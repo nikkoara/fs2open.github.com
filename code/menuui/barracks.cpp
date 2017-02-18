@@ -33,12 +33,6 @@
 #include "ship/ship.h"
 #include "ui/ui.h"
 
-
-
-
-//Returns 0 on failure, 1 on success
-int delete_pilot_file( char *pilot_name );		// manage_pilot.cpp
-
 // stats defines
 //#define NUM_STAT_LINES (21 + MAX_SHIP_CLASSES)	// Goober5000
 #define STAT_COLUMN1_W 40
@@ -831,7 +825,6 @@ void barracks_delete_pilot()
 {
 	char buf[MAX_FILENAME_LEN];
 	int active = 0;
-	int del_rval;
 
 	if (!Num_pilots) {
 		gamesnd_play_iface(InterfaceSounds::GENERAL_FAIL);
@@ -857,7 +850,7 @@ void barracks_delete_pilot()
 
 	strcpy_s(buf, Pilots[Selected_line]);
 
-	del_rval = delete_pilot_file(buf);
+	auto del_rval = delete_pilot_file(buf);
 
 	if ( !del_rval ) {
 		popup(PF_USE_AFFIRMATIVE_ICON | PF_TITLE_BIG | PF_TITLE_RED, 1, POPUP_OK, XSTR("Error\nFailed to delete pilot file. File may be read-only.", 1599));

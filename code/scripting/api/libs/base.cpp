@@ -304,6 +304,15 @@ ADE_FUNC(getCurrentLanguageExtension,
 	return ade_set_args(L, "s", Lcl_languages[Lcl_current_lang].lang_ext);
 }
 
+ADE_FUNC(getVersionString, l_Base, nullptr,
+         "Returns a string describing the version of the build that is currently running. This is mostly intended to "
+         "be displayed to the user and not processed by a script so don't rely on the exact format of the string.",
+         "string", "The version information")
+{
+	auto str = gameversion::get_version_string();
+	return ade_set_args(L, "s", str.c_str());
+}
+
 //**********SUBLIBRARY: Base/Events
 ADE_LIB_DERIV(l_Base_Events, "GameEvents", NULL, "Freespace 2 game events", l_Base);
 
