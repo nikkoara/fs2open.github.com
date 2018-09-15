@@ -53,19 +53,19 @@
 
 // Since SSMs are parsed after weapons, if we want to allow SSM strikes to be specified by name, we need to store those names until after SSMs are parsed.
 typedef struct delayed_ssm_data {
-	SCP_string filename;
+	std::string filename;
 	int linenum;
-	SCP_string ssm_entry;
+	std::string ssm_entry;
 } delayed_ssm_data;
-SCP_map<SCP_string, delayed_ssm_data> Delayed_SSM_data;
-SCP_vector<SCP_string> Delayed_SSM_names;
+std::map<std::string, delayed_ssm_data> Delayed_SSM_data;
+std::vector<std::string> Delayed_SSM_names;
 
 typedef struct delayed_ssm_index_data {
-	SCP_string filename;
+	std::string filename;
 	int linenum;
 } delayed_ssm_index_data;
-SCP_map<SCP_string, delayed_ssm_index_data> Delayed_SSM_indices_data;
-SCP_vector<SCP_string> Delayed_SSM_indices;
+std::map<std::string, delayed_ssm_index_data> Delayed_SSM_indices_data;
+std::vector<std::string> Delayed_SSM_indices;
 
 
 #ifndef NDEBUG
@@ -100,7 +100,7 @@ const size_t Num_burst_fire_flags = sizeof(Burst_fire_flags)/sizeof(flag_def_lis
 
 weapon_explosions Weapon_explosions;
 
-SCP_vector<lod_checker> LOD_checker;
+std::vector<lod_checker> LOD_checker;
 
 flag_def_list_new<Weapon::Info_Flags> Weapon_Info_Flags[] = {
     { "spawn",							Weapon::Info_Flags::Spawn,								true, true }, //special case
@@ -555,7 +555,7 @@ void parse_wi_flags(weapon_info *weaponp, flagset<Weapon::Info_Flags> wi_flags)
         return;
 
 	// To make sure +override doesn't overwrite previously parsed values we parse the flags into a separate flagset
-    SCP_vector<SCP_string> unparsed_or_special;
+    std::vector<std::string> unparsed_or_special;
 	flagset<Weapon::Info_Flags> parsed_flags;
     parse_string_flag_list(parsed_flags, Weapon_Info_Flags, num_weapon_info_flags, &unparsed_or_special);
 
@@ -569,7 +569,7 @@ void parse_wi_flags(weapon_info *weaponp, flagset<Weapon::Info_Flags> wi_flags)
     bool set_nopierce = false;
 
     for (auto flag = unparsed_or_special.begin(); flag != unparsed_or_special.end(); ++flag) {
-        SCP_string flag_text = *flag;
+        std::string flag_text = *flag;
         //deal with spawn flag
         if (!strnicmp(spawn_str, flag_text.c_str(), 5))
         {
@@ -1446,7 +1446,7 @@ int parse_weapon(int subtype, bool replace, const char *filename)
 
 	if (optional_string("+Inflight sound type:"))
 	{
-		SCP_string type;
+		std::string type;
 
 		stuff_string(type, F_NAME);
 
@@ -3442,7 +3442,7 @@ void weapon_do_post_parse()
 		Default_cmeasure_index = first_cmeasure_index;
 
 	// now we want to resolve the countermeasures by species
-	for (SCP_vector<species_info>::iterator ii = Species_info.begin(); ii != Species_info.end(); ++ii)
+	for (std::vector<species_info>::iterator ii = Species_info.begin(); ii != Species_info.end(); ++ii)
 	{
 		if (*ii->cmeasure_name)
 		{
@@ -3855,7 +3855,7 @@ void find_homing_object(object *weapon_objp, int num)
 /**
  * For all homing weapons, see if they should be decoyed by a countermeasure.
  */
-void find_homing_object_cmeasures(const SCP_vector<object*> &cmeasure_list)
+void find_homing_object_cmeasures(const std::vector<object*> &cmeasure_list)
 {
 	for (object *weapon_objp = GET_FIRST(&obj_used_list); weapon_objp != END_OF_LIST(&obj_used_list); weapon_objp = GET_NEXT(weapon_objp) ) {
 		if (weapon_objp->type == OBJ_WEAPON) {
@@ -3884,7 +3884,7 @@ void find_homing_object_cmeasures(const SCP_vector<object*> &cmeasure_list)
 						float chance;
 
 						if (wp->cmeasure_ignore_list == nullptr) {
-							wp->cmeasure_ignore_list = new SCP_vector<int>;
+							wp->cmeasure_ignore_list = new std::vector<int>;
 						}
 						else {
 							bool found = false;
@@ -6567,7 +6567,7 @@ bool weapon_page_in(int weapon_type)
 		return false;
 	}
 
-	SCP_vector<int> page_in_weapons;
+	std::vector<int> page_in_weapons;
 	page_in_weapons.push_back(weapon_type);
 	
 	// Make sure substitution weapons are paged in as well
@@ -7486,7 +7486,7 @@ void weapon_render(object* obj, model_draw_list *scene)
 void validate_SSM_entries()
 {
 	int wi;
-	SCP_vector<SCP_string>::const_iterator it;
+	std::vector<std::string>::const_iterator it;
 	weapon_info *wip;
 
 	for (it = Delayed_SSM_names.begin(); it != Delayed_SSM_names.end(); ++it) {

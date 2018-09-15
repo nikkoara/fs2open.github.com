@@ -36,7 +36,7 @@
 #include "species_defs/species_defs.h"
 #include "weapon/emp.h"
 
-SCP_vector<SCP_string> Builtin_moods;
+std::vector<std::string> Builtin_moods;
 int Current_mission_mood;
 
 int Valid_builtin_message_types[MAX_BUILTIN_MESSAGE_TYPES]; 
@@ -96,15 +96,15 @@ builtin_message Builtin_messages[] =
 	//XSTR:ON
 };
 
-SCP_vector<MMessage> Messages;
+std::vector<MMessage> Messages;
 
 int Num_messages, Num_message_avis, Num_message_waves;
 int Num_builtin_messages, Num_builtin_avis, Num_builtin_waves;
 
 int Message_debug_index = -1;
 
-SCP_vector<message_extra> Message_avis;
-SCP_vector<message_extra> Message_waves;
+std::vector<message_extra> Message_avis;
+std::vector<message_extra> Message_waves;
 
 #define MAX_PLAYING_MESSAGES		2
 
@@ -186,7 +186,7 @@ int Default_command_persona;
 
 // Goober5000
 // NOTE - these are truncated filenames, i.e. without extensions
-SCP_vector<SCP_string> generic_message_filenames;
+std::vector<std::string> generic_message_filenames;
 
 ///////////////////////////////////////////////////////////////////
 // used to distort incoming messages when comms are damaged
@@ -433,11 +433,11 @@ void message_parse(bool importing_from_fsm)
 	}
 
 	if ( optional_string("$Mood:")) {
-		SCP_string buf; 
+		std::string buf; 
 		bool found = false;
 
 		stuff_string(buf, F_NAME); 
-		for (SCP_vector<SCP_string>::iterator iter = Builtin_moods.begin(); iter != Builtin_moods.end(); ++iter) {
+		for (std::vector<std::string>::iterator iter = Builtin_moods.begin(); iter != Builtin_moods.end(); ++iter) {
 			if (*iter == buf) {
 				msg.mood = (int)std::distance(Builtin_moods.begin(), iter);
 				found = true;
@@ -455,12 +455,12 @@ void message_parse(bool importing_from_fsm)
 	}
 
 	if ( optional_string("$Exclude Mood:")) {
-		SCP_vector<SCP_string> buff;
+		std::vector<std::string> buff;
 		bool found = false;
 
 		stuff_string_list(buff); 
-		for (SCP_vector<SCP_string>::iterator parsed_moods = buff.begin(); parsed_moods != buff.end(); ++parsed_moods) {
-			for (SCP_vector<SCP_string>::iterator iter = Builtin_moods.begin(); iter != Builtin_moods.end(); ++iter) {
+		for (std::vector<std::string>::iterator parsed_moods = buff.begin(); parsed_moods != buff.end(); ++parsed_moods) {
+			for (std::vector<std::string>::iterator iter = Builtin_moods.begin(); iter != Builtin_moods.end(); ++iter) {
 				if (!stricmp(iter->c_str(), parsed_moods->c_str())) {
 					msg.excluded_moods.push_back((int)std::distance(Builtin_moods.begin(), iter));
 					found = true;
@@ -526,7 +526,7 @@ void message_moods_parse()
 {	
 
 	while (required_string_either("#End", "$Mood:")){
-		SCP_string buf; 
+		std::string buf; 
 
 		required_string("$Mood:");
 		stuff_string(buf, F_NAME);
@@ -1936,7 +1936,7 @@ void message_send_builtin_to_player( int type, ship *shipp, int priority, int ti
 	int best_match = -1;
 
 	matching_builtin current_builtin;
-	SCP_vector <matching_builtin> matching_builtins; 
+	std::vector <matching_builtin> matching_builtins; 
 
 
 	// if we aren't showing builtin msgs, bail
@@ -2015,7 +2015,7 @@ void message_send_builtin_to_player( int type, ship *shipp, int priority, int ti
 
 			// check if the personas mood suits this particular message, first check if it is excluded
 			if (!Messages[i].excluded_moods.empty() && (current_builtin.type_of_match ==  BUILTIN_MATCHES_PERSONA_CHECK_MOOD)) {
-				for (SCP_vector<int>::iterator iter = Messages[i].excluded_moods.begin(); iter != Messages[i].excluded_moods.end(); ++iter) {
+				for (std::vector<int>::iterator iter = Messages[i].excluded_moods.begin(); iter != Messages[i].excluded_moods.end(); ++iter) {
 					if (*iter == Current_mission_mood) {
 						current_builtin.type_of_match =  BUILTIN_MATCHES_PERSONA_EXCLUDED; 
 						break; 
@@ -2230,7 +2230,7 @@ void message_maybe_distort_text(char *text, int shipnum)
 	auto buffer_size = strlen(text);
 	auto len         = unicode::num_codepoints(text, text + buffer_size);
 	if (Message_wave_duration == 0) {
-		SCP_string result_str;
+		std::string result_str;
 
 		size_t next_distort = 5 + myrand() % 5;
 		size_t i            = 0;
@@ -2268,7 +2268,7 @@ void message_maybe_distort_text(char *text, int shipnum)
 	unicode::codepoint_range range(text);
 	auto curr_iter = range.begin();
 	size_t curr_offset = 0;
-	SCP_string result_str;
+	std::string result_str;
 	while (voice_duration > 0) {
 		size_t run = fl2i(Distort_patterns[Distort_num][Distort_next] * len);
 		auto upper_limit = std::min(len, curr_offset + run);

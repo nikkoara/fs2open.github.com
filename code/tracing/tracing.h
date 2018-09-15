@@ -72,7 +72,7 @@ void frame_profile_process_frame();
  * @brief Gets the output of the frame profiler.
  * @return The frame profiler output
  */
-SCP_string get_frame_profile_output();
+std::string get_frame_profile_output();
 
 /**
  * @brief Deinitializes the tracing subsystem

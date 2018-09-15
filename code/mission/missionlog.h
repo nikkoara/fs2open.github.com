@@ -58,8 +58,8 @@ struct log_entry {
 	int primary_team;
 	int secondary_team;
 
-	SCP_string pname_display;
-	SCP_string sname_display;
+	std::string pname_display;
+	std::string sname_display;
 };
 
 extern int Num_log_lines;

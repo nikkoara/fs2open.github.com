@@ -135,7 +135,7 @@ public:
 class ConditionedHook
 {
 private:
-	SCP_vector<script_action> Actions;
+	std::vector<script_action> Actions;
 	script_condition Conditions[MAX_HOOK_CONDITIONS];
 public:
 	bool AddCondition(script_condition *sc);
@@ -157,8 +157,8 @@ private:
 	const struct script_lua_lib_list *LuaLibs;
 
 	//Utility variables
-	SCP_vector<image_desc> ScriptImages;
-	SCP_vector<ConditionedHook> ConditionalHooks;
+	std::vector<image_desc> ScriptImages;
+	std::vector<ConditionedHook> ConditionalHooks;
 
 private:
 

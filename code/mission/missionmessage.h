@@ -32,8 +32,8 @@ typedef struct message_extra {
 	bool				exists;
 } message_extra;
 
-extern SCP_vector<message_extra> Message_avis;
-extern SCP_vector<message_extra> Message_waves;
+extern std::vector<message_extra> Message_avis;
+extern std::vector<message_extra> Message_waves;
 
 // defines for message priorities
 #define MESSAGE_PRIORITY_LOW		1
@@ -65,7 +65,7 @@ typedef struct builtin_message {
 	int				min_delay;
 } builtin_message;
 
-extern SCP_vector<SCP_string> Builtin_moods;
+extern std::vector<std::string> Builtin_moods;
 extern int Current_mission_mood;
 
 // this number in this define should match the number of elements in the next array
@@ -125,7 +125,7 @@ typedef struct MissionMessage {
 	int	persona_index;							// which persona says this message
 	int	multi_team;								// multiplayer team filter (important for TvT only)
 	int				mood;
-	SCP_vector<int> excluded_moods;
+	std::vector<int> excluded_moods;
 
 	// unions for avi/wave information.  Because of issues with Fred, we are using
 	// the union to specify either the index into the avi or wave arrays above,
@@ -143,7 +143,7 @@ typedef struct MissionMessage {
 
 } MMessage;
 
-extern SCP_vector<MMessage> Messages;
+extern std::vector<MMessage> Messages;
 
 typedef struct pmessage {
 	//anim_instance *anim;		// handle of anim currently playing

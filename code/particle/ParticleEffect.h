@@ -35,18 +35,18 @@ enum class EffectType: int64_t {
  */
 class ParticleEffect {
  protected:
-	SCP_string m_name; //!< The name if this effect
+	std::string m_name; //!< The name if this effect
 
  public:
 	/**
 	 * @brief Initializes the base ParticleEffect
 	 * @param name The name this effect should have
 	 */
-	explicit ParticleEffect(const SCP_string& name) : m_name(name) {}
+	explicit ParticleEffect(const std::string& name) : m_name(name) {}
 
 	virtual ~ParticleEffect() {}
 
-	const SCP_string& getName() const { return m_name; }
+	const std::string& getName() const { return m_name; }
 
 	/**
 	 * @brief Parses the values of this effect

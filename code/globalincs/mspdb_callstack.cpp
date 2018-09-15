@@ -221,7 +221,7 @@ DWORD WINAPI SCP_mspdbcs_DumpStackThread( LPVOID pv )
 #endif
 
 	/* All the discovered addresses will be stored in an array */
-	SCP_vector< void* > addresses;
+	std::vector< void* > addresses;
 
 	/* Walk the stack */
 	for ( int currFrame = 0; currFrame < SCP_MSPDBCS_MAX_STACK_FRAMES; currFrame++ )

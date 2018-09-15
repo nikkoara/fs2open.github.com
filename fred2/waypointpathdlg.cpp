@@ -72,8 +72,8 @@ BOOL waypoint_path_dlg::Create()
 void waypoint_path_dlg::OnInitMenu(CMenu* pMenu)
 {
 	int i;
-	SCP_list<waypoint_list>::iterator ii;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<waypoint_list>::iterator ii;
+	std::list<CJumpNode>::iterator jnp;
 	CMenu *m;
 
 	m = pMenu->GetSubMenu(0);
@@ -123,7 +123,7 @@ void waypoint_path_dlg::OnClose()
 void waypoint_path_dlg::initialize_data(int full_update)
 {
 	int enable = TRUE;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	if (!GetSafeHwnd())
 		return;
@@ -161,7 +161,7 @@ int waypoint_path_dlg::update_data(int redraw)
 	char old_name[255];
 	int i, z;
 	object *ptr;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	if (!GetSafeHwnd())
 		return 0;
@@ -249,7 +249,7 @@ int waypoint_path_dlg::update_data(int redraw)
 			}
 		}
 
-		SCP_list<waypoint_list>::iterator ii;
+		std::list<waypoint_list>::iterator ii;
 		for (ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++ii)
 		{
 			if (!stricmp(ii->get_name(), m_name) && (&(*ii) != cur_waypoint_list)) {

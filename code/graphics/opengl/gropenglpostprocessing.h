@@ -11,8 +11,8 @@ void gr_opengl_post_process_save_zbuffer();
 void gr_opengl_post_process_restore_zbuffer();
 void gr_opengl_post_process_begin();
 void gr_opengl_post_process_end();
-void get_post_process_effect_names(SCP_vector<SCP_string> &names);
+void get_post_process_effect_names(std::vector<std::string> &names);
 
-void opengl_post_shader_header(SCP_stringstream &sflags, shader_type shader_t, int flags);
+void opengl_post_shader_header(std::stringstream &sflags, shader_type shader_t, int flags);
 
 #endif	// _GROPENGLPOSTPROCESSING_H

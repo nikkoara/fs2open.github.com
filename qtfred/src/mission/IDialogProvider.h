@@ -40,8 +40,8 @@ class IDialogProvider {
 	}
 
 	virtual DialogButton showButtonDialog(DialogType type,
-										  const SCP_string& title,
-										  const SCP_string& message,
+										  const std::string& title,
+										  const std::string& message,
 										  const flagset<DialogButton>& buttons) = 0;
 
 	virtual std::unique_ptr<IDialog<dialogs::FormWingDialogModel>> createFormWingDialog() = 0;

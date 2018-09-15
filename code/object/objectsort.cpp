@@ -106,9 +106,9 @@ inline bool sorted_obj::operator < (const sorted_obj &other) const
 }
 
 
-SCP_vector<sorted_obj> Sorted_objects;
-SCP_vector<object*> effect_ships; 
-SCP_vector<object*> transparent_objects;
+std::vector<sorted_obj> Sorted_objects;
+std::vector<object*> effect_ships; 
+std::vector<object*> transparent_objects;
 bool object_had_transparency = false;
 // Used to (fairly) quicky find the 8 extreme
 // points around an object.
@@ -244,7 +244,7 @@ void obj_render_all(const std::function<void(object*)>& render_function, bool *d
 
 	// now draw them
 	// only render models in this loop in order to minimize state changes
-	SCP_vector<sorted_obj>::iterator os;
+	std::vector<sorted_obj>::iterator os;
 	for (os = Sorted_objects.begin(); os != Sorted_objects.end(); ++os) {
 		object *obj = os->obj;
 

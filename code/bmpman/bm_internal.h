@@ -118,7 +118,7 @@ void bm_lock_user( int handle, bitmap_slot *bs, bitmap *bmp, int bpp, ubyte flag
 
 const size_t BM_BLOCK_SIZE = 4096;
 
-extern SCP_vector<std::array<bitmap_slot, BM_BLOCK_SIZE>> bm_blocks;
+extern std::vector<std::array<bitmap_slot, BM_BLOCK_SIZE>> bm_blocks;
 
 bitmap_slot* bm_get_slot(int handle, bool separate_ani_frames = true);
 

@@ -26,12 +26,12 @@
 #include "globalincs/pstypes.h"
 
 
-void cf_sort_filenames( SCP_vector<SCP_string> &list, int sort, SCP_vector<file_list_info> *info )
+void cf_sort_filenames( std::vector<std::string> &list, int sort, std::vector<file_list_info> *info )
 {
 	// NOTE: This really needs to be updated to C++ style sorting at some point
 
 	int i, j, incr;
-	SCP_string t;
+	std::string t;
 	file_list_info tt;
 
 	int n = (int)list.size();

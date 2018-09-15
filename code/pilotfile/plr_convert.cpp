@@ -847,7 +847,7 @@ bool pilotfile_convert::plr_convert(const char *fname, bool inferno)
 {
 	Assert( fname != NULL );
 
-	SCP_string filename;
+	std::string filename;
 	bool rval = true;
 
 

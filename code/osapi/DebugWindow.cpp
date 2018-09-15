@@ -123,8 +123,8 @@ float DebugWindow::print_line(float bottom_y, const LineInfo& line) {
 	gr_get_string_size(&category_width, nullptr, line.category.c_str());
 
 	// Wrap the string to make sure everything can be read
-	SCP_vector<const char*> split_lines;
-	SCP_vector<int> line_lengths;
+	std::vector<const char*> split_lines;
+	std::vector<int> line_lengths;
 
 	// Substract 40 so that we can have margins on both sides
 	// Make sure that the width doesn't go too low or else split_str will not be able to fit enough characters in one line
@@ -138,7 +138,7 @@ float DebugWindow::print_line(float bottom_y, const LineInfo& line) {
 
 	float cat_x_pos = max_category_width - category_width + 10.f;
 	// Give each category a unique color. We do this by hashing the string and using that to construct the RGB values
-	auto hash = std::hash<SCP_string>()(line.category);
+	auto hash = std::hash<std::string>()(line.category);
 	gr_set_color((int) (hash & 0xFF), (int) ((hash & 0xFF00) >> 8), (int) ((hash & 0xFF0000) >> 16));
 	gr_string(cat_x_pos, y_pos, line.category.c_str(), GR_RESIZE_NONE);
 
@@ -224,9 +224,9 @@ void DebugWindow::addDebugMessage(const char* category, const char* text) {
 
 	split_current_and_add_to_log(category);
 }
-void DebugWindow::split_current_and_add_to_log(const SCP_string& category) {
+void DebugWindow::split_current_and_add_to_log(const std::string& category) {
 	size_t pos;
-	while ((pos = current_line.find('\n')) != SCP_string::npos) {
+	while ((pos = current_line.find('\n')) != std::string::npos) {
 		LineInfo info;
 		info.text = current_line.substr(0, pos);
 		info.category = category;

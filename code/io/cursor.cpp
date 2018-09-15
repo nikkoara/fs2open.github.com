@@ -88,7 +88,7 @@ namespace io
 
 		Cursor::~Cursor()
 		{
-			SCP_vector<SDL_Cursor*>::iterator iter;
+			std::vector<SDL_Cursor*>::iterator iter;
 
 			for (iter = mAnimationFrames.begin(); iter != mAnimationFrames.end(); ++iter)
 			{

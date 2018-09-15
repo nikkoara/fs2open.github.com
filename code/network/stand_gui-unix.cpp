@@ -203,10 +203,10 @@ public:
 
 class ChangeServerInformationCommand : public WebapiCommand
 {
-	SCP_string name;
+	std::string name;
 	bool hasName;
 
-	SCP_string passwd;
+	std::string passwd;
 	bool hasPasswd;
 
 	int framecap;
@@ -310,7 +310,7 @@ public:
 };
 
 SDL_mutex* webapiCommandQueueMutex = SDL_CreateMutex();
-SCP_vector<WebapiCommand*> webapiCommandQueue;
+std::vector<WebapiCommand*> webapiCommandQueue;
 
 void webapiAddCommand(WebapiCommand *command) {
     SDL_mutexP(webapiCommandQueueMutex);
@@ -323,7 +323,7 @@ void webapiAddCommand(WebapiCommand *command) {
 void webapiExecuteCommands() {
     SDL_mutexP(webapiCommandQueueMutex);
 
-    for (SCP_vector<WebapiCommand*>::iterator iter = webapiCommandQueue.begin(); iter != webapiCommandQueue.end();
+    for (std::vector<WebapiCommand*>::iterator iter = webapiCommandQueue.begin(); iter != webapiCommandQueue.end();
             ++iter) {
         (*iter)->execute();
 		delete *iter;
@@ -341,7 +341,7 @@ struct LogResource {
     };
 
     long currentTimestamp;
-    SCP_list<LogResourceEntry> entries;
+    std::list<LogResourceEntry> entries;
 
     void addEntity(json_t* entity) {
         LogResourceEntry entry;
@@ -431,14 +431,14 @@ static void sendJsonResponse(mg_connection *connection, json_t *responseEntity) 
 
 struct ResourceContext {
     json_t *requestEntity;
-    SCP_map<SCP_string, SCP_string> parameters;
+    std::map<std::string, std::string> parameters;
 };
 
 typedef json_t* (*resourceHandler)(ResourceContext *);
 
 struct Resource {
-    SCP_string path;
-    SCP_string method;
+    std::string path;
+    std::string method;
 
     resourceHandler handler;
 };
@@ -672,7 +672,7 @@ json_t* playerMissionScoreMissionGet(ResourceContext *context) {
 }
 
 int afterTimestamp(ResourceContext *context) {
-    SCP_map<SCP_string, SCP_string>::iterator iter = context->parameters.find("after");
+    std::map<std::string, std::string>::iterator iter = context->parameters.find("after");
     if (iter != context->parameters.end()) {
         return atoi(iter->second.c_str());
     }
@@ -720,19 +720,19 @@ struct Resource resources[] = {
     { "api/1/debug", "GET", &debugGet } };
 
 static bool webserverApiRequest(mg_connection *conn, const mg_request_info *ri) {
-    SCP_string resourcePath(ri->uri);
+    std::string resourcePath(ri->uri);
 
     resourcePath.erase(0, 1);
-    SCP_vector<SCP_string> pathParts;
+    std::vector<std::string> pathParts;
     split(pathParts, resourcePath, "/", split_struct::no_empties);
 
     json_t *result = NULL;
 
-    SCP_string method(ri->request_method);
+    std::string method(ri->request_method);
 
     for (size_t i = 0; i < ARRAY_SIZE(resources); i++) {
         Resource* r = &resources[i];
-        SCP_vector<SCP_string> resourcePathParts;
+        std::vector<std::string> resourcePathParts;
         split(resourcePathParts, r->path, "/", split_struct::no_empties);
 
         if (resourcePathParts.size() == pathParts.size()) {
@@ -768,13 +768,13 @@ static bool webserverApiRequest(mg_connection *conn, const mg_request_info *ri) 
                 }
 
                 if (ri->query_string) {
-                    SCP_string query(ri->query_string);
-                    SCP_vector<SCP_string> queryPairs;
+                    std::string query(ri->query_string);
+                    std::vector<std::string> queryPairs;
                     split(queryPairs, query, "&", split_struct::no_empties);
 
-                    for (SCP_vector<SCP_string>::const_iterator iter = queryPairs.begin(); iter != queryPairs.end();
+                    for (std::vector<std::string>::const_iterator iter = queryPairs.begin(); iter != queryPairs.end();
                             ++iter) {
-                        SCP_vector<SCP_string> temp;
+                        std::vector<std::string> temp;
 
                         split(temp, *iter, "=", split_struct::no_empties);
 
@@ -871,10 +871,10 @@ void std_add_chat_text(const char *text, int  /*player_index*/, int  /*add_id*/)
 
 void std_debug_multilog_add_line(const char *str) {
 
-    SCP_vector<SCP_string> debugMessages;
-    split(debugMessages, SCP_string(str), "\n", split_struct::no_empties);
+    std::vector<std::string> debugMessages;
+    split(debugMessages, std::string(str), "\n", split_struct::no_empties);
 
-    for (SCP_vector<SCP_string>::const_iterator iter = debugMessages.begin(); iter != debugMessages.end(); ++iter) {
+    for (std::vector<std::string>::const_iterator iter = debugMessages.begin(); iter != debugMessages.end(); ++iter) {
         json_t *msg = json_object();
         json_object_set_new(msg, "message", json_string(str));
         webapi_debugLog.addEntity(msg);

@@ -6,7 +6,7 @@
 namespace fso {
 namespace fred {
 
-SCP_string getUsername();
+std::string getUsername();
 
 }
 }

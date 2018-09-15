@@ -36,7 +36,7 @@ const char* getEffectTypeName(EffectType type) {
 	return effectTypeNames[static_cast<int64_t>(type)];
 }
 
-ParticleEffectPtr constructEffect(const SCP_string& name, EffectType type) {
+ParticleEffectPtr constructEffect(const std::string& name, EffectType type) {
 	using namespace effects;
 	// Use an unique_ptr to make sure memory is deallocated if an exception is thrown
 	std::unique_ptr<ParticleEffect> effect;
@@ -74,7 +74,7 @@ ParticleEffectPtr constructEffect(const SCP_string& name, EffectType type) {
 EffectType parseEffectType() {
 	required_string("$Type:");
 
-	SCP_string type;
+	std::string type;
 	stuff_string(type, F_NAME);
 
 	for (size_t i = 0; i < static_cast<size_t>(EffectType::MAX); ++i) {
@@ -98,7 +98,7 @@ void parseCallback(const char* fileName) {
 		required_string("#Particle Effects");
 
 		while (optional_string("$Effect:")) {
-			SCP_string name;
+			std::string name;
 			stuff_string(name, F_NAME);
 
 			auto type = parseEffectType();
@@ -155,7 +155,7 @@ ParticleSource* ParticleManager::createSource() {
 	return source;
 }
 
-ParticleEffectHandle ParticleManager::getEffectByName(const SCP_string& name)
+ParticleEffectHandle ParticleManager::getEffectByName(const std::string& name)
 {
 	if (name.empty()) {
 		// Don't allow empty names, it's a special case for effects that should not be referenced.
@@ -244,7 +244,7 @@ ParticleSourceWrapper ParticleManager::createSource(ParticleEffectHandle index)
 	ParticleSourceWrapper wrapper;
 
 	if (eff->getType() == EffectType::Composite) {
-		SCP_vector<ParticleSource*> sources;
+		std::vector<ParticleSource*> sources;
 		auto composite = static_cast<effects::CompositeEffect*>(eff);
 		auto& childEffects = composite->getEffects();
 
@@ -280,9 +280,9 @@ void ParticleManager::clearSources() {
 }
 
 namespace util {
-ParticleEffectHandle parseEffect(const SCP_string& objectName)
+ParticleEffectHandle parseEffect(const std::string& objectName)
 {
-	SCP_string name;
+	std::string name;
 	stuff_string(name, F_NAME);
 
 	auto idx = ParticleManager::get()->getEffectByName(name);
@@ -301,10 +301,10 @@ ParticleEffectHandle parseEffect(const SCP_string& objectName)
 }
 
 namespace internal {
-ParticleEffectHandle parseEffectElement(EffectType forcedType, const SCP_string& name)
+ParticleEffectHandle parseEffectElement(EffectType forcedType, const std::string& name)
 {
 	if (!optional_string("$New Effect")) {
-		SCP_string newName;
+		std::string newName;
 		stuff_string(newName, F_NAME);
 
 		auto index = ParticleManager::get()->getEffectByName(newName);
@@ -344,7 +344,7 @@ bool required_string_if_new(const char* token, bool no_create) {
 }
 
 int parseAnimation(bool critical) {
-	SCP_string name;
+	std::string name;
 	stuff_string(name, F_FILESPEC);
 
 	auto handle = bm_load_animation(name.c_str());

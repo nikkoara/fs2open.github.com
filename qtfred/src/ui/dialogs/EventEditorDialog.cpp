@@ -786,8 +786,8 @@ bool EventEditorDialog::query_modified() {
 bool EventEditorDialog::hasDefaultMessageParamter() {
 	return m_num_messages > 0;
 }
-SCP_vector<SCP_string> EventEditorDialog::getMessages() {
-	SCP_vector<SCP_string> messages;
+std::vector<std::string> EventEditorDialog::getMessages() {
+	std::vector<std::string> messages;
 	messages.reserve(m_num_messages);
 
 	for (auto i = 0; i < m_num_messages; ++i) {
@@ -882,7 +882,7 @@ void EventEditorDialog::deleteMessage() {
 		m_messages[m_cur_msg].wave_info.name = nullptr;
 	}
 
-	SCP_string buf;
+	std::string buf;
 	sprintf(buf, "<%s>", m_messages[m_cur_msg].name);
 	update_sexp_references(m_messages[m_cur_msg].name, buf.c_str(), OPF_MESSAGE);
 	update_sexp_references(m_messages[m_cur_msg].name, buf.c_str(), OPF_MESSAGE_OR_STRING);
@@ -981,8 +981,8 @@ void EventEditorDialog::updatePersona() {
 		return;
 	}
 
-	SCP_string wave_name = m_messages[m_cur_msg].wave_info.name;
-	SCP_string avi_name = m_messages[m_cur_msg].avi_info.name;
+	std::string wave_name = m_messages[m_cur_msg].wave_info.name;
+	std::string avi_name = m_messages[m_cur_msg].avi_info.name;
 
 	if ((wave_name[0] >= '1') && (wave_name[0] <= '9') && (wave_name[1] == '_')) {
 		auto i = wave_name[0] - '1';

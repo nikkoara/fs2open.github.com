@@ -18,9 +18,9 @@ namespace font
 	*
 	* Parses the first font name in the font table and stuffs it into @c firstFont
 	*
-	* @param firstFont The SCP_string which should contain the name
+	* @param firstFont The std::string which should contain the name
 	*/
-	void stuff_first(SCP_string &firstFont);
+	void stuff_first(std::string &firstFont);
 
 	/**
 	* Crops a string if required to force it to not exceed max_width pixels when printed.
@@ -103,5 +103,5 @@ namespace font
 	* @param name The name which should be searched
 	* @return The font pointer or NULL if no font with that name could be found
 	*/
-	FSFont *get_font(const SCP_string& name);
+	FSFont *get_font(const std::string& name);
 }

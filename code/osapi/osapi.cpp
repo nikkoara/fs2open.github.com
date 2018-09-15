@@ -31,7 +31,7 @@ namespace
 	bool checkedLegacyMode = false;
 	bool legacyMode = false;
 
-	SCP_vector<std::unique_ptr<os::Viewport>> viewports;
+	std::vector<std::unique_ptr<os::Viewport>> viewports;
 	os::Viewport* mainViewPort = nullptr;
 	SDL_Window* mainSDLWindow = nullptr;
 
@@ -200,13 +200,13 @@ static char			szWinTitle[128];
 static char			szWinClass[128];
 static int			Os_inited = 0;
 
-static SCP_vector<SDL_Event> buffered_events;
+static std::vector<SDL_Event> buffered_events;
 
 int Os_debugger_running = 0;
 
 #ifdef SCP_UNIX
 static bool user_dir_initialized = false;
-static SCP_string Os_user_dir_legacy;
+static std::string Os_user_dir_legacy;
 
 const char* os_get_legacy_user_dir() {
 	if (user_dir_initialized) {
@@ -332,12 +332,12 @@ void os_sleep(uint ms)
 #endif
 }
 
-static bool file_exists(const SCP_string& path) {
+static bool file_exists(const std::string& path) {
 	std::ofstream str(path, std::ios::in);
 	return str.good();
 }
 
-static time_t get_file_modification_time(const SCP_string& path) {
+static time_t get_file_modification_time(const std::string& path) {
 #ifdef SCP_UNIX
 	struct stat file_stats{};
 	if(stat(path.c_str(), &file_stats) < 0) {
@@ -374,7 +374,7 @@ bool os_is_legacy_mode()
 		Osapi_legacy_mode_reason = "Legacy mode disabled since portable mode was enabled.";
 	}
 	else {
-		SCP_stringstream path_stream;
+		std::stringstream path_stream;
 		path_stream << getPreferencesPath() << Osreg_config_file_name;
 
 		auto new_config_exists = file_exists(path_stream.str());
@@ -541,7 +541,7 @@ namespace os
 				return left.type < right.type;
 			}
 			
-			SCP_vector<EventListenerData> eventListeners;
+			std::vector<EventListenerData> eventListeners;
 		}
 
 		ListenerIdentifier addEventListener(SDL_EventType type, int weight, const Listener& listener)
@@ -654,13 +654,13 @@ void os_poll()
 	}
 }
 
-SCP_string os_get_config_path(const SCP_string& subpath)
+std::string os_get_config_path(const std::string& subpath)
 {
 	// Make path platform compatible
-	SCP_string compatiblePath(subpath);
+	std::string compatiblePath(subpath);
 	std::replace(compatiblePath.begin(), compatiblePath.end(), '/', DIR_SEPARATOR_CHAR);
 
-	SCP_stringstream ss;
+	std::stringstream ss;
 
 	if (Cmdline_portable_mode) {
 		// Use the current directory

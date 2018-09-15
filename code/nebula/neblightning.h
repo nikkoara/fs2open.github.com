@@ -89,8 +89,8 @@ typedef struct storm_type {
 	storm_type() : num_bolt_types(0) {}
 } storm_type;
 
-extern SCP_vector<storm_type>	Storm_types;
-extern SCP_vector<bolt_type>	Bolt_types;
+extern std::vector<storm_type>	Storm_types;
+extern std::vector<bolt_type>	Bolt_types;
 
 // nebula lightning intensity (0.0 to 1.0)
 extern float Nebl_intensity;

@@ -46,7 +46,7 @@ ADE_FUNC(sub,
 	if (normalized_start > normalized_end) {
 		return ade_set_args(L, "s", "");
 	}
-	SCP_string result_str;
+	std::string result_str;
 	size_t current = 1;
 	auto inserter = std::back_inserter(result_str);
 	for (auto cp : unicode::codepoint_range(string, end_ptr)) {

@@ -191,7 +191,7 @@ int bm_load(const char* filename);
  * @returns The bitmap number if successful, else
  * @returns a negative value if not
  */
-int bm_load(const SCP_string& filename);
+int bm_load(const std::string& filename);
 
 /**
  * @brief Reloads a bitmap as a duplicate.
@@ -366,7 +366,7 @@ int bm_get_info(int handle, int *w = NULL, int * h = NULL, ubyte * flags = NULL,
  *
  * @param[out] filename The filename of the bitmap, if successful. Is set to an empty string if unseccessful
  *
- * @todo z64 - maybe deprecate this in favor of an SCP_string version
+ * @todo z64 - maybe deprecate this in favor of an std::string version
  */
 void bm_get_filename(int bitmapnum, char *filename);
 
@@ -377,9 +377,9 @@ void bm_get_filename(int bitmapnum, char *filename);
  *
  * @returns A const char* to the filename of the bitmap
  *
- * @todo z64 - maybe deprecate this in favor of an SCP_string version.
+ * @todo z64 - maybe deprecate this in favor of an std::string version.
  * @todo z64 - maybe combine this with the other bm_get_filename function like so:
- *   void bm_get_filename(int handle, SCP_string *filename, bool must_exist = false);
+ *   void bm_get_filename(int handle, std::string *filename, bool must_exist = false);
  */
 const char *bm_get_filename(int handle);
 
@@ -721,7 +721,7 @@ int bmpman_count_available_slots();
  * @param animation If set to @c true then animations are valid files
  * @return @c true if the file name is valid, @c false otherwise
  */
-bool bm_validate_filename(const SCP_string& file, bool single_frame, bool animation);
+bool bm_validate_filename(const std::string& file, bool single_frame, bool animation);
 
 SDL_Surface* bm_to_sdl_surface(int handle);
 

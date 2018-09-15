@@ -25,7 +25,7 @@ namespace particle
 	class ParticleSourceWrapper
 	{
 	private:
-		SCP_vector<ParticleSource*> m_sources;
+		std::vector<ParticleSource*> m_sources;
 
 		bool m_finished = false;
 
@@ -35,7 +35,7 @@ namespace particle
 		ParticleSourceWrapper& operator=(const ParticleSourceWrapper&) SCP_DELETED_FUNCTION;
 
 		ParticleSourceWrapper() {}
-		explicit ParticleSourceWrapper(SCP_vector<ParticleSource*>&& sources);
+		explicit ParticleSourceWrapper(std::vector<ParticleSource*>&& sources);
 		explicit ParticleSourceWrapper(ParticleSource* source);
 
 		~ParticleSourceWrapper();

@@ -11,7 +11,7 @@ class FictionViewerDialogModel: public AbstractDialogModel {
 
  public:
 	 struct MusicOptionElement {
-		 SCP_string name;
+		 std::string name;
 		 int id = -1;
 
 		 MusicOptionElement(const char* Name, int Id)
@@ -25,15 +25,15 @@ class FictionViewerDialogModel: public AbstractDialogModel {
 
 	void reject() override;
 
-	const SCP_string& getStoryFile() const { return _storyFile; }
-	const SCP_string& getFontFile() const { return _fontFile; }
-	const SCP_string& getVoiceFile() const { return _voiceFile; }
+	const std::string& getStoryFile() const { return _storyFile; }
+	const std::string& getFontFile() const { return _fontFile; }
+	const std::string& getVoiceFile() const { return _voiceFile; }
 	int getFictionMusic() const { return _fictionMusic; }
-	const SCP_vector<MusicOptionElement>& getMusicOptions() const { return _musicOptions; }
+	const std::vector<MusicOptionElement>& getMusicOptions() const { return _musicOptions; }
 
-	void setStoryFile(const SCP_string& storyFile) { modify<SCP_string>(_storyFile, storyFile); }
-	void setFontFile(const SCP_string& fontFile) { modify<SCP_string>(_fontFile, fontFile); }
-	void setVoiceFile(const SCP_string& voiceFile) { modify<SCP_string>(_voiceFile, voiceFile); }
+	void setStoryFile(const std::string& storyFile) { modify<std::string>(_storyFile, storyFile); }
+	void setFontFile(const std::string& fontFile) { modify<std::string>(_fontFile, fontFile); }
+	void setVoiceFile(const std::string& voiceFile) { modify<std::string>(_voiceFile, voiceFile); }
 	// TODO input validation on passed in fictionMusic?
 	void setFictionMusic(int fictionMusic);
 
@@ -50,11 +50,11 @@ class FictionViewerDialogModel: public AbstractDialogModel {
 	template<typename T>
 	void modify(T &a, const T &b);
 
-	SCP_string _storyFile;
-	SCP_string _fontFile;
-	SCP_string _voiceFile;
+	std::string _storyFile;
+	std::string _fontFile;
+	std::string _voiceFile;
 	int		_fictionMusic;
-	SCP_vector<MusicOptionElement> _musicOptions;
+	std::vector<MusicOptionElement> _musicOptions;
 
 	int _maxStoryFileLength, _maxFontFileLength, _maxVoiceFileLength;
 };

@@ -1179,7 +1179,7 @@ void HudGaugeTargetBox::renderTargetJumpNode(object *target_objp)
 	vec3d		orient_vec, up_vector;
 	float			factor, dist;
 	int			hx, hy, w, h;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 	
 	for (jnp = Jump_nodes.begin(); jnp != Jump_nodes.end(); ++jnp) {
 		if(jnp->GetSCPObject() != target_objp)

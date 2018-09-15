@@ -340,7 +340,7 @@ void FredView::showContextMenu(const QPoint& globalPos) {
 		fred->selectObject(obj);
 
 		// There is an object under the cursor
-		SCP_string objName;
+		std::string objName;
 		if (fred->getNumMarked() > 1) {
 			objName = "Marked Ships";
 		} else {
@@ -693,8 +693,8 @@ void FredView::on_actionObjects_triggered(bool) {
 	orientEditorTriggered();
 }
 DialogButton FredView::showButtonDialog(DialogType type,
-										const SCP_string& title,
-										const SCP_string& message,
+										const std::string& title,
+										const std::string& message,
 										const flagset<DialogButton>& buttons) {
 	QMessageBox dialog(this);
 

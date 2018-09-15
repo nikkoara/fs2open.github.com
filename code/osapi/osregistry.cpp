@@ -38,9 +38,9 @@ namespace
 	// This code is needed for compatibility with the old windows registry
 	bool userSIDInitialized = false;
 	bool userSIDValid = false;
-	SCP_string userSID;
+	std::string userSID;
 
-	bool get_user_sid(SCP_string& outStr)
+	bool get_user_sid(std::string& outStr)
 	{
 		HANDLE hToken = NULL;
 		if (OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken) == FALSE)

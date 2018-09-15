@@ -850,7 +850,7 @@ int debris_check_collision(object *pdebris, object *other_obj, vec3d *hitpos, co
 		// first test against the sphere - if this fails then don't do any submodel tests
 		mc.flags = MC_ONLY_SPHERE | MC_CHECK_SPHERELINE;
 
-		SCP_vector<int> submodel_vector;
+		std::vector<int> submodel_vector;
 		polymodel_instance *pmi;
 
 		if (model_collide(&mc)) {
@@ -860,7 +860,7 @@ int debris_check_collision(object *pdebris, object *other_obj, vec3d *hitpos, co
 
 			// Do collision the cool new way
 			if ( debris_hit_info->collide_rotate ) {
-				SCP_vector<int>::iterator smv;
+				std::vector<int>::iterator smv;
 
 				// We collide with the sphere, find the list of rotating submodels and test one at a time
 				model_get_rotating_submodel_list(&submodel_vector, heavy_obj);

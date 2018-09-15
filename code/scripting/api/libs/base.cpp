@@ -251,10 +251,10 @@ ADE_FUNC(XSTR,
 		return ADE_RETURN_NIL;
 	}
 
-	SCP_string xstr;
+	std::string xstr;
 	sprintf(xstr, "XSTR(\"%s\", %d)", text, id);
 
-	SCP_string translated;
+	std::string translated;
 	lcl_ext_localize(xstr, translated);
 
 	return ade_set_args(L, "s", translated.c_str());

@@ -105,7 +105,7 @@ private:
 
 	//! Pool of alt ship classes for the selected item.
 	//! The pool is shown in the m_alt_class_list but this vector is easier to work with internally.
-	SCP_vector<alt_class> alt_class_pool;
+	std::vector<alt_class> alt_class_pool;
 
 	int num_string_variables;                           //!< Number of string variables in the mission
 	int string_variable_indices[MAX_SEXP_VARIABLES];    //!< maps string variables to their index in Sexp_variables

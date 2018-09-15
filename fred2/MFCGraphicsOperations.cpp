@@ -246,7 +246,7 @@ std::unique_ptr<os::OpenGLContext> MFCGraphicsOperations::createOpenGLContext(os
 		return std::unique_ptr<os::OpenGLContext>(new MFCOpenGLContext(temp_ctx));
 	}
 	
-	SCP_vector<int> attrib_list;
+	std::vector<int> attrib_list;
 	attrib_list.push_back(WGL_CONTEXT_MAJOR_VERSION_ARB);
 	attrib_list.push_back(ctx.major_version);
 

@@ -21,7 +21,7 @@
 extern	char	Recent_missions[MAX_RECENT_MISSIONS][MAX_FILENAME_LEN];
 extern	int	Num_recent_missions;
 
-extern SCP_vector<SCP_string> Ignored_missions;
+extern std::vector<std::string> Ignored_missions;
 
 // Mission_load takes no parameters.
 // It sets the following global variables:

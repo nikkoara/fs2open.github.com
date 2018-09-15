@@ -26,8 +26,8 @@ class ShieldSystemDialogModel: public AbstractDialogModel {
 	void setCurrentTeamShieldSys(const int value) { Assert(value == 0 || value == 1); modify<int>(_teams[_currTeam], value); }
 	void setCurrentTypeShieldSys(const int value) { Assert(value == 0 || value == 1); modify<int>(_types[_currType], value); }
 
-	const std::vector<SCP_string>& getShipTypeOptions() const { return _shipTypeOptions; }
-	const std::vector<SCP_string>& getTeamOptions() const { return _teamOptions; }
+	const std::vector<std::string>& getShipTypeOptions() const { return _shipTypeOptions; }
+	const std::vector<std::string>& getTeamOptions() const { return _teamOptions; }
 
 	bool query_modified() const;
  private:
@@ -36,8 +36,8 @@ class ShieldSystemDialogModel: public AbstractDialogModel {
 	template<typename T>
 	void modify(T &a, const T &b);
 
-	std::vector<SCP_string> _shipTypeOptions;
-	std::vector<SCP_string> _teamOptions;
+	std::vector<std::string> _shipTypeOptions;
+	std::vector<std::string> _teamOptions;
 	std::vector<int> _teams;
 	std::vector<int> _types;
 	int		_currTeam;

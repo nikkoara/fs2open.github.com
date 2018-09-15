@@ -384,7 +384,7 @@ void DumpStats::get_object_stats(CString &buffer)
 	size_t total_waypoints = 0;
 	buffer += "\r\nWAYPOINTS\r\n";
 
-	SCP_list<waypoint_list>::iterator ii;
+	std::list<waypoint_list>::iterator ii;
 	for (ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++ii) {
 		temp.Format("\tWaypoint: %s, count: %d\r\n", ii->get_name(), ii->get_waypoints().size());
 		buffer += temp;
@@ -399,7 +399,7 @@ void DumpStats::get_object_stats(CString &buffer)
 	// Jumpnodes
 	buffer += "\r\nJUMPNODES\r\n";
 
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 	for (jnp = Jump_nodes.begin(); jnp != Jump_nodes.end(); ++jnp) {
 		temp.Format("\tJumpnode: %s\r\n", jnp->GetName());
 		buffer += temp;

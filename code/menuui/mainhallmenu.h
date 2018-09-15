@@ -22,11 +22,11 @@ class main_hall_region
 public:
 	int mask;
 	char key;
-	SCP_string description;
+	std::string description;
 	int action;
-	SCP_string lua_action;
+	std::string lua_action;
 
-	main_hall_region(int _mask, char _key, const SCP_string &_description, int _action, const SCP_string &_lua_action)
+	main_hall_region(int _mask, char _key, const std::string &_description, int _action, const std::string &_lua_action)
 		: mask(_mask), key(_key), description(_description), action(_action), lua_action(_lua_action)
 	{}
 
@@ -39,11 +39,11 @@ class main_hall_defines
 {
 public:
 	// mainhall name identifier
-	SCP_string name;
+	std::string name;
 
-	SCP_vector<SCP_string> cheat;
-	SCP_vector<SCP_string> cheat_anim_from;
-	SCP_vector<SCP_string> cheat_anim_to;
+	std::vector<std::string> cheat;
+	std::vector<std::string> cheat_anim_from;
+	std::vector<std::string> cheat_anim_to;
 
 	// minimum resolution and aspect ratio needed to display this main hall
 	int min_width;
@@ -51,15 +51,15 @@ public:
 	float min_aspect_ratio;
 
 	// bitmap and mask
-	SCP_string bitmap;
-	SCP_string mask;
+	std::string bitmap;
+	std::string mask;
 
 	// music
-	SCP_string music_name;
-	SCP_string substitute_music_name;
+	std::string music_name;
+	std::string substitute_music_name;
 
 	// help overlay
-	SCP_string help_overlay_name;
+	std::string help_overlay_name;
 	int help_overlay_resolution_index;
 
 	// zoom area
@@ -72,13 +72,13 @@ public:
 	int num_random_intercom_sounds;
 
 	// random (min/max) delays between playing intercom sounds
-	SCP_vector<SCP_vector<int> > intercom_delay;
+	std::vector<std::vector<int> > intercom_delay;
 
 	// intercom sounds themselves
-	SCP_vector<interface_snd_id> intercom_sounds;
+	std::vector<interface_snd_id> intercom_sounds;
 
 	// intercom sound pan values
-	SCP_vector<float> intercom_sound_pan;
+	std::vector<float> intercom_sound_pan;
 
 
 	// misc animations --------------------
@@ -87,37 +87,37 @@ public:
 	int num_misc_animations;
 
 	// filenames of the misc animations
-	SCP_vector<SCP_string> misc_anim_name;
+	std::vector<std::string> misc_anim_name;
 
 	// Time until we will next play a given misc animation, min delay, and max delay
-	SCP_vector<SCP_vector<int> > misc_anim_delay;
+	std::vector<std::vector<int> > misc_anim_delay;
 
 	// Goober5000, used in preference to the flag in generic_anim
-	SCP_vector<int> misc_anim_paused;
+	std::vector<int> misc_anim_paused;
 
 	// Goober5000, used when we want to play one of several anims
-	SCP_vector<int> misc_anim_group;
+	std::vector<int> misc_anim_group;
 
 	// coords of where to play the misc anim
-	SCP_vector<SCP_vector<int> > misc_anim_coords;
+	std::vector<std::vector<int> > misc_anim_coords;
 
 	// misc anim play modes (see MISC_ANIM_MODE_* above)
-	SCP_vector<int> misc_anim_modes;
+	std::vector<int> misc_anim_modes;
 
 	// panning values for each of the misc anims
-	SCP_vector<float> misc_anim_sound_pan;
+	std::vector<float> misc_anim_sound_pan;
 
 	//sounds for each of the misc anims
-	SCP_vector<SCP_vector<interface_snd_id> > misc_anim_special_sounds;
+	std::vector<std::vector<interface_snd_id> > misc_anim_special_sounds;
 
 	//frame number triggers for each of the misc anims
-	SCP_vector<SCP_vector<int> > misc_anim_special_trigger;
+	std::vector<std::vector<int> > misc_anim_special_trigger;
 
 	//flags for each of the misc anim sounds
-	SCP_vector<SCP_vector<int> > misc_anim_sound_flag;
+	std::vector<std::vector<int> > misc_anim_sound_flag;
 
 	// controls the render order
-	SCP_vector<bool> misc_anim_over_doors;
+	std::vector<bool> misc_anim_over_doors;
 
 
 	// door animations --------------------
@@ -126,17 +126,17 @@ public:
 	int num_door_animations;
 
 	// filenames of the door animations
-	SCP_vector<SCP_string> door_anim_name;
+	std::vector<std::string> door_anim_name;
 
 	// first pair : coords of where to play a given door anim
 	// second pair : center of a given door anim in windowed mode
-	SCP_vector<SCP_vector<int> > door_anim_coords;
+	std::vector<std::vector<int> > door_anim_coords;
 
 	// sounds for each region (open/close)
-	SCP_vector<SCP_vector<interface_snd_id> > door_sounds;
+	std::vector<std::vector<interface_snd_id> > door_sounds;
 
 	// pan values for the door sounds
-	SCP_vector<float> door_sound_pan;
+	std::vector<float> door_sound_pan;
 
 	// region descriptions ----------------
 
@@ -144,7 +144,7 @@ public:
 	int font;
 
 	// action
-	SCP_vector<main_hall_region> regions;
+	std::vector<main_hall_region> regions;
 	
 	bool default_readyroom;
 
@@ -156,11 +156,11 @@ public:
 
 };
 
-extern SCP_vector< SCP_vector<main_hall_defines> > Main_hall_defines;
+extern std::vector< std::vector<main_hall_defines> > Main_hall_defines;
 
 
 // initialize the main hall proper 
-void main_hall_init(const SCP_string &main_hall_name);
+void main_hall_init(const std::string &main_hall_name);
 
 // parse mainhall table files
 void main_hall_table_init();
@@ -183,13 +183,13 @@ void main_hall_stop_music(bool fade);
 // get the music index
 int main_hall_get_music_index(int main_hall_num);
 
-main_hall_defines* main_hall_get_pointer(const SCP_string &name_to_find);
+main_hall_defines* main_hall_get_pointer(const std::string &name_to_find);
 
-int main_hall_get_index(const SCP_string &name_to_find);
+int main_hall_get_index(const std::string &name_to_find);
 
 int main_hall_get_resolution_index(int main_hall_num);
 
-void main_hall_get_name(SCP_string &name, unsigned int index);
+void main_hall_get_name(std::string &name, unsigned int index);
 
 int main_hall_get_overlay_id();
 int main_hall_get_overlay_resolution_index();

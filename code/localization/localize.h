@@ -46,7 +46,7 @@ typedef struct lang_info {
 #define NUM_BUILTIN_LANGUAGES		4
 extern lang_info Lcl_builtin_languages[NUM_BUILTIN_LANGUAGES];
 
-extern SCP_vector<lang_info> Lcl_languages; 
+extern std::vector<lang_info> Lcl_languages; 
 
 // following is the offset where special characters start in our font
 extern int Lcl_special_chars;
@@ -103,11 +103,11 @@ int lcl_add_dir_to_path_with_filename(char *current_path, size_t path_max);
 
 // Goober5000
 void lcl_replace_stuff(char *text, size_t max_len);
-void lcl_replace_stuff(SCP_string &text);
+void lcl_replace_stuff(std::string &text);
 
 // Karajorma
 void lcl_fred_replace_stuff(char *text, size_t max_len);
-void lcl_fred_replace_stuff(SCP_string &text);
+void lcl_fred_replace_stuff(std::string &text);
 
 // get the localized version of the string. if none exists, return the original string
 // valid input to this function includes :
@@ -117,7 +117,7 @@ void lcl_fred_replace_stuff(SCP_string &text);
 // and these should cover all the externalized string cases
 // fills in id if non-NULL. a value of -2 indicates it is not an external string
 void lcl_ext_localize(const char *in, char *out, size_t max_len, int *id = NULL);
-void lcl_ext_localize(const SCP_string &in, SCP_string &out, int *id = NULL);
+void lcl_ext_localize(const std::string &in, std::string &out, int *id = NULL);
 
 // translate the specified string based upon the current language
 const char *XSTR(const char *str, int index);

@@ -12,15 +12,15 @@
 namespace {
 
 class DecalDefinition {
-	SCP_string _name;
+	std::string _name;
 
-	SCP_string _diffuseFilename;
+	std::string _diffuseFilename;
 	bool _loopDiffuse = true;
 
-	SCP_string _glowFilename;
+	std::string _glowFilename;
 	bool _loopGlow = true;
 
-	SCP_string _normalMapFilename;
+	std::string _normalMapFilename;
 	bool _loopNormal = true;
 
 	int _diffuseBitmap = -1;
@@ -28,7 +28,7 @@ class DecalDefinition {
 	int _normalBitmap = -1;
 
  public:
-	explicit DecalDefinition(SCP_string name) : _name(std::move(name)) {
+	explicit DecalDefinition(std::string name) : _name(std::move(name)) {
 	}
 
 	~DecalDefinition() {
@@ -155,7 +155,7 @@ class DecalDefinition {
 		return _diffuseBitmap >= 0 || _glowBitmap >= 0 || _normalBitmap >= 0;
 	}
 
-	const SCP_string& getName() const {
+	const std::string& getName() const {
 		return _name;
 	}
 	int getDiffuseBitmap() const {
@@ -178,7 +178,7 @@ class DecalDefinition {
 	}
 };
 
-SCP_vector<DecalDefinition> decalDefinitions;
+std::vector<DecalDefinition> decalDefinitions;
 
 // Variable to indicate if the system is able to work correctly on the current system
 bool decal_system_active = true;
@@ -191,7 +191,7 @@ void parse_decals_table(const char* filename) {
 		required_string("#Decals");
 
 		while (optional_string("$Decal:")) {
-			SCP_string name;
+			std::string name;
 			stuff_string(name, F_NAME);
 
 			DecalDefinition def(name);
@@ -269,7 +269,7 @@ struct Decal {
 	}
 };
 
-SCP_vector<Decal> active_decals;
+std::vector<Decal> active_decals;
 
 bool required_string_if_new(const char* token, bool new_entry) {
 	if (!new_entry) {
@@ -313,7 +313,7 @@ void shutdown() {
 	decalDefinitions.clear();
 }
 
-int getDecalConfig(const SCP_string& name) {
+int getDecalConfig(const std::string& name) {
 	int index = 0;
 	for (auto& def : decalDefinitions) {
 		if (!stricmp(def.getName().c_str(), name.c_str())) {
@@ -326,7 +326,7 @@ int getDecalConfig(const SCP_string& name) {
 }
 
 void parseDecalReference(creation_info& dest_info, bool is_new_entry) {
-	SCP_string name;
+	std::string name;
 	stuff_string(name, F_NAME);
 
 	auto decalRef = getDecalConfig(name);

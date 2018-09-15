@@ -183,19 +183,19 @@ void multi_options_read_config()
 				if ( SETTING("+webui_root") ) {
 					NEXT_TOKEN();
 					if (tok != NULL) {
-						Multi_options_g.webuiRootDirectory = SCP_string(tok);
+						Multi_options_g.webuiRootDirectory = std::string(tok);
 					}
 				} else
 				if ( SETTING("+webapi_username") ) {
 					NEXT_TOKEN();
 					if (tok != NULL) {
-						Multi_options_g.webapiUsername = SCP_string(tok);
+						Multi_options_g.webapiUsername = std::string(tok);
 					}
 				} else
 				if ( SETTING("+webapi_password") ) {
 					NEXT_TOKEN();
 					if (tok != NULL) {
-						Multi_options_g.webapiPassword = SCP_string(tok);
+						Multi_options_g.webapiPassword = std::string(tok);
 					}
 				} else
 				if ( SETTING("+webapi_server_port") ) {

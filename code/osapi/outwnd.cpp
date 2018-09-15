@@ -34,8 +34,8 @@ struct outwnd_filter_struct {
 	bool enabled;
 };
 
-SCP_vector<outwnd_filter_struct>& filter_vector() {
-	static SCP_vector<outwnd_filter_struct> vec;
+std::vector<outwnd_filter_struct>& filter_vector() {
+	static std::vector<outwnd_filter_struct> vec;
 	return vec;
 }
 
@@ -147,7 +147,7 @@ void save_filter_info(void)
 
 void outwnd_printf2(const char *format, ...)
 {
-	SCP_string temp;
+	std::string temp;
 	va_list args;
 
 	if (format == NULL)
@@ -162,7 +162,7 @@ void outwnd_printf2(const char *format, ...)
 
 void outwnd_printf(const char *id, const char *format, ...)
 {
-	SCP_string temp;
+	std::string temp;
 	va_list args;
 
 	if ( (id == NULL) || (format == NULL) )

@@ -30,7 +30,7 @@
 int Num_medals = 0;
 
 // define for the medal information
-SCP_vector<medal_stuff> Medals;
+std::vector<medal_stuff> Medals;
 
 // coords for indiv medal bitmaps
 static int Default_medal_coords[GR_NUM_RESOLUTIONS][NUM_MEDALS_FS2][2] = {
@@ -172,7 +172,7 @@ typedef struct medal_display_info {
 	coord2d		coords[GR_NUM_RESOLUTIONS];	// screen position (can now be defined by the table)
 } medal_display_info;
 
-static SCP_vector<medal_display_info> Medal_display_info;
+static std::vector<medal_display_info> Medal_display_info;
 static MENU_REGION *Medal_regions = NULL;
 
 int Rank_medal_index = -1;
@@ -370,7 +370,7 @@ void parse_medal_tbl()
 							continue;
 						}
 					}
-					temp_medal.promotion_text[persona] = SCP_string(buf);
+					temp_medal.promotion_text[persona] = std::string(buf);
 				}
 				if (temp_medal.promotion_text.find(-1) == temp_medal.promotion_text.end()) {
 					Warning(LOCATION, "%s medal is missing default debriefing text.\n", temp_medal.name);
@@ -736,7 +736,7 @@ void medal_main_close()
 		bm_unlock(Medals_bitmap_mask);
 	}
 
-	for (SCP_vector<medal_display_info>::iterator idx = Medal_display_info.begin(); idx != Medal_display_info.end(); ++idx) {
+	for (std::vector<medal_display_info>::iterator idx = Medal_display_info.begin(); idx != Medal_display_info.end(); ++idx) {
 		if (idx->bitmap >= 0){
 			bm_release(idx->bitmap);
 		}

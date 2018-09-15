@@ -20,8 +20,8 @@
 #include "render/3d.h"
 
 
-SCP_vector<light> Lights;
-SCP_vector<light> Static_light;
+std::vector<light> Lights;
+std::vector<light> Static_light;
 
 static int Light_in_shadow = 0;	// If true, this means we're in a shadow
 
@@ -41,7 +41,7 @@ int Num_lights = 0;
 
 DCF(light,"Changes lighting parameters")
 {
-	SCP_string arg_str;
+	std::string arg_str;
 	float val_f;
 	bool  val_b;
 

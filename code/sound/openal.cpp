@@ -17,8 +17,8 @@
 #endif
 
 
-static SCP_string Playback_device;
-static SCP_string Capture_device;
+static std::string Playback_device;
+static std::string Capture_device;
 
 
 enum {
@@ -28,7 +28,7 @@ enum {
 };
 
 typedef struct OALdevice {
-	SCP_string device_name;
+	std::string device_name;
 	int type;
 	bool usable;
 
@@ -43,8 +43,8 @@ typedef struct OALdevice {
 	}
 } OALdevice;
 
-static SCP_vector<OALdevice> PlaybackDevices;
-static SCP_vector<OALdevice> CaptureDevices;
+static std::vector<OALdevice> PlaybackDevices;
+static std::vector<OALdevice> CaptureDevices;
 
 
 // enumeration extension
@@ -267,7 +267,7 @@ static void find_capture_device(OpenALInformation* info)
 }
 
 // initializes hardware device from perferred/default/enumerated list
-bool openal_init_device(SCP_string *playback, SCP_string *capture)
+bool openal_init_device(std::string *playback, std::string *capture)
 {
 	if ( !Playback_device.empty() ) {
 		if (playback) {
@@ -421,7 +421,7 @@ static void enumerate_playback_devices(OpenALInformation* info) {
 	auto default_device = alcGetString( NULL, ALC_DEFAULT_DEVICE_SPECIFIER );
 	if (default_device != nullptr) {
 		info->default_playback_device = default_device;
-		info->efx_support.push_back(std::make_pair(SCP_string(default_device), device_supports_efx(default_device)));
+		info->efx_support.push_back(std::make_pair(std::string(default_device), device_supports_efx(default_device)));
 	}
 
 	if ( alcIsExtensionPresent(NULL, (const ALCchar*)"ALC_ENUMERATION_EXT") == AL_TRUE ) {
@@ -438,8 +438,8 @@ static void enumerate_playback_devices(OpenALInformation* info) {
 
 		if ( (str_list != NULL) && ((ext_length = strlen(str_list)) > 0) ) {
 			while (ext_length) {
-				info->playback_devices.push_back( SCP_string(str_list) );
-				info->efx_support.push_back(std::make_pair(SCP_string(str_list), device_supports_efx(str_list)));
+				info->playback_devices.push_back( std::string(str_list) );
+				info->efx_support.push_back(std::make_pair(std::string(str_list), device_supports_efx(str_list)));
 
 				str_list += (ext_length + 1);
 				ext_length = strlen(str_list);
@@ -447,7 +447,7 @@ static void enumerate_playback_devices(OpenALInformation* info) {
 		}
 	} else {
 		if (default_device) {
-			info->playback_devices.push_back(SCP_string(default_device));
+			info->playback_devices.push_back(std::string(default_device));
 		}
 	}
 }
@@ -469,7 +469,7 @@ static void enumerate_capture_devices(OpenALInformation* info) {
 
 		if ( (str_list != NULL) && ((ext_length = strlen(str_list)) > 0) ) {
 			while (ext_length) {
-				info->capture_devices.push_back( SCP_string(str_list));
+				info->capture_devices.push_back( std::string(str_list));
 
 				str_list += (ext_length + 1);
 				ext_length = strlen(str_list);
@@ -477,7 +477,7 @@ static void enumerate_capture_devices(OpenALInformation* info) {
 		}
 	} else {
 		if (default_device) {
-			info->capture_devices.push_back(SCP_string(default_device));
+			info->capture_devices.push_back(std::string(default_device));
 		}
 	}
 }

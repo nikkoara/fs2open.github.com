@@ -29,7 +29,7 @@ class medal_stuff
 {
 public:
 	char	name[NAME_LENGTH];
-	SCP_string alt_name;
+	std::string alt_name;
 	char	bitmap[MAX_FILENAME_LEN];
 	char	debrief_bitmap[MAX_FILENAME_LEN];
 	int	num_versions;
@@ -39,14 +39,14 @@ public:
 
 	//If this is a badge (kills_needed > 0)
 	char voice_base[MAX_FILENAME_LEN];
-	SCP_map<int, SCP_string> promotion_text;
+	std::map<int, std::string> promotion_text;
 
 	medal_stuff();
 
 	const char* get_display_string();
 };
 
-extern SCP_vector<medal_stuff> Medals;
+extern std::vector<medal_stuff> Medals;
 
 extern void parse_medal_tbl();
 

@@ -88,7 +88,7 @@ CodecContextParameters getCodecParameters(AVStream* stream) {
 	return paras;
 }
 
-SCP_string normalizeLanguage(const char* langauge_name) {
+std::string normalizeLanguage(const char* langauge_name) {
 	if (!stricmp(langauge_name, "eng")) {
 		return "English";
 	}
@@ -186,7 +186,7 @@ FFMPEGDecoder::~FFMPEGDecoder() {
 }
 
 namespace {
-std::unique_ptr<InputStream> openStream(const SCP_string& name) {
+std::unique_ptr<InputStream> openStream(const std::string& name) {
 	// Only check the root and movies folders
 	int dirType;
 	if (cf_exists_full(name.c_str(), CF_TYPE_ROOT)) {
@@ -410,7 +410,7 @@ std::unique_ptr<DecoderStatus> initializeStatus(std::unique_ptr<InputStream>& st
 	return status;
 }
 
-std::unique_ptr<InputStream> openInputStream(const SCP_string& name) {
+std::unique_ptr<InputStream> openInputStream(const std::string& name) {
 	// Check a list of extensions we might use
 	// The actual format of the file may be whatever FFmpeg supports
 	for (auto ext : CHECKED_EXTENSIONS) {
@@ -426,12 +426,12 @@ std::unique_ptr<InputStream> openInputStream(const SCP_string& name) {
 	return nullptr;
 }
 
-std::unique_ptr<InputStream> openSubtitleStream(const SCP_string& name)
+std::unique_ptr<InputStream> openSubtitleStream(const std::string& name)
 {
 	auto& current_language = Lcl_languages[Lcl_current_lang];
 
 	for (auto ext : CHECKED_SUBT_EXTENSIONS) {
-		SCP_string fileName;
+		std::string fileName;
 		if (strlen(current_language.lang_ext) == 0) {
 			fileName = name + "." + ext;
 		} else {
@@ -449,15 +449,15 @@ std::unique_ptr<InputStream> openSubtitleStream(const SCP_string& name)
 }
 }
 
-bool FFMPEGDecoder::initialize(const SCP_string& fileName, const PlaybackProperties& properties)
+bool FFMPEGDecoder::initialize(const std::string& fileName, const PlaybackProperties& properties)
 {
-	SCP_string movieName = fileName;
+	std::string movieName = fileName;
 	// First make the file name lower case
 	std::transform(movieName.begin(), movieName.end(), movieName.begin(), ::tolower);
 
 	// Then remove the extension
 	size_t dotPos = movieName.find('.');
-	if (dotPos != SCP_string::npos) {
+	if (dotPos != std::string::npos) {
 		movieName.resize(dotPos);
 	}
 

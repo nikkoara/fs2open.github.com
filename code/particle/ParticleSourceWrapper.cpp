@@ -3,7 +3,7 @@
 
 namespace particle
 {
-	ParticleSourceWrapper::ParticleSourceWrapper(SCP_vector<ParticleSource*>&& sources) : m_sources(std::move(sources))
+	ParticleSourceWrapper::ParticleSourceWrapper(std::vector<ParticleSource*>&& sources) : m_sources(std::move(sources))
 	{
 	}
 

@@ -60,7 +60,7 @@ int	Num_campaigns;
 int Campaign_file_missing;
 int Campaign_load_failure = 0;
 int Campaign_names_inited = 0;
-SCP_vector<SCP_string> Ignored_campaigns;
+std::vector<std::string> Ignored_campaigns;
 
 char Default_campaign_file_name[MAX_FILENAME_LEN - 4]  = { 0 };
 
@@ -868,7 +868,7 @@ void mission_campaign_delete_all_savefiles(char *pilot_name)
 	char file_spec[MAX_FILENAME_LEN + 2];
 	char filename[1024];
 	int(*filter_save)(const char *filename);
-	SCP_vector<SCP_string> names;
+	std::vector<std::string> names;
 
 	auto ext = NOX(".csg");
 	dir_type = CF_TYPE_PLAYERS;
@@ -1385,10 +1385,10 @@ int mission_campaign_get_filenames(char *filename, char dest[][NAME_LENGTH], int
 	return 0;
 }
 
-SCP_string mission_campaign_get_name(const char* filename)
+std::string mission_campaign_get_name(const char* filename)
 {
 	// read the mission file and only read the name entry
-	SCP_string filename_str = filename;
+	std::string filename_str = filename;
 	filename_str += FS_CAMPAIGN_FILE_EXT;
 	try {
 		Assertion(filename_str.size() < MAX_FILENAME_LEN,
@@ -1399,13 +1399,13 @@ SCP_string mission_campaign_get_name(const char* filename)
 
 		required_string("$Name:");
 
-		SCP_string res;
+		std::string res;
 		stuff_string(res, F_NAME);
 
 		return res;
 	} catch (const parse::ParseException& e) {
 		mprintf(("MISSIONCAMPAIGN: Unable to parse '%s'!  Error message = %s.\n", filename_str.c_str(), e.what()));
-		return SCP_string();
+		return std::string();
 	}
 }
 
@@ -1655,7 +1655,7 @@ void mission_campaign_save_persistent( int type, int sindex )
 
 bool campaign_is_ignored(const char *filename)
 {
-	SCP_string filename_no_ext = filename;
+	std::string filename_no_ext = filename;
 	drop_extension(filename_no_ext);
 	std::transform(filename_no_ext.begin(), filename_no_ext.end(), filename_no_ext.begin(), ::tolower);
 
@@ -1872,7 +1872,7 @@ void mission_campaign_jump_to_mission(char *name, bool no_skip)
 		mission_campaign_savefile_delete(Campaign.filename);
 		mission_campaign_load(Campaign.filename);
 	} else {
-		for (SCP_vector<ship_info>::iterator it = Ship_info.begin(); it != Ship_info.end(); it++) {
+		for (std::vector<ship_info>::iterator it = Ship_info.begin(); it != Ship_info.end(); it++) {
 			i = static_cast<int>(std::distance(Ship_info.begin(), it));
 			Campaign.ships_allowed[i] = 1;
 		}

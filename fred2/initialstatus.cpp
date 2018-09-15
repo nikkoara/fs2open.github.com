@@ -404,7 +404,7 @@ BOOL initial_status::OnInitDialog()
 				m_team_color_setting.SetItemData(t, i);
 				++i;
 
-				for (SCP_vector<SCP_string>::iterator tni = Team_Names.begin(); tni != Team_Names.end(); ++tni) {
+				for (std::vector<std::string>::iterator tni = Team_Names.begin(); tni != Team_Names.end(); ++tni) {
 					z = m_team_color_setting.AddString(tni->c_str());
 					if (!stricmp(tni->c_str(), shipp->team_name.c_str())) {
 						m_team_color_setting.SetCurSel(i);

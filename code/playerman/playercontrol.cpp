@@ -1799,7 +1799,7 @@ void player_generate_death_message(player *player_p)
 {
 	char weapon_name[NAME_LENGTH];
 	weapon_name[0] = 0;
-	SCP_string &msg = player_p->death_message;
+	std::string &msg = player_p->death_message;
 	int ship_index;
 
 	player_generate_killer_weapon_name(player_p->killer_weapon_index, player_p->killer_species, weapon_name);
@@ -1887,7 +1887,7 @@ void player_generate_death_message(player *player_p)
  */
 void player_show_death_message()
 {
-	SCP_string &msg = Player->death_message;
+	std::string &msg = Player->death_message;
 
 	// make sure we don't already have a death message
 	if (msg.empty())

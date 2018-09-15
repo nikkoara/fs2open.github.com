@@ -163,7 +163,7 @@ cf_root *cf_create_root()
 // return the # of packfiles which exist
 int cf_get_packfile_count(cf_root *root)
 {
-	SCP_string filespec;
+	std::string filespec;
 	int i;
 	int packfile_count;
 
@@ -383,7 +383,7 @@ static void cf_add_mod_roots(const char* rootDirectory, uint32_t basic_location)
 		bool primary = true;
 		for (const char* cur_pos=Cmdline_mod; strlen(cur_pos) != 0; cur_pos+= (strlen(cur_pos)+1))
 		{
-			SCP_stringstream ss;
+			std::stringstream ss;
 			ss << rootDirectory;
 
 			if (rootDirectory[strlen(rootDirectory) - 1] != DIR_SEPARATOR_CHAR)
@@ -393,7 +393,7 @@ static void cf_add_mod_roots(const char* rootDirectory, uint32_t basic_location)
 
 			ss << cur_pos << DIR_SEPARATOR_STR;
 
-			SCP_string rootPath = ss.str();
+			std::string rootPath = ss.str();
 			if (rootPath.size() + 1 >= CF_MAX_PATHNAME_LENGTH) {
 				Error(LOCATION, "The length of mod directory path '%s' exceeds the maximum of %d!\n", rootPath.c_str(), CF_MAX_PATHNAME_LENGTH);
 			}
@@ -563,7 +563,7 @@ void cf_search_root_path(int root_index)
 	char search_path[CF_MAX_PATHNAME_LENGTH];
 #ifdef SCP_UNIX
     // This map stores the mapping between a specific path type and the actual path that we use for it
-	SCP_unordered_map<int, SCP_string> pathTypeToRealPath;
+	std::unordered_map<int, std::string> pathTypeToRealPath;
 #endif
 
 	for (i=CF_TYPE_ROOT; i<CF_MAX_PATH_TYPES; i++ )	{
@@ -583,7 +583,7 @@ void cf_search_root_path(int root_index)
 		} 
 
 #if defined _WIN32
-		SCP_string search_directory = search_path;
+		std::string search_directory = search_path;
 		strcat_s( search_path, "*.*" );
 
 		intptr_t find_handle;
@@ -608,7 +608,7 @@ void cf_search_root_path(int root_index)
 							file->size = find.size;
 							file->pack_offset = 0;			// Mark as a non-packed file
 
-							SCP_string file_name;
+							std::string file_name;
 							sprintf(file_name, "%s%s%s", search_directory.c_str(), DIR_SEPARATOR_STR, find.name);
 
 							file->real_name = vm_strdup(file_name.c_str());
@@ -626,7 +626,7 @@ void cf_search_root_path(int root_index)
 		}
 #elif defined SCP_UNIX
 		DIR *dirp = nullptr;
-		SCP_string search_dir;
+		std::string search_dir;
 		{
 			if (i == CF_TYPE_ROOT) {
 				// Don't search for the same name for the root case since we would be searching in other mod directories in that case
@@ -636,7 +636,7 @@ void cf_search_root_path(int root_index)
 				// On Unix we can have a different case for the search paths so we also need to account for that
 				// We do that by looking at the parent of search_path and enumerating all directories and the check if any of
 				// them are a case-insensitive match
-				SCP_string directory_name;
+				std::string directory_name;
 
 				auto parentPathIter = pathTypeToRealPath.find(Pathtypes[i].parent_index);
 
@@ -666,7 +666,7 @@ void cf_search_root_path(int root_index)
 							continue;
 						}
 
-						SCP_string fn;
+						std::string fn;
 						sprintf(fn, "%s/%s", directory_name.c_str(), dir->d_name);
 
 						struct stat buf;
@@ -694,7 +694,7 @@ void cf_search_root_path(int root_index)
 			{
 				if (!fnmatch ("*.*", dir->d_name, 0))
 				{
-					SCP_string fn;
+					std::string fn;
 					sprintf(fn, "%s/%s", search_dir.c_str(), dir->d_name);
 
 					struct stat buf;
@@ -1328,7 +1328,7 @@ CFileLocationExt cf_find_file_location_ext( const char *filename, const int ext_
 	// (FIXME: this assumes that everything in ext_list[] is the same length!)
 	size_t filespec_len_big = filespec_len + strlen(ext_list[0]);
 
-	SCP_vector< cf_file* > file_list_index;
+	std::vector< cf_file* > file_list_index;
 	int last_root_index = -1;
 	int last_path_index = -1;
 
@@ -1380,7 +1380,7 @@ CFileLocationExt cf_find_file_location_ext( const char *filename, const int ext_
 
 	// now try and find our preferred match
 	for (cur_ext = 0; cur_ext < ext_num; cur_ext++) {
-		for (SCP_vector<cf_file*>::iterator fli = file_list_index.begin(); fli != file_list_index.end(); ++fli) {
+		for (std::vector<cf_file*>::iterator fli = file_list_index.begin(); fli != file_list_index.end(); ++fli) {
 			cf_file *f = *fli;
 	
 			strcat_s( filespec, ext_list[cur_ext] );
@@ -1528,7 +1528,7 @@ static bool verify_file_list_child()
 	return true;
 }
 
-static int cf_file_already_in_list( SCP_vector<SCP_string> &list, const char *filename )
+static int cf_file_already_in_list( std::vector<std::string> &list, const char *filename )
 {
 	char name_no_extension[MAX_PATH_LEN];
 	size_t i, size = list.size();
@@ -1556,14 +1556,14 @@ static int cf_file_already_in_list( SCP_vector<SCP_string> &list, const char *fi
 // This one has a 'type', which is a CF_TYPE_* value.  Because this specifies the directory
 // location, 'filter' only needs to be the filter itself, with no path information.
 // See above descriptions of cf_get_file_list() for more information about how it all works.
-int cf_get_file_list(SCP_vector<SCP_string>& list, int pathtype, const char* filter, int sort,
-                     SCP_vector<file_list_info>* info, uint32_t location_flags)
+int cf_get_file_list(std::vector<std::string>& list, int pathtype, const char* filter, int sort,
+                     std::vector<file_list_info>* info, uint32_t location_flags)
 {
 	char *ptr;
 	uint i;
 	int own_flag = 0;
 	size_t l;
-	SCP_vector<file_list_info> my_info;
+	std::vector<file_list_info> my_info;
 	file_list_info tinfo;
 
 	if ( !info && (sort == CF_SORT_TIME) ) {
@@ -1611,7 +1611,7 @@ int cf_get_file_list(SCP_vector<SCP_string>& list, int pathtype, const char* fil
 					else
 						l = strlen(find.name);
 
-					list.push_back( SCP_string(find.name, l) );
+					list.push_back( std::string(find.name, l) );
 
 					if (info) {
 						tinfo.write_time = find.time_write;
@@ -1665,7 +1665,7 @@ int cf_get_file_list(SCP_vector<SCP_string>& list, int pathtype, const char* fil
 				else
 					l = strlen(dir->d_name);
 
-				list.push_back( SCP_string(dir->d_name, l) );
+				list.push_back( std::string(dir->d_name, l) );
 
 				if (info) {
 					tinfo.write_time = buf.st_mtime;
@@ -1732,7 +1732,7 @@ int cf_get_file_list(SCP_vector<SCP_string>& list, int pathtype, const char* fil
 				else
 					l = strlen(f->name_ext);
 
-				list.push_back( SCP_string(f->name_ext, l) );
+				list.push_back( std::string(f->name_ext, l) );
 
 				if (info) {
 					tinfo.write_time = f->write_time;
@@ -2314,7 +2314,7 @@ int cf_create_default_path_string(char* path, uint path_max, int pathtype, const
 //          filename  - optional, if set, tacks the filename onto end of path.
 // Output:  path      - Fully qualified pathname.
 //Returns 0 if the result would be too long (invalid result)
-int cf_create_default_path_string(SCP_string& path, int pathtype, const char* filename, bool /*localize*/,
+int cf_create_default_path_string(std::string& path, int pathtype, const char* filename, bool /*localize*/,
                                   uint32_t location_flags)
 {
 #ifdef SCP_UNIX

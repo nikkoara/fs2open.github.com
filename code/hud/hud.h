@@ -230,9 +230,9 @@ protected:
 	int custom_frame_offset;
 	int textoffset_x, textoffset_y;
 	char custom_name[NAME_LENGTH];
-	SCP_string custom_text;
+	std::string custom_text;
 	
-	SCP_string default_text;
+	std::string default_text;
 
 	// Render to texture stuff
 	char texture_target_fname[MAX_FILENAME_LEN];
@@ -282,7 +282,7 @@ public:
 	void updateCustomGaugeCoords(int _x, int _y);
 	void updateCustomGaugeFrame(int frame_offset);
 	void updateCustomGaugeText(const char* txt);
-	void updateCustomGaugeText(const SCP_string& txt);
+	void updateCustomGaugeText(const std::string& txt);
 	const char* getCustomGaugeText();
 
 	void startPopUp(int time=4000);
@@ -420,7 +420,7 @@ public:
 class HudGaugeDamage: public HudGauge
 {
 	struct DamageInfo {
-		SCP_string name;
+		std::string name;
 		int strength = -1;
 
 		int bright_index = HUD_C_NONE;
@@ -538,7 +538,7 @@ public:
 
 HudGauge* hud_get_gauge(const char* name);
 
-extern SCP_vector<std::unique_ptr<HudGauge>> default_hud_gauges;
+extern std::vector<std::unique_ptr<HudGauge>> default_hud_gauges;
 
 extern flag_def_list Hud_gauge_types[];
 extern int Num_hud_gauge_types;

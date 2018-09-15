@@ -639,7 +639,7 @@ float emp_current_intensity()
 DCF(zap, "zap a ship with an EMP effect")
 {
 	int shipnum;
-	SCP_string ship_str;
+	std::string ship_str;
 
 	dc_stuff_string_white(ship_str);
 	shipnum = ship_name_lookup(ship_str.c_str(), 1);

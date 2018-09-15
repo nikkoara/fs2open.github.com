@@ -32,7 +32,7 @@ void test::FSTestFixture::SetUp() {
 	os_init("Test", "Test");
 
 	if (_initFlags & INIT_CFILE) {
-		SCP_string cfile_dir(TEST_DATA_PATH);
+		std::string cfile_dir(TEST_DATA_PATH);
 		cfile_dir += DIR_SEPARATOR_CHAR;
 		cfile_dir += "test"; // Cfile expects something after the path
 
@@ -101,7 +101,7 @@ void test::FSTestFixture::TearDown() {
 		Cmdline_mod = NULL;
 	}
 }
-void test::FSTestFixture::addCommandlineArg(const SCP_string& arg) {
+void test::FSTestFixture::addCommandlineArg(const std::string& arg) {
 	_cmdlineArgs.push_back(arg);
 }
 void test::FSTestFixture::init_cmdline() {
@@ -113,7 +113,7 @@ void test::FSTestFixture::init_cmdline() {
 
 	parse_cmdline((int) _cmdlineArgs.size(), parts.get());
 }
-void test::FSTestFixture::pushModDir(const SCP_string& mod) {
+void test::FSTestFixture::pushModDir(const std::string& mod) {
 	if (!_currentModDir.empty()) {
 		// Don't prepend a / if we are at the root or else it would be an absolute path
 		_currentModDir += DIR_SEPARATOR_CHAR;

@@ -14,10 +14,10 @@ namespace effects {
  */
 class CompositeEffect: public ParticleEffect {
  private:
-	SCP_vector<ParticleEffectPtr> m_childEffects;
+	std::vector<ParticleEffectPtr> m_childEffects;
 
  public:
-	explicit CompositeEffect(const SCP_string& name);
+	explicit CompositeEffect(const std::string& name);
 
 	bool processSource(const ParticleSource* source) override;
 
@@ -27,7 +27,7 @@ class CompositeEffect: public ParticleEffect {
 
 	EffectType getType() const override { return EffectType::Composite; }
 
-	const SCP_vector<ParticleEffectPtr>& getEffects() const { return m_childEffects; }
+	const std::vector<ParticleEffectPtr>& getEffects() const { return m_childEffects; }
 
 	void addEffect(ParticleEffectPtr effect);
 };

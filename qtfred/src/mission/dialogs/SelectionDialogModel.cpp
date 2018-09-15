@@ -42,7 +42,7 @@ void SelectionDialogModel::initializeData() {
 	}
 
 	_waypoint_list.clear();
-	SCP_list<waypoint_list>::iterator ii;
+	std::list<waypoint_list>::iterator ii;
 	int i;
 	for (i = 0, ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++i, ++ii) {
 		ListEntry entry;
@@ -100,7 +100,7 @@ void SelectionDialogModel::updateObjectList() {
 				waypoint_list* wp_list = find_waypoint_list_with_instance(ptr->instance, &waypoint_num);
 				Assert(wp_list != NULL);
 
-				SCP_string text;
+				std::string text;
 				sprintf(text, "%s:%d", wp_list->get_name(), waypoint_num + 1);
 
 				ListEntry entry;
@@ -195,7 +195,7 @@ void SelectionDialogModel::updateWingListSelection() {
 		Assert(wp_list != NULL);
 
 		auto count = 0;
-		SCP_vector<waypoint>::iterator jj;
+		std::vector<waypoint>::iterator jj;
 		int j;
 		for (j = 0, jj = wp_list->get_waypoints().begin(); jj != wp_list->get_waypoints().end(); ++j, ++jj) {
 			for (auto& obj_entry : _obj_list) {
@@ -213,13 +213,13 @@ void SelectionDialogModel::updateWingListSelection() {
 		entry.selected = (uint) count == wp_list->get_waypoints().size();
 	}
 }
-const SCP_vector<SelectionDialogModel::ListEntry>& SelectionDialogModel::getObjectList() const {
+const std::vector<SelectionDialogModel::ListEntry>& SelectionDialogModel::getObjectList() const {
 	return _obj_list;
 }
-const SCP_vector<SelectionDialogModel::ListEntry>& SelectionDialogModel::getWingList() const {
+const std::vector<SelectionDialogModel::ListEntry>& SelectionDialogModel::getWingList() const {
 	return _wing_list;
 }
-const SCP_vector<SelectionDialogModel::ListEntry>& SelectionDialogModel::getWaypointList() const {
+const std::vector<SelectionDialogModel::ListEntry>& SelectionDialogModel::getWaypointList() const {
 	return _waypoint_list;
 }
 
@@ -307,7 +307,7 @@ void SelectionDialogModel::updateShipListSelection() {
 	for (auto& entry : _waypoint_list) {
 		waypoint_list* wp_list = find_waypoint_list_at_index(entry.id);
 		Assert(wp_list != NULL);
-		SCP_vector<waypoint>::iterator jj;
+		std::vector<waypoint>::iterator jj;
 		int j;
 		for (j = 0, jj = wp_list->get_waypoints().begin(); jj != wp_list->get_waypoints().end(); ++j, ++jj) {
 			for (auto& obj_entry : _obj_list) {
@@ -320,12 +320,12 @@ void SelectionDialogModel::updateShipListSelection() {
 		}
 	}
 }
-void SelectionDialogModel::updateObjectSelection(const SCP_vector<ListEntry>& newSelection) {
+void SelectionDialogModel::updateObjectSelection(const std::vector<ListEntry>& newSelection) {
 	Assertion(_obj_list.size() == newSelection.size(), "Current and new selection size differs!");
 	// Check if there was any change at all
 	bool changed = false;
-	SCP_vector<ListEntry>::iterator this_iter;
-	SCP_vector<ListEntry>::const_iterator new_iter;
+	std::vector<ListEntry>::iterator this_iter;
+	std::vector<ListEntry>::const_iterator new_iter;
 	for (this_iter = _obj_list.begin(), new_iter = newSelection.cbegin(); this_iter != _obj_list.end(); ++this_iter, ++new_iter) {
 		Assertion(this_iter->id == new_iter->id, "List entry mismatch detected!");
 		if (this_iter->selected != new_iter->selected) {

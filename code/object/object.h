@@ -133,10 +133,10 @@ public:
 	matrix			last_orient;	// how the object was oriented last frame
 	physics_info	phys_info;		// a physics object
 	int				n_quadrants;	// how many shield quadrants the ship has
-	SCP_vector<float>	shield_quadrant;	//	Shield is broken into components, quadrants by default.
+	std::vector<float>	shield_quadrant;	//	Shield is broken into components, quadrants by default.
 	float			hull_strength;	//	Remaining hull strength.
 	float			sim_hull_strength;	// Simulated hull strength - used with training weapons.
-	SCP_vector<int> objsnd_num;		// Index of persistant sound struct.
+	std::vector<int> objsnd_num;		// Index of persistant sound struct.
 	ushort			net_signature;
 	int				num_pairs;		// How many object pairs this is associated with.  When 0 then there are no more.
 

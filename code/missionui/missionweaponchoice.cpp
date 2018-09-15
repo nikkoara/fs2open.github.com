@@ -2757,7 +2757,7 @@ void weapon_select_do(float frametime)
 				} else {
 					//Draw the weapon name, crappy last-ditch effort to not crash.
 					int half_x, half_y;
-					SCP_string print_name = Weapon_info[Carried_wl_icon.weapon_class].get_display_string();
+					std::string print_name = Weapon_info[Carried_wl_icon.weapon_class].get_display_string();
 
 					// Truncate the # and everything to the right. Zacam
 					end_string_at_first_hash_symbol(print_name);
@@ -3002,7 +3002,7 @@ void wl_render_icon(int index, int x, int y, int num, int draw_num_flag, int hot
 		{
 			//Draw the weapon name, crappy last-ditch effort to not crash.
 			int half_x, half_y;
-			SCP_string print_name = Weapon_info[index].get_display_string();
+			std::string print_name = Weapon_info[index].get_display_string();
 
 			// Truncate the # and everything to the right. Zacam
 			end_string_at_first_hash_symbol(print_name);
@@ -3973,7 +3973,7 @@ void wl_apply_current_loadout_to_all_ships_in_current_wing()
 
 	// error stuff
 	bool error_flag = false;
-	SCP_vector<SCP_string> error_messages;
+	std::vector<std::string> error_messages;
 
 	// make sure we're not holding anything
 	wl_dump_carried_icon();
@@ -4050,7 +4050,7 @@ void wl_apply_current_loadout_to_all_ships_in_current_wing()
 			// make sure this ship can accept this weapon
 			if (!eval_weapon_flag_for_game_type(sip->allowed_weapons[weapon_type_to_add]))
 			{
-				SCP_string temp;
+				std::string temp;
 				sprintf(temp, XSTR("%s is unable to carry %s weaponry", 1629), ship_name, wep_display_name);
 				error_messages.push_back(temp);
 
@@ -4063,7 +4063,7 @@ void wl_apply_current_loadout_to_all_ships_in_current_wing()
 			{
 				if (!eval_weapon_flag_for_game_type(sip->allowed_bank_restricted_weapons[cur_bank][weapon_type_to_add]))
 				{
-					SCP_string temp;
+					std::string temp;
 					if (cur_bank < MAX_SHIP_PRIMARY_BANKS)
 						sprintf(temp, XSTR("%s is unable to carry %s weaponry in primary bank %d", 1630), ship_name, wep_display_name, cur_bank+1);
 					else
@@ -4081,7 +4081,7 @@ void wl_apply_current_loadout_to_all_ships_in_current_wing()
 			// bank left unfilled or partially filled
 			if ((result == 0) || (result == 2))
 			{
-				SCP_string temp;
+				std::string temp;
 				sprintf(temp, XSTR("Insufficient %s available to arm %s", 1632), Weapon_info[weapon_type_to_add].get_display_string(), ship_name);
 				error_messages.push_back(temp);
 
@@ -4097,7 +4097,7 @@ void wl_apply_current_loadout_to_all_ships_in_current_wing()
 	// display error messages
 	if (error_flag)
 	{
-		SCP_string full_error_message = "The following errors were encountered:\n";
+		std::string full_error_message = "The following errors were encountered:\n";
 
 		size_t j;
 		bool is_duplicate;

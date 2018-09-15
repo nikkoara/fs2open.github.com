@@ -137,7 +137,7 @@ ADE_FUNC(getString, l_Parsing, nullptr, "Gets a single line of text from the fil
 	}
 
 	try {
-		SCP_string str;
+		std::string str;
 		stuff_string(str, F_NAME);
 
 		return ade_set_args(L, "s", str.c_str());

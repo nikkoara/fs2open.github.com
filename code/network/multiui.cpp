@@ -3322,8 +3322,8 @@ int Multi_create_list_start;											// where to start displaying from
 int Multi_create_list_select;											// which item is currently highlighted
 int Multi_create_files_loaded;
 
-SCP_vector<multi_create_info> Multi_create_mission_list;
-SCP_vector<multi_create_info> Multi_create_campaign_list;
+std::vector<multi_create_info> Multi_create_mission_list;
+std::vector<multi_create_info> Multi_create_campaign_list;
 
 int Multi_create_overlay_id;
 

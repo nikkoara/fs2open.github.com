@@ -143,12 +143,12 @@ class ObjectClassInfoEntry
 	friend class GUIScreen;
 private:
 	int Object;
-	SCP_string Name;	//Do we want this to only apply to a specific object?
+	std::string Name;	//Do we want this to only apply to a specific object?
 						//If so, set name
 	int Coords[4];
 
-	SCP_vector<ObjectClassInfoEntry> Subentries;
-	SCP_vector<ClassInfoEntry> Entries;
+	std::vector<ObjectClassInfoEntry> Subentries;
+	std::vector<ClassInfoEntry> Entries;
 public:
 	ObjectClassInfoEntry(){Object=-1;Coords[0]=Coords[1]=Coords[2]=Coords[3]=INT_MAX;}
 	bool Parse();
@@ -163,12 +163,12 @@ class ScreenClassInfoEntry : public LinkedList
 {
 	friend class GUIScreen;
 private:
-	SCP_string Name;
-	SCP_vector<ObjectClassInfoEntry> Entries;
+	std::string Name;
+	std::vector<ObjectClassInfoEntry> Entries;
 public:
 	bool Parse();
 
-	SCP_string GetName(){return Name;}
+	std::string GetName(){return Name;}
 };
 
 //*****************************GUIObject*******************************
@@ -232,7 +232,7 @@ private:
 	int	ChildCoords[4];				//Coordinates where children may frolick
 
 	int Type;
-	SCP_string Name;
+	std::string Name;
 
 	int LastStatus;
 	int Status;
@@ -281,7 +281,7 @@ protected:
 public:
 	//CONSTRUCTION/DESTRUCTION
 	//Derive your class's constructer from the GUIObject one
-	GUIObject(const SCP_string &in_Name="", int x_coord = 0, int y_coord = 0, int x_width = -1, int y_height = -1, int in_style = 0);
+	GUIObject(const std::string &in_Name="", int x_coord = 0, int y_coord = 0, int x_width = -1, int y_height = -1, int in_style = 0);
 	~GUIObject() override;
 	void Delete();
 
@@ -306,15 +306,15 @@ class GUIScreen : public LinkedList
 {
 	friend class GUISystem;
 private:
-	SCP_string Name;
+	std::string Name;
 
 	GUISystem* OwnerSystem;
 
 	ScreenClassInfoEntry* ScreenClassInfo;
 	GUIObject Guiobjects;
-	SCP_vector<GUIObject*> DeletionCache;
+	std::vector<GUIObject*> DeletionCache;
 public:
-	GUIScreen(const SCP_string &in_Name="");
+	GUIScreen(const std::string &in_Name="");
 	~GUIScreen() override;
 
 	ObjectClassInfoEntry *GetObjectClassInfo(GUIObject *cgp);
@@ -362,7 +362,7 @@ public:
 	GUIScreen* PushScreen(GUIScreen *csp);
 	void PullScreen(GUIScreen *in_screen);
 	ScreenClassInfoEntry *GetClassInfo(){return &ScreenClassInfo;}
-	ScreenClassInfoEntry *GetScreenClassInfo(const SCP_string & screen_name);
+	ScreenClassInfoEntry *GetScreenClassInfo(const std::string & screen_name);
 	//-----
 
 	//Set stuff
@@ -402,7 +402,7 @@ public:
 
 class Window : public GUIObject
 {
-	SCP_string Caption;
+	std::string Caption;
 
 	//Close
 	bool CloseHighlight;
@@ -437,8 +437,8 @@ protected:
 	bool HasChildren(){return NOT_EMPTY(&Children);}
 
 public:
-	Window(const SCP_string &in_caption, int x_coord, int y_coord, int x_width = -1, int y_height = -1, int in_style = 0);
-	void SetCaption(const SCP_string &in_caption){Caption = in_caption;}
+	Window(const std::string &in_caption, int x_coord, int y_coord, int x_width = -1, int y_height = -1, int in_style = 0);
+	void SetCaption(const std::string &in_caption){Caption = in_caption;}
 	void ClearContent();
 };
 
@@ -456,7 +456,7 @@ public:
 
 class Button : public GUIObject
 {
-	SCP_string Caption;
+	std::string Caption;
 	void (*function)(Button *caller);
 
 	bool IsDown;	//Does it look pressed?
@@ -468,7 +468,7 @@ protected:
 	int DoMouseUp(float frametime) override;
 	int DoMouseOut(float frametime) override;
 public:
-	Button(const SCP_string &in_caption, int x_coord, int y_coord, void (*in_function)(Button *caller) = NULL, int x_width = -1, int y_height = -1, int in_style = 0);
+	Button(const std::string &in_caption, int x_coord, int y_coord, void (*in_function)(Button *caller) = NULL, int x_width = -1, int y_height = -1, int in_style = 0);
 
 	void SetPressed(bool in_isdown){IsDown = in_isdown;}
 };
@@ -502,7 +502,7 @@ private:
 	TreeItem *Parent;
 	LinkedList Children;
 public:
-	SCP_string Name;
+	std::string Name;
 	//Get
 	TreeItem * GetParentItem(){return Parent;}
 	int GetData(){return Data;}
@@ -535,10 +535,10 @@ protected:
 	int DoMouseDown(float frametime) override;
 	int DoMouseUp(float frametime) override;
 public:
-	Tree(const SCP_string &in_name, int x_coord, int y_coord, void* in_associateditem = NULL, int x_width = -1, int y_width = -1, int in_style = 0);
+	Tree(const std::string &in_name, int x_coord, int y_coord, void* in_associateditem = NULL, int x_width = -1, int y_width = -1, int in_style = 0);
 
 	//void LoadItemList(TreeItem *in_list, unsigned int count);
-	TreeItem* AddItem(TreeItem *parent, const SCP_string &in_name, int in_data = 0, bool in_delete_data = true, void (*in_function)(Tree *caller) = NULL);
+	TreeItem* AddItem(TreeItem *parent, const std::string &in_name, int in_data = 0, bool in_delete_data = true, void (*in_function)(Tree *caller) = NULL);
 	void ClearItems();
 
 	TreeItem* GetSelectedItem(){return SelectedItem;}
@@ -567,7 +567,7 @@ public:
 
 class Text : public GUIObject
 {
-	SCP_string Content;
+	std::string Content;
 
 	//Used to display stuff; change only from calculate func
 	int NumLines;
@@ -595,10 +595,10 @@ protected:
 	int DoMouseDown(float frametime) override;
 	int DoKeyPress(float frametime) override;
 public:
-	Text(const SCP_string &in_name, const SCP_string &in_content, int x_coord, int y_coord, int x_width = -1, int y_width = -1, int in_style = 0);
+	Text(const std::string &in_name, const std::string &in_content, int x_coord, int y_coord, int x_width = -1, int y_width = -1, int in_style = 0);
 
 	//Set
-	void SetText(const SCP_string &in_content);
+	void SetText(const std::string &in_content);
 	void SetText(int the_int);
 	void SetText(float the_float);
 	void SetSaveLoc(int *ptr, int save_method, int max_value=INT_MAX, int min_value=INT_MIN);
@@ -607,7 +607,7 @@ public:
 	void SetSaveLoc(char *ptr, int save_method, uint max_len=UINT_MAX, uint min_len = 0);
 	void SetSaveLoc(ubyte *ptr, int save_method, int max_value=UCHAR_MAX, int min_value=0);
 	void SetSaveStringAlloc(char **ptr, int save_method, int mem_flags, uint max_len=UINT_MAX, uint min_len = 0);
-	void AddLine(const SCP_string &in_line);
+	void AddLine(const std::string &in_line);
 
 	//Get?
 	bool Save();
@@ -619,7 +619,7 @@ public:
 
 class Checkbox : public GUIObject
 {
-	SCP_string Label;
+	std::string Label;
 	void (*function)(Checkbox *caller);
 
 	//For toggling flags with this thing
@@ -645,13 +645,13 @@ protected:
 	int DoMouseOut(float frametime) override;
 
 public:
-	Checkbox(const SCP_string &in_label, int x_coord, int y_coord, void (*in_function)(Checkbox *caller) = NULL, int x_width = -1, int y_height = DEFAULT_BUTTON_HEIGHT, int in_style = 0);
+	Checkbox(const std::string &in_label, int x_coord, int y_coord, void (*in_function)(Checkbox *caller) = NULL, int x_width = -1, int y_height = DEFAULT_BUTTON_HEIGHT, int in_style = 0);
 
 	bool GetChecked() {
 		return IsChecked;
 	}
 
-	void SetLabel(const SCP_string &in_label) {
+	void SetLabel(const std::string &in_label) {
 		Label = in_label;
 	}
 
@@ -704,7 +704,7 @@ public:
 
 class ImageAnim : public GUIObject
 {
-	SCP_string ImageAnimName;
+	std::string ImageAnimName;
 
 	IMG_HANDLE ImageHandle;
 	int TotalFrames;
@@ -722,9 +722,9 @@ protected:
 	void DoDraw(float frametime) override;
 	int DoRefreshSize() override;
 public:
-	ImageAnim(const SCP_string &in_name, const SCP_string &in_imagename, int x_coord, int y_coord, int x_width = -1, int y_width = -1, int in_style = 0);
+	ImageAnim(const std::string &in_name, const std::string &in_imagename, int x_coord, int y_coord, int x_width = -1, int y_width = -1, int in_style = 0);
 
-	void SetImage(const SCP_string &in_imagename);
+	void SetImage(const std::string &in_imagename);
 	void Play(bool in_isreversed);
 	void Pause();
 	void Stop();
@@ -734,7 +734,7 @@ public:
 
 class Slider : public GUIObject
 {
-	SCP_string Label;
+	std::string Label;
 	void(*function)(Slider *caller);
 
 	int BarCoords[4];
@@ -761,7 +761,7 @@ protected:
 	int DoMouseUp(float frametime) override;
 
 public:
-	Slider(const SCP_string &in_label, float min, float max, int x_coord, int y_coord, void(*in_function)(Slider *caller) = NULL, int x_width = -1, int y_height = DEFAULT_BUTTON_HEIGHT, int in_style = 0);
+	Slider(const std::string &in_label, float min, float max, int x_coord, int y_coord, void(*in_function)(Slider *caller) = NULL, int x_width = -1, int y_height = DEFAULT_BUTTON_HEIGHT, int in_style = 0);
 
 	float GetSliderValue();
 };

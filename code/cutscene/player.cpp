@@ -27,7 +27,7 @@ using namespace cutscene;
 
 const int MAX_AUDIO_BUFFERS = 15;
 
-std::unique_ptr<Decoder> findDecoder(const SCP_string& name, const PlaybackProperties& properties) {
+std::unique_ptr<Decoder> findDecoder(const std::string& name, const PlaybackProperties& properties) {
 	{
 		std::unique_ptr<Decoder> ffmpeg(new ::cutscene::ffmpeg::FFMPEGDecoder());
 		if (ffmpeg->initialize(name, properties)) {
@@ -366,7 +366,7 @@ void Player::decoderThread() {
 	}
 }
 
-std::unique_ptr<Player> Player::newPlayer(const SCP_string& name, const PlaybackProperties& properties)
+std::unique_ptr<Player> Player::newPlayer(const std::string& name, const PlaybackProperties& properties)
 {
 	mprintf(("Creating player for movie '%s'.\n", name.c_str()));
 
@@ -392,7 +392,7 @@ void Player::draw(float x1, float y1, float x2, float y2) {
 		m_state.videoPresenter->displayFrame(x1, y1, x2, y2);
 	}
 }
-SCP_string Player::getCurrentSubtitle() {
+std::string Player::getCurrentSubtitle() {
 	if (!m_state.currentSubtitle) {
 		return "";
 	} else {

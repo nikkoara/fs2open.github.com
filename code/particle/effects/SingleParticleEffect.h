@@ -20,7 +20,7 @@ class SingleParticleEffect: public ParticleEffect {
 	util::EffectTiming m_timing;
 
  public:
-	explicit SingleParticleEffect(const SCP_string& name);
+	explicit SingleParticleEffect(const std::string& name);
 
 	bool processSource(const ParticleSource* source) override;
 

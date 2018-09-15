@@ -57,9 +57,9 @@ int model_render_flags_size = sizeof(model_render_flags)/sizeof(flag_def_list);
 // info for special polygon lists
 
 polymodel *Polygon_models[MAX_POLYGON_MODELS];
-SCP_vector<polymodel_instance*> Polygon_model_instances;
+std::vector<polymodel_instance*> Polygon_model_instances;
 
-SCP_vector<bsp_collision_tree> Bsp_collision_tree_list;
+std::vector<bsp_collision_tree> Bsp_collision_tree_list;
 
 static int model_initted = 0;
 
@@ -123,7 +123,7 @@ flag_def_list Dock_type_names[] =
 
 int Num_dock_type_names = sizeof(Dock_type_names) / sizeof(flag_def_list);
 
-SCP_vector<glow_point_bank_override> glowpoint_bank_overrides;
+std::vector<glow_point_bank_override> glowpoint_bank_overrides;
 
 
 // Goober5000 - reimplementation of Bobboau's $dumb_rotation feature in a way that works with the rest of the model instance system
@@ -149,14 +149,14 @@ class intrinsic_rotation
 public:
 	bool is_ship;
 	int model_instance_num;
-	SCP_vector<submodel_intrinsic_rotation> list;
+	std::vector<submodel_intrinsic_rotation> list;
 
 	intrinsic_rotation(bool _is_ship, int _model_instance_num)
 		: is_ship(_is_ship), model_instance_num(_model_instance_num), list()
 	{}
 };
 
-SCP_vector<intrinsic_rotation> Intrinsic_rotations;
+std::vector<intrinsic_rotation> Intrinsic_rotations;
 
 
 // Free up a model, getting rid of all its memory
@@ -4504,7 +4504,7 @@ int rotating_submodel_has_ship_subsys(int submodel, ship *shipp)
  * 2) Are currently rotating (i.e. actually moving and not part of the superstructure due to being destroyed or replaced)
  * 3) Are not rotating too far for collision detection (c.f. MAX_SUBMODEL_COLLISION_ROT_ANGLE)
  */
-void model_get_rotating_submodel_list(SCP_vector<int> *submodel_vector, object *objp)
+void model_get_rotating_submodel_list(std::vector<int> *submodel_vector, object *objp)
 {
 	Assert(objp->type == OBJ_SHIP || objp->type == OBJ_WEAPON || objp->type == OBJ_ASTEROID);
 	
@@ -4569,7 +4569,7 @@ void model_get_rotating_submodel_list(SCP_vector<int> *submodel_vector, object *
 	}
 }
 
-void model_get_submodel_tree_list(SCP_vector<int> &submodel_vector, polymodel* pm, int mn)
+void model_get_submodel_tree_list(std::vector<int> &submodel_vector, polymodel* pm, int mn)
 {
 	if ( pm->submodel[mn].buffer.model_list != NULL ) {
 		submodel_vector.push_back(mn);
@@ -5592,9 +5592,9 @@ void glowpoint_override_defaults(glow_point_bank_override *gpo)
 	gpo->rotation_speed = 0.0f;
 }
 
-SCP_vector<glow_point_bank_override>::iterator get_glowpoint_bank_override_by_name(const char* name)
+std::vector<glow_point_bank_override>::iterator get_glowpoint_bank_override_by_name(const char* name)
 {
-	SCP_vector<glow_point_bank_override>::iterator gpo = glowpoint_bank_overrides.begin();
+	std::vector<glow_point_bank_override>::iterator gpo = glowpoint_bank_overrides.begin();
 	for(;gpo != glowpoint_bank_overrides.end(); ++gpo)	{
 		if(!strcmp(gpo->name, name))	{
 			return gpo;
@@ -5796,7 +5796,7 @@ void parse_glowpoint_table(const char *filename)
 				}
 			}
 			if (!skip) {
-				SCP_vector<glow_point_bank_override>::iterator gpoi = get_glowpoint_bank_override_by_name(gpo.name);
+				std::vector<glow_point_bank_override>::iterator gpoi = get_glowpoint_bank_override_by_name(gpo.name);
 				if (gpoi == glowpoint_bank_overrides.end()) {
 					if (!replace) {
 						glowpoint_bank_overrides.push_back(gpo);

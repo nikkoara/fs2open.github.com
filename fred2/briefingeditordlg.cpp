@@ -309,7 +309,7 @@ void briefing_editor_dlg::restore_editor_state()
 void briefing_editor_dlg::update_data(int update)
 {
 	char buf[MAX_LABEL_LEN], buf2[MAX_ICON_TEXT_LEN];
-	SCP_string buf3;
+	std::string buf3;
 	int i, j, l, lines, count, enable = TRUE, valid = 0, invalid = 0;
 	object *objp;
 	brief_stage *ptr = NULL;
@@ -950,7 +950,7 @@ void briefing_editor_dlg::OnMakeIcon()
 	biconp = &Briefing->stages[m_cur_stage].icons[m_cur_icon];
 	ship = waypoint = -1;
 	team = 0;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	vm_vec_make(&min, 9e19f, 9e19f, 9e19f);
 	vm_vec_make(&max, -9e19f, -9e19f, -9e19f);

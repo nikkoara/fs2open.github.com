@@ -32,7 +32,7 @@ DynamicSEXP* get_dynamic_sexp(int operator_const);
  * @param name The display name of the category
  * @return The new category identifier or -1 on error
  */
-int add_subcategory(int parent_category, const SCP_string& name);
+int add_subcategory(int parent_category, const std::string& name);
 
 /**
  * @brief Initializes the dynamic SEXP system

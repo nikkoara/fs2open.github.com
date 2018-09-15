@@ -274,7 +274,7 @@ typedef struct {
 	char	*shipname;
 } huge_fire_info;
 
-SCP_vector<huge_fire_info> Ai_huge_fire_info;
+std::vector<huge_fire_info> Ai_huge_fire_info;
 
 int Ai_last_arrive_path;	// index of ship_bay path used by last arrival from a fighter bay
 
@@ -349,7 +349,7 @@ int is_preferred_weapon(int weapon_num, object *firer_objp, object *target_objp)
 {
 	int firer_team, target_signature;
 	ship *firer_ship;
-	SCP_vector<huge_fire_info>::iterator hfi;
+	std::vector<huge_fire_info>::iterator hfi;
 
 	Assert( firer_objp->type == OBJ_SHIP );
 	firer_ship = &Ships[firer_objp->instance];
@@ -2794,7 +2794,7 @@ void create_model_path(object *pl_objp, object *mobjp, int path_num, int subsys_
 	aip->path_create_orient = pl_objp->orient;
 	
 	//Get path departure orientation from ships.tbl if it exists, otherwise zero it
-	SCP_string pathName(mp->name);
+	std::string pathName(mp->name);
 	if (osip->pathMetadata.find(pathName) != osip->pathMetadata.end() && !IS_VEC_NULL(&osip->pathMetadata[pathName].departure_rvec))
 	{
 		vm_vec_copy_normalize(&aip->path_depart_orient, &osip->pathMetadata[pathName].departure_rvec);
@@ -3604,7 +3604,7 @@ float maybe_recreate_path(object *objp, ai_info *aip, int force_recreate_flag, i
 				//Get path departure orientation from ships.tbl if it exists, otherwise zero it
 				ship_info *osip = &Ship_info[Ships[path_objp->instance].ship_info_index];
 				model_path	*mp = &model_get(osip->model_num)->paths[aip->mp_index];
-				SCP_string pathName(mp->name);
+				std::string pathName(mp->name);
 				if (osip->pathMetadata.find(pathName) != osip->pathMetadata.end() && !IS_VEC_NULL(&osip->pathMetadata[pathName].departure_rvec))
 				{
 					vm_vec_copy_normalize(&aip->path_depart_orient, &osip->pathMetadata[pathName].departure_rvec);
@@ -3646,7 +3646,7 @@ void set_accel_for_docking(object *objp, ai_info *aip, float dot, float dot_to_n
 		if (aip->mode == AIM_BAY_EMERGE || (aip->mode == AIM_BAY_DEPART && aip->path_cur != aip->path_start)) {
 			ship_info *gsip = &Ship_info[Ships[gobjp->instance].ship_info_index];
 			polymodel *pm = model_get(gsip->model_num);
-			SCP_string pathName(pm->paths[Path_points[aip->path_start].path_num].name);
+			std::string pathName(pm->paths[Path_points[aip->path_start].path_num].name);
 			float speed_mult = FLT_MIN;
 
 			if (aip->mode == AIM_BAY_EMERGE) { // Arriving

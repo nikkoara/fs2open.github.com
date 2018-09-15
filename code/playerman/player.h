@@ -204,9 +204,9 @@ public:
 	ubyte				show_skip_popup;							// false if dude clicked "don't show this again" -- persists for current mission only
 
 	// player-persistent variables - Goober5000
-	SCP_vector<sexp_variable>	variables;
+	std::vector<sexp_variable>	variables;
 
-	SCP_string		death_message;								// Goober5000
+	std::string		death_message;								// Goober5000
 
 	control_info	lua_ci;				// copy of control info for scripting purposes (not to disturb real controls).
 	button_info		lua_bi;				// copy of button info for scripting purposes (not to disturb real controls).

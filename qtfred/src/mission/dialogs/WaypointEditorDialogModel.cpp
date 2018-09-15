@@ -20,7 +20,7 @@ WaypointEditorDialogModel::WaypointEditorDialogModel(QObject* parent, EditorView
 
 	initializeData();
 }
-bool WaypointEditorDialogModel::showErrorDialog(const SCP_string& message, const SCP_string& title) {
+bool WaypointEditorDialogModel::showErrorDialog(const std::string& message, const std::string& title) {
 	if (bypass_errors) {
 		return true;
 	}
@@ -45,7 +45,7 @@ bool WaypointEditorDialogModel::apply() {
 	char old_name[255];
 	int i;
 	object* ptr;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	if (query_valid_object(_editor->currentObject) && Objects[_editor->currentObject].type == OBJ_WAYPOINT) {
 		Assert(
@@ -106,7 +106,7 @@ bool WaypointEditorDialogModel::apply() {
 			}
 		}
 
-		SCP_list<waypoint_list>::iterator ii;
+		std::list<waypoint_list>::iterator ii;
 		for (ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++ii) {
 			if (!stricmp(ii->get_name(), _currentName.c_str()) && (&(*ii) != _editor->cur_waypoint_list)) {
 				if (showErrorDialog("This waypoint path name is already being used by another waypoint path\n"
@@ -265,7 +265,7 @@ void WaypointEditorDialogModel::onSelectedObjectMarkingChanged(int, bool) {
 }
 void WaypointEditorDialogModel::initializeData() {
 	_enabled = true;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	updateElementList();
 
@@ -291,7 +291,7 @@ void WaypointEditorDialogModel::initializeData() {
 
 	modelChanged();
 }
-const SCP_string& WaypointEditorDialogModel::getCurrentName() const {
+const std::string& WaypointEditorDialogModel::getCurrentName() const {
 	return _currentName;
 }
 int WaypointEditorDialogModel::getCurrentElementId() const {
@@ -300,13 +300,13 @@ int WaypointEditorDialogModel::getCurrentElementId() const {
 bool WaypointEditorDialogModel::isEnabled() const {
 	return _enabled;
 }
-const SCP_vector<WaypointEditorDialogModel::PointListElement>& WaypointEditorDialogModel::getElements() const {
+const std::vector<WaypointEditorDialogModel::PointListElement>& WaypointEditorDialogModel::getElements() const {
 	return _elements;
 }
 void WaypointEditorDialogModel::updateElementList() {
 	int i;
-	SCP_list<waypoint_list>::iterator ii;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<waypoint_list>::iterator ii;
+	std::list<CJumpNode>::iterator jnp;
 
 	_elements.clear();
 	_currentElementId = -1;
@@ -379,7 +379,7 @@ void WaypointEditorDialogModel::idSelected(int id) {
 		}
 	}
 }
-void WaypointEditorDialogModel::setNameEditText(const SCP_string& name) {
+void WaypointEditorDialogModel::setNameEditText(const std::string& name) {
 	_currentName = name;
 
 	modelChanged();
@@ -389,7 +389,7 @@ void WaypointEditorDialogModel::missionChanged() {
 	initializeData();
 }
 
-WaypointEditorDialogModel::PointListElement::PointListElement(const SCP_string& in_name, int in_id) :
+WaypointEditorDialogModel::PointListElement::PointListElement(const std::string& in_name, int in_id) :
 	name(in_name), id(in_id) {
 }
 }

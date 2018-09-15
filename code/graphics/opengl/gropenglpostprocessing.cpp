@@ -40,9 +40,9 @@ int ls_samplenum = 50;
 const int MAX_MIP_BLUR_LEVELS = 4;
 
 typedef struct post_effect_t {
-	SCP_string name;
-	SCP_string uniform_name;
-	SCP_string define_name;
+	std::string name;
+	std::string uniform_name;
+	std::string define_name;
 
 	float intensity;
 	float default_intensity;
@@ -61,7 +61,7 @@ typedef struct post_effect_t {
 	}
 } post_effect_t;
 
-SCP_vector<post_effect_t> Post_effects;
+std::vector<post_effect_t> Post_effects;
 
 static int Post_initialized = 0;
 
@@ -491,7 +491,7 @@ void gr_opengl_post_process_end()
 	Post_in_frame = false;
 }
 
-void get_post_process_effect_names(SCP_vector<SCP_string> &names)
+void get_post_process_effect_names(std::vector<std::string> &names)
 {
 	size_t idx;
 
@@ -707,7 +707,7 @@ static bool opengl_post_init_table()
 	}
 }
 
-void opengl_post_shader_header(SCP_stringstream &sflags, shader_type shader_t, int flags)
+void opengl_post_shader_header(std::stringstream &sflags, shader_type shader_t, int flags)
 {
 	if ( shader_t == SDR_TYPE_POST_PROCESS_MAIN ) {
 		for (size_t idx = 0; idx < Post_effects.size(); idx++) {

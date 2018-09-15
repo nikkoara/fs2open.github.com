@@ -992,7 +992,7 @@ bool gr_init(std::unique_ptr<os::GraphicsOperations>&& graphicsOps, int d_mode, 
 					}
 				}
 
-				SCP_string videomode;
+				std::string videomode;
 				sprintf(videomode, "OGL -(%dx%d)x%d bit", width, height, depth);
 
 				os_config_write_string(NULL, NOX("VideocardFs2open"), videomode.c_str());
@@ -1562,7 +1562,7 @@ void gr_pline_helper(vec3d *out, vec3d *in1, vec3d *in2, int thickness)
 * Moreover, it is _really_ intended for use with 45 degree angles.
 * Adapted from gr_pline_special()
 */
-void gr_pline_special(SCP_vector<vec3d> *pts, int thickness, int resize_mode)
+void gr_pline_special(std::vector<vec3d> *pts, int thickness, int resize_mode)
 {
 	vec3d s1, s2, e1, e2, dir;
 	vec3d last_e1, last_e2;
@@ -1961,7 +1961,7 @@ void poly_list::calculate_tangent()
 
 static poly_list buffer_list_internal;
 
-void poly_list::make_index_buffer(SCP_vector<int> &vertex_list)
+void poly_list::make_index_buffer(std::vector<int> &vertex_list)
 {
 	int nverts = 0;
 	int j, z = 0;
@@ -2175,7 +2175,7 @@ void gr_print_timestamp(int x, int y, fix timestamp, int resize_mode)
 	int seconds = fl2i(f2fl(timestamp));
 
 	// format the time information into strings
-	SCP_string time;
+	std::string time;
 	sprintf(time, "%.1d:%.2d:%.2d", (seconds / 3600) % 10, (seconds / 60) % 60, seconds % 60);
 
 	gr_string(x, y, time.c_str(), resize_mode);
@@ -2208,15 +2208,15 @@ graphics::util::UniformBuffer* gr_get_uniform_buffer(uniform_block_type type) {
 	return uniform_buffer_managers[static_cast<size_t>(type)]->getBuffer();
 }
 
-SCP_vector<DisplayData> gr_enumerate_displays()
+std::vector<DisplayData> gr_enumerate_displays()
 {
 	// It seems that linux cannot handle having the video subsystem inited
 	// too late
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
-		return SCP_vector<DisplayData>();
+		return std::vector<DisplayData>();
 	}
 
-	SCP_vector<DisplayData> data;
+	std::vector<DisplayData> data;
 
 	auto num_displays = SDL_GetNumVideoDisplays();
 	for (auto i = 0; i < num_displays; ++i) {

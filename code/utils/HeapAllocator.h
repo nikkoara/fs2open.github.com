@@ -35,8 +35,8 @@ class HeapAllocator {
 
 	HeapResizer _heapResizer;
 
-	SCP_vector<MemoryRange> _freeRanges;
-	SCP_vector<MemoryRange> _allocatedRanges;
+	std::vector<MemoryRange> _freeRanges;
+	std::vector<MemoryRange> _allocatedRanges;
 
 	void addFreeRange(const MemoryRange& range);
 	void addAllocatedRange(const MemoryRange& range);

@@ -199,9 +199,9 @@ private:
 	//Rather than make an extra struct,
 	//I just made two arrays
 	int					DamageTypeIndex;
-	SCP_vector<int>	Calculations;
-	SCP_vector<float>	Arguments;
-	SCP_vector<int>		altArguments;		// Nuke: to facilitate optional importation of data in place of +value: tag -nuke 
+	std::vector<int>	Calculations;
+	std::vector<float>	Arguments;
+	std::vector<int>		altArguments;		// Nuke: to facilitate optional importation of data in place of +value: tag -nuke 
 	float				shieldpierce_pct;
 
 	// piercing effect data
@@ -219,7 +219,7 @@ class ArmorType
 private:
 	char Name[NAME_LENGTH];
 
-	SCP_vector<ArmorDamageType> DamageTypes;
+	std::vector<ArmorDamageType> DamageTypes;
 public:
 	ArmorType(const char* in_name);
 	int flags;
@@ -236,7 +236,7 @@ public:
 	void ParseData();
 };
 
-extern SCP_vector<ArmorType> Armor_types;
+extern std::vector<ArmorType> Armor_types;
 
 //**************************************************************
 //WMC - Damage type handling code
@@ -246,7 +246,7 @@ typedef struct DamageTypeStruct
 	char name[NAME_LENGTH];
 } DamageTypeStruct;
 
-extern SCP_vector<DamageTypeStruct>	Damage_types;
+extern std::vector<DamageTypeStruct>	Damage_types;
 
 #define SAF_IGNORE_SS_ARMOR			(1 << 0)		// hull armor is applied regardless of the subsystem armor for hull damage
 
@@ -272,7 +272,7 @@ typedef struct cockpit_display {
 	char name[MAX_FILENAME_LEN];
 } cockpit_display;
 
-extern SCP_vector<cockpit_display> Player_displays;
+extern std::vector<cockpit_display> Player_displays;
 
 typedef struct cockpit_display_info {
 	char name[MAX_FILENAME_LEN];
@@ -494,7 +494,7 @@ public:
 
 
 	char	ship_name[NAME_LENGTH];
-	SCP_string display_name;
+	std::string display_name;
 
 	int	team;				//	Which team it's on, HOSTILE, FRIENDLY, UNKNOWN, NEUTRAL
 	
@@ -551,7 +551,7 @@ public:
 
 	int	shield_hits;						//	Number of hits on shield this frame.
 
-	SCP_vector<vec3d>	shield_points;
+	std::vector<vec3d>	shield_points;
 
 	float		wash_intensity;
 	vec3d	wash_rot_axis;
@@ -679,7 +679,7 @@ public:
 	int thrusters_start[MAX_MAN_THRUSTERS];		//Timestamp of when thrusters started
 	int thrusters_sounds[MAX_MAN_THRUSTERS];	//Sound index for thrusters
 
-	SCP_vector<alt_class> s_alt_classes;	
+	std::vector<alt_class> s_alt_classes;	
 
 	int ship_iff_color[MAX_IFFS][MAX_IFFS];
 
@@ -700,8 +700,8 @@ public:
 	RadarVisibility radar_last_status; // Last radar status
 	RadarVisibility radar_current_status; // Current radar status
 
-	SCP_string team_name;
-	SCP_string secondary_team_name;	//If the change-team-color sexp is used, these fields control the fading behaviour
+	std::string team_name;
+	std::string secondary_team_name;	//If the change-team-color sexp is used, these fields control the fading behaviour
 	fix team_change_timestamp;
 	int team_change_time;
 
@@ -724,16 +724,16 @@ struct ai_target_priority {
 	char name[NAME_LENGTH];
 
 	int obj_type;
-	SCP_vector <int> ship_type;
-	SCP_vector <int> ship_class;
-	SCP_vector <int> weapon_class;
+	std::vector <int> ship_type;
+	std::vector <int> ship_class;
+	std::vector <int> weapon_class;
 
 	flagset<Object::Object_Flags> obj_flags;
     flagset<Ship::Info_Flags> sif_flags;
 	flagset<Weapon::Info_Flags> wif_flags;
 };
 
-extern SCP_vector <ai_target_priority> Ai_tp_list;
+extern std::vector <ai_target_priority> Ai_tp_list;
 
 void parse_ai_target_priorities();
 void parse_weapon_targeting_priorities();
@@ -744,7 +744,7 @@ ai_target_priority init_ai_target_priorities();
 
 typedef struct exited_ship {
 	char	ship_name[NAME_LENGTH];
-	SCP_string display_string;
+	std::string display_string;
 	int		obj_signature;
 	int		ship_class;
 	int		team;
@@ -757,7 +757,7 @@ typedef struct exited_ship {
 	int   damage_ship_id[MAX_DAMAGE_SLOTS];
 } exited_ship;
 
-extern SCP_vector<exited_ship> Ships_exited;
+extern std::vector<exited_ship> Ships_exited;
 
 // a couple of functions to get at the data
 extern void ship_add_exited_ship( ship *shipp, Ship::Exit_Flags reason );
@@ -807,18 +807,18 @@ typedef struct ship_type_info {
 	int ai_player_orders;
 	int ai_active_dock;
 	int ai_passive_dock;
-	SCP_vector<int> ai_actively_pursues;
-	SCP_vector<int> ai_cripple_ignores;
+	std::vector<int> ai_actively_pursues;
+	std::vector<int> ai_cripple_ignores;
 
 	//Explosions
 	float vaporize_chance;
 
 	//Resources
-	SCP_vector<int> explosion_bitmap_anims;
+	std::vector<int> explosion_bitmap_anims;
 
 	//Regen values - need to be converted after all types have loaded
-	SCP_vector<SCP_string> ai_actively_pursues_temp;
-	SCP_vector<SCP_string> ai_cripple_ignores_temp;
+	std::vector<std::string> ai_actively_pursues_temp;
+	std::vector<std::string> ai_cripple_ignores_temp;
 
 	ship_type_info( )
 		: debris_max_speed( 0.f ),
@@ -833,7 +833,7 @@ typedef struct ship_type_info {
 	}
 } ship_type_info;
 
-extern SCP_vector<ship_type_info> Ship_types;
+extern std::vector<ship_type_info> Ship_types;
 
 class man_thruster {
     public:
@@ -1010,7 +1010,7 @@ public:
 	int death_roll_base_time;
 	int death_fx_count;
 	int	shockwave_count;					// the # of total shockwaves
-	SCP_vector<int> explosion_bitmap_anims;
+	std::vector<int> explosion_bitmap_anims;
 	float vaporize_chance;					
 
 	particle_effect		impact_spew;
@@ -1129,7 +1129,7 @@ public:
 
 	// HW2-style team coloring
 	bool uses_team_colors;
-	SCP_string default_team_name;
+	std::string default_team_name;
 
 	// optional afterburner trail values
 	generic_bitmap afterburner_trail;
@@ -1139,8 +1139,8 @@ public:
 	int afterburner_trail_faded_out_sections;
 
 	// thruster particles
-	SCP_vector<thruster_particles> normal_thruster_particles;
-	SCP_vector<thruster_particles> afterburner_thruster_particles;
+	std::vector<thruster_particles> normal_thruster_particles;
+	std::vector<thruster_particles> afterburner_thruster_particles;
 
 	// Bobboau's extra thruster stuff
 	thrust_pair			thruster_flame_info;
@@ -1163,7 +1163,7 @@ public:
 	char splodeing_texture_name[MAX_FILENAME_LEN];
 
 	// Goober5000
-	SCP_vector<texture_replace> replacement_textures;
+	std::vector<texture_replace> replacement_textures;
 
 	
 	int armor_type_idx;
@@ -1186,7 +1186,7 @@ public:
 	gamesnd_id glide_start_snd;					// handle to sound to play at the beginning of a glide maneuver (default is 0 for regular throttle down sound)
 	gamesnd_id glide_end_snd;						// handle to sound to play at the end of a glide maneuver (default is 0 for regular throttle up sound)
 
-	SCP_map<GameSounds, gamesnd_id> ship_sounds;			// specifies ship-specific sound indexes
+	std::map<GameSounds, gamesnd_id> ship_sounds;			// specifies ship-specific sound indexes
 
 	int num_maneuvering;
 	man_thruster maneuvering[MAX_MAN_THRUSTERS];
@@ -1212,15 +1212,15 @@ public:
 
 	int damage_lightning_type;
 
-	SCP_vector<std::unique_ptr<HudGauge>> hud_gauges;
+	std::vector<std::unique_ptr<HudGauge>> hud_gauges;
 	bool hud_enabled;
 	bool hud_retail;
 
-	SCP_vector<cockpit_display_info> displays;
+	std::vector<cockpit_display_info> displays;
 
-	SCP_map<SCP_string, path_metadata> pathMetadata;
+	std::map<std::string, path_metadata> pathMetadata;
 
-	SCP_unordered_map<int, void*> glowpoint_bank_override_map;
+	std::unordered_map<int, void*> glowpoint_bank_override_map;
 
 	ship_info();
 	~ship_info();
@@ -1276,7 +1276,7 @@ typedef struct engine_wash_info
 	
 } engine_wash_info;
 
-extern SCP_vector<engine_wash_info> Engine_wash_info;
+extern std::vector<engine_wash_info> Engine_wash_info;
 
 
 //	Defines a wing of ships.
@@ -1347,7 +1347,7 @@ extern int ai_paused;
 extern int CLOAKMAP;
 
 extern int Num_reinforcements;
-extern SCP_vector<ship_info> Ship_info;
+extern std::vector<ship_info> Ship_info;
 extern reinforcements Reinforcements[MAX_REINFORCEMENTS];
 
 // structure definition for ship type counts.  Used to give a count of the number of ships
@@ -1360,7 +1360,7 @@ typedef struct ship_counts {
 	ship_counts(){total=0;killed=0;}
 } ship_counts;
 
-extern SCP_vector<ship_counts> Ship_type_counts;
+extern std::vector<ship_counts> Ship_type_counts;
 
 
 // Use the below macros when you want to find the index of an array element in the
@@ -1582,7 +1582,7 @@ int ship_dumbfire_threat(ship *sp);
 int ship_lock_threat(ship *sp);
 
 int	bitmask_2_bitnum(int num);
-SCP_string ship_return_orders(ship *sp);
+std::string ship_return_orders(ship *sp);
 char	*ship_return_time_to_goal(char *outbuf, ship *sp);
 
 void	ship_maybe_warn_player(ship *enemy_sp, float dist);
@@ -1758,7 +1758,7 @@ typedef struct ship_effect {
 	int shader_effect;
 } ship_effect;
 
-extern SCP_vector<ship_effect> Ship_effects;
+extern std::vector<ship_effect> Ship_effects;
 
 /**
  *  @brief Returns a ship-specific sound index

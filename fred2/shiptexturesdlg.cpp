@@ -120,7 +120,7 @@ void CShipTexturesDlg::OnOK()
 		sort_textures();
 
 		// overwrite all the old entries that refer to this ship
-		SCP_vector<texture_replace>::iterator ii, end;
+		std::vector<texture_replace>::iterator ii, end;
 		end = Fred_texture_replacements.end();
 		for (ii = Fred_texture_replacements.begin(); ii != end; ++ii)
 		{
@@ -236,7 +236,7 @@ BOOL CShipTexturesDlg::OnInitDialog()
 	}
 
 	// now look for new textures
-	for (SCP_vector<texture_replace>::iterator ii = Fred_texture_replacements.begin(); ii != Fred_texture_replacements.end(); ++ii)
+	for (std::vector<texture_replace>::iterator ii = Fred_texture_replacements.begin(); ii != Fred_texture_replacements.end(); ++ii)
 	{
 		if (!stricmp(Ships[self_ship].ship_name, ii->ship_name))
 		{

@@ -31,7 +31,7 @@ TEST(HeapAllocatorTests, manySmallAllocations) {
 	std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 	std::uniform_int_distribution<size_t> sizeDist(1, 50000);
 
-	SCP_vector<size_t> offsets;
+	std::vector<size_t> offsets;
 	// Allocate enough small ranges to require a resize at some point
 	for (auto i = 0; i < 1500; ++i) {
 		auto size = sizeDist(gen);
@@ -94,7 +94,7 @@ TEST(HeapAllocatorTests, manySmallAllocations) {
 TEST(HeapAllocatorTests, largeAllocations) {
 	HeapAllocator allocator(dummyResizer);
 
-	SCP_vector<size_t> offsets;
+	std::vector<size_t> offsets;
 	// Allocate enough small ranges to require a resize at some point
 	for (auto i = 0; i < 100; ++i) {
 		offsets.push_back(allocator.allocate(10 * 1024 * 1024));

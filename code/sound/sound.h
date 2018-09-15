@@ -83,9 +83,9 @@ enum class GameSoundCycleType {
  */
 struct game_snd
 {
-	SCP_string name;				//!< The name of the sound
+	std::string name;				//!< The name of the sound
 
-	SCP_vector<game_snd_entry> sound_entries; //!< A game sound consists of one or more distinct entries
+	std::vector<game_snd_entry> sound_entries; //!< A game sound consists of one or more distinct entries
 
 	int	min = 0;					//!<distance at which sound will stop getting louder
 	int max = 0;					//!<distance at which sound is inaudible

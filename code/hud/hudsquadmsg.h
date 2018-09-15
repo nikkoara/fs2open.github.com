@@ -115,7 +115,7 @@ typedef struct squadmsg_history {
 	squadmsg_history(): order_to(-1), order(-1), target(-1), order_from(-1), special_index(-1), order_time(0) {}
 } squadmsg_history;
 
-extern SCP_vector<squadmsg_history> Squadmsg_history; 
+extern std::vector<squadmsg_history> Squadmsg_history; 
 
 /*
 #define SQUADMSG_HISTORY_MAX 160

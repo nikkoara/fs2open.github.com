@@ -71,7 +71,7 @@ bool ch_is_exp_prefix(char ch);
  * @details Similar in operation to dc_stuff_string_white, but won't throw any error messages and will only grab the
  *   first word. (dc_stuff_string_white may grab quoted strings)
  */
-void dc_get_token(SCP_string &out_str);
+void dc_get_token(std::string &out_str);
 
 /**
  * @brief Returns a single token, but does not advances Cp
@@ -79,7 +79,7 @@ void dc_get_token(SCP_string &out_str);
  * @details Similar in operation to dc_stuff_string_white, but won't throw any error messages and will only grab the
  *   first word. (dc_stuff_string_white may grab quoted strings).
  */
-void dc_get_token_no_advance(SCP_string &out_str);
+void dc_get_token_no_advance(std::string &out_str);
 
 /**
  * @brief Parses a double-precision floating point type. Supports, Whole, Fractional, and Mixed numbers, and supports
@@ -127,21 +127,21 @@ long   dc_parse_long(const char *ch, dc_token type);
 ulong  dc_parse_ulong(const char *ch, dc_token type);
 
 // State processes for dc_parse_double
-state_float dc_parse_double_sign(const char* &ch_ptr, SCP_string &buffer_str);
-state_float dc_parse_double_whole(const char* &ch_ptr, SCP_string &buffer_str);
-state_float dc_parse_double_decimal(const char* &ch_ptr, SCP_string &buffer_str);
-state_float dc_parse_double_fraction(const char* &ch_ptr, SCP_string &buffer_str);
-state_float dc_parse_double_expprefix(const char* &ch_ptr, SCP_string &buffer_str);
-state_float dc_parse_double_expsign(const char* &ch_ptr, SCP_string &buffer_str);
-state_float dc_parse_double_exponent(const char* &ch_ptr, SCP_string &buffer_str);
+state_float dc_parse_double_sign(const char* &ch_ptr, std::string &buffer_str);
+state_float dc_parse_double_whole(const char* &ch_ptr, std::string &buffer_str);
+state_float dc_parse_double_decimal(const char* &ch_ptr, std::string &buffer_str);
+state_float dc_parse_double_fraction(const char* &ch_ptr, std::string &buffer_str);
+state_float dc_parse_double_expprefix(const char* &ch_ptr, std::string &buffer_str);
+state_float dc_parse_double_expsign(const char* &ch_ptr, std::string &buffer_str);
+state_float dc_parse_double_exponent(const char* &ch_ptr, std::string &buffer_str);
 
 // State processes for dc_parse_long and dc_parse_ulong.
-state_int dc_parse_long_prefix(const char* &ch_ptr, SCP_string &buffer_str, int &base);
-state_int dc_parse_long_sign(const char* &ch_ptr, SCP_string &buffer_str);
-state_int dc_parse_long_numeral(const char* &ch_ptr, SCP_string &buffer_str);
-state_int dc_parse_long_numeral_bin(const char* &ch_ptr, SCP_string &buffer_str);
-state_int dc_parse_long_numeral_hex(const char* &ch_ptr, SCP_string &buffer_str);
-state_int dc_parse_long_numeral_octal(const char* &ch_ptr, SCP_string &buffer_str);
+state_int dc_parse_long_prefix(const char* &ch_ptr, std::string &buffer_str, int &base);
+state_int dc_parse_long_sign(const char* &ch_ptr, std::string &buffer_str);
+state_int dc_parse_long_numeral(const char* &ch_ptr, std::string &buffer_str);
+state_int dc_parse_long_numeral_bin(const char* &ch_ptr, std::string &buffer_str);
+state_int dc_parse_long_numeral_hex(const char* &ch_ptr, std::string &buffer_str);
+state_int dc_parse_long_numeral_octal(const char* &ch_ptr, std::string &buffer_str);
 
 
 // ============================== IMPLEMENTATIONS =============================
@@ -211,7 +211,7 @@ bool ch_is_exp_prefix(char ch)
 	return ((ch == 'e') || (ch == 'E'));
 }
 
-void dc_get_token(SCP_string &out_str) {
+void dc_get_token(std::string &out_str) {
 	size_t count = 0;
 	char *c_ptr;
 
@@ -239,7 +239,7 @@ void dc_get_token(SCP_string &out_str) {
 	Cp = c_ptr;
 }
 
-void dc_get_token_no_advance(SCP_string &out_str) {
+void dc_get_token_no_advance(std::string &out_str) {
 	size_t count = 0;
 	char *c_ptr;
 
@@ -393,7 +393,7 @@ bool dc_maybe_stuff_string(char *out_str, size_t maxlen)
 	return true;
 }
 
-bool dc_maybe_stuff_string(SCP_string &out_str)
+bool dc_maybe_stuff_string(std::string &out_str)
 {
 	size_t count = 0;
 	char *c_ptr = Cp;
@@ -443,7 +443,7 @@ bool dc_maybe_stuff_string_white(char *str, size_t len)
 	}
 }
 
-bool dc_maybe_stuff_string_white(SCP_string &str)
+bool dc_maybe_stuff_string_white(std::string &str)
 {
 	dc_ignore_gray_space();
 
@@ -475,7 +475,7 @@ void dc_required_string(char *pstr)
 		Cp += strlen(str_found);
 	} else {
 		// Didn't find a required string.
-		SCP_string token;
+		std::string token;
 		dc_get_token_no_advance(token);
 		throw errParseString(token.c_str(), pstr);
 	}
@@ -505,7 +505,7 @@ int dc_required_string_either(char *str1, char *str2)
 		Cp += strlen(str_found);
 	} else {
 		// Didn't find a required string.
-		SCP_string token;
+		std::string token;
 		dc_get_token_no_advance(token);
 		throw errParseString(token.c_str(), str1, str2);
 	}
@@ -516,7 +516,7 @@ int dc_required_string_either(char *str1, char *str2)
 uint dc_required_string_any(const uint n, ...)
 {
 	va_list vl;
-	SCP_vector<SCP_string> strings;
+	std::vector<std::string> strings;
 	const char *str_found = NULL;
 	uint i;
 
@@ -547,7 +547,7 @@ uint dc_required_string_any(const uint n, ...)
 		Cp += strlen(str_found);
 	} else {
 		// Didn't find a required string.
-		SCP_string token;
+		std::string token;
 		dc_get_token_no_advance(token);
 		throw errParseString(token.c_str(), strings);
 	}
@@ -593,7 +593,7 @@ bool dc_optional_string_either(const char *str1, const char *str2)
 	return true;;
 }
 
-void dc_parse_init(SCP_string &str)
+void dc_parse_init(std::string &str)
 {
 	strcpy_s(Command_string, str.c_str());
 	Cp = Command_string;
@@ -604,7 +604,7 @@ double dc_parse_double(const char *ch, dc_token type) {
 	char *end_ptr;
 	double ret;
 	state_float state = sf_start;
-	SCP_string buffer_str;
+	std::string buffer_str;
 
 	while ((*ch_ptr != '\0') && is_white_space(*ch_ptr)) {
 		ch_ptr++;
@@ -690,7 +690,7 @@ double dc_parse_double(const char *ch, dc_token type) {
 	return ret;
 }
 
-state_float dc_parse_double_sign(const char* &ch_ptr, SCP_string &buffer_str)
+state_float dc_parse_double_sign(const char* &ch_ptr, std::string &buffer_str)
 {
 	state_float state = sf_invalid;
 
@@ -714,7 +714,7 @@ state_float dc_parse_double_sign(const char* &ch_ptr, SCP_string &buffer_str)
 	return state;
 }
 
-state_float dc_parse_double_whole(const char* &ch_ptr, SCP_string &buffer_str)
+state_float dc_parse_double_whole(const char* &ch_ptr, std::string &buffer_str)
 {
 	state_float state = sf_invalid;
 
@@ -746,7 +746,7 @@ state_float dc_parse_double_whole(const char* &ch_ptr, SCP_string &buffer_str)
 	return state;
 }
 
-state_float dc_parse_double_decimal(const char* &ch_ptr, SCP_string &buffer_str)
+state_float dc_parse_double_decimal(const char* &ch_ptr, std::string &buffer_str)
 {
 	state_float state = sf_invalid;
 
@@ -773,7 +773,7 @@ state_float dc_parse_double_decimal(const char* &ch_ptr, SCP_string &buffer_str)
 	return state;
 }
 
-state_float dc_parse_double_fraction(const char* &ch_ptr, SCP_string &buffer_str)
+state_float dc_parse_double_fraction(const char* &ch_ptr, std::string &buffer_str)
 {
 	state_float state = sf_invalid;
 
@@ -800,7 +800,7 @@ state_float dc_parse_double_fraction(const char* &ch_ptr, SCP_string &buffer_str
 	return state;
 }
 
-state_float dc_parse_double_expprefix(const char* &ch_ptr, SCP_string &buffer_str)
+state_float dc_parse_double_expprefix(const char* &ch_ptr, std::string &buffer_str)
 {
 	state_float state = sf_invalid;
 
@@ -824,7 +824,7 @@ state_float dc_parse_double_expprefix(const char* &ch_ptr, SCP_string &buffer_st
 	return state;
 }
 
-state_float dc_parse_double_expsign(const char* &ch_ptr, SCP_string &buffer_str)
+state_float dc_parse_double_expsign(const char* &ch_ptr, std::string &buffer_str)
 {
 	state_float state = sf_invalid;
 
@@ -843,7 +843,7 @@ state_float dc_parse_double_expsign(const char* &ch_ptr, SCP_string &buffer_str)
 	return state;
 }
 
-state_float dc_parse_double_exponent(const char* &ch_ptr, SCP_string &buffer_str)
+state_float dc_parse_double_exponent(const char* &ch_ptr, std::string &buffer_str)
 {
 	state_float state = sf_invalid;
 	
@@ -871,7 +871,7 @@ long dc_parse_long(const char *ch, dc_token type) {
 	int base = 10;
 	long ret;
 	state_int state = si_start;
-	SCP_string buffer_str;
+	std::string buffer_str;
 
 	while ((*ch_ptr != '\0') && is_white_space(*ch_ptr)) {
 		ch_ptr++;
@@ -971,7 +971,7 @@ ulong dc_parse_ulong(const char *ch, dc_token type) {
 	int base = 10;
 	ulong ret;
 	state_int state = si_start;
-	SCP_string buffer_str;
+	std::string buffer_str;
 
 	while ((*ch_ptr != '\0') && is_white_space(*ch_ptr)) {
 		ch_ptr++;
@@ -1057,7 +1057,7 @@ ulong dc_parse_ulong(const char *ch, dc_token type) {
 void dc_stuff_float(float *f)
 {
 	double value_d;
-	SCP_string token;
+	std::string token;
 
 	dc_ignore_gray_space();
 
@@ -1075,7 +1075,7 @@ void dc_stuff_float(float *f)
 void dc_stuff_int(int *i)
 {
 	long value_l;
-	SCP_string token;
+	std::string token;
 
 	dc_ignore_gray_space();
 
@@ -1093,7 +1093,7 @@ void dc_stuff_int(int *i)
 void dc_stuff_uint(uint *i)
 {
 	ulong value_l;
-	SCP_string token;
+	std::string token;
 
 	dc_ignore_gray_space();
 
@@ -1111,7 +1111,7 @@ void dc_stuff_uint(uint *i)
 void dc_stuff_ubyte(ubyte *i)
 {
 	ulong value_ul;
-	SCP_string token;
+	std::string token;
 
 	dc_ignore_gray_space();
 
@@ -1129,7 +1129,7 @@ void dc_stuff_ubyte(ubyte *i)
 
 void dc_stuff_boolean(bool *b)
 {
-	SCP_string token;
+	std::string token;
 
 	dc_get_token(token);
 
@@ -1173,7 +1173,7 @@ void dc_stuff_string(char *out_str, size_t maxlen = MAX_TOKEN_LENGTH)
 {
 	size_t count = 0;
 	char *c_ptr = Cp;
-	SCP_string token;
+	std::string token;
 
 	Assert(Cp);
 	Assert(out_str);
@@ -1205,7 +1205,7 @@ void dc_stuff_string(char *out_str, size_t maxlen = MAX_TOKEN_LENGTH)
 	Cp = c_ptr;
 }
 
-void dc_stuff_string(SCP_string &out_str)
+void dc_stuff_string(std::string &out_str)
 {
 	size_t count = 0;
 	char *c_ptr = Cp;
@@ -1228,7 +1228,7 @@ void dc_stuff_string(SCP_string &out_str)
 
 	// Bail if overflow
 	if ((count == out_str.max_size()) && (*c_ptr != '\0')) {
-		throw errParse("SCP_string overflow!", DCT_STRING);
+		throw errParse("std::string overflow!", DCT_STRING);
 	}
 
 	// Copy string into out_str
@@ -1272,7 +1272,7 @@ void dc_stuff_string_white(char *out_str, size_t maxlen)
 	Cp = c_ptr;
 }
 
-void dc_stuff_string_white(SCP_string &out_str)
+void dc_stuff_string_white(std::string &out_str)
 {
 	size_t count = 0;
 	char *c_ptr;
@@ -1306,7 +1306,7 @@ void dc_stuff_string_white(SCP_string &out_str)
 }
 
 inline
-state_int dc_parse_long_prefix(const char* &ch_ptr, SCP_string &buffer_str, int &base) {
+state_int dc_parse_long_prefix(const char* &ch_ptr, std::string &buffer_str, int &base) {
 	state_int state = si_invalid;
 
 	if (ch_is_binary_prefix(*ch_ptr)) {
@@ -1346,7 +1346,7 @@ state_int dc_parse_long_prefix(const char* &ch_ptr, SCP_string &buffer_str, int 
 }
 
 inline
-state_int dc_parse_long_sign(const char* &ch_ptr, SCP_string &buffer_str) {
+state_int dc_parse_long_sign(const char* &ch_ptr, std::string &buffer_str) {
 	state_int state;
 	if (ch_is_numeral(*ch_ptr)) {
 		state = si_numeral;
@@ -1372,7 +1372,7 @@ state_int dc_parse_long_sign(const char* &ch_ptr, SCP_string &buffer_str) {
 }
 
 inline
-state_int dc_parse_long_numeral(const char* &ch_ptr, SCP_string &buffer_str) {
+state_int dc_parse_long_numeral(const char* &ch_ptr, std::string &buffer_str) {
 	state_int state = si_numeral;
 
 	if (ch_is_numeral(*ch_ptr)) {
@@ -1394,7 +1394,7 @@ state_int dc_parse_long_numeral(const char* &ch_ptr, SCP_string &buffer_str) {
 }
 
 inline
-state_int dc_parse_long_numeral_bin(const char* &ch_ptr, SCP_string &buffer_str) {
+state_int dc_parse_long_numeral_bin(const char* &ch_ptr, std::string &buffer_str) {
 	state_int state = si_numeral_bin;
 
 	if (ch_is_binary(*ch_ptr)) {
@@ -1415,7 +1415,7 @@ state_int dc_parse_long_numeral_bin(const char* &ch_ptr, SCP_string &buffer_str)
 }
 
 inline
-state_int dc_parse_long_numeral_hex(const char* &ch_ptr, SCP_string &buffer_str) {
+state_int dc_parse_long_numeral_hex(const char* &ch_ptr, std::string &buffer_str) {
 	state_int state = si_numeral_hex;
 
 	if (ch_is_hex(*ch_ptr)) {
@@ -1435,7 +1435,7 @@ state_int dc_parse_long_numeral_hex(const char* &ch_ptr, SCP_string &buffer_str)
 }
 
 inline
-state_int dc_parse_long_numeral_octal(const char* &ch_ptr, SCP_string &buffer_str) {
+state_int dc_parse_long_numeral_octal(const char* &ch_ptr, std::string &buffer_str) {
 	state_int state = si_numeral_octal;
 
 	if (ch_is_octal(*ch_ptr)) {

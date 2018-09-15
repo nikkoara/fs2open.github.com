@@ -93,7 +93,7 @@ void parse_rank_tbl()
 						continue;
 					}
 				}
-				Ranks[idx].promotion_text[persona] = SCP_string(buf);
+				Ranks[idx].promotion_text[persona] = std::string(buf);
 			}
 			if (Ranks[idx].promotion_text.find(-1) == Ranks[idx].promotion_text.end()) {
 				Warning(LOCATION, "%s rank is missing default debriefing text.\n", Ranks[idx].name);
@@ -1301,7 +1301,7 @@ DCF(rank, "changes player rank")
 
 void scoreing_close()
 {
-	SCP_map<int, char*>::iterator it;
+	std::map<int, char*>::iterator it;
 	for(int i = 0; i<NUM_RANKS; i++) {
 		Ranks[i].promotion_text.clear();
 	}

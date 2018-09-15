@@ -67,7 +67,7 @@ private:
 	template<typename T>
 	void modify(T &a, const T &b);
 
-	void showErrorDialogNoCancel(const SCP_string& message);
+	void showErrorDialogNoCancel(const std::string& message);
 	void initializeData();
 
 	bool  _enable_asteroids;

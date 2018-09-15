@@ -10,10 +10,10 @@ namespace dialogs {
 class ObjectOrientEditorDialogModel: public AbstractDialogModel {
  public:
 	struct ObjectEntry {
-		SCP_string name;
+		std::string name;
 		int objIndex = -1;
 
-		ObjectEntry(const SCP_string& name, int objIndex);
+		ObjectEntry(const std::string& name, int objIndex);
 	};
 
 	enum class PointToMode {
@@ -34,7 +34,7 @@ class ObjectOrientEditorDialogModel: public AbstractDialogModel {
 
 	int total = 0;
 
-	SCP_vector<ObjectEntry> _entries;
+	std::vector<ObjectEntry> _entries;
 
 	PointToMode _pointMode = PointToMode::Object;
 
@@ -51,7 +51,7 @@ class ObjectOrientEditorDialogModel: public AbstractDialogModel {
 	const vec3d& getPosition() const;
 	const vec3d& getLocation() const;
 	bool isEnabled() const;
-	const SCP_vector<ObjectEntry>& getEntries() const;
+	const std::vector<ObjectEntry>& getEntries() const;
 	PointToMode getPointMode() const;
 
 	void setSelectedObjectNum(int selectedObjectNum);

@@ -1170,9 +1170,9 @@ bool cmdline_parm::has_param() {
 #ifdef SCP_UNIX
 // Return a vector with all filesystem names of "parent/dir" relative to parent.
 // dir must not contain a slash.
-static SCP_vector<SCP_string> unix_get_single_dir_names(const SCP_string& parent, const SCP_string& dir)
+static std::vector<std::string> unix_get_single_dir_names(const std::string& parent, const std::string& dir)
 {
-	SCP_vector<SCP_string> ret;
+	std::vector<std::string> ret;
 
 	DIR *dp;
 	if ((dp = opendir(parent.c_str())) == NULL) {
@@ -1193,7 +1193,7 @@ static SCP_vector<SCP_string> unix_get_single_dir_names(const SCP_string& parent
 
 // Return a vector with all filesystem names of "parent/dir" relative to parent.
 // Recurses to deal with slashes in dir.
-static SCP_vector<SCP_string> unix_get_dir_names(const SCP_string& parent, const SCP_string& dir)
+static std::vector<std::string> unix_get_dir_names(const std::string& parent, const std::string& dir)
 {
 	size_t slash = dir.find_first_of("/\\");
 
@@ -1203,20 +1203,20 @@ static SCP_vector<SCP_string> unix_get_dir_names(const SCP_string& parent, const
 	}
 
 	// get the names of the first component of dir
-	SCP_vector<SCP_string> this_dir_names = unix_get_single_dir_names(parent, dir.substr(0, slash));
+	std::vector<std::string> this_dir_names = unix_get_single_dir_names(parent, dir.substr(0, slash));
 
-	SCP_string rest = dir.substr(slash + 1);
+	std::string rest = dir.substr(slash + 1);
 
-	SCP_vector<SCP_string> ret;
+	std::vector<std::string> ret;
 
 	// search for the rest of dir in each of these
-	SCP_vector<SCP_string>::iterator ii, end = this_dir_names.end();
+	std::vector<std::string>::iterator ii, end = this_dir_names.end();
 	for (ii = this_dir_names.begin(); ii != end; ++ii) {
-		SCP_string this_dir_path = parent + "/" + *ii;
-		SCP_vector<SCP_string> mod_path = unix_get_dir_names(this_dir_path, rest);
+		std::string this_dir_path = parent + "/" + *ii;
+		std::vector<std::string> mod_path = unix_get_dir_names(this_dir_path, rest);
 
 		// add all found paths relative to parent
-		SCP_vector<SCP_string>::iterator ii2, end2 = mod_path.end();
+		std::vector<std::string>::iterator ii2, end2 = mod_path.end();
 		for (ii2 = mod_path.begin(); ii2 != end2; ++ii2) {
 			ret.push_back(*ii + "/" + *ii2);
 		}
@@ -1229,10 +1229,10 @@ static SCP_vector<SCP_string> unix_get_dir_names(const SCP_string& parent, const
 static void handle_unix_modlist(char **modlist, size_t *len)
 {
 	// search filesystem for given paths
-	SCP_vector<SCP_string> mod_paths;
+	std::vector<std::string> mod_paths;
 	for (char *cur_mod = strtok(*modlist, ","); cur_mod != NULL; cur_mod = strtok(NULL, ","))
 	{
-		SCP_vector<SCP_string> this_mod_paths = unix_get_dir_names(".", cur_mod);
+		std::vector<std::string> this_mod_paths = unix_get_dir_names(".", cur_mod);
 		// Ignore non-existing mods for unit tests
 		if (!running_unittests && this_mod_paths.empty()) {
 			ReleaseWarning(LOCATION, "Can't find mod '%s'. Ignoring.", cur_mod);
@@ -1242,7 +1242,7 @@ static void handle_unix_modlist(char **modlist, size_t *len)
 
 	// create new char[] to replace modlist
 	size_t total_len = 0;
-	SCP_vector<SCP_string>::iterator ii, end = mod_paths.end();
+	std::vector<std::string>::iterator ii, end = mod_paths.end();
 	for (ii = mod_paths.begin(); ii != end; ++ii) {
 		total_len += ii->length() + 1;
 	}
@@ -1486,7 +1486,7 @@ static flag_output_type get_flags_output_type() {
 		return flag_output_type::Binary;
 	}
 
-	SCP_string type(get_flags_arg.str());
+	std::string type(get_flags_arg.str());
 
 	if (type == "binary") {
 		return flag_output_type::Binary;

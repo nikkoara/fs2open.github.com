@@ -184,7 +184,7 @@ class ade_table_entry {
  * @ingroup ade_api
  */
 class ade_manager {
-	SCP_vector<ade_table_entry> _table_entries;
+	std::vector<ade_table_entry> _table_entries;
 
 	ade_manager() {}
  public:

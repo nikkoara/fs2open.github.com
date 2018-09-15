@@ -102,15 +102,15 @@ class SexpTreeEditorInterface {
 	explicit SexpTreeEditorInterface(const flagset<TreeFlags>& flags);
 
 	virtual bool hasDefaultMessageParamter();
-	virtual SCP_vector<SCP_string> getMessages();
+	virtual std::vector<std::string> getMessages();
 
-	virtual SCP_vector<SCP_string> getMissionGoals(const SCP_string& reference_name);
+	virtual std::vector<std::string> getMissionGoals(const std::string& reference_name);
 	virtual bool hasDefaultGoal(int operator_value);
 
-	virtual SCP_vector<SCP_string> getMissionEvents(const SCP_string& reference_name);
+	virtual std::vector<std::string> getMissionEvents(const std::string& reference_name);
 	virtual bool hasDefaultEvent(int operator_value);
 
-	virtual SCP_vector<SCP_string> getMissionNames();
+	virtual std::vector<std::string> getMissionNames();
 	virtual bool hasDefaultMissionName();
 
 	virtual int getRootReturnType() const;
@@ -143,7 +143,7 @@ class sexp_list_item {
  public:
 	int type;
 	int op;
-	SCP_string text;
+	std::string text;
 	int flags;
 	sexp_list_item* next;
 
@@ -224,7 +224,7 @@ class sexp_tree: public QTreeWidget {
 	void add_sub_tree(int node, QTreeWidgetItem* root);
 	int load_sub_tree(int index, bool valid, const char* text);
 	void hilite_item(int node);
-	SCP_string match_closest_operator(const char* str, int node);
+	std::string match_closest_operator(const char* str, int node);
 	void delete_sexp_tree_variable(const char* var_name);
 	void modify_sexp_tree_variable(const char* old_name, int sexp_var_index);
 	int get_item_index_to_var_index();
@@ -364,7 +364,7 @@ class sexp_tree: public QTreeWidget {
 
 	int flag;
 
-	SCP_vector<sexp_tree_item> tree_nodes;
+	std::vector<sexp_tree_item> tree_nodes;
 	int total_nodes;
 
 	// This flag is used for keeping track if we are currently editing a tree node

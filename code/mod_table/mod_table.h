@@ -31,11 +31,11 @@ extern bool Red_alert_applies_to_delayed_ships;
 extern bool Beams_use_damage_factors;
 extern float Generic_pain_flash_factor;
 extern float Shield_pain_flash_factor;
-extern SCP_string Window_title;
+extern std::string Window_title;
 extern bool Unicode_text_mode;
-extern SCP_string Movie_subtitle_font;
+extern std::string Movie_subtitle_font;
 extern bool Enable_scripts_in_fred;
-extern SCP_string Window_icon_path;
+extern std::string Window_icon_path;
 extern bool Disable_built_in_translations;
 extern bool Weapon_shockwaves_respect_huge;
 

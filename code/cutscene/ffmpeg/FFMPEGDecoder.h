@@ -29,7 +29,7 @@ class FFMPEGDecoder: public Decoder {
 
 	~FFMPEGDecoder() override;
 
-	bool initialize(const SCP_string& fileName, const PlaybackProperties& properties) override;
+	bool initialize(const std::string& fileName, const PlaybackProperties& properties) override;
 
 	MovieProperties getProperties() const override;
 

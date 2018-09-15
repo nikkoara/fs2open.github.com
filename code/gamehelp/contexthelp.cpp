@@ -47,7 +47,7 @@ typedef struct {
 } help_line;
 
 typedef struct {
-	SCP_vector<vec3d> vtx;
+	std::vector<vec3d> vtx;
 	int vtxcount;
 } help_pline;
 
@@ -67,11 +67,11 @@ typedef struct {
 typedef struct {
 	char name[HELP_MAX_NAME_LENGTH];
 	int num_resolutions;
-	SCP_vector<int>	fontlist;
-	SCP_vector<SCP_vector<help_pline> >			plinelist;
-	SCP_vector<SCP_vector<help_text> >			textlist;
-	SCP_vector<SCP_vector<help_left_bracket> >	lbracketlist;
-	SCP_vector<SCP_vector<help_right_bracket> >	rbracketlist;
+	std::vector<int>	fontlist;
+	std::vector<std::vector<help_pline> >			plinelist;
+	std::vector<std::vector<help_text> >			textlist;
+	std::vector<std::vector<help_left_bracket> >	lbracketlist;
+	std::vector<std::vector<help_right_bracket> >	rbracketlist;
 	int plinecount;
 	int textcount;
 	int lbracketcount;
@@ -286,7 +286,7 @@ void launch_context_help()
 void close_help(){
 	for (int overlay_id=0; overlay_id<MAX_HELP_OVERLAYS; overlay_id++){
 		if (!help_overlaylist[overlay_id].textlist.empty()) {
-			for(SCP_vector<help_text>::iterator ii = help_overlaylist[overlay_id].textlist.at(0).begin(); ii != help_overlaylist[overlay_id].textlist.at(0).end(); ++ii) {
+			for(std::vector<help_text>::iterator ii = help_overlaylist[overlay_id].textlist.at(0).begin(); ii != help_overlaylist[overlay_id].textlist.at(0).end(); ++ii) {
 				safe_kill(ii->string);
 			}
 		}
@@ -325,13 +325,13 @@ void parse_helptbl(const char *filename)
 	char buf[HELP_MAX_STRING_LENGTH + 1];
 	int i, j;
 
-	SCP_vector<help_pline> pline_temp;
+	std::vector<help_pline> pline_temp;
 	help_pline pline_temp2;
-	SCP_vector<help_text> text_temp;
+	std::vector<help_text> text_temp;
 	help_text text_temp2;
-	SCP_vector<help_right_bracket> rbracket_temp;
+	std::vector<help_right_bracket> rbracket_temp;
 	help_right_bracket rbracket_temp2;
-	SCP_vector<help_left_bracket> lbracket_temp;
+	std::vector<help_left_bracket> lbracket_temp;
 	help_left_bracket lbracket_temp2;
 	vec3d vec3d_temp;
 	

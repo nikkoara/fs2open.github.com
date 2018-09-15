@@ -142,7 +142,7 @@ typedef struct mission {
 	// Goober5000
 	ai_profile_t *ai_profile;
 
-	SCP_vector<mission_cutscene> cutscenes;
+	std::vector<mission_cutscene> cutscenes;
 
 	void Reset( )
 	{
@@ -305,7 +305,7 @@ typedef struct texture_replace {
 	int new_texture_id;
 } texture_replace;
 
-extern SCP_vector<texture_replace> Fred_texture_replacements;
+extern std::vector<texture_replace> Fred_texture_replacements;
 
 typedef struct alt_class {
 	int ship_class;				
@@ -322,7 +322,7 @@ class p_object
 {
 public:
 	char	name[NAME_LENGTH];
-	SCP_string display_name;
+	std::string display_name;
 	p_object *next, *prev;
 
 	vec3d	pos;
@@ -332,7 +332,7 @@ public:
 	int	behavior;							// ai_class;
 	int	ai_goals;							// sexp of lists of goals that this ship should try and do
 	char	cargo1;
-	SCP_string team_color_setting;
+	std::string team_color_setting;
 
 	int	status_count;
 	int	status_type[MAX_OBJECT_STATUS];
@@ -406,9 +406,9 @@ public:
 	float max_shield_recharge;
 
 	// Goober5000
-	SCP_vector<texture_replace> replacement_textures;
+	std::vector<texture_replace> replacement_textures;
 
-	SCP_vector<alt_class> alt_classes;	
+	std::vector<alt_class> alt_classes;	
 
 	int alt_iff_color[MAX_IFFS][MAX_IFFS];
 
@@ -420,7 +420,7 @@ public:
 };
 
 // Goober5000 - this is now dynamic
-extern SCP_vector<p_object> Parse_objects;
+extern std::vector<p_object> Parse_objects;
 #define POBJ_INDEX(pobjp) (int)(pobjp - &Parse_objects[0])	// yes, this arithmetic is valid :D
 
 extern p_object Support_ship_pobj, *Arriving_support_ship;

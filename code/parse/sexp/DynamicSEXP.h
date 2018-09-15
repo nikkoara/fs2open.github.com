@@ -11,16 +11,16 @@ namespace sexp {
  */
 class DynamicSEXP {
  protected:
-	SCP_string _name; //!< The operator name of this SEXP
-	SCP_string _help_text; //!< The help text to be displayed in FRED
+	std::string _name; //!< The operator name of this SEXP
+	std::string _help_text; //!< The help text to be displayed in FRED
 
-	explicit DynamicSEXP(const SCP_string& name);
+	explicit DynamicSEXP(const std::string& name);
  public:
 	virtual ~DynamicSEXP() = default;
 
-	const SCP_string& getName() const;
+	const std::string& getName() const;
 
-	const SCP_string& getHelpText() const;
+	const std::string& getHelpText() const;
 
 	/**
 	 * @brief Retrieves the minimum number of parameters this SEXP needs

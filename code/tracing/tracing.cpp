@@ -56,9 +56,9 @@ std::unique_ptr<ThreadedTraceEventWriter> traceEventWriter;
 std::unique_ptr<ThreadedMainFrameTimer> mainFrameTimer;
 std::unique_ptr<FrameProfiler> frameProfiler;
 
-SCP_vector<int> query_objects;
+std::vector<int> query_objects;
 // The GPU timestamp queries use an internal free list to reduce the number of graphics API calls
-SCP_queue<int> free_query_objects;
+std::queue<int> free_query_objects;
 bool do_gpu_queries = true;
 
 int get_query_object() {
@@ -93,7 +93,7 @@ struct gpu_trace_event {
 	int gpu_end_query = -1;
 };
 
-SCP_queue<gpu_trace_event> gpu_events;
+std::queue<gpu_trace_event> gpu_events;
 
 bool initialized = false;
 
@@ -254,7 +254,7 @@ void frame_profile_process_frame() {
 	return frameProfiler->processFrame();
 }
 
-SCP_string get_frame_profile_output() {
+std::string get_frame_profile_output() {
 	Assertion(frameProfiler, "Frame profiling must be enabled for this function!");
 
 	return frameProfiler->getContent();

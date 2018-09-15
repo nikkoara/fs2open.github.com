@@ -16,7 +16,7 @@
 #include "species_defs/species_defs.h"
 
 
-SCP_vector<species_info> Species_info;
+std::vector<species_info> Species_info;
 
 //+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 

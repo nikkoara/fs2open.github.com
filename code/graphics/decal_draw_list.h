@@ -13,7 +13,7 @@ class decal_draw_list {
 
 		size_t uniform_offset;
 	};
-	SCP_vector<decal_draw_info> _draws;
+	std::vector<decal_draw_info> _draws;
 
 	util::UniformBuffer* _buffer = nullptr;
 

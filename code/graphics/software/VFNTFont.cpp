@@ -11,7 +11,7 @@ namespace font
 
 		this->fontPtr = fnt;
 
-		setName(SCP_string(fnt->filename));
+		setName(std::string(fnt->filename));
 	}
 
 	VFNTFont::~VFNTFont()

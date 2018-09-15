@@ -138,7 +138,7 @@ int multi_kick_is_banned(net_addr *addr)
 void multi_dcf_kick()
 {
 	int player_num,idx;
-	SCP_string arg;
+	std::string arg;
 
 	// get the callsign of the player to kick
 	dc_stuff_string(arg);

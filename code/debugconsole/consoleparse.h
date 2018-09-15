@@ -48,7 +48,7 @@ enum dc_token {
  */
 class errParse {
 public:
-	SCP_string found_token;
+	std::string found_token;
 	dc_token expected_type;
 
 	/**
@@ -70,7 +70,7 @@ public:
 class errParseString : public errParse
 {
 public:
-	SCP_vector<SCP_string> expected_tokens;
+	std::vector<std::string> expected_tokens;
 
 	/**
 	 *  @brief Invalid/Unexpected token constructor.
@@ -104,7 +104,7 @@ public:
 	 *  @param [in] found_str The string that was found
 	 *  @param [in] strings The strings that were expected
 	 */
-	errParseString(const char *found_str, SCP_vector<SCP_string> &strings)
+	errParseString(const char *found_str, std::vector<std::string> &strings)
 	    : errParse(found_str, DCT_STRING), expected_tokens(strings)
 	{
 	}
@@ -131,7 +131,7 @@ public:
 /**
  * @brief Initializes the DC command line parser
  */
-void dc_parse_init(SCP_string &str);
+void dc_parse_init(std::string &str);
 
 /**
  * @brief Advances the parser past whitespace characters
@@ -299,7 +299,7 @@ void dc_stuff_string(char *str, size_t maxlen);
  *
  * @throws errParse when nothing left was found on the command line
  */
-void dc_stuff_string(SCP_string &str);
+void dc_stuff_string(std::string &str);
 
 /**
  * @brief Stuffs a whitespace delimited string to out_str from the command line, stopping at the end of the command line
@@ -319,7 +319,7 @@ void dc_stuff_string_white(char *str, size_t len);
  *
  * @throws errParse when nothing left was found on the command line
  */
-void dc_stuff_string_white(SCP_string &str);
+void dc_stuff_string_white(std::string &str);
 
 /**
  * @brief Tries to stuff a float from the Command_string.
@@ -432,7 +432,7 @@ bool dc_maybe_stuff_string(char *str, size_t len);
  * @retval true if the operation was successful,
  * @retval false otherwise
  */
-bool dc_maybe_stuff_string(SCP_string &str);
+bool dc_maybe_stuff_string(std::string &str);
 
 /**
  * @brief Tries to stuff a whitespace delimited string to out_str from the command line, stopping at the end of the command line
@@ -455,6 +455,6 @@ bool dc_maybe_stuff_string_white(char *str, size_t len);
  * @retval true if the operation was successful,
  * @retval false otherwise
  */
-bool dc_maybe_stuff_string_white(SCP_string &str);
+bool dc_maybe_stuff_string_white(std::string &str);
 
 #endif // _CONSOLEPARSE_H

@@ -24,8 +24,8 @@ using namespace particle;
 
 namespace
 {
-	SCP_vector<::particle::particle> Particles;
-	SCP_vector<ParticlePtr> Persistent_particles;
+	std::vector<::particle::particle> Particles;
+	std::vector<ParticlePtr> Persistent_particles;
 
 	int Anim_bitmap_id_fire = -1;
 	int Anim_num_frames_fire = -1;

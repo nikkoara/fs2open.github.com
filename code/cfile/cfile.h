@@ -365,19 +365,19 @@ int cfwrite_string(const char *buf, CFILE *file);
  */
 int cfwrite_string_len(const char *buf, CFILE *file);
 
-int cf_get_file_list(SCP_vector<SCP_string>& list, int pathtype, const char* filter, int sort = CF_SORT_NONE,
-                     SCP_vector<file_list_info>* info = nullptr, uint32_t location_flags = CF_LOCATION_ALL);
+int cf_get_file_list(std::vector<std::string>& list, int pathtype, const char* filter, int sort = CF_SORT_NONE,
+                     std::vector<file_list_info>* info = nullptr, uint32_t location_flags = CF_LOCATION_ALL);
 int cf_get_file_list(int max, char** list, int type, const char* filter, int sort = CF_SORT_NONE,
                      file_list_info* info = nullptr, uint32_t location_flags = CF_LOCATION_ALL);
 int cf_get_file_list_preallocated(int max, char arr[][MAX_FILENAME_LEN], char** list, int type, const char* filter,
                                   int sort = CF_SORT_NONE, file_list_info* info = nullptr,
                                   uint32_t location_flags = CF_LOCATION_ALL);
 void cf_sort_filenames( int n, char **list, int sort, file_list_info *info = NULL );
-void cf_sort_filenames( SCP_vector<SCP_string> &list, int sort, SCP_vector<file_list_info> *info = NULL );
+void cf_sort_filenames( std::vector<std::string> &list, int sort, std::vector<file_list_info> *info = NULL );
 
 struct CFileLocation {
 	bool found = false;
-	SCP_string full_name;
+	std::string full_name;
 	size_t size          = 0;
 	size_t offset        = 0;
 	const void* data_ptr = nullptr;

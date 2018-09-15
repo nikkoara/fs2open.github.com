@@ -35,10 +35,10 @@ void gr_opengl_pop_debug_group();
  * @param name The name of the object
  */
 #if !defined(NDEBUG) || defined(FS_OPENGL_DEBUG) || defined(DOXYGEN)
-void opengl_set_object_label(GLenum type, GLuint handle, const SCP_string& name);
+void opengl_set_object_label(GLenum type, GLuint handle, const std::string& name);
 #else
 // Remove this definition
-inline void opengl_set_object_label(GLenum, GLuint, const SCP_string&) {}
+inline void opengl_set_object_label(GLenum, GLuint, const std::string&) {}
 #endif
 
 uint opengl_data_type_size(GLenum data_type);
@@ -58,7 +58,7 @@ extern GLuint GL_vao;
 
 extern float GL_alpha_threshold;
 
-extern SCP_string GL_implementation_id;
-extern SCP_vector<GLint> GL_binary_formats;
+extern std::string GL_implementation_id;
+extern std::vector<GLint> GL_binary_formats;
 
 #endif

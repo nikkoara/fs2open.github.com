@@ -55,7 +55,7 @@
 #include "weapon/emp.h"
 #include "weapon/weapon.h"
 
-SCP_vector<std::unique_ptr<HudGauge>> default_hud_gauges;
+std::vector<std::unique_ptr<HudGauge>> default_hud_gauges;
 
 // new values for HUD alpha
 #define HUD_NEW_ALPHA_DIM				80	
@@ -429,7 +429,7 @@ void HudGauge::updateCustomGaugeText(const char* txt)
 	custom_text = txt;
 }
 
-void HudGauge::updateCustomGaugeText(const SCP_string& txt)
+void HudGauge::updateCustomGaugeText(const std::string& txt)
 {
 	if(!custom_gauge) {
 		return;
@@ -2040,7 +2040,7 @@ void HudGaugeDamage::render(float  /*frametime*/)
 
 	// Build a list of damage values to display and then actually display them in a second pass
 	// This allows to hide the gauge when there is no damage
-	SCP_vector<DamageInfo> info_lines;
+	std::vector<DamageInfo> info_lines;
 
 	auto sx = position[0] + subsys_integ_start_offsets[0];
 	auto sy = position[1] + subsys_integ_start_offsets[1];

@@ -212,8 +212,8 @@ class FredView: public QMainWindow, public IDialogProvider {
 
  public:
 	DialogButton showButtonDialog(DialogType type,
-								  const SCP_string& title,
-								  const SCP_string& message,
+								  const std::string& title,
+								  const std::string& message,
 								  const flagset<DialogButton>& buttons) override;
 
 	std::unique_ptr<IDialog<dialogs::FormWingDialogModel>> createFormWingDialog() override;

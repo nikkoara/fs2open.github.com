@@ -31,7 +31,7 @@ namespace font
 	class FSFont
 	{
 	private:
-		SCP_string name;	//!< The name of this font
+		std::string name;	//!< The name of this font
 
 	protected:
 		float offsetTop;		//!< The offset at the top of a line of text
@@ -66,7 +66,7 @@ namespace font
 		*
 		* @param	name	The new name.
 		*/
-		void setName(const SCP_string& newName);
+		void setName(const std::string& newName);
 
 		/**
 		* @brief	Gets the name of this font.
@@ -75,7 +75,7 @@ namespace font
 		*
 		* @return	The name.
 		*/
-		const SCP_string& getName() const;
+		const std::string& getName() const;
 
 		/**
 		* @brief	Gets the type of this font.

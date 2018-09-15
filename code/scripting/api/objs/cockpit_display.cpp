@@ -439,7 +439,7 @@ ADE_INDEXER(l_CockpitDisplayInfos, "number/string", "Returns the handle at the r
 
 		size_t index = 0;
 
-		for (SCP_vector<cockpit_display_info>::iterator iter = sip->displays.begin(); iter != sip->displays.end(); ++iter)
+		for (std::vector<cockpit_display_info>::iterator iter = sip->displays.begin(); iter != sip->displays.end(); ++iter)
 		{
 			if (!strcmp(name, iter->name))
 			{
@@ -556,7 +556,7 @@ ADE_INDEXER(l_CockpitDisplays, "number/string", "Gets a cockpit display from the
 
 		size_t index = 0;
 
-		for (SCP_vector<cockpit_display>::iterator iter = Player_displays.begin(); iter != Player_displays.end(); ++iter)
+		for (std::vector<cockpit_display>::iterator iter = Player_displays.begin(); iter != Player_displays.end(); ++iter)
 		{
 			if (!strcmp(name, iter->name))
 			{

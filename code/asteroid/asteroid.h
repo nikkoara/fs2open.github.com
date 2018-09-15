@@ -68,10 +68,10 @@ public:
 	float		damage;											// maximum damage applied from area effect explosion
 	float		blast;											// maximum blast impulse from area effect explosion
 	float		initial_asteroid_strength;						// starting strength of asteroid
-	SCP_vector< asteroid_split_info > split_info;
+	std::vector< asteroid_split_info > split_info;
 	polymodel	*modelp[NUM_DEBRIS_POFS];
 	int			model_num[NUM_DEBRIS_POFS];
-	SCP_vector<int> explosion_bitmap_anims;
+	std::vector<int> explosion_bitmap_anims;
 	float		fireball_radius_multiplier;						// the model radius is multiplied by this to determine the fireball size
 
 	asteroid_info( )
@@ -138,7 +138,7 @@ typedef	struct asteroid_field {
 	int				field_debris_type[MAX_ACTIVE_DEBRIS_TYPES];	// one of the debris type defines above
 } asteroid_field;
 
-extern SCP_vector< asteroid_info > Asteroid_info;
+extern std::vector< asteroid_info > Asteroid_info;
 extern asteroid Asteroids[MAX_ASTEROIDS];
 extern asteroid_field	Asteroid_field;
 

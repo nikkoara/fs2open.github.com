@@ -54,7 +54,7 @@ int camMovingTime;
 //float CameraSpeed;
 bool CinematicStarted, CameraMoving;
 vec3d cameraPos, cameraTarget;
-SCP_map<int,int> autopilot_wings;
+std::map<int,int> autopilot_wings;
 
 int AutopilotMinEnemyDistance;
 int AutopilotMinAsteroidDistance;
@@ -314,7 +314,7 @@ bool StartAutopilot()
 	capship_spreads[1] = 0.0f;
 	capship_spreads[2] = 0.0f;
 
-	SCP_vector<int> capIndexes;
+	std::vector<int> capIndexes;
 
 	// empty the autopilot wings map
 	autopilot_wings.clear();
@@ -565,7 +565,7 @@ bool StartAutopilot()
 			// position capships
 
 			vec3d right, front, up, offset;
-			for (SCP_vector<int>::iterator idx = capIndexes.begin(); idx != capIndexes.end(); ++idx)
+			for (std::vector<int>::iterator idx = capIndexes.begin(); idx != capIndexes.end(); ++idx)
 			{
 				vm_vec_add(&right, &Autopilot_flight_leader->orient.vec.rvec, &zero);
 				vm_vec_add(&front, &Autopilot_flight_leader->orient.vec.fvec, &zero);
@@ -1274,7 +1274,7 @@ void NavSystem_Init()
 
 void parse_autopilot_table(const char *filename)
 {
-	SCP_vector<SCP_string> lines;
+	std::vector<std::string> lines;
 
 	try
 	{

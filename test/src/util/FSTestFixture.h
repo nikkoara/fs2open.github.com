@@ -19,17 +19,17 @@ class FSTestFixture: public ::testing::Test {
  private:
 	std::uint64_t _initFlags;
 
-	SCP_vector<SCP_string> _cmdlineArgs;
-	SCP_string _currentModDir;
+	std::vector<std::string> _cmdlineArgs;
+	std::string _currentModDir;
 
 	void init_cmdline();
  protected:
 	explicit FSTestFixture(uint64_t init_flags = INIT_CFILE);
 	virtual ~FSTestFixture() {};
 
-	void addCommandlineArg(const SCP_string& arg);
+	void addCommandlineArg(const std::string& arg);
 
-	void pushModDir(const SCP_string& mod);
+	void pushModDir(const std::string& mod);
 
 	virtual void SetUp();
 

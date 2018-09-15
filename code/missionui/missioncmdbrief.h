@@ -22,7 +22,7 @@ struct anim;
 struct anim_instance;
 
 struct cmd_brief_stage {
-	SCP_string text;  // text to display
+	std::string text;  // text to display
 	char ani_filename[MAX_FILENAME_LEN];  // associated ani file to play
 	char wave_filename[MAX_FILENAME_LEN]; // associated wav file to play
 	int wave;  // instance number of above

@@ -56,7 +56,7 @@ TEST_F(ParseloTest, utf8_with_bom) {
 	read_file_text("bom_test.tbl", CF_TYPE_TABLES);
 	reset_parse();
 
-	SCP_string content;
+	std::string content;
 	stuff_string(content, F_NAME);
 
 	ASSERT_STREQ(content.c_str(), "Hello World");
@@ -79,7 +79,7 @@ TEST(ParseloUtilTest, drop_trailing_whitespace_cstr) {
 }
 
 TEST(ParseloUtilTest, drop_trailing_whitespace) {
-	SCP_string test_str;
+	std::string test_str;
 
 	test_str = "Test string       ";
 	drop_trailing_white_space(test_str);
@@ -111,7 +111,7 @@ TEST(ParseloUtilTest, drop_leading_whitespace_cstr) {
 }
 
 TEST(ParseloUtilTest, drop_leading_whitespace) {
-	SCP_string test_str;
+	std::string test_str;
 
 	test_str = "          Test string";
 	drop_leading_white_space(test_str);
@@ -151,7 +151,7 @@ TEST(ParseloUtilTest, drop_whitespace_cstr) {
 }
 
 TEST(ParseloUtilTest, drop_whitespace) {
-	SCP_string test_str;
+	std::string test_str;
 
 	test_str = "          Test string";
 	drop_white_space(test_str);

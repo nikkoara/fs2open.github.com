@@ -485,7 +485,7 @@ void multi_voice_process()
 // voice settings debug console function
 void multi_voice_dcf()
 {
-	SCP_string arg;
+	std::string arg;
 	int value;
 
 	dc_stuff_string_white(arg);

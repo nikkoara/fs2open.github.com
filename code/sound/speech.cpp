@@ -107,7 +107,7 @@ bool speech_play(const char *text)
 	}
 
 #ifdef _WIN32
-	SCP_string work_buffer;
+	std::string work_buffer;
 
 	bool saw_dollar = false;
 	for (auto ch : unicode::codepoint_range(text)) {
@@ -282,7 +282,7 @@ bool speech_is_speaking()
 #endif
 }
 
-SCP_vector<SCP_string> speech_enumerate_voices()
+std::vector<std::string> speech_enumerate_voices()
 {
 #ifdef _WIN32
 	HRESULT hr = CoCreateInstance(
@@ -293,7 +293,7 @@ SCP_vector<SCP_string> speech_enumerate_voices()
 		(void **)&Voice_device);
 
 	if (FAILED(hr)) {
-		return SCP_vector<SCP_string>();
+		return std::vector<std::string>();
 	}
 
 	// This code is mostly copied from wxLauncher
@@ -305,25 +305,25 @@ SCP_vector<SCP_string> speech_enumerate_voices()
 	hr = ::CoCreateInstance(CLSID_SpObjectTokenCategory, NULL,
 		CLSCTX_INPROC_SERVER, IID_ISpObjectTokenCategory, (LPVOID*)&comTokenCategory);
 	if (FAILED(hr)) {
-		return SCP_vector<SCP_string>();
+		return std::vector<std::string>();
 	}
 
 	hr = comTokenCategory->SetId(SPCAT_VOICES, false);
 	if (FAILED(hr)) {
-		return SCP_vector<SCP_string>();
+		return std::vector<std::string>();
 	}
 
 	hr = comTokenCategory->EnumTokens(NULL, NULL, &comVoices);
 	if (FAILED(hr)) {
-		return SCP_vector<SCP_string>();
+		return std::vector<std::string>();
 	}
 
 	hr = comVoices->GetCount(&comVoicesCount);
 	if (FAILED(hr)) {
-		return SCP_vector<SCP_string>();
+		return std::vector<std::string>();
 	}
 
-	SCP_vector<SCP_string> voices;
+	std::vector<std::string> voices;
 	while (comVoicesCount > 0) {
 		ISpObjectToken * comAVoice = NULL;
 
@@ -336,7 +336,7 @@ SCP_vector<SCP_string> speech_enumerate_voices()
 		auto buffer_size = WideCharToMultiByte(CP_UTF8, 0, id, (int)idlength, nullptr, 0, nullptr, nullptr);
 
 		if (buffer_size > 0) {
-			SCP_string voiceName;
+			std::string voiceName;
 			voiceName.resize(buffer_size);
 			buffer_size = WideCharToMultiByte(CP_UTF8, 0, id, (int)idlength, &voiceName[0], buffer_size, nullptr, nullptr);
 
@@ -356,7 +356,7 @@ SCP_vector<SCP_string> speech_enumerate_voices()
 #else
 	STUB_FUNCTION;
 
-	return SCP_vector<SCP_string>();
+	return std::vector<std::string>();
 #endif
 }
 

@@ -22,7 +22,7 @@ namespace io
 		class Cursor
 		{
 		private:
-			SCP_vector<SDL_Cursor*> mAnimationFrames; //!< The individual frames
+			std::vector<SDL_Cursor*> mAnimationFrames; //!< The individual frames
 
 			int mBitmapHandle; //!< The bitmap of this cursor
 
@@ -86,11 +86,11 @@ namespace io
 		private:
 			static CursorManager* mSingleton; //!< The singleton manager
 
-			SCP_vector<std::unique_ptr<Cursor>> mLoadedCursors; //!< A list of loaded cursors
+			std::vector<std::unique_ptr<Cursor>> mLoadedCursors; //!< A list of loaded cursors
 
 			Cursor* mCurrentCursor; //!< The current cursor
 
-			SCP_vector<std::pair<bool, bool>> mStatusStack; //!< Contains the stack of saved mouse statuses
+			std::vector<std::pair<bool, bool>> mStatusStack; //!< Contains the stack of saved mouse statuses
 
 			/**
 			 * @brief Default constructor

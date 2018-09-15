@@ -252,10 +252,10 @@ static bool sort_table_entries(const ade_table_entry* left, const ade_table_entr
 		return false;
 	}
 
-	SCP_string leftStr(leftCmp);
+	std::string leftStr(leftCmp);
 	std::transform(std::begin(leftStr), std::end(leftStr), std::begin(leftStr), ::tolower);
 
-	SCP_string rightStr(rightCmp);
+	std::string rightStr(rightCmp);
 	std::transform(std::begin(rightStr), std::end(rightStr), std::begin(rightStr), ::tolower);
 
 	return leftStr < rightStr;
@@ -281,7 +281,7 @@ void script_state::OutputLuaMeta(FILE *fp)
 	//***Version info
 	fprintf(fp, "<dd>Version: %s</dd>\n", LUA_RELEASE);
 
-	SCP_vector<ade_table_entry*> table_entries;
+	std::vector<ade_table_entry*> table_entries;
 
 	//***TOC: Libraries
 	fputs("<dt><b>Libraries</b></dt>\n", fp);

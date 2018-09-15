@@ -119,8 +119,8 @@ void drop_trailing_white_space(char *str)
 	str[i + 1] = '\0';
 }
 
-//	Ditto for SCP_string
-void drop_trailing_white_space(SCP_string &str)
+//	Ditto for std::string
+void drop_trailing_white_space(std::string &str)
 {
 	if (str.empty())
 	{
@@ -153,8 +153,8 @@ void drop_leading_white_space(char *str)
 	str[len-first] = 0;
 }
 
-//	Ditto for SCP_string
-void drop_leading_white_space(SCP_string &str)
+//	Ditto for std::string
+void drop_leading_white_space(std::string &str)
 {
 	auto len = str.length();
 	size_t first = 0;
@@ -180,8 +180,8 @@ char *drop_white_space(char *str)
 	return str;
 }
 
-// ditto for SCP_string
-void drop_white_space(SCP_string &str)
+// ditto for std::string
+void drop_white_space(std::string &str)
 {
 	drop_trailing_white_space(str);
 	drop_leading_white_space(str);
@@ -201,7 +201,7 @@ void skip_token()
 void diag_printf(const char *format, ...)
 {
 #ifndef NDEBUG
-	SCP_string buffer;
+	std::string buffer;
 	va_list args;
 
 	va_start(args, format);
@@ -280,7 +280,7 @@ extern int Cmdline_noparseerrors;
 void error_display(int error_level, const char *format, ...)
 {
 	char type[8];
-	SCP_string error_text;
+	std::string error_text;
 	va_list args;
 
 	if (error_level == 0) {
@@ -685,7 +685,7 @@ int required_string_one_of(int arg_count, ...)
 	int count = 0;
 	int idx;
 	char *expected;
-	SCP_string message = "";
+	std::string message = "";
 	va_list vl;
 
 	ignore_white_space();
@@ -783,8 +783,8 @@ void copy_to_eoln(char *outstr, const char *more_terminators, const char *instr,
 	*outstr = 0;
 }
 
-//	Ditto for SCP_string.
-void copy_to_eoln(SCP_string &outstr, const char *more_terminators, const char *instr)
+//	Ditto for std::string.
+void copy_to_eoln(std::string &outstr, const char *more_terminators, const char *instr)
 {
 	char	ch;
 	char	terminators[128];
@@ -834,8 +834,8 @@ void copy_to_next_white(char *outstr, char *instr, int max)
 	*outstr = 0;
 }
 
-//	Ditto for SCP_string.
-void copy_to_next_white(SCP_string &outstr, char *instr)
+//	Ditto for std::string.
+void copy_to_next_white(std::string &outstr, char *instr)
 {
 	int	in_quotes = 0;
 	char	ch;
@@ -918,8 +918,8 @@ void copy_text_until(char *outstr, char *instr, const char *endstr, int max_char
 	diag_printf("Here's the partial wad of text:\n%.30s\n", outstr);
 }
 
-//	Ditto for SCP_string.
-void copy_text_until(SCP_string &outstr, char *instr, const char *endstr)
+//	Ditto for std::string.
+void copy_text_until(std::string &outstr, char *instr, const char *endstr)
 {
 	char *foundstr;
 	Assert(instr && endstr);
@@ -948,8 +948,8 @@ void stuff_string_white(char *outstr, int len)
 	advance_to_next_white();
 }
 
-// ditto for SCP_string
-void stuff_string_white(SCP_string &outstr)
+// ditto for std::string
+void stuff_string_white(std::string &outstr)
 {
 	ignore_white_space();
 	copy_to_next_white(outstr, Mp);
@@ -969,7 +969,7 @@ void stuff_string_until(char *outstr, const char *endstr, int len)
 }
 
 // Goober5000
-void stuff_string_until(SCP_string &outstr, const char *endstr)
+void stuff_string_until(std::string &outstr, const char *endstr)
 {
 	ignore_gray_space();
 	copy_text_until(outstr, Mp, endstr);
@@ -1087,8 +1087,8 @@ int get_string_or_variable (char *str)
 	return result;
 }
 
-// ditto for SCP_string
-int get_string_or_variable (SCP_string &str)
+// ditto for std::string
+int get_string_or_variable (std::string &str)
 {
 	int result = -1;
 
@@ -1143,7 +1143,7 @@ int get_string(char *str, int max)
 /**
  * Stuff a string (" chars ") into str.
  */
-void get_string(SCP_string &str)
+void get_string(std::string &str)
 {
 	auto len = strcspn(Mp + 1, "\"");
 	str.assign(Mp + 1, len);
@@ -1241,9 +1241,9 @@ void stuff_string(char *outstr, int type, int len, const char *terminators)
 
 //	Stuff a string into a string buffer.
 //	Supports various FreeSpace primitive types.
-void stuff_string(SCP_string &outstr, int type, const char *terminators)
+void stuff_string(std::string &outstr, int type, const char *terminators)
 {
-	SCP_string read_str;
+	std::string read_str;
 	int tag_id;
 
 	// make sure it's zero'd out
@@ -1345,10 +1345,10 @@ void stuff_string_line(char *outstr, int len)
 	diag_printf("Stuffed string = [%.30s]\n", outstr);
 }
 
-// ditto for SCP_string
-void stuff_string_line(SCP_string &outstr)
+// ditto for std::string
+void stuff_string_line(std::string &outstr)
 {
-	SCP_string read_str;
+	std::string read_str;
 	int tag_id;
 
 	// read in a line
@@ -1373,7 +1373,7 @@ void stuff_string_line(SCP_string &outstr)
 // the default string length if using the F_NAME case.
 char *stuff_and_malloc_string(int type, char *terminators)
 {
-	SCP_string tmp_result;
+	std::string tmp_result;
 
 	stuff_string(tmp_result, type, terminators);
 	drop_white_space(tmp_result);
@@ -1426,8 +1426,8 @@ void compact_multitext_string(char *str)
 		str[len-num_cr] = 0;
 }
 
-// ditto for SCP_string
-void compact_multitext_string(SCP_string &str)
+// ditto for std::string
+void compact_multitext_string(std::string &str)
 {
 	size_t i;
 	size_t len = str.length();
@@ -1716,10 +1716,10 @@ size_t maybe_convert_foreign_characters(const char *in, char *out, bool add_null
 }
 
 // Goober5000
-void maybe_convert_foreign_characters(SCP_string &text)
+void maybe_convert_foreign_characters(std::string &text)
 {
 	if (!Fred_running) {
-		for (SCP_string::iterator ii = text.begin(); ii != text.end(); ++ii) {
+		for (std::string::iterator ii = text.begin(); ii != text.end(); ++ii) {
 			text.reserve(get_converted_string_length(text));
 
 			if (*ii == SHARP_S) {
@@ -1751,7 +1751,7 @@ size_t get_converted_string_length(const char *text)
 
 // Yarn - Returns what the length of the text will be after it's processed by
 // maybe_convert_foreign_characters.
-size_t get_converted_string_length(const SCP_string &text)
+size_t get_converted_string_length(const std::string &text)
 {
 	if (Fred_running) {
 		return text.size();
@@ -1801,10 +1801,10 @@ bool get_number_before_separator(int &number, int &number_chars, const char *tex
 }
 
 // Goober5000
-bool get_number_before_separator(int &number, int &number_chars, const SCP_string &text, SCP_string::iterator text_pos, char separator)
+bool get_number_before_separator(int &number, int &number_chars, const std::string &text, std::string::iterator text_pos, char separator)
 {
 	char buf[8];
-	SCP_string::iterator ch = text_pos;
+	std::string::iterator ch = text_pos;
 	int len = 0;
 
 	while (true)
@@ -2225,7 +2225,7 @@ void read_raw_file_text(const char *filename, int mode, char *raw_text)
 				// SDL2 has iconv functionality so we use that to convert from Latin1 to UTF-8
 
 				// We need the raw_text as the output buffer so we first need to copy the current
-				SCP_string input_str = raw_text;
+				std::string input_str = raw_text;
 
 				do {
 					auto in_str = input_str.c_str();
@@ -2757,7 +2757,7 @@ int parse_string_flag_list(int *dest, flag_def_list defs[], int defs_size)
 	return num_strings;
 }
 
-int stuff_string_list(SCP_vector<SCP_string>& slp)
+int stuff_string_list(std::vector<std::string>& slp)
 {
 	//_asm int 3;
 	slp.clear();
@@ -2773,7 +2773,7 @@ int stuff_string_list(SCP_vector<SCP_string>& slp)
 
 	ignore_white_space();
 
-	SCP_string buf;
+	std::string buf;
 
 	while (*Mp != ')') {
 		if(*Mp != '\"') {
@@ -3226,7 +3226,7 @@ int stuff_vec3d_list(vec3d *vlp, int max_vecs)
 }
 
 // ditto the above, but a vector of vec3ds...
-int stuff_vec3d_list(SCP_vector<vec3d> &vec_list)
+int stuff_vec3d_list(std::vector<vec3d> &vec_list)
 {
 	ignore_white_space();
 
@@ -3623,7 +3623,7 @@ int split_str(const char *src, int max_pixel_w, int *n_chars, const char **p_str
 	return line_num;
 }
 
-int split_str(const char *src, int max_pixel_w, SCP_vector<int> &n_chars, SCP_vector<const char*> &p_str, unicode::codepoint_t ignore_char, bool strip_leading_whitespace)
+int split_str(const char *src, int max_pixel_w, std::vector<int> &n_chars, std::vector<const char*> &p_str, unicode::codepoint_t ignore_char, bool strip_leading_whitespace)
 {
 	char buffer[SPLIT_STR_BUFFER_SIZE];
 	const char *breakpoint = NULL;
@@ -3897,7 +3897,7 @@ bool can_construe_as_integer(const char *text)
 
 // Goober5000
 // yoinked gratefully from dbugfile.cpp
-void vsprintf(SCP_string &dest, const char *format, va_list ap)
+void vsprintf(std::string &dest, const char *format, va_list ap)
 {
 	va_list copy;
 
@@ -3921,7 +3921,7 @@ void vsprintf(SCP_string &dest, const char *format, va_list ap)
 	vsnprintf(&dest[0], dest.size() + 1, format, ap);
 }
 
-void sprintf(SCP_string &dest, const char *format, ...)
+void sprintf(std::string &dest, const char *format, ...)
 {
 	va_list args;
 	va_start(args, format);
@@ -3949,7 +3949,7 @@ bool end_string_at_first_hash_symbol(char *src)
 }
 
 // Goober5000
-bool end_string_at_first_hash_symbol(SCP_string &src)
+bool end_string_at_first_hash_symbol(std::string &src)
 {
 	int index = get_index_of_first_hash_symbol(src);
 	if (index >= 0)
@@ -3979,10 +3979,10 @@ const char *get_pointer_to_first_hash_symbol(const char *src)
 }
 
 // Goober5000
-int get_index_of_first_hash_symbol(SCP_string &src)
+int get_index_of_first_hash_symbol(std::string &src)
 {
 	size_t pos = src.find('#');
-	return (pos == SCP_string::npos) ? -1 : (int)pos;
+	return (pos == std::string::npos) ? -1 : (int)pos;
 }
 
 // Goober5000
@@ -4055,20 +4055,20 @@ ptrdiff_t replace_all(char *str, const char *oldstr, const char *newstr, size_t 
 	return (val < 0) ? val : tally;
 }
 
-SCP_string& replace_one(SCP_string& context, const SCP_string& from, const SCP_string& to)
+std::string& replace_one(std::string& context, const std::string& from, const std::string& to)
 {
 	size_t foundHere;
-	if ((foundHere = context.find(from, 0)) != SCP_string::npos)
+	if ((foundHere = context.find(from, 0)) != std::string::npos)
 	{
 		context.replace(foundHere, from.length(), to);
 	}
 	return context;
 }
 
-SCP_string& replace_one(SCP_string& context, const char* from, const char* to)
+std::string& replace_one(std::string& context, const char* from, const char* to)
 {
 	size_t foundHere;
-	if ((foundHere = context.find(from, 0)) != SCP_string::npos)
+	if ((foundHere = context.find(from, 0)) != std::string::npos)
 	{
 		context.replace(foundHere, strlen(from), to);
 	}
@@ -4076,14 +4076,14 @@ SCP_string& replace_one(SCP_string& context, const char* from, const char* to)
 }
 
 // http://www.cppreference.com/wiki/string/replace
-SCP_string& replace_all(SCP_string& context, const SCP_string& from, const SCP_string& to)
+std::string& replace_all(std::string& context, const std::string& from, const std::string& to)
 {
 	size_t from_len = from.length();
 	size_t to_len = to.length();
 
 	size_t lookHere = 0;
 	size_t foundHere;
-	while ((foundHere = context.find(from, lookHere)) != SCP_string::npos)
+	while ((foundHere = context.find(from, lookHere)) != std::string::npos)
 	{
 		context.replace(foundHere, from_len, to);
 		lookHere = foundHere + to_len;
@@ -4092,14 +4092,14 @@ SCP_string& replace_all(SCP_string& context, const SCP_string& from, const SCP_s
 }
 
 // http://www.cppreference.com/wiki/string/replace
-SCP_string& replace_all(SCP_string& context, const char* from, const char* to)
+std::string& replace_all(std::string& context, const char* from, const char* to)
 {
 	size_t from_len = strlen(from);
 	size_t to_len = strlen(to);
 
 	size_t lookHere = 0;
 	size_t foundHere;
-	while ((foundHere = context.find(from, lookHere)) != SCP_string::npos)
+	while ((foundHere = context.find(from, lookHere)) != std::string::npos)
 	{
 		context.replace(foundHere, from_len, to);
 		lookHere = foundHere + to_len;
@@ -4153,10 +4153,10 @@ bool drop_extension(char *str)
 }
 
 // Goober5000
-bool drop_extension(SCP_string &str)
+bool drop_extension(std::string &str)
 {
 	size_t pos = str.rfind('.');
-	if (pos != SCP_string::npos)
+	if (pos != std::string::npos)
 	{
 		str.resize(pos);
 		return true;
@@ -4251,7 +4251,7 @@ int scan_fso_version_string(const char *text, int *major, int *minor, int *build
 }
 
 // Goober5000 - used for long Warnings, Errors, and FRED error messages with SEXPs
-void truncate_message_lines(SCP_string &text, int num_allowed_lines)
+void truncate_message_lines(std::string &text, int num_allowed_lines)
 {
 	Assert(num_allowed_lines > 0);
 	size_t find_from = 0;
@@ -4266,7 +4266,7 @@ void truncate_message_lines(SCP_string &text, int num_allowed_lines)
 		}
 
 		size_t pos = text.find('\n', find_from);
-		if (pos == SCP_string::npos)
+		if (pos == std::string::npos)
 			break;
 
 		num_allowed_lines--;
@@ -4304,7 +4304,7 @@ void parse_int_list(int *ilist, int size)
 // parse a modular table of type "name_check" and parse it using the specified function callback
 int parse_modular_table(const char *name_check, void (*parse_callback)(const char *filename), int path_type, int sort_type)
 {
-	SCP_vector<SCP_string> tbl_file_names;
+	std::vector<std::string> tbl_file_names;
 	int i, num_files = 0;
 
 	if ( (name_check == NULL) || (parse_callback == NULL) || ((*name_check) != '*') ) {

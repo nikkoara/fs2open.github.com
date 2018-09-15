@@ -28,7 +28,7 @@
 
 // current language
 int Lcl_current_lang = FS2_OPEN_DEFAULT_LANGUAGE;
-SCP_vector<lang_info> Lcl_languages;
+std::vector<lang_info> Lcl_languages;
 
 // These are the original languages supported by FS2. The code expects these languages to be supported even if the tables don't
 
@@ -76,7 +76,7 @@ int Xstr_inited = 0;
 #define PARSE_TEXT_BUF_SIZE			PARSE_BUF_SIZE
 #define PARSE_ID_BUF_SIZE			5
 
-SCP_unordered_map<int, char*> Lcl_ext_str;
+std::unordered_map<int, char*> Lcl_ext_str;
 
 
 // ------------------------------------------------------------------------------------------------------------
@@ -85,11 +85,11 @@ SCP_unordered_map<int, char*> Lcl_ext_str;
 
 // given a valid XSTR() tag piece of text, extract the string portion, return it in out, nonzero on success
 int lcl_ext_get_text(const char *xstr, char *out);
-int lcl_ext_get_text(const SCP_string &xstr, SCP_string &out);
+int lcl_ext_get_text(const std::string &xstr, std::string &out);
 
 // given a valid XSTR() tag piece of text, extract the id# portion, return the value in out, nonzero on success
 int lcl_ext_get_id(const char *xstr, int *out);
-int lcl_ext_get_id(const SCP_string &xstr, int *out);
+int lcl_ext_get_id(const std::string &xstr, int *out);
 
 // if the char is a valid char for a signed integer value string
 int lcl_is_valid_numeric_char(char c);
@@ -603,8 +603,8 @@ void lcl_replace_stuff(char *text, size_t max_len)
 
 	Assert(text);	// Goober5000
 
-	// delegate to SCP_string for the replacements
-	SCP_string temp_text = text;
+	// delegate to std::string for the replacements
+	std::string temp_text = text;
 	lcl_replace_stuff(temp_text);
 
 	// fill up the original string
@@ -617,7 +617,7 @@ void lcl_replace_stuff(char *text, size_t max_len)
 // now will also replace $quote with double quotation marks
 // now will also replace $semicolon with semicolon mark
 // now will also replace $slash and $backslash
-void lcl_replace_stuff(SCP_string &text)
+void lcl_replace_stuff(std::string &text)
 {
 	if (Fred_running)
 		return;
@@ -640,8 +640,8 @@ void lcl_fred_replace_stuff(char *text, size_t max_len)
 
 	Assert(text);	// Goober5000
 
-	// delegate to SCP_string for the replacements
-	SCP_string temp_text = text;
+	// delegate to std::string for the replacements
+	std::string temp_text = text;
 	lcl_fred_replace_stuff(temp_text);
 
 	// fill up the original string
@@ -649,7 +649,7 @@ void lcl_fred_replace_stuff(char *text, size_t max_len)
 	text[len] = 0;
 }
 
-void lcl_fred_replace_stuff(SCP_string &text)
+void lcl_fred_replace_stuff(std::string &text)
 {
 	if (!Fred_running)
 		return;
@@ -769,10 +769,10 @@ void lcl_ext_localize_sub(const char *in, char *out, size_t max_len, int *id)
 	}
 }
 
-// ditto for SCP_string
-void lcl_ext_localize_sub(const SCP_string &in, SCP_string &out, int *id)
+// ditto for std::string
+void lcl_ext_localize_sub(const std::string &in, std::string &out, int *id)
 {
-	SCP_string text_str = "";
+	std::string text_str = "";
 	int str_id;
 
 	// default (non-external string) value
@@ -857,8 +857,8 @@ void lcl_ext_localize(const char *in, char *out, size_t max_len, int *id)
 	lcl_replace_stuff(out, max_len);
 }
 
-// ditto for SCP_string
-void lcl_ext_localize(const SCP_string &in, SCP_string &out, int *id)
+// ditto for std::string
+void lcl_ext_localize(const std::string &in, std::string &out, int *id)
 {
 	// do XSTR translation
 	lcl_ext_localize_sub(in, out, id);
@@ -953,21 +953,21 @@ int lcl_ext_get_text(const char *xstr, char *out)
 }
 
 // given a valid XSTR() tag piece of text, extract the string portion, return it in out, nonzero on success
-int lcl_ext_get_text(const SCP_string &xstr, SCP_string &out)
+int lcl_ext_get_text(const std::string &xstr, std::string &out)
 {
 	size_t open_quote_pos, close_quote_pos;
 
 	// this is some crazy wack-ass code.
 	// look for the open quote
 	open_quote_pos = xstr.find('\"');
-	if (open_quote_pos == SCP_string::npos) {
+	if (open_quote_pos == std::string::npos) {
 		error_display(0, "Error parsing XSTR() tag %s\n", xstr.c_str());
 		return 0;
 	}
 
 	// look for the close quote
 	close_quote_pos = xstr.find('\"', open_quote_pos+1);
-	if (close_quote_pos == SCP_string::npos) {
+	if (close_quote_pos == std::string::npos) {
 		error_display(0, "Error parsing XSTR() tag %s\n", xstr.c_str());
 		return 0;
 	}
@@ -1058,14 +1058,14 @@ int lcl_ext_get_id(const char *xstr, int *out)
 }
 
 // given a valid XSTR() tag piece of text, extract the id# portion, return the value in out, nonzero on success
-int lcl_ext_get_id(const SCP_string &xstr, int *out)
+int lcl_ext_get_id(const std::string &xstr, int *out)
 {
 	char id_buf[10];
 	size_t p, pnext;
 
 	// find the first quote
 	p = xstr.find('\"');
-	if (p == SCP_string::npos) {
+	if (p == std::string::npos) {
 		error_display(0, "Error parsing id# in XSTR() tag %s\n", xstr.c_str());
 		return 0;
 	}
@@ -1074,7 +1074,7 @@ int lcl_ext_get_id(const SCP_string &xstr, int *out)
 	// continue searching until we find the close quote
 	while(1) {
 		pnext = xstr.find('\"', p);
-		if (pnext == SCP_string::npos) {
+		if (pnext == std::string::npos) {
 			error_display(0, "Error parsing id# in XSTR() tag %s\n", xstr.c_str());
 			return 0;
 		}
@@ -1091,7 +1091,7 @@ int lcl_ext_get_id(const SCP_string &xstr, int *out)
 
 	// search until we find a ,	
 	pnext = xstr.find(',', p);
-	if (pnext == SCP_string::npos) {
+	if (pnext == std::string::npos) {
 		error_display(0, "Error parsing id# in XSTR() tag %s\n", xstr.c_str());
 		return 0;
 	}
@@ -1100,7 +1100,7 @@ int lcl_ext_get_id(const SCP_string &xstr, int *out)
 	// find the close parenthesis
 	p = pnext;
 	pnext = xstr.find(')', p);
-	if (pnext == SCP_string::npos) {
+	if (pnext == std::string::npos) {
 		error_display(0, "Error parsing id# in XSTR() tag %s\n", xstr.c_str());
 		return 0;
 	}

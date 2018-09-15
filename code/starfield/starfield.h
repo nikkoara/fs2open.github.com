@@ -36,8 +36,8 @@ typedef struct starfield_list_entry {
 
 // backgrounds
 typedef struct background_t {
-	SCP_vector<starfield_list_entry> bitmaps;
-	SCP_vector<starfield_list_entry> suns;
+	std::vector<starfield_list_entry> bitmaps;
+	std::vector<starfield_list_entry> suns;
 } background_t;
 
 #define MAX_BACKGROUNDS	2

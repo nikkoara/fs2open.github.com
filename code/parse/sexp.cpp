@@ -118,7 +118,7 @@
 #define FALSE	0
 
 
-SCP_vector<sexp_oper> Operators = {
+std::vector<sexp_oper> Operators = {
 //   Operator, Identity, Min / Max arguments
 	//Arithmetic Category
 	{ "+",								OP_PLUS,								2,	INT_MAX,	SEXP_ARITHMETIC_OPERATOR,	},
@@ -857,7 +857,7 @@ sexp_variable Block_variables[MAX_SEXP_VARIABLES];			// used for compatibility w
 
 int Num_special_expl_blocks;
 
-SCP_vector<int> Current_sexp_operator;
+std::vector<int> Current_sexp_operator;
 
 int Players_target = UNINITIALIZED;
 int Players_mlocked = UNINITIALIZED; // for is-missile-locked - Sesquipedalian
@@ -896,7 +896,7 @@ const char *Explosion_option[] = { "damage", "blast", "inner radius", "outer rad
 int Num_explosion_options = 6;
 
 int get_sexp();
-void build_extended_sexp_string(SCP_string &accumulator, int cur_node, int level, int mode);
+void build_extended_sexp_string(std::string &accumulator, int cur_node, int level, int mode);
 void update_sexp_references(const char *old_name, const char *new_name, int format, int node);
 int sexp_determine_team(char *subj);
 int extract_sexp_variable_index(int node);
@@ -911,9 +911,9 @@ void sexp_set_variable_by_index(int node);
 void sexp_copy_variable_from_index(int node);
 void sexp_copy_variable_between_indexes(int node);
 
-SCP_vector<char*> Sexp_replacement_arguments;
+std::vector<char*> Sexp_replacement_arguments;
 int Sexp_current_argument_nesting_level;
-SCP_vector<char*> Applicable_arguments_temp;
+std::vector<char*> Applicable_arguments_temp;
 
 // Goober5000
 arg_item Sexp_applicable_argument_list;
@@ -940,9 +940,9 @@ ship * sexp_get_ship_from_node(int node);
 #define SEXP_HUD_GAUGE_WARPOUT "warpout"
 
 // event log stuff
-SCP_vector<SCP_string> *Current_event_log_buffer;
-SCP_vector<SCP_string> *Current_event_log_variable_buffer;
-SCP_vector<SCP_string> *Current_event_log_argument_buffer;
+std::vector<std::string> *Current_event_log_buffer;
+std::vector<std::string> *Current_event_log_variable_buffer;
+std::vector<std::string> *Current_event_log_argument_buffer;
 // Goober5000 - arg_item class stuff, borrowed from sexp_list_item class stuff -------------
 void arg_item::add_data(char *str)
 {
@@ -3581,7 +3581,7 @@ int get_sexp()
 
 				int id = atoi(Sexp_nodes[CDR(n)].text);
 				Assert(id < 10000000);
-				SCP_string xstr;
+				std::string xstr;
 				sprintf(xstr, "XSTR(\"%s\", %d)", Sexp_nodes[n].text, id);
 
 				memset(Sexp_nodes[n].text, 0, NAME_LENGTH*sizeof(char));
@@ -3801,7 +3801,7 @@ int num_block_variables()
 /**
  * Stuff SEXP text string
  */
-void stuff_sexp_text_string(SCP_string &dest, int node, int mode)
+void stuff_sexp_text_string(std::string &dest, int node, int mode)
 {
 	Assert( (node >= 0) && (node < Num_sexp_nodes) );
 
@@ -3861,9 +3861,9 @@ void stuff_sexp_text_string(SCP_string &dest, int node, int mode)
 	}
 }
 
-int build_sexp_string(SCP_string &accumulator, int cur_node, int level, int mode)
+int build_sexp_string(std::string &accumulator, int cur_node, int level, int mode)
 {
-	SCP_string buf;
+	std::string buf;
 	int node;
 	auto old_length = accumulator.length();
 
@@ -3893,9 +3893,9 @@ int build_sexp_string(SCP_string &accumulator, int cur_node, int level, int mode
 	return 0;
 }
 
-void build_extended_sexp_string(SCP_string &accumulator, int cur_node, int level, int mode)
+void build_extended_sexp_string(std::string &accumulator, int cur_node, int level, int mode)
 {
-	SCP_string buf;
+	std::string buf;
 	int i, flag = 0, node;
 
 	accumulator += "( ";
@@ -3927,7 +3927,7 @@ void build_extended_sexp_string(SCP_string &accumulator, int cur_node, int level
 	accumulator += ")";
 }
 
-void convert_sexp_to_string(SCP_string &dest, int cur_node, int mode)
+void convert_sexp_to_string(std::string &dest, int cur_node, int mode)
 {
 	if (cur_node >= 0) {
 		dest = "";
@@ -8660,7 +8660,7 @@ int test_argument_nodes_for_condition(int n, int condition_node, int *num_true, 
 
 // Goober5000
 // NOTE: if you change this function, check to see if the previous function should also be changed!
-int test_argument_vector_for_condition(SCP_vector<char*> argument_vector, bool already_dupped, int condition_node, int *num_true, int *num_false, int *num_known_true, int *num_known_false)
+int test_argument_vector_for_condition(std::vector<char*> argument_vector, bool already_dupped, int condition_node, int *num_true, int *num_false, int *num_known_true, int *num_known_false)
 {
 	int val, num_valid_arguments;
 	Assert(condition_node != -1);
@@ -9007,7 +9007,7 @@ int eval_for_counter(int arg_handler_node, int condition_node)
 	}
 
 	// build a vector of counter values
-	SCP_vector<char*> argument_vector;
+	std::vector<char*> argument_vector;
 	for (i = counter_start; ((counter_step > 0) ? i <= counter_stop : i >= counter_stop); i += counter_step)
 	{
 		sprintf(buf, "%d", i);
@@ -9939,7 +9939,7 @@ void sexp_hud_set_message(int n)
 {
 	char* gaugename = CTEXT(n);
 	char* text = CTEXT(CDR(n));
-	SCP_string message;
+	std::string message;
 
 	for (int i = 0; i < Num_messages; i++) {
 		if ( !stricmp(text, Messages[i].name) ) {
@@ -13561,7 +13561,7 @@ void sexp_set_mission_mood (int node)
 	char *mood; 
 
 	mood = CTEXT(node);
-	for (SCP_vector<SCP_string>::iterator iter = Builtin_moods.begin(); iter != Builtin_moods.end(); ++iter) {
+	for (std::vector<std::string>::iterator iter = Builtin_moods.begin(); iter != Builtin_moods.end(); ++iter) {
 		if (!strcmp(iter->c_str(), mood)) {
 			Current_mission_mood = (int)std::distance(Builtin_moods.begin(), iter);
 			return;
@@ -15544,7 +15544,7 @@ int sexp_weapon_recharge_pct(int node)
 int sexp_get_ets_value(int node)
 {
 	int sindex;
-	SCP_string ets_type;
+	std::string ets_type;
 
 	ets_type = CTEXT(node);
 	node = CDR(node);
@@ -20423,7 +20423,7 @@ void sexp_string_concatenate(int n)
 void sexp_string_concatenate_block(int n)
 {
 	int sexp_variable_index;
-	SCP_string new_text;
+	std::string new_text;
 
 	// Only do single player or multi host
 	if (MULTIPLAYER_CLIENT)
@@ -20577,7 +20577,7 @@ void sexp_string_set_substring(int node)
 		return;
 	}
 
-	SCP_string new_text = parent;
+	std::string new_text = parent;
 
 	auto range = unicode::codepoint_range(parent);
 	auto end_iter = range.end();
@@ -20653,7 +20653,7 @@ void sexp_modify_variable_xstr(int n)
 void sexp_debug(int node)
 {
 	int i;
-	SCP_string warning_message;
+	std::string warning_message;
 
 	#ifdef NDEBUG
 	bool no_release_message = is_sexp_true(node); 
@@ -22239,7 +22239,7 @@ int sexp_script_eval(int node, int return_type, bool concat_args = false)
 			}
 		case OPR_NULL:
 			{
-				SCP_string script_cmd;
+				std::string script_cmd;
 				while (n != -1)
 				{
 					char* s = CTEXT(n);
@@ -22570,7 +22570,7 @@ int sexp_get_colgroup(int node) {
 
 int get_effect_from_name(char* name) {
 	int i = 0;
-	for (SCP_vector<ship_effect>::iterator sei = Ship_effects.begin(); sei != Ship_effects.end(); ++sei) {
+	for (std::vector<ship_effect>::iterator sei = Ship_effects.begin(); sei != Ship_effects.end(); ++sei) {
 		if (!stricmp(name, sei->name))
 			return i;
 		i++;
@@ -22653,8 +22653,8 @@ void sexp_ship_effect(int n)
 }
 
 void sexp_change_team_color(int n) {
-	SCP_string new_color = CTEXT(n);
-	SCP_vector<ship*> shippointers;
+	std::string new_color = CTEXT(n);
+	std::vector<ship*> shippointers;
 	n = CDR(n);
 	int fade_time = eval_num(n);
 
@@ -22675,7 +22675,7 @@ void sexp_change_team_color(int n) {
 	Current_sexp_network_packet.send_int(fade_time);
 	Current_sexp_network_packet.send_int((int)shippointers.size());
 
-	for (SCP_vector<ship*>::iterator shipp = shippointers.begin(); shipp != shippointers.end(); ++shipp) {
+	for (std::vector<ship*>::iterator shipp = shippointers.begin(); shipp != shippointers.end(); ++shipp) {
 		ship* shp = *shipp;
 		Current_sexp_network_packet.send_ship(shp);
 		if (fade_time == 0) {
@@ -22691,7 +22691,7 @@ void sexp_change_team_color(int n) {
 }
 
 void multi_sexp_change_team_color() {
-	SCP_string new_color = "<none>";
+	std::string new_color = "<none>";
 	int fade_time = 0;
 	int n_ships = 0;
 	
@@ -22965,7 +22965,7 @@ void add_to_event_log_buffer(int op_num, int result)
 	}
 
 	char buffer[TOKEN_LENGTH];
-	SCP_string tmp; 
+	std::string tmp; 
 	tmp.append(Operators[op_num].text);
 	tmp.append(" returned ");
 
@@ -25720,8 +25720,8 @@ int run_sexp(const char* sexpression)
 
 DCF(sexpc, "Always runs the given sexp command (Warning! There is no undo for this!)")
 {
-	SCP_string sexp;
-	SCP_string sexp_always;
+	std::string sexp;
+	std::string sexp_always;
 	
 	if (dc_optional_string_either("help", "--help")) {
 		dc_printf( "Usage: sexpc sexpression\n. Always runs the given sexp as '( when ( true ) ( sexp ) )' .\n" );
@@ -25739,7 +25739,7 @@ DCF(sexpc, "Always runs the given sexp command (Warning! There is no undo for th
 
 DCF(sexp,"Runs the given sexp")
 {
-	SCP_string sexp;
+	std::string sexp;
 
 	if (dc_optional_string_either("help", "--help")) {
 		dc_printf( "Usage: sexp 'sexpression'\n. Runs the given sexp.\n");
@@ -29239,7 +29239,7 @@ void sexp_modify_variable(const char *text, int index, bool sexp_callback)
 	if (strchr(text, '$') != NULL)
 	{
 		// we want to use the same variable substitution that's in messages etc.
-		SCP_string temp_text = text;
+		std::string temp_text = text;
 		sexp_replace_variable_names_with_values(temp_text);
 
 		// copy to original buffer
@@ -29600,7 +29600,7 @@ int get_index_sexp_variable_name(const char *text)
 /**
  * Return index of sexp_variable_name, -1 if not found
  */
-int get_index_sexp_variable_name(SCP_string &text)
+int get_index_sexp_variable_name(std::string &text)
 {
 	for (int i=0; i<MAX_SEXP_VARIABLES; i++) {
 		if (Sexp_variables[i].type & SEXP_VARIABLE_SET) {
@@ -29635,14 +29635,14 @@ int get_index_sexp_variable_name_special(const char *startpos)
 
 // Goober5000 - tests whether a variable name starts here
 // return index of sexp_variable_name, -1 if not found
-int get_index_sexp_variable_name_special(SCP_string &text, size_t startpos)
+int get_index_sexp_variable_name_special(std::string &text, size_t startpos)
 {
 	for (int i = MAX_SEXP_VARIABLES - 1; i >= 0; i--) {
 		if (Sexp_variables[i].type & SEXP_VARIABLE_SET) {
 			// check case sensitive
 			// check that the variable name starts here, as opposed to farther down the string
 			size_t pos = text.find(Sexp_variables[i].variable_name, startpos);
-			if (pos != SCP_string::npos && pos == startpos) {
+			if (pos != std::string::npos && pos == startpos) {
 				return i;
 			}
 		}
@@ -29692,7 +29692,7 @@ bool sexp_replace_variable_names_with_values(char *text, int max_len)
 }
 
 // Goober5000
-bool sexp_replace_variable_names_with_values(SCP_string &text)
+bool sexp_replace_variable_names_with_values(std::string &text)
 {
 	bool replaced_anything = false;
 
@@ -29704,7 +29704,7 @@ bool sexp_replace_variable_names_with_values(SCP_string &text)
 		foundHere = text.find('$', lookHere);
 
 		// found?
-		if (foundHere != SCP_string::npos)
+		if (foundHere != std::string::npos)
 		{
 			// see if a variable starts at the next char
 			int var_index = get_index_sexp_variable_name_special(text, foundHere+1);
@@ -29722,7 +29722,7 @@ bool sexp_replace_variable_names_with_values(SCP_string &text)
 				lookHere = foundHere + 1;
 			}
 		}
-	} while (foundHere != SCP_string::npos);
+	} while (foundHere != std::string::npos);
 
 	return replaced_anything;
 }
@@ -30351,7 +30351,7 @@ int get_subcategory(int sexp_id)
 }
 
 // clang-format off
-SCP_vector<sexp_help_struct> Sexp_help = {
+std::vector<sexp_help_struct> Sexp_help = {
 	{ OP_PLUS, "Plus (Arithmetic operator)\r\n"
 		"\tAdds numbers and returns results.\r\n\r\n"
 		"Returns a number.  Takes 2 or more numeric arguments." },
@@ -34123,7 +34123,7 @@ SCP_vector<sexp_help_struct> Sexp_help = {
 
 
 
-SCP_vector<op_menu_struct> op_menu =
+std::vector<op_menu_struct> op_menu =
 {
 	{ "Objectives",		OP_CATEGORY_OBJECTIVE	},
 	{ "Time",			OP_CATEGORY_TIME		},
@@ -34139,7 +34139,7 @@ SCP_vector<op_menu_struct> op_menu =
 
 // Goober5000's subcategorization of the Change menu (and possibly other menus in the future,
 // if people so choose - see sexp.h)
-SCP_vector<op_menu_struct> op_submenu =
+std::vector<op_menu_struct> op_submenu =
 {
 	{	"Messages and Personas",		CHANGE_SUBCATEGORY_MESSAGING						},
 	{	"AI Control",					CHANGE_SUBCATEGORY_AI_CONTROL						},
@@ -34235,7 +34235,7 @@ bool output_sexps(const char *filepath)
 	fputs("<body>", fp);
 	fprintf(fp,"\t<h1>SEXP Output - FSO v%s</h1>\n", FS_VERSION_FULL);
 
-	SCP_vector<int> done_sexp_ids;
+	std::vector<int> done_sexp_ids;
 	int x,y,z;
 
 	//Output an overview

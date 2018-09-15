@@ -26,8 +26,8 @@ struct PlayerState {
 	bool audioInited = false;
 	bool hasAudio = false;
 	ALuint audioSid = 0;
-	SCP_vector<ALuint> audioBuffers;
-	SCP_queue<ALuint> unqueuedAudioBuffers;
+	std::vector<ALuint> audioBuffers;
+	std::queue<ALuint> unqueuedAudioBuffers;
 
 	// Graphics state following
 	bool videoInited = false;
@@ -38,7 +38,7 @@ struct PlayerState {
 
 	std::unique_ptr<player::VideoPresenter> videoPresenter;
 
-	SCP_queue<SubtitleFramePtr> queued_subtitles;
+	std::queue<SubtitleFramePtr> queued_subtitles;
 	SubtitleFramePtr currentSubtitle;
 
 	PlayerState() {
@@ -116,7 +116,7 @@ class Player {
 	 * @brief Gets the subtitle text that should be displayed now
 	 * @return The text, encoded in UTF-8
 	 */
-	SCP_string getCurrentSubtitle();
+	std::string getCurrentSubtitle();
 
 	/**
 	 * @brief Stops playback
@@ -132,6 +132,6 @@ class Player {
 	 * @param properties A structure describing how the movie will be used
 	 * @return @c nullptr if the specified movie could not be opened, a valid Player pointer otherwise
 	 */
-	static std::unique_ptr<Player> newPlayer(const SCP_string& name, const PlaybackProperties& properties = PlaybackProperties());
+	static std::unique_ptr<Player> newPlayer(const std::string& name, const PlaybackProperties& properties = PlaybackProperties());
 };
 }

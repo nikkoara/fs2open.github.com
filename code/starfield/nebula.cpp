@@ -164,7 +164,7 @@ void nebula_init( const char *filename, angles * pbh )
 
 DCF(nebula,"Loads a different nebula")
 {
-	SCP_string filename;
+	std::string filename;
 
 	if (dc_optional_string_either("help", "--help")) {
 		dc_printf("Usage: nebula [filename]\n");

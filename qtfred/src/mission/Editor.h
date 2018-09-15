@@ -168,15 +168,15 @@ class Editor: public QObject {
 
 	bool global_error_check();
 
-	SCP_vector<SCP_string> get_docking_list(int model_index);
+	std::vector<std::string> get_docking_list(int model_index);
 
 	bool compareShieldSysData(const std::vector<int>& teams, const std::vector<int>& types) const;
 	void exportShieldSysData(std::vector<int>& teams, std::vector<int>& types) const;
 	void importShieldSysData(const std::vector<int>& teams, const std::vector<int>& types);
 	void normalizeShieldSysData();
 
-	static void strip_quotation_marks(SCP_string& str);
-	static void pad_with_newline(SCP_string& str, size_t max_size);
+	static void strip_quotation_marks(std::string& str);
+	static void pad_with_newline(std::string& str, size_t max_size);
  private:
 	void clearMission();
 
@@ -184,7 +184,7 @@ class Editor: public QObject {
 
 	void setupCurrentObjectIndices(int obj);
 
-	SCP_vector<std::unique_ptr<EditorViewport>> _viewports;
+	std::vector<std::unique_ptr<EditorViewport>> _viewports;
 	EditorViewport* _lastActiveViewport = nullptr;
 
 	int numMarked = 0;

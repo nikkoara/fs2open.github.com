@@ -1093,7 +1093,7 @@ void pilotfile_convert::csg_export_variables()
 }
 
 void pilotfile_convert::csg_export_cutscenes() {
-	SCP_vector<cutscene_info>::iterator cut;
+	std::vector<cutscene_info>::iterator cut;
 
 	startSection(Section::Cutscenes);
 
@@ -1154,7 +1154,7 @@ bool pilotfile_convert::csg_convert(const char *fname, bool inferno)
 	Assert( plr != NULL);
 	Assert( csg == NULL );
 
-	SCP_string filename;
+	std::string filename;
 	bool rval = true;
 
 	csg = new(std::nothrow) csg_data;

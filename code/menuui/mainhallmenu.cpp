@@ -56,7 +56,7 @@ extern void game_process_cheats(int k);
 #define NUM_REGIONS					7		// (6 + 1 for multiplayer equivalent of campaign room)
 #define MAIN_HALL_MAX_CHEAT_LEN		40		// cheat buffer length (also maximum cheat length)
 
-SCP_vector< SCP_vector<main_hall_defines> > Main_hall_defines;
+std::vector< std::vector<main_hall_defines> > Main_hall_defines;
 
 static main_hall_defines *Main_hall = NULL;
 
@@ -65,7 +65,7 @@ static int Main_hall_music_index = -1;
 int Vasudan_funny = 0;
 int Vasudan_funny_plate = -1;
 
-SCP_string Main_hall_cheat = "";
+std::string Main_hall_cheat = "";
 
 // ----------------------------------------------------------------------------
 // MISC interface data
@@ -134,7 +134,7 @@ void main_hall_handle_random_intercom_sounds();
 //
 
 // the misc animations themselves
-SCP_vector<generic_anim> Main_hall_misc_anim;
+std::vector<generic_anim> Main_hall_misc_anim;
 
 // render all playing misc animations
 void main_hall_render_misc_anims(float frametime, bool over_doors);
@@ -147,7 +147,7 @@ void main_hall_render_misc_anims(float frametime, bool over_doors);
 #define DOOR_TEXT_Y 450
 
 // the door animations themselves
-SCP_vector<generic_anim> Main_hall_door_anim;
+std::vector<generic_anim> Main_hall_door_anim;
 
 // render all playing door animations
 void main_hall_render_door_anims(float frametime);
@@ -225,7 +225,7 @@ void main_hall_mouse_grab_region(int region);
 #define ALLENDER_REGION		4
 
 // handles to the sound instances of the doors opening/closing
-SCP_vector<sound_handle> Main_hall_door_sound_handles;
+std::vector<sound_handle> Main_hall_door_sound_handles;
 
 // sound handle for looping ambient sound
 sound_handle Main_hall_ambient_loop = sound_handle::invalid();
@@ -403,7 +403,7 @@ void main_hall_campaign_cheat()
  *
  * @param main_hall_name Name of main hall to initialise
  */
-void main_hall_init(const SCP_string &main_hall_name)
+void main_hall_init(const std::string &main_hall_name)
 {
 	BM_TYPE bg_type;
 	if (Main_hall_inited) {
@@ -411,7 +411,7 @@ void main_hall_init(const SCP_string &main_hall_name)
 	}
 
 	int idx;
-	SCP_string main_hall_to_load;
+	std::string main_hall_to_load;
 
 	// reparse the table here if the relevant cmdline flag is set
 	if (Cmdline_reparse_mainhall) {
@@ -453,7 +453,7 @@ void main_hall_init(const SCP_string &main_hall_name)
 	}
 	
 	// Read the menu regions from mainhall.tbl
-	SCP_vector<main_hall_region>::iterator it;
+	std::vector<main_hall_region>::iterator it;
 	for (it = Main_hall->regions.begin(); Main_hall->regions.end() != it; ++it) {
 		snazzy_menu_add_region(&Main_hall_region[it - Main_hall->regions.begin()], it->description.c_str(), it->mask, it->key, interface_snd_id());
 	}
@@ -652,7 +652,7 @@ void main_hall_exit_game()
 void main_hall_do(float frametime)
 {
 	int code, key, snazzy_action, region_action = -1;
-	SCP_vector<main_hall_region>::iterator it;
+	std::vector<main_hall_region>::iterator it;
 
 	// set the screen scale to the main hall's dimensions
 	gr_set_screen_scale(Main_hall_bitmap_w, Main_hall_bitmap_h, Main_hall->zoom_area_width, Main_hall->zoom_area_height);
@@ -693,7 +693,7 @@ void main_hall_do(float frametime)
 
 			// TODO change way cheat anims are loaded to work with apngs
 			// maybe load both cheat & normal, advance frames in lockstep, display which one you want
-			if(Main_hall_cheat.find(Main_hall->cheat.at(c_idx)) != SCP_string::npos) {
+			if(Main_hall_cheat.find(Main_hall->cheat.at(c_idx)) != std::string::npos) {
 				cheat_found = true;
 				// switch animations
 
@@ -1191,7 +1191,7 @@ void main_hall_render_misc_anims(float frametime, bool over_doors)
 
 						// make sure we haven't already checked it
 						if (group_anims_weve_checked.at(idx) == false) {
-							SCP_vector<int> group_indexes; //stores indexes of which anims are part of a group
+							std::vector<int> group_indexes; //stores indexes of which anims are part of a group
 							bool all_neg1 = true;
 
 							// okay... now we need to make sure all anims in this group are paused and -1
@@ -1777,7 +1777,7 @@ void main_hall_process_help_stuff()
  * \return pointer to mainhall if one with a matching name is found
  * \return NULL otherwise
  */
-main_hall_defines* main_hall_get_pointer(const SCP_string &name_to_find)
+main_hall_defines* main_hall_get_pointer(const std::string &name_to_find)
 {
 	unsigned int i;
 
@@ -1797,7 +1797,7 @@ main_hall_defines* main_hall_get_pointer(const SCP_string &name_to_find)
  * \return -1 otherwise
  */
 
-int main_hall_get_index(const SCP_string &name_to_find)
+int main_hall_get_index(const std::string &name_to_find)
 {
 	unsigned int i;
 
@@ -1823,7 +1823,7 @@ int main_hall_get_resolution_index(int main_hall_num)
 	return 0;
 }
 
-void main_hall_get_name(SCP_string &name, unsigned int index)
+void main_hall_get_name(std::string &name, unsigned int index)
 {
 	if (index>=Main_hall_defines.size()) {
 		name = "";
@@ -1873,7 +1873,7 @@ void intercom_sounds_init(main_hall_defines &m)
 		m.intercom_sound_pan.clear();
 	}
 
-	SCP_vector<int> temp;
+	std::vector<int> temp;
 
 	for (idx = 0; idx < m.num_random_intercom_sounds; idx++) {
 		// intercom_delay
@@ -1915,8 +1915,8 @@ void misc_anim_init(main_hall_defines &m)
 		m.misc_anim_sound_flag.clear();
 	}
 
-	SCP_vector<int> temp;
-	SCP_string temp_string;
+	std::vector<int> temp;
+	std::string temp_string;
 
 	for (idx = 0; idx < m.num_misc_animations; idx++) {
 
@@ -1951,7 +1951,7 @@ void misc_anim_init(main_hall_defines &m)
 
 		// misc_anim_special_sounds
 		// parse_sound_list deals with the rest of the initialisation for this one
-		m.misc_anim_special_sounds.push_back(SCP_vector<interface_snd_id>());
+		m.misc_anim_special_sounds.push_back(std::vector<interface_snd_id>());
 
 		// misc_anim_special_trigger
 		m.misc_anim_special_trigger.push_back(temp);
@@ -1982,8 +1982,8 @@ void door_anim_init(main_hall_defines &m)
 		m.door_sound_pan.clear();
 	}
 
-	SCP_vector<int> temp;
-	SCP_string temp_string;
+	std::vector<int> temp;
+	std::string temp_string;
 
 	for (idx = 0; idx < m.num_door_animations; idx++) {
 		// door_anim_name
@@ -1999,7 +1999,7 @@ void door_anim_init(main_hall_defines &m)
 		m.door_anim_coords.at(idx).push_back(0);
 
 		// door_sounds
-		m.door_sounds.push_back(SCP_vector<interface_snd_id>());
+		m.door_sounds.push_back(std::vector<interface_snd_id>());
 
 		// door_sound_pan
 		m.door_sound_pan.push_back(0.0f);
@@ -2050,13 +2050,13 @@ void main_hall_table_init()
 // read in main hall table
 void parse_main_hall_table(const char* filename)
 {
-	SCP_vector<main_hall_defines> temp_vector;
+	std::vector<main_hall_defines> temp_vector;
 	main_hall_defines *m, temp;
 	int idx, s_idx, m_idx;
 	int num_resolutions = 2;
 	size_t count;
 	char temp_string[MAX_FILENAME_LEN];
-	SCP_string temp_scp_string;
+	std::string temp_scp_string;
 
 	try
 	{
@@ -2239,7 +2239,7 @@ void parse_main_hall_table(const char* filename)
 					// anim names
 					required_string("+Misc anim:");
 					stuff_string(temp_string, F_NAME, MAX_FILENAME_LEN);
-					m->misc_anim_name.at(idx) = (SCP_string)temp_string;
+					m->misc_anim_name.at(idx) = (std::string)temp_string;
 				}
 
 				for (idx = 0; idx < m->num_misc_animations; idx++) {
@@ -2341,7 +2341,7 @@ void parse_main_hall_table(const char* filename)
 					// door name
 					required_string("+Door anim:");
 					stuff_string(temp_string, F_NAME, MAX_FILENAME_LEN);
-					m->door_anim_name.at(idx) = (SCP_string)temp_string;
+					m->door_anim_name.at(idx) = (std::string)temp_string;
 				}
 
 				for (idx = 0; idx < m->num_door_animations; idx++) {
@@ -2401,7 +2401,7 @@ void parse_main_hall_table(const char* filename)
 						}
 
 						if (action == -1) {
-							SCP_string err_msg = "";
+							std::string err_msg = "";
 							for (int i = 0; Main_hall_region_map[i].name != NULL; i++) {
 								if (i != 0) {
 									err_msg += ", ";

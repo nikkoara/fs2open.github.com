@@ -147,9 +147,9 @@ ADE_INDEXER(l_Graphics_Posteffects, "number index", "Gets the name of the specif
 	if (index < 0)
 		return ade_set_error(L, "s", "");
 
-	SCP_vector<SCP_string> names;
+	std::vector<std::string> names;
 	get_post_process_effect_names(names);
-	names.push_back(SCP_string("lightshafts"));
+	names.push_back(std::string("lightshafts"));
 
 	if (index >= (int) names.size())
 		return ade_set_error(L, "s", "");
@@ -159,7 +159,7 @@ ADE_INDEXER(l_Graphics_Posteffects, "number index", "Gets the name of the specif
 
 ADE_FUNC(__len, l_Graphics_Posteffects, NULL, "Gets the number or available post processing effects", "number", "number of post processing effects or 0 on error")
 {
-	SCP_vector<SCP_string> names;
+	std::vector<std::string> names;
 	get_post_process_effect_names(names);
 
 	// Add one for lightshafts
@@ -839,7 +839,7 @@ ADE_FUNC(drawTargetingBrackets, l_Graphics, "object Object, [boolean draw=true, 
 	int bound_rc, pof;
 	int modelnum;
 	bool entered_frame = false;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	if ( !(g3_in_frame( ) > 0 ) )
 	{
@@ -1095,8 +1095,8 @@ ADE_FUNC(drawString, l_Graphics, "string Message, [number X1, number Y1, number 
 	}
 	else
 	{
-		SCP_vector<int> linelengths;
-		SCP_vector<const char*> linestarts;
+		std::vector<int> linelengths;
+		std::vector<const char*> linestarts;
 
 		if (y2 >= 0 && y2 < y)
 		{

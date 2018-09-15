@@ -115,12 +115,12 @@ typedef struct starfield_bitmap_instance {
 } starfield_bitmap_instance;
 
 // for drawing cool stuff on the background - comes from a table
-static SCP_vector<starfield_bitmap> Starfield_bitmaps;
-static SCP_vector<starfield_bitmap_instance> Starfield_bitmap_instances;
+static std::vector<starfield_bitmap> Starfield_bitmaps;
+static std::vector<starfield_bitmap_instance> Starfield_bitmap_instances;
 
 // sun bitmaps and sun glow bitmaps
-static SCP_vector<starfield_bitmap> Sun_bitmaps;
-static SCP_vector<starfield_bitmap_instance> Suns;
+static std::vector<starfield_bitmap> Sun_bitmaps;
+static std::vector<starfield_bitmap_instance> Suns;
 
 // Goober5000
 int Num_backgrounds = 0;
@@ -939,7 +939,7 @@ uint Star_flags = STAR_FLAG_DEFAULT;
 //XSTR:OFF
 DCF(stars,"Set parameters for starfield")
 {
-	SCP_string arg;
+	std::string arg;
 	float val_f;
 	int val_i;
 
@@ -1399,7 +1399,7 @@ float Subspace_glow_rate = 1.0f;
 //XSTR:OFF
 DCF(subspace_set,"Set parameters for subspace effect")
 {
-	SCP_string arg;
+	std::string arg;
 	float value;
 
 	if (dc_optional_string_either("help", "--help")) {

@@ -60,7 +60,7 @@ class FFMPEGStreamDecoder {
 
 	AVFrame* m_decodeFrame = nullptr;
 
-	SCP_queue<FramePtr<frame_type>> m_decodedFrames;
+	std::queue<FramePtr<frame_type>> m_decodedFrames;
 
 	void pushFrame(FramePtr<frame_type>&& frame);
  public:

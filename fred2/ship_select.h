@@ -80,6 +80,6 @@ protected:
 private:
 	int activity, list_size, wlist_size, wplist_size;
 	object *obj_index[MAX_OBJECTS];
-	SCP_vector<int> wing_index;
-	SCP_vector<int> wing_sel_last;
+	std::vector<int> wing_index;
+	std::vector<int> wing_sel_last;
 };

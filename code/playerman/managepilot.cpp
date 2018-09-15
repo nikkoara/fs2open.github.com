@@ -670,7 +670,7 @@ void player::assign(const player *other)
 
 	variables.clear();
 	variables.reserve(other->variables.size());
-	for (SCP_vector<sexp_variable>::const_iterator ii = other->variables.begin(); ii != other->variables.end(); ++ii)
+	for (std::vector<sexp_variable>::const_iterator ii = other->variables.begin(); ii != other->variables.end(); ++ii)
 	{
 		sexp_variable temp;
 		memcpy(&temp, &(*ii), sizeof(sexp_variable));

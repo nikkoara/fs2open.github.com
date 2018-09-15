@@ -105,7 +105,7 @@ using namespace Ship;
 static int Num_ship_subsystems = 0;
 static int Num_ship_subsystems_allocated = 0;
 
-static SCP_vector<ship_subsys*> Ship_subsystems;
+static std::vector<ship_subsys*> Ship_subsystems;
 ship_subsys ship_subsys_free_list;
 
 extern bool splodeing;
@@ -129,7 +129,7 @@ ship	Ships[MAX_SHIPS];
 
 ship	*Player_ship;
 int		*Player_cockpit_textures;
-SCP_vector<cockpit_display> Player_displays;
+std::vector<cockpit_display> Player_displays;
 
 wing	Wings[MAX_WINGS];
 int	ships_inited = 0;
@@ -146,7 +146,7 @@ char Starting_wing_names[MAX_STARTING_WINGS][NAME_LENGTH];
 char Squadron_wing_names[MAX_SQUADRON_WINGS][NAME_LENGTH];
 char TVT_wing_names[MAX_TVT_WINGS][NAME_LENGTH];
 
-SCP_vector<engine_wash_info> Engine_wash_info;
+std::vector<engine_wash_info> Engine_wash_info;
 
 static engine_wash_info *get_engine_wash_pointer(char* engine_wash_name);
 static int subsys_set(int objnum, int ignore_subsys_info = 0);
@@ -167,7 +167,7 @@ void ship_reset_disabled_physics(object *objp, int ship_class);
 static int parse_ship_values(ship_info* sip, const bool is_template, const bool first_time, const bool replace);
 
 // information for ships which have exited the game
-SCP_vector<exited_ship> Ships_exited;
+std::vector<exited_ship> Ships_exited;
 
 int	Num_engine_wash_types;
 int	Num_ship_subobj_types;
@@ -179,14 +179,14 @@ int	Player_ship_class;	// needs to be player specific, move to player structure
 ship_obj		Ship_objs[MAX_SHIP_OBJS];		// array used to store ship object indexes
 ship_obj		Ship_obj_list;							// head of linked list of ship_obj structs
 
-SCP_vector<ship_info>	Ship_info;
+std::vector<ship_info>	Ship_info;
 reinforcements	Reinforcements[MAX_REINFORCEMENTS];
-SCP_vector<ship_info>	Ship_templates;
+std::vector<ship_info>	Ship_templates;
 
-SCP_vector<ship_type_info> Ship_types;
+std::vector<ship_type_info> Ship_types;
 
-SCP_vector<ArmorType> Armor_types;
-SCP_vector<DamageTypeStruct>	Damage_types;
+std::vector<ArmorType> Armor_types;
+std::vector<DamageTypeStruct>	Damage_types;
 
 flag_def_list Armor_flags[] = {
 	{ "ignore subsystem armor",		SAF_IGNORE_SS_ARMOR,	0 }
@@ -504,7 +504,7 @@ flag_def_list_new<Weapon::Info_Flags> ai_tgt_weapon_flags[] = {
 
 const int num_ai_tgt_weapon_info_flags = sizeof(ai_tgt_weapon_flags) / sizeof(flag_def_list_new<Weapon::Info_Flags>);
 
-SCP_vector <ai_target_priority> Ai_tp_list;
+std::vector <ai_target_priority> Ai_tp_list;
 
 //	Constant for flag,				Name of flag,				In flags or flags2
 //  When adding new flags remember to bump MAX_SHIP_FLAG_NAMES in ship.h
@@ -533,7 +533,7 @@ ship_flag_name Ship_flag_names[] = {
 static int Laser_energy_out_snd_timer;	// timer so we play out of laser sound effect periodically
 static int Missile_out_snd_timer;	// timer so we play out of laser sound effect periodically
 
-SCP_vector<ship_counts>	Ship_type_counts;
+std::vector<ship_counts>	Ship_type_counts;
 
 // I don't want to do an AI cargo check every frame, so I made a global timer to limit check to
 // every SHIP_CARGO_CHECK_INTERVAL ms.  Didn't want to make a timer in each ship struct.  Ensure
@@ -544,7 +544,7 @@ static int Thrust_anim_inited = 0;
 
 static int ship_get_subobj_model_num(ship_info* sip, char* subobj_name);
 
-SCP_vector<ship_effect> Ship_effects;
+std::vector<ship_effect> Ship_effects;
 
 int ship_render_mode = MODEL_RENDER_ALL;
 /**
@@ -2344,7 +2344,7 @@ static int parse_ship_values(ship_info* sip, const bool is_template, const bool 
 		int i_species = 0;
 		
 		bool found = false;
-		for (SCP_vector<species_info>::iterator sii = Species_info.begin(); sii != Species_info.end(); ++sii, ++i_species) {
+		for (std::vector<species_info>::iterator sii = Species_info.begin(); sii != Species_info.end(); ++sii, ++i_species) {
 			if (!stricmp(temp, sii->species_name)) {
 				sip->species = i_species;
 				found = true;
@@ -2612,7 +2612,7 @@ static int parse_ship_values(ship_info* sip, const bool is_template, const bool 
 	if (optional_string("$Default Team:")) {
 		char temp[NAME_LENGTH];
 		stuff_string(temp, F_NAME, NAME_LENGTH);
-		SCP_string name = temp;
+		std::string name = temp;
 		if (!stricmp(temp, "none")) {
 			sip->uses_team_colors = true;
 		} else {
@@ -3261,7 +3261,7 @@ static int parse_ship_values(ship_info* sip, const bool is_template, const bool 
 	}
 
 	if(optional_string("$Model Point Shield Controls:")) {
-		SCP_vector<SCP_string> ctrl_strings;
+		std::vector<std::string> ctrl_strings;
 		int num_strings = stuff_string_list(ctrl_strings);
 
 		// Init all to -1 in case some aren't supplied...
@@ -4022,20 +4022,20 @@ static int parse_ship_values(ship_info* sip, const bool is_template, const bool 
 	}
 
 	if (optional_string("$Glowpoint overrides:")) {
-		SCP_vector<SCP_string> tokens;
+		std::vector<std::string> tokens;
 		tokens.clear();
 		stuff_string_list(tokens);
-		for(SCP_vector<SCP_string>::iterator token = tokens.begin(); token != tokens.end(); ++token) {
-			SCP_string name, banks;
+		for(std::vector<std::string>::iterator token = tokens.begin(); token != tokens.end(); ++token) {
+			std::string name, banks;
 			size_t seppos;
 			seppos = token->find_first_of(':');
-			if(seppos == SCP_string::npos) {
+			if(seppos == std::string::npos) {
 				Warning(LOCATION, "Couldn't find ':' seperator in Glowpoint override for ship %s ignoring token", sip->name);
 				continue;
 			}
 			name = token->substr(0, seppos);
 			banks = token->substr(seppos+1);
-			SCP_vector<glow_point_bank_override>::iterator gpo = get_glowpoint_bank_override_by_name(name.data());
+			std::vector<glow_point_bank_override>::iterator gpo = get_glowpoint_bank_override_by_name(name.data());
 			if(gpo == glowpoint_bank_overrides.end()){
 				Warning(LOCATION, "Couldn't find preset %s in glowpoints.tbl when parsing ship: %s", name.data(), sip->name);
 				continue;
@@ -4044,7 +4044,7 @@ static int parse_ship_values(ship_info* sip, const bool is_template, const bool 
 				sip->glowpoint_bank_override_map[-1] = (void*)(&(*gpo));
 				continue;
 			}
-			SCP_string banktoken;
+			std::string banktoken;
 			size_t start = 0;
 			size_t end;
 			do {
@@ -4054,8 +4054,8 @@ static int parse_ship_values(ship_info* sip, const bool is_template, const bool 
 				
 				size_t fromtopos;
 				fromtopos = banktoken.find_first_of('-');
-				if(fromtopos != SCP_string::npos) {
-					SCP_string from, to;
+				if(fromtopos != std::string::npos) {
+					std::string from, to;
 					int ifrom, ito;
 					from = banktoken.substr(0, fromtopos);
 					to = banktoken.substr(fromtopos+1);
@@ -4068,7 +4068,7 @@ static int parse_ship_values(ship_info* sip, const bool is_template, const bool 
 					int bank = atoi(banktoken.data()) - 1;
 					sip->glowpoint_bank_override_map[bank] = (void*)(&(*gpo));
 				}
-			} while(end !=SCP_string::npos);
+			} while(end !=std::string::npos);
 		}
 	}
 
@@ -4119,7 +4119,7 @@ static int parse_ship_values(ship_info* sip, const bool is_template, const bool 
 	}
 
 	if (optional_string("$Target Priority Groups:") ) {
-		SCP_vector<SCP_string> target_group_strings;
+		std::vector<std::string> target_group_strings;
 		int num_strings = stuff_string_list(target_group_strings);
 		size_t num_groups = Ai_tp_list.size();
 		bool override_strings = false;
@@ -4189,7 +4189,7 @@ static int parse_ship_values(ship_info* sip, const bool is_template, const bool 
 		}
 
 		//Add the new path_metadata to sip->pathMetadata keyed by path name
-		SCP_string pathName(path_name);
+		std::string pathName(path_name);
 		sip->pathMetadata[pathName] = metadata;
 	}
 
@@ -4408,7 +4408,7 @@ static int parse_ship_values(ship_info* sip, const bool is_template, const bool 
 			}
 
 			if (optional_string("$Target Priority:")) {
-				SCP_vector <SCP_string> tgt_priorities;
+				std::vector <std::string> tgt_priorities;
 				int num_strings = stuff_string_list(tgt_priorities);
 				sp->num_target_priorities = 0;
 
@@ -4462,7 +4462,7 @@ static int parse_ship_values(ship_info* sip, const bool is_template, const bool 
 			}
 
 			if (optional_string("$Flags:")) {
-                SCP_vector<SCP_string> errors;
+                std::vector<std::string> errors;
                 flagset<Model::Subsystem_Flags> tmp_flags;
                 parse_string_flag_list(tmp_flags, Subsystem_flags, Num_subsystem_flags, &errors);
                 
@@ -4801,7 +4801,7 @@ static void parse_ship_type()
 
 	//AI turret targeting priority setup
 	if (optional_string("$Target Priority Groups:") ) {
-		SCP_vector <SCP_string> target_group_strings;
+		std::vector <std::string> target_group_strings;
 		int num_strings = stuff_string_list(target_group_strings);
 		auto num_groups = Ai_tp_list.size();
 		bool override_strings = false;
@@ -9683,24 +9683,24 @@ void change_ship_type(int n, int ship_type, int by_sexp)
 	// MageKing17 - See if any AIs are doing anything with subsystems of this ship (targeting, goal to destroy)
 	// keep track of those subsystems and transfer the target/goal if the subsystem still exists, delete otherwise
 
-	SCP_list<int> target_matches;	// tells us to check this Ai_info index during subsystem traversal
+	std::list<int> target_matches;	// tells us to check this Ai_info index during subsystem traversal
 
-	SCP_list<ivec3> subsystem_matches;	// Ai_info index, goal index (or -1 for targeted), subsystem index
+	std::list<ivec3> subsystem_matches;	// Ai_info index, goal index (or -1 for targeted), subsystem index
 	// not having a subsystem index at first is why we have the target_matches list:
 	// while traversing the subsystem list, a match can be compared directly to the
 	// subsystem object, and its index added to subsystem_matches.
 
-	SCP_list<weapon*> homing_matches;	// any missiles locked on to a subsystem from this ship
+	std::list<weapon*> homing_matches;	// any missiles locked on to a subsystem from this ship
 
-	SCP_list<std::pair<weapon*, int>> homing_subsystem_matches;	// When homing_matches find matches, they put them here
+	std::list<std::pair<weapon*, int>> homing_subsystem_matches;	// When homing_matches find matches, they put them here
 
-	SCP_list<weapon*> weapon_turret_matches;	// projectiles that were fired from turrets on this ship
+	std::list<weapon*> weapon_turret_matches;	// projectiles that were fired from turrets on this ship
 
-	SCP_list<std::pair<weapon*, int>> weapon_turret_subsystem_matches;
+	std::list<std::pair<weapon*, int>> weapon_turret_subsystem_matches;
 
-	SCP_list<int> last_targeted_matches;
+	std::list<int> last_targeted_matches;
 
-	SCP_list<std::pair<int, int>> last_targeted_subsystem_matches;
+	std::list<std::pair<int, int>> last_targeted_subsystem_matches;
 
 	if (!(Fred_running) && (Game_mode & GM_IN_MISSION)) {	// Doing this effort only makes sense in the middle of a mission.
 		// Delete ship sparks if the model changed
@@ -10273,7 +10273,7 @@ void change_ship_type(int n, int ship_type, int by_sexp)
 			sp->ship_replacement_textures[i] = -1;
 
 		// now fill them in according to texture name
-		for (SCP_vector<texture_replace>::iterator tr = p_objp->replacement_textures.begin(); tr != p_objp->replacement_textures.end(); ++tr)
+		for (std::vector<texture_replace>::iterator tr = p_objp->replacement_textures.begin(); tr != p_objp->replacement_textures.end(); ++tr)
 		{
 			int j;
 			polymodel *pm = model_get(sip->model_num);
@@ -14257,7 +14257,7 @@ DCF(set_hull, "Change player ship hull strength")
 //XSTR:OFF
 DCF(set_subsys, "Set the strength of a particular subsystem on player ship" )
 {
-	SCP_string arg;
+	std::string arg;
 	int subsystem = SUBSYSTEM_NONE;
 	float val_f;
 	
@@ -15125,7 +15125,7 @@ static const char* ship_get_ai_target_display_name(int goal, const char* name)
 // of what a ship's orders are.  Feel free to use this function if 
 // it suits your needs for something.
 //
-SCP_string ship_return_orders(ship* sp)
+std::string ship_return_orders(ship* sp)
 {
 	ai_info* aip;
 	ai_goal* aigp;
@@ -15137,15 +15137,15 @@ SCP_string ship_return_orders(ship* sp)
 	aigp = &aip->goals[0];
 
 	if (aigp->ai_mode < 0)
-		return SCP_string();
+		return std::string();
 
 	auto order_text = Ai_goal_text(aigp->ai_mode);
 	if (order_text == nullptr)
-		return SCP_string();
+		return std::string();
 
-	SCP_string outbuf = order_text;
+	std::string outbuf = order_text;
 
-	SCP_string target_name;
+	std::string target_name;
 	if (aigp->target_name) {
 		target_name = ship_get_ai_target_display_name(aigp->ai_mode, aigp->target_name);
 		end_string_at_first_hash_symbol(target_name);
@@ -15205,7 +15205,7 @@ SCP_string ship_return_orders(ship* sp)
 		break;
 
 	default:
-		return SCP_string();
+		return std::string();
 	}
 
 	return outbuf;
@@ -15246,7 +15246,7 @@ char *ship_return_time_to_goal(char *outbuf, ship *sp)
 			Assert(aip->wp_index != INVALID_WAYPOINT_POSITION);
 			dist += vm_vec_dist_quick(&objp->pos, aip->wp_list->get_waypoints()[aip->wp_index].get_pos());
 
-			SCP_vector<waypoint>::iterator ii;
+			std::vector<waypoint>::iterator ii;
 			vec3d *prev_vec = NULL;
 			for (ii = (aip->wp_list->get_waypoints().begin() + aip->wp_index); ii != aip->wp_list->get_waypoints().end(); ++ii) {
 				if (prev_vec != NULL) {
@@ -18347,7 +18347,7 @@ void parse_ai_target_priorities()
 {
 	int i, j, num_strings;
 	int n_entries = (int)Ai_tp_list.size();
-	SCP_vector <SCP_string> temp_strings;
+	std::vector <std::string> temp_strings;
 
 	bool first_time = false;
 	int already_exists = -1;
@@ -18493,7 +18493,7 @@ void parse_weapon_targeting_priorities()
 		if(k == MAX_WEAPON_TYPES) {
 			error_display(0, "Unrecognized weapon '%s' found when setting weapon targeting priorities.\n", tempname);
 			if (optional_string("+Target Priority:")) {		// consume the data to avoid parsing errors
-				SCP_vector<SCP_string> dummy;
+				std::vector<std::string> dummy;
 				stuff_string_list(dummy);
 			}
 		} else {
@@ -18504,7 +18504,7 @@ void parse_weapon_targeting_priorities()
 			wip->num_targeting_priorities = 0;
 
 			if (optional_string("+Target Priority:")) {
-				SCP_vector <SCP_string> tgt_priorities;
+				std::vector <std::string> tgt_priorities;
 				int num_strings = stuff_string_list(tgt_priorities);
 
 				if (num_strings > 32)
@@ -18559,7 +18559,7 @@ gamesnd_id ship_get_sound(object *objp, GameSounds id)
 	ship *shipp = &Ships[objp->instance];
 	ship_info *sip = &Ship_info[shipp->ship_info_index];
 
-	SCP_map<GameSounds, gamesnd_id>::iterator element = sip->ship_sounds.find(id);
+	std::map<GameSounds, gamesnd_id>::iterator element = sip->ship_sounds.find(id);
 
 	if (element == sip->ship_sounds.end())
 		return gamesnd_id(id);

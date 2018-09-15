@@ -440,7 +440,7 @@ bool AsteroidEditorDialogModel::get_modified()
 	return _modified;
 }
 
-void AsteroidEditorDialogModel::showErrorDialogNoCancel(const SCP_string& message)
+void AsteroidEditorDialogModel::showErrorDialogNoCancel(const std::string& message)
 {
 	if (_bypass_errors) {
 		return;

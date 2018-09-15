@@ -14,7 +14,7 @@ class SelectionDialogModel : public AbstractDialogModel {
 	Q_OBJECT
  public:
 	struct ListEntry {
-		SCP_string name;
+		std::string name;
 		int id = -1;
 		bool selected = false;
 	};
@@ -30,11 +30,11 @@ class SelectionDialogModel : public AbstractDialogModel {
 
 	void updateStatus(bool first_time);
 
-	SCP_vector<ListEntry> _obj_list;
+	std::vector<ListEntry> _obj_list;
 
-	SCP_vector<ListEntry> _wing_list;
+	std::vector<ListEntry> _wing_list;
 
-	SCP_vector<ListEntry> _waypoint_list;
+	std::vector<ListEntry> _waypoint_list;
 
 	bool _filter_ships = true;
 	bool _filter_starts = true;
@@ -57,11 +57,11 @@ signals:
 
 	void invertSelection();
 
-	const SCP_vector<ListEntry>& getObjectList() const;
+	const std::vector<ListEntry>& getObjectList() const;
 
-	const SCP_vector<ListEntry>& getWingList() const;
+	const std::vector<ListEntry>& getWingList() const;
 
-	const SCP_vector<ListEntry>& getWaypointList() const;
+	const std::vector<ListEntry>& getWaypointList() const;
 
 	bool isFilterShips() const;
 	void setFilterShips(bool filter_ships);
@@ -82,7 +82,7 @@ signals:
 	 *
 	 * @param newSelection The new selection list
 	 */
-	void updateObjectSelection(const SCP_vector<ListEntry>& newSelection);
+	void updateObjectSelection(const std::vector<ListEntry>& newSelection);
 
 	void selectWing(int wing_id);
 

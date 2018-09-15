@@ -15,8 +15,8 @@ class LuaSEXP : public DynamicSEXP {
 	int _min_args;
 	int _max_args;
 
-	SCP_vector<int> _argument_types; //!< These are the types of the static, non-repeating arguments
-	SCP_vector<int> _varargs_type_pattern; //!< This is the pattern for the variable argument part of the SEXP
+	std::vector<int> _argument_types; //!< These are the types of the static, non-repeating arguments
+	std::vector<int> _varargs_type_pattern; //!< This is the pattern for the variable argument part of the SEXP
 
 	int _return_type = OPR_NULL;
 
@@ -25,7 +25,7 @@ class LuaSEXP : public DynamicSEXP {
 
 	luacpp::LuaValue sexpToLua(int node, int argnum) const;
  public:
-	explicit LuaSEXP(const SCP_string& name);
+	explicit LuaSEXP(const std::string& name);
 
 	int getMinimumArguments() override;
 

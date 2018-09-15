@@ -18,7 +18,7 @@ class JSONFileHandler: public FileHandler {
 
 	json_t* _currentEl;
 
-	SCP_vector<json_t*> _elementStack;
+	std::vector<json_t*> _elementStack;
 
 	void ensureNotExists(const char* name);
 	void writeInteger(const char* name, json_int_t value);

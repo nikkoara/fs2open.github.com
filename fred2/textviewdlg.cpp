@@ -52,7 +52,7 @@ void text_view_dlg::set(int ship_class)
 {
 	char line[256], line2[256], file_text[82];
 	int i, j, n, found = 0, comment = 0, num_files = 0;
-	SCP_vector<SCP_string> tbl_file_names;
+	std::vector<std::string> tbl_file_names;
 	CFILE *fp;
 
 	if (ship_class < 0)

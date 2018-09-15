@@ -53,7 +53,7 @@ class decal_material;
 class transform_stack {
 
 	matrix4 Current_transform;
-	SCP_vector<matrix4> Stack;
+	std::vector<matrix4> Stack;
 public:
 	transform_stack()
 	{
@@ -243,7 +243,7 @@ struct vertex_format_data
 };
 class vertex_layout
 {
-	SCP_vector<vertex_format_data> Vertex_components;
+	std::vector<vertex_format_data> Vertex_components;
 
 	uint Vertex_mask = 0;
 	size_t Vertex_stride = 0;
@@ -368,7 +368,7 @@ public:
 	poly_list& operator=(const poly_list&);
 
 	void allocate(int size);
-	void make_index_buffer(SCP_vector<int> &vertex_list);
+	void make_index_buffer(std::vector<int> &vertex_list);
 	void calculate_tangent();
 	int n_verts;
 	vertex *vert;
@@ -515,7 +515,7 @@ public:
 
 	poly_list *model_list;
 
-	SCP_vector<buffer_data> tex_buf;
+	std::vector<buffer_data> tex_buf;
 
 	vertex_layout layout;
 
@@ -536,7 +536,7 @@ public:
 			model_list = NULL;
 		}
 
-		for (SCP_vector<buffer_data>::iterator tbi = tex_buf.begin(); tbi != tex_buf.end(); ++tbi) {
+		for (std::vector<buffer_data>::iterator tbi = tex_buf.begin(); tbi != tex_buf.end(); ++tbi) {
 			tbi->release();
 		}
 	}
@@ -1150,7 +1150,7 @@ void gr_opengl_update_texture(int bitmap_handle, int bpp, const ubyte* data, int
 // special function for drawing polylines. this function is specifically intended for
 // polylines where each section is no more than 90 degrees away from a previous section.
 // Moreover, it is _really_ intended for use with 45 degree angles. 
-void gr_pline_special(SCP_vector<vec3d> *pts, int thickness,int resize_mode=GR_RESIZE_FULL);
+void gr_pline_special(std::vector<vec3d> *pts, int thickness,int resize_mode=GR_RESIZE_FULL);
 
 #define VB_FLAG_POSITION	(1<<0)
 #define VB_FLAG_RHW			(1<<1)	//incompatable with the next normal
@@ -1212,17 +1212,17 @@ struct VideoModeData {
 
 struct DisplayData {
 	uint32_t index;
-	SCP_string name;
+	std::string name;
 
 	int32_t x = 0;
 	int32_t y = 0;
 	int32_t width = 0;
 	int32_t height = 0;
 
-	SCP_vector<VideoModeData> video_modes;
+	std::vector<VideoModeData> video_modes;
 };
 
-SCP_vector<DisplayData> gr_enumerate_displays();
+std::vector<DisplayData> gr_enumerate_displays();
 
 enum class GpuHeap {
 	ModelVertex = 0,

@@ -28,10 +28,10 @@ class event final {
 	}
 
 	// In this case we collect the return values and return them to the caller
-	template <typename Dummy = SCP_vector<Ret>>
+	template <typename Dummy = std::vector<Ret>>
 	inline typename std::enable_if<!std::is_same<Ret, void>::value, Dummy>::type operator()(Args... args) const
 	{
-		SCP_vector<Ret> vals;
+		std::vector<Ret> vals;
 
 		for (const auto& l : _listeners) {
 			vals.push_back(l(args...));
@@ -41,7 +41,7 @@ class event final {
 	}
 
   private:
-	SCP_vector<callback_type> _listeners;
+	std::vector<callback_type> _listeners;
 };
 
 } // namespace util

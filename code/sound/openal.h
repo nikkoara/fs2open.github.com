@@ -15,7 +15,7 @@
 
 
 const char* openal_error_string(int get_alc = 0);
-bool openal_init_device(SCP_string *playback, SCP_string *capture);
+bool openal_init_device(std::string *playback, std::string *capture);
 
 ALenum openal_get_format(ALint bits, ALint n_channels);
 
@@ -23,13 +23,13 @@ struct OpenALInformation {
 	uint32_t version_major = 0;
 	uint32_t version_minor = 0;
 
-	SCP_string default_playback_device{};
-	SCP_string default_capture_device{};
+	std::string default_playback_device{};
+	std::string default_capture_device{};
 
-	SCP_vector<SCP_string> playback_devices;
-	SCP_vector<SCP_string> capture_devices;
+	std::vector<std::string> playback_devices;
+	std::vector<std::string> capture_devices;
 
-	SCP_vector<std::pair<SCP_string, bool>> efx_support;
+	std::vector<std::pair<std::string, bool>> efx_support;
 };
 
 OpenALInformation openal_get_platform_information();

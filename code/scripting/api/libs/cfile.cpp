@@ -108,7 +108,7 @@ ADE_FUNC(listFiles, l_CFile, "string directory, string filter",
 		return ADE_RETURN_NIL;
 	}
 
-	SCP_string filter_str = filter;
+	std::string filter_str = filter;
 	if (filter_str.empty()) {
 		LuaError(L, "The filter \"%s\" is not valid! It may not be empty.", filter);
 		return ADE_RETURN_NIL;
@@ -119,9 +119,9 @@ ADE_FUNC(listFiles, l_CFile, "string directory, string filter",
 		return ADE_RETURN_NIL;
 	}
 
-	SCP_string ext; // Extension with '.' if it exists
+	std::string ext; // Extension with '.' if it exists
 	auto dot_pos = filter_str.find('.');
-	if (dot_pos != SCP_string::npos) {
+	if (dot_pos != std::string::npos) {
 		ext = filter_str.substr(dot_pos);
 	}
 
@@ -131,7 +131,7 @@ ADE_FUNC(listFiles, l_CFile, "string directory, string filter",
 		return ADE_RETURN_NIL;
 	}
 
-	SCP_vector<SCP_string> files;
+	std::vector<std::string> files;
 	cf_get_file_list(files, path_type, filter, CF_SORT_NAME);
 
 	LuaTable table = LuaTable::create(L);

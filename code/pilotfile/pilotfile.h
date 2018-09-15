@@ -63,7 +63,7 @@ class pilotfile {
 		// --------------------------------------------------------------------
 		CFILE *cfp;
 		std::unique_ptr<pilot::FileHandler> handler;
-		SCP_string filename;
+		std::string filename;
 		player *p;
 
 		int version;
@@ -77,7 +77,7 @@ class pilotfile {
 		bool m_data_invalid;
 
 		typedef struct index_list_t {
-			SCP_string name;
+			std::string name;
 			int index;
 			int val;
 
@@ -90,10 +90,10 @@ class pilotfile {
 		// overall content list, can include reference to more than current
 		// mod/campaign provides
 		// NOTE:  order of each list **must be preserved**
-		SCP_vector<index_list_t> ship_list;
-		SCP_vector<index_list_t> weapon_list;
-		SCP_vector<index_list_t> intel_list;
-		SCP_vector<index_list_t> medals_list;
+		std::vector<index_list_t> ship_list;
+		std::vector<index_list_t> weapon_list;
+		std::vector<index_list_t> intel_list;
+		std::vector<index_list_t> medals_list;
 
 		// special stats struct, since our use here is not content specific
 		typedef struct scoring_special_t {
@@ -117,8 +117,8 @@ class pilotfile {
 			_fs_time_t last_flown;
 			_fs_time_t last_backup;
 
-			SCP_vector<index_list_t> ship_kills;
-			SCP_vector<index_list_t> medals_earned;
+			std::vector<index_list_t> ship_kills;
+			std::vector<index_list_t> medals_earned;
 
 			scoring_special_t() :
 				score(0), rank(RANK_ENSIGN), assists(0), kill_count(0), kill_count_ok(0),

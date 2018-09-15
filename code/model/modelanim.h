@@ -135,7 +135,7 @@ class triggered_rotation
 		int start_time;		// the time the current animation started
 };
 
-extern SCP_vector<triggered_rotation> Triggered_rotations;
+extern std::vector<triggered_rotation> Triggered_rotations;
 
 // functions...
 
@@ -173,9 +173,9 @@ typedef struct stack_item
 	bool instant;
 } stack_item;
 
-typedef SCP_vector<stack_item> animation_stack;
+typedef std::vector<stack_item> animation_stack;
 
-extern SCP_map<int, animation_stack> Animation_map;
+extern std::map<int, animation_stack> Animation_map;
 
 bool model_anim_push_and_start_type(int stack_unique_id, ship *shipp, int animation_type, int subtype, int direction, bool instant = false);
 bool model_anim_pop_and_start_type(int stack_unique_id);

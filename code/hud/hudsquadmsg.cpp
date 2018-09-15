@@ -233,7 +233,7 @@ char *comm_order_get_text(int item)
 	return NULL;
 }
 
-SCP_vector<squadmsg_history> Squadmsg_history; 
+std::vector<squadmsg_history> Squadmsg_history; 
 
 // forward declarations
 void hud_add_issued_order(const char *name, int order);

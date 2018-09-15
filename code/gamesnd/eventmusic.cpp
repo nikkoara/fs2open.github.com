@@ -1767,7 +1767,7 @@ int event_music_get_spooled_music_index(const char *name)
 	return -1;
 }
 
-int event_music_get_spooled_music_index(const SCP_string& name)
+int event_music_get_spooled_music_index(const std::string& name)
 {
 	return event_music_get_spooled_music_index(name.c_str());
 	}

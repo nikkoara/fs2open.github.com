@@ -130,7 +130,7 @@ struct scrollback_buttons {
 	scrollback_buttons(const char *name, int x1, int y1, int x2, int y2, int h) : filename(name), x(x1), y(y1), xt(x2), yt(y2), hotspot(h) {}
 };
 
-SCP_vector<HUD_message_data> HUD_msg_buffer;
+std::vector<HUD_message_data> HUD_msg_buffer;
 
 int HUD_msg_inited = FALSE;
 
@@ -291,7 +291,7 @@ void HudGaugeMessages::initialize()
 	Window_height = Max_lines * Line_h;
 
 	active_messages.clear();
-	pending_messages = SCP_queue<HUD_message_data>(); // there's no clear() method for queues :/
+	pending_messages = std::queue<HUD_message_data>(); // there's no clear() method for queues :/
 
 	Scroll_needed = false;
 	Scroll_in_progress = false;
@@ -366,7 +366,7 @@ void HudGaugeMessages::scrollMessages()
 
 		pending_messages.pop();
 
-		for ( SCP_vector<Hud_display_info>::iterator m = active_messages.begin(); m != active_messages.end(); ++m ) {
+		for ( std::vector<Hud_display_info>::iterator m = active_messages.begin(); m != active_messages.end(); ++m ) {
 			// determine if there are any existing messages, if so need to scroll them up
 			if ( !timestamp_elapsed(m->total_life) ) {
 				m->target_y -= Line_h;
@@ -388,7 +388,7 @@ void HudGaugeMessages::scrollMessages()
 	Scroll_in_progress = false;
 	Scroll_needed = false;
 
-	for ( SCP_vector<Hud_display_info>::iterator m = active_messages.begin(); m != active_messages.end(); ) {
+	for ( std::vector<Hud_display_info>::iterator m = active_messages.begin(); m != active_messages.end(); ) {
 		if ( !timestamp_elapsed(m->total_life) ) {
 			if ( m->y > m->target_y ) {
 				Scroll_needed = true;
@@ -457,7 +457,7 @@ void HudGaugeMessages::render(float  /*frametime*/)
 	// dependant on max_width, max_lines, and line_height
 	setClip(position[0], position[1], Window_width, Window_height+2);
 
-	for ( SCP_vector<Hud_display_info>::iterator m = active_messages.begin(); m != active_messages.end(); ++m) {
+	for ( std::vector<Hud_display_info>::iterator m = active_messages.begin(); m != active_messages.end(); ++m) {
 		if ( !timestamp_elapsed(m->total_life) ) {
 			if ( !(Player->flags & PLAYER_FLAGS_MSG_MODE) || !Hidden_by_comms_menu) {
 				// set the appropriate color					
@@ -607,7 +607,7 @@ void hud_sourced_print(int source, const char *msg)
 
 	HUD_message_data new_msg;
 
-	new_msg.text = SCP_string(msg);
+	new_msg.text = std::string(msg);
 	new_msg.source = source;
 	new_msg.x = 0;
 

@@ -84,8 +84,8 @@ void multi_common_unload_palette();
 void multi_common_verify_cd();
 
 // variables to hold the mission and campaign lists
-extern SCP_vector<multi_create_info> Multi_create_mission_list;
-extern SCP_vector<multi_create_info> Multi_create_campaign_list;
+extern std::vector<multi_create_info> Multi_create_mission_list;
+extern std::vector<multi_create_info> Multi_create_campaign_list;
 
 extern int Multi_create_overlay_id;
 

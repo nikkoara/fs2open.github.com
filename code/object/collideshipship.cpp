@@ -236,7 +236,7 @@ int ship_ship_check_collision(collision_info_struct *ship_ship_hit_info, vec3d *
 	// first test against the sphere - if this fails then don't do any submodel tests
 	mc.flags = MC_ONLY_SPHERE | MC_CHECK_SPHERELINE;
 
-	SCP_vector<int> submodel_vector;
+	std::vector<int> submodel_vector;
 	int valid_hit_occured = 0;
 	polymodel *pm_light;
 	polymodel_instance *pmi;
@@ -254,7 +254,7 @@ int ship_ship_check_collision(collision_info_struct *ship_ship_hit_info, vec3d *
 
 		// Do collision the cool new way
 		if ( ship_ship_hit_info->collide_rotate ) {
-			SCP_vector<int>::iterator smv;
+			std::vector<int>::iterator smv;
 
 			model_get_rotating_submodel_list(&submodel_vector, heavy_obj);
 

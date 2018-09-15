@@ -68,7 +68,7 @@ float Max_front_seperation[GR_NUM_RESOLUTIONS] = {
 	16.0f
 };
 
-SCP_vector<target_display_info> target_display_list;
+std::vector<target_display_info> target_display_list;
 
 // The following variables are global to this file, and do not need to be persistent from frame-to-frame
 // This means the variables are not player-specific
@@ -612,7 +612,7 @@ void hud_reticle_list_update(object *objp, float measure, int dot_flag)
 {
 	reticle_list	*rl, *new_rl;
 	int				i;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	if (objp->type == OBJ_JUMP_NODE) {
 		for (jnp = Jump_nodes.begin(); jnp != Jump_nodes.end(); ++jnp) {
@@ -1159,7 +1159,7 @@ void hud_target_common(int team_mask, int next_flag)
 	object	*A, *start, *start2;
 	ship		*shipp;
 	int		is_ship, target_found = FALSE;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	if (Player_ai->target_objnum == -1)
 		start = &obj_used_list;
@@ -2453,7 +2453,7 @@ void hud_target_targets_target()
 int object_targetable_in_reticle(object *target_objp)
 {
 	int obj_type;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	if (target_objp == Player_obj ) {
 		return 0;
@@ -2499,7 +2499,7 @@ void hud_target_in_reticle_new()
 	object	*A;
 	mc_info	mc;
 	float		dist;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	hud_reticle_clear_list(&Reticle_cur_list);
 	Reticle_save_timestamp = timestamp(RESET_TARGET_IN_RETICLE);

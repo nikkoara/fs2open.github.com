@@ -592,8 +592,8 @@ int cf_rename(const char *old_name, const char *name, int dir_type)
 // Do note that this requires the path to have normalized directory separators as defined by DIR_SEPARATOR_CHAR
 static void mkdir_recursive(const char *path) {
     size_t pre = 0, pos;
-    SCP_string tmp(path);
-    SCP_string dir;
+    std::string tmp(path);
+    std::string dir;
 
     if (tmp[tmp.size() - 1] != DIR_SEPARATOR_CHAR) {
         // force trailing / so we can handle everything in loop

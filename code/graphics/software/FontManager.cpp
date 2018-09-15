@@ -14,15 +14,15 @@
 namespace font
 {
 
-	SCP_map<SCP_string, TrueTypeFontData> FontManager::allocatedData;
-	SCP_map<SCP_string, std::unique_ptr<font>> FontManager::vfntFontData;
-	SCP_vector<std::unique_ptr<FSFont>> FontManager::fonts;
+	std::map<std::string, TrueTypeFontData> FontManager::allocatedData;
+	std::map<std::string, std::unique_ptr<font>> FontManager::vfntFontData;
+	std::vector<std::unique_ptr<FSFont>> FontManager::fonts;
 
 	FSFont* FontManager::currentFont = NULL;
 
-	FSFont* FontManager::getFont(const SCP_string& name)
+	FSFont* FontManager::getFont(const std::string& name)
 	{
-		for (SCP_vector<std::unique_ptr<FSFont>>::iterator iter = fonts.begin(); iter != fonts.end(); iter++)
+		for (std::vector<std::unique_ptr<FSFont>>::iterator iter = fonts.begin(); iter != fonts.end(); iter++)
 		{
 			if ((*iter)->getName() == name)
 				return iter->get();
@@ -44,11 +44,11 @@ namespace font
 		return FontManager::getFontIndex(currentFont);
 	}
 
-	int FontManager::getFontIndex(const SCP_string& name)
+	int FontManager::getFontIndex(const std::string& name)
 	{
 		int index = 0;
 
-		for (SCP_vector<std::unique_ptr<FSFont>>::iterator iter = fonts.begin(); iter != fonts.end(); iter++, index++)
+		for (std::vector<std::unique_ptr<FSFont>>::iterator iter = fonts.begin(); iter != fonts.end(); iter++, index++)
 		{
 			if ((*iter)->getName() == name)
 				return index;
@@ -64,7 +64,7 @@ namespace font
 
 		int index = 0;
 
-		for (SCP_vector<std::unique_ptr<FSFont>>::iterator iter = fonts.begin(); iter != fonts.end(); iter++, index++)
+		for (std::vector<std::unique_ptr<FSFont>>::iterator iter = fonts.begin(); iter != fonts.end(); iter++, index++)
 		{
 			if (iter->get() == font)
 				return index;
@@ -94,7 +94,7 @@ namespace font
 		currentFont = font;
 	}
 
-	font* FontManager::loadFontOld(const SCP_string& typeface)
+	font* FontManager::loadFontOld(const std::string& typeface)
 	{
 		if (vfntFontData.find(typeface) != vfntFontData.end())
 		{
@@ -245,7 +245,7 @@ namespace font
 		return ptr;
 	}
 
-	VFNTFont *FontManager::loadVFNTFont(const SCP_string& name)
+	VFNTFont *FontManager::loadVFNTFont(const std::string& name)
 	{
 		font* font = FontManager::loadFontOld(name);
 
@@ -265,7 +265,7 @@ namespace font
 		}
 	}
 
-	NVGFont *FontManager::loadNVGFont(const SCP_string& fileName, float fontSize)
+	NVGFont *FontManager::loadNVGFont(const std::string& fileName, float fontSize)
 	{
 		if (allocatedData.find(fileName) == allocatedData.end())
 		{

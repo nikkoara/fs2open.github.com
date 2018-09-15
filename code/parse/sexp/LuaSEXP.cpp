@@ -24,7 +24,7 @@ using namespace luacpp;
 
 namespace {
 
-SCP_unordered_map<SCP_string, int> parameter_type_mapping{{ "boolean",      OPF_BOOL },
+std::unordered_map<std::string, int> parameter_type_mapping{{ "boolean",      OPF_BOOL },
 														  { "number",       OPF_NUMBER },
 														  { "ship",         OPF_SHIP },
 														  { "string",       OPF_STRING },
@@ -35,8 +35,8 @@ SCP_unordered_map<SCP_string, int> parameter_type_mapping{{ "boolean",      OPF_
 														  { "wing",         OPF_WING },
 														  { "shipclass",    OPF_SHIP_CLASS_NAME },
 														  { "weaponclass",  OPF_WEAPON_NAME }, };
-int get_parameter_type(const SCP_string& name) {
-	SCP_string copy = name;
+int get_parameter_type(const std::string& name) {
+	std::string copy = name;
 	std::transform(copy.begin(), copy.end(), copy.begin(), ::tolower);
 
 	auto iter = parameter_type_mapping.find(copy);
@@ -47,11 +47,11 @@ int get_parameter_type(const SCP_string& name) {
 	}
 }
 
-SCP_unordered_map<SCP_string, int> return_type_mapping{{ "number",  OPR_NUMBER },
+std::unordered_map<std::string, int> return_type_mapping{{ "number",  OPR_NUMBER },
 													   { "boolean", OPR_BOOL },
 													   { "nothing", OPR_NULL }, };
-int get_return_type(const SCP_string& name) {
-	SCP_string copy = name;
+int get_return_type(const std::string& name) {
+	std::string copy = name;
 	std::transform(copy.begin(), copy.end(), copy.begin(), ::tolower);
 
 	auto iter = return_type_mapping.find(copy);
@@ -62,7 +62,7 @@ int get_return_type(const SCP_string& name) {
 	}
 }
 
-int get_category(const SCP_string& name) {
+int get_category(const std::string& name) {
 	for (auto& subcat : op_menu) {
 		if (subcat.name == name) {
 			return subcat.id;
@@ -72,7 +72,7 @@ int get_category(const SCP_string& name) {
 	return -1;
 }
 
-int get_subcategory(const SCP_string& name) {
+int get_subcategory(const std::string& name) {
 	for (auto& subcat : op_submenu) {
 		if (subcat.name == name) {
 			return subcat.id;
@@ -86,7 +86,7 @@ int get_subcategory(const SCP_string& name) {
 
 namespace sexp {
 
-LuaSEXP::LuaSEXP(const SCP_string& name) : DynamicSEXP(name) {
+LuaSEXP::LuaSEXP(const std::string& name) : DynamicSEXP(name) {
 }
 int LuaSEXP::getMinimumArguments() {
 	return _min_args;
@@ -321,7 +321,7 @@ int LuaSEXP::getCategory() {
 }
 void LuaSEXP::parseTable() {
 	required_string("$Category:");
-	SCP_string category;
+	std::string category;
 	stuff_string(category, F_NAME);
 
 	_category = get_category(category);
@@ -331,7 +331,7 @@ void LuaSEXP::parseTable() {
 	}
 
 	required_string("$Subcategory:");
-	SCP_string subcategory;
+	std::string subcategory;
 	stuff_string(subcategory, F_NAME);
 
 	_subcategory = get_subcategory(subcategory);
@@ -383,7 +383,7 @@ void LuaSEXP::parseTable() {
 	}
 
 	if (optional_string("$Return Type:")) {
-		SCP_string type;
+		std::string type;
 		stuff_string(type, F_NAME);
 
 		_return_type = get_return_type(type);
@@ -396,12 +396,12 @@ void LuaSEXP::parseTable() {
 		_return_type = OPR_NULL;
 	}
 
-	SCP_stringstream help_text;
+	std::stringstream help_text;
 	help_text << _name << "\r\n";
 
 	required_string("$Description:");
 
-	SCP_string description;
+	std::string description;
 	stuff_string(description, F_NAME);
 
 	help_text << "\t" << description << "\r\n";
@@ -415,7 +415,7 @@ void LuaSEXP::parseTable() {
 	while (optional_string("$Parameter:")) {
 		required_string("+Description:");
 
-		SCP_string param_desc;
+		std::string param_desc;
 		stuff_string(param_desc, F_NAME);
 
 		if (variable_arg_part) {
@@ -426,7 +426,7 @@ void LuaSEXP::parseTable() {
 		help_text << ": " << param_desc << "\r\n";
 
 		required_string("+Type:");
-		SCP_string type_str;
+		std::string type_str;
 		stuff_string(type_str, F_NAME);
 
 		auto type = get_parameter_type(type_str);

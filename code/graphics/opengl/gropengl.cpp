@@ -73,7 +73,7 @@ static GLuint GL_screen_pbo = 0;
 float GL_alpha_threshold = 0.0f;
 
 extern const char *Osreg_title;
-extern SCP_string Window_title;
+extern std::string Window_title;
 
 extern GLfloat GL_anisotropy;
 
@@ -91,8 +91,8 @@ static GLenum GL_read_format = GL_BGRA;
 
 GLuint GL_vao = 0;
 
-SCP_string GL_implementation_id;
-SCP_vector<GLint> GL_binary_formats;
+std::string GL_implementation_id;
+std::vector<GLint> GL_binary_formats;
 
 static std::unique_ptr<os::OpenGLContext> GL_context = nullptr;
 
@@ -1305,7 +1305,7 @@ static bool printNextDebugMessage() {
 	GLint msgLen = 0;
 	glGetIntegerv(GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH_ARB, &msgLen);
 
-	SCP_vector<GLchar> msg;
+	std::vector<GLchar> msg;
 	msg.resize(msgLen + 1); // Includes null character, needs to be removed later
 
 	GLenum source;
@@ -1615,7 +1615,7 @@ void gr_opengl_pop_debug_group() {
 	}
 }
 #if !defined(NDEBUG) || defined(FS_OPENGL_DEBUG) || defined(DOXYGEN)
-void opengl_set_object_label(GLenum type, GLuint handle, const SCP_string& name) {
+void opengl_set_object_label(GLenum type, GLuint handle, const std::string& name) {
 	if (GLAD_GL_KHR_debug) {
 		glObjectLabel(type, handle, (GLsizei) name.size(), name.c_str());
 	}

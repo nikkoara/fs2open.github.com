@@ -35,7 +35,7 @@ struct gr_light
 };
 
 // Variables
-SCP_vector<gr_light> gr_lights;
+std::vector<gr_light> gr_lights;
 graphics::model_light gr_light_uniforms[graphics::MAX_UNIFORM_LIGHTS];
 
 int Num_active_gr_lights = 0;

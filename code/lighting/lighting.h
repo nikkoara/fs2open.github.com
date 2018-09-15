@@ -53,7 +53,7 @@ typedef struct light {
 	int instance;
 } light;
 
-extern SCP_vector<light> Static_light;
+extern std::vector<light> Static_light;
 
 struct light_indexing_info
 {
@@ -63,13 +63,13 @@ struct light_indexing_info
 
 class scene_lights
 {
-	SCP_vector<light> AllLights;
+	std::vector<light> AllLights;
 	
-	SCP_vector<size_t> StaticLightIndices;
+	std::vector<size_t> StaticLightIndices;
 
-	SCP_vector<size_t> FilteredLights;
+	std::vector<size_t> FilteredLights;
 
-	SCP_vector<size_t> BufferedLights;
+	std::vector<size_t> BufferedLights;
 
 	size_t current_light_index;
 	size_t current_num_lights;

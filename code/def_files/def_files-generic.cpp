@@ -41,8 +41,8 @@ default_file defaults_get_file(const char *filename)
 	return def;
 }
 
-SCP_vector<default_file> defaults_get_all() {
-	SCP_vector<default_file> files;
+std::vector<default_file> defaults_get_all() {
+	std::vector<default_file> files;
 
 	for (auto& file : Default_files) {
 		default_file def;

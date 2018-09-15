@@ -407,8 +407,8 @@ const char *Joy_button_text_english[] = {
 const char **Scan_code_text = Scan_code_text_english;
 const char **Joy_button_text = Joy_button_text_english;
 
-SCP_vector<config_item*> Control_config_presets;
-SCP_vector<SCP_string> Control_config_preset_names;
+std::vector<config_item*> Control_config_presets;
+std::vector<std::string> Control_config_preset_names;
 
 void set_modifier_status()
 {
@@ -650,9 +650,9 @@ void control_config_common_close()
 
 #include <map>
 #include <string>
-SCP_map<SCP_string, int> mKeyNameToVal;
-SCP_map<SCP_string, CC_type> mCCTypeNameToVal;
-SCP_map<SCP_string, char> mCCTabNameToVal;
+std::map<std::string, int> mKeyNameToVal;
+std::map<std::string, CC_type> mCCTypeNameToVal;
+std::map<std::string, char> mCCTabNameToVal;
 
 /*! Helper function to LoadEnumsIntoMaps(), Loads the Keyboard definitions/enumerations into mKeyNameToVal
 */
@@ -849,7 +849,7 @@ void control_config_common_load_overrides()
 			std::copy(Control_config, Control_config + CCFG_MAX + 1, cfg_preset);
 			Control_config_presets.push_back(cfg_preset);
 
-			SCP_string preset_name;
+			std::string preset_name;
 			if (optional_string("$Name:")) {
 				stuff_string_line(preset_name);
 			} else {

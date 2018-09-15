@@ -11,12 +11,12 @@
 #include "graphics/2d.h"
 #include "parse/parselo.h"
 
-SCP_map<SCP_string, team_color> Team_Colors;
-SCP_vector<SCP_string> Team_Names;
+std::map<std::string, team_color> Team_Colors;
+std::vector<std::string> Team_Names;
 
-SCP_map<char, color*> Tagged_Colors;
-SCP_map<char, color> Custom_Colors;
-SCP_vector<char> Color_Tags;
+std::map<char, color*> Tagged_Colors;
+std::map<char, color> Custom_Colors;
+std::vector<char> Color_Tags;
 
 // -----------------------------------------------------------------------------------
 // ALPHA DEFINES/VARS
@@ -365,7 +365,7 @@ void parse_everything_else(const char *filename)
 
 		// reusable temp vars
 		int i, j;
-		SCP_string temp;
+		std::string temp;
 
 		if (optional_string("#Start Colors")) {
 			// Skip this section; we already parsed it in every file.

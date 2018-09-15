@@ -13,12 +13,12 @@ public:
 	bool apply() override;
 	void reject() override;
 
-	void setStartingWing(SCP_string, int);
-	void setSquadronWing(SCP_string, int);
-	void setTvTWing(SCP_string, int);
-	SCP_string getStartingWing(int);
-	SCP_string getSquadronWing(int);
-	SCP_string getTvTWing(int);
+	void setStartingWing(std::string, int);
+	void setSquadronWing(std::string, int);
+	void setTvTWing(std::string, int);
+	std::string getStartingWing(int);
+	std::string getSquadronWing(int);
+	std::string getTvTWing(int);
 
 	bool query_modified();
 private:
@@ -27,9 +27,9 @@ private:
 	template<typename T>
 	void modify(T &a, T &b);
 
-	SCP_string _m_starting[3];
-	SCP_string _m_squadron[5];
-	SCP_string _m_tvt[2];
+	std::string _m_starting[3];
+	std::string _m_squadron[5];
+	std::string _m_tvt[2];
 };
 
 template<typename T>

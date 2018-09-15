@@ -58,7 +58,7 @@ int	Num_asteroids = 0;
 int	Asteroid_throw_objnum = -1;		//	Object index of ship to throw asteroids at.
 int	Next_asteroid_throw;
 
-SCP_vector< asteroid_info > Asteroid_info;
+std::vector< asteroid_info > Asteroid_info;
 asteroid			Asteroids[MAX_ASTEROIDS];
 asteroid_field	Asteroid_field;
 
@@ -620,7 +620,7 @@ void asteroid_level_init()
 	Num_asteroids = 0;
 	Next_asteroid_throw = timestamp(1);
 	asteroid_obj_list_init();
-	SCP_vector<asteroid_info>::iterator ast;
+	std::vector<asteroid_info>::iterator ast;
 	for (ast = Asteroid_info.begin(); ast != Asteroid_info.end(); ++ast)
 		ast->damage_type_idx = ast->damage_type_idx_sav;
 }
@@ -1010,7 +1010,7 @@ int asteroid_check_collision(object *pasteroid, object *other_obj, vec3d *hitpos
 		// first test against the sphere - if this fails then don't do any submodel tests
 		mc.flags = MC_ONLY_SPHERE | MC_CHECK_SPHERELINE;
 
-		SCP_vector<int> submodel_vector;
+		std::vector<int> submodel_vector;
 		polymodel_instance *pmi;
 
 		if (model_collide(&mc)) {
@@ -1485,8 +1485,8 @@ static void asteroid_maybe_break_up(object *pasteroid_obj)
 							break;
 					}
 				} else {
-					SCP_vector<int> roids_to_create;
-					SCP_vector<asteroid_split_info>::iterator split;
+					std::vector<int> roids_to_create;
+					std::vector<asteroid_split_info>::iterator split;
 					for (split = asip->split_info.begin(); split != asip->split_info.end(); ++split) {
 						int num_roids = split->min;
 						int num_roids_var = split->max - split->min;
@@ -1875,7 +1875,7 @@ static void asteroid_parse_tbl()
 			NUM_DEBRIS_SIZES + Species_info.size() * NUM_DEBRIS_SIZES;
 
 #ifndef NDEBUG
-		SCP_vector<SCP_string> parsed_asteroids;
+		std::vector<std::string> parsed_asteroids;
 #endif
 
 		// parse and tally each asteroid
@@ -1893,7 +1893,7 @@ static void asteroid_parse_tbl()
 				// even if the message never gets displayed.
 				Warning(LOCATION, "Ignoring extra asteroid/debris");
 #else
-				SCP_string msg("Ignoring extra asteroid/debris '");
+				std::string msg("Ignoring extra asteroid/debris '");
 				msg.append(new_asteroid.name);
 				msg.append("'\n");
 				Warning(LOCATION, "%s", msg.c_str());
@@ -1903,7 +1903,7 @@ static void asteroid_parse_tbl()
 			else
 			{
 #ifndef NDEBUG
-				SCP_string msg;
+				std::string msg;
 				msg.append("Parsing asteroid: '");
 				msg.append(new_asteroid.name);
 				msg.append("' as a '");
@@ -1939,7 +1939,7 @@ static void asteroid_parse_tbl()
 		if (tally != max_asteroids)
 		{
 #ifndef NDEBUG
-			for (SCP_vector<SCP_string>::iterator iter = parsed_asteroids.begin();
+			for (std::vector<std::string>::iterator iter = parsed_asteroids.begin();
 				iter != parsed_asteroids.end(); ++iter)
 			{
 				mprintf(("Asteroid.tbl as parsed:\n"));

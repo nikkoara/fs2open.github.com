@@ -46,10 +46,10 @@ int Num_lbolts = 0;
 l_bolt Nebl_bolts[MAX_LIGHTNING_BOLTS];
 
 // Lightning bolt types
-SCP_vector<bolt_type> Bolt_types;
+std::vector<bolt_type> Bolt_types;
 
 // Lightning storm types
-SCP_vector<storm_type> Storm_types;
+std::vector<storm_type> Storm_types;
 
 // points on the basic cross section
 vec3d Nebl_ring[3] = {	

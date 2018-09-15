@@ -29,7 +29,7 @@ typedef struct gauge_settings {
 	int font_num;
 	bool scale_gauge;
 	int force_scaling_above_res[2];
-	SCP_vector<int>* ship_idx;
+	std::vector<int>* ship_idx;
 	color *use_clr;
 	float origin[2];
 	int offset[2];

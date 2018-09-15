@@ -27,9 +27,9 @@
 
 
 // make use of the LOD checker for tbl/tbm parsing (from weapons.cpp)
-extern SCP_vector<lod_checker> LOD_checker;
+extern std::vector<lod_checker> LOD_checker;
 
-static SCP_vector<color> LOD_color;
+static std::vector<color> LOD_color;
 
 int Warp_model;
 int Knossos_warp_ani_used;
@@ -252,7 +252,7 @@ void parse_fireball_tbl(const char *filename)
 void fireball_parse_tbl()
 {
 	int i = 0, j;
-	SCP_vector<lod_checker>::iterator lod;
+	std::vector<lod_checker>::iterator lod;
 
 	memset( &Fireball_info, 0, sizeof(fireball_info) * MAX_FIREBALL_TYPES );
 

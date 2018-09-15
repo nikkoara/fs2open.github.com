@@ -254,7 +254,7 @@ public:
 extern bool Dc_debug_on;
 extern int dc_commands_size;
 extern uint lastline;
-extern SCP_string dc_command_str;	// The rest of the command line, from the end of the last processed arg on.
+extern std::string dc_command_str;	// The rest of the command line, from the end of the last processed arg on.
 
 /**
  * @brief   Pauses the output of a command and allows user to scroll through the output history.

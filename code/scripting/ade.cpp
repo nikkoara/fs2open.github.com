@@ -1008,8 +1008,8 @@ void load_default_script(lua_State* L, const char* name)
 {
 	using namespace luacpp;
 
-	SCP_string source;
-	SCP_string source_name;
+	std::string source;
+	std::string source_name;
 	if (Enable_external_default_scripts && cf_exists(name, CF_TYPE_SCRIPTS)) {
 		// Load from disk (or built-in file)
 		source_name = name;
@@ -1025,7 +1025,7 @@ void load_default_script(lua_State* L, const char* name)
 		cfclose(cfp);
 	} else {
 		// Load from default files
-		source_name = SCP_string("default ") + name;
+		source_name = std::string("default ") + name;
 
 		auto def = defaults_get_file(name);
 

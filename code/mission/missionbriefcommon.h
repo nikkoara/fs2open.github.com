@@ -67,7 +67,7 @@ typedef struct briefing_icon_info {
 	hud_anim		highlight;
 } briefing_icon_type;
 
-extern SCP_vector<briefing_icon_info> Briefing_icon_info;
+extern std::vector<briefing_icon_info> Briefing_icon_info;
 
 struct brief_icon;
 extern briefing_icon_info *brief_get_icon_info(brief_icon *bi);
@@ -140,7 +140,7 @@ typedef struct brief_line {
 class brief_stage
 {
 public:
-	SCP_string	text;
+	std::string	text;
 	char			voice[MAX_FILENAME_LEN];
 	vec3d		camera_pos;
 	matrix		camera_orient;
@@ -166,9 +166,9 @@ class debrief_stage
 {
 public:
 	int			formula;
-	SCP_string	text;
+	std::string	text;
 	char			voice[MAX_FILENAME_LEN];
-	SCP_string	recommendation_text;
+	std::string	recommendation_text;
 
 	debrief_stage( ) 
 		: formula( -1 ), text( ),

@@ -30,8 +30,8 @@ namespace apng {
 class apng_ani {
 public:
 	struct apng_frame {
-		SCP_vector<ubyte>  data;
-		SCP_vector<ubyte*> rows;
+		std::vector<ubyte>  data;
+		std::vector<ubyte*> rows;
 		float              delay;
 	};
 
@@ -59,12 +59,12 @@ public:
 private:
 	struct _chunk_s {
 		uint              size;
-		SCP_vector<ubyte> data;
+		std::vector<ubyte> data;
 	};
-	SCP_vector<apng_frame>  _frames;
-	SCP_vector<int>         _frame_offsets;
-	SCP_vector<_chunk_s>    _info_chunks;
-	SCP_string              _filename;
+	std::vector<apng_frame>  _frames;
+	std::vector<int>         _frame_offsets;
+	std::vector<_chunk_s>    _info_chunks;
+	std::string              _filename;
 	apng_frame              _frame_next, _frame_raw;
 	_chunk_s                _chunk_IHDR, _chunk;
 	png_structp             _pngp;

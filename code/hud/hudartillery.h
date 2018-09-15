@@ -45,8 +45,8 @@ typedef struct ssm_info {
 
 // creation info for the strike (useful for multiplayer)
 typedef struct ssm_firing_info {
-	SCP_vector<int>		delay_stamp;	// timestamps
-	SCP_vector<vec3d>	start_pos;		// start positions
+	std::vector<int>		delay_stamp;	// timestamps
+	std::vector<vec3d>	start_pos;		// start positions
 
 	int					count;			// The ssm_info count may be variable; this stores the actual number of projectiles for this strike.
 	size_t				ssm_index;		// index info ssm_info array
@@ -57,15 +57,15 @@ typedef struct ssm_firing_info {
 
 // the strike itself
 typedef struct ssm_strike {
-	SCP_vector<int>		fireballs;		// warpin effect fireballs
-	SCP_vector<bool>	done_flags;		// when we've fired off the individual missiles
+	std::vector<int>		fireballs;		// warpin effect fireballs
+	std::vector<bool>	done_flags;		// when we've fired off the individual missiles
 
 	// this is the info that controls how the strike behaves (just like for beam weapons)
 	ssm_firing_info		sinfo;
 } ssm_strike;
 
 
-extern SCP_vector<ssm_info> Ssm_info;
+extern std::vector<ssm_info> Ssm_info;
 
 
 // -----------------------------------------------------------------------------------------------------------------------

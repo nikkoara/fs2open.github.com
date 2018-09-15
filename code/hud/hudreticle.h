@@ -37,7 +37,7 @@ class HudGaugeReticle: public HudGauge
 protected:
 	hud_frames crosshair; 
 	bool firepoint_display;
-	SCP_vector<firepoint> fp;
+	std::vector<firepoint> fp;
 
 	int firepoint_size;
 	int firepoint_scale_x;

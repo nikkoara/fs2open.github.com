@@ -109,27 +109,27 @@ void CustomWingNamesDialogModel::initializeData() {
 	}
 }
 
-void CustomWingNamesDialogModel::setStartingWing(SCP_string str, int index) {
+void CustomWingNamesDialogModel::setStartingWing(std::string str, int index) {
 	modify(_m_starting[index], str);
 }
 
-void CustomWingNamesDialogModel::setSquadronWing(SCP_string str, int index) {
+void CustomWingNamesDialogModel::setSquadronWing(std::string str, int index) {
 	modify(_m_squadron[index], str);
 }
 
-void CustomWingNamesDialogModel::setTvTWing(SCP_string str, int index) {
+void CustomWingNamesDialogModel::setTvTWing(std::string str, int index) {
 	modify(_m_tvt[index], str);
 }
 
-SCP_string CustomWingNamesDialogModel::getStartingWing(int index) {
+std::string CustomWingNamesDialogModel::getStartingWing(int index) {
 	return _m_starting[index];
 }
 
-SCP_string CustomWingNamesDialogModel::getSquadronWing(int index) {
+std::string CustomWingNamesDialogModel::getSquadronWing(int index) {
 	return _m_squadron[index];
 }
 
-SCP_string CustomWingNamesDialogModel::getTvTWing(int index) {
+std::string CustomWingNamesDialogModel::getTvTWing(int index) {
 	return _m_tvt[index];
 }
 

@@ -149,7 +149,7 @@ void radar_plot_object( object *objp )
 	vec3d pos, tempv;
 	float awacs_level, dist, max_radar_dist;
 	vec3d world_pos = objp->pos;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	// don't process anything here.  Somehow, a jumpnode object caused this function
 	// to get entered on server side.
@@ -494,7 +494,7 @@ RadarVisibility radar_is_visible( object *objp )
 	vec3d pos, tempv;
 	float awacs_level, dist, max_radar_dist;
 	vec3d world_pos = objp->pos;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	// get team-wide awacs level for the object if not ship
 	int ship_is_visible = 0;

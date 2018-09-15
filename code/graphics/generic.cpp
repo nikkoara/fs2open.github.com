@@ -113,8 +113,8 @@ void generic_anim_init(generic_anim *ga, const char *filename)
 	ga->use_hud_color = false;
 }
 
-// CommanderDJ - same as generic_anim_init, just with an SCP_string 
-void generic_anim_init(generic_anim *ga, const SCP_string& filename)
+// CommanderDJ - same as generic_anim_init, just with an std::string 
+void generic_anim_init(generic_anim *ga, const std::string& filename)
 {
 	generic_anim_init(ga);
 	filename.copy(ga->filename, MAX_FILENAME_LEN - 1);

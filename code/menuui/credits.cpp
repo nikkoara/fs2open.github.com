@@ -200,7 +200,7 @@ static float Credits_counter;
 
 static int Credits_num_images;
 static int Credits_artwork_index;
-static SCP_vector<int> Credits_bmps;
+static std::vector<int> Credits_bmps;
 
 // Positions for credits...
 float Credit_start_pos, Credit_stop_pos, Credit_position = 0.0f;
@@ -210,7 +210,7 @@ static float Credits_scroll_rate			= 15.0f;
 static float Credits_artwork_display_time	= 9.0f;
 static float Credits_artwork_fade_time		= 1.0f;
 
-static SCP_vector<SCP_string> Credit_text_parts;
+static std::vector<std::string> Credit_text_parts;
 
 static bool Credits_parsed;
 
@@ -347,11 +347,11 @@ void credits_parse_table(const char* filename)
 
 		ignore_white_space();
 
-		SCP_string credits_text;
-		SCP_string line;
+		std::string credits_text;
+		std::string line;
 
-		SCP_vector<int> charNum;
-		SCP_vector<const char*> lines;
+		std::vector<int> charNum;
+		std::vector<const char*> lines;
 		int numLines = -1;
 
 		bool first_run = true;
@@ -393,7 +393,7 @@ void credits_parse_table(const char* filename)
 				// Now add all splitted lines to the credit text and append a newline to the end
 				for (int i = 0; i < numLines; i++)
 				{
-					credits_text.append(SCP_string(lines[i], charNum[i]));
+					credits_text.append(std::string(lines[i], charNum[i]));
 					credits_text.append("\n");
 				}
 			}
@@ -457,7 +457,7 @@ void credits_init()
 	
 	if (!Credits_parsed)
 	{
-		Credit_text_parts.push_back(SCP_string("No credits available.\n"));
+		Credit_text_parts.push_back(std::string("No credits available.\n"));
 	}
 	else
 	{
@@ -478,11 +478,11 @@ void credits_init()
 	}
 
 	int ch;
-	SCP_vector<SCP_string>::iterator iter;
+	std::vector<std::string>::iterator iter;
 
 	for (iter = Credit_text_parts.begin(); iter != Credit_text_parts.end(); ++iter)
 	{
-		for (SCP_string::iterator ii = iter->begin(); ii != iter->end(); ++ii)
+		for (std::string::iterator ii = iter->begin(); ii != iter->end(); ++ii)
 		{
 			ch = *ii;
 			switch (ch)
@@ -795,7 +795,7 @@ void credits_do_frame(float  /*frametime*/)
 	gr_set_color_fast(&Color_normal);
 	
 	int y_offset = 0;
-	for (SCP_vector<SCP_string>::iterator iter = Credit_text_parts.begin(); iter != Credit_text_parts.end(); ++iter)
+	for (std::vector<std::string>::iterator iter = Credit_text_parts.begin(); iter != Credit_text_parts.end(); ++iter)
 	{
 		size_t currentPos = 0;
 		size_t lineEnd;
@@ -806,7 +806,7 @@ void credits_do_frame(float  /*frametime*/)
 			lineEnd = iter->find('\n', currentPos);
 
 			auto length = lineEnd - currentPos;
-			if (lineEnd == SCP_string::npos)
+			if (lineEnd == std::string::npos)
 			{
 				length = std::numeric_limits<size_t>::max();
 			}
@@ -821,7 +821,7 @@ void credits_do_frame(float  /*frametime*/)
 
 			y_offset += height;
 			currentPos = lineEnd + 1;
-		} while (lineEnd < iter->length() && lineEnd != SCP_string::npos);
+		} while (lineEnd < iter->length() && lineEnd != std::string::npos);
 	}
 
 	int temp_time;

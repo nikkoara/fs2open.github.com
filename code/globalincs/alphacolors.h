@@ -45,11 +45,11 @@ extern color Brief_color_red, Brief_color_green, Brief_color_legacy_neutral;
 extern color *Color_netplayer[NETPLAYER_COLORS];
 
 // Team colors
-extern SCP_map<SCP_string, team_color> Team_Colors;
-extern SCP_vector<SCP_string> Team_Names;
+extern std::map<std::string, team_color> Team_Colors;
+extern std::vector<std::string> Team_Names;
 
-extern SCP_map<char, color*> Tagged_Colors;
-extern SCP_vector<char> Color_Tags;
+extern std::map<char, color*> Tagged_Colors;
+extern std::vector<char> Color_Tags;
 
 #define MAX_DEFAULT_TEXT_COLORS	7
 extern char default_fiction_viewer_color;

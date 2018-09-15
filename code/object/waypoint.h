@@ -39,18 +39,18 @@ class waypoint_list
 
 		// accessors
 		char *get_name();
-		SCP_vector<waypoint> &get_waypoints();
+		std::vector<waypoint> &get_waypoints();
 
 		// mutators
 		void set_name(const char *name);
 
 	private:
 		char m_name[NAME_LENGTH];
-		SCP_vector<waypoint> waypoints;
+		std::vector<waypoint> waypoints;
 };
 
 //********************GLOBALS********************
-extern SCP_list<waypoint_list> Waypoint_lists;
+extern std::list<waypoint_list> Waypoint_lists;
 
 // bah
 extern const size_t INVALID_WAYPOINT_POSITION;
@@ -89,7 +89,7 @@ int find_index_of_waypoint(waypoint *wpt);
 void waypoint_find_unique_name(char *dest_name, int start_index);
 
 // Add a new list of waypoints.  Called from mission parsing.
-void waypoint_add_list(const char *name, SCP_vector<vec3d> &vec_list);
+void waypoint_add_list(const char *name, std::vector<vec3d> &vec_list);
 
 // Attempts to create a waypoint with the specified instance (used to calculate list and index).
 // Returns the object number, or -1 on failure.  Used by scripting and FRED.

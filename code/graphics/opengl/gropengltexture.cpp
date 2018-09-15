@@ -1465,7 +1465,7 @@ struct fbo_t {
 	int fbo_id = -1;
 };
 
-static SCP_vector<fbo_t> RenderTarget;
+static std::vector<fbo_t> RenderTarget;
 static fbo_t *render_target = NULL;
 static int next_fbo_id = 0;
 

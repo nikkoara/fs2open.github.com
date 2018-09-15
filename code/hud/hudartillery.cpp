@@ -38,10 +38,10 @@
 // test code for subspace missile strike -------------------------------------------
 
 // ssm_info, like ship_info etc.
-SCP_vector<ssm_info> Ssm_info;
+std::vector<ssm_info> Ssm_info;
 
 // list of active strikes
-SCP_list<ssm_strike> Ssm_strikes;
+std::list<ssm_strike> Ssm_strikes;
 
 // Goober5000
 int ssm_info_lookup(const char *name)
@@ -340,7 +340,7 @@ void ssm_create(object *target, vec3d *start, size_t ssm_index, ssm_firing_info 
 }
 
 // delete a finished ssm effect
-void ssm_delete(SCP_list<ssm_strike>::iterator ssm)
+void ssm_delete(std::list<ssm_strike>::iterator ssm)
 {
 	Ssm_strikes.erase(ssm);
 }
@@ -349,7 +349,7 @@ void ssm_delete(SCP_list<ssm_strike>::iterator ssm)
 void ssm_process()
 {
 	int idx, finished;
-	SCP_list<ssm_strike>::iterator moveup, eraser;
+	std::list<ssm_strike>::iterator moveup, eraser;
 	ssm_info *si;
 	int weapon_objnum;
 

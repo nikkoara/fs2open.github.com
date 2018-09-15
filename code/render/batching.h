@@ -71,7 +71,7 @@ struct batch_buffer_key {
 class primitive_batch
 {
 	batch_info render_info;
-	SCP_vector<batch_vertex> Vertices;
+	std::vector<batch_vertex> Vertices;
 
 public:
 	primitive_batch() : render_info() {}
@@ -108,7 +108,7 @@ struct primitive_batch_buffer {
 
 	primitive_type prim_type;
 
-	SCP_vector<primitive_batch_item> items;
+	std::vector<primitive_batch_item> items;
 };
 
 primitive_batch* batching_find_batch(int texture, batch_info::material_type material_id, primitive_type prim_type = PRIM_TYPE_TRIS, bool thruster = false);

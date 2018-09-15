@@ -79,7 +79,7 @@ debug_command::debug_command(const char *_name, const char *_help, void(*_func)(
 DCF(debug, "Runs a command in debug mode.")
 {
 	int i;
-	SCP_string command = "";
+	std::string command = "";
 	
 	Dc_debug_on = true;
 
@@ -115,7 +115,7 @@ DCF(help, "Displays the help list." )
 	extern uint DROWS;
 
 	int i;
-	SCP_string command = "";
+	std::string command = "";
 
 	dc_maybe_stuff_string_white(command);
 	if ((command == "help") || (command == "man"))

@@ -480,7 +480,7 @@ void VoiceActingManager::OnGenerateScript()
 
 		if (m_group_messages)
 		{
-			SCP_vector<int> message_indexes;
+			std::vector<int> message_indexes;
 			for (int i = 0; i < Num_messages - Num_builtin_messages; i++)
 				message_indexes.push_back(i + Num_builtin_messages);
 
@@ -711,7 +711,7 @@ void VoiceActingManager::OnChangeNoReplace()
 
 int VoiceActingManager::fout(char *format, ...)
 {
-	SCP_string str;
+	std::string str;
 	va_list args;
 	
 	va_start(args, format);
@@ -784,13 +784,13 @@ char *VoiceActingManager::get_message_sender(char *message)
 	return "<none>";
 }
 
-void VoiceActingManager::group_message_indexes(SCP_vector<int> &message_indexes)
+void VoiceActingManager::group_message_indexes(std::vector<int> &message_indexes)
 {
 #ifndef NDEBUG
 	size_t initial_size = message_indexes.size();
 #endif
 
-	SCP_vector<int> temp_message_indexes = message_indexes;
+	std::vector<int> temp_message_indexes = message_indexes;
 	message_indexes.clear();
 
 	// add all messages found in send-message-list or send-random-message node trees
@@ -816,7 +816,7 @@ void VoiceActingManager::group_message_indexes(SCP_vector<int> &message_indexes)
 #endif
 }
 
-void VoiceActingManager::group_message_indexes_in_tree(int node, SCP_vector<int> &source_list, SCP_vector<int> &destination_list)
+void VoiceActingManager::group_message_indexes_in_tree(int node, std::vector<int> &source_list, std::vector<int> &destination_list)
 {
 	int op, n;
 

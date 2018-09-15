@@ -85,7 +85,7 @@ void gr_opengl_deferred_lighting_end()
 	GL_state.ColorMask(true, true, true, false);
 }
 
-extern SCP_vector<light> Lights;
+extern std::vector<light> Lights;
 extern int Num_lights;
 extern float static_point_factor;
 extern float static_light_factor;

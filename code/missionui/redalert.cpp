@@ -47,8 +47,8 @@ static int Red_alert_new_mission_timestamp;		// timestamp used to give user a li
 //static int Red_alert_num_slots_used = 0;
 static int Red_alert_voice_started;
 
-SCP_vector<red_alert_ship_status> Red_alert_wingman_status;
-SCP_string Red_alert_precursor_mission;
+std::vector<red_alert_ship_status> Red_alert_wingman_status;
+std::string Red_alert_precursor_mission;
 
 /////////////////////////////////////////////////////////////////////////////
 // Red Alert Interface
@@ -828,11 +828,11 @@ void red_alert_bash_wingman_status()
 	int j;
 	ship_obj			*so;
 
-	SCP_vector<red_alert_ship_status>::iterator rasii;
-	SCP_vector<p_object>::iterator poii;
+	std::vector<red_alert_ship_status>::iterator rasii;
+	std::vector<p_object>::iterator poii;
 
-	SCP_unordered_map<int, int> Wing_pobjects_deleted;
-	SCP_unordered_map<int, int>::iterator ii;
+	std::unordered_map<int, int> Wing_pobjects_deleted;
+	std::unordered_map<int, int>::iterator ii;
 
 	if ( !(Game_mode & GM_CAMPAIGN_MODE) ) {
 		return;

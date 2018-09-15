@@ -30,7 +30,7 @@
 #define HUD_SOURCE_TEAM_OFFSET	8	// must be higher than any previous hud source
 
 typedef struct HUD_message_data {
-	SCP_string text;
+	std::string text;
 	int source;  // where this message came from so we can color code it
 	int x;
 } HUD_message_data;
@@ -92,8 +92,8 @@ protected:
 	int Window_width;
 	int Window_height;
 
-	SCP_vector<Hud_display_info> active_messages;
-	SCP_queue<HUD_message_data> pending_messages;
+	std::vector<Hud_display_info> active_messages;
+	std::queue<HUD_message_data> pending_messages;
 
 	bool Scroll_needed;
 	bool Scroll_in_progress;

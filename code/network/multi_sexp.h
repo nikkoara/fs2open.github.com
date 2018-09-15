@@ -137,7 +137,7 @@ public:
     * Add a string to the SEXP packet. Should only be used for strings TOKEN_LENGTH in size or smaller.
     */
     void send_string(char *string);
-    void send_string(const SCP_string &string);
+    void send_string(const std::string &string);
 
     /**
     * Add a boolean to the SEXP packet.
@@ -216,7 +216,7 @@ public:
     * Attempts to remove a string from the SEXP packet and assign it to the value parameter. Returns false if it is unable to do so.
     */
     bool get_string(char *buffer);
-    bool get_string(SCP_string &buffer);
+    bool get_string(std::string &buffer);
 
     /**
     * Attempts to remove a boolean from the SEXP packet and assign it to the value parameter. Returns false if it is unable to do so.

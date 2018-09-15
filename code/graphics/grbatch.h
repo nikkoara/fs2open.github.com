@@ -72,7 +72,7 @@ public:
 
 class geometry_shader_batcher
 {
-	SCP_vector<particle_pnt> vertices;
+	std::vector<particle_pnt> vertices;
 
 	ptrdiff_t buffer_offset;
 public:

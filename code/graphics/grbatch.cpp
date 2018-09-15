@@ -646,9 +646,9 @@ struct g_sdr_batch_item {
 	bool laser;
 };
 
-static SCP_map<int, g_sdr_batch_item> geometry_shader_map;
-static SCP_map<int, batch_item> geometry_map;
-static SCP_map<int, batch_item> distortion_map;
+static std::map<int, g_sdr_batch_item> geometry_shader_map;
+static std::map<int, batch_item> geometry_map;
+static std::map<int, batch_item> distortion_map;
 
 // Used for sending verts to the vertex buffer
 void *Batch_buffer = NULL;
@@ -665,7 +665,7 @@ float batch_add_laser(int texture, vec3d *p0, float width1, vec3d *p1, float wid
 	}
 
 	batch_item *item = NULL;
-	SCP_map<int, batch_item>::iterator it = geometry_map.find(texture);
+	std::map<int, batch_item>::iterator it = geometry_map.find(texture);
 
 	if ( !geometry_map.empty() && it != geometry_map.end() ) {
 		item = &it->second;
@@ -704,7 +704,7 @@ int batch_add_bitmap(int texture, int tmap_flags, vertex *pnt, int orient, float
 
 	batch_item *item = NULL;
 
-	SCP_map<int, batch_item>::iterator it = geometry_map.find(texture);
+	std::map<int, batch_item>::iterator it = geometry_map.find(texture);
 
 	if ( !geometry_map.empty() && it != geometry_map.end() ) {
 		item = &it->second;
@@ -733,7 +733,7 @@ int geometry_batch_add_bitmap(int texture, int tmap_flags, vertex *pnt, int orie
 	}
 
 	g_sdr_batch_item *item = NULL;
-	SCP_map<int, g_sdr_batch_item>::iterator it = geometry_shader_map.find(texture);
+	std::map<int, g_sdr_batch_item>::iterator it = geometry_shader_map.find(texture);
 
 	if ( !geometry_shader_map.empty() && it != geometry_shader_map.end() ) {
 		item = &it->second;
@@ -766,7 +766,7 @@ int batch_add_bitmap_rotated(int texture, int tmap_flags, vertex *pnt, float ang
 
 	batch_item *item = NULL;
 
-	SCP_map<int, batch_item>::iterator it = geometry_map.find(texture);
+	std::map<int, batch_item>::iterator it = geometry_map.find(texture);
 
 	if ( !geometry_map.empty() && it != geometry_map.end() ) {
 		item = &it->second;
@@ -796,7 +796,7 @@ int batch_add_tri(int texture, int tmap_flags, vertex *verts, float alpha)
 
 	batch_item *item = NULL;
 
-	SCP_map<int, batch_item>::iterator it = geometry_map.find(texture);
+	std::map<int, batch_item>::iterator it = geometry_map.find(texture);
 
 	if ( !geometry_map.empty() && it != geometry_map.end() ) {
 		item = &it->second;
@@ -826,7 +826,7 @@ int batch_add_quad(int texture, int tmap_flags, vertex *verts, float alpha)
 
 	batch_item *item = NULL;
 
-	SCP_map<int, batch_item>::iterator it = geometry_map.find(texture);
+	std::map<int, batch_item>::iterator it = geometry_map.find(texture);
 
 	if ( !geometry_map.empty() && it != geometry_map.end() ) {
 		item = &it->second;
@@ -906,7 +906,7 @@ int batch_add_polygon(int texture, int tmap_flags, vec3d *pos, matrix *orient, f
 
 	batch_item *item = NULL;
 
-	SCP_map<int, batch_item>::iterator it = geometry_map.find(texture);
+	std::map<int, batch_item>::iterator it = geometry_map.find(texture);
 
 	if ( !geometry_map.empty() && it != geometry_map.end() ) {
 		item = &it->second;
@@ -936,7 +936,7 @@ int batch_add_beam(int texture, int tmap_flags, vec3d *start, vec3d *end, float 
 
 	batch_item *item = NULL;
 
-	SCP_map<int, batch_item>::iterator it = geometry_map.find(texture);
+	std::map<int, batch_item>::iterator it = geometry_map.find(texture);
 
 	if ( !geometry_map.empty() && it != geometry_map.end() ) {
 		item = &it->second;
@@ -959,7 +959,7 @@ int batch_add_beam(int texture, int tmap_flags, vec3d *start, vec3d *end, float 
 
 void batch_render_lasers(int buffer_handle)
 {
-	for (SCP_map<int, batch_item>::iterator bi = geometry_map.begin(); bi != geometry_map.end(); ++bi) {
+	for (std::map<int, batch_item>::iterator bi = geometry_map.begin(); bi != geometry_map.end(); ++bi) {
 
 		if ( !bi->second.laser )
 			continue;
@@ -979,7 +979,7 @@ void batch_render_lasers(int buffer_handle)
 
 void batch_load_buffer_lasers(effect_vertex* buffer, int *n_verts)
 {
-	for (SCP_map<int, batch_item>::iterator bi = geometry_map.begin(); bi != geometry_map.end(); ++bi) {
+	for (std::map<int, batch_item>::iterator bi = geometry_map.begin(); bi != geometry_map.end(); ++bi) {
 
 		if ( !bi->second.laser )
 			continue;
@@ -994,7 +994,7 @@ void batch_load_buffer_lasers(effect_vertex* buffer, int *n_verts)
 
 void batch_render_geometry_map_bitmaps(int buffer_handle)
 {
-	for (SCP_map<int, batch_item>::iterator bi = geometry_map.begin(); bi != geometry_map.end(); ++bi) {
+	for (std::map<int, batch_item>::iterator bi = geometry_map.begin(); bi != geometry_map.end(); ++bi) {
 
 		if ( bi->second.laser )
 			continue;
@@ -1014,7 +1014,7 @@ void batch_render_geometry_map_bitmaps(int buffer_handle)
 
 void batch_render_geometry_shader_map_bitmaps(int buffer_handle)
 {
-	for (SCP_map<int, g_sdr_batch_item>::iterator bi = geometry_shader_map.begin(); bi != geometry_shader_map.end(); ++bi) {
+	for (std::map<int, g_sdr_batch_item>::iterator bi = geometry_shader_map.begin(); bi != geometry_shader_map.end(); ++bi) {
 
 		if ( bi->second.laser )
 			continue;
@@ -1030,7 +1030,7 @@ void batch_render_geometry_shader_map_bitmaps(int buffer_handle)
 
 void batch_load_buffer_geometry_map_bitmaps(effect_vertex* buffer, int *n_verts)
 {
-	for (SCP_map<int, batch_item>::iterator bi = geometry_map.begin(); bi != geometry_map.end(); ++bi) {
+	for (std::map<int, batch_item>::iterator bi = geometry_map.begin(); bi != geometry_map.end(); ++bi) {
 
 		if ( bi->second.laser )
 			continue;
@@ -1045,7 +1045,7 @@ void batch_load_buffer_geometry_map_bitmaps(effect_vertex* buffer, int *n_verts)
 
 void batch_load_buffer_geometry_shader_map_bitmaps(particle_pnt* buffer, size_t *n_verts)
 {
-	for (SCP_map<int, g_sdr_batch_item>::iterator bi = geometry_shader_map.begin(); bi != geometry_shader_map.end(); ++bi) {
+	for (std::map<int, g_sdr_batch_item>::iterator bi = geometry_shader_map.begin(); bi != geometry_shader_map.end(); ++bi) {
 
 		if ( bi->second.laser )
 			continue;
@@ -1143,7 +1143,7 @@ int distortion_add_bitmap_rotated(int texture, int tmap_flags, vertex *pnt, floa
 
 	batch_item *item = NULL;
 
-	SCP_map<int, batch_item>::iterator it = distortion_map.find(texture);
+	std::map<int, batch_item>::iterator it = distortion_map.find(texture);
 
 	if ( !distortion_map.empty() && it != distortion_map.end() ) {
 		item = &it->second;
@@ -1173,7 +1173,7 @@ int distortion_add_beam(int texture, int tmap_flags, vec3d *start, vec3d *end, f
 
 	batch_item *item = NULL;
 
-	SCP_map<int, batch_item>::iterator it = distortion_map.find(texture);
+	std::map<int, batch_item>::iterator it = distortion_map.find(texture);
 
 	if ( !distortion_map.empty() && it != distortion_map.end() ) {
 		item = &it->second;
@@ -1196,7 +1196,7 @@ int distortion_add_beam(int texture, int tmap_flags, vec3d *start, vec3d *end, f
 
 void batch_render_distortion_map_bitmaps(int buffer_handle)
 {
-	for (SCP_map<int,batch_item>::iterator bi = distortion_map.begin(); bi != distortion_map.end(); ++bi) {
+	for (std::map<int,batch_item>::iterator bi = distortion_map.begin(); bi != distortion_map.end(); ++bi) {
 
 		if ( bi->second.laser )
 			continue;
@@ -1217,7 +1217,7 @@ void batch_render_distortion_map_bitmaps(int buffer_handle)
 
 void batch_load_buffer_distortion_map_bitmaps(effect_vertex* buffer, int *n_verts)
 {
-	for (SCP_map<int, batch_item>::iterator bi = distortion_map.begin(); bi != distortion_map.end(); ++bi) {
+	for (std::map<int, batch_item>::iterator bi = distortion_map.begin(); bi != distortion_map.end(); ++bi) {
 
 		if ( bi->second.laser )
 			continue;
@@ -1233,7 +1233,7 @@ void batch_load_buffer_distortion_map_bitmaps(effect_vertex* buffer, int *n_vert
 int batch_get_size()
 {
 	int n_to_render = 0;
-	SCP_map<int, batch_item>::iterator bi;
+	std::map<int, batch_item>::iterator bi;
 
 	for (bi = geometry_map.begin(); bi != geometry_map.end(); ++bi) {
 		n_to_render += bi->second.batch.need_to_render();
@@ -1252,7 +1252,7 @@ int batch_get_size()
 size_t geometry_batch_get_size()
 {
 	size_t n_to_render = 0;
-	SCP_map<int, g_sdr_batch_item>::iterator bi;
+	std::map<int, g_sdr_batch_item>::iterator bi;
 
 	for (bi = geometry_shader_map.begin(); bi != geometry_shader_map.end(); ++bi) {
 		n_to_render += bi->second.batch.need_to_render();

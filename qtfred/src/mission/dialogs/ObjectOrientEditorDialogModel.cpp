@@ -159,7 +159,7 @@ const vec3d& ObjectOrientEditorDialogModel::getLocation() const {
 bool ObjectOrientEditorDialogModel::isEnabled() const {
 	return _enabled;
 }
-const SCP_vector<fso::fred::dialogs::ObjectOrientEditorDialogModel::ObjectEntry>&
+const std::vector<fso::fred::dialogs::ObjectOrientEditorDialogModel::ObjectEntry>&
 ObjectOrientEditorDialogModel::getEntries() const {
 	return _entries;
 }
@@ -197,7 +197,7 @@ void ObjectOrientEditorDialogModel::setPointMode(ObjectOrientEditorDialogModel::
 	}
 }
 
-ObjectOrientEditorDialogModel::ObjectEntry::ObjectEntry(const SCP_string& in_name, int in_objIndex) :
+ObjectOrientEditorDialogModel::ObjectEntry::ObjectEntry(const std::string& in_name, int in_objIndex) :
 	name(in_name), objIndex(in_objIndex) {
 }
 }

@@ -22,15 +22,15 @@ typedef struct shield_hit_info
 {
 	int members;
 	int hull_hit_index; // used to access the members in shield_hit_info that pertain to the hull
-	SCP_vector<int> shield_hit_timers; // timestamps that get set for SHIELD_FLASH_TIME when a quadrant is hit
-	SCP_vector<int> shield_hit_next_flash;
+	std::vector<int> shield_hit_timers; // timestamps that get set for SHIELD_FLASH_TIME when a quadrant is hit
+	std::vector<int> shield_hit_next_flash;
 	int shield_hit_status;		// bitfield, if offset for shield quadrant is set, that means shield is being hit
 	int shield_show_bright;		// bitfield, if offset for shield quadrant is set, that means play bright frame
 } shield_hit_info;
 
 extern ubyte Quadrant_xlate[4];
 
-extern SCP_vector<SCP_string> Hud_shield_filenames;
+extern std::vector<std::string> Hud_shield_filenames;
 
 class player;
 class object;

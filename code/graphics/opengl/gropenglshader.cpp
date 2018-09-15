@@ -29,11 +29,11 @@
 #include <md5.h>
 #include <jansson.h>
 
-SCP_vector<opengl_shader_t> GL_shader;
+std::vector<opengl_shader_t> GL_shader;
 
 GLuint Framebuffer_fallback_texture_id = 0;
 
-SCP_vector<opengl_vert_attrib> GL_vertex_attrib_info =
+std::vector<opengl_vert_attrib> GL_vertex_attrib_info =
 	{
 		{ opengl_vert_attrib::POSITION,		"vertPosition",		{{{ 0.0f, 0.0f, 0.0f, 1.0f }}} },
 		{ opengl_vert_attrib::COLOR,		"vertColor",		{{{ 1.0f, 1.0f, 1.0f, 1.0f }}} },
@@ -338,8 +338,8 @@ void opengl_shader_shutdown()
 	GL_shader.clear();
 }
 
-static SCP_string opengl_shader_get_header(shader_type type_id, int flags, bool has_geo_shader) {
-	SCP_stringstream sflags;
+static std::string opengl_shader_get_header(shader_type type_id, int flags, bool has_geo_shader) {
+	std::stringstream sflags;
 
 	sflags << "#version " << GLSL_version << " core\n";
 
@@ -379,8 +379,8 @@ static SCP_string opengl_shader_get_header(shader_type type_id, int flags, bool 
  * @param flags		integer variable holding a combination of SDR_* flags
  * @return			C-string holding the complete shader source code
  */
-static SCP_string opengl_load_shader(const char* filename) {
-	SCP_string content;
+static std::string opengl_load_shader(const char* filename) {
+	std::string content;
 	if (Enable_external_shaders) {
 		CFILE* cf_shader = cfopen(filename, "rt", CFILE_NORMAL, CF_TYPE_EFFECTS);
 
@@ -403,25 +403,25 @@ static SCP_string opengl_load_shader(const char* filename) {
 	return content;
 }
 
-static void handle_includes_impl(SCP_vector<SCP_string>& include_stack,
-								 SCP_stringstream& output,
+static void handle_includes_impl(std::vector<std::string>& include_stack,
+								 std::stringstream& output,
 								 int& include_counter,
-								 const SCP_string& filename,
-								 const SCP_string& original) {
+								 const std::string& filename,
+								 const std::string& original) {
 	include_stack.emplace_back(filename);
 	auto current_source_number = include_counter + 1;
 
 	const char* INCLUDE_STRING = "#include";
-	SCP_stringstream input(original);
+	std::stringstream input(original);
 
 	int line_num = 1;
-	for (SCP_string line; std::getline(input, line);) {
+	for (std::string line; std::getline(input, line);) {
 		auto include_start = line.find(INCLUDE_STRING);
-		if (include_start != SCP_string::npos) {
+		if (include_start != std::string::npos) {
 			auto first_quote = line.find('"', include_start + strlen(INCLUDE_STRING));
 			auto second_quote = line.find('"', first_quote + 1);
 
-			if (first_quote == SCP_string::npos || second_quote == SCP_string::npos) {
+			if (first_quote == std::string::npos || second_quote == std::string::npos) {
 				Error(LOCATION,
 					  "Shader %s:%d: Malformed include line. Could not find both quote charaters.",
 					  filename.c_str(),
@@ -429,11 +429,11 @@ static void handle_includes_impl(SCP_vector<SCP_string>& include_stack,
 			}
 
 			auto file_name = line.substr(first_quote + 1, second_quote - first_quote - 1);
-			auto existing_name = std::find_if(include_stack.begin(), include_stack.end(), [&file_name](const SCP_string& str) {
+			auto existing_name = std::find_if(include_stack.begin(), include_stack.end(), [&file_name](const std::string& str) {
 				return str == file_name;
 			});
 			if (existing_name != include_stack.end()) {
-				SCP_stringstream stack_string;
+				std::stringstream stack_string;
 				for (auto& name : include_stack) {
 					stack_string << "\t" << name << "\n";
 				}
@@ -468,9 +468,9 @@ static void handle_includes_impl(SCP_vector<SCP_string>& include_stack,
 	include_stack.pop_back();
 }
 
-static SCP_string handle_includes(const char* filename, const SCP_string& original) {
-	SCP_stringstream output;
-	SCP_vector<SCP_string> include_stack;
+static std::string handle_includes(const char* filename, const std::string& original) {
+	std::stringstream output;
+	std::vector<std::string> include_stack;
 	auto include_counter = 0;
 
 	handle_includes_impl(include_stack, output, include_counter, filename, original);
@@ -478,8 +478,8 @@ static SCP_string handle_includes(const char* filename, const SCP_string& origin
 	return output.str();
 }
 
-static SCP_vector<SCP_string> opengl_get_shader_content(shader_type type_id, const char* filename, int flags, bool has_geo_shader) {
-	SCP_vector<SCP_string> parts;
+static std::vector<std::string> opengl_get_shader_content(shader_type type_id, const char* filename, int flags, bool has_geo_shader) {
+	std::vector<std::string> parts;
 	parts.push_back(opengl_shader_get_header(type_id, flags, has_geo_shader));
 
 	parts.push_back(handle_includes(filename, opengl_load_shader(filename)));
@@ -487,15 +487,15 @@ static SCP_vector<SCP_string> opengl_get_shader_content(shader_type type_id, con
 	return parts;
 }
 
-static void add_shader_parts(MD5& md5, const SCP_vector<SCP_string>& parts) {
+static void add_shader_parts(MD5& md5, const std::vector<std::string>& parts) {
 	for (auto& part : parts) {
 		md5.update(part.c_str(), (MD5::size_type) part.size());
 	}
 }
 
-static SCP_string get_shader_hash(const SCP_vector<SCP_string>& vert,
-								  const SCP_vector<SCP_string>& geom_content,
-								  const SCP_vector<SCP_string>& frag) {
+static std::string get_shader_hash(const std::vector<std::string>& vert,
+								  const std::vector<std::string>& geom_content,
+								  const std::vector<std::string>& frag) {
 	MD5 md5;
 	add_shader_parts(md5, vert);
 	add_shader_parts(md5, geom_content);
@@ -508,7 +508,7 @@ static SCP_string get_shader_hash(const SCP_vector<SCP_string>& vert,
 	}
 
 	md5.update(GL_implementation_id.data(),
-	           (MD5::size_type)GL_implementation_id.size() * sizeof(SCP_string::value_type));
+	           (MD5::size_type)GL_implementation_id.size() * sizeof(std::string::value_type));
 
 	md5.finalize();
 
@@ -527,12 +527,12 @@ static bool do_shader_caching() {
 	return true;
 }
 
-static bool load_cached_shader_binary(opengl::ShaderProgram* program, const SCP_string& hash) {
+static bool load_cached_shader_binary(opengl::ShaderProgram* program, const std::string& hash) {
 	if (!do_shader_caching()) {
 		return false;
 	}
 
-	auto base_filename = SCP_string("ogl_shader-") + hash;
+	auto base_filename = std::string("ogl_shader-") + hash;
 
 	auto metadata = base_filename + ".json";
 	auto binary = base_filename + ".bin";
@@ -545,7 +545,7 @@ static bool load_cached_shader_binary(opengl::ShaderProgram* program, const SCP_
 	}
 
 	auto size = cfilelength(metadata_fp);
-	SCP_string metadata_content;
+	std::string metadata_content;
 	metadata_content.resize((size_t) size);
 	cfread(&metadata_content[0], 1, size, metadata_fp);
 
@@ -588,7 +588,7 @@ static bool load_cached_shader_binary(opengl::ShaderProgram* program, const SCP_
 	
 	GR_DEBUG_SCOPE("Loading cached shader");
 	
-	SCP_vector<uint8_t> buffer;
+	std::vector<uint8_t> buffer;
 	int length = cfilelength(binary_fp);
 	buffer.resize((size_t) length);
 	cfread(&buffer[0], 1, length, binary_fp);
@@ -614,7 +614,7 @@ static int json_write_callback(const char *buffer, size_t size, void *data) {
 	}
 }
 
-static void cache_program_binary(GLuint program, const SCP_string& hash) {
+static void cache_program_binary(GLuint program, const std::string& hash) {
 	if (!do_shader_caching()) {
 		return;
 	}
@@ -629,7 +629,7 @@ static void cache_program_binary(GLuint program, const SCP_string& hash) {
 		return;
 	}
 
-	SCP_vector<uint8_t> binary;
+	std::vector<uint8_t> binary;
 	binary.resize((size_t) size);
 	GLenum binary_fmt;
 	GLsizei length;
@@ -638,7 +638,7 @@ static void cache_program_binary(GLuint program, const SCP_string& hash) {
 		return;
 	}
 
-	auto base_filename = SCP_string("ogl_shader-") + hash;
+	auto base_filename = std::string("ogl_shader-") + hash;
 
 	auto metadata_name = base_filename + ".json";
 	auto binary_name = base_filename + ".bin";
@@ -715,7 +715,7 @@ void opengl_compile_shader_actual(shader_type sdr, const uint &flags, opengl_sha
 
 	auto vert_content = opengl_get_shader_content(sdr_info->type_id, sdr_info->vert, flags, use_geo_sdr);
 	auto frag_content = opengl_get_shader_content(sdr_info->type_id, sdr_info->frag, flags, use_geo_sdr);
-	SCP_vector<SCP_string> geom_content;
+	std::vector<std::string> geom_content;
 
 	if (use_geo_sdr) {
 		// read geometry shader
@@ -860,14 +860,14 @@ void gr_opengl_recompile_all_shaders(const std::function<void(size_t, size_t)>& 
 
 static void opengl_purge_shader_cache_type(const char* ext) {
 
-	SCP_string filter("*.");
+	std::string filter("*.");
 	filter += ext;
 
 	// Previously the cache files were stored in the mod directory. Since we have a better system now, those files
 	// should be cleaned out. This is only needed if we have a mod directory since otherwise we would delete the actual
 	// cache files
 	if (Cmdline_mod != nullptr && strlen(Cmdline_mod) > 0) {
-		SCP_vector<SCP_string> cache_files;
+		std::vector<std::string> cache_files;
 		cf_get_file_list(cache_files, CF_TYPE_CACHE, filter.c_str(), CF_SORT_NONE, nullptr,
 		                 CF_LOCATION_TYPE_PRIMARY_MOD | CF_LOCATION_TYPE_SECONDARY_MODS);
 
@@ -877,8 +877,8 @@ static void opengl_purge_shader_cache_type(const char* ext) {
 		}
 	}
 
-	SCP_vector<SCP_string> cache_files;
-	SCP_vector<file_list_info> file_info;
+	std::vector<std::string> cache_files;
+	std::vector<file_list_info> file_info;
 	cf_get_file_list(cache_files, CF_TYPE_CACHE, filter.c_str(), CF_SORT_NONE, &file_info,
 	                 CF_LOCATION_ROOT_USER | CF_LOCATION_ROOT_GAME | CF_LOCATION_TYPE_ROOT);
 
@@ -886,7 +886,7 @@ static void opengl_purge_shader_cache_type(const char* ext) {
 			  "cf_get_file_list returned different sizes for file names and file informations!");
 
 	const auto TIMEOUT = 2.0 * 30.0 * 24.0 * 60.0 * 60.0; // purge timeout in seconds which is ~2 months
-	const SCP_string PREFIX = "ogl_shader-";
+	const std::string PREFIX = "ogl_shader-";
 
 	auto now = std::time(nullptr);
 	for (size_t i = 0; i < cache_files.size(); ++i) {

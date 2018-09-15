@@ -15,8 +15,8 @@
 #include "graphics/material.h"
 #include "tracing/tracing.h"
 
-static SCP_map<batch_info, primitive_batch> Batching_primitives;
-static SCP_map<batch_buffer_key, primitive_batch_buffer> Batching_buffers;
+static std::map<batch_info, primitive_batch> Batching_primitives;
+static std::map<batch_buffer_key, primitive_batch_buffer> Batching_buffers;
 
 void primitive_batch::add_triangle(batch_vertex* v0, batch_vertex* v1, batch_vertex *v2)
 {
@@ -97,7 +97,7 @@ primitive_batch_buffer* batching_find_buffer(uint vertex_mask, primitive_type pr
 {
 	batch_buffer_key query(vertex_mask, prim_type);
 
-	SCP_map<batch_buffer_key, primitive_batch_buffer>::iterator iter = Batching_buffers.find(query);
+	std::map<batch_buffer_key, primitive_batch_buffer>::iterator iter = Batching_buffers.find(query);
 
 	if ( iter == Batching_buffers.end() ) {
 		primitive_batch_buffer *buffer = &Batching_buffers[query];
@@ -117,7 +117,7 @@ primitive_batch* batching_find_batch(int texture, batch_info::material_type mate
 
 	batch_info query(material_id, base_tex, prim_type, thruster);
 
-	SCP_map<batch_info, primitive_batch>::iterator iter = Batching_primitives.find(query);
+	std::map<batch_info, primitive_batch>::iterator iter = Batching_primitives.find(query);
 
 	if ( iter == Batching_primitives.end() ) {
 		primitive_batch* batch = &Batching_primitives[query];
@@ -924,8 +924,8 @@ void batching_load_buffers(bool distortion)
 	GR_DEBUG_SCOPE("Batching load buffers");
 	TRACE_SCOPE(tracing::LoadBatchingBuffers);
 
-	SCP_map<batch_info, primitive_batch>::iterator bi;
-	SCP_map<batch_buffer_key, primitive_batch_buffer>::iterator buffer_iter;
+	std::map<batch_info, primitive_batch>::iterator bi;
+	std::map<batch_buffer_key, primitive_batch_buffer>::iterator buffer_iter;
 
 	for ( buffer_iter = Batching_buffers.begin(); buffer_iter != Batching_buffers.end(); ++buffer_iter ) {
 		// zero out the buffers
@@ -995,7 +995,7 @@ void batching_render_all(bool render_distortions)
 
 	batching_load_buffers(render_distortions);
 
-	SCP_map<batch_buffer_key, primitive_batch_buffer>::iterator bi;
+	std::map<batch_buffer_key, primitive_batch_buffer>::iterator bi;
 
 	for ( bi = Batching_buffers.begin(); bi != Batching_buffers.end(); ++bi ) {
 		batching_render_buffer(&bi->second);

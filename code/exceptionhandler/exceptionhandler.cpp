@@ -308,7 +308,7 @@ static char* GetFilePart(char *source)
 //
 // --------------------
 
-SCP_string safe_string;
+std::string safe_string;
 
 // Entry point into the main exception handling routine.  This routine is put into an except()
 // statment at the beginning of a thread and is called anytime that there is a program exception

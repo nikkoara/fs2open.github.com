@@ -2150,7 +2150,7 @@ void control_config_do_frame(float frametime)
 
 	// If multiple controls presets are provided, display which one is in use
 	if (Control_config_presets.size() > 1) {
-		SCP_string preset_str;
+		std::string preset_str;
 		int matching_preset = -1;
 
 		for (i=0; i<(int)Control_config_presets.size(); i++) {

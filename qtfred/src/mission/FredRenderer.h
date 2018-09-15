@@ -44,7 +44,7 @@ struct ViewSettings;
 class FredRenderer: public QObject {
  Q_OBJECT
 
-	SCP_vector<int> rendering_order;
+	std::vector<int> rendering_order;
 	int Fred_outline = 0;
 
 	EditorViewport* _viewport = nullptr;

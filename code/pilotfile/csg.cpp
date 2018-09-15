@@ -1202,7 +1202,7 @@ void pilotfile::csg_read_cutscenes() {
 }
 
 void pilotfile::csg_write_cutscenes() {
-	SCP_vector<cutscene_info>::iterator cut;
+	std::vector<cutscene_info>::iterator cut;
 
 	startSection(Section::Cutscenes);
 

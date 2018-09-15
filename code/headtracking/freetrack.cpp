@@ -15,7 +15,7 @@ namespace
 	 * For windows there is a registry entry at HKEY_CURRENT_USER\Software\FreeTrack\FreeTrackClient
 	 * that specifies where the dll is located.
 	 */
-	SCP_string getLibraryLocation()
+	std::string getLibraryLocation()
 	{
 		HKEY hKey = NULL;
 		LONG lResult = RegOpenKeyEx(HKEY_CURRENT_USER,
@@ -42,7 +42,7 @@ namespace
 			return "";
 		}
 
-		SCP_string value;
+		std::string value;
 		value.resize(dwLen);
 
 		dwLen = static_cast<DWORD>(value.size());
@@ -177,7 +177,7 @@ namespace headtracking
 			return true;
 		}
 
-		SCP_string FreeTrackProvider::getName()
+		std::string FreeTrackProvider::getName()
 		{
 			return "FreeTrack";
 		}

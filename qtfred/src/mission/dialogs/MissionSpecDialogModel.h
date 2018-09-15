@@ -21,21 +21,21 @@ private:
 
 	bool _modified = false;
 
-	SCP_string _m_created;
-	SCP_string _m_modified;
-	SCP_string _m_mission_notes;
-	SCP_string _m_designer_name;
-	SCP_string _m_mission_title;
-	SCP_string _m_mission_desc;
-	SCP_string _m_squad_filename;
-	SCP_string _m_squad_name;
-	SCP_string _m_loading_640;
-	SCP_string _m_loading_1024;
+	std::string _m_created;
+	std::string _m_modified;
+	std::string _m_mission_notes;
+	std::string _m_designer_name;
+	std::string _m_mission_title;
+	std::string _m_mission_desc;
+	std::string _m_squad_filename;
+	std::string _m_squad_name;
+	std::string _m_loading_640;
+	std::string _m_loading_1024;
 	int		_m_ai_profile;
 	int		_m_event_music;
-	SCP_string	_m_substitute_event_music;
+	std::string	_m_substitute_event_music;
 	int		_m_command_persona;
-	SCP_string	_m_command_sender;
+	std::string	_m_command_sender;
 	bool		_m_full_war;
 	uint		_m_num_respawns;
 	int			_m_max_respawn_delay;
@@ -57,15 +57,15 @@ public:
 	bool apply() override;
 	void reject() override;
 
-	void setMissionTitle(const SCP_string& m_mission_title);
-	SCP_string getMissionTitle();
+	void setMissionTitle(const std::string& m_mission_title);
+	std::string getMissionTitle();
 
-	void setDesigner(const SCP_string& m_designer_name);
-	SCP_string getDesigner();
+	void setDesigner(const std::string& m_designer_name);
+	std::string getDesigner();
 
-	SCP_string getCreatedTime();
+	std::string getCreatedTime();
 
-	SCP_string getModifiedTime();
+	std::string getModifiedTime();
 
 	void setMissionType(int m_type);
 	int getMissionType();
@@ -76,15 +76,15 @@ public:
 	void setMaxRespawnDelay(int);
 	int getMaxRespawnDelay();
 
-	void setSquadronName(const SCP_string&);
-	SCP_string getSquadronName();
-	void setSquadronLogo(const SCP_string&);
-	SCP_string getSquadronLogo();
+	void setSquadronName(const std::string&);
+	std::string getSquadronName();
+	void setSquadronLogo(const std::string&);
+	std::string getSquadronLogo();
 
-	void setLowResLoadingScreen(const SCP_string&);
-	SCP_string getLowResLoadingScren();
-	void setHighResLoadingScreen(const SCP_string&);
-	SCP_string getHighResLoadingScren();
+	void setLowResLoadingScreen(const std::string&);
+	std::string getLowResLoadingScren();
+	void setHighResLoadingScreen(const std::string&);
+	std::string getHighResLoadingScren();
 
 	void setDisallowSupport(bool);
 	bool getDisallowSupport();
@@ -98,15 +98,15 @@ public:
 	void setTrailDisplaySpeed(int);
 	int getTrailDisplaySpeed();
 
-	void setCommandSender(const SCP_string&);
-	SCP_string getCommandSender();
+	void setCommandSender(const std::string&);
+	std::string getCommandSender();
 	void setCommandPersona(int);
 	int getCommandPersona();
 
 	void setEventMusic(int);
 	int getEventMusic();
-	void setSubEventMusic(const SCP_string&);
-	SCP_string getSubEventMusic();
+	void setSubEventMusic(const std::string&);
+	std::string getSubEventMusic();
 
 	void setMissionFlag(Mission::Mission_Flags flag, bool enabled);
 	const flagset<Mission::Mission_Flags>& getMissionFlags() const;
@@ -116,11 +116,11 @@ public:
 	void setAIProfileIndex(int m_ai_profile);
 	int getAIProfileIndex() const;
 
-	void setMissionDescText(const SCP_string&);
-	SCP_string getMissionDescText();
+	void setMissionDescText(const std::string&);
+	std::string getMissionDescText();
 
-	void setDesignerNoteText(const SCP_string&);
-	SCP_string getDesignerNoteText();
+	void setDesignerNoteText(const std::string&);
+	std::string getDesignerNoteText();
 
 	bool query_modified();
 };

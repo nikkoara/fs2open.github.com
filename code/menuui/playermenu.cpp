@@ -159,7 +159,7 @@ int Player_select_clone_flag;						// clone the currently selected pilot
 char Player_select_last_pilot[CALLSIGN_LEN + 10];	// callsign of the last used pilot, or none if there wasn't one
 int Player_select_last_is_multi;
 
-SCP_string Player_select_force_main_hall = "";
+std::string Player_select_force_main_hall = "";
 
 static int Player_select_no_save_pilot = 0;		// to skip save of pilot in pilot_select_close()
 
@@ -214,7 +214,7 @@ extern int delete_pilot_file(char *pilot_name);
 bool valid_pilot_lang(char *callsign)
 {
 	char pilot_lang[LCL_LANG_NAME_LEN+1], current_lang[LCL_LANG_NAME_LEN+1];
-	SCP_string filename = callsign;
+	std::string filename = callsign;
 
 	filename += ".plr";
 	lcl_get_language_name(current_lang);

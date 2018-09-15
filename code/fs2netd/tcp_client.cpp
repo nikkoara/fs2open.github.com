@@ -33,7 +33,7 @@
 #include <climits>
 
 
-extern SCP_vector<crc_valid_status> Table_valid_status;
+extern std::vector<crc_valid_status> Table_valid_status;
  
 
 int FS2NetD_CheckSingleMission(const char *m_name, uint crc32, bool do_send)
@@ -317,7 +317,7 @@ int FS2NetD_GetPlayerData(const char *player_name, player *pl, bool can_create, 
 	return -1;
 }
 
-int FS2NetD_GetBanList(SCP_vector<SCP_string> &mask_list, bool do_send)
+int FS2NetD_GetBanList(std::vector<std::string> &mask_list, bool do_send)
 {
 	int buffer_size, buffer_offset;
 	bool my_packet = false;
@@ -392,7 +392,7 @@ int FS2NetD_GetBanList(SCP_vector<SCP_string> &mask_list, bool do_send)
 	return 0;
 }
 
-int FS2NetD_GetMissionsList(SCP_vector<file_record> &m_list, bool do_send)
+int FS2NetD_GetMissionsList(std::vector<file_record> &m_list, bool do_send)
 {
 	int buffer_size, buffer_offset;
 	bool my_packet = false;
@@ -708,7 +708,7 @@ int FS2NetD_ValidateTableList(bool do_send)
 
 		PXO_ADD_USHORT( num_tables );
 
-		for (SCP_vector<crc_valid_status>::iterator tvs = Table_valid_status.begin(); tvs != Table_valid_status.end(); ++tvs) {
+		for (std::vector<crc_valid_status>::iterator tvs = Table_valid_status.begin(); tvs != Table_valid_status.end(); ++tvs) {
 			PXO_ADD_STRING(tvs->name );
 			PXO_ADD_UINT( tvs->crc32 );
 		}
@@ -772,7 +772,7 @@ int FS2NetD_ValidateTableList(bool do_send)
 			return -1;
 		}
 
-		for (SCP_vector<crc_valid_status>::iterator tvs = Table_valid_status.begin(); tvs != Table_valid_status.end(); ++tvs) {
+		for (std::vector<crc_valid_status>::iterator tvs = Table_valid_status.begin(); tvs != Table_valid_status.end(); ++tvs) {
 			PXO_GET_DATA( tbl_valid_status );
 			Assert( (tbl_valid_status == 0) || (tbl_valid_status == 1) );
 

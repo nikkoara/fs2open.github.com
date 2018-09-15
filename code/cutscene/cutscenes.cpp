@@ -36,11 +36,11 @@ const char* Cutscene_mask_name[GR_NUM_RESOLUTIONS] = {
 };
 
 int Description_index;
-SCP_vector<cutscene_info> Cutscenes;
+std::vector<cutscene_info> Cutscenes;
 
 void cutscene_close()
 {
-	for (SCP_vector<cutscene_info>::iterator cut = Cutscenes.begin(); cut != Cutscenes.end(); ++cut)
+	for (std::vector<cutscene_info>::iterator cut = Cutscenes.begin(); cut != Cutscenes.end(); ++cut)
 		if (cut->description != NULL)
 		{
 			vm_free(cut->description);
@@ -134,7 +134,7 @@ void cutscene_mark_viewable(const char* filename)
 	// change to lower case
 	strlwr(file);
 	int i = 0;
-	for (SCP_vector<cutscene_info>::iterator cut = Cutscenes.begin(); cut != Cutscenes.end(); ++cut)
+	for (std::vector<cutscene_info>::iterator cut = Cutscenes.begin(); cut != Cutscenes.end(); ++cut)
 	{
 		// change the cutscene file name to lower case
 		strcpy_s(cut_file, cut->filename);
@@ -164,7 +164,7 @@ void cutscene_mark_viewable(const char* filename)
 #define PLAY_BUTTON                6
 #define EXIT_BUTTON                7
 
-static SCP_vector<int> Cutscene_list;
+static std::vector<int> Cutscene_list;
 //static int Stats_scroll_offset;  // not used - taylor
 static int Selected_line = 0;  // line that is currently selected for binding
 static int Scroll_offset;
@@ -441,7 +441,7 @@ void cutscenes_screen_init()
 	Cutscene_list.clear();
 
 	int u = 0;
-	for (SCP_vector<cutscene_info>::iterator cut = Cutscenes.begin(); cut != Cutscenes.end(); ++cut, u++)
+	for (std::vector<cutscene_info>::iterator cut = Cutscenes.begin(); cut != Cutscenes.end(); ++cut, u++)
 	{
 		if ((*cut).viewable)
 		{

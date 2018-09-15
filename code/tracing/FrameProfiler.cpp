@@ -14,7 +14,7 @@ bool event_sorter(const trace_event& left, const trace_event& right) {
 	return left.event_id < right.event_id;
 }
 
-void process_begin(SCP_vector<profile_sample>& samples, const trace_event& evt) {
+void process_begin(std::vector<profile_sample>& samples, const trace_event& evt) {
 	int parent = -1;
 	for (int i = 0; i < (int) samples.size(); i++) {
 		if (!samples[i].open_profiles) {
@@ -43,7 +43,7 @@ void process_begin(SCP_vector<profile_sample>& samples, const trace_event& evt) 
 	// create a new profile sample
 	profile_sample new_sample;
 
-	new_sample.name = SCP_string(evt.category->getName());
+	new_sample.name = std::string(evt.category->getName());
 	new_sample.open_profiles = 1;
 	new_sample.profile_instances = 1;
 	new_sample.accumulator = 0;
@@ -55,7 +55,7 @@ void process_begin(SCP_vector<profile_sample>& samples, const trace_event& evt) 
 	samples.push_back(new_sample);
 }
 
-void process_end(SCP_vector<profile_sample>& samples, const trace_event& evt) {
+void process_end(std::vector<profile_sample>& samples, const trace_event& evt) {
 	uint num_parents = 0;
 	int child_of = -1;
 
@@ -173,7 +173,7 @@ void FrameProfiler::processEvent(const trace_event* event) {
 	_bufferedEvents.push_back(end);
 }
 
-void FrameProfiler::get_profile_from_history(SCP_string& name,
+void FrameProfiler::get_profile_from_history(std::string& name,
 											 uint64_t* avg_micro_sec,
 											 uint64_t* min_micro_sec,
 											 uint64_t* max_micro_sec) {
@@ -186,7 +186,7 @@ void FrameProfiler::get_profile_from_history(SCP_string& name,
 		}
 	}
 }
-void FrameProfiler::store_profile_in_history(SCP_string& name,
+void FrameProfiler::store_profile_in_history(std::string& name,
 											 uint64_t time) {
 	float old_ratio;
 	float new_ratio = 0.8f * f2fl(Frametime);
@@ -228,10 +228,10 @@ void FrameProfiler::store_profile_in_history(SCP_string& name,
 
 	history.push_back(new_history);
 }
-void FrameProfiler::dump_output(SCP_stringstream& out,
+void FrameProfiler::dump_output(std::stringstream& out,
 								uint64_t  /*start_profile_time*/,
 								uint64_t  /*end_profile_time*/,
-								SCP_vector<profile_sample>& samples) {
+								std::vector<profile_sample>& samples) {
 	out << "  Avg :  Min :  Max :   # : Profile Name\n";
 	out << "----------------------------------------\n";
 
@@ -261,7 +261,7 @@ void FrameProfiler::dump_output(SCP_stringstream& out,
 		sprintf(max, "%3.1fms", i2fl(max_micro_seconds) * 0.000001f);
 		sprintf(num, "%3d", samples[i].profile_instances);
 
-		SCP_string indented_name;
+		std::string indented_name;
 
 		for (uint indent = 0; indent < samples[i].num_parents; indent++) {
 			indented_name += ">";
@@ -275,7 +275,7 @@ void FrameProfiler::dump_output(SCP_stringstream& out,
 	}
 }
 
-SCP_string FrameProfiler::getContent() {
+std::string FrameProfiler::getContent() {
 	return content;
 }
 void FrameProfiler::processFrame() {
@@ -284,9 +284,9 @@ void FrameProfiler::processFrame() {
 
 	std::sort(_bufferedEvents.begin(), _bufferedEvents.end(), event_sorter);
 
-	SCP_stringstream stream;
+	std::stringstream stream;
 
-	SCP_vector<profile_sample> samples;
+	std::vector<profile_sample> samples;
 
 	bool start_found = false;
 	bool end_found = false;

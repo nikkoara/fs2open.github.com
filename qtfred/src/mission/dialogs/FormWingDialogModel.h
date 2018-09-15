@@ -16,11 +16,11 @@ class FormWingDialogModel: public AbstractDialogModel {
 
 	void reject() override;
 
-	const SCP_string& getName() const;
-	void setName(const SCP_string& name);
+	const std::string& getName() const;
+	void setName(const std::string& name);
 
  private:
-	SCP_string _name;
+	std::string _name;
 
 	template<typename T>
 	inline void modify(T& a, const T& b);

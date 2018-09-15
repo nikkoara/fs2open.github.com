@@ -47,7 +47,7 @@ namespace headtracking
 			return true;
 		}
 
-		SCP_string TrackIRProvider::getName()
+		std::string TrackIRProvider::getName()
 		{
 			return "TrackIR";
 		}

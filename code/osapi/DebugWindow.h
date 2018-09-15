@@ -15,17 +15,17 @@ class DebugWindow {
 	 * A single line in the debug log can have multiple properties which are stored in this structure
 	 */
 	struct LineInfo {
-		SCP_string category;
-		SCP_string text;
+		std::string category;
+		std::string text;
 	};
 
 	os::Viewport* debug_view = nullptr; //!< The viewport in which the debug output is shown
 	SDL_Window* debug_sdl_window = nullptr; //!< The SDL window handle of the debug view
 
-	SCP_vector<LineInfo> lines; //!< Finished lines
+	std::vector<LineInfo> lines; //!< Finished lines
 
-	SCP_string current_category; //!< The category of the current line
-	SCP_string current_line; //!< Line that is currently being constructed, may be empty
+	std::string current_category; //!< The category of the current line
+	std::string current_line; //!< Line that is currently being constructed, may be empty
 
 	int max_category_width = 0; //!< The maximum width of any category string encountered thus far
 
@@ -52,7 +52,7 @@ class DebugWindow {
 	 *
 	 * @param category The category to use for these lines
 	 */
-	void split_current_and_add_to_log(const SCP_string& category);
+	void split_current_and_add_to_log(const std::string& category);
 
 	/**
 	 * @brief Event handler for window events

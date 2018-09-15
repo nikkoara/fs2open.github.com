@@ -17,7 +17,7 @@
 
 extern float flFrametime;
 
-SCP_vector<triggered_rotation> Triggered_rotations;
+std::vector<triggered_rotation> Triggered_rotations;
 
 const char *Animation_type_names[MAX_TRIGGER_ANIMATION_TYPES] =
 {
@@ -926,7 +926,7 @@ void model_anim_handle_multiplayer(ship *shipp)
 
 // Goober5000 - stack based animation for reversing a sequence of animations
 
-SCP_map<int, animation_stack> Animation_map;
+std::map<int, animation_stack> Animation_map;
 
 bool model_anim_push_and_start_type(int stack_unique_id, ship *shipp, int animation_type, int subtype, int direction, bool instant)
 {

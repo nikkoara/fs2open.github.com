@@ -13,7 +13,7 @@
 
 namespace particle {
 namespace effects {
-SingleParticleEffect::SingleParticleEffect(const SCP_string& name)
+SingleParticleEffect::SingleParticleEffect(const std::string& name)
 	: ParticleEffect(name) {}
 
 bool SingleParticleEffect::processSource(const ParticleSource* source) {

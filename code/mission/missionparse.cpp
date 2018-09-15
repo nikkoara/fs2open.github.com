@@ -125,7 +125,7 @@ int Mission_callsign_count = 0;
 p_object Ship_arrival_list;	// for linked list of ships to arrive later
 
 // all the ships that we parse
-SCP_vector<p_object> Parse_objects;
+std::vector<p_object> Parse_objects;
 
 
 // list for arriving support ship
@@ -153,7 +153,7 @@ p_object *Player_start_pobject;
 char Parse_names[MAX_SHIPS + MAX_WINGS][NAME_LENGTH];
 int Num_parse_names;
 
-SCP_vector<texture_replace> Fred_texture_replacements;
+std::vector<texture_replace> Fred_texture_replacements;
 
 int Num_path_restrictions;
 path_restriction_t Path_restrictions[MAX_PATH_RESTRICTIONS];
@@ -2007,7 +2007,7 @@ int parse_create_object_sub(p_object *p_objp)
 	}
 
 	// now fill them in
-	for (SCP_vector<texture_replace>::iterator tr = p_objp->replacement_textures.begin(); tr != p_objp->replacement_textures.end(); ++tr)
+	for (std::vector<texture_replace>::iterator tr = p_objp->replacement_textures.begin(); tr != p_objp->replacement_textures.end(); ++tr)
 	{
 		pm = model_get(sip->model_num);
 
@@ -3062,7 +3062,7 @@ int parse_object(mission *pm, int  /*flag*/, p_object *p_objp)
     p_objp->flags.reset();
     if (optional_string("+Flags:"))
     {
-        SCP_vector<SCP_string> unparsed;
+        std::vector<std::string> unparsed;
         parse_string_flag_list(p_objp->flags, Parse_object_flags, num_parse_object_flags, &unparsed);
         if (!unparsed.empty()) {
             for (size_t k = 0; k < unparsed.size(); ++k) {
@@ -3074,7 +3074,7 @@ int parse_object(mission *pm, int  /*flag*/, p_object *p_objp)
     // second set - Goober5000
     if (optional_string("+Flags2:"))
     {
-        SCP_vector<SCP_string> unparsed;
+        std::vector<std::string> unparsed;
         parse_string_flag_list(p_objp->flags, Parse_object_flags, num_parse_object_flags, &unparsed);
         if (!unparsed.empty()) {
             for (size_t k = 0; k < unparsed.size(); ++k) {
@@ -3374,7 +3374,7 @@ int parse_object(mission *pm, int  /*flag*/, p_object *p_objp)
 	}
 
 	// now load the textures (do this outside the parse loop because we may have ship class replacements too)
-	for (SCP_vector<texture_replace>::iterator tr = p_objp->replacement_textures.begin(); tr != p_objp->replacement_textures.end(); ++tr)
+	for (std::vector<texture_replace>::iterator tr = p_objp->replacement_textures.begin(); tr != p_objp->replacement_textures.end(); ++tr)
 	{
 		// load the texture
 		if (!stricmp(tr->new_texture, "invisible"))
@@ -3699,7 +3699,7 @@ bool is_ship_assignable(p_object *p_objp)
 	}
 
 	// Now we check the alt_classes (if there are any)
-	for (SCP_vector<alt_class>::iterator pac = p_objp->alt_classes.begin(); pac != p_objp->alt_classes.end(); ++pac) {
+	for (std::vector<alt_class>::iterator pac = p_objp->alt_classes.begin(); pac != p_objp->alt_classes.end(); ++pac) {
 		// we don't check availability unless we are asked to
 		if (pac->default_to_this_class == false) {
 			loadout_index = pac->ship_class;
@@ -3732,7 +3732,7 @@ bool is_ship_assignable(p_object *p_objp)
  */
 void process_loadout_objects() 
 {	
-	SCP_vector<size_t> reassignments;
+	std::vector<size_t> reassignments;
 	
 	// Loop through all the Parse_objects looking for ships that should be affected by the loadout code.
 	for (size_t i=0; i < Parse_objects.size(); i++)
@@ -3924,7 +3924,7 @@ void swap_parse_object(p_object *p_obj, int new_ship_class)
 
 p_object *mission_parse_get_parse_object(ushort net_signature)
 {
-	SCP_vector<p_object>::iterator ii;
+	std::vector<p_object>::iterator ii;
 
 	// look for original ships
 	for (ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
@@ -3938,7 +3938,7 @@ p_object *mission_parse_get_parse_object(ushort net_signature)
 // Goober5000 - also get it by name
 p_object *mission_parse_get_parse_object(const char *name)
 {
-	SCP_vector<p_object>::iterator ii;
+	std::vector<p_object>::iterator ii;
 
 	// look for original ships
 	for (ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
@@ -4107,7 +4107,7 @@ int parse_wing_create_ships( wing *wingp, int num_to_create, int force, int spec
 
 	// Goober5000 - we have to do this via the array because we have no guarantee we'll be able to iterate along the list
 	// (since created objects plus anything they're docked to will be removed from it)
-	for (SCP_vector<p_object>::iterator ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
+	for (std::vector<p_object>::iterator ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
 	{
 		int index;
 		ai_info *aip;
@@ -4631,7 +4631,7 @@ void parse_wing(mission *pm)
 		// everything is still only in the parse array at this point (in both FRED and FS2)
 
 		// find the parse object and assign it the wing number
-		for (SCP_vector<p_object>::iterator p_objp = Parse_objects.begin(); p_objp != Parse_objects.end(); ++p_objp) {
+		for (std::vector<p_object>::iterator p_objp = Parse_objects.begin(); p_objp != Parse_objects.end(); ++p_objp) {
 			if ( !strcmp(ship_name, p_objp->name) ) {
 				// get Allender -- ship appears to be in multiple wings
 				Assert (p_objp->wingnum == -1);
@@ -4740,7 +4740,7 @@ void post_process_path_stuff()
 	wing *wingp;
 
 	// take care of parse objects (ships)
-	for (SCP_vector<p_object>::iterator pobjp = Parse_objects.begin(); pobjp != Parse_objects.end(); ++pobjp)
+	for (std::vector<p_object>::iterator pobjp = Parse_objects.begin(); pobjp != Parse_objects.end(); ++pobjp)
 	{
 		resolve_path_masks(pobjp->arrival_anchor, &pobjp->arrival_path_mask);
 		resolve_path_masks(pobjp->departure_anchor, &pobjp->departure_path_mask);
@@ -4773,7 +4773,7 @@ void post_process_ships_wings()
 	// Goober5000 - now create all objects that we can.  This must be done before any ship stuff
 	// but can't be done until the dock references are resolved.  This was originally done
 	// in parse_object().
-	for (SCP_vector<p_object>::iterator ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
+	for (std::vector<p_object>::iterator ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
 	{
 		mission_parse_maybe_create_parse_object(&(*ii));
 	}
@@ -4793,7 +4793,7 @@ void post_process_ships_wings()
 	if (Fred_running)
 	{
 		// even though the ships are already created, only the parse objects know the wing info
-		for (SCP_vector<p_object>::iterator p_objp = Parse_objects.begin(); p_objp != Parse_objects.end(); ++p_objp)
+		for (std::vector<p_object>::iterator p_objp = Parse_objects.begin(); p_objp != Parse_objects.end(); ++p_objp)
 		{
 			// link the ship into the wing's array of ship indices (previously done in parse_wing
 			// in a rather less backwards way)
@@ -4904,7 +4904,7 @@ void parse_event(mission * /*pm*/)
 	}
 
 	if( optional_string("+Event Log Flags:") ) {
-		SCP_vector<SCP_string> buffer;
+		std::vector<std::string> buffer;
 		
 		stuff_string_list(buffer); 
 		for (int i = 0; i < (int)buffer.size(); i++) {
@@ -5016,7 +5016,7 @@ void parse_waypoint_list(mission *pm)
 	required_string("$Name:");
 	stuff_string(name_buf, F_NAME, NAME_LENGTH);
 
-	SCP_vector<vec3d> vec_list;
+	std::vector<vec3d> vec_list;
 	required_string("$List:");
 	stuff_vec3d_list(vec_list);
 
@@ -5813,8 +5813,8 @@ void post_process_mission()
 			// entering this if statement will result in program termination!!!!!
 			// print out an error based on the return value from check_sexp_syntax()
 			if ( result ) {
-				SCP_string sexp_str;
-				SCP_string error_msg;
+				std::string sexp_str;
+				std::string error_msg;
 
 				convert_sexp_to_string(sexp_str, i, SEXP_ERROR_CHECK_MODE);
 				truncate_message_lines(sexp_str, 30);
@@ -6222,7 +6222,7 @@ void reset_arrival_to_false(p_object *pobjp, bool reset_wing)
 		mprintf(("Setting arrival cue of wing %s to false for initial docking purposes.\n", wingp->name));
 		set_cue_to_false(&wingp->arrival_cue);
 
-		for (SCP_vector<p_object>::iterator ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
+		for (std::vector<p_object>::iterator ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
 		{
 			if ((&(*ii) != pobjp) && (ii->wingnum == pobjp->wingnum))
 				reset_arrival_to_false(&(*ii), false);
@@ -6296,7 +6296,7 @@ void parse_object_clear_handled_flag_helper(p_object *pobjp, p_dock_function_inf
 void parse_object_clear_all_handled_flags()
 {
 	// clear flag for all ships
-	for (SCP_vector<p_object>::iterator ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
+	for (std::vector<p_object>::iterator ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
 	{
 		p_object *pobjp = &(*ii);
 		p_dock_function_info dfi;
@@ -6369,7 +6369,7 @@ void mission_parse_set_up_initial_docks()
 	}
 
 	// now resolve the leader of each tree
-	for (SCP_vector<p_object>::iterator ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
+	for (std::vector<p_object>::iterator ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
 	{
 		p_object *pobjp = &(*ii);
 		p_dock_function_info dfi;
@@ -6912,7 +6912,7 @@ void mission_eval_arrivals()
 	// check the arrival list
 	// Goober5000 - we can't run through the list the usual way because we might
 	// remove a bunch of objects and completely screw up the list linkage
-	for (SCP_vector<p_object>::iterator ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
+	for (std::vector<p_object>::iterator ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
 	{
 		p_object *pobjp = &(*ii);
 
@@ -7378,7 +7378,7 @@ int insert_subsys_status(p_object *pobjp)
 
 	// we also have to adjust all the indexes in existing parse objects
 	// (each p_object's subsys_index points to subsystem 0 in its list)
-	for (SCP_vector<p_object>::iterator ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
+	for (std::vector<p_object>::iterator ii = Parse_objects.begin(); ii != Parse_objects.end(); ++ii)
 	{
 		// bump up base index to accommodate inserted subsystem
 		if (ii->subsys_index >= new_index)

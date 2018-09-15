@@ -329,7 +329,7 @@ int ObjectClassInfoEntry::GetObjectCoords(int *x, int *y, int *w, int *h)
 	return rval;
 }
 //*****************************GUIScreen*******************************
-GUIScreen::GUIScreen(const SCP_string &in_Name)
+GUIScreen::GUIScreen(const std::string &in_Name)
 {
 	//Set the name
 	Name = in_Name;
@@ -596,7 +596,7 @@ void GUISystem::PullScreen(GUIScreen *in_screen)
 	}
 }
 
-ScreenClassInfoEntry *GUISystem::GetScreenClassInfo(const SCP_string & screen_name)
+ScreenClassInfoEntry *GUISystem::GetScreenClassInfo(const std::string & screen_name)
 {
 	ScreenClassInfoEntry *sciep;
 	for (sciep = (ScreenClassInfoEntry*)GET_FIRST(&ScreenClassInfo); sciep != END_OF_LIST(&ScreenClassInfo); sciep = (ScreenClassInfoEntry*)GET_NEXT(sciep)) {
@@ -735,7 +735,7 @@ void GUISystem::DestroyClassInfo()
 }
 
 //*****************************GUIObject*******************************
-GUIObject::GUIObject(const SCP_string &in_Name, int x_coord, int y_coord, int x_width, int y_height, int in_style)
+GUIObject::GUIObject(const std::string &in_Name, int x_coord, int y_coord, int x_width, int y_height, int in_style)
 {
 	//General stuff
 	LastStatus = Status = 0;
@@ -1577,7 +1577,7 @@ void Window::ClearContent()
 	}
 }
 
-Window::Window(const SCP_string &in_caption, int x_coord, int y_coord, int x_width, int y_width, int in_style)
+Window::Window(const std::string &in_caption, int x_coord, int y_coord, int x_width, int y_width, int in_style)
 :GUIObject(in_caption, x_coord,y_coord,x_width,y_width,in_style)
 {
 	Caption = in_caption;
@@ -1594,7 +1594,7 @@ Window::Window(const SCP_string &in_caption, int x_coord, int y_coord, int x_wid
 
 //*****************************Button*******************************
 
-Button::Button(const SCP_string &in_caption, int x_coord, int y_coord, void (*in_function)(Button *caller), int x_width, int y_height, int in_style)
+Button::Button(const std::string &in_caption, int x_coord, int y_coord, void (*in_function)(Button *caller), int x_width, int y_height, int in_style)
 :GUIObject(in_caption, x_coord, y_coord, x_width, y_height, in_style)
 {
 	Caption = in_caption;
@@ -1805,7 +1805,7 @@ int Tree::DoRefreshSize()
 	return OF_TRUE;
 }
 
-Tree::Tree(const SCP_string &in_name, int x_coord, int y_coord, void* in_associateditem, int x_width, int y_height, int in_style)
+Tree::Tree(const std::string &in_name, int x_coord, int y_coord, void* in_associateditem, int x_width, int y_height, int in_style)
 :GUIObject(in_name, x_coord, y_coord, x_width, y_height, in_style)
 {
 	AssociatedItem = in_associateditem;
@@ -1928,7 +1928,7 @@ void Tree::DoMove(int dx, int dy)
 	MoveTreeItems(dx, dy, &Items);
 }
 
-TreeItem* Tree::AddItem(TreeItem *parent, const SCP_string &in_name, int in_data, bool in_delete_data, void (*in_function)(Tree* caller))
+TreeItem* Tree::AddItem(TreeItem *parent, const std::string &in_name, int in_data, bool in_delete_data, void (*in_function)(Tree* caller))
 {
 	TreeItem *ni = new TreeItem;
 
@@ -2126,7 +2126,7 @@ int Text::DoKeyPress(float  /*frametime*/)
 	return OF_TRUE;
 }
 
-Text::Text(const SCP_string &in_name, const SCP_string &in_content, int x_coord, int y_coord, int x_width, int y_height, int in_style)
+Text::Text(const std::string &in_name, const std::string &in_content, int x_coord, int y_coord, int x_width, int y_height, int in_style)
 :GUIObject(in_name, x_coord, y_coord, x_width, y_height, in_style)
 {
 	Content = in_content;
@@ -2136,7 +2136,7 @@ Text::Text(const SCP_string &in_name, const SCP_string &in_content, int x_coord,
 	Type = GT_TEXT;
 }
 
-void Text::SetText(const SCP_string &in_content)
+void Text::SetText(const std::string &in_content)
 {
 	Content = in_content;
 	OnRefreshSize();
@@ -2158,7 +2158,7 @@ void Text::SetText(float the_float)
 	OnRefreshSize();
 }
 
-void Text::AddLine(const SCP_string &in_line)
+void Text::AddLine(const std::string &in_line)
 {
 	Content += in_line;
 	OnRefreshSize();
@@ -2365,7 +2365,7 @@ void Text::Load()
 
 //*****************************Checkbox*******************************
 
-Checkbox::Checkbox(const SCP_string &in_label, int x_coord, int y_coord, void (*in_function)(Checkbox *caller), int x_width, int y_height, int in_style)
+Checkbox::Checkbox(const std::string &in_label, int x_coord, int y_coord, void (*in_function)(Checkbox *caller), int x_width, int y_height, int in_style)
 :GUIObject(in_label, x_coord, y_coord, x_width, y_height, in_style)
 {
 	Label = in_label;
@@ -2513,7 +2513,7 @@ int Checkbox::DoMouseOut(float  /*frametime*/)
 }
 
 //*****************************ImageAnim*******************************
-ImageAnim::ImageAnim(const SCP_string &in_name, const SCP_string & /*in_imagename*/, int x_coord, int y_coord, int x_width, int y_width, int in_style)
+ImageAnim::ImageAnim(const std::string &in_name, const std::string & /*in_imagename*/, int x_coord, int y_coord, int x_width, int y_width, int in_style)
 :GUIObject(in_name, x_coord, y_coord, x_width, y_width, in_style)
 {
 	//Load the image
@@ -2588,7 +2588,7 @@ int ImageAnim::DoRefreshSize()
 	return OF_FALSE;
 }
 
-void ImageAnim::SetImage(const SCP_string &in_imagename)
+void ImageAnim::SetImage(const std::string &in_imagename)
 {
 	if (in_imagename.size()) {
 		ImageHandle = IMG_LOAD_ANIM(in_imagename.c_str(), &TotalFrames, &FPS);
@@ -2642,7 +2642,7 @@ void ImageAnim::Stop()
 
 //*****************************Slider*******************************
 
-Slider::Slider(const SCP_string &in_label, float min, float max, int x_coord, int y_coord, void(*in_function)(Slider *caller), int x_width, int y_height, int in_style)
+Slider::Slider(const std::string &in_label, float min, float max, int x_coord, int y_coord, void(*in_function)(Slider *caller), int x_width, int y_height, int in_style)
 	:GUIObject(in_label, x_coord, y_coord, x_width, y_height, in_style)
 {
 	Label = in_label;

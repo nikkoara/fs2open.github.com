@@ -47,7 +47,7 @@ int filelength(int fd)
 }
 
 
-SCP_string dump_stacktrace()
+std::string dump_stacktrace()
 {
 #ifdef HAVE_EXECINFO_H
 	// The following is adapted from here: https://panthema.net/2008/0901-stacktrace-demangled/
@@ -70,7 +70,7 @@ SCP_string dump_stacktrace()
 	
 	// Demangle c++ function names to a more readable format using the ABI functions
 	// TODO: Maybe add configure time checks to check if the required features are available
-	SCP_stringstream stackstream;
+	std::stringstream stackstream;
 #ifdef HAVE_CXXAPI_H
 	size_t funcnamesize = 256;
 	char* funcname = reinterpret_cast<char*>(malloc(funcnamesize));

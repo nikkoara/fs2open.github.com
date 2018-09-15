@@ -85,11 +85,11 @@ struct bsp_polygon
 
 class bsp_polygon_data
 {
-	SCP_vector<vec3d> Vertex_list;
-	SCP_vector<vec3d> Normal_list; 
+	std::vector<vec3d> Vertex_list;
+	std::vector<vec3d> Normal_list; 
 
-	SCP_vector<bsp_vertex> Polygon_vertices;
-	SCP_vector<bsp_polygon> Polygons;
+	std::vector<bsp_vertex> Polygon_vertices;
+	std::vector<bsp_polygon> Polygons;
 
 	ubyte* Lights;
 
@@ -2235,7 +2235,7 @@ void interp_configure_vertex_buffers(polymodel *pm, int mn)
 
 	int i, j, first_index;
 	uint total_verts = 0;
-	SCP_vector<int> vertex_list;
+	std::vector<int> vertex_list;
 
 	Assert( (mn >= 0) && (mn < pm->n_models) );
 
@@ -2405,7 +2405,7 @@ void interp_copy_index_buffer(vertex_buffer *src, vertex_buffer *dest, size_t *i
 	}
 }
 
-void interp_fill_detail_index_buffer(SCP_vector<int> &submodel_list, polymodel *pm, vertex_buffer *buffer)
+void interp_fill_detail_index_buffer(std::vector<int> &submodel_list, polymodel *pm, vertex_buffer *buffer)
 {
 	size_t index_counts[MAX_MODEL_TEXTURES];
 	int i, j;
@@ -2481,7 +2481,7 @@ void interp_create_detail_index_buffer(polymodel *pm, int detail_num)
 {
 	TRACE_SCOPE(tracing::ModelCreateDetailIndexBuffers);
 
-	SCP_vector<int> submodel_list;
+	std::vector<int> submodel_list;
 
 	submodel_list.clear();
 
@@ -2524,7 +2524,7 @@ void interp_create_transparency_index_buffer(polymodel *pm, int mn)
 		return;
 	}
 
-	SCP_vector<buffer_data> &tex_buffers = pm->submodel[mn].buffer.tex_buf;
+	std::vector<buffer_data> &tex_buffers = pm->submodel[mn].buffer.tex_buf;
 	uint current_tri[NUM_VERTS_PER_TRI];
 	bool transparent_tri = false;
 	int num_tris = 0;
@@ -2557,7 +2557,7 @@ void interp_create_transparency_index_buffer(polymodel *pm, int mn)
 			continue;
 		}
 
-		SCP_vector<int> transparent_indices;
+		std::vector<int> transparent_indices;
 
 		transparent_tri = false;
 		num_tris = 0;
@@ -2614,7 +2614,7 @@ void interp_create_transparency_index_buffer(polymodel *pm, int mn)
 
 void model_interp_process_shield_mesh(polymodel * pm)
 {
-	SCP_vector<vec3d> buffer;
+	std::vector<vec3d> buffer;
 
 	if ( pm->shield.nverts <= 0 ) {
 		return;
@@ -2759,7 +2759,7 @@ void model_mix_two_team_colors(team_color* dest, team_color* a, team_color* b, f
 	dest->stripe.b = a->stripe.b * (1.0f - mix_factor) + b->stripe.b * mix_factor;
 }
 
-bool model_get_team_color( team_color *clr, const SCP_string &team, const SCP_string &secondaryteam, fix timestamp, int fadetime )
+bool model_get_team_color( team_color *clr, const std::string &team, const std::string &secondaryteam, fix timestamp, int fadetime )
 {
 	Assert(clr != NULL);
 

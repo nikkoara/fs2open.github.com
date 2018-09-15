@@ -193,11 +193,11 @@ class CFred_mission_save {
 	void convert_special_tags_to_retail(char* text, int max_len);
 
 	/**
-	 * @brief Converts $escaped tags in the given SCP_string
+	 * @brief Converts $escaped tags in the given std::string
 	 *
 	 * @param[in,out] text Text to check for tags
 	 */
-	void convert_special_tags_to_retail(SCP_string& text);
+	void convert_special_tags_to_retail(std::string& text);
 
 	/**
 	 * @brief Save asteroid field (singular) to file
@@ -476,7 +476,7 @@ class CFred_mission_save {
 	int save_wings();
 
 	char* raw_ptr = nullptr;
-	SCP_vector<SCP_string> fso_ver_comment;
+	std::vector<std::string> fso_ver_comment;
 	int err = 0;
 	CFILE* fp = nullptr;
 

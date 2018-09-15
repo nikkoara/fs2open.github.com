@@ -63,7 +63,7 @@ void processEvents(PlaybackState* state) {
 
 template<typename... Args>
 float print_string(float x, float y, const char* fmt, Args... params) {
-	SCP_string text;
+	std::string text;
 	sprintf(text, fmt, params...);
 
 	gr_string(x, y, text.c_str(), GR_RESIZE_NONE);

@@ -294,7 +294,7 @@ ship_info *sip = &Ship_info[Player_ship->ship_info_index];
 			int centerX = position[0] + (ax / 2);
 			int centerY = position[1] + (ay / 2);
 
-			for (SCP_vector<firepoint>::iterator fpi = fp.begin(); fpi != fp.end(); ++fpi) {
+			for (std::vector<firepoint>::iterator fpi = fp.begin(); fpi != fp.end(); ++fpi) {
 				if (fpi->active == 2)
 					setGaugeColor(HUD_C_BRIGHT);
 				else if (fpi->active == 1)
@@ -481,11 +481,11 @@ void HudGaugeThrottle::initMatchSpeedOffsets(int x, int y, bool custom)
 		Match_speed_icon = 'm';
 		Match_speed_draw_background = true;
 	}
-	SCP_stringstream stream;
+	std::stringstream stream;
 
 	stream << static_cast<char>(Match_speed_icon);
 	
-	const SCP_string& iconStr = stream.str();
+	const std::string& iconStr = stream.str();
 
 	gr_get_string_size(&Match_speed_icon_width, nullptr, iconStr.c_str());
 }

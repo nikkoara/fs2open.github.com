@@ -1540,7 +1540,7 @@ void std_debug_set_standalone_state_string(const char *str)
 
 void std_debug_multilog_add_line(const char *str)
 {
-	SCP_string log_str;
+	std::string log_str;
 
 	if ( !str || !strlen(str) ) {
 		return;
@@ -1555,7 +1555,7 @@ void std_debug_multilog_add_line(const char *str)
 	// parse the string, adding each new line to the list
 	size_t nline = log_str.find('\n');
 
-	while (nline != SCP_string::npos) {
+	while (nline != std::string::npos) {
 		log_str[nline] = '\0';
 
 		SendMessage(Standalone_multilog_string, LB_ADDSTRING, 0, (LPARAM)log_str.c_str());

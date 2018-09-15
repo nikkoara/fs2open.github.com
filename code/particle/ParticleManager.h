@@ -26,16 +26,16 @@ using ParticleEffectHandle = ::util::ID<particle_effect_tag, ptrdiff_t, -1>;
  */
 class ParticleManager {
  private:
-	SCP_vector<std::shared_ptr<ParticleEffect>> m_effects; //!< All parsed effects
+	std::vector<std::shared_ptr<ParticleEffect>> m_effects; //!< All parsed effects
 
-	SCP_vector<ParticleSource> m_sources; //!< The currently active sources
+	std::vector<ParticleSource> m_sources; //!< The currently active sources
 
 	bool m_processingSources = false; //!< @c true if sources are currently being processed
 	/**
 	 * If the sources are currently being processed, no additional sources can be added. Instead, they are added to this
 	 * vector and then added to the main vector when processing is done.
 	 */
-	SCP_vector<ParticleSource> m_deferredSourceAdding;
+	std::vector<ParticleSource> m_deferredSourceAdding;
 
 	/**
 	 * The global paticle manager
@@ -99,7 +99,7 @@ class ParticleManager {
 	 * @param name The name of the effect that is being searchd, may not be empty
 	 * @return The index of the effect
 	 */
-	ParticleEffectHandle getEffectByName(const SCP_string& name);
+	ParticleEffectHandle getEffectByName(const std::string& name);
 
 	/**
 	 * @brief Adds an effect
@@ -146,7 +146,7 @@ namespace internal {
  * @param name The name of the created effect, an empty string means no special name
  * @return The index of the added effect
  */
-ParticleEffectHandle parseEffectElement(EffectType forcedType = EffectType::Invalid, const SCP_string& name = "");
+ParticleEffectHandle parseEffectElement(EffectType forcedType = EffectType::Invalid, const std::string& name = "");
 
 /**
  * @brief Utility function for required_string
@@ -181,7 +181,7 @@ namespace util {
  * @param objectName Can be optionally specified so the error message is a bit more specific
  * @return The index
  */
-ParticleEffectHandle parseEffect(const SCP_string& objectName = "");
+ParticleEffectHandle parseEffect(const std::string& objectName = "");
 }
 }
 

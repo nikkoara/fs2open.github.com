@@ -142,7 +142,7 @@ typedef struct EFXREVERBPROPERTIES_list
 
 typedef struct EFXREVERBPROPERTIES
 {
-	SCP_string name;
+	std::string name;
 	float flDensity;
 	float flDiffusion;
 	float flGain;
@@ -172,7 +172,7 @@ typedef struct EFXREVERBPROPERTIES
 	EFXREVERBPROPERTIES(const EFXREVERBPROPERTIES_list &list);
 } EFXREVERBPROPERTIES;
 
-extern SCP_vector<EFXREVERBPROPERTIES> EFX_presets;
+extern std::vector<EFXREVERBPROPERTIES> EFX_presets;
 
 typedef struct
 {

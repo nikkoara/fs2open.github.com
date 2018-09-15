@@ -27,7 +27,7 @@ bool FormWingDialogModel::apply() {
 
 	for (auto i = 0; i < MAX_WINGS; i++) {
 		if (!stricmp(Wings[i].name, _name.c_str()) && Wings[i].wave_count) {
-			SCP_string msg;
+			std::string msg;
 			sprintf(msg, "The name \"%s\" is already being used by another wing", _name.c_str());
 
 			_viewport->dialogProvider->showButtonDialog(DialogType::Error,
@@ -72,7 +72,7 @@ bool FormWingDialogModel::apply() {
 
 	for (auto i = 0; i < Num_iffs; i++) {
 		if (!stricmp(_name.c_str(), Iff_info[i].iff_name)) {
-			SCP_string msg;
+			std::string msg;
 			sprintf(msg, "The name \"%s\" is already being used by a team", _name.c_str());
 
 			_viewport->dialogProvider->showButtonDialog(DialogType::Error,
@@ -85,7 +85,7 @@ bool FormWingDialogModel::apply() {
 
 	for (auto i = 0; i < (int) Ai_tp_list.size(); i++) {
 		if (!stricmp(_name.c_str(), Ai_tp_list[i].name)) {
-			SCP_string msg;
+			std::string msg;
 			sprintf(msg, "The name \"%s\" is already being used by a target priority group", _name.c_str());
 
 			_viewport->dialogProvider->showButtonDialog(DialogType::Error,
@@ -117,10 +117,10 @@ bool FormWingDialogModel::apply() {
 void FormWingDialogModel::reject() {
 
 }
-const SCP_string& FormWingDialogModel::getName() const {
+const std::string& FormWingDialogModel::getName() const {
 	return _name;
 }
-void FormWingDialogModel::setName(const SCP_string& name) {
+void FormWingDialogModel::setName(const std::string& name) {
 	modify(_name, name);
 }
 

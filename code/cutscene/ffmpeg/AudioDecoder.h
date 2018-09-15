@@ -16,7 +16,7 @@ class AudioDecoder: public FFMPEGStreamDecoder<AudioFrame> {
 	int m_maxOutNumSamples;
 	int m_outNumSamples;
 
-	SCP_vector<short> m_audioBuffer;
+	std::vector<short> m_audioBuffer;
 
 	void handleDecodedFrame(AVFrame* frame);
 

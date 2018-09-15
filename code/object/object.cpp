@@ -1430,7 +1430,7 @@ void obj_move_all(float frametime)
 	TRACE_SCOPE(tracing::MoveObjects);
 
 	object *objp;	
-	SCP_vector<object*> cmeasure_list;
+	std::vector<object*> cmeasure_list;
 	const bool global_cmeasure_timer = (Cmeasures_homing_check > 0);
 
 	Assertion(Cmeasures_homing_check >= 0, "Cmeasures_homing_check is %d in obj_move_all(); it should never be negative. Get a coder!\n", Cmeasures_homing_check);
@@ -1674,7 +1674,7 @@ void obj_queue_render(object* obj, model_draw_list* scene)
 		asteroid_render(obj, scene);
 		break;
 	case OBJ_JUMP_NODE:
-		for ( SCP_list<CJumpNode>::iterator jnp = Jump_nodes.begin(); jnp != Jump_nodes.end(); ++jnp ) {
+		for ( std::list<CJumpNode>::iterator jnp = Jump_nodes.begin(); jnp != Jump_nodes.end(); ++jnp ) {
 			if ( jnp->GetSCPObject() != obj ) {
 				continue;
 			}

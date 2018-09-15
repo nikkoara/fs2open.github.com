@@ -57,7 +57,7 @@ struct MovieProperties {
 };
 
 struct AudioFrame {
-	SCP_vector<short> audioData;
+	std::vector<short> audioData;
 
 	int channels = -1;
 
@@ -69,7 +69,7 @@ struct SubtitleFrame {
     double displayStartTime = -1.0;
     double displayEndTime = -1.0;
 
-	SCP_string text;
+	std::string text;
 };
 typedef std::unique_ptr<SubtitleFrame> SubtitleFramePtr;
 
@@ -111,7 +111,7 @@ class Decoder {
 	 * @param fileName The name of the file that should be opened
 	 * @return @c true if the initialization was successfull, @c false otherwise
 	 */
-	virtual bool initialize(const SCP_string& fileName, const PlaybackProperties& properties) = 0;
+	virtual bool initialize(const std::string& fileName, const PlaybackProperties& properties) = 0;
 
 	/**
 	 * @brief Returns the properties of the video

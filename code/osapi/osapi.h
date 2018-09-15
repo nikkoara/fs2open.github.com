@@ -86,7 +86,7 @@ bool os_is_legacy_mode();
  * 
  * @returns The path to the specified config path
  */
-SCP_string os_get_config_path(const SCP_string& subpath = "");
+std::string os_get_config_path(const std::string& subpath = "");
 
 namespace os
 {
@@ -198,7 +198,7 @@ namespace os
 
 		ViewportPixelFormat pixel_format;
 
-		SCP_string title;
+		std::string title;
 
 		uint32_t width;
 		uint32_t height;

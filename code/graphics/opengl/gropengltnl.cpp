@@ -65,7 +65,7 @@ bool Rendering_to_shadow_map = false;
 
 int Transform_buffer_handle = -1;
 
-SCP_unordered_map<vertex_layout, GLuint> Stored_vertex_arrays;
+std::unordered_map<vertex_layout, GLuint> Stored_vertex_arrays;
 
 static opengl_vertex_bind GL_array_binding_data[] =
 	{
@@ -94,7 +94,7 @@ struct opengl_buffer_object {
 	GLuint texture;	// for texture buffer objects
 };
 
-static SCP_vector<opengl_buffer_object> GL_buffer_objects;
+static std::vector<opengl_buffer_object> GL_buffer_objects;
 static int GL_vertex_buffers_in_use = 0;
 
 static GLenum convertBufferType(BufferType type) {

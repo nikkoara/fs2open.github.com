@@ -2159,7 +2159,7 @@ void game_show_framerate()
 		sx = gr_screen.center_offset_x + 20;
 		sy = gr_screen.center_offset_y + 100 + (line_height * 2);
 
-		SCP_string mem_buffer;
+		std::string mem_buffer;
 
 		PROCESS_MEMORY_COUNTERS_EX process_stats;
 		process_stats.cb = sizeof(process_stats);
@@ -3397,8 +3397,8 @@ DCF_BOOL( subspace, Game_subspace_effect )
 void clip_frame_view();
 
 // Does everything needed to render a frame
-extern SCP_vector<object*> effect_ships;
-extern SCP_vector<object*> transparent_objects;
+extern std::vector<object*> effect_ships;
+extern std::vector<object*> transparent_objects;
 void game_render_frame( camid cid )
 {
 	GR_DEBUG_SCOPE("Main Frame");
@@ -3494,7 +3494,7 @@ void game_render_frame( camid cid )
 	gr_copy_effect_texture();
 
 	// render all ships with shader effects on them
-	SCP_vector<object*>::iterator obji = effect_ships.begin();
+	std::vector<object*>::iterator obji = effect_ships.begin();
 	for(;obji != effect_ships.end();++obji)
 	{
 		obj_render(*obji);
@@ -7494,7 +7494,7 @@ int detect_lang()
 {
 	uint file_checksum;
 	int idx;
-	SCP_string first_font;
+	std::string first_font;
 
 	// if the reg is set then let lcl_init() figure out what to do
 	if (os_config_read_string( NULL, NOX("Language"), NULL ) != NULL)

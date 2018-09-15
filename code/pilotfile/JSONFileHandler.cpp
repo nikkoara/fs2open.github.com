@@ -12,7 +12,7 @@ int json_write_callback(const char *buffer, size_t size, void *data) {
 	}
 }
 
-const SCP_vector<std::pair<Section, const char*>> SectionMapping {
+const std::vector<std::pair<Section, const char*>> SectionMapping {
 	std::pair<Section, const char*>(Section::Unnamed, nullptr),
 	std::pair<Section, const char*>(Section::Flags, "flags"),
 	std::pair<Section, const char*>(Section::Info, "info"),

@@ -34,7 +34,7 @@ class EventEditorDialog: public QDialog, public SexpTreeEditorInterface {
 	void set_current_event(int evt);
 
 	int m_num_messages = 0;
-	SCP_vector<MMessage> m_messages;
+	std::vector<MMessage> m_messages;
 	int m_cur_msg = -1;
 	void set_current_message(int msg);
 
@@ -103,7 +103,7 @@ class EventEditorDialog: public QDialog, public SexpTreeEditorInterface {
 	void rootNodeFormulaChanged(int old, int node);
 
 	bool hasDefaultMessageParamter() override;
-	SCP_vector<SCP_string> getMessages() override;
+	std::vector<std::string> getMessages() override;
 	int getRootReturnType() const override;
 };
 

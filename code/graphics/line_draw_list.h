@@ -17,7 +17,7 @@ class line_draw_list {
 		vec2d position;
 		vec4 color;
 	};
-	SCP_vector<line_vertex> _line_vertices;
+	std::vector<line_vertex> _line_vertices;
 
 	void add_vertex(int x, int y, int resize_mode, const color* color);
  public:

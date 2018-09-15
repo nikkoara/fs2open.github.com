@@ -82,7 +82,7 @@ bool generic_anim_exists(const char *filename);
 int generic_anim_init_and_stream(generic_anim *ga, const char *anim_filename, BM_TYPE bg_type, bool attempt_hi_res);
 void generic_anim_init(generic_anim *ga);
 void generic_anim_init(generic_anim *ga, const char *filename);
-void generic_anim_init(generic_anim *ga, const SCP_string& filename);
+void generic_anim_init(generic_anim *ga, const std::string& filename);
 void generic_bitmap_init(generic_bitmap *gb, const char *filename = NULL);
 int generic_anim_load(generic_anim *ga);
 int generic_anim_stream(generic_anim *ga, const bool cache = true);

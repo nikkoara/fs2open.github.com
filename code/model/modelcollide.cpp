@@ -647,7 +647,7 @@ void model_collide_bsp(bsp_collision_tree *tree, int node_index)
 	}
 }
 
-void model_collide_parse_bsp_tmappoly(bsp_collision_leaf *leaf, SCP_vector<model_tmap_vert> *vert_buffer, void *model_ptr)
+void model_collide_parse_bsp_tmappoly(bsp_collision_leaf *leaf, std::vector<model_tmap_vert> *vert_buffer, void *model_ptr)
 {
 	ubyte *p = (ubyte *)model_ptr;
 
@@ -687,7 +687,7 @@ void model_collide_parse_bsp_tmappoly(bsp_collision_leaf *leaf, SCP_vector<model
 	}
 }
 
-void model_collide_parse_bsp_flatpoly(bsp_collision_leaf *leaf, SCP_vector<model_tmap_vert> *vert_buffer, void *model_ptr)
+void model_collide_parse_bsp_flatpoly(bsp_collision_leaf *leaf, std::vector<model_tmap_vert> *vert_buffer, void *model_ptr)
 {
 	ubyte *p = (ubyte *)model_ptr;
 
@@ -768,11 +768,11 @@ void model_collide_parse_bsp(bsp_collision_tree *tree, void *model_ptr, int vers
 	bsp_collision_node new_node;
 	bsp_collision_leaf new_leaf;
 
-	SCP_vector<bsp_collision_node> node_buffer;
-	SCP_vector<bsp_collision_leaf> leaf_buffer;
-	SCP_vector<model_tmap_vert> vert_buffer;
+	std::vector<bsp_collision_node> node_buffer;
+	std::vector<bsp_collision_leaf> leaf_buffer;
+	std::vector<model_tmap_vert> vert_buffer;
 
-	SCP_map<size_t, ubyte*> bsp_datap;
+	std::map<size_t, ubyte*> bsp_datap;
 
 	node_buffer.push_back(new_node);
 

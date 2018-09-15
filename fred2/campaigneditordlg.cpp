@@ -860,7 +860,7 @@ void campaign_editor::OnChangeMainHall()
 	if (Cur_campaign_mission >= 0)
 	{
 		GetDlgItem(IDC_MAIN_HALL)->GetWindowText(str);
-		Campaign.missions[Cur_campaign_mission].main_hall = SCP_string((LPCTSTR)(str));
+		Campaign.missions[Cur_campaign_mission].main_hall = std::string((LPCTSTR)(str));
 	}
 }
 

@@ -745,7 +745,7 @@ public:
 	shield_info	shield;								// new shield information
 	ubyte	*shield_collision_tree;
 	int		sldc_size;
-	SCP_vector<vec3d>		shield_points;
+	std::vector<vec3d>		shield_points;
 
 	int			n_paths;
 	model_path	*paths;
@@ -959,10 +959,10 @@ extern void find_submodel_instance_point_orient(vec3d *outpnt, matrix *outorient
 extern void find_submodel_instance_world_point(vec3d *outpnt, int model_instance_num, int submodel_num, const matrix *objorient, const vec3d *objpos);
 
 // Given a polygon model index, find a list of rotating submodels to be used for collision
-void model_get_rotating_submodel_list(SCP_vector<int> *submodel_vector, object *objp);
+void model_get_rotating_submodel_list(std::vector<int> *submodel_vector, object *objp);
 
 // Given a polygon model index, get a list of a model tree starting from that index
-void model_get_submodel_tree_list(SCP_vector<int> &submodel_vector, polymodel* pm, int mn);
+void model_get_submodel_tree_list(std::vector<int> &submodel_vector, polymodel* pm, int mn);
 
 // For a rotating submodel, find a point on the axis
 void model_init_submodel_axis_pt(submodel_instance_info *sii, int model_num, int submodel_num);
@@ -1302,7 +1302,7 @@ void model_do_intrinsic_rotations(int model_instance_num = -1);
 
 int model_should_render_engine_glow(int objnum, int bank_obj);
 
-bool model_get_team_color(team_color *clr, const SCP_string &team, const SCP_string &secondaryteam, fix timestamp, int fadetime);
+bool model_get_team_color(team_color *clr, const std::string &team, const std::string &secondaryteam, fix timestamp, int fadetime);
 
 void moldel_calc_facing_pts( vec3d *top, vec3d *bot, vec3d *fvec, vec3d *pos, float w, float z_add, vec3d *Eyeposition );
 
@@ -1326,7 +1326,7 @@ void model_interp_submit_buffers(indexed_vertex_source *vert_src, size_t vertex_
 void model_allocate_interp_data(int n_verts = 0, int n_norms = 0);
 
 void glowpoint_init();
-SCP_vector<glow_point_bank_override>::iterator get_glowpoint_bank_override_by_name(const char* name);
-extern SCP_vector<glow_point_bank_override> glowpoint_bank_overrides;
+std::vector<glow_point_bank_override>::iterator get_glowpoint_bank_override_by_name(const char* name);
+extern std::vector<glow_point_bank_override> glowpoint_bank_overrides;
 
 #endif // _MODEL_H

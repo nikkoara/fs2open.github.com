@@ -57,7 +57,7 @@ typedef struct mflash_blob_info {
 typedef struct mflash_info {
 	char name[MAX_FILENAME_LEN];
 	int	 used_this_level;
-	SCP_vector<mflash_blob_info> blobs;
+	std::vector<mflash_blob_info> blobs;
 
 	mflash_info() 
 		: used_this_level( 0 )
@@ -82,7 +82,7 @@ typedef struct mflash_info {
 	}
 } mflash_info;
 
-SCP_vector<mflash_info> Mflash_info;
+std::vector<mflash_info> Mflash_info;
 
 
 // ---------------------------------------------------------------------------------------------------------------------

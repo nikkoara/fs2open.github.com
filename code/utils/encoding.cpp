@@ -7,7 +7,7 @@
 
 namespace util {
 
-Encoding guess_encoding(const SCP_string& content, bool assume_utf8) {
+Encoding guess_encoding(const std::string& content, bool assume_utf8) {
 	if (content.size()>= 3 && !strncmp(content.c_str(), "\xEF\xBB\xBF", 3)) {        // UTF-8
 		return Encoding::UTF8;
 	}
@@ -30,7 +30,7 @@ Encoding guess_encoding(const SCP_string& content, bool assume_utf8) {
 
 	return assume_utf8 ? Encoding::UTF8 : Encoding::ASCII;
 }
-bool has_bom(const SCP_string& content) {
+bool has_bom(const std::string& content) {
 	if (content.size()>= 3 && !strncmp(content.c_str(), "\xEF\xBB\xBF", 3)) {        // UTF-8
 		return true;
 	}
@@ -57,7 +57,7 @@ int check_encoding_and_skip_bom(CFILE* file, const char* filename, int* start_of
 	cfseek(file, 0, CF_SEEK_SET);
 
 	// Read up to 10 bytes from the file to check if there is a BOM
-	SCP_string probe;
+	std::string probe;
 	auto probe_size = (size_t)std::min(10, cfilelength(file));
 	probe.resize(probe_size);
 	cfread(&probe[0], 1, (int) probe_size, file);

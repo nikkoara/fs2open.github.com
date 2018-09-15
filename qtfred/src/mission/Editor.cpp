@@ -152,7 +152,7 @@ bool Editor::loadMission(const std::string& mission_name, int flags) {
 
 	if (parse_main(filepath.c_str(), flags)) {
 		if (flags & MPF_IMPORT_FSM) {
-			SCP_string msg;
+			std::string msg;
 			sprintf(msg, "Unable to import the file \"%s\".", filepath.c_str());
 
 			_lastActiveViewport->dialogProvider->showButtonDialog(DialogType::Error,
@@ -160,7 +160,7 @@ bool Editor::loadMission(const std::string& mission_name, int flags) {
 																  msg,
 																  { DialogButton::Ok });
 		} else {
-			SCP_string msg;
+			std::string msg;
 			sprintf(msg, "Unable to load the file \"%s\".", filepath.c_str());
 			_lastActiveViewport->dialogProvider->showButtonDialog(DialogType::Error,
 																  "Load Error",
@@ -174,7 +174,7 @@ bool Editor::loadMission(const std::string& mission_name, int flags) {
 
 	if ((Num_unknown_ship_classes > 0) || (Num_unknown_weapon_classes > 0) || (Num_unknown_loadout_classes > 0)) {
 		if (flags & MPF_IMPORT_FSM) {
-			SCP_string msg;
+			std::string msg;
 			sprintf(msg,
 					"Fred encountered unknown ship/weapon classes when importing \"%s\" (path \"%s\"). You will have to manually edit the converted mission to correct this.",
 					The_mission.name,
@@ -912,7 +912,7 @@ int Editor::common_object_delete(int obj) {
 	char msg[255], * name;
 	int i, z, r, type;
 	object* objp;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	type = Objects[obj].type;
 	if (type == OBJ_START) {
@@ -1492,7 +1492,7 @@ void Editor::ai_update_goal_references(int type, const char* old_name, const cha
 	}
 }
 void Editor::update_texture_replacements(const char* old_name, const char* new_name) {
-	for (SCP_vector<texture_replace>::iterator ii = Fred_texture_replacements.begin();
+	for (std::vector<texture_replace>::iterator ii = Fred_texture_replacements.begin();
 		 ii != Fred_texture_replacements.end(); ++ii) {
 		if (!stricmp(ii->ship_name, old_name))
 			strcpy_s(ii->ship_name, new_name);
@@ -2324,7 +2324,7 @@ int Editor::global_error_check_impl() {
 		return internal_error("Num_wings is incorrect");
 	}
 
-	SCP_list<waypoint_list>::iterator ii;
+	std::list<waypoint_list>::iterator ii;
 	for (ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++ii) {
 		for (z = 0; z < obj_count; z++) {
 			if (names[z]) {
@@ -2560,7 +2560,7 @@ int Editor::internal_error(const char* msg, ...) {
 	return -1;
 }
 int Editor::fred_check_sexp(int sexp, int type, const char* msg, ...) {
-	SCP_string buf, sexp_buf, error_buf;
+	std::string buf, sexp_buf, error_buf;
 	int err = 0, z, faulty_node;
 	va_list args;
 
@@ -2848,10 +2848,10 @@ const char* Editor::get_order_name(int order) {
 
 	return "???";
 }
-SCP_vector<SCP_string> Editor::get_docking_list(int model_index) {
+std::vector<std::string> Editor::get_docking_list(int model_index) {
 	int i;
 	polymodel *pm;
-	SCP_vector<SCP_string> out;
+	std::vector<std::string> out;
 
 	pm = model_get(model_index);
 	out.reserve(pm->n_docks);
@@ -2867,8 +2867,8 @@ int Editor::global_error_check_player_wings(int multi) {
 	int tvt_wing_count[MAX_TVT_WINGS];
 
 	object *ptr;
-	SCP_string starting_wing_list = "";
-	SCP_string tvt_wing_list = "";
+	std::string starting_wing_list = "";
+	std::string tvt_wing_list = "";
 
 	// check team wings in tvt
 	if ( multi && The_mission.game_type & MISSION_TYPE_MULTI_TEAMS )
@@ -3182,14 +3182,14 @@ void Editor::normalizeShieldSysData() {
 	}
 }
 
-void Editor::strip_quotation_marks(SCP_string& str) {
-	SCP_string::size_type idx = 0;
-	while ((idx = str.find('\"', idx)) != SCP_string::npos) {
+void Editor::strip_quotation_marks(std::string& str) {
+	std::string::size_type idx = 0;
+	while ((idx = str.find('\"', idx)) != std::string::npos) {
 		str.erase(idx, 1);
 	}
 }
 
-void Editor::pad_with_newline(SCP_string& str, size_t max_size) {
+void Editor::pad_with_newline(std::string& str, size_t max_size) {
 	size_t len = str.size();
 	if (!len || (str.back() != '\n' && len < max_size)) {
 		str += "\n";

@@ -205,7 +205,7 @@ void model_render_params::set_team_color(team_color &clr)
 	Current_team_color = clr;
 }
 
-void model_render_params::set_team_color(const SCP_string &team, const SCP_string &secondaryteam, fix timestamp, int fadetime)
+void model_render_params::set_team_color(const std::string &team, const std::string &secondaryteam, fix timestamp, int fadetime)
 {
 	Team_color_set = model_get_team_color(&Current_team_color, team, secondaryteam, timestamp, fadetime);
 }
@@ -220,7 +220,7 @@ void model_render_params::set_replacement_textures(int *textures)
 	Replacement_textures = textures;
 }
 
-void model_render_params::set_replacement_textures(int modelnum, SCP_vector<texture_replace>& replacement_textures)
+void model_render_params::set_replacement_textures(int modelnum, std::vector<texture_replace>& replacement_textures)
 {
 	Replacement_textures = (int*)vm_malloc(MAX_REPLACEMENT_TEXTURES * sizeof(int));
 	Manage_replacement_textures = true;
@@ -1888,7 +1888,7 @@ void model_render_set_glow_points(polymodel *pm, int objnum)
 	int time = timestamp();
 	glow_point_bank_override *gpo = NULL;
 	bool override_all = false;
-	SCP_unordered_map<int, void*>::iterator gpoi;
+	std::unordered_map<int, void*>::iterator gpoi;
 	ship_info *sip = NULL;
 	ship *shipp = NULL;
 
@@ -1956,7 +1956,7 @@ void model_render_glow_points(polymodel *pm, ship *shipp, matrix *orient, vec3d 
 
 	glow_point_bank_override *gpo = NULL;
 	bool override_all = false;
-	SCP_unordered_map<int, void*>::iterator gpoi;
+	std::unordered_map<int, void*>::iterator gpoi;
 	ship_info *sip = NULL;
 
 	if ( shipp ) {

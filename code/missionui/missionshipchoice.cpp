@@ -1889,7 +1889,7 @@ void commit_pressed()
 	// Goober5000 - mjn.mixael's required weapon feature
 	int num_required_weapons = 0;
 	int num_satisfied_weapons = 0;
-	SCP_string weapon_list;
+	std::string weapon_list;
 	for (j=0; j<MAX_WEAPON_TYPES; j++)
 	{
 		if (Team_data[Common_team].weapon_required[j])

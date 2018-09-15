@@ -7085,7 +7085,7 @@ void process_client_update_packet(ubyte *data, header *hinfo)
 		ship_info *sip;
 		ship *shipp;
 		ubyte hull_percent, n_quadrants, n_subsystems, subsystem_percent[MAX_MODEL_SUBSYSTEMS], threats;
-		SCP_vector<ubyte> shield_percent;
+		std::vector<ubyte> shield_percent;
 		ubyte ub_tmp;
 		ship_subsys *subsysp;
 		object *objp;

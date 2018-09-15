@@ -6,13 +6,13 @@
 #include "object/waypoint.h"
 
 //********************GLOBALS********************
-SCP_list<waypoint_list> Waypoint_lists;
+std::list<waypoint_list> Waypoint_lists;
 
 // In order to restore ai_info to a plain-old-data struct, ai_info->wp_index
 // now uses size_t rather than iterator to index into the list.  If ai_info
 // eventually becomes an actual class, we ought to go back to using iterators.
-//SCP_list<waypoint> dummy_waypoint;
-//const SCP_list<waypoint>::iterator INVALID_WAYPOINT_POSITION = dummy_waypoint.end();
+//std::list<waypoint> dummy_waypoint;
+//const std::list<waypoint>::iterator INVALID_WAYPOINT_POSITION = dummy_waypoint.end();
 const size_t INVALID_WAYPOINT_POSITION = (size_t) -1;
 
 //********************CLASS MEMBERS********************
@@ -86,7 +86,7 @@ char *waypoint_list::get_name()
 	return m_name;
 }
 
-SCP_vector<waypoint> &waypoint_list::get_waypoints()
+std::vector<waypoint> &waypoint_list::get_waypoints()
 {
 	return waypoints;
 }
@@ -147,8 +147,8 @@ void waypoint_create_game_object(waypoint *wpt, int list_index, int wpt_index)
 // done immediately after mission load; originally found in aicode.cpp
 void waypoint_create_game_objects()
 {
-	SCP_list<waypoint_list>::iterator ii;
-	SCP_vector<waypoint>::iterator jj;
+	std::list<waypoint_list>::iterator ii;
+	std::vector<waypoint>::iterator jj;
 
 	int list = 0;
 	for (ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++ii)
@@ -166,7 +166,7 @@ void waypoint_create_game_objects()
 waypoint_list *find_matching_waypoint_list(const char *name)
 {
 	Assert(name != NULL);
-	SCP_list<waypoint_list>::iterator ii;
+	std::list<waypoint_list>::iterator ii;
 
 	for (ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++ii)
 	{
@@ -181,7 +181,7 @@ waypoint_list *find_matching_waypoint_list(const char *name)
 waypoint *find_matching_waypoint(const char *name)
 {
 	Assert(name != NULL);
-	SCP_list<waypoint_list>::iterator ii;
+	std::list<waypoint_list>::iterator ii;
 
 	for (ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++ii)
 	{
@@ -238,8 +238,8 @@ waypoint *find_waypoint_with_objnum(int objnum)
 	if (objnum < 0 || Objects[objnum].type != OBJ_WAYPOINT)
 		return NULL;
 
-	SCP_list<waypoint_list>::iterator ii;
-	SCP_vector<waypoint>::iterator jj;
+	std::list<waypoint_list>::iterator ii;
+	std::vector<waypoint>::iterator jj;
 
 	for (ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++ii)
 	{
@@ -295,7 +295,7 @@ waypoint_list *find_waypoint_list_at_index(int index)
 	Assert(index >= 0);
 
 	int i = 0;
-	SCP_list<waypoint_list>::iterator ii;
+	std::list<waypoint_list>::iterator ii;
 
 	for (ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++i, ++ii)
 	{
@@ -312,7 +312,7 @@ waypoint *find_waypoint_at_index(waypoint_list *list, int index)
 	Assert(index >= 0);
 
 	int i = 0;
-	SCP_vector<waypoint>::iterator ii;
+	std::vector<waypoint>::iterator ii;
 
 	for (ii = list->get_waypoints().begin(); ii != list->get_waypoints().end(); ++i, ++ii)
 	{
@@ -326,7 +326,7 @@ waypoint *find_waypoint_at_index(waypoint_list *list, int index)
 int find_index_of_waypoint_list(waypoint_list *wp_list)
 {
 	Assert(wp_list != NULL);
-	SCP_list<waypoint_list>::iterator ii;
+	std::list<waypoint_list>::iterator ii;
 
 	int index = 0;
 	for (ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++ii)
@@ -343,7 +343,7 @@ int find_index_of_waypoint(waypoint_list *wp_list, waypoint *wpt)
 {
 	Assert(wp_list != NULL);
 	Assert(wpt != NULL);
-	SCP_vector<waypoint>::iterator ii;
+	std::vector<waypoint>::iterator ii;
 
 	int index = 0;
 	for (ii = wp_list->get_waypoints().begin(); ii != wp_list->get_waypoints().end(); ++ii)
@@ -373,7 +373,7 @@ void waypoint_find_unique_name(char *dest_name, int start_index)
 	} while (collision != NULL);
 }
 
-void waypoint_add_list(const char *name, SCP_vector<vec3d> &vec_list)
+void waypoint_add_list(const char *name, std::vector<vec3d> &vec_list)
 {
 	Assert(name != NULL);
 
@@ -388,7 +388,7 @@ void waypoint_add_list(const char *name, SCP_vector<vec3d> &vec_list)
 	waypoint_list *wp_list = &Waypoint_lists.back();
 
 	wp_list->get_waypoints().reserve(vec_list.size());
-	SCP_vector<vec3d>::iterator ii;
+	std::vector<vec3d>::iterator ii;
 	for (ii = vec_list.begin(); ii != vec_list.end(); ++ii)
 	{
 		waypoint new_waypoint(&(*ii), wp_list);
@@ -453,7 +453,7 @@ int waypoint_add(vec3d *pos, int waypoint_instance)
 	waypoint new_waypoint(pos, wp_list);
 
 	// add it at its appropriate spot, which may be the end of the list
-	SCP_vector<waypoint>::iterator ii = wp_list->get_waypoints().begin();
+	std::vector<waypoint>::iterator ii = wp_list->get_waypoints().begin();
 	for (i = 0; i < wp_index; i++)
 		++ii;
 	wp_list->get_waypoints().insert(ii, new_waypoint);
@@ -487,7 +487,7 @@ void waypoint_remove(waypoint *wpt)
 		else
 		{
 			// remove this particular waypoint list
-			SCP_list<waypoint_list>::iterator ii;
+			std::list<waypoint_list>::iterator ii;
 			int i;
 			for (i = 0, ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++i, ++ii)
 			{
@@ -512,7 +512,7 @@ void waypoint_remove(waypoint *wpt)
 	else
 	{
 		// remove this particular waypoint
-		SCP_vector<waypoint>::iterator ii;
+		std::vector<waypoint>::iterator ii;
 		int i;
 		for (i = 0, ii = wp_list->get_waypoints().begin(); ii != wp_list->get_waypoints().end(); ++i, ++ii)
 		{

@@ -111,7 +111,7 @@ void multi_log_process()
 // printf function itself called by the ml_printf macro
 void ml_printf(const char *format, ...)
 {
-	SCP_string temp;
+	std::string temp;
 	va_list args;
 
 	if (format == NULL) {

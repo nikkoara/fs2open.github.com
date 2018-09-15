@@ -13,7 +13,7 @@
 #include "model/model.h"
 #include "model/modelrender.h"
 
-SCP_list<CJumpNode> Jump_nodes;
+std::list<CJumpNode> Jump_nodes;
 
 /**
  * Constructor for CJumpNode class, default
@@ -382,7 +382,7 @@ void CJumpNode::Render(model_draw_list* scene, vec3d *pos, vec3d *view_pos)
 CJumpNode *jumpnode_get_by_name(const char* name)
 {
 	Assert(name != NULL);
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	for (jnp = Jump_nodes.begin(); jnp != Jump_nodes.end(); ++jnp) {	
 		if(!stricmp(jnp->GetName(), name)) 
@@ -401,7 +401,7 @@ CJumpNode *jumpnode_get_by_name(const char* name)
 CJumpNode *jumpnode_get_which_in(object *objp)
 {
 	Assert(objp != NULL);
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 	float radius, dist;
 
 	for (jnp = Jump_nodes.begin(); jnp != Jump_nodes.end(); ++jnp) {
@@ -425,7 +425,7 @@ CJumpNode *jumpnode_get_which_in(object *objp)
  */
 void jumpnode_render_all()
 {
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 	
 	for (jnp = Jump_nodes.begin(); jnp != Jump_nodes.end(); ++jnp) {	
 		jnp->Render(&jnp->GetSCPObject()->pos);

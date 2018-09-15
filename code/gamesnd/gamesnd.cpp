@@ -17,9 +17,9 @@
 #include "species_defs/species_defs.h"
 #include "tracing/tracing.h"
 
-SCP_vector<game_snd>	Snds;
-SCP_vector<game_snd>	Snds_iface;
-SCP_vector<sound_handle> Snds_iface_handle;
+std::vector<game_snd>	Snds;
+std::vector<game_snd>	Snds_iface;
+std::vector<sound_handle> Snds_iface_handle;
 
 // jg18 - default priorities and limits for retail gameplay sounds
 static const int NUM_RETAIL_GAMEPLAY_SOUNDS = 192; // indices 0-191, from retail sounds.tbl
@@ -230,7 +230,7 @@ void gamesnd_add_retail_default_enhanced_sound_data()
 {
 	int i = 0;
 
-	for (SCP_vector<game_snd>::iterator it = Snds.begin(), end = Snds.end(); it != end; ++it, ++i)
+	for (std::vector<game_snd>::iterator it = Snds.begin(), end = Snds.end(); it != end; ++it, ++i)
 	{
 		if (it->enhanced_sound_data.priority== SND_ENHANCED_PRIORITY_INVALID)
 		{
@@ -274,7 +274,7 @@ void gamesnd_play_iface(interface_snd_id n)
  * @param sounds Vector to seach in
  *
  */
-int gamesnd_lookup_name(const char* name, const SCP_vector<game_snd>& sounds)
+int gamesnd_lookup_name(const char* name, const std::vector<game_snd>& sounds)
 {
 	// if we get passed -1, don't bother trying to look it up.
 	if (name == NULL || *name == 0 || !strcmp(name, "-1"))
@@ -286,7 +286,7 @@ int gamesnd_lookup_name(const char* name, const SCP_vector<game_snd>& sounds)
 
 	int i = 0;
 
-	for(SCP_vector<game_snd>::const_iterator snd = sounds.begin(); snd != sounds.end(); ++snd)
+	for(std::vector<game_snd>::const_iterator snd = sounds.begin(); snd != sounds.end(); ++snd)
 	{
 		if (snd->name == name)
 		{
@@ -420,7 +420,7 @@ interface_snd_id gamesnd_get_by_iface_tbl_index(int index)
 void parse_game_sound(const char* tag, gamesnd_id* idx_dest) {
 	if(optional_string(tag))
 	{
-		SCP_string buf;
+		std::string buf;
 		stuff_string(buf, F_NAME);
 
 		*idx_dest = gamesnd_get_by_name(buf.c_str());
@@ -448,7 +448,7 @@ void parse_iface_sound(const char* tag, interface_snd_id* idx_dest) {
 
 	if(optional_string(tag))
 	{
-		SCP_string buf;
+		std::string buf;
 		stuff_string(buf, F_NAME);
 
 		*idx_dest = gamesnd_get_by_iface_name(buf.c_str());
@@ -472,7 +472,7 @@ void parse_iface_sound(const char* tag, interface_snd_id* idx_dest) {
  * @param flags See the parse_sound_flags enum
  *
  */
-void parse_iface_sound_list(const char* tag, SCP_vector<interface_snd_id>& destination, const char* object_name, bool scp_list)
+void parse_iface_sound_list(const char* tag, std::vector<interface_snd_id>& destination, const char* object_name, bool scp_list)
 {
 	if(optional_string(tag))
 	{
@@ -487,7 +487,7 @@ void parse_iface_sound_list(const char* tag, SCP_vector<interface_snd_id>& desti
 		//now read the rest of the entries on the line
 		for(size_t i=0; !check_for_eoln(); i++)
 		{
-			SCP_string buf;
+			std::string buf;
 			stuff_string_white(buf);
 
 			//we do this conditionally to avoid adding needless entries when reparsing
@@ -524,7 +524,7 @@ void gamesnd_preload_common_sounds()
 		return;
 
 	Assert( Snds.size() <= INT_MAX );
-	for (SCP_vector<game_snd>::iterator gs = Snds.begin(); gs != Snds.end(); ++gs) {
+	for (std::vector<game_snd>::iterator gs = Snds.begin(); gs != Snds.end(); ++gs) {
 		if ( gs->preload ) {
 			for (auto& entry : gs->sound_entries) {
 				if ( entry.filename[0] != 0 && strnicmp(entry.filename, NOX("none.wav"), 4) != 0 ) {
@@ -545,7 +545,7 @@ void gamesnd_load_gameplay_sounds()
 		return;
 
 	Assert( Snds.size() <= INT_MAX );
-	for (SCP_vector<game_snd>::iterator gs = Snds.begin(); gs != Snds.end(); ++gs) {
+	for (std::vector<game_snd>::iterator gs = Snds.begin(); gs != Snds.end(); ++gs) {
 		if ( !gs->preload ) { // don't try to load anything that's already preloaded
 			for (auto& entry : gs->sound_entries) {
 				if (entry.filename[0] != 0 && strnicmp(entry.filename, NOX("none.wav"), 4) != 0) {
@@ -563,7 +563,7 @@ void gamesnd_load_gameplay_sounds()
 void gamesnd_unload_gameplay_sounds()
 {
 	Assert( Snds.size() <= INT_MAX );
-	for (SCP_vector<game_snd>::iterator gs = Snds.begin(); gs != Snds.end(); ++gs) {
+	for (std::vector<game_snd>::iterator gs = Snds.begin(); gs != Snds.end(); ++gs) {
 		for (auto& entry : gs->sound_entries) {
 			if (entry.id.isValid()) {
 				snd_unload(entry.id);
@@ -582,7 +582,7 @@ void gamesnd_load_interface_sounds()
 		return;
 
 	Assert( Snds_iface.size() < INT_MAX );
-	for (SCP_vector<game_snd>::iterator si = Snds_iface.begin(); si != Snds_iface.end(); ++si) {
+	for (std::vector<game_snd>::iterator si = Snds_iface.begin(); si != Snds_iface.end(); ++si) {
 		for (auto& entry : si->sound_entries) {
 			if ( entry.filename[0] != 0 && strnicmp(entry.filename, NOX("none.wav"), 4) != 0 ) {
 				entry.id = snd_load(&entry, si->flags);
@@ -597,7 +597,7 @@ void gamesnd_load_interface_sounds()
 void gamesnd_unload_interface_sounds()
 {
 	Assert( Snds_iface.size() < INT_MAX );
-	for (SCP_vector<game_snd>::iterator si = Snds_iface.begin(); si != Snds_iface.end(); ++si) {
+	for (std::vector<game_snd>::iterator si = Snds_iface.begin(); si != Snds_iface.end(); ++si) {
 		for (auto& entry : si->sound_entries) {
 			if (entry.id.isValid()) {
 				snd_unload( entry.id );
@@ -790,7 +790,7 @@ void parse_gamesnd_soundset(game_snd* gs, bool no_create) {
 	// jg18 - enhanced sound parameters
 	if (optional_string("+Priority:"))
 	{
-		SCP_string priority_string;
+		std::string priority_string;
 		stuff_string(priority_string, F_NAME);
 		EnhancedSoundPriority priority = convert_to_enhanced_priority(priority_string.c_str());
 		if (priority != SND_ENHANCED_PRIORITY_INVALID)
@@ -893,7 +893,7 @@ void parse_gamesnd_new(game_snd* gs, bool no_create)
 	// jg18 - enhanced sound parameters
 	if (optional_string("+Priority:"))
 	{
-		SCP_string priority_string;
+		std::string priority_string;
 		stuff_string(priority_string, F_NAME);
 		EnhancedSoundPriority priority = convert_to_enhanced_priority(priority_string.c_str());
 		if (priority != SND_ENHANCED_PRIORITY_INVALID)
@@ -919,9 +919,9 @@ void parse_gamesnd_new(game_snd* gs, bool no_create)
 	}
 }
 
-void gamesnd_parse_entry(game_snd *gs, bool no_create, SCP_vector<game_snd> *lookupVector)
+void gamesnd_parse_entry(game_snd *gs, bool no_create, std::vector<game_snd> *lookupVector)
 {
-	SCP_string name;
+	std::string name;
 
 	stuff_string(name, F_NAME, "\t \n");
 
@@ -975,7 +975,7 @@ void gamesnd_parse_entry(game_snd *gs, bool no_create, SCP_vector<game_snd> *loo
  * @return @c true when a new entry has been parsed and should be added to the list of known
  *			entries. @c false otherwise, for example in case of @c +nocreate
  */
-bool gamesnd_parse_line(game_snd *gs, const char *tag, SCP_vector<game_snd> *lookupVector = NULL)
+bool gamesnd_parse_line(game_snd *gs, const char *tag, std::vector<game_snd> *lookupVector = NULL)
 {
 	Assertion(gs != NULL, "Invalid game_snd pointer passed to gamesnd_parse_line!");
 
@@ -1164,7 +1164,7 @@ void parse_sound_environments()
 	required_string("#Sound Environments End");
 }
 
-static SCP_vector<species_info> missingFlybySounds;
+static std::vector<species_info> missingFlybySounds;
 
 void parse_sound_table(const char* filename)
 {
@@ -1261,7 +1261,7 @@ void gamesnd_parse_soundstbl()
 	// if we are missing any species then report
 	if (!missingFlybySounds.empty())
 	{
-		SCP_string errorString;
+		std::string errorString;
 		for (size_t i = 0; i < missingFlybySounds.size(); i++)
 		{
 			errorString.append(missingFlybySounds[i].species_name);

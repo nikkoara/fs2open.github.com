@@ -1498,11 +1498,11 @@ int sexp_tree::end_label_edit(TVITEMA &item)
 // number of it.  What operators are valid is determined by 'node', and an operator is valid
 // if it is allowed to fit at position 'node'
 //
-SCP_string sexp_tree::match_closest_operator(const char *str, int node)
+std::string sexp_tree::match_closest_operator(const char *str, int node)
 {
 	int z, i, op, arg_num, opf, opr;
-	SCP_string sub_best;
-	SCP_string best;
+	std::string sub_best;
+	std::string best;
 
 	z = tree_nodes[node].parent;
 	if (z < 0) {
@@ -5005,7 +5005,7 @@ sexp_list_item *sexp_tree::get_listing_opf_subsystem_type(int parent_node)
 sexp_list_item *sexp_tree::get_listing_opf_point()
 {
 	char buf[NAME_LENGTH+8];
-	SCP_list<waypoint_list>::iterator ii;
+	std::list<waypoint_list>::iterator ii;
 	int j;
 	sexp_list_item head;
 
@@ -5398,7 +5398,7 @@ sexp_list_item *sexp_tree::get_listing_opf_ship_effect()
 {
 	sexp_list_item head;
 	
-	for (SCP_vector<ship_effect>::iterator sei = Ship_effects.begin(); sei != Ship_effects.end(); ++sei) {
+	for (std::vector<ship_effect>::iterator sei = Ship_effects.begin(); sei != Ship_effects.end(); ++sei) {
 		head.add_data_dup(sei->name);
 	}
 
@@ -5417,7 +5417,7 @@ sexp_list_item *sexp_tree::get_listing_opf_explosion_option()
 
 sexp_list_item *sexp_tree::get_listing_opf_waypoint_path()
 {
-	SCP_list<waypoint_list>::iterator ii;
+	std::list<waypoint_list>::iterator ii;
 	sexp_list_item head;
 
 	for (ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++ii)
@@ -5784,7 +5784,7 @@ sexp_list_item *sexp_tree::get_listing_opf_jump_nodes()
 {
 	sexp_list_item head;
 
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 	for (jnp = Jump_nodes.begin(); jnp != Jump_nodes.end(); ++jnp) {	
 		head.add_data( jnp->GetName());
 	}
@@ -5896,7 +5896,7 @@ sexp_list_item *sexp_tree::get_listing_opf_post_effect()
 	unsigned int i;
 	sexp_list_item head;
 
-	SCP_vector<SCP_string> ppe_names;
+	std::vector<std::string> ppe_names;
 	get_post_process_effect_names(ppe_names);
 	for (i=0; i < ppe_names.size(); i++) {
 		head.add_data_dup(ppe_names[i].c_str());
@@ -5970,7 +5970,7 @@ sexp_list_item *sexp_tree::get_listing_opf_weapon_banks()
 sexp_list_item *sexp_tree::get_listing_opf_mission_moods()
 {
 	sexp_list_item head;
-	for (SCP_vector<SCP_string>::iterator iter = Builtin_moods.begin(); iter != Builtin_moods.end(); ++iter) {
+	for (std::vector<std::string>::iterator iter = Builtin_moods.begin(); iter != Builtin_moods.end(); ++iter) {
 		head.add_data_dup(iter->c_str());
 	}
 
@@ -6001,7 +6001,7 @@ sexp_list_item *sexp_tree::get_listing_opf_team_colors()
 {
 	sexp_list_item head;
 	head.add_data("None");
-	for (SCP_map<SCP_string, team_color>::iterator tcolor = Team_Colors.begin(); tcolor != Team_Colors.end(); ++tcolor) {
+	for (std::map<std::string, team_color>::iterator tcolor = Team_Colors.begin(); tcolor != Team_Colors.end(); ++tcolor) {
 		head.add_data_dup(tcolor->first.c_str());
 	}
 
@@ -6023,7 +6023,7 @@ sexp_list_item *sexp_tree::get_listing_opf_nebula_patterns()
 	return head.next;
 }
 
-extern SCP_vector<game_snd>	Snds;
+extern std::vector<game_snd>	Snds;
 
 sexp_list_item *sexp_tree::get_listing_opf_game_snds()
 {
@@ -6031,7 +6031,7 @@ sexp_list_item *sexp_tree::get_listing_opf_game_snds()
 
 	head.add_data(SEXP_NONE_STRING);
 
-	for (SCP_vector<game_snd>::iterator iter = Snds.begin(); iter != Snds.end(); ++iter) {
+	for (std::vector<game_snd>::iterator iter = Snds.begin(); iter != Snds.end(); ++iter) {
 		if (!can_construe_as_integer(iter->name.c_str())) {
 			head.add_data(iter->name.c_str());
 		}

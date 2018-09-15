@@ -1041,7 +1041,7 @@ typedef struct sexp_ai_goal_link {
 #define SEXP_TRIGGER_OPERATOR		( SEXP_ARITHMETIC_OPERATOR | SEXP_BOOLEAN_OPERATOR | SEXP_INTEGER_OPERATOR ) 
 
 typedef struct sexp_oper {
-	SCP_string text;
+	std::string text;
 	int	value;
 	int	min, max;
 	int type;
@@ -1105,7 +1105,7 @@ extern sexp_node *Sexp_nodes;
 extern sexp_variable Sexp_variables[MAX_SEXP_VARIABLES];
 extern sexp_variable Block_variables[MAX_SEXP_VARIABLES];
 
-extern SCP_vector<sexp_oper> Operators;
+extern std::vector<sexp_oper> Operators;
 
 extern int Locked_sexp_true, Locked_sexp_false;
 extern int Directive_count;
@@ -1126,13 +1126,13 @@ extern int Players_target_timestamp;
 extern int Players_mlocked_timestamp;
 extern int Sexp_clipboard;  // used by Fred
 
-extern SCP_vector<int> Current_sexp_operator;
+extern std::vector<int> Current_sexp_operator;
 
 
 // event log stuff
-extern SCP_vector<SCP_string> *Current_event_log_buffer;
-extern SCP_vector<SCP_string> *Current_event_log_variable_buffer;
-extern SCP_vector<SCP_string> *Current_event_log_argument_buffer;
+extern std::vector<std::string> *Current_event_log_buffer;
+extern std::vector<std::string> *Current_event_log_variable_buffer;
+extern std::vector<std::string> *Current_event_log_argument_buffer;
 
 extern void init_sexp();
 extern void sexp_shutdown();
@@ -1166,7 +1166,7 @@ extern int query_referenced_in_sexp(int mode, const char *name, int *node);
 extern int verify_vector(char *text);
 extern void skip_white(char **str);
 extern int validate_float(char **str);
-extern int build_sexp_string(SCP_string &accumulator, int cur_node, int level, int mode);
+extern int build_sexp_string(std::string &accumulator, int cur_node, int level, int mode);
 extern int sexp_query_type_match(int opf, int opr);
 extern const char *sexp_error_message(int num);
 extern int count_free_sexp_nodes();
@@ -1188,11 +1188,11 @@ void flush_sexp_tree(int node);
 void sexp_modify_variable(const char *text, int index, bool sexp_callback = true);
 int get_index_sexp_variable_from_node (int node);
 int get_index_sexp_variable_name(const char *text);
-int get_index_sexp_variable_name(SCP_string &text);	// Goober5000
+int get_index_sexp_variable_name(std::string &text);	// Goober5000
 int get_index_sexp_variable_name_special(const char *text);	// Goober5000
-int get_index_sexp_variable_name_special(SCP_string &text, size_t startpos);	// Goober5000
+int get_index_sexp_variable_name_special(std::string &text, size_t startpos);	// Goober5000
 bool sexp_replace_variable_names_with_values(char *text, int max_len);	// Goober5000
-bool sexp_replace_variable_names_with_values(SCP_string &text);	// Goober5000
+bool sexp_replace_variable_names_with_values(std::string &text);	// Goober5000
 int get_nth_variable_index(int nth, int variable_type);	// Karajorma
 int sexp_variable_count();
 int sexp_campaign_file_variable_count();	// Goober5000
@@ -1228,18 +1228,18 @@ extern int Knossos_warp_ani_used;
 //WMC - moved here from FRED
 typedef struct sexp_help_struct {
 	int id;
-	SCP_string help;
+	std::string help;
 } sexp_help_struct;
 
-extern SCP_vector<sexp_help_struct> Sexp_help;
+extern std::vector<sexp_help_struct> Sexp_help;
 
 typedef struct op_menu_struct {
-	SCP_string name;
+	std::string name;
 	int id;
 } op_menu_struct;
 
-extern SCP_vector<op_menu_struct> op_menu;
-extern SCP_vector<op_menu_struct> op_submenu;
+extern std::vector<op_menu_struct> op_menu;
+extern std::vector<op_menu_struct> op_submenu;
 
 //WMC
 //Outputs sexp.html file

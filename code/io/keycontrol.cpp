@@ -89,7 +89,7 @@ public:
 
 private:
 
-	SCP_vector< SCP_vector<size_t> > _lookup;
+	std::vector< std::vector<size_t> > _lookup;
 
 	/**
 	* Grow the internal lookup table based on the desired size.

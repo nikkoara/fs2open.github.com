@@ -45,7 +45,7 @@ struct opengl_vert_attrib {
 	};
 
 	attrib_id attribute_id;
-	SCP_string name;
+	std::string name;
 	vec4 default_value;
 };
 namespace std {
@@ -56,7 +56,7 @@ template<> struct hash<opengl_vert_attrib::attrib_id> {
 };
 }
 
-extern SCP_vector<opengl_vert_attrib> GL_vertex_attrib_info;
+extern std::vector<opengl_vert_attrib> GL_vertex_attrib_info;
 
 struct geometry_sdr_params
 {
@@ -72,7 +72,7 @@ struct opengl_shader_type_t {
 	const char *frag;
 	const char *geo;
 
-	SCP_vector<opengl_vert_attrib::attrib_id> attributes;
+	std::vector<opengl_vert_attrib::attrib_id> attributes;
 
 	const char* description;
 };
@@ -83,9 +83,9 @@ struct opengl_shader_variant_t {
 	bool use_geometry_sdr;
 
 	int flag;
-	SCP_string flag_text;
+	std::string flag_text;
 
-	SCP_vector<opengl_vert_attrib::attrib_id> attributes;
+	std::vector<opengl_vert_attrib::attrib_id> attributes;
 
 	const char* description;
 };
@@ -97,9 +97,9 @@ struct opengl_shader_file_t {
 
 	int flags;
 
-	SCP_vector<const char*> uniforms;
+	std::vector<const char*> uniforms;
 
-	SCP_vector<const char*> attributes;
+	std::vector<const char*> attributes;
 
 	const char* description;
 };
@@ -107,17 +107,17 @@ struct opengl_shader_file_t {
 struct opengl_shader_uniform_reference_t {
 	unsigned int flag;
 
-	SCP_vector<const char*> uniforms;
+	std::vector<const char*> uniforms;
 
-	SCP_vector<const char*> attributes;
+	std::vector<const char*> attributes;
 
-	SCP_vector<const char*> uniform_blocks;
+	std::vector<const char*> uniform_blocks;
 
 	const char* name;
 };
 
 typedef struct opengl_shader_uniform_t {
-	SCP_string text_id;
+	std::string text_id;
 	GLint location;
 
 	opengl_shader_uniform_t() : location(-1) {}
@@ -139,7 +139,7 @@ typedef struct opengl_shader_t {
 	opengl_shader_t& operator=(const opengl_shader_t&) = delete;
 } opengl_shader_t;
 
-extern SCP_vector<opengl_shader_t> GL_shader;
+extern std::vector<opengl_shader_t> GL_shader;
 
 extern opengl_shader_t *Current_shader;
 

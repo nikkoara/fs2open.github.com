@@ -31,7 +31,7 @@ static const char *Default_shockwave_3D_filename = "shockwave.pof";
 static int Default_2D_shockwave_index = -1;
 static int Default_shockwave_loaded = 0;
 
-SCP_vector<shockwave_info> Shockwave_info;
+std::vector<shockwave_info> Shockwave_info;
 
 shockwave Shockwaves[MAX_SHOCKWAVES];
 shockwave Shockwave_list;

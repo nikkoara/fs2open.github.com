@@ -17,7 +17,7 @@
 #include "mission/missionparse.h"
 #include "graphics/util/UniformBuffer.h"
 
-extern SCP_vector<light> Lights;
+extern std::vector<light> Lights;
 extern int Num_lights;
 
 extern bool Rendering_to_shadow_map;
@@ -117,9 +117,9 @@ public:
 	void set_forced_bitmap(int bitmap);
 	void set_insignia_bitmap(int bitmap);
 	void set_replacement_textures(int *textures);
-	void set_replacement_textures(int modelnum, SCP_vector<texture_replace>& replacement_textures);
+	void set_replacement_textures(int modelnum, std::vector<texture_replace>& replacement_textures);
 	void set_team_color(team_color &clr);
-	void set_team_color(const SCP_string &team, const SCP_string &secondaryteam, fix timestamp, int fadetime);
+	void set_team_color(const std::string &team, const std::string &secondaryteam, fix timestamp, int fadetime);
 	void set_clip_plane(vec3d &pos, vec3d &normal);
 	void set_animated_effect(int effect_num, float timer);
 	void set_thruster_info(mst_info &info);
@@ -212,7 +212,7 @@ struct outline_draw
 
 class model_batch_buffer
 {
-	SCP_vector<matrix4> Submodel_matrices;
+	std::vector<matrix4> Submodel_matrices;
 	void* Mem_alloc;
 	size_t Mem_alloc_size;
 
@@ -246,12 +246,12 @@ class model_draw_list
 	void render_outline(outline_draw &outline_info);
 	void render_buffer(queued_buffer_draw &render_elements);
 	
-	SCP_vector<queued_buffer_draw> Render_elements;
-	SCP_vector<int> Render_keys;
+	std::vector<queued_buffer_draw> Render_elements;
+	std::vector<int> Render_keys;
 
-	SCP_vector<arc_effect> Arcs;
-	SCP_vector<insignia_draw_data> Insignias;
-	SCP_vector<outline_draw> Outlines;
+	std::vector<arc_effect> Arcs;
+	std::vector<insignia_draw_data> Insignias;
+	std::vector<outline_draw> Outlines;
 
 	graphics::util::UniformBuffer* _dataBuffer = nullptr;
 	

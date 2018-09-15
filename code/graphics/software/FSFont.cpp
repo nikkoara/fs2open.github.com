@@ -2,7 +2,7 @@
 
 namespace font
 {
-	FSFont::FSFont() : name(SCP_string("<Invalid>")), offsetTop(0.0f), offsetBottom(0.0f)
+	FSFont::FSFont() : name(std::string("<Invalid>")), offsetTop(0.0f), offsetBottom(0.0f)
 	{
 	}
 
@@ -20,7 +20,7 @@ namespace font
 		this->offsetTop = offset;
 	}
 
-	void FSFont::setName(const SCP_string &newName)
+	void FSFont::setName(const std::string &newName)
 	{
 		this->name = newName;
 	}
@@ -40,7 +40,7 @@ namespace font
 		return _height;
 	}
 
-	const SCP_string &FSFont::getName() const
+	const std::string &FSFont::getName() const
 	{
 		return this->name;
 	}

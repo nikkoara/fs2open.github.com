@@ -9,7 +9,7 @@ struct query_object_slot {
 	GLuint name = 0;
 };
 
-SCP_vector<query_object_slot> query_objects;
+std::vector<query_object_slot> query_objects;
 
 int get_new_query_slot() {
 	auto end = query_objects.end();

@@ -154,7 +154,7 @@ int Fiction_viewer_slider_coordinates[NUM_FVW_SETTINGS][GR_NUM_RESOLUTIONS][4] =
 	}
 };
 
-SCP_vector<fiction_viewer_stage> Fiction_viewer_stages;
+std::vector<fiction_viewer_stage> Fiction_viewer_stages;
 int Fiction_viewer_active_stage = -1;
 
 static int Top_fiction_viewer_text_line = 0;

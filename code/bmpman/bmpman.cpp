@@ -88,7 +88,7 @@ extern int Cmdline_cache_bitmaps;
 
 // --------------------------------------------------------------------------------------------------------------------
 // Definition of public variables (declared as extern in bm_internal.h).
-SCP_vector<std::array<bitmap_slot, BM_BLOCK_SIZE>> bm_blocks;
+std::vector<std::array<bitmap_slot, BM_BLOCK_SIZE>> bm_blocks;
 
 // --------------------------------------------------------------------------------------------------------------------
 // Definition of private variables at file scope (static).
@@ -460,7 +460,7 @@ DCF(bm_used, "Shows BmpMan Slot Usage") {
 		}
 	}
 
-	SCP_stringstream text;
+	std::stringstream text;
 	text << "BmpMan Used Slots\n";
 	text << "  " << std::dec << std::setw(4) << std::setfill('0') << pcx  << ", PCX\n";
 	text << "  " << std::dec << std::setw(4) << std::setfill('0') << user << ", User\n";
@@ -1280,7 +1280,7 @@ int bm_load(const char *real_filename) {
 	return handle;
 }
 
-int bm_load(const SCP_string& filename) {
+int bm_load(const std::string& filename) {
 	return bm_load(filename.c_str());
 }
 
@@ -3361,7 +3361,7 @@ int bmpman_count_available_slots() {
 	return (int) (bm_blocks.size() * BM_BLOCK_SIZE);
 }
 
-bool bm_validate_filename(const SCP_string& file, bool single_frame, bool animation) {
+bool bm_validate_filename(const std::string& file, bool single_frame, bool animation) {
 	Assertion(single_frame || animation, "At least one of single_frame or animation must be true!");
 
 	if (!VALID_FNAME(file.c_str())) {

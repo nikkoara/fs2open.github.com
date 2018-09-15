@@ -32,7 +32,7 @@ void ScriptingTestFixture::EvalTestScript() {
 	}
 
 	auto length = cfilelength(fp);
-	SCP_string content;
+	std::string content;
 	content.resize(length);
 
 	auto read = cfread(&content[0], 1, length, fp);

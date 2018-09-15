@@ -46,7 +46,7 @@ channel *Channels = NULL;
 static int channel_next_sig = 1;
 
 const int BUFFER_BUMP = 50;
-SCP_vector<sound_buffer> sound_buffers;
+std::vector<sound_buffer> sound_buffers;
 
 static int Ds_use_eax = 0;
 
@@ -122,7 +122,7 @@ static const EFXREVERBPROPERTIES_list EFX_Reverb_Defaults[EAX_ENVIRONMENT_COUNT]
 	{ "Psychotic", 0.062500f, 0.50f, 0.316228f, 0.840427f, 1.0f, 7.56f, 0.91f, 1.0f, 0.486407f, 0.02f, {0.0f, 0.0f, 0.0f}, 2.437811f, 0.03f, {0.0f, 0.0f, 0.0f}, 0.25f, 0.0f, 4.00f, 1.0f, 0.994260f, 5000.0f, 250.0f, 0.0f, 0 }
 };
 
-SCP_vector<EFXREVERBPROPERTIES> EFX_presets;
+std::vector<EFXREVERBPROPERTIES> EFX_presets;
 
 
 typedef ALvoid (AL_APIENTRY * ALGENFILTERS) (ALsizei, ALuint*);
@@ -274,10 +274,10 @@ int ds_load_buffer(int *sid, int  /*flags*/, ffmpeg::WaveFile* file)
 		return -1;
 	}
 
-	SCP_vector<uint8_t> audio_buffer;
+	std::vector<uint8_t> audio_buffer;
 	audio_buffer.reserve(size);
 
-	SCP_vector<uint8_t> buffer(file->getSampleRate() * file->getSampleByteSize());
+	std::vector<uint8_t> buffer(file->getSampleRate() * file->getSampleByteSize());
 	int read;
 	while((read = file->Read(&buffer[0], buffer.size())) >= 0) {
 		if (read == 0) {
@@ -382,8 +382,8 @@ int ds_init()
 
 	sample_rate = os_config_read_uint("Sound", "SampleRate", sample_rate);
 	attrList[1] = sample_rate;
-	SCP_string playback_device;
-	SCP_string capture_device;
+	std::string playback_device;
+	std::string capture_device;
 
 	if ( openal_init_device(&playback_device, &capture_device) == false ) {
 		mprintf(("\n  ERROR: Unable to find suitable playback device!\n\n"));

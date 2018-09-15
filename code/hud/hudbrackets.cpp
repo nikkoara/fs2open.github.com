@@ -513,7 +513,7 @@ void draw_bounding_brackets(int x1, int y1, int x2, int y2, int w_correction, in
 		const char* tinfo_class = NULL;
 		char temp_name[NAME_LENGTH*2+3];
 		char temp_class[NAME_LENGTH];
-		SCP_list<CJumpNode>::iterator jnp;
+		std::list<CJumpNode>::iterator jnp;
 
 		switch(t_objp->type)
 		{
@@ -760,7 +760,7 @@ void HudGaugeBrackets::renderObjectBrackets(object *targetp, color *clr, int w_c
 	int x1,x2,y1,y2;
 	bool draw_box = true;
 	int bound_rc;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	if ( Player->target_is_dying <= 0 ) {
 		int modelnum;
@@ -988,7 +988,7 @@ void HudGaugeBrackets::renderBoundingBrackets(int x1, int y1, int x2, int y2, in
 		const char* tinfo_class = NULL;
 		char temp_name[NAME_LENGTH*2+3];
 		char temp_class[NAME_LENGTH];
-		SCP_list<CJumpNode>::iterator jnp;
+		std::list<CJumpNode>::iterator jnp;
 
 		switch(t_objp->type) {
 			case OBJ_SHIP:

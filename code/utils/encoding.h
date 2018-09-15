@@ -13,14 +13,14 @@ enum class Encoding {
  * @param assume_utf8 Set the @true true if no BOM should be treated as UTF-8 instead of ASCII
  * @return The guessed encoding of the content
  */
-Encoding guess_encoding(const SCP_string& content, bool assume_utf8 = true);
+Encoding guess_encoding(const std::string& content, bool assume_utf8 = true);
 
 /**
  * @brief Determines if the given text has a Byte Order Mark (BOM) that has to be skipped to get to the real text
  * @param content The text to check
  * @return @c true if there is a BOM, @c false otherwise
  */
-bool has_bom(const SCP_string& content);
+bool has_bom(const std::string& content);
 
 /**
  * @brief Guesses if the specifies buffer contains Latin1 encoding

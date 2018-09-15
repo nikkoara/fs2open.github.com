@@ -99,7 +99,7 @@ public:
 	int				level;					// what level of the tree it's on (Fred)
 	int				pos;					// what x position on level it's on (Fred)
 	int				flags;
-	SCP_string		main_hall;				// which main hall the player is in - converted to SCP_string by CommanderDJ
+	std::string		main_hall;				// which main hall the player is in - converted to std::string by CommanderDJ
 	ubyte			debrief_persona_index;	// which persona is used for ranks/badges - Goober5000
 	scoring_struct	stats;
 };
@@ -125,8 +125,8 @@ public:
 	ubyte	ships_allowed[MAX_SHIP_CLASSES];		// which ships the player can use
 	ubyte	weapons_allowed[MAX_WEAPON_TYPES];		// which weapons the player can use
 	cmission	missions[MAX_CAMPAIGN_MISSIONS];	// decription of the missions
-	SCP_vector<sexp_variable> persistent_variables;		// These variables will be saved at the end of a mission
-	SCP_vector<sexp_variable> red_alert_variables;		// state of the variables in the previous mission of a Red Alert scenario.
+	std::vector<sexp_variable> persistent_variables;		// These variables will be saved at the end of a mission
+	std::vector<sexp_variable> red_alert_variables;		// state of the variables in the previous mission of a Red Alert scenario.
 
 	campaign()
 		: desc(nullptr), num_missions(0)
@@ -159,7 +159,7 @@ extern char *Campaign_file_names[MAX_CAMPAIGNS];
 extern char *Campaign_descs[MAX_CAMPAIGNS];
 extern int	Num_campaigns;
 extern int	Campaign_names_inited;
-extern SCP_vector<SCP_string> Ignored_campaigns;
+extern std::vector<std::string> Ignored_campaigns;
 
 extern char Default_campaign_file_name[MAX_FILENAME_LEN - 4];
 
@@ -278,7 +278,7 @@ extern void mission_campaign_save_on_close_variables();
 
 extern void mission_campaign_load_failure_popup();
 
-SCP_string mission_campaign_get_name(const char* filename);
+std::string mission_campaign_get_name(const char* filename);
 
 // End CSFE stuff
 #endif

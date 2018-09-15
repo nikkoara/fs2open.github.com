@@ -39,17 +39,17 @@ bool Beams_use_damage_factors;
 float Generic_pain_flash_factor;
 float Shield_pain_flash_factor;
 gameversion::version Targetted_version; // Defaults to retail
-SCP_string Window_title;
+std::string Window_title;
 bool Unicode_text_mode;
-SCP_string Movie_subtitle_font;
+std::string Movie_subtitle_font;
 bool Enable_scripts_in_fred; // By default FRED does not initialize the scripting system
-SCP_string Window_icon_path;
+std::string Window_icon_path;
 bool Disable_built_in_translations;
 bool Weapon_shockwaves_respect_huge;
 
 void parse_mod_table(const char *filename)
 {
-	// SCP_vector<SCP_string> lines;
+	// std::vector<std::string> lines;
 
 	try
 	{
@@ -112,7 +112,7 @@ void parse_mod_table(const char *filename)
 		}
 
 		if (optional_string("#Ignored Campaign File Names")) {
-			SCP_string campaign_name;
+			std::string campaign_name;
 
 			while (optional_string("$Campaign File Name:")) {
 				stuff_string(campaign_name, F_NAME);
@@ -131,7 +131,7 @@ void parse_mod_table(const char *filename)
 
 		// Note: this feature does not ignore missions that are contained in campaigns
 		if (optional_string("#Ignored Mission File Names")) {
-			SCP_string mission_name;
+			std::string mission_name;
 
 			while (optional_string("$Mission File Name:")) {
 				stuff_string(mission_name, F_NAME);

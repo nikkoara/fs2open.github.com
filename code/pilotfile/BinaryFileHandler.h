@@ -17,7 +17,7 @@ class BinaryFileHandler: public FileHandler {
 		size_t offset;
 	};
 
-	SCP_vector<SectionOffset> _sectionOffsets;
+	std::vector<SectionOffset> _sectionOffsets;
  public:
 	explicit BinaryFileHandler(CFILE* cfp);
 

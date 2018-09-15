@@ -98,9 +98,9 @@ public:
 		UNREFERENCED_PARAMETER( error );
 	}
 
-	SCP_string DumpToString( )
+	std::string DumpToString( )
 	{
-		SCP_string callstack;
+		std::string callstack;
 		for ( size_t i = 0; i < m_stackFrames.size( ); i++ )
 		{
 			callstack += m_stackFrames[ i ].module + "! " + m_stackFrames[ i ].symbol + "\n";
@@ -111,11 +111,11 @@ public:
 private:
 	struct StackEntry
 	{
-		SCP_string module;
-		SCP_string symbol;
+		std::string module;
+		std::string symbol;
 	};
 
-	SCP_vector< StackEntry > m_stackFrames;
+	std::vector< StackEntry > m_stackFrames;
 };
 
 #elif defined( SHOW_CALL_STACK )
@@ -729,7 +729,7 @@ void DumpCallsStack( std::ostream& dumpBuffer )
 
 #endif	//SHOW_CALL_STACK
 
-SCP_string dump_stacktrace()
+std::string dump_stacktrace()
 {
 
 #if defined( SHOW_CALL_STACK ) && defined( PDB_DEBUGGING )
@@ -739,7 +739,7 @@ SCP_string dump_stacktrace()
 
 	return callStack.DumpToString();
 #elif defined( SHOW_CALL_STACK )
-	SCP_stringstream stream;
+	std::stringstream stream;
 
 	DumpCallsStack(stream);
 

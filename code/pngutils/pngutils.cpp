@@ -874,7 +874,7 @@ void apng_ani::_apng_failed(const char* msg)
 	anim_time = 0.0f;
 	_cleanup_resources();
 
-	SCP_string error_msg = "(file ";
+	std::string error_msg = "(file ";
 	error_msg += _filename;
 	error_msg += ") ";
 	error_msg += msg;

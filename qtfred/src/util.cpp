@@ -10,12 +10,12 @@
 namespace fso {
 namespace fred {
 
-SCP_string getUsername() {
+std::string getUsername() {
 #ifdef Q_OS_WIN
     char acUserName[256];
     DWORD nUserName = sizeof(acUserName);
     if (GetUserNameA(acUserName, &nUserName))
-        return SCP_string(acUserName);
+        return std::string(acUserName);
     else
     	return "";
 #elif defined(Q_OS_UNIX)

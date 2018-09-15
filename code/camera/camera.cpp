@@ -18,8 +18,8 @@ warp_camera Warp_camera;
 
 //*************************OTHER STUFF*************************
 //Some global vars
-SCP_vector<subtitle> Subtitles;
-SCP_vector<camera*> Cameras;
+std::vector<subtitle> Subtitles;
+std::vector<camera*> Cameras;
 //Preset cameras
 camid Current_camera;
 camid Main_camera;
@@ -549,7 +549,7 @@ subtitle::subtitle(int in_x_pos, int in_y_pos, const char* in_text, const char* 
 	// Initialize color
 	gr_init_color(&text_color, 0, 0, 0);
 	
-	SCP_string text_buf;
+	std::string text_buf;
 
 	// basic init, this always has to be done
 	memset( imageanim, 0, sizeof(imageanim) );
@@ -723,7 +723,7 @@ void subtitle::do_frame(float frametime)
 	int y = text_pos.y;
 
 
-	for(SCP_vector<SCP_string>::iterator line = text_lines.begin(); line != text_lines.end(); ++line)
+	for(std::vector<std::string>::iterator line = text_lines.begin(); line != text_lines.end(); ++line)
 	{
 		gr_string(x, y, (char*)line->c_str(), GR_RESIZE_NONE);
 		y += font_height;
@@ -1017,7 +1017,7 @@ void subtitles_close()
 
 void subtitles_do_frame(float frametime)
 {
-	SCP_vector<subtitle>::iterator sub;
+	std::vector<subtitle>::iterator sub;
 	for(sub = Subtitles.begin(); sub != Subtitles.end(); ++sub)
 	{
 		if ( !sub->is_post_shaded( ) )
@@ -1027,7 +1027,7 @@ void subtitles_do_frame(float frametime)
 
 void subtitles_do_frame_post_shaded(float frametime)
 {
-	SCP_vector<subtitle>::iterator sub;
+	std::vector<subtitle>::iterator sub;
 	for(sub = Subtitles.begin(); sub != Subtitles.end(); ++sub)
 	{
 		if ( sub->is_post_shaded( ) )

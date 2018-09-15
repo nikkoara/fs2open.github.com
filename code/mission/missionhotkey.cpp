@@ -260,7 +260,7 @@ static UI_XSTR Hotkey_text[GR_NUM_RESOLUTIONS][HOTKEY_NUM_TEXT] = {
 
 
 static struct {
-	SCP_string label;
+	std::string label;
 	int type;
 	int index;
 	int y;  // Y coordinate of line

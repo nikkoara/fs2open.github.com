@@ -376,7 +376,7 @@ int campaign_tree_wnd::error_checker()
 
 int campaign_tree_wnd::error(const char *msg, ...)
 {
-	SCP_string buf;
+	std::string buf;
 	va_list args;
 
 	g_err++;
@@ -393,7 +393,7 @@ int campaign_tree_wnd::error(const char *msg, ...)
 
 int campaign_tree_wnd::internal_error(const char *msg, ...)
 {
-	SCP_string buf, buf2;
+	std::string buf, buf2;
 	va_list args;
 
 	g_err++;
@@ -413,7 +413,7 @@ int campaign_tree_wnd::internal_error(const char *msg, ...)
 
 int campaign_tree_wnd::fred_check_sexp(int sexp, int type, char *msg, ...)
 {
-	SCP_string buf, sexp_buf, error_buf;
+	std::string buf, sexp_buf, error_buf;
 	int err = 0, z, faulty_node;
 	va_list args;
 

@@ -87,7 +87,7 @@ namespace headtracking
 
 			bool query(HeadTrackingStatus* statusOut) override;
 
-			static SCP_string getName();
+			static std::string getName();
 		};
 	}
 }

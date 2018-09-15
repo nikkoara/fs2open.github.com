@@ -186,8 +186,8 @@ typedef struct colored_char
 	char	color;		// tag to look up in Tagged_Colors
 } colored_char;
 
-typedef SCP_vector<colored_char> briefing_line; 
-typedef SCP_vector<briefing_line> briefing_stream; 
+typedef std::vector<colored_char> briefing_line; 
+typedef std::vector<briefing_line> briefing_stream; 
 static briefing_stream Colored_stream[MAX_TEXT_STREAMS];
 
 #define BRIGHTEN_LEAD	2
@@ -250,7 +250,7 @@ int Brief_voices[MAX_BRIEF_STAGES];
 cmd_brief *Cur_cmd_brief;
 cmd_brief Cmd_briefs[MAX_TVT_TEAMS];
 
-SCP_vector<briefing_icon_info> Briefing_icon_info;
+std::vector<briefing_icon_info> Briefing_icon_info;
 
 // --------------------------------------------------------------------------------------
 // forward declarations
@@ -332,7 +332,7 @@ void brief_parse_icon_tbl()
 		// error check
 		if (num_species_covered < Species_info.size())
 		{
-			SCP_string errormsg = "The following species are missing icon info in icons.tbl:\n";
+			std::string errormsg = "The following species are missing icon info in icons.tbl:\n";
 
 			for (species = num_species_covered; species < Species_info.size(); species++)
 			{
@@ -1167,7 +1167,7 @@ void brief_blit_stage_num(int stage_num, int stage_max)
 void brief_render_line(int line_num, int x, int y, int instance) {
 	Assert(0 <= instance && instance < (int) (sizeof(Colored_stream) / sizeof(*Colored_stream)));
 
-	SCP_vector<colored_char>* src = &Colored_stream[instance].at(line_num);
+	std::vector<colored_char>* src = &Colored_stream[instance].at(line_num);
 
 	// empty strings do not have to be drawn
 	size_t src_len = src->size();
@@ -1428,7 +1428,7 @@ bool brief_verify_color_tag(unicode::codepoint_t color_tag)
 	if (color_tag > 127) {
 		// The tag will always be out of range. This is done to be sure that the case below does not accidentally
 		// produce a valid tag character.
-		SCP_string tag_str;
+		std::string tag_str;
 		unicode::encode(color_tag, std::back_inserter(tag_str));
 
 		Warning(LOCATION, "Invalid text color tag '$%s' used in mission: '%s'.\n", tag_str.c_str(), Mission_filename);
@@ -1567,8 +1567,8 @@ int brief_text_colorize(char *src, int instance, char default_color_stack[], int
 int brief_color_text_init(const char* src, int w, const char default_color, int instance, int max_lines, const bool append)
 {
 	int i, n_lines, len;
-	SCP_vector<int> n_chars;
-	SCP_vector<const char*> p_str;
+	std::vector<int> n_chars;
+	std::vector<const char*> p_str;
 	char tmp_brief_line[MAX_BRIEF_LINE_LEN];
 
 	// manage different default colors (don't use a SCP_ stack because eh)
@@ -2167,7 +2167,7 @@ void brief_modify_grid(grid *gridp)
 
 void brief_unload_anims()
 {
-	for (SCP_vector<briefing_icon_info>::iterator ii = Briefing_icon_info.begin(); ii != Briefing_icon_info.end(); ++ii)
+	for (std::vector<briefing_icon_info>::iterator ii = Briefing_icon_info.begin(); ii != Briefing_icon_info.end(); ++ii)
 	{
 		if (ii->regular.first_frame >= 0)
 		{

@@ -39,9 +39,9 @@
 // CommanderDJ - now dynamic
 // #define MAX_SHIELD_ICONS		80	
 
-SCP_vector<SCP_string> Hud_shield_filenames;
+std::vector<std::string> Hud_shield_filenames;
 
-SCP_vector<hud_frames> Shield_gauges;
+std::vector<hud_frames> Shield_gauges;
 
 static int Hud_shield_inited = 0;
 /*static int Player_shield_coords[GR_NUM_RESOLUTIONS][2] = 
@@ -296,7 +296,7 @@ void hud_shield_assign_info(ship_info *sip, char *filename)
 
 	//No HUD icon found. Add one!
 	sip->shield_icon_index = (unsigned char) Hud_shield_filenames.size();
-	Hud_shield_filenames.push_back((SCP_string)filename);
+	Hud_shield_filenames.push_back((std::string)filename);
 }
 
 void hud_show_mini_ship_integrity(object *objp, int x_force, int y_force)

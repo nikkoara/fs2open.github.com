@@ -1114,7 +1114,7 @@ void brief_render(float frametime)
 		#ifndef NDEBUG
 		gr_get_string_size(&w, &h, The_mission.name);
 		gr_set_color_fast(&Color_normal);
-		SCP_string debugText;
+		std::string debugText;
 		sprintf(debugText, NOX("[filename: %s, last mod: %s]"), Mission_filename, The_mission.modified);
 
 		gr_get_string_size(&w, NULL, debugText.c_str());

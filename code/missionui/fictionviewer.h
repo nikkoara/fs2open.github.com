@@ -26,7 +26,7 @@ typedef struct fiction_viewer_stage {
 	int formula;
 } fiction_viewer_stage;
 
-extern SCP_vector<fiction_viewer_stage> Fiction_viewer_stages;
+extern std::vector<fiction_viewer_stage> Fiction_viewer_stages;
 
 
 // management stuff

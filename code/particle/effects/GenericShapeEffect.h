@@ -81,7 +81,7 @@ class GenericShapeEffect : public ParticleEffect {
 	}
 
  public:
-	explicit GenericShapeEffect(const SCP_string& name) : ParticleEffect(name) {
+	explicit GenericShapeEffect(const std::string& name) : ParticleEffect(name) {
 	}
 
 	bool processSource(const ParticleSource* source) override {
@@ -143,7 +143,7 @@ class GenericShapeEffect : public ParticleEffect {
 		}
 
 		if (optional_string("+Direction:")) {
-			SCP_string dirStr;
+			std::string dirStr;
 			stuff_string(dirStr, F_NAME);
 
 			if (!stricmp(dirStr.c_str(), "Incoming")) {

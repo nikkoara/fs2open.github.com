@@ -2003,8 +2003,8 @@ void render_one_model_nohtl(object *objp) {
 void render_waypoints(void) {
 	vertex v;
 
-	SCP_list<waypoint_list>::iterator ii;
-	SCP_vector<waypoint>::iterator jj;
+	std::list<waypoint_list>::iterator ii;
+	std::vector<waypoint>::iterator jj;
 
 	for (ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++ii) {
 		vec3d *prev_vec = NULL;

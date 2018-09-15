@@ -270,7 +270,7 @@ void parse_hud_gauges_tbl(const char *filename)
 		int gauge_type = -1;
 		int use_font = -1;
 		color *use_clr_p = NULL;
-		SCP_vector<int> ship_classes;
+		std::vector<int> ship_classes;
 		bool retail_config = false;
 		int n_ships = 0;
 
@@ -566,7 +566,7 @@ void load_missing_retail_gauges()
 	// for each ship class, check if their specific HUD config is enabled
 	int k = 0;
 	for (auto it = Ship_info.cbegin(); it != Ship_info.cend(); k++, ++it) {
-		SCP_vector<int> sindex;
+		std::vector<int> sindex;
 		sindex.push_back(k);
 		if(it->hud_enabled && it->hud_retail) {
 			int num_loaded_gauges = (int)it->hud_gauges.size();
@@ -904,7 +904,7 @@ int parse_gauge_type()
 
 void load_gauge(int gauge, gauge_settings* settings)
 {
-	SCP_vector<int> ship_index;
+	std::vector<int> ship_index;
 	ship_index.push_back(-1);
 	if (settings->ship_idx == NULL) {
 		settings->ship_idx = &ship_index;

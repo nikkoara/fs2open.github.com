@@ -33,7 +33,7 @@ class FFmpegContext {
 
 	static std::unique_ptr<FFmpegContext> createContext(CFILE* mediaFile);
 
-	static std::unique_ptr<FFmpegContext> createContext(const SCP_string& path, int dir_type);
+	static std::unique_ptr<FFmpegContext> createContext(const std::string& path, int dir_type);
 };
 
 }

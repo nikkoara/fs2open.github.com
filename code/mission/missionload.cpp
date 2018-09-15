@@ -29,7 +29,7 @@ extern mission The_mission;  // need to send this info to the briefing
 extern int shifted_ascii_table[];
 extern int ascii_table[];
 
-SCP_vector<SCP_string> Ignored_missions;
+std::vector<std::string> Ignored_missions;
 
 // -----------------------------------------------
 // For recording most recent missions played
@@ -80,7 +80,7 @@ void ml_update_recent_missions(char *filename)
 
 bool mission_is_ignored(const char *filename)
 {
-	SCP_string filename_no_ext = filename;
+	std::string filename_no_ext = filename;
 	drop_extension(filename_no_ext);
 	std::transform(filename_no_ext.begin(), filename_no_ext.end(), filename_no_ext.begin(), ::tolower);
 

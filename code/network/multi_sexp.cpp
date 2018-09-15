@@ -348,7 +348,7 @@ void sexp_network_packet::send_string(char * string)
     current_argument_count += packet_size - start_size;
 }
 
-void sexp_network_packet::send_string(const SCP_string & string)
+void sexp_network_packet::send_string(const std::string & string)
 {
     if (cannot_send_data()) {
         return;
@@ -533,7 +533,7 @@ bool sexp_network_packet::get_string(char * buffer)
     return true;
 }
 
-bool sexp_network_packet::get_string(SCP_string & buffer)
+bool sexp_network_packet::get_string(std::string & buffer)
 {
     char tempstring[TOKEN_LENGTH];
     int starting_offset = offset;

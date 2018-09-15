@@ -55,9 +55,9 @@ typedef struct multi_global_options {
 	int		std_framecap;												// standalone frame cap
 
 	ushort		webapiPort;
-	SCP_string	webapiUsername;
-	SCP_string	webapiPassword;
-	SCP_string	webuiRootDirectory;
+	std::string	webapiUsername;
+	std::string	webapiPassword;
+	std::string	webuiRootDirectory;
 
 	void reset() {
 		protocol = 1;//NET_TCP

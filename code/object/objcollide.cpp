@@ -43,7 +43,7 @@ obj_pair *Obj_pairs = NULL;
 obj_pair pair_used_list;
 obj_pair pair_free_list;
 
-SCP_vector<int> Collision_sort_list;
+std::vector<int> Collision_sort_list;
 
 class collider_pair
 {
@@ -62,7 +62,7 @@ public:
 	{}
 };
 
-SCP_unordered_map<uint, collider_pair> Collision_cached_pairs;
+std::unordered_map<uint, collider_pair> Collision_cached_pairs;
 
 class checkobject;
 extern checkobject CheckObjects[MAX_OBJECTS];
@@ -1069,7 +1069,7 @@ int collide_remove_weapons( )
 			opp = opp->next;
 		}
 	} else {
-		SCP_unordered_map<uint, collider_pair>::iterator it;
+		std::unordered_map<uint, collider_pair>::iterator it;
 		collider_pair *pair_obj;
 
 		for ( it = Collision_cached_pairs.begin(); it != Collision_cached_pairs.end(); ++it ) {
@@ -1210,7 +1210,7 @@ void obj_reset_colliders()
 
 void obj_collide_retime_cached_pairs(int checkdly)
 {
-	SCP_unordered_map<uint, collider_pair>::iterator it;
+	std::unordered_map<uint, collider_pair>::iterator it;
 
 	for ( it = Collision_cached_pairs.begin(); it != Collision_cached_pairs.end(); ++it ) {
 		it->second.next_check_time = timestamp(checkdly);
@@ -1225,8 +1225,8 @@ void obj_sort_and_collide()
 	if ( !(Game_detail_flags & DETAIL_FLAG_COLLISION) )
 		return;
 
-	SCP_vector<int> sort_list_y;
-	SCP_vector<int> sort_list_z;
+	std::vector<int> sort_list_y;
+	std::vector<int> sort_list_z;
 
 	sort_list_y.clear();
 	{
@@ -1250,14 +1250,14 @@ void obj_sort_and_collide()
 	obj_find_overlap_colliders(&sort_list_y, &sort_list_z, 2, true);
 }
 
-void obj_find_overlap_colliders(SCP_vector<int> *overlap_list_out, SCP_vector<int> *list, int axis, bool collide)
+void obj_find_overlap_colliders(std::vector<int> *overlap_list_out, std::vector<int> *list, int axis, bool collide)
 {
 	TRACE_SCOPE(tracing::FindOverlapColliders);
 
 	size_t i, j;
 	bool overlapped;
 	bool first_not_added = true;
-	SCP_vector<int> overlappers;
+	std::vector<int> overlappers;
 
 	float min;
 	float overlap_max;
@@ -1352,7 +1352,7 @@ float obj_get_collider_endpoint(int obj_num, int axis, bool min)
 	}
 }
 
-void obj_quicksort_colliders(SCP_vector<int> *list, int left, int right, int axis)
+void obj_quicksort_colliders(std::vector<int> *list, int left, int right, int axis)
 {
 	Assert( axis >= 0 );
 	Assert( axis <= 2 );

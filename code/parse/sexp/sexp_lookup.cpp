@@ -10,10 +10,10 @@
 namespace {
 using namespace sexp;
 
-SCP_unordered_map<int, std::unique_ptr<sexp::DynamicSEXP>> operator_const_mapping;
+std::unordered_map<int, std::unique_ptr<sexp::DynamicSEXP>> operator_const_mapping;
 
 // This contains which operator is the next free operator in a specific category
-SCP_unordered_map<int, int> next_free_operator_mapping;
+std::unordered_map<int, int> next_free_operator_mapping;
 
 int get_next_free_operator(int category) {
 	Assertion(category != OP_CATEGORY_CHANGE, "The primary change category is full so it can't be used for new operators!");
@@ -50,7 +50,7 @@ void parse_sexp_table(const char* filename) {
 		const char* INVALID_CHARS = "()\"'\t ";
 
 		while (optional_string("$Operator:")) {
-			SCP_string name;
+			std::string name;
 			stuff_string(name, F_NAME);
 
 			if (std::strpbrk(name.c_str(), INVALID_CHARS) != nullptr) {
@@ -123,7 +123,7 @@ void dynamic_sexp_init() {
 void dynamic_sexp_shutdown() {
 	operator_const_mapping.clear();
 }
-int add_subcategory(int parent_category, const SCP_string& name) {
+int add_subcategory(int parent_category, const std::string& name) {
 	// Another hack to make sure change2 is interpreted as the normal change category
 	if (parent_category == OP_CATEGORY_CHANGE2) {
 		parent_category = OP_CATEGORY_CHANGE;

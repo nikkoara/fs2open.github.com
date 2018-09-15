@@ -85,7 +85,7 @@ public:
 	}
 };
 
-extern SCP_vector<species_info> Species_info;
+extern std::vector<species_info> Species_info;
 
 
 // load up the species_defs.tbl into the correct data areas

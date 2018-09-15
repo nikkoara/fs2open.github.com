@@ -1373,7 +1373,7 @@ void CFREDView::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
 	CMenu menu;
 	int	objnum;
 	CPoint local = point;
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 
 	if (button_down) {
 		cancel_drag();
@@ -2836,7 +2836,7 @@ int CFREDView::global_error_check()
 		return internal_error("Num_wings is incorrect");
 	}
 
-	SCP_list<waypoint_list>::iterator ii;
+	std::list<waypoint_list>::iterator ii;
 	for (ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++ii) {
 		for (z=0; z<obj_count; z++){
 			if (names[z]){
@@ -3327,7 +3327,7 @@ int CFREDView::internal_error(const char *msg, ...)
 
 int CFREDView::fred_check_sexp(int sexp, int type, const char *msg, ...)
 {
-	SCP_string buf, sexp_buf, error_buf;
+	std::string buf, sexp_buf, error_buf;
 	int err = 0, z, faulty_node;
 	va_list args;
 

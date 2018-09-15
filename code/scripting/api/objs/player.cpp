@@ -64,7 +64,7 @@ ADE_FUNC(getImageFilename, l_Player, NULL, "Gets current player image filename",
 
 ADE_FUNC(getMainHallName, l_Player, NULL, "Gets player's current main hall name", "string", "Main hall name, or name of first mainhall in campaign if something goes wrong")
 {
-	SCP_string hallname;
+	std::string hallname;
 	// FS2-->Lua
 	if (Campaign.next_mission == -1) {
 		hallname = Campaign.missions[0].main_hall;

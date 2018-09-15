@@ -55,7 +55,7 @@
 #define MAX_OP_MENUS    30
 #define MAX_SUBMENUS    (MAX_OP_MENUS * MAX_OP_MENUS)
 
-extern SCP_vector<game_snd> Snds;
+extern std::vector<game_snd> Snds;
 
 //********************sexp_tree********************
 
@@ -137,8 +137,8 @@ SexpTreeEditorInterface::SexpTreeEditorInterface(const flagset<TreeFlags>& flags
 bool SexpTreeEditorInterface::hasDefaultMessageParamter() {
 	return Num_messages > Num_builtin_messages;
 }
-SCP_vector<SCP_string> SexpTreeEditorInterface::getMessages() {
-	SCP_vector<SCP_string> list;
+std::vector<std::string> SexpTreeEditorInterface::getMessages() {
+	std::vector<std::string> list;
 
 	for (auto i = Num_builtin_messages; i < Num_messages; i++) {
 		list.emplace_back(Messages[i].name);
@@ -146,8 +146,8 @@ SCP_vector<SCP_string> SexpTreeEditorInterface::getMessages() {
 
 	return list;
 }
-SCP_vector<SCP_string> SexpTreeEditorInterface::getMissionGoals(const SCP_string&  /*reference_name*/) {
-	SCP_vector<SCP_string> list;
+std::vector<std::string> SexpTreeEditorInterface::getMissionGoals(const std::string&  /*reference_name*/) {
+	std::vector<std::string> list;
 
 	for (auto i = 0; i < Num_goals; i++) {
 		list.emplace_back(Mission_goals[i].name);
@@ -155,8 +155,8 @@ SCP_vector<SCP_string> SexpTreeEditorInterface::getMissionGoals(const SCP_string
 
 	return list;
 }
-SCP_vector<SCP_string> SexpTreeEditorInterface::getMissionEvents(const SCP_string&  /*reference_name*/) {
-	SCP_vector<SCP_string> list;
+std::vector<std::string> SexpTreeEditorInterface::getMissionEvents(const std::string&  /*reference_name*/) {
+	std::vector<std::string> list;
 
 	for (auto i = 0; i < Num_mission_events; i++) {
 		list.emplace_back(Mission_events[i].name);
@@ -164,8 +164,8 @@ SCP_vector<SCP_string> SexpTreeEditorInterface::getMissionEvents(const SCP_strin
 
 	return list;
 }
-SCP_vector<SCP_string> SexpTreeEditorInterface::getMissionNames() {
-	return { SCP_string(Mission_filename) };
+std::vector<std::string> SexpTreeEditorInterface::getMissionNames() {
+	return { std::string(Mission_filename) };
 }
 bool SexpTreeEditorInterface::hasDefaultMissionName() {
 	return *Mission_filename != '\0';
@@ -718,10 +718,10 @@ int sexp_tree::query_node_argument_type(int node) {
 // number of it.  What operators are valid is determined by 'node', and an operator is valid
 // if it is allowed to fit at position 'node'
 //
-SCP_string sexp_tree::match_closest_operator(const char* str, int node) {
+std::string sexp_tree::match_closest_operator(const char* str, int node) {
 	int z, i, op, arg_num, opf, opr;
-	SCP_string sub_best;
-	SCP_string best;
+	std::string sub_best;
+	std::string best;
 
 	z = tree_nodes[node].parent;
 	if (z < 0) {
@@ -3486,7 +3486,7 @@ sexp_list_item* sexp_tree::get_listing_opf_subsystem_type(int parent_node) {
 
 sexp_list_item* sexp_tree::get_listing_opf_point() {
 	char buf[NAME_LENGTH + 8];
-	SCP_list<waypoint_list>::iterator ii;
+	std::list<waypoint_list>::iterator ii;
 	int j;
 	sexp_list_item head;
 
@@ -3842,7 +3842,7 @@ sexp_list_item* sexp_tree::get_listing_opf_hud_gauge() {
 sexp_list_item* sexp_tree::get_listing_opf_ship_effect() {
 	sexp_list_item head;
 
-	for (SCP_vector<ship_effect>::iterator sei = Ship_effects.begin(); sei != Ship_effects.end(); ++sei) {
+	for (std::vector<ship_effect>::iterator sei = Ship_effects.begin(); sei != Ship_effects.end(); ++sei) {
 		head.add_data_dup(sei->name);
 	}
 
@@ -3860,7 +3860,7 @@ sexp_list_item* sexp_tree::get_listing_opf_explosion_option() {
 }
 
 sexp_list_item* sexp_tree::get_listing_opf_waypoint_path() {
-	SCP_list<waypoint_list>::iterator ii;
+	std::list<waypoint_list>::iterator ii;
 	sexp_list_item head;
 
 	for (ii = Waypoint_lists.begin(); ii != Waypoint_lists.end(); ++ii) {
@@ -3956,7 +3956,7 @@ sexp_list_item* sexp_tree::get_listing_opf_goal_name(int parent_node) {
 	auto child = tree_nodes[parent_node].child;
 
 	// This is used by the campaign editor to show the entries for specific missions
-	SCP_string reference;
+	std::string reference;
 	if (child >= 0) {
 		reference = tree_nodes[child].text;
 	}
@@ -4045,7 +4045,7 @@ sexp_list_item* sexp_tree::get_listing_opf_event_name(int parent_node) {
 	auto child = tree_nodes[parent_node].child;
 
 	// This is used by the campaign editor to show the entries for specific missions
-	SCP_string reference;
+	std::string reference;
 	if (child >= 0) {
 		reference = tree_nodes[child].text;
 	}
@@ -4242,7 +4242,7 @@ sexp_list_item* sexp_tree::get_listing_opf_subsys_or_generic(int parent_node, in
 sexp_list_item* sexp_tree::get_listing_opf_jump_nodes() {
 	sexp_list_item head;
 
-	SCP_list<CJumpNode>::iterator jnp;
+	std::list<CJumpNode>::iterator jnp;
 	for (jnp = Jump_nodes.begin(); jnp != Jump_nodes.end(); ++jnp) {
 		head.add_data(jnp->GetName());
 	}
@@ -4342,7 +4342,7 @@ sexp_list_item* sexp_tree::get_listing_opf_post_effect() {
 	unsigned int i;
 	sexp_list_item head;
 
-	SCP_vector<SCP_string> ppe_names;
+	std::vector<std::string> ppe_names;
 	get_post_process_effect_names(ppe_names);
 	for (i = 0; i < ppe_names.size(); i++) {
 		head.add_data_dup(ppe_names[i].c_str());
@@ -4412,7 +4412,7 @@ sexp_list_item* sexp_tree::get_listing_opf_weapon_banks() {
 
 sexp_list_item* sexp_tree::get_listing_opf_mission_moods() {
 	sexp_list_item head;
-	for (SCP_vector<SCP_string>::iterator iter = Builtin_moods.begin(); iter != Builtin_moods.end(); ++iter) {
+	for (std::vector<std::string>::iterator iter = Builtin_moods.begin(); iter != Builtin_moods.end(); ++iter) {
 		head.add_data_dup(iter->c_str());
 	}
 
@@ -4441,7 +4441,7 @@ sexp_list_item* sexp_tree::get_listing_opf_ship_flags() {
 sexp_list_item* sexp_tree::get_listing_opf_team_colors() {
 	sexp_list_item head;
 	head.add_data("None");
-	for (SCP_map<SCP_string, team_color>::iterator tcolor = Team_Colors.begin(); tcolor != Team_Colors.end();
+	for (std::map<std::string, team_color>::iterator tcolor = Team_Colors.begin(); tcolor != Team_Colors.end();
 		 ++tcolor) {
 		head.add_data_dup(tcolor->first.c_str());
 	}
@@ -4468,7 +4468,7 @@ sexp_list_item* sexp_tree::get_listing_opf_game_snds() {
 
 	head.add_data(SEXP_NONE_STRING);
 
-	for (SCP_vector<game_snd>::iterator iter = Snds.begin(); iter != Snds.end(); ++iter) {
+	for (std::vector<game_snd>::iterator iter = Snds.begin(); iter != Snds.end(); ++iter) {
 		if (!can_construe_as_integer(iter->name.c_str())) {
 			head.add_data(iter->name.c_str());
 		}
@@ -5479,7 +5479,7 @@ void sexp_tree::handleItemChange(QTreeWidgetItem* item, int  /*column*/) {
 	}
 
 	// let's make sure we aren't introducing any invalid characters, per Mantis #2893
-	SCP_string replaced_str = str.toStdString();
+	std::string replaced_str = str.toStdString();
 	lcl_fred_replace_stuff(replaced_str);
 
 	for (node = 0; node < tree_nodes.size(); node++) {

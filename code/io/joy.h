@@ -192,13 +192,13 @@ namespace io
 			 * This is useful for identifying a joystick if it has been disconnected at some point
 			 * @return The string representation of the GUID
 			 */
-			SCP_string getGUID() const;
+			std::string getGUID() const;
 
 			/**
 			 * @brief Gets the name of the joystick
 			 * @return The name
 			 */
-			SCP_string getName() const;
+			std::string getName() const;
 
 			/**
 			 * @brief Gets the unique instance ID of the joystick
@@ -244,13 +244,13 @@ namespace io
 			int _device_id; //!< The SDL device index
 			SDL_Joystick *_joystick; //!< The SDL joystick handle
 
-			SCP_string _guidStr; //!< The GUID string
-			SCP_string _name; //!< The joystick name
+			std::string _guidStr; //!< The GUID string
+			std::string _name; //!< The joystick name
 
 			SDL_JoystickID _id; //!< The instance ID
 
-			SCP_vector<Sint16> _axisValues; //!< The current axes values
-			SCP_vector<coord2d> _ballValues; //!< The ball values
+			std::vector<Sint16> _axisValues; //!< The current axes values
+			std::vector<coord2d> _ballValues; //!< The ball values
 			
 
 			struct button_info
@@ -259,7 +259,7 @@ namespace io
 				int DownCount;      //!< The number of times the button was pressed
 			};
 
-			SCP_vector<button_info> _button;
+			std::vector<button_info> _button;
 
 			struct hat_info
 			{
@@ -272,7 +272,7 @@ namespace io
 				int DownCount8[8];      //!< The number of times each 8-hat position has been hit since we last checked.
 			};
 
-			SCP_vector<hat_info> _hat;
+			std::vector<hat_info> _hat;
 		};
 
 		/**
@@ -310,8 +310,8 @@ namespace io
 		void shutdown();
 
 		struct JoystickInformation {
-			SCP_string name;
-			SCP_string guid;
+			std::string name;
+			std::string guid;
 
 			uint32_t num_axes;
 			uint32_t num_balls;
@@ -321,7 +321,7 @@ namespace io
 			bool is_haptic;
 		};
 
-		SCP_vector<JoystickInformation> getJoystickInformations();
+		std::vector<JoystickInformation> getJoystickInformations();
 	}
 }
 

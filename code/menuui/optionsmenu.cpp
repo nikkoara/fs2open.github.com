@@ -1356,7 +1356,7 @@ void options_detail_init()
 
 bool shader_compile_status = false;
 bool shader_compile_started = false;
-SCP_string recompile_state = "";
+std::string recompile_state = "";
 void shader_recompile_callback(size_t current, size_t total) 
 {
 	recompile_state = "";
