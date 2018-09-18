@@ -70,7 +70,7 @@ MACRO(COPY_FILE_TO_TARGET _target _file)
 	if(UNIX)
 		ADD_CUSTOM_COMMAND(
 			TARGET ${_target} POST_BUILD
-			COMMAND cp -a "${_file}"  "$<TARGET_FILE_DIR:${_target}>/${LIBRAY_DESTINATION}/"
+			COMMAND install -d "${_file}"  "$<TARGET_FILE_DIR:${_target}>/${LIBRAY_DESTINATION}/"
 			COMMENT "copying '${_file}'..."
 		)
 	else()
