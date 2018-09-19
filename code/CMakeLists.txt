@@ -46,6 +46,21 @@ IF (FSO_USE_SPEECH)
 	target_link_libraries(code PUBLIC speech)
 ENDIF(FSO_USE_SPEECH)
 
+SET(Boost_USE_STATIC_LIBS        ON)
+SET(Boost_USE_MULTITHREADED      ON)
+SET(Boost_USE_STATIC_RUNTIME    OFF)
+
+find_package( Boost 1.66 REQUIRED COMPONENTS timer date_time filesystem system )
+
+if(Boost_FOUND)
+  INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+  TARGET_LINK_LIBRARIES(code PUBLIC
+    ${Boost_TIMER_LIBRARY}
+    ${Boost_DATE_TIME_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY} )
+endif()
+
 TARGET_LINK_LIBRARIES(code PUBLIC jansson)
 
 # Headers for standalone "gui" on UNIX
@@ -55,7 +70,6 @@ ENDIF(UNIX)
 
 IF(FSO_BUILD_TOOLS)
 	ADD_SUBDIRECTORY(cfilearchiver)
-
 	ADD_SUBDIRECTORY(cfileextractor)
 ENDIF(FSO_BUILD_TOOLS)
 

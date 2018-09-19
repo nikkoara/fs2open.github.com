@@ -9,6 +9,11 @@
 #define SCP_TOKEN_CONCAT1(x, y) x ## y
 #define SCP_TOKEN_CONCAT(x, y) SCP_TOKEN_CONCAT1(x, y)
 
+#define FS2_DO_PASTE(a, b) a ## b
+#define FS2_PASTE(a, b) FS2_DO_PASTE(a, b)
+
+#define FS2_UNUSED(x) ((void*)x)
+
 /**
  * Define for a function that should be constexpr but if the compiler doesn't support it then it uses inline
  */
