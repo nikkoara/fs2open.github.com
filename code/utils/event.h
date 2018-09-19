@@ -6,42 +6,40 @@
 
 namespace util {
 
-template <typename Ret, typename... Args>
-class event final {
-  public:
-	using callback_type = std::function<Ret(Args...)>;
+template <typename T, typename... Args>
+struct event {
+    using callback_type = std::function< T(Args...) >;
 
-	event()  = default;
-	~event() = default;
+    void
+    listen (callback_type func) {
+        fs.push_back (func);
+    }
 
-	void add(callback_type func) { _listeners.push_back(func); }
+    void
+    clear () {
+        fs.clear();
+    }
 
-	void clear() { _listeners.clear(); }
+    template< typename U = void >
+    inline typename std::enable_if< std::is_same< T, void >::value, U >::type
+    notify_all (Args... args) const {
+        for (const auto& f : fs)
+            f (args...);
+    }
 
-	// This variant is used if the listeners return no values
-	template <typename Dummy = void>
-	inline typename std::enable_if<std::is_same<Ret, void>::value, Dummy>::type operator()(Args... args) const
-	{
-		for (const auto& l : _listeners) {
-			l(args...);
-		}
-	}
+    template< typename U = std::vector< T > >
+    inline typename std::enable_if< !std::is_same< T, void >::value, U >::type
+    notify_all (Args... args) const {
+        std::vector< T > result;
 
-	// In this case we collect the return values and return them to the caller
-	template <typename Dummy = std::vector<Ret>>
-	inline typename std::enable_if<!std::is_same<Ret, void>::value, Dummy>::type operator()(Args... args) const
-	{
-		std::vector<Ret> vals;
+        for (const auto& f : fs)
+            result.push_back (f (args...));
 
-		for (const auto& l : _listeners) {
-			vals.push_back(l(args...));
-		}
+        return result;
+    }
 
-		return vals;
-	}
-
-  private:
-	std::vector<callback_type> _listeners;
+private:
+    std::vector< callback_type > fs;
 };
 
 } // namespace util

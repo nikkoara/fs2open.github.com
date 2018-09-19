@@ -428,7 +428,7 @@ ADE_FUNC(addPreMoveHook, l_Object, "function(object) callback",
 	if (!objh->IsValid())
 		return ADE_RETURN_NIL;
 
-	objh->objp->pre_move_event.add(make_lua_callback<void, object*>(callback));
+	objh->objp->pre_move_event.listen(make_lua_callback<void, object*>(callback));
 
 	return ADE_RETURN_NIL;
 }
@@ -452,7 +452,7 @@ ADE_FUNC(addPostMoveHook, l_Object, "function(object) callback",
 	if (!objh->IsValid())
 		return ADE_RETURN_NIL;
 
-	objh->objp->post_move_event.add(make_lua_callback<void, object*>(callback));
+	objh->objp->post_move_event.listen(make_lua_callback<void, object*>(callback));
 
 	return ADE_RETURN_NIL;
 }

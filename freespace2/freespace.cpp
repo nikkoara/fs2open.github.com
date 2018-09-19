@@ -5196,7 +5196,7 @@ void game_process_event( int current_state, int event )
 // need to post an event, not change the state.
 void game_leave_state( int old_state, int new_state )
 {
-	events::GameLeaveState(old_state, new_state);
+	events::GameLeaveState.notify_all(old_state, new_state);
 
 	int end_mission = 1;
 
@@ -5620,7 +5620,7 @@ int Main_hall_netgame_started = 0;
 
 void game_enter_state( int old_state, int new_state )
 {
-	events::GameEnterState(old_state, new_state);
+	events::GameEnterState.notify_all(old_state, new_state);
 
 	//WMC - Scripting override
 	/*
@@ -6780,7 +6780,7 @@ int game_main(int argc, char *argv[])
 		// only important for non THREADED mode
 		os_poll();
 
-		events::EngineUpdate();
+		events::EngineUpdate.notify_all();
 
 		state = gameseq_process_events();
 		if ( state == GS_STATE_QUIT_GAME ) {
@@ -6840,7 +6840,7 @@ void game_launch_launcher_on_exit()
 //
 void game_shutdown(void)
 {
-	events::EngineShutdown();
+	events::EngineShutdown.notify_all();
 
 	headtracking::shutdown();
 

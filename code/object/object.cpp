@@ -1179,7 +1179,7 @@ void obj_move_all_pre(object *objp, float frametime)
 		Error(LOCATION, "Unhandled object type %d in obj_move_all_pre\n", objp->type);
 	}
 
-	objp->pre_move_event(objp);
+	objp->pre_move_event.notify_all(objp);
 }
 
 // Used to tell if a particular group of lasers has cast light yet.
@@ -1412,7 +1412,7 @@ void obj_move_all_post(object *objp, float frametime)
 		    Error(LOCATION, "Unhandled object type %d in obj_move_all_post\n", objp->type);
 	    }
 
-	    objp->post_move_event(objp);
+	    objp->post_move_event.notify_all(objp);
 }
 
 

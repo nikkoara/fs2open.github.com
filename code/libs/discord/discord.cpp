@@ -241,11 +241,11 @@ void init()
 
 	Discord_Initialize(APPLICATION_ID, &handlers, 0, nullptr);
 
-	events::EngineUpdate.add(update_discord);
-	events::EngineShutdown.add(shutdown_discord);
-	events::GameEnterState.add(handleEnterState);
-	events::GameLeaveState.add(handleLeaveState);
-	events::GameMissionLoad.add(handleMissionLoad);
+	events::EngineUpdate.listen(update_discord);
+	events::EngineShutdown.listen(shutdown_discord);
+	events::GameEnterState.listen(handleEnterState);
+	events::GameLeaveState.listen(handleLeaveState);
+	events::GameMissionLoad.listen(handleMissionLoad);
 
 	initialized = true;
 }

@@ -108,7 +108,7 @@ int mission_load(char *filename_ext)
 		strncpy(Game_current_mission_filename, filename_ext, MAX_FILENAME_LEN-1);
 
 	mprintf(("MISSION LOAD: '%s'\n", filename_ext));
-	events::GameMissionLoad(filename_ext);
+	events::GameMissionLoad.notify_all (filename_ext);
 
 	strcpy_s( filename, filename_ext );
 	ext = strrchr(filename, '.');
