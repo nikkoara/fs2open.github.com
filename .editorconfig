@@ -1,7 +1,0 @@
-root = true
-
-[*.{h,cpp}]
-indent_style = tab
-
-[*.sdr]
-indent_style = tab

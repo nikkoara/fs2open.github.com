@@ -18,14 +18,17 @@ if(DOXYGEN_FOUND)
 	ENDFOREACH(DIR)
 	STRING(REPLACE ";" " " INPUT_DIRS "${INPUT_DIRS}")
 	
-	CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/fs2open.Doxyfile.in
-					${CMAKE_CURRENT_BINARY_DIR}/fs2open.Doxyfile
-					@ONLY)
+	CONFIGURE_FILE(
+      ${CMAKE_CURRENT_SOURCE_DIR}/doc/fs2open.Doxyfile.in
+	  ${CMAKE_CURRENT_BINARY_DIR}/fs2open.Doxyfile
+	  @ONLY)
 	
 	add_custom_target(doxygen
-		${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/fs2open.Doxyfile
-		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-		COMMENT "Generating API documentation with Doxygen" VERBATIM
+	  ${DOXYGEN_EXECUTABLE}
+      ${CMAKE_CURRENT_BINARY_DIR}/fs2open.Doxyfile
+	  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+	  COMMENT "Generating API documentation with Doxygen"
+      VERBATIM
 	)
 	
 	set_target_properties(doxygen
