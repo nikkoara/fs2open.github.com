@@ -13,7 +13,6 @@
 #include "globalincs/alphacolors.h"
 #include "hud/hudparse.h"
 #include "io/key.h"
-#include "events/events.h"
 #include "mission/missioncampaign.h"
 #include "mission/missionload.h"
 #include "mission/missionparse.h"
@@ -99,7 +98,6 @@ int mission_load (char* filename_ext) {
             Game_current_mission_filename, filename_ext, MAX_FILENAME_LEN - 1);
 
     mprintf (("MISSION LOAD: '%s'\n", filename_ext));
-    events::GameMissionLoad.notify_all (filename_ext);
 
     strcpy_s (filename, filename_ext);
     ext = strrchr (filename, '.');

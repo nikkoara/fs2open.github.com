@@ -76,7 +76,6 @@
 #include "jumpnode/jumpnode.h"
 #include "lab/lab.h"
 #include "lab/wmcgui.h" //So that GUI_System can be initialized
-#include "libs/discord/discord.h"
 #include "libs/ffmpeg/FFmpeg.h"
 #include "lighting/lighting.h"
 #include "localization/localize.h"
@@ -2068,8 +2067,6 @@ void game_init () {
     convert_pilot_files ();
 
     libs::ffmpeg::initialize ();
-
-    libs::discord::init ();
 
     nprintf (
         ("General", "Ships.tbl is : %s\n",
@@ -5378,8 +5375,6 @@ void game_process_event (int current_state, int event) {
 // in here... if you think you need to, you probably really
 // need to post an event, not change the state.
 void game_leave_state (int old_state, int new_state) {
-    events::GameLeaveState.notify_all (old_state, new_state);
-
     int end_mission = 1;
 
     switch (new_state) {
@@ -5752,8 +5747,6 @@ int Main_hall_netgame_started = 0;
 // need to post an event, not change the state.
 
 void game_enter_state (int old_state, int new_state) {
-    events::GameEnterState.notify_all (old_state, new_state);
-
     // WMC - Scripting override
     /*
     if(script_hook_valid(&GS_state_hooks[new_state]) &&
@@ -6903,8 +6896,6 @@ int game_main (int argc, char* argv[]) {
         // only important for non THREADED mode
         os_poll ();
 
-        events::EngineUpdate.notify_all ();
-
         state = gameseq_process_events ();
         if (state == GS_STATE_QUIT_GAME) { break; }
 
@@ -6959,8 +6950,6 @@ void game_launch_launcher_on_exit()
 // This function is called when FreeSpace terminates normally.
 //
 void game_shutdown (void) {
-    events::EngineShutdown.notify_all ();
-
     headtracking::shutdown ();
 
     fsspeech_deinit ();

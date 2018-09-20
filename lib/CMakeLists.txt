@@ -26,5 +26,3 @@ add_subdirectory(md5)
 add_subdirectory(utfcpp)
 
 include(FFmpeg.cmake)
-
-add_subdirectory(discord)

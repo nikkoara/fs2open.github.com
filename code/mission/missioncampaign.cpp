@@ -23,7 +23,6 @@
 #endif
 
 #include "freespace.h"
-#include "missioncampaign.h"
 #include "cfile/cfile.h"
 #include "cutscene/cutscenes.h"
 #include "cutscene/movie.h"
@@ -1427,35 +1426,6 @@ int mission_campaign_get_filenames (
     }
 
     return 0;
-}
-
-std::string mission_campaign_get_name (const char* filename) {
-    // read the mission file and only read the name entry
-    std::string filename_str = filename;
-    filename_str += FS_CAMPAIGN_FILE_EXT;
-    try {
-        Assertion (
-            filename_str.size () < MAX_FILENAME_LEN,
-            "Filename (%s) is too long. Is " SIZE_T_ARG
-            " bytes long but maximum is %d.",
-            filename_str.c_str (), filename_str.size (),
-            MAX_FILENAME_LEN); // make sure no overflow
-        read_file_text (filename_str.c_str ());
-        reset_parse ();
-
-        required_string ("$Name:");
-
-        std::string res;
-        stuff_string (res, F_NAME);
-
-        return res;
-    }
-    catch (const parse::ParseException& e) {
-        mprintf (
-            ("MISSIONCAMPAIGN: Unable to parse '%s'!  Error message = %s.\n",
-             filename_str.c_str (), e.what ()));
-        return std::string ();
-    }
 }
 
 /**
