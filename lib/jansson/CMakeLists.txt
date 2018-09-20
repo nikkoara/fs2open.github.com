@@ -272,8 +272,9 @@ IF(FSO_BUILD_INCLUDED_LIBS OR NOT JANSSON_FOUND)
                     ${CMAKE_CURRENT_BINARY_DIR}/include/jansson_config.h)
 
     # Copy the jansson.h file to the public include folder
-    file (COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/jansson.h
-               DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/include/)
+    file (
+      COPY ${CMAKE_CURRENT_SOURCE_DIR}/jansson.h
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/include/)
 
     add_definitions(-DJANSSON_USING_CMAKE)
 
@@ -285,18 +286,18 @@ IF(FSO_BUILD_INCLUDED_LIBS OR NOT JANSSON_FOUND)
     add_definitions(-DHAVE_CONFIG_H)
 
     # Add the lib sources.
-    file(GLOB JANSSON_SRC src/*.c)
+    file(GLOB JANSSON_SRC *.c)
 
     set(JANSSON_HDR_PRIVATE
-       ${CMAKE_CURRENT_SOURCE_DIR}/src/hashtable.h
-       ${CMAKE_CURRENT_SOURCE_DIR}/src/jansson_private.h
-       ${CMAKE_CURRENT_SOURCE_DIR}/src/strbuffer.h
-       ${CMAKE_CURRENT_SOURCE_DIR}/src/utf.h
+       ${CMAKE_CURRENT_SOURCE_DIR}/hashtable.h
+       ${CMAKE_CURRENT_SOURCE_DIR}/jansson_private.h
+       ${CMAKE_CURRENT_SOURCE_DIR}/strbuffer.h
+       ${CMAKE_CURRENT_SOURCE_DIR}/utf.h
        ${CMAKE_CURRENT_BINARY_DIR}/private_include/jansson_private_config.h)
 
     set(JANSSON_HDR_PUBLIC
        ${CMAKE_CURRENT_BINARY_DIR}/include/jansson_config.h
-       ${CMAKE_CURRENT_SOURCE_DIR}/src/jansson.h)
+       ${CMAKE_CURRENT_SOURCE_DIR}/jansson.h)
 
     source_group("Library Sources" FILES ${JANSSON_SRC})
     source_group("Library Private Headers" FILES ${JANSSON_HDR_PRIVATE})

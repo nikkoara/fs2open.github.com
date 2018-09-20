@@ -21,18 +21,18 @@ AM_PROG_AS
 
 AC_CONFIG_WITH_RANGE3
 
-BOOST_REQUIRE([1.66.0])
+dnl BOOST_REQUIRE([1.66.0])
 
-BOOST_SMART_PTR
-BOOST_CHRONO
-BOOST_DATE_TIME
-BOOST_FILESYSTEM
-BOOST_LOG
-BOOST_PROGRAM_OPTIONS
-BOOST_SYSTEM
-BOOST_THREADS
-BOOST_TIMER
-BOOST_TEST
+dnl BOOST_SMART_PTR
+dnl BOOST_CHRONO
+dnl BOOST_DATE_TIME
+dnl BOOST_FILESYSTEM
+dnl BOOST_LOG
+dnl BOOST_PROGRAM_OPTIONS
+dnl BOOST_SYSTEM
+dnl BOOST_THREADS
+dnl BOOST_TIMER
+dnl BOOST_TEST
 
 AM_CONDITIONAL([DARWIN],[test `uname` == Darwin])
 AM_CONDITIONAL([LINUX], [test `uname` == Linux])
@@ -46,16 +46,16 @@ AC_CHECK_FUNCS([strlwr snprintf _snprintf])
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(etc/Makefile)
 
-dnl AC_CONFIG_FILES(src/lib/jansson/Makefile)
-dnl AC_CONFIG_FILES(src/lib/libjpeg/Makefile)
-dnl AC_CONFIG_FILES(src/lib/libpng/Makefile)
-dnl AC_CONFIG_FILES(src/lib/libsdl/Makefile)
-dnl AC_CONFIG_FILES(src/lib/lua/Makefile)
-dnl AC_CONFIG_FILES(src/lib/md5/Makefile)
-dnl AC_CONFIG_FILES(src/lib/mongoose/Makefile)
-dnl AC_CONFIG_FILES(src/lib/opengl/Makefile)
-dnl AC_CONFIG_FILES(src/lib/utfcpp/Makefile)
-dnl AC_CONFIG_FILES(src/lib/zlib/Makefile)
+dnl AC_CONFIG_FILES(lib/jansson/Makefile)
+dnl AC_CONFIG_FILES(lib/libjpeg/Makefile)
+dnl AC_CONFIG_FILES(lib/libpng/Makefile)
+dnl AC_CONFIG_FILES(lib/libsdl/Makefile)
+dnl AC_CONFIG_FILES(lib/lua/Makefile)
+dnl AC_CONFIG_FILES(lib/md5/Makefile)
+dnl AC_CONFIG_FILES(lib/mongoose/Makefile)
+dnl AC_CONFIG_FILES(lib/opengl/Makefile)
+dnl AC_CONFIG_FILES(lib/utfcpp/Makefile)
+dnl AC_CONFIG_FILES(lib/zlib/Makefile)
 
 AC_CONFIG_FILES(code/Makefile)
 AC_CONFIG_FILES(freespace2/Makefile)

@@ -2,5 +2,5 @@
 
 ACLOCAL_AMFLAGS = -I etc/m4
 
-SUBDIRS =										\
+SUBDIRS =                                       \
     code freespace2
