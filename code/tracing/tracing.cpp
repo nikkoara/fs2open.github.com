@@ -209,16 +209,11 @@ void init () {
     do_async_events = false;
     do_counter_events = false;
 
-    if (Cmdline_json_profiling) {
-        traceEventWriter.reset (new ThreadedTraceEventWriter ());
-        do_trace_events = true;
-        do_async_events = true;
-        do_counter_events = true;
-    }
     if (Cmdline_profile_write_file) {
         mainFrameTimer.reset (new ThreadedMainFrameTimer ());
         do_async_events = true;
     }
+
     if (Cmdline_frame_profile) {
         frameProfiler.reset (new FrameProfiler ());
         do_trace_events = true;

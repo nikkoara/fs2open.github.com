@@ -25,9 +25,6 @@
 #include "render/3d.h"
 #include "ShaderProgram.h"
 
-#include <md5.h>
-#include <jansson.h>
-
 std::vector< opengl_shader_t > GL_shader;
 
 GLuint Framebuffer_fallback_texture_id = 0;
@@ -696,207 +693,6 @@ static std::vector< std::string > opengl_get_shader_content (
     return parts;
 }
 
-static void
-add_shader_parts (MD5& md5, const std::vector< std::string >& parts) {
-    for (auto& part : parts) {
-        md5.update (part.c_str (), (MD5::size_type)part.size ());
-    }
-}
-
-static std::string get_shader_hash (
-    const std::vector< std::string >& vert,
-    const std::vector< std::string >& geom_content,
-    const std::vector< std::string >& frag) {
-    MD5 md5;
-    add_shader_parts (md5, vert);
-    add_shader_parts (md5, geom_content);
-    add_shader_parts (md5, frag);
-
-    // Add the attribute locations so that changes get detected
-    for (uint32_t i = 0; i < (uint32_t)GL_vertex_attrib_info.size (); ++i) {
-        md5.update (
-            GL_vertex_attrib_info[i].name.c_str (),
-            (MD5::size_type)GL_vertex_attrib_info[i].name.size ());
-        md5.update (reinterpret_cast< const char* > (&i), sizeof (i));
-    }
-
-    md5.update (
-        GL_implementation_id.data (),
-        (MD5::size_type)GL_implementation_id.size () *
-            sizeof (std::string::value_type));
-
-    md5.finalize ();
-
-    return md5.hexdigest ();
-}
-
-static bool do_shader_caching () {
-    if (!GLAD_GL_ARB_get_program_binary) {
-        // Not supported until OpenGL 4.1
-        return false;
-    }
-    if (Cmdline_noshadercache) {
-        // Shader cache is disabled
-        return false;
-    }
-    return true;
-}
-
-static bool load_cached_shader_binary (
-    opengl::ShaderProgram* program, const std::string& hash) {
-    if (!do_shader_caching ()) { return false; }
-
-    auto base_filename = std::string ("ogl_shader-") + hash;
-
-    auto metadata = base_filename + ".json";
-    auto binary = base_filename + ".bin";
-
-    auto metadata_fp = cfopen (
-        metadata.c_str (), "rb", CFILE_NORMAL, CF_TYPE_CACHE, false,
-        CF_LOCATION_ROOT_USER | CF_LOCATION_ROOT_GAME | CF_LOCATION_TYPE_ROOT);
-    if (!metadata_fp) {
-        nprintf (("ShaderCache", "Metadata file does not exist.\n"));
-        return false;
-    }
-
-    auto size = cfilelength (metadata_fp);
-    std::string metadata_content;
-    metadata_content.resize ((size_t)size);
-    cfread (&metadata_content[0], 1, size, metadata_fp);
-
-    cfclose (metadata_fp);
-
-    auto metadata_root = json_loads (metadata_content.c_str (), 0, nullptr);
-    if (!metadata_root) {
-        mprintf (
-            ("Loading of cache metadata failed! Falling back to GLSL "
-             "shader...\n"));
-        return false;
-    }
-
-    json_int_t format;
-    if (json_unpack (metadata_root, "{sI}", "format", &format) != 0) {
-        mprintf (
-            ("Failed to unpack values from metadata JSON! Falling back to "
-             "GLSL shader...\n"));
-        return false;
-    }
-    auto binary_format = (GLenum)format;
-    json_decref (metadata_root);
-
-    bool supported = false;
-    for (auto supported_fmt : GL_binary_formats) {
-        if ((GLenum)supported_fmt == binary_format) {
-            supported = true;
-            break;
-        }
-    }
-
-    if (!supported) {
-        // This can happen in case an implementation stops supporting a
-        // particular binary format
-        nprintf (
-            ("ShaderCache",
-             "Unsupported binary format %d encountered in shader cache.\n",
-             binary_format));
-        return false;
-    }
-
-    auto binary_fp = cfopen (
-        binary.c_str (), "rb", CFILE_NORMAL, CF_TYPE_CACHE, false,
-        CF_LOCATION_ROOT_USER | CF_LOCATION_ROOT_GAME | CF_LOCATION_TYPE_ROOT);
-    if (!binary_fp) {
-        nprintf (("ShaderCache", "Binary file does not exist.\n"));
-        return false;
-    }
-
-    GR_DEBUG_SCOPE ("Loading cached shader");
-
-    std::vector< uint8_t > buffer;
-    int length = cfilelength (binary_fp);
-    buffer.resize ((size_t)length);
-    cfread (&buffer[0], 1, length, binary_fp);
-
-    cfclose (binary_fp);
-
-    // Load the data!
-    glProgramBinary (
-        program->getShaderHandle (), binary_format, buffer.data (),
-        (GLsizei)buffer.size ());
-
-    // Check the status...
-    GLint status;
-    glGetProgramiv (program->getShaderHandle (), GL_LINK_STATUS, &status);
-
-    return status == GL_TRUE;
-}
-static int json_write_callback (const char* buffer, size_t size, void* data) {
-    CFILE* cfp = (CFILE*)data;
-
-    if ((size_t)cfwrite (buffer, 1, (int)size, cfp) != size) {
-        return -1; // Error
-    }
-    else {
-        return 0; // Success
-    }
-}
-
-static void cache_program_binary (GLuint program, const std::string& hash) {
-    if (!do_shader_caching ()) { return; }
-
-    GR_DEBUG_SCOPE ("Saving shader binary");
-
-    GLint size;
-    glGetProgramiv (program, GL_PROGRAM_BINARY_LENGTH, &size);
-
-    if (size <= 0) {
-        // No binary available (I'm looking at you Mesa...)
-        return;
-    }
-
-    std::vector< uint8_t > binary;
-    binary.resize ((size_t)size);
-    GLenum binary_fmt;
-    GLsizei length;
-    glGetProgramBinary (
-        program, (GLsizei)binary.size (), &length, &binary_fmt,
-        binary.data ());
-    if (length == 0) { return; }
-
-    auto base_filename = std::string ("ogl_shader-") + hash;
-
-    auto metadata_name = base_filename + ".json";
-    auto binary_name = base_filename + ".bin";
-
-    auto metadata_fp = cfopen (
-        metadata_name.c_str (), "wb", CFILE_NORMAL, CF_TYPE_CACHE, false,
-        CF_LOCATION_ROOT_USER | CF_LOCATION_ROOT_GAME | CF_LOCATION_TYPE_ROOT);
-    if (!metadata_fp) {
-        mprintf (("Could not open shader cache metadata file!\n"));
-        return;
-    }
-
-    auto metadata = json_pack ("{sI}", "format", (json_int_t)binary_fmt);
-    if (json_dump_callback (metadata, json_write_callback, metadata_fp, 0) !=
-        0) {
-        mprintf (("Failed to write shader cache metadata file!\n"));
-        cfclose (metadata_fp);
-        return;
-    }
-    cfclose (metadata_fp);
-    json_decref (metadata);
-
-    auto binary_fp = cfopen (
-        binary_name.c_str (), "wb", CFILE_NORMAL, CF_TYPE_CACHE, false,
-        CF_LOCATION_ROOT_USER | CF_LOCATION_ROOT_GAME | CF_LOCATION_TYPE_ROOT);
-    if (!binary_fp) {
-        mprintf (("Could not open shader cache binary file!\n"));
-        return;
-    }
-    cfwrite (binary.data (), 1, (int)binary.size (), binary_fp);
-    cfclose (binary_fp);
-}
-
 static void opengl_set_default_uniforms (const opengl_shader_t& sdr) {
     switch (sdr.shader) {
     case SDR_TYPE_DEFERRED_LIGHTING:
@@ -944,8 +740,10 @@ void opengl_compile_shader_actual (
 
     auto vert_content = opengl_get_shader_content (
         sdr_info->type_id, sdr_info->vert, flags, use_geo_sdr);
+
     auto frag_content = opengl_get_shader_content (
         sdr_info->type_id, sdr_info->frag, flags, use_geo_sdr);
+
     std::vector< std::string > geom_content;
 
     if (use_geo_sdr) {
@@ -954,69 +752,59 @@ void opengl_compile_shader_actual (
             sdr_info->type_id, sdr_info->geo, flags, use_geo_sdr);
     }
 
-    auto shader_hash =
-        get_shader_hash (vert_content, geom_content, frag_content);
     std::unique_ptr< opengl::ShaderProgram > program (
         new opengl::ShaderProgram (sdr_info->description));
 
-    if (!load_cached_shader_binary (program.get (), shader_hash)) {
-        GR_DEBUG_SCOPE ("Compiling shader code");
-        try {
+    GR_DEBUG_SCOPE ("Compiling shader code");
+
+    try {
+        program->addShaderCode (
+            opengl::STAGE_VERTEX, sdr_info->vert, vert_content);
+
+        program->addShaderCode (
+            opengl::STAGE_FRAGMENT, sdr_info->frag, frag_content);
+
+        if (use_geo_sdr) {
             program->addShaderCode (
-                opengl::STAGE_VERTEX, sdr_info->vert, vert_content);
-            program->addShaderCode (
-                opengl::STAGE_FRAGMENT, sdr_info->frag, frag_content);
-            if (use_geo_sdr) {
-                program->addShaderCode (
-                    opengl::STAGE_GEOMETRY, sdr_info->geo, geom_content);
-            }
-
-            for (size_t i = 0; i < GL_vertex_attrib_info.size (); ++i) {
-                // Check that the enum values match the position in the vector
-                // to make accessing that information more efficient
-                Assertion (
-                    GL_vertex_attrib_info[i].attribute_id == (int)i,
-                    "Mistmatch between enum values and attribute vector "
-                    "detected!");
-
-                // assign vert attribute binding locations before we link the
-                // shader
-                glBindAttribLocation (
-                    program->getShaderHandle (), (GLint)i,
-                    GL_vertex_attrib_info[i].name.c_str ());
-            }
-
-            // bind fragment data locations before we link the shader
-            glBindFragDataLocation (
-                program->getShaderHandle (), 0, "fragOut0");
-            glBindFragDataLocation (
-                program->getShaderHandle (), 1, "fragOut1");
-            glBindFragDataLocation (
-                program->getShaderHandle (), 2, "fragOut2");
-            glBindFragDataLocation (
-                program->getShaderHandle (), 3, "fragOut3");
-            glBindFragDataLocation (
-                program->getShaderHandle (), 4, "fragOut4");
-
-            if (do_shader_caching ()) {
-                // Enable shader caching
-                glProgramParameteri (
-                    program->getShaderHandle (),
-                    GL_PROGRAM_BINARY_RETRIEVABLE_HINT, GL_TRUE);
-            }
-
-            program->linkProgram ();
-        }
-        catch (const std::exception&) {
-            // Since all shaders are required a compilation failure is a fatal
-            // error
-            Error (
-                LOCATION,
-                "A shader failed to compile! Check the debug log for more "
-                "information.");
+                opengl::STAGE_GEOMETRY, sdr_info->geo, geom_content);
         }
 
-        cache_program_binary (program->getShaderHandle (), shader_hash);
+        for (size_t i = 0; i < GL_vertex_attrib_info.size (); ++i) {
+            // Check that the enum values match the position in the vector
+            // to make accessing that information more efficient
+            Assertion (
+                GL_vertex_attrib_info[i].attribute_id == (int)i,
+                "Mistmatch between enum values and attribute vector "
+                "detected!");
+
+            // assign vert attribute binding locations before we link the
+            // shader
+            glBindAttribLocation (
+                program->getShaderHandle (), (GLint)i,
+                GL_vertex_attrib_info[i].name.c_str ());
+        }
+
+        // bind fragment data locations before we link the shader
+        glBindFragDataLocation (
+            program->getShaderHandle (), 0, "fragOut0");
+        glBindFragDataLocation (
+            program->getShaderHandle (), 1, "fragOut1");
+        glBindFragDataLocation (
+            program->getShaderHandle (), 2, "fragOut2");
+        glBindFragDataLocation (
+            program->getShaderHandle (), 3, "fragOut3");
+        glBindFragDataLocation (
+            program->getShaderHandle (), 4, "fragOut4");
+
+        program->linkProgram ();
+    }
+    catch (const std::exception&) {
+        // Since all shaders are required a compilation failure is a fatal
+        // error
+        Error (
+            LOCATION,
+            "A shader failed to compile! Check the debug log for more "
+            "information.");
     }
 
     new_shader.shader = sdr_info->type_id;

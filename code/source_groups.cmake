@@ -917,12 +917,7 @@ add_file_folder("Physics"
 
 # PilotFile files
 add_file_folder("PilotFile"
-	pilotfile/BinaryFileHandler.cpp
-	pilotfile/BinaryFileHandler.h
 	pilotfile/csg.cpp
-	pilotfile/FileHandler.h
-	pilotfile/JSONFileHandler.cpp
-	pilotfile/JSONFileHandler.h
 	pilotfile/csg_convert.cpp
 	pilotfile/pilotfile.cpp
 	pilotfile/pilotfile.h

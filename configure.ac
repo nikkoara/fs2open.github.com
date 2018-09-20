@@ -46,7 +46,6 @@ AC_CHECK_FUNCS([strlwr snprintf _snprintf])
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(etc/Makefile)
 
-AC_CONFIG_FILES(lib/discord/Makefile)
 dnl AC_CONFIG_FILES(src/lib/jansson/Makefile)
 dnl AC_CONFIG_FILES(src/lib/libjpeg/Makefile)
 dnl AC_CONFIG_FILES(src/lib/libpng/Makefile)

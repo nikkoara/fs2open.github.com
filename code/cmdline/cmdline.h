@@ -132,7 +132,6 @@ extern bool Cmdline_gl_finish;
 extern bool Cmdline_no_geo_sdr_effects;
 extern bool Cmdline_set_cpu_affinity;
 extern bool Cmdline_nograb;
-extern bool Cmdline_noshadercache;
 #ifdef WIN32
 extern bool Cmdline_alternate_registry_path;
 #endif
@@ -155,8 +154,8 @@ extern bool Cmdline_profile_write_file;
 extern bool Cmdline_no_unfocus_pause;
 extern bool Cmdline_benchmark_mode;
 extern bool Cmdline_noninteractive;
-extern bool Cmdline_json_pilot;
-extern bool Cmdline_json_profiling;
+// extern bool Cmdline_json_pilot;
+// extern bool Cmdline_json_profiling;
 extern bool Cmdline_frame_profile;
 extern bool Cmdline_show_video_info;
 extern bool Cmdline_debug_window;

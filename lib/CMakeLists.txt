@@ -1,28 +1,23 @@
 
-include(prebuilt.cmake)
+INCLUDE(prebuilt.cmake)
 
 ADD_SUBDIRECTORY(libjpeg)
-
 ADD_SUBDIRECTORY(zlib)
-
 ADD_SUBDIRECTORY(libpng)
-
 ADD_SUBDIRECTORY(lua)
 
-include(OpenAL.cmake)
+INCLUDE(OpenAL.cmake)
 
-add_subdirectory(opengl)
-
+ADD_SUBDIRECTORY(opengl)
 ADD_SUBDIRECTORY(libsdl)
 
 ADD_SUBDIRECTORY(jansson)
-# These are only required for the web-ui which is non-Windows
+
 IF(UNIX)
-	ADD_SUBDIRECTORY(mongoose)
+  ADD_SUBDIRECTORY(mongoose)
 ENDIF(UNIX)
 
-add_subdirectory(md5)
+ADD_SUBDIRECTORY(md5)
+ADD_SUBDIRECTORY(utfcpp)
 
-add_subdirectory(utfcpp)
-
-include(FFmpeg.cmake)
+INCLUDE(FFmpeg.cmake)

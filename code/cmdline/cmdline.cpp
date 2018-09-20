@@ -41,13 +41,6 @@
 #include <cstdlib>
 #include <cstdio>
 
-#include <jansson.h>
-
-// Stupid windows workaround...
-#ifdef MessageBox
-#undef MessageBox
-#endif
-
 enum cmdline_arg_type { AT_NONE = 0, AT_INT, AT_FLOAT, AT_STRING };
 // values and order MUST match cmdline_arg_type
 const char* cmdline_arg_types[] = {
@@ -648,16 +641,6 @@ Flag exe_params[] = {
         "http://www.hard-light.net/wiki/index.php/"
         "Command-Line_Reference#-nograb",
     },
-    {
-        "-noshadercache",
-        "Disables the shader cache",
-        true,
-        0,
-        EASY_DEFAULT,
-        "Troubleshoot",
-        "http://www.hard-light.net/wiki/index.php/"
-        "Command-Line_Reference#-noshadercache",
-    },
 #ifdef WIN32
     {
         "-fix_registry",
@@ -909,26 +892,26 @@ Flag exe_params[] = {
         "http://www.hard-light.net/wiki/index.php/"
         "Command-Line_Reference#-noninteractive",
     },
-    {
-        "-json_pilot",
-        "Dump pilot files in JSON format",
-        true,
-        0,
-        EASY_DEFAULT,
-        "Dev Tool",
-        "http://www.hard-light.net/wiki/index.php/"
-        "Command-Line_Reference#-json_pilot",
-    },
-    {
-        "-json_profiling",
-        "Generate JSON profiling output",
-        true,
-        0,
-        EASY_DEFAULT,
-        "Dev Tool",
-        "http://www.hard-light.net/wiki/index.php/"
-        "Command-Line_Reference#-json_profiling",
-    },
+    // {
+    //     "-json_pilot",
+    //     "Dump pilot files in JSON format",
+    //     true,
+    //     0,
+    //     EASY_DEFAULT,
+    //     "Dev Tool",
+    //     "http://www.hard-light.net/wiki/index.php/"
+    //     "Command-Line_Reference#-json_pilot",
+    // },
+    // {
+    //     "-json_profiling",
+    //     "Generate JSON profiling output",
+    //     true,
+    //     0,
+    //     EASY_DEFAULT,
+    //     "Dev Tool",
+    //     "http://www.hard-light.net/wiki/index.php/"
+    //     "Command-Line_Reference#-json_profiling",
+    // },
     {
         "-profile_frame_time",
         "Profile engine subsystems",
@@ -1228,7 +1211,6 @@ cmdline_parm gl_finish ("-gl_finish", NULL, AT_NONE);
 cmdline_parm no_geo_sdr_effects ("-no_geo_effects", NULL, AT_NONE);
 cmdline_parm set_cpu_affinity ("-set_cpu_affinity", NULL, AT_NONE);
 cmdline_parm nograb_arg ("-nograb", NULL, AT_NONE);
-cmdline_parm noshadercache_arg ("-noshadercache", NULL, AT_NONE);
 #ifdef WIN32
 cmdline_parm fix_registry ("-fix_registry", NULL, AT_NONE);
 #endif
@@ -1246,7 +1228,6 @@ bool Cmdline_gl_finish = false;
 bool Cmdline_no_geo_sdr_effects = false;
 bool Cmdline_set_cpu_affinity = false;
 bool Cmdline_nograb = false;
-bool Cmdline_noshadercache = false;
 #ifdef WIN32
 bool Cmdline_alternate_registry_path = false;
 #endif
@@ -1295,9 +1276,9 @@ cmdline_parm benchmark_mode_arg (
     "-benchmark_mode", NULL, AT_NONE); // Cmdline_benchmark_mode
 cmdline_parm noninteractive_arg (
     "-noninteractive", NULL, AT_NONE); // Cmdline_noninteractive
-cmdline_parm json_pilot ("-json_pilot", NULL, AT_NONE); // Cmdline_json_pilot
-cmdline_parm json_profiling (
-    "-json_profiling", NULL, AT_NONE); // Cmdline_json_profiling
+// cmdline_parm json_pilot ("-json_pilot", NULL, AT_NONE); // Cmdline_json_pilot
+// cmdline_parm json_profiling (
+//     "-json_profiling", NULL, AT_NONE); // Cmdline_json_profiling
 cmdline_parm show_video_info (
     "-show_video_info", NULL, AT_NONE); // Cmdline_show_video_info
 cmdline_parm frame_profile_arg (
@@ -1329,15 +1310,13 @@ bool Cmdline_profile_write_file = false;
 bool Cmdline_no_unfocus_pause = false;
 bool Cmdline_benchmark_mode = false;
 bool Cmdline_noninteractive = false;
-bool Cmdline_json_pilot = false;
-bool Cmdline_json_profiling = false;
+// bool Cmdline_json_pilot = false;
+// bool Cmdline_json_profiling = false;
 bool Cmdline_frame_profile = false;
 bool Cmdline_show_video_info = false;
 bool Cmdline_debug_window = false;
 
 // Other
-cmdline_parm
-    get_flags_arg ("-get_flags", "Output the launcher flags file", AT_STRING);
 cmdline_parm output_sexp_arg (
     "-output_sexps", NULL, AT_NONE); // WMC - outputs all SEXPs to sexps.html
 cmdline_parm output_scripting_arg ("-output_scripting", NULL, AT_NONE); // WMC
@@ -2085,313 +2064,12 @@ static void handle_unix_modlist (char** modlist, size_t* len) {
 }
 #endif /* SCP_UNIX */
 
-// external entry point into this modules
-
-static json_t* json_get_v1 () {
-    auto root = json_object ();
-
-    {
-        auto version_obj = json_object ();
-
-        json_object_set_new (
-            version_obj, "full", json_string (FS_VERSION_FULL));
-        json_object_set_new (
-            version_obj, "major", json_integer (FS_VERSION_MAJOR));
-        json_object_set_new (
-            version_obj, "minor", json_integer (FS_VERSION_MINOR));
-        json_object_set_new (
-            version_obj, "build", json_integer (FS_VERSION_BUILD));
-
-        json_object_set_new (
-            version_obj, "has_revision", json_boolean (FS_VERSION_HAS_REVIS));
-        json_object_set_new (
-            version_obj, "revision", json_integer (FS_VERSION_REVIS));
-        json_object_set_new (
-            version_obj, "revision_str", json_string (FS_VERSION_REVIS_STR));
-
-        json_object_set_new (root, "version", version_obj);
-    }
-    {
-        auto easy_array = json_array ();
-
-        for (auto& easy_flag : easy_flags) {
-            json_array_append_new (easy_array, json_string (easy_flag.name));
-        }
-
-        json_object_set_new (root, "easy_flags", easy_array);
-    }
-    {
-        auto flags_array = json_array ();
-
-        for (auto& flag : exe_params) {
-            auto flag_obj = json_object ();
-
-            json_object_set_new (flag_obj, "name", json_string (flag.name));
-            json_object_set_new (
-                flag_obj, "description", json_string (flag.desc));
-            json_object_set_new (
-                flag_obj, "fso_only", json_boolean (flag.fso_only));
-            json_object_set_new (
-                flag_obj, "on_flags", json_integer (flag.on_flags));
-            json_object_set_new (
-                flag_obj, "off_flags", json_integer (flag.off_flags));
-            json_object_set_new (flag_obj, "type", json_string (flag.type));
-            json_object_set_new (
-                flag_obj, "web_url", json_string (flag.web_url));
-
-            json_array_append_new (flags_array, flag_obj);
-        }
-
-        json_object_set_new (root, "flags", flags_array);
-    }
-    {
-        auto caps_array = json_array ();
-
-        json_array_append_new (caps_array, json_string ("OpenAL"));
-        json_array_append_new (caps_array, json_string ("No D3D"));
-        json_array_append_new (caps_array, json_string ("New Sound"));
-        json_array_append_new (caps_array, json_string ("SDL"));
-
-        json_object_set_new (root, "caps", caps_array);
-    }
-    {
-        auto voices_array = json_array ();
-
-        auto voices = speech_enumerate_voices ();
-
-        for (auto& voice : voices) {
-            json_array_append_new (voices_array, json_string (voice.c_str ()));
-        }
-
-        json_object_set_new (root, "voices", voices_array);
-    }
-    {
-        auto resolution_array = json_array ();
-
-        auto displays = gr_enumerate_displays ();
-
-        for (auto& display : displays) {
-            auto display_obj = json_object ();
-
-            json_object_set_new (
-                display_obj, "index", json_integer (display.index));
-            json_object_set_new (
-                display_obj, "name", json_string (display.name.c_str ()));
-
-            json_object_set_new (display_obj, "x", json_integer (display.x));
-            json_object_set_new (display_obj, "y", json_integer (display.y));
-            json_object_set_new (
-                display_obj, "width", json_integer (display.width));
-            json_object_set_new (
-                display_obj, "height", json_integer (display.height));
-
-            auto modes_array = json_array ();
-
-            for (auto& mode : display.video_modes) {
-                auto mode_obj = json_object ();
-
-                json_object_set_new (mode_obj, "x", json_integer (mode.width));
-                json_object_set_new (
-                    mode_obj, "y", json_integer (mode.height));
-                json_object_set_new (
-                    mode_obj, "bits", json_integer (mode.bit_depth));
-
-                json_array_append_new (modes_array, mode_obj);
-            }
-
-            json_object_set_new (display_obj, "modes", modes_array);
-
-            json_array_append_new (resolution_array, display_obj);
-        }
-
-        json_object_set_new (root, "displays", resolution_array);
-    }
-    {
-        auto openal_obj = json_object ();
-
-        auto openal_info = openal_get_platform_information ();
-
-        json_object_set_new (
-            openal_obj, "version_major",
-            json_integer (openal_info.version_major));
-        json_object_set_new (
-            openal_obj, "version_minor",
-            json_integer (openal_info.version_minor));
-
-        json_object_set (
-            openal_obj, "default_playback",
-            json_string (openal_info.default_playback_device.c_str ()));
-        json_object_set (
-            openal_obj, "default_capture",
-            json_string (openal_info.default_capture_device.c_str ()));
-
-        {
-            auto playback_array = json_array ();
-
-            for (auto& device : openal_info.playback_devices) {
-                json_array_append_new (
-                    playback_array, json_string (device.c_str ()));
-            }
-
-            json_object_set_new (
-                openal_obj, "playback_devices", playback_array);
-        }
-        {
-            auto capture_array = json_array ();
-
-            for (auto& device : openal_info.capture_devices) {
-                json_array_append_new (
-                    capture_array, json_string (device.c_str ()));
-            }
-
-            json_object_set_new (openal_obj, "capture_devices", capture_array);
-        }
-        {
-            auto efx_support_obj = json_object ();
-
-            for (auto& pair : openal_info.efx_support) {
-                json_object_set_new (
-                    efx_support_obj, pair.first.c_str (),
-                    json_boolean (pair.second));
-            }
-
-            json_object_set_new (openal_obj, "efx_support", efx_support_obj);
-        }
-
-        json_object_set_new (root, "openal", openal_obj);
-    }
-    {
-        auto joystick_array = json_array ();
-
-        auto joysticks = io::joystick::getJoystickInformations ();
-        for (auto& info : joysticks) {
-            auto joystick_obj = json_object ();
-
-            json_object_set_new (
-                joystick_obj, "name", json_string (info.name.c_str ()));
-            json_object_set_new (
-                joystick_obj, "guid", json_string (info.guid.c_str ()));
-
-            json_object_set_new (
-                joystick_obj, "num_axes", json_integer (info.num_axes));
-            json_object_set_new (
-                joystick_obj, "num_balls", json_integer (info.num_balls));
-            json_object_set_new (
-                joystick_obj, "num_buttons", json_integer (info.num_buttons));
-            json_object_set_new (
-                joystick_obj, "num_hats", json_integer (info.num_hats));
-
-            json_object_set_new (
-                joystick_obj, "is_haptic", json_boolean (info.is_haptic));
-
-            json_array_append_new (joystick_array, joystick_obj);
-        }
-
-        json_object_set_new (root, "joysticks", joystick_array);
-    }
-    {
-        json_object_set_new (
-            root, "pref_path", json_string (os_get_config_path ().c_str ()));
-    }
-
-    return root;
-}
-
-static void write_flags_file () {
-    FILE* fp = fopen ("flags.lch", "w");
-
-    if (fp == NULL) {
-        os::dialogs::Message (
-            os::dialogs::MESSAGEBOX_ERROR,
-            "Error creating flag list for launcher");
-        return;
-    }
-
-    int easy_flag_size = sizeof (EasyFlag);
-    int flag_size = sizeof (Flag);
-
-    int num_easy_flags = sizeof (easy_flags) / easy_flag_size;
-    int num_flags = sizeof (exe_params) / flag_size;
-
-    // Launcher will check its using structures of the same size
-    fwrite (&easy_flag_size, sizeof (int), 1, fp);
-    fwrite (&flag_size, sizeof (int), 1, fp);
-
-    fwrite (&num_easy_flags, sizeof (int), 1, fp);
-    fwrite (&easy_flags, sizeof (easy_flags), 1, fp);
-
-    fwrite (&num_flags, sizeof (int), 1, fp);
-    fwrite (&exe_params, sizeof (exe_params), 1, fp);
-
-    {
-        // cheap and bastardly cap check for builds
-        // (needs to be compatible with older Launchers, which means having
-        //  this implies an OpenAL build for old Launchers)
-        ubyte build_caps = 0;
-
-        /* portej05 defined this always */
-        build_caps |= BUILD_CAPS_OPENAL;
-        build_caps |= BUILD_CAPS_NO_D3D;
-        build_caps |= BUILD_CAPS_NEW_SND;
-        build_caps |= BUILD_CAPS_SDL;
-
-        fwrite (&build_caps, 1, 1, fp);
-    }
-
-    fflush (fp);
-    fclose (fp);
-}
-
-static flag_output_type get_flags_output_type () {
-    Assertion (
-        get_flags_arg.found (),
-        "This function is only valid if -get_flags is present!");
-
-    if (!get_flags_arg.has_param ()) {
-        // Default to binary mode
-        return flag_output_type::Binary;
-    }
-
-    std::string type (get_flags_arg.str ());
-
-    if (type == "binary") { return flag_output_type::Binary; }
-    else if (type == "json_v1") {
-        return flag_output_type::Json_V1;
-    }
-    else {
-        // This is supposed to make it easy for the launcher to recognize an
-        // unsupported type
-        printf ("OUTPUT TYPE NOT SUPPORTED!\n");
-        // Default to json in this case so that no flags.lch file is created
-        return flag_output_type::Json_V1;
-    }
-}
-
-static void write_flags () {
-    auto type = get_flags_output_type ();
-    switch (type) {
-    case flag_output_type::Binary: write_flags_file (); break;
-    case flag_output_type::Json_V1:
-        json_t* root = json_get_v1 ();
-
-        json_dumpf (root, stdout, JSON_INDENT (4));
-        json_decref (root);
-        break;
-    }
-}
-
-bool SetCmdlineParams ()
 // Sets externed variables used for communication cmdline information
-{
+bool SetCmdlineParams () {
     // getcwd(FreeSpace_Directory, 256); // set the directory to our fs2 root
 
     // DO THIS FIRST to avoid unrecognized flag warnings when just getting flag
     // file
-    if (get_flags_arg.found ()) {
-        write_flags ();
-
-        return false;
-    }
 
     if (no_fpscap.found ()) { Cmdline_NoFPSCap = 1; }
 
@@ -2685,8 +2363,6 @@ bool SetCmdlineParams ()
 
     if (nograb_arg.found ()) { Cmdline_nograb = true; }
 
-    if (noshadercache_arg.found ()) { Cmdline_noshadercache = true; }
-
     if (portable_mode.found ()) { Cmdline_portable_mode = true; }
 
 #ifdef WIN32
@@ -2765,9 +2441,9 @@ bool SetCmdlineParams ()
 
     if (noninteractive_arg.found ()) { Cmdline_noninteractive = true; }
 
-    if (json_pilot.found ()) { Cmdline_json_pilot = true; }
+    // if (json_pilot.found ()) { Cmdline_json_pilot = true; }
 
-    if (json_profiling.found ()) { Cmdline_json_profiling = true; }
+    // if (json_profiling.found ()) { Cmdline_json_profiling = true; }
 
     if (frame_profile_arg.found ()) { Cmdline_frame_profile = true; }
 

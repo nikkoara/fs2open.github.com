@@ -21,7 +21,7 @@ pilotfile::~pilotfile () {
     if (cfp) { cfclose (cfp); }
 }
 
-void pilotfile::startSection (Section section_id) {
+void pilotfile::startSection (Section::id section_id) {
     Assert (cfp);
 
     const int zero = 0;
