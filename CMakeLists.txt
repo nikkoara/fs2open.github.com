@@ -77,7 +77,7 @@ ENDIF(RESET_INSTALL_PREFIX)
 
 IF(UNIX)
   option(FSO_BUILD_APPIMAGE "Build an AppImage package" OFF)
-ENDIF(WIN32)
+ENDIF(UNIX)
 
 OPTION(FSO_DEVELOPMENT_MODE "Generate binaries in development mode, only use if you know what you're doing!" OFF)
 
@@ -143,11 +143,6 @@ endif()
 
 IF(MSVC_USE_RUNTIME_DLL)
   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "${BINARY_DESTINATION}")
-
-  IF(FSO_BUILD_FRED2)
-    SET(CMAKE_INSTALL_MFC_LIBRARIES ON)
-  ENDIF(FSO_BUILD_FRED2)
-
   INCLUDE(InstallRequiredSystemLibraries)
 ENDIF(MSVC_USE_RUNTIME_DLL)
 
@@ -159,10 +154,8 @@ include(doxygen)
 IF (WIN32)
   message(STATUS "Using text to speech: ${FSO_USE_SPEECH}")
   message(STATUS "Using voice recogition: ${FSO_USE_VOICEREC}")
-  message(STATUS "Building FRED2: ${FSO_BUILD_FRED2}")
 elseif(UNIX)
   message(STATUS "Building AppImage: ${FSO_BUILD_APPIMAGE}")
 ENDIF()
 message(STATUS "Building FSO tools: ${FSO_BUILD_TOOLS}")
-message(STATUS "Building qtFRED: ${FSO_BUILD_QTFRED}")
 message(STATUS "Fatal warnings: ${FSO_FATAL_WARNINGS}")
