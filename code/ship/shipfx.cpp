@@ -1532,9 +1532,9 @@ void shipfx_emit_spark (int n, int sn) {
 
     // WMC - I have two options here:
     //(A)	Break backwards compatibility and nobody will ever notice (but for
-    //this comment) (B)	implement some hackish workaround with the new
-    //warpeffect system just for this 		utterly minor and trivial
-    //optimization/graphical thing (C)	Contact me if (A) is REALLY necessary
+    // this comment) (B)	implement some hackish workaround with the new
+    // warpeffect system just for this 		utterly minor and trivial
+    // optimization/graphical thing (C)	Contact me if (A) is REALLY necessary
     //
     // phreak: Mantis 1676 - Re-enable warpout clipping.
 
@@ -1630,7 +1630,7 @@ void shipfx_emit_spark (int n, int sn) {
             pe.num_high = pef.n_high;
             pe.normal_variance =
                 pef.variance; //	How close they stick to that normal 0=good,
-                              //1=360 degree
+                              // 1=360 degree
             pe.min_life = pef.min_life; // How long the particles live
             pe.max_life = pef.max_life; // How long the particles live
 
@@ -2335,7 +2335,7 @@ maybe_fireball_wipe (clip_ship* half_ship, sound_handle* handle_array) {
             pe.normal = vmd_x_vector; // What normal the particle emit around
             pe.normal_variance =
                 pef.variance; //	How close they stick to that normal 0=on
-                              //normal, 1=180, 2=360 degree
+                              // normal, 1=180, 2=360 degree
 
             if (pef.max_vel > 0.0f) {
                 pe.min_vel = pef.min_vel;

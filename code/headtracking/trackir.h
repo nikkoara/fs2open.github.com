@@ -6,22 +6,20 @@
 #include "headtracking/headtracking_internal.h"
 #include "headtracking/trackirpublic.h"
 
-namespace headtracking
-{
-	namespace trackir
-	{
-		class TrackIRProvider : public internal::HeadTrackingProvider
-		{
-			TrackIRDLL _trackIRDll;
-		public:
-			TrackIRProvider();
-			virtual ~TrackIRProvider();
+namespace headtracking {
+namespace trackir {
+class TrackIRProvider : public internal::HeadTrackingProvider {
+    TrackIRDLL _trackIRDll;
 
-			bool query(HeadTrackingStatus* statusOut) override;
+public:
+    TrackIRProvider ();
+    virtual ~TrackIRProvider ();
 
-			static std::string getName();
-		};
-	}
-}
+    bool query (HeadTrackingStatus* statusOut) override;
+
+    static std::string getName ();
+};
+} // namespace trackir
+} // namespace headtracking
 
 #endif // HEADTRACKING_TRACKIR_H

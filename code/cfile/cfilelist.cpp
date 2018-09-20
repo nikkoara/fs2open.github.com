@@ -331,7 +331,7 @@ int cf_compress (char* out, char* in, int bytecount) {
 }
 
 //	cf_decompress - Do Decompression on a run-length encoded block of data.
-//Targa format.
+// Targa format.
 //
 //	Usage:
 //				out			Buffer to write it out to

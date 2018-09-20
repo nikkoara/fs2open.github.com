@@ -13,21 +13,19 @@
  *  @ingroup tracing
  */
 
-namespace tracing
-{
-class TraceEventWriter
-{
-	std::ofstream _out;
-	bool _first_line = true;
+namespace tracing {
+class TraceEventWriter {
+    std::ofstream _out;
+    bool _first_line = true;
 
 public:
-	TraceEventWriter();
-	~TraceEventWriter();
+    TraceEventWriter ();
+    ~TraceEventWriter ();
 
-	void processEvent(const trace_event* event);
+    void processEvent (const trace_event* event);
 };
 
-typedef ThreadedEventProcessor<TraceEventWriter> ThreadedTraceEventWriter;
-}
+typedef ThreadedEventProcessor< TraceEventWriter > ThreadedTraceEventWriter;
+} // namespace tracing
 
 #endif // _TRACEEVENTWRITER_H

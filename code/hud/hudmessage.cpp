@@ -102,8 +102,8 @@ static int Hud_mission_log_time2_coords[GR_NUM_RESOLUTIONS][2] = {
 
 #define HUD_MSG_LENGTH_MAX 2048
 //#define HUD_MSG_MAX_PIXEL_W	439	// maximum number of pixels wide message
-//display area is #define HUD_MSG_MAX_PIXEL_W	619	// maximum number of pixels
-//wide message display area is
+// display area is #define HUD_MSG_MAX_PIXEL_W	619	// maximum number of pixels
+// wide message display area is
 
 /* not used anymore
 static int Hud_mission_log_status_coords[GR_NUM_RESOLUTIONS][2] = {
@@ -450,7 +450,7 @@ void HudGaugeMessages::render (float /*frametime*/) {
 }
 
 //	Similar to HUD printf, but shows only one message at a time, at a fixed
-//location.
+// location.
 void HUD_fixed_printf (float duration, color col, const char* format, ...) {
     va_list args;
     char tmp[HUD_MSG_LENGTH_MAX];

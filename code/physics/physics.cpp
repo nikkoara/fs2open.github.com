@@ -41,7 +41,7 @@
 #define REDUCED_DAMP_TIME 2000 // ms (2.0 sec)
 #define WEAPON_SHAKE_TIME \
     500 //	ms (0.5 sec)	viewer shake time after hit by weapon (implemented
-        //via afterburner shake)
+        // via afterburner shake)
 #define SPECIAL_WARP_T_CONST \
     0.651 // special warp time constant (loose 99 % of excess speed in 3 sec)
 
@@ -285,8 +285,8 @@ void physics_sim_vel (
 
     //	Maybe clear the reduced_damp flag.
     //	This fixes the problem of the player getting near-instantaneous
-    //acceleration under unknown circumstances. 	The larger problem is probably
-    //that PF_USE_VEL is getting stuck set.
+    // acceleration under unknown circumstances. 	The larger problem is
+    // probably that PF_USE_VEL is getting stuck set.
     if ((pi->flags & PF_REDUCED_DAMP) &&
         (timestamp_elapsed (pi->reduced_damp_decay))) {
         pi->flags &= ~PF_REDUCED_DAMP;
@@ -426,7 +426,7 @@ void physics_sim (
 
         pi->speed =
             vm_vec_mag (&pi->vel); //	Note, cannot use quick version, causes
-                                   //cumulative error, increasing speed.
+                                   // cumulative error, increasing speed.
         pi->fspeed = vm_vec_dot (
             &orient->vec.fvec,
             &pi->vel); // instead of vector magnitude -- use only forward
@@ -604,7 +604,7 @@ void physics_read_flying_controls (
     //	To change direction of bank, negate the whole expression.
     //	To increase magnitude of banking, decrease denominator.
     //	Adam: The following statement is all the math for banking while
-    //turning.
+    // turning.
     delta_bank = -(ci->heading * pi->max_rotvel.xyz.y) * pi->delta_bank_const;
 #else
     delta_bank = 0.0f;
@@ -777,8 +777,8 @@ void physics_read_flying_controls (
             pi->desired_vel = pi->vel;
 
             // SUSHI: A (hopefully better) approach to dealing with
-            // accelerations in glide mode Get *actual* current velocities along
-            // each axis and use those instead of ramped velocities
+            // accelerations in glide mode Get *actual* current velocities
+            // along each axis and use those instead of ramped velocities
             vec3d local_vel;
             vm_vec_rotate (&local_vel, &pi->vel, orient);
 
@@ -909,15 +909,16 @@ void physics_set_rotvel_and_saturate (float* dest, float delta) {
 // both the objects velocity and the rotational velocity based on the impulse
 // being applied.
 //
-//	input:	impulse		=>		impulse vector ( force*time = impulse = change in
-//momentum (mv) )
-//				pos			=>		vector from center of mass to location of where the
-//force acts 				pi				=>		pointer to phys_info struct of object
-//getting whacked
-//				orient		=>		orientation matrix (needed to set rotational impulse
-//in body coords)
-//				mass			=>		mass of the object (may be different from pi.mass if
-//docked)
+//	input:	impulse		=>		impulse vector ( force*time = impulse = change
+// in momentum (mv) )
+//				pos			=>		vector from center of mass to location of
+//where the
+// force acts 				pi				=>		pointer to phys_info struct
+// of
+// object getting whacked 				orient		=>		orientation matrix (needed to
+// set
+// rotational impulse in body coords) 				mass			=>		mass of the
+// object (may be different from pi.mass if docked)
 //
 #define WHACK_LIMIT 0.001f
 #define ROTVEL_WHACK_CONST 0.12
@@ -1044,16 +1045,16 @@ float glide_ramp (
 // physics_apply_whack since a shock wave is a pressure wave which acts over
 // the *surface* of the object, not a point.
 //
-// inputs:	direction_vec		=>		a position vector whose direction is from the
-// center of the shock wave to the object
-//				pressure				=>		the pressure of the shock wave at the
-//object 				pi						=>		physics_info structure
-//				orient				=>		matrix orientation of the object
-//				min					=>		vector of minimum values of the bounding
-//box 				max					=>		vector of maximum values of the bounding
-//box
-//				radius				=>		bounding box radius of the object, used for
-//scaling rotation
+// inputs:	direction_vec		=>		a position vector whose direction is
+// from the center of the shock wave to the object
+//				pressure				=>		the pressure of the shock wave
+//at the object 				pi						=>		physics_info
+// structure 				orient				=>		matrix orientation of the object
+// min
+//=>		vector of minimum values of the bounding box 				max
+// =>		vector of maximum values of the bounding box 				radius
+// =>
+// bounding box radius of the object, used for scaling rotation
 //
 // outputs:	makes changes to physics_info structure rotvel and vel variables
 //
@@ -1198,11 +1199,12 @@ void physics_apply_shock (
 // both the objects velocity and the rotational velocity based on the impulse
 // being applied.
 //
-//	input:	impulse					=>		impulse vector ( force*time = impulse =
-//change in momentum (mv) ) 				world_delta_rotvel	=>		change in rotational
-//velocity (already calculated) 				pi							=>		pointer to
-//phys_info struct of object getting whacked 				orient					=>
-//orientation matrix (needed to set rotational impulse in body coords)
+//	input:	impulse					=>		impulse vector ( force*time =
+//impulse = change in momentum (mv) ) 				world_delta_rotvel	=>
+// change in rotational
+// velocity (already calculated) 				pi							=>
+// pointer to phys_info struct of object getting whacked 				orient
+// => orientation matrix (needed to set rotational impulse in body coords)
 //
 
 // Warning:  Do not change ROTVEL_COLLIDE_WHACK_CONST.  This will mess up
@@ -1270,7 +1272,7 @@ int check_rotvel_limit (physics_info* pi) {
         // (pi->max_rotvel.xyz.y <= ROTVEL_CAP) && (pi->max_rotvel.xyz.z <=
         // ROTVEL_CAP) );
         //		Warning(LOCATION,"Excessive rotvel (wx: %f, wy: %f, wz:%f)\n",
-        //pi->rotvel.xyz.x, pi->rotvel.xyz.y, pi->rotvel.xyz.z);
+        // pi->rotvel.xyz.x, pi->rotvel.xyz.y, pi->rotvel.xyz.z);
         if (fl_abs (pi->rotvel.xyz.x) > pi->max_rotvel.xyz.x) {
             pi->rotvel.xyz.x = (pi->rotvel.xyz.x / fl_abs (pi->rotvel.xyz.x)) *
                                (pi->max_rotvel.xyz.x - (float)ROTVEL_TOL);

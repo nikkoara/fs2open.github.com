@@ -12,42 +12,39 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_OBJ(l_Vector, vec3d);
+DECLARE_ADE_OBJ (l_Vector, vec3d);
 
-//WMC - Due to the exorbitant times required to store matrix data,
-//I initially store the matrix in this struct.
-enum class MatrixState {
-	Fine,
-	MatrixOutOfdate,
-	AnglesOutOfDate
-};
+// WMC - Due to the exorbitant times required to store matrix data,
+// I initially store the matrix in this struct.
+enum class MatrixState { Fine, MatrixOutOfdate, AnglesOutOfDate };
 struct matrix_h {
- private:
-	MatrixState status;
+private:
+    MatrixState status;
 
-	matrix mtx;
-	angles ang;
+    matrix mtx;
+    angles ang;
 
-	//WMC - Call these to make sure what you want
-	//is up to date
-	void ValidateAngles();
+    // WMC - Call these to make sure what you want
+    // is up to date
+    void ValidateAngles ();
 
-	void ValidateMatrix();
- public:
-	matrix_h();
-	explicit matrix_h(matrix* in);
-	explicit matrix_h(angles* in);
+    void ValidateMatrix ();
 
-	angles* GetAngles();
+public:
+    matrix_h ();
+    explicit matrix_h (matrix* in);
+    explicit matrix_h (angles* in);
 
-	matrix* GetMatrix();
+    angles* GetAngles ();
 
-	void SetStatus(MatrixState n_status);
+    matrix* GetMatrix ();
+
+    void SetStatus (MatrixState n_status);
 };
 
-DECLARE_ADE_OBJ(l_Matrix, matrix_h);
+DECLARE_ADE_OBJ (l_Matrix, matrix_h);
 
-}
-}
+} // namespace api
+} // namespace scripting
 
-#endif //FS2_OPEN_VECMATH_H
+#endif // FS2_OPEN_VECMATH_H

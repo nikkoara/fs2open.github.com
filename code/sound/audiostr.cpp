@@ -264,8 +264,8 @@ bool AudioStream::Create (char* pszFilename) {
                 m_cbBufSize =
                     (m_cbBufSize > BIGBUF_SIZE) ? BIGBUF_SIZE : m_cbBufSize;
 
-                //				nprintf(("SOUND", "SOUND => Stream buffer created
-                //using %d bytes\n", m_cbBufSize));
+                //				nprintf(("SOUND", "SOUND => Stream buffer
+                // created using %d bytes\n", m_cbBufSize));
 
                 OpenAL_ErrorCheck (alGenSources (1, &m_source_id), {
                     fRtn = false;
@@ -546,7 +546,7 @@ bool AudioStream::ServiceBuffer (void) {
 
         if (WriteWaveData (dwFreeSpace, &num_bytes_written) == true) {
             //			nprintf(("Alan","Num bytes written: %d\n",
-            //num_bytes_written));
+            // num_bytes_written));
 
             if (m_total_uncompressed_bytes_read >=
                 m_max_uncompressed_bytes_to_read) {

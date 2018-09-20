@@ -1025,8 +1025,8 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
 
     //	Read the model file.  It can be a POF file or none.
     //	If there is no model file (Model file: = "none") then we use our
-    //special 	laser renderer which requires inner, middle and outer
-    //information.
+    // special 	laser renderer which requires inner, middle and outer
+    // information.
     if (optional_string ("$Model file:")) {
         stuff_string (wip->pofbitmap_name, F_NAME, MAX_FILENAME_LEN);
 
@@ -4209,9 +4209,9 @@ void find_homing_object (object* weapon_objp, int num) {
 
                     //	MK, 9/4/99.
                     //	If this is a player object, make sure there aren't
-                    //already too many homers. 	Only in single player.  In
-                    //multiplayer, we don't want to restrict it in dogfight on
-                    //team vs. team. 	For co-op, it's probably also OK.
+                    // already too many homers. 	Only in single player.  In
+                    // multiplayer, we don't want to restrict it in dogfight on
+                    // team vs. team. 	For co-op, it's probably also OK.
                     if (!(Game_mode & GM_MULTIPLAYER)) {
                         int num_homers = compute_num_homing_objects (objp);
                         if (The_mission.ai_profile
@@ -4662,7 +4662,7 @@ void weapon_home (object* obj, int num, float frame_time) {
     }
 
     //	See if this weapon is the nearest homing object to the object it is
-    //homing on. 	If so, update some fields in the target object's ai_info.
+    // homing on. 	If so, update some fields in the target object's ai_info.
     if (hobjp != &obj_used_list) {
         float dist;
 
@@ -4693,8 +4693,8 @@ void weapon_home (object* obj, int num, float frame_time) {
         // need to calculate the world coordinates of that subsystem so the
         // homing missile can seek it out.
         //	For now, March 7, 1997, MK, heat seeking homing missiles will be
-        //able to home on 	any subsystem.  Probably makes sense for them to only
-        //home on certain kinds of subsystems.
+        // able to home on 	any subsystem.  Probably makes sense for them to
+        // only home on certain kinds of subsystems.
         if ((wp->homing_subsys != NULL) &&
             !(wip->wi_flags[Weapon::Info_Flags::Non_subsys_homing]) &&
             hobjp->type == OBJ_SHIP) {
@@ -4713,7 +4713,7 @@ void weapon_home (object* obj, int num, float frame_time) {
                 (hobj_infop->wi_flags[Weapon::Info_Flags::Cmeasure])) {
                 if (dist < hobj_infop->cm_detonation_rad) {
                     //	Make this missile detonate soon.  Not right away, not
-                    //sure why.  Seems better.
+                    // sure why.  Seems better.
                     if (iff_x_attacks_y (
                             Weapons[hobjp->instance].team, wp->team)) {
                         detonate_nearby_missiles (hobjp, obj);
@@ -4728,8 +4728,8 @@ void weapon_home (object* obj, int num, float frame_time) {
             if (IS_VEC_NULL (&wp->homing_pos)) { pick_homing_point = 1; }
 
             //	Update homing position if it hasn't been set, you're within 500
-            //meters, or every half second, approximately. 	For large objects,
-            //don't lead them.
+            // meters, or every half second, approximately. 	For large
+            // objects, don't lead them.
             if (hobjp->radius < 40.0f) {
                 target_pos = hobjp->pos;
                 wp->homing_pos = target_pos;
@@ -4805,7 +4805,7 @@ void weapon_home (object* obj, int num, float frame_time) {
         //	Cause aspect seeking weapon to home at target's predicted position.
         //	But don't use predicted position if dot product small or negative.
         //	If do this, with a ship headed towards missile, could choose a
-        //point behind missile.
+        // point behind missile.
         float dist_to_target, time_to_target;
 
         dist_to_target =
@@ -4820,8 +4820,8 @@ void weapon_home (object* obj, int num, float frame_time) {
 
         //	If a weapon has missed its target, detonate it.
         //	This solves the problem of a weapon circling the center of a
-        //subsystem that has been blown away. 	Problem: It does not do impact
-        //damage, just proximity damage.
+        // subsystem that has been blown away. 	Problem: It does not do impact
+        // damage, just proximity damage.
         if ((dist_to_target <
              flFrametime * obj->phys_info.speed * 4.0f + 10.0f) &&
             (old_dot < wip->fov) && (wp->lifeleft > 0.01f) &&
@@ -4831,8 +4831,8 @@ void weapon_home (object* obj, int num, float frame_time) {
         }
 
         //	Only lead target if more than one second away.  Otherwise can miss
-        //target.  I think this 	is what's causing Harbingers to miss the super
-        //destroyer. -- MK, 4/15/98
+        // target.  I think this 	is what's causing Harbingers to miss the
+        // super destroyer. -- MK, 4/15/98
         if ((old_dot > 0.1f) && (time_to_target > 0.1f)) {
             if (wip->wi_flags[Weapon::Info_Flags::Variable_lead_homing]) {
                 vm_vec_scale_add2 (
@@ -4848,18 +4848,19 @@ void weapon_home (object* obj, int num, float frame_time) {
         }
 
         //	If a HEAT seeking (rather than ASPECT seeking) homing missile,
-        //verify that target is in viewcone.
+        // verify that target is in viewcone.
         if (wip->wi_flags[Weapon::Info_Flags::Homing_heat]) {
             if ((old_dot < wip->fov) &&
-                (dist_to_target > wip->shockwave.inner_rad *
-                                      1.1f)) { //	Delay finding new target
-                                               //one frame to allow detonation.
+                (dist_to_target >
+                 wip->shockwave.inner_rad *
+                     1.1f)) { //	Delay finding new target
+                              // one frame to allow detonation.
                 find_homing_object (obj, num);
                 return; //	Maybe found a new homing object.  Return, process
-                        //more next frame.
+                        // more next frame.
             }
             else //	Subtract out life based on how far from target this missile
-                 //points.
+                 // points.
                 if ((wip->fov < 0.95f) &&
                     !(wip->wi_flags
                           [Weapon::Info_Flags::No_life_lost_if_missed])) {
@@ -4867,7 +4868,7 @@ void weapon_home (object* obj, int num, float frame_time) {
             }
         }
         else if (wip->is_locked_homing ()) { //	subtract life as if max turn is
-                                             //90 degrees.
+                                             // 90 degrees.
             if ((wip->fov < 0.95f) &&
                 !(wip->wi_flags[Weapon::Info_Flags::No_life_lost_if_missed]))
                 wp->lifeleft -= flFrametime * (0.95f - old_dot);
@@ -4881,8 +4882,8 @@ void weapon_home (object* obj, int num, float frame_time) {
         }
 
         //	Control speed based on dot product to goal.  If close to straight
-        //ahead, move 	at max speed, else move slower based on how far from
-        //ahead.
+        // ahead, move 	at max speed, else move slower based on how far from
+        // ahead.
         if (old_dot < 0.90f) {
             obj->phys_info.speed = MAX (0.2f, old_dot * (float)fabs (old_dot));
             if (obj->phys_info.speed < max_speed * 0.75f)
@@ -5256,8 +5257,8 @@ void weapon_process_post (object* obj, float frame_time) {
 
                 //	Learn!  If over-shooting or under-shooting, compensate.
                 //	Really need to compensate for left/right errors.  This does
-                //no good against someone circling 	in a plane perpendicular to
-                //the attacker's forward vector.
+                // no good against someone circling 	in a plane
+                // perpendicular to the attacker's forward vector.
                 if (parent_aip != NULL) {
                     if (cur_dist > 100.0f) parent_aip->lead_scale = 0.0f;
 
@@ -5585,8 +5586,8 @@ void weapon_set_tracking_info (
             }
             else if (wip->wi_flags[Weapon::Info_Flags::Homing_heat]) {
                 //	Make a heat seeking missile try to home.  If the target is
-                //outside the view cone, it will 	immediately drop it and try to
-                //find one in its view cone.
+                // outside the view cone, it will 	immediately drop it and try
+                // to find one in its view cone.
                 if ((target_objnum != -1) &&
                     !(wip->wi_flags
                           [Weapon::Info_Flags::Untargeted_heat_seeker])) {
@@ -5606,15 +5607,15 @@ void weapon_set_tracking_info (
         }
 
         //	If missile is locked on target, increase its lifetime by 20% since
-        //missiles can be fired at limit of range 	as defined by
-        //velocity*lifeleft, but missiles often slow down a bit, plus can be
-        //fired at a moving away target. 	Confusing to many players when their
-        //missiles run out of gas before getting to target.
+        // missiles can be fired at limit of range 	as defined by
+        // velocity*lifeleft, but missiles often slow down a bit, plus can be
+        // fired at a moving away target. 	Confusing to many players when
+        // their missiles run out of gas before getting to target.
         // DB - removed 7:14 pm 9/6/99. was totally messing up lifetimes for
         // all weapons.
         //	MK, 7:11 am, 9/7/99.  Put it back in, but with a proper check here
-        //to make sure it's an aspect seeker and 	put a sanity check in the
-        //color changing laser code that was broken by this code.
+        // to make sure it's an aspect seeker and 	put a sanity check in the
+        // color changing laser code that was broken by this code.
         if (target_is_locked && (wp->target_num != -1) &&
             (wip->is_locked_homing ())) {
             wp->lifeleft *= LOCKED_HOMING_EXTENDED_LIFE_FACTOR;
@@ -5967,7 +5968,7 @@ int weapon_create (
     }
 
     //	Make remote detonate missiles look like they're getting detonated by
-    //firer simply by giving them variable lifetimes.
+    // firer simply by giving them variable lifetimes.
     if (parent_objp != NULL &&
         !(parent_objp->flags[Object::Object_Flags::Player_ship]) &&
         (wip->wi_flags[Weapon::Info_Flags::Remote])) {
@@ -6009,9 +6010,9 @@ int weapon_create (
     //	For missiles, it is a small amount plus the firing ship's velocity.
     //	For missiles, the velocity trends towards some goal.
     //	Note: If you change how speed works here, such as adding in speed of
-    //parent ship, you'll need to change the AI code 	that predicts collision
-    //points.  See Mike Kulas or Dave Andsager.  (Or see
-    //ai_get_weapon_speed().)
+    // parent ship, you'll need to change the AI code 	that predicts collision
+    // points.  See Mike Kulas or Dave Andsager.  (Or see
+    // ai_get_weapon_speed().)
     if (wip->acceleration_time > 0.0f) {
         vm_vec_copy_scale (
             &objp->phys_info.desired_vel, &objp->orient.vec.fvec,
@@ -6029,9 +6030,9 @@ int weapon_create (
     }
     else {
         //	For weapons that home, set velocity to sum of forward component of
-        //parent's velocity and 1/4 weapon's max speed. 	Note that it is
-        //important to extract the forward component of the parent's velocity
-        //to factor out sliding, else 	the missile will not be moving forward.
+        // parent's velocity and 1/4 weapon's max speed. 	Note that it is
+        // important to extract the forward component of the parent's velocity
+        // to factor out sliding, else 	the missile will not be moving forward.
         if (parent_objp != NULL) {
             if (wip->free_flight_time > 0.0)
                 vm_vec_copy_scale (
@@ -6344,7 +6345,7 @@ void spawn_child_weapons (object* objp) {
                 }
 
                 //	Assign a little randomness to lifeleft so they don't all
-                //disappear at the same time.
+                // disappear at the same time.
                 if (weapon_objnum != -1) {
                     float rand_val;
 
@@ -6987,7 +6988,7 @@ void weapon_hit (
         if (aip->target_objnum == objnum) {
             set_target_objnum (aip, -1);
             //	If this ship had a dynamic goal of chasing this weapon, clear
-            //the dynamic goal.
+            // the dynamic goal.
             if (aip->resume_goal_time != -1) aip->active_goal = AI_GOAL_NONE;
         }
 
@@ -7601,8 +7602,9 @@ void weapon_maybe_spew_particle (object* obj) {
 
                         // uvec
                         ang = frand_range (
-                            -PI_2, PI_2); // fl_radian(frand_range(-90.0f, 90.0f));
-                                          // -optimized by nuke
+                            -PI_2,
+                            PI_2); // fl_radian(frand_range(-90.0f, 90.0f));
+                                   // -optimized by nuke
                         vm_rot_point_around_line (
                             &direct_temp, &direct, ang, &null_vec,
                             &obj->orient.vec.fvec);
@@ -7613,8 +7615,9 @@ void weapon_maybe_spew_particle (object* obj) {
 
                         // rvec
                         ang = frand_range (
-                            -PI_2, PI_2); // fl_radian(frand_range(-90.0f, 90.0f));
-                                          // -optimized by nuke
+                            -PI_2,
+                            PI_2); // fl_radian(frand_range(-90.0f, 90.0f));
+                                   // -optimized by nuke
                         vm_rot_point_around_line (
                             &direct_temp, &direct, ang, &null_vec,
                             &obj->orient.vec.rvec);
@@ -7625,8 +7628,9 @@ void weapon_maybe_spew_particle (object* obj) {
 
                         // fvec
                         ang = frand_range (
-                            -PI_2, PI_2); // fl_radian(frand_range(-90.0f, 90.0f));
-                                          // -optimized by nuke
+                            -PI_2,
+                            PI_2); // fl_radian(frand_range(-90.0f, 90.0f));
+                                   // -optimized by nuke
                         vm_rot_point_around_line (
                             &direct_temp, &direct, ang, &null_vec,
                             &obj->orient.vec.uvec);

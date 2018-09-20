@@ -21,7 +21,7 @@
 //#define MAX_PAIRS 10000	//	Bumped back to 10,000 by WMC
 //	Reduced from 10,000 to 6,000 by MK on 4/1/98.
 //	Most I saw was 3400 in sm1-06a, the asteroid mission.  No other mission
-//came close.
+// came close.
 #define MIN_PAIRS 2500 // start out with this many pairs
 #define PAIRS_BUMP \
     1000 // increase by this many avialable pairs when more are needed
@@ -207,16 +207,16 @@ void obj_add_pair (object* A, object* B, int check_time, int add_to_end) {
         break;
     case COLLISION_OF (OBJ_ASTEROID, OBJ_WEAPON):
         // Only check collision's with player weapons
-        //		if ( Objects[B->parent].flags[Object::Object_Flags::Player_ship]
-        //) {
+        //		if (
+        // Objects[B->parent].flags[Object::Object_Flags::Player_ship] ) {
         check_collision = collide_asteroid_weapon;
         //		}
         break;
     case COLLISION_OF (OBJ_WEAPON, OBJ_ASTEROID):
         swapped = 1;
         // Only check collision's with player weapons
-        //		if ( Objects[A->parent].flags[Object::Object_Flags::Player_ship]
-        //) {
+        //		if (
+        // Objects[A->parent].flags[Object::Object_Flags::Player_ship] ) {
         check_collision = collide_asteroid_weapon;
         //		}
         break;
@@ -561,8 +561,8 @@ void obj_check_all_collisions () {
             if ((*tmp->check_collision) (tmp)) {
 // We never need to check this pair again.
 #if 0 // def DONT_REMOVE_PAIRS
-					// Never check it again, but keep the pair around
-					// (useful for debugging)
+      // Never check it again, but keep the pair around
+      // (useful for debugging)
 					tmp->next_check_time = timestamp(-1);
 #else
                 // Never check it again, so remove the pair
@@ -667,14 +667,16 @@ int collide_subdivide (
 }
 
 //	Return true if object A is expected to collide with object B within time
-//duration 	For purposes of this check, the first object moves from current
-//location to predicted 	location.  The second object is assumed to be where it
-//will be at time duration, NOT 	where it currently is. 	radius_scale is used to
-//control the precision of the check. 		If 0.0, then use polygon models to
-//perform check, slow and accurate 		If !0.0, then use as a scale on the radius
-//of the objects.  1.0 is Descent style 			collisions.  Larger values can be used
-//to be sloppy about the collisions which 			is useful if a moving object wants to
-//prevent a collision.
+// duration 	For purposes of this check, the first object moves from current
+// location to predicted 	location.  The second object is assumed to be where
+// it will be at time duration, NOT 	where it currently is. 	radius_scale is
+// used to control the precision of the check. 		If 0.0, then use polygon
+// models to perform check, slow and accurate 		If !0.0, then use as a
+// scale on the radius
+// of the objects.  1.0 is Descent style 			collisions.  Larger values can
+// be used
+// to be sloppy about the collisions which 			is useful if a moving
+// object wants to prevent a collision.
 int objects_will_collide (
     object* A, object* B, float duration, float radius_scale) {
     vec3d prev_pos;
@@ -717,7 +719,7 @@ int objects_will_collide (
 }
 
 //	Return true if the vector from *start_pos to *end_pos is within
-//objp->radius*radius_scale of *objp
+// objp->radius*radius_scale of *objp
 int vector_object_collision (
     vec3d* start_pos, vec3d* end_pos, object* objp, float radius_scale) {
     float dist, r;
@@ -744,7 +746,7 @@ int weapon_will_never_hit (
     weapon_info* wip = &Weapon_info[wp->weapon_info_index];
 
     //	mprintf(( "Frame: %d,  Weapon=%d, Other=%d, pair=$%08x\n",
-    //G3_frame_count, OBJ_INDEX(weapon), OBJ_INDEX(other), current_pair ));
+    // G3_frame_count, OBJ_INDEX(weapon), OBJ_INDEX(other), current_pair ));
 
     // Do some checks for weapons that don't turn
     if (!(wip->wi_flags[Weapon::Info_Flags::Turns])) {
@@ -947,8 +949,8 @@ int weapon_will_never_hit (
 }
 
 //	Return true if vector from *curpos to *goalpos intersects with object
-//*goalobjp 	Else, return false. 	radius is radius of object moving from curpos
-//to goalpos.
+//*goalobjp 	Else, return false. 	radius is radius of object moving from
+// curpos to goalpos.
 int pp_collide (
     vec3d* curpos, vec3d* goalpos, object* goalobjp, float radius) {
     mc_info mc;
@@ -1021,11 +1023,11 @@ int collide_predict_large_ship (object* objp, float distance) {
                 d1 = 2.5f * distance + objp2->radius;
                 count =
                     (int)(d1 / (objp2->radius + objp->radius)); //	Scale up
-                                                                //distance,
-                                                                //else looks
-                                                                //like there
-                                                                //would be a
-                                                                //collision.
+                                                                // distance,
+                                                                // else looks
+                                                                // like there
+                                                                // would be a
+                                                                // collision.
                 pos = cur_pos;
                 vm_vec_normalized_dir (&delvec, &goal_pos, &cur_pos);
                 vm_vec_scale (&delvec, d1 / count);
@@ -1479,16 +1481,16 @@ void obj_collide_pair (object* A, object* B) {
         break;
     case COLLISION_OF (OBJ_ASTEROID, OBJ_WEAPON):
         // Only check collision's with player weapons
-        //		if ( Objects[B->parent].flags[Object::Object_Flags::Player_ship]
-        //) {
+        //		if (
+        // Objects[B->parent].flags[Object::Object_Flags::Player_ship] ) {
         check_collision = collide_asteroid_weapon;
         //		}
         break;
     case COLLISION_OF (OBJ_WEAPON, OBJ_ASTEROID):
         swapped = 1;
         // Only check collision's with player weapons
-        //		if ( Objects[A->parent].flags[Object::Object_Flags::Player_ship]
-        //) {
+        //		if (
+        // Objects[A->parent].flags[Object::Object_Flags::Player_ship] ) {
         check_collision = collide_asteroid_weapon;
         //		}
         break;

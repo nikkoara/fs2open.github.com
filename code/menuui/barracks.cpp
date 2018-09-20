@@ -1445,8 +1445,8 @@ void barracks_init () {
         Buttons[gr_screen.res][15].text_y, &Buttons[gr_screen.res][15].button,
         UI_XSTR_COLOR_GREEN);
     //	w->add_XSTR("Convert",1043, Buttons[gr_screen.res][16].text_x,
-    //Buttons[gr_screen.res][16].text_y, &Buttons[gr_screen.res][16].button,
-    //UI_XSTR_COLOR_GREEN);
+    // Buttons[gr_screen.res][16].text_y, &Buttons[gr_screen.res][16].button,
+    // UI_XSTR_COLOR_GREEN);
     for (i = 0; i < BARRACKS_NUM_TEXT; i++) {
         w->add_XSTR (&Barracks_text[gr_screen.res][i]);
     }

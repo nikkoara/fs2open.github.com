@@ -16,17 +16,18 @@
 #define _TOOLCHAIN_H
 
 #if defined(DOXYGEN)
-#	include "globalincs/toolchain/doxygen.h"
+#include "globalincs/toolchain/doxygen.h"
 #elif defined(__MINGW32__)
-#	include "globalincs/toolchain/mingw.h"
+#include "globalincs/toolchain/mingw.h"
 #elif defined(__clang__)
-#	include "globalincs/toolchain/clang.h"
+#include "globalincs/toolchain/clang.h"
 #elif defined(__GNUC__)
-#	include "globalincs/toolchain/gcc.h"
+#include "globalincs/toolchain/gcc.h"
 #elif defined(_MSC_VER)
-#	include "globalincs/toolchain/msvc.h"
+#include "globalincs/toolchain/msvc.h"
 #else
-#	error "Unknown toolchain detected!\n"           \
+#error \
+    "Unknown toolchain detected!\n"           \
 		"Currently supported toolchains include:\n" \
 		"\tMingW, Clang, GCC, MSVC\n"               \
 		"Update toolchain.h to add support for additional toolchains.\n"

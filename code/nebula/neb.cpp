@@ -1432,11 +1432,11 @@ int neb2_get_bitmap () {
 // be handled by neb2. This should clear up the DCF list a bit
 DCF (neb2, "list nebula console commands") {
     //	dc_printf("neb2_fog <X> <float> <float>  : set near and far fog planes
-    //for ship type X\n"); 	dc_printf("where X is an integer from 1 - 11\n");
-    //	dc_printf("1 = cargo containers, 2 = fighters/bombers, 3 =
-    //cruisers\n"); 	dc_printf("4 = freighters, 5 = capital ships, 6 =
-    //transports, 7 = support ships\n"); 	dc_printf("8 = navbuoys, 9 =
-    //sentryguns, 10 = escape pods, 11 = background nebula polygons\n\n");
+    // for ship type X\n"); 	dc_printf("where X is an integer from 1 -
+    // 11\n"); 	dc_printf("1 = cargo containers, 2 = fighters/bombers, 3 =
+    // cruisers\n"); 	dc_printf("4 = freighters, 5 = capital ships, 6 =
+    // transports, 7 = support ships\n"); 	dc_printf("8 = navbuoys, 9 =
+    // sentryguns, 10 = escape pods, 11 = background nebula polygons\n\n");
 
     dc_printf (
         "neb2_max_alpha   : max alpha value (0.0 to 1.0) for cloud poofs. 0.0 "
@@ -1469,7 +1469,7 @@ DCF (neb2, "list nebula console commands") {
     dc_printf ("neb2_fog_color   : rgb fog color\n");
 
     //	dc_printf("neb2_fog_vals    : display all the current settings for all
-    //above values\n");
+    // above values\n");
 }
 
 DCF (neb2_prad, "set cloud poof radius") { dc_stuff_float (&Nd->prad); }

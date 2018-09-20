@@ -290,7 +290,7 @@ struct HC_gauge_region HC_gauge_regions[GR_NUM_RESOLUTIONS][NUM_HUD_GAUGES] = {
             "HCB_46", 324, 264, 46, 0, 0, -1, 0, 0), // support view gauge
         HC_gauge_region (
             "HCB_47", 418, 262, 47, 0, 0, -1, 0, 0), // netlag icon gauge
-        // XSTR:ON
+                                                     // XSTR:ON
     },
     {
         // GR_1024
@@ -370,7 +370,7 @@ struct HC_gauge_region HC_gauge_regions[GR_NUM_RESOLUTIONS][NUM_HUD_GAUGES] = {
             "2_HCB_46", 520, 422, 46, 0, 0, -1, 0, 0), // support view gauge
         HC_gauge_region (
             "2_HCB_47", 670, 419, 47, 0, 0, -1, 0, 0), // netlag icon gauge
-        // XSTR:ON
+                                                       // XSTR:ON
     }
 };
 

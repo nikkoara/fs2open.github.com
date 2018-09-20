@@ -13587,10 +13587,10 @@ void sexp_update_sound_environment (int node) {
 // From sexp help:
 //{ OP_ADJUST_AUDIO_VOLUME, "adjust-audio-volume\r\n"
 //	"Adjusts the relative volume of one sound type. Takes 2 or 3
-//arguments....\r\n"
+// arguments....\r\n"
 //	"\t1:\tSound Type to adjust, either Music, Voice or Effects\r\n"
 //	"\t2:\tPercentage of the users' settings to adjust to, 0 will be silence,
-//100 means the maximum volume as set by the user\r\n"
+// 100 means the maximum volume as set by the user\r\n"
 //	"\t3:\tFade time (optional), time in milliseconds to adjust the volume"},
 
 int audio_volume_option_lookup (char* text) {
@@ -15198,7 +15198,7 @@ void sexp_force_jump () {
         // forced warp, taken from training failure code
         gameseq_post_event (
             GS_EVENT_PLAYER_WARPOUT_START_FORCED); //	Force player to warp
-                                                   //out.
+                                                   // out.
     }
 }
 
@@ -22745,7 +22745,7 @@ int process_special_sexps (int index) {
         return SEXP_FALSE;
 
     case 2: //	Ship "Freighter 1", subsystem "Weapons" is aspect locked by
-            //player.
+            // player.
         if (Player_ai->target_objnum != -1) {
             if (!(stricmp (
                     Ships[Objects[Player_ai->target_objnum].instance]
@@ -22888,7 +22888,7 @@ int process_special_sexps (int index) {
         break;
 
     case 9: //	Zero left and right quadrants in preparation for maximizing
-            //rear quadrant.
+            // rear quadrant.
         if (!(Ship_info[Player_ship->ship_info_index]
                   .flags[Ship::Info_Flags::Model_point_shields])) {
             Player_obj->shield_quadrant[LEFT_QUAD] = 0.0f;
@@ -30329,7 +30329,7 @@ int query_operator_argument_type (int op, int argnum) {
     case OP_DEACTIVATE_GLOW_MAPS:   //-Bobboau
     case OP_ACTIVATE_GLOW_MAPS:     //-Bobboau
         return OPF_SHIP;            // a list of ships that are to be
-                         // activated/deactivated
+                                    // activated/deactivated
     case OP_DEACTIVATE_GLOW_POINT_BANK:
     case OP_ACTIVATE_GLOW_POINT_BANK:
         if (!argnum)

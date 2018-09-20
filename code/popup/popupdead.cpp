@@ -32,9 +32,9 @@
 UI_WINDOW Popupdead_window;
 UI_BUTTON Popupdead_buttons[POPUPDEAD_NUM_CHOICES_MAX]; // actual lit buttons
 UI_BUTTON
-    Popupdead_button_regions[POPUPDEAD_NUM_CHOICES_MAX]; // fake buttons used
-                                                         // for mouse detection
-                                                         // over text
+Popupdead_button_regions[POPUPDEAD_NUM_CHOICES_MAX]; // fake buttons used
+                                                     // for mouse detection
+                                                     // over text
 
 int Popupdead_region_coords[GR_NUM_RESOLUTIONS][POPUPDEAD_NUM_CHOICES_MAX][4] =
     {
@@ -163,9 +163,9 @@ void popupdead_start () {
         // also do a campaign check here?
         if (0) { //((Player->show_skip_popup) &&
                  //(!Popupdead_skip_already_shown) && (Game_mode &
-                 //GM_CAMPAIGN_MODE) && (Game_mode & GM_NORMAL) &&
+                 // GM_CAMPAIGN_MODE) && (Game_mode & GM_NORMAL) &&
                  //(Player->failures_this_session >=
-                 //PLAYER_MISSION_FAILURE_LIMIT)) {
+                 // PLAYER_MISSION_FAILURE_LIMIT)) {
             // init the special preliminary death popup that gives the skip
             // option
             Popupdead_button_text[0] = XSTR ("Do Not Skip This Mission", 1473);

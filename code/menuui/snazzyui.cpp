@@ -41,7 +41,7 @@ void snazzy_menu_init () { game_flush (); }
 // a uniform color
 //
 //	The action parameter is used to return whether the region is clicked on or
-//simply
+// simply
 // has the mouse over it.  The #defines SNAZZY_OVER and SNAZZY_CLICKED are
 // used.
 //

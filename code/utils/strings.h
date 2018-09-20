@@ -21,38 +21,37 @@
 #endif
 
 #if HAVE_STRCASECMP
-inline int stricmp(const char* s1, const char* s2) {
-	return strcasecmp(s1, s2);
+inline int stricmp (const char* s1, const char* s2) {
+    return strcasecmp (s1, s2);
 }
 #elif HAVE__STRICMP
-inline int stricmp(const char* s1, const char* s2) {
-	return _stricmp(s1, s2);
+inline int stricmp (const char* s1, const char* s2) {
+    return _stricmp (s1, s2);
 }
 #else
 #error No case insensitive string comparision available!
 #endif
 
 #if HAVE_STRNCASECMP
-inline int strnicmp(const char* s1, const char* s2, size_t n) {
-	return strncasecmp(s1, s2, n);
+inline int strnicmp (const char* s1, const char* s2, size_t n) {
+    return strncasecmp (s1, s2, n);
 }
 #elif HAVE__STRNICMP
-inline int strnicmp(const char* s1, const char* s2, size_t n) {
-	return _strnicmp(s1, s2, n);
+inline int strnicmp (const char* s1, const char* s2, size_t n) {
+    return _strnicmp (s1, s2, n);
 }
 #else
 #error No case insensitive string comparision available!
 #endif
 
 #if !HAVE_STRLWR
-inline void strlwr(char *s) {
-	if (s == NULL)
-		return;
+inline void strlwr (char* s) {
+    if (s == NULL) return;
 
-	while (*s) {
-		*s = (char) tolower(*s);
-		s++;
-	}
+    while (*s) {
+        *s = (char)tolower (*s);
+        s++;
+    }
 }
 #endif
 
@@ -64,18 +63,16 @@ inline void strlwr(char *s) {
 #endif
 #endif
 
-template<size_t SIZE, typename... Args>
-inline int sprintf_safe(char (&dest)[SIZE], const char* format, Args&&... args) {
-	auto written = snprintf(dest, SIZE, format, std::forward<Args>(args)...);
+template< size_t SIZE, typename... Args >
+inline int
+sprintf_safe (char (&dest)[SIZE], const char* format, Args&&... args) {
+    auto written =
+        snprintf (dest, SIZE, format, std::forward< Args > (args)...);
 
-	if (written < 0) {
-		return written;
-	}
+    if (written < 0) { return written; }
 
-	if ((size_t)written >= SIZE) {
-		dest[SIZE - 1] = '\0';
-	}
-	return written;
+    if ((size_t)written >= SIZE) { dest[SIZE - 1] = '\0'; }
+    return written;
 }
 
-#endif //FS2_OPEN_CASECMP_H
+#endif // FS2_OPEN_CASECMP_H

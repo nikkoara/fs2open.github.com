@@ -9,10 +9,11 @@
 
 //	Detail level effects (Detail.shield_effects)
 //		0		Nothing rendered
-//		1		An animating bitmap rendered per hit, not shrink-wrapped.  Lasts
-//half time.  One per ship. 		2		Animating bitmap per hit, not
-//shrink-wrapped.  Lasts full time.  Unlimited. 		3		Shrink-wrapped texture.
-//Lasts half-time. 		4		Shrink-wrapped texture.  Lasts full-time.
+//		1		An animating bitmap rendered per hit, not shrink-wrapped. Lasts
+// half time.  One per ship. 		2		Animating bitmap per hit, not
+// shrink-wrapped.  Lasts full time.  Unlimited. 		3		Shrink-wrapped
+// texture. Lasts half-time. 		4		Shrink-wrapped texture.  Lasts
+// full-time.
 
 #include "render/3d.h"
 #include "model/model.h"
@@ -34,7 +35,7 @@ int Show_shield_mesh = 0;
 #define MAX_SHIELD_TRI_BUFFER \
     (MAX_SHIELD_HITS *        \
      MAX_TRIS_PER_HIT) //(MAX_SHIELD_HITS*20) //	Persistent buffer of
-                       //triangle comprising all active shield hits.
+                       // triangle comprising all active shield hits.
 #define SHIELD_HIT_DURATION \
     (3 * F1_0 / 4) //	Duration, in milliseconds, of shield hit effect
 
@@ -63,11 +64,11 @@ typedef struct gshield_tri {
 typedef struct shield_hit {
     int start_time; //	start time of this object
     int type;     //	type, probably the weapon type, to indicate the bitmap to
-                  //use
+                  // use
     int objnum;   //	Object index, needed to get current orientation, position.
     int num_tris; //	Number of Shield_tris comprising this shield.
     int tri_list[MAX_TRIS_PER_HIT]; //	Indices into Shield_tris, triangles for
-                                    //this shield hit.
+                                    // this shield hit.
     ubyte rgb[3];                   //  rgb colors
     matrix hit_orient;              //	hit rotation
     vec3d hit_pos;                  //	hit position
@@ -89,9 +90,9 @@ int Num_shield_points;
 int Num_multi_shield_points; // used by multiplayer clients
 
 gshield_tri Global_tris[MAX_SHIELD_TRI_BUFFER]; //	The persistent triangles,
-                                                //part of shield hits.
+                                                // part of shield hits.
 int Num_tris; //	Number of triangles in current shield.  Would be a local,
-              //but needed in numerous routines.
+              // but needed in numerous routines.
 
 shield_hit Shield_hits[MAX_SHIELD_HITS];
 
@@ -450,7 +451,7 @@ void render_shield (int shield_num) {
     if (objp->flags[Object::Object_Flags::No_shields]) { return; }
 
     //	If this object didn't get rendered, don't render its shields.  In fact,
-    //make the shield hit go away.
+    // make the shield hit go away.
     if (!(objp->flags[Object::Object_Flags::Was_rendered])) {
         Shield_hits[shield_num].type = SH_UNUSED;
         return;
@@ -468,13 +469,13 @@ void render_shield (int shield_num) {
     // objp, shipp, and si are now setup correctly
 
     //	If this ship is in its deathroll, make the shield hit effects go away
-    //faster.
+    // faster.
     if (shipp->flags[Ship::Ship_Flags::Dying]) {
         Shield_hits[shield_num].start_time -= fl2f (2 * flFrametime);
     }
 
     //	Detail level stuff.  When lots of shield hits, maybe make them go away
-    //faster.
+    // faster.
     if (Poly_count > 50) {
         if (Shield_hits[shield_num].start_time +
                 (SHIELD_HIT_DURATION * 50) / Poly_count <
@@ -756,7 +757,7 @@ void create_shield_low_detail (
 
     Global_tris[gi].used = 1;
     Global_tris[gi].trinum = -1; //	This tells triangle renderer to not render
-                                 //in case detail_level was switched.
+                                 // in case detail_level was switched.
     Global_tris[gi].creation_time = Missiontime;
 
     Shield_hits[shnum].tri_list[0] = gi;
@@ -832,8 +833,8 @@ void create_shield_explosion (
     //	as the impact point moves to another triangle.  To prevent this,
     //	you could average the normals at the vertices, then interpolate the
     //	normals from the vertices to get a smoothly changing normal across the
-    //face. 	I had tried using the vector from the impact point to the center,
-    //which 	changes smoothly, but this looked surprisingly bad.
+    // face. 	I had tried using the vector from the impact point to the
+    // center, which 	changes smoothly, but this looked surprisingly bad.
     vm_vector_2_matrix (&tom, &shieldp->tris[tr0].norm, NULL, NULL);
 
     //	Create the shield from the current triangle, as well as its neighbors.
@@ -1061,7 +1062,7 @@ int ship_is_shield_up (object* obj, int quadrant) {
 //	  / \.
 //	/  2  \.
 //	Note: This is in the object's local reference frame.  Do _not_ pass a
-//vector in the world frame.
+// vector in the world frame.
 int get_quadrant (vec3d* hit_pnt, object* shipobjp) {
     if (shipobjp != NULL &&
         Ship_info[Ships[shipobjp->instance].ship_info_index]

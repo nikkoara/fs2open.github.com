@@ -5,6 +5,6 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_LIB(l_Parsing);
+DECLARE_ADE_LIB (l_Parsing);
 }
 } // namespace scripting

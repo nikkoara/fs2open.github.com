@@ -1003,7 +1003,7 @@ void game_level_init () {
     NavSystem_Init (); // zero out the nav system
 
     ai_level_init (); //	Call this before ship_init() because it reads
-                      //ai.tbl.
+                      // ai.tbl.
     ship_level_init ();
     player_level_init ();
     shipfx_flash_init (); // Init the ship gun flash system.
@@ -2441,7 +2441,7 @@ void game_show_time_left () {
 
 //========================================================================================
 //=================== NEW DEBUG CONSOLE COMMANDS TO REPLACE OLD DEBUG PAUSE
-//MENU =========
+// MENU =========
 //========================================================================================
 
 #ifndef NDEBUG
@@ -2580,7 +2580,7 @@ void game_set_view_clip (float /*frametime*/) {
         }
         else {
             //	Numeric constants encouraged by J "pig farmer" S, who shall
-            //remain semi-anonymous.
+            // remain semi-anonymous.
             // J.S. I've changed my ways!! See the new "no constants" code!!!
             gr_set_clip (
                 0, yborder, gr_screen.max_w, gr_screen.max_h - yborder * 2,
@@ -3175,7 +3175,7 @@ void apply_view_shake (matrix* eye_orient) {
 }
 
 //	Player's velocity just before he blew up.  Used to keep camera target
-//moving.
+// moving.
 vec3d Dead_player_last_vel = { { { 1.0f, 1.0f, 1.0f } } };
 
 int Scripting_didnt_draw_hud = 1;
@@ -3955,7 +3955,7 @@ void game_simulation_frame () {
                               // damaged
     player_repair_frame (
         flFrametime); //	AI objects get repaired in ai_process, called from
-                      //move code...deal with player.
+                      // move code...deal with player.
     player_process_pending_praise ();   // maybe send off a delayed praise
                                         // message to the player
     player_maybe_play_all_alone_msg (); // maybe tell the player he is all
@@ -4289,7 +4289,7 @@ void game_frame (bool paused) {
         }
 
         //	Note: These are done even before the player enters, else buffers
-        //can overflow.
+        // can overflow.
         if (!(Game_mode & GM_STANDALONE_SERVER)) { radar_frame_init (); }
 
         shield_frame_init ();
@@ -4470,8 +4470,8 @@ void game_frame (bool paused) {
 #define MAX_FRAMETIME \
     (F1_0 / 4) // Frametime gets saturated at this.  Changed by MK on 11/1/97.
                //	Some bug was causing Frametime to always get saturated
-               //at 2.0 seconds after the player 	died.  This resulted in
-               //screwed up death sequences.
+               // at 2.0 seconds after the player 	died.  This resulted in
+               // screwed up death sequences.
 
 fix Last_time = 0; // The absolute time of game at end of last frame (beginning
                    // of this frame)
@@ -4878,9 +4878,9 @@ int game_poll () {
         case GS_STATE_HUD_CONFIG:
         case GS_STATE_CONTROL_CONFIG:
         case GS_STATE_DEATH_DIED:
-            //				case GS_STATE_DEATH_BLEW_UP:	// 	DEATH_BLEW_UP might be
-            //okay but do not comment out DEATH_DIED as otherwise no clean up
-            //is performed on the dead ship
+            //				case GS_STATE_DEATH_BLEW_UP:	// 	DEATH_BLEW_UP might
+            //be okay but do not comment out DEATH_DIED as otherwise no clean
+            // up is performed on the dead ship
         case GS_STATE_VIEW_MEDALS: break;
 
         default:
@@ -6147,7 +6147,7 @@ void game_enter_state (int old_state, int new_state) {
 
         Players[Player_num].flags &=
             ~PLAYER_FLAGS_AUTO_TARGETING; //	Prevent immediate switch to a
-                                          //hostile ship.
+                                          // hostile ship.
         Game_mode |= GM_DEAD_BLEW_UP;
         Show_viewing_from_self = 0;
 

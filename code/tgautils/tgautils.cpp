@@ -738,8 +738,8 @@ int targa_write_bitmap (
     // f.write_ubyte(0);				//	ColorMapType
 
     cfwrite_ubyte (10, f);
-    // f.write_ubyte(10);			//	image_type: 2 = 24bpp, uncompressed, 10=24bpp
-    // rle compressed
+    // f.write_ubyte(10);			//	image_type: 2 = 24bpp, uncompressed,
+    // 10=24bpp rle compressed
 
     cfwrite_ushort (0, f);
     // f.write_ushort(0);			// CMapStart
@@ -766,7 +766,8 @@ int targa_write_bitmap (
     // f.write_ubyte(24);			// pixel_depth
 
     cfwrite_ubyte (0x20, f);
-    // f.write_ubyte(0x20);				// ImageDesc  ( 0x20 = Origin at upper left
+    // f.write_ubyte(0x20);				// ImageDesc  ( 0x20 = Origin at upper
+    // left
     // )
 
     ubyte* compressed_data;

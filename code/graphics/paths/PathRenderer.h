@@ -7,168 +7,155 @@
 
 #include "graphics/2d.h"
 
-namespace graphics
-{
-	namespace paths
-	{
-		enum Direction
-		{
-			DIR_CCW,
-			DIR_CW
-		};
+namespace graphics {
+namespace paths {
+enum Direction { DIR_CCW, DIR_CW };
 
-		enum Solidity
-		{
-			SOLIDITY_SOLID,
-			SOLIDITY_HOLE
-		};
+enum Solidity { SOLIDITY_SOLID, SOLIDITY_HOLE };
 
-		enum TextAlign
-		{
-			// Horizontal align
-			ALIGN_LEFT = 1 << 0,	// Default, align text horizontally to left.
-			ALIGN_CENTER = 1 << 1,	// Align text horizontally to center.
-			ALIGN_RIGHT = 1 << 2,	// Align text horizontally to right.
+enum TextAlign {
+    // Horizontal align
+    ALIGN_LEFT = 1 << 0,   // Default, align text horizontally to left.
+    ALIGN_CENTER = 1 << 1, // Align text horizontally to center.
+    ALIGN_RIGHT = 1 << 2,  // Align text horizontally to right.
 
-			// Vertical align
-			ALIGN_TOP = 1 << 3,	// Align text vertically to top.
-			ALIGN_MIDDLE = 1 << 4,	// Align text vertically to middle.
-			ALIGN_BOTTOM = 1 << 5,	// Align text vertically to bottom.
-			ALIGN_BASELINE = 1 << 6, // Default, align text vertically to baseline.
-		};
+    // Vertical align
+    ALIGN_TOP = 1 << 3,      // Align text vertically to top.
+    ALIGN_MIDDLE = 1 << 4,   // Align text vertically to middle.
+    ALIGN_BOTTOM = 1 << 5,   // Align text vertically to bottom.
+    ALIGN_BASELINE = 1 << 6, // Default, align text vertically to baseline.
+};
 
-		/**
-		 * @brief A paint used for drawing
-		 * @attention The contents of this struct are private, do not rely on any form of structure in it
-		 */
-		struct DrawPaint
-		{
-			// Use a union when more backends are implemented
-			NVGpaint nvg;
-		};
+/**
+ * @brief A paint used for drawing
+ * @attention The contents of this struct are private, do not rely on any form
+ * of structure in it
+ */
+struct DrawPaint {
+    // Use a union when more backends are implemented
+    NVGpaint nvg;
+};
 
-		class PathRenderer
-		{
-		private:
-			static std::unique_ptr<PathRenderer> s_instance;
+class PathRenderer {
+private:
+    static std::unique_ptr< PathRenderer > s_instance;
 
-			NVGcontext* m_context;
-			bool m_inFrame;
-		public:
-			PathRenderer();
-			~PathRenderer();
+    NVGcontext* m_context;
+    bool m_inFrame;
 
-			static bool init();
+public:
+    PathRenderer ();
+    ~PathRenderer ();
 
-			static inline PathRenderer* instance()
-			{
-				return s_instance.get();
-			}
+    static bool init ();
 
-			static void shutdown();
+    static inline PathRenderer* instance () { return s_instance.get (); }
 
-			void beginFrame();
+    static void shutdown ();
 
-			void cancelFrame();
+    void beginFrame ();
 
-			void endFrame();
+    void cancelFrame ();
 
-			void scissor(float x, float y, float w, float h);
+    void endFrame ();
 
-			void resetScissor();
+    void scissor (float x, float y, float w, float h);
 
-			/* begin transforms */
+    void resetScissor ();
 
-			void resetTransform();
+    /* begin transforms */
 
-			void translate(float x, float y);
+    void resetTransform ();
 
-			void rotate(float rad);
+    void translate (float x, float y);
 
-			void skewX(float rad);
+    void rotate (float rad);
 
-			void skewY(float rad);
+    void skewX (float rad);
 
-			void scale(float x, float y);
+    void skewY (float rad);
 
-			/* end transforms */
+    void scale (float x, float y);
 
-			/* begin paint creation */
+    /* end transforms */
 
-			DrawPaint createLinearGradient(float sx, float sy, float ex,
-				float ey, color* icol, color* ocol);
+    /* begin paint creation */
 
-			/* end paint creation */
+    DrawPaint createLinearGradient (
+        float sx, float sy, float ex, float ey, color* icol, color* ocol);
 
-			/* begin color handling */
-			void setAlpha(float alpha);
+    /* end paint creation */
 
-			void setFillColor(color* color);
+    /* begin color handling */
+    void setAlpha (float alpha);
 
-			void setFillPaint(const DrawPaint& paint);
+    void setFillColor (color* color);
 
-			void setStrokeColor(color* color);
+    void setFillPaint (const DrawPaint& paint);
 
-			void setStrokePaint(const DrawPaint& paint);
+    void setStrokeColor (color* color);
 
-			void setStrokeWidth(float witdh);
-			/* end color handling */
+    void setStrokePaint (const DrawPaint& paint);
 
-			void beginPath();
+    void setStrokeWidth (float witdh);
+    /* end color handling */
 
-			void moveTo(float x, float y);
+    void beginPath ();
 
-			void setSolidity(Solidity solid);
+    void moveTo (float x, float y);
 
-			/* begin shapes
-			   TODO: Replace this with doxygen */
+    void setSolidity (Solidity solid);
 
-			void lineTo(float x, float y);
+    /* begin shapes
+       TODO: Replace this with doxygen */
 
-			void rectangle(float x, float y, float w, float h);
+    void lineTo (float x, float y);
 
-			void roundedRectangle(float x, float y, float w, float h, float radius);
+    void rectangle (float x, float y, float w, float h);
 
-			void circle(float x, float y, float r);
+    void roundedRectangle (float x, float y, float w, float h, float radius);
 
-			void ellipse(float x, float y, float rx, float ry);
+    void circle (float x, float y, float r);
 
-			void arc(float cx, float cy, float r, float a0, float a1, Direction dir);
+    void ellipse (float x, float y, float rx, float ry);
 
-			/* end shapes */
+    void arc (float cx, float cy, float r, float a0, float a1, Direction dir);
 
-			/* begin font and text */
+    /* end shapes */
 
-			int createFontMem(const char* name, unsigned char* data, int ndata, int freeData);
+    /* begin font and text */
 
-			void fontSize(float size);
+    int createFontMem (
+        const char* name, unsigned char* data, int ndata, int freeData);
 
-			void textLetterSpacing(float spacing);
+    void fontSize (float size);
 
-			void fontFaceId(int font);
+    void textLetterSpacing (float spacing);
 
-			float text(float x, float y, const char* string, const char* end);
+    void fontFaceId (int font);
 
-			float textBounds(float x, float y, const char* string, const char* end, float* bounds);
+    float text (float x, float y, const char* string, const char* end);
 
-			void textMetrics(float* ascender, float* descender, float* lineh);
+    float textBounds (
+        float x, float y, const char* string, const char* end, float* bounds);
 
-			void textAlign(TextAlign align);
+    void textMetrics (float* ascender, float* descender, float* lineh);
 
-			/* end font and text */
+    void textAlign (TextAlign align);
 
-			void closePath();
+    /* end font and text */
 
-			void fill();
+    void closePath ();
 
-			void stroke();
+    void fill ();
 
-			void saveState();
+    void stroke ();
 
-			void resetState();
+    void saveState ();
 
-			void restoreState();
-		};
-	}
-}
+    void resetState ();
 
+    void restoreState ();
+};
+} // namespace paths
+} // namespace graphics

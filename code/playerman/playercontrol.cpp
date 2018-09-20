@@ -791,7 +791,7 @@ void read_keyboard_controls (
                 }
 
                 //	Note, if closer than 100 units, scale down speed a bit.
-                //Prevents repeated collisions. -- MK, 12/17/97
+                // Prevents repeated collisions. -- MK, 12/17/97
                 float dist =
                     vm_vec_dist (&Player_obj->pos, &targeted_objp->pos);
 
@@ -1277,8 +1277,8 @@ void player_match_target_speed (
             }
         }
         else {
-            //			HUD_sourced_printf(HUD_SOURCE_HIDDEN, XSTR("No currently
-            //selected target.",-1) );
+            //			HUD_sourced_printf(HUD_SOURCE_HIDDEN, XSTR("No
+            // currently selected target.",-1) );
         }
         return;
     }
@@ -1296,7 +1296,7 @@ void player_match_target_speed (
         }
         else {
             //			HUD_sourced_printf(HUD_SOURCE_HIDDEN, XSTR("No longer
-            //matching speed with current target.",-1) );
+            // matching speed with current target.",-1) );
         }
     }
     else {
@@ -1324,8 +1324,8 @@ void player_match_target_speed (
                 }
             }
             else {
-                //				HUD_sourced_printf(HUD_SOURCE_HIDDEN, XSTR("Matching
-                //speed with current target.",-1) );
+                //				HUD_sourced_printf(HUD_SOURCE_HIDDEN,
+                // XSTR("Matching speed with current target.",-1) );
             }
         }
     }
@@ -1442,7 +1442,7 @@ void player_restore_target_and_weapon_link_prefs () {
     polymodel* pm = model_get (player_sip->model_num);
 
     //	Don't restores the save flags in training, as we must ensure certain
-    //things are off, such as speed matching.
+    // things are off, such as speed matching.
     if (!(The_mission.game_type & MISSION_TYPE_TRAINING)) {
         Player->flags |= Player->save_flags;
     }

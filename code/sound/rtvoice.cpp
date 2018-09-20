@@ -248,17 +248,18 @@ int rtvoice_start_recording (void (*user_callback) (), int callback_time) {
 }
 
 // Retrieve the recorded voice data
-// input:	outbuf					=>		output parameter, recorded voice stored
-// here
-//				compressed_size		=>		output parameter, size in bytes of recorded
-//voice after compression
-//				uncompressed_size		=>		output parameter, size in bytes of
-//recorded voice before compression 				gain						=> output
-//parameter, gain value which must be passed to decoder 				outbuf_raw
-//=>		output optional parameter, pointer to the raw sound data making up the
-//compressed chunk
-//				outbuf_size_raw		=>		output optional parameter, size of the
-//outbuf_raw buffer
+// input:	outbuf					=>		output parameter, recorded voice
+// stored here
+//				compressed_size		=>		output parameter, size in bytes of
+// recorded voice after compression
+//				uncompressed_size		=>		output parameter, size in bytes
+// of
+// recorded voice before compression 				gain => output parameter,
+// gain value which must be passed to decoder outbuf_raw
+//=>		output optional parameter, pointer to the raw sound data making up
+// the compressed chunk
+//				outbuf_size_raw		=>		output optional parameter, size of
+// the outbuf_raw buffer
 //
 // NOTE: function converts voice data into compressed format
 void rtvoice_get_data (unsigned char** outbuf, int* size, double* /*gain*/) {

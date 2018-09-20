@@ -5,24 +5,25 @@
 
 namespace cutscene {
 namespace ffmpeg {
-class VideoDecoder: public FFMPEGStreamDecoder<VideoFrame> {
- private:
-	int m_frameId;
-	SwsContext* m_swsCtx;
-	AVPixelFormat m_destinationFormat;
+class VideoDecoder : public FFMPEGStreamDecoder< VideoFrame > {
+private:
+    int m_frameId;
+    SwsContext* m_swsCtx;
+    AVPixelFormat m_destinationFormat;
 
-	void convertAndPushPicture(const AVFrame* frame);
+    void convertAndPushPicture (const AVFrame* frame);
 
- public:
-	explicit VideoDecoder(DecoderStatus* status, AVPixelFormat destination_fmt);
+public:
+    explicit VideoDecoder (
+        DecoderStatus* status, AVPixelFormat destination_fmt);
 
-	~VideoDecoder() override;
+    ~VideoDecoder () override;
 
-	void decodePacket(AVPacket* packet) override;
+    void decodePacket (AVPacket* packet) override;
 
-	void finishDecoding() override;
+    void finishDecoding () override;
 
-	void flushBuffers() override;
+    void flushBuffers () override;
 };
-}
-}
+} // namespace ffmpeg
+} // namespace cutscene

@@ -811,7 +811,7 @@ void message_mission_close () {
 
 //	Compare function for sorting message queue entries based on priority.
 //	Return values set to sort array in _decreasing_ order.  If priorities
-//equal, sort based
+// equal, sort based
 // on time added into queue
 int message_queue_priority_compare (const void* a, const void* b) {
     message_q *ma, *mb;
@@ -1107,8 +1107,8 @@ bool message_play_wave (message_q* q) {
 // Determine the starting frame for the animation
 // input:	time	=>		time of voice clip, in ms
 //				ani	=>		pointer to anim data
-//				reverse	=>	flag to indicate that the start should be time ms from
-//the end (used for death screams)
+//				reverse	=>	flag to indicate that the start should be time ms
+// from the end (used for death screams)
 void message_calc_anim_start_frame (int time, generic_anim* ani, int reverse) {
     float wave_time, anim_time;
     int start_frame;
@@ -1338,7 +1338,7 @@ void message_queue_process () {
             wave_done = 1;
 
             //			if ( (Playing_messages[i].wave != -1) &&
-            //snd_is_playing(Playing_messages[i].wave) )
+            // snd_is_playing(Playing_messages[i].wave) )
             if ((Playing_messages[i].wave.isValid ()) &&
                 (snd_time_remaining (Playing_messages[i].wave) > 250))
                 wave_done = 0;
@@ -2396,8 +2396,10 @@ void message_maybe_distort () {
 //
 // second case: Message_wave_duration > 0 (occurs when voice playback
 // accompainies message)
-//					 Blank out portions of the sound based on Distort_num, this this is
-//that same 					 data that will be used to blank out portions of the audio playback
+//					 Blank out portions of the sound based on Distort_num, this
+//this is
+// that same 					 data that will be used to blank out portions of the
+// audio playback
 //
 void message_maybe_distort_text (char* text, int shipnum) {
     int voice_duration;

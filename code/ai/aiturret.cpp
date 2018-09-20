@@ -699,8 +699,8 @@ void evaluate_obj_as_target (object* objp, eval_enemy_obj_struct* eeo) {
 
         // modify distance based on number of turrets from my ship attacking
         // enemy (add 10% per turret) dist *=
-        // (num_enemies_attacking(OBJ_INDEX(objp))+2)/2;	//	prevents lots of
-        // ships from attacking same target
+        // (num_enemies_attacking(OBJ_INDEX(objp))+2)/2;	//	prevents lots
+        // of ships from attacking same target
         int num_att_turrets =
             num_turrets_attacking (turret_parent_obj, OBJ_INDEX (objp));
         dist_comp *= (1.0f + 0.1f * num_att_turrets);
@@ -813,8 +813,8 @@ int is_target_beam_valid (ship_weapon* swp, object* objp) {
  *
  * @param turret_parent_objnum	Parent objnum for the turret
  * @param turret_subsys			Pointer to system_info for the turret subsystem
- * @param enemy_team_mask		OR'ed TEAM_ flags for the enemy of the turret parent
- * ship
+ * @param enemy_team_mask		OR'ed TEAM_ flags for the enemy of the turret
+ * parent ship
  * @param tpos                  Position of turret (world coords)
  * @param tvec					Forward vector of turret (world coords)
  * @param current_enemy			Objnum of current turret target
@@ -1541,7 +1541,7 @@ int aifft_rotate_turret (
             get_turret_weapon_wip (&ss->weapons, best_weapon_tidx);
 
         //	weapon_system_strength scales time enemy in range in 0..1.  So, the
-        //lower this is, the worse the aiming will be.
+        // lower this is, the worse the aiming will be.
         weapon_system_strength =
             ship_get_subsystem_strength (shipp, SUBSYSTEM_WEAPONS);
 
@@ -1603,15 +1603,15 @@ int aifft_rotate_turret (
                 Missiontime >> 18,
                 &rand_vec); //	Return same random number for two seconds.
             //	Add to predicted_enemy_pos value in .45 to 1.5x radius of enemy
-            //ship, so will often miss, but not by a huge amount.
+            // ship, so will often miss, but not by a huge amount.
             vm_vec_scale_add2 (
                 predicted_enemy_pos, &rand_vec,
                 (1.0f - weapon_system_strength) * 1.5f * lep->radius);
         }
 
         // Get the normalized dir between the turret and the predicted enemy
-        // position. If the dot product is smaller than or equal to the turret's
-        // FOV, try and point the gun at it.
+        // position. If the dot product is smaller than or equal to the
+        // turret's FOV, try and point the gun at it.
         vec3d v2e;
         vm_vec_normalized_dir (&v2e, predicted_enemy_pos, &gun_pos);
 
@@ -2366,8 +2366,9 @@ bool turret_fire_weapon (
         turret->turret_next_fire_stamp = timestamp ((int)wait);
     }
 
-    turret->flags.set (Ship::Subsystem_Flags::Has_fired); // set has fired flag
-                                                          // for scriptng - nuke
+    turret->flags.set (
+        Ship::Subsystem_Flags::Has_fired); // set has fired flag
+                                           // for scriptng - nuke
 
     // Fire animation stuff
     model_anim_start_type (
@@ -2676,7 +2677,7 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
             else {
                 ss->turret_next_fire_stamp =
                     timestamp (1000); //	Regardless of firing rate, don't
-                                      //check whether should fire for awhile.
+                                      // check whether should fire for awhile.
             }
 
             // we're done with this weapon mount
@@ -2801,7 +2802,7 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
     if (num_valid < 1) ss->turret_enemy_objnum = -1;
 
     //	Maybe pick a new enemy, unless targeting has been taken over by
-    //scripting
+    // scripting
     if (turret_should_pick_new_target (ss) && !ss->scripting_target_override) {
         Num_find_turret_enemy++;
         int objnum = find_turret_enemy (
@@ -2845,12 +2846,12 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
         else {
             ss->turret_next_enemy_check_stamp = timestamp (
                 (int)(2000.0f * frand_range (0.9f, 1.1f))); //	Check every two
-                                                            //seconds
+                                                            // seconds
         }
     }
 
     //	If still don't have an enemy, return.  Or, if enemy is protected,
-    //return.
+    // return.
     if (ss->turret_enemy_objnum != -1) {
         // Don't shoot at ship we're docked with.
         if (dock_check_find_docked_object (
@@ -2872,7 +2873,7 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
         if (Objects[ss->turret_enemy_objnum]
                 .flags[Object::Object_Flags::Protected]) {
             //	This can happen if the enemy was selected before it became
-            //protected.
+            // protected.
             ss->turret_enemy_objnum = -1;
             return;
         }

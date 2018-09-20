@@ -1109,8 +1109,8 @@ angles* vm_extract_angles_vector (angles* a, const vec3d* v) {
 
 // compute the distance from a point to a plane.  takes the normalized normal
 // of the plane (ebx), a point on the plane (edi), and the point to check
-// (esi). returns distance in eax distance is signed, so negative dist is on the
-// back of the plane
+// (esi). returns distance in eax distance is signed, so negative dist is on
+// the back of the plane
 float vm_dist_to_plane (
     const vec3d* checkp, const vec3d* norm, const vec3d* planep) {
     float t1;
@@ -1169,7 +1169,7 @@ void vm_trackball (int idx, int idy, matrix* RotMat) {
 }
 
 //	Compute the outer product of A = A * transpose(A).  1x3 vector becomes 3x3
-//matrix.
+// matrix.
 static void vm_vec_outer_product (matrix* mat, const vec3d* vec) {
     mat->vec.rvec.xyz.x = vec->xyz.x * vec->xyz.x;
     mat->vec.rvec.xyz.y = vec->xyz.x * vec->xyz.y;
@@ -1187,9 +1187,9 @@ static void vm_vec_outer_product (matrix* mat, const vec3d* vec) {
 //	Find the point on the line between p0 and p1 that is nearest to int_pnt.
 //	Stuff result in nearest_point.
 //	Uses algorithm from page 148 of Strang, Linear Algebra and Its
-//Applications. 	Returns value indicating whether *nearest_point is between *p0
-//and *p1. 	0.0f means *nearest_point is *p0, 1.0f means it's *p1. 2.0f means
-//it's beyond p1 by 2x. 	-1.0f means it's "before" *p0 by 1x.
+// Applications. 	Returns value indicating whether *nearest_point is between
+// *p0 and *p1. 	0.0f means *nearest_point is *p0, 1.0f means it's *p1. 2.0f
+// means it's beyond p1 by 2x. 	-1.0f means it's "before" *p0 by 1x.
 float find_nearest_point_on_line (
     vec3d* nearest_point, const vec3d* p0, const vec3d* p1,
     const vec3d* int_pnt) {
@@ -1352,7 +1352,7 @@ float vm_vec_dot_to_point (
 
 /////////////////////////////////////////////////////////
 //	Given a plane and a point, return the point on the plane closest the the
-//point. 	Result returned in q.
+// point. 	Result returned in q.
 void compute_point_on_plane (vec3d* q, const plane* planep, const vec3d* p) {
     float k;
     vec3d normal;
@@ -2083,19 +2083,24 @@ void get_camera_limits (
 // ---------------------------------------------------------------------------------------------
 //
 //		inputs:		goal_f		=>		goal forward vector
-//						orient		=>		current orientation matrix (with current forward
-//vector) 						w_in			=>		current input angular velocity 						delta_t		=>
-//time to move toward goal 						delta_bank	=>		desired change in bank in
-//degrees 						next_orient	=>		the orientation matrix at time delta_t (with
-//current forward vector) 												NOTE: this does not include any rotation about z
-//(bank) 						w_out			=>		the angular velocity of the ship at delta_t
-//						vel_limit	=>		maximum rotational speed
-//						acc_limit	=>		maximum rotational speed
+//						orient		=>		current orientation matrix (with
+//current forward
+// vector) 						w_in			=>		current input angular velocity
+// delta_t
+// => time to move toward goal 						delta_bank	=>		desired
+// change in bank in degrees 						next_orient	=> the
+// orientation matrix at time delta_t (with current forward vector)
+// NOTE: this does not include any rotation about z
+//(bank) 						w_out			=>		the angular velocity of the ship
+//at
+// delta_t 						vel_limit	=>		maximum rotational speed 						acc_limit	=>
+// maximum rotational speed
 //
 //		function moves the forward vector toward the goal forward vector taking
-//account of anglular 		momentum (velocity)  Attempt to try to move bank by goal
-//delta_bank.  Rotational velocity 		on x/y is rotated with bank, giving smoother
-//motion.
+// account of anglular 		momentum (velocity)  Attempt to try to move bank by
+// goal
+// delta_bank.  Rotational velocity 		on x/y is rotated with bank, giving
+// smoother motion.
 void vm_forward_interpolate (
     const vec3d* goal_f, const matrix* orient, const vec3d* w_in,
     float delta_t, float delta_bank, matrix* next_orient, vec3d* w_out,
@@ -2338,9 +2343,10 @@ void vm_forward_interpolate (
 //
 //	input:	pnts			=>		array of world positions
 //				num_pnts		=>		number of points inside pnts array
-//				center		=>		OUTPUT PARAMETER:	contains world pos of bounding
-//sphere center 				radius		=>		OUTPUT PARAMETER:	continas radius of
-//bounding sphere
+//				center		=>		OUTPUT PARAMETER:	contains world pos of
+// bounding
+// sphere center 				radius		=>		OUTPUT PARAMETER:	continas
+// radius of bounding sphere
 //
 #define BIGNUMBER 100000000.0f
 void vm_find_bounding_sphere (
@@ -2467,7 +2473,7 @@ vec3d* vm_rotate_vec_to_world (
 //	inputs:		last_orient		=>		last orientation matrix
 //				current_orient	=>		current orientation matrix
 //				next_orient		=>		next orientation matrix		[the
-//result]
+// result]
 //
 void vm_estimate_next_orientation (
     const matrix* last_orient, const matrix* current_orient,
@@ -2696,8 +2702,8 @@ void vm_vec_boxscale (vec2d* vec, float /*scale*/) {
 /**
  * @brief							Attempts to invert a 4x4 matrix
  * @param[in]			m			Pointer to the matrix we want to invert
- * @param[inout]		invOut		The inverted matrix, or nullptr if inversion is
- * impossible
+ * @param[inout]		invOut		The inverted matrix, or nullptr if
+ * inversion is impossible
  *
  * @returns							Whether or not the matrix is invertible
  */

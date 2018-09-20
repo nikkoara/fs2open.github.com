@@ -5,8 +5,6 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_LIB(l_HUD);
-
+DECLARE_ADE_LIB (l_HUD);
 }
-}
-
+} // namespace scripting

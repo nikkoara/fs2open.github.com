@@ -1753,7 +1753,7 @@ int opengl_set_render_target (int slot, int face, int is_static) {
     }
 
     //	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-    //GL_RENDERBUFFER, fbo->renderbuffer_id);
+    // GL_RENDERBUFFER, fbo->renderbuffer_id);
 
     fbo->working_handle = slot;
     fbo->is_static = is_static;
@@ -1862,7 +1862,7 @@ int opengl_make_render_target (
     }
 
     //	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-    //GL_RENDERBUFFER, new_fbo.renderbuffer_id);
+    // GL_RENDERBUFFER, new_fbo.renderbuffer_id);
 
     if (opengl_check_framebuffer ()) {
         // Oops!!  reset everything and then bail

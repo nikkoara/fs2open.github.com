@@ -523,7 +523,7 @@ void joy_ff_play_vector_effect (vec3d* v, float scaler) {
     float x, y;
 
     //	nprintf(("Joystick", "FF: vec = { %f, %f, %f } s = %f\n", v->xyz.x,
-    //v->xyz.y, v->xyz.z, scaler));
+    // v->xyz.y, v->xyz.z, scaler));
     vm_vec_copy_scale (&vf, v, scaler);
     x = vf.xyz.x;
     vf.xyz.x = 0.0f;

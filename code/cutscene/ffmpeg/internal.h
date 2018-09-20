@@ -9,105 +9,103 @@
 namespace cutscene {
 namespace ffmpeg {
 struct CodecContextParameters {
-	int width = -1;
-	int height = -1;
-	AVPixelFormat pixel_format = AV_PIX_FMT_NONE;
+    int width = -1;
+    int height = -1;
+    AVPixelFormat pixel_format = AV_PIX_FMT_NONE;
 
-	uint64_t channel_layout = 0;
-	int sample_rate = -1;
-	AVSampleFormat audio_format = AV_SAMPLE_FMT_NONE;
+    uint64_t channel_layout = 0;
+    int sample_rate = -1;
+    AVSampleFormat audio_format = AV_SAMPLE_FMT_NONE;
 
-	AVCodecID codec_id = AV_CODEC_ID_NONE;
+    AVCodecID codec_id = AV_CODEC_ID_NONE;
 };
 
 struct DecoderStatus {
-	int videoStreamIndex = -1;
-	AVStream* videoStream = nullptr;
-	CodecContextParameters videoCodecPars;
-	AVCodec* videoCodec = nullptr;
-	AVCodecContext* videoCodecCtx = nullptr;
+    int videoStreamIndex = -1;
+    AVStream* videoStream = nullptr;
+    CodecContextParameters videoCodecPars;
+    AVCodec* videoCodec = nullptr;
+    AVCodecContext* videoCodecCtx = nullptr;
 
-	int audioStreamIndex = -1;
-	AVStream* audioStream = nullptr;
-	CodecContextParameters audioCodecPars;
-	AVCodec* audioCodec = nullptr;
-	AVCodecContext* audioCodecCtx = nullptr;
+    int audioStreamIndex = -1;
+    AVStream* audioStream = nullptr;
+    CodecContextParameters audioCodecPars;
+    AVCodec* audioCodec = nullptr;
+    AVCodecContext* audioCodecCtx = nullptr;
 
-	// Subtitles are a bit different since they max come from a different file
-	bool externalSubtitles   = false;
-	int subtitleStreamIndex = -1;
-	AVStream* subtitleStream = nullptr;
-	CodecContextParameters subtitleCodecPars;
-	AVCodec* subtitleCodec = nullptr;
-	AVCodecContext* subtitleCodecCtx = nullptr;
+    // Subtitles are a bit different since they max come from a different file
+    bool externalSubtitles = false;
+    int subtitleStreamIndex = -1;
+    AVStream* subtitleStream = nullptr;
+    CodecContextParameters subtitleCodecPars;
+    AVCodec* subtitleCodec = nullptr;
+    AVCodecContext* subtitleCodecCtx = nullptr;
 
-	DecoderStatus();
+    DecoderStatus ();
 
-	~DecoderStatus();
+    ~DecoderStatus ();
 
- private:
-	DecoderStatus(const DecoderStatus&) SCP_DELETED_FUNCTION;
+private:
+    DecoderStatus (const DecoderStatus&) SCP_DELETED_FUNCTION;
 
-	DecoderStatus& operator=(const DecoderStatus&) SCP_DELETED_FUNCTION;
+    DecoderStatus& operator= (const DecoderStatus&) SCP_DELETED_FUNCTION;
 };
 
-template<typename Frame>
+template< typename Frame >
 class FFMPEGStreamDecoder {
- protected:
-	typedef Frame frame_type;
+protected:
+    typedef Frame frame_type;
 
-	DecoderStatus* m_status = nullptr;
+    DecoderStatus* m_status = nullptr;
 
-	AVFrame* m_decodeFrame = nullptr;
+    AVFrame* m_decodeFrame = nullptr;
 
-	std::queue<FramePtr<frame_type>> m_decodedFrames;
+    std::queue< FramePtr< frame_type > > m_decodedFrames;
 
-	void pushFrame(FramePtr<frame_type>&& frame);
- public:
-	explicit FFMPEGStreamDecoder(DecoderStatus* status);
-	virtual ~FFMPEGStreamDecoder();
+    void pushFrame (FramePtr< frame_type >&& frame);
 
-	FFMPEGStreamDecoder(const FFMPEGStreamDecoder&) SCP_DELETED_FUNCTION;
-	FFMPEGStreamDecoder& operator=(const FFMPEGStreamDecoder&) SCP_DELETED_FUNCTION;
+public:
+    explicit FFMPEGStreamDecoder (DecoderStatus* status);
+    virtual ~FFMPEGStreamDecoder ();
 
-	virtual void decodePacket(AVPacket* packet) = 0;
+    FFMPEGStreamDecoder (const FFMPEGStreamDecoder&) SCP_DELETED_FUNCTION;
+    FFMPEGStreamDecoder&
+    operator= (const FFMPEGStreamDecoder&) SCP_DELETED_FUNCTION;
 
-	virtual void finishDecoding() = 0;
+    virtual void decodePacket (AVPacket* packet) = 0;
 
-	virtual void flushBuffers() = 0;
+    virtual void finishDecoding () = 0;
 
-	virtual FramePtr<frame_type> getFrame();
+    virtual void flushBuffers () = 0;
+
+    virtual FramePtr< frame_type > getFrame ();
 };
 
-template <typename Frame>
-void FFMPEGStreamDecoder<Frame>::pushFrame(FramePtr<frame_type>&& frame)
-{
-	m_decodedFrames.push(std::move(frame));
+template< typename Frame >
+void FFMPEGStreamDecoder< Frame >::pushFrame (FramePtr< frame_type >&& frame) {
+    m_decodedFrames.push (std::move (frame));
 }
 
-	template <typename Frame>
-FFMPEGStreamDecoder<Frame>::FFMPEGStreamDecoder(DecoderStatus* status):m_status(status)
-{
-	m_decodeFrame = av_frame_alloc();
+template< typename Frame >
+FFMPEGStreamDecoder< Frame >::FFMPEGStreamDecoder (DecoderStatus* status)
+    : m_status (status) {
+    m_decodeFrame = av_frame_alloc ();
 }
 
-template <typename Frame>
-FFMPEGStreamDecoder<Frame>::~FFMPEGStreamDecoder()
-{
-	av_frame_free(&m_decodeFrame);
+template< typename Frame >
+FFMPEGStreamDecoder< Frame >::~FFMPEGStreamDecoder () {
+    av_frame_free (&m_decodeFrame);
 }
 
-template <typename Frame>
-FramePtr<typename FFMPEGStreamDecoder<Frame>::frame_type> FFMPEGStreamDecoder<Frame>::getFrame()
-{
-	if (m_decodedFrames.empty()) {
-		return nullptr;
-	}
+template< typename Frame >
+FramePtr< typename FFMPEGStreamDecoder< Frame >::frame_type >
+FFMPEGStreamDecoder< Frame >::getFrame () {
+    if (m_decodedFrames.empty ()) { return nullptr; }
 
-	auto frame = std::move(m_decodedFrames.front());
-	m_decodedFrames.pop();
+    auto frame = std::move (m_decodedFrames.front ());
+    m_decodedFrames.pop ();
 
-	return frame;
+    return frame;
 }
-}
-}
+} // namespace ffmpeg
+} // namespace cutscene

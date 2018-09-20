@@ -518,7 +518,7 @@ int hud_reticle_list_find_free () {
 
     if (i == MAX_RETICLE_TARGETS) {
         //		nprintf(("Warning","Warning ==> Ran out of reticle target
-        //elements...\n"));
+        // elements...\n"));
         return -1;
     }
 
@@ -552,7 +552,8 @@ void hud_stuff_reticle_list (
 //
 //	parmeters:	objp		=>		object pointer to target
 //					measure	=>		distance or dot product, depending on
-//dot_flag 					dot_flag	=>		if 0, measure is distance, if 1 measure is dot
+// dot_flag 					dot_flag	=>		if 0, measure is distance, if 1 measure
+// is dot
 //
 void hud_reticle_list_update (object* objp, float measure, int dot_flag) {
     reticle_list *rl, *new_rl;
@@ -831,7 +832,8 @@ void hud_target_hotkey_select (int k) {
     // in the list, otherwise target the first
     // set	first_target - first visible item in list
     //			target - item in list that is the player's currently selected
-    //target 			next_target -	next visible item in list following target
+    // target 			next_target -	next visible item in list following
+    // target
     target_objnum = Player_ai->target_objnum;
     target = NULL;
     next_target = NULL;
@@ -1021,7 +1023,7 @@ void hud_init_targeting () {
 }
 
 //	Target the next or previous subobject on the currently selected ship, based
-//on next_flag.
+// on next_flag.
 void hud_target_subobject_common (int next_flag) {
     if (Player_ai->target_objnum == -1) {
         HUD_sourced_printf (
@@ -1837,8 +1839,8 @@ void hud_target_live_turret (
         // if (live_turret) {
         // debug info
         //	mprintf(("name %s, index: %d, type: %d\n",
-        //live_turret->system_info->subobj_name, next_index,
-        //ent[next_index].type));
+        // live_turret->system_info->subobj_name, next_index,
+        // ent[next_index].type));
         //}
     }
 
@@ -2516,8 +2518,8 @@ void hud_target_in_reticle_new () {
             mc.pos = &A->pos;          // The object's position
             mc.p0 = &Eye_position;     // Point 1 of ray to check
             mc.p1 = &terminus;         // Point 2 of ray to check
-            mc.flags = MC_CHECK_MODEL; // | MC_ONLY_BOUND_BOX;		// check the
-                                       // model, but only its bounding box
+            mc.flags = MC_CHECK_MODEL; // | MC_ONLY_BOUND_BOX;		// check
+                                       // the model, but only its bounding box
 
             model_collide (&mc);
             if (mc.num_hits) {
@@ -2543,7 +2545,7 @@ void hud_target_in_reticle_new () {
 //          the one that is closest to 1 and at least MIN_DOT_FOR_TARGET
 //
 //	IMPORTANT:  The MIN_DOT_FOR_TARGET value was arrived at by trial and error
-//and
+// and
 //             is only valid for the HUD reticle in use at that time.
 
 #define MIN_DOT_FOR_TARGET 0.9726 // fov for targeting in reticle
@@ -2607,7 +2609,7 @@ void hud_target_in_reticle_old () {
 //          the one that is closest to 1 and at least MIN_DOT_FOR_TARGET
 //
 //	IMPORTANT:  The MIN_DOT_FOR_TARGET value was arrived at by trial and error
-//and
+// and
 //             is only valid for the HUD reticle in use at that time.
 //
 
@@ -3464,8 +3466,8 @@ void hud_show_selection_set () {
 //
 // Must be inside a g3_start_frame()
 // input:	frametime	=>		time in seconds since last update
-//				in_cockpit	=>		flag (default value 1) indicating whether viewpoint
-//is from cockpit or external
+//				in_cockpit	=>		flag (default value 1) indicating whether
+// viewpoint is from cockpit or external
 void hud_show_targeting_gauges (float frametime) {
     vertex target_point; // temp vertex used to find screen position for 3-D
                          // object;
@@ -3667,8 +3669,8 @@ void HudGaugeHostileTriangle::render (float /*frametime*/) {
         bool in_frame = g3_in_frame () > 0;
         if (!in_frame) g3_start_frame (0);
 
-        // hud_set_iff_color( TEAM_HOSTILE, 1 );	//	Note: This should really be
-        // TEAM_HOSTILE, not opposite of Player_ship->team.
+        // hud_set_iff_color( TEAM_HOSTILE, 1 );	//	Note: This should
+        // really be TEAM_HOSTILE, not opposite of Player_ship->team.
         hud_set_iff_color (hostile_obj, 1);
         renderTriangle (&hostile_obj->pos, 0, 1, 0);
 
@@ -4134,8 +4136,8 @@ void HudGaugeLeadIndicator::renderLeadQuick (
     //							vec3d firing_vec;
     //							vm_vec_unrotate(&firing_vec,
     //&po->gun_banks[bank_to_fire].norm[pt], &obj->orient);
-    //							vm_vector_2_matrix(&firing_orient, &firing_vec, NULL,
-    //NULL);
+    //							vm_vector_2_matrix(&firing_orient, &firing_vec,
+    // NULL, NULL);
 
     // source_pos will contain the world coordinate of where to base the lead
     // indicator prediction from.  Normally, this will be the world pos of the
@@ -4897,8 +4899,8 @@ void HudGaugeAutoSpeed::pageIn () {
 }
 
 // Set the player target to the closest friendly repair ship
-// input:	goal_objnum	=>	Try to find repair ship where aip->goal_objnum matches
-// this output:	1	=>	A repair ship was targeted
+// input:	goal_objnum	=>	Try to find repair ship where aip->goal_objnum
+// matches this output:	1	=>	A repair ship was targeted
 //				0	=>	No targeting change
 int hud_target_closest_repair_ship (int goal_objnum) {
     object* A;
@@ -6508,7 +6510,7 @@ void HudGaugeOffscreen::calculatePosition (
 
     if (eye_vertex->flags & PF_OVERFLOW) {
         Int3 (); //	This is unlikely to happen, but can if a clip goes through
-                 //the player's eye.
+                 // the player's eye.
         Player_ai->target_objnum = -1;
         return;
     }

@@ -540,7 +540,7 @@ static EnhancedSoundData Default_sound_priorities[NUM_RETAIL_GAMEPLAY_SOUNDS] =
                                             // 148,//!< BFGreen	been loop
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH,
-            3), // SND_UNDEFINED_149              = 149,//!< Antifighter 	beam
+            3), // SND_UNDEFINED_149              = 149,//!< Antifighter beam
                 // loop
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH,

@@ -364,30 +364,30 @@ ui_button_info Multi_ingame_join_buttons
 #define MULTI_INGAME_JOIN_NUM_TEXT 8
 
 UI_XSTR
-    Multi_ingame_join_text[GR_NUM_RESOLUTIONS][MULTI_INGAME_JOIN_NUM_TEXT] = {
-        { // GR_640
-          { "Cancel", 387, 510, 413, UI_XSTR_COLOR_PINK, -1,
-            &Multi_ingame_join_buttons[GR_640][MIJ_CANCEL].button },
-          { "Join", 1303, 585, 413, UI_XSTR_COLOR_PINK, -1,
-            &Multi_ingame_join_buttons[GR_640][MIJ_JOIN].button },
-          { "Select Ship", 317, 39, 6, UI_XSTR_COLOR_PINK, -1, NULL },
-          { "name", 1423, 39, 28, UI_XSTR_COLOR_GREEN, -1, NULL },
-          { "class", 1424, 145, 28, UI_XSTR_COLOR_GREEN, -1, NULL },
-          { "status", 1425, 214, 28, UI_XSTR_COLOR_GREEN, -1, NULL },
-          { "primary", 1426, 295, 28, UI_XSTR_COLOR_GREEN, -1, NULL },
-          { "secondary", 1427, 440, 28, UI_XSTR_COLOR_GREEN, -1, NULL } },
-        { // GR_1024
-          { "Cancel", 387, 843, 665, UI_XSTR_COLOR_PINK, -1,
-            &Multi_ingame_join_buttons[GR_1024][MIJ_CANCEL].button },
-          { "Join", 1303, 950, 665, UI_XSTR_COLOR_PINK, -1,
-            &Multi_ingame_join_buttons[GR_1024][MIJ_JOIN].button },
-          { "Select Ship", 317, 63, 14, UI_XSTR_COLOR_PINK, -1, NULL },
-          { "name", 1423, 63, 45, UI_XSTR_COLOR_GREEN, -1, NULL },
-          { "class", 1424, 233, 45, UI_XSTR_COLOR_GREEN, -1, NULL },
-          { "status", 1425, 343, 45, UI_XSTR_COLOR_GREEN, -1, NULL },
-          { "primary", 1426, 473, 45, UI_XSTR_COLOR_GREEN, -1, NULL },
-          { "secondary", 1427, 704, 45, UI_XSTR_COLOR_GREEN, -1, NULL } }
-    };
+Multi_ingame_join_text[GR_NUM_RESOLUTIONS][MULTI_INGAME_JOIN_NUM_TEXT] = {
+    { // GR_640
+      { "Cancel", 387, 510, 413, UI_XSTR_COLOR_PINK, -1,
+        &Multi_ingame_join_buttons[GR_640][MIJ_CANCEL].button },
+      { "Join", 1303, 585, 413, UI_XSTR_COLOR_PINK, -1,
+        &Multi_ingame_join_buttons[GR_640][MIJ_JOIN].button },
+      { "Select Ship", 317, 39, 6, UI_XSTR_COLOR_PINK, -1, NULL },
+      { "name", 1423, 39, 28, UI_XSTR_COLOR_GREEN, -1, NULL },
+      { "class", 1424, 145, 28, UI_XSTR_COLOR_GREEN, -1, NULL },
+      { "status", 1425, 214, 28, UI_XSTR_COLOR_GREEN, -1, NULL },
+      { "primary", 1426, 295, 28, UI_XSTR_COLOR_GREEN, -1, NULL },
+      { "secondary", 1427, 440, 28, UI_XSTR_COLOR_GREEN, -1, NULL } },
+    { // GR_1024
+      { "Cancel", 387, 843, 665, UI_XSTR_COLOR_PINK, -1,
+        &Multi_ingame_join_buttons[GR_1024][MIJ_CANCEL].button },
+      { "Join", 1303, 950, 665, UI_XSTR_COLOR_PINK, -1,
+        &Multi_ingame_join_buttons[GR_1024][MIJ_JOIN].button },
+      { "Select Ship", 317, 63, 14, UI_XSTR_COLOR_PINK, -1, NULL },
+      { "name", 1423, 63, 45, UI_XSTR_COLOR_GREEN, -1, NULL },
+      { "class", 1424, 233, 45, UI_XSTR_COLOR_GREEN, -1, NULL },
+      { "status", 1425, 343, 45, UI_XSTR_COLOR_GREEN, -1, NULL },
+      { "primary", 1426, 473, 45, UI_XSTR_COLOR_GREEN, -1, NULL },
+      { "secondary", 1427, 704, 45, UI_XSTR_COLOR_GREEN, -1, NULL } }
+};
 
 #define MI_FIELD_X 0
 #define MI_FIELD_Y 1

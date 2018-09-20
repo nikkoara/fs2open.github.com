@@ -99,9 +99,9 @@ typedef struct ss_wing_info {
     ss_slot_info ss_slots[MAX_WING_SLOTS];
 } ss_wing_info;
 
-// ss_icon_info	Ss_icons[MAX_SHIP_CLASSES];		// holds ui info on different ship
-// icons ss_wing_info	Ss_wings[MAX_WING_BLOCKS];		// holds ui info for
-// wings and wing slots
+// ss_icon_info	Ss_icons[MAX_SHIP_CLASSES];		// holds ui info on different
+// ship icons ss_wing_info	Ss_wings[MAX_WING_BLOCKS];		// holds ui info
+// for wings and wing slots
 
 ss_wing_info Ss_wings_teams[MAX_TVT_TEAMS][MAX_WING_BLOCKS];
 ss_wing_info* Ss_wings = NULL;
@@ -203,8 +203,8 @@ typedef struct ss_active_item {
 } ss_active_item;
 
 static ss_active_item SS_active_head;
-// static ss_active_item	SS_active_items[MAX_WSS_SLOTS];//DTP commented out or
-// else singleplayer will only have a max of MAX_WSS_SLOTS ships
+// static ss_active_item	SS_active_items[MAX_WSS_SLOTS];//DTP commented out
+// or else singleplayer will only have a max of MAX_WSS_SLOTS ships
 static ss_active_item
     SS_active_items[MAX_SHIP_CLASSES]; // DTP, now we have all ships in the
                                        // TBL, as they can all be playerships
@@ -2078,8 +2078,8 @@ void pick_from_wing (int wb_num, int ws_num) {
 // input:	wb_num	=>		wing block number (numbering starts at 0)
 //				hot_slot	=>		index of slot that mouse is over
 //				selected_slot	=>	index of slot that is selected
-//				class_select	=>	all ships of this class are drawn selected (send -1
-//to not use)
+//				class_select	=>	all ships of this class are drawn selected
+//(send -1 to not use)
 void draw_wing_block (
     int wb_num, int hot_slot, int selected_slot, int class_select,
     bool ship_selection) {
@@ -2441,8 +2441,8 @@ int create_wings () {
                         // ship.  I think this is
                         //       the right thing to do, since the ships may
                         //       have different numbers
-                        //			of weapons and may not have the same allowed
-                        //weapon types
+                        //			of weapons and may not have the same
+                        // allowed weapon types
                         if (Ships[wp->ship_index[j]].ship_info_index !=
                             Wss_slots[slot_index].ship_class)
                             change_ship_type (
@@ -2546,8 +2546,8 @@ void update_player_ship (int si_index) {
  *
  * @note: only used for quick start missions
  *
- * @param	use_last_flown	select ship that was last flown on a mission (default
- * parameter set to 1)
+ * @param	use_last_flown	select ship that was last flown on a mission
+ * (default parameter set to 1)
  *
  * @return	0 => success, !0 => failure
  */
@@ -2635,11 +2635,14 @@ int ss_return_saindex (int slot_num) {
 //
 //	input:	wing_block	=>		wing block of ship to find
 //				wing_slot	=>		wing slot of ship to find
-//				ship_index	=>		OUTPUT parameter: the Ships[] index of the ship in
-//the wing slot 										This value will be -1 if there is no ship created yet 				ppobjp
-//=>		OUTPUT parameter: returns a pointer to a parse object for 										the ship
-//that hasn't been created yet.  Set to NULL if the 										ship has already been
-//created
+//				ship_index	=>		OUTPUT parameter: the Ships[] index of the
+//ship in
+// the wing slot 										This value will be -1 if there is no ship
+// created yet 				ppobjp
+//=>		OUTPUT parameter: returns a pointer to a parse object for
+// the ship
+// that hasn't been created yet.  Set to NULL if the 										ship has
+// already been created
 //
 // returns:	the original ship class of the ship, or -1 if the ship doesn't
 // exist

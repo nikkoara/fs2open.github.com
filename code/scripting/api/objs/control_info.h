@@ -5,9 +5,6 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_OBJ(l_Control_Info, int);
-
+DECLARE_ADE_OBJ (l_Control_Info, int);
 }
-}
-
-
+} // namespace scripting

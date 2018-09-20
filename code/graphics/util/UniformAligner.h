@@ -10,84 +10,95 @@ namespace graphics {
 namespace util {
 
 /**
- * @brief Aligns data so that each element starts at a specific offset. Useful for storing uniform buffer data
+ * @brief Aligns data so that each element starts at a specific offset. Useful
+ * for storing uniform buffer data
  */
 class UniformAligner {
- private:
-	static_assert(sizeof(uint8_t) == 1, "A uint8_t must be exactly one byte!");
+private:
+    static_assert (
+        sizeof (uint8_t) == 1, "A uint8_t must be exactly one byte!");
 
-	size_t _requiredAlignment = 1;
+    size_t _requiredAlignment = 1;
 
-	std::vector<uint8_t> _buffer;
-	size_t _numElements;
+    std::vector< uint8_t > _buffer;
+    size_t _numElements;
 
-	size_t _dataSize = 0;
-	size_t _headerSize = 0;
- public:
-	UniformAligner(size_t dataSize, size_t headerSize = 0);
+    size_t _dataSize = 0;
+    size_t _headerSize = 0;
 
-	void setAlignment(size_t align);
+public:
+    UniformAligner (size_t dataSize, size_t headerSize = 0);
 
-	void resize(size_t num_elements);
+    void setAlignment (size_t align);
 
-	void clear();
+    void resize (size_t num_elements);
 
-	void* addElement();
+    void clear ();
 
-	template<typename T>
-	T* addTypedElement() {
-		Assertion(sizeof(T) == _dataSize,
-				  "Sizes of template parameter and runtime size do not match! This probably uses the wrong type.");
+    void* addElement ();
 
-		return reinterpret_cast<T*>(addElement());
-	}
+    template< typename T >
+    T* addTypedElement () {
+        Assertion (
+            sizeof (T) == _dataSize,
+            "Sizes of template parameter and runtime size do not match! This "
+            "probably uses the wrong type.");
 
-	template<typename THeader>
-	THeader* getHeader() {
-		Assertion(sizeof(THeader) == _headerSize, "Header size does not match requested header type!");
+        return reinterpret_cast< T* > (addElement ());
+    }
 
-		return reinterpret_cast<THeader*>(_buffer.data());
-	}
+    template< typename THeader >
+    THeader* getHeader () {
+        Assertion (
+            sizeof (THeader) == _headerSize,
+            "Header size does not match requested header type!");
 
-	void* getElement(size_t index);
+        return reinterpret_cast< THeader* > (_buffer.data ());
+    }
 
-	template<typename T>
-	T* getTypedElement(size_t index) {
-		Assertion(sizeof(T) == _dataSize,
-				  "Sizes of template parameter and runtime size do not match! This probably uses the wrong type.");
+    void* getElement (size_t index);
 
-		return reinterpret_cast<T*>(getElement(index));
-	}
+    template< typename T >
+    T* getTypedElement (size_t index) {
+        Assertion (
+            sizeof (T) == _dataSize,
+            "Sizes of template parameter and runtime size do not match! This "
+            "probably uses the wrong type.");
 
-	size_t getOffset(size_t index);
+        return reinterpret_cast< T* > (getElement (index));
+    }
 
-	/**
-	 * @brief Gets the offset of the last element in the aligner
-	 * @return The offset in bytes
-	 */
-	size_t getCurrentOffset();
+    size_t getOffset (size_t index);
 
-	template<typename T>
-	T* nextTypedElement(T* currentEl) {
-		Assertion(sizeof(T) == _dataSize,
-				  "Sizes of template parameter and runtime size do not match! This probably uses the wrong type.");
+    /**
+     * @brief Gets the offset of the last element in the aligner
+     * @return The offset in bytes
+     */
+    size_t getCurrentOffset ();
 
-		return reinterpret_cast<T*>(nextElement(reinterpret_cast<void*>(currentEl)));
-	}
+    template< typename T >
+    T* nextTypedElement (T* currentEl) {
+        Assertion (
+            sizeof (T) == _dataSize,
+            "Sizes of template parameter and runtime size do not match! This "
+            "probably uses the wrong type.");
 
-	void* nextElement(void* currentEl);
+        return reinterpret_cast< T* > (
+            nextElement (reinterpret_cast< void* > (currentEl)));
+    }
 
-	size_t getNumElements();
+    void* nextElement (void* currentEl);
 
-	/**
-	 * @brief Gets the size in bytes of the data in this aligner
-	 * @return The size in bytes
-	 */
-	size_t getSize();
+    size_t getNumElements ();
 
-	void* getData();
+    /**
+     * @brief Gets the size in bytes of the data in this aligner
+     * @return The size in bytes
+     */
+    size_t getSize ();
+
+    void* getData ();
 };
 
-}
-}
-
+} // namespace util
+} // namespace graphics

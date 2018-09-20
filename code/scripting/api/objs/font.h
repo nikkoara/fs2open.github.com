@@ -9,23 +9,22 @@
 namespace scripting {
 namespace api {
 
-class font_h
-{
-	font::FSFont *font;
+class font_h {
+    font::FSFont* font;
 
 public:
-	explicit font_h(font::FSFont* fontIn);
+    explicit font_h (font::FSFont* fontIn);
 
-	font_h();
+    font_h ();
 
-	font::FSFont* Get();
+    font::FSFont* Get ();
 
-	bool isValid();
+    bool isValid ();
 };
 
-DECLARE_ADE_OBJ(l_Font, font_h);
+DECLARE_ADE_OBJ (l_Font, font_h);
 
-}
-}
+} // namespace api
+} // namespace scripting
 
 #endif

@@ -6,22 +6,22 @@
 namespace scripting {
 namespace api {
 
-class mc_info_h
-{
- protected:
-	mc_info* info;
- public:
-	explicit mc_info_h(mc_info* val);
+class mc_info_h {
+protected:
+    mc_info* info;
 
-	mc_info_h();
+public:
+    explicit mc_info_h (mc_info* val);
 
-	mc_info *Get();
+    mc_info_h ();
 
-	void deleteInfo();
+    mc_info* Get ();
 
-	bool IsValid();
+    void deleteInfo ();
+
+    bool IsValid ();
 };
 
-DECLARE_ADE_OBJ(l_ColInfo, mc_info_h);
-}
-}
+DECLARE_ADE_OBJ (l_ColInfo, mc_info_h);
+} // namespace api
+} // namespace scripting

@@ -192,7 +192,7 @@ static int ship_weapon_check_collision (
     polymodel* pm = model_get (sip->model_num);
 
     //	total time is flFrametime + time_limit (time_limit used to predict
-    //collisions into the future)
+    // collisions into the future)
     vec3d weapon_end_pos;
     vm_vec_scale_add (
         &weapon_end_pos, &weapon_objp->pos, &weapon_objp->phys_info.vel,
@@ -217,13 +217,14 @@ static int ship_weapon_check_collision (
     // (btw, these are leftover comments from below...)
     //
     //	Note: This code is obviously stupid. We want to add the shield point if
-    //there is shield to hit, but:
-    //		1. We want the size/color of the hit effect to indicate shield damage
-    //done.  (i.e., for already-weak shield, smaller effect)
+    // there is shield to hit, but:
+    //		1. We want the size/color of the hit effect to indicate shield
+    // damage done.  (i.e., for already-weak shield, smaller effect)
     //		2. Currently (8/9/97), shield_apply_damage() passes lefer damage to
-    //hull, which might not make sense.  If 			wouldn't have collided with hull,
-    //shouldn't do damage.  Once this is fixed, the code below needs to cast
-    //the 			vector through to the hull if there is leftover damage.
+    // hull, which might not make sense.  If 			wouldn't have collided
+    // with hull, shouldn't do damage.  Once this is fixed, the code below
+    // needs to cast the 			vector through to the hull if there is
+    // leftover damage.
     //
     // WIF2_PIERCE_SHIELDS pierces shields
     // AL 1-14-97: "Puncture" doesn't mean penetrate shield anymore, it means

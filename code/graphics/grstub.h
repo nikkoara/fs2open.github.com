@@ -1,3 +1,3 @@
 
 
-bool gr_stub_init();
+bool gr_stub_init ();

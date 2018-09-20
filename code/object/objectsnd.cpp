@@ -222,8 +222,8 @@ void obj_snd_level_init () {
 //
 // Stop a persistent sound from playing.
 //
-// parameters:  objp			=> pointer to object that sound is to be stopped
-// for
+// parameters:  objp			=> pointer to object that sound is to be
+// stopped for
 //
 //
 void obj_snd_stop (object* objp, int index) {
@@ -445,8 +445,8 @@ void maybe_play_flyby_snd (
                 // sound, species = %i, size = %i, dist = %7.3f\n", Framecount,
                 // species, ship_size, dist));
                 //				nprintf(("AI", "Frame %i: Playing flyby sound,
-                //species = %i, size = %i, dist = %7.3f\n", Framecount,
-                //Debug_1, Debug_2, dist)); Debug_1 = (Debug_1+1)%3; Debug_2 =
+                // species = %i, size = %i, dist = %7.3f\n", Framecount,
+                // Debug_1, Debug_2, dist)); Debug_1 = (Debug_1+1)%3; Debug_2 =
                 // (Debug_2+1)%2;
 
                 joy_ff_fly_by (
@@ -720,11 +720,12 @@ void obj_snd_do_frame () {
 //
 // parameters:  objnum		=> index of object that sound is being assigned to
 //              i				=> Index into Snds[] array
-//					 fname		=> filename of sound to play ( so DS3D can load the sound
+//					 fname		=> filename of sound to play ( so DS3D can load
+//the sound
 //)
 //
-// returns:     -1			=> sound could not be assigned (possible, since only
-// MAX_OBJECT_SOUNDS persistent
+// returns:     -1			=> sound could not be assigned (possible, since
+// only MAX_OBJECT_SOUNDS persistent
 //										sound can be assigned per object).
 //               >= 0			=> sound was successfully assigned
 //
@@ -826,8 +827,10 @@ void obj_snd_delete (int objnum, int index) {
 //
 // parameters:  objnum		=> index of object that sound is being removed
 // from.
-//				sndnum		=> index of sound that we're trying to completely get rid
-//of 								-1 to delete all persistent sounds on ship.
+//				sndnum		=> index of sound that we're trying to completely
+//get rid of 								-1 to delete all persistent sounds
+// on
+// ship.
 //
 //
 void obj_snd_delete_type (int objnum, gamesnd_id sndnum, ship_subsys* ss) {

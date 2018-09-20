@@ -59,7 +59,7 @@ void grid_read_camera_controls (control_info* ci, float /*frametime*/) {
 }
 
 //	Project the viewer's position onto the grid plane.  If more than threshold
-//distance 	from grid center, move grid center.
+// distance 	from grid center, move grid center.
 void maybe_create_new_grid (
     grid* gridp, vec3d* pos, matrix* orient, int force) {
     int roundoff;
@@ -221,7 +221,7 @@ grid* create_grid (
 }
 
 //	Create a nice grid -- centered at origin, 10x10, 10.0 size squares, in xz
-//plane.
+// plane.
 grid* create_default_grid (void) {
     grid* rgrid;
     vec3d fvec, rvec, cvec;

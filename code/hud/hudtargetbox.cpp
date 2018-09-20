@@ -2113,7 +2113,7 @@ void HudGaugeTargetBox::showTargetData (float /*frametime*/) {
             case AIM_CHASE:
                 Assert (
                     aip->submode <= SM_BIG_PARALLEL); //	Must be <= largest
-                                                      //chase submode value.
+                                                      // chase submode value.
                 sprintf (outstr2, " / %s", Submode_text[aip->submode]);
                 strcat_s (outstr, outstr2);
                 break;
@@ -2121,7 +2121,7 @@ void HudGaugeTargetBox::showTargetData (float /*frametime*/) {
                 Assert (
                     aip->submode <=
                     AIS_STRAFE_POSITION); //	Must be <= largest chase
-                                          //submode value.
+                                          // submode value.
                 sprintf (
                     outstr2, " / %s",
                     Strafe_submode_text[aip->submode - AIS_STRAFE_ATTACK]);
@@ -2416,8 +2416,8 @@ void hud_update_ship_status (object* targetp) {
  * Start the targetbox item flashing for duration ms
  *
  * @param index		TBOX_FLASH_ define
- * @param duration	optional param (default value TBOX_FLASH_DURATION), how long
- * to flash in ms
+ * @param duration	optional param (default value TBOX_FLASH_DURATION), how
+ * long to flash in ms
  */
 void hud_targetbox_start_flash (int index, int duration) {
     Targetbox_flash_timers[index] = timestamp (duration);

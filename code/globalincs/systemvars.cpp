@@ -205,13 +205,13 @@ detail_levels Detail_defaults[NUM_DEFAULT_DETAIL_LEVELS] = {
            // MAX_DETAIL_LEVEL=highest detail
         0, // detail_distance;			// 0=lowest MAX_DETAIL_LEVEL=highest
         0, //	hardware_textures;			// 0=max culling,
-           //MAX_DETAIL_LEVEL=no culling
-        0, //	num_small_debris;			// 0=min number, MAX_DETAIL_LEVEL=max
-           //number
-        0, //	num_particles;				// 0=min number, MAX_DETAIL_LEVEL=max
-           //number
-        0, //	num_stars;					// 0=min number, MAX_DETAIL_LEVEL=max
-           //number
+           // MAX_DETAIL_LEVEL=no culling
+        0, //	num_small_debris;			// 0=min number,
+           // MAX_DETAIL_LEVEL=max number
+        0, //	num_particles;				// 0=min number,
+           // MAX_DETAIL_LEVEL=max number
+        0, //	num_stars;					// 0=min number,
+           // MAX_DETAIL_LEVEL=max number
         0, //	shield_effects;			// 0=min, MAX_DETAIL_LEVEL=max
         2, // lighting;					// 0=min, MAX_DETAIL_LEVEL=max
 
@@ -228,13 +228,13 @@ detail_levels Detail_defaults[NUM_DEFAULT_DETAIL_LEVELS] = {
            // MAX_DETAIL_LEVEL=highest detail
         2, // detail_distance;			// 0=lowest MAX_DETAIL_LEVEL=highest
         2, //	hardware_textures;			// 0=max culling,
-           //MAX_DETAIL_LEVEL=no culling
-        2, //	num_small_debris;			// 0=min number, MAX_DETAIL_LEVEL=max
-           //number
-        2, //	num_particles;				// 0=min number, MAX_DETAIL_LEVEL=max
-           //number
-        2, //	num_stars;					// 0=min number, MAX_DETAIL_LEVEL=max
-           //number
+           // MAX_DETAIL_LEVEL=no culling
+        2, //	num_small_debris;			// 0=min number,
+           // MAX_DETAIL_LEVEL=max number
+        2, //	num_particles;				// 0=min number,
+           // MAX_DETAIL_LEVEL=max number
+        2, //	num_stars;					// 0=min number,
+           // MAX_DETAIL_LEVEL=max number
         2, //	shield_effects;			// 0=min, MAX_DETAIL_LEVEL=max
         3, // lighting;					// 0=min, MAX_DETAIL_LEVEL=max
 
@@ -251,13 +251,13 @@ detail_levels Detail_defaults[NUM_DEFAULT_DETAIL_LEVELS] = {
            // MAX_DETAIL_LEVEL=highest detail
         2, // detail_distance;			// 0=lowest MAX_DETAIL_LEVEL=highest
         3, //	hardware_textures;			// 0=max culling,
-           //MAX_DETAIL_LEVEL=no culling
-        3, //	num_small_debris;			// 0=min number, MAX_DETAIL_LEVEL=max
-           //number
-        3, //	num_particles;				// 0=min number, MAX_DETAIL_LEVEL=max
-           //number
-        4, //	num_stars;					// 0=min number, MAX_DETAIL_LEVEL=max
-           //number
+           // MAX_DETAIL_LEVEL=no culling
+        3, //	num_small_debris;			// 0=min number,
+           // MAX_DETAIL_LEVEL=max number
+        3, //	num_particles;				// 0=min number,
+           // MAX_DETAIL_LEVEL=max number
+        4, //	num_stars;					// 0=min number,
+           // MAX_DETAIL_LEVEL=max number
         3, //	shield_effects;			// 0=min, MAX_DETAIL_LEVEL=max
         4, // lighting;					// 0=min, MAX_DETAIL_LEVEL=max
 
@@ -274,13 +274,13 @@ detail_levels Detail_defaults[NUM_DEFAULT_DETAIL_LEVELS] = {
            // MAX_DETAIL_LEVEL=highest detail
         3, // detail_distance;			// 0=lowest MAX_DETAIL_LEVEL=highest
         4, //	hardware_textures;			// 0=max culling,
-           //MAX_DETAIL_LEVEL=no culling
-        4, //	num_small_debris;			// 0=min number, MAX_DETAIL_LEVEL=max
-           //number
-        4, //	num_particles;				// 0=min number, MAX_DETAIL_LEVEL=max
-           //number
-        4, //	num_stars;					// 0=min number, MAX_DETAIL_LEVEL=max
-           //number
+           // MAX_DETAIL_LEVEL=no culling
+        4, //	num_small_debris;			// 0=min number,
+           // MAX_DETAIL_LEVEL=max number
+        4, //	num_particles;				// 0=min number,
+           // MAX_DETAIL_LEVEL=max number
+        4, //	num_stars;					// 0=min number,
+           // MAX_DETAIL_LEVEL=max number
         4, //	shield_effects;			// 0=min, MAX_DETAIL_LEVEL=max
         4, // lighting;					// 0=min, MAX_DETAIL_LEVEL=max
 

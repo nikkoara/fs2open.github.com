@@ -26,8 +26,8 @@
 // MULTI VOICE DEFINES/VARS
 //
 
-// #define MULTI_VOICE_POST_DECOMPRESS									// when we're _not_ using
-// streaming
+// #define MULTI_VOICE_POST_DECOMPRESS									// when we're
+// _not_ using streaming
 #define MULTI_VOICE_PRE_DECOMPRESS // when we _are_ using streaming
 
 #define MULTI_VOICE_VERBOSE // keep this defined for verbose debug output
@@ -75,7 +75,7 @@ int Multi_voice_pre_sound_size = 0;
 // NOTE : the following 2 defines should be used for reference only. they
 // represent the worst case situation,
 //			 sending voice to a specific target under IPX. you should use
-//multi_voice_max_chunk_size(...) when
+// multi_voice_max_chunk_size(...) when
 //        determining if a given chunk will fit into an individual freespace
 //        packet
 // max size of a data packet header (note, this changes as the code itself

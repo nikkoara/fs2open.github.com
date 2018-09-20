@@ -450,9 +450,9 @@ operator= (opengl_shader_t&& other) SCP_NOEXCEPT {
 
 /**
  * Set the currently active shader
- * @param shader_obj	Pointer to an opengl_shader_t object. This function calls
- * glUseProgramARB with parameter 0 if shader_obj is NULL or if function is
- * called without parameters, causing OpenGL to revert to fixed-function
+ * @param shader_obj	Pointer to an opengl_shader_t object. This function
+ * calls glUseProgramARB with parameter 0 if shader_obj is NULL or if function
+ * is called without parameters, causing OpenGL to revert to fixed-function
  * processing
  */
 void opengl_shader_set_current (opengl_shader_t* shader_obj) {
@@ -496,8 +496,8 @@ size_t opengl_get_shader_idx (shader_type shader_t, unsigned int flags) {
  * @param shader_t  shader_type variable, a reference to the shader program
  * needed
  * @param flags	Integer variable, holding a combination of SDR_* flags
- * @return 		Index into GL_shader, referencing a valid shader, or -1 if shader
- * compilation failed
+ * @return 		Index into GL_shader, referencing a valid shader, or -1 if
+ * shader compilation failed
  */
 int gr_opengl_maybe_create_shader (shader_type shader_t, unsigned int flags) {
     size_t idx = opengl_get_shader_idx (shader_t, flags);
@@ -568,8 +568,8 @@ static std::string opengl_shader_get_header (
  * GLSL version as reported by the GPU driver.
  *
  * @param shader	shader_type enum defined with which shader we're loading
- * @param filename	C-string holding the filename (with extension) of the shader
- * file
+ * @param filename	C-string holding the filename (with extension) of the
+ * shader file
  * @param flags		integer variable holding a combination of SDR_* flags
  * @return			C-string holding the complete shader source code
  */

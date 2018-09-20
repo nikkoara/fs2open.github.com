@@ -9,9 +9,8 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_LIB(l_BitOps);
-
+DECLARE_ADE_LIB (l_BitOps);
 }
-}
+} // namespace scripting
 
-#endif //FS2_OPEN_BIT_H
+#endif // FS2_OPEN_BIT_H

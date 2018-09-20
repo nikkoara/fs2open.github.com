@@ -19,59 +19,64 @@
 
 #include <sal.h>
 
-#define SCP_FORMAT_STRING            _Printf_format_string_
-#define SCP_FORMAT_STRING_ARGS(x,y)
+#define SCP_FORMAT_STRING _Printf_format_string_
+#define SCP_FORMAT_STRING_ARGS(x, y)
 
 #define __attribute__(x)
 #define __UNUSED
-#define __ALIGNED(x)  __declspec(align(x))
+#define __ALIGNED(x) __declspec(align (x))
 
 #ifdef NO_RESTRICT_USE
-#   define RESTRICT
+#define RESTRICT
 #elif _MSC_VER >= 1400
-#   define RESTRICT  __restrict
+#define RESTRICT __restrict
 #else
-#   define RESTRICT
+#define RESTRICT
 #endif
 
 #define ASSUME(x)
 
 #if defined(NDEBUG)
-#	if _MSC_VER >= 1400  /* MSVC 2005 or newer */
-#		define Assertion(expr, msg, ...)  do { ASSUME(expr); } while (false)
-#	else
-#		define Assertion(expr, msg)  do {} while (false)
-#	endif
+#if _MSC_VER >= 1400 /* MSVC 2005 or newer */
+#define Assertion(expr, msg, ...) \
+    do { ASSUME (expr); } while (false)
 #else
-	/*
-	 * NOTE: Assertion() can only use its proper functionality in compilers
-	 * that support variadic macros.
-	 */
-#	if _MSC_VER >= 1400  /* MSVC 2005 or newer */
-#		define Assertion(expr, msg, ...)                                    \
-			do {                                                            \
-				if (!(expr)) {                                              \
-					os::dialogs::AssertMessage(#expr, __FILE__, __LINE__, msg, __VA_ARGS__); \
-				}                                                           \
-			} while (false)
-#	else                 /* Older MSVC compilers */
-#		define Assertion(expr, msg)                        \
-			do {                                           \
-				if (!(expr)) {                             \
-					os::dialogs::AssertMessage(#expr, __FILE__, __LINE__);  \
-			} while (false)
-#	endif
+#define Assertion(expr, msg) \
+    do {                     \
+    } while (false)
+#endif
+#else
+/*
+ * NOTE: Assertion() can only use its proper functionality in compilers
+ * that support variadic macros.
+ */
+#if _MSC_VER >= 1400 /* MSVC 2005 or newer */
+#define Assertion(expr, msg, ...)                             \
+    do {                                                      \
+        if (!(expr)) {                                        \
+            os::dialogs::AssertMessage (                      \
+                #expr, __FILE__, __LINE__, msg, __VA_ARGS__); \
+        }                                                     \
+    } while (false)
+#else /* Older MSVC compilers */
+#define Assertion(expr, msg)                                        \
+    do {                                                            \
+        if (!(expr)) {                                              \
+            os::dialogs::AssertMessage (#expr, __FILE__, __LINE__); \
+        }                                                           \
+        while (false)
+#endif
 #endif
 
 /* C++11 Standard Detection */
 #if !defined(HAVE_CXX11)
-	/* Use the Visual Studio version to detect C++11 support */
-#	if _MSC_VER >= 1600
-#		define HAVE_CXX11
-#	endif
+/* Use the Visual Studio version to detect C++11 support */
+#if _MSC_VER >= 1600
+#define HAVE_CXX11
+#endif
 #endif
 
-#define SIZE_T_ARG    "%Iu"
+#define SIZE_T_ARG "%Iu"
 #define PTRDIFF_T_ARG "%Id"
 
 #define likely(x)
@@ -83,12 +88,11 @@
 
 #define CLANG_ANALYZER_NORETURN
 
-
 #ifndef NDEBUG
-#define UNREACHABLE(msg, ...)                                                                                          \
-	do {                                                                                                               \
-		os::dialogs::Error(__FILE__, __LINE__, msg, ##__VA_ARGS__);                                                    \
-	} while (false)
+#define UNREACHABLE(msg, ...)                                        \
+    do {                                                             \
+        os::dialogs::Error (__FILE__, __LINE__, msg, ##__VA_ARGS__); \
+    } while (false)
 #else
-#define UNREACHABLE(msg, ...) __assume(false)
+#define UNREACHABLE(msg, ...) __assume (false)
 #endif

@@ -1190,8 +1190,8 @@ void wl_set_disabled_weapons (int ship_class) {
 
     for (i = 0; i < MAX_WEAPON_TYPES; i++) {
         //	Determine whether weapon #i is allowed on this ship class in the
-        //current type of mission. 	As of 9/6/99, the only difference is
-        //dogfight missions have a different list of legal weapons.
+        // current type of mission. 	As of 9/6/99, the only difference is
+        // dogfight missions have a different list of legal weapons.
         Wl_icons[i].can_use =
             eval_weapon_flag_for_game_type (sip->allowed_weapons[i]);
     }
@@ -3266,7 +3266,7 @@ int wl_update_ship_weapons (int objnum, wss_unit* slot) {
     }
     // AL 11-15-97: Ensure that the player ship hasn't removed all
     //					 weapons from their ship.  This will cause a warning to
-    //appear.
+    // appear.
     if (objnum == OBJ_INDEX (Player_obj) && Weapon_select_open) {
         if (wl_slots_all_empty (slot) &&
             (sip->num_primary_banks > 0 || sip->num_secondary_banks > 0)) {

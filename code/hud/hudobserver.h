@@ -1,13 +1,11 @@
 /*
  * Copyright (C) Volition, Inc. 1999.  All rights reserved.
  *
- * All source code herein is the property of Volition, Inc. You may not sell 
- * or otherwise commercially exploit the source or things you created based on the 
- * source.
+ * All source code herein is the property of Volition, Inc. You may not sell
+ * or otherwise commercially exploit the source or things you created based on
+ * the source.
  *
-*/ 
-
-
+ */
 
 #ifndef _HUD_OBSERVER_FILE
 #define _HUD_OBSERVER_FILE
@@ -20,8 +18,8 @@ struct ai_info;
 extern ship Hud_obs_ship;
 extern ai_info Hud_obs_ai;
 
-void hud_observer_init(ship *shipp,ai_info *aip);
+void hud_observer_init (ship* shipp, ai_info* aip);
 
-void hud_render_observer();
+void hud_render_observer ();
 
 #endif

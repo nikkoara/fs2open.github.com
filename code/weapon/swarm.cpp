@@ -24,7 +24,7 @@
 
 // *No longer need this  -Et1
 //#define SWARM_MISSILE_DELAY		150		// time delay between each swarm
-//missile that is fired
+// missile that is fired
 
 #define SWARM_TIME_VARIANCE \
     100 // max time variance when deciding when to change swarm missile course

@@ -784,7 +784,7 @@ void common_render (float frametime) {
 // common_render_selected_screen_button()
 //
 //	A very ugly piece of special purpose code.  This is used to draw the
-//pressed button
+// pressed button
 // frame for whatever stage of the briefing/ship select/weapons loadout we are
 // on.
 //

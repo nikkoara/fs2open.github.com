@@ -9,21 +9,21 @@ namespace scripting {
 namespace api {
 
 class gamestate_h {
- private:
-	int sdx;
- public:
-	gamestate_h();
-	gamestate_h(int n_state);
+private:
+    int sdx;
 
-	bool IsValid();
+public:
+    gamestate_h ();
+    gamestate_h (int n_state);
 
-	int Get();
+    bool IsValid ();
+
+    int Get ();
 };
 
-DECLARE_ADE_OBJ(l_GameState, gamestate_h);
+DECLARE_ADE_OBJ (l_GameState, gamestate_h);
 
-
-}
-}
+} // namespace api
+} // namespace scripting
 
 #endif // FS2_OPEN_GAMESTATE_H

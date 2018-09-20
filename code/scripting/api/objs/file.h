@@ -5,7 +5,7 @@
 #include "cfile/cfile.h"
 
 namespace scripting {
-	namespace api {
-		DECLARE_ADE_OBJ(l_File, CFILE*);
-	}
+namespace api {
+DECLARE_ADE_OBJ (l_File, CFILE*);
 }
+} // namespace scripting

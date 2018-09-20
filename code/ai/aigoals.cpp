@@ -156,7 +156,7 @@ void ai_post_process_mission () {
     // So basically, we are checking for (1)
     if (!Fred_running) {
         //	MK, 5/9/98: Used to iterate through MAX_STARTING_WINGS, but this
-        //was too many ships forming on player.
+        // was too many ships forming on player.
         // Goober5000 - MK originally iterated on only the first wing; now we
         // iterate on only the player wing because the player wing may not be
         // first
@@ -1816,9 +1816,9 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
         // if the ship that I am supposed to dock with is docked with something
         // else, then I need to put my goal on hold
         //	[MK, 4/23/98: With Mark, we believe this fixes the problem of Comet
-        //refusing to warp out after docking with Omega. 	This bug occurred only
-        //when mission goals were validated in the frame in which Comet docked,
-        //which happened about
+        // refusing to warp out after docking with Omega. 	This bug occurred
+        // only when mission goals were validated in the frame in which Comet
+        // docked, which happened about
         // once in 10-20 tries.]
         if (object_is_docked (goal_objp)) {
             // if the dockpoint I need to dock to is occupied by someone other
@@ -2199,7 +2199,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
     if (aip->goals[0].flags[AI::Goal_Flags::Goal_on_hold]) return;
 
     //	Kind of a hack for now.  active_goal means the goal currently being
-    //pursued. 	It will always be #0 since the list is prioritized.
+    // pursued. 	It will always be #0 since the list is prioritized.
     aip->active_goal = 0;
 
     // nprintf(("AI", "New goal for %s = %i\n",
@@ -2238,7 +2238,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
 
         //	Mike -- debug code!
         //	If a ship has a subobject on it, attack that instead of the main
-        //ship!
+        // ship!
         ai_attack_object (objp, other_obj, NULL);
         break;
 
@@ -2382,7 +2382,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
         if (current_goal->ai_mode != AI_GOAL_DESTROY_SUBSYSTEM) {
             if (aip->target_objnum != -1) {
                 //	Only protect if _not_ a capital ship.  We don't want the
-                //Lucifer accidentally getting protected.
+                // Lucifer accidentally getting protected.
                 if (Ship_types[Ship_info[Ships[shipnum].ship_info_index]
                                    .class_type]
                         .flags[Ship::Type_Info_Flags::AI_protected_on_cripple])

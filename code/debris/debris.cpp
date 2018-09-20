@@ -200,7 +200,7 @@ void maybe_delete_debris (debris* db) {
     if (timestamp_elapsed (db->next_distance_check) &&
         timestamp_elapsed (db->must_survive_until)) {
         if (!(Game_mode & GM_MULTIPLAYER)) { //	In single player game, just
-                                             //check against player.
+                                             // check against player.
             if (vm_vec_dist_quick (
                     &Player_obj->pos, &Objects[db->objnum].pos) >
                 MAX_DEBRIS_DIST)
@@ -435,9 +435,9 @@ void calc_debris_physics_properties (physics_info* pi, vec3d* min, vec3d* max);
  * @param pos			Position in vector space
  * @param exp_center	Explosion center in vector space
  * @param hull_flag		Hull flag settings
- * @param exp_force		Explosion force, used to assign velocity to pieces. 1.0f
- * assigns velocity like before. 2.0f assigns twice as much to non-inherited
- * part of velocity
+ * @param exp_force		Explosion force, used to assign velocity to
+ * pieces. 1.0f assigns velocity like before. 2.0f assigns twice as much to
+ * non-inherited part of velocity
  */
 object* debris_create (
     object* source_obj, int model_num, int submodel_num, vec3d* pos,
@@ -776,7 +776,7 @@ void debris_hit (
 
         pe.normal = tmp_norm;      // What normal the particle emit around
         pe.normal_variance = 0.3f; //	How close they stick to that normal
-                                   //0=good, 1=360 degree
+                                   // 0=good, 1=360 degree
         pe.min_rad = 0.20f;        // Min radius
         pe.max_rad = 0.40f;        // Max radius
 
@@ -784,7 +784,7 @@ void debris_hit (
         pe.num_low = 10;           // Lowest number of particles to create
         pe.num_high = 10;          // Highest number of particles to create
         pe.normal_variance = 0.3f; //	How close they stick to that normal
-                                   //0=good, 1=360 degree
+                                   // 0=good, 1=360 degree
         pe.min_vel = 0.0f;         // How fast the slowest particle can move
         pe.max_vel = 10.0f;        // How fast the fastest particle can move
         pe.min_life = 0.25f;       // How long the particles live

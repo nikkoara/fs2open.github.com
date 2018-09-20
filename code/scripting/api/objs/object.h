@@ -5,6 +5,6 @@
 
 namespace scripting {
 namespace api {
-DECLARE_ADE_OBJ(l_Object, object_h);
+DECLARE_ADE_OBJ (l_Object, object_h);
 }
-}
+} // namespace scripting

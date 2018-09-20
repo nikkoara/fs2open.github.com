@@ -5,7 +5,6 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_LIB(l_Utf8);
-
+DECLARE_ADE_LIB (l_Utf8);
 }
-}
+} // namespace scripting

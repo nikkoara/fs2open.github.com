@@ -8,47 +8,41 @@
 namespace scripting {
 namespace api {
 
+struct sound_entry_h {
+    gamesnd_id idx;
 
-struct sound_entry_h
-{
-	gamesnd_id idx;
+    sound_entry_h ();
 
-	sound_entry_h();
+    explicit sound_entry_h (gamesnd_id n_idx);
 
-	explicit sound_entry_h(gamesnd_id n_idx);
+    game_snd* Get ();
 
-	game_snd *Get();
-
-	bool IsValid();
+    bool IsValid ();
 };
 
 //**********HANDLE: SoundEntry
-DECLARE_ADE_OBJ(l_SoundEntry, sound_entry_h);
+DECLARE_ADE_OBJ (l_SoundEntry, sound_entry_h);
 
-struct sound_h : public sound_entry_h
-{
-	sound_handle sig;
+struct sound_h : public sound_entry_h {
+    sound_handle sig;
 
-	sound_h();
+    sound_h ();
 
-	sound_h(gamesnd_id n_gs_idx, sound_handle n_sig);
+    sound_h (gamesnd_id n_gs_idx, sound_handle n_sig);
 
-	sound_handle getSignature();
+    sound_handle getSignature ();
 
-	bool IsSoundValid();
+    bool IsSoundValid ();
 
-	bool IsValid();
+    bool IsValid ();
 };
 
 //**********HANDLE: Sound
-DECLARE_ADE_OBJ(l_Sound, sound_h);
+DECLARE_ADE_OBJ (l_Sound, sound_h);
 
-
-DECLARE_ADE_OBJ(l_Sound3D, sound_h);
-
+DECLARE_ADE_OBJ (l_Sound3D, sound_h);
 
 //**********HANDLE: Soundfile
-DECLARE_ADE_OBJ(l_Soundfile, sound_load_id);
-}
-}
-
+DECLARE_ADE_OBJ (l_Soundfile, sound_load_id);
+} // namespace api
+} // namespace scripting

@@ -130,14 +130,15 @@ int ship_ship_check_collision (
     if (ships_are_docking (heavy_obj, light_obj)) { return 0; }
 
     //	If light_obj emerging from or departing to dock bay in heavy_obj, no
-    //collision detection.
+    // collision detection.
     if (bay_emerge_or_depart (heavy_obj, light_obj)) { return 0; }
 
     //	Ships which are dying should not do collision detection.
     //	Also, this is the only clean way I could figure to get ships to not do
-    //damage to each other for one frame 	when they are docked and departing.
-    //Due to sequencing, they would not show up as docked, yet they 	would still
-    //come through here, so they would harm each other, if on opposing teams.
+    // damage to each other for one frame 	when they are docked and departing.
+    // Due to sequencing, they would not show up as docked, yet they 	would
+    // still come through here, so they would harm each other, if on opposing
+    // teams.
     //-- MK, 2/2/98
     if ((heavy_obj->flags[Object::Object_Flags::Should_be_dead]) ||
         (light_obj->flags[Object::Object_Flags::Should_be_dead])) {
@@ -594,10 +595,13 @@ static bool check_subsystem_landing_allowed (
 }
 
 // ------------------------------------------------------------------------------------------------
-//		input:		ship_ship_hit		=>		structure containing ship_ship hit
-//info 		(includes)	A, B					=>		objects colliding 						r_A, r_B
-//=>		position to collision from center of mass 						collision_normal	=>
-//collision_normal (outward from B)
+//		input:		ship_ship_hit		=>		structure containing ship_ship
+// hit info 		(includes)	A, B					=>		objects
+// colliding
+// r_A, r_B
+//=>		position to collision from center of mass
+//collision_normal
+//=> collision_normal (outward from B)
 //
 //		output:	velocity, angular velocity, impulse
 //
@@ -802,9 +806,10 @@ void calculate_ship_ship_collision_physics (
         // a later time, so reset v_rel_normal_m
 
         //	(2) We could also have just gotten a slightly incorrect hitpos,
-        //where r dot v_rel is nearly zero. 	In this case, we know there was a
-        //collision, but slight collision and the normal is correct, so reset
-        //v_rel_normal_m 	need a normal direction.  We can just take the
+        // where r dot v_rel is nearly zero. 	In this case, we know there was
+        // a collision, but slight collision and the normal is correct, so
+        // reset v_rel_normal_m 	need a normal direction.  We can just take
+        // the
         //-v_light normalized.		v_rel_normal_m = -v_rel_normal_m;
 
         nprintf (
@@ -1076,10 +1081,10 @@ void calculate_ship_ship_collision_physics (
 //	get_I_inv()
 //
 //		input:	I_inv_body	=>		inverse moment of inertia matrix in body
-//coordinates 					orient		=>		orientation matrix
+// coordinates 					orient		=>		orientation matrix
 //
-//		output:	I_inv			=>		inverse moment of inertia matrix in world
-//coordinates
+//		output:	I_inv			=>		inverse moment of inertia matrix in
+// world coordinates
 // ------------------------------------------------------------------------------------------------
 //
 // calculates the inverse moment of inertia matrix from the body matrix and
@@ -1520,7 +1525,7 @@ int collide_ship_ship (obj_pair* pair) {
                         Ships[HeavyOne->instance].team) {
                         //	Decrease damage if non-player ships and not large.
                         //	Looks dumb when fighters are taking damage from
-                        //bumping into each other.
+                        // bumping into each other.
                         if ((LightOne->radius < 50.0f) &&
                             (HeavyOne->radius < 50.0f)) {
                             damage /= 4.0f;

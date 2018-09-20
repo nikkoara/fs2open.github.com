@@ -8,24 +8,23 @@
 namespace scripting {
 namespace api {
 
-class gameevent_h
-{
+class gameevent_h {
 private:
-	int edx;
+    int edx;
+
 public:
-	gameevent_h();
+    gameevent_h ();
 
-	explicit gameevent_h(int n_event);
+    explicit gameevent_h (int n_event);
 
-	bool IsValid();
+    bool IsValid ();
 
-	int Get();
+    int Get ();
 };
 
-DECLARE_ADE_OBJ(l_GameEvent, gameevent_h);
+DECLARE_ADE_OBJ (l_GameEvent, gameevent_h);
 
-}
-}
-
+} // namespace api
+} // namespace scripting
 
 #endif

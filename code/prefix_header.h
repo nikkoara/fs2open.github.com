@@ -1,6 +1,7 @@
 #pragma once
 
-// This header is used for compiling the precompiled header file that is included in the entire code project
+// This header is used for compiling the precompiled header file that is
+// included in the entire code project
 
 #include <cstdio>
 #include <cstddef>
@@ -36,4 +37,3 @@
 #include <fstream>
 #include <random>
 #include <future>
-

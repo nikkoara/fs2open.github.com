@@ -1280,7 +1280,7 @@ void draw_gamma_box () {
     // (although we should always be using less)
     // TODO: change MAX size to maximum size for a 1024x768 bitmap
     //	ushort
-    //Gamma_data[Options_gamma_coords[gr_screen.res][OPTIONS_W_COORD]*Options_gamma_coords[gr_screen.res][OPTIONS_H_COORD]*2];
+    // Gamma_data[Options_gamma_coords[gr_screen.res][OPTIONS_W_COORD]*Options_gamma_coords[gr_screen.res][OPTIONS_H_COORD]*2];
     ushort Gamma_data[MAX_GAMMA_BITMAP_SIZE];
 
     v = fl2i (pow (0.5f, 1.0f / FreeSpace_gamma) * 255.0f);

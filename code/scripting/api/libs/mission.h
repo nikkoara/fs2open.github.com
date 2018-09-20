@@ -5,10 +5,9 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_LIB(l_Mission);
+DECLARE_ADE_LIB (l_Mission);
 
-DECLARE_ADE_LIB(l_Campaign);
+DECLARE_ADE_LIB (l_Campaign);
 
-}
-}
-
+} // namespace api
+} // namespace scripting

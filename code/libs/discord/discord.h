@@ -3,6 +3,6 @@
 namespace libs {
 namespace discord {
 
-void init();
+void init ();
 }
 } // namespace libs

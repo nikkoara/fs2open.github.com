@@ -1157,10 +1157,10 @@ void mission_eval_goals () {
 }
 
 //	evaluate_primary_goals() will determine if the primary goals for a mission
-//are complete
+// are complete
 //
 //	returns 1 - all primary goals are all complete or imcomplete (or there are
-//no primary goals at all)
+// no primary goals at all)
 // returns 0 - not all primary goals are complete
 int mission_evaluate_primary_goals () {
     int i, primary_goals_complete = PRIMARY_GOALS_COMPLETE;

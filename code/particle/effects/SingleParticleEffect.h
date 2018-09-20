@@ -13,31 +13,31 @@ namespace effects {
 /**
  * @ingroup particleEffects
  */
-class SingleParticleEffect: public ParticleEffect {
- private:
-	util::ParticleProperties m_particleProperties;
+class SingleParticleEffect : public ParticleEffect {
+private:
+    util::ParticleProperties m_particleProperties;
 
-	util::EffectTiming m_timing;
+    util::EffectTiming m_timing;
 
- public:
-	explicit SingleParticleEffect(const std::string& name);
+public:
+    explicit SingleParticleEffect (const std::string& name);
 
-	bool processSource(const ParticleSource* source) override;
+    bool processSource (const ParticleSource* source) override;
 
-	void parseValues(bool nocreate) override;
+    void parseValues (bool nocreate) override;
 
-	void pageIn() override;
+    void pageIn () override;
 
-	void initializeSource(ParticleSource& source) override;
+    void initializeSource (ParticleSource& source) override;
 
-	EffectType getType() const override { return EffectType::Single; }
+    EffectType getType () const override { return EffectType::Single; }
 
-	util::ParticleProperties& getProperties() { return m_particleProperties; }
+    util::ParticleProperties& getProperties () { return m_particleProperties; }
 
-	static SingleParticleEffect* createInstance(int effectID, float minSize, float maxSize,
-												float lifetime = -1.0f);
+    static SingleParticleEffect* createInstance (
+        int effectID, float minSize, float maxSize, float lifetime = -1.0f);
 };
-}
-}
+} // namespace effects
+} // namespace particle
 
 #endif // SINGLE_PARTICLE_EFFECT_H

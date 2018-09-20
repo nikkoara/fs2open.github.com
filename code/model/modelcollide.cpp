@@ -181,9 +181,10 @@ static void mc_check_face (
 //
 //	inputs:	nv				=>		number of vertices
 //				verts			=>		array of vertices
-//				plane_pnt	=>		center point in plane (about which radius is
-//measured) 				face_rad		=>		radius of face
-//				plane_norm	=>		normal of face
+//				plane_pnt	=>		center point in plane (about which radius
+// is measured) 				face_rad		=>		radius of face
+// plane_norm
+//=>		normal of face
 static void mc_check_sphereline_face (
     int nv, vec3d** verts, vec3d* plane_pnt, vec3d* plane_norm,
     uv_pair* uvl_list, int ntmap, ubyte* poly, bsp_collision_leaf* bsp_leaf) {
@@ -343,8 +344,8 @@ Mc->radius\n", temp_dist, Mc->radius));
                 //	nprintf(("Physics", "edge sphere time: %f, normal: (%f, %f,
                 //%f) hit_point: (%f, %f, %f)\n", sphere_time,
                 //		Mc->hit_normal.xyz.x, Mc->hit_normal.xyz.y,
-                //Mc->hit_normal.xyz.z, 		hit_point.xyz.x, hit_point.xyz.y,
-                //hit_point.xyz.z));
+                // Mc->hit_normal.xyz.z, 		hit_point.xyz.x,
+                // hit_point.xyz.y, hit_point.xyz.z));
             }
             else { // Not best so far
                 Assert (Mc->num_hits > 0);
@@ -548,7 +549,7 @@ int model_collide_sub (void* model_ptr) {
 
     while (chunk_type != OP_EOF) {
         //		mprintf(( "Processing chunk type %d, len=%d\n", chunk_type,
-        //chunk_size ));
+        // chunk_size ));
 
         switch (chunk_type) {
         case OP_DEFPOINTS: model_collide_defpoints (p); break;

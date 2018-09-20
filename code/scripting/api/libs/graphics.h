@@ -5,10 +5,9 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_LIB(l_Graphics);
+DECLARE_ADE_LIB (l_Graphics);
 
-void graphics_on_frame();
+void graphics_on_frame ();
 
-}
-}
-
+} // namespace api
+} // namespace scripting

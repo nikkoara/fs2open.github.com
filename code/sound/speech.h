@@ -1,10 +1,10 @@
 /*
  * Code created by Thomas Whittaker (RT) for a FreeSpace 2 source code project
  *
- * You may not sell or otherwise commercially exploit the source or things you 
+ * You may not sell or otherwise commercially exploit the source or things you
  * created based on the source.
  *
-*/ 
+ */
 
 #ifndef _SPEECH_H_
 #define _SPEECH_H_
@@ -13,19 +13,19 @@
 
 #if FS2_SPEECH
 
-bool speech_init();
-void speech_deinit();
-bool speech_play(const char *text);
-bool speech_pause();
-bool speech_resume();
-bool speech_stop();
+bool speech_init ();
+void speech_deinit ();
+bool speech_play (const char* text);
+bool speech_pause ();
+bool speech_resume ();
+bool speech_stop ();
 
-bool speech_set_volume(unsigned short volume);
-bool speech_set_voice(int voice);
+bool speech_set_volume (unsigned short volume);
+bool speech_set_voice (int voice);
 
-bool speech_is_speaking();
+bool speech_is_speaking ();
 
-std::vector<std::string> speech_enumerate_voices();
+std::vector< std::string > speech_enumerate_voices ();
 
 #else
 
@@ -41,8 +41,8 @@ std::vector<std::string> speech_enumerate_voices();
 #define speech_set_voice(voice) ((voice), false)
 #define speech_is_speaking() (false)
 
-inline std::vector<std::string> speech_enumerate_voices() {
-	return std::vector<std::string>();
+inline std::vector< std::string > speech_enumerate_voices () {
+    return std::vector< std::string > ();
 }
 
 #endif

@@ -18,52 +18,55 @@
  */
 
 #define SCP_FORMAT_STRING
-#define SCP_FORMAT_STRING_ARGS(x,y)  __attribute__((format(printf, x, y)))
+#define SCP_FORMAT_STRING_ARGS(x, y) __attribute__ ((format (printf, x, y)))
 
-#define __UNUSED __attribute__((__unused__))
-#define __ALIGNED(x)  __attribute__((__aligned__(x)))
+#define __UNUSED __attribute__ ((__unused__))
+#define __ALIGNED(x) __attribute__ ((__aligned__ (x)))
 
 #ifdef NO_RESTRICT_USE
-#   define RESTRICT
+#define RESTRICT
 #else
-#   define RESTRICT  restrict
+#define RESTRICT restrict
 #endif
 
 #define ASSUME(x)
 
 #if defined(NDEBUG)
-#	define Assertion(expr, msg, ...)  do {} while (false)
+#define Assertion(expr, msg, ...) \
+    do {                          \
+    } while (false)
 #else
 /*
  * NOTE: Assertion() can only use its proper functionality in compilers
  * that support variadic macros.
  */
-#	define Assertion(expr, msg, ...)                                      \
-		do {                                                              \
-			if (!(expr)) {                                                \
-				os::dialogs::AssertMessage(#expr, __FILE__, __LINE__, msg, ##__VA_ARGS__); \
-			}                                                             \
-		} while (false)
+#define Assertion(expr, msg, ...)                               \
+    do {                                                        \
+        if (!(expr)) {                                          \
+            os::dialogs::AssertMessage (                        \
+                #expr, __FILE__, __LINE__, msg, ##__VA_ARGS__); \
+        }                                                       \
+    } while (false)
 #endif
 
 /* C++11 Standard Detection */
 #if !defined(HAVE_CXX11)
-	/*
-	 * For GCC with autotools, see AX_CXX_COMPiLE_STDCXX_11 macro in the
-	 * file "configure.ac". This sets HAVE_CXX11 & -std=c++0x or -std=c++11
-	 * as appropriate.
-	 *
-	 * TODO: Is anything else required here?
-	 */
+/*
+ * For GCC with autotools, see AX_CXX_COMPiLE_STDCXX_11 macro in the
+ * file "configure.ac". This sets HAVE_CXX11 & -std=c++0x or -std=c++11
+ * as appropriate.
+ *
+ * TODO: Is anything else required here?
+ */
 #endif
 
-#define SIZE_T_ARG    "%zu"
+#define SIZE_T_ARG "%zu"
 #define PTRDIFF_T_ARG "%zd"
 
-#define likely(x)    __builtin_expect((long) !!(x), 1L)
-#define unlikely(x)  __builtin_expect((long) !!(x), 0L)
+#define likely(x) __builtin_expect ((long)!!(x), 1L)
+#define unlikely(x) __builtin_expect ((long)!!(x), 0L)
 
-#define USED_VARIABLE __attribute__((used))
+#define USED_VARIABLE __attribute__ ((used))
 
 #if SCP_COMPILER_VERSION_MAJOR >= 7
 #define FALLTHROUGH [[fallthrough]]
@@ -74,10 +77,10 @@
 #define CLANG_ANALYZER_NORETURN
 
 #ifndef NDEBUG
-#define UNREACHABLE(msg, ...)                                                                                          \
-	do {                                                                                                               \
-		os::dialogs::Error(__FILE__, __LINE__, msg, ##__VA_ARGS__);                                                    \
-	} while (false)
+#define UNREACHABLE(msg, ...)                                        \
+    do {                                                             \
+        os::dialogs::Error (__FILE__, __LINE__, msg, ##__VA_ARGS__); \
+    } while (false)
 #else
-#define UNREACHABLE(msg, ...) __builtin_unreachable()
+#define UNREACHABLE(msg, ...) __builtin_unreachable ()
 #endif

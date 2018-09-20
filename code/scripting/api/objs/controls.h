@@ -5,8 +5,6 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_LIB(l_Mouse);
-
+DECLARE_ADE_LIB (l_Mouse);
 }
-}
-
+} // namespace scripting

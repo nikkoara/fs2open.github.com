@@ -421,7 +421,7 @@ void HudGaugeRadarDradis::drawSweeps () {
     g3_start_instance_matrix (
         &vmd_zero_vector, /*&Player_obj->orient*/ &vmd_identity_matrix, true);
     //		gr_set_bitmap(sweep_plane, GR_ALPHABLEND_FILTER,
-    //GR_BITBLT_MODE_NORMAL, 1.0f);
+    // GR_BITBLT_MODE_NORMAL, 1.0f);
 
     // 		g3_draw_polygon(&vmd_zero_vector, &sweep_a, scale, scale,
     // TMAP_FLAG_TEXTURED | TMAP_HTL_3D_UNLIT);

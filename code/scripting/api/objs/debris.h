@@ -6,9 +6,6 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_OBJ(l_Debris, object_h);
-
+DECLARE_ADE_OBJ (l_Debris, object_h);
 }
-}
-
-
+} // namespace scripting

@@ -3,7 +3,7 @@
 // Disable a few warnings that happen in the ffmpeg headers
 // TODO: Also do this for other compilers
 #pragma warning(push)
-#pragma warning(disable: 4244) // conversion from 'int' to '*'
+#pragma warning(disable : 4244) // conversion from 'int' to '*'
 
 extern "C" {
 #include <libavcodec/version.h>
@@ -22,7 +22,7 @@ extern "C" {
 }
 
 #ifdef WITH_LIBAV
-	#include "LibAVCompatibility.h"
+#include "LibAVCompatibility.h"
 #endif
 
 #pragma warning(pop)
@@ -36,8 +36,8 @@ extern "C" {
 #define AV_VERSION_MAJOR(a) ((a) >> 16)
 #endif
 #ifndef AV_VERSION_MINOR
-#define AV_VERSION_MINOR(a) (((a) & 0x00FF00) >> 8)
+#define AV_VERSION_MINOR(a) (((a)&0x00FF00) >> 8)
 #endif
 #ifndef AV_VERSION_MICRO
-#define AV_VERSION_MICRO(a) ((a) & 0xFF)
+#define AV_VERSION_MICRO(a) ((a)&0xFF)
 #endif

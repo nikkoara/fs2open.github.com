@@ -65,8 +65,8 @@ const char* Player_select_background_bitmap_name[GR_NUM_RESOLUTIONS] = {
 const char* Player_select_background_mask_bitmap[GR_NUM_RESOLUTIONS] = {
     "ChoosePilot-m", "2_ChoosePilot-m"
 };
-// #define PLAYER_SELECT_PALETTE			NOX("ChoosePilotPalette")	// palette for the
-// screen
+// #define PLAYER_SELECT_PALETTE			NOX("ChoosePilotPalette")	// palette
+// for the screen
 
 #define PLAYER_SELECT_MAIN_HALL_OVERLAY \
     NOX ("MainHall1") // main hall help overlay
@@ -1230,7 +1230,7 @@ void player_select_display_copyright () {
     char Copyright_msg1[256], Copyright_msg2[256];
 
     //	strcpy_s(Copyright_msg1, XSTR("Descent: FreeSpace - The Great War,
-    //Copyright c 1998, Volition, Inc.", -1));
+    // Copyright c 1998, Volition, Inc.", -1));
     gr_set_color_fast (&Color_white);
 
     //	sprintf(Copyright_msg1, NOX("FreeSpace 2"));

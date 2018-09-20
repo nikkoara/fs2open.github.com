@@ -2088,7 +2088,7 @@ int button_function_demo_valid (int n) {
     int ret = 0;
 
     //	No keys, not even targeting keys, when player in death roll.  He can
-    //press keys after he blows up.
+    // press keys after he blows up.
     if (Game_mode & GM_DEAD_DIED) { return 0; }
 
     // any of these buttons are valid
@@ -2257,7 +2257,7 @@ int button_function (int n) {
     }
 
     //	No keys, not even targeting keys, when player in death roll.  He can
-    //press keys after he blows up.
+    // press keys after he blows up.
     if (Game_mode & GM_DEAD_DIED) { return 0; }
 
     // Goober5000 - if the ship doesn't have subspace drive, jump key doesn't
@@ -2681,7 +2681,7 @@ int button_function (int n) {
         // AL: Try to find the closest repair ship coming to repair the
         // player... if no support
         //		 ships are coming to rearm the player, just try for the closest
-        //repair ship
+        // repair ship
         if (hud_target_closest_repair_ship (OBJ_INDEX (Player_obj)) == 0) {
             if (hud_target_closest_repair_ship () == 0) {
                 snd_play (gamesnd_get_game_sound (GameSounds::TARGET_FAIL));

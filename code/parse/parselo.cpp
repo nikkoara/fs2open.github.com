@@ -764,7 +764,7 @@ void copy_to_eoln (
 }
 
 //	Copy characters from instr to outstr until next white space is found, or
-//until max 	characters have been copied (including terminator).
+// until max 	characters have been copied (including terminator).
 void copy_to_next_white (char* outstr, char* instr, int max) {
     int count = 0;
     int in_quotes = 0;
@@ -1122,7 +1122,7 @@ void get_string (std::string& str) {
 
 //	Stuff a string into a string buffer.
 //	Supports various FreeSpace primitive types.  If 'len' is supplied, it will
-//override
+// override
 // the default string length if using the F_NAME case.
 void stuff_string (char* outstr, int type, int len, const char* terminators) {
     char read_str[PARSE_BUF_SIZE] = "";
@@ -1343,7 +1343,7 @@ void stuff_string_line (std::string& outstr) {
 
 // Exactly the same as stuff string only Malloc's the buffer.
 //	Supports various FreeSpace primitive types.  If 'len' is supplied, it will
-//override
+// override
 // the default string length if using the F_NAME case.
 char* stuff_and_malloc_string (int type, char* terminators) {
     std::string tmp_result;
@@ -2606,8 +2606,8 @@ int stuff_string_list (std::vector< std::string >& slp) {
         if (*Mp != '\"') {
             error_display (0, "Missing quotation marks in string list.");
         }
-        // Assert ( *Mp == '\"' );					// should always be enclosed in
-        // quotes
+        // Assert ( *Mp == '\"' );					// should always be
+        // enclosed in quotes
 
         buf = "";
         get_string (buf);
@@ -2640,8 +2640,8 @@ int stuff_string_list (char slp[][NAME_LENGTH], int max_strings) {
         if (*Mp != '\"') {
             error_display (0, "Missing quotation marks in string list.");
         }
-        // Assert ( *Mp == '\"' );					// should always be enclosed in
-        // quotes
+        // Assert ( *Mp == '\"' );					// should always be
+        // enclosed in quotes
 
         if (count < max_strings) { get_string (slp[count++]); }
         else {
@@ -2958,7 +2958,7 @@ size_t stuff_float_list (float* flp, size_t max_floats) {
 //	This is of the form ( i* )
 //	  where i is an integer.
 //	If a specified string is found in the lookup and its value is 7, then the
-//7th value 	in the array is set.
+// 7th value 	in the array is set.
 void mark_int_list (int* ilp, int max_ints, int lookup_type) {
     ignore_white_space ();
 
@@ -3329,13 +3329,17 @@ char* split_str_once (char* src, int max_pixel_w) {
 //
 // parameters:		src			=>		source string to be broken up
 //						max_pixel_w	=>		max width of line in pixels
-//						n_chars		=>		output array that will hold number of characters
-//in each line
-//						p_str			=>		output array of pointers to start of lines
-//within src 						max_lines	=>		limit of number of lines to break src up into
-//						ignore_char	=>		OPTIONAL parameter (default val -1).  Ignore
-//words starting with this character 												This is useful when you want to ignore
-//embedded control information that starts 												with a specific character, like $ or
+//						n_chars		=>		output array that will hold number
+//of characters in each line 						p_str			=>		output array of pointers to
+//start of
+// lines within src 						max_lines	=>		limit of number
+// of
+// lines to break src up into 						ignore_char	=>		OPTIONAL parameter
+// (default
+// val -1).  Ignore
+// words starting with this character 												This is useful when you
+// want to ignore embedded control information that starts with a specific
+// character, like $ or
 //#
 //
 //	returns:			number of lines src is broken into

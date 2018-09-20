@@ -501,8 +501,8 @@ FSFont* get_font (const std::string& name) {
  *
  * @param fnt				The font data
  * @param c1				The character that should be checked.
- * @param c2				The character which follows this character. Used to compute the
- * kerning
+ * @param c2				The character which follows this character. Used to
+ * compute the kerning
  * @param [out]	width   	If non-null, the width.
  * @param [out]	spaceing	If non-null, the spaceing.
  *

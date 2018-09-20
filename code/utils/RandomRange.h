@@ -24,99 +24,96 @@ namespace {
  *
  * @ingroup randomUtils
  */
-template<typename T, size_t N>
-size_t parse_number_list(T (& list)[N]) {
-	float helpList[N];
-	auto num = stuff_float_list(helpList, N);
+template< typename T, size_t N >
+size_t parse_number_list (T (&list)[N]) {
+    float helpList[N];
+    auto num = stuff_float_list (helpList, N);
 
-	for (size_t i = 0; i < num; ++i) {
-		list[i] = static_cast<T>(helpList[i]);
-	}
+    for (size_t i = 0; i < num; ++i) {
+        list[i] = static_cast< T > (helpList[i]);
+    }
 
-	return num;
+    return num;
 }
-}
+} // namespace
 
 /**
  * @brief Generic class for generating numbers in a specific range
  *
- * This allows to use a generic value, distribution and generator type. It's valid to only use one value for the range
- * in which case the returned value is constant.
+ * This allows to use a generic value, distribution and generator type. It's
+ * valid to only use one value for the range in which case the returned value
+ * is constant.
  *
  * @ingroup randomUtils
  */
-template<typename Value, typename Distribution, typename Generator>
+template< typename Value, typename Distribution, typename Generator >
 class RandomRange {
- public:
-	typedef Distribution DistributionType;
-	typedef Generator GeneratorType;
-	typedef Value ValueType;
+public:
+    typedef Distribution DistributionType;
+    typedef Generator GeneratorType;
+    typedef Value ValueType;
 
- private:
-	GeneratorType m_generator;
-	DistributionType m_distribution;
+private:
+    GeneratorType m_generator;
+    DistributionType m_distribution;
 
-	bool m_constant;
-	ValueType m_minValue;
-	ValueType m_maxValue;
+    bool m_constant;
+    ValueType m_minValue;
+    ValueType m_maxValue;
 
- public:
-	template<typename... Ts>
-	RandomRange(ValueType param1, ValueType param2, Ts&& ... distributionParameters) :
-		m_generator(std::random_device()()),
-		m_distribution(param1, param2, distributionParameters...) {
-		m_minValue = static_cast<ValueType>(param1);
-		m_maxValue = static_cast<ValueType>(param2);
-		m_constant = false;
-	}
+public:
+    template< typename... Ts >
+    RandomRange (
+        ValueType param1, ValueType param2, Ts&&... distributionParameters)
+        : m_generator (std::random_device () ()),
+          m_distribution (param1, param2, distributionParameters...) {
+        m_minValue = static_cast< ValueType > (param1);
+        m_maxValue = static_cast< ValueType > (param2);
+        m_constant = false;
+    }
 
-	explicit RandomRange(const ValueType& val) : RandomRange() {
-		m_minValue = val;
-		m_maxValue = val;
-		m_constant = true;
-	}
+    explicit RandomRange (const ValueType& val) : RandomRange () {
+        m_minValue = val;
+        m_maxValue = val;
+        m_constant = true;
+    }
 
-	RandomRange() :
-		m_generator(std::random_device()()),
-		m_distribution() {
-		m_minValue = static_cast<ValueType>(0.0);
-		m_maxValue = static_cast<ValueType>(0.0);
-		m_constant = true;
-	}
+    RandomRange ()
+        : m_generator (std::random_device () ()), m_distribution () {
+        m_minValue = static_cast< ValueType > (0.0);
+        m_maxValue = static_cast< ValueType > (0.0);
+        m_constant = true;
+    }
 
-	/**
-	 * @brief Determines the next random number of this range
-	 * @return The random number
-	 */
-	ValueType next() {
-		if (m_constant) {
-			return m_minValue;
-		}
+    /**
+     * @brief Determines the next random number of this range
+     * @return The random number
+     */
+    ValueType next () {
+        if (m_constant) { return m_minValue; }
 
-		return m_distribution(m_generator);
-	}
+        return m_distribution (m_generator);
+    }
 
-	/**
-	 * @brief Gets the minimum value that may be returned by this random range
-	 *
-	 * @warning This is not valid for normal distribution ranges since those do not have a definite minimum value.
-	 *
-	 * @return The minimum value
-	 */
-	ValueType min() const {
-		return m_minValue;
-	}
+    /**
+     * @brief Gets the minimum value that may be returned by this random range
+     *
+     * @warning This is not valid for normal distribution ranges since those do
+     * not have a definite minimum value.
+     *
+     * @return The minimum value
+     */
+    ValueType min () const { return m_minValue; }
 
-	/**
-	 * @brief Gets the maximum value that may be returned by this random range
-	 *
-	 * @warning This is not valid for normal distribution ranges since those do not have a definite maximum value.
-	 *
-	 * @return The maximum value
-	 */
-	ValueType max() {
-		return m_maxValue;
-	}
+    /**
+     * @brief Gets the maximum value that may be returned by this random range
+     *
+     * @warning This is not valid for normal distribution ranges since those do
+     * not have a definite maximum value.
+     *
+     * @return The maximum value
+     */
+    ValueType max () { return m_maxValue; }
 };
 
 /**
@@ -126,17 +123,16 @@ class RandomRange {
  *
  * @ingroup randomUtils
  */
-template<typename Value>
-using NormalRange = RandomRange<Value,
-								std::normal_distribution<Value>,
-								std::minstd_rand>;
+template< typename Value >
+using NormalRange =
+    RandomRange< Value, std::normal_distribution< Value >, std::minstd_rand >;
 
 /**
  * @brief A normal range which uses floats
  *
  * @ingroup randomUtils
  */
-typedef NormalRange<float> NormalFloatRange;
+typedef NormalRange< float > NormalFloatRange;
 
 /**
  * @brief A function for parsing a normal range
@@ -144,20 +140,20 @@ typedef NormalRange<float> NormalFloatRange;
  *
  * @ingroup randomUtils
  */
-template<typename Value>
-NormalRange<Value> parseNormalRange() {
-	Value valueList[2];
-	auto num = parse_number_list(valueList);
+template< typename Value >
+NormalRange< Value > parseNormalRange () {
+    Value valueList[2];
+    auto num = parse_number_list (valueList);
 
-	if (num == 0) {
-		error_display(0, "Need at least one value to form a random range!");
-		return NormalRange<Value>();
-	}
-	else if (num == 1) {
-		return NormalRange<Value>(valueList[0]);
-	}
+    if (num == 0) {
+        error_display (0, "Need at least one value to form a random range!");
+        return NormalRange< Value > ();
+    }
+    else if (num == 1) {
+        return NormalRange< Value > (valueList[0]);
+    }
 
-	return NormalRange<Value>(valueList[0], valueList[1]);
+    return NormalRange< Value > (valueList[0], valueList[1]);
 }
 
 /**
@@ -165,33 +161,35 @@ NormalRange<Value> parseNormalRange() {
  *
  * @ingroup randomUtils
  */
-template<typename Value>
-using UniformRange = RandomRange<Value,
-								 typename std::conditional<std::is_integral<Value>::value,
-														   std::uniform_int_distribution<Value>,
-														   std::uniform_real_distribution<Value>>::type,
-								 std::minstd_rand>;
+template< typename Value >
+using UniformRange = RandomRange<
+    Value,
+    typename std::conditional<
+        std::is_integral< Value >::value,
+        std::uniform_int_distribution< Value >,
+        std::uniform_real_distribution< Value > >::type,
+    std::minstd_rand >;
 
 /**
  * @brief A uniform range which uses floats
  *
  * @ingroup randomUtils
  */
-typedef UniformRange<float> UniformFloatRange;
+typedef UniformRange< float > UniformFloatRange;
 
 /**
  * @brief A uniform range which uses ints
  *
  * @ingroup randomUtils
  */
-typedef UniformRange<int> UniformIntRange;
+typedef UniformRange< int > UniformIntRange;
 
 /**
  * @brief A uniform range which uses uints
  *
  * @ingroup randomUtils
  */
-typedef UniformRange<uint> UniformUIntRange;
+typedef UniformRange< uint > UniformUIntRange;
 
 /**
  * @brief Parses a generic uniform range
@@ -203,50 +201,62 @@ typedef UniformRange<uint> UniformUIntRange;
  *
  * @ingroup randomUtils
  */
-template<typename Value>
-UniformRange<Value> parseUniformRange(Value min = std::numeric_limits<Value>::min(),
-									  Value max = std::numeric_limits<Value>::max()) {
-	Assertion(min <= max, "Invalid min-max values specified!");
+template< typename Value >
+UniformRange< Value > parseUniformRange (
+    Value min = std::numeric_limits< Value >::min (),
+    Value max = std::numeric_limits< Value >::max ()) {
+    Assertion (min <= max, "Invalid min-max values specified!");
 
-	Value valueList[2];
-	auto num = parse_number_list(valueList);
+    Value valueList[2];
+    auto num = parse_number_list (valueList);
 
-	if (num == 0) {
-		error_display(0, "Need at least one value to form a random range!");
-		return UniformRange<Value>();
-	}
-	else if (num == 1) {
-		return UniformRange<Value>(valueList[0]);
-	}
+    if (num == 0) {
+        error_display (0, "Need at least one value to form a random range!");
+        return UniformRange< Value > ();
+    }
+    else if (num == 1) {
+        return UniformRange< Value > (valueList[0]);
+    }
 
-	if (valueList[0] > valueList[1]) {
-		error_display(0, "Minimum value %f is more than maximum value %f!", (float) valueList[0], (float) valueList[1]);
-		std::swap(valueList[0], valueList[1]);
-	}
+    if (valueList[0] > valueList[1]) {
+        error_display (
+            0, "Minimum value %f is more than maximum value %f!",
+            (float)valueList[0], (float)valueList[1]);
+        std::swap (valueList[0], valueList[1]);
+    }
 
-	if (valueList[0] < min) {
-		error_display(0, "First value (%f) is less than the minimum %f!", (float) valueList[0], (float) min);
-		valueList[0] = min;
-	}
-	if (valueList[0] > max) {
-		error_display(0, "First value (%f) is greater than the maximum %f!", (float) valueList[0], (float) max);
-		valueList[0] = max;
-	}
+    if (valueList[0] < min) {
+        error_display (
+            0, "First value (%f) is less than the minimum %f!",
+            (float)valueList[0], (float)min);
+        valueList[0] = min;
+    }
+    if (valueList[0] > max) {
+        error_display (
+            0, "First value (%f) is greater than the maximum %f!",
+            (float)valueList[0], (float)max);
+        valueList[0] = max;
+    }
 
-	if (valueList[1] < min) {
-		error_display(0, "Second value (%f) is less than the minimum %f!", (float) valueList[1], (float) min);
-		valueList[1] = min;
-	}
-	if (valueList[1] > max) {
-		error_display(0, "Second value (%f) is greater than the maximum %f!", (float) valueList[1], (float) max);
-		valueList[1] = max;
-	}
+    if (valueList[1] < min) {
+        error_display (
+            0, "Second value (%f) is less than the minimum %f!",
+            (float)valueList[1], (float)min);
+        valueList[1] = min;
+    }
+    if (valueList[1] > max) {
+        error_display (
+            0, "Second value (%f) is greater than the maximum %f!",
+            (float)valueList[1], (float)max);
+        valueList[1] = max;
+    }
 
-	if (valueList[0] == valueList[1]) {
-		// If the two values are equal then this is slightly more efficient
-		return UniformRange<Value>(valueList[0]);
-	} else {
-		return UniformRange<Value>(valueList[0], valueList[1]);
-	}
+    if (valueList[0] == valueList[1]) {
+        // If the two values are equal then this is slightly more efficient
+        return UniformRange< Value > (valueList[0]);
+    }
+    else {
+        return UniformRange< Value > (valueList[0], valueList[1]);
+    }
 }
-}
+} // namespace util

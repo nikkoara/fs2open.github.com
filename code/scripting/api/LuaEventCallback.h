@@ -7,41 +7,42 @@ namespace scripting {
 namespace api {
 namespace util {
 
-void convert_arg(lua_State* L, luacpp::LuaValueList& out, object* objp);
+void convert_arg (lua_State* L, luacpp::LuaValueList& out, object* objp);
 }
 
-template <typename Ret, typename... Args>
+template< typename Ret, typename... Args >
 class LuaEventCallback {
-	luacpp::LuaFunction _func;
+    luacpp::LuaFunction _func;
 
-	void convert_args(lua_State* /*L*/, luacpp::LuaValueList& /*out*/) {}
+    void convert_args (lua_State* /*L*/, luacpp::LuaValueList& /*out*/) {}
 
-	template <typename T, typename... A>
-	void convert_args(lua_State* L, luacpp::LuaValueList& out, T t, A... args)
-	{
-		util::convert_arg(L, out, t);
+    template< typename T, typename... A >
+    void
+    convert_args (lua_State* L, luacpp::LuaValueList& out, T t, A... args) {
+        util::convert_arg (L, out, t);
 
-		convert_args(L, out, args...);
-	}
+        convert_args (L, out, args...);
+    }
 
-  public:
-	explicit LuaEventCallback(const luacpp::LuaFunction& func) : _func(func) {}
+public:
+    explicit LuaEventCallback (const luacpp::LuaFunction& func)
+        : _func (func) {}
 
-	void operator()(Args... args)
-	{
-		using namespace luacpp;
+    void operator() (Args... args) {
+        using namespace luacpp;
 
-		LuaValueList lua_args;
-		convert_args(_func.getLuaState(), lua_args, args...);
+        LuaValueList lua_args;
+        convert_args (_func.getLuaState (), lua_args, args...);
 
-		_func(lua_args);
-	}
+        _func (lua_args);
+    }
 };
 
-template <typename Ret, typename... Args>
-std::function<Ret(Args...)> make_lua_callback(const luacpp::LuaFunction& func)
-{
-	return std::function<Ret(Args...)>(LuaEventCallback<Ret, Args...>(func));
+template< typename Ret, typename... Args >
+std::function< Ret (Args...) >
+make_lua_callback (const luacpp::LuaFunction& func) {
+    return std::function< Ret (Args...) > (
+        LuaEventCallback< Ret, Args... > (func));
 }
 
 } // namespace api

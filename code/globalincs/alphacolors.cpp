@@ -393,7 +393,7 @@ void parse_everything_else (const char* filename) {
                         //} else if (check_for_string("#")) {
                         //	stuff_hex_list(rgba, 4);
                         //	gr_init_alphacolor(interface_colors[i], rgba[0],
-                        //rgba[1], rgba[2], rgba[3]);
+                        // rgba[1], rgba[2], rgba[3]);
                     }
                     else {
                         // We have a string; it should be the name of a color
@@ -511,8 +511,9 @@ void parse_everything_else (const char* filename) {
                         //} else if ( check_for_string ("#") ) {
                         //	stuff_hex_list(rgba, 4);
                         //	gr_init_alphacolor(&temp_color, rgba[0], rgba[1],
-                        //rgba[2], rgba[3]); 	Custom_Colors[tag] = temp_color;
-                        //	Tagged_Colors[tag] = &Custom_Colors[tag];
+                        // rgba[2], rgba[3]); 	Custom_Colors[tag] =
+                        // temp_color; 	Tagged_Colors[tag] =
+                        // &Custom_Colors[tag];
                     }
                     else {
                         // We have a string; it should be the name of a color

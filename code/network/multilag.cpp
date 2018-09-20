@@ -54,8 +54,8 @@ typedef struct lag_buf {
     ubyte data[700]; // the data from the packet
     int data_len;    // length of the data
     SOCKET
-        socket; // this can be either a PSNET_SOCKET or a PSNET_SOCKET_RELIABLE
-    int stamp;  // when this expires, make this packet available
+    socket;    // this can be either a PSNET_SOCKET or a PSNET_SOCKET_RELIABLE
+    int stamp; // when this expires, make this packet available
     SOCKADDR_IN ip_addr; // ip address
 
     struct lag_buf* prev; // prev in the list

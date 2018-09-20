@@ -34,7 +34,7 @@ int collide_weapon_weapon (obj_pair* pair) {
     if (A->parent_sig == B->parent_sig) return 1;
 
     //	Only shoot down teammate's missile if not traveling in nearly same
-    //direction.
+    // direction.
     if (Weapons[A->instance].team == Weapons[B->instance].team)
         if (vm_vec_dot (&A->orient.vec.fvec, &B->orient.vec.fvec) > 0.7f)
             return 1;

@@ -5992,8 +5992,8 @@ void process_deny_packet (ubyte* data, header* hinfo) {
 // 1.) netplayer ship classes			(85 bytes max)
 // 2.) ship weapon state data			(277 bytes max)
 // 3.) player settings et. al.		(133 bytes max)
-// TOTAL                            495				NOTE : keep this in mind when/if
-// adding new data to this packet
+// TOTAL                            495				NOTE : keep this in mind
+// when/if adding new data to this packet
 void send_post_sync_data_packet (net_player* p, int std_request) {
     ubyte data[MAX_PACKET_SIZE], val;
     char bval;
@@ -8034,8 +8034,8 @@ void send_beam_fired_packet (
     ADD_DATA (b_info); // FIXME: This is still wrong, we shouldn't be sending
                        // an entire struct over the wire - taylor
     //	ADD_DATA(bfi_flags);	// this breaks the protocol but is here in case
-    //we decided to do that in the future - taylor 	ADD_DATA(target_pos);	//
-    //ditto - Goober5000
+    // we decided to do that in the future - taylor 	ADD_DATA(target_pos);
+    // // ditto - Goober5000
 
     // send to all clients
     multi_io_send_to_all_reliable (data, packet_size);
@@ -8062,7 +8062,7 @@ void process_beam_fired_packet (ubyte* data, header* hinfo) {
     GET_DATA (b_info); // FIXME: This is still wrong, we shouldn't be sending
                        // an entire struct over the wire - taylor
     //	GET_DATA(fighter_beam);  // this breaks the protocol but is here in
-    //case we decided to do that in the future - taylor
+    // case we decided to do that in the future - taylor
     PACKET_SET_SIZE ();
 
     // swap the beam_info override info into native byte order

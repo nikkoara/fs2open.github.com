@@ -7,17 +7,16 @@ namespace scripting {
 namespace api {
 
 class eye_h {
- public:
-	int model;
-	int eye_idx;
+public:
+    int model;
+    int eye_idx;
 
-	eye_h();
-	eye_h(int n_m, int n_e);
-	bool IsValid();
+    eye_h ();
+    eye_h (int n_m, int n_e);
+    bool IsValid ();
 };
 
-DECLARE_ADE_OBJ(l_Eyepoint, eye_h);
+DECLARE_ADE_OBJ (l_Eyepoint, eye_h);
 
-}
-}
-
+} // namespace api
+} // namespace scripting

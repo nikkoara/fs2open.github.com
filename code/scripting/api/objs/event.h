@@ -4,7 +4,7 @@
 #include "scripting/ade_api.h"
 
 namespace scripting {
-	namespace api {
-		DECLARE_ADE_OBJ(l_Event, int);
-	}
+namespace api {
+DECLARE_ADE_OBJ (l_Event, int);
 }
+} // namespace scripting

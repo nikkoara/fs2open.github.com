@@ -277,7 +277,7 @@ int pcx_read_bitmap (
     buffer_pos = 0;
 
     //	Assert( buffer_size == 1024 );	// AL: removed to avoid optimized
-    //warning 'unreachable code'
+    // warning 'unreachable code'
 
     buffer_size = cfread (buffer, 1, buffer_size, PCXfile);
 

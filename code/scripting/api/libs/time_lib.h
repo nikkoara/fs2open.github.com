@@ -5,6 +5,6 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_LIB(l_Time);
+DECLARE_ADE_LIB (l_Time);
 }
 } // namespace scripting

@@ -7,25 +7,22 @@
 
 #include <fstream>
 
-
 /** @file
  *  @ingroup tracing
  */
 
-namespace tracing
-{
-class MainFrameTimer
-{
-	std::ofstream _out;
+namespace tracing {
+class MainFrameTimer {
+    std::ofstream _out;
 
-	std::uint64_t _begin_time = 0;
- public:
-	MainFrameTimer();
-	~MainFrameTimer();
+    std::uint64_t _begin_time = 0;
 
-	void processEvent(const trace_event* event);
+public:
+    MainFrameTimer ();
+    ~MainFrameTimer ();
+
+    void processEvent (const trace_event* event);
 };
 
-typedef ThreadedEventProcessor<MainFrameTimer> ThreadedMainFrameTimer;
-}
-
+typedef ThreadedEventProcessor< MainFrameTimer > ThreadedMainFrameTimer;
+} // namespace tracing

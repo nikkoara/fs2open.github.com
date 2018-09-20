@@ -48,8 +48,9 @@ enum CfileRootType {
 
 //  Created by:
 //    specifying hard drive tree
-//    searching for pack files on hard drive		// Found by searching all known
-//    paths specifying cd-rom tree searching for pack files on CD-rom tree
+//    searching for pack files on hard drive		// Found by searching all
+//    known paths specifying cd-rom tree searching for pack files on CD-rom
+//    tree
 typedef struct cf_root {
     char path[CF_MAX_PATHNAME_LENGTH]; // Contains something like
                                        // c:\projects\freespace or

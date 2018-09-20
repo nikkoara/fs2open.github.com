@@ -5,4 +5,4 @@
 #include "globalincs/memory/memory.h"
 #include "globalincs/memory/utils.h"
 
-#endif	// _FSMEMORY_H
+#endif // _FSMEMORY_H

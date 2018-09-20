@@ -170,7 +170,7 @@ int Multi_current_file_length = -1;
 
 // -------------------------------------------------------------------------------------------------
 //	multi_init() is called only once, at game start-up.  Get player address +
-//port, initialize the
+// port, initialize the
 // network players list.
 //
 //
@@ -499,8 +499,8 @@ void multi_client_check_server () {
 
 // -------------------------------------------------------------------------------------------------
 //	process_packet_normal() will determine what sort of packet it is, and send
-//it to the appropriate spot. 	Prelimiary verification of the magic number and
-//checksum are done here.
+// it to the appropriate spot. 	Prelimiary verification of the magic number and
+// checksum are done here.
 //
 
 void process_packet_normal (ubyte* data, header* header_info) {
@@ -1057,7 +1057,7 @@ void multi_process_incoming () {
 
 // -------------------------------------------------------------------------------------------------
 //	multi_do_frame() is called once per game loop do update all the multiplayer
-//objects, and send
+// objects, and send
 // the player data to all the other net players.
 //
 //
@@ -1296,7 +1296,7 @@ void multi_do_frame () {
 
 // -------------------------------------------------------------------------------------------------
 //	multi_pause_do_frame() is called once per game loop do update all the
-//multiplayer objects, and send
+// multiplayer objects, and send
 // the player data to all the other net players when the multiplayer game is
 // paused. It only will do checking for a few specialized packets
 // (MULTI_UNPAUSE, etc)

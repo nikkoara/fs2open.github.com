@@ -5,9 +5,6 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_OBJ(l_Player, int);
-
+DECLARE_ADE_OBJ (l_Player, int);
 }
-}
-
-
+} // namespace scripting

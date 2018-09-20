@@ -16,43 +16,42 @@ namespace effects {
  * @ingroup particleEffects
  */
 class SphereShape {
-	::util::UniformFloatRange m_sphereRange;
- public:
-	SphereShape() : m_sphereRange(0.f, 1.f) {}
+    ::util::UniformFloatRange m_sphereRange;
 
-	matrix getDisplacementMatrix() {
-		auto u = m_sphereRange.next();
-		auto v = m_sphereRange.next();
+public:
+    SphereShape () : m_sphereRange (0.f, 1.f) {}
 
-		auto theta = 2 * PI * u;
-		auto phi = acos(2 * v - 1);
+    matrix getDisplacementMatrix () {
+        auto u = m_sphereRange.next ();
+        auto v = m_sphereRange.next ();
 
-		vec3d vec;
-		vec.xyz.x = sin(theta)*cos(phi);
-		vec.xyz.y = sin(theta)*sin(phi);
-		vec.xyz.z = cos(theta);
+        auto theta = 2 * PI * u;
+        auto phi = acos (2 * v - 1);
 
-		matrix m;
-		vm_vector_2_matrix_norm(&m, &vec);
+        vec3d vec;
+        vec.xyz.x = sin (theta) * cos (phi);
+        vec.xyz.y = sin (theta) * sin (phi);
+        vec.xyz.z = cos (theta);
 
-		return m;
-	}
+        matrix m;
+        vm_vector_2_matrix_norm (&m, &vec);
 
-	void parse(bool  /*nocreate*/) {
-	}
+        return m;
+    }
 
-	EffectType getType() const { return EffectType::Sphere; }
+    void parse (bool /*nocreate*/) {}
 
-	/**
-	 * @brief Specifies if the velocities of the particles should be scaled with the deviation from the direction
-	 * @return @c true
-	 */
-	static SCP_CONSTEXPR bool scale_velocity_deviation() {
-		return false;
-	}
+    EffectType getType () const { return EffectType::Sphere; }
+
+    /**
+     * @brief Specifies if the velocities of the particles should be scaled
+     * with the deviation from the direction
+     * @return @c true
+     */
+    static SCP_CONSTEXPR bool scale_velocity_deviation () { return false; }
 };
 
-}
-}
+} // namespace effects
+} // namespace particle
 
 #endif //_SPHERE_SHAPE_H

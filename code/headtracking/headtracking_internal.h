@@ -5,29 +5,21 @@
 
 #include "headtracking/headtracking.h"
 
-namespace headtracking
-{
-	namespace internal
-	{
-		class HeadTrackingException : public std::runtime_error
-		{
-		public:
-			explicit HeadTrackingException(const std::string& _Message)
-				: runtime_error(_Message)
-			{
-			}
-		};
+namespace headtracking {
+namespace internal {
+class HeadTrackingException : public std::runtime_error {
+public:
+    explicit HeadTrackingException (const std::string& _Message)
+        : runtime_error (_Message) {}
+};
 
-		class HeadTrackingProvider
-		{
-		public:
-			virtual ~HeadTrackingProvider()
-			{
-			}
+class HeadTrackingProvider {
+public:
+    virtual ~HeadTrackingProvider () {}
 
-			virtual bool query(HeadTrackingStatus* statusOut) = 0;
-		};
-	}
-}
+    virtual bool query (HeadTrackingStatus* statusOut) = 0;
+};
+} // namespace internal
+} // namespace headtracking
 
 #endif // HEADTRACKING_INTERNAL_H

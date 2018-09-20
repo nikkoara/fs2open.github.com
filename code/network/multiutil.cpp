@@ -360,7 +360,7 @@ const char* multi_random_chat_start () {
 
 // -------------------------------------------------------------------------------------------------
 //	multi_ship_class_lookup() will return the Ship_info[] index for the ship
-//specified as a
+// specified as a
 // parameter.
 //
 //
@@ -381,7 +381,7 @@ int multi_ship_class_lookup (const char* ship_name) {
 
 // -------------------------------------------------------------------------------------------------
 //	find_player() is called when a packet arrives, and we need to know which
-//net player to update.
+// net player to update.
 // The matching is done based on the address and port.  Port checking is done
 // in case multiple instances of FreeSpace are running on the same box.
 //
@@ -678,7 +678,7 @@ void multi_assign_player_ship (
 
 // -------------------------------------------------------------------------------------------------
 //	create_player() is called when a net player needs to be instantiated.  The
-//ship that is created
+// ship that is created
 // depends on the parameter ship_class.  Note that if ship_class is invalid,
 // the ship default_player_ship is used.  Returns 1 on success, 0 otherwise
 
@@ -1017,7 +1017,7 @@ void delete_player (int player_num, int kicked_reason) {
 
 // -------------------------------------------------------------------------------------------------
 //	multi_cull_zombies() will check if there has been any net players or
-//observers that have been inactive for
+// observers that have been inactive for
 // INACTIVE_LIMIT milliseconds since last check.  If so, they are taken out of
 // the net game.
 //

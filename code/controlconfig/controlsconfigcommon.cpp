@@ -1171,7 +1171,7 @@ const char* Joy_button_text_polish[] = {
 };
 
 //!	This is the text that is displayed on the screen for the keys a player
-//!selects
+//! selects
 const char* Scan_code_text_english[] = {
     "",
     "Esc",

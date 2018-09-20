@@ -1431,10 +1431,10 @@ static void asteroid_do_area_effect (object* asteroid_objp) {
  * into smaller asteroids.
  *
  * @param pasteroid_obj		pointer to asteroid object getting hit
- * @param other_obj		object that hit asteroid, can be NULL if asteroid hit by
+ * @param other_obj		object that hit asteroid, can be NULL if asteroid hit
+ * by area effect
+ * @param hitpos		world position asteroid was hit, can be NULL if hit by
  * area effect
- * @param hitpos		world position asteroid was hit, can be NULL if hit by area
- * effect
  * @param damage		amount of damage to apply to asteroid
  */
 void asteroid_hit (

@@ -392,10 +392,10 @@ static int ij_table[3][2] = {
  * @param nv		How many verts in the poly
  * @param verts		The vertives for the polygon
  * @param norm1		The polygon's normal
- * @param u_out		If not null and v_out not null and uvls not_null and point is
- * on face, the uv's of where it hit
- * @param vout		If not null and v_out not null and uvls not_null and point is
- * on face, the uv's of where it hit
+ * @param u_out		If not null and v_out not null and uvls not_null and point
+ * is on face, the uv's of where it hit
+ * @param vout		If not null and v_out not null and uvls not_null and point
+ * is on face, the uv's of where it hit
  * @param uvls		A list of uv pairs for each vertex
  *
  * This replaces the old check_point_to_face & find_hitpoint_uv
@@ -502,8 +502,8 @@ static int check_sphere_point (
  * If two collisions occur, returns earliest legal time
  * returns the intersection point on the plane
  *
- * @param intersect_point		position on plane where sphere makes first contact
- * [if hit_time in range 0-1]
+ * @param intersect_point		position on plane where sphere makes first
+ * contact [if hit_time in range 0-1]
  * @param sphere_center_start	initial sphere center
  * @param sphere_velocity		initial sphere velocity
  * @param sphere_radius			radius of sphere
@@ -566,8 +566,8 @@ int fvi_sphere_plane (
  * perpendicular to sphere_velocity If two collisions occur, returns the
  * earliest legal time returns the intersection point on the edge
  *
- * @param intersect_point		position on plane where sphere makes first contact
- * [RESULT]
+ * @param intersect_point		position on plane where sphere makes first
+ * contact [RESULT]
  * @param sphere_center_start	initial sphere center
  * @param sphere_velocity		initial sphere velocity
  * @param sphere_radius			radius of sphere

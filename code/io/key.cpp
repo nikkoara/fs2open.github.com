@@ -48,11 +48,10 @@ int key_inited = 0;
 
 SDL_mutex* key_lock;
 
-// int Backspace_debug=1;	// global flag that will enable/disable the backspace
-// key from stopping execution
-// This flag was created since the backspace key is also used to correct
-// mistakes when typing in your pilots callsign.  This global flag is checked
-// before execution is stopped.
+// int Backspace_debug=1;	// global flag that will enable/disable the
+// backspace key from stopping execution This flag was created since the
+// backspace key is also used to correct mistakes when typing in your pilots
+// callsign.  This global flag is checked before execution is stopped.
 
 std::map< int, int > SDLtoFS2;
 
@@ -247,8 +246,8 @@ void key_turn_on_numlock () {}
 
 //	Convert a BIOS scancode to ASCII.
 //	If scancode >= 127, returns 255, meaning there is no corresponding ASCII
-//code. 	Uses ascii_table and shifted_ascii_table to translate scancode to
-//ASCII.
+// code. 	Uses ascii_table and shifted_ascii_table to translate scancode to
+// ASCII.
 int key_to_ascii (int keycode) {
     int shifted;
 
@@ -462,7 +461,7 @@ uint key_get_shift_status () {
 }
 
 //	Returns amount of time key (specified by "code") has been down since last
-//call. 	Returns float, unlike key_down_time() which returns a fix.
+// call. 	Returns float, unlike key_down_time() which returns a fix.
 float key_down_timef (uint scancode) {
     uint time_down, time;
     uint delta_time;
@@ -540,7 +539,7 @@ int key_up_count (int scancode) {
 int key_check (int key) { return key_data.down_check[key]; }
 
 //	Add a key up or down code to the key buffer.  state=1 -> down, state=0 ->
-//up
+// up
 // latency => time difference in ms between when key was actually pressed and
 // now
 // void key_mark( uint code, int state )

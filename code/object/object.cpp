@@ -805,7 +805,7 @@ void obj_move_call_physics (object* objp, float frametime) {
     int has_fired = -1; // stop fireing stuff-Bobboau
 
     //	Do physics for objects with OF_PHYSICS flag set and with some engine
-    //strength remaining.
+    // strength remaining.
     if (objp->flags[Object::Object_Flags::Physics]) {
         // only set phys info if ship is not dead
         if ((objp->type == OBJ_SHIP) &&
@@ -821,7 +821,7 @@ void obj_move_call_physics (object* objp, float frametime) {
 
             if (engine_strength ==
                 0.0f) { //	All this is necessary to make ship gradually come
-                        //to a stop after engines are blown.
+                        // to a stop after engines are blown.
                 vm_vec_zero (&objp->phys_info.desired_vel);
                 vm_vec_zero (&objp->phys_info.desired_rotvel);
                 objp->phys_info.flags |= (PF_REDUCED_DAMP | PF_DEAD_DAMP);
@@ -907,18 +907,18 @@ void obj_move_call_physics (object* objp, float frametime) {
         else {
             //	Hack for dock mode.
             //	If docking with a ship, we don't obey the normal ship physics,
-            //we can slew about.
+            // we can slew about.
             if (objp->type == OBJ_SHIP) {
                 ai_info* aip = &Ai_info[Ships[objp->instance].ai_index];
 
                 //	Note: This conditional for using PF_USE_VEL (instantaneous
-                //acceleration) is probably too loose. 	A ships awaiting support
-                //will fly towards the support ship with instantaneous
-                //acceleration. 	But we want to have ships in the process of
-                //docking have quick acceleration, or they overshoot their
-                //goals. 	Probably can not key off
-                //objnum_I_am_docked_or_docking_with, but then need to add some
-                //other condition.  Live with it for now. -- MK, 2/19/98
+                // acceleration) is probably too loose. 	A ships awaiting
+                // support will fly towards the support ship with instantaneous
+                // acceleration. 	But we want to have ships in the process of
+                // docking have quick acceleration, or they overshoot their
+                // goals. 	Probably can not key off
+                // objnum_I_am_docked_or_docking_with, but then need to add
+                // some other condition.  Live with it for now. -- MK, 2/19/98
 
                 // Goober5000 - no need to key off objnum; other conditions get
                 // it just fine
@@ -937,7 +937,7 @@ void obj_move_call_physics (object* objp, float frametime) {
                     else {
                         objp->phys_info.flags &=
                             ~PF_USE_VEL; //	If engine blown, don't PF_USE_VEL,
-                                         //or ships stop immediately
+                                         // or ships stop immediately
                     }
                 }
                 else {
@@ -1643,7 +1643,7 @@ void obj_move_all (float frametime) {
     if (!cmeasure_list.empty ())
         find_homing_object_cmeasures (
             cmeasure_list); //	If any cmeasures are active, maybe steer away
-                            //homing missiles
+                            // homing missiles
 
     // do pre-collision stuff for beam weapons
     beam_move_all_pre ();

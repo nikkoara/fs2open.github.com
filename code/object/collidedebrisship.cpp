@@ -173,7 +173,7 @@ int collide_debris_ship (obj_pair* pair) {
         }
     }
     else { //	Bounding spheres don't intersect, set timestamp for next
-           //collision check.
+           // collision check.
         float ship_max_speed, debris_speed;
         float time;
         ship* shipp;
@@ -309,7 +309,7 @@ int collide_asteroid_ship (obj_pair* pair) {
                 }
 
                 //	Decrease damage during warp out because it's annoying when
-                //your escoree dies during warp out.
+                // your escoree dies during warp out.
                 if (Ai_info[Ships[pship->instance].ai_index].mode ==
                     AIM_WARP_OUT)
                     ship_damage /= 3.0f;

@@ -420,10 +420,10 @@ void shield_info_reset (object* objp, shield_hit_info* shi) {
 //
 // This needs to be called whenever the player selects a new target
 //
-// input:	player	=>	optional parameter (default value 0).  This is to indicate
-// that player shield hit
+// input:	player	=>	optional parameter (default value 0).  This is to
+// indicate that player shield hit
 //								info should be reset.  This is normally not the
-//case. 								is for the player's current target
+// case. 								is for the player's current target
 void hud_shield_hit_reset (object* objp, int player) {
     shield_hit_info* shi;
 
@@ -467,8 +467,8 @@ void hud_shield_hit_update () {
 //
 // input:
 //				objp		=>	object pointer for ship that has been hit
-//				quadrant	=> quadrant of shield getting hit (-1 if no shield is
-//present)
+//				quadrant	=> quadrant of shield getting hit (-1 if no shield
+// is present)
 void hud_shield_quadrant_hit (object* objp, int quadrant) {
     shield_hit_info* shi;
     int num;

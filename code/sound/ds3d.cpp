@@ -21,8 +21,9 @@
 //
 //	parameters:		channel	=> identifies the 3D sound to update
 //						min		=>	the distance at which sound doesn't get any
-//louder 						max		=>	the distance at which sound doesn't attenuate any
-//further 						pos		=> world position of sound
+// louder 						max		=>	the distance at which sound doesn't
+// attenuate any further 						pos		=> world position of
+// sound
 //						vel		=> velocity of the objects producing the sound
 //
 //	returns:		0		=>		success

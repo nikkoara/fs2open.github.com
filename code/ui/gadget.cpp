@@ -135,7 +135,7 @@ void UI_GADGET::draw () {
 }
 
 //	Free up bitmaps used by the gadget, and call children to destroy themselves
-//as well.
+// as well.
 //
 void UI_GADGET::destroy () {
     int i;

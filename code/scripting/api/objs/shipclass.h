@@ -5,7 +5,6 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_OBJ(l_Shipclass, int);
-
+DECLARE_ADE_OBJ (l_Shipclass, int);
 }
-}
+} // namespace scripting

@@ -409,11 +409,11 @@ void opengl_tnl_init () {
             GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
         // 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-        // GL_LINEAR); 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-        // GL_LINEAR); 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-        // GL_CLAMP_TO_EDGE); 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
-        // GL_CLAMP_TO_EDGE); 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R,
-        // GL_CLAMP_TO_EDGE);
+        // GL_LINEAR); 		glTexParameteri(GL_TEXTURE_2D,
+        // GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
         // glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT,
         // GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_REF_DEPTH_TO_TEXTURE_EXT);
         // glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT,
@@ -451,11 +451,11 @@ void opengl_tnl_init () {
         glTexParameteri (
             GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
         // 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-        // GL_LINEAR); 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-        // GL_LINEAR); 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-        // GL_CLAMP_TO_EDGE); 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
-        // GL_CLAMP_TO_EDGE); 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R,
-        // GL_CLAMP_TO_EDGE);
+        // GL_LINEAR); 		glTexParameteri(GL_TEXTURE_2D,
+        // GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
         glTexImage3D (
             GL_TEXTURE_2D_ARRAY, 0, GL_RGB32F, size, size, 4, 0, GL_RGBA,
             GL_UNSIGNED_INT_8_8_8_8_REV, NULL);

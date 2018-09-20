@@ -1162,10 +1162,13 @@ void mission_hotkey_do_frame (float /*frametime*/) {
 
             //				gr_set_color_fast(&Color_bright);
             //				gr_line(ICON_LIST_X, i, ICON_LIST_X + 2, i,
-            //GR_RESIZE_MENU); 				gr_line(ICON_LIST_X + 4, i - 4, ICON_LIST_X + 4,
-            //i - 2, GR_RESIZE_MENU); 				gr_line(ICON_LIST_X + 6, i, ICON_LIST_X +
-            //8, i, GR_RESIZE_MENU); 				gr_line(ICON_LIST_X + 4, i + 2,
-            //ICON_LIST_X + 4, i + 4, GR_RESIZE_MENU);
+            // GR_RESIZE_MENU); 				gr_line(ICON_LIST_X + 4, i - 4,
+            // ICON_LIST_X
+            // + 4,
+            // i - 2, GR_RESIZE_MENU); 				gr_line(ICON_LIST_X + 6, i,
+            // ICON_LIST_X + 8, i, GR_RESIZE_MENU);
+            // gr_line(ICON_LIST_X + 4, i + 2, ICON_LIST_X + 4, i + 4,
+            // GR_RESIZE_MENU);
 
             hotkeys = get_wing_hotkeys (Hotkey_lines[line].index);
             break;

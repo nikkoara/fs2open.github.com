@@ -714,8 +714,8 @@ void hud_squadmsg_repair_rearm (int toggle_state, object* objp) {
         }
     }
 
-    // if ( multi_player_num == -1 )		// only do the hud display if it is for
-    // me! 	hud_support_view_start();
+    // if ( multi_player_num == -1 )		// only do the hud display if it is
+    // for me! 	hud_support_view_start();
 
     if (toggle_state) hud_squadmsg_toggle (); // take us out of message mode
 }
@@ -2282,8 +2282,8 @@ void hud_squadmsg_save_keys (int /*do_scroll*/) {
         for ( j=0; j<MAX_KEYS_USED; j++ ) {
             for ( i=0; Control_config[i].text[0]; i++ ) {	// the text field
        in this structure is empty at the end of the config list if (
-       Control_config[i].key_id == keys_used[j] ) {		// this is true if we have
-       a match
+       Control_config[i].key_id == keys_used[j] ) {		// this is true if we
+       have a match
 
                     // if we are not saving scrolling keys and we are trying to
        match page up and page down

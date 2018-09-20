@@ -6,25 +6,18 @@
 
 namespace util {
 
-template <typename T, typename... Args>
+template< typename T, typename... Args >
 struct event {
-    using callback_type = std::function< T(Args...) >;
+    using callback_type = std::function< T (Args...) >;
 
-    void
-    listen (callback_type func) {
-        fs.push_back (func);
-    }
+    void listen (callback_type func) { fs.push_back (func); }
 
-    void
-    clear () {
-        fs.clear();
-    }
+    void clear () { fs.clear (); }
 
     template< typename U = void >
     inline typename std::enable_if< std::is_same< T, void >::value, U >::type
     notify_all (Args... args) const {
-        for (const auto& f : fs)
-            f (args...);
+        for (const auto& f : fs) f (args...);
     }
 
     template< typename U = std::vector< T > >
@@ -32,8 +25,7 @@ struct event {
     notify_all (Args... args) const {
         std::vector< T > result;
 
-        for (const auto& f : fs)
-            result.push_back (f (args...));
+        for (const auto& f : fs) result.push_back (f (args...));
 
         return result;
     }

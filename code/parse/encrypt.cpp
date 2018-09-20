@@ -56,10 +56,11 @@ ushort chksum_add_short (ushort seed, char* buffer, int size) {
 // input:	text		=>	ascii data to be scrambled
 //				text_len	=>	number of bytes of ascii data to scramble
 //				scrambled_text	=>	storage for scrambled text (malloc at least
-//text_len) 				scrambled_len	=>	size of text after getting scrambled 				use_8bit
+// text_len) 				scrambled_len	=>	size of text after getting
+// scrambled use_8bit
 //=> flag to indicate that chars are stored using 8 bits (default value is 0)
-//				new_encrypt => flag to switch between old and new encryption styles
-//(default = yes)
+//				new_encrypt => flag to switch between old and new encryption
+// styles (default = yes)
 void encrypt (
     char* text, int text_len, char* scrambled_text, int* scrambled_len,
     int use_8bit, bool new_encrypt) {
@@ -176,7 +177,7 @@ void encrypt (
 //				scrambled_len	=>	number of bytes of scrambled text
 //				text				=>	storage for unscrambled ascii data
 //				text_len			=>	actual number of bytes of unscrambled
-//data
+// data
 void unencrypt (
     char* scrambled_text, int scrambled_len, char* text, int* text_len) {
 #ifdef ENCRYPT_NEW
@@ -302,7 +303,8 @@ ushort Lvl1_keys[NUM_LVL1_KEYS] = { 0xa820, 0x71f0, 0x88da, 0x1fff,
 // input:	text		=>	ascii data to be scrambled
 //				text_len	=>	number of bytes of ascii data to scramble
 //				scrambled_text	=>	storage for scrambled text (malloc at least
-//text_len) 				scrambled_len	=>	size of text after getting scrambled
+// text_len) 				scrambled_len	=>	size of text after getting
+// scrambled
 void encrypt_new (
     char* text, int text_len, char* scrambled_text, int* scrambled_len) {
     ushort lvl1_block[NUM_LVL1_KEYS * 2];
@@ -352,7 +354,7 @@ void encrypt_new (
 //				scrambled_len	=>	number of bytes of scrambled text
 //				text				=>	storage for unscrambled ascii data
 //				text_len			=>	actual number of bytes of unscrambled
-//data
+// data
 void unencrypt_new (
     char* scrambled_text, int scrambled_len, char* text, int* text_len) {
     ushort lvl1_block[NUM_LVL1_KEYS * 2];

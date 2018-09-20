@@ -540,8 +540,8 @@ void shockwave_level_init () {
         // Goober5000 - check for existence of file before trying to load it
         // chief1983 - Spicious added this check for the command line option.
         // I've modified the hardcoded "shockwave.pof" that existed in the
-        // check 	to use the static name instead, and added a check to override
-        // the command line if a 2d default filename is not found
+        // check 	to use the static name instead, and added a check to
+        // override the command line if a 2d default filename is not found
         //  Note - The 3d shockwave flag is forced on by TBP's flag as of rev
         //  4983
         if (Cmdline_enable_3d_shockwave &&

@@ -552,8 +552,8 @@ void event_music_do_frame () {
 // kicks off the first track to play().
 //
 // input:	force_soundtrack	=>		OPTIONAL parameter (default value -1)
-//												forces the soundtrack to ignore the music.tbl
-//assignment
+//												forces the soundtrack to ignore
+//the music.tbl assignment
 //
 void event_music_level_init (int force_soundtrack) {
     int i;
@@ -1553,7 +1553,7 @@ void event_music_unpause () {
 // event_music_set_volume_all()
 //
 //	Set the volume of the event driven music.  Used when using the game-wide
-//music volume is changed
+// music volume is changed
 // by the user.
 //
 void event_music_set_volume_all (float volume) {
@@ -1646,8 +1646,8 @@ void event_music_get_info (char* outbuf) {
 // ----------------------------------------------------------------
 // event_music_next_soundtrack()
 //
-// input:	delta		=>		1 or -1, depending if you want to go to next or previous
-// song
+// input:	delta		=>		1 or -1, depending if you want to go to next or
+// previous song
 //
 // returns: New soundtrack number if successfully changed, otherwise return -1
 //

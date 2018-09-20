@@ -174,9 +174,9 @@ void HudGaugeLock::render (float frametime) {
 
     hud_set_iff_color (targetp);
     //	nprintf(("Alan","lockx: %d, locky: %d TargetX: %d, TargetY: %d\n",
-    //Players[Player_num].lock_indicator_x,
-    //Players[Player_num].lock_indicator_y, Player->current_target_sx,
-    //Player->current_target_sy));
+    // Players[Player_num].lock_indicator_x,
+    // Players[Player_num].lock_indicator_y, Player->current_target_sx,
+    // Player->current_target_sy));
 
     // We have the coordinates of the lock indicator relative to the target in
     // our "virtual frame" so, we calculate where it should be drawn based on
@@ -549,9 +549,9 @@ void hud_do_lock_indicator (float frametime) {
 
     // If locking on a subsystem, and not in sight... can't lock
     //	Changed by MK on 4/3/98.  It was confusing me that my hornets would not
-    //lock on my target. 	It will now be confusing that they lock, but don't
-    //home on your subsystem, but I think that's preferable. 	Often you really
-    //care about destroying the target, not just the subsystem.
+    // lock on my target. 	It will now be confusing that they lock, but don't
+    // home on your subsystem, but I think that's preferable. 	Often you
+    // really care about destroying the target, not just the subsystem.
     /*if ( Player_ai->targeted_subsys ) {
         if ( !hud_lock_on_subsys_ok() ) {
             Player->target_in_lock_cone=0;

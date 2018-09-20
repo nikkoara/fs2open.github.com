@@ -1441,8 +1441,8 @@ void gr_bitmap_uv (
 // 		bm_get_info(gr_screen.current_bitmap, &l->w, &l->h, NULL, NULL, NULL);
 //
 // 		if ( resize_mode != GR_RESIZE_NONE && (gr_screen.custom_size ||
-// (gr_screen.rendering_to_texture != -1)) ) { 			gr_resize_screen_pos(&l->x,
-// &l->y, &l->w, &l->h, resize_mode);
+// (gr_screen.rendering_to_texture != -1)) ) {
+// gr_resize_screen_pos(&l->x, &l->y, &l->w, &l->h, resize_mode);
 // 		}
 // 	}
 //

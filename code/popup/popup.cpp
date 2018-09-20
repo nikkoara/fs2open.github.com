@@ -969,8 +969,8 @@ void popup_maybe_assign_keypress (popup_info* pi, int n, char* str) {
     }
 }
 
-// input:	flags			=>		flags			=>		formatting specificatons
-// (PF_...)
+// input:	flags			=>		flags			=>		formatting
+// specificatons (PF_...)
 //				nchoices		=>		number of choices popup has
 //				text_1		=>		text for first button
 //				...			=>
@@ -984,7 +984,7 @@ void popup_maybe_assign_keypress (popup_info* pi, int n, char* str) {
 // typical usage:
 //
 //	rval = popup(0, 2, POPUP_OK, POPUP_CANCEL, "Sorry %s, try again",
-//pl->callsign);
+// pl->callsign);
 int popup (int flags, int nchoices, ...) {
     int i, choice;
     char *format, *s;

@@ -279,7 +279,7 @@ static void starfield_create_bitmap_buffer (const int si_idx) {
 
     // cap division values
     //	div_x = div_x > MAX_PERSPECTIVE_DIVISIONS ? MAX_PERSPECTIVE_DIVISIONS :
-    //div_x;
+    // div_x;
     div_x = 1;
     div_y =
         div_y > MAX_PERSPECTIVE_DIVISIONS ? MAX_PERSPECTIVE_DIVISIONS : div_y;
@@ -525,7 +525,7 @@ void parse_startbl (const char* filename) {
                                 MAX_FILENAME_LEN);
                         }
                         //	else break; //don't allow flaretexture1 and then 3,
-                        //etc.
+                        // etc.
                     }
 
                     required_string ("$FlareGlow1:");
@@ -558,7 +558,7 @@ void parse_startbl (const char* filename) {
                             stuff_float (&sbm.flare_infos[idx].scale);
                         }
                         //	else break; //don't allow "flare 1" and then "flare
-                        //3"
+                        // 3"
                     }
                 }
 

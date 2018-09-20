@@ -29,57 +29,57 @@
 /* These are function pointer prototypes provided for library loading */
 
 /* Only one function doesn't return an int or a float */
-typedef int ( SCP_EXT_CALLCONV *SCPTRACKIR_PFINIT )( HWND );
+typedef int(SCP_EXT_CALLCONV* SCPTRACKIR_PFINIT) (HWND);
 
 /* All other trackir functions return an int or a float
  *  and take no parameters
  */
-typedef int ( SCP_EXT_CALLCONV *SCPTRACKIR_PFINTVOID )( );
-typedef float ( SCP_EXT_CALLCONV *SCPTRACKIR_PFFLOATVOID )( );
+typedef int(SCP_EXT_CALLCONV* SCPTRACKIR_PFINTVOID) ();
+typedef float(SCP_EXT_CALLCONV* SCPTRACKIR_PFFLOATVOID) ();
 
-class TrackIRDLL : public SCP_ExternalCode
-{
+class TrackIRDLL : public SCP_ExternalCode {
 public:
-	TrackIRDLL();
+    TrackIRDLL ();
 
-	virtual ~TrackIRDLL();
+    virtual ~TrackIRDLL ();
 
-	bool Enabled() const;
+    bool Enabled () const;
 
-	void Reset();
+    void Reset ();
 
-	/* Returns 0 on success */
-	int Init(SDL_Window* window);
+    /* Returns 0 on success */
+    int Init (SDL_Window* window);
 
-	int Close();
+    int Close ();
 
-	int Query();
+    int Query ();
 
-	float GetX() const;
+    float GetX () const;
 
-	float GetY() const;
+    float GetY () const;
 
-	float GetZ() const;
+    float GetZ () const;
 
-	float GetPitch() const;
+    float GetPitch () const;
 
-	float GetRoll() const;
+    float GetRoll () const;
 
-	float GetYaw() const;
+    float GetYaw () const;
+
 private:
-	/* Functions */
-	SCPTRACKIR_PFINIT m_Init;
-	SCPTRACKIR_PFINTVOID m_Close;
-	SCPTRACKIR_PFINTVOID m_Query;
+    /* Functions */
+    SCPTRACKIR_PFINIT m_Init;
+    SCPTRACKIR_PFINTVOID m_Close;
+    SCPTRACKIR_PFINTVOID m_Query;
 
-	SCPTRACKIR_PFFLOATVOID m_GetX;
-	SCPTRACKIR_PFFLOATVOID m_GetY;
-	SCPTRACKIR_PFFLOATVOID m_GetZ;
-	SCPTRACKIR_PFFLOATVOID m_GetPitch;
-	SCPTRACKIR_PFFLOATVOID m_GetRoll;
-	SCPTRACKIR_PFFLOATVOID m_GetYaw;
+    SCPTRACKIR_PFFLOATVOID m_GetX;
+    SCPTRACKIR_PFFLOATVOID m_GetY;
+    SCPTRACKIR_PFFLOATVOID m_GetZ;
+    SCPTRACKIR_PFFLOATVOID m_GetPitch;
+    SCPTRACKIR_PFFLOATVOID m_GetRoll;
+    SCPTRACKIR_PFFLOATVOID m_GetYaw;
 
-	bool m_enabled;
+    bool m_enabled;
 };
 
 #endif /* TRACKIRPUBLIC_H_INCLUDED_ */

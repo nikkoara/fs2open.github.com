@@ -6,32 +6,32 @@
 namespace cutscene {
 namespace ffmpeg {
 
-class AudioDecoder: public FFMPEGStreamDecoder<AudioFrame> {
- private:
-	SwrContext* m_resampleCtx;
+class AudioDecoder : public FFMPEGStreamDecoder< AudioFrame > {
+private:
+    SwrContext* m_resampleCtx;
 
-	uint8_t** m_outData;
-	int m_outLinesize;
+    uint8_t** m_outData;
+    int m_outLinesize;
 
-	int m_maxOutNumSamples;
-	int m_outNumSamples;
+    int m_maxOutNumSamples;
+    int m_outNumSamples;
 
-	std::vector<short> m_audioBuffer;
+    std::vector< short > m_audioBuffer;
 
-	void handleDecodedFrame(AVFrame* frame);
+    void handleDecodedFrame (AVFrame* frame);
 
-	void flushAudioBuffer();
+    void flushAudioBuffer ();
 
- public:
-	explicit AudioDecoder(DecoderStatus* status);
+public:
+    explicit AudioDecoder (DecoderStatus* status);
 
-	~AudioDecoder() override;
+    ~AudioDecoder () override;
 
-	void decodePacket(AVPacket* packet) override;
+    void decodePacket (AVPacket* packet) override;
 
-	void finishDecoding() override;
+    void finishDecoding () override;
 
-	void flushBuffers() override;
+    void flushBuffers () override;
 };
-}
-}
+} // namespace ffmpeg
+} // namespace cutscene

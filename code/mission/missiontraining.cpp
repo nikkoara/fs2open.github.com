@@ -1171,7 +1171,7 @@ void training_process_message (char* message) {
 void training_fail () {
     Training_failure = 1;
     //	JasonH: Add code here to suspend training and display a directive to
-    //warp out. 	Suspend training. 	Give directive to warp out. 	Also ensure that
-    //a special failure debriefing is given.  Must mention firing at
-    //instructor. 	Ask Sandeep to write it (or you can).
+    // warp out. 	Suspend training. 	Give directive to warp out. 	Also
+    // ensure that a special failure debriefing is given.  Must mention firing
+    // at instructor. 	Ask Sandeep to write it (or you can).
 }

@@ -1118,7 +1118,7 @@ void control_config_do_bind () {
 
     game_flush ();
     //	if ((Selected_line < 0) || (Cc_lines[Selected_line].cc_index &
-    //JOY_AXIS)) {
+    // JOY_AXIS)) {
     if (Selected_line < 0) {
         gamesnd_play_iface (InterfaceSounds::GENERAL_FAIL);
         return;
@@ -2388,7 +2388,7 @@ void control_get_axes_readings (int* h, int* p, int* b, int* ta, int* tr) {
     joystick_read_raw_axis (JOY_NUM_AXES, axes_values);
 
     //	joy_get_scaled_reading will return a value represents the joystick pos
-    //from -1 to +1 (fixed point)
+    // from -1 to +1 (fixed point)
     *h = 0;
     if (Axis_map_to[0] >= 0) {
         *h = joy_get_scaled_reading (axes_values[Axis_map_to[0]]);

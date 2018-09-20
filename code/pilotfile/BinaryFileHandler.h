@@ -9,45 +9,44 @@
 #include "cfile/cfile.h"
 
 namespace pilot {
-class BinaryFileHandler: public FileHandler {
-	CFILE* _cfp;
+class BinaryFileHandler : public FileHandler {
+    CFILE* _cfp;
 
-	struct SectionOffset {
-		Section id;
-		size_t offset;
-	};
+    struct SectionOffset {
+        Section id;
+        size_t offset;
+    };
 
-	std::vector<SectionOffset> _sectionOffsets;
- public:
-	explicit BinaryFileHandler(CFILE* cfp);
+    std::vector< SectionOffset > _sectionOffsets;
 
-	~BinaryFileHandler() override;
+public:
+    explicit BinaryFileHandler (CFILE* cfp);
 
-	void writeUByte(const char* name, std::uint8_t value) override;
+    ~BinaryFileHandler () override;
 
-	void writeShort(const char* name, std::int16_t value) override;
+    void writeUByte (const char* name, std::uint8_t value) override;
 
-	void writeInt(const char* name, std::int32_t value) override;
+    void writeShort (const char* name, std::int16_t value) override;
 
-	void writeUInt(const char* name, std::uint32_t value) override;
+    void writeInt (const char* name, std::int32_t value) override;
 
-	void writeFloat(const char* name, float value) override;
+    void writeUInt (const char* name, std::uint32_t value) override;
 
-	void writeString(const char* name, const char* str) override;
+    void writeFloat (const char* name, float value) override;
 
+    void writeString (const char* name, const char* str) override;
 
-	void startSectionWrite(Section id) override;
+    void startSectionWrite (Section id) override;
 
-	void endSectionWrite() override;
+    void endSectionWrite () override;
 
+    void startArrayWrite (
+        const char* name, size_t size, bool short_length) override;
 
-	void startArrayWrite(const char* name, size_t size, bool short_length) override;
+    void endArrayWrite () override;
 
-	void endArrayWrite() override;
-
-
-	void flush() override;
+    void flush () override;
 };
-}
+} // namespace pilot
 
 #endif // BINARY_FILE_HANDLER_H

@@ -495,7 +495,8 @@ flag_def_list_new< Weapon::Info_Flags > ai_tgt_weapon_flags[] = {
     { "particle spew", Weapon::Info_Flags::Particle_spew, true, false },
     { "esuck", Weapon::Info_Flags::Energy_suck, true, false },
     { "flak", Weapon::Info_Flags::Flak, true, false },
-    //{ "beam",						Weapon::Info_Flags::Beam,								true, false
+    //{ "beam",						Weapon::Info_Flags::Beam,
+    //true, false
     //},	// Okay, this one probably doesn't make sense.
     { "tag", Weapon::Info_Flags::Tag, true, false },
     { "shudder", Weapon::Info_Flags::Shudder, true, false },
@@ -571,7 +572,7 @@ const int num_ai_tgt_weapon_info_flags =
 std::vector< ai_target_priority > Ai_tp_list;
 
 //	Constant for flag,				Name of flag,				In flags or
-//flags2
+// flags2
 //  When adding new flags remember to bump MAX_SHIP_FLAG_NAMES in ship.h
 ship_flag_name Ship_flag_names[] = {
     { Ship_Flags::Vaporize, "vaporize" },
@@ -1762,7 +1763,7 @@ ship_info::ship_info () {
 
     hull_repair_rate = 0.0f;
     //-2 represents not set, in which case the default is used for the ship (if
-    //it is small)
+    // it is small)
     subsys_repair_rate = -2.0f;
 
     sup_hull_repair_rate = 0.15f;
@@ -5173,8 +5174,8 @@ static int parse_ship_values (
     // (we don't want a div-0 error)
     if (hull_percentage_of_hits <= 0.0f) {
         // Warning(LOCATION, "The subsystems defined for the %s can take more
-        // (or the same) combined damage than the ship itself. Adjust the tables
-        // so that the percentages add up to less than 100", sip->name);
+        // (or the same) combined damage than the ship itself. Adjust the
+        // tables so that the percentages add up to less than 100", sip->name);
     }
     // when done reading subsystems, malloc and copy the subsystem data to the
     // ship info structure
@@ -7052,8 +7053,8 @@ void ship_subsys::clear () {
  * Set subsystem
  *
  * @param objnum				Object number (used as index into Objects[])
- * @param ignore_subsys_info	Default parameter with value of 0.  This is only
- * set to 1 by the save/restore code
+ * @param ignore_subsys_info	Default parameter with value of 0.  This is
+ * only set to 1 by the save/restore code
  */
 static int subsys_set (int objnum, int ignore_subsys_info) {
     ship* shipp = &Ships[Objects[objnum].instance];
@@ -8675,7 +8676,7 @@ static void ship_dying_frame (object* objp, int ship_num) {
                                 .uvec; // What normal the particle emit around
                 pe.normal_variance =
                     pef.variance; //	How close they stick to that normal
-                                  //0=on normal, 1=180, 2=360 degree
+                                  // 0=on normal, 1=180, 2=360 degree
                 pe.min_vel = pef.min_vel;
                 pe.max_vel = pef.max_vel;
                 pe.min_rad = pef.min_rad; // * objp->radius;
@@ -8830,7 +8831,7 @@ static void ship_dying_frame (object* objp, int ship_num) {
                             .uvec; // What normal the particle emit around
                     pe.normal_variance =
                         pef.variance; //	How close they stick to that normal
-                                      //0=on normal, 1=180, 2=360 degree
+                                      // 0=on normal, 1=180, 2=360 degree
                     pe.min_vel =
                         pef.min_vel; // How fast the slowest particle can move
                     pe.max_vel =
@@ -9411,8 +9412,8 @@ static void ship_check_player_distance_sub (player* p, int multi_target = -1) {
     if (!(p->flags & PLAYER_FLAGS_FORCE_MISSION_OVER) &&
         ((p->distance_warning_count > PLAYER_DISTANCE_MAX_WARNINGS) ||
          (dist > PLAYER_MAX_DIST_END))) {
-        //		DKA 5/17/99 - DON'T force warpout.  Won't work multiplayer.  Blow
-        //up ship.
+        //		DKA 5/17/99 - DON'T force warpout.  Won't work multiplayer.
+        // Blow up ship.
         if (!(p->flags & PLAYER_FLAGS_DIST_TO_BE_KILLED)) {
             message_send_builtin_to_player (
                 MESSAGE_STRAY_WARNING_FINAL, NULL, MESSAGE_PRIORITY_HIGH,
@@ -9766,7 +9767,7 @@ void ship_process_post (object* obj, float frametime) {
         // MWA -- move the spark code to before the check for multiplayer
         // master
         //	Do ship sparks.  Don't do sparks on my ship (since I cannot see
-        //it).  This
+        // it).  This
         // code will do sparks on other ships in multiplayer though.
         // JAS: Actually in external view, you can see sparks, so I don't do
         // sparks on the Viewer_obj, not Player_obj.
@@ -10114,8 +10115,8 @@ static void ship_make_create_time_unique (ship* shipp) {
                         shipp->create_time) {
                     // WMC: If we're creating a whole bunch of ships at once,
                     // we can shortcut this process by looking at the last call
-                    // to this function This fixes a bug when more than 50 ships
-                    // are created at once.
+                    // to this function This fixes a bug when more than 50
+                    // ships are created at once.
                     new_create_time = last_smctu_final_time + 1;
                 }
                 else {
@@ -10370,7 +10371,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
 
     ship_set_default_weapons (
         shipp, sip); //	Moved up here because ship_set requires that weapon
-                     //info be valid.  MK, 4/28/98
+                     // info be valid.  MK, 4/28/98
     ship_set (n, objnum, ship_type);
 
     init_ai_object (objnum);
@@ -11228,15 +11229,17 @@ void change_ship_type (int n, int ship_type, int by_sexp) {
         sp->flags.remove (Ship_Flags::Stealth);
 
     if (sip->flags
-            [Ship::Info_Flags::Ship_class_dont_collide_invis]) // changing TO a
-                                                               // don't-collide-invisible
-                                                               // ship class
+            [Ship::Info_Flags::
+                 Ship_class_dont_collide_invis]) // changing TO a
+                                                 // don't-collide-invisible
+                                                 // ship class
         sp->flags.set (Ship_Flags::Dont_collide_invis);
-    else if (sip_orig
-                 ->flags[Ship::Info_Flags::
-                             Ship_class_dont_collide_invis]) // changing FROM a
-                                                             // don't-collide-invisible
-                                                             // ship class
+    else if (
+        sip_orig->flags
+            [Ship::Info_Flags::
+                 Ship_class_dont_collide_invis]) // changing FROM a
+                                                 // don't-collide-invisible
+                                                 // ship class
         sp->flags.remove (Ship_Flags::Dont_collide_invis);
 
     if (sip->flags[Ship::Info_Flags::No_collide]) // changing TO a no-collision
@@ -11370,7 +11373,7 @@ int ship_fire_primary_debug (object* objp) {
     shipp->weapons.last_primary_fire_stamp[0] = timestamp ();
 
     //	Debug code!  Make the single laser fire only one bolt and from the
-    //object center!
+    // object center!
     for (i = 0; i < MAX_WEAPON_TYPES; i++)
         if (!stricmp (Weapon_info[i].name, NOX ("Debug Laser"))) break;
 
@@ -12063,11 +12066,11 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
         }
 
         //	MK, 2/4/98: Since you probably were allowed to fire earlier, but
-        //couldn't fire until your frame interval 	rolled around, subtract out
-        //up to half the previous frametime. 	Note, unless we track whether the
-        //fire button has been held down, and not tapped, it's hard to 	know how
-        //much time to subtract off.  It could be this fire is "late" because
-        //the user didn't want to fire.
+        // couldn't fire until your frame interval 	rolled around, subtract out
+        // up to half the previous frametime. 	Note, unless we track whether
+        // the fire button has been held down, and not tapped, it's hard to
+        // know how much time to subtract off.  It could be this fire is "late"
+        // because the user didn't want to fire.
         if ((next_fire_delay > 0.0f)) {
             if (obj->flags[Object::Object_Flags::Player_ship]) {
                 int t = timestamp_until (
@@ -12713,8 +12716,9 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
                              winfo_p
                                  ->pre_launch_snd_min_interval) // and if we're
                                                                 // past our
-                                                                // minimum delay
-                                                                // from the last
+                                                                // minimum
+                                                                // delay from
+                                                                // the last
                                                                 // cease-fire
                             && (shipp->was_firing_last_frame[bank_to_fire] ==
                                 0) // and if we are at the beginning of a
@@ -12986,7 +12990,7 @@ static int ship_fire_secondary_detonate (object* obj, ship_weapon* swp) {
             object* first_objp = &Objects[swp->last_fired_weapon_index];
             if (maybe_detonate_weapon (swp, obj)) {
                 //	If dual fire was set, there could be another weapon to
-                //detonate.  Scan all weapons.
+                // detonate.  Scan all weapons.
                 missile_obj* mo;
 
                 // check for currently locked missiles (highest precedence)
@@ -13018,11 +13022,11 @@ ai_maybe_announce_shockwave_weapon (object* firing_objp, int weapon_index);
 
 //	Object *obj fires its secondary weapon, if it can.
 //	If its most recently fired weapon is a remotely detonatable weapon,
-//detonate it. 	Returns number of weapons fired.  Note, for swarmers, returns 1
-//if it is allowed 	to fire the missiles when allow_swarm is NOT set.  They
-//don't actually get fired on a call here unless allow_swarm is set. 	When you
-//want to fire swarmers, you call this function with allow_swarm NOT set and
-//frame interval 	code comes aruond and fires it.
+// detonate it. 	Returns number of weapons fired.  Note, for swarmers,
+// returns 1 if it is allowed 	to fire the missiles when allow_swarm is NOT
+// set.  They don't actually get fired on a call here unless allow_swarm is
+// set. 	When you want to fire swarmers, you call this function with
+// allow_swarm NOT set and frame interval 	code comes aruond and fires it.
 // allow_swarm -> default value is 0... since swarm missiles are fired over
 // several frames,
 //                need to avoid firing when normally called
@@ -13224,7 +13228,7 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
         }
         shipp->swarm_missile_bank = bank;
         return 1; //	Note: Missiles didn't get fired, but the frame interval
-                  //code will fire them.
+                  // code will fire them.
     }
 
     // if trying to fire a corkscrew missile, make sure being called from right
@@ -13236,7 +13240,7 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
             (ubyte) (shipp->num_corkscrew_to_fire + (ubyte)wip->cs_num_fired);
         shipp->corkscrew_missile_bank = bank;
         return 1; //	Note: Missiles didn't get fired, but the frame interval
-                  //code will fire them.
+                  // code will fire them.
     }
 
     float t;
@@ -13304,9 +13308,9 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
         if (check_ammo && (swp->secondary_bank_ammo[bank] <= 0)) {
             if (shipp->objnum == OBJ_INDEX (Player_obj)) {
                 if (ship_maybe_play_secondary_fail_sound (wip)) {
-                    //					HUD_sourced_printf(HUD_SOURCE_HIDDEN, "No %s
-                    //missiles left in bank",
-                    //Weapon_info[swp->secondary_bank_weapons[bank]].name);
+                    //					HUD_sourced_printf(HUD_SOURCE_HIDDEN,
+                    //"No %s missiles left in bank",
+                    // Weapon_info[swp->secondary_bank_weapons[bank]].name);
                 }
             }
             else {
@@ -13551,8 +13555,8 @@ done_secondary:
 
     // 21-07-02 01:24 DTP; COMMENTED OUT some of the mistakes
     // this bug was made by AL, when he assumed he had to take the next
-    // fire_wait time remaining and add 250 ms of delay to it, and put it in the
-    // next valid bank. for the player to have a 250 ms of penalty
+    // fire_wait time remaining and add 250 ms of delay to it, and put it in
+    // the next valid bank. for the player to have a 250 ms of penalty
     //
     // what that caused was that the next valid bank inherited the current
     // valid banks FULL fire delay. since he used the Weapon_info struct that
@@ -14524,13 +14528,14 @@ void ship_get_eye (
 //
 // NOTE: This function takes into account how many ships are attacking a
 // subsystem, and will
-//			prefer an ignored subsystem over a subsystem that is in line of sight,
-//if the in-sight 			subsystem is attacked by more than MAX_SUBSYS_ATTACKERS
+//			prefer an ignored subsystem over a subsystem that is in line of
+// sight, if the in-sight 			subsystem is attacked by more than
+// MAX_SUBSYS_ATTACKERS
 // input:
 //				sp					=>		ship pointer to parent of subsystem
 //				subsys_type		=>		what kind of subsystem this is
-//				attacker_pos	=>		the world coords of the attacker of this
-//subsystem
+//				attacker_pos	=>		the world coords of the attacker of
+// this subsystem
 //
 // returns: pointer to subsystem if one found, NULL otherwise
 #define MAX_SUBSYS_ATTACKERS 3
@@ -14601,9 +14606,10 @@ ship_subsys* ship_get_best_subsys_to_attack (
 // function to return a pointer to the 'nth' ship_subsys structure in a ship's
 // linked list of ship_subsys'. attacker_pos	=>	world pos of attacker
 // (default value NULL).  If value is non-NULL, try
-//							to select the best subsystem to attack of that type (using
-//line-of-sight) 							and based on the number of ships already attacking the
-//subsystem
+//							to select the best subsystem to attack of that type
+//(using
+// line-of-sight) 							and based on the number of ships already
+// attacking the subsystem
 ship_subsys*
 ship_get_indexed_subsys (ship* sp, int index, vec3d* attacker_pos) {
     int count;
@@ -15014,7 +15020,7 @@ int ship_do_rearm_frame (object* objp, float frametime) {
 
     //	AL 11-24-97: remove increase to hull integrity
     //	Comments removed by PhReAk; Note that this is toggled on/off with a
-    //mission flag
+    // mission flag
 
     // Figure out how much of the ship's hull we can repair
     max_hull_repair = shipp->ship_max_hull_strength *
@@ -16134,7 +16140,7 @@ int ship_navigation_ok_to_warp (ship* sp) {
 // point input:	sp	=>	pointer to ship that is parent of subsystem
 //				ss =>	pointer to subsystem of interest
 //				norm	=> output parameter... vector from subsys to first path
-//point
+// point
 //
 //	exit:		0	=>	a valid vector was placed in norm
 //				!0	=> an path normal could not be calculated
@@ -16174,7 +16180,7 @@ int ship_return_subsys_path_normal (
 }
 
 //	Determine if the subsystem can be viewed from eye_pos.  The method is to
-//check where the
+// check where the
 // vector from eye_pos to the subsystem hits the ship.  If distance from the
 // hit position and the center of the subsystem is within a range (currently
 // the subsystem radius) it is considered in view (return true).  If not in
@@ -16184,14 +16190,17 @@ int ship_return_subsys_path_normal (
 // it
 //				subsys	=>		pointer to the subsystem of interest
 //				eye_pos	=>		world coord for the eye looking at the
-//subsystem 				subsys_pos			=>	world coord for the center of the subsystem
-//of interest 				do_facing_check	=>	OPTIONAL PARAMETER (default value is 1), do
-//a dot product check to see if subsystem fvec is facing 											towards the eye
-//position
-//				dot_out	=>		OPTIONAL PARAMETER, output parameter, will return dot
-//between subsys fvec and subsys_to_eye_vec 									(only filled in if do_facing_check
-//is true) 				vec_out	=>		OPTIONAL PARAMETER, vector from eye_pos to absolute
-//subsys_pos.  (only filled in if do_facing_check is true)
+// subsystem 				subsys_pos			=>	world coord for the center of
+// the subsystem of interest 				do_facing_check	=>	OPTIONAL
+// PARAMETER (default value is 1), do a dot product check to see if subsystem
+// fvec is facing 											towards the eye
+// position
+//				dot_out	=>		OPTIONAL PARAMETER, output parameter, will
+//return dot
+// between subsys fvec and subsys_to_eye_vec 									(only filled in
+// if do_facing_check is true) 				vec_out	=>		OPTIONAL PARAMETER,
+// vector from eye_pos to absolute subsys_pos.  (only filled in if
+// do_facing_check is true)
 int ship_subsystem_in_sight (
     object* objp, ship_subsys* subsys, vec3d* eye_pos, vec3d* subsys_pos,
     int do_facing_check, float* dot_out, vec3d* vec_out) {
@@ -16509,7 +16518,7 @@ ship_get_ai_target_display_name (int goal, const char* name) {
 //
 // exit:		NULL		=>		printable orders are not applicable
 //				non-NULL	=>		pointer to string that was passed in
-//originally
+// originally
 //
 // This function is called from HUD code to get a text description
 // of what a ship's orders are.  Feel free to use this function if
@@ -16609,7 +16618,7 @@ std::string ship_return_orders (ship* sp) {
 //
 // exit:		NULL		=>		printable orders are not applicable
 //				non-NULL	=>		pointer to string that was passed in
-//originally
+// originally
 //
 // This function is called from HUD code to get a text description
 // of what a ship's orders are.  Feel free to use this function if
@@ -17775,7 +17784,7 @@ void ship_page_in () {
 
         // don't need this one anymore, it's already been accounted for
         //	num_subsystems_needed +=
-        //Ship_info[Ships[i].ship_info_index].n_subsystems;
+        // Ship_info[Ships[i].ship_info_index].n_subsystems;
     }
 
     // Mark any ships that might warp in in the future as used
@@ -18201,8 +18210,8 @@ void ship_page_out_textures (int ship_index, bool release) {
 // function to return true if support ships are allowed in the mission for the
 // given object.
 //	In single player, must be friendly and not Shivan. (Goober5000 - Shivans
-//can now have support) 	In multiplayer -- to be coded by Mark Allender after
-//5/4/98 -- MK, 5/4/98
+// can now have support) 	In multiplayer -- to be coded by Mark Allender
+// after 5/4/98 -- MK, 5/4/98
 int is_support_allowed (object* objp, bool do_simple_check) {
     int result = -1;
 

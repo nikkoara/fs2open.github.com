@@ -6,22 +6,21 @@
 namespace scripting {
 namespace api {
 
-class particle_h
-{
- protected:
-	particle::WeakParticlePtr part;
- public:
-	particle_h();
+class particle_h {
+protected:
+    particle::WeakParticlePtr part;
 
-	explicit particle_h(const particle::WeakParticlePtr& part_p);
+public:
+    particle_h ();
 
-	particle::WeakParticlePtr Get();
+    explicit particle_h (const particle::WeakParticlePtr& part_p);
 
-	bool isValid();
+    particle::WeakParticlePtr Get ();
+
+    bool isValid ();
 };
 
-DECLARE_ADE_OBJ(l_Particle, particle_h*);
+DECLARE_ADE_OBJ (l_Particle, particle_h*);
 
-}
-}
-
+} // namespace api
+} // namespace scripting

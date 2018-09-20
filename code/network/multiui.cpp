@@ -195,9 +195,9 @@ void multi_common_split_text () {
 
     for (i = 0; i < n_lines; i++) {
         // The E -- This check is unnecessary, and will break when fonts that
-        // aren't bank gothic are used split_str already ensured that everything
-        // will fit in the text window for us already. Assert(n_chars[i] <
-        // MULTI_COMMON_TEXT_MAX_LINE_LENGTH);
+        // aren't bank gothic are used split_str already ensured that
+        // everything will fit in the text window for us already.
+        // Assert(n_chars[i] < MULTI_COMMON_TEXT_MAX_LINE_LENGTH);
         strncpy (Multi_common_text[i], p_str[i], n_chars[i]);
         Multi_common_text[i][n_chars[i]] = 0;
         drop_leading_white_space (Multi_common_text[i]);
@@ -2219,11 +2219,15 @@ int Multi_sg_bitmap;              // the background bitmap
 ui_button_info Multi_sg_buttons[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_BUTTONS] = {
     {
         // GR_640
-        ui_button_info ("MSG_00", 1, 184, 34, 191, 2), // open
-        //******ui_button_info("MSG_01",	1,		159,	34,	166,	1),		//
-        //closed
-        //******ui_button_info("MSG_02",	1,		184,	34,	191,	2),		//
-        //restricted
+        ui_button_info (
+            "MSG_00", 1, 184, 34, 191,
+            2), // open
+                //******ui_button_info("MSG_01",	1,		159,	34,	166,
+                //1),
+                //// closed
+                //******ui_button_info("MSG_02",	1,		184,	34,	191,
+                //2),
+                //// restricted
         ui_button_info ("MSG_03", 1, 209, 34, 218, 3),     // password
         ui_button_info ("MSG_04", 1, 257, 34, 266, 4),     // rank set
         ui_button_info ("MSG_05", 1, 282, -1, -1, 5),      // rank scroll up
@@ -2236,11 +2240,15 @@ ui_button_info Multi_sg_buttons[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_BUTTONS] = {
     },
     {
         // GR_1024
-        ui_button_info ("2_MSG_00", 2, 295, 51, 307, 2), // open
-        //******ui_button_info("2_MSG_01",	2,		254,	51,	267,	1),		//
-        //closed
-        //******ui_button_info("2_MSG_02",	2,		295,	51,	307,	2),		//
-        //restricted
+        ui_button_info (
+            "2_MSG_00", 2, 295, 51, 307,
+            2), // open
+                //******ui_button_info("2_MSG_01",	2,		254,	51,	267,
+                //1),
+                //// closed
+                //******ui_button_info("2_MSG_02",	2,		295,	51,	307,
+                //2),
+                //// restricted
         ui_button_info ("2_MSG_03", 2, 335, 51, 350, 3),    // password
         ui_button_info ("2_MSG_04", 2, 412, 51, 426, 4),    // rank set
         ui_button_info ("2_MSG_05", 2, 452, -1, -1, 5),     // rank scroll up
@@ -2260,10 +2268,12 @@ UI_XSTR Multi_sg_text[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_TEXT] = {
         // GR_640
         { "Open", 1322, 34, 191, UI_XSTR_COLOR_GREEN, -1,
           &Multi_sg_buttons[0][MSG_OPEN_GAME].button },
-        //******{"Closed",				1323,		34,	166,	UI_XSTR_COLOR_GREEN,	-1,
+        //******{"Closed",				1323,		34,	166,
+        //UI_XSTR_COLOR_GREEN, -1,
         //&Multi_sg_buttons[0][MSG_CLOSED_GAME].button},
-        //******{"Restricted",			1324,		34,	191,	UI_XSTR_COLOR_GREEN,
-        //-1,	&Multi_sg_buttons[0][MSG_RESTRICTED_GAME].button},
+        //******{"Restricted",			1324,		34,	191,
+        // UI_XSTR_COLOR_GREEN, -1,
+        //&Multi_sg_buttons[0][MSG_RESTRICTED_GAME].button},
         { "Password Protected", 1325, 34, 218, UI_XSTR_COLOR_GREEN, -1,
           &Multi_sg_buttons[0][MSG_PASSWD_GAME].button },
         { "Allow Rank", 1326, 34, 266, UI_XSTR_COLOR_GREEN, -1,
@@ -2286,10 +2296,12 @@ UI_XSTR Multi_sg_text[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_TEXT] = {
         // GR_1024
         { "Open", 1322, 51, 307, UI_XSTR_COLOR_GREEN, -1,
           &Multi_sg_buttons[1][MSG_OPEN_GAME].button },
-        //******{"Closed",				1323,		51,	267,	UI_XSTR_COLOR_GREEN,	-1,
+        //******{"Closed",				1323,		51,	267,
+        //UI_XSTR_COLOR_GREEN, -1,
         //&Multi_sg_buttons[1][MSG_CLOSED_GAME].button},
-        //******{"Restricted",			1324,		51,	307,	UI_XSTR_COLOR_GREEN,
-        //-1,	&Multi_sg_buttons[1][MSG_RESTRICTED_GAME].button},
+        //******{"Restricted",			1324,		51,	307,
+        // UI_XSTR_COLOR_GREEN, -1,
+        //&Multi_sg_buttons[1][MSG_RESTRICTED_GAME].button},
         { "Password Protected", 1325, 51, 350, UI_XSTR_COLOR_GREEN, -1,
           &Multi_sg_buttons[1][MSG_PASSWD_GAME].button },
         { "Allow Rank", 1326, 51, 426, UI_XSTR_COLOR_GREEN, -1,
@@ -8077,8 +8089,8 @@ void multi_sync_common_init () {
 
     Multi_launch_button_created = 0;
 
-    // create the chatbox thingie	(shouldn't be necesary to do this, but we'll
-    // put it in for good measure)
+    // create the chatbox thingie	(shouldn't be necesary to do this, but
+    // we'll put it in for good measure)
     chatbox_create ();
 
     // force the chatbox to be small

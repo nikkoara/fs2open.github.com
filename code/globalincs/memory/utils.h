@@ -4,23 +4,20 @@
 
 #include "globalincs/pstypes.h"
 
-inline char *vm_strndup(const char *ptr, size_t size)
-{
-	char *dst = (char *) vm_malloc(size + 1);
+inline char* vm_strndup (const char* ptr, size_t size) {
+    char* dst = (char*)vm_malloc (size + 1);
 
-	if (!dst)
-		return NULL;
+    if (!dst) return NULL;
 
-	std::strncpy(dst, ptr, size);
-	// make sure it has a NULL terminiator
-	dst[size] = '\0';
+    std::strncpy (dst, ptr, size);
+    // make sure it has a NULL terminiator
+    dst[size] = '\0';
 
-	return dst;
+    return dst;
 }
 
-inline char *vm_strdup(const char *ptr)
-{
-	size_t len = std::strlen(ptr);
+inline char* vm_strdup (const char* ptr) {
+    size_t len = std::strlen (ptr);
 
-	return vm_strndup(ptr, len);
+    return vm_strndup (ptr, len);
 }

@@ -157,7 +157,7 @@ int snd_init () {
 
 Failure:
     //	Warning(LOCATION, "Sound system was unable to be initialized.  If you
-    //continue, sound will be disabled.\n");
+    // continue, sound will be disabled.\n");
     nprintf (
         ("Sound",
          "SOUND => Audio init unsuccessful, continuing without sound.\n"));
@@ -270,7 +270,7 @@ void snd_spew_debug_info () {
 //
 // parameters:		gs							=> file of sound to load
 //						allow_hardware_load	=> whether to try to allocate in
-//hardware
+// hardware
 //
 // returns:			success => index of sound in Sounds[] array
 //						failure => -1
@@ -513,16 +513,15 @@ MONITOR (NumSoundsLoaded)
 //	snd_play()
 //
 //	NOTE: vol_scale parameter is the multiplicative scaling applied to the
-//default volume
+// default volume
 //       (vol_scale is a default parameter with a default value of 1.0f)
 //
 // input:	gs				=>	game-level sound description
-//				pan			=>	-1 (full left) to 1.0 (full right), this is a default
-//parm
-//				vol_scale	=>	factor to scale default volume by (applied before
-//global sound volume applied) 				priority		=> SND_PRIORITY_MUST_PLAY
-//									SND_PRIORITY_SINGLE_INSTANCE		(default
-//value) 									SND_PRIORITY_DOUBLE_INSTANCE 									SND_PRIORITY_TRIPLE_INSTANCE
+//				pan			=>	-1 (full left) to 1.0 (full right), this is a
+// default parm 				vol_scale	=>	factor to scale default volume by
+// (applied before global sound volume applied) 				priority		=>
+// SND_PRIORITY_MUST_PLAY 									SND_PRIORITY_SINGLE_INSTANCE		(default
+// value) SND_PRIORITY_DOUBLE_INSTANCE SND_PRIORITY_TRIPLE_INSTANCE
 //
 // returns:		-1		=>		sound could not be played
 //					n		=>		handle for instance of sound
@@ -590,23 +589,26 @@ MONITOR (Num3DSoundsLoaded)
 // snd_play_3d()
 //
 //	NOTE: vol_scale parameter is the multiplicative scaling applied to the
-//default volume
+// default volume
 //       (vol_scale is a default parameter with a default value of 1.0f)
 //
 // input:	gs				=>	game-level sound description
 //				source_pos	=>	global pos of where the sound is
 //				listen_pos	=>	global pos of where listener is
-//				radius		=>	optional parameter, this specifes distance at which to
-//apply min/max distances 				source_vel	=>	velocity of the source playing the
-//sound (used for DirectSound3D only)
-//				looping		=>	flag to indicate the sound should loop (default value
-//0) 				vol_scale	=>	factor to scale the static volume by (applied before
-//attenuation) 				priority		=> SND_PRIORITY_MUST_PLAY
-//									SND_PRIORITY_SINGLE_INSTANCE	(default
-//value) 									SND_PRIORITY_DOUBLE_INSTANCE 									SND_PRIORITY_TRIPLE_INSTANCE 				sound_fvec
-//=> forward vector of where sound is emitting from (RSX use only) 				range_factor
+//				radius		=>	optional parameter, this specifes distance at
+//which to apply min/max distances 				source_vel	=>	velocity of the
+// source playing the sound (used for DirectSound3D only)
+//				looping		=>	flag to indicate the sound should loop (default
+// value 0) 				vol_scale	=>	factor to scale the static volume
+// by
+// (applied before attenuation) 				priority		=>
+// SND_PRIORITY_MUST_PLAY 									SND_PRIORITY_SINGLE_INSTANCE	(default
+// value) SND_PRIORITY_DOUBLE_INSTANCE
+// SND_PRIORITY_TRIPLE_INSTANCE sound_fvec
+//=> forward vector of where sound is emitting from (RSX use only)
+// range_factor
 //=>	factor N, which increases distance sound is heard by N times (default
-//value 1)
+// value 1)
 //
 // returns:		-1		=>		sound could not be played
 //					n		=>		handle for instance of sound
@@ -762,14 +764,15 @@ void snd_update_3d_pos (
 //						pos		=> 3D position used to calc volume and pan
 //						vol		=> output parameter for the volume
 //						pan		=> output parameter for the pan
-//						radius	=>	optional parameter (default value 0) which indicates
-//sound attenuation 										should occur from this radius
+//						radius	=>	optional parameter (default value 0) which
+// indicates sound attenuation 										should
+// occur from this radius
 //
 // returns:			-1			=> could not determine vol or pan
 //						0			=> success
 //
 //	NOTE: the volume is not scaled by the Master_sound_volume, since this
-//always occurs 			when snd_play() or snd_play_looping() is called
+// always occurs 			when snd_play() or snd_play_looping() is called
 //
 int snd_get_3d_vol_and_pan (
     game_snd* gs, vec3d* pos, float* vol, float* pan, float radius,

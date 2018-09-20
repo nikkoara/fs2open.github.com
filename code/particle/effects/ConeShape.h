@@ -12,46 +12,47 @@ namespace effects {
  * @ingroup particleEffects
  */
 class ConeShape {
-	::util::NormalFloatRange m_normalDeviation;
- public:
-	ConeShape() {}
+    ::util::NormalFloatRange m_normalDeviation;
 
-	matrix getDisplacementMatrix() {
-		angles angs;
+public:
+    ConeShape () {}
 
-		angs.b = 0.0f;
+    matrix getDisplacementMatrix () {
+        angles angs;
 
-		angs.h = m_normalDeviation.next();
-		angs.p = m_normalDeviation.next();
+        angs.b = 0.0f;
 
-		matrix m;
+        angs.h = m_normalDeviation.next ();
+        angs.p = m_normalDeviation.next ();
 
-		vm_angles_2_matrix(&m, &angs);
+        matrix m;
 
-		return m;
-	}
+        vm_angles_2_matrix (&m, &angs);
 
-	void parse(bool nocreate) {
-		if (internal::required_string_if_new("+Deviation:", nocreate)) {
-			float deviation;
-			stuff_float(&deviation);
+        return m;
+    }
 
-			m_normalDeviation = ::util::NormalFloatRange(0.0, fl_radians(deviation));
-		}
-	}
+    void parse (bool nocreate) {
+        if (internal::required_string_if_new ("+Deviation:", nocreate)) {
+            float deviation;
+            stuff_float (&deviation);
 
-	EffectType getType() const { return EffectType::Cone; }
+            m_normalDeviation =
+                ::util::NormalFloatRange (0.0, fl_radians (deviation));
+        }
+    }
 
-	/**
-	 * @brief Specifies if the velocities of the particles should be scaled with the deviation from the direction
-	 * @return @c true
-	 */
-	static SCP_CONSTEXPR bool scale_velocity_deviation() {
-		return true;
-	}
+    EffectType getType () const { return EffectType::Cone; }
+
+    /**
+     * @brief Specifies if the velocities of the particles should be scaled
+     * with the deviation from the direction
+     * @return @c true
+     */
+    static SCP_CONSTEXPR bool scale_velocity_deviation () { return true; }
 };
 
-}
-}
+} // namespace effects
+} // namespace particle
 
 #endif // CONE_GENERATOR_EFFECT_H

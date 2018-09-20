@@ -5,12 +5,11 @@
 
 /**
  * @file LuaHeaders.hpp
- * 
+ *
  * Contains the lua headers wrapped in an @c exteren @c "C" block.
  */
 
-extern "C"
-{
+extern "C" {
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>

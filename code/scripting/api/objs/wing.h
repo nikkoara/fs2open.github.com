@@ -8,9 +8,7 @@ namespace scripting {
 namespace api {
 
 //**********HANDLE: Wing
-DECLARE_ADE_OBJ(l_Wing, int);
+DECLARE_ADE_OBJ (l_Wing, int);
 
-
-}
-}
-
+} // namespace api
+} // namespace scripting

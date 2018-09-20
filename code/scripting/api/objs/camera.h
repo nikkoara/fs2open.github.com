@@ -5,9 +5,6 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_OBJ(l_Camera, camid);
-
+DECLARE_ADE_OBJ (l_Camera, camid);
 }
-}
-
-
+} // namespace scripting

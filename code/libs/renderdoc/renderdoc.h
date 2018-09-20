@@ -2,14 +2,14 @@
 
 namespace renderdoc {
 
-bool loadApi();
+bool loadApi ();
 
-void triggerCapture();
+void triggerCapture ();
 
-void startCapture();
+void startCapture ();
 
-bool isCapturing();
+bool isCapturing ();
 
-void endCapture();
+void endCapture ();
 
-}
+} // namespace renderdoc

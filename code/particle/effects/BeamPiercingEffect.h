@@ -11,27 +11,29 @@ namespace effects {
 /**
  * @ingroup particleEffects
  */
-class BeamPiercingEffect: public ParticleEffect {
- private:
-	float m_radius = -1.f;
-	float m_velocity = -1.f;
-	float m_backVelocity = -1.f;
-	float m_variance = -1.f;
+class BeamPiercingEffect : public ParticleEffect {
+private:
+    float m_radius = -1.f;
+    float m_velocity = -1.f;
+    float m_backVelocity = -1.f;
+    float m_variance = -1.f;
 
-	int m_effectBitmap = -1;
+    int m_effectBitmap = -1;
 
- public:
-	BeamPiercingEffect() : ParticleEffect("") {}
+public:
+    BeamPiercingEffect () : ParticleEffect ("") {}
 
-	bool processSource(const ParticleSource* source) override;
+    bool processSource (const ParticleSource* source) override;
 
-	void parseValues(bool nocreate) override;
+    void parseValues (bool nocreate) override;
 
-	void pageIn() override;
+    void pageIn () override;
 
-	void setValues(int bitmapIndex, float radius, float velocity, float back_velocity, float variance);
+    void setValues (
+        int bitmapIndex, float radius, float velocity, float back_velocity,
+        float variance);
 };
-}
-}
+} // namespace effects
+} // namespace particle
 
 #endif // BEAM_PIERCING_EFFECT_H

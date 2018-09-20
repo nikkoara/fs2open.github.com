@@ -10,44 +10,47 @@
 namespace sexp {
 
 class LuaSEXP : public DynamicSEXP {
-	luacpp::LuaFunction _action;
+    luacpp::LuaFunction _action;
 
-	int _min_args;
-	int _max_args;
+    int _min_args;
+    int _max_args;
 
-	std::vector<int> _argument_types; //!< These are the types of the static, non-repeating arguments
-	std::vector<int> _varargs_type_pattern; //!< This is the pattern for the variable argument part of the SEXP
+    std::vector< int > _argument_types; //!< These are the types of the static,
+                                        //!< non-repeating arguments
+    std::vector< int >
+        _varargs_type_pattern; //!< This is the pattern for the variable
+                               //!< argument part of the SEXP
 
-	int _return_type = OPR_NULL;
+    int _return_type = OPR_NULL;
 
-	int _category;
-	int _subcategory;
+    int _category;
+    int _subcategory;
 
-	luacpp::LuaValue sexpToLua(int node, int argnum) const;
- public:
-	explicit LuaSEXP(const std::string& name);
+    luacpp::LuaValue sexpToLua (int node, int argnum) const;
 
-	int getMinimumArguments() override;
+public:
+    explicit LuaSEXP (const std::string& name);
 
-	int getMaximumArguments() override;
+    int getMinimumArguments () override;
 
-	int getArgumentType(int argnum) const override;
+    int getMaximumArguments () override;
 
-	int execute(int node) override;
+    int getArgumentType (int argnum) const override;
 
-	int getReturnType() override;
+    int execute (int node) override;
 
-	int getSubcategory() override;
+    int getReturnType () override;
 
-	int getCategory() override;
+    int getSubcategory () override;
 
-	void parseTable();
+    int getCategory () override;
 
-	void setAction(const luacpp::LuaFunction& action);
+    void parseTable ();
 
-	luacpp::LuaFunction getAction() const;
-	int getSexpReturnValue(const luacpp::LuaValueList& retVals) const;
+    void setAction (const luacpp::LuaFunction& action);
+
+    luacpp::LuaFunction getAction () const;
+    int getSexpReturnValue (const luacpp::LuaValueList& retVals) const;
 };
 
-}
-
+} // namespace sexp

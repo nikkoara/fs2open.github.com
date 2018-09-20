@@ -7,7 +7,6 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_OBJ(l_Shiptype, int);
-
+DECLARE_ADE_OBJ (l_Shiptype, int);
 }
-}
+} // namespace scripting

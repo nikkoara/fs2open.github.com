@@ -9,13 +9,14 @@
 namespace libs {
 namespace ffmpeg {
 
-void initialize();
+void initialize ();
 
-class FFmpegException: public std::runtime_error {
- public:
-	explicit FFmpegException(const std::string& msg) : std::runtime_error(msg) {}
-	~FFmpegException() SCP_NOEXCEPT override {}
+class FFmpegException : public std::runtime_error {
+public:
+    explicit FFmpegException (const std::string& msg)
+        : std::runtime_error (msg) {}
+    ~FFmpegException () SCP_NOEXCEPT override {}
 };
 
-}
-}
+} // namespace ffmpeg
+} // namespace libs

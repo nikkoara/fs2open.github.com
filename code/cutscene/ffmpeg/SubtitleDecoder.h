@@ -6,20 +6,18 @@
 namespace cutscene {
 namespace ffmpeg {
 
-class SubtitleDecoder: public FFMPEGStreamDecoder<SubtitleFrame> {
- public:
-    explicit SubtitleDecoder(DecoderStatus* status);
+class SubtitleDecoder : public FFMPEGStreamDecoder< SubtitleFrame > {
+public:
+    explicit SubtitleDecoder (DecoderStatus* status);
 
-	~SubtitleDecoder() override;
+    ~SubtitleDecoder () override;
 
-	void decodePacket(AVPacket* packet) override;
+    void decodePacket (AVPacket* packet) override;
 
-	void finishDecoding() override;
-    void pushSubtitleFrame(AVPacket* subtitle, AVSubtitle* pSubtitle);
-	void flushBuffers() override;
+    void finishDecoding () override;
+    void pushSubtitleFrame (AVPacket* subtitle, AVSubtitle* pSubtitle);
+    void flushBuffers () override;
 };
 
-}
-}
-
-
+} // namespace ffmpeg
+} // namespace cutscene

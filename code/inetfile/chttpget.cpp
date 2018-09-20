@@ -493,8 +493,8 @@ uint ChttpGet::ReadDataChannel () {
 typedef struct _async_dns_lookup {
     unsigned int ip; // resolved host. Write only to worker thread.
     char* host;      // host name to resolve. read only to worker thread
-    bool done; // write only to the worker thread. Signals that the operation
-               // is complete
+    bool done;  // write only to the worker thread. Signals that the operation
+                // is complete
     bool error; // write only to worker thread. Thread sets this if the name
                 // doesn't resolve
     bool abort; // read only to worker thread. If this is set, don't fill in

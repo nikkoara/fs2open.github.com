@@ -3,25 +3,27 @@
 #define _TRACING_CATEGORIES_H
 #pragma once
 
-
 /** @file
  *  @ingroup tracing
  *
- *  This file contains the tracing categories. In order to add a new category you must add the instance in categories.cpp,
- *  declare the @c extern reference here and then use it with the appropriate functions wherever you want to trace.
+ *  This file contains the tracing categories. In order to add a new category
+ * you must add the instance in categories.cpp, declare the @c extern reference
+ * here and then use it with the appropriate functions wherever you want to
+ * trace.
  */
 
 namespace tracing {
 
 class Category {
-	const char* _name;
-	bool _graphics_category;
- public:
-	Category(const char* name, bool is_graphics);
+    const char* _name;
+    bool _graphics_category;
 
-	const char* getName() const;
+public:
+    Category (const char* name, bool is_graphics);
 
-	bool usesGPUCounter() const;
+    const char* getName () const;
+
+    bool usesGPUCounter () const;
 };
 
 extern Category LuaOnFrame;
@@ -147,6 +149,6 @@ extern Category RenderSingleDecal;
 extern Category GpuHeapAllocate;
 extern Category GpuHeapDeallocate;
 
-}
+} // namespace tracing
 
 #endif // _TRACING_CATEGORIES_H

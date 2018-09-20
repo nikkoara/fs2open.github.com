@@ -4,28 +4,26 @@
 
 #include "globalincs/pstypes.h"
 
-namespace headtracking
-{
-	struct HeadTrackingStatus
-	{
-		float x;
-		float y;
-		float z;
+namespace headtracking {
+struct HeadTrackingStatus {
+    float x;
+    float y;
+    float z;
 
-		float pitch;
-		float roll;
-		float yaw;
-	};
+    float pitch;
+    float roll;
+    float yaw;
+};
 
-	bool init();
+bool init ();
 
-	bool isEnabled();
+bool isEnabled ();
 
-	bool query();
+bool query ();
 
-	HeadTrackingStatus* getStatus();
+HeadTrackingStatus* getStatus ();
 
-	void shutdown();
-}
+void shutdown ();
+} // namespace headtracking
 
 #endif // HEADTRACKING_H

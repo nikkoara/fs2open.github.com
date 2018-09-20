@@ -1299,14 +1299,14 @@ void multi_ts_init_graphics () {
         UI_XSTR_COLOR_GREEN);
 
     //	Multi_ts_window.add_XSTR("Help", 928,
-    //Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_HELP_BUTTON].xt,
-    //Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_HELP_BUTTON].yt,
+    // Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_HELP_BUTTON].xt,
+    // Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_HELP_BUTTON].yt,
     //&Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_HELP_BUTTON].button,
-    //UI_XSTR_COLOR_GREEN); 	Multi_ts_window.add_XSTR("Options", 1036,
-    //Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_OPTIONS_BUTTON].xt,
-    //Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_OPTIONS_BUTTON].yt,
+    // UI_XSTR_COLOR_GREEN); 	Multi_ts_window.add_XSTR("Options", 1036,
+    // Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_OPTIONS_BUTTON].xt,
+    // Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_OPTIONS_BUTTON].yt,
     //&Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_OPTIONS_BUTTON].button,
-    //UI_XSTR_COLOR_GREEN);
+    // UI_XSTR_COLOR_GREEN);
 
     // make the ship scrolling lists
 
@@ -2964,7 +2964,7 @@ void multi_ts_select_ship () {
 
     Assert (Multi_ts_select_ship_class >= 0);
     //	Assert((Ship_info[Multi_ts_select_ship_class].desc != NULL) &&
-    //strlen(Ship_info[Multi_ts_select_ship_class].desc));
+    // strlen(Ship_info[Multi_ts_select_ship_class].desc));
     if (Ship_info[Multi_ts_select_ship_class].desc != NULL) {
         // strip out newlines
         memset (ship_desc, 0, 1000);

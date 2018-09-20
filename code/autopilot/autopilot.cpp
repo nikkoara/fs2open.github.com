@@ -210,7 +210,7 @@ extern object* Autopilot_flight_leader;
 //        * Tell AI to fly to targeted Nav Point (for all nav-status
 //        wings/ships)
 //		  * Sets max waypoint speed to the best-speed of the slowest ship
-//tagged
+// tagged
 bool StartAutopilot () {
     // Check for support ship and dismiss it if it is not doing anything.
     // If the support ship is doing something then tell the user such.
@@ -1113,10 +1113,10 @@ void nav_warp (bool prewarp = false) {
 // ********************************************************************************************
 // Checks for changes every NPS_TICKRATE milliseconds
 // Checks:
-//			* if we've gotten close enough to a nav point for it to be counted as
-//"Visited"
+//			* if we've gotten close enough to a nav point for it to be counted
+// as "Visited"
 //			* If we're current AutoNavigating it checks if we need to
-//autodisengage
+// autodisengage
 void NavSystem_Do () {
     static unsigned int last_update = 0;
     if (clock () - last_update > NPS_TICKRATE) {

@@ -1139,7 +1139,7 @@ int read_model_file (
 
         switch (id) {
         case ID_OHDR: { // Object header
-            // vector v;
+                        // vector v;
 
             // mprintf(0,"Got chunk OHDR, len=%d\n",len);
 
@@ -1188,7 +1188,7 @@ int read_model_file (
                 pm->detail[i] = cfread_int (fp);
                 pm->detail_depth[i] = 0.0f;
                 ///		mprintf(( "Detail level %d is model %d.\n", i,
-                ///pm->detail[i] ));
+                /// pm->detail[i] ));
             }
 
             pm->num_debris_objects = cfread_int (fp);
@@ -1233,7 +1233,7 @@ int read_model_file (
 
                     float vol_mass = cfread_float (fp);
                     //	Attn: John Slagel:  The following is better done in
-                    //bspgen.
+                    // bspgen.
                     // Convert volume (cubic) to surface area (quadratic) and
                     // scale so 100 -> 100
                     float area_mass = (float)pow (vol_mass, 0.6667f) * 4.65f;
@@ -1346,16 +1346,16 @@ int read_model_file (
             cfread_vector (&pm->submodel[n].offset, fp);
 
             //			mprintf(( "Subobj %d, offs = %.1f, %.1f, %.1f\n", n,
-            //pm->submodel[n].offset.xyz.x, pm->submodel[n].offset.xyz.y,
-            //pm->submodel[n].offset.xyz.z ));
+            // pm->submodel[n].offset.xyz.x, pm->submodel[n].offset.xyz.y,
+            // pm->submodel[n].offset.xyz.z ));
 
 #if defined(FREESPACE1_FORMAT)
             pm->submodel[n].rad = cfread_float (fp); // radius
 #endif
 
             //				pm->submodel[n].tree_offset = cfread_int(fp);
-            ////offset 				pm->submodel[n].data_offset = cfread_int(fp);
-            ////offset
+            ////offset 				pm->submodel[n].data_offset =
+            /// cfread_int(fp); /offset
 
             cfread_vector (&pm->submodel[n].geometric_center, fp);
 
@@ -2209,7 +2209,7 @@ int read_model_file (
                              pm->filename));
                         //	Error( LOCATION, "Couldn't open texture
                         //'%s'\nreferenced by model '%s'\n", glow_texture_name,
-                        //pm->filename );
+                        // pm->filename );
                     }
                     else {
                         nprintf (
@@ -2322,8 +2322,8 @@ int read_model_file (
                                 (n_subsystems > 0)) {
                                 if (table_error) {
                                     //	Warning(LOCATION, "No engine wash table
-                                    //entry in ships.tbl for ship model %s",
-                                    //filename);
+                                    // entry in ships.tbl for ship model %s",
+                                    // filename);
                                 }
                                 else {
                                     Warning (
@@ -2697,8 +2697,8 @@ int read_model_file (
                     pm->ins[idx].norm[idx2] = tempv;
                     //						mprintf(("insignorm %.2f %.2f
                     //%.2f\n",pm->ins[idx].norm[idx2].xyz.x,
-                    //pm->ins[idx].norm[idx2].xyz.y,
-                    //pm->ins[idx].norm[idx2].xyz.z));
+                    // pm->ins[idx].norm[idx2].xyz.y,
+                    // pm->ins[idx].norm[idx2].xyz.z));
                 }
             }
             break;
@@ -4357,10 +4357,10 @@ int model_rotate_gun (
         model_make_turret_matrix (model_num, turret);
 
     Assert (turret->flags[Model::Subsystem_Flags::Turret_matrix]);
-    //	Assert( gun->movement_axis == MOVEMENT_AXIS_X );				// Gun must be
-    //able to change pitch
-    //	Assert( base->movement_axis == MOVEMENT_AXIS_Z );	// Parent must be
-    //able to change heading
+    //	Assert( gun->movement_axis == MOVEMENT_AXIS_X );				// Gun
+    //must be able to change pitch 	Assert( base->movement_axis ==
+    // MOVEMENT_AXIS_Z );
+    //// Parent must be able to change heading
 
     //------------
     // rotate the dest point into the turret gun normal's frame of
@@ -4452,7 +4452,8 @@ int model_rotate_gun (
     }
 
     //	base_angles->h -=
-    //step_size*(key_down_timef(KEY_1)-key_down_timef(KEY_2) ); 	gun_angles->p
+    // step_size*(key_down_timef(KEY_1)-key_down_timef(KEY_2) );
+    // gun_angles->p
     //+= step_size*(key_down_timef(KEY_3)-key_down_timef(KEY_4) );
 
     if (turret->flags[Model::Subsystem_Flags::Fire_on_target]) {

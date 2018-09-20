@@ -5,8 +5,6 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_LIB(l_HookVar);
-
+DECLARE_ADE_LIB (l_HookVar);
 }
-}
-
+} // namespace scripting

@@ -20,9 +20,9 @@ namespace util {
  * @ingroup particleUtils
  */
 enum class Duration {
-	Onetime, //!< The effect is active exactly once
-	Range, //!< The effect is active withing a specific time range
-	Always //!< The effect is always active
+    Onetime, //!< The effect is active exactly once
+    Range,   //!< The effect is active withing a specific time range
+    Always   //!< The effect is always active
 };
 
 /**
@@ -33,34 +33,34 @@ enum class Duration {
  * @ingroup particleUtils
  */
 class EffectTiming {
- private:
-	Duration m_duration;
-	::util::UniformFloatRange m_delayRange;
-	::util::UniformFloatRange m_durationRange;
- public:
-	EffectTiming();
+private:
+    Duration m_duration;
+    ::util::UniformFloatRange m_delayRange;
+    ::util::UniformFloatRange m_durationRange;
 
-	/**
+public:
+    EffectTiming ();
+
+    /**
      * @brief Applies the timing information to a specific source
      * @param source The source to be modified
      */
-	void applyToSource(ParticleSource* source);
+    void applyToSource (ParticleSource* source);
 
-	/**
+    /**
      * @brief Determines if processing should continue
      * @param source The source which should be checked
      * @return @c true if processing should contine, @c false otherwise
      */
-	bool continueProcessing(const ParticleSource* source);
+    bool continueProcessing (const ParticleSource* source);
 
-	/**
+    /**
      * @brief Parses an effect timing class
      * @return The parsed effect timing
      */
-	static EffectTiming parseTiming();
+    static EffectTiming parseTiming ();
 };
-}
-}
+} // namespace util
+} // namespace particle
 
-
-#endif //FS2_OPEN_EFFECTTIMING_H
+#endif // FS2_OPEN_EFFECTTIMING_H

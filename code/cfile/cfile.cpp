@@ -623,8 +623,8 @@ extern int game_cd_changed ();
 //                            exists and returns NULL
 //               type     ==> one of:    CFILE_NORMAL
 //                                       CFILE_MEMORY_MAPPED
-//					  dir_type	=>	override extension check, value is one of CF_TYPE*
-//#defines
+//					  dir_type	=>	override extension check, value is one of
+// CF_TYPE* #defines
 //
 //               NOTE: type parameter is an optional parameter.  The default
 //               value is CFILE_NORMAL
@@ -692,7 +692,7 @@ CFILE* _cfopen (
         // WMC - For some godawful reason, fread does not return the correct
         // number of bytes read in text mode, which messes up FS2_Open's
         // raw_position indicator in fgets. As a consequence, you _must_ open
-        //files that are gonna be read in binary mode.
+        // files that are gonna be read in binary mode.
 
         char happy_mode[8];
         if (strcspn (mode, "ra+") != strlen (mode) &&
@@ -777,11 +777,13 @@ CFILE* _cfopen (
 // cfopen_ext()
 //
 // parameters:	*filepath	==> name of file to open (may be path+name)
-//				*mode		==> specifies how file should be opened (eg "rb" for read
-//binary) 								passing NULL to mode deletes the file if it exists and returns NULL
+//				*mode		==> specifies how file should be opened (eg "rb"
+//for read
+// binary) 								passing NULL to mode deletes the file if it exists
+// and returns NULL
 
-//				dir_type	=>	override extension check, value is one of CF_TYPE*
-//#defines
+//				dir_type	=>	override extension check, value is one of
+// CF_TYPE* #defines
 //
 // returns:		success	==> address of CFILE structure
 //				error	==> NULL

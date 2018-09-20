@@ -485,7 +485,7 @@ void debrief_voice_load_all () {
         if (strnicmp (Debrief_stages[i]->voice, NOX ("none"), 4) != 0) {
             debrief_load_voice_file (i, Debrief_stages[i]->voice);
             //			Debrief_voices[i] =
-            //audiostream_open(Debrief_stages[i]->voice, ASF_VOICE);
+            // audiostream_open(Debrief_stages[i]->voice, ASF_VOICE);
         }
     }
 }
@@ -2003,7 +2003,7 @@ void debrief_init () {
     strcpy_s (Debrief_current_callsign, Player->callsign);
     Debrief_player = Player;
     //	Debrief_current_net_player_index =
-    //debrief_multi_list[0].net_player_index;
+    // debrief_multi_list[0].net_player_index;
 
     // set up the Debrief_stages[] and Recommendations[] arrays.  Only do the
     // following stuff for non-clients (i.e. single and game server).
@@ -2574,7 +2574,7 @@ void debrief_do_frame (float frametime) {
     // AL 3-6-98: Needed to move key reading here, since popups are launched
     // from this code, and we don't
     //				  want to include the mouse pointer which is drawn in the
-    //flip
+    // flip
 
     if (!help_overlay_active (Debrief_overlay_id)) {
         debrief_check_buttons ();

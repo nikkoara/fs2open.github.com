@@ -12,9 +12,8 @@
 namespace scripting {
 namespace api {
 
-DECLARE_ADE_OBJ(l_Shields, object_h);
-
+DECLARE_ADE_OBJ (l_Shields, object_h);
 }
-}
+} // namespace scripting
 
-#endif //FS2_OPEN_SHIELDS_H
+#endif // FS2_OPEN_SHIELDS_H

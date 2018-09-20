@@ -4220,11 +4220,11 @@ int find_wing_name (char* name) {
 
 /**
  * @brief						Tries to create a wing of ships
- * @param[inout]	wingp			Pointer to the wing structure of the wing to be
- *created
+ * @param[inout]	wingp			Pointer to the wing structure of the wing
+ *to be created
  * @param[in] num_to_create		Number of ships to create
- * @param[in] force				If set to 1, the wing will be created regardless of
- *whether or not the arrival conditions have been met yet.
+ * @param[in] force				If set to 1, the wing will be created
+ *regardless of whether or not the arrival conditions have been met yet.
  * @param[in] specific_instance	Set this to create a specific ship from this
  *wing
  * @returns						Number of ships created
@@ -4247,9 +4247,11 @@ int parse_wing_create_ships (
         // can't create any ships if the arrival cue is false or the timestamp
         // has not elapsed.
 
-        if (!eval_sexp (wingp->arrival_cue)) /* ||
-                                                !timestamp_elapsed(wingp->arrival_delay)
-                                                ) */
+        if (!eval_sexp (
+                wingp
+                    ->arrival_cue)) /* ||
+                                       !timestamp_elapsed(wingp->arrival_delay)
+                                       ) */
             return 0;
 
         // once the sexpressions becomes true, then check the arrival delay on
@@ -6958,11 +6960,11 @@ int mission_parse_get_multi_mission_info (const char* filename) {
 }
 
 /**
- * @brief				Returns the parse object on the ship arrival list associated
- *with the given name.
+ * @brief				Returns the parse object on the ship arrival list
+ *associated with the given name.
  * @param[in] name		The name of the object
- * @returns				The parse object, or NULL if no object with the given name
- *is on the arrival list
+ * @returns				The parse object, or NULL if no object with the given
+ *name is on the arrival list
  * @remarks				This function is used to determine whether a ship has
  *arrived. Ships on the arrival list are considered to not be in the game; In
  *order to make respawns work in multiplayer, player ships (those marked with
@@ -6985,15 +6987,15 @@ p_object* mission_parse_get_arrival_ship (const char* name) {
 }
 
 /**
- * @brief					Returns the parse object on the ship arrival list associated
- *with the given net signature.
+ * @brief					Returns the parse object on the ship arrival list
+ *associated with the given net signature.
  * @param[in] net_signature	The net signature of the object
- * @returns					The parse object, or NULL if no object with the given
- *signature is on the arrival list
- * @remarks					This function is used to determine whether a ship has
- *arrived. Ships on the arrival list are considered to not be in the game; In
- *order to make respawns work in multiplayer, player ships (those marked with
- *the P_OF_PLAYER_START flag) are never removed from it.
+ * @returns					The parse object, or NULL if no object with the
+ *given signature is on the arrival list
+ * @remarks					This function is used to determine whether a ship
+ *has arrived. Ships on the arrival list are considered to not be in the game;
+ *In order to make respawns work in multiplayer, player ships (those marked
+ *with the P_OF_PLAYER_START flag) are never removed from it.
  */
 p_object* mission_parse_get_arrival_ship (ushort net_signature) {
     p_object* p_objp;
@@ -8180,9 +8182,9 @@ void mission_bring_in_support_ship (object* requester_objp) {
 
     //	Choose position to warp in ship.
     //	Temporary, but changed by MK because it used to be exactly behind the
-    //player. 	This could cause an Assert if the player immediately targeted it
-    //(before moving). 	Tend to put in front of the player to aid him in flying
-    //towards the ship.
+    // player. 	This could cause an Assert if the player immediately targeted
+    // it (before moving). 	Tend to put in front of the player to aid him in
+    // flying towards the ship.
 
     if (!get_warp_in_pos (&warp_in_pos, requester_objp, 1.0f, 0.1f, 1.0f))
         if (!get_warp_in_pos (&warp_in_pos, requester_objp, 1.0f, 0.2f, -1.0f))

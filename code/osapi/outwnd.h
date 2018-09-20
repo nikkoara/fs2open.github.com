@@ -1,11 +1,11 @@
 /*
  * Copyright (C) Volition, Inc. 1999.  All rights reserved.
  *
- * All source code herein is the property of Volition, Inc. You may not sell 
- * or otherwise commercially exploit the source or things you created based on the 
- * source.
+ * All source code herein is the property of Volition, Inc. You may not sell
+ * or otherwise commercially exploit the source or things you created based on
+ * the source.
  *
-*/
+ */
 
 #ifndef _OUTWND_H
 #define _OUTWND_H
@@ -14,18 +14,20 @@
 
 #ifndef NDEBUG
 
-void load_filter_info(void);
-void outwnd_init();
-void outwnd_close();
-void outwnd_printf(const char *id, SCP_FORMAT_STRING const char *format, ...) SCP_FORMAT_STRING_ARGS(2, 3);
-void outwnd_printf2(SCP_FORMAT_STRING const char *format, ...) SCP_FORMAT_STRING_ARGS(1, 2);
+void load_filter_info (void);
+void outwnd_init ();
+void outwnd_close ();
+void outwnd_printf (const char* id, SCP_FORMAT_STRING const char* format, ...)
+    SCP_FORMAT_STRING_ARGS (2, 3);
+void outwnd_printf2 (SCP_FORMAT_STRING const char* format, ...)
+    SCP_FORMAT_STRING_ARGS (1, 2);
 
-void outwnd_debug_window_init();
-void outwnd_debug_window_do_frame(float frametime);
-void outwnd_debug_window_deinit();
+void outwnd_debug_window_init ();
+void outwnd_debug_window_do_frame (float frametime);
+void outwnd_debug_window_deinit ();
 
 extern int Log_debug_output_to_file;
 
-#endif	// NDEBUG
+#endif // NDEBUG
 
-#endif	// _OUTWND_H
+#endif // _OUTWND_H
