@@ -1,4 +1,5 @@
 #include <limits>
+#include <thread>
 
 #include "cutscene/ffmpeg/FFMPEGDecoder.h"
 

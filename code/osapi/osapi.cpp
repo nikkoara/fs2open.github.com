@@ -7,12 +7,14 @@
  *
  */
 
-#include <fcntl.h>
-
 #include "globalincs/pstypes.h"
 #include "gamesequence/gamesequence.h"
 #include "freespace.h"
 #include "parse/parselo.h"
+
+#include <fstream>
+
+#include <fcntl.h>
 
 #ifdef SCP_UNIX
 #include <sys/stat.h>

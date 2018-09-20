@@ -140,15 +140,6 @@ macro(set_if_not_defined VAR VALUE)
     endif()
 endmacro(set_if_not_defined)
 
-macro(configure_cotire target)
-	if(ENABLE_COTIRE)
-		# Disable unity build as it doesn't work well for us
-		set_target_properties(${target} PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
-
-		cotire(${target})
-	endif()
-endmacro(configure_cotire)
-
 macro(add_target_copy_files)
 	foreach(file ${ARGN})
 		if (IS_DIRECTORY "${file}")
