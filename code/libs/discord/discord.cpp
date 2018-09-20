@@ -12,12 +12,12 @@
 
 namespace {
 struct PresenceInfo {
-	std::string state;
-	int64_t timestamp;
+    std::string state;
+    int64_t timestamp;
 };
 
-bool initialized        = false;
-bool discord_ready      = false;
+bool initialized = false;
+bool discord_ready = false;
 int next_mission_update = -1;
 
 bool in_mission = false;
@@ -26,191 +26,167 @@ PresenceInfo current_info;
 
 const char* APPLICATION_ID = "465270111440470016";
 
-std::unordered_map<std::string, std::string> campaign_name_cache;
+std::unordered_map< std::string, std::string > campaign_name_cache;
 
-std::string get_campaign_name(const char* filename)
-{
-	std::string name = filename;
+std::string get_campaign_name (const char* filename) {
+    std::string name = filename;
 
-	auto iter = campaign_name_cache.find(name);
-	if (iter != campaign_name_cache.end()) {
-		return iter->second;
-	}
+    auto iter = campaign_name_cache.find (name);
+    if (iter != campaign_name_cache.end ()) { return iter->second; }
 
-	auto campaign_name        = mission_campaign_get_name(filename);
-	campaign_name_cache[name] = campaign_name;
+    auto campaign_name = mission_campaign_get_name (filename);
+    campaign_name_cache[name] = campaign_name;
 
-	return campaign_name;
+    return campaign_name;
 }
 
-std::string get_current_campaign_name()
-{
-	if (Game_mode & GM_CAMPAIGN_MODE) {
-		return Campaign.name;
-	} else if (Player != nullptr) {
-		return get_campaign_name(Player->current_campaign);
-	} else {
-		return "";
-	}
+std::string get_current_campaign_name () {
+    if (Game_mode & GM_CAMPAIGN_MODE) { return Campaign.name; }
+    else if (Player != nullptr) {
+        return get_campaign_name (Player->current_campaign);
+    }
+    else {
+        return "";
+    }
 }
 
-std::string get_details()
-{
-	std::string res;
+std::string get_details () {
+    std::string res;
 
-	auto has_campaign = Player != nullptr && strlen(Player->current_campaign) > 0;
-	if (in_mission && !(Game_mode & GM_CAMPAIGN_MODE)) {
-		// This is a standalone mission so we don't actually have a campaign
-		has_campaign = false;
-	}
+    auto has_campaign =
+        Player != nullptr && strlen (Player->current_campaign) > 0;
+    if (in_mission && !(Game_mode & GM_CAMPAIGN_MODE)) {
+        // This is a standalone mission so we don't actually have a campaign
+        has_campaign = false;
+    }
 
-	if (has_campaign && in_mission) {
-		sprintf(res, "%s: %s", get_current_campaign_name().c_str(), The_mission.name);
-	} else if (has_campaign) {
-		sprintf(res, "Campaign %s", get_current_campaign_name().c_str());
-	} else if (in_mission) {
-		res = The_mission.name;
-	} else {
-		res = "In game";
-	}
+    if (has_campaign && in_mission) {
+        sprintf (
+            res, "%s: %s", get_current_campaign_name ().c_str (),
+            The_mission.name);
+    }
+    else if (has_campaign) {
+        sprintf (res, "Campaign %s", get_current_campaign_name ().c_str ());
+    }
+    else if (in_mission) {
+        res = The_mission.name;
+    }
+    else {
+        res = "In game";
+    }
 
-	return res;
+    return res;
 }
 
-void update_presence() {
-	auto details = get_details();
+void update_presence () {
+    auto details = get_details ();
 
-	DiscordRichPresence presence;
-	memset(&presence, 0, sizeof(presence));
-	presence.details        = details.c_str();
-	presence.state          = current_info.state.c_str();
-	presence.startTimestamp = current_info.timestamp;
+    DiscordRichPresence presence;
+    memset (&presence, 0, sizeof (presence));
+    presence.details = details.c_str ();
+    presence.state = current_info.state.c_str ();
+    presence.startTimestamp = current_info.timestamp;
 
-	Discord_UpdatePresence(&presence);
+    Discord_UpdatePresence (&presence);
 }
 
-void set_presence(const std::string& state, int64_t timestamp = 0) {
-	if (current_info.state == state && current_info.timestamp == timestamp) {
-		// No changes
-		return;
-	}
+void set_presence (const std::string& state, int64_t timestamp = 0) {
+    if (current_info.state == state && current_info.timestamp == timestamp) {
+        // No changes
+        return;
+    }
 
-	current_info.state = state;
-	current_info.timestamp = timestamp;
+    current_info.state = state;
+    current_info.timestamp = timestamp;
 
-	if (discord_ready) {
-		update_presence();
-	}
+    if (discord_ready) { update_presence (); }
 }
 
-void set_game_play_presence()
-{
-	std::string state;
+void set_game_play_presence () {
+    std::string state;
 
-	sprintf(state, "In mission (%d %s)", Player->stats.m_kill_count_ok,
-	        Player->stats.m_kill_count_ok == 1 ? "kill" : "kills");
+    sprintf (
+        state, "In mission (%d %s)", Player->stats.m_kill_count_ok,
+        Player->stats.m_kill_count_ok == 1 ? "kill" : "kills");
 
-	set_presence(state, (int64_t)time(nullptr) - f2i(Missiontime));
+    set_presence (state, (int64_t)time (nullptr) - f2i (Missiontime));
 
-	// Update this every 20 seconds since Discord already has a 15 second rate-limit
-	// This will update the "elapsed" time even if time compression is active but the clock will jump forward
-	next_mission_update = timestamp(20000);
+    // Update this every 20 seconds since Discord already has a 15 second
+    // rate-limit This will update the "elapsed" time even if time compression
+    // is active but the clock will jump forward
+    next_mission_update = timestamp (20000);
 }
 
-void update_discord()
-{
-	if (!initialized)
-		return;
+void update_discord () {
+    if (!initialized) return;
 
-	Discord_RunCallbacks();
+    Discord_RunCallbacks ();
 
-	if (gameseq_get_state() == GS_STATE_GAME_PLAY && timestamp_elapsed(next_mission_update)) {
-		set_game_play_presence();
-	}
+    if (gameseq_get_state () == GS_STATE_GAME_PLAY &&
+        timestamp_elapsed (next_mission_update)) {
+        set_game_play_presence ();
+    }
 }
-void shutdown_discord()
-{
-	if (!initialized)
-		return;
+void shutdown_discord () {
+    if (!initialized) return;
 
-	Discord_Shutdown();
-	initialized = false;
-	discord_ready = false;
+    Discord_Shutdown ();
+    initialized = false;
+    discord_ready = false;
 }
 
-void handleEnterState(int old_state, int new_state)
-{
-	if (old_state == new_state) {
-		return;
-	}
+void handleEnterState (int old_state, int new_state) {
+    if (old_state == new_state) { return; }
 
-	if (new_state == GS_STATE_GAME_PLAY) {
-		// Update immediately if we enter the game play state again
-		set_game_play_presence();
-		return;
-	}
+    if (new_state == GS_STATE_GAME_PLAY) {
+        // Update immediately if we enter the game play state again
+        set_game_play_presence ();
+        return;
+    }
 
-	if (gameseq_get_state_idx(GS_STATE_GAME_PLAY) >= 0) {
-		// Special case for when we come out of game play
-		switch (new_state) {
-		case GS_STATE_OPTIONS_MENU:
-		case GS_STATE_HOTKEY_SCREEN:
-		case GS_STATE_GAMEPLAY_HELP:
-		case GS_STATE_MISSION_LOG_SCROLLBACK:
-			set_presence("In game menu");
-			return;
-		default:
-			break;
-		}
-	}
+    if (gameseq_get_state_idx (GS_STATE_GAME_PLAY) >= 0) {
+        // Special case for when we come out of game play
+        switch (new_state) {
+        case GS_STATE_OPTIONS_MENU:
+        case GS_STATE_HOTKEY_SCREEN:
+        case GS_STATE_GAMEPLAY_HELP:
+        case GS_STATE_MISSION_LOG_SCROLLBACK:
+            set_presence ("In game menu");
+            return;
+        default: break;
+        }
+    }
 
-	switch (new_state) {
-	case GS_STATE_MAIN_MENU:
-		set_presence("In Mainhall");
-		break;
-	case GS_STATE_BRIEFING:
-		set_presence("In mission briefing");
-		break;
-	case GS_STATE_CMD_BRIEF:
-		set_presence("In command briefing");
-		break;
-	case GS_EVENT_DEBRIEF:
-		set_presence("In debriefing");
-		break;
-	case GS_STATE_GAME_PAUSED:
-		set_presence("Paused");
-		break;
-	case GS_STATE_RED_ALERT:
-		set_presence("Red alert briefing");
-		break;
-	case GS_STATE_INITIAL_PLAYER_SELECT:
-		set_presence("Selecting player");
-		break;
-	case GS_STATE_FICTION_VIEWER:
-		set_presence("In fiction viewer");
-		break;
-	default:
-		break;
-	}
+    switch (new_state) {
+    case GS_STATE_MAIN_MENU: set_presence ("In Mainhall"); break;
+    case GS_STATE_BRIEFING: set_presence ("In mission briefing"); break;
+    case GS_STATE_CMD_BRIEF: set_presence ("In command briefing"); break;
+    case GS_EVENT_DEBRIEF: set_presence ("In debriefing"); break;
+    case GS_STATE_GAME_PAUSED: set_presence ("Paused"); break;
+    case GS_STATE_RED_ALERT: set_presence ("Red alert briefing"); break;
+    case GS_STATE_INITIAL_PLAYER_SELECT:
+        set_presence ("Selecting player");
+        break;
+    case GS_STATE_FICTION_VIEWER: set_presence ("In fiction viewer"); break;
+    default: break;
+    }
 }
 
-void handleLeaveState(int old_state, int /*new_state*/)
-{
-	if (old_state == GS_STATE_GAME_PAUSED) {
-		// Reset the game play state immediately
-		set_game_play_presence();
-	}
+void handleLeaveState (int old_state, int /*new_state*/) {
+    if (old_state == GS_STATE_GAME_PAUSED) {
+        // Reset the game play state immediately
+        set_game_play_presence ();
+    }
 
-	if (old_state == GS_STATE_GAME_PLAY) {
-		in_mission          = false;
-		next_mission_update = -1;
-	}
+    if (old_state == GS_STATE_GAME_PLAY) {
+        in_mission = false;
+        next_mission_update = -1;
+    }
 }
 
-void handleMissionLoad(const char* /*filename*/)
-{
-	set_presence("Loading mission");
-	in_mission = true;
+void handleMissionLoad (const char* /*filename*/) {
+    set_presence ("Loading mission");
+    in_mission = true;
 }
 
 } // namespace
@@ -218,36 +194,37 @@ void handleMissionLoad(const char* /*filename*/)
 namespace libs {
 namespace discord {
 
-void init()
-{
-	Assertion(!initialized, "Discord integration can only be initialized once!");
+void init () {
+    Assertion (
+        !initialized, "Discord integration can only be initialized once!");
 
-	DiscordEventHandlers handlers;
-	memset(&handlers, 0, sizeof(handlers));
-	handlers.ready = [](const DiscordUser* connectedUser) {
-		mprintf(("Discord: connected to user %s#%s - %s\n", connectedUser->username, connectedUser->discriminator,
-		         connectedUser->userId));
-		discord_ready = true;
-		update_presence();
-	};
-	handlers.errored = [](int errcode, const char* message) {
-		mprintf(("Discord: error (%d: %s)\n", errcode, message));
-		discord_ready = false;
-	};
-	handlers.disconnected = [](int errcode, const char* message) {
-		mprintf(("Discord: disconnected (%d: %s)\n", errcode, message));
-		discord_ready = false;
-	};
+    DiscordEventHandlers handlers;
+    memset (&handlers, 0, sizeof (handlers));
+    handlers.ready = [](const DiscordUser* connectedUser) {
+        mprintf ((
+            "Discord: connected to user %s#%s - %s\n", connectedUser->username,
+            connectedUser->discriminator, connectedUser->userId));
+        discord_ready = true;
+        update_presence ();
+    };
+    handlers.errored = [](int errcode, const char* message) {
+        mprintf (("Discord: error (%d: %s)\n", errcode, message));
+        discord_ready = false;
+    };
+    handlers.disconnected = [](int errcode, const char* message) {
+        mprintf (("Discord: disconnected (%d: %s)\n", errcode, message));
+        discord_ready = false;
+    };
 
-	Discord_Initialize(APPLICATION_ID, &handlers, 0, nullptr);
+    Discord_Initialize (APPLICATION_ID, &handlers, 0, nullptr);
 
-	events::EngineUpdate.listen(update_discord);
-	events::EngineShutdown.listen(shutdown_discord);
-	events::GameEnterState.listen(handleEnterState);
-	events::GameLeaveState.listen(handleLeaveState);
-	events::GameMissionLoad.listen(handleMissionLoad);
+    events::EngineUpdate.listen (update_discord);
+    events::EngineShutdown.listen (shutdown_discord);
+    events::GameEnterState.listen (handleEnterState);
+    events::GameLeaveState.listen (handleLeaveState);
+    events::GameMissionLoad.listen (handleMissionLoad);
 
-	initialized = true;
+    initialized = true;
 }
 
 } // namespace discord

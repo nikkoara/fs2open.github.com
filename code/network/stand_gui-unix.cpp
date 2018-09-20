@@ -10,29 +10,29 @@
 #include <iterator>
 #include <cstddef>
 
-// Copy-Paste from http://www.cplusplus.com/faq/sequences/strings/split/#c-tokenizer
+// Copy-Paste from
+// http://www.cplusplus.com/faq/sequences/strings/split/#c-tokenizer
 struct split_struct {
-    enum empties_t {
-        empties_ok, no_empties
-    };
+    enum empties_t { empties_ok, no_empties };
 };
 
-template<typename Container>
-Container& split(Container& result, const typename Container::value_type& s,
-        const typename Container::value_type& delimiters, split_struct::empties_t empties = split_struct::empties_ok) {
-    result.clear();
+template< typename Container >
+Container& split (
+    Container& result, const typename Container::value_type& s,
+    const typename Container::value_type& delimiters,
+    split_struct::empties_t empties = split_struct::empties_ok) {
+    result.clear ();
     size_t current;
     size_t next = -1;
     do {
         if (empties == split_struct::no_empties) {
-            next = s.find_first_not_of(delimiters, next + 1);
-            if (next == Container::value_type::npos)
-                break;
+            next = s.find_first_not_of (delimiters, next + 1);
+            if (next == Container::value_type::npos) break;
             next -= 1;
         }
         current = next + 1;
-        next = s.find_first_of(delimiters, current);
-        result.push_back(s.substr(current, next - current));
+        next = s.find_first_of (delimiters, current);
+        result.push_back (s.substr (current, next - current));
     } while (next != Container::value_type::npos);
     return result;
 }
@@ -66,15 +66,17 @@ Container& split(Container& result, const typename Container::value_type& s,
 
  */
 
-static const std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "abcdefghijklmnopqrstuvwxyz"
-        "0123456789+/";
+static const std::string base64_chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz"
+    "0123456789+/";
 
-static inline bool is_base64(unsigned char c) {
-    return (isalnum(c) || (c == '+') || (c == '/'));
+static inline bool is_base64 (unsigned char c) {
+    return (isalnum (c) || (c == '+') || (c == '/'));
 }
 
-std::string base64_encode(unsigned char const* bytes_to_encode, unsigned int in_len) {
+std::string
+base64_encode (unsigned char const* bytes_to_encode, unsigned int in_len) {
     std::string ret;
     int i = 0;
     int j = 0;
@@ -85,87 +87,97 @@ std::string base64_encode(unsigned char const* bytes_to_encode, unsigned int in_
         char_array_3[i++] = *(bytes_to_encode++);
         if (i == 3) {
             char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
-            char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
-            char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
+            char_array_4[1] = ((char_array_3[0] & 0x03) << 4) +
+                              ((char_array_3[1] & 0xf0) >> 4);
+            char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) +
+                              ((char_array_3[2] & 0xc0) >> 6);
             char_array_4[3] = char_array_3[2] & 0x3f;
 
-            for (i = 0; (i < 4); i++)
-                ret += base64_chars[char_array_4[i]];
+            for (i = 0; (i < 4); i++) ret += base64_chars[char_array_4[i]];
             i = 0;
         }
     }
 
     if (i) {
-        for (j = i; j < 3; j++)
-            char_array_3[j] = '\0';
+        for (j = i; j < 3; j++) char_array_3[j] = '\0';
 
         char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
-        char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
-        char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
+        char_array_4[1] =
+            ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
+        char_array_4[2] =
+            ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
         char_array_4[3] = char_array_3[2] & 0x3f;
 
-        for (j = 0; (j < i + 1); j++)
-            ret += base64_chars[char_array_4[j]];
+        for (j = 0; (j < i + 1); j++) ret += base64_chars[char_array_4[j]];
 
-        while ((i++ < 3))
-            ret += '=';
-
+        while ((i++ < 3)) ret += '=';
     }
 
     return ret;
-
 }
 
-std::string base64_decode(std::string const& encoded_string) {
-    int in_len = encoded_string.size();
+std::string base64_decode (std::string const& encoded_string) {
+    int in_len = encoded_string.size ();
     int i = 0;
     int j = 0;
     int in_ = 0;
     unsigned char char_array_4[4], char_array_3[3];
     std::string ret;
 
-    while (in_len-- && (encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
+    while (in_len-- && (encoded_string[in_] != '=') &&
+           is_base64 (encoded_string[in_])) {
         char_array_4[i++] = encoded_string[in_];
         in_++;
         if (i == 4) {
             for (i = 0; i < 4; i++)
-                char_array_4[i] = base64_chars.find(char_array_4[i]);
+                char_array_4[i] = base64_chars.find (char_array_4[i]);
 
-            char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
-            char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
+            char_array_3[0] =
+                (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
+            char_array_3[1] = ((char_array_4[1] & 0xf) << 4) +
+                              ((char_array_4[2] & 0x3c) >> 2);
             char_array_3[2] = ((char_array_4[2] & 0x3) << 6) + char_array_4[3];
 
-            for (i = 0; (i < 3); i++)
-                ret += char_array_3[i];
+            for (i = 0; (i < 3); i++) ret += char_array_3[i];
             i = 0;
         }
     }
 
     if (i) {
-        for (j = i; j < 4; j++)
-            char_array_4[j] = 0;
+        for (j = i; j < 4; j++) char_array_4[j] = 0;
 
         for (j = 0; j < 4; j++)
-            char_array_4[j] = base64_chars.find(char_array_4[j]);
+            char_array_4[j] = base64_chars.find (char_array_4[j]);
 
-        char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
-        char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
+        char_array_3[0] =
+            (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
+        char_array_3[1] =
+            ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
         char_array_3[2] = ((char_array_4[2] & 0x3) << 6) + char_array_4[3];
 
-        for (j = 0; (j < i - 1); j++)
-            ret += char_array_3[j];
+        for (j = 0; (j < i - 1); j++) ret += char_array_3[j];
     }
 
     return ret;
 }
 // Copy-Paste end
 
-
 /*
  Copyright (c) 2013 Eli2
- Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions: The above copyright
+ notice and this permission notice shall be included in all copies or
+ substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS",
+ WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #include "network/stand_gui.h"
@@ -189,182 +201,169 @@ std::string base64_decode(std::string const& encoded_string) {
 #include "mongoose.h"
 #include "jansson.h"
 
-#define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
-
-
+#define ARRAY_SIZE(array) (sizeof (array) / sizeof (array[0]))
 
 class WebapiCommand {
 public:
-    virtual ~WebapiCommand() {
-    }
-    ;
-    virtual void execute() = 0;
+    virtual ~WebapiCommand (){};
+    virtual void execute () = 0;
 };
 
-class ChangeServerInformationCommand : public WebapiCommand
-{
-	std::string name;
-	bool hasName;
+class ChangeServerInformationCommand : public WebapiCommand {
+    std::string name;
+    bool hasName;
 
-	std::string passwd;
-	bool hasPasswd;
+    std::string passwd;
+    bool hasPasswd;
 
-	int framecap;
+    int framecap;
 
 public:
-	ChangeServerInformationCommand() : hasName(false), hasPasswd(false), framecap(0) {}
+    ChangeServerInformationCommand ()
+        : hasName (false), hasPasswd (false), framecap (0) {}
 
-	void setFrameCap(int cap) { framecap = cap; }
+    void setFrameCap (int cap) { framecap = cap; }
 
-	void setName(const char* newName)
-	{
-		hasName = true;
-		name.assign(newName);
-	}
-
-	void setPasswd(const char* newPasswd)
-	{
-		hasPasswd = true;
-		passwd.assign(newPasswd);
-	}
-
-	void execute() override {
-		if (hasName) {
-			strcpy_s(Netgame.name, name.c_str());
-			strcpy_s(Multi_options_g.std_pname, name.c_str());
-			// update fs2netd with the info
-			if (MULTI_IS_TRACKER_GAME) {
-				fs2netd_gameserver_disconnect();
-				os_sleep(50);
-				fs2netd_gameserver_start();
-			}
-		}
-
-		if (hasPasswd) {
-			strcpy_s(Multi_options_g.std_passwd, passwd.c_str());
-		}
-
-		if (framecap)
-		{
-			Multi_options_g.std_framecap = framecap;
-		}
-	}
-};
-
-class KickPlayerCommand: public WebapiCommand {
-public:
-    KickPlayerCommand(int playerId)
-            : mPlayerId(playerId) {
+    void setName (const char* newName) {
+        hasName = true;
+        name.assign (newName);
     }
 
-	void execute() override {
+    void setPasswd (const char* newPasswd) {
+        hasPasswd = true;
+        passwd.assign (newPasswd);
+    }
+
+    void execute () override {
+        if (hasName) {
+            strcpy_s (Netgame.name, name.c_str ());
+            strcpy_s (Multi_options_g.std_pname, name.c_str ());
+            // update fs2netd with the info
+            if (MULTI_IS_TRACKER_GAME) {
+                fs2netd_gameserver_disconnect ();
+                os_sleep (50);
+                fs2netd_gameserver_start ();
+            }
+        }
+
+        if (hasPasswd) {
+            strcpy_s (Multi_options_g.std_passwd, passwd.c_str ());
+        }
+
+        if (framecap) { Multi_options_g.std_framecap = framecap; }
+    }
+};
+
+class KickPlayerCommand : public WebapiCommand {
+public:
+    KickPlayerCommand (int playerId) : mPlayerId (playerId) {}
+
+    void execute () override {
         size_t foundPlayerIndex = MAX_PLAYERS;
         for (size_t idx = 0; idx < MAX_PLAYERS; idx++) {
-            if (MULTI_CONNECTED(Net_players[idx])) {
+            if (MULTI_CONNECTED (Net_players[idx])) {
                 if (Net_players[idx].player_id == mPlayerId) {
                     foundPlayerIndex = idx;
                 }
             }
         }
-        
+
         if (foundPlayerIndex < MAX_PLAYERS) {
-            multi_kick_player(foundPlayerIndex, 0);
+            multi_kick_player (foundPlayerIndex, 0);
         }
     }
+
 private:
     int mPlayerId;
 };
 
-class ShutdownServerCommand: public WebapiCommand {
+class ShutdownServerCommand : public WebapiCommand {
 public:
-	void execute() override {
-        gameseq_post_event(GS_EVENT_QUIT_GAME);
-    }
+    void execute () override { gameseq_post_event (GS_EVENT_QUIT_GAME); }
 };
 
-class UpdateMissionsCommand: public WebapiCommand {
+class UpdateMissionsCommand : public WebapiCommand {
 public:
-	void execute() override {
+    void execute () override {
         if (MULTI_IS_TRACKER_GAME) {
             // delete mvalid.cfg if it exists
-            cf_delete(MULTI_VALID_MISSION_FILE, CF_TYPE_DATA);
+            cf_delete (MULTI_VALID_MISSION_FILE, CF_TYPE_DATA);
 
             // refresh missions
-            multi_update_valid_missions();
+            multi_update_valid_missions ();
         }
     }
 };
 
-class ResetGameCommand: public WebapiCommand {
+class ResetGameCommand : public WebapiCommand {
 public:
-	void execute() override {
-        multi_quit_game(PROMPT_NONE);
-    }
+    void execute () override { multi_quit_game (PROMPT_NONE); }
 };
 
-class ResetFs2NetCommand: public WebapiCommand {
+class ResetFs2NetCommand : public WebapiCommand {
 public:
-	void execute() override {
-        fs2netd_reset_connection();
-    }
+    void execute () override { fs2netd_reset_connection (); }
 };
 
-SDL_mutex* webapiCommandQueueMutex = SDL_CreateMutex();
-std::vector<WebapiCommand*> webapiCommandQueue;
+SDL_mutex* webapiCommandQueueMutex = SDL_CreateMutex ();
+std::vector< WebapiCommand* > webapiCommandQueue;
 
-void webapiAddCommand(WebapiCommand *command) {
-    SDL_mutexP(webapiCommandQueueMutex);
+void webapiAddCommand (WebapiCommand* command) {
+    SDL_mutexP (webapiCommandQueueMutex);
 
-    webapiCommandQueue.push_back(command);
+    webapiCommandQueue.push_back (command);
 
-    SDL_mutexV(webapiCommandQueueMutex);
+    SDL_mutexV (webapiCommandQueueMutex);
 }
 
-void webapiExecuteCommands() {
-    SDL_mutexP(webapiCommandQueueMutex);
+void webapiExecuteCommands () {
+    SDL_mutexP (webapiCommandQueueMutex);
 
-    for (std::vector<WebapiCommand*>::iterator iter = webapiCommandQueue.begin(); iter != webapiCommandQueue.end();
-            ++iter) {
-        (*iter)->execute();
-		delete *iter;
+    for (std::vector< WebapiCommand* >::iterator iter =
+             webapiCommandQueue.begin ();
+         iter != webapiCommandQueue.end (); ++iter) {
+        (*iter)->execute ();
+        delete *iter;
     }
 
-    webapiCommandQueue.clear();
+    webapiCommandQueue.clear ();
 
-    SDL_mutexV(webapiCommandQueueMutex);
+    SDL_mutexV (webapiCommandQueueMutex);
 }
 
 struct LogResource {
     struct LogResourceEntry {
         long timestamp;
-        json_t *entity;
+        json_t* entity;
     };
 
     long currentTimestamp;
-    std::list<LogResourceEntry> entries;
+    std::list< LogResourceEntry > entries;
 
-    void addEntity(json_t* entity) {
+    void addEntity (json_t* entity) {
         LogResourceEntry entry;
         entry.timestamp = currentTimestamp;
         entry.entity = entity;
 
-        entries.push_back(entry);
+        entries.push_back (entry);
         currentTimestamp++;
 
-        if (entries.size() > 500) {
-            json_delete(entries.front().entity);
-            entries.pop_front();
+        if (entries.size () > 500) {
+            json_delete (entries.front ().entity);
+            entries.pop_front ();
         }
     }
 
-    json_t* getEntriesAfter(long after) {
-        json_t *msgs = json_array();
+    json_t* getEntriesAfter (long after) {
+        json_t* msgs = json_array ();
 
-        for (std::list<LogResourceEntry>::iterator iter = entries.begin(); iter != entries.end(); ++iter) {
+        for (std::list< LogResourceEntry >::iterator iter = entries.begin ();
+             iter != entries.end (); ++iter) {
             if (iter->timestamp >= after) {
-                json_t *msg = json_copy(iter->entity);
-                json_object_set_new(msg, "timestamp", json_integer(iter->timestamp));
-                json_array_append(msgs, msg);
+                json_t* msg = json_copy (iter->entity);
+                json_object_set_new (
+                    msg, "timestamp", json_integer (iter->timestamp));
+                json_array_append (msgs, msg);
             }
         }
 
@@ -372,69 +371,67 @@ struct LogResource {
     }
 };
 
-
-SDL_mutex *webapi_dataMutex = SDL_CreateMutex();
+SDL_mutex* webapi_dataMutex = SDL_CreateMutex ();
 netgame_info webapi_netgameInfo;
-std::map<short, net_player> webapiNetPlayers;
+std::map< short, net_player > webapiNetPlayers;
 float webui_fps;
 float webui_missiontime;
-std::list<mission_goal> webuiMissionGoals;
+std::list< mission_goal > webuiMissionGoals;
 LogResource webapi_chatLog;
 LogResource webapi_debugLog;
 
 enum HttpStatuscode {
-    HTTP_200_OK, HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
+    HTTP_200_OK,
+    HTTP_401_UNAUTHORIZED,
+    HTTP_404_NOT_FOUND,
+    HTTP_500_INTERNAL_SERVER_ERROR
 };
 
-static void sendResponse(mg_connection *conn, std::string const& data, HttpStatuscode status) {
+static void sendResponse (
+    mg_connection* conn, std::string const& data, HttpStatuscode status) {
     std::stringstream headerStream;
 
     headerStream << "HTTP/1.0 ";
     switch (status) {
-    case HTTP_200_OK:
-        headerStream << "200 OK";
-        break;
-    case HTTP_401_UNAUTHORIZED:
-        headerStream << "401 Unauthorized";
-        break;
-    case HTTP_404_NOT_FOUND:
-        headerStream << "404 Not Found";
-        break;
+    case HTTP_200_OK: headerStream << "200 OK"; break;
+    case HTTP_401_UNAUTHORIZED: headerStream << "401 Unauthorized"; break;
+    case HTTP_404_NOT_FOUND: headerStream << "404 Not Found"; break;
     case HTTP_500_INTERNAL_SERVER_ERROR:
         headerStream << "500 Internal Server Error";
         break;
     }
     headerStream << "\r\n";
 
-    if (data.length() > 0) {
-        headerStream << "Content-Length: " << data.length() << "\r\n";
+    if (data.length () > 0) {
+        headerStream << "Content-Length: " << data.length () << "\r\n";
         headerStream << "Content-Type: application/json\r\n\r\n";
     }
 
     std::string resultString;
-    resultString += headerStream.str();
+    resultString += headerStream.str ();
     resultString += data;
 
-    mg_write(conn, resultString.c_str(), (int) resultString.length());
+    mg_write (conn, resultString.c_str (), (int)resultString.length ());
 }
 
-static void sendJsonResponse(mg_connection *connection, json_t *responseEntity) {
-    char* result = json_dumps(responseEntity, 0);
-    std::string resultString(result);
-    free(result);
-    json_delete(responseEntity);
+static void
+sendJsonResponse (mg_connection* connection, json_t* responseEntity) {
+    char* result = json_dumps (responseEntity, 0);
+    std::string resultString (result);
+    free (result);
+    json_delete (responseEntity);
 
-    sendResponse(connection, resultString, HTTP_200_OK);
+    sendResponse (connection, resultString, HTTP_200_OK);
 }
 
 // =============================================================================
 
 struct ResourceContext {
-    json_t *requestEntity;
-    std::map<std::string, std::string> parameters;
+    json_t* requestEntity;
+    std::map< std::string, std::string > parameters;
 };
 
-typedef json_t* (*resourceHandler)(ResourceContext *);
+typedef json_t* (*resourceHandler) (ResourceContext*);
 
 struct Resource {
     std::string path;
@@ -443,178 +440,177 @@ struct Resource {
     resourceHandler handler;
 };
 
-json_t* emptyResource(ResourceContext * /*context*/) {
-    return json_object();
-}
+json_t* emptyResource (ResourceContext* /*context*/) { return json_object (); }
 
-json_t* serverGet(ResourceContext * /*context*/) {
-    json_t *result = json_object();
+json_t* serverGet (ResourceContext* /*context*/) {
+    json_t* result = json_object ();
 
-    json_object_set_new(result, "name", json_string(Multi_options_g.std_pname));
-    json_object_set_new(result, "password", json_string(Multi_options_g.std_passwd));
-    json_object_set_new(result, "framecap", json_integer(Multi_options_g.std_framecap));
+    json_object_set_new (
+        result, "name", json_string (Multi_options_g.std_pname));
+    json_object_set_new (
+        result, "password", json_string (Multi_options_g.std_passwd));
+    json_object_set_new (
+        result, "framecap", json_integer (Multi_options_g.std_framecap));
 
     return result;
 }
 
-json_t* serverPut(ResourceContext *context) {
-	ChangeServerInformationCommand* changeCommand = new ChangeServerInformationCommand();
+json_t* serverPut (ResourceContext* context) {
+    ChangeServerInformationCommand* changeCommand =
+        new ChangeServerInformationCommand ();
 
-	const char* name = json_string_value(json_object_get(context->requestEntity, "name"));
-	if (name) {
-		changeCommand->setName(name);
-	}
-	const char* passwd = json_string_value(json_object_get(context->requestEntity, "password"));
-	if (passwd) {
-		changeCommand->setPasswd(passwd);
-	}
-	int framecap = atoi(json_string_value(json_object_get(context->requestEntity, "framecap")));
-	if (framecap)
-	{
-		changeCommand->setFrameCap(framecap);
-	}
+    const char* name =
+        json_string_value (json_object_get (context->requestEntity, "name"));
+    if (name) { changeCommand->setName (name); }
+    const char* passwd = json_string_value (
+        json_object_get (context->requestEntity, "password"));
+    if (passwd) { changeCommand->setPasswd (passwd); }
+    int framecap = atoi (json_string_value (
+        json_object_get (context->requestEntity, "framecap")));
+    if (framecap) { changeCommand->setFrameCap (framecap); }
 
-	webapiAddCommand(changeCommand);
+    webapiAddCommand (changeCommand);
 
-	return json_object();
+    return json_object ();
 }
 
-json_t* serverDelete(ResourceContext * /*context*/) {
-    webapiAddCommand(new ShutdownServerCommand());
-    return json_object();
+json_t* serverDelete (ResourceContext* /*context*/) {
+    webapiAddCommand (new ShutdownServerCommand ());
+    return json_object ();
 }
 
-json_t* refreshMissions(ResourceContext * /*context*/) {
-    webapiAddCommand(new UpdateMissionsCommand());
-    return json_object();
+json_t* refreshMissions (ResourceContext* /*context*/) {
+    webapiAddCommand (new UpdateMissionsCommand ());
+    return json_object ();
 }
 
-json_t* serverResetGame(ResourceContext * /*context*/) {
-    webapiAddCommand(new ResetGameCommand());
-    return json_object();
+json_t* serverResetGame (ResourceContext* /*context*/) {
+    webapiAddCommand (new ResetGameCommand ());
+    return json_object ();
 }
 
-json_t* fs2netReset(ResourceContext * /*context*/) {
-    webapiAddCommand(new ResetFs2NetCommand());
-    return json_object();
+json_t* fs2netReset (ResourceContext* /*context*/) {
+    webapiAddCommand (new ResetFs2NetCommand ());
+    return json_object ();
 }
 
-json_t* netgameInfoGet(ResourceContext * /*context*/) {
-    json_t *obj = json_object();
+json_t* netgameInfoGet (ResourceContext* /*context*/) {
+    json_t* obj = json_object ();
 
-    json_object_set_new(obj, "name", json_string(webapi_netgameInfo.name));
-    json_object_set_new(obj, "mission", json_string(webapi_netgameInfo.mission_name));
-    json_object_set_new(obj, "campaign", json_string(webapi_netgameInfo.campaign_name));
+    json_object_set_new (obj, "name", json_string (webapi_netgameInfo.name));
+    json_object_set_new (
+        obj, "mission", json_string (webapi_netgameInfo.mission_name));
+    json_object_set_new (
+        obj, "campaign", json_string (webapi_netgameInfo.campaign_name));
 
-    json_object_set_new(obj, "maxPlayers", json_integer(webapi_netgameInfo.max_players));
-    json_object_set_new(obj, "maxObservers", json_integer(webapi_netgameInfo.options.max_observers));
-    json_object_set_new(obj, "respawn", json_integer(webapi_netgameInfo.respawn));
+    json_object_set_new (
+        obj, "maxPlayers", json_integer (webapi_netgameInfo.max_players));
+    json_object_set_new (
+        obj, "maxObservers",
+        json_integer (webapi_netgameInfo.options.max_observers));
+    json_object_set_new (
+        obj, "respawn", json_integer (webapi_netgameInfo.respawn));
 
-    json_object_set_new(obj, "gameState", json_integer(webapi_netgameInfo.game_state));
+    json_object_set_new (
+        obj, "gameState", json_integer (webapi_netgameInfo.game_state));
 
-    json_object_set_new(obj, "security", json_integer(webapi_netgameInfo.security));
+    json_object_set_new (
+        obj, "security", json_integer (webapi_netgameInfo.security));
     return obj;
 }
 
-json_t* missionGet(ResourceContext * /*context*/) {
-    json_t *fpsEntity = json_object();
+json_t* missionGet (ResourceContext* /*context*/) {
+    json_t* fpsEntity = json_object ();
 
-    json_object_set_new(fpsEntity, "fps", json_real(webui_fps));
-    json_object_set_new(fpsEntity, "time", json_real(webui_missiontime));
+    json_object_set_new (fpsEntity, "fps", json_real (webui_fps));
+    json_object_set_new (fpsEntity, "time", json_real (webui_missiontime));
 
     return fpsEntity;
 }
 
-json_t* missionGoalsGet(ResourceContext * /*context*/) {
-    json_t *goals = json_array();
+json_t* missionGoalsGet (ResourceContext* /*context*/) {
+    json_t* goals = json_array ();
 
-    for (std::list<mission_goal>::iterator iter = webuiMissionGoals.begin(); iter != webuiMissionGoals.end(); ++iter) {
+    for (std::list< mission_goal >::iterator iter = webuiMissionGoals.begin ();
+         iter != webuiMissionGoals.end (); ++iter) {
         mission_goal goal = *iter;
 
-        json_t *goalEntity = json_object();
+        json_t* goalEntity = json_object ();
 
-        json_object_set_new(goalEntity, "name", json_string(goal.name));
-        json_object_set_new(goalEntity, "message", json_string(goal.message));
-        json_object_set_new(goalEntity, "score", json_integer(goal.score));
-        json_object_set_new(goalEntity, "team", json_integer(goal.team));
+        json_object_set_new (goalEntity, "name", json_string (goal.name));
+        json_object_set_new (
+            goalEntity, "message", json_string (goal.message));
+        json_object_set_new (goalEntity, "score", json_integer (goal.score));
+        json_object_set_new (goalEntity, "team", json_integer (goal.team));
 
-        const char *typeString;
+        const char* typeString;
         switch (goal.type) {
-        case PRIMARY_GOAL:
-            typeString = "primary";
-            break;
-        case SECONDARY_GOAL:
-            typeString = "secondary";
-            break;
-        case BONUS_GOAL:
-            typeString = "bonus";
-            break;
-        default:
-            typeString = "error";
-            break;
+        case PRIMARY_GOAL: typeString = "primary"; break;
+        case SECONDARY_GOAL: typeString = "secondary"; break;
+        case BONUS_GOAL: typeString = "bonus"; break;
+        default: typeString = "error"; break;
         };
-        json_object_set_new(goalEntity, "type", json_string(typeString));
+        json_object_set_new (goalEntity, "type", json_string (typeString));
 
-        const char *statusString;
+        const char* statusString;
         switch (goal.satisfied) {
-        case GOAL_FAILED:
-            statusString = "failed";
-            break;
-        case GOAL_COMPLETE:
-            statusString = "complete";
-            break;
-        case GOAL_INCOMPLETE:
-            statusString = "incomplete";
-            break;
-        default:
-            statusString = "error";
-            break;
+        case GOAL_FAILED: statusString = "failed"; break;
+        case GOAL_COMPLETE: statusString = "complete"; break;
+        case GOAL_INCOMPLETE: statusString = "incomplete"; break;
+        default: statusString = "error"; break;
         };
-        json_object_set_new(goalEntity, "status", json_string(statusString));
+        json_object_set_new (goalEntity, "status", json_string (statusString));
 
-        json_array_append(goals, goalEntity);
+        json_array_append (goals, goalEntity);
     }
 
     return goals;
 }
 
-json_t* playerGet(ResourceContext * /*context*/) {
-    json_t *playerList = json_array();
+json_t* playerGet (ResourceContext* /*context*/) {
+    json_t* playerList = json_array ();
 
-    for (std::map<short, net_player>::iterator iter = webapiNetPlayers.begin(); iter != webapiNetPlayers.end();
-            ++iter) {
+    for (std::map< short, net_player >::iterator iter =
+             webapiNetPlayers.begin ();
+         iter != webapiNetPlayers.end (); ++iter) {
         net_player p = iter->second;
 
         char address[256];
-        sprintf(address, "%u.%u.%u.%u:%u", p.p_info.addr.addr[0], p.p_info.addr.addr[1], p.p_info.addr.addr[2],
-                p.p_info.addr.addr[3], p.p_info.addr.port);
+        sprintf (
+            address, "%u.%u.%u.%u:%u", p.p_info.addr.addr[0],
+            p.p_info.addr.addr[1], p.p_info.addr.addr[2],
+            p.p_info.addr.addr[3], p.p_info.addr.port);
 
-        json_t *obj = json_object();
+        json_t* obj = json_object ();
 
-        json_object_set(obj, "id", json_integer(p.player_id));
-        json_object_set(obj, "address", json_string(address));
-        json_object_set(obj, "ping", json_integer(p.s_info.ping.ping_avg));
-        json_object_set(obj, "host", (MULTI_HOST(p)) ? json_true() : json_false());
-        json_object_set(obj, "observer", (MULTI_OBSERVER(p)) ? json_true() : json_false());
-        json_object_set(obj, "callsign", json_string(p.m_player->callsign));
-        json_object_set(obj, "ship", json_string(Ship_info[p.p_info.ship_class].name));
+        json_object_set (obj, "id", json_integer (p.player_id));
+        json_object_set (obj, "address", json_string (address));
+        json_object_set (obj, "ping", json_integer (p.s_info.ping.ping_avg));
+        json_object_set (
+            obj, "host", (MULTI_HOST (p)) ? json_true () : json_false ());
+        json_object_set (
+            obj, "observer",
+            (MULTI_OBSERVER (p)) ? json_true () : json_false ());
+        json_object_set (obj, "callsign", json_string (p.m_player->callsign));
+        json_object_set (
+            obj, "ship", json_string (Ship_info[p.p_info.ship_class].name));
 
-        json_array_append(playerList, obj);
+        json_array_append (playerList, obj);
     }
 
     return playerList;
 }
 
-json_t* playerDelete(ResourceContext *context) {
-    int playerId = atoi(context->parameters["playerId"].c_str());
-    webapiAddCommand(new KickPlayerCommand(playerId));
-    return json_object();
+json_t* playerDelete (ResourceContext* context) {
+    int playerId = atoi (context->parameters["playerId"].c_str ());
+    webapiAddCommand (new KickPlayerCommand (playerId));
+    return json_object ();
 }
 
-net_player *playerForId(int playerId) {
-    net_player *foundPlayer = NULL;
+net_player* playerForId (int playerId) {
+    net_player* foundPlayer = NULL;
     for (size_t idx = 0; idx < MAX_PLAYERS; idx++) {
-        if (MULTI_CONNECTED(Net_players[idx])) {
+        if (MULTI_CONNECTED (Net_players[idx])) {
             if (Net_players[idx].player_id == playerId) {
                 foundPlayer = &Net_players[idx];
             }
@@ -623,81 +619,104 @@ net_player *playerForId(int playerId) {
     return foundPlayer;
 }
 
-json_t* playerMissionScoreAlltimeGet(ResourceContext *context) {
-    net_player *p = playerForId(atoi(context->parameters["playerId"].c_str()));
+json_t* playerMissionScoreAlltimeGet (ResourceContext* context) {
+    net_player* p =
+        playerForId (atoi (context->parameters["playerId"].c_str ()));
 
-    json_t *obj2 = json_object();
-    if (p == NULL || p->m_player == NULL)
-        return obj2;
+    json_t* obj2 = json_object ();
+    if (p == NULL || p->m_player == NULL) return obj2;
 
-    scoring_struct *scores = &(p->m_player->stats);
+    scoring_struct* scores = &(p->m_player->stats);
 
-    json_object_set_new(obj2, "score", json_integer(scores->m_score));
-    json_object_set_new(obj2, "kills", json_integer(scores->m_kill_count));
-    json_object_set_new(obj2, "kills-enemy", json_integer(scores->m_kill_count_ok));
-    json_object_set_new(obj2, "kills-friendly", json_integer(scores->m_bonehead_kills));
-    json_object_set_new(obj2, "assists", json_integer(scores->m_assists));
-    json_object_set_new(obj2, "shots-primary", json_integer(scores->mp_shots_fired));
-    json_object_set_new(obj2, "shots-secondary", json_integer(scores->ms_shots_fired));
-    json_object_set_new(obj2, "hits-primary", json_integer(scores->mp_shots_hit));
-    json_object_set_new(obj2, "hits-secondary", json_integer(scores->ms_shots_hit));
-    json_object_set_new(obj2, "hits-friendly-primary", json_integer(scores->mp_bonehead_hits));
-    json_object_set_new(obj2, "hits-friendly-secondary", json_integer(scores->ms_bonehead_hits));
+    json_object_set_new (obj2, "score", json_integer (scores->m_score));
+    json_object_set_new (obj2, "kills", json_integer (scores->m_kill_count));
+    json_object_set_new (
+        obj2, "kills-enemy", json_integer (scores->m_kill_count_ok));
+    json_object_set_new (
+        obj2, "kills-friendly", json_integer (scores->m_bonehead_kills));
+    json_object_set_new (obj2, "assists", json_integer (scores->m_assists));
+    json_object_set_new (
+        obj2, "shots-primary", json_integer (scores->mp_shots_fired));
+    json_object_set_new (
+        obj2, "shots-secondary", json_integer (scores->ms_shots_fired));
+    json_object_set_new (
+        obj2, "hits-primary", json_integer (scores->mp_shots_hit));
+    json_object_set_new (
+        obj2, "hits-secondary", json_integer (scores->ms_shots_hit));
+    json_object_set_new (
+        obj2, "hits-friendly-primary",
+        json_integer (scores->mp_bonehead_hits));
+    json_object_set_new (
+        obj2, "hits-friendly-secondary",
+        json_integer (scores->ms_bonehead_hits));
 
     return obj2;
 }
 
-json_t* playerMissionScoreMissionGet(ResourceContext *context) {
-    net_player *p = playerForId(atoi(context->parameters["playerId"].c_str()));
+json_t* playerMissionScoreMissionGet (ResourceContext* context) {
+    net_player* p =
+        playerForId (atoi (context->parameters["playerId"].c_str ()));
 
-    json_t *obj = json_object();
-    if (p == NULL || p->m_player == NULL)
-        return obj;
+    json_t* obj = json_object ();
+    if (p == NULL || p->m_player == NULL) return obj;
 
-    scoring_struct *scores = &(p->m_player->stats);
+    scoring_struct* scores = &(p->m_player->stats);
 
-    json_object_set_new(obj, "score", json_integer(scores->score));
-    json_object_set_new(obj, "kills", json_integer(scores->kill_count));
-    json_object_set_new(obj, "kills-enemy", json_integer(scores->kill_count_ok));
-    json_object_set_new(obj, "kills-friendly", json_integer(scores->bonehead_kills));
-    json_object_set_new(obj, "assists", json_integer(scores->assists));
-    json_object_set_new(obj, "shots-primary", json_integer(scores->p_shots_fired));
-    json_object_set_new(obj, "shots-secondary", json_integer(scores->s_shots_fired));
-    json_object_set_new(obj, "hits-primary", json_integer(scores->p_shots_hit));
-    json_object_set_new(obj, "hits-secondary", json_integer(scores->s_shots_hit));
-    json_object_set_new(obj, "hits-friendly-primary", json_integer(scores->p_bonehead_hits));
-    json_object_set_new(obj, "hits-friendly-secondary", json_integer(scores->s_bonehead_hits));
+    json_object_set_new (obj, "score", json_integer (scores->score));
+    json_object_set_new (obj, "kills", json_integer (scores->kill_count));
+    json_object_set_new (
+        obj, "kills-enemy", json_integer (scores->kill_count_ok));
+    json_object_set_new (
+        obj, "kills-friendly", json_integer (scores->bonehead_kills));
+    json_object_set_new (obj, "assists", json_integer (scores->assists));
+    json_object_set_new (
+        obj, "shots-primary", json_integer (scores->p_shots_fired));
+    json_object_set_new (
+        obj, "shots-secondary", json_integer (scores->s_shots_fired));
+    json_object_set_new (
+        obj, "hits-primary", json_integer (scores->p_shots_hit));
+    json_object_set_new (
+        obj, "hits-secondary", json_integer (scores->s_shots_hit));
+    json_object_set_new (
+        obj, "hits-friendly-primary", json_integer (scores->p_bonehead_hits));
+    json_object_set_new (
+        obj, "hits-friendly-secondary",
+        json_integer (scores->s_bonehead_hits));
 
     return obj;
 }
 
-int afterTimestamp(ResourceContext *context) {
-    std::map<std::string, std::string>::iterator iter = context->parameters.find("after");
-    if (iter != context->parameters.end()) {
-        return atoi(iter->second.c_str());
+int afterTimestamp (ResourceContext* context) {
+    std::map< std::string, std::string >::iterator iter =
+        context->parameters.find ("after");
+    if (iter != context->parameters.end ()) {
+        return atoi (iter->second.c_str ());
     }
 
     return 0;
 }
 
-json_t* chatGet(ResourceContext *context) {
-    int after = afterTimestamp(context);
-    return webapi_chatLog.getEntriesAfter(after);
+json_t* chatGet (ResourceContext* context) {
+    int after = afterTimestamp (context);
+    return webapi_chatLog.getEntriesAfter (after);
 }
 
-json_t* chatPost(ResourceContext *context) {
-    const char* message = json_string_value(json_object_get(context->requestEntity, "message"));
+json_t* chatPost (ResourceContext* context) {
+    const char* message = json_string_value (
+        json_object_get (context->requestEntity, "message"));
     if (message) {
-        send_game_chat_packet(Net_player, const_cast<char*>(message), MULTI_MSG_ALL, NULL);
-        std_add_chat_text(const_cast<char*>(message), 0 /*MY_NET_PLAYER_NUM*/, 1);
+        send_game_chat_packet (
+            Net_player, const_cast< char* > (message), MULTI_MSG_ALL, NULL);
+        std_add_chat_text (
+            const_cast< char* > (message), 0 /*MY_NET_PLAYER_NUM*/, 1);
     }
 
-    return emptyResource(context);
+    return emptyResource (context);
 }
 
-json_t* debugGet(ResourceContext *context) {
-    int after = afterTimestamp(context);
-    return webapi_debugLog.getEntriesAfter(after);
+json_t* debugGet (ResourceContext* context) {
+    int after = afterTimestamp (context);
+    return webapi_debugLog.getEntriesAfter (after);
 }
 
 struct Resource resources[] = {
@@ -717,85 +736,94 @@ struct Resource resources[] = {
     { "api/1/player/*/score/alltime", "GET", &playerMissionScoreAlltimeGet },
     { "api/1/chat", "GET", &chatGet },
     { "api/1/chat", "POST", &chatPost },
-    { "api/1/debug", "GET", &debugGet } };
+    { "api/1/debug", "GET", &debugGet }
+};
 
-static bool webserverApiRequest(mg_connection *conn, const mg_request_info *ri) {
-    std::string resourcePath(ri->uri);
+static bool
+webserverApiRequest (mg_connection* conn, const mg_request_info* ri) {
+    std::string resourcePath (ri->uri);
 
-    resourcePath.erase(0, 1);
-    std::vector<std::string> pathParts;
-    split(pathParts, resourcePath, "/", split_struct::no_empties);
+    resourcePath.erase (0, 1);
+    std::vector< std::string > pathParts;
+    split (pathParts, resourcePath, "/", split_struct::no_empties);
 
-    json_t *result = NULL;
+    json_t* result = NULL;
 
-    std::string method(ri->request_method);
+    std::string method (ri->request_method);
 
-    for (size_t i = 0; i < ARRAY_SIZE(resources); i++) {
+    for (size_t i = 0; i < ARRAY_SIZE (resources); i++) {
         Resource* r = &resources[i];
-        std::vector<std::string> resourcePathParts;
-        split(resourcePathParts, r->path, "/", split_struct::no_empties);
+        std::vector< std::string > resourcePathParts;
+        split (resourcePathParts, r->path, "/", split_struct::no_empties);
 
-        if (resourcePathParts.size() == pathParts.size()) {
+        if (resourcePathParts.size () == pathParts.size ()) {
             ResourceContext context;
 
             bool pathMatch = true;
-            for (size_t u = 0; u < resourcePathParts.size(); u++) {
-                //TODO this is kind of a hack
-                if (resourcePathParts.at(u) == "*") {
-                    context.parameters["playerId"] = pathParts.at(u);
-                } else if (resourcePathParts.at(u) != pathParts.at(u)) {
+            for (size_t u = 0; u < resourcePathParts.size (); u++) {
+                // TODO this is kind of a hack
+                if (resourcePathParts.at (u) == "*") {
+                    context.parameters["playerId"] = pathParts.at (u);
+                }
+                else if (resourcePathParts.at (u) != pathParts.at (u)) {
                     pathMatch = false;
                     break;
                 }
             }
 
             if (pathMatch && r->method == method) {
-
                 std::string userNameAndPassword;
 
-                userNameAndPassword += Multi_options_g.webapiUsername.c_str();
+                userNameAndPassword += Multi_options_g.webapiUsername.c_str ();
                 userNameAndPassword += ":";
-                userNameAndPassword += Multi_options_g.webapiPassword.c_str();
+                userNameAndPassword += Multi_options_g.webapiPassword.c_str ();
 
                 std::string basicAuthValue = "Basic ";
 
-                basicAuthValue += base64_encode(reinterpret_cast<const unsigned char*>(userNameAndPassword.c_str()), userNameAndPassword.length());
+                basicAuthValue += base64_encode (
+                    reinterpret_cast< const unsigned char* > (
+                        userNameAndPassword.c_str ()),
+                    userNameAndPassword.length ());
 
-                const char* authValue = mg_get_header(conn, "Authorization");
-                if (authValue == NULL || strcmp(authValue, basicAuthValue.c_str()) != 0) {
-                    sendResponse(conn, std::string(), HTTP_401_UNAUTHORIZED);
+                const char* authValue = mg_get_header (conn, "Authorization");
+                if (authValue == NULL ||
+                    strcmp (authValue, basicAuthValue.c_str ()) != 0) {
+                    sendResponse (conn, std::string (), HTTP_401_UNAUTHORIZED);
                     return true;
                 }
 
                 if (ri->query_string) {
-                    std::string query(ri->query_string);
-                    std::vector<std::string> queryPairs;
-                    split(queryPairs, query, "&", split_struct::no_empties);
+                    std::string query (ri->query_string);
+                    std::vector< std::string > queryPairs;
+                    split (queryPairs, query, "&", split_struct::no_empties);
 
-                    for (std::vector<std::string>::const_iterator iter = queryPairs.begin(); iter != queryPairs.end();
-                            ++iter) {
-                        std::vector<std::string> temp;
+                    for (std::vector< std::string >::const_iterator iter =
+                             queryPairs.begin ();
+                         iter != queryPairs.end (); ++iter) {
+                        std::vector< std::string > temp;
 
-                        split(temp, *iter, "=", split_struct::no_empties);
+                        split (temp, *iter, "=", split_struct::no_empties);
 
-                        if (temp.size() == 2) {
+                        if (temp.size () == 2) {
                             context.parameters[temp[0]] = temp[1];
                         }
                     }
                 }
 
                 char entityBuffer[1024];
-                memset(entityBuffer, 0, sizeof(entityBuffer));
+                memset (entityBuffer, 0, sizeof (entityBuffer));
 
-                /*int readBytes = */mg_read(conn, &entityBuffer, sizeof(entityBuffer));
+                /*int readBytes = */ mg_read (
+                    conn, &entityBuffer, sizeof (entityBuffer));
 
                 json_error_t parseError;
-                context.requestEntity = json_loads((const char*) &entityBuffer, JSON_DISABLE_EOF_CHECK, &parseError);
+                context.requestEntity = json_loads (
+                    (const char*)&entityBuffer, JSON_DISABLE_EOF_CHECK,
+                    &parseError);
 
-
-                SDL_mutexP(webapi_dataMutex);
-                result = r->handler(&context);
-                SDL_mutexV(webapi_dataMutex);
+                SDL_mutexP (webapi_dataMutex);
+                result = r->handler (&context);
+                SDL_mutexV (webapi_dataMutex);
 
                 break;
             }
@@ -803,117 +831,123 @@ static bool webserverApiRequest(mg_connection *conn, const mg_request_info *ri) 
     }
 
     if (result) {
-        sendJsonResponse(conn, result);
+        sendJsonResponse (conn, result);
         return true;
     }
 
     return false;
 }
 
-static void *webserverCallback(enum mg_event event, struct mg_connection *conn) {
-    const struct mg_request_info *ri = mg_get_request_info(conn);
+static void*
+webserverCallback (enum mg_event event, struct mg_connection* conn) {
+    const struct mg_request_info* ri = mg_get_request_info (conn);
 
     switch (event) {
     case MG_EVENT_LOG: {
-        const char *msg = (const char *) ri->ev_data;
-        mprintf(("Webapi error: %s\n", msg));
+        const char* msg = (const char*)ri->ev_data;
+        mprintf (("Webapi error: %s\n", msg));
         break;
     }
     case MG_NEW_REQUEST: {
-        bool requestHandled = webserverApiRequest(conn, ri);
-        return requestHandled ? const_cast<char*>("") : NULL;
+        bool requestHandled = webserverApiRequest (conn, ri);
+        return requestHandled ? const_cast< char* > ("") : NULL;
     }
-    default:
-        break;
+    default: break;
     };
     return NULL;
 }
 
-struct mg_context *webserverContext = NULL;
+struct mg_context* webserverContext = NULL;
 
-void webapi_shutdown() {
+void webapi_shutdown () {
     if (webserverContext) {
-        mprintf(("Webapi shutting down\n"));
-        mg_stop(webserverContext);
+        mprintf (("Webapi shutting down\n"));
+        mg_stop (webserverContext);
     }
 }
 
-void std_init_standalone() {
-    atexit(webapi_shutdown);
-}
+void std_init_standalone () { atexit (webapi_shutdown); }
 
-void std_configLoaded(multi_global_options *options) {
-
-    webapi_shutdown();
+void std_configLoaded (multi_global_options* options) {
+    webapi_shutdown ();
 
     char buffer[16];
-    sprintf(buffer, "%d", options->webapiPort);
+    sprintf (buffer, "%d", options->webapiPort);
 
-    const char *mgOptions[] = {
-        "listening_ports", buffer,
-        "document_root", options->webuiRootDirectory.c_str(),
-        "num_threads", "4",
-        NULL };
+    const char* mgOptions[] = { "listening_ports",
+                                buffer,
+                                "document_root",
+                                options->webuiRootDirectory.c_str (),
+                                "num_threads",
+                                "4",
+                                NULL };
 
-    mprintf(("Webapi starting on port: %d with document root at: %s\n", options->webapiPort, options->webuiRootDirectory.c_str()));
+    mprintf (
+        ("Webapi starting on port: %d with document root at: %s\n",
+         options->webapiPort, options->webuiRootDirectory.c_str ()));
 
-    webserverContext = mg_start(&webserverCallback, NULL, mgOptions);
+    webserverContext = mg_start (&webserverCallback, NULL, mgOptions);
 }
 
-void std_add_chat_text(const char *text, int  /*player_index*/, int  /*add_id*/) {
+void std_add_chat_text (
+    const char* text, int /*player_index*/, int /*add_id*/) {
+    json_t* msg = json_object ();
+    // json_object_set_new(msg, "source",
+    // json_string(Net_players[player_index].m_player->callsign));
+    json_object_set_new (msg, "message", json_string (text));
 
-    json_t *msg = json_object();
-    //json_object_set_new(msg, "source",    json_string(Net_players[player_index].m_player->callsign));
-    json_object_set_new(msg, "message", json_string(text));
-
-    webapi_chatLog.addEntity(msg);
+    webapi_chatLog.addEntity (msg);
 }
 
-void std_debug_multilog_add_line(const char *str) {
+void std_debug_multilog_add_line (const char* str) {
+    std::vector< std::string > debugMessages;
+    split (debugMessages, std::string (str), "\n", split_struct::no_empties);
 
-    std::vector<std::string> debugMessages;
-    split(debugMessages, std::string(str), "\n", split_struct::no_empties);
-
-    for (std::vector<std::string>::const_iterator iter = debugMessages.begin(); iter != debugMessages.end(); ++iter) {
-        json_t *msg = json_object();
-        json_object_set_new(msg, "message", json_string(str));
-        webapi_debugLog.addEntity(msg);
+    for (std::vector< std::string >::const_iterator iter =
+             debugMessages.begin ();
+         iter != debugMessages.end (); ++iter) {
+        json_t* msg = json_object ();
+        json_object_set_new (msg, "message", json_string (str));
+        webapi_debugLog.addEntity (msg);
     }
 }
 
 // =============================================================================
 
-std::vector<std::string> bannedPlayers;
+std::vector< std::string > bannedPlayers;
 
-void std_add_ban(const char *name) {
-    bannedPlayers.push_back(std::string(name));
+void std_add_ban (const char* name) {
+    bannedPlayers.push_back (std::string (name));
 }
 
-int std_player_is_banned(const char *name) {
-    return std::find(bannedPlayers.begin(), bannedPlayers.end(), std::string(name)) != bannedPlayers.end() ? 1 : 0;
+int std_player_is_banned (const char* name) {
+    return std::find (
+               bannedPlayers.begin (), bannedPlayers.end (),
+               std::string (name)) != bannedPlayers.end ()
+               ? 1
+               : 0;
 }
 
 /**
  * return 1 if the standalone is host password protected, otherwise 0
  */
-int std_is_host_passwd() {
+int std_is_host_passwd () {
     return (Multi_options_g.std_passwd[0] != '\0') ? 1 : 0;
 }
 
-void std_set_standalone_fps(float fps) {
-    webui_fps = fps;
-}
+void std_set_standalone_fps (float fps) { webui_fps = fps; }
 
-void std_do_gui_frame() {
-    SDL_mutexP(webapi_dataMutex);
+void std_do_gui_frame () {
+    SDL_mutexP (webapi_dataMutex);
 
     webapi_netgameInfo = Netgame;
 
     // Update player data
-    webapiNetPlayers.clear();
+    webapiNetPlayers.clear ();
 
     for (size_t idx = 0; idx < MAX_PLAYERS; idx++) {
-        if (MULTI_CONNECTED(Net_players[idx]) && (Net_player != &Net_players[idx])) {
+        if (MULTI_CONNECTED (Net_players[idx]) &&
+            (Net_player != &Net_players[idx])) {
             net_player* p = &Net_players[idx];
 
             webapiNetPlayers[p->player_id] = *p;
@@ -921,66 +955,68 @@ void std_do_gui_frame() {
     }
 
     // Update mission data
-    webui_missiontime = f2fl(Missiontime);
+    webui_missiontime = f2fl (Missiontime);
 
-    webuiMissionGoals.clear();
+    webuiMissionGoals.clear ();
     for (int idx = 0; idx < Num_goals; idx++) {
-        webuiMissionGoals.push_back(Mission_goals[idx]);
+        webuiMissionGoals.push_back (Mission_goals[idx]);
     }
 
-    SDL_mutexV(webapi_dataMutex);
+    SDL_mutexV (webapi_dataMutex);
 
-    webapiExecuteCommands();
+    webapiExecuteCommands ();
 }
 
 // set the game name for the standalone. passing NULL uses the default
-void std_connect_set_gamename(char *name)
-{
-	// use the default name for now
-	if(name == NULL){
-		// if a permanent name exists, use that instead of the default
-		if(strlen(Multi_options_g.std_pname)){
-			strcpy_s(Netgame.name, Multi_options_g.std_pname);
-		} else {
-			strcpy_s(Netgame.name,XSTR("Standalone Server",916));
-		}
-	} else {
-		strcpy_s(Netgame.name,name);
+void std_connect_set_gamename (char* name) {
+    // use the default name for now
+    if (name == NULL) {
+        // if a permanent name exists, use that instead of the default
+        if (strlen (Multi_options_g.std_pname)) {
+            strcpy_s (Netgame.name, Multi_options_g.std_pname);
+        }
+        else {
+            strcpy_s (Netgame.name, XSTR ("Standalone Server", 916));
+        }
+    }
+    else {
+        strcpy_s (Netgame.name, name);
 
-		// update fs2netd
-		if (MULTI_IS_TRACKER_GAME) {
-			fs2netd_gameserver_disconnect();
-			os_sleep(50);
-			fs2netd_gameserver_start();
-		}
-	}
+        // update fs2netd
+        if (MULTI_IS_TRACKER_GAME) {
+            fs2netd_gameserver_disconnect ();
+            os_sleep (50);
+            fs2netd_gameserver_start ();
+        }
+    }
 }
 
 /**
  * Unused methods from the original API below,
  * most of this stuff is now done in std_do_gui_frame
  */
-void std_add_player(net_player * /*p*/) {}
-/* The return value does nothing, except cause the two functions below to be called*/
-int std_remove_player(net_player * /*p*/) {return 0;}
-void std_connect_set_host_connect_status() {}
-int std_connect_set_connect_count() {return 0;}
-void std_update_player_ping(net_player * /*p*/) {}
-void std_multi_setup_goal_tree() {}
-void std_multi_add_goals() {}
-void std_multi_update_goals() {}
-void std_multi_update_netgame_info_controls() {}
-void std_multi_set_standalone_mission_name(char * /*mission_name*/) {}
-void std_gen_set_text(const char * /*str*/, int  /*field_num*/) {}
-void std_create_gen_dialog(const char * /*title*/) {}
-void std_destroy_gen_dialog() {}
-int std_gen_is_active() {return 0;}
-void std_debug_set_standalone_state_string(const char * /*str*/) {}
-void std_reset_standalone_gui() {}
-void std_reset_timestamps() {}
-void std_multi_set_standalone_missiontime(float  /*mission_time*/) {}
+void std_add_player (net_player* /*p*/) {}
+/* The return value does nothing, except cause the two functions below to be
+ * called*/
+int std_remove_player (net_player* /*p*/) { return 0; }
+void std_connect_set_host_connect_status () {}
+int std_connect_set_connect_count () { return 0; }
+void std_update_player_ping (net_player* /*p*/) {}
+void std_multi_setup_goal_tree () {}
+void std_multi_add_goals () {}
+void std_multi_update_goals () {}
+void std_multi_update_netgame_info_controls () {}
+void std_multi_set_standalone_mission_name (char* /*mission_name*/) {}
+void std_gen_set_text (const char* /*str*/, int /*field_num*/) {}
+void std_create_gen_dialog (const char* /*title*/) {}
+void std_destroy_gen_dialog () {}
+int std_gen_is_active () { return 0; }
+void std_debug_set_standalone_state_string (const char* /*str*/) {}
+void std_reset_standalone_gui () {}
+void std_reset_timestamps () {}
+void std_multi_set_standalone_missiontime (float /*mission_time*/) {}
 
 // stub - not required for *nix standalone
-void std_init_os() {}
+void std_init_os () {}
 
 #endif

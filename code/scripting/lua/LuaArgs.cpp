@@ -5,4 +5,4 @@ namespace luacpp {
 namespace args {
 opt optional;
 }
-}
+} // namespace luacpp

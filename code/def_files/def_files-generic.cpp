@@ -8,51 +8,51 @@
 
 #include <iterator>
 
-struct def_file
-{
-	const char* path_type;
-	const char* filename;
-	const void* contents;
-	const size_t size;
+struct def_file {
+    const char* path_type;
+    const char* filename;
+    const void* contents;
+    const size_t size;
 };
 
 #include "def_files/generated_def_files-generic.inc"
 
-default_file defaults_get_file(const char *filename)
-{
-	default_file def;
+default_file defaults_get_file (const char* filename) {
+    default_file def;
 
-	auto endIter = std::end(Default_files);
-	for (auto iter = std::begin(Default_files); iter != endIter; ++iter)
-	{
-		if (!stricmp(iter->filename, filename))
-		{
-			def.path_type = iter->path_type;
-			def.filename = iter->filename;
-			def.data = iter->contents;
-			def.size = iter->size;
+    auto endIter = std::end (Default_files);
+    for (auto iter = std::begin (Default_files); iter != endIter; ++iter) {
+        if (!stricmp (iter->filename, filename)) {
+            def.path_type = iter->path_type;
+            def.filename = iter->filename;
+            def.data = iter->contents;
+            def.size = iter->size;
 
-			return def;
-		}
-	}
+            return def;
+        }
+    }
 
-	//WMC - This is really bad, because it means we have a default table missing.
-	Error(LOCATION, "Default table '%s' missing from executable - contact a coder.", filename);
-	return def;
+    // WMC - This is really bad, because it means we have a default table
+    // missing.
+    Error (
+        LOCATION,
+        "Default table '%s' missing from executable - contact a coder.",
+        filename);
+    return def;
 }
 
-std::vector<default_file> defaults_get_all() {
-	std::vector<default_file> files;
+std::vector< default_file > defaults_get_all () {
+    std::vector< default_file > files;
 
-	for (auto& file : Default_files) {
-		default_file def;
-		def.path_type = file.path_type;
-		def.filename = file.filename;
-		def.data = file.contents;
-		def.size = file.size;
+    for (auto& file : Default_files) {
+        default_file def;
+        def.path_type = file.path_type;
+        def.filename = file.filename;
+        def.data = file.contents;
+        def.size = file.size;
 
-		files.push_back(def);
-	}
+        files.push_back (def);
+    }
 
-	return files;
+    return files;
 }

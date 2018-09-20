@@ -1,13 +1,11 @@
 /*
  * Copyright (C) Volition, Inc. 1999.  All rights reserved.
  *
- * All source code herein is the property of Volition, Inc. You may not sell 
- * or otherwise commercially exploit the source or things you created based on the 
- * source.
+ * All source code herein is the property of Volition, Inc. You may not sell
+ * or otherwise commercially exploit the source or things you created based on
+ * the source.
  *
-*/
-
-
+ */
 
 #ifndef NDEBUG
 
@@ -30,279 +28,296 @@
 #include "parse/parselo.h"
 
 struct outwnd_filter_struct {
-	char name[NAME_LENGTH];
-	bool enabled;
+    char name[NAME_LENGTH];
+    bool enabled;
 };
 
-std::vector<outwnd_filter_struct>& filter_vector() {
-	static std::vector<outwnd_filter_struct> vec;
-	return vec;
+std::vector< outwnd_filter_struct >& filter_vector () {
+    static std::vector< outwnd_filter_struct > vec;
+    return vec;
 }
 
-void outwnd_print(const char *id = NULL, const char *temp = NULL);
+void outwnd_print (const char* id = NULL, const char* temp = NULL);
 
-ubyte Outwnd_no_filter_file = 0;		// 0 = .cfg file found, 1 = not found and warning not printed yet, 2 = not found and warning printed
+ubyte Outwnd_no_filter_file =
+    0; // 0 = .cfg file found, 1 = not found and warning not printed yet, 2 =
+       // not found and warning printed
 
 ubyte outwnd_filter_loaded = 0;
 bool outwnd_inited = false;
 
 // used for file logging
 int Log_debug_output_to_file = 1;
-FILE *Log_fp = NULL;
-const char *FreeSpace_logfilename = NULL;
+FILE* Log_fp = NULL;
+const char* FreeSpace_logfilename = NULL;
 
-std::unique_ptr<osapi::DebugWindow> debugWindow;
+std::unique_ptr< osapi::DebugWindow > debugWindow;
 
-void load_filter_info(void)
-{
-	FILE *fp = NULL;
-	char pathname[MAX_PATH_LEN];
-	char inbuf[NAME_LENGTH+4];
-	outwnd_filter_struct new_filter;
+void load_filter_info (void) {
+    FILE* fp = NULL;
+    char pathname[MAX_PATH_LEN];
+    char inbuf[NAME_LENGTH + 4];
+    outwnd_filter_struct new_filter;
 
-	outwnd_filter_loaded = 1;
+    outwnd_filter_loaded = 1;
 
-	memset( pathname, 0, sizeof(pathname) );
-	snprintf( pathname, MAX_PATH_LEN, "%s/%s", Pathtypes[CF_TYPE_DATA].path, NOX("debug_filter.cfg") );
+    memset (pathname, 0, sizeof (pathname));
+    snprintf (
+        pathname, MAX_PATH_LEN, "%s/%s", Pathtypes[CF_TYPE_DATA].path,
+        NOX ("debug_filter.cfg"));
 
-	fp = fopen(os_get_config_path(pathname).c_str(), "rt");
+    fp = fopen (os_get_config_path (pathname).c_str (), "rt");
 
-	if (!fp) {
-		Outwnd_no_filter_file = 1;
+    if (!fp) {
+        Outwnd_no_filter_file = 1;
 
-		strcpy_s( new_filter.name, "error" );
-		new_filter.enabled = true;
-		filter_vector().push_back( new_filter );
+        strcpy_s (new_filter.name, "error");
+        new_filter.enabled = true;
+        filter_vector ().push_back (new_filter);
 
-		strcpy_s( new_filter.name, "general" );
-		new_filter.enabled = true;
-		filter_vector().push_back( new_filter );
+        strcpy_s (new_filter.name, "general");
+        new_filter.enabled = true;
+        filter_vector ().push_back (new_filter);
 
-		strcpy_s( new_filter.name, "warning" );
-		new_filter.enabled = true;
-		filter_vector().push_back( new_filter );
+        strcpy_s (new_filter.name, "warning");
+        new_filter.enabled = true;
+        filter_vector ().push_back (new_filter);
 
-		return;
-	}
+        return;
+    }
 
-	Outwnd_no_filter_file = 0;
+    Outwnd_no_filter_file = 0;
 
-	while ( fgets(inbuf, NAME_LENGTH+3, fp) ) {
+    while (fgets (inbuf, NAME_LENGTH + 3, fp)) {
+        if (*inbuf == '+')
+            new_filter.enabled = true;
+        else if (*inbuf == '-')
+            new_filter.enabled = false;
+        else
+            continue; // skip everything else
 
-		if (*inbuf == '+')
-			new_filter.enabled = true;
-		else if (*inbuf == '-')
-			new_filter.enabled = false;
-		else
-			continue;	// skip everything else
+        auto z = strlen (inbuf) - 1;
+        if (inbuf[z] == '\n') inbuf[z] = 0;
 
-		auto z = strlen(inbuf) - 1;
-		if (inbuf[z] == '\n')
-			inbuf[z] = 0;
+        Assert (strlen (inbuf + 1) < NAME_LENGTH);
+        strcpy_s (new_filter.name, inbuf + 1);
 
-		Assert( strlen(inbuf+1) < NAME_LENGTH );
-		strcpy_s(new_filter.name, inbuf + 1);
+        if (!stricmp (new_filter.name, "error")) { new_filter.enabled = true; }
+        else if (!stricmp (new_filter.name, "general")) {
+            new_filter.enabled = true;
+        }
+        else if (!stricmp (new_filter.name, "warning")) {
+            new_filter.enabled = true;
+        }
 
-		if ( !stricmp(new_filter.name, "error") ) {
-			new_filter.enabled = true;
-		} else if ( !stricmp(new_filter.name, "general") ) {
-			new_filter.enabled = true;
-		} else if ( !stricmp(new_filter.name, "warning") ) {
-			new_filter.enabled = true;
-		}
+        filter_vector ().push_back (new_filter);
+    }
 
-		filter_vector().push_back( new_filter );
-	}
+    if (ferror (fp) && !feof (fp))
+        nprintf (("Error", "Error reading \"%s\"\n", pathname));
 
-	if ( ferror(fp) && !feof(fp) )
-		nprintf(("Error", "Error reading \"%s\"\n", pathname));
-
-	fclose(fp);
+    fclose (fp);
 }
 
-void save_filter_info(void)
-{
-	FILE *fp = NULL;
-	char pathname[MAX_PATH_LEN];
+void save_filter_info (void) {
+    FILE* fp = NULL;
+    char pathname[MAX_PATH_LEN];
 
-	if ( !outwnd_filter_loaded )
-		return;
+    if (!outwnd_filter_loaded) return;
 
-	if (Outwnd_no_filter_file)
-		return;	// No file, don't save
+    if (Outwnd_no_filter_file) return; // No file, don't save
 
+    memset (pathname, 0, sizeof (pathname));
+    snprintf (
+        pathname, MAX_PATH_LEN, "%s/%s", Pathtypes[CF_TYPE_DATA].path,
+        NOX ("debug_filter.cfg"));
 
-	memset( pathname, 0, sizeof(pathname) );
-	snprintf( pathname, MAX_PATH_LEN, "%s/%s", Pathtypes[CF_TYPE_DATA].path, NOX("debug_filter.cfg") );
+    fp = fopen (os_get_config_path (pathname).c_str (), "wt");
 
-	fp = fopen(os_get_config_path(pathname).c_str(), "wt");
+    if (fp) {
+        for (size_t i = 0; i < filter_vector ().size (); i++)
+            fprintf (
+                fp, "%c%s\n", filter_vector ()[i].enabled ? '+' : '-',
+                filter_vector ()[i].name);
 
-	if (fp) {
-		for (size_t i = 0; i < filter_vector().size(); i++)
-			fprintf(fp, "%c%s\n", filter_vector()[i].enabled ? '+' : '-', filter_vector()[i].name);
-
-		fclose(fp);
-	}
+        fclose (fp);
+    }
 }
 
-void outwnd_printf2(const char *format, ...)
-{
-	std::string temp;
-	va_list args;
+void outwnd_printf2 (const char* format, ...) {
+    std::string temp;
+    va_list args;
 
-	if (format == NULL)
-		return;
+    if (format == NULL) return;
 
-	va_start(args, format);
-	vsprintf(temp, format, args);
-	va_end(args);
+    va_start (args, format);
+    vsprintf (temp, format, args);
+    va_end (args);
 
-	outwnd_print("General", temp.c_str());
+    outwnd_print ("General", temp.c_str ());
 }
 
-void outwnd_printf(const char *id, const char *format, ...)
-{
-	std::string temp;
-	va_list args;
+void outwnd_printf (const char* id, const char* format, ...) {
+    std::string temp;
+    va_list args;
 
-	if ( (id == NULL) || (format == NULL) )
-		return;
+    if ((id == NULL) || (format == NULL)) return;
 
-	va_start(args, format);
-	vsprintf(temp, format, args);
-	va_end(args);
+    va_start (args, format);
+    vsprintf (temp, format, args);
+    va_end (args);
 
-	outwnd_print(id, temp.c_str());
+    outwnd_print (id, temp.c_str ());
 }
 
-void outwnd_print(const char *id, const char *tmp)
-{
-	if ( running_unittests ) {
-		// Ignore all messages when running unit tests
-		return;
-	}
+void outwnd_print (const char* id, const char* tmp) {
+    if (running_unittests) {
+        // Ignore all messages when running unit tests
+        return;
+    }
 
-	if ( (id == NULL) || (tmp == NULL) )
-		return;
+    if ((id == NULL) || (tmp == NULL)) return;
 
-  	if ( !outwnd_inited )
-  		return;
+    if (!outwnd_inited) return;
 
-	if (Outwnd_no_filter_file == 1) {
-		Outwnd_no_filter_file = 2;
+    if (Outwnd_no_filter_file == 1) {
+        Outwnd_no_filter_file = 2;
 
-		outwnd_print( "general", "==========================================================================\n" );
-		outwnd_print( "general", "DEBUG SPEW: No debug_filter.cfg found, so only general, error, and warning\n" );
-		outwnd_print( "general", "categories can be shown and no debug_filter.cfg info will be saved.\n" );
-		outwnd_print( "general", "==========================================================================\n" );
-	}
+        outwnd_print (
+            "general",
+            "================================================================="
+            "=========\n");
+        outwnd_print (
+            "general",
+            "DEBUG SPEW: No debug_filter.cfg found, so only general, error, "
+            "and warning\n");
+        outwnd_print (
+            "general",
+            "categories can be shown and no debug_filter.cfg info will be "
+            "saved.\n");
+        outwnd_print (
+            "general",
+            "================================================================="
+            "=========\n");
+    }
 
-	auto filter = std::find_if(filter_vector().begin(), filter_vector().end(), [&id] (const outwnd_filter_struct& f) { return stricmp(f.name, id) == 0; });
+    auto filter = std::find_if (
+        filter_vector ().begin (), filter_vector ().end (),
+        [&id](const outwnd_filter_struct& f) {
+            return stricmp (f.name, id) == 0;
+        });
 
-	// id found that isn't in the filter list yet
-	if ( filter == filter_vector().end() ) {
-		// Only create new filters if there was a filter file
-		if (Outwnd_no_filter_file)
-			return;
+    // id found that isn't in the filter list yet
+    if (filter == filter_vector ().end ()) {
+        // Only create new filters if there was a filter file
+        if (Outwnd_no_filter_file) return;
 
-		Assert( strlen(id)+1 < NAME_LENGTH );
-		outwnd_filter_struct new_filter;
+        Assert (strlen (id) + 1 < NAME_LENGTH);
+        outwnd_filter_struct new_filter;
 
-		strcpy_s(new_filter.name, id);
-		new_filter.enabled = stricmp(new_filter.name, "general") == 0 || stricmp(new_filter.name, "error") == 0 || stricmp(new_filter.name, "warning") == 0;
+        strcpy_s (new_filter.name, id);
+        new_filter.enabled = stricmp (new_filter.name, "general") == 0 ||
+                             stricmp (new_filter.name, "error") == 0 ||
+                             stricmp (new_filter.name, "warning") == 0;
 
-		filter_vector().push_back( new_filter );
-		save_filter_info();
-	}
-	else if (!filter->enabled)
-			return;
+        filter_vector ().push_back (new_filter);
+        save_filter_info ();
+    }
+    else if (!filter->enabled)
+        return;
 
-	if (Log_debug_output_to_file) {
-		if (Log_fp != NULL) {
-			fputs(tmp, Log_fp);	
-			fflush(Log_fp);
-		}
-	}
+    if (Log_debug_output_to_file) {
+        if (Log_fp != NULL) {
+            fputs (tmp, Log_fp);
+            fflush (Log_fp);
+        }
+    }
 
-	if (debugWindow) {
-		debugWindow->addDebugMessage(id, tmp);
-	}
+    if (debugWindow) { debugWindow->addDebugMessage (id, tmp); }
 }
 
-extern const char* Osapi_legacy_mode_reason; // This was not exported in a header since it's not intended for general use
+extern const char*
+    Osapi_legacy_mode_reason; // This was not exported in a header since it's
+                              // not intended for general use
 
-void outwnd_init()
-{
-	if (outwnd_inited)
-		return;
+void outwnd_init () {
+    if (outwnd_inited) return;
 
-	if (!running_unittests && Log_fp == NULL) {
-		char pathname[MAX_PATH_LEN];
+    if (!running_unittests && Log_fp == NULL) {
+        char pathname[MAX_PATH_LEN];
 
-		/* Set where the log file is going to go */
-		// Zacam: Set various conditions based on what type of log to generate.
-		if (Fred_running) {
-			FreeSpace_logfilename = "fred2_open.log";
-		} else if (Is_standalone) {
-			FreeSpace_logfilename = "fs2_standalone.log";
-		} else {
-			FreeSpace_logfilename = "fs2_open.log";
-		}
+        /* Set where the log file is going to go */
+        // Zacam: Set various conditions based on what type of log to generate.
+        if (Fred_running) { FreeSpace_logfilename = "fred2_open.log"; }
+        else if (Is_standalone) {
+            FreeSpace_logfilename = "fs2_standalone.log";
+        }
+        else {
+            FreeSpace_logfilename = "fs2_open.log";
+        }
 
-		// create data file path if it does not exist
-		_mkdir(os_get_config_path(Pathtypes[CF_TYPE_DATA].path).c_str());
+        // create data file path if it does not exist
+        _mkdir (os_get_config_path (Pathtypes[CF_TYPE_DATA].path).c_str ());
 
-		memset( pathname, 0, sizeof(pathname) );
-		snprintf( pathname, MAX_PATH_LEN, "%s/%s", Pathtypes[CF_TYPE_DATA].path, FreeSpace_logfilename);
+        memset (pathname, 0, sizeof (pathname));
+        snprintf (
+            pathname, MAX_PATH_LEN, "%s/%s", Pathtypes[CF_TYPE_DATA].path,
+            FreeSpace_logfilename);
 
-		auto logpath = os_get_config_path(pathname);
+        auto logpath = os_get_config_path (pathname);
 
-		Log_fp = fopen(logpath.c_str(), "wb");
+        Log_fp = fopen (logpath.c_str (), "wb");
 
-		outwnd_inited = Log_fp != nullptr;
+        outwnd_inited = Log_fp != nullptr;
 
-		if (Log_fp == NULL) {
-			fprintf(stderr, "Error opening %s\n", logpath.c_str());
-		} else {
-			time_t timedate = time(NULL);
-			char datestr[50];
+        if (Log_fp == NULL) {
+            fprintf (stderr, "Error opening %s\n", logpath.c_str ());
+        }
+        else {
+            time_t timedate = time (NULL);
+            char datestr[50];
 
-			memset(datestr, 0, sizeof(datestr));
-			strftime(datestr, sizeof(datestr) - 1, "%a %b %d %H:%M:%S %Y", localtime(&timedate));
+            memset (datestr, 0, sizeof (datestr));
+            strftime (
+                datestr, sizeof (datestr) - 1, "%a %b %d %H:%M:%S %Y",
+                localtime (&timedate));
 
-			outwnd_printf("General", "Opened log '%s', %s ...\n", logpath.c_str(), datestr);
-			mprintf(("Legacy config mode is %s.\nReason: %s\n", os_is_legacy_mode() ? "ENABLED" : "DISABLED",
-			         Osapi_legacy_mode_reason));
-		}
-	}
+            outwnd_printf (
+                "General", "Opened log '%s', %s ...\n", logpath.c_str (),
+                datestr);
+            mprintf (
+                ("Legacy config mode is %s.\nReason: %s\n",
+                 os_is_legacy_mode () ? "ENABLED" : "DISABLED",
+                 Osapi_legacy_mode_reason));
+        }
+    }
 }
 
-void outwnd_close()
-{
-	if ( !running_unittests && Log_fp != NULL ) {
-		time_t timedate = time(NULL);
-		char datestr[50];
+void outwnd_close () {
+    if (!running_unittests && Log_fp != NULL) {
+        time_t timedate = time (NULL);
+        char datestr[50];
 
-		memset( datestr, 0, sizeof(datestr) );
-		strftime( datestr, sizeof(datestr)-1, "%a %b %d %H:%M:%S %Y", localtime(&timedate) );
+        memset (datestr, 0, sizeof (datestr));
+        strftime (
+            datestr, sizeof (datestr) - 1, "%a %b %d %H:%M:%S %Y",
+            localtime (&timedate));
 
-		outwnd_printf("General", "... Log closed, %s\n", datestr);
+        outwnd_printf ("General", "... Log closed, %s\n", datestr);
 
-		fclose(Log_fp);
-		Log_fp = NULL;
-	}
+        fclose (Log_fp);
+        Log_fp = NULL;
+    }
 
-	outwnd_inited = false;
+    outwnd_inited = false;
 }
 
-void outwnd_debug_window_init() {
-	debugWindow.reset(new osapi::DebugWindow());
+void outwnd_debug_window_init () {
+    debugWindow.reset (new osapi::DebugWindow ());
 }
-void outwnd_debug_window_do_frame(float frametime) {
-	debugWindow->doFrame(frametime);
+void outwnd_debug_window_do_frame (float frametime) {
+    debugWindow->doFrame (frametime);
 }
-void outwnd_debug_window_deinit() {
-	debugWindow.reset();
-}
+void outwnd_debug_window_deinit () { debugWindow.reset (); }
 
-#endif //NDEBUG
+#endif // NDEBUG
