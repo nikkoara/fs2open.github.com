@@ -3,7 +3,7 @@
 
 #include "globalincs/pstypes.h"
 
-#include <SDL_loadso.h>
+#include <SDL2/SDL_loadso.h>
 
 /* This class loads external libraries for FSO use.
  * Uses SDL to do the actual loading so this should be supported on most

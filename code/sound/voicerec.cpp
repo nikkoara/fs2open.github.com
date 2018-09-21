@@ -44,7 +44,7 @@
 #include "playerman/player.h"
 #include "ship/ship.h"
 
-#include <SDL_syswm.h>
+#include <SDL2/SDL_syswm.h>
 
 CComPtr< ISpRecoGrammar > p_grammarObject; // Pointer to our grammar object
 CComPtr< ISpRecoContext > p_recogContext; // Pointer to our recognition context

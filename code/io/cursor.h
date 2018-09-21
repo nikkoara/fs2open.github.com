@@ -3,7 +3,7 @@
 #define CURSOR_H
 #pragma once
 
-#include <SDL_mouse.h>
+#include <SDL2/SDL_mouse.h>
 
 #include "globalincs/pstypes.h"
 #include "cmdline/cmdline.h"

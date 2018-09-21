@@ -42,11 +42,8 @@
 #include "tracing/tracing.h"
 #include "utils/boost/hash_combine.h"
 
-#if (SDL_VERSION_ATLEAST(1, 2, 7))
-#include "SDL_cpuinfo.h"
-#endif
-
-#include "SDL_surface.h"
+#include <SDL2/SDL_cpuinfo.h>
+#include <SDL2/SDL_surface.h>
 
 const char* Resolution_prefixes[GR_NUM_RESOLUTIONS] = { "", "2_" };
 

@@ -12,7 +12,7 @@
 
 #include "globalincs/pstypes.h"
 
-#include "SDL_joystick.h"
+#include <SDL2/SDL_joystick.h>
 
 // z64: Moved up here for compatibility. Bye bye, organization!
 const int JOY_NUM_BUTTONS = 32;

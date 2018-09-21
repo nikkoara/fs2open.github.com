@@ -5,7 +5,7 @@
 
 #include "osapi/osapi.h"
 
-#include <SDL_syswm.h>
+#include <SDL2/SDL_syswm.h>
 
 namespace headtracking {
 namespace trackir {

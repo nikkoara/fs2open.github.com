@@ -27,7 +27,7 @@
 #include <functional>
 #include <memory>
 
-#include <SDL_events.h>
+#include <SDL2/SDL_events.h>
 
 // --------------------------------------------------------------------------------------------------
 // OSAPI DEFINES/VARS

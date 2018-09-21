@@ -178,8 +178,8 @@
 #include <cinttypes>
 
 #include <stdexcept>
-#include <SDL.h>
-#include <SDL_main.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_main.h>
 
 extern int Om_tracker_flag; // needed for FS2OpenPXO config
 
@@ -1695,7 +1695,7 @@ DCF (gamma, "Sets and saves Gamma Factor") {
 
 #ifdef FS2_VOICER
 // This is really awful but thank the guys of X11 for naming something "Window"
-#include "SDL_syswm.h" // For SDL_SysWMinfo
+#  include <SDL2/SDL_syswm.h> // For SDL_SysWMinfo
 #endif
 
 /**
