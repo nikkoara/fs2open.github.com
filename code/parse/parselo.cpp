@@ -29,8 +29,6 @@
 #include "utils/encoding.h"
 #include "utils/unicode.h"
 
-#include <utf8.h>
-
 #define ERROR_LENGTH 64
 #define RS_MAX_TRIES 5
 #define SHARP_S (char)-33
@@ -2033,7 +2031,9 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
 
     if (Unicode_text_mode) {
         // Validate the UTF-8 encoding
-        auto invalid = utf8::find_invalid (raw_text, raw_text + file_len);
+        auto invalid = unicode::detail::find_invalid (
+            raw_text, raw_text + file_len);
+
         if (invalid != raw_text + file_len) {
             auto isLatin1 =
                 util::guessLatin1Encoding (raw_text, (size_t)file_len);

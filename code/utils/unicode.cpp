@@ -11,23 +11,15 @@ text_iterator::text_iterator (
     : current_byte (in_current_byte), range_end_byte (in_range_end_byte),
       range_start_byte (in_range_start_byte) {
     if (range_end_byte == nullptr) {
-#if SCP_COMPILER_IS_GNU
-#pragma GCC diagnostic push
-// This suppresses a GCC bug where it thinks that in_current_byte is null in
-// release builds
-#pragma GCC diagnostic ignored "-Wnonnull"
-#endif
         range_end_byte = in_current_byte + strlen (in_current_byte);
-#if SCP_COMPILER_IS_GNU
-#pragma GCC diagnostic pop
-#endif
     }
 }
+
 text_iterator& unicode::text_iterator::operator++ () {
     if (Unicode_text_mode) {
         try {
             // Increment by UTF-8 encoded codepoints
-            utf8::next (current_byte, range_end_byte);
+            detail::next (current_byte, range_end_byte);
         }
         catch (const std::exception& e) {
             Error (
@@ -44,11 +36,12 @@ text_iterator& unicode::text_iterator::operator++ () {
 
     return *this;
 }
+
 text_iterator& text_iterator::operator-- () {
     if (Unicode_text_mode) {
         try {
             // Decrement by UTF-8 encoded codepoints
-            utf8::prior (current_byte, range_start_byte);
+            detail::prior (current_byte, range_start_byte);
         }
         catch (const std::exception& e) {
             Error (
@@ -65,10 +58,11 @@ text_iterator& text_iterator::operator-- () {
 
     return *this;
 }
+
 text_iterator::value_type text_iterator::operator* () {
     if (Unicode_text_mode) {
         try {
-            return utf8::peek_next (current_byte, range_end_byte);
+            return detail::peek_next (current_byte, range_end_byte);
         }
         catch (const std::exception& e) {
             Error (
@@ -84,7 +78,9 @@ text_iterator::value_type text_iterator::operator* () {
                reinterpret_cast< const uint8_t* > (current_byte);
     }
 }
+
 const char* text_iterator::pos () const { return current_byte; }
+
 bool text_iterator::operator== (const text_iterator& rhs) const {
     Assertion (
         is_from_same_range (rhs),
@@ -92,6 +88,7 @@ bool text_iterator::operator== (const text_iterator& rhs) const {
 
     return current_byte == rhs.current_byte;
 }
+
 bool text_iterator::operator!= (const text_iterator& rhs) const {
     Assertion (
         is_from_same_range (rhs),
@@ -99,6 +96,7 @@ bool text_iterator::operator!= (const text_iterator& rhs) const {
 
     return !(rhs == *this);
 }
+
 bool text_iterator::operator< (const text_iterator& rhs) const {
     Assertion (
         is_from_same_range (rhs),
@@ -106,6 +104,7 @@ bool text_iterator::operator< (const text_iterator& rhs) const {
 
     return current_byte < rhs.current_byte;
 }
+
 bool text_iterator::operator> (const text_iterator& rhs) const {
     Assertion (
         is_from_same_range (rhs),
@@ -113,6 +112,7 @@ bool text_iterator::operator> (const text_iterator& rhs) const {
 
     return rhs < *this;
 }
+
 bool text_iterator::operator<= (const text_iterator& rhs) const {
     Assertion (
         is_from_same_range (rhs),
@@ -120,6 +120,7 @@ bool text_iterator::operator<= (const text_iterator& rhs) const {
 
     return !(rhs < *this);
 }
+
 bool text_iterator::operator>= (const text_iterator& rhs) const {
     Assertion (
         is_from_same_range (rhs),
@@ -127,6 +128,7 @@ bool text_iterator::operator>= (const text_iterator& rhs) const {
 
     return !(*this < rhs);
 }
+
 text_iterator text_iterator::operator+ (ptrdiff_t diff) const {
     if (diff < 0) {
         // Use minus operator to avoid duplicating code
@@ -137,6 +139,7 @@ text_iterator text_iterator::operator+ (ptrdiff_t diff) const {
     for (ptrdiff_t i = 0; i < diff; ++i) { ++iter; }
     return iter;
 }
+
 text_iterator text_iterator::operator- (ptrdiff_t diff) const {
     if (diff < 0) {
         // Use plus operator to avoid duplicating code
@@ -147,6 +150,7 @@ text_iterator text_iterator::operator- (ptrdiff_t diff) const {
     for (ptrdiff_t i = 0; i < diff; ++i) { --iter; }
     return iter;
 }
+
 bool text_iterator::is_from_same_range (const text_iterator& other) const {
     return range_start_byte == other.range_start_byte &&
            range_end_byte == other.range_end_byte;
@@ -162,9 +166,11 @@ codepoint_range::codepoint_range (const char* in_start, const char* in_end)
         end_ptr = start + strlen (start);
     }
 }
+
 text_iterator codepoint_range::begin () {
     return text_iterator (start, start, end_ptr);
 }
+
 text_iterator codepoint_range::end () {
     return text_iterator (end_ptr, start, end_ptr);
 }
@@ -172,7 +178,7 @@ text_iterator codepoint_range::end () {
 size_t encoded_size (codepoint_t cp) {
     if (Unicode_text_mode) {
         try {
-            return utf8::encoded_width (cp);
+            return detail::encoded_width (cp);
         }
         catch (const std::exception& e) {
             Error (
@@ -188,4 +194,5 @@ size_t encoded_size (codepoint_t cp) {
         return 1;
     }
 }
+
 } // namespace unicode

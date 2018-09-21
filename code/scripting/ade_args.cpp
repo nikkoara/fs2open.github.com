@@ -8,7 +8,7 @@
 
 #include "mod_table/mod_table.h"
 
-#include <utf8.h>
+#include "utils/unicode.h"
 
 namespace {
 using namespace scripting;
@@ -175,7 +175,7 @@ int ade_get_args (lua_State* L, const char* fmt, ...) {
                     // ensure that FSO doesn't just crash when a script passes
                     // an invalid UTF-8 sequence to the API
                     auto end = value + strlen (value);
-                    auto invalid = utf8::find_invalid (value, end);
+                    auto invalid = unicode::detail::find_invalid (value, end);
 
                     if (invalid != end) {
                         if (invalid == value) {

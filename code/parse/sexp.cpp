@@ -23267,7 +23267,8 @@ void sexp_string_set_substring (int node) {
         // in Unicode mode
         if (Unicode_text_mode) {
             auto invalid =
-                utf8::find_invalid (new_text.begin (), new_text.end ());
+                unicode::detail::find_invalid (
+                    new_text.begin (), new_text.end ());
 
             if (invalid != new_text.end ()) {
                 // Found an invalid sequence. End the string right before that
