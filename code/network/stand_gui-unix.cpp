@@ -7,8 +7,11 @@
 #include <fstream>
 #include <streambuf>
 #include <algorithm>
+#include <memory>
 #include <iterator>
 #include <cstddef>
+
+#include <json/json.h>
 
 // Copy-Paste from
 // http://www.cplusplus.com/faq/sequences/strings/split/#c-tokenizer
@@ -224,14 +227,24 @@ public:
 
     void setFrameCap (int cap) { framecap = cap; }
 
-    void setName (const char* newName) {
+    void setName (const char* s) {
         hasName = true;
-        name.assign (newName);
+        name = s;
     }
 
-    void setPasswd (const char* newPasswd) {
+    void setName (const std::string& s) {
+        hasName = true;
+        name = s;
+    }
+
+    void setPasswd (const char* s) {
         hasPasswd = true;
-        passwd.assign (newPasswd);
+        passwd = s;
+    }
+
+    void setPasswd (const std::string& s) {
+        hasPasswd = true;
+        passwd = s;
     }
 
     void execute () override {
@@ -319,11 +332,11 @@ void webapiAddCommand (WebapiCommand* command) {
 void webapiExecuteCommands () {
     SDL_mutexP (webapiCommandQueueMutex);
 
-    for (std::vector< WebapiCommand* >::iterator iter =
-             webapiCommandQueue.begin ();
-         iter != webapiCommandQueue.end (); ++iter) {
-        (*iter)->execute ();
-        delete *iter;
+    for (auto p : webapiCommandQueue) {
+        if (p) {
+            p->execute ();
+            delete p;
+        }
     }
 
     webapiCommandQueue.clear ();
@@ -334,40 +347,31 @@ void webapiExecuteCommands () {
 struct LogResource {
     struct LogResourceEntry {
         long timestamp;
-        json_t* entity;
+        Json::Value data;
     };
 
     long currentTimestamp;
     std::list< LogResourceEntry > entries;
 
-    void addEntity (json_t* entity) {
-        LogResourceEntry entry;
-        entry.timestamp = currentTimestamp;
-        entry.entity = entity;
-
-        entries.push_back (entry);
-        currentTimestamp++;
-
-        if (entries.size () > 500) {
-            json_delete (entries.front ().entity);
-            entries.pop_front ();
-        }
+    void
+    addEntity (Json::Value value) {
+        entries.push_back ({ currentTimestamp++, std::move (value) });
+        if (entries.size () > 500) entries.pop_front ();
     }
 
-    json_t* getEntriesAfter (long after) {
-        json_t* msgs = json_array ();
+    Json::Value
+    getEntriesAfter (long after) const {
+        Json::Value result;
 
-        for (std::list< LogResourceEntry >::iterator iter = entries.begin ();
-             iter != entries.end (); ++iter) {
-            if (iter->timestamp >= after) {
-                json_t* msg = json_copy (iter->entity);
-                json_object_set_new (
-                    msg, "timestamp", json_integer (iter->timestamp));
-                json_array_append (msgs, msg);
+        for (const auto& entry : entries) {
+            if (entry.timestamp >= after) {
+                Json::Value data = entry.data;
+                data ["timestamp"] = Json::Value::Int64 (entry.timestamp);
+                result.append (data);
             }
         }
 
-        return msgs;
+        return result;
     }
 };
 
@@ -415,196 +419,189 @@ static void sendResponse (
 }
 
 static void
-sendJsonResponse (mg_connection* connection, json_t* responseEntity) {
-    char* result = json_dumps (responseEntity, 0);
-    std::string resultString (result);
-    free (result);
-    json_delete (responseEntity);
-
-    sendResponse (connection, resultString, HTTP_200_OK);
+sendJsonResponse (mg_connection* connection, const Json::Value& response) {
+    std::stringstream ss;
+    ss << response;
+    sendResponse (connection, ss.str (), HTTP_200_OK);
 }
 
 // =============================================================================
 
 struct ResourceContext {
-    json_t* requestEntity;
+    Json::Value requestEntity;
     std::map< std::string, std::string > parameters;
 };
 
-typedef json_t* (*resourceHandler) (ResourceContext*);
+typedef Json::Value (*resourceHandler) (ResourceContext*);
 
 struct Resource {
     std::string path;
     std::string method;
-
     resourceHandler handler;
 };
 
-json_t* emptyResource (ResourceContext* /*context*/) { return json_object (); }
+static inline Json::Value
+emptyResource (ResourceContext* /*context*/) {
+    return { };
+}
 
-json_t* serverGet (ResourceContext* /*context*/) {
-    json_t* result = json_object ();
+static inline Json::Value
+serverGet (ResourceContext* /*context*/) {
+    Json::Value result;
 
-    json_object_set_new (
-        result, "name", json_string (Multi_options_g.std_pname));
-    json_object_set_new (
-        result, "password", json_string (Multi_options_g.std_passwd));
-    json_object_set_new (
-        result, "framecap", json_integer (Multi_options_g.std_framecap));
+    result ["name"]     = Multi_options_g.std_pname;
+    result ["password"] = Multi_options_g.std_passwd;
+    result ["framecap"] = Multi_options_g.std_framecap;
 
     return result;
 }
 
-json_t* serverPut (ResourceContext* context) {
-    ChangeServerInformationCommand* changeCommand =
-        new ChangeServerInformationCommand ();
+static
+Json::Value serverPut (ResourceContext* context) {
+    auto p = std::make_unique< ChangeServerInformationCommand > ();
 
-    const char* name =
-        json_string_value (json_object_get (context->requestEntity, "name"));
-    if (name) { changeCommand->setName (name); }
-    const char* passwd = json_string_value (
-        json_object_get (context->requestEntity, "password"));
-    if (passwd) { changeCommand->setPasswd (passwd); }
-    int framecap = atoi (json_string_value (
-        json_object_get (context->requestEntity, "framecap")));
-    if (framecap) { changeCommand->setFrameCap (framecap); }
+    const auto& req = context->requestEntity;
 
-    webapiAddCommand (changeCommand);
+    if (req.isMember ("name"))
+        p->setName (req ["name"].asString ());
 
-    return json_object ();
+    if (req.isMember ("password"))
+        p->setPasswd (req ["password"].asString ());
+
+    if (req.isMember ("password"))
+        p->setFrameCap (req ["framecap"].asInt ());
+
+    webapiAddCommand (p.release ());
+
+    return { };
 }
 
-json_t* serverDelete (ResourceContext* /*context*/) {
+Json::Value serverDelete (ResourceContext* /*context*/) {
     webapiAddCommand (new ShutdownServerCommand ());
-    return json_object ();
+    return { };
 }
 
-json_t* refreshMissions (ResourceContext* /*context*/) {
+Json::Value refreshMissions (ResourceContext* /*context*/) {
     webapiAddCommand (new UpdateMissionsCommand ());
-    return json_object ();
+    return { };
 }
 
-json_t* serverResetGame (ResourceContext* /*context*/) {
+Json::Value serverResetGame (ResourceContext* /*context*/) {
     webapiAddCommand (new ResetGameCommand ());
-    return json_object ();
+    return { };
 }
 
-json_t* fs2netReset (ResourceContext* /*context*/) {
+Json::Value fs2netReset (ResourceContext* /*context*/) {
     webapiAddCommand (new ResetFs2NetCommand ());
-    return json_object ();
+    return { };
 }
 
-json_t* netgameInfoGet (ResourceContext* /*context*/) {
-    json_t* obj = json_object ();
+Json::Value
+netgameInfoGet (ResourceContext* /*context*/) {
+    Json::Value result;
 
-    json_object_set_new (obj, "name", json_string (webapi_netgameInfo.name));
-    json_object_set_new (
-        obj, "mission", json_string (webapi_netgameInfo.mission_name));
-    json_object_set_new (
-        obj, "campaign", json_string (webapi_netgameInfo.campaign_name));
+    result["name"]         = webapi_netgameInfo.name;
+    result["mission"]      = webapi_netgameInfo.mission_name;
+    result["campaign"]     = webapi_netgameInfo.campaign_name;
+    result["maxPlayers"]   = webapi_netgameInfo.max_players;
+    result["maxObservers"] = webapi_netgameInfo.options.max_observers;
+    result["respawn"]      = webapi_netgameInfo.respawn;
+    result["gameState"]    = webapi_netgameInfo.game_state;
+    result["security"]     = webapi_netgameInfo.security;
 
-    json_object_set_new (
-        obj, "maxPlayers", json_integer (webapi_netgameInfo.max_players));
-    json_object_set_new (
-        obj, "maxObservers",
-        json_integer (webapi_netgameInfo.options.max_observers));
-    json_object_set_new (
-        obj, "respawn", json_integer (webapi_netgameInfo.respawn));
-
-    json_object_set_new (
-        obj, "gameState", json_integer (webapi_netgameInfo.game_state));
-
-    json_object_set_new (
-        obj, "security", json_integer (webapi_netgameInfo.security));
-    return obj;
+    return result;
 }
 
-json_t* missionGet (ResourceContext* /*context*/) {
-    json_t* fpsEntity = json_object ();
+Json::Value
+missionGet (ResourceContext* /*context*/) {
+    Json::Value fpsEntity;
 
-    json_object_set_new (fpsEntity, "fps", json_real (webui_fps));
-    json_object_set_new (fpsEntity, "time", json_real (webui_missiontime));
+    fpsEntity["fps"]  = webui_fps;
+    fpsEntity["time"] = webui_missiontime;
 
     return fpsEntity;
 }
 
-json_t* missionGoalsGet (ResourceContext* /*context*/) {
-    json_t* goals = json_array ();
+Json::Value
+missionGoalsGet (ResourceContext* /*context*/) {
+    Json::Value goals;
 
-    for (std::list< mission_goal >::iterator iter = webuiMissionGoals.begin ();
-         iter != webuiMissionGoals.end (); ++iter) {
-        mission_goal goal = *iter;
+    for (const auto& goal : webuiMissionGoals) {
+        Json::Value goalEntity;
 
-        json_t* goalEntity = json_object ();
-
-        json_object_set_new (goalEntity, "name", json_string (goal.name));
-        json_object_set_new (
-            goalEntity, "message", json_string (goal.message));
-        json_object_set_new (goalEntity, "score", json_integer (goal.score));
-        json_object_set_new (goalEntity, "team", json_integer (goal.team));
+        goalEntity ["name"]    = goal.name;
+        goalEntity ["message"] = goal.message;
+        goalEntity ["score"]   = goal.score;
+        goalEntity ["team"]    = goal.team;
 
         const char* typeString;
+
         switch (goal.type) {
-        case PRIMARY_GOAL: typeString = "primary"; break;
+        case PRIMARY_GOAL:   typeString = "primary";   break;
         case SECONDARY_GOAL: typeString = "secondary"; break;
-        case BONUS_GOAL: typeString = "bonus"; break;
-        default: typeString = "error"; break;
+        case BONUS_GOAL:     typeString = "bonus";     break;
+        default:             typeString = "error";     break;
         };
-        json_object_set_new (goalEntity, "type", json_string (typeString));
+
+        goalEntity ["type"] = typeString;
 
         const char* statusString;
-        switch (goal.satisfied) {
-        case GOAL_FAILED: statusString = "failed"; break;
-        case GOAL_COMPLETE: statusString = "complete"; break;
-        case GOAL_INCOMPLETE: statusString = "incomplete"; break;
-        default: statusString = "error"; break;
-        };
-        json_object_set_new (goalEntity, "status", json_string (statusString));
 
-        json_array_append (goals, goalEntity);
+        switch (goal.satisfied) {
+        case GOAL_FAILED: statusString     = "failed";     break;
+        case GOAL_COMPLETE: statusString   = "complete";   break;
+        case GOAL_INCOMPLETE: statusString = "incomplete"; break;
+        default: statusString              = "error";      break;
+        };
+
+        goalEntity ["status"] = statusString;
+
+        goals.append (goalEntity);
     }
 
     return goals;
 }
 
-json_t* playerGet (ResourceContext* /*context*/) {
-    json_t* playerList = json_array ();
+Json::Value
+playerGet (ResourceContext* /*context*/) {
+    Json::Value playerList;
 
-    for (std::map< short, net_player >::iterator iter =
-             webapiNetPlayers.begin ();
-         iter != webapiNetPlayers.end (); ++iter) {
-        net_player p = iter->second;
-
+    for (const auto& pair : webapiNetPlayers) {
         char address[256];
+
+        const auto& p = pair.second;
+
         sprintf (
-            address, "%u.%u.%u.%u:%u", p.p_info.addr.addr[0],
-            p.p_info.addr.addr[1], p.p_info.addr.addr[2],
-            p.p_info.addr.addr[3], p.p_info.addr.port);
+            address, "%u.%u.%u.%u:%u",
+            p.p_info.addr.addr[0],
+            p.p_info.addr.addr[1],
+            p.p_info.addr.addr[2],
+            p.p_info.addr.addr[3],
+            p.p_info.addr.port);
 
-        json_t* obj = json_object ();
+        Json::Value obj;
 
-        json_object_set (obj, "id", json_integer (p.player_id));
-        json_object_set (obj, "address", json_string (address));
-        json_object_set (obj, "ping", json_integer (p.s_info.ping.ping_avg));
-        json_object_set (
-            obj, "host", (MULTI_HOST (p)) ? json_true () : json_false ());
-        json_object_set (
-            obj, "observer",
-            (MULTI_OBSERVER (p)) ? json_true () : json_false ());
-        json_object_set (obj, "callsign", json_string (p.m_player->callsign));
-        json_object_set (
-            obj, "ship", json_string (Ship_info[p.p_info.ship_class].name));
+        obj ["id"] = p.player_id;
+        obj ["address"] = address;
+        obj ["ping"] = p.s_info.ping.ping_avg;
 
-        json_array_append (playerList, obj);
+        obj ["host"]     = bool (MULTI_HOST     (p));
+        obj ["observer"] = bool (MULTI_OBSERVER (p));
+
+        obj ["callsign"] = p.m_player->callsign;
+        obj ["ship"] = Ship_info[p.p_info.ship_class].name;
+
+        playerList.append (obj);
     }
 
     return playerList;
 }
 
-json_t* playerDelete (ResourceContext* context) {
+Json::Value
+playerDelete (ResourceContext* context) {
     int playerId = atoi (context->parameters["playerId"].c_str ());
     webapiAddCommand (new KickPlayerCommand (playerId));
-    return json_object ();
+    return { };
 }
 
 net_player* playerForId (int playerId) {
@@ -619,69 +616,54 @@ net_player* playerForId (int playerId) {
     return foundPlayer;
 }
 
-json_t* playerMissionScoreAlltimeGet (ResourceContext* context) {
+Json::Value
+playerMissionScoreAlltimeGet (ResourceContext* context) {
     net_player* p =
         playerForId (atoi (context->parameters["playerId"].c_str ()));
 
-    json_t* obj2 = json_object ();
+    Json::Value obj2;
     if (p == NULL || p->m_player == NULL) return obj2;
 
     scoring_struct* scores = &(p->m_player->stats);
 
-    json_object_set_new (obj2, "score", json_integer (scores->m_score));
-    json_object_set_new (obj2, "kills", json_integer (scores->m_kill_count));
-    json_object_set_new (
-        obj2, "kills-enemy", json_integer (scores->m_kill_count_ok));
-    json_object_set_new (
-        obj2, "kills-friendly", json_integer (scores->m_bonehead_kills));
-    json_object_set_new (obj2, "assists", json_integer (scores->m_assists));
-    json_object_set_new (
-        obj2, "shots-primary", json_integer (scores->mp_shots_fired));
-    json_object_set_new (
-        obj2, "shots-secondary", json_integer (scores->ms_shots_fired));
-    json_object_set_new (
-        obj2, "hits-primary", json_integer (scores->mp_shots_hit));
-    json_object_set_new (
-        obj2, "hits-secondary", json_integer (scores->ms_shots_hit));
-    json_object_set_new (
-        obj2, "hits-friendly-primary",
-        json_integer (scores->mp_bonehead_hits));
-    json_object_set_new (
-        obj2, "hits-friendly-secondary",
-        json_integer (scores->ms_bonehead_hits));
+    obj2 ["score"] = scores->m_score;
+    obj2 ["kills"] = scores->m_kill_count;
+    obj2 ["kills-enemy"] = scores->m_kill_count_ok;
+    obj2 ["kills-friendly"] = scores->m_bonehead_kills;
+    obj2 ["assists"] = scores->m_assists;
+    obj2 ["shots-primary"] = scores->mp_shots_fired;
+    obj2 ["shots-secondary"] = scores->ms_shots_fired;
+    obj2 ["hits-primary"] = scores->mp_shots_hit;
+    obj2 ["hits-secondary"] = scores->ms_shots_hit;
+    obj2 ["hits-friendly-primary"] = scores->mp_bonehead_hits;
+    obj2 ["hits-friendly-secondary"] = scores->ms_bonehead_hits;
 
     return obj2;
 }
 
-json_t* playerMissionScoreMissionGet (ResourceContext* context) {
-    net_player* p =
-        playerForId (atoi (context->parameters["playerId"].c_str ()));
+Json::Value
+playerMissionScoreMissionGet (ResourceContext* context) {
+    net_player* p = playerForId (
+        atoi (context->parameters["playerId"].c_str ()));
 
-    json_t* obj = json_object ();
-    if (p == NULL || p->m_player == NULL) return obj;
+    Json::Value obj;
+
+    if (0 == p || 0 == p->m_player)
+        return obj;
 
     scoring_struct* scores = &(p->m_player->stats);
 
-    json_object_set_new (obj, "score", json_integer (scores->score));
-    json_object_set_new (obj, "kills", json_integer (scores->kill_count));
-    json_object_set_new (
-        obj, "kills-enemy", json_integer (scores->kill_count_ok));
-    json_object_set_new (
-        obj, "kills-friendly", json_integer (scores->bonehead_kills));
-    json_object_set_new (obj, "assists", json_integer (scores->assists));
-    json_object_set_new (
-        obj, "shots-primary", json_integer (scores->p_shots_fired));
-    json_object_set_new (
-        obj, "shots-secondary", json_integer (scores->s_shots_fired));
-    json_object_set_new (
-        obj, "hits-primary", json_integer (scores->p_shots_hit));
-    json_object_set_new (
-        obj, "hits-secondary", json_integer (scores->s_shots_hit));
-    json_object_set_new (
-        obj, "hits-friendly-primary", json_integer (scores->p_bonehead_hits));
-    json_object_set_new (
-        obj, "hits-friendly-secondary",
-        json_integer (scores->s_bonehead_hits));
+    obj ["score"] = scores->score;
+    obj ["kills"] = scores->kill_count;
+    obj ["kills-enemy"] = scores->kill_count_ok;
+    obj ["kills-friendly"] = scores->bonehead_kills;
+    obj ["assists"] = scores->assists;
+    obj ["shots-primary"] = scores->p_shots_fired;
+    obj ["shots-secondary"] = scores->s_shots_fired;
+    obj ["hits-primary"] = scores->p_shots_hit;
+    obj ["hits-secondary"] = scores->s_shots_hit;
+    obj ["hits-friendly-primary"] = scores->p_bonehead_hits;
+    obj ["hits-friendly-secondary"] = scores->s_bonehead_hits;
 
     return obj;
 }
@@ -696,25 +678,27 @@ int afterTimestamp (ResourceContext* context) {
     return 0;
 }
 
-json_t* chatGet (ResourceContext* context) {
+Json::Value
+chatGet (ResourceContext* context) {
     int after = afterTimestamp (context);
     return webapi_chatLog.getEntriesAfter (after);
 }
 
-json_t* chatPost (ResourceContext* context) {
-    const char* message = json_string_value (
-        json_object_get (context->requestEntity, "message"));
-    if (message) {
-        send_game_chat_packet (
-            Net_player, const_cast< char* > (message), MULTI_MSG_ALL, NULL);
-        std_add_chat_text (
-            const_cast< char* > (message), 0 /*MY_NET_PLAYER_NUM*/, 1);
+Json::Value
+chatPost (ResourceContext* context) {
+    const auto& req = context->requestEntity;
+
+    if (req.isMember ("message")) {
+        const auto s = req ["message"].asString ();
+        send_game_chat_packet (Net_player, s.c_str (), MULTI_MSG_ALL, 0);
+        std_add_chat_text (s.c_str (), 0, 1);
     }
 
     return emptyResource (context);
 }
 
-json_t* debugGet (ResourceContext* context) {
+Json::Value
+debugGet (ResourceContext* context) {
     int after = afterTimestamp (context);
     return webapi_debugLog.getEntriesAfter (after);
 }
@@ -747,7 +731,7 @@ webserverApiRequest (mg_connection* conn, const mg_request_info* ri) {
     std::vector< std::string > pathParts;
     split (pathParts, resourcePath, "/", split_struct::no_empties);
 
-    json_t* result = NULL;
+    Json::Value result;
 
     std::string method (ri->request_method);
 
@@ -816,10 +800,18 @@ webserverApiRequest (mg_connection* conn, const mg_request_info* ri) {
                 /*int readBytes = */ mg_read (
                     conn, &entityBuffer, sizeof (entityBuffer));
 
-                json_error_t parseError;
-                context.requestEntity = json_loads (
-                    (const char*)&entityBuffer, JSON_DISABLE_EOF_CHECK,
-                    &parseError);
+                {
+                    Json::CharReaderBuilder parser;
+                    parser ["collectComments"] = false;
+
+                    std::stringstream ss (entityBuffer);
+
+                    std::string ignore;
+                    Json::Value root;
+
+                    /* bool ignore2 = */
+                    Json::parseFromStream (parser, ss, &root, &ignore);
+                }
 
                 SDL_mutexP (webapi_dataMutex);
                 result = r->handler (&context);
@@ -874,13 +866,11 @@ void std_configLoaded (multi_global_options* options) {
     char buffer[16];
     sprintf (buffer, "%d", options->webapiPort);
 
-    const char* mgOptions[] = { "listening_ports",
-                                buffer,
-                                "document_root",
-                                options->webuiRootDirectory.c_str (),
-                                "num_threads",
-                                "4",
-                                NULL };
+    const char* mgOptions [] = {
+        "listening_ports", buffer,
+        "document_root",   options->webuiRootDirectory.c_str (),
+        "num_threads", "4", 0
+    };
 
     mprintf (
         ("Webapi starting on port: %d with document root at: %s\n",
@@ -891,10 +881,9 @@ void std_configLoaded (multi_global_options* options) {
 
 void std_add_chat_text (
     const char* text, int /*player_index*/, int /*add_id*/) {
-    json_t* msg = json_object ();
-    // json_object_set_new(msg, "source",
-    // json_string(Net_players[player_index].m_player->callsign));
-    json_object_set_new (msg, "message", json_string (text));
+
+    Json::Value msg;
+    msg ["message"] = text;
 
     webapi_chatLog.addEntity (msg);
 }
@@ -903,11 +892,9 @@ void std_debug_multilog_add_line (const char* str) {
     std::vector< std::string > debugMessages;
     split (debugMessages, std::string (str), "\n", split_struct::no_empties);
 
-    for (std::vector< std::string >::const_iterator iter =
-             debugMessages.begin ();
-         iter != debugMessages.end (); ++iter) {
-        json_t* msg = json_object ();
-        json_object_set_new (msg, "message", json_string (str));
+    for (const auto& s : debugMessages) {
+        Json::Value msg;
+        msg ["message"] = s;
         webapi_debugLog.addEntity (msg);
     }
 }

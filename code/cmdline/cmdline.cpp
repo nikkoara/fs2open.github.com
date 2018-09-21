@@ -42,17 +42,13 @@
 #include <cstdio>
 
 enum cmdline_arg_type { AT_NONE = 0, AT_INT, AT_FLOAT, AT_STRING };
+
 // values and order MUST match cmdline_arg_type
 const char* cmdline_arg_types[] = {
     "NONE",
     "INT",
     "FLOAT",
     "STRING",
-};
-
-enum class flag_output_type {
-    Binary,
-    Json_V1,
 };
 
 // variables
@@ -892,26 +888,6 @@ Flag exe_params[] = {
         "http://www.hard-light.net/wiki/index.php/"
         "Command-Line_Reference#-noninteractive",
     },
-    // {
-    //     "-json_pilot",
-    //     "Dump pilot files in JSON format",
-    //     true,
-    //     0,
-    //     EASY_DEFAULT,
-    //     "Dev Tool",
-    //     "http://www.hard-light.net/wiki/index.php/"
-    //     "Command-Line_Reference#-json_pilot",
-    // },
-    // {
-    //     "-json_profiling",
-    //     "Generate JSON profiling output",
-    //     true,
-    //     0,
-    //     EASY_DEFAULT,
-    //     "Dev Tool",
-    //     "http://www.hard-light.net/wiki/index.php/"
-    //     "Command-Line_Reference#-json_profiling",
-    // },
     {
         "-profile_frame_time",
         "Profile engine subsystems",
@@ -1276,9 +1252,6 @@ cmdline_parm benchmark_mode_arg (
     "-benchmark_mode", NULL, AT_NONE); // Cmdline_benchmark_mode
 cmdline_parm noninteractive_arg (
     "-noninteractive", NULL, AT_NONE); // Cmdline_noninteractive
-// cmdline_parm json_pilot ("-json_pilot", NULL, AT_NONE); // Cmdline_json_pilot
-// cmdline_parm json_profiling (
-//     "-json_profiling", NULL, AT_NONE); // Cmdline_json_profiling
 cmdline_parm show_video_info (
     "-show_video_info", NULL, AT_NONE); // Cmdline_show_video_info
 cmdline_parm frame_profile_arg (
@@ -1310,8 +1283,6 @@ bool Cmdline_profile_write_file = false;
 bool Cmdline_no_unfocus_pause = false;
 bool Cmdline_benchmark_mode = false;
 bool Cmdline_noninteractive = false;
-// bool Cmdline_json_pilot = false;
-// bool Cmdline_json_profiling = false;
 bool Cmdline_frame_profile = false;
 bool Cmdline_show_video_info = false;
 bool Cmdline_debug_window = false;
@@ -2440,10 +2411,6 @@ bool SetCmdlineParams () {
     if (benchmark_mode_arg.found ()) { Cmdline_benchmark_mode = true; }
 
     if (noninteractive_arg.found ()) { Cmdline_noninteractive = true; }
-
-    // if (json_pilot.found ()) { Cmdline_json_pilot = true; }
-
-    // if (json_profiling.found ()) { Cmdline_json_profiling = true; }
 
     if (frame_profile_arg.found ()) { Cmdline_frame_profile = true; }
 
