@@ -1,9 +1,6 @@
 
 INCLUDE(prebuilt.cmake)
 
-ADD_SUBDIRECTORY(libjpeg)
-ADD_SUBDIRECTORY(zlib)
-ADD_SUBDIRECTORY(libpng)
 ADD_SUBDIRECTORY(lua)
 
 INCLUDE(OpenAL.cmake)
@@ -13,7 +10,5 @@ ADD_SUBDIRECTORY(opengl)
 IF(UNIX)
   ADD_SUBDIRECTORY(mongoose)
 ENDIF(UNIX)
-
-ADD_SUBDIRECTORY(md5)
 
 INCLUDE(FFmpeg.cmake)
