@@ -9,7 +9,7 @@ endif()
 include(cmake/util.cmake)
 
 # Set a few policies
-set_policy(CMP0051 OLD)
+# set_policy(CMP0051 OLD)
 set_policy(CMP0053 NEW)
 set_policy(CMP0054 NEW)
 
@@ -27,15 +27,13 @@ ENDIF(NOT DEFINED CMAKE_INSTALL_PREFIX)
 SET(TARGET_COPY_FILES "" CACHE INTERNAL "" FORCE)
 SET(TARGET_COPY_DIRS "" CACHE INTERNAL "" FORCE)
 
-### Define options and editable variables in the section below:
-# This is only needed for single configuration generators so don't annoy others
-if(NOT CMAKE_BUILD_TYPE AND NOT DEFINED CMAKE_CONFIGURATION_TYPES)
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Default build configuration used." FORCE)
-  message(WARNING "CMAKE_BUILD_TYPE was not specified, defaulting to Release configuration.")
-endif(NOT CMAKE_BUILD_TYPE AND NOT DEFINED CMAKE_CONFIGURATION_TYPES)
+SET(CMAKE_CONFIGURATION_TYPES
+  Debug Release FastDebug CACHE STRING "Available configurations" FORCE)
 
-# Override standard CMake configurations
-set(CMAKE_CONFIGURATION_TYPES Debug Release FastDebug CACHE STRING "Available configurations" FORCE)
+IF(NOT CMAKE_BUILD_TYPE)
+  SET(CMAKE_BUILD_TYPE "Release"
+    CACHE STRING "Default build configuration used." FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
 
 PROJECT(FS2_Open)
 
