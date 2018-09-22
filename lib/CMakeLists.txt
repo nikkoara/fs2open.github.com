@@ -1,6 +1,7 @@
 
 INCLUDE(prebuilt.cmake)
 
+ADD_SUBDIRECTORY(lua)
 ADD_SUBDIRECTORY(opengl)
 
 IF(UNIX)
