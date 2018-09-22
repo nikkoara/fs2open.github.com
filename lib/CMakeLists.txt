@@ -1,14 +1,8 @@
 
 INCLUDE(prebuilt.cmake)
 
-ADD_SUBDIRECTORY(lua)
-
-INCLUDE(OpenAL.cmake)
-
 ADD_SUBDIRECTORY(opengl)
 
 IF(UNIX)
   ADD_SUBDIRECTORY(mongoose)
 ENDIF(UNIX)
-
-INCLUDE(FFmpeg.cmake)
