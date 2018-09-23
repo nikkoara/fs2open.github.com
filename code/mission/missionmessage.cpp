@@ -2422,7 +2422,7 @@ void message_maybe_distort_text (char* text, int shipnum) {
 
             if (run > 0) {
                 unicode::encode (
-                    UNICODE_CHAR ('-'), std::back_inserter (result_str));
+                    U'-', std::back_inserter (result_str));
                 --run;
 
                 if (run <= 0) { next_distort = i + (5 + myrand () % 5); }
@@ -2455,13 +2455,13 @@ void message_maybe_distort_text (char* text, int shipnum) {
         auto num_chars = upper_limit - curr_offset;
         if (Distort_next & 1) {
             for (size_t i = 0; i < num_chars; ++i, ++curr_iter) {
-                if (*curr_iter != UNICODE_CHAR (' ')) {
+                if (*curr_iter != U' ') {
                     unicode::encode (
-                        UNICODE_CHAR ('-'), std::back_inserter (result_str));
+                        U'-', std::back_inserter (result_str));
                 }
                 else {
                     unicode::encode (
-                        UNICODE_CHAR (' '), std::back_inserter (result_str));
+                        U' ', std::back_inserter (result_str));
                 }
             }
 

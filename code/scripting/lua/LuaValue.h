@@ -1,13 +1,12 @@
 
 #ifndef LUAVALUE_H
 #define LUAVALUE_H
-#pragma once
+
+#include "LuaHeaders.h"
 
 #include "LuaConvert.h"
 #include "LuaReference.h"
 #include "LuaException.h"
-
-#include "LuaHeaders.h"
 
 #include <memory>
 

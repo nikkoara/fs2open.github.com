@@ -4,7 +4,7 @@
  * create based on the source.
  */
 
-#include "def_files/def_files.h"
+#include "resource/resource.hpp"
 #include "hud/hud.h"
 #include "iff_defs/iff_defs.h"
 #include "io/timer.h"

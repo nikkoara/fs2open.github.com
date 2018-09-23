@@ -48,7 +48,7 @@ version get_executable_version () {
     v.major = FS_VERSION_MAJOR;
     v.minor = FS_VERSION_MINOR;
     v.build = FS_VERSION_BUILD;
-    v.revision = FS_VERSION_REVIS;
+    v.revision = FS_VERSION_REVISION;
 
     return v;
 }

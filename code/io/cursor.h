@@ -45,14 +45,14 @@ public:
      *
      * Transfers SDL resources to this newly constructed object
      */
-    Cursor (Cursor&& other) SCP_NOEXCEPT;
+    Cursor (Cursor&& other) noexcept;
 
     /**
      * @brief Move operator
      *
      * Transfers SDL resources to this object
      */
-    Cursor& operator= (Cursor&& other) SCP_NOEXCEPT;
+    Cursor& operator= (Cursor&& other) noexcept;
 
     /**
      * @brief Cursor destructor

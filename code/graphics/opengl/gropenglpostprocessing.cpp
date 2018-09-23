@@ -1,7 +1,7 @@
 
 #include "cmdline/cmdline.h"
 #include "freespace.h"
-#include "def_files/def_files.h"
+#include "resource/resource.hpp"
 #include "gropengl.h"
 #include "gropengldraw.h"
 #include "gropenglpostprocessing.h"

@@ -46,9 +46,9 @@ public:
     // Constructors
     CJumpNode ();
     CJumpNode (vec3d* position);
-    CJumpNode (CJumpNode&& other) SCP_NOEXCEPT;
+    CJumpNode (CJumpNode&& other) noexcept;
 
-    CJumpNode& operator= (CJumpNode&&) SCP_NOEXCEPT;
+    CJumpNode& operator= (CJumpNode&&) noexcept;
 
     // Destructor
     ~CJumpNode ();

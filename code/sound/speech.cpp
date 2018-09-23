@@ -103,7 +103,7 @@ bool speech_play (const char* text) {
 
     bool saw_dollar = false;
     for (auto ch : unicode::codepoint_range (text)) {
-        if (ch == UNICODE_CHAR ('$')) {
+        if (ch == U'$') {
             // Skip $ escape sequences which appear in briefing text
             saw_dollar = true;
             continue;

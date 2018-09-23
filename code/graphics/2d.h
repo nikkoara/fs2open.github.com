@@ -1242,7 +1242,7 @@ public:
 
 #ifndef NDEBUG
 #define GR_DEBUG_SCOPE(name) \
-    ::graphics::DebugScope SCP_TOKEN_CONCAT (gr_scope, __LINE__) (name)
+    ::graphics::DebugScope FS2_PASTE (gr_scope, __LINE__) (name)
 #else
 #define GR_DEBUG_SCOPE(name) \
     do {                     \

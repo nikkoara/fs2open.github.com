@@ -63,7 +63,7 @@ int is_white_space (char ch) {
 }
 int is_white_space (unicode::codepoint_t cp) {
     return (
-        (cp == UNICODE_CHAR (' ')) || (cp == UNICODE_CHAR ('\t')) ||
+        (cp == U' ') || (cp == U'\t') ||
         (cp == (unicode::codepoint_t)EOLN));
 }
 
@@ -72,7 +72,7 @@ int is_white_space (unicode::codepoint_t cp) {
 int is_gray_space (char ch) { return ((ch == ' ') || (ch == '\t')); }
 
 bool is_gray_space (unicode::codepoint_t cp) {
-    return cp == UNICODE_CHAR (' ') || cp == UNICODE_CHAR ('\t');
+    return cp == U' ' || cp == U'\t';
 }
 
 int is_parenthesis (char ch) { return ((ch == '(') || (ch == ')')); }
@@ -1690,7 +1690,7 @@ bool matches_version_specific_tag (
     if (s_num == 0) return false;
 
     // hack for releases
-    if (s_num == 4 && FS_VERSION_REVIS < 1000) { s_num = 3; }
+    if (s_num == 4 && FS_VERSION_REVISION < 1000) { s_num = 3; }
 
     const char* ch = line_start + 6;
     while ((*ch) != ';') {
@@ -1721,7 +1721,9 @@ bool matches_version_specific_tag (
         else if (minor == FS_VERSION_MINOR && s_num > 2) {
             if (build > FS_VERSION_BUILD) { compatible_version = false; }
             else if (build == FS_VERSION_BUILD && s_num > 3) {
-                if (revis > FS_VERSION_REVIS) { compatible_version = false; }
+                if (revis > FS_VERSION_REVISION) {
+                    compatible_version = false;
+                }
             }
         }
     }
@@ -3399,7 +3401,7 @@ int split_str (
         }
 
         // if we have a newline, split the line here
-        if (cp == UNICODE_CHAR ('\n')) {
+        if (cp == U'\n') {
             n_chars[line_num] =
                 (int)(iter.pos () - p_str[line_num]); // track length of line
             line_num++;
@@ -3528,7 +3530,7 @@ int split_str (
         }
 
         // if we have a newline, split the line here
-        if (cp == UNICODE_CHAR ('\n')) {
+        if (cp == U'\n') {
             n_chars.push_back (
                 (int)(iter.pos () - p_str[line_num])); // track length of line
             line_num++;

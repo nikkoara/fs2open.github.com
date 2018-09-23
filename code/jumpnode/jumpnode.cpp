@@ -58,7 +58,7 @@ CJumpNode::CJumpNode (vec3d* position)
         OBJ_JUMP_NODE, -1, -1, NULL, &m_pos, m_radius, default_flags);
 }
 
-CJumpNode::CJumpNode (CJumpNode&& other) SCP_NOEXCEPT
+CJumpNode::CJumpNode (CJumpNode&& other) noexcept
     : m_radius (other.m_radius),
       m_modelnum (other.m_modelnum),
       m_objnum (other.m_objnum),
@@ -74,7 +74,7 @@ CJumpNode::CJumpNode (CJumpNode&& other) SCP_NOEXCEPT
     strcpy_s (m_name, other.m_name);
 }
 
-CJumpNode& CJumpNode::operator= (CJumpNode&& other) SCP_NOEXCEPT {
+CJumpNode& CJumpNode::operator= (CJumpNode&& other) noexcept {
     if (this != &other) {
         m_radius = other.m_radius;
         m_modelnum = other.m_modelnum;

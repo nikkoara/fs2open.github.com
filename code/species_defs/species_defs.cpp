@@ -8,7 +8,7 @@
  */
 
 #include "cfile/cfile.h"
-#include "def_files/def_files.h"
+#include "resource/resource.hpp"
 #include "iff_defs/iff_defs.h"
 #include "localization/localize.h"
 #include "parse/parselo.h"

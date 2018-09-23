@@ -201,8 +201,7 @@ std::string base64_decode (std::string const& encoded_string) {
 
 #include "fs2netd/fs2netd_client.h"
 
-#include "mongoose.h"
-#include "jansson.h"
+#include "mongoose/mongoose.h"
 
 #define ARRAY_SIZE(array) (sizeof (array) / sizeof (array[0]))
 

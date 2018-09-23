@@ -160,8 +160,8 @@ void value (const Category& category, float value);
 
 } // namespace tracing
 
-#define TRACE_SCOPE(category)                                   \
-    ::tracing::complete::ScopedCompleteEvent SCP_TOKEN_CONCAT ( \
+#define TRACE_SCOPE(category)                               \
+    ::tracing::complete::ScopedCompleteEvent FS2_PASTE (    \
         complete_trace_scope, __LINE__) (category)
 
 #endif //_TRACING_H

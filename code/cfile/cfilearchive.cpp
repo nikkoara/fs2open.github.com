@@ -22,7 +22,7 @@
 
 #include "cfile/cfile.h"
 #include "cfile/cfilearchive.h"
-#include "luaconf.h"
+#include "lua/luaconf.h"
 
 #include <sstream>
 #include <limits>

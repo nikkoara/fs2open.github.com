@@ -23,7 +23,7 @@
 #include "gamesnd/gamesnd.h"
 #include "globalincs/alphacolors.h"
 #include "graphics/matrix.h"
-#include "def_files/def_files.h"
+#include "resource/resource.hpp"
 #include "globalincs/linklist.h"
 #include "hud/hud.h"
 #include "hud/hudartillery.h"
@@ -1524,12 +1524,12 @@ void ship_info::free_strings () {
     CHECK_THEN_FREE (missile_banks);
 }
 
-ship_info& ship_info::operator= (ship_info&& other) SCP_NOEXCEPT {
+ship_info& ship_info::operator= (ship_info&& other) noexcept {
     if (this != &other) { move (std::move (other)); }
     return *this;
 }
 
-ship_info::ship_info (ship_info&& other) SCP_NOEXCEPT {
+ship_info::ship_info (ship_info&& other) noexcept {
     // MageKing17 - Initialize these pointers to NULL because otherwise move()
     // will leave them uninitialized.
     type_str = NULL;

@@ -279,7 +279,7 @@ Joystick::Joystick (int device_id) : _device_id (device_id) {
     fillValues ();
 }
 
-Joystick::Joystick (Joystick&& other) SCP_NOEXCEPT : _joystick (nullptr) {
+Joystick::Joystick (Joystick&& other) noexcept : _joystick (nullptr) {
     *this = std::move (other);
 }
 
@@ -290,7 +290,7 @@ Joystick::~Joystick () {
     }
 }
 
-Joystick& Joystick::operator= (Joystick&& other) SCP_NOEXCEPT {
+Joystick& Joystick::operator= (Joystick&& other) noexcept {
     std::swap (_device_id, other._device_id);
     std::swap (_joystick, other._joystick);
 

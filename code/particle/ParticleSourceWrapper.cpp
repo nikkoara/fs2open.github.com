@@ -11,7 +11,7 @@ ParticleSourceWrapper::ParticleSourceWrapper (ParticleSource* source) {
 }
 
 ParticleSourceWrapper::ParticleSourceWrapper (ParticleSourceWrapper&& other)
-    SCP_NOEXCEPT {
+    noexcept {
     *this = std::move (other);
 }
 
@@ -27,7 +27,7 @@ ParticleSourceWrapper::~ParticleSourceWrapper () {
 }
 
 ParticleSourceWrapper& ParticleSourceWrapper::
-operator= (ParticleSourceWrapper&& other) SCP_NOEXCEPT {
+operator= (ParticleSourceWrapper&& other) noexcept {
     std::swap (other.m_sources, m_sources);
     return *this;
 }

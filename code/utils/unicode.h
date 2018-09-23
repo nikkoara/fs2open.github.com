@@ -32,24 +32,6 @@ DEALINGS IN THE SOFTWARE.
 #include <iterator>
 #include <stdexcept>
 
-#if !HAVE_CHAR32_T
-// Older compilers don't have this as a built-in type so we define it for those
-typedef std::uint_least32_t char32_t;
-#endif
-
-#if !HAVE_UNICODE_CHAR_LITERAL
-#define UNICODE_CHAR(c) (char32_t) c
-#else
-/**
- * @brief Compatibility macro for compilers which don't support U'' char
- * literals.
- *
- * @warning This can only handle standard ASCII character values since older
- * compilers still use standard character literals
- */
-#define UNICODE_CHAR(c) U##c
-#endif
-
 namespace unicode {
 namespace detail {
 

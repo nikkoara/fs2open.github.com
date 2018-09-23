@@ -48,7 +48,8 @@ public:
      * with the deviation from the direction
      * @return @c true
      */
-    static SCP_CONSTEXPR bool scale_velocity_deviation () { return false; }
+    static constexpr bool
+    scale_velocity_deviation () { return false; }
 };
 
 } // namespace effects

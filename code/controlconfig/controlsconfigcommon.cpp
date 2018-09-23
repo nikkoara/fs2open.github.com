@@ -12,7 +12,7 @@
 
 #include "cfile/cfile.h"
 #include "controlconfig/controlsconfig.h"
-#include "def_files/def_files.h"
+#include "resource/resource.hpp"
 #include "globalincs/systemvars.h"
 #include "io/joy.h"
 #include "io/key.h"

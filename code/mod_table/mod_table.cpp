@@ -5,7 +5,7 @@
  */
 
 #include "gamesnd/eventmusic.h"
-#include "def_files/def_files.h"
+#include "resource/resource.hpp"
 #include "globalincs/version.h"
 #include "localization/localize.h"
 #include "mission/missioncampaign.h"

@@ -29,10 +29,10 @@ private:
     bool m_finished = false;
 
 public:
-    ParticleSourceWrapper (const ParticleSourceWrapper&) SCP_DELETED_FUNCTION;
+    ParticleSourceWrapper (const ParticleSourceWrapper&) = delete;
 
     ParticleSourceWrapper&
-    operator= (const ParticleSourceWrapper&) SCP_DELETED_FUNCTION;
+    operator= (const ParticleSourceWrapper&) = delete;
 
     ParticleSourceWrapper () {}
     explicit ParticleSourceWrapper (std::vector< ParticleSource* >&& sources);
@@ -40,10 +40,10 @@ public:
 
     ~ParticleSourceWrapper ();
 
-    ParticleSourceWrapper (ParticleSourceWrapper&& other) SCP_NOEXCEPT;
+    ParticleSourceWrapper (ParticleSourceWrapper&& other) noexcept;
 
     ParticleSourceWrapper&
-    operator= (ParticleSourceWrapper&& other) SCP_NOEXCEPT;
+    operator= (ParticleSourceWrapper&& other) noexcept;
 
     void finish ();
 

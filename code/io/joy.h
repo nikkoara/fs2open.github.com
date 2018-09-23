@@ -63,7 +63,7 @@ public:
      *
      * @param other A rvalue reference
      */
-    Joystick (Joystick&& other) SCP_NOEXCEPT;
+    Joystick (Joystick&& other) noexcept;
 
     /**
      * @brief Frees the owned SDL handle
@@ -75,7 +75,7 @@ public:
      *
      * @param other A rvalue reference to the other object
      */
-    Joystick& operator= (Joystick&& other) SCP_NOEXCEPT;
+    Joystick& operator= (Joystick&& other) noexcept;
 
     /**
      * @brief Determines if this joystick is still connected to the computer

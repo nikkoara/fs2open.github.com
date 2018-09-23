@@ -2,6 +2,8 @@
 
 #ifdef SCP_UNIX
 
+#include "defs.hpp"
+
 #include <cctype>
 #include <cerrno>
 #include <fcntl.h>
@@ -11,8 +13,6 @@
 #include <unistd.h>
 
 #include "windows_stub/config.h"
-
-#include "platformChecks.h"
 
 #if defined(APPLE_APP)
 #include <CoreFoundation/CoreFoundation.h>

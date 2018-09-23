@@ -10,7 +10,7 @@
 #include "cfile/cfile.h"
 #include "freespace.h"
 #include "gamesnd/eventmusic.h"
-#include "def_files/def_files.h"
+#include "resource/resource.hpp"
 #include "globalincs/linklist.h"
 #include "iff_defs/iff_defs.h"
 #include "io/timer.h"

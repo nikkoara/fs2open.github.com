@@ -10,7 +10,7 @@
 #ifndef _GLOBAL_ALPHACOLORS_HEADER_FILE
 #define _GLOBAL_ALPHACOLORS_HEADER_FILE
 
-#include "def_files/def_files.h"
+#include "resource/resource.hpp"
 #include "graphics/2d.h"
 #include "parse/parselo.h"
 

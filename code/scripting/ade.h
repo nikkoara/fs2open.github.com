@@ -1,11 +1,9 @@
-//
-//
-
 #ifndef FS2_OPEN_ADE_H
 #define FS2_OPEN_ADE_H
 
+#include "defs.hpp"
+
 #include "globalincs/pstypes.h"
-#include "platformChecks.h"
 
 extern "C" {
 #include <lauxlib.h>

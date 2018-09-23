@@ -23,7 +23,7 @@
 
 #include "mod_table/mod_table.h"
 
-#include "def_files/def_files.h"
+#include "resource/resource.hpp"
 #include "bmpman/bmpman.h"
 #include "cfile/cfile.h"
 #include "localization/localize.h"

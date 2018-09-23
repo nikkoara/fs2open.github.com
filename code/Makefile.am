@@ -4,14 +4,78 @@ ACLOCAL_AMFLAGS = -I etc/m4
 
 noinst_LIBRARIES = libfreespace2.a
 
-libfreespace2_a_CPPFLAGS = -I.                  \
-    -I/opt/local/include/SDL2                   \
-    -I/opt/local/include                        \
-    -I../freespace2                             \
-    -I../../build/generated_source              \
+libfreespace2_a_CPPFLAGS = -DAPPLE_APP -DSCP_UNIX -I.   \
+    -I$(top_srcdir)/lib/lua                             \
+    -I$(top_srcdir)/lib/                                \
+    -I$(top_srcdir)/code/                               \
+    -I$(top_srcdir)/freespace2                          \
+    -I/opt/local/include/SDL2                           \
+    -I/opt/local/include                                \
     -isystem OpenAL
 
+RESOURCE_SRCS =                                     \
+    resource/effects/batched-f.sdr.cpp              \
+    resource/effects/batched-v.sdr.cpp              \
+    resource/effects/bloom-comp-f.sdr.cpp           \
+    resource/effects/blur-f.sdr.cpp                 \
+    resource/effects/brightpass-f.sdr.cpp           \
+    resource/effects/decal-f.sdr.cpp                \
+    resource/effects/decal-v.sdr.cpp                \
+    resource/effects/default-material-f.sdr.cpp     \
+    resource/effects/deferred-clear-f.sdr.cpp       \
+    resource/effects/deferred-clear-v.sdr.cpp       \
+    resource/effects/deferred-f.sdr.cpp             \
+    resource/effects/deferred-v.sdr.cpp             \
+    resource/effects/effect-distort-f.sdr.cpp       \
+    resource/effects/effect-distort-v.sdr.cpp       \
+    resource/effects/effect-particle-f.sdr.cpp      \
+    resource/effects/effect-screen-g.sdr.cpp        \
+    resource/effects/effect-v.sdr.cpp               \
+    resource/effects/fog-f.sdr.cpp                  \
+    resource/effects/fxaa-f.sdr.cpp                 \
+    resource/effects/fxaa-v.sdr.cpp                 \
+    resource/effects/fxaapre-f.sdr.cpp              \
+    resource/effects/gamma.sdr.cpp                  \
+    resource/effects/lighting.sdr.cpp               \
+    resource/effects/ls-f.sdr.cpp                   \
+    resource/effects/main-f.sdr.cpp                 \
+    resource/effects/main-g.sdr.cpp                 \
+    resource/effects/main-v.sdr.cpp                 \
+    resource/effects/nanovg-f.sdr.cpp               \
+    resource/effects/nanovg-v.sdr.cpp               \
+    resource/effects/normals.sdr.cpp                \
+    resource/effects/passthrough-f.sdr.cpp          \
+    resource/effects/passthrough-v.sdr.cpp          \
+    resource/effects/post-f.sdr.cpp                 \
+    resource/effects/post-v.sdr.cpp                 \
+    resource/effects/shadowdebug-f.sdr.cpp          \
+    resource/effects/shadowdebug-v.sdr.cpp          \
+    resource/effects/shadows.sdr.cpp                \
+    resource/effects/shield-impact-f.sdr.cpp        \
+    resource/effects/shield-impact-v.sdr.cpp        \
+    resource/effects/tonemapping-f.sdr.cpp          \
+    resource/effects/video-f.sdr.cpp                \
+    resource/effects/video-v.sdr.cpp                \
+    resource/scripts/cfile_require.lua.cpp          \
+    resource/maps/app_icon.png.cpp                  \
+    resource/maps/app_icon_d.png.cpp                \
+    resource/maps/app_icon_sse.png.cpp              \
+    resource/maps/app_icon_sse_d.png.cpp            \
+    resource/tables/ai_profiles.tbl.cpp             \
+    resource/tables/autopilot.tbl.cpp               \
+    resource/tables/controlconfigdefaults.tbl.cpp   \
+    resource/tables/fonts.tbl.cpp                   \
+    resource/tables/game_settings.tbl.cpp           \
+    resource/tables/iff_defs.tbl.cpp                \
+    resource/tables/objecttypes.tbl.cpp             \
+    resource/tables/post_processing.tbl.cpp         \
+    resource/tables/species_defs.tbl.cpp
+
+%.cpp: %.res
+	xxd -i $< >$@
+
 libfreespace2_a_SOURCES =                       \
+    $(RESOURCE_SRCS)                            \
     ai/ai.cpp                                   \
     ai/ai_profiles.cpp                          \
     ai/aibig.cpp                                \
@@ -51,7 +115,6 @@ libfreespace2_a_SOURCES =                       \
     debugconsole/consolecmds.cpp                \
     debugconsole/consoleparse.cpp               \
     decals/decals.cpp                           \
-    def_files/def_files-generic.cpp             \
     events/events.cpp                           \
     exceptionhandler/exceptionhandler.cpp       \
     fireball/fireballs.cpp                      \
@@ -70,7 +133,6 @@ libfreespace2_a_SOURCES =                       \
     globalincs/safe_strings.cpp                 \
     globalincs/systemvars.cpp                   \
     globalincs/version.cpp                      \
-    globalincs/windebug.cpp                     \
     graphics/2d.cpp                             \
     graphics/decal_draw_list.cpp                \
     graphics/generic.cpp                        \
@@ -106,10 +168,7 @@ libfreespace2_a_SOURCES =                       \
     graphics/util/UniformAligner.cpp            \
     graphics/util/UniformBuffer.cpp             \
     graphics/util/UniformBufferManager.cpp      \
-    headtracking/freetrack.cpp                  \
     headtracking/headtracking.cpp               \
-    headtracking/trackir.cpp                    \
-    headtracking/trackirpublic.cpp              \
     hud/hud.cpp                                 \
     hud/hudartillery.cpp                        \
     hud/hudbrackets.cpp                         \
@@ -288,6 +347,7 @@ libfreespace2_a_SOURCES =                       \
     render/3dmath.cpp                           \
     render/3dsetup.cpp                          \
     render/batching.cpp                         \
+    resource/resource.cpp                       \
     scripting/ade.cpp                           \
     scripting/ade_args.cpp                      \
     scripting/api/LuaEventCallback.cpp          \

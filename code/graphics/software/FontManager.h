@@ -22,12 +22,12 @@ struct TrueTypeFontData {
 
     TrueTypeFontData () : size (0) {}
 
-    TrueTypeFontData (TrueTypeFontData&& other) SCP_NOEXCEPT {
+    TrueTypeFontData (TrueTypeFontData&& other) noexcept {
         std::swap (data, other.data);
         size = other.size;
     }
 
-    TrueTypeFontData& operator= (TrueTypeFontData&& other) SCP_NOEXCEPT {
+    TrueTypeFontData& operator= (TrueTypeFontData&& other) noexcept {
         std::swap (data, other.data);
         size = other.size;
 
@@ -35,9 +35,9 @@ struct TrueTypeFontData {
     }
 
 private:
-    TrueTypeFontData (const TrueTypeFontData&) SCP_DELETED_FUNCTION;
+    TrueTypeFontData (const TrueTypeFontData&) = delete;
 
-    TrueTypeFontData& operator= (const TrueTypeFontData&) SCP_DELETED_FUNCTION;
+    TrueTypeFontData& operator= (const TrueTypeFontData&) = delete;
 };
 
 // Forward declarations

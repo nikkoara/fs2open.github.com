@@ -5,7 +5,7 @@
  */
 
 #include "globalincs/pstypes.h"
-#include "def_files/def_files.h"
+#include "resource/resource.hpp"
 #include "ai/ai_profiles.h"
 #include "globalincs/pstypes.h"
 #include "localization/localize.h"

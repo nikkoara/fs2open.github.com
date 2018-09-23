@@ -108,7 +108,7 @@ int Briefing_voice_enabled =
 static int Last_new_stage;
 int Cur_brief_id;
 
-const unicode::codepoint_t BRIEF_META_CHAR = UNICODE_CHAR ('$');
+const unicode::codepoint_t BRIEF_META_CHAR = U'$';
 
 const int HIGHEST_COLOR_STACK_INDEX = 9;
 
@@ -1511,7 +1511,7 @@ int brief_text_colorize (
             ++iter; // Consume the $ character
 
             // it's possible that there's a closing brace here
-            if (*iter == UNICODE_CHAR ('}')) {
+            if (*iter == U'}') {
                 if (color_stack_index > 0) {
                     color_stack_index--;
                     active_color_index =
@@ -1520,7 +1520,7 @@ int brief_text_colorize (
                 ++iter; // consume the }
             }
             // breaking character
-            else if (*iter == UNICODE_CHAR ('|')) {
+            else if (*iter == U'|') {
                 active_color_index = default_color_stack[color_stack_index];
                 ++iter; // consume the |
             }
@@ -1535,7 +1535,7 @@ int brief_text_colorize (
                 // special case: color spans (different default color within
                 // braces) (there's a slim chance that src[i] could be the
                 // null-terminator, but that's okay here)
-                if (*iter == UNICODE_CHAR ('{')) {
+                if (*iter == U'{') {
                     if (color_stack_index < HIGHEST_COLOR_STACK_INDEX) {
                         color_stack_index++;
                         default_color_stack[color_stack_index] =

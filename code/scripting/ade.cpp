@@ -3,7 +3,7 @@
 
 #include "scripting/ade.h"
 #include "ade_api.h"
-#include "def_files/def_files.h"
+#include "resource/resource.hpp"
 #include "mod_table/mod_table.h"
 #include "scripting/lua/LuaFunction.h"
 #include "ship/ship.h"

@@ -31,7 +31,7 @@
 //   the first version is 3.0 :-)
 //   Major.Minor.Bugfix
 
-#include "project.h"
+#include "defs.hpp"
 
 // The GCC POSIX headers seem to think defining a common word like "major" is a
 // good idea... FYI, no it isn't.

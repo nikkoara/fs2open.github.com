@@ -14,7 +14,7 @@
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"
 #include "globalincs/flagset.h"
-#include "def_files/def_files.h"
+#include "resource/resource.hpp"
 #include "utils/unicode.h"
 
 #include <cinttypes>
@@ -403,7 +403,7 @@ class ParseException : public std::runtime_error {
 public:
     explicit ParseException (const std::string& msg)
         : std::runtime_error (msg) {}
-    ~ParseException () SCP_NOEXCEPT override {}
+    ~ParseException () noexcept override {}
 };
 } // namespace parse
 

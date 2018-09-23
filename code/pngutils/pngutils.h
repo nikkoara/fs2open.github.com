@@ -102,7 +102,7 @@ class ApngException : public std::runtime_error {
 public:
     explicit ApngException (const std::string& msg)
         : std::runtime_error (msg) {}
-    ~ApngException () SCP_NOEXCEPT override {}
+    ~ApngException () noexcept override {}
 };
 
 } // namespace apng

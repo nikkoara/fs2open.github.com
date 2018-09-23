@@ -69,11 +69,11 @@ bool UniformBuffer::isInUse () {
     // use
     return true;
 }
-UniformBuffer::UniformBuffer (UniformBuffer&& other) SCP_NOEXCEPT
+UniformBuffer::UniformBuffer (UniformBuffer&& other) noexcept
     : _aligner (0, 0) {
     *this = std::move (other);
 }
-UniformBuffer& UniformBuffer::operator= (UniformBuffer&& other) SCP_NOEXCEPT {
+UniformBuffer& UniformBuffer::operator= (UniformBuffer&& other) noexcept {
     std::swap (_buffer_obj, other._buffer_obj);
     std::swap (_aligner, other._aligner);
     std::swap (_sync_obj, other._sync_obj);

@@ -28,8 +28,8 @@ public:
     UniformBuffer (const UniformBuffer&) = delete;
     UniformBuffer& operator= (const UniformBuffer&) = delete;
 
-    UniformBuffer (UniformBuffer&& other) SCP_NOEXCEPT;
-    UniformBuffer& operator= (UniformBuffer&& other) SCP_NOEXCEPT;
+    UniformBuffer (UniformBuffer&& other) noexcept;
+    UniformBuffer& operator= (UniformBuffer&& other) noexcept;
 
     inline UniformAligner& aligner () { return _aligner; }
 

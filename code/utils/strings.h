@@ -4,7 +4,7 @@
 #ifndef FS2_OPEN_CASECMP_H
 #define FS2_OPEN_CASECMP_H
 
-#include "platformChecks.h"
+#include "defs.hpp"
 
 #include <utility>
 

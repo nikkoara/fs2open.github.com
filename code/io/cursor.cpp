@@ -56,9 +56,9 @@ void changeMouseStatus (bool show, bool grab) {
 namespace io {
 namespace mouse {
 
-Cursor::Cursor (Cursor&& other) SCP_NOEXCEPT { *this = std::move (other); }
+Cursor::Cursor (Cursor&& other) noexcept { *this = std::move (other); }
 
-Cursor& Cursor::operator= (Cursor&& other) SCP_NOEXCEPT {
+Cursor& Cursor::operator= (Cursor&& other) noexcept {
     std::swap (this->mAnimationFrames, other.mAnimationFrames);
 
     this->mBitmapHandle = other.mBitmapHandle;

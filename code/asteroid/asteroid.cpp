@@ -1609,8 +1609,12 @@ static void asteroid_maybe_break_up (object* pasteroid_obj) {
                                     split->asteroid_type);
                     }
 
-                    random_shuffle (
-                        roids_to_create.begin (), roids_to_create.end ());
+                    std::random_device rng;
+                    std::mt19937 urng (rng ());
+
+                    std::shuffle (
+                        roids_to_create.begin (), roids_to_create.end (),
+                        urng);
 
                     size_t total_roids = roids_to_create.size ();
                     for (size_t i = 0; i < total_roids; i++) {

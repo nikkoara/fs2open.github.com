@@ -35,7 +35,7 @@
 #include "cfile/cfilesystem.h"
 #include "cmdline/cmdline.h"
 #include "globalincs/pstypes.h"
-#include "def_files/def_files.h"
+#include "resource/resource.hpp"
 #include "localization/localize.h"
 #include "osapi/osapi.h"
 #include "parse/parselo.h"
