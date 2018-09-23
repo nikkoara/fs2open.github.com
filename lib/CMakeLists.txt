@@ -1,9 +1,0 @@
-
-INCLUDE(prebuilt.cmake)
-
-ADD_SUBDIRECTORY(lua)
-ADD_SUBDIRECTORY(glad)
-
-IF(UNIX)
-  ADD_SUBDIRECTORY(mongoose)
-ENDIF(UNIX)

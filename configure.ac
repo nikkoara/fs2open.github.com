@@ -6,7 +6,7 @@ AC_CONFIG_MACRO_DIR([etc/m4])
 AC_CONFIG_AUX_DIR([etc/m4])
 
 AM_INIT_AUTOMAKE([-Wno-portability subdir-objects dist-bzip2 nostdinc foreign])
-AC_CONFIG_HEADERS([code/_config.hpp:code/config.ac])
+AC_CONFIG_HEADERS([src/_config.hpp:src/config.ac])
 
 AC_PROG_OBJC
 AC_PROG_CXX
@@ -46,16 +46,11 @@ AC_CHECK_FUNCS([strlwr snprintf _snprintf])
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(etc/Makefile)
 
-AC_CONFIG_FILES(lib/glad/Makefile)
-AC_CONFIG_FILES(lib/lua/Makefile)
-dnl AC_CONFIG_FILES(lib/md5/Makefile)
-dnl AC_CONFIG_FILES(lib/mongoose/Makefile)
-dnl AC_CONFIG_FILES(lib/opengl/Makefile)
-dnl AC_CONFIG_FILES(lib/utfcpp/Makefile)
-dnl AC_CONFIG_FILES(lib/zlib/Makefile)
+AC_CONFIG_FILES(src/Makefile)
 
-AC_CONFIG_FILES(code/Makefile)
-AC_CONFIG_FILES(freespace2/Makefile)
+AC_CONFIG_FILES(src/external/glad/Makefile)
+AC_CONFIG_FILES(src/external/lua/Makefile)
+AC_CONFIG_FILES(src/external/mongoose/Makefile)
 
 AC_OUTPUT()
 
