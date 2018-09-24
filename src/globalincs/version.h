@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FS2_VERSIONING_HEADER_FILE
-#define __FS2_VERSIONING_HEADER_FILE
+#ifndef FREESPACE2_GLOBALINCS_VERSION_H
+#define FREESPACE2_GLOBALINCS_VERSION_H
 
 #include "globalincs/vmallocator.h"
 

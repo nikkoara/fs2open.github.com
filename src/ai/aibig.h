@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __AIBIG_H__
-#define __AIBIG_H__
+#ifndef FREESPACE2_AI_AIBIG_H
+#define FREESPACE2_AI_AIBIG_H
 
 class object;
 struct ai_info;

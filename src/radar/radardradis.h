@@ -7,8 +7,8 @@
  *
  */
 
-#ifndef _RADAR_DRADIS_H
-#define _RADAR_DRADIS_H
+#ifndef FREESPACE2_RADAR_RADARDRADIS_H
+#define FREESPACE2_RADAR_RADARDRADIS_H
 
 #include "globalincs/pstypes.h"
 #include "radar/radarsetup.h"

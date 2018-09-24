@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _COLLIDESTUFF_H
-#define _COLLIDESTUFF_H
+#ifndef FREESPACE2_OBJECT_OBJCOLLIDE_H
+#define FREESPACE2_OBJECT_OBJCOLLIDE_H
 
 #include "globalincs/pstypes.h"
 

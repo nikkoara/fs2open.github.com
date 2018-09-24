@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _TMAPPER_H
-#define _TMAPPER_H
+#ifndef FREESPACE2_GRAPHICS_TMAPPER_H
+#define FREESPACE2_GRAPHICS_TMAPPER_H
 
 #include "globalincs/pstypes.h"
 

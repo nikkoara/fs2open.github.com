@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _TRACING_CATEGORIES_H
-#define _TRACING_CATEGORIES_H
+#ifndef FREESPACE2_TRACING_CATEGORIES_H
+#define FREESPACE2_TRACING_CATEGORIES_H
 
 /** @file
  *  @ingroup tracing
@@ -151,4 +151,4 @@ extern Category GpuHeapDeallocate;
 
 } // namespace tracing
 
-#endif // _TRACING_CATEGORIES_H
+#endif // FREESPACE2_TRACING_CATEGORIES_H

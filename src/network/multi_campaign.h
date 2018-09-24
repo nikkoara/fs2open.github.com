@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTIPLAYER_CAMPAIGN_HEADER_FILE
-#define _MULTIPLAYER_CAMPAIGN_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_CAMPAIGN_H
+#define FREESPACE2_NETWORK_MULTI_CAMPAIGN_H
 
 #include "globalincs/pstypes.h"
 

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __MISSION_WEAPON_CHOICE_H__
-#define __MISSION_WEAPON_CHOICE_H__
+#ifndef FREESPACE2_MISSIONUI_MISSIONWEAPONCHOICE_H
+#define FREESPACE2_MISSIONUI_MISSIONWEAPONCHOICE_H
 
 class p_object;
 struct wss_unit;
@@ -60,4 +60,4 @@ int wl_drop (
     int from_bank, int from_list, int to_bank, int to_list, int ship_slot,
     int player_index = -1, bool dont_play_sound = false);
 
-#endif /* __MISSION_WEAPON_CHOICE_H__ */
+#endif /* FREESPACE2_MISSIONUI_MISSIONWEAPONCHOICE_H */

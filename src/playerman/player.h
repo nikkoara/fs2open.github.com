@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _PLAYER_H
-#define _PLAYER_H
+#ifndef FREESPACE2_PLAYERMAN_PLAYER_H
+#define FREESPACE2_PLAYERMAN_PLAYER_H
 
 #include "globalincs/globals.h"
 #include "hud/hudtarget.h" // for targeting hotkey lists

@@ -1,9 +1,9 @@
 // -*- mode: c++; -*-
 
-#ifndef _FSMEMORY_H
-#define _FSMEMORY_H
+#ifndef FREESPACE2_GLOBALINCS_FSMEMORY_H
+#define FREESPACE2_GLOBALINCS_FSMEMORY_H
 
 #include "globalincs/memory/memory.h"
 #include "globalincs/memory/utils.h"
 
-#endif // _FSMEMORY_H
+#endif // FREESPACE2_GLOBALINCS_FSMEMORY_H

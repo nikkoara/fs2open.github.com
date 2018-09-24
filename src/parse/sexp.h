@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _SEXP_H
-#define _SEXP_H
+#ifndef FREESPACE2_PARSE_SEXP_H
+#define FREESPACE2_PARSE_SEXP_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h" // for NULL

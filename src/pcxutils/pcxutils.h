@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _PCXUTILS_H
-#define _PCXUTILS_H
+#ifndef FREESPACE2_PCXUTILS_PCXUTILS_H
+#define FREESPACE2_PCXUTILS_PCXUTILS_H
 
 #include "globalincs/pstypes.h"
 #include "cfile/cfile.h"

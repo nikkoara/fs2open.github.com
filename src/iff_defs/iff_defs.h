@@ -6,8 +6,8 @@
  * create based on the source.
  */
 
-#ifndef _IFF_DEFS_H_
-#define _IFF_DEFS_H_
+#ifndef FREESPACE2_IFF_DEFS_IFF_DEFS_H
+#define FREESPACE2_IFF_DEFS_IFF_DEFS_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"

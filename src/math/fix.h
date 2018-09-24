@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FIX_H
-#define _FIX_H
+#ifndef FREESPACE2_MATH_FIX_H
+#define FREESPACE2_MATH_FIX_H
 
 #define F1_0 65536
 #define f1_0 65536

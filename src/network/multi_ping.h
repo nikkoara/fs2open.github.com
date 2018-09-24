@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTIPLAYER_PING_HEADER_FILE
-#define _MULTIPLAYER_PING_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_PING_H
+#define FREESPACE2_NETWORK_MULTI_PING_H
 
 // ------------------------------------------------------------------------------------
 // MULTIPLAYER PING DEFINES/VARS

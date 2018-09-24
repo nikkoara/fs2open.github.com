@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MISSION_SCREEN_COMMON_HEADER_FILE
-#define _MISSION_SCREEN_COMMON_HEADER_FILE
+#ifndef FREESPACE2_MISSIONUI_MISSIONSCREENCOMMON_H
+#define FREESPACE2_MISSIONUI_MISSIONSCREENCOMMON_H
 
 #include "globalincs/globals.h"
 #include "gamesnd/gamesnd.h"

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _SCORING_HEADER_FILE
-#define _SCORING_HEADER_FILE
+#ifndef FREESPACE2_STATS_SCORING_H
+#define FREESPACE2_STATS_SCORING_H
 
 #include <ctime>
 

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _3D_H
-#define _3D_H
+#ifndef FREESPACE2_RENDER_3D_H
+#define FREESPACE2_RENDER_3D_H
 
 #include "camera/camera.h"
 #include "graphics/2d.h"

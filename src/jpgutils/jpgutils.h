@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _JPEGUTILS_H
-#define _JPEGUTILS_H
+#ifndef FREESPACE2_JPGUTILS_JPGUTILS_H
+#define FREESPACE2_JPGUTILS_JPGUTILS_H
 
 #include "globalincs/pstypes.h"
 #include "cfile/cfile.h"
@@ -18,4 +18,4 @@ extern int jpeg_read_bitmap (
     const char* real_filename, ubyte* image_data, ubyte* palette,
     int dest_size, int cf_type = CF_TYPE_ANY);
 
-#endif // _JPEGUTILS_H
+#endif // FREESPACE2_JPGUTILS_JPGUTILS_H

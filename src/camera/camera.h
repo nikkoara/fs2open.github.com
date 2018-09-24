@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _CAMERA_H
-#define _CAMERA_H
+#ifndef FREESPACE2_CAMERA_CAMERA_H
+#define FREESPACE2_CAMERA_CAMERA_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"
@@ -212,4 +212,4 @@ void subtitles_close ();
 void subtitles_do_frame (float frametime);
 void subtitles_do_frame_post_shaded (float frametime);
 
-#endif // _CAMERA_H
+#endif // FREESPACE2_CAMERA_CAMERA_H

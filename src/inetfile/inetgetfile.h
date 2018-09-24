@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _INET_GETFILE_HEADER_
-#define _INET_GETFILE_HEADER_
+#ifndef FREESPACE2_INETFILE_INETGETFILE_H
+#define FREESPACE2_INETFILE_INETGETFILE_H
 
 // At the end of this file is an example of usage
 

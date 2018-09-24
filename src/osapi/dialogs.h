@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _OSAPI_DIALOGS_H
-#define _OSAPI_DIALOGS_H
+#ifndef FREESPACE2_OSAPI_DIALOGS_H
+#define FREESPACE2_OSAPI_DIALOGS_H
 
 #include "globalincs/pstypes.h"
 
@@ -145,4 +145,4 @@ using os::dialogs::ReleaseWarning;
 using os::dialogs::Warning;
 using os::dialogs::WarningEx;
 
-#endif // _OSAPI_DIALOGS_H
+#endif // FREESPACE2_OSAPI_DIALOGS_H

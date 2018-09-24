@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FS_STATISTICS_STATE_HEADER
-#define _FS_STATISTICS_STATE_HEADER
+#ifndef FREESPACE2_STATS_STATS_H
+#define FREESPACE2_STATS_STATS_H
 
 #define MISSION_STATS 0
 #define ALL_TIME_STATS 1

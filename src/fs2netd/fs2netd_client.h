@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FS2NETD_CLIENT_H
-#define _FS2NETD_CLIENT_H
+#ifndef FREESPACE2_FS2NETD_FS2NETD_CLIENT_H
+#define FREESPACE2_FS2NETD_FS2NETD_CLIENT_H
 
 #include "network/multi.h"
 
@@ -72,4 +72,4 @@ void fs2netd_add_table_validation (const char* tblname);
 
 void fs2netd_update_game_count (const char* chan_name);
 
-#endif // _FS2NETD_CLIENT_H
+#endif // FREESPACE2_FS2NETD_FS2NETD_CLIENT_H

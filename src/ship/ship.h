@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _SHIP_H
-#define _SHIP_H
+#ifndef FREESPACE2_SHIP_SHIP_H
+#define FREESPACE2_SHIP_SHIP_H
 
 #include "ai/ai.h"
 #include "fireball/fireballs.h"
@@ -48,7 +48,7 @@ extern vec3d Original_vec_to_deader;
     0.01f // max_hits threshold where subsys is considered to take damage
 
 #define HP_SCALE 1.2    //	1.2 means die when 20% of hits remaining
-#define MAX_SHIP_HITS 8 // hits to kill a ship
+#define MAXFREESPACE2_SHIP_SHIP_HITS 8 // hits to kill a ship
 #define MAX_SHIP_DETAIL_LEVELS \
     5 // maximum detail levels that a ship can render at
 #define MAX_REINFORCEMENTS 32
@@ -542,7 +542,7 @@ public:
 
     int next_hit_spark;
     int num_hits; //	Note, this is the number of spark emitter positions!
-    ship_spark sparks[MAX_SHIP_HITS];
+    ship_spark sparks[MAXFREESPACE2_SHIP_SHIP_HITS];
 
     bool use_special_explosion;
     int special_exp_damage; // new special explosion/hitpoints system

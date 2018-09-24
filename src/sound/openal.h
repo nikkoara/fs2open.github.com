@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _AL_H
-#define _AL_H
+#ifndef FREESPACE2_SOUND_OPENAL_H
+#define FREESPACE2_SOUND_OPENAL_H
 
 #include <OpenAL/al.h>
 #include <OpenAL/alc.h>
@@ -141,4 +141,4 @@ OpenALInformation openal_get_platform_information ();
 #define AL_FORMAT_STEREO_FLOAT32 0x10011
 #endif
 
-#endif // _AL_H
+#endif // FREESPACE2_SOUND_OPENAL_H

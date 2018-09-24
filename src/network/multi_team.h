@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTI_TEAMPLAY_HEADER_FILE
-#define _MULTI_TEAMPLAY_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_TEAM_H
+#define FREESPACE2_NETWORK_MULTI_TEAM_H
 
 #include <globalincs/globals.h>
 

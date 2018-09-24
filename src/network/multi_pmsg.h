@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTIPLAYER_MESSAGING_HEADER_FILE
-#define _MULTIPLAYER_MESSAGING_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_PMSG_H
+#define FREESPACE2_NETWORK_MULTI_PMSG_H
 
 // ----------------------------------------------------------------------------------
 // MULTI MESSAGING DEFINES/VARS

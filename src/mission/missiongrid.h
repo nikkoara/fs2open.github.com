@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __MISSIONGRID_H__
-#define __MISSIONGRID_H__
+#ifndef FREESPACE2_MISSION_MISSIONGRID_H
+#define FREESPACE2_MISSION_MISSIONGRID_H
 
 #include "globalincs/pstypes.h"
 #include "physics/physics.h"

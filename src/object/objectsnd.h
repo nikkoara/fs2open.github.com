@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __OBJECTSNDS_H__
-#define __OBJECTSNDS_H__
+#ifndef FREESPACE2_OBJECT_OBJECTSND_H
+#define FREESPACE2_OBJECT_OBJECTSND_H
 
 #define OS_USED (1 << 0)
 #define OS_DS3D (1 << 1)

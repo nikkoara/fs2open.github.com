@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _HUDRETICLE_H
-#define _HUDRETICLE_H
+#ifndef FREESPACE2_HUD_HUDRETICLE_H
+#define FREESPACE2_HUD_HUDRETICLE_H
 
 #include "hud/hud.h"
 

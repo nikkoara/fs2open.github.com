@@ -9,8 +9,8 @@
  *  @ingroup osapi
  */
 
-#ifndef _OSAPI_H
-#define _OSAPI_H
+#ifndef FREESPACE2_OSAPI_OSAPI_H
+#define FREESPACE2_OSAPI_OSAPI_H
 
 #include "globalincs/pstypes.h"
 #include "osapi/osregistry.h"
@@ -427,4 +427,4 @@ bool isWindowEvent (const SDL_Event& e, SDL_Window* window);
  * @see @ref os_graphics_api
  */
 
-#endif // _OSAPI_H
+#endif // FREESPACE2_OSAPI_OSAPI_H

@@ -6,8 +6,8 @@
  * create based on the source.
  */
 
-#ifndef _DEAD_OBJECT_DOCK_H
-#define _DEAD_OBJECT_DOCK_H
+#ifndef FREESPACE2_OBJECT_DEADOBJECTDOCK_H
+#define FREESPACE2_OBJECT_DEADOBJECTDOCK_H
 
 #include "globalincs/globals.h"
 #include "object/objectdock.h"
@@ -38,4 +38,4 @@ void dock_dead_undock_all (object* objp);
 // object cleanup
 void dock_free_dead_dock_list (object* objp);
 
-#endif // _DEAD_OBJECT_DOCK_H
+#endif // FREESPACE2_OBJECT_DEADOBJECTDOCK_H

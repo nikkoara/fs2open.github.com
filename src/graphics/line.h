@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _LINE_H
-#define _LINE_H
+#ifndef FREESPACE2_GRAPHICS_LINE_H
+#define FREESPACE2_GRAPHICS_LINE_H
 
 // void gr8_line(int x1,int y1,int x2,int y2, bool b);
 // void gr8_aaline(vertex *v1, vertex *v2);

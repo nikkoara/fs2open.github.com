@@ -1,10 +1,10 @@
 // -*- mode: c++; -*-
 
-#ifndef __FISHTANK_H__
-#define __FISHTANK_H__
+#ifndef FREESPACE2_MENUUI_FISHTANK_H
+#define FREESPACE2_MENUUI_FISHTANK_H
 
 void fishtank_start ();
 void fishtank_stop ();
 void fishtank_process ();
 
-#endif /* __FISHTANK_H__ */
+#endif /* FREESPACE2_MENUUI_FISHTANK_H */

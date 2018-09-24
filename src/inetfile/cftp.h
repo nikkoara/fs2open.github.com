@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _CFTP_HEADER_
-#define _CFTP_HEADER_
+#ifndef FREESPACE2_INETFILE_CFTP_H
+#define FREESPACE2_INETFILE_CFTP_H
 
 #include "globalincs/pstypes.h"
 

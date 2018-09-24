@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MISSIONLOG_H
-#define _MISSIONLOG_H
+#ifndef FREESPACE2_MISSION_MISSIONLOG_H
+#define FREESPACE2_MISSION_MISSIONLOG_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"

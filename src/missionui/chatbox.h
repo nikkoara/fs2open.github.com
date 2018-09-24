@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FREESPACE_CHATBOX_H__
-#define __FREESPACE_CHATBOX_H__
+#ifndef FREESPACE2_MISSIONUI_CHATBOX_H
+#define FREESPACE2_MISSIONUI_CHATBOX_H
 
 // prototype
 struct net_player;

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _STATIC_RAND_H
-#define _STATIC_RAND_H
+#ifndef FREESPACE2_MATH_STATICRAND_H
+#define FREESPACE2_MATH_STATICRAND_H
 
 #include "globalincs/pstypes.h"
 

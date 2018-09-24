@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MISSIONMESSAGE_H
-#define _MISSIONMESSAGE_H
+#ifndef FREESPACE2_MISSION_MISSIONMESSAGE_H
+#define FREESPACE2_MISSION_MISSIONMESSAGE_H
 
 #include "anim/packunpack.h"
 #include "globalincs/globals.h" // include so that we can gets defs for lengths of tokens

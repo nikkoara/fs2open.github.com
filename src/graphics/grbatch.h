@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef __GRBATCH_H__
-#define __GRBATCH_H__
+#ifndef FREESPACE2_GRAPHICS_GRBATCH_H
+#define FREESPACE2_GRAPHICS_GRBATCH_H
 
 class geometry_batcher {
 private:

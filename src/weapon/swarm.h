@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FREESPACE_SWARM_H__
-#define __FREESPACE_SWARM_H__
+#ifndef FREESPACE2_WEAPON_SWARM_H
+#define FREESPACE2_WEAPON_SWARM_H
 
 #include "globalincs/pstypes.h"
 
@@ -61,4 +61,4 @@ void turret_swarm_set_up_info (
     int weapon_num);
 void turret_swarm_check_validity ();
 
-#endif /* __FREESPACE_SWARM_H__ */
+#endif /* FREESPACE2_WEAPON_SWARM_H */

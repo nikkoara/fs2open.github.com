@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FREESPACE_MULTIPLAYER_LOGFILE_HEADER_FILE
-#define _FREESPACE_MULTIPLAYER_LOGFILE_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_LOG_H
+#define FREESPACE2_NETWORK_MULTI_LOG_H
 
 #include "globalincs/pstypes.h"
 

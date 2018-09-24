@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FS2_NEB2_EFFECT_HEADER_FILE
-#define _FS2_NEB2_EFFECT_HEADER_FILE
+#ifndef FREESPACE2_NEBULA_NEB_H
+#define FREESPACE2_NEBULA_NEB_H
 
 // --------------------------------------------------------------------------------------------------------
 // NEBULA DEFINES/VARS

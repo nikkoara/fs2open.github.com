@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __HUDWINGMAN_STATUS_H__
-#define __HUDWINGMAN_STATUS_H__
+#ifndef FREESPACE2_HUD_HUDWINGMANSTATUS_H
+#define FREESPACE2_HUD_HUDWINGMANSTATUS_H
 
 #include "hud/hud.h"
 

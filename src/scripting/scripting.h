@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _SCRIPTING_H
-#define _SCRIPTING_H
+#ifndef FREESPACE2_SCRIPTING_SCRIPTING_H
+#define FREESPACE2_SCRIPTING_SCRIPTING_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"
@@ -238,4 +238,4 @@ extern bool Output_scripting_meta;
 
 //*************************Conditional scripting*************************
 
-#endif //_SCRIPTING_H
+#endif //FREESPACE2_SCRIPTING_SCRIPTING_H

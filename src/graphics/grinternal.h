@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _GRINTERNAL_H
-#define _GRINTERNAL_H
+#ifndef FREESPACE2_GRAPHICS_GRINTERNAL_H
+#define FREESPACE2_GRAPHICS_GRINTERNAL_H
 
 #include "globalincs/globals.h" // just in case pstypes.h messed up
 #include "globalincs/pstypes.h" // IAM_64BIT

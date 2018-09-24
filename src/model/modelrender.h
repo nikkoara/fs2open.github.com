@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef _MODELRENDER_H
-#define _MODELRENDER_H
+#ifndef FREESPACE2_MODEL_MODELRENDER_H
+#define FREESPACE2_MODEL_MODELRENDER_H
 
 #include "graphics/material.h"
 #include "lighting/lighting.h"

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _KEY_H
-#define _KEY_H
+#ifndef FREESPACE2_IO_KEY_H
+#define FREESPACE2_IO_KEY_H
 
 /*
 #ifdef __cplusplus

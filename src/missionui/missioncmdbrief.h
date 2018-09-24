@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __MISSIONCMDBRIEF_H__
-#define __MISSIONCMDBRIEF_H__
+#ifndef FREESPACE2_MISSIONUI_MISSIONCMDBRIEF_H
+#define FREESPACE2_MISSIONUI_MISSIONCMDBRIEF_H
 
 #define CMD_BRIEF_STAGES_MAX 10
 
@@ -42,4 +42,4 @@ void cmd_brief_unpause ();
 
 int mission_has_cmd_brief ();
 
-#endif // __MISSIONCMDBRIEF_H__
+#endif // FREESPACE2_MISSIONUI_MISSIONCMDBRIEF_H

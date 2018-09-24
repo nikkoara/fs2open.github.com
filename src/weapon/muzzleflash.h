@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FS2_MUZZLEFLASH_HEADER_FILE
-#define __FS2_MUZZLEFLASH_HEADER_FILE
+#ifndef FREESPACE2_WEAPON_MUZZLEFLASH_H
+#define FREESPACE2_WEAPON_MUZZLEFLASH_H
 
 #include "physics/physics.h"
 

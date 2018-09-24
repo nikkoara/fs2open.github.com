@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __JOY_H__
-#define __JOY_H__
+#ifndef FREESPACE2_IO_JOY_H
+#define FREESPACE2_IO_JOY_H
 
 #include "globalincs/pstypes.h"
 
@@ -339,4 +339,4 @@ int joy_down_count (int btn, int reset_count);
 
 int joy_down (int btn);
 
-#endif /* __JOY_H__ */
+#endif /* FREESPACE2_IO_JOY_H */

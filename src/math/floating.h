@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FLOATING_H
-#define _FLOATING_H
+#ifndef FREESPACE2_MATH_FLOATING_H
+#define FREESPACE2_MATH_FLOATING_H
 
 #include <cmath>
 #include <cmath>

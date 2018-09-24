@@ -456,8 +456,8 @@ typedef char stbtt__check_size16[sizeof (stbtt_int16) == 2 ? 1 : -1];
 ////
 ////
 
-#ifndef __STB_INCLUDE_STB_TRUETYPE_H__
-#define __STB_INCLUDE_STB_TRUETYPE_H__
+#ifndef FREESPACE2_GRAPHICS_PATHS_NANOVG_STB_TRUETYPE_H
+#define FREESPACE2_GRAPHICS_PATHS_NANOVG_STB_TRUETYPE_H
 
 #ifdef STBTT_STATIC
 #define STBTT_DEF static
@@ -1024,7 +1024,7 @@ enum { // languageID for STBTT_PLATFORM_ID_MAC
 }
 #endif
 
-#endif // __STB_INCLUDE_STB_TRUETYPE_H__
+#endif // FREESPACE2_GRAPHICS_PATHS_NANOVG_STB_TRUETYPE_H
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////

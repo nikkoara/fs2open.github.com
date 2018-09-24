@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FREESPACE_LOGFILE_HEADER_FILE
-#define _FREESPACE_LOGFILE_HEADER_FILE
+#ifndef FREESPACE2_PARSE_GENERIC_LOG_H
+#define FREESPACE2_PARSE_GENERIC_LOG_H
 
 // ----------------------------------------------------------------------------------------------------
 // LOGFILE DEFINES/VARS

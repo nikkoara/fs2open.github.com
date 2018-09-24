@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _RADAR_H
-#define _RADAR_H
+#ifndef FREESPACE2_RADAR_RADAR_H
+#define FREESPACE2_RADAR_RADAR_H
 
 #include "radar/radarsetup.h"
 

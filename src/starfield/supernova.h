@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FS2_SUPERNOVA_FUN_HEADER_FILE
-#define __FS2_SUPERNOVA_FUN_HEADER_FILE
+#ifndef FREESPACE2_STARFIELD_SUPERNOVA_H
+#define FREESPACE2_STARFIELD_SUPERNOVA_H
 
 // --------------------------------------------------------------------------------------------------------------------------
 // SUPERNOVA DEFINES/VARS

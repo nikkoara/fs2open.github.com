@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _BMPMAN_H
-#define _BMPMAN_H
+#ifndef FREESPACE2_BMPMAN_BMPMAN_H
+#define FREESPACE2_BMPMAN_BMPMAN_H
 /**
  * @file bmpman.h
  * Header file for the bitmap manager (bmpman)

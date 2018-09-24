@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __GAMEPLAY_HELP_H__
-#define __GAMEPLAY_HELP_H__
+#ifndef FREESPACE2_GAMEHELP_GAMEPLAYHELP_H
+#define FREESPACE2_GAMEHELP_GAMEPLAYHELP_H
 
 void gameplay_help_init ();
 void gameplay_help_close ();

@@ -2,8 +2,8 @@
 
 // defines for game sequencing
 
-#ifndef __GAMESEQUENCE_H__
-#define __GAMESEQUENCE_H__
+#ifndef FREESPACE2_GAMESEQUENCE_GAMESEQUENCE_H
+#define FREESPACE2_GAMESEQUENCE_GAMESEQUENCE_H
 
 /**
  *  @brief Enum's for Game Sequence Events.
@@ -211,4 +211,4 @@ int gameseq_get_state_idx (char* s);
 // zookeeper
 int gameseq_get_state_idx (int state);
 
-#endif /* __GAMESEQUENCE_H__ */
+#endif /* FREESPACE2_GAMESEQUENCE_GAMESEQUENCE_H */

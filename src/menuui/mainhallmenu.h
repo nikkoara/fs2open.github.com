@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MAIN_HALL_MENU_HEADER_FILE
-#define _MAIN_HALL_MENU_HEADER_FILE
+#ifndef FREESPACE2_MENUUI_MAINHALLMENU_H
+#define FREESPACE2_MENUUI_MAINHALLMENU_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"

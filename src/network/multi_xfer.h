@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FREESPACE_FILE_TRANSFER_HEADER
-#define _FREESPACE_FILE_TRANSFER_HEADER
+#ifndef FREESPACE2_NETWORK_MULTI_XFER_H
+#define FREESPACE2_NETWORK_MULTI_XFER_H
 
 // ------------------------------------------------------------------------------------------
 // MULTI XFER DEFINES/VARS

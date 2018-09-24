@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __EVENT_MUSIC_H__
-#define __EVENT_MUSIC_H__
+#ifndef FREESPACE2_GAMESND_EVENTMUSIC_H
+#define FREESPACE2_GAMESND_EVENTMUSIC_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"
@@ -121,4 +121,4 @@ int event_music_player_respawn ();
 int event_music_player_respawn_as_observer ();
 void event_music_hostile_ship_destroyed ();
 
-#endif /* __EVENT_MUSIC_H__  */
+#endif /* FREESPACE2_GAMESND_EVENTMUSIC_H  */

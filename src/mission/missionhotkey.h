@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __MISSIONHOTKEY_H__
-#define __MISSIONHOTKEY_H__
+#ifndef FREESPACE2_MISSION_MISSIONHOTKEY_H
+#define FREESPACE2_MISSION_MISSIONHOTKEY_H
 
 void mission_hotkey_init ();
 void mission_hotkey_close ();

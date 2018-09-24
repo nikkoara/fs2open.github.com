@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTI_H
-#define _MULTI_H
+#ifndef FREESPACE2_NETWORK_MULTI_H
+#define FREESPACE2_NETWORK_MULTI_H
 
 #include "globalincs/pstypes.h"
 #include "network/psnet2.h" // for PSNET_SOCKET

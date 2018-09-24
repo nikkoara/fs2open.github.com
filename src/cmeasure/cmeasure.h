@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _CMEASURE_H
-#define _CMEASURE_H
+#ifndef FREESPACE2_CMEASURE_CMEASURE_H
+#define FREESPACE2_CMEASURE_CMEASURE_H
 
 #include "globalincs/globals.h"
 #include "globalincs/systemvars.h"
@@ -25,4 +25,4 @@ cmeasure_set_ship_launch_vel (object* objp, object* parent_objp, int arand);
 extern void cmeasure_select_next (object* objp);
 extern void cmeasure_maybe_alert_success (object* objp);
 
-#endif // _CMEASURE_H
+#endif // FREESPACE2_CMEASURE_CMEASURE_H

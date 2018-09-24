@@ -3,8 +3,8 @@
 //
 //
 
-#ifndef _SPHERE_SHAPE_H
-#define _SPHERE_SHAPE_H
+#ifndef FREESPACE2_PARTICLE_EFFECTS_SPHERESHAPE_H
+#define FREESPACE2_PARTICLE_EFFECTS_SPHERESHAPE_H
 
 #include <math/bitarray.h>
 #include "globalincs/pstypes.h"
@@ -55,4 +55,4 @@ public:
 } // namespace effects
 } // namespace particle
 
-#endif //_SPHERE_SHAPE_H
+#endif //FREESPACE2_PARTICLE_EFFECTS_SPHERESHAPE_H

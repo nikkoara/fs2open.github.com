@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FREESPACE_HUDESCORT_VIEW_H__
-#define __FREESPACE_HUDESCORT_VIEW_H__
+#ifndef FREESPACE2_HUD_HUDESCORT_H
+#define FREESPACE2_HUD_HUDESCORT_H
 
 #include "hud/hud.h"
 
@@ -65,4 +65,4 @@ public:
     void renderIconDogfight (int x, int y, int index);
 };
 
-#endif /* __FREESPACE_HUDESCORT_VIEW_H__ */
+#endif /* FREESPACE2_HUD_HUDESCORT_H */

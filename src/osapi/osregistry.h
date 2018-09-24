@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FS2_REGISTRY_HEADER_FILE
-#define _FS2_REGISTRY_HEADER_FILE
+#ifndef FREESPACE2_OSAPI_OSREGISTRY_H
+#define FREESPACE2_OSAPI_OSREGISTRY_H
 
 #include <cstdlib>
 

@@ -4,8 +4,8 @@
 //
 //
 
-#ifndef __CONTEXTHELP_H__
-#define __CONTEXTHELP_H__
+#ifndef FREESPACE2_GAMEHELP_CONTEXTHELP_H
+#define FREESPACE2_GAMEHELP_CONTEXTHELP_H
 
 // Help overlays
 //
@@ -48,4 +48,4 @@ void context_help_grey_screen (); // call to grey out a screen (normally when
 
 void launch_context_help ();
 
-#endif /* __CONTEXTHELP_H__ */
+#endif /* FREESPACE2_GAMEHELP_CONTEXTHELP_H */

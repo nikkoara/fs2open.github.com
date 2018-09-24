@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _AUDIOSTR_H
-#define _AUDIOSTR_H
+#ifndef FREESPACE2_SOUND_AUDIOSTR_H
+#define FREESPACE2_SOUND_AUDIOSTR_H
 
 // type of audio stream
 #define ASF_SOUNDFX 0
@@ -76,4 +76,4 @@ void audiostream_pause_all (
 void audiostream_unpause_all (
     bool via_sexp_or_script = false); // unpause all audio streams
 
-#endif // _AUDIOSTR_H
+#endif // FREESPACE2_SOUND_AUDIOSTR_H

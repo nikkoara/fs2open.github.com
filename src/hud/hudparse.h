@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _HUDPARSE_H
-#define _HUDPARSE_H
+#ifndef FREESPACE2_HUD_HUDPARSE_H
+#define FREESPACE2_HUD_HUDPARSE_H
 
 #include "ai/ai.h"
 #include "globalincs/globals.h"
@@ -235,4 +235,4 @@ void load_gauge_primary_weapons (gauge_settings* settings);
 #define HUD_OBJECT_SECONDARY_WEAPONS 55
 void load_gauge_secondary_weapons (gauge_settings* settings);
 
-#endif // _HUDPARSE_H
+#endif // FREESPACE2_HUD_HUDPARSE_H

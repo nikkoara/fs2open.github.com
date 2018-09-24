@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTIPLAYER_KICK_HEADER_FILE
-#define _MULTIPLAYER_KICK_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_KICK_H
+#define FREESPACE2_NETWORK_MULTI_KICK_H
 
 // ----------------------------------------------------------------------------------
 // KICK DEFINES/VARS

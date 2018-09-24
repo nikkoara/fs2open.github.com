@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _SHIPHIT_H
-#define _SHIPHIT_H
+#ifndef FREESPACE2_SHIP_SHIPHIT_H
+#define FREESPACE2_SHIP_SHIPHIT_H
 
 struct vec3d;
 class ship;
@@ -80,4 +80,4 @@ int get_max_sparks (object* ship_obj);
 // player pain
 void ship_hit_pain (float damage, int quadrant);
 
-#endif //_SHIPHIT_H
+#endif //FREESPACE2_SHIP_SHIPHIT_H

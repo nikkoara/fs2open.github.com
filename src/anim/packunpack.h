@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __PACKUNPACK_H__
-#define __PACKUNPACK_H__
+#ifndef FREESPACE2_ANIM_PACKUNPACK_H
+#define FREESPACE2_ANIM_PACKUNPACK_H
 
 #include "globalincs/pstypes.h"
 
@@ -119,4 +119,4 @@ ubyte* anim_get_next_raw_buffer (
 void anim_set_palette (anim* a);
 void anim_check_for_palette_change (anim_instance* inst);
 
-#endif /* __PACKUNPACK_H__ */
+#endif /* FREESPACE2_ANIM_PACKUNPACK_H */

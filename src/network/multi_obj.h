@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTI_NEW_OBJECT_UPDATE_HEADER_FILE
-#define _MULTI_NEW_OBJECT_UPDATE_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_OBJ_H
+#define FREESPACE2_NETWORK_MULTI_OBJ_H
 
 #include "math/vecmat.h"
 

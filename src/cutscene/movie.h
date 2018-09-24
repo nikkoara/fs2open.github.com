@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MOVIE_HEADER_FILE
-#define _MOVIE_HEADER_FILE
+#ifndef FREESPACE2_CUTSCENE_MOVIE_H
+#define FREESPACE2_CUTSCENE_MOVIE_H
 
 namespace movie {
 

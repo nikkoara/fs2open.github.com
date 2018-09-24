@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _OGL_BMPMAN_H
-#define _OGL_BMPMAN_H
+#ifndef FREESPACE2_GRAPHICS_OPENGL_GROPENGLBMPMAN_H
+#define FREESPACE2_GRAPHICS_OPENGL_GROPENGLBMPMAN_H
 
 #include "bmpman/bmpman.h"
 #include "globalincs/pstypes.h"
@@ -27,4 +27,4 @@ int gr_opengl_bm_make_render_target (
     int n, int* width, int* height, int* bpp, int* mm_lvl, int flags);
 int gr_opengl_bm_set_render_target (int n, int face);
 
-#endif // _OGL_BMPMAN_H
+#endif // FREESPACE2_GRAPHICS_OPENGL_GROPENGLBMPMAN_H

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _CFILESYSTEM_H
-#define _CFILESYSTEM_H
+#ifndef FREESPACE2_CFILE_CFILESYSTEM_H
+#define FREESPACE2_CFILE_CFILESYSTEM_H
 
 #include "cfile/cfile.h"
 
@@ -42,4 +42,4 @@ int cf_create_default_path_string (
     std::string& path, int pathtype, const char* filename = nullptr,
     bool localize = false, uint32_t location_flags = CF_LOCATION_ALL);
 
-#endif //_CFILESYSTEM_H
+#endif //FREESPACE2_CFILE_CFILESYSTEM_H

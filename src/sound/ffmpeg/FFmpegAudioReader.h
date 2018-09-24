@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FFMPEGAUDIOREADER_H
-#define _FFMPEGAUDIOREADER_H
+#ifndef FREESPACE2_SOUND_FFMPEG_FFMPEGAUDIOREADER_H
+#define FREESPACE2_SOUND_FFMPEG_FFMPEGAUDIOREADER_H
 
 #include "globalincs/pstypes.h"
 
@@ -29,4 +29,4 @@ public:
 
 } // namespace ffmpeg
 
-#endif // _FFMPEGAUDIOREADER_H
+#endif // FREESPACE2_SOUND_FFMPEG_FFMPEGAUDIOREADER_H

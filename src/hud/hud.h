@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __HUD_H__
-#define __HUD_H__
+#ifndef FREESPACE2_HUD_HUD_H
+#define FREESPACE2_HUD_HUD_H
 
 #include "globalincs/vmallocator.h"
 #include "graphics/2d.h"
@@ -578,4 +578,4 @@ extern std::vector< std::unique_ptr< HudGauge > > default_hud_gauges;
 extern flag_def_list Hud_gauge_types[];
 extern int Num_hud_gauge_types;
 
-#endif /* __HUD_H__ */
+#endif /* FREESPACE2_HUD_HUD_H */

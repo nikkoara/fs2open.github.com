@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __POPUPDEAD_H__
-#define __POPUPDEAD_H__
+#ifndef FREESPACE2_POPUP_POPUPDEAD_H
+#define FREESPACE2_POPUP_POPUPDEAD_H
 
 // return values for popup_do_frame for multiplayer
 #define POPUPDEAD_DO_RESPAWN 0

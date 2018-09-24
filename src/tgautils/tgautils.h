@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __TARGA_H
-#define __TARGA_H
+#ifndef FREESPACE2_TGAUTILS_TGAUTILS_H
+#define FREESPACE2_TGAUTILS_TGAUTILS_H
 
 #include "cfile/cfile.h"
 
@@ -36,4 +36,4 @@ int targa_compress (
 int targa_uncompress (
     ubyte* dst, ubyte* src, int bitmap_width, int bytes_per_pixel);
 
-#endif // __TARGA_H
+#endif // FREESPACE2_TGAUTILS_TGAUTILS_H

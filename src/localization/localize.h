@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FREESPACE2_LOCALIZATION_UTILITIES_HEADER_FILE
-#define __FREESPACE2_LOCALIZATION_UTILITIES_HEADER_FILE
+#ifndef FREESPACE2_LOCALIZATION_LOCALIZE_H
+#define FREESPACE2_LOCALIZATION_LOCALIZE_H
 
 #include "globalincs/pstypes.h"
 #include "graphics/font.h"
@@ -132,4 +132,4 @@ void lcl_translate_targetbox_name_pl (char* name);
 void lcl_translate_medal_name_gr (char* name);
 void lcl_translate_medal_name_pl (char* name);
 
-#endif // defined __FREESPACE2_LOCALIZATION_UTILITIES_HEADER_FILE
+#endif // defined FREESPACE2_LOCALIZATION_LOCALIZE_H

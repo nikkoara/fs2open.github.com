@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __GAMESND_H__
-#define __GAMESND_H__
+#ifndef FREESPACE2_GAMESND_GAMESND_H
+#define FREESPACE2_GAMESND_GAMESND_H
 
 #include "sound/sound.h"
 #include "utils/id.h"

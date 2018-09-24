@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _GLOBAL_ALPHACOLORS_HEADER_FILE
-#define _GLOBAL_ALPHACOLORS_HEADER_FILE
+#ifndef FREESPACE2_GLOBALINCS_ALPHACOLORS_H
+#define FREESPACE2_GLOBALINCS_ALPHACOLORS_H
 
 #include "graphics/2d.h"
 #include "parse/parselo.h"

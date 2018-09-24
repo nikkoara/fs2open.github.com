@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _STARFIELD_H
-#define _STARFIELD_H
+#ifndef FREESPACE2_STARFIELD_STARFIELD_H
+#define FREESPACE2_STARFIELD_STARFIELD_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _OUTWND_H
-#define _OUTWND_H
+#ifndef FREESPACE2_OSAPI_OUTWND_H
+#define FREESPACE2_OSAPI_OUTWND_H
 
 #include "globalincs/pstypes.h"
 
@@ -23,4 +23,4 @@ extern int Log_debug_output_to_file;
 
 #endif // NDEBUG
 
-#endif // _OUTWND_H
+#endif // FREESPACE2_OSAPI_OUTWND_H

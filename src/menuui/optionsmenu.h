@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _OPTIONSMENU_H
-#define _OPTIONSMENU_H
+#ifndef FREESPACE2_MENUUI_OPTIONSMENU_H
+#define FREESPACE2_MENUUI_OPTIONSMENU_H
 
 #include "ui/ui.h"
 

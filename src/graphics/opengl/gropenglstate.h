@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _GROPENGLSTATE_H
-#define _GROPENGLSTATE_H
+#ifndef FREESPACE2_GRAPHICS_OPENGL_GROPENGLSTATE_H
+#define FREESPACE2_GRAPHICS_OPENGL_GROPENGLSTATE_H
 
 #include "globalincs/pstypes.h"
 #include "gropengl.h"
@@ -334,4 +334,4 @@ void opengl_setup_render_states (
     int& r, int& g, int& b, int& alpha, int& tmap_type, int flags,
     int is_scaler = 0);
 
-#endif // _GROPENGLSTATE_H
+#endif // FREESPACE2_GRAPHICS_OPENGL_GROPENGLSTATE_H

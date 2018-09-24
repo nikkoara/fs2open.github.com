@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FREESPACE_HUDTARGETBOX_H__
-#define __FREESPACE_HUDTARGETBOX_H__
+#ifndef FREESPACE2_HUD_HUDTARGETBOX_H
+#define FREESPACE2_HUD_HUDTARGETBOX_H
 
 #include "hud/hud.h"
 #include "radar/radarsetup.h"
@@ -182,4 +182,4 @@ void hud_targetbox_truncate_subsys_name (char* outstr);
 // swich through the valid targetbox modes
 void hud_targetbox_switch_wireframe_mode ();
 
-#endif /* __FREESPACE_HUDTARGETBOX_H__ */
+#endif /* FREESPACE2_HUD_HUDTARGETBOX_H */

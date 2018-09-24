@@ -3,8 +3,8 @@
 // header file to load .dds files
 // these use dxtc texture compression
 
-#ifndef __DDS_H
-#define __DDS_H
+#ifndef FREESPACE2_DDSUTILS_DDSUTILS_H
+#define FREESPACE2_DDSUTILS_DDSUTILS_H
 
 #include "globalincs/pstypes.h"
 #include "cfile/cfile.h"
@@ -160,4 +160,4 @@ const char* dds_error_string (int code);
 extern int Texture_compression_available;
 extern int Use_compressed_textures;
 
-#endif //__DDS_H
+#endif //FREESPACE2_DDSUTILS_DDSUTILS_H

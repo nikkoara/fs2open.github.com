@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FS2OPEN_RADARSETUP_H
-#define _FS2OPEN_RADARSETUP_H
+#ifndef FREESPACE2_RADAR_RADARSETUP_H
+#define FREESPACE2_RADAR_RADARSETUP_H
 
 #include "hud/hud.h"
 #include "hud/hudconfig.h"
@@ -132,4 +132,4 @@ public:
     void pageIn () override;
 };
 
-#endif //_FS2OPEN_RADARSETUP_H
+#endif //FREESPACE2_RADAR_RADARSETUP_H

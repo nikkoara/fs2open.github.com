@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FS2_BEAM_WEAPON_HEADER_FILE
-#define __FS2_BEAM_WEAPON_HEADER_FILE
+#ifndef FREESPACE2_WEAPON_BEAM_H
+#define FREESPACE2_WEAPON_BEAM_H
 
 // ------------------------------------------------------------------------------------------------
 // BEAM WEAPON DEFINES/VARS

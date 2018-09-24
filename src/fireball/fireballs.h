@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FIREBALLS_H
-#define _FIREBALLS_H
+#ifndef FREESPACE2_FIREBALL_FIREBALLS_H
+#define FREESPACE2_FIREBALL_FIREBALLS_H
 
 #include "globalincs/pstypes.h"
 #include "model/modelrender.h"
@@ -131,4 +131,4 @@ extern int Warp_model;
 // Goober5000
 extern int Knossos_warp_ani_used;
 
-#endif /* _FIREBALLS_H */
+#endif /* FREESPACE2_FIREBALL_FIREBALLS_H */

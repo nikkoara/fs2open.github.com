@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __HUD_COMMON_H__
-#define __HUD_COMMON_H__
+#ifndef FREESPACE2_HUD_HUDGAUGES_H
+#define FREESPACE2_HUD_HUDGAUGES_H
 
 // HUD gauge types
 #define NUM_HUD_GAUGES 39
@@ -48,4 +48,4 @@
 
 extern const char* HUD_gauge_text[NUM_HUD_GAUGES]; // defined in sexp.cpp!!!!
 
-#endif /* __HUD_COMMON_H__ */
+#endif /* FREESPACE2_HUD_HUDGAUGES_H */

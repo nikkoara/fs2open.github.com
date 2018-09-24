@@ -6,8 +6,8 @@
  * create based on the source.
  */
 
-#ifndef _AI_PROFILES_H_
-#define _AI_PROFILES_H_
+#ifndef FREESPACE2_AI_AI_PROFILES_H
+#define FREESPACE2_AI_AI_PROFILES_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"

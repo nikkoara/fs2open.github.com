@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _TRAININGMENU_H
-#define _TRAININGMENU_H
+#ifndef FREESPACE2_MENUUI_TRAININGMENU_H
+#define FREESPACE2_MENUUI_TRAININGMENU_H
 
 #define TRAINING_MENU_MAX_CHOICES \
     3 // keep up to date if any more choices added!

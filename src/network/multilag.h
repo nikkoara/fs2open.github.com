@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTI_LAG_HEADER_FILE
-#define _MULTI_LAG_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTILAG_H
+#define FREESPACE2_NETWORK_MULTILAG_H
 
 #ifndef NDEBUG
 // #define MULTI_USE_LAG

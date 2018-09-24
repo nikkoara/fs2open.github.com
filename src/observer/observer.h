@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _OBSERVER_HEADER_FILE
-#define _OBSERVER_HEADER_FILE
+#ifndef FREESPACE2_OBSERVER_OBSERVER_H
+#define FREESPACE2_OBSERVER_OBSERVER_H
 
 class object;
 struct vec3d;

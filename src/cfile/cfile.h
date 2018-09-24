@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __CFILE_H__
-#define __CFILE_H__
+#ifndef FREESPACE2_CFILE_CFILE_H
+#define FREESPACE2_CFILE_CFILE_H
 
 #include <ctime>
 #include "globalincs/pstypes.h"
@@ -500,4 +500,4 @@ public:
 
 } // namespace cfile
 
-#endif /* __CFILE_H__ */
+#endif /* FREESPACE2_CFILE_CFILE_H */

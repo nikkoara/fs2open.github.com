@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _HUD_SQUADMSG
-#define _HUD_SQUADMSG
+#ifndef FREESPACE2_HUD_HUDSQUADMSG_H
+#define FREESPACE2_HUD_HUDSQUADMSG_H
 
 #include "hud/hud.h"
 #include "network/multi.h"

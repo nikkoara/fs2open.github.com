@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _DEBRIS_H
-#define _DEBRIS_H
+#ifndef FREESPACE2_DEBRIS_DEBRIS_H
+#define FREESPACE2_DEBRIS_DEBRIS_H
 
 #include "globalincs/pstypes.h"
 
@@ -72,4 +72,4 @@ void debris_hit (
 int debris_get_team (object* objp);
 void debris_clear_expired_flag (debris* db);
 
-#endif // _DEBRIS_H
+#endif // FREESPACE2_DEBRIS_DEBRIS_H

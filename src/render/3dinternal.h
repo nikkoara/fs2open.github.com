@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _3DINTERNAL_H
-#define _3DINTERNAL_H
+#ifndef FREESPACE2_RENDER_3DINTERNAL_H
+#define FREESPACE2_RENDER_3DINTERNAL_H
 
 #include "render/3d.h"
 

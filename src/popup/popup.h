@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __POPUP_H__
-#define __POPUP_H__
+#ifndef FREESPACE2_POPUP_POPUP_H
+#define FREESPACE2_POPUP_POPUP_H
 
 // standardized text used for common buttons
 // Special note (JH): The leading '&' is expected for these 4 defines in the

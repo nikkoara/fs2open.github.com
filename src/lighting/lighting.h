@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _LIGHTING_H
-#define _LIGHTING_H
+#ifndef FREESPACE2_LIGHTING_LIGHTING_H
+#define FREESPACE2_LIGHTING_LIGHTING_H
 
 // Light stuff works like this:
 // At the start of the frame, call light_reset.

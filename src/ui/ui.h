@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _UI_H
-#define _UI_H
+#ifndef FREESPACE2_UI_UI_H
+#define FREESPACE2_UI_UI_H
 
 #include "graphics/2d.h"
 #include "graphics/font.h"

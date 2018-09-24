@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTITEAMSELECT_H
-#define _MULTITEAMSELECT_H
+#ifndef FREESPACE2_NETWORK_MULTITEAMSELECT_H
+#define FREESPACE2_NETWORK_MULTITEAMSELECT_H
 
 // ------------------------------------------------------------------------------------------------------
 // TEAM SELECT DEFINES/VARS

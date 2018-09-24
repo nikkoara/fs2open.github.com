@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _VECMAT_H
-#define _VECMAT_H
+#ifndef FREESPACE2_MATH_VECMAT_H
+#define FREESPACE2_MATH_VECMAT_H
 
 #include "globalincs/pstypes.h"
 #include "math/floating.h"

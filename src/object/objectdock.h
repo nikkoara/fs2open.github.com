@@ -6,8 +6,8 @@
  * create based on the source.
  */
 
-#ifndef _OBJECT_DOCK_H
-#define _OBJECT_DOCK_H
+#ifndef FREESPACE2_OBJECT_OBJECTDOCK_H
+#define FREESPACE2_OBJECT_OBJECTDOCK_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"
@@ -144,4 +144,4 @@ void dock_undock_all (object* objp);
 // object cleanup
 void dock_free_dock_list (object* objp);
 
-#endif // _OBJECT_DOCK_H
+#endif // FREESPACE2_OBJECT_OBJECTDOCK_H

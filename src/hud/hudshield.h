@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FREESPACE_HUDSHIELD_H__
-#define __FREESPACE_HUDSHIELD_H__
+#ifndef FREESPACE2_HUD_HUDSHIELD_H
+#define FREESPACE2_HUD_HUDSHIELD_H
 
 #include "globalincs/pstypes.h"
 #include "hud/hud.h"

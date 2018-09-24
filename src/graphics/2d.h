@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _GRAPHICS_H
-#define _GRAPHICS_H
+#ifndef FREESPACE2_GRAPHICS_2D_H
+#define FREESPACE2_GRAPHICS_2D_H
 
 #include "graphics/grinternal.h"
 #include "osapi/osapi.h"

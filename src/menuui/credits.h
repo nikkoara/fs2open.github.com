@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __CREDITS_H__
-#define __CREDITS_H__
+#ifndef FREESPACE2_MENUUI_CREDITS_H
+#define FREESPACE2_MENUUI_CREDITS_H
 
 void credits_init ();
 void credits_do_frame (float frametime);
@@ -9,4 +9,4 @@ void credits_close ();
 
 void credits_stop_music (bool fade);
 
-#endif /* __CREDITS_H__ */
+#endif /* FREESPACE2_MENUUI_CREDITS_H */

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _GROPENGLTNL_H
-#define _GROPENGLTNL_H
+#ifndef FREESPACE2_GRAPHICS_OPENGL_GROPENGLTNL_H
+#define FREESPACE2_GRAPHICS_OPENGL_GROPENGLTNL_H
 
 #include "globalincs/pstypes.h"
 #include "gropengl.h"
@@ -80,4 +80,4 @@ void opengl_bind_vertex_layout (
     vertex_layout& layout, GLuint vertexBuffer, GLuint indexBuffer,
     size_t base_offset = 0);
 
-#endif //_GROPENGLTNL_H
+#endif //FREESPACE2_GRAPHICS_OPENGL_GROPENGLTNL_H

@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef _SHADOWS_H
-#define _SHADOWS_H
+#ifndef FREESPACE2_GRAPHICS_SHADOWS_H
+#define FREESPACE2_GRAPHICS_SHADOWS_H
 
 #include "globalincs/pstypes.h"
 #include "object/object.h"

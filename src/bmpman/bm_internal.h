@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __BM_INTERNAL_H__
-#define __BM_INTERNAL_H__
+#ifndef FREESPACE2_BMPMAN_BM_INTERNAL_H
+#define FREESPACE2_BMPMAN_BM_INTERNAL_H
 
 /**
  * @file bm_internal.h
@@ -149,4 +149,4 @@ T* bm_get_gr_info (int handle, bool separate_ani_frames = true) {
         bm_get_slot (handle, separate_ani_frames)->gr_info);
 }
 
-#endif // __BM_INTERNAL_H__
+#endif // FREESPACE2_BMPMAN_BM_INTERNAL_H

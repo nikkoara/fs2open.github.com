@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _GENERIC_H_
-#define _GENERIC_H_
+#ifndef FREESPACE2_GRAPHICS_GENERIC_H
+#define FREESPACE2_GRAPHICS_GENERIC_H
 
 #include "anim/animplay.h"
 #include "bmpman/bmpman.h"

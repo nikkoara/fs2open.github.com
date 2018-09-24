@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _CONSOLE_H
-#define _CONSOLE_H
+#ifndef FREESPACE2_DEBUGCONSOLE_CONSOLE_H
+#define FREESPACE2_DEBUGCONSOLE_CONSOLE_H
 /*
  * z64555's debug console, created for the FreeSpace Source Code project
  *
@@ -322,4 +322,4 @@ void dc_printf (SCP_FORMAT_STRING const char* format, ...)
  */
 void debug_console (void (*func) (void) = NULL);
 
-#endif // _CONSOLE_H
+#endif // FREESPACE2_DEBUGCONSOLE_CONSOLE_H

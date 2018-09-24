@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _HUDCONFIG_H
-#define _HUDCONFIG_H
+#ifndef FREESPACE2_HUD_HUDCONFIG_H
+#define FREESPACE2_HUD_HUDCONFIG_H
 
 #include "hud/hud.h"
 

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _HUDMESSAGE_H
-#define _HUDMESSAGE_H
+#ifndef FREESPACE2_HUD_HUDMESSAGE_H
+#define FREESPACE2_HUD_HUDMESSAGE_H
 
 #include "anim/packunpack.h"
 #include "graphics/generic.h"

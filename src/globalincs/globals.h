@@ -6,8 +6,8 @@
  * create based on the source.
  */
 
-#ifndef _GLOBALS_H
-#define _GLOBALS_H
+#ifndef FREESPACE2_GLOBALINCS_GLOBALS_H
+#define FREESPACE2_GLOBALINCS_GLOBALS_H
 
 // from parselo.h
 #define PATHNAME_LENGTH 192
@@ -91,4 +91,4 @@
 // from weapon.h (and beam.h)
 #define MAX_BEAM_SECTIONS 5
 
-#endif // _GLOBALS_H
+#endif // FREESPACE2_GLOBALINCS_GLOBALS_H

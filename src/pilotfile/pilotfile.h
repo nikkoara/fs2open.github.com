@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _PILOTFILE_H
-#define _PILOTFILE_H
+#ifndef FREESPACE2_PILOTFILE_PILOTFILE_H
+#define FREESPACE2_PILOTFILE_PILOTFILE_H
 
 #include "cfile/cfile.h"
 #include "globalincs/pstypes.h"
@@ -220,4 +220,4 @@ extern pilotfile Pilot;
 
 extern void convert_pilot_files ();
 
-#endif // _PILOTFILE_H
+#endif // FREESPACE2_PILOTFILE_PILOTFILE_H

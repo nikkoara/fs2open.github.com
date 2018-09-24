@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __JUMPNODE_H__
-#define __JUMPNODE_H__
+#ifndef FREESPACE2_JUMPNODE_JUMPNODE_H
+#define FREESPACE2_JUMPNODE_JUMPNODE_H
 
 #include <cstdlib>
 

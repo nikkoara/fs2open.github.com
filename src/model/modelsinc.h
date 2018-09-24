@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MODELSINC_H
-#define _MODELSINC_H
+#ifndef FREESPACE2_MODEL_MODELSINC_H
+#define FREESPACE2_MODEL_MODELSINC_H
 
 class polymodel;
 

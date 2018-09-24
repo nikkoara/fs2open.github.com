@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __TEMP_MAIN_HALL_MENU_HEADER_FILE
-#define __TEMP_MAIN_HALL_MENU_HEADER_FILE
+#ifndef FREESPACE2_MENUUI_MAINHALLTEMP_H
+#define FREESPACE2_MENUUI_MAINHALLTEMP_H
 
 // ------------------------------------------------------------------------------------------------------------------------
 // TEMP MAIN HALL DEFINES/VARS

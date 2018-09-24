@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTI_NETGAME_OPTIONS_HEADER_FILE
-#define _MULTI_NETGAME_OPTIONS_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_OPTIONS_H
+#define FREESPACE2_NETWORK_MULTI_OPTIONS_H
 
 #include "globalincs/pstypes.h"
 #include "psnet2.h"

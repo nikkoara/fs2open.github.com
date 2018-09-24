@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __MISSIONSHIPCHOICE_H__
-#define __MISSIONSHIPCHOICE_H__
+#ifndef FREESPACE2_MISSIONUI_MISSIONSHIPCHOICE_H
+#define FREESPACE2_MISSIONUI_MISSIONSHIPCHOICE_H
 
 #include "gamesnd/gamesnd.h"
 
@@ -104,4 +104,4 @@ void ss_drop (
     int from_slot, int from_index, int to_slot, int to_index,
     int player_index = -1);
 
-#endif /* __MISSIONSHIPCHOICE_H__ */
+#endif /* FREESPACE2_MISSIONUI_MISSIONSHIPCHOICE_H */

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MISSIONLOAD_H
-#define _MISSIONLOAD_H
+#ifndef FREESPACE2_MISSION_MISSIONLOAD_H
+#define FREESPACE2_MISSION_MISSIONLOAD_H
 
 #include "globalincs/pstypes.h"
 

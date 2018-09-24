@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MISSION_PAUSE_HEADER_FILE
-#define _MISSION_PAUSE_HEADER_FILE
+#ifndef FREESPACE2_MISSIONUI_MISSIONPAUSE_H
+#define FREESPACE2_MISSIONUI_MISSIONPAUSE_H
 
 #include "graphics/2d.h"
 

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FS2_MULTIPLAYER_DOGFIGHT_HEADER_FILE
-#define __FS2_MULTIPLAYER_DOGFIGHT_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_DOGFIGHT_H
+#define FREESPACE2_NETWORK_MULTI_DOGFIGHT_H
 
 // ----------------------------------------------------------------------------------------------------
 // MULTI DOGFIGHT DEFINES/VARS

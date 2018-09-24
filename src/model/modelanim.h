@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MODELANIM_H
-#define _MODELANIM_H
+#ifndef FREESPACE2_MODEL_MODELANIM_H
+#define FREESPACE2_MODEL_MODELANIM_H
 
 #include <climits>
 
@@ -184,4 +184,4 @@ bool model_anim_push_and_start_type (
     int direction, bool instant = false);
 bool model_anim_pop_and_start_type (int stack_unique_id);
 
-#endif // _MODELANIM_H
+#endif // FREESPACE2_MODEL_MODELANIM_H

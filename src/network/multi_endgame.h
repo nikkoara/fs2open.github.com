@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTI_ENDGAME_HEADER_FILE
-#define _MULTI_ENDGAME_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_ENDGAME_H
+#define FREESPACE2_NETWORK_MULTI_ENDGAME_H
 
 // ----------------------------------------------------------------------------------------------------------
 // Put all functions/data related to leaving a netgame, handling players

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTIPLAYER_VOICE_STREAMING_HEADER_FILE
-#define _MULTIPLAYER_VOICE_STREAMING_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_VOICE_H
+#define FREESPACE2_NETWORK_MULTI_VOICE_H
 
 // --------------------------------------------------------------------------------------------------
 // MULTI VOICE DEFINES/VARS

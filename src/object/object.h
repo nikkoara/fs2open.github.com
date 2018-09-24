@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _OBJECT_H
-#define _OBJECT_H
+#ifndef FREESPACE2_OBJECT_OBJECT_H
+#define FREESPACE2_OBJECT_OBJECT_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"

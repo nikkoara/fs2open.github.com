@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _TECHMENU_H
-#define _TECHMENU_H
+#ifndef FREESPACE2_MENUUI_TECHMENU_H
+#define FREESPACE2_MENUUI_TECHMENU_H
 
 #include "globalincs/globals.h"
 

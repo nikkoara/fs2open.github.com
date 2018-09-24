@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FVI_H
-#define _FVI_H
+#ifndef FREESPACE2_MATH_FVI_H
+#define FREESPACE2_MATH_FVI_H
 
 #include "globalincs/pstypes.h"
 

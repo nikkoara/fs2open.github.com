@@ -1,9 +1,9 @@
 // -*- mode: c++; -*-
 
-#ifndef _CFILEARCHIVE_H
-#define _CFILEARCHIVE_H
+#ifndef FREESPACE2_CFILE_CFILEARCHIVE_H
+#define FREESPACE2_CFILE_CFILEARCHIVE_H
 
-#ifndef _CFILE_INTERNAL
+#ifndef FREESPACE2_CFILE_CFILEARCHIVE_H
 #error This file should only be included internally in CFILE!!
 #endif
 

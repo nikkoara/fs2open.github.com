@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _HUD_OBSERVER_FILE
-#define _HUD_OBSERVER_FILE
+#ifndef FREESPACE2_HUD_HUDOBSERVER_H
+#define FREESPACE2_HUD_HUDOBSERVER_H
 
 // prototypes
 class ship;

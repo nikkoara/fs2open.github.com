@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _AIGOALS_H
-#define _AIGOALS_H
+#ifndef FREESPACE2_AI_AIGOALS_H
+#define FREESPACE2_AI_AIGOALS_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"

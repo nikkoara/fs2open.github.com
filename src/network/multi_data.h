@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTI_PLAYER_DATA_HEADER_FILE
-#define _MULTI_PLAYER_DATA_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_DATA_H
+#define FREESPACE2_NETWORK_MULTI_DATA_H
 
 // -------------------------------------------------------------------------
 // MULTI DATA DEFINES/VARS

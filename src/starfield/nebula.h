@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _NEBULA_H
-#define _NEBULA_H
+#ifndef FREESPACE2_STARFIELD_NEBULA_H
+#define FREESPACE2_STARFIELD_NEBULA_H
 
 // mainly only needed by Fred
 extern int Nebula_pitch;
@@ -19,4 +19,4 @@ void nebula_render ();
 
 #define NEBULA_INDEXED_COLORS 20
 
-#endif //_NEBULA_H
+#endif //FREESPACE2_STARFIELD_NEBULA_H

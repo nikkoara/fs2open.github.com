@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _PNGUTILS_H
-#define _PNGUTILS_H
+#ifndef FREESPACE2_PNGUTILS_PNGUTILS_H
+#define FREESPACE2_PNGUTILS_PNGUTILS_H
 
 // see comments in (1.2) pngconf.h on Linux
 // libpng wants to check that the version of setjmp it uses is the same as the
@@ -109,4 +109,4 @@ public:
 
 } // namespace apng
 
-#endif // _PNGUTILS_H
+#endif // FREESPACE2_PNGUTILS_PNGUTILS_H

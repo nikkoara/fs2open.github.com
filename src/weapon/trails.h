@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _TRAILS_H
-#define _TRAILS_H
+#ifndef FREESPACE2_WEAPON_TRAILS_H
+#define FREESPACE2_WEAPON_TRAILS_H
 
 #include "globalincs/pstypes.h"
 #include "graphics/generic.h"
@@ -63,4 +63,4 @@ void trail_object_died (trail* trailp);
 int trail_stamp_elapsed (trail* trailp);
 void trail_set_stamp (trail* trailp);
 
-#endif //_TRAILS_H
+#endif //FREESPACE2_WEAPON_TRAILS_H

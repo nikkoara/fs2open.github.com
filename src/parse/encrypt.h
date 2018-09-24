@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __ENCRYPT_H__
-#define __ENCRYPT_H__
+#ifndef FREESPACE2_PARSE_ENCRYPT_H
+#define FREESPACE2_PARSE_ENCRYPT_H
 
 // initialize encryption
 void encrypt_init ();

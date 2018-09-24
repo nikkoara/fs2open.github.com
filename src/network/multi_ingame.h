@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTI_INGAME_JOIN_HEADER_FILE
-#define _MULTI_INGAME_JOIN_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_INGAME_H
+#define FREESPACE2_NETWORK_MULTI_INGAME_H
 
 #include "globalincs/pstypes.h"
 

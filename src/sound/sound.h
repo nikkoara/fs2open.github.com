@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __SOUND_H__
-#define __SOUND_H__
+#ifndef FREESPACE2_SOUND_SOUND_H
+#define FREESPACE2_SOUND_SOUND_H
 
 #include "globalincs/pstypes.h"
 #include "sound/ds.h"

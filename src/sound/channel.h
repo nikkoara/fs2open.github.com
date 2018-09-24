@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __CHANNEL_H__
-#define __CHANNEL_H__
+#ifndef FREESPACE2_SOUND_CHANNEL_H
+#define FREESPACE2_SOUND_CHANNEL_H
 
 #include "sound/ds.h"
 #include "sound/openal.h"
@@ -28,4 +28,4 @@ typedef struct channel {
 // #define	MAX_CHANNELS  16
 extern channel* Channels; //[MAX_CHANNELS];
 
-#endif /* __CHANNEL_H__ */
+#endif /* FREESPACE2_SOUND_CHANNEL_H */

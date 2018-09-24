@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FREESPACE_AUTOUPDATE_THINGIE_HEADER_FILE
-#define _FREESPACE_AUTOUPDATE_THINGIE_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_UPDATE_H
+#define FREESPACE2_NETWORK_MULTI_UPDATE_H
 
 // -------------------------------------------------------------------------------------------------------------------
 // MULTI UPDATE DEFINES/VARS

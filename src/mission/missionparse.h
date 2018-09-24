@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _PARSE_H
-#define _PARSE_H
+#ifndef FREESPACE2_MISSION_MISSIONPARSE_H
+#define FREESPACE2_MISSION_MISSIONPARSE_H
 
 #include <csetjmp>
 

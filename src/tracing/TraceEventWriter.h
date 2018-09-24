@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _TRACEEVENTWRITER_H
-#define _TRACEEVENTWRITER_H
+#ifndef FREESPACE2_TRACING_TRACEEVENTWRITER_H
+#define FREESPACE2_TRACING_TRACEEVENTWRITER_H
 
 #include "globalincs/pstypes.h"
 #include "tracing/tracing.h"
@@ -29,4 +29,4 @@ public:
 typedef ThreadedEventProcessor< TraceEventWriter > ThreadedTraceEventWriter;
 } // namespace tracing
 
-#endif // _TRACEEVENTWRITER_H
+#endif // FREESPACE2_TRACING_TRACEEVENTWRITER_H

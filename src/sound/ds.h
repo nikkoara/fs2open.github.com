@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __DS_H__
-#define __DS_H__
+#ifndef FREESPACE2_SOUND_DS_H
+#define FREESPACE2_SOUND_DS_H
 
 #include "globalincs/pstypes.h"
 #include "sound/ffmpeg/WaveFile.h"
@@ -223,4 +223,4 @@ int ds_eax_set_all (
 int ds_eax_get_all (EAX_REVERBPROPERTIES* er, int id = -1);
 int ds_eax_is_inited ();
 
-#endif /* __DS_H__ */
+#endif /* FREESPACE2_SOUND_DS_H */

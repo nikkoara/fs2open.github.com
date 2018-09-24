@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _PARSELO_H
-#define _PARSELO_H
+#ifndef FREESPACE2_PARSE_PARSELO_H
+#define FREESPACE2_PARSE_PARSELO_H
 
 #include "cfile/cfile.h"
 #include "globalincs/globals.h"

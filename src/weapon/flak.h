@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FLAK_WEAPONS_HEADER_FILE
-#define _FLAK_WEAPONS_HEADER_FILE
+#ifndef FREESPACE2_WEAPON_FLAK_H
+#define FREESPACE2_WEAPON_FLAK_H
 
 #include "physics/physics.h"
 #include "weapon/weapon.h"

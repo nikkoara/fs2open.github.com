@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FREESPACE_CUTSCENES_SCREEN_HEADER_FILE
-#define _FREESPACE_CUTSCENES_SCREEN_HEADER_FILE
+#ifndef FREESPACE2_CUTSCENE_CUTSCENES_H
+#define FREESPACE2_CUTSCENE_CUTSCENES_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"

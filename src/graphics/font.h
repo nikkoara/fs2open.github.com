@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FONT_H
-#define _FONT_H
+#ifndef FREESPACE2_GRAPHICS_FONT_H
+#define FREESPACE2_GRAPHICS_FONT_H
 
 #include "globalincs/pstypes.h"
 

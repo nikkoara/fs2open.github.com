@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _GROPENGLPOSTPROCESSING_H
-#define _GROPENGLPOSTPROCESSING_H
+#ifndef FREESPACE2_GRAPHICS_OPENGL_GROPENGLPOSTPROCESSING_H
+#define FREESPACE2_GRAPHICS_OPENGL_GROPENGLPOSTPROCESSING_H
 
 void opengl_post_process_init ();
 void opengl_post_process_shutdown ();
@@ -18,4 +18,4 @@ void get_post_process_effect_names (std::vector< std::string >& names);
 void opengl_post_shader_header (
     std::stringstream& sflags, shader_type shader_t, int flags);
 
-#endif // _GROPENGLPOSTPROCESSING_H
+#endif // FREESPACE2_GRAPHICS_OPENGL_GROPENGLPOSTPROCESSING_H

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _GROPENGLTEXTURE_H
-#define _GROPENGLTEXTURE_H
+#ifndef FREESPACE2_GRAPHICS_OPENGL_GROPENGLTEXTURE_H
+#define FREESPACE2_GRAPHICS_OPENGL_GROPENGLTEXTURE_H
 
 #include "globalincs/pstypes.h"
 #include "gropengl.h"
@@ -91,4 +91,4 @@ void gr_opengl_bm_generate_mip_maps (int slot);
 void gr_opengl_get_texture_scale (
     int bitmap_handle, float* u_scale, float* v_scale);
 
-#endif //_GROPENGLTEXTURE_H
+#endif //FREESPACE2_GRAPHICS_OPENGL_GROPENGLTEXTURE_H

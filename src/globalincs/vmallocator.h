@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _VMALLOCATOR_H_INCLUDED_
-#define _VMALLOCATOR_H_INCLUDED_
+#ifndef FREESPACE2_GLOBALINCS_VMALLOCATOR_H
+#define FREESPACE2_GLOBALINCS_VMALLOCATOR_H
 
 /* SCP_vm_allocator - maintained by portej05 (i.e. please don't patch this one
  * yourself!) */
@@ -16,4 +16,4 @@
 #include <unordered_map>
 #include <sstream>
 
-#endif // _VMALLOCATOR_H_INCLUDED_
+#endif // FREESPACE2_GLOBALINCS_VMALLOCATOR_H

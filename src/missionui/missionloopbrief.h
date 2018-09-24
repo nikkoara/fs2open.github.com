@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FS2_CAMPAIGN_LOOP_BRIEF_HEADER_FILE
-#define __FS2_CAMPAIGN_LOOP_BRIEF_HEADER_FILE
+#ifndef FREESPACE2_MISSIONUI_MISSIONLOOPBRIEF_H
+#define FREESPACE2_MISSIONUI_MISSIONLOOPBRIEF_H
 
 // ---------------------------------------------------------------------------------------------------------------------------------------
 // MISSION LOOP BRIEF DEFINES/VARS

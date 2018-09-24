@@ -6,8 +6,8 @@
  * create based on the source.
  */
 
-#ifndef __FICTION_VIEWER_H__
-#define __FICTION_VIEWER_H__
+#ifndef FREESPACE2_MISSIONUI_FICTIONVIEWER_H
+#define FREESPACE2_MISSIONUI_FICTIONVIEWER_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"

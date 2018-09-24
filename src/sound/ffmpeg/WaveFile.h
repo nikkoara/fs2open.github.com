@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _WAVEFILE_H
-#define _WAVEFILE_H
+#ifndef FREESPACE2_SOUND_FFMPEG_WAVEFILE_H
+#define FREESPACE2_SOUND_FFMPEG_WAVEFILE_H
 
 #include "globalincs/pstypes.h"
 #include "sound/audiostr.h"
@@ -157,4 +157,4 @@ protected:
 
 } // namespace ffmpeg
 
-#endif // _WAVEFILE_H
+#endif // FREESPACE2_SOUND_FFMPEG_WAVEFILE_H

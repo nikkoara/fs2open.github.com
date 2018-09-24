@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FREESPACE_CORKSCREW_H__
-#define __FREESPACE_CORKSCREW_H__
+#ifndef FREESPACE2_WEAPON_CORKSCREW_H
+#define FREESPACE2_WEAPON_CORKSCREW_H
 
 class object;
 
@@ -22,4 +22,4 @@ void cscrew_process_post (object* objp);
 // maybe fire another corkscrew-style missile
 void cscrew_maybe_fire_missile (int shipnum);
 
-#endif /* __FREESPACE_CORKSCREW_H__ */
+#endif /* FREESPACE2_WEAPON_CORKSCREW_H */

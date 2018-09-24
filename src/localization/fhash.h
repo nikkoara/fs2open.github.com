@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FRED_XSTR_HASH_TABLE_HEADER_FILE
-#define _FRED_XSTR_HASH_TABLE_HEADER_FILE
+#ifndef FREESPACE2_LOCALIZATION_FHASH_H
+#define FREESPACE2_LOCALIZATION_FHASH_H
 
 // -----------------------------------------------------------------------------------------------
 // HASH DEFINES/VARS

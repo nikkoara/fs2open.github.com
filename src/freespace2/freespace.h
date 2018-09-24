@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FREESPACE_H
-#define _FREESPACE_H
+#ifndef FREESPACE2_FREESPACE2_FREESPACE_H
+#define FREESPACE2_FREESPACE2_FREESPACE_H
 #ifndef STAMPER_PROGRAM // because of all the dependancies, I have to do
                         // this...yuck!!!  MWA 7/21/97
 

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _PHYSICS_H
-#define _PHYSICS_H
+#ifndef FREESPACE2_PHYSICS_PHYSICS_H
+#define FREESPACE2_PHYSICS_PHYSICS_H
 
 #include "math/vecmat.h"
 

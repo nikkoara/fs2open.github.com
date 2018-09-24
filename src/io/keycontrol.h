@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FREESPACE_KEYCONTROL_H__
-#define __FREESPACE_KEYCONTROL_H__
+#ifndef FREESPACE2_IO_KEYCONTROL_H
+#define FREESPACE2_IO_KEYCONTROL_H
 
 #include "controlconfig/controlsconfig.h"
 

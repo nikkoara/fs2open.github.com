@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _SDL_GRAPHICS_OPERATIONS
-#define _SDL_GRAPHICS_OPERATIONS
+#ifndef FREESPACE2_FREESPACE2_SDLGRAPHICSOPERATIONS_H
+#define FREESPACE2_FREESPACE2_SDLGRAPHICSOPERATIONS_H
 
 #include "osapi/osapi.h"
 
@@ -21,4 +21,4 @@ public:
     createViewport (const os::ViewPortProperties& props) override;
 };
 
-#endif // _SDL_GRAPHICS_OPERATIONS
+#endif // FREESPACE2_FREESPACE2_SDLGRAPHICSOPERATIONS_H

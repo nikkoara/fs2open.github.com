@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _SYSTEMVARS_H
-#define _SYSTEMVARS_H
+#ifndef FREESPACE2_GLOBALINCS_SYSTEMVARS_H
+#define FREESPACE2_GLOBALINCS_SYSTEMVARS_H
 
 #include "globalincs/pstypes.h"
 #include <cmath>

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __MISSIONTRAINING_H__
-#define __MISSIONTRAINING_H__
+#ifndef FREESPACE2_MISSION_MISSIONTRAINING_H
+#define FREESPACE2_MISSION_MISSIONTRAINING_H
 
 #include "hud/hud.h"
 
@@ -56,4 +56,4 @@ public:
     bool canRender () override;
 };
 
-#endif /* __MISSIONTRAINING_H__ */
+#endif /* FREESPACE2_MISSION_MISSIONTRAINING_H */

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __MISSIONDEBRIEF_H__
-#define __MISSIONDEBRIEF_H__
+#ifndef FREESPACE2_MISSIONUI_MISSIONDEBRIEF_H
+#define FREESPACE2_MISSIONUI_MISSIONDEBRIEF_H
 
 extern int Debrief_overlay_id;
 
@@ -27,4 +27,4 @@ void debrief_set_multi_clients (int stage_count, int active_stages[]);
 void debrief_pause ();
 void debrief_unpause ();
 
-#endif /* __MISSIONDEBRIEF_H__ */
+#endif /* FREESPACE2_MISSIONUI_MISSIONDEBRIEF_H */

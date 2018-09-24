@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _GROPENGLSHADER_H
-#define _GROPENGLSHADER_H
+#ifndef FREESPACE2_GRAPHICS_OPENGL_GROPENGLSHADER_H
+#define FREESPACE2_GRAPHICS_OPENGL_GROPENGLSHADER_H
 
 #include "globalincs/pstypes.h"
 #include "graphics/2d.h"
@@ -159,4 +159,4 @@ void opengl_shader_set_default_material (
     bool textured, bool alpha, vec4* clr, float color_scale,
     uint32_t array_index, const material::clip_plane& clip_plane);
 
-#endif // _GROPENGLSHADER_H
+#endif // FREESPACE2_GRAPHICS_OPENGL_GROPENGLSHADER_H

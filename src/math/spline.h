@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FS2_SPLINE_HEADER_FILE
-#define __FS2_SPLINE_HEADER_FILE
+#ifndef FREESPACE2_MATH_SPLINE_H
+#define FREESPACE2_MATH_SPLINE_H
 
 #include "math/vecmat.h"
 

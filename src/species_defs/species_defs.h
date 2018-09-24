@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef _SPECIES_DEFS_H_
-#define _SPECIES_DEFS_H_
+#ifndef FREESPACE2_SPECIES_DEFS_SPECIES_DEFS_H
+#define FREESPACE2_SPECIES_DEFS_SPECIES_DEFS_H
 
 #include "gamesnd/gamesnd.h"
 #include "globalincs/globals.h"

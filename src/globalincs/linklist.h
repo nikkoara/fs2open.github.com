@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _LINKLIST_H
-#define _LINKLIST_H
+#ifndef FREESPACE2_GLOBALINCS_LINKLIST_H
+#define FREESPACE2_GLOBALINCS_LINKLIST_H
 
 // Initializes a list of zero elements
 #define list_init(head)        \

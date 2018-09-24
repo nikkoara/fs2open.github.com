@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _AIINTERNAL_H
-#define _AIINTERNAL_H
+#ifndef FREESPACE2_AI_AIINTERNAL_H
+#define FREESPACE2_AI_AIINTERNAL_H
 
 #include "ship/ship.h"
 #include "weapon/weapon.h"

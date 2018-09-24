@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FS2_HUD_ARTILLERY_HEADER_FILE
-#define _FS2_HUD_ARTILLERY_HEADER_FILE
+#ifndef FREESPACE2_HUD_HUDARTILLERY_H
+#define FREESPACE2_HUD_HUDARTILLERY_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"

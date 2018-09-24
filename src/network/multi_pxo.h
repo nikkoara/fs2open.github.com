@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _PARALLAX_ONLINE_HEADER_FILE
-#define _PARALLAX_ONLINE_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_PXO_H
+#define FREESPACE2_NETWORK_MULTI_PXO_H
 
 // ----------------------------------------------------------------------------------------------------
 // PXO DEFINES/VARS

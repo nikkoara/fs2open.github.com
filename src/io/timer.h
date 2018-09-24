@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _TIMER_H
-#define _TIMER_H
+#ifndef FREESPACE2_IO_TIMER_H
+#define FREESPACE2_IO_TIMER_H
 
 #include "globalincs/pstypes.h"
 

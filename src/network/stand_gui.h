@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FREESPACE_STANDALONE_GUI_HEADER_FILE
-#define _FREESPACE_STANDALONE_GUI_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_STAND_GUI_H
+#define FREESPACE2_NETWORK_STAND_GUI_H
 
 #include "network/multi.h"
 #include "network/multi_options.h"

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __JOY_FF_H__
-#define __JOY_FF_H__
+#ifndef FREESPACE2_IO_JOY_FF_H
+#define FREESPACE2_IO_JOY_FF_H
 
 #include "globalincs/pstypes.h"
 

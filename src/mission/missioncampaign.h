@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MISSION_CAMPAIGN_H
-#define _MISSION_CAMPAIGN_H
+#ifndef FREESPACE2_MISSION_MISSIONCAMPAIGN_H
+#define FREESPACE2_MISSION_MISSIONCAMPAIGN_H
 
 #include "stats/scoring.h"
 #include "parse/sexp.h"

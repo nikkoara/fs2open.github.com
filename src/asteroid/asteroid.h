@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __ASTEROID_H__
-#define __ASTEROID_H__
+#ifndef FREESPACE2_ASTEROID_ASTEROID_H
+#define FREESPACE2_ASTEROID_ASTEROID_H
 
 #include "globalincs/globals.h" // for NAME_LENGTH
 #include "globalincs/pstypes.h"
@@ -167,4 +167,4 @@ void asteroid_sub_create (
 
 void asteroid_frame ();
 
-#endif // __ASTEROID_H__
+#endif // FREESPACE2_ASTEROID_ASTEROID_H

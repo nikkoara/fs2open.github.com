@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _OBJECTSHIELD_H
-#define _OBJECTSHIELD_H
+#ifndef FREESPACE2_OBJECT_OBJECTSHIELD_H
+#define FREESPACE2_OBJECT_OBJECTSHIELD_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"
@@ -143,4 +143,4 @@ float shield_apply_damage (object* objp, int quadrant, float damage);
  */
 int shield_is_up (object* objp, int quadrant_num);
 
-#endif //_OBJECTSHIELD_H
+#endif //FREESPACE2_OBJECT_OBJECTSHIELD_H

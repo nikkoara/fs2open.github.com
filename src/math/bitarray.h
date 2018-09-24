@@ -6,8 +6,8 @@
  * create based on the source.
  */
 
-#ifndef _BIT_ARRAY_H
-#define _BIT_ARRAY_H
+#ifndef FREESPACE2_MATH_BITARRAY_H
+#define FREESPACE2_MATH_BITARRAY_H
 
 #include "globalincs/pstypes.h"
 
@@ -51,4 +51,4 @@
 // calculate number of bytes from number of bits
 #define calculate_num_bytes(num_bits) ((num_bits >> 3) + 1)
 
-#endif // _BIT_ARRAY_H
+#endif // FREESPACE2_MATH_BITARRAY_H

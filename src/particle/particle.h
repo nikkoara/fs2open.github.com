@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _PARTICLE_H
-#define _PARTICLE_H
+#ifndef FREESPACE2_PARTICLE_PARTICLE_H
+#define FREESPACE2_PARTICLE_PARTICLE_H
 
 #include "globalincs/pstypes.h"
 #include "object/object.h"
@@ -162,4 +162,4 @@ void emit (
     float range = 1.0);
 } // namespace particle
 
-#endif // _PARTICLE_H
+#endif // FREESPACE2_PARTICLE_PARTICLE_H

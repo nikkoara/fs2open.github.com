@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __SUBSYS_DAMAGE_H__
-#define __SUBSYS_DAMAGE_H__
+#ifndef FREESPACE2_SHIP_SUBSYSDAMAGE_H
+#define FREESPACE2_SHIP_SUBSYSDAMAGE_H
 
 /////////////////////////////////////////
 // engines

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FS2_MULTI_DATA_RATE_HEADER_FILE
-#define _FS2_MULTI_DATA_RATE_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_RATE_H
+#define FREESPACE2_NETWORK_MULTI_RATE_H
 
 // keep this defined to compile in rate checking
 #if !defined(NDEBUG)

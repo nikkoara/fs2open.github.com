@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _SHIPFX_H
-#define _SHIPFX_H
+#ifndef FREESPACE2_SHIP_SHIPFX_H
+#define FREESPACE2_SHIP_SHIPFX_H
 
 #include "globalincs/pstypes.h"
 #include "graphics/grbatch.h"

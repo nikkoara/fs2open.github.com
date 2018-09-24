@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __SHOCKWAVE_H__
-#define __SHOCKWAVE_H__
+#ifndef FREESPACE2_WEAPON_SHOCKWAVE_H
+#define FREESPACE2_WEAPON_SHOCKWAVE_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"
@@ -96,4 +96,4 @@ int shockwave_get_damage_type_idx (int index);
 int shockwave_get_framenum (const int index, const int ani_id);
 int shockwave_get_flags (int index);
 
-#endif /* __SHOCKWAVE_H__ */
+#endif /* FREESPACE2_WEAPON_SHOCKWAVE_H */

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _CONSOLEPARSE_H
-#define _CONSOLEPARSE_H
+#ifndef FREESPACE2_DEBUGCONSOLE_CONSOLEPARSE_H
+#define FREESPACE2_DEBUGCONSOLE_CONSOLEPARSE_H
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Command-line parsing functions for z64555's debug console, created for the
 // FreeSpace Source Code project
@@ -501,4 +501,4 @@ bool dc_maybe_stuff_string_white (char* str, size_t len);
  */
 bool dc_maybe_stuff_string_white (std::string& str);
 
-#endif // _CONSOLEPARSE_H
+#endif // FREESPACE2_DEBUGCONSOLE_CONSOLEPARSE_H

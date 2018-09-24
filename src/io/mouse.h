@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MOUSE_H
-#define _MOUSE_H
+#ifndef FREESPACE2_IO_MOUSE_H
+#define FREESPACE2_IO_MOUSE_H
 
 #include "globalincs/pstypes.h"
 

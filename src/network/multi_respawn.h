@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTIPLAYER_RESPAWN_HEADER_FILE
-#define _MULTIPLAYER_RESPAWN_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_RESPAWN_H
+#define FREESPACE2_NETWORK_MULTI_RESPAWN_H
 
 // ---------------------------------------------------------------------------------------
 // MULTI RESPAWN DEFINES/VARS

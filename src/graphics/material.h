@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MATERIAL_H
-#define _MATERIAL_H
+#ifndef FREESPACE2_GRAPHICS_MATERIAL_H
+#define FREESPACE2_GRAPHICS_MATERIAL_H
 
 #include "graphics/grinternal.h"
 #include "model/model.h"

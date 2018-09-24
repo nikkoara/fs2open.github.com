@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __ANIMPLAY_H__
-#define __ANIMPLAY_H__
+#ifndef FREESPACE2_ANIM_ANIMPLAY_H
+#define FREESPACE2_ANIM_ANIMPLAY_H
 
 #include "cfile/cfile.h"
 #include "globalincs/pstypes.h"
@@ -64,4 +64,4 @@ void anim_unpause (anim_instance* ai);
 int anim_instance_is_streamed (anim_instance* ai);
 unsigned char anim_instance_get_byte (anim_instance* ai, int offset);
 
-#endif /* __ANIMPLAY_H__ */
+#endif /* FREESPACE2_ANIM_ANIMPLAY_H */

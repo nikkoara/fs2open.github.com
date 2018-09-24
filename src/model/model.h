@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MODEL_H
-#define _MODEL_H
+#ifndef FREESPACE2_MODEL_MODEL_H
+#define FREESPACE2_MODEL_MODEL_H
 
 #include "globalincs/globals.h" // for NAME_LENGTH
 #include "globalincs/pstypes.h"
@@ -1547,4 +1547,4 @@ std::vector< glow_point_bank_override >::iterator
 get_glowpoint_bank_override_by_name (const char* name);
 extern std::vector< glow_point_bank_override > glowpoint_bank_overrides;
 
-#endif // _MODEL_H
+#endif // FREESPACE2_MODEL_MODEL_H

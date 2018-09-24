@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _FREESPACE2_SHIP_CONTRAIL_HEADER_FILE
-#define _FREESPACE2_SHIP_CONTRAIL_HEADER_FILE
+#ifndef FREESPACE2_SHIP_SHIPCONTRAILS_H
+#define FREESPACE2_SHIP_SHIPCONTRAILS_H
 
 // ----------------------------------------------------------------------------------------------
 // CONTRAIL DEFINES/VARS

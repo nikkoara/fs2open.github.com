@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __DSCAP_H__
-#define __DSCAP_H__
+#ifndef FREESPACE2_SOUND_DSCAP_H
+#define FREESPACE2_SOUND_DSCAP_H
 
 int dscap_init ();
 void dscap_close ();
@@ -15,4 +15,4 @@ int dscap_stop_record ();
 int dscap_max_buffersize ();
 int dscap_get_raw_data (unsigned char* outbuf, unsigned int max_size);
 
-#endif // __DSCAP_H__
+#endif // FREESPACE2_SOUND_DSCAP_H

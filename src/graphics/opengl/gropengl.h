@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _GROPENGL_H
-#define _GROPENGL_H
+#ifndef FREESPACE2_GRAPHICS_OPENGL_GROPENGL_H
+#define FREESPACE2_GRAPHICS_OPENGL_GROPENGL_H
 
 #include <glad/glad.h>
 #include "globalincs/pstypes.h"

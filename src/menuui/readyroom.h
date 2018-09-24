@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _READYROOM_H
-#define _READYROOM_H
+#ifndef FREESPACE2_MENUUI_READYROOM_H
+#define FREESPACE2_MENUUI_READYROOM_H
 
 extern int Sim_room_overlay_id;
 extern int Campaign_room_overlay_id;

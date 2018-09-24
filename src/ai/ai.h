@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _AI_H
-#define _AI_H
+#ifndef FREESPACE2_AI_AI_H
+#define FREESPACE2_AI_AI_H
 
 #include "ai/ai_profiles.h"
 #include "globalincs/globals.h"

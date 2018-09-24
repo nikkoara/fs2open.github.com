@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _WEAPON_H
-#define _WEAPON_H
+#ifndef FREESPACE2_WEAPON_WEAPON_H
+#define FREESPACE2_WEAPON_WEAPON_H
 
 #include "globalincs/globals.h"
 #include "globalincs/systemvars.h"

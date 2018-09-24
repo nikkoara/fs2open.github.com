@@ -6,8 +6,8 @@
  * create based on the source.
  */
 
-#ifndef _PARSE_OBJECT_DOCK_H
-#define _PARSE_OBJECT_DOCK_H
+#ifndef FREESPACE2_OBJECT_PARSEOBJECTDOCK_H
+#define FREESPACE2_OBJECT_PARSEOBJECTDOCK_H
 
 #include "globalincs/globals.h"
 
@@ -77,4 +77,4 @@ void dock_dock_objects (
 // object cleanup
 void dock_free_dock_list (p_object* objp);
 
-#endif // _PARSE_OBJECT_DOCK_H
+#endif // FREESPACE2_OBJECT_PARSEOBJECTDOCK_H

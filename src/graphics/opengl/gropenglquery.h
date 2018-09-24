@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _GROPENGLQUERY_H
-#define _GROPENGLQUERY_H
+#ifndef FREESPACE2_GRAPHICS_OPENGL_GROPENGLQUERY_H
+#define FREESPACE2_GRAPHICS_OPENGL_GROPENGLQUERY_H
 
 #include "graphics/2d.h"
 
@@ -15,4 +15,4 @@ std::uint64_t gr_opengl_get_query_value (int obj);
 
 void gr_opengl_delete_query_object (int obj);
 
-#endif // _GROPENGLQUERY_H
+#endif // FREESPACE2_GRAPHICS_OPENGL_GROPENGLQUERY_H

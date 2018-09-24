@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FREESPACE_EMP_MISSILE_HEADER_FILE_
-#define __FREESPACE_EMP_MISSILE_HEADER_FILE_
+#ifndef FREESPACE2_WEAPON_EMP_H
+#define FREESPACE2_WEAPON_EMP_H
 
 // ----------------------------------------------------------------------------------------------------
 // EMP EFFECT DEFINES/VARS

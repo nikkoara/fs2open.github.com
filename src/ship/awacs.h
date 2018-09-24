@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FS2_AWACS_HEADER_FILE
-#define __FS2_AWACS_HEADER_FILE
+#ifndef FREESPACE2_SHIP_AWACS_H
+#define FREESPACE2_SHIP_AWACS_H
 
 // ----------------------------------------------------------------------------------------------------
 // AWACS DEFINES/VARS

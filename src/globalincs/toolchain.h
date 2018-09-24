@@ -6,8 +6,8 @@
  * @brief Macros to abstract compiler capabilities for various toolchains
  */
 
-#ifndef _TOOLCHAIN_H
-#define _TOOLCHAIN_H
+#ifndef FREESPACE2_GLOBALINCS_TOOLCHAIN_H
+#define FREESPACE2_GLOBALINCS_TOOLCHAIN_H
 
 #if defined(DOXYGEN)
 #include "globalincs/toolchain/doxygen.h"
@@ -23,4 +23,4 @@
 		"Update toolchain.h to add support for additional toolchains.\n"
 #endif
 
-#endif /* _TOOLCHAIN_H */
+#endif /* FREESPACE2_GLOBALINCS_TOOLCHAIN_H */

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __MISSIONBRIEFCOMMON_H__
-#define __MISSIONBRIEFCOMMON_H__
+#ifndef FREESPACE2_MISSION_MISSIONBRIEFCOMMON_H
+#define FREESPACE2_MISSION_MISSIONBRIEFCOMMON_H
 
 #include "anim/packunpack.h"
 #include "globalincs/globals.h"

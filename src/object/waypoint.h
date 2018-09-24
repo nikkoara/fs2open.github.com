@@ -3,8 +3,8 @@
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"
 
-#ifndef _WAYPOINT_H
-#define _WAYPOINT_H
+#ifndef FREESPACE2_OBJECT_WAYPOINT_H
+#define FREESPACE2_OBJECT_WAYPOINT_H
 
 //********************CLASSES********************
 class waypoint_list;
@@ -103,4 +103,4 @@ int waypoint_add (vec3d* pos, int waypoint_instance);
 // remaining.
 void waypoint_remove (waypoint* wpt);
 
-#endif //_WAYPOINT_H
+#endif //FREESPACE2_OBJECT_WAYPOINT_H

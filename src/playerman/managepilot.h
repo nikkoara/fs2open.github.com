@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MANAGEPILOT_H
-#define _MANAGEPILOT_H
+#ifndef FREESPACE2_PLAYERMAN_MANAGEPILOT_H
+#define FREESPACE2_PLAYERMAN_MANAGEPILOT_H
 
 #include "globalincs/pstypes.h"
 
@@ -52,4 +52,4 @@ int pilot_verify_overwrite ();
 
 void pilot_set_start_campaign (player* p);
 
-#endif // _MANAGEPILOT_H
+#endif // FREESPACE2_PLAYERMAN_MANAGEPILOT_H

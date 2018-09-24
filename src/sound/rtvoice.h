@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __RTVOICE_H__
-#define __RTVOICE_H__
+#ifndef FREESPACE2_SOUND_RTVOICE_H
+#define FREESPACE2_SOUND_RTVOICE_H
 
 #include "sound/sound.h"
 

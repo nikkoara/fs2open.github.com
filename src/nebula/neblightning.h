@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __FS2_NEBULA_LIGHTNING_HEADER_FILE
-#define __FS2_NEBULA_LIGHTNING_HEADER_FILE
+#ifndef FREESPACE2_NEBULA_NEBLIGHTNING_H
+#define FREESPACE2_NEBULA_NEBLIGHTNING_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"

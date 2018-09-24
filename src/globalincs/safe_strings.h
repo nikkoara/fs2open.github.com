@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _SAFE_STRINGS_H_INCLUDED_
-#define _SAFE_STRINGS_H_INCLUDED_
+#ifndef FREESPACE2_GLOBALINCS_SAFE_STRINGS_H
+#define FREESPACE2_GLOBALINCS_SAFE_STRINGS_H
 
 /* It is a condition of use that safe_strings.cpp, safe_strings.h,
  * safe_strings_test.cpp remain together.
@@ -41,8 +41,8 @@ typedef int errno_t;
  */
 #ifndef SAFESTRINGS_TEST_APP
 
-#ifndef __safe_strings_error_handler
-#define __safe_strings_error_handler(val)                                  \
+#ifndef FREESPACE2_GLOBALINCS_SAFE_STRINGS_H
+#define FREESPACE2_GLOBALINCS_SAFE_STRINGS_H(val)                                  \
     Error (                                                                \
         file, line,                                                        \
         "%s: String error. Please Report.\nTrying to put into " SIZE_T_ARG \
@@ -53,7 +53,7 @@ typedef int errno_t;
 #else
 
 /* For testing only */
-#define __safe_strings_error_handler(errnoVal)                  \
+#define FREESPACE2_GLOBALINCS_SAFE_STRINGS_H(errnoVal)                  \
     extern void error_handler (                                 \
         int errnoValue, const char* errnoStr, const char* file, \
         const char* function, int line);                        \
@@ -110,4 +110,4 @@ inline errno_t strcat_s (char* strDest, const char* strSource) {
 
 #endif // !NO_SAFE_STRINGS
 
-#endif // _SAFE_STRINGS_H_INCLUDED_
+#endif // FREESPACE2_GLOBALINCS_SAFE_STRINGS_H

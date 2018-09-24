@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _SNAZZYUI_H
-#define _SNAZZYUI_H
+#ifndef FREESPACE2_MENUUI_SNAZZYUI_H
+#define FREESPACE2_MENUUI_SNAZZYUI_H
 
 #define MAX_CHAR 150
 #define ESC_PRESSED -2

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MULTI_OBSERVER_HEADER_FILE
-#define _MULTI_OBSERVER_HEADER_FILE
+#ifndef FREESPACE2_NETWORK_MULTI_OBSERVER_H
+#define FREESPACE2_NETWORK_MULTI_OBSERVER_H
 
 // ---------------------------------------------------------------------------------------
 // MULTI OBSERVER DEFINES/VARS

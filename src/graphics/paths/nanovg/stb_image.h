@@ -553,7 +553,7 @@ STBIDEF int stbi_zlib_decode_noheader_buffer (
 #define STBI_ASSERT(x) assert (x)
 #endif
 
-#ifndef _MSC_VER
+#ifndef FREESPACE2_GRAPHICS_PATHS_NANOVG_STB_IMAGE_H
 #ifdef __cplusplus
 #define stbi_inline inline
 #else
@@ -563,7 +563,7 @@ STBIDEF int stbi_zlib_decode_noheader_buffer (
 #define stbi_inline __forceinline
 #endif
 
-#ifdef _MSC_VER
+#ifdef FREESPACE2_GRAPHICS_PATHS_NANOVG_STB_IMAGE_H
 typedef unsigned short stbi__uint16;
 typedef signed short stbi__int16;
 typedef unsigned int stbi__uint32;
@@ -579,13 +579,13 @@ typedef int32_t stbi__int32;
 // should produce compiler error if size is wrong
 typedef unsigned char validate_uint32[sizeof (stbi__uint32) == 4 ? 1 : -1];
 
-#ifdef _MSC_VER
+#ifdef FREESPACE2_GRAPHICS_PATHS_NANOVG_STB_IMAGE_H
 #define STBI_NOTUSED(v) (void)(v)
 #else
 #define STBI_NOTUSED(v) (void)sizeof (v)
 #endif
 
-#ifdef _MSC_VER
+#ifdef FREESPACE2_GRAPHICS_PATHS_NANOVG_STB_IMAGE_H
 #define STBI_HAS_LROTL
 #endif
 
@@ -658,9 +658,9 @@ typedef unsigned char validate_uint32[sizeof (stbi__uint32) == 4 ? 1 : -1];
 #define STBI_SSE2
 #include <emmintrin.h>
 
-#ifdef _MSC_VER
+#ifdef FREESPACE2_GRAPHICS_PATHS_NANOVG_STB_IMAGE_H
 
-#if _MSC_VER >= 1400 // not VC6
+#if FREESPACE2_GRAPHICS_PATHS_NANOVG_STB_IMAGE_H >= 1400 // not VC6
 #include <intrin.h>  // __cpuid
 static int stbi__cpuid3 (void) {
     int info[4];
@@ -1176,7 +1176,7 @@ static void stbi__float_postprocess (
 
 static FILE* stbi__fopen (char const* filename, char const* mode) {
     FILE* f;
-#if defined(_MSC_VER) && _MSC_VER >= 1400
+#if defined(FREESPACE2_GRAPHICS_PATHS_NANOVG_STB_IMAGE_H) && _MSC_VER >= 1400
     if (0 != fopen_s (&f, filename, mode)) f = 0;
 #else
     f = fopen (filename, mode);

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef __REDALERT_H__
-#define __REDALERT_H__
+#ifndef FREESPACE2_MISSIONUI_REDALERT_H
+#define FREESPACE2_MISSIONUI_REDALERT_H
 
 #include "globalincs/pstypes.h"
 

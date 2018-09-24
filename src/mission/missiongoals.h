@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MISSIONGOAL_H
-#define _MISSIONGOAL_H
+#ifndef FREESPACE2_MISSION_MISSIONGOALS_H
+#define FREESPACE2_MISSION_MISSIONGOALS_H
 
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"

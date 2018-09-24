@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _BARRACKS_H
-#define _BARRACKS_H
+#ifndef FREESPACE2_MENUUI_BARRACKS_H
+#define FREESPACE2_MENUUI_BARRACKS_H
 
 extern int Barracks_overlay_id;
 
@@ -14,4 +14,4 @@ void barracks_do_frame (float frametime);
 // close the barracks
 void barracks_close ();
 
-#endif // _BARRACKS_H
+#endif // FREESPACE2_MENUUI_BARRACKS_H

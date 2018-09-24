@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _MISSIONBRIEF_H
-#define _MISSIONBRIEF_H
+#ifndef FREESPACE2_MISSIONUI_MISSIONBRIEF_H
+#define FREESPACE2_MISSIONUI_MISSIONBRIEF_H
 
 #include "ui/ui.h"
 

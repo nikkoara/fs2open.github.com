@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _OPTIONS_MENU_MULTI_HEADER_FILE
-#define _OPTIONS_MENU_MULTI_HEADER_FILE
+#ifndef FREESPACE2_MENUUI_OPTIONSMENUMULTI_H
+#define FREESPACE2_MENUUI_OPTIONSMENUMULTI_H
 
 // This file is basically just a sister module to the OptionsMenu file
 

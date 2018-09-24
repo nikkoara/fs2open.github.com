@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef _UIDEFS_H
-#define _UIDEFS_H
+#ifndef FREESPACE2_UI_UIDEFS_H
+#define FREESPACE2_UI_UIDEFS_H
 
 #include "freespace2/freespace.h"
 #include "globalincs/pstypes.h"
