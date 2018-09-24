@@ -97,14 +97,14 @@ ADE_FUNC (
         // int num = 0;
         if (type == LUA_TSTRING) {
             fmt = (char*)lua_tostring (L, i);
-            if (!stricmp (fmt, "*n")) {
+            if (!strcasecmp (fmt, "*n")) {
                 double d = 0.0f;
                 if (cfread_lua_number (&d, cfp) == EOF) return ADE_RETURN_NIL;
 
                 lua_pushnumber (L, d);
                 num_returned++;
             }
-            else if (!stricmp (fmt, "*a")) {
+            else if (!strcasecmp (fmt, "*a")) {
                 int tell_res = cftell (cfp);
                 if (tell_res < 0) {
                     Error (
@@ -121,7 +121,7 @@ ADE_FUNC (
                 vm_free (buf);
                 num_returned++;
             }
-            else if (!stricmp (fmt, "*l")) {
+            else if (!strcasecmp (fmt, "*l")) {
                 char buf[10240];
                 size_t idx;
                 if (cfgets (buf, (int)(sizeof (buf) / sizeof (char)), cfp) ==
@@ -194,13 +194,13 @@ ADE_FUNC (
 
     if (!cf_is_valid (cfp)) return ADE_RETURN_NIL;
 
-    if (!(w == NULL || (!stricmp (w, "cur") && o != 0))) {
+    if (!(w == NULL || (!strcasecmp (w, "cur") && o != 0))) {
         int seek_type = CF_SEEK_CUR;
-        if (!stricmp (w, "set"))
+        if (!strcasecmp (w, "set"))
             seek_type = CF_SEEK_SET;
-        else if (!stricmp (w, "cur"))
+        else if (!strcasecmp (w, "cur"))
             seek_type = CF_SEEK_CUR;
-        else if (!stricmp (w, "end"))
+        else if (!strcasecmp (w, "end"))
             seek_type = CF_SEEK_END;
         else
             LuaError (L, "Invalid where argument passed to seek() - '%s'", w);

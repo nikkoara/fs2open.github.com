@@ -2280,7 +2280,7 @@ int stars_find_bitmap (char* name) {
 
     // lookup
     for (idx = 0; idx < (int)Starfield_bitmaps.size (); idx++) {
-        if (!stricmp (name, Starfield_bitmaps[idx].filename)) { return idx; }
+        if (!strcasecmp (name, Starfield_bitmaps[idx].filename)) { return idx; }
     }
 
     // not found
@@ -2295,7 +2295,7 @@ int stars_find_sun (char* name) {
 
     // lookup
     for (idx = 0; idx < (int)Sun_bitmaps.size (); idx++) {
-        if (!stricmp (name, Sun_bitmaps[idx].filename)) { return idx; }
+        if (!strcasecmp (name, Sun_bitmaps[idx].filename)) { return idx; }
     }
 
     // not found

@@ -274,7 +274,7 @@ void FrameProfiler::dump_output (
         indented_name += samples[i].name;
 
         char line[256];
-        sprintf_safe (line, "%5s : %5s : %5s : %3s : ", avg, min, max, num);
+        sprintf (line, "%5s : %5s : %5s : %3s : ", avg, min, max, num);
 
         out << line + indented_name + "\n";
     }

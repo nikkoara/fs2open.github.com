@@ -188,7 +188,7 @@ int cf_get_packfile_count (cf_root* root) {
 // packfile sort function
 bool cf_packfile_sort_func (const cf_root_sort& r1, const cf_root_sort& r2) {
     // if the 2 directory types are the same, do a string compare
-    if (r1.cf_type == r2.cf_type) { return (stricmp (r1.path, r2.path) < 0); }
+    if (r1.cf_type == r2.cf_type) { return (strcasecmp (r1.path, r2.path) < 0); }
 
     // otherwise return them in order of CF_TYPE_* precedence
     return (r1.cf_type < r2.cf_type);
@@ -472,7 +472,7 @@ int is_ext_in_list (const char* ext_list, const char* ext) {
     char tmp_ext[128];
 
     strcpy_s (tmp_ext, ext);
-    strlwr (tmp_ext);
+    stolower (tmp_ext);
     if (strstr (ext_list, tmp_ext)) { return 1; }
 
     return 0;
@@ -550,7 +550,7 @@ void cf_search_root_path (int root_index) {
                 if (parentDirP) {
                     struct dirent* dir = nullptr;
                     while ((dir = readdir (parentDirP)) != nullptr) {
-                        if (stricmp (search_name, dir->d_name) != 0) {
+                        if (strcasecmp (search_name, dir->d_name) != 0) {
                             continue;
                         }
 
@@ -695,7 +695,7 @@ void cf_search_root_pack (int root_index) {
 
         if (find.size == 0) {
             size_t search_path_len = strlen (search_path);
-            if (!stricmp (find.filename, "..")) {
+            if (!strcasecmp (find.filename, "..")) {
                 char* p = &search_path[search_path_len - 1];
                 while ((p > search_path) && (*p != DIR_SEPARATOR_CHAR)) {
                     p--;
@@ -716,7 +716,7 @@ void cf_search_root_pack (int root_index) {
             int j;
 
             for (j = CF_TYPE_ROOT; j < CF_MAX_PATH_TYPES; j++) {
-                if (!stricmp (search_path, Pathtypes[j].path)) {
+                if (!strcasecmp (search_path, Pathtypes[j].path)) {
                     char* ext = strrchr (find.filename, '.');
                     if (ext) {
                         if (is_ext_in_list (Pathtypes[j].extensions, ext)) {
@@ -944,7 +944,7 @@ CFileLocation cf_find_file_location (
 
             if (lcl_add_dir_to_path_with_filename (
                     longname, MAX_PATH_LEN - 1)) {
-                if (!stricmp (longname, f->name_ext)) {
+                if (!strcasecmp (longname, f->name_ext)) {
                     CFileLocation res (true);
                     res.size = static_cast< size_t > (f->size);
                     res.offset = (size_t)f->pack_offset;
@@ -974,7 +974,7 @@ CFileLocation cf_find_file_location (
         }
 
         // file either not localized or localized version not found
-        if (!stricmp (filespec, f->name_ext)) {
+        if (!strcasecmp (filespec, f->name_ext)) {
             CFileLocation res (true);
             res.size = static_cast< size_t > (f->size);
             res.offset = (size_t)f->pack_offset;
@@ -1156,7 +1156,7 @@ CFileLocationExt cf_find_file_location_ext (
         if (strlen (f->name_ext) != filespec_len_big) continue;
 
         // ... check that we match the base filename
-        if (strnicmp (f->name_ext, filespec, filespec_len) != 0) continue;
+        if (strncasecmp (f->name_ext, filespec, filespec_len) != 0) continue;
 
         // ... make sure that it's one of our supported types
         bool found_one = false;
@@ -1199,7 +1199,7 @@ CFileLocationExt cf_find_file_location_ext (
 
                 if (lcl_add_dir_to_path_with_filename (
                         longname, MAX_PATH_LEN - 1)) {
-                    if (!stricmp (longname, f->name_ext)) {
+                    if (!strcasecmp (longname, f->name_ext)) {
                         CFileLocationExt res (cur_ext);
                         res.found = true;
                         res.size = static_cast< size_t > (f->size);
@@ -1233,7 +1233,7 @@ CFileLocationExt cf_find_file_location_ext (
             }
 
             // file either not localized or localized version not found
-            if (!stricmp (filespec, f->name_ext)) {
+            if (!strcasecmp (filespec, f->name_ext)) {
                 CFileLocationExt res (cur_ext);
                 res.found = true;
                 res.size = static_cast< size_t > (f->size);
@@ -1294,11 +1294,11 @@ int cf_matches_spec (const char* filespec, const char* filename) {
               ((filespec + strlen (filespec)) - src_ext);
     if (!dst_ext) return 1;
 
-    if (src_ext == filespec) { return !stricmp (dst_ext, src_ext); }
+    if (src_ext == filespec) { return !strcasecmp (dst_ext, src_ext); }
     else {
         return (
-            !stricmp (dst_ext, src_ext) &&
-            !strnicmp (dst_ext, src_ext, src_ext - filespec));
+            !strcasecmp (dst_ext, src_ext) &&
+            !strncasecmp (dst_ext, src_ext, src_ext - filespec));
     }
 }
 
@@ -1338,7 +1338,7 @@ static int cf_file_already_in_list (
     if (p) *p = 0;
 
     for (i = 0; i < size; i++) {
-        if (!stricmp (list[i].c_str (), name_no_extension)) {
+        if (!strcasecmp (list[i].c_str (), name_no_extension)) {
             // Match found!
             return 1;
         }
@@ -1520,7 +1520,7 @@ int cf_file_already_in_list (
     if (p) *p = 0;
 
     for (i = 0; i < num_files; i++) {
-        if (!stricmp (list[i], name_no_extension)) {
+        if (!strcasecmp (list[i], name_no_extension)) {
             // Match found!
             return 1;
         }
@@ -1702,7 +1702,7 @@ int cf_file_already_in_list_preallocated (
     if (p) *p = 0;
 
     for (i = 0; i < num_files; i++) {
-        if (!stricmp (arr[i], name_no_extension)) {
+        if (!strcasecmp (arr[i], name_no_extension)) {
             // Match found!
             return 1;
         }

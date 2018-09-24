@@ -516,7 +516,7 @@ void main_hall_init (const std::string& main_hall_name) {
 
     // are we funny?
     if (Vasudan_funny && main_hall_is_vasudan ()) {
-        if (!stricmp (Main_hall->bitmap.c_str (), "vhall")) {
+        if (!strcasecmp (Main_hall->bitmap.c_str (), "vhall")) {
             Main_hall->door_sounds.at (OPTIONS_REGION).at (0) =
                 InterfaceSounds::VASUDAN_BUP;
             Main_hall->door_sounds.at (OPTIONS_REGION).at (1) =
@@ -528,7 +528,7 @@ void main_hall_init (const std::string& main_hall_name) {
             // set the background
             Main_hall->bitmap = "vhallhead";
         }
-        else if (!stricmp (Main_hall->bitmap.c_str (), "2_vhall")) {
+        else if (!strcasecmp (Main_hall->bitmap.c_str (), "2_vhall")) {
             Main_hall->door_sounds.at (OPTIONS_REGION).at (0) =
                 InterfaceSounds::VASUDAN_BUP;
             Main_hall->door_sounds.at (OPTIONS_REGION).at (1) =
@@ -2767,8 +2767,8 @@ void main_hall_vasudan_funny () { Vasudan_funny = 1; }
 int main_hall_is_vasudan () {
     // kind of a hack for now
     return (
-        !stricmp (Main_hall->music_name.c_str (), "Psampik") ||
-        !stricmp (Main_hall->music_name.c_str (), "Psamtik"));
+        !strcasecmp (Main_hall->music_name.c_str (), "Psampik") ||
+        !strcasecmp (Main_hall->music_name.c_str (), "Psamtik"));
 }
 
 /**

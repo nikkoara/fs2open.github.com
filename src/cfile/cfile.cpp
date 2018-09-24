@@ -354,7 +354,7 @@ char* cf_add_ext (const char* filename, const char* ext) {
     size_t elen = strlen (ext);
     Assert (flen < MAX_PATH_LEN);
     strcpy_s (path, filename);
-    if ((flen < 4) || stricmp (path + flen - elen, ext) != 0) {
+    if ((flen < 4) || strcasecmp (path + flen - elen, ext) != 0) {
         Assert (flen + elen < MAX_PATH_LEN);
         strcat_s (path, ext);
     }

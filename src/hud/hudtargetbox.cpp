@@ -99,13 +99,13 @@ static int Last_ts;    // holds last target status.
 void hud_targetbox_truncate_subsys_name (char* outstr) {
     if (Lcl_gr) {
         if (strstr (outstr, "communication")) { strcpy (outstr, "Komm"); }
-        else if (!stricmp (outstr, "weapons")) {
+        else if (!strcasecmp (outstr, "weapons")) {
             strcpy (outstr, "Waffen");
         }
         else if (strstr (outstr, "engine") || strstr (outstr, "Engine")) {
             strcpy (outstr, "Antrieb");
         }
-        else if (!stricmp (outstr, "sensors")) {
+        else if (!strcasecmp (outstr, "sensors")) {
             strcpy (outstr, "Sensoren");
         }
         else if (strstr (outstr, "navigat")) {
@@ -137,19 +137,19 @@ void hud_targetbox_truncate_subsys_name (char* outstr) {
         else if (strstr (outstr, "RadarDish")) {
             strcpy (outstr, "Radarantenne");
         }
-        else if (!stricmp (outstr, "Gas Collector")) {
+        else if (!strcasecmp (outstr, "Gas Collector")) {
             strcpy (outstr, "Sammler");
         }
     }
     else if (Lcl_fr) {
         if (strstr (outstr, "communication")) { strcpy (outstr, "comm"); }
-        else if (!stricmp (outstr, "weapons")) {
+        else if (!strcasecmp (outstr, "weapons")) {
             strcpy (outstr, "armes");
         }
         else if (strstr (outstr, "engine")) {
             strcpy (outstr, "moteur");
         }
-        else if (!stricmp (outstr, "sensors")) {
+        else if (!strcasecmp (outstr, "sensors")) {
             strcpy (outstr, "detecteurs");
         }
         else if (strstr (outstr, "navi")) {
@@ -171,13 +171,13 @@ void hud_targetbox_truncate_subsys_name (char* outstr) {
         if (strstr (outstr, "communication")) {
             strcpy (outstr, "komunikacja");
         }
-        else if (!stricmp (outstr, "weapons")) {
+        else if (!strcasecmp (outstr, "weapons")) {
             strcpy (outstr, "uzbrojenie");
         }
         else if (strstr (outstr, "engine") || strstr (outstr, "Engine")) {
             strcpy (outstr, "silnik");
         }
-        else if (!stricmp (outstr, "sensors")) {
+        else if (!strcasecmp (outstr, "sensors")) {
             strcpy (outstr, "sensory");
         }
         else if (strstr (outstr, "navigat")) {
@@ -207,7 +207,7 @@ void hud_targetbox_truncate_subsys_name (char* outstr) {
             strstr (outstr, "RadarDish") || strstr (outstr, "Radar Dish")) {
             strcpy (outstr, "antena radaru");
         }
-        else if (!stricmp (outstr, "Gas Collector")) {
+        else if (!strcasecmp (outstr, "Gas Collector")) {
             strcpy (outstr, "zbieracz gazu");
         }
     }

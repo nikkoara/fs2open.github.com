@@ -335,22 +335,22 @@ void ss_set_carried_icon (int from_slot, int ship_class);
 const char* ss_tooltip_handler (const char* str) {
     if (Selected_ss_class < 0) return NULL;
 
-    if (!stricmp (str, NOX ("@ship_name"))) {
+    if (!strcasecmp (str, NOX ("@ship_name"))) {
         return Ship_info[Selected_ss_class].name;
     }
-    else if (!stricmp (str, NOX ("@ship_type"))) {
+    else if (!strcasecmp (str, NOX ("@ship_type"))) {
         return Ship_info[Selected_ss_class].type_str;
     }
-    else if (!stricmp (str, NOX ("@ship_maneuverability"))) {
+    else if (!strcasecmp (str, NOX ("@ship_maneuverability"))) {
         return Ship_info[Selected_ss_class].maneuverability_str;
     }
-    else if (!stricmp (str, NOX ("@ship_armor"))) {
+    else if (!strcasecmp (str, NOX ("@ship_armor"))) {
         return Ship_info[Selected_ss_class].armor_str;
     }
-    else if (!stricmp (str, NOX ("@ship_manufacturer"))) {
+    else if (!strcasecmp (str, NOX ("@ship_manufacturer"))) {
         return Ship_info[Selected_ss_class].manufacturer_str;
     }
-    else if (!stricmp (str, NOX ("@ship_desc"))) {
+    else if (!strcasecmp (str, NOX ("@ship_desc"))) {
         char* str2;
         int x, y, w, h;
 
@@ -2554,7 +2554,7 @@ int create_default_player_ship (int use_last_flown) {
     }
     else {
         for (auto it = Ship_info.cbegin (); it != Ship_info.cend (); ++it) {
-            if (!stricmp (it->name, default_player_ship)) {
+            if (!strcasecmp (it->name, default_player_ship)) {
                 player_ship_class =
                     (int)std::distance (Ship_info.cbegin (), it);
                 Players[Player_num].last_ship_flown_si_index =

@@ -198,7 +198,7 @@ void pilot_set_start_campaign (player* p) {
         CF_SORT_NONE);
 
     for (i = 0; i < rc; i++) {
-        if (!stricmp (campaign_file_list[i], Default_campaign_file_name)) {
+        if (!strcasecmp (campaign_file_list[i], Default_campaign_file_name)) {
             strcpy_s (p->current_campaign, campaign_file_list[i]);
             return;
         }
@@ -222,11 +222,11 @@ void pilot_set_start_campaign (player* p) {
                     break;
                 }
 
-                if (!strnicmp (name1, "the ", 4)) name1 += 4;
+                if (!strncasecmp (name1, "the ", 4)) name1 += 4;
 
-                if (!strnicmp (name2, "the ", 4)) name2 += 4;
+                if (!strncasecmp (name2, "the ", 4)) name2 += 4;
 
-                if (stricmp (name1, name2) > 0) {
+                if (strcasecmp (name1, name2) > 0) {
                     // first, do filenames
                     t = campaign_file_list[j];
                     campaign_file_list[j] = campaign_file_list[j + incr];

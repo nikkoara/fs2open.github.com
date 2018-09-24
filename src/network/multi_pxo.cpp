@@ -1658,7 +1658,7 @@ int multi_pxo_is_nick_command (char* msg) {
         return 0;
     }
 
-    return !stricmp (tok, NOX ("/nick"));
+    return !strcasecmp (tok, NOX ("/nick"));
 }
 
 /**
@@ -1826,7 +1826,7 @@ int multi_pxo_connect_do () {
 
         // build the tracker id string
         memset (id_string, 0, MAX_PXO_TEXT_LEN);
-        sprintf_safe (
+        sprintf (
             id_string, "%s %s", Multi_tracker_id_string, Player->callsign);
 
         // build the ip string
@@ -2117,7 +2117,7 @@ void multi_pxo_process_nick_change (char* data) {
             strcpy_s (lookup->name, to);
 
             // if this is also my nick, change it
-            if (!stricmp (Multi_pxo_nick, from)) {
+            if (!strcasecmp (Multi_pxo_nick, from)) {
                 strcpy_s (Multi_pxo_nick, to);
             }
         }
@@ -2146,7 +2146,7 @@ int multi_pxo_is_autojoin (char* name) {
     if (strlen (name) < strlen (MULTI_PXO_AUTOJOIN_PREFIX)) return 0;
 
     // check to see if the first n chars match
-    return !strnicmp (
+    return !strncasecmp (
         name, MULTI_PXO_AUTOJOIN_PREFIX, strlen (MULTI_PXO_AUTOJOIN_PREFIX));
 }
 
@@ -2371,7 +2371,7 @@ pxo_channel* multi_pxo_find_channel (char* name, pxo_channel* list) {
     moveup = list;
     if (moveup == NULL) { return NULL; }
     do {
-        if (!stricmp (name, moveup->name)) { return moveup; }
+        if (!strcasecmp (name, moveup->name)) { return moveup; }
 
         moveup = moveup->next;
     } while ((moveup != list) && (moveup != NULL));
@@ -2621,7 +2621,7 @@ void multi_pxo_join_channel (pxo_channel* chan) {
 
     // if we're already on this channel, do nothing
     if (ON_CHANNEL () &&
-        !stricmp (chan->name, Multi_pxo_channel_current.name)) {
+        !strcasecmp (chan->name, Multi_pxo_channel_current.name)) {
         return;
     }
 
@@ -2809,7 +2809,7 @@ void multi_pxo_del_player (char* name) {
     if (lookup == NULL) { return; }
     do {
         // if we found a match, delete it
-        if (!stricmp (name, lookup->name)) {
+        if (!strcasecmp (name, lookup->name)) {
             // if this is the only item on the list, free stuff up
             if (lookup->next == lookup) {
                 Assert (lookup == Multi_pxo_players);
@@ -2876,7 +2876,7 @@ player_list* multi_pxo_find_player (char* name) {
     lookup = Multi_pxo_players;
     if (lookup == NULL) { return NULL; }
     do {
-        if (!stricmp (name, lookup->name)) { return lookup; }
+        if (!strcasecmp (name, lookup->name)) { return lookup; }
 
         lookup = lookup->next;
     } while ((lookup != NULL) && (lookup != Multi_pxo_players));
@@ -3525,14 +3525,14 @@ const char* multi_pxo_chat_is_private (const char* txt) {
     size_t from_len = strlen (PMSG_FROM);
     if (strlen (txt) > from_len) {
         // otherwise do a comparison
-        if (!strnicmp (txt, PMSG_FROM, from_len)) { return &txt[from_len]; }
+        if (!strncasecmp (txt, PMSG_FROM, from_len)) { return &txt[from_len]; }
     }
 
     // quick check
     size_t to_len = strlen (PMSG_TO);
     if (strlen (txt) > to_len) {
         // otherwise do a comparison
-        if (!strnicmp (txt, PMSG_TO, to_len)) { return &txt[to_len]; }
+        if (!strncasecmp (txt, PMSG_TO, to_len)) { return &txt[to_len]; }
     }
 
     return NULL;
@@ -4326,7 +4326,7 @@ int multi_pxo_pinfo_cond () {
             if ((int)ret_string[0] == -1) { return 1; }
 
             // user not a tracker pilot
-            if (!stricmp (ret_string, "-1")) { return 1; }
+            if (!strcasecmp (ret_string, "-1")) { return 1; }
 
             // otherwise parse into his id and callsign
             strcpy_s (temp_string, ret_string);

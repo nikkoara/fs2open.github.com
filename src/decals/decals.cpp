@@ -298,7 +298,7 @@ void shutdown () {
 int getDecalConfig (const std::string& name) {
     int index = 0;
     for (auto& def : decalDefinitions) {
-        if (!stricmp (def.getName ().c_str (), name.c_str ())) {
+        if (!strcasecmp (def.getName ().c_str (), name.c_str ())) {
             return index;
         }
         ++index;

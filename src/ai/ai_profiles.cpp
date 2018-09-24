@@ -43,7 +43,7 @@ int Num_ai_path_types = sizeof (AI_path_types) / sizeof (char*);
 int ai_path_type_match (char* p) {
     int i;
     for (i = 0; i < Num_ai_path_types; i++) {
-        if (!stricmp (AI_path_types[i], p)) return i;
+        if (!strcasecmp (AI_path_types[i], p)) return i;
     }
 
     return -1;
@@ -79,7 +79,7 @@ void parse_ai_profiles_tbl (const char* filename) {
 
             // see if it exists
             for (i = 0; i < Num_ai_profiles; i++) {
-                if (!stricmp (Ai_profiles[i].profile_name, profile_name)) {
+                if (!strcasecmp (Ai_profiles[i].profile_name, profile_name)) {
                     previous_profile = &Ai_profiles[i];
                     break;
                 }
@@ -716,7 +716,7 @@ void ai_profiles_init () {
 
 int ai_profile_lookup (char* name) {
     for (int i = 0; i < Num_ai_profiles; i++)
-        if (!stricmp (name, Ai_profiles[i].profile_name)) return i;
+        if (!strcasecmp (name, Ai_profiles[i].profile_name)) return i;
 
     return -1;
 }

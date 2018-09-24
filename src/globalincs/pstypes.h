@@ -415,8 +415,8 @@ public:
 //  - is not "none"
 //  - is not "<none>"
 inline bool VALID_FNAME (const char* x) {
-    return strlen ((x)) && stricmp ((x), "none") != 0 &&
-           stricmp ((x), "<none>") != 0;
+    return strlen ((x)) && strcasecmp ((x), "none") != 0 &&
+           strcasecmp ((x), "<none>") != 0;
 }
 /**
  * @brief Checks if the specified string may be a valid file name
@@ -429,8 +429,8 @@ inline bool VALID_FNAME (const char* x) {
  */
 inline bool VALID_FNAME (const std::string& x) {
     if (x.empty ()) { return false; }
-    if (!stricmp (x.c_str (), "none")) { return false; }
-    if (!stricmp (x.c_str (), "<none>")) { return false; }
+    if (!strcasecmp (x.c_str (), "none")) { return false; }
+    if (!strcasecmp (x.c_str (), "<none>")) { return false; }
     return true;
 }
 

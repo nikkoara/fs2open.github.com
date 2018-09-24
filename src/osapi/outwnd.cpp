@@ -91,11 +91,11 @@ void load_filter_info (void) {
         Assert (strlen (inbuf + 1) < NAME_LENGTH);
         strcpy_s (new_filter.name, inbuf + 1);
 
-        if (!stricmp (new_filter.name, "error")) { new_filter.enabled = true; }
-        else if (!stricmp (new_filter.name, "general")) {
+        if (!strcasecmp (new_filter.name, "error")) { new_filter.enabled = true; }
+        else if (!strcasecmp (new_filter.name, "general")) {
             new_filter.enabled = true;
         }
-        else if (!stricmp (new_filter.name, "warning")) {
+        else if (!strcasecmp (new_filter.name, "warning")) {
             new_filter.enabled = true;
         }
 
@@ -193,7 +193,7 @@ void outwnd_print (const char* id, const char* tmp) {
     auto filter = std::find_if (
         filter_vector ().begin (), filter_vector ().end (),
         [&id](const outwnd_filter_struct& f) {
-            return stricmp (f.name, id) == 0;
+            return strcasecmp (f.name, id) == 0;
         });
 
     // id found that isn't in the filter list yet
@@ -205,9 +205,9 @@ void outwnd_print (const char* id, const char* tmp) {
         outwnd_filter_struct new_filter;
 
         strcpy_s (new_filter.name, id);
-        new_filter.enabled = stricmp (new_filter.name, "general") == 0 ||
-                             stricmp (new_filter.name, "error") == 0 ||
-                             stricmp (new_filter.name, "warning") == 0;
+        new_filter.enabled = strcasecmp (new_filter.name, "general") == 0 ||
+                             strcasecmp (new_filter.name, "error") == 0 ||
+                             strcasecmp (new_filter.name, "warning") == 0;
 
         filter_vector ().push_back (new_filter);
         save_filter_info ();

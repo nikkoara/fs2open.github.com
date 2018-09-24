@@ -1787,13 +1787,13 @@ void labviewer_change_background_actual () {
                     // parse the proper nebula type (full or not)
                     for (z = 0; z < NUM_NEBULAS; z++) {
                         if (flags[Mission::Mission_Flags::Fullneb]) {
-                            if (!stricmp (str, Neb2_filenames[z])) {
+                            if (!strcasecmp (str, Neb2_filenames[z])) {
                                 Nebula_index = z;
                                 break;
                             }
                         }
                         else {
-                            if (!stricmp (str, Nebula_filenames[z])) {
+                            if (!strcasecmp (str, Nebula_filenames[z])) {
                                 Nebula_index = z;
                                 break;
                             }
@@ -1806,7 +1806,7 @@ void labviewer_change_background_actual () {
                     if (optional_string ("+Color:")) {
                         stuff_string (str, F_NAME, MAX_FILENAME_LEN);
                         for (z = 0; z < NUM_NEBULA_COLORS; z++) {
-                            if (!stricmp (str, Nebula_colors[z])) {
+                            if (!strcasecmp (str, Nebula_colors[z])) {
                                 Mission_palette = z;
                                 break;
                             }

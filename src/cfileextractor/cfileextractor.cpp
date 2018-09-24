@@ -96,7 +96,7 @@ typedef struct vp_fileinfo {
 
 std::vector< vp_fileinfo > VP_FileInfo;
 
-// just like strlwr() but without actually including it here
+// just like stolower() but without actually including it here
 void lowercase (char* s) {
     if (s == NULL) return;
 

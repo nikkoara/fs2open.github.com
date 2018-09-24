@@ -155,16 +155,16 @@ public:
             std::string dirStr;
             stuff_string (dirStr, F_NAME);
 
-            if (!stricmp (dirStr.c_str (), "Incoming")) {
+            if (!strcasecmp (dirStr.c_str (), "Incoming")) {
                 m_direction = ConeDirection::Incoming;
             }
-            else if (!stricmp (dirStr.c_str (), "Normal")) {
+            else if (!strcasecmp (dirStr.c_str (), "Normal")) {
                 m_direction = ConeDirection::Normal;
             }
-            else if (!stricmp (dirStr.c_str (), "Reflected")) {
+            else if (!strcasecmp (dirStr.c_str (), "Reflected")) {
                 m_direction = ConeDirection::Reflected;
             }
-            else if (!stricmp (dirStr.c_str (), "Reverse")) {
+            else if (!strcasecmp (dirStr.c_str (), "Reverse")) {
                 m_direction = ConeDirection::Reverse;
             }
             else {

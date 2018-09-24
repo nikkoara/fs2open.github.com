@@ -182,7 +182,7 @@ luacpp::LuaValue LuaSEXP::sexpToLua (int node, int argnum) const {
 
         auto idx = -1;
         for (int i = Num_builtin_messages; i < (int)Messages.size (); i++) {
-            if (!stricmp (Messages[i].name, name)) {
+            if (!strcasecmp (Messages[i].name, name)) {
                 idx = i;
                 break;
             }

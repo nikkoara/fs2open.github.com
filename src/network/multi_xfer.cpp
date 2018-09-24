@@ -439,7 +439,7 @@ int multi_xfer_lookup (char* filename) {
     for (idx = 0; idx < MAX_XFER_ENTRIES; idx++) {
         // if we found a matching filename
         if ((Multi_xfer_entry[idx].flags & MULTI_XFER_FLAG_USED) &&
-            !stricmp (filename, Multi_xfer_entry[idx].filename)) {
+            !strcasecmp (filename, Multi_xfer_entry[idx].filename)) {
             return idx;
         }
     }

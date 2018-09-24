@@ -1899,7 +1899,7 @@ void hud_squadmsg_call_reinforcement (
 
     // check to see if the reinforcement called was a wing.
     for (i = 0; i < Num_wings; i++) {
-        if (!stricmp (rp->name, Wings[i].name)) {
+        if (!strcasecmp (rp->name, Wings[i].name)) {
             // found a wingname.  Call the parse function to create all the
             // ships in this wing we must set the arrival cue of the wing to
             // true, otherwise, this won't work!!
@@ -2570,12 +2570,12 @@ int hud_query_order_issued (
     }
 
     for (i = 0; i < NUM_COMM_ORDER_ITEMS; i++)
-        if (!stricmp (order_name, Comm_orders[i].name))
+        if (!strcasecmp (order_name, Comm_orders[i].name))
             order = Comm_orders[i].item;
 
     // Goober5000 - if not found, check compatibility
     if (order == -1) {
-        if (!stricmp (order_name, "Attack my target")) {
+        if (!strcasecmp (order_name, "Attack my target")) {
             i = 0; // it maps to option 0, "Destroy my target"
             order = Comm_orders[i].item;
         }

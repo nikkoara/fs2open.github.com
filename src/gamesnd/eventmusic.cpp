@@ -592,7 +592,7 @@ void event_music_level_init (int force_soundtrack) {
     // pattern array kept getting spurious music tracks because their patterns
     // weren't -1
     for (i = 0; i < MAX_PATTERNS; i++) {
-        if (!strnicmp (strack->pattern_fnames[i], NOX ("none.wav"), 4)) {
+        if (!strncasecmp (strack->pattern_fnames[i], NOX ("none.wav"), 4)) {
             Patterns[i].handle = -1;
             continue;
         }
@@ -1183,7 +1183,7 @@ void parse_soundtrack () {
     if (optional_string ("+Cycle:")) {
         char temp[NAME_LENGTH];
         stuff_string (temp, F_NAME, NAME_LENGTH);
-        if (!stricmp (temp, "FS1"))
+        if (!strcasecmp (temp, "FS1"))
             Soundtracks[strack_idx].flags |= EMF_CYCLE_FS1;
     }
 
@@ -1260,7 +1260,7 @@ void parse_soundtrack () {
     for (i = 0; i < Soundtracks[strack_idx].num_patterns; i++) {
         // check for "none"
         if (!strlen (Soundtracks[strack_idx].pattern_fnames[i]) ||
-            !strnicmp (Soundtracks[strack_idx].pattern_fnames[i], "none", 4))
+            !strncasecmp (Soundtracks[strack_idx].pattern_fnames[i], "none", 4))
             continue;
 
         // check for file
@@ -1312,7 +1312,7 @@ void parse_menumusic () {
 
     if (optional_string ("$Filename:")) {
         stuff_string (fname, F_LNAME, MAX_FILENAME_LEN);
-        if (strnicmp (fname, NOX ("none.wav"), 4) != 0) {
+        if (strncasecmp (fname, NOX ("none.wav"), 4) != 0) {
             strcpy_s (Spooled_music[idx].filename, fname);
         }
         else {
@@ -1663,7 +1663,7 @@ void event_sexp_change_soundtrack (char* name) {
     int i, new_soundtrack = -1;
 
     for (i = 0; i < Num_soundtracks; i++) {
-        if (!stricmp (name, Soundtracks[i].name)) { new_soundtrack = i; }
+        if (!strcasecmp (name, Soundtracks[i].name)) { new_soundtrack = i; }
     }
 
     // if we are already on this soundtrack then bail
@@ -1701,7 +1701,7 @@ void event_music_set_soundtrack (char* name) {
 int event_music_get_soundtrack_index (const char* name) {
     // find the correct index for the event music
     for (int i = 0; i < Num_soundtracks; i++) {
-        if (!stricmp (name, Soundtracks[i].name)) { return i; }
+        if (!strcasecmp (name, Soundtracks[i].name)) { return i; }
     }
 
     return -1;
@@ -1710,7 +1710,7 @@ int event_music_get_soundtrack_index (const char* name) {
 int event_music_get_spooled_music_index (const char* name) {
     // find the correct index for the event music
     for (int i = 0; i < Num_music_files; i++) {
-        if (!stricmp (name, Spooled_music[i].name)) { return i; }
+        if (!strcasecmp (name, Spooled_music[i].name)) { return i; }
     }
 
     return -1;

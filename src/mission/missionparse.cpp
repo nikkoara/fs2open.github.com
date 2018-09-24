@@ -513,7 +513,7 @@ void parse_mission_info (mission* pm, bool basic = false) {
         ignore_white_space ();
         stuff_string (game_string, F_NAME, NAME_LENGTH);
         for (int i = 0; i < OLD_MAX_GAME_TYPES; i++) {
-            if (!stricmp (game_string, Old_game_types[i])) {
+            if (!strcasecmp (game_string, Old_game_types[i])) {
                 // this block of code is now old mission compatibility code. We
                 // specify game type in a different manner than before.
                 if (i == OLD_GAME_TYPE_SINGLE_ONLY)
@@ -1188,7 +1188,7 @@ void parse_music (mission* pm, int flags) {
     }
 
     // Goober5000 - if briefing not specified in import, default to BRIEF1
-    if (!stricmp (pm->briefing_music_name, "none") && (flags & MPF_IMPORT_FSM))
+    if (!strcasecmp (pm->briefing_music_name, "none") && (flags & MPF_IMPORT_FSM))
         strcpy_s (pm->briefing_music_name, "BRIEF1");
 
     // Goober5000 - old way of grabbing substitute music, but here for reverse
@@ -1205,14 +1205,14 @@ void parse_music (mission* pm, int flags) {
     // tracks
     if (flags & MPF_IMPORT_FSM) {
         // no specified music?
-        if (!stricmp (pm->event_music_name, "none")) goto done_event_music;
+        if (!strcasecmp (pm->event_music_name, "none")) goto done_event_music;
 
         // set the FS1 equivalent as the substitute
         strcpy_s (pm->substitute_event_music_name, "FS1-");
         strcat_s (pm->substitute_event_music_name, pm->event_music_name);
 
         // if we have Marauder, it's in FS2 as Deuteronomy, so we're done
-        if (!stricmp (pm->event_music_name, "7: Marauder") &&
+        if (!strcasecmp (pm->event_music_name, "7: Marauder") &&
             event_music_get_soundtrack_index ("5: Deuteronomy") >= 0) {
             strcpy_s (pm->event_music_name, "5: Deuteronomy");
             goto done_event_music;
@@ -1239,7 +1239,7 @@ void parse_music (mission* pm, int flags) {
     done_event_music:
 
         // no specified music?
-        if (!stricmp (pm->briefing_music_name, "none"))
+        if (!strcasecmp (pm->briefing_music_name, "none"))
             goto done_briefing_music;
 
         // set the FS1 equivalent as the substitute
@@ -1247,7 +1247,7 @@ void parse_music (mission* pm, int flags) {
         strcat_s (pm->substitute_briefing_music_name, pm->briefing_music_name);
 
         // Choco Mousse is the FS1 title soundtrack, so use Aquitaine in FS2
-        if (!stricmp (pm->briefing_music_name, "Choco Mousse") &&
+        if (!strcasecmp (pm->briefing_music_name, "Choco Mousse") &&
             event_music_get_spooled_music_index ("Aquitaine") >= 0) {
             strcpy_s (pm->briefing_music_name, "Aquitaine");
             goto done_briefing_music;
@@ -1561,7 +1561,7 @@ void parse_briefing (mission* /*pm*/, int flags) {
                 // Goober5000 - import
                 if (flags & MPF_IMPORT_FSM) {
                     // the Faustus is a largeship
-                    if (!strnicmp (
+                    if (!strncasecmp (
                             Ship_info[bi->ship_class].name, "GTSC Faustus",
                             12)) {
                         if (bi->type == ICON_CRUISER)
@@ -1571,13 +1571,13 @@ void parse_briefing (mission* /*pm*/, int flags) {
                             bi->type = ICON_LARGESHIP_WING;
                     }
                     // the Demon is a support ship :p
-                    else if (!strnicmp (
+                    else if (!strncasecmp (
                                  Ship_info[bi->ship_class].name, "SD Demon",
                                  8)) {
                         bi->type = ICON_SUPPORT_SHIP;
                     }
                     // the Hades is a supercap
-                    else if (!strnicmp (
+                    else if (!strncasecmp (
                                  Ship_info[bi->ship_class].name, "GTD Hades",
                                  9)) {
                         bi->type = ICON_SUPERCAP;
@@ -1599,7 +1599,7 @@ void parse_briefing (mission* /*pm*/, int flags) {
                     bi->id = -1;
                     for (i = 0; i < stage_num - 1; i++)
                         for (j = 0; j < bp->stages[i].num_icons; j++) {
-                            if (!stricmp (
+                            if (!strcasecmp (
                                     bp->stages[i].icons[j].label, bi->label))
                                 bi->id = bp->stages[i].icons[j].id;
                         }
@@ -2013,7 +2013,7 @@ int parse_create_object_sub (p_object* p_objp) {
     // it team traitor
     if (MULTI_DOGFIGHT && (p_objp->wingnum >= 0)) {
         for (i = 0; i < MAX_STARTING_WINGS; i++) {
-            if (!stricmp (Starting_wing_names[i], Wings[p_objp->wingnum].name))
+            if (!strcasecmp (Starting_wing_names[i], Wings[p_objp->wingnum].name))
                 shipp->team = Iff_traitor;
         }
     }
@@ -2240,7 +2240,7 @@ int parse_create_object_sub (p_object* p_objp) {
     i = p_objp->subsys_count;
     while (i--) {
         sssp = &Subsys_status[p_objp->subsys_index + i];
-        if (!stricmp (sssp->name, NOX ("Pilot"))) {
+        if (!strcasecmp (sssp->name, NOX ("Pilot"))) {
             wp = &shipp->weapons;
             if (sssp->primary_banks[0] != SUBSYS_STATUS_NO_CHANGE) {
                 for (j = k = 0; j < MAX_SHIP_PRIMARY_BANKS; j++) {
@@ -2341,7 +2341,7 @@ int parse_create_object_sub (p_object* p_objp) {
                 }
             }
 
-            if (!subsystem_stricmp (
+            if (!subsystem_strcasecmp (
                     ptr->system_info->subobj_name, sssp->name)) {
                 if (Fred_running) {
                     ptr->current_hits = sssp->percent;
@@ -2647,7 +2647,7 @@ void parse_bring_in_docked_wing (p_object* p_objp, int wingnum, int shipnum) {
 
     // set flag if necessary
     for (j = 0; j < MAX_STARTING_WINGS; j++) {
-        if (!stricmp (Starting_wing_names[j], wingp->name))
+        if (!strcasecmp (Starting_wing_names[j], wingp->name))
             Ships[shipnum].flags[Ship::Ship_Flags::From_player_wing];
     }
 
@@ -3302,8 +3302,8 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
         if (!unparsed.empty ()) {
             for (size_t k = 0; k < unparsed.size (); ++k) {
                 // catch typos or deprecations
-                if (!stricmp (unparsed[k].c_str (), "no-collide") ||
-                    !stricmp (unparsed[k].c_str (), "no_collide")) {
+                if (!strcasecmp (unparsed[k].c_str (), "no-collide") ||
+                    !strcasecmp (unparsed[k].c_str (), "no_collide")) {
                     p_objp->flags.set (
                         Mission::Parse_Object_Flags::OF_No_collide);
                 }
@@ -3612,7 +3612,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
              p_objp->replacement_textures.begin ();
          tr != p_objp->replacement_textures.end (); ++tr) {
         // load the texture
-        if (!stricmp (tr->new_texture, "invisible")) {
+        if (!strcasecmp (tr->new_texture, "invisible")) {
             // invisible is a special case
             tr->new_texture_id = REPLACE_WITH_INVISIBLE;
         }
@@ -3825,10 +3825,10 @@ void parse_common_object_data (p_object* objp) {
 
         // Genghis: check that the subsystem name makes sense for this ship
         // type
-        if (subsystem_stricmp (Subsys_status[i].name, NOX ("pilot"))) {
+        if (subsystem_strcasecmp (Subsys_status[i].name, NOX ("pilot"))) {
             int j;
             for (j = 0; j < sip->n_subsystems; ++j)
-                if (!subsystem_stricmp (
+                if (!subsystem_strcasecmp (
                         sip->subsystems[j].subobj_name, Subsys_status[i].name))
                     break;
             // if (j == sip->n_subsystems)
@@ -4191,7 +4191,7 @@ p_object* mission_parse_get_parse_object (const char* name) {
 
     // look for original ships
     for (ii = Parse_objects.begin (); ii != Parse_objects.end (); ++ii)
-        if (!stricmp (ii->name, name)) return &(*ii);
+        if (!strcasecmp (ii->name, name)) return &(*ii);
 
     // boo
     return NULL;
@@ -4201,7 +4201,7 @@ int find_wing_name (char* name) {
     int i;
 
     for (i = 0; i < Num_wings; i++) {
-        if (!stricmp (name, Wings[i].name)) return i;
+        if (!strcasecmp (name, Wings[i].name)) return i;
     }
 
     return -1;
@@ -4507,14 +4507,14 @@ int parse_wing_create_ships (
         if (MULTI_TEAM) {
             // different for tvt -- Goober5000
             for (j = 0; j < MAX_TVT_WINGS; j++) {
-                if (!stricmp (TVT_wing_names[j], wingp->name))
+                if (!strcasecmp (TVT_wing_names[j], wingp->name))
                     Ships[Objects[objnum].instance].flags.set (
                         Ship::Ship_Flags::From_player_wing);
             }
         }
         else {
             for (j = 0; j < MAX_STARTING_WINGS; j++) {
-                if (!stricmp (Starting_wing_names[j], wingp->name))
+                if (!strcasecmp (Starting_wing_names[j], wingp->name))
                     Ships[Objects[objnum].instance].flags.set (
                         Ship::Ship_Flags::From_player_wing);
             }
@@ -4656,7 +4656,7 @@ void parse_wing (mission* pm) {
                 // do we have a previous texture?
                 if (Wings[i].wing_insignia_texture != -1) {
                     // if we have a match
-                    if (!stricmp (
+                    if (!strcasecmp (
                             Wings[i].wing_squad_filename,
                             wingp->wing_squad_filename)) {
                         flag = i;
@@ -4803,23 +4803,23 @@ void parse_wing (mission* pm) {
 
         count = stuff_string_list (wing_flag_strings, PARSEABLE_WING_FLAGS);
         for (i = 0; i < count; i++) {
-            if (!stricmp (wing_flag_strings[i], NOX ("ignore-count")))
+            if (!strcasecmp (wing_flag_strings[i], NOX ("ignore-count")))
                 wingp->flags.set (Ship::Wing_Flags::Ignore_count);
-            else if (!stricmp (wing_flag_strings[i], NOX ("reinforcement")))
+            else if (!strcasecmp (wing_flag_strings[i], NOX ("reinforcement")))
                 wingp->flags.set (Ship::Wing_Flags::Reinforcement);
-            else if (!stricmp (wing_flag_strings[i], NOX ("no-arrival-music")))
+            else if (!strcasecmp (wing_flag_strings[i], NOX ("no-arrival-music")))
                 wingp->flags.set (Ship::Wing_Flags::No_arrival_music);
-            else if (!stricmp (
+            else if (!strcasecmp (
                          wing_flag_strings[i], NOX ("no-arrival-message")))
                 wingp->flags.set (Ship::Wing_Flags::No_arrival_message);
-            else if (!stricmp (wing_flag_strings[i], NOX ("no-arrival-warp")))
+            else if (!strcasecmp (wing_flag_strings[i], NOX ("no-arrival-warp")))
                 wingp->flags.set (Ship::Wing_Flags::No_arrival_warp);
-            else if (!stricmp (
+            else if (!strcasecmp (
                          wing_flag_strings[i], NOX ("no-departure-warp")))
                 wingp->flags.set (Ship::Wing_Flags::No_departure_warp);
-            else if (!stricmp (wing_flag_strings[i], NOX ("no-dynamic")))
+            else if (!strcasecmp (wing_flag_strings[i], NOX ("no-dynamic")))
                 wingp->flags.set (Ship::Wing_Flags::No_dynamic);
-            else if (!stricmp (wing_flag_strings[i], NOX ("nav-carry-status")))
+            else if (!strcasecmp (wing_flag_strings[i], NOX ("nav-carry-status")))
                 wingp->flags.set (Ship::Wing_Flags::Nav_carry);
             else
                 Warning (
@@ -4855,7 +4855,7 @@ void parse_wing (mission* pm) {
     // sure that wave count doesn't exceed one for these wings.
     if (MULTI_NOT_TEAM) {
         for (i = 0; i < MAX_STARTING_WINGS; i++) {
-            if (!stricmp (Starting_wing_names[i], wingp->name)) {
+            if (!strcasecmp (Starting_wing_names[i], wingp->name)) {
                 if (wingp->num_waves > 1) {
                     // only end the game if we're the server - clients will
                     // eventually find out :)
@@ -4870,7 +4870,7 @@ void parse_wing (mission* pm) {
     }
     else if (MULTI_TEAM) {
         for (i = 0; i < MAX_TVT_WINGS; i++) {
-            if (!stricmp (TVT_wing_names[i], wingp->name)) {
+            if (!strcasecmp (TVT_wing_names[i], wingp->name)) {
                 if (wingp->num_waves > 1) {
                     // only end the game if we're the server - clients will
                     // eventually find out :)
@@ -5229,7 +5229,7 @@ void parse_event (mission* /*pm*/) {
             int add_flag = 1;
 
             for (int j = 0; j < MAX_MISSION_EVENT_LOG_FLAGS; j++) {
-                if (!stricmp (
+                if (!strcasecmp (
                         buffer[i].c_str (), Mission_event_log_flags[j])) {
                     // bitshift add_flag so that it equals the index of the
                     // flag in Mission_event_log_flags[]
@@ -5635,13 +5635,13 @@ void parse_bitmaps (mission* pm) {
             // parse the proper nebula type (full or not)
             for (z = 0; z < NUM_NEBULAS; z++) {
                 if (pm->flags[Mission::Mission_Flags::Fullneb]) {
-                    if (!stricmp (str, Neb2_filenames[z])) {
+                    if (!strcasecmp (str, Neb2_filenames[z])) {
                         Nebula_index = z;
                         break;
                     }
                 }
                 else {
-                    if (!stricmp (str, Nebula_filenames[z])) {
+                    if (!strcasecmp (str, Nebula_filenames[z])) {
                         Nebula_index = z;
                         break;
                     }
@@ -5655,7 +5655,7 @@ void parse_bitmaps (mission* pm) {
             if (optional_string ("+Color:")) {
                 stuff_string (str, F_NAME, MAX_FILENAME_LEN);
                 for (z = 0; z < NUM_NEBULA_COLORS; z++) {
-                    if (!stricmp (str, Nebula_colors[z])) {
+                    if (!strcasecmp (str, Nebula_colors[z])) {
                         Mission_palette = z;
                         break;
                     }
@@ -5852,7 +5852,7 @@ void parse_variables () {
             // if the active mission has a variable with the same name as a
             // variable saved to the campaign file override its initial value
             // with the previous mission's value
-            if (!stricmp (
+            if (!strcasecmp (
                     Sexp_variables[j].variable_name,
                     current_pv.variable_name)) {
                 // if this is an eternal that shares the same name as a
@@ -5892,7 +5892,7 @@ void parse_variables () {
             // if the active mission has a variable with the same name as a
             // variable saved to the player file override its initial value
             // with the previous mission's value
-            if (!stricmp (
+            if (!strcasecmp (
                     Sexp_variables[j].variable_name,
                     Player->variables[i].variable_name)) {
                 if (Sexp_variables[j].type & SEXP_VARIABLE_IS_PERSISTENT) {
@@ -6967,7 +6967,7 @@ p_object* mission_parse_get_arrival_ship (const char* name) {
     for (p_objp = GET_FIRST (&Ship_arrival_list);
          p_objp != END_OF_LIST (&Ship_arrival_list);
          p_objp = GET_NEXT (p_objp)) {
-        if (!stricmp (p_objp->name, name)) {
+        if (!strcasecmp (p_objp->name, name)) {
             return p_objp; // still on the arrival list
         }
     }
@@ -7178,7 +7178,7 @@ void mission_parse_mark_reinforcement_available (char* name) {
 
     for (i = 0; i < Num_reinforcements; i++) {
         rp = &Reinforcements[i];
-        if (!stricmp (rp->name, name)) {
+        if (!strcasecmp (rp->name, name)) {
             if (!(rp->flags & RF_IS_AVAILABLE)) {
                 rp->flags |= RF_IS_AVAILABLE;
 
@@ -7559,7 +7559,7 @@ void mission_eval_arrivals () {
                     // see if this wing has an arrival message associated with
                     // it
                     for (j = 0; j < MAX_BUILTIN_MESSAGE_TYPES; j++) {
-                        if (!stricmp (
+                        if (!strcasecmp (
                                 message_name, Builtin_messages[j].name)) {
                             message_send_builtin_to_player (
                                 j, &Ships[rship], MESSAGE_PRIORITY_LOW,
@@ -7939,7 +7939,7 @@ parse_get_subsys_status (p_object* pobjp, const char* subsys_name) {
     for (i = 0; i < pobjp->subsys_count; i++) {
         sssp = &Subsys_status[pobjp->subsys_index + i];
 
-        if (!subsystem_stricmp (sssp->name, subsys_name)) return sssp;
+        if (!subsystem_strcasecmp (sssp->name, subsys_name)) return sssp;
     }
 
     return NULL;
@@ -7950,7 +7950,7 @@ int get_parse_name_index (const char* name) {
     int i;
 
     for (i = 0; i < Num_parse_names; i++)
-        if (!stricmp (name, Parse_names[i])) return i;
+        if (!strcasecmp (name, Parse_names[i])) return i;
 
     Assert (i < MAX_SHIPS + MAX_WINGS);
     Assert (strlen (name) < NAME_LENGTH);
@@ -7979,7 +7979,7 @@ int add_path_restriction () {
         // see if path names match
         for (j = 0; j < temp.num_paths; j++) {
             // no match, so skip this
-            if (stricmp (
+            if (strcasecmp (
                     temp.path_names[j], Path_restrictions[i].path_names[j]) !=
                 0)
                 goto continue_outer_loop;
@@ -8014,13 +8014,13 @@ int get_special_anchor (char* name) {
     const char* iff_name;
     int iff_index;
 
-    if (strnicmp (name, "<any ", 5) != 0) return -1;
+    if (strncasecmp (name, "<any ", 5) != 0) return -1;
 
     strcpy_s (tmp, name + 5);
     iff_name = strtok (tmp, " >");
 
     // hack substitute "hostile" for "enemy"
-    if (!stricmp (iff_name, "enemy")) iff_name = "hostile";
+    if (!strcasecmp (iff_name, "enemy")) iff_name = "hostile";
 
     iff_index = iff_lookup (iff_name);
     if (iff_index < 0) return -1;
@@ -8090,7 +8090,7 @@ void mission_add_to_arriving_support (object* requester_objp) {
     shipp = &Ships[requester_objp->instance];
     // check for duplicates before adding
     for (i = 0; i < Num_arriving_repair_targets; i++) {
-        if (!stricmp (Arriving_repair_targets[i], shipp->ship_name)) { break; }
+        if (!strcasecmp (Arriving_repair_targets[i], shipp->ship_name)) { break; }
     }
     if (i != Num_arriving_repair_targets) { // found the ship before reaching
                                             // the end -- ignore it!
@@ -8257,7 +8257,7 @@ void mission_bring_in_support_ship (object* requester_objp) {
     // need to set ship's cargo to nothing.  scan the cargo_names array looking
     // for the string nothing. add it if not found
     for (i = 0; i < Num_cargo; i++)
-        if (!stricmp (Cargo_names[i], NOX ("nothing"))) break;
+        if (!strcasecmp (Cargo_names[i], NOX ("nothing"))) break;
 
     if (i == Num_cargo) {
         strcpy (Cargo_names[i], NOX ("Nothing"));

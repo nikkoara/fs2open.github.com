@@ -1478,13 +1478,13 @@ int translate_key_to_index (const char* key, bool find_override) {
 
     // look for modifiers
     Assert (key);
-    if (!strnicmp (key, "Alt", 3)) {
+    if (!strncasecmp (key, "Alt", 3)) {
         alt = 1;
         key += 3;
         if (*key) key++;
     }
 
-    if (!strnicmp (key, "Shift", 5)) {
+    if (!strncasecmp (key, "Shift", 5)) {
         shift = 1;
         key += 5;
         if (*key) key++;
@@ -1493,7 +1493,7 @@ int translate_key_to_index (const char* key, bool find_override) {
     // look up index for default key
     if (*key) {
         for (i = 0; i < max_scan_codes; i++)
-            if (!stricmp (key, Scan_code_text_english[i])) {
+            if (!strcasecmp (key, Scan_code_text_english[i])) {
                 index = i;
                 break;
             }

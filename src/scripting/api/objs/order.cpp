@@ -163,7 +163,7 @@ ADE_VIRTVAR (
             case AI_GOAL_FLY_TO_SHIP:
             case AI_GOAL_STAY_STILL:
                 if ((newh->objp->type == OBJ_SHIP) &&
-                    !stricmp (
+                    !strcasecmp (
                         Ships[newh->objp->instance].ship_name,
                         ohp->aigp->target_name)) {
                     ohp->aigp->target_name =
@@ -196,7 +196,7 @@ ADE_VIRTVAR (
                 if (newh->objp->type == OBJ_WAYPOINT) {
                     wpl = find_waypoint_list_with_instance (
                         newh->objp->instance);
-                    if (!stricmp (wpl->get_name (), ohp->aigp->target_name)) {
+                    if (!strcasecmp (wpl->get_name (), ohp->aigp->target_name)) {
                         ohp->aigp->target_name = wpl->get_name ();
                         ohp->aigp->time = Missiontime;
                         if (ohp->odx == 0) {
@@ -210,7 +210,7 @@ ADE_VIRTVAR (
                 break;
             case AI_GOAL_CHASE_WING:
                 if ((newh->objp->type == OBJ_SHIP) &&
-                    !stricmp (
+                    !strcasecmp (
                         Ships[newh->objp->instance].ship_name,
                         ohp->aigp->target_name)) {
                     ship* shipp = &Ships[newh->objp->instance];
@@ -225,7 +225,7 @@ ADE_VIRTVAR (
                 break;
             case AI_GOAL_GUARD_WING:
                 if ((newh->objp->type == OBJ_SHIP) &&
-                    !stricmp (
+                    !strcasecmp (
                         Ships[newh->objp->instance].ship_name,
                         ohp->aigp->target_name)) {
                     ship* shipp = &Ships[newh->objp->instance];
@@ -317,7 +317,7 @@ ADE_VIRTVAR (
         if (newh && newh->IsValid () &&
             (ohp->aigp->ai_mode == AI_GOAL_DESTROY_SUBSYSTEM)) {
             objp = &Objects[newh->ss->parent_objnum];
-            if (!stricmp (
+            if (!strcasecmp (
                     Ships[objp->instance].ship_name, ohp->aigp->target_name)) {
                 ohp->aigp->target_name = Ships[objp->instance].ship_name;
                 ohp->aigp->time = Missiontime;

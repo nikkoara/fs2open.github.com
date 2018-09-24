@@ -494,7 +494,7 @@ void barracks_strip_pcx (char* str) {
     const size_t EXT_LEN = 4;
     size_t flen = strlen (str);
 
-    if ((flen > 4) && !stricmp (str + flen - EXT_LEN, ".pcx")) {
+    if ((flen > 4) && !strcasecmp (str + flen - EXT_LEN, ".pcx")) {
         str[flen - EXT_LEN] = '\0';
     }
 }
@@ -532,7 +532,7 @@ int barracks_new_pilot_selected () {
     strcpy_s (stripped, Cur_pilot->image_filename);
     barracks_strip_pcx (stripped);
     for (i = 0; i < Num_pilot_images; i++) {
-        if (!stricmp (stripped, Pilot_image_names[i])) { break; }
+        if (!strcasecmp (stripped, Pilot_image_names[i])) { break; }
     }
     Pic_number = i;
 
@@ -544,7 +544,7 @@ int barracks_new_pilot_selected () {
     }
     barracks_strip_pcx (stripped);
     for (i = 0; i < Num_pilot_squad_images; i++) {
-        if (!stricmp (stripped, Pilot_squad_image_names[i])) { break; }
+        if (!strcasecmp (stripped, Pilot_squad_image_names[i])) { break; }
     }
     Pic_squad_number = i;
 
@@ -846,7 +846,7 @@ void barracks_delete_pilot () {
         XSTR ("Warning!\n\nAre you sure you wish to delete this pilot?", 65));
     if (popup_rval != 1) { return; }
 
-    if (!stricmp (Pilots[Selected_line], Cur_pilot->callsign)) { active = 1; }
+    if (!strcasecmp (Pilots[Selected_line], Cur_pilot->callsign)) { active = 1; }
 
     strcpy_s (buf, Pilots[Selected_line]);
 
@@ -1133,7 +1133,7 @@ void barracks_display_pilot_callsigns (int prospective_pilot) {
            Barracks_list_coords[gr_screen.res][BARRACKS_H_COORD]) {
         if (cur_pilot_idx >= Num_pilots) break;
 
-        if (!stricmp (Cur_pilot->callsign, Pilots[cur_pilot_idx]) && multi) {
+        if (!strcasecmp (Cur_pilot->callsign, Pilots[cur_pilot_idx]) && multi) {
             gr_set_color_fast (&Color_text_active);
         }
         else {
@@ -1240,7 +1240,7 @@ void barracks_accept_new_pilot_callsign () {
     }
 
     for (i = 1; i < Num_pilots; i++) {
-        if (!stricmp (buf, Pilots[i])) {
+        if (!strcasecmp (buf, Pilots[i])) {
             z = 1;
             if (pilot_verify_overwrite () == 1) {
                 strcpy_s (name, Pilots[Selected_line]);

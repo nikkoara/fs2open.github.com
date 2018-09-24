@@ -127,7 +127,7 @@ void mission_log_obsolete_entries (LogType type, const char* pname) {
             // that it belongs to the ship passed into this routine.  If it
             // matches, mark as obsolete.  We'll clean up the log when it
             // starts to get full
-            if (!stricmp (pname, entry->pname)) {
+            if (!strcasecmp (pname, entry->pname)) {
                 if ((entry->type == LOG_SHIP_SUBSYS_DESTROYED) ||
                     (entry->type == LOG_SHIP_DISARMED) ||
                     (entry->type == LOG_SHIP_DISABLED))
@@ -477,10 +477,10 @@ int mission_log_get_time_indexed (
                     return 0;
                 }
 
-                if ((!stricmp (entry->pname, pname) &&
-                     !stricmp (entry->sname, sname)) ||
-                    (!stricmp (entry->pname, sname) &&
-                     !stricmp (entry->sname, pname))) {
+                if ((!strcasecmp (entry->pname, pname) &&
+                     !strcasecmp (entry->sname, sname)) ||
+                    (!strcasecmp (entry->pname, sname) &&
+                     !strcasecmp (entry->sname, pname))) {
                     found = 1;
                 }
             }
@@ -491,19 +491,19 @@ int mission_log_get_time_indexed (
                     return 0;
                 }
 
-                if (stricmp (entry->pname, pname) != 0) { continue; }
+                if (strcasecmp (entry->pname, pname) != 0) { continue; }
 
                 // if we are looking for a subsystem entry, the subsystem names
                 // must be compared
                 if ((type == LOG_SHIP_SUBSYS_DESTROYED ||
                      type == LOG_CAP_SUBSYS_CARGO_REVEALED)) {
                     if ((sname == NULL) ||
-                        !subsystem_stricmp (sname, entry->sname)) {
+                        !subsystem_strcasecmp (sname, entry->sname)) {
                         found = 1;
                     }
                 }
                 else {
-                    if ((sname == NULL) || !stricmp (sname, entry->sname)) {
+                    if ((sname == NULL) || !strcasecmp (sname, entry->sname)) {
                         found = 1;
                     }
                 }
@@ -558,10 +558,10 @@ int mission_log_get_count (
                     return 0;
                 }
 
-                if ((!stricmp (entry->pname, pname) &&
-                     !stricmp (entry->sname, sname)) ||
-                    (!stricmp (entry->pname, sname) &&
-                     !stricmp (entry->sname, pname))) {
+                if ((!strcasecmp (entry->pname, pname) &&
+                     !strcasecmp (entry->sname, sname)) ||
+                    (!strcasecmp (entry->pname, sname) &&
+                     !strcasecmp (entry->sname, pname))) {
                     count++;
                 }
             }
@@ -572,9 +572,9 @@ int mission_log_get_count (
                     return 0;
                 }
 
-                if (stricmp (entry->pname, pname) != 0) { continue; }
+                if (strcasecmp (entry->pname, pname) != 0) { continue; }
 
-                if ((sname == NULL) || !stricmp (sname, entry->sname)) {
+                if ((sname == NULL) || !strcasecmp (sname, entry->sname)) {
                     count++;
                 }
             }

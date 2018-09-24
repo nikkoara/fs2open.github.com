@@ -526,7 +526,7 @@ void training_check_objectives () {
             Mission_events[event_idx].objective_text &&
             (timestamp () >
              Mission_events[event_idx].born_on_date + Directive_wait_time)) {
-            if (!Training_failure || !strnicmp (
+            if (!Training_failure || !strncasecmp (
                                          Mission_events[event_idx].name,
                                          XSTR ("Training failed", 423), 15)) {
                 // check for the actual objective
@@ -630,7 +630,7 @@ void training_mission_shutdown () {
  * Translates special tokens.  Handles one token only.
  */
 char* translate_message_token (char* str) {
-    if (!stricmp (str, NOX ("wp"))) {
+    if (!strcasecmp (str, NOX ("wp"))) {
         sprintf (str, "%d", Training_context_goal_waypoint + 1);
         return str;
     }
@@ -674,7 +674,7 @@ void message_translate_tokens (char* buf, const char* text) {
                 temp[toke2 - text] = 0; // null terminate string
                 ptr = translate_key (temp); // try and translate key
                 if (ptr) {                  // was key translated properly?
-                    if (!stricmp (ptr, NOX ("none")) &&
+                    if (!strcasecmp (ptr, NOX ("none")) &&
                         (Training_bind_warning != Missiontime)) {
                         if (The_mission.game_type & MISSION_TYPE_TRAINING) {
                             r = popup (
@@ -797,7 +797,7 @@ int message_play_training_voice (int index) {
                     }
                 }
 
-                if (strnicmp (
+                if (strncasecmp (
                         Message_waves[index].name, NOX ("none.wav"), 4) != 0) {
                     Training_voice_soundstream = audiostream_open (
                         Message_waves[index].name, ASF_VOICE);
@@ -906,10 +906,10 @@ void message_training_queue (const char* text, int timestamp, int length) {
 
     Assert (Training_message_queue_count < TRAINING_MESSAGE_QUEUE_MAX);
     if (Training_message_queue_count < TRAINING_MESSAGE_QUEUE_MAX) {
-        if (!stricmp (text, NOX ("none"))) { m = -1; }
+        if (!strcasecmp (text, NOX ("none"))) { m = -1; }
         else {
             for (m = 0; m < Num_messages; m++)
-                if (!stricmp (text, Messages[m].name)) break;
+                if (!strcasecmp (text, Messages[m].name)) break;
 
             Assert (m < Num_messages);
             if (m >= Num_messages) return;
@@ -1137,7 +1137,7 @@ void training_process_message (char* message) {
     src = buf;
     dest = Training_buf;
     while (*src) {
-        if (!strnicmp (src, NOX ("<b>"), 3)) {
+        if (!strncasecmp (src, NOX ("<b>"), 3)) {
             Assert (count < MAX_TRAINING_MESSAGE_MODS);
             src += 3;
             Training_message_mods[count].pos = dest;
@@ -1145,7 +1145,7 @@ void training_process_message (char* message) {
             count++;
         }
 
-        if (!strnicmp (src, NOX ("</b>"), 4)) {
+        if (!strncasecmp (src, NOX ("</b>"), 4)) {
             Assert (count < MAX_TRAINING_MESSAGE_MODS);
             src += 4;
             Training_message_mods[count].pos = dest;

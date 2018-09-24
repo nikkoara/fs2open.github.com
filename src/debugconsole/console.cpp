@@ -138,7 +138,7 @@ void dc_do_command (std::string* cmd_str) {
         command); // Grab the first token, presumably this is a command
 
     for (i = 0; i < dc_commands_size; ++i) {
-        if (stricmp (dc_commands[i]->name, command.c_str ()) == 0) {
+        if (strcasecmp (dc_commands[i]->name, command.c_str ()) == 0) {
             break;
         } // Else, continue
     }

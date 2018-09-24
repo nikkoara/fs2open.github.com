@@ -257,7 +257,7 @@ void hud_shield_assign_info (ship_info* sip, char* filename) {
     ubyte i;
 
     for (i = 0; i < (ubyte)Hud_shield_filenames.size (); i++) {
-        if (!stricmp (filename, Hud_shield_filenames.at (i).c_str ())) {
+        if (!strcasecmp (filename, Hud_shield_filenames.at (i).c_str ())) {
             sip->shield_icon_index = i;
             return;
         }

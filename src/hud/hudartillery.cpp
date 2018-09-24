@@ -39,7 +39,7 @@ int ssm_info_lookup (const char* name) {
     if (name == NULL) return -1;
 
     for (auto it = Ssm_info.cbegin (); it != Ssm_info.cend (); ++it)
-        if (!stricmp (name, it->name))
+        if (!strcasecmp (name, it->name))
             return (int)std::distance (Ssm_info.cbegin (), it);
 
     return -1;

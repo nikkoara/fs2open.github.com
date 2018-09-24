@@ -994,7 +994,7 @@ void player_select_init_player_stuff (int mode) {
     if (Player_select_last_pilot[0] != '\0') {
         int i, j;
         for (i = 0; i < Player_select_num_pilots; ++i) {
-            if (!stricmp (Player_select_last_pilot, Pilots[i])) { break; }
+            if (!strcasecmp (Player_select_last_pilot, Pilots[i])) { break; }
         }
         if (i != Player_select_num_pilots) {
             for (j = i; j > 0; --j) {
@@ -1141,7 +1141,7 @@ void player_select_process_input (int k) {
         }
 
         for (idx = 1; idx < Player_select_num_pilots; idx++) {
-            if (!stricmp (buf, Pilots[idx])) {
+            if (!strcasecmp (buf, Pilots[idx])) {
                 // verify if it is ok to overwrite the file
                 if (pilot_verify_overwrite () == 1) {
                     // delete the pilot and select the beginning of the list

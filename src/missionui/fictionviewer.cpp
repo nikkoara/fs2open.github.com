@@ -499,7 +499,7 @@ bool mission_has_fiction () {
 int fiction_viewer_ui_name_to_index (const char* ui_name) {
     int i;
     for (i = 0; i < NUM_FVW_SETTINGS; i++) {
-        if (!stricmp (ui_name, Fiction_viewer_ui_names[i])) { return i; }
+        if (!strcasecmp (ui_name, Fiction_viewer_ui_names[i])) { return i; }
     }
 
     return -1;

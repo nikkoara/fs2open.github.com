@@ -391,22 +391,22 @@ void parse_mod_table (const char* filename) {
         if (optional_string ("$Default ship select effect:")) {
             char effect[NAME_LENGTH];
             stuff_string (effect, F_NAME, NAME_LENGTH);
-            if (!stricmp (effect, "FS2"))
+            if (!strcasecmp (effect, "FS2"))
                 Default_ship_select_effect = 2;
-            else if (!stricmp (effect, "FS1"))
+            else if (!strcasecmp (effect, "FS1"))
                 Default_ship_select_effect = 1;
-            else if (!stricmp (effect, "off"))
+            else if (!strcasecmp (effect, "off"))
                 Default_ship_select_effect = 0;
         }
 
         if (optional_string ("$Default weapon select effect:")) {
             char effect[NAME_LENGTH];
             stuff_string (effect, F_NAME, NAME_LENGTH);
-            if (!stricmp (effect, "FS2"))
+            if (!strcasecmp (effect, "FS2"))
                 Default_weapon_select_effect = 2;
-            else if (!stricmp (effect, "FS1"))
+            else if (!strcasecmp (effect, "FS1"))
                 Default_weapon_select_effect = 1;
-            else if (!stricmp (effect, "off"))
+            else if (!strcasecmp (effect, "off"))
                 Default_weapon_select_effect = 0;
         }
 
@@ -443,7 +443,7 @@ void parse_mod_table (const char* filename) {
         if (optional_string ("$Default fiction viewer UI:")) {
             char ui_name[NAME_LENGTH];
             stuff_string (ui_name, F_NAME, NAME_LENGTH);
-            if (!stricmp (ui_name, "auto"))
+            if (!strcasecmp (ui_name, "auto"))
                 Default_fiction_viewer_ui = -1;
             else {
                 int ui_index = fiction_viewer_ui_name_to_index (ui_name);

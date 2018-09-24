@@ -76,7 +76,7 @@ char* ai_get_goal_target_name (const char* name, int* index) {
     int i;
 
     for (i = 0; i < Total_goal_target_names; i++)
-        if (!stricmp (name, Goal_target_names[i])) {
+        if (!strcasecmp (name, Goal_target_names[i])) {
             *index = i;
             return Goal_target_names[i];
         }

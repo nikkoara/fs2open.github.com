@@ -524,7 +524,7 @@ int hotkey_line_add_sorted (const char* text, int type, int index, int start) {
     z = Num_lines - 1;
     while ((z >= start) &&
            ((Hotkey_lines[z].type == HOTKEY_LINE_SUBSHIP) ||
-            (stricmp (text, Hotkey_lines[z].label.c_str ()) < 0)))
+            (strcasecmp (text, Hotkey_lines[z].label.c_str ()) < 0)))
         z--;
 
     z++;

@@ -103,7 +103,7 @@ void parse_mflash_tbl (const char* filename) {
             }
 
             for (i = 0; i < Mflash_info.size (); i++) {
-                if (!stricmp (mflash.name, Mflash_info[i].name)) {
+                if (!strcasecmp (mflash.name, Mflash_info[i].name)) {
                     if (override_mflash) { Mflash_info[i] = mflash; }
                     break;
                 }
@@ -279,7 +279,7 @@ int mflash_lookup (char* name) {
 
     // look it up
     for (idx = 0; idx < Mflash_info.size (); idx++) {
-        if (!stricmp (name, Mflash_info[idx].name)) return idx;
+        if (!strcasecmp (name, Mflash_info[idx].name)) return idx;
     }
 
     // couldn't find it

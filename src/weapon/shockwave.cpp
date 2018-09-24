@@ -478,7 +478,7 @@ int shockwave_load (const char* s_name, bool shock_3D) {
 
     for (auto it = Shockwave_info.cbegin (); it != Shockwave_info.cend ();
          ++it) {
-        if (!stricmp (it->filename, s_name)) {
+        if (!strcasecmp (it->filename, s_name)) {
             s_index = (int)std::distance (Shockwave_info.cbegin (), it);
             break;
         }

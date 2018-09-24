@@ -4679,7 +4679,7 @@ int cmp_sexp_chains (int node1, int node2) {
 
     // DA: 1/7/99 Need to check the actual Sexp_node.text, not possible
     // variable, which can be equal
-    if (stricmp (Sexp_nodes[node1].text, Sexp_nodes[node2].text) != 0) {
+    if (strcasecmp (Sexp_nodes[node1].text, Sexp_nodes[node2].text) != 0) {
         return 0;
     }
 
@@ -5113,7 +5113,7 @@ int check_sexp_syntax (
         case OPF_SHIP_OR_NONE:
             if (type2 != SEXP_ATOM_STRING) { return SEXP_CHECK_TYPE_MISMATCH; }
 
-            if (stricmp (CTEXT (node), SEXP_NONE_STRING) != 0) // none is okay
+            if (strcasecmp (CTEXT (node), SEXP_NONE_STRING) != 0) // none is okay
             {
                 if (ship_name_lookup (CTEXT (node), 1) < 0) {
                     if (Fred_running ||
@@ -5184,7 +5184,7 @@ int check_sexp_syntax (
 
             // none is okay for _OR_NONE
             if (type == OPF_SHIP_WING_POINT_OR_NONE &&
-                !stricmp (CTEXT (node), SEXP_NONE_STRING)) {
+                !strcasecmp (CTEXT (node), SEXP_NONE_STRING)) {
                 break;
             }
 
@@ -5227,14 +5227,14 @@ int check_sexp_syntax (
 
             // none is okay for subsys_or_none
             if (type == OPF_SUBSYSTEM_OR_NONE &&
-                !stricmp (CTEXT (node), SEXP_NONE_STRING)) {
+                !strcasecmp (CTEXT (node), SEXP_NONE_STRING)) {
                 break;
             }
 
             //  subsys_or_generic has a few extra options it accepts
             if (type == OPF_SUBSYS_OR_GENERIC &&
-                (!(stricmp (CTEXT (node), SEXP_ALL_ENGINES_STRING)) ||
-                 !(stricmp (CTEXT (node), SEXP_ALL_TURRETS_STRING)))) {
+                (!(strcasecmp (CTEXT (node), SEXP_ALL_ENGINES_STRING)) ||
+                 !(strcasecmp (CTEXT (node), SEXP_ALL_TURRETS_STRING)))) {
                 break;
             }
 
@@ -5299,21 +5299,21 @@ int check_sexp_syntax (
                 (Operators[op].value == OP_SET_SUBSYSTEM_STRNGTH) ||
                 (Operators[op].value == OP_SET_ARMOR_TYPE) ||
                 (Operators[op].value == OP_BEAM_FIRE)) {
-                if (!stricmp (CTEXT (node), SEXP_HULL_STRING) ||
-                    !stricmp (CTEXT (node), SEXP_SIM_HULL_STRING)) {
+                if (!strcasecmp (CTEXT (node), SEXP_HULL_STRING) ||
+                    !strcasecmp (CTEXT (node), SEXP_SIM_HULL_STRING)) {
                     break;
                 }
             }
             // check for special "shields" value for armor types
             if (Operators[op].value == OP_SET_ARMOR_TYPE) {
-                if (!stricmp (CTEXT (node), SEXP_SHIELD_STRING) ||
-                    !stricmp (CTEXT (node), SEXP_SIM_HULL_STRING)) {
+                if (!strcasecmp (CTEXT (node), SEXP_SHIELD_STRING) ||
+                    !strcasecmp (CTEXT (node), SEXP_SIM_HULL_STRING)) {
                     break;
                 }
             }
 
             for (i = 0; i < Ship_info[ship_class].n_subsystems; i++) {
-                if (!subsystem_stricmp (
+                if (!subsystem_strcasecmp (
                         Ship_info[ship_class].subsystems[i].subobj_name,
                         CTEXT (node))) {
                     break;
@@ -5348,7 +5348,7 @@ int check_sexp_syntax (
 
         case OPF_SUBSYSTEM_TYPE:
             for (i = 0; i < SUBSYSTEM_MAX; i++) {
-                if (!stricmp (CTEXT (node), Subsystem_types[i])) break;
+                if (!strcasecmp (CTEXT (node), Subsystem_types[i])) break;
             }
 
             if (i == SUBSYSTEM_MAX) return SEXP_CHECK_INVALID_SUBSYS_TYPE;
@@ -5379,7 +5379,7 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) { return SEXP_CHECK_TYPE_MISMATCH; }
 
             for (i = 0; i < Num_ai_classes; i++) {
-                if (!stricmp (Ai_class_names[i], CTEXT (node))) { break; }
+                if (!strcasecmp (Ai_class_names[i], CTEXT (node))) { break; }
             }
 
             if (i == Num_ai_classes) { return SEXP_CHECK_INVALID_AI_CLASS; }
@@ -5390,7 +5390,7 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) { return SEXP_CHECK_TYPE_MISMATCH; }
 
             for (i = 0; i < MAX_ARRIVAL_NAMES; i++) {
-                if (!stricmp (Arrival_location_names[i], CTEXT (node))) {
+                if (!strcasecmp (Arrival_location_names[i], CTEXT (node))) {
                     break;
                 }
             }
@@ -5405,7 +5405,7 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) { return SEXP_CHECK_TYPE_MISMATCH; }
 
             for (i = 0; i < MAX_DEPARTURE_NAMES; i++) {
-                if (!stricmp (Departure_location_names[i], CTEXT (node))) {
+                if (!strcasecmp (Departure_location_names[i], CTEXT (node))) {
                     break;
                 }
             }
@@ -5440,12 +5440,12 @@ int check_sexp_syntax (
         case OPF_SOUNDTRACK_NAME:
             if (type2 != SEXP_ATOM_STRING) { return SEXP_CHECK_TYPE_MISMATCH; }
 
-            if (!stricmp (CTEXT (node), "<No Music>")) break;
+            if (!strcasecmp (CTEXT (node), "<No Music>")) break;
 
             if (Cmdline_freespace_no_music) break;
 
             for (i = 0; i < Num_soundtracks; i++) {
-                if (!stricmp (CTEXT (node), Soundtracks[i].name)) { break; }
+                if (!strcasecmp (CTEXT (node), Soundtracks[i].name)) { break; }
             }
 
             if (i == Num_soundtracks)
@@ -5460,7 +5460,7 @@ int check_sexp_syntax (
 
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
-            if (!stricmp (name, "<no anchor>")) break;
+            if (!strcasecmp (name, "<no anchor>")) break;
 
             shipnum = ship_name_lookup (name, 1);
             if (shipnum < 0) {
@@ -5487,14 +5487,14 @@ int check_sexp_syntax (
         case OPF_SUPPORT_SHIP_CLASS:
             if (type2 != SEXP_ATOM_STRING) { return SEXP_CHECK_TYPE_MISMATCH; }
 
-            if (!stricmp (CTEXT (node), "<species support ship class>")) break;
+            if (!strcasecmp (CTEXT (node), "<species support ship class>")) break;
 
-            if (!stricmp (CTEXT (node), "<any support ship class>")) break;
+            if (!strcasecmp (CTEXT (node), "<any support ship class>")) break;
 
             i = -1;
             for (auto it = Ship_info.cbegin (); it != Ship_info.cend ();
                  ++it) {
-                if (!stricmp (CTEXT (node), it->name)) {
+                if (!strcasecmp (CTEXT (node), it->name)) {
                     if (it->flags[Ship::Info_Flags::Support]) {
                         i = (int)std::distance (Ship_info.cbegin (), it);
                         break;
@@ -5625,7 +5625,7 @@ int check_sexp_syntax (
 
             if (Fred_running) {
                 for (i = 0; i < Num_messages; i++)
-                    if (!stricmp (Messages[i].name, CTEXT (node))) break;
+                    if (!strcasecmp (Messages[i].name, CTEXT (node))) break;
 
                 if (i == Num_messages) return SEXP_CHECK_UNKNOWN_MESSAGE;
             }
@@ -5639,8 +5639,8 @@ int check_sexp_syntax (
                 char* name;
 
                 name = CTEXT (node);
-                if (!stricmp (name, "low") || !stricmp (name, "normal") ||
-                    !stricmp (name, "high"))
+                if (!strcasecmp (name, "low") || !strcasecmp (name, "normal") ||
+                    !strcasecmp (name, "high"))
                     break;
 
                 return SEXP_CHECK_INVALID_PRIORITY;
@@ -5655,7 +5655,7 @@ int check_sexp_syntax (
             if (Fred_running) {
                 if (mode == SEXP_MODE_CAMPAIGN) {
                     for (i = 0; i < Campaign.num_missions; i++)
-                        if (!stricmp (
+                        if (!strcasecmp (
                                 CTEXT (node), Campaign.missions[i].name)) {
                             if ((i != Sexp_useful_number) &&
                                 (Campaign.missions[i].level >=
@@ -5682,7 +5682,7 @@ int check_sexp_syntax (
                         break;
 
                     if (!(*Mission_filename) ||
-                        stricmp (Mission_filename, CTEXT (node)) != 0)
+                        strcasecmp (Mission_filename, CTEXT (node)) != 0)
                         return SEXP_CHECK_INVALID_MISSION_NAME;
                 }
             }
@@ -5701,7 +5701,7 @@ int check_sexp_syntax (
                                         // mission name
                 Assert (z >= 0);
                 for (i = 0; i < Campaign.num_missions; i++)
-                    if (!stricmp (CTEXT (z), Campaign.missions[i].name)) break;
+                    if (!strcasecmp (CTEXT (z), Campaign.missions[i].name)) break;
 
                 // read the goal/event list from the mission file if both
                 // num_goals and num_events are < 0
@@ -5711,7 +5711,7 @@ int check_sexp_syntax (
 
                 if (i < Campaign.num_missions) {
                     for (t = 0; t < Campaign.missions[i].num_goals; t++)
-                        if (!stricmp (
+                        if (!strcasecmp (
                                 CTEXT (node),
                                 Campaign.missions[i].goals[t].name))
                             break;
@@ -5728,7 +5728,7 @@ int check_sexp_syntax (
                     break;
 
                 for (i = 0; i < Num_goals; i++)
-                    if (!stricmp (CTEXT (node), Mission_goals[i].name)) break;
+                    if (!strcasecmp (CTEXT (node), Mission_goals[i].name)) break;
 
                 if (i == Num_goals) return SEXP_CHECK_INVALID_GOAL_NAME;
             }
@@ -5748,7 +5748,7 @@ int check_sexp_syntax (
                                         // mission name
                 Assert (z >= 0);
                 for (i = 0; i < Campaign.num_missions; i++)
-                    if (!stricmp (CTEXT (z), Campaign.missions[i].name)) break;
+                    if (!strcasecmp (CTEXT (z), Campaign.missions[i].name)) break;
 
                 // read the goal/event list from the mission file if both
                 // num_goals and num_events are < 0
@@ -5758,7 +5758,7 @@ int check_sexp_syntax (
 
                 if (i < Campaign.num_missions) {
                     for (t = 0; t < Campaign.missions[i].num_events; t++)
-                        if (!stricmp (
+                        if (!strcasecmp (
                                 CTEXT (node),
                                 Campaign.missions[i].events[t].name))
                             break;
@@ -5775,7 +5775,7 @@ int check_sexp_syntax (
                     break;
 
                 for (i = 0; i < Num_mission_events; i++) {
-                    if (!stricmp (CTEXT (node), Mission_events[i].name)) break;
+                    if (!strcasecmp (CTEXT (node), Mission_events[i].name)) break;
                 }
                 if (i == Num_mission_events)
                     return SEXP_CHECK_INVALID_EVENT_NAME;
@@ -5822,7 +5822,7 @@ int check_sexp_syntax (
                 model = Ship_info[Ships[ship_num].ship_info_index].model_num;
                 z = model_get_num_dock_points (model);
                 for (i = 0; i < z; i++)
-                    if (!stricmp (
+                    if (!strcasecmp (
                             CTEXT (node), model_get_dock_name (model, i)))
                         break;
 
@@ -5866,7 +5866,7 @@ int check_sexp_syntax (
                 model = Ship_info[Ships[ship_num].ship_info_index].model_num;
                 z = model_get_num_dock_points (model);
                 for (i = 0; i < z; i++)
-                    if (!stricmp (
+                    if (!strcasecmp (
                             CTEXT (node), model_get_dock_name (model, i)))
                         break;
 
@@ -5879,8 +5879,8 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
             if (*CTEXT (node) != '#') { // not a manual source?
-                if (stricmp (CTEXT (node), "<any wingman>") != 0)
-                    if (stricmp (CTEXT (node), "<none>") !=
+                if (strcasecmp (CTEXT (node), "<any wingman>") != 0)
+                    if (strcasecmp (CTEXT (node), "<none>") !=
                         0) // not a special token?
                         if ((ship_name_lookup (CTEXT (node), TRUE) < 0) &&
                             (wing_name_lookup (CTEXT (node), 1) <
@@ -5921,7 +5921,7 @@ int check_sexp_syntax (
         case OPF_SHIP_FLAG: {
             bool found = false;
             for (i = 0; i < MAX_OBJECT_FLAG_NAMES; i++) {
-                if (!stricmp (Object_flag_names[i].flag_name, CTEXT (node))) {
+                if (!strcasecmp (Object_flag_names[i].flag_name, CTEXT (node))) {
                     found = true;
                     break;
                 }
@@ -5929,7 +5929,7 @@ int check_sexp_syntax (
 
             if (!found) {
                 for (i = 0; i < MAX_SHIP_FLAG_NAMES; i++) {
-                    if (!stricmp (
+                    if (!strcasecmp (
                             Ship_flag_names[i].flag_name, CTEXT (node))) {
                         found = true;
                         break;
@@ -5939,7 +5939,7 @@ int check_sexp_syntax (
 
             if (!found) {
                 for (i = 0; i < MAX_AI_FLAG_NAMES; i++) {
-                    if (!stricmp (Ai_flag_names[i].flag_name, CTEXT (node))) {
+                    if (!strcasecmp (Ai_flag_names[i].flag_name, CTEXT (node))) {
                         found = true;
                         break;
                     }
@@ -5954,7 +5954,7 @@ int check_sexp_syntax (
         case OPF_TEAM_COLOR:
             if (type2 != SEXP_ATOM_STRING) { return SEXP_CHECK_TYPE_MISMATCH; }
 
-            if (!stricmp (CTEXT (node), "none")) break;
+            if (!strcasecmp (CTEXT (node), "none")) break;
 
             if (Team_Colors.find (CTEXT (node)) == Team_Colors.end ())
                 return SEXP_CHECK_INVALID_TEAM_COLOR;
@@ -5972,7 +5972,7 @@ int check_sexp_syntax (
         case OPF_SOUND_ENVIRONMENT:
             if (type2 != SEXP_ATOM_STRING) { return SEXP_CHECK_TYPE_MISMATCH; }
 
-            if (stricmp (CTEXT (node), SEXP_NONE_STRING) != 0 &&
+            if (strcasecmp (CTEXT (node), SEXP_NONE_STRING) != 0 &&
                 ds_eax_get_preset_id (CTEXT (node)) < 0) {
                 return SEXP_CHECK_INVALID_SOUND_ENVIRONMENT;
             }
@@ -6023,7 +6023,7 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
             for (i = 0; i < NUM_SKILL_LEVELS; i++) {
-                if (!stricmp (CTEXT (node), Skill_level_names (i, 0))) break;
+                if (!strcasecmp (CTEXT (node), Skill_level_names (i, 0))) break;
             }
             if (i == NUM_SKILL_LEVELS) return SEXP_CHECK_INVALID_SKILL_LEVEL;
             break;
@@ -6032,7 +6032,7 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
             for (i = 0; i < Num_medals; i++) {
-                if (!stricmp (CTEXT (node), Medals[i].name)) break;
+                if (!strcasecmp (CTEXT (node), Medals[i].name)) break;
             }
 
             if (i == Num_medals) return SEXP_CHECK_INVALID_MEDAL_NAME;
@@ -6043,7 +6043,7 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
             for (i = 0; i < Num_weapon_types; i++) {
-                if (!stricmp (CTEXT (node), Weapon_info[i].name)) break;
+                if (!strcasecmp (CTEXT (node), Weapon_info[i].name)) break;
             }
 
             if (i == Num_weapon_types) return SEXP_CHECK_INVALID_WEAPON_NAME;
@@ -6062,7 +6062,7 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
             for (i = 0; i < Intel_info_size; i++) {
-                if (!stricmp (CTEXT (node), Intel_info[i].name)) break;
+                if (!strcasecmp (CTEXT (node), Intel_info[i].name)) break;
             }
 
             if (i == Intel_info_size) return SEXP_CHECK_INVALID_INTEL_NAME;
@@ -6073,7 +6073,7 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
             for (i = 0; i < NUM_TURRET_ORDER_TYPES; i++) {
-                if (!stricmp (CTEXT (node), Turret_target_order_names[i]))
+                if (!strcasecmp (CTEXT (node), Turret_target_order_names[i]))
                     break;
             }
 
@@ -6085,10 +6085,10 @@ int check_sexp_syntax (
         case OPF_ARMOR_TYPE:
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
-            if (!stricmp (CTEXT (node), SEXP_NONE_STRING)) break;
+            if (!strcasecmp (CTEXT (node), SEXP_NONE_STRING)) break;
 
             for (st = 0; st < Armor_types.size (); st++) {
-                if (!stricmp (CTEXT (node), Armor_types[st].GetNamePtr ()))
+                if (!strcasecmp (CTEXT (node), Armor_types[st].GetNamePtr ()))
                     break;
             }
 
@@ -6100,10 +6100,10 @@ int check_sexp_syntax (
         case OPF_DAMAGE_TYPE:
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
-            if (!stricmp (CTEXT (node), SEXP_NONE_STRING)) break;
+            if (!strcasecmp (CTEXT (node), SEXP_NONE_STRING)) break;
 
             for (st = 0; st < Damage_types.size (); st++) {
-                if (!stricmp (CTEXT (node), Damage_types[st].name)) break;
+                if (!strcasecmp (CTEXT (node), Damage_types[st].name)) break;
             }
 
             if (st == Damage_types.size ())
@@ -6124,7 +6124,7 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
             for (st = 0; st < Ai_tp_list.size (); st++) {
-                if (!stricmp (CTEXT (node), Ai_tp_list[st].name)) break;
+                if (!strcasecmp (CTEXT (node), Ai_tp_list[st].name)) break;
             }
 
             if (st == Ai_tp_list.size ())
@@ -6144,7 +6144,7 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
             for (i = 0; i < NUM_HUD_GAUGES; i++) {
-                if (!stricmp (CTEXT (node), HUD_gauge_text[i])) break;
+                if (!strcasecmp (CTEXT (node), HUD_gauge_text[i])) break;
             }
 
             // if we reached the end of the list, then the name is invalid
@@ -6155,7 +6155,7 @@ int check_sexp_syntax (
         case OPF_SKYBOX_MODEL_NAME:
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
-            if (stricmp (CTEXT (node), NOX ("default")) != 0 &&
+            if (strcasecmp (CTEXT (node), NOX ("default")) != 0 &&
                 !strstr (CTEXT (node), NOX (".pof")))
                 return SEXP_CHECK_INVALID_SKYBOX_NAME;
 
@@ -6165,7 +6165,7 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
             for (i = 0; i < Num_skybox_flags; ++i) {
-                if (!stricmp (CTEXT (node), Skybox_flags[i])) break;
+                if (!strcasecmp (CTEXT (node), Skybox_flags[i])) break;
             }
 
             // if we reached the end of the list, then the flag is invalid
@@ -6235,7 +6235,7 @@ int check_sexp_syntax (
         case OPF_WEAPON_BANK_NUMBER:
             if (type2 != SEXP_ATOM_STRING) { return SEXP_CHECK_TYPE_MISMATCH; }
 
-            if (!stricmp (CTEXT (node), SEXP_ALL_BANKS_STRING)) { break; }
+            if (!strcasecmp (CTEXT (node), SEXP_ALL_BANKS_STRING)) { break; }
 
             // if we haven't specified all banks we need to check the number of
             // the bank is legal
@@ -6264,7 +6264,7 @@ int check_sexp_syntax (
                 }
             }
             else if (type2 == SEXP_ATOM_STRING) {
-                if (stricmp (CTEXT (node), SEXP_NONE_STRING) != 0 &&
+                if (strcasecmp (CTEXT (node), SEXP_NONE_STRING) != 0 &&
                     !gamesnd_get_by_name (CTEXT (node)).isValid ()) {
                     return SEXP_CHECK_INVALID_GAME_SND;
                 }
@@ -6498,25 +6498,25 @@ int get_sexp () {
             token[len] = 0;
 
             // maybe replace deprecated names
-            if (!stricmp (token, "set-ship-position"))
+            if (!strcasecmp (token, "set-ship-position"))
                 strcpy_s (token, "set-object-position");
-            else if (!stricmp (token, "set-ship-facing"))
+            else if (!strcasecmp (token, "set-ship-facing"))
                 strcpy_s (token, "set-object-facing");
-            else if (!stricmp (token, "set-ship-facing-object"))
+            else if (!strcasecmp (token, "set-ship-facing-object"))
                 strcpy_s (token, "set-object-facing-object");
-            else if (!stricmp (token, "ai-chase-any-except"))
+            else if (!strcasecmp (token, "ai-chase-any-except"))
                 strcpy_s (token, "ai-chase-any");
-            else if (!stricmp (token, "change-ship-model"))
+            else if (!strcasecmp (token, "change-ship-model"))
                 strcpy_s (token, "change-ship-class");
-            else if (!stricmp (token, "radar-set-max-range"))
+            else if (!strcasecmp (token, "radar-set-max-range"))
                 strcpy_s (token, "hud-set-max-targeting-range");
-            else if (!stricmp (token, "ship-subsys-vanished"))
+            else if (!strcasecmp (token, "ship-subsys-vanished"))
                 strcpy_s (token, "ship-subsys-vanish");
-            else if (!stricmp (token, "directive-is-variable"))
+            else if (!strcasecmp (token, "directive-is-variable"))
                 strcpy_s (token, "directive-value");
-            else if (!stricmp (token, "variable-array-get"))
+            else if (!strcasecmp (token, "variable-array-get"))
                 strcpy_s (token, "get-variable-by-index");
-            else if (!stricmp (token, "variable-array-set"))
+            else if (!strcasecmp (token, "variable-array-set"))
                 strcpy_s (token, "set-variable-by-index");
 
             op = get_operator_index (token);
@@ -6752,11 +6752,11 @@ int stuff_sexp_variable_list () {
         ignore_white_space ();
 
         // determine type
-        if (!stricmp (str_type, "number")) { type = SEXP_VARIABLE_NUMBER; }
-        else if (!stricmp (str_type, "string")) {
+        if (!strcasecmp (str_type, "number")) { type = SEXP_VARIABLE_NUMBER; }
+        else if (!strcasecmp (str_type, "string")) {
             type = SEXP_VARIABLE_STRING;
         }
-        else if (!stricmp (str_type, "block")) {
+        else if (!strcasecmp (str_type, "block")) {
             // Goober5000 - This looks dangerous... these flags are needed for
             // certain things, but it looks like BLOCK_*_SIZE is the only thing
             // that keeps a block from running off the end of its boundary.
@@ -7915,7 +7915,7 @@ void sexp_get_object_ship_wing_point_team (
     oswpt->clear ();
     oswpt->object_name = object_name;
 
-    if (!stricmp (object_name, SEXP_NONE_STRING)) {
+    if (!strcasecmp (object_name, SEXP_NONE_STRING)) {
         oswpt->type = OSWPT_TYPE_NONE;
         return;
     }
@@ -9374,7 +9374,7 @@ int sexp_hits_left_subsystem_generic (int node) {
     // find subsystem type
     subsys_type = -1;
     for (i = 0; i < SUBSYSTEM_MAX; i++) {
-        if (!stricmp (subsys_type_name, Subsystem_types[i])) subsys_type = i;
+        if (!strcasecmp (subsys_type_name, Subsystem_types[i])) subsys_type = i;
     }
 
     // error checking
@@ -9471,7 +9471,7 @@ int sexp_determine_team (char* subj) {
     char team_name[NAME_LENGTH];
 
     // quick check
-    if (strnicmp (subj, "<any ", 5) != 0) return -1;
+    if (strncasecmp (subj, "<any ", 5) != 0) return -1;
 
     // grab IFF (rest of string except for closing angle bracket)
     auto len = strlen (subj + 5) - 1;
@@ -10009,8 +10009,8 @@ int sexp_get_object_coordinate (int n, int axis) {
     // see if we have a subsys
     if (oswpt.objp->type == OBJ_SHIP) {
         if ((subsystem_name != NULL) &&
-            stricmp (subsystem_name, SEXP_NONE_STRING) != 0 &&
-            stricmp (subsystem_name, SEXP_HULL_STRING) != 0) {
+            strcasecmp (subsystem_name, SEXP_NONE_STRING) != 0 &&
+            strcasecmp (subsystem_name, SEXP_HULL_STRING) != 0) {
             pos = &subsys_pos_buf;
             // get the world pos but bail if we can't get one
             if (!sexp_get_subsystem_world_pos (
@@ -10523,7 +10523,7 @@ int sexp_skill_level_at_least (int n) {
     if (level_name == NULL) return SEXP_FALSE;
 
     for (i = 0; i < NUM_SKILL_LEVELS; i++) {
-        if (!stricmp (level_name, Skill_level_names (i, 0))) {
+        if (!strcasecmp (level_name, Skill_level_names (i, 0))) {
             if (Game_skill_level >= i) { return SEXP_TRUE; }
             else {
                 return SEXP_FALSE;
@@ -10556,7 +10556,7 @@ int sexp_was_medal_granted (int n) {
     if (medal_name == NULL) return SEXP_FALSE;
 
     for (i = 0; i < Num_medals; i++) {
-        if (!stricmp (medal_name, Medals[i].name)) break;
+        if (!strcasecmp (medal_name, Medals[i].name)) break;
     }
 
     if ((i < Num_medals) && (Player->stats.m_medal_earned == i))
@@ -12650,7 +12650,7 @@ int sexp_is_ai_class (int n) {
     // find ai class
     ai_class_to_check = -1;
     for (i = 0; i < Num_ai_classes; i++) {
-        if (!stricmp (Ai_class_names[i], CTEXT (n))) ai_class_to_check = i;
+        if (!strcasecmp (Ai_class_names[i], CTEXT (n))) ai_class_to_check = i;
     }
 
     Assert (ai_class_to_check >= 0);
@@ -12707,7 +12707,7 @@ void sexp_change_ai_class (int n) {
     // find ai class
     new_ai_class = -1;
     for (i = 0; i < Num_ai_classes; i++) {
-        if (!stricmp (Ai_class_names[i], CTEXT (n))) new_ai_class = i;
+        if (!strcasecmp (Ai_class_names[i], CTEXT (n))) new_ai_class = i;
     }
 
     Assert (new_ai_class >= 0);
@@ -12958,7 +12958,7 @@ void sexp_hud_set_message (int n) {
     std::string message;
 
     for (int i = 0; i < Num_messages; i++) {
-        if (!stricmp (text, Messages[i].name)) {
+        if (!strcasecmp (text, Messages[i].name)) {
             message = Messages[i].message;
 
             sexp_replace_variable_names_with_values (message);
@@ -13090,7 +13090,7 @@ void sexp_hud_display_gauge (int n) {
     int show_for = eval_num (n);
     char* gauge = CTEXT (CDR (n));
 
-    if (stricmp (SEXP_HUD_GAUGE_WARPOUT, gauge) == 0) {
+    if (strcasecmp (SEXP_HUD_GAUGE_WARPOUT, gauge) == 0) {
         Sexp_hud_display_warpout =
             (show_for > 1) ? timestamp (show_for) : (show_for);
     }
@@ -13120,7 +13120,7 @@ void sexp_hud_set_custom_gauge_active (int node) {
 
 int hud_gauge_type_lookup (char* name) {
     for (int i = 0; i < Num_hud_gauge_types; i++) {
-        if (!stricmp (name, Hud_gauge_types[i].name))
+        if (!strcasecmp (name, Hud_gauge_types[i].name))
             return Hud_gauge_types[i].def;
     }
     return -1;
@@ -13234,7 +13234,7 @@ void sexp_set_player_orders (int n) {
             // since it's the cheaper test, test first if the ship will even
             // accept this order first
             if (default_orders & Sexp_comm_orders[i].item) {
-                if (!stricmp (CTEXT (n), Sexp_comm_orders[i].name)) {
+                if (!strcasecmp (CTEXT (n), Sexp_comm_orders[i].name)) {
                     orders |= Sexp_comm_orders[i].item;
                     break;
                 }
@@ -13337,7 +13337,7 @@ gamesnd_id sexp_get_sound_index (int node) {
         const char* sound_name = CTEXT (node);
 
         // if it's not <none>, try looking it up
-        if (stricmp (sound_name, SEXP_NONE_STRING) != 0) {
+        if (strcasecmp (sound_name, SEXP_NONE_STRING) != 0) {
             sound_index = gamesnd_get_by_name (sound_name);
 
             if (!sound_index.isValid ())
@@ -13519,7 +13519,7 @@ void sexp_set_sound_environment (int node) {
     char* preset = CTEXT (n);
     n = CDR (n);
 
-    if (preset && !stricmp (preset, SEXP_NONE_STRING)) {
+    if (preset && !strcasecmp (preset, SEXP_NONE_STRING)) {
         sound_env_disable ();
         return;
     }
@@ -14033,11 +14033,11 @@ void sexp_send_one_message (
     Assert ((name != NULL) && (who_from != NULL) && (priority != NULL));
 
     // determine the priority of the message
-    if (!stricmp (priority, "low"))
+    if (!strcasecmp (priority, "low"))
         ipriority = MESSAGE_PRIORITY_LOW;
-    else if (!stricmp (priority, "normal"))
+    else if (!strcasecmp (priority, "normal"))
         ipriority = MESSAGE_PRIORITY_NORMAL;
-    else if (!stricmp (priority, "high"))
+    else if (!strcasecmp (priority, "high"))
         ipriority = MESSAGE_PRIORITY_HIGH;
     else {
         Warning (
@@ -14059,7 +14059,7 @@ void sexp_send_one_message (
             delay);
         return;
     }
-    else if (!stricmp (who_from, "<any allied>")) {
+    else if (!strcasecmp (who_from, "<any allied>")) {
         return;
     }
     else if ((num = wing_name_lookup (who_from)) != -1) {
@@ -14086,11 +14086,11 @@ void sexp_send_one_message (
         source = MESSAGE_SOURCE_COMMAND;
     }
     else if (
-        !stricmp (who_from, "<any wingman>") ||
+        !strcasecmp (who_from, "<any wingman>") ||
         (wing_name_lookup (who_from) != -1)) {
         source = MESSAGE_SOURCE_WINGMAN;
     }
-    else if (!stricmp (who_from, "<none>")) {
+    else if (!strcasecmp (who_from, "<none>")) {
         source = MESSAGE_SOURCE_NONE;
     }
     else {
@@ -14125,8 +14125,8 @@ void sexp_send_message (int n) {
 
     // a temporary check to see if the name field matched a priority since I am
     // in the process of reordering the arguments
-    if (!stricmp (name, "low") || !stricmp (name, "normal") ||
-        !stricmp (name, "high")) {
+    if (!strcasecmp (name, "low") || !strcasecmp (name, "normal") ||
+        !strcasecmp (name, "high")) {
         tmp = name;
         name = priority;
         priority = tmp;
@@ -14248,7 +14248,7 @@ void sexp_next_mission (int n) {
     }
 
     for (i = 0; i < Campaign.num_missions; i++) {
-        if (!stricmp (Campaign.missions[i].name, mission_name)) {
+        if (!strcasecmp (Campaign.missions[i].name, mission_name)) {
             Campaign.next_mission = i;
             return;
         }
@@ -14294,7 +14294,7 @@ void sexp_end_campaign (int n) {
     // campaign since the supernova code needs special time to execute and will
     // post GS_EVENT_END_CAMPAIGN with Game_mode check or show death-popup when
     // it's done - taylor
-    if (supernova_active () /*&& !stricmp(Campaign.filename, "freespace2")*/) {
+    if (supernova_active () /*&& !strcasecmp(Campaign.filename, "freespace2")*/) {
         Campaign_ending_via_supernova = 1;
     }
     else {
@@ -14327,7 +14327,7 @@ void sexp_sabotage_subsystem (int n) {
     shipp = &Ships[shipnum];
 
     // see if we are dealing with the HULL
-    if (!stricmp (subsystem, SEXP_HULL_STRING)) {
+    if (!strcasecmp (subsystem, SEXP_HULL_STRING)) {
         float ihs;
         object* objp;
 
@@ -14342,7 +14342,7 @@ void sexp_sabotage_subsystem (int n) {
     }
 
     // see if we are dealing with the Simulated HULL
-    if (!stricmp (subsystem, SEXP_SIM_HULL_STRING)) {
+    if (!strcasecmp (subsystem, SEXP_SIM_HULL_STRING)) {
         float ihs;
         object* objp;
 
@@ -14448,7 +14448,7 @@ void sexp_repair_subsystem (int n) {
     percentage = eval_num (CDR (CDR (n)));
 
     // see if we are dealing with the HULL
-    if (!stricmp (subsystem, SEXP_HULL_STRING)) {
+    if (!strcasecmp (subsystem, SEXP_HULL_STRING)) {
         float ihs;
         object* objp;
 
@@ -14461,7 +14461,7 @@ void sexp_repair_subsystem (int n) {
     }
 
     // see if we are dealing with the Simulated HULL
-    if (!stricmp (subsystem, SEXP_SIM_HULL_STRING)) {
+    if (!strcasecmp (subsystem, SEXP_SIM_HULL_STRING)) {
         float ihs;
         object* objp;
 
@@ -14578,7 +14578,7 @@ void sexp_set_subsystem_strength (int n) {
     }
 
     // see if we are dealing with the HULL
-    if (!stricmp (subsystem, SEXP_HULL_STRING)) {
+    if (!strcasecmp (subsystem, SEXP_HULL_STRING)) {
         float ihs;
         object* objp;
 
@@ -14595,7 +14595,7 @@ void sexp_set_subsystem_strength (int n) {
     }
 
     // see if we are dealing with the Simulated HULL
-    if (!stricmp (subsystem, SEXP_SIM_HULL_STRING)) {
+    if (!strcasecmp (subsystem, SEXP_SIM_HULL_STRING)) {
         float ihs;
         object* objp;
 
@@ -14699,8 +14699,8 @@ void sexp_destroy_subsys_instantly (int n) {
     // Process subsystems
     while (n != -1) {
         subsystem = CTEXT (n);
-        if (!stricmp (subsystem, SEXP_HULL_STRING) ||
-            !stricmp (subsystem, SEXP_SIM_HULL_STRING)) {
+        if (!strcasecmp (subsystem, SEXP_HULL_STRING) ||
+            !strcasecmp (subsystem, SEXP_SIM_HULL_STRING)) {
             n = CDR (n);
             continue;
         }
@@ -14824,7 +14824,7 @@ int sexp_is_cargo (int n) {
     if (cargo_index < 0) return SEXP_FALSE;
 
     // check cargo
-    if (!stricmp (Cargo_names[cargo_index & CARGO_INDEX_MASK], cargo))
+    if (!strcasecmp (Cargo_names[cargo_index & CARGO_INDEX_MASK], cargo))
         return SEXP_TRUE;
     else
         return SEXP_FALSE;
@@ -14853,7 +14853,7 @@ void sexp_set_cargo (int n) {
     // find this cargo in the cargo list
     for (i = 0; i < Num_cargo; i++) {
         // found it?
-        if (!stricmp (cargo, Cargo_names[i])) {
+        if (!strcasecmp (cargo, Cargo_names[i])) {
             cargo_index = i;
             break;
         }
@@ -14941,7 +14941,7 @@ void sexp_transfer_cargo (int n) {
         return;
     }
 
-    if (!stricmp (
+    if (!strcasecmp (
             Cargo_names[Ships[shipnum1].cargo1 & CARGO_INDEX_MASK],
             "nothing")) {
         return;
@@ -14951,7 +14951,7 @@ void sexp_transfer_cargo (int n) {
 #ifndef NDEBUG
     // Don't give warning for large ships (cruiser on up)
     if (!(Ship_info[Ships[shipnum2].ship_info_index].is_big_or_huge ())) {
-        if (stricmp (
+        if (strcasecmp (
                 Cargo_names[Ships[shipnum2].cargo1 & CARGO_INDEX_MASK],
                 "nothing") != 0) {
             Warning (
@@ -14971,7 +14971,7 @@ void sexp_transfer_cargo (int n) {
         // need to set ship1's cargo to nothing.  scan the cargo_names array
         // looking for the string nothing. add it if not found
         for (i = 0; i < Num_cargo; i++) {
-            if (!stricmp (Cargo_names[i], "nothing")) {
+            if (!strcasecmp (Cargo_names[i], "nothing")) {
                 Ships[shipnum1].cargo1 = char(i);
                 return;
             }
@@ -15430,7 +15430,7 @@ void sexp_nebula_toggle_poof (int n) {
     if (name == NULL) return;
 
     for (i = 0; i < MAX_NEB2_POOFS; i++) {
-        if (!stricmp (name, Neb2_poof_filenames[i])) break;
+        if (!strcasecmp (name, Neb2_poof_filenames[i])) break;
     }
 
     // coulnd't find the poof
@@ -15564,7 +15564,7 @@ void sexp_grant_medal (int n) {
     }
 
     for (i = 0; i < Num_medals; i++) {
-        if (!stricmp (medal_name, Medals[i].name)) break;
+        if (!strcasecmp (medal_name, Medals[i].name)) break;
     }
 
     if (i < Num_medals) {
@@ -16167,7 +16167,7 @@ bool sexp_check_flag_arrays (
     bool send_multi = false;
 
     for (i = 0; i < MAX_OBJECT_FLAG_NAMES; i++) {
-        if (!stricmp (Object_flag_names[i].flag_name, flag_name)) {
+        if (!strcasecmp (Object_flag_names[i].flag_name, flag_name)) {
             // make sure the list writes to the correct list of flags!
             if (Object_flag_names[i].flag_list == 1) {
                 object_flag = Object_flag_names[i].flag;
@@ -16177,7 +16177,7 @@ bool sexp_check_flag_arrays (
     }
 
     for (i = 0; i < MAX_SHIP_FLAG_NAMES; i++) {
-        if (!stricmp (Ship_flag_names[i].flag_name, flag_name)) {
+        if (!strcasecmp (Ship_flag_names[i].flag_name, flag_name)) {
             // make sure the list writes to the correct list of flags!
             ship_flags = Ship_flag_names[i].flag;
             send_multi = true;
@@ -16188,14 +16188,14 @@ bool sexp_check_flag_arrays (
     // parse files already have a list of names in the same order as the flags,
     // so we can do something slightly different here.
     for (i = 0; i < (int)num_parse_object_flags; i++) {
-        if (!stricmp (Parse_object_flags[i].name, flag_name)) {
+        if (!strcasecmp (Parse_object_flags[i].name, flag_name)) {
             parse_obj_flag = Parse_object_flags[i].def;
             break;
         }
     }
 
     for (i = 0; i < MAX_AI_FLAG_NAMES; i++) {
-        if (!stricmp (Ai_flag_names[i].flag_name, flag_name)) {
+        if (!strcasecmp (Ai_flag_names[i].flag_name, flag_name)) {
             ai_flag = Ai_flag_names[i].flag;
             break;
         }
@@ -16528,12 +16528,12 @@ void sexp_toggle_builtin_messages (int node, bool enable_messages) {
 
         // check that this isn't a request to silence command.
         if ((*ship_name == '#') &&
-            !stricmp (&ship_name[1], The_mission.command_sender)) {
+            !strcasecmp (&ship_name[1], The_mission.command_sender)) {
             // Either disable or enable messages from command
             The_mission.flags.set (
                 Mission::Mission_Flags::No_builtin_command, !enable_messages);
         }
-        else if (!stricmp (ship_name, "<Any Wingman>")) {
+        else if (!strcasecmp (ship_name, "<Any Wingman>")) {
             // Since trying to determine whose wingman in a stand alone
             // multiplayer game opens a can of worms Any Wingman silences all
             // ships in wings regardless of whose side they're on.
@@ -16798,7 +16798,7 @@ int sexp_previous_goal_status (int n, int status) {
             // now try and find the goal this mission
             mission_num = i;
             for (i = 0; i < Campaign.missions[mission_num].num_goals; i++) {
-                if (!stricmp (
+                if (!strcasecmp (
                         Campaign.missions[mission_num].goals[i].name,
                         goal_name))
                     break;
@@ -16892,7 +16892,7 @@ int sexp_previous_event_status (int n, int status) {
             // now try and find the goal this mission
             mission_num = i;
             for (i = 0; i < Campaign.missions[mission_num].num_events; i++) {
-                if (!stricmp (
+                if (!strcasecmp (
                         Campaign.missions[mission_num].events[i].name, name))
                     break;
             }
@@ -16957,7 +16957,7 @@ int sexp_event_status (int n, int want_true) {
     for (i = 0; i < Num_mission_events; i++) {
         // look for the event name, check it's status.  If formula is gone, we
         // know the state won't ever change.
-        if (!stricmp (Mission_events[i].name, name)) {
+        if (!strcasecmp (Mission_events[i].name, name)) {
             result = Mission_events[i].result;
             if (Mission_events[i].formula < 0) {
                 if ((want_true && result) || (!want_true && !result))
@@ -17006,7 +17006,7 @@ int sexp_event_delay_status (int n, int want_true, bool use_msecs = false) {
     for (i = 0; i < Num_mission_events; i++) {
         // look for the event name, check it's status.  If formula is gone, we
         // know the state won't ever change.
-        if (!stricmp (Mission_events[i].name, name)) {
+        if (!strcasecmp (Mission_events[i].name, name)) {
             if ((fix)Mission_events[i].timestamp + delay >= Missiontime) {
                 rval = SEXP_FALSE;
                 break;
@@ -17059,7 +17059,7 @@ int sexp_event_incomplete (int n) {
     Assertion (name != nullptr, "CTEXT returned NULL for node %d!", n);
 
     for (i = 0; i < Num_mission_events; i++) {
-        if (!stricmp (Mission_events[i].name, name)) {
+        if (!strcasecmp (Mission_events[i].name, name)) {
             // if the formula is still >= 0 (meaning it is still getting
             // eval'ed), then the event is incomplete
             if (Mission_events[i].formula != -1)
@@ -17160,22 +17160,22 @@ void sexp_turret_protect_ships (int n, bool flag) {
     char* turret_type = CTEXT (n);
     n = CDR (n);
 
-    if (!stricmp (turret_type, "beam"))
+    if (!strcasecmp (turret_type, "beam"))
         sexp_deal_with_ship_flag (
             n, true, Object::Object_Flags::Beam_protected,
             Ship::Ship_Flags::NUM_VALUES,
             Mission::Parse_Object_Flags::OF_Beam_protected, flag);
-    else if (!stricmp (turret_type, "flak"))
+    else if (!strcasecmp (turret_type, "flak"))
         sexp_deal_with_ship_flag (
             n, true, Object::Object_Flags::Flak_protected,
             Ship::Ship_Flags::NUM_VALUES,
             Mission::Parse_Object_Flags::OF_Flak_protected, flag);
-    else if (!stricmp (turret_type, "laser"))
+    else if (!strcasecmp (turret_type, "laser"))
         sexp_deal_with_ship_flag (
             n, true, Object::Object_Flags::Laser_protected,
             Ship::Ship_Flags::NUM_VALUES,
             Mission::Parse_Object_Flags::OF_Laser_protected, flag);
-    else if (!stricmp (turret_type, "missile"))
+    else if (!strcasecmp (turret_type, "missile"))
         sexp_deal_with_ship_flag (
             n, true, Object::Object_Flags::Missile_protected,
             Ship::Ship_Flags::NUM_VALUES,
@@ -17596,7 +17596,7 @@ void sexp_ship_create (int n) {
     // get ship name - none means don't specify it
     // if ship with this name already exists, ship_create will respond
     // appropriately
-    if (!stricmp (CTEXT (n), SEXP_NONE_STRING)) { new_ship_name = NULL; }
+    if (!strcasecmp (CTEXT (n), SEXP_NONE_STRING)) { new_ship_name = NULL; }
     else {
         new_ship_name = CTEXT (n);
     }
@@ -17659,7 +17659,7 @@ void sexp_weapon_create (int n) {
     Assert (n >= 0);
 
     parent_objnum = -1;
-    if (stricmp (CTEXT (n), SEXP_NONE_STRING) != 0) {
+    if (strcasecmp (CTEXT (n), SEXP_NONE_STRING) != 0) {
         int parent_ship = ship_name_lookup (CTEXT (n));
 
         if (parent_ship >= 0) parent_objnum = Ships[parent_ship].objnum;
@@ -17891,7 +17891,7 @@ void sexp_ingame_ship_alt_name (ship* shipp, int alt_index) {
     }
 
     // see if this is actually the ship class
-    if (!stricmp (
+    if (!strcasecmp (
             Ship_info[shipp->ship_info_index].name,
             Mission_alt_types[alt_index])) {
         shipp->alt_type_index = -1;
@@ -17912,7 +17912,7 @@ void sexp_parse_ship_alt_name (p_object* parse_obj, int alt_index) {
     }
 
     // see if this is actually the ship class
-    if (!stricmp (
+    if (!strcasecmp (
             Ship_class_names[parse_obj->ship_class],
             Mission_alt_types[alt_index])) {
         parse_obj->alt_type_index = -1;
@@ -17932,7 +17932,7 @@ void sexp_ship_change_alt_name (int node) {
     n = CDR (n);
 
     // and its index
-    if (!*new_alt_name || !stricmp (new_alt_name, SEXP_ANY_STRING)) {
+    if (!*new_alt_name || !strcasecmp (new_alt_name, SEXP_ANY_STRING)) {
         new_alt_index = -1;
     }
     else {
@@ -17991,7 +17991,7 @@ void sexp_ship_change_callsign (int node) {
     node = CDR (node);
 
     // and its index
-    if (!*new_callsign || !stricmp (new_callsign, SEXP_ANY_STRING)) {
+    if (!*new_callsign || !strcasecmp (new_callsign, SEXP_ANY_STRING)) {
         cindex = -1;
     }
     else {
@@ -18022,7 +18022,7 @@ void multi_sexp_ship_change_callsign () {
     ship* shipp = NULL;
 
     Current_sexp_network_packet.get_string (new_callsign);
-    if (!new_callsign[0] || !stricmp (new_callsign, SEXP_ANY_STRING)) {
+    if (!new_callsign[0] || !strcasecmp (new_callsign, SEXP_ANY_STRING)) {
         cindex = -1;
     }
     else {
@@ -18044,7 +18044,7 @@ void sexp_set_death_message (int n) {
 
     // but use an actual message if one exists
     for (i = 0; i < Num_messages; i++) {
-        if (!stricmp (Messages[i].name, Player->death_message.c_str ())) {
+        if (!strcasecmp (Messages[i].name, Player->death_message.c_str ())) {
             Player->death_message = Messages[i].message;
             break;
         }
@@ -18140,7 +18140,7 @@ int sexp_targeted (int node) {
         if (CDR (CDR (node)) >= 0) {
             ptr = Players_targeted_subsys;
             if (!ptr ||
-                subsystem_stricmp (
+                subsystem_strcasecmp (
                     ptr->system_info->subobj_name, CTEXT (CDR (CDR (node))))) {
                 return SEXP_FALSE;
             }
@@ -18568,13 +18568,13 @@ int sexp_get_ets_value (int node) {
     if (sindex < 0) { return SEXP_FALSE; }
     if (Ships[sindex].objnum < 0) { return SEXP_FALSE; }
 
-    if (!stricmp (ets_type.c_str (), "engine")) {
+    if (!strcasecmp (ets_type.c_str (), "engine")) {
         return Ships[sindex].engine_recharge_index;
     }
-    else if (!stricmp (ets_type.c_str (), "shield")) {
+    else if (!strcasecmp (ets_type.c_str (), "shield")) {
         return Ships[sindex].shield_recharge_index;
     }
-    else if (!stricmp (ets_type.c_str (), "weapon")) {
+    else if (!strcasecmp (ets_type.c_str (), "weapon")) {
         return Ships[sindex].weapon_recharge_index;
     }
     else {
@@ -19696,22 +19696,22 @@ void sexp_set_skybox_model (int n) {
     // gather any flags
     while (n != -1) {
         // this should check all entries in Skybox_flags
-        if (!stricmp ("add-lighting", CTEXT (n))) {
+        if (!strcasecmp ("add-lighting", CTEXT (n))) {
             new_skybox_model_flags &= ~MR_NO_LIGHTING;
         }
-        else if (!stricmp ("no-transparency", CTEXT (n))) {
+        else if (!strcasecmp ("no-transparency", CTEXT (n))) {
             new_skybox_model_flags &= ~MR_ALL_XPARENT;
         }
-        else if (!stricmp ("add-zbuffer", CTEXT (n))) {
+        else if (!strcasecmp ("add-zbuffer", CTEXT (n))) {
             new_skybox_model_flags &= ~MR_NO_ZBUFFER;
         }
-        else if (!stricmp ("add-culling", CTEXT (n))) {
+        else if (!strcasecmp ("add-culling", CTEXT (n))) {
             new_skybox_model_flags &= ~MR_NO_CULL;
         }
-        else if (!stricmp ("no-glowmaps", CTEXT (n))) {
+        else if (!strcasecmp ("no-glowmaps", CTEXT (n))) {
             new_skybox_model_flags |= MR_NO_GLOWMAPS;
         }
-        else if (!stricmp ("force-clamp", CTEXT (n))) {
+        else if (!strcasecmp ("force-clamp", CTEXT (n))) {
             new_skybox_model_flags |= MR_FORCE_CLAMP;
         }
         else {
@@ -19721,7 +19721,7 @@ void sexp_set_skybox_model (int n) {
         }
         n = CDR (n);
     }
-    if (!stricmp ("default", new_skybox_model)) {
+    if (!strcasecmp ("default", new_skybox_model)) {
         stars_set_background_model (
             The_mission.skybox_model, NULL, new_skybox_model_flags);
     }
@@ -19739,7 +19739,7 @@ void sexp_set_skybox_model (int n) {
 void sexp_set_skybox_model_preload (char* name) {
     int i;
 
-    if (!stricmp ("default", name)) {
+    if (!strcasecmp ("default", name)) {
         // if there isn't a mission skybox model then don't load one
         if (strlen (The_mission.skybox_model)) {
             i = model_load (The_mission.skybox_model, 0, NULL);
@@ -19905,7 +19905,7 @@ void sexp_beam_floating_fire (int n) {
     }
 
     fire_info.shooter = NULL;
-    if (stricmp (CTEXT (n), SEXP_NONE_STRING) != 0) {
+    if (strcasecmp (CTEXT (n), SEXP_NONE_STRING) != 0) {
         sindex = ship_name_lookup (CTEXT (n));
 
         if (sindex >= 0) fire_info.shooter = &Objects[Ships[sindex].objnum];
@@ -19926,7 +19926,7 @@ void sexp_beam_floating_fire (int n) {
     fire_info.target_subsys = NULL;
 
     sindex = -1;
-    if (stricmp (CTEXT (n), SEXP_NONE_STRING) != 0) {
+    if (strcasecmp (CTEXT (n), SEXP_NONE_STRING) != 0) {
         sindex = ship_name_lookup (CTEXT (n));
 
         if (sindex >= 0) fire_info.target = &Objects[Ships[sindex].objnum];
@@ -19937,7 +19937,7 @@ void sexp_beam_floating_fire (int n) {
     n = CDR (n);
 
     if (n >= 0) {
-        if (stricmp (CTEXT (n), SEXP_NONE_STRING) != 0) {
+        if (strcasecmp (CTEXT (n), SEXP_NONE_STRING) != 0) {
             if (sindex >= 0)
                 fire_info.target_subsys =
                     ship_get_subsys (&Ships[sindex], CTEXT (n));
@@ -20338,21 +20338,21 @@ void sexp_set_armor_type (int node) {
 
     // get armor
     node = CDR (node);
-    if (!stricmp (SEXP_NONE_STRING, CTEXT (node))) { armor = -1; }
+    if (!strcasecmp (SEXP_NONE_STRING, CTEXT (node))) { armor = -1; }
     else {
         armor = armor_type_get_idx (CTEXT (node));
     }
 
     // Set armor
     while (node != -1) {
-        if (!stricmp (SEXP_HULL_STRING, CTEXT (node))) {
+        if (!strcasecmp (SEXP_HULL_STRING, CTEXT (node))) {
             // we are setting the ship itself
             if (!rset)
                 shipp->armor_type_idx = sip->armor_type_idx;
             else
                 shipp->armor_type_idx = armor;
         }
-        else if (!stricmp (SEXP_SHIELD_STRING, CTEXT (node))) {
+        else if (!strcasecmp (SEXP_SHIELD_STRING, CTEXT (node))) {
             // we are setting the ships shields
             if (!rset)
                 shipp->shield_armor_type_idx = sip->shield_armor_type_idx;
@@ -20388,11 +20388,11 @@ void sexp_weapon_set_damage_type (int node) {
 
     // get damage type
     node = CDR (node);
-    if (!stricmp (SEXP_NONE_STRING, CTEXT (node)))
+    if (!strcasecmp (SEXP_NONE_STRING, CTEXT (node)))
         damage = -1;
     else {
         for (t = 0; t < Damage_types.size (); t++) {
-            if (!stricmp (Damage_types[t].name, CTEXT (node))) break;
+            if (!strcasecmp (Damage_types[t].name, CTEXT (node))) break;
         }
         if (t == Damage_types.size ()) return;
         damage = (int)t;
@@ -20437,11 +20437,11 @@ void sexp_ship_set_damage_type (int node) {
 
     // get damage type
     node = CDR (node);
-    if (!stricmp (SEXP_NONE_STRING, CTEXT (node)))
+    if (!strcasecmp (SEXP_NONE_STRING, CTEXT (node)))
         damage = -1;
     else {
         for (t = 0; t < Damage_types.size (); t++) {
-            if (!stricmp (Damage_types[t].name, CTEXT (node))) break;
+            if (!strcasecmp (Damage_types[t].name, CTEXT (node))) break;
         }
         if (t == Damage_types.size ()) return;
         damage = (int)t;
@@ -20486,11 +20486,11 @@ void sexp_ship_shockwave_set_damage_type (int node) {
     size_t t;
 
     // get damage type
-    if (!stricmp (SEXP_NONE_STRING, CTEXT (node)))
+    if (!strcasecmp (SEXP_NONE_STRING, CTEXT (node)))
         damage = -1;
     else {
         for (t = 0; t < Damage_types.size (); t++) {
-            if (!stricmp (Damage_types[t].name, CTEXT (node))) break;
+            if (!strcasecmp (Damage_types[t].name, CTEXT (node))) break;
         }
         if (t == Damage_types.size ()) return;
         damage = (int)t;
@@ -20522,11 +20522,11 @@ void sexp_field_set_damage_type (int node) {
     size_t t;
 
     // get damage type
-    if (!stricmp (SEXP_NONE_STRING, CTEXT (node)))
+    if (!strcasecmp (SEXP_NONE_STRING, CTEXT (node)))
         damage = -1;
     else {
         for (t = 0; t < Damage_types.size (); t++) {
-            if (!stricmp (Damage_types[t].name, CTEXT (node))) break;
+            if (!strcasecmp (Damage_types[t].name, CTEXT (node))) break;
         }
         if (t == Damage_types.size ()) return;
         damage = (int)t;
@@ -20572,7 +20572,7 @@ void sexp_turret_set_target_order (int node) {
         if (oindex >= NUM_TURRET_ORDER_TYPES) { break; }
 
         for (i = 0; i < NUM_TURRET_ORDER_TYPES; i++) {
-            if (!stricmp (Turret_target_order_names[i], CTEXT (node))) {
+            if (!strcasecmp (Turret_target_order_names[i], CTEXT (node))) {
                 turret->turret_targeting_order[oindex] = i;
             }
         }
@@ -20725,7 +20725,7 @@ void sexp_turret_set_target_priorities (int node) {
         while (node != -1) {
             if (turret->num_target_priorities < 32) {
                 for (j = 0; j < num_groups; j++) {
-                    if (!stricmp (Ai_tp_list[j].name, CTEXT (node))) {
+                    if (!strcasecmp (Ai_tp_list[j].name, CTEXT (node))) {
                         turret
                             ->target_priority[turret->num_target_priorities] =
                             j;
@@ -20760,7 +20760,7 @@ void sexp_ship_turret_target_order (int node) {
         if (oindex >= NUM_TURRET_ORDER_TYPES) { break; }
 
         for (i = 0; i < NUM_TURRET_ORDER_TYPES; i++) {
-            if (!stricmp (Turret_target_order_names[i], CTEXT (node))) {
+            if (!strcasecmp (Turret_target_order_names[i], CTEXT (node))) {
                 new_target_order[oindex] = i;
             }
         }
@@ -21426,7 +21426,7 @@ void sexp_set_support_ship (int n) {
     // get arrival location
     temp_val = -1;
     for (i = 0; i < MAX_ARRIVAL_NAMES; i++) {
-        if (!stricmp (CTEXT (n), Arrival_location_names[i])) temp_val = i;
+        if (!strcasecmp (CTEXT (n), Arrival_location_names[i])) temp_val = i;
     }
     if (temp_val < 0) {
         Warning (
@@ -21438,7 +21438,7 @@ void sexp_set_support_ship (int n) {
 
     // get arrival anchor
     n = CDR (n);
-    if (!stricmp (CTEXT (n), "<no anchor>")) {
+    if (!strcasecmp (CTEXT (n), "<no anchor>")) {
         // if no anchor, set arrival location to hyperspace
         The_mission.support_ships.arrival_location = 0;
     }
@@ -21446,7 +21446,7 @@ void sexp_set_support_ship (int n) {
         // anchor must exist - look for it
         temp_val = -1;
         for (i = 0; i < Num_parse_names; i++) {
-            if (!stricmp (CTEXT (n), Parse_names[i])) temp_val = i;
+            if (!strcasecmp (CTEXT (n), Parse_names[i])) temp_val = i;
         }
         // if not found, make a new entry
         if (temp_val < 0) {
@@ -21461,7 +21461,7 @@ void sexp_set_support_ship (int n) {
     n = CDR (n);
     temp_val = -1;
     for (i = 0; i < MAX_DEPARTURE_NAMES; i++) {
-        if (!stricmp (CTEXT (n), Departure_location_names[i])) temp_val = i;
+        if (!strcasecmp (CTEXT (n), Departure_location_names[i])) temp_val = i;
     }
     if (temp_val < 0) {
         Warning (
@@ -21473,7 +21473,7 @@ void sexp_set_support_ship (int n) {
 
     // get departure anchor
     n = CDR (n);
-    if (!stricmp (CTEXT (n), "<no anchor>")) {
+    if (!strcasecmp (CTEXT (n), "<no anchor>")) {
         // if no anchor, set departure location to hyperspace
         The_mission.support_ships.departure_location = 0;
     }
@@ -21481,7 +21481,7 @@ void sexp_set_support_ship (int n) {
         // anchor must exist - look for it
         temp_val = -1;
         for (i = 0; i < Num_parse_names; i++) {
-            if (!stricmp (CTEXT (n), Parse_names[i])) temp_val = i;
+            if (!strcasecmp (CTEXT (n), Parse_names[i])) temp_val = i;
         }
         // if not found, make a new entry
         if (temp_val < 0) {
@@ -21496,8 +21496,8 @@ void sexp_set_support_ship (int n) {
     n = CDR (n);
     temp_val = ship_info_lookup (CTEXT (n));
     if ((temp_val < 0) &&
-        ((stricmp (CTEXT (n), "<species support ship class>") != 0) &&
-         (stricmp (CTEXT (n), "<any support ship class>") != 0))) {
+        ((strcasecmp (CTEXT (n), "<species support ship class>") != 0) &&
+         (strcasecmp (CTEXT (n), "<any support ship class>") != 0))) {
         Warning (LOCATION, "Support ship class '%s' not found.\n", CTEXT (n));
         return;
     }
@@ -21539,7 +21539,7 @@ void sexp_set_arrival_info (int node) {
     // get arrival location
     arrival_location = -1;
     for (i = 0; i < MAX_ARRIVAL_NAMES; i++) {
-        if (!stricmp (CTEXT (n), Arrival_location_names[i]))
+        if (!strcasecmp (CTEXT (n), Arrival_location_names[i]))
             arrival_location = i;
     }
     if (arrival_location < 0) {
@@ -21550,14 +21550,14 @@ void sexp_set_arrival_info (int node) {
 
     // get arrival anchor
     arrival_anchor = -1;
-    if ((n < 0) || !stricmp (CTEXT (n), "<no anchor>")) {
+    if ((n < 0) || !strcasecmp (CTEXT (n), "<no anchor>")) {
         // if no anchor, set arrival location to hyperspace
         arrival_location = 0;
     }
     else {
         // anchor must exist - look for it
         for (i = 0; i < Num_parse_names; i++) {
-            if (!stricmp (CTEXT (n), Parse_names[i])) arrival_anchor = i;
+            if (!strcasecmp (CTEXT (n), Parse_names[i])) arrival_anchor = i;
         }
         // if not found, make a new entry
         if (arrival_anchor < 0) {
@@ -21633,7 +21633,7 @@ void sexp_set_departure_info (int node) {
     // get departure location
     departure_location = -1;
     for (i = 0; i < MAX_DEPARTURE_NAMES; i++) {
-        if (!stricmp (CTEXT (n), Departure_location_names[i]))
+        if (!strcasecmp (CTEXT (n), Departure_location_names[i]))
             departure_location = i;
     }
     if (departure_location < 0) {
@@ -21644,14 +21644,14 @@ void sexp_set_departure_info (int node) {
 
     // get departure anchor
     departure_anchor = -1;
-    if ((n < 0) || !stricmp (CTEXT (n), "<no anchor>")) {
+    if ((n < 0) || !strcasecmp (CTEXT (n), "<no anchor>")) {
         // if no anchor, set departure location to hyperspace
         departure_location = 0;
     }
     else {
         // anchor must exist - look for it
         for (i = 0; i < Num_parse_names; i++) {
-            if (!stricmp (CTEXT (n), Parse_names[i])) departure_anchor = i;
+            if (!strcasecmp (CTEXT (n), Parse_names[i])) departure_anchor = i;
         }
         // if not found, make a new entry
         if (departure_anchor < 0) {
@@ -21837,7 +21837,7 @@ void set_nav_carry_status (int node) {
         skip = false;
 
         for (i = 0; i < MAX_WINGS; i++) {
-            if (!stricmp (Wings[i].name, name)) {
+            if (!strcasecmp (Wings[i].name, name)) {
                 Wings[i].flags.set (Ship::Wing_Flags::Nav_carry);
                 skip = true;
                 break;
@@ -21847,7 +21847,7 @@ void set_nav_carry_status (int node) {
         if (!skip) {
             for (i = 0; i < MAX_SHIPS; i++) {
                 if (Ships[i].objnum != -1 &&
-                    !stricmp (Ships[i].ship_name, name)) {
+                    !strcasecmp (Ships[i].ship_name, name)) {
                     Ships[i].flags.set (Ship::Ship_Flags::Navpoint_carry);
                     break;
                 }
@@ -21871,7 +21871,7 @@ void unset_nav_carry_status (int node) {
         skip = false;
 
         for (i = 0; i < MAX_WINGS; i++) {
-            if (!stricmp (Wings[i].name, name)) {
+            if (!strcasecmp (Wings[i].name, name)) {
                 Wings[i].flags.remove (Ship::Wing_Flags::Nav_carry);
                 skip = true;
                 break;
@@ -21881,7 +21881,7 @@ void unset_nav_carry_status (int node) {
         if (!skip) {
             for (i = 0; i < MAX_SHIPS; i++) {
                 if (Ships[i].objnum != -1 &&
-                    !stricmp (Ships[i].ship_name, name)) {
+                    !strcasecmp (Ships[i].ship_name, name)) {
                     Ships[i].flags.remove (Ship::Ship_Flags::Navpoint_carry);
                     break;
                 }
@@ -21903,7 +21903,7 @@ void set_nav_needslink (int node) {
         name = CTEXT (n);
 
         for (i = 0; i < MAX_SHIPS; i++) {
-            if (Ships[i].objnum != -1 && !stricmp (Ships[i].ship_name, name)) {
+            if (Ships[i].objnum != -1 && !strcasecmp (Ships[i].ship_name, name)) {
                 Ships[i].flags.remove (Ship::Ship_Flags::Navpoint_carry);
                 Ships[i].flags.set (Ship::Ship_Flags::Navpoint_needslink);
                 break;
@@ -21924,7 +21924,7 @@ void unset_nav_needslink (int node) {
         name = CTEXT (n);
 
         for (i = 0; i < MAX_SHIPS; i++) {
-            if (Ships[i].objnum != -1 && !stricmp (Ships[i].ship_name, name)) {
+            if (Ships[i].objnum != -1 && !strcasecmp (Ships[i].ship_name, name)) {
                 Ships[i].flags.remove (Ship::Ship_Flags::Navpoint_needslink);
                 break;
             }
@@ -22136,7 +22136,7 @@ int is_nav_linked (int node) {
     char* ship_name = CTEXT (node);
     for (int i = 0; i < MAX_SHIPS; i++) {
         if (Ships[i].objnum != -1 &&
-            !stricmp (Ships[i].ship_name, ship_name)) {
+            !strcasecmp (Ships[i].ship_name, ship_name)) {
             return (Ships[i].flags[Ship::Ship_Flags::Navpoint_carry]) != 0;
         }
     }
@@ -22195,7 +22195,7 @@ int sexp_missile_locked (int node) {
     // do we have a specific ship?
     if (CDR (node) != -1) {
         // if we're not targeting the specific ship, it's false
-        if (stricmp (
+        if (strcasecmp (
                 Ships[Objects[Players_target].instance].ship_name,
                 CTEXT (CDR (node))) != 0)
             return SEXP_FALSE;
@@ -22206,7 +22206,7 @@ int sexp_missile_locked (int node) {
             if (!Player_ai->targeted_subsys) return SEXP_FALSE;
 
             // if we're not targeting the specific subsystem, it's false
-            if (subsystem_stricmp (
+            if (subsystem_strcasecmp (
                     Player_ai->targeted_subsys->system_info->subobj_name,
                     CTEXT (CDR (CDR (node)))))
                 return SEXP_FALSE;
@@ -22705,7 +22705,7 @@ int process_special_sexps (int index) {
     switch (index) {
     case 0: //	Ship "Freighter 1" is aspect locked by player.
         if (Player_ai->target_objnum != -1) {
-            if (!(stricmp (
+            if (!(strcasecmp (
                     Ships[Objects[Player_ai->target_objnum].instance]
                         .ship_name,
                     "Freighter 1"))) {
@@ -22719,14 +22719,14 @@ int process_special_sexps (int index) {
         for (objp = GET_FIRST (&obj_used_list);
              objp != END_OF_LIST (&obj_used_list); objp = GET_NEXT (objp)) {
             if (objp->type == OBJ_WEAPON) {
-                if (!stricmp (
+                if (!strcasecmp (
                         Weapon_info[Weapons[objp->instance].weapon_info_index]
                             .name,
                         "Interceptor#weak")) {
                     int target = Weapons[objp->instance].target_num;
                     if (target != -1) {
                         if (Objects[target].type == OBJ_SHIP) {
-                            if (!(stricmp (
+                            if (!(strcasecmp (
                                     Ships[Objects[target].instance].ship_name,
                                     "Freighter 1")))
                                 return SEXP_TRUE;
@@ -22740,11 +22740,11 @@ int process_special_sexps (int index) {
     case 2: //	Ship "Freighter 1", subsystem "Weapons" is aspect locked by
             // player.
         if (Player_ai->target_objnum != -1) {
-            if (!(stricmp (
+            if (!(strcasecmp (
                     Ships[Objects[Player_ai->target_objnum].instance]
                         .ship_name,
                     "Freighter 1"))) {
-                if (!(subsystem_stricmp (
+                if (!(subsystem_strcasecmp (
                         Player_ai->targeted_subsys->system_info->name,
                         "Weapons"))) {
                     if (Player_ai->current_target_is_locked) {
@@ -23320,7 +23320,7 @@ void sexp_debug (int node) {
     // but use an actual message if one exists
     for (i = 0; i < Num_messages; i++) {
         // find the message
-        if (!stricmp (Messages[i].name, warning_message.c_str ())) {
+        if (!strcasecmp (Messages[i].name, warning_message.c_str ())) {
             warning_message = Messages[i].message;
             break;
         }
@@ -23360,7 +23360,7 @@ void sexp_flash_hud_gauge (int node) {
 
     name = CTEXT (node);
     for (i = 0; i < NUM_HUD_GAUGES; i++) {
-        if (!stricmp (HUD_gauge_text[i], name)) {
+        if (!strcasecmp (HUD_gauge_text[i], name)) {
             hud_gauge_start_flash (i); // call HUD function to flash gauge
 
             Current_sexp_network_packet.start_callback ();
@@ -23910,7 +23910,7 @@ object* sexp_camera_get_objsub (int node, int* o_submodel) {
 
     //*****Process submodel
     if (objp != NULL && sub_name != NULL && oswpt.type == OSWPT_TYPE_SHIP) {
-        if (stricmp (sub_name, SEXP_NONE_STRING) != 0) {
+        if (strcasecmp (sub_name, SEXP_NONE_STRING) != 0) {
             ship_subsys* ss =
                 ship_get_subsys (&Ships[objp->instance], sub_name);
             if (ss != NULL) { submodel = ss->system_info->subobj_num; }
@@ -24156,7 +24156,7 @@ void sexp_show_subtitle_text (int node) {
 
     // but use an actual message if one exists
     for (i = 0; i < Num_messages; i++) {
-        if (!stricmp (Messages[i].name, ctext)) {
+        if (!strcasecmp (Messages[i].name, ctext)) {
             ctext = Messages[i].message;
             message_index = i;
             break;
@@ -25058,7 +25058,7 @@ int get_effect_from_name (char* name) {
     int i = 0;
     for (std::vector< ship_effect >::iterator sei = Ship_effects.begin ();
          sei != Ship_effects.end (); ++sei) {
-        if (!stricmp (name, sei->name)) return i;
+        if (!strcasecmp (name, sei->name)) return i;
         i++;
     }
     return -1;
@@ -30752,7 +30752,7 @@ void update_sexp_references (const char* old_name, const char* new_name) {
     for (i = 0; i < Num_sexp_nodes; i++) {
         if ((SEXP_NODE_TYPE (i) == SEXP_ATOM) &&
             (Sexp_nodes[i].subtype == SEXP_ATOM_STRING))
-            if (!stricmp (CTEXT (i), old_name)) strcpy (CTEXT (i), new_name);
+            if (!strcasecmp (CTEXT (i), old_name)) strcpy (CTEXT (i), new_name);
     }
 }
 
@@ -30811,7 +30811,7 @@ void update_sexp_references (
                  (Sexp_nodes[n].subtype == SEXP_ATOM_STRING)));
 
             if (query_operator_argument_type (op, i) == format) {
-                if (!stricmp (CTEXT (n), old_name))
+                if (!strcasecmp (CTEXT (n), old_name))
                     strcpy (CTEXT (n), new_name);
             }
         }
@@ -30827,7 +30827,7 @@ int query_referenced_in_sexp (int /*mode*/, const char* name, int* node) {
     for (n = 0; n < Num_sexp_nodes; n++) {
         if ((SEXP_NODE_TYPE (n) == SEXP_ATOM) &&
             (Sexp_nodes[n].subtype == SEXP_ATOM_STRING)) {
-            if (!stricmp (CTEXT (n), name)) { break; }
+            if (!strcasecmp (CTEXT (n), name)) { break; }
         }
     }
 
@@ -31931,7 +31931,7 @@ int sexp_var_compare (const void* var1, const void* var2) {
         return 1;
     }
     else {
-        return stricmp (sexp_var1->variable_name, sexp_var2->variable_name);
+        return strcasecmp (sexp_var1->variable_name, sexp_var2->variable_name);
     }
 }
 
@@ -31959,7 +31959,7 @@ int eval_num (int n) {
 // Goober5000
 int get_sexp_id (char* sexp_name) {
     for (size_t i = 0; i < Operators.size (); i++) {
-        if (!stricmp (sexp_name, Operators[i].text.c_str ()))
+        if (!strcasecmp (sexp_name, Operators[i].text.c_str ()))
             return Operators[i].value;
     }
     return -1;

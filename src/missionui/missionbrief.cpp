@@ -292,7 +292,7 @@ void brief_maybe_blit_scene_cut (float frametime);
 void brief_transition_reset ();
 
 const char* brief_tooltip_handler (const char* str) {
-    if (!stricmp (str, NOX ("@close"))) {
+    if (!strcasecmp (str, NOX ("@close"))) {
         if (Closeup_icon) return XSTR ("Close", 428);
     }
 

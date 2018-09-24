@@ -245,7 +245,7 @@ ADE_INDEXER (
 
     int i;
     for (i = 0; i < Num_mission_events; i++) {
-        if (!stricmp (Mission_events[i].name, s))
+        if (!strcasecmp (Mission_events[i].name, s))
             return ade_set_args (L, "o", l_Event.Set (i));
     }
 
@@ -624,7 +624,7 @@ ADE_INDEXER (
         if (name == NULL) return ade_set_args (L, "o", l_Message.Set (-1));
 
         for (int i = Num_builtin_messages; i < (int)Messages.size (); i++) {
-            if (!stricmp (Messages[i].name, name)) {
+            if (!strcasecmp (Messages[i].name, name)) {
                 idx = i;
                 break;
             }
@@ -668,7 +668,7 @@ ADE_INDEXER (
         if (name == NULL) return ade_set_args (L, "o", l_Message.Set (-1));
 
         for (int i = 0; i < Num_builtin_messages; i++) {
-            if (!stricmp (Messages[i].name, name)) {
+            if (!strcasecmp (Messages[i].name, name)) {
                 idx = i;
                 break;
             }
@@ -1024,7 +1024,7 @@ ADE_FUNC (
     if (Game_mode & GM_IN_MISSION) {
         // TO DO... All the things needed if this function is called in any
         // state of the game while mission is running.
-        //    most likely all require 'stricmp(str,
+        //    most likely all require 'strcasecmp(str,
         //    Game_current_mission_filename)' to make sure missions arent mixed
         //    but after that it might be possible to imprement method for
         //    jumping directly into already running missions.

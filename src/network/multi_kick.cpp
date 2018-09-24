@@ -143,7 +143,7 @@ void multi_dcf_kick () {
     player_num = -1;
     for (idx = 0; idx < MAX_PLAYERS; idx++) {
         if (MULTI_CONNECTED (Net_players[idx]) &&
-            (stricmp (Net_players[idx].m_player->callsign, arg.c_str ()) ==
+            (strcasecmp (Net_players[idx].m_player->callsign, arg.c_str ()) ==
              0)) {
             player_num = idx;
             break;

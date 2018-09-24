@@ -5038,7 +5038,7 @@ void ai_fly_to_ship () {
 
     for (int j = 0; j < MAX_SHIPS; j++) {
         if (Ships[j].objnum != -1 &&
-            !stricmp (
+            !strcasecmp (
                 aip->goals[aip->active_goal].target_name,
                 Ships[j].ship_name)) {
             target_p = &Objects[Ships[j].objnum];
@@ -5321,7 +5321,7 @@ void maybe_afterburner_after_ship_hit (
  * @return true if object *objp is an instructor.
  */
 int is_instructor (object* objp) {
-    return !strnicmp (
+    return !strncasecmp (
         Ships[objp->instance].ship_name, INSTRUCTOR_SHIP_NAME,
         strlen (INSTRUCTOR_SHIP_NAME));
 }
@@ -8757,9 +8757,9 @@ int maybe_hack_cruiser_chase_abort () {
     ai_info* aip = &Ai_info[shipp->ai_index];
 
     // mission sm3-08, sathanos chasing collosus
-    if (stricmp (Mission_filename, "sm3-08.fs2") == 0) {
-        if ((stricmp (eshipp->ship_name, "colossus") == 0) ||
-            (stricmp (shipp->ship_name, "colossus") == 0)) {
+    if (strcasecmp (Mission_filename, "sm3-08.fs2") == 0) {
+        if ((strcasecmp (eshipp->ship_name, "colossus") == 0) ||
+            (strcasecmp (shipp->ship_name, "colossus") == 0)) {
             // Changed so all big ships attacking the Colossus will not do the
             // chase code. Did this so Beast wouldn't swerve away from
             // Colossus. -- MK, 9/14/99
@@ -14549,7 +14549,7 @@ void ai_execute_behavior (ai_info* aip) {
             ship* shipp = &Ships[aip->shipnum];
             ship_info* sip = &Ship_info[shipp->ship_info_index];
 
-            if (strnicmp (
+            if (strncasecmp (
                     shipp->ship_name, INSTRUCTOR_SHIP_NAME,
                     strlen (INSTRUCTOR_SHIP_NAME)) != 0) {
                 if (sip->is_big_or_huge ()) { aip->mode = AIM_NONE; }
@@ -17314,13 +17314,13 @@ void maybe_cheat_fire_synaptic (object* objp) {
     if (!(The_mission.flags[Mission::Mission_Flags::Subspace])) return;
 
     //	Only do in sm3-09a
-    if (!stricmp (Game_current_mission_filename, "sm3-09a")) {
+    if (!strcasecmp (Game_current_mission_filename, "sm3-09a")) {
         ship* shipp;
         int wing_index, time;
 
         shipp = &Ships[objp->instance];
 
-        if (!(strnicmp (shipp->ship_name, NOX ("delta"), 5))) {
+        if (!(strncasecmp (shipp->ship_name, NOX ("delta"), 5))) {
             wing_index = shipp->ship_name[6] - '1';
 
             if ((wing_index >= 0) && (wing_index < MAX_SHIPS_PER_WING)) {

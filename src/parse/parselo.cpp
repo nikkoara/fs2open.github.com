@@ -304,10 +304,10 @@ int skip_to_string (const char* pstr, const char* end) {
 
     if (end) len2 = strlen (end);
 
-    while ((*Mp != '\0') && strnicmp (pstr, Mp, len) != 0) {
+    while ((*Mp != '\0') && strncasecmp (pstr, Mp, len) != 0) {
         if (end && *Mp == '#') return 0;
 
-        if (end && !strnicmp (end, Mp, len2)) return -1;
+        if (end && !strncasecmp (end, Mp, len2)) return -1;
 
         advance_to_eoln (NULL);
         ignore_white_space ();
@@ -330,10 +330,10 @@ int skip_to_start_of_string (const char* pstr, const char* end) {
     else
         endlen = 0;
 
-    while ((*Mp != '\0') && strnicmp (pstr, Mp, len) != 0) {
+    while ((*Mp != '\0') && strncasecmp (pstr, Mp, len) != 0) {
         if (end && *Mp == '#') return 0;
 
-        if (end && !strnicmp (end, Mp, endlen)) return 0;
+        if (end && !strncasecmp (end, Mp, endlen)) return 0;
 
         advance_to_eoln (NULL);
         ignore_white_space ();
@@ -358,11 +358,11 @@ int skip_to_start_of_string_either (
     else
         endlen = 0;
 
-    while ((*Mp != '\0') && strnicmp (pstr1, Mp, len1) != 0 &&
-           strnicmp (pstr2, Mp, len2) != 0) {
+    while ((*Mp != '\0') && strncasecmp (pstr1, Mp, len1) != 0 &&
+           strncasecmp (pstr2, Mp, len2) != 0) {
         if (end && *Mp == '#') return 0;
 
-        if (end && !strnicmp (end, Mp, endlen)) return 0;
+        if (end && !strncasecmp (end, Mp, endlen)) return 0;
 
         advance_to_eoln (NULL);
         ignore_white_space ();
@@ -384,7 +384,7 @@ int required_string (const char* pstr) {
 
     ignore_white_space ();
 
-    while (strnicmp (pstr, Mp, strlen (pstr)) != 0 && (count < RS_MAX_TRIES)) {
+    while (strncasecmp (pstr, Mp, strlen (pstr)) != 0 && (count < RS_MAX_TRIES)) {
         error_display (
             1, "Missing required token: [%s]. Found [%.32s] instead.\n", pstr,
             next_tokens ());
@@ -435,14 +435,14 @@ int check_for_eoln () {
 int check_for_string (const char* pstr) {
     ignore_white_space ();
 
-    if (!strnicmp (pstr, Mp, strlen (pstr))) return 1;
+    if (!strncasecmp (pstr, Mp, strlen (pstr))) return 1;
 
     return 0;
 }
 
 // like check for string, but doesn't skip past any whitespace
 int check_for_string_raw (const char* pstr) {
-    if (!strnicmp (pstr, Mp, strlen (pstr))) return 1;
+    if (!strncasecmp (pstr, Mp, strlen (pstr))) return 1;
 
     return 0;
 }
@@ -453,7 +453,7 @@ int check_for_string_raw (const char* pstr) {
 int optional_string (const char* pstr) {
     ignore_white_space ();
 
-    if (!strnicmp (pstr, Mp, strlen (pstr))) {
+    if (!strncasecmp (pstr, Mp, strlen (pstr))) {
         Mp += strlen (pstr);
         return 1;
     }
@@ -464,11 +464,11 @@ int optional_string (const char* pstr) {
 int optional_string_either (const char* str1, const char* str2) {
     ignore_white_space ();
 
-    if (!strnicmp (str1, Mp, strlen (str1))) {
+    if (!strncasecmp (str1, Mp, strlen (str1))) {
         Mp += strlen (str1);
         return 0;
     }
-    else if (!strnicmp (str2, Mp, strlen (str2))) {
+    else if (!strncasecmp (str2, Mp, strlen (str2))) {
         Mp += strlen (str2);
         return 1;
     }
@@ -492,7 +492,7 @@ int optional_string_one_of (int arg_count, ...) {
     for (idx = 0; idx < arg_count; idx++) {
         pstr = va_arg (vl, char*);
 
-        if (!strnicmp (pstr, Mp, strlen (pstr))) {
+        if (!strncasecmp (pstr, Mp, strlen (pstr))) {
             Mp += strlen (pstr);
             found = idx;
             break;
@@ -510,8 +510,8 @@ int required_string_fred (const char* pstr, const char* end) {
     if (fred_parse_flag) return 0;
 
     ignore_white_space ();
-    while (*Mp != '\0' && strnicmp (pstr, Mp, strlen (pstr)) != 0) {
-        if ((*Mp == '#') || (end && !strnicmp (end, Mp, strlen (end)))) {
+    while (*Mp != '\0' && strncasecmp (pstr, Mp, strlen (pstr)) != 0) {
+        if ((*Mp == '#') || (end && !strncasecmp (end, Mp, strlen (end)))) {
             Mp = NULL;
             break;
         }
@@ -547,9 +547,9 @@ int optional_string_fred (
     if (fred_parse_flag) return 0;
 
     ignore_white_space ();
-    while ((*Mp != '\0') && strnicmp (pstr, Mp, strlen (pstr)) != 0) {
-        if ((*Mp == '#') || (end && !strnicmp (end, Mp, strlen (end))) ||
-            (end2 && !strnicmp (end2, Mp, strlen (end2)))) {
+    while ((*Mp != '\0') && strncasecmp (pstr, Mp, strlen (pstr)) != 0) {
+        if ((*Mp == '#') || (end && !strncasecmp (end, Mp, strlen (end))) ||
+            (end2 && !strncasecmp (end2, Mp, strlen (end2)))) {
             Mp = NULL;
             break;
         }
@@ -585,12 +585,12 @@ int required_string_either (const char* str1, const char* str2) {
     ignore_white_space ();
 
     for (int count = 0; count < RS_MAX_TRIES; ++count) {
-        if (strnicmp (str1, Mp, strlen (str1)) == 0) {
+        if (strncasecmp (str1, Mp, strlen (str1)) == 0) {
             // Mp += strlen(str1);
             diag_printf ("Found required string [%s]\n", token_found = str1);
             return 0;
         }
-        else if (strnicmp (str2, Mp, strlen (str2)) == 0) {
+        else if (strncasecmp (str2, Mp, strlen (str2)) == 0) {
             // Mp += strlen(str2);
             diag_printf ("Found required string [%s]\n", token_found = str2);
             return 1;
@@ -638,7 +638,7 @@ int required_string_one_of (int arg_count, ...) {
         va_start (vl, arg_count);
         for (idx = 0; idx < arg_count; idx++) {
             expected = va_arg (vl, char*);
-            if (strnicmp (expected, Mp, strlen (expected)) == 0) {
+            if (strncasecmp (expected, Mp, strlen (expected)) == 0) {
                 diag_printf (
                     "Found required string [%s]", token_found = expected);
                 va_end (vl);
@@ -679,12 +679,12 @@ int required_string_either_fred (const char* str1, const char* str2) {
     ignore_white_space ();
 
     while (*Mp != '\0') {
-        if (!strnicmp (str1, Mp, strlen (str1))) {
+        if (!strncasecmp (str1, Mp, strlen (str1))) {
             // Mp += strlen(str1);
             diag_printf ("Found required string [%s]\n", token_found = str1);
             return fred_parse_flag = 0;
         }
-        else if (!strnicmp (str2, Mp, strlen (str2))) {
+        else if (!strncasecmp (str2, Mp, strlen (str2))) {
             // Mp += strlen(str2);
             diag_printf ("Found required string [%s]\n", token_found = str2);
             return fred_parse_flag = 1;
@@ -944,7 +944,7 @@ void stuff_string_until (std::string& outstr, const char* endstr) {
 // extra_chars indicates extra malloc space that should be allocated.
 char* alloc_block (const char* startstr, const char* endstr, int extra_chars) {
     Assert (startstr != NULL && endstr != NULL);
-    Assert (stricmp (startstr, endstr));
+    Assert (strcasecmp (startstr, endstr));
 
     char* rval = NULL;
     auto elen = strlen (endstr);
@@ -961,8 +961,8 @@ char* alloc_block (const char* startstr, const char* endstr, int extra_chars) {
     // Depth checking
     int level = 1;
     while (*pos != '\0') {
-        if (!strnicmp (pos, startstr, slen)) { level++; }
-        else if (!strnicmp (pos, endstr, elen)) {
+        if (!strncasecmp (pos, startstr, slen)) { level++; }
+        else if (!strncasecmp (pos, endstr, elen)) {
             level--;
         }
 
@@ -1673,7 +1673,7 @@ bool matches_version_specific_tag (
     // formatted like e.g. ;;FSO 3.7.0;;
     // Should now support anything from ;;FSO 3;; to ;;FSO 3.7.3.20151106;;
     // -MageKing17
-    if (strnicmp (line_start, ";;FSO ", 6) != 0) return false;
+    if (strncasecmp (line_start, ";;FSO ", 6) != 0) return false;
 
     int major, minor, build, revis;
     int s_num =
@@ -2420,25 +2420,25 @@ void stuff_boolean (bool* b, bool a_to_eol) {
             *b = false;
     }
     else {
-        if (!stricmp (token, "yes") || !stricmp (token, "true") ||
-            !stricmp (token, "ja")          // German
-            || !stricmp (token, "Oui")      // French
-            || !stricmp (token, "si")       // Spanish
-            || !stricmp (token, "ita vero") // Latin
-            || !stricmp (token, "HIja'") ||
-            !stricmp (token, "HISlaH")) // Klingon
+        if (!strcasecmp (token, "yes") || !strcasecmp (token, "true") ||
+            !strcasecmp (token, "ja")          // German
+            || !strcasecmp (token, "Oui")      // French
+            || !strcasecmp (token, "si")       // Spanish
+            || !strcasecmp (token, "ita vero") // Latin
+            || !strcasecmp (token, "HIja'") ||
+            !strcasecmp (token, "HISlaH")) // Klingon
         {
             *b = true;
         }
         else if (
-            !stricmp (token, "no") || !stricmp (token, "false") ||
-            !stricmp (token, "nein")   // German
-            || !stricmp (token, "Non") // French
+            !strcasecmp (token, "no") || !strcasecmp (token, "false") ||
+            !strcasecmp (token, "nein")   // German
+            || !strcasecmp (token, "Non") // French
             // I don't know spanish for "no"
             // But according to altavista, spanish for "No" is "no"
             // Go figure.
-            || !stricmp (token, "minime")  // Latin
-            || !stricmp (token, "ghobe'")) // Klingon
+            || !strcasecmp (token, "minime")  // Latin
+            || !strcasecmp (token, "ghobe'")) // Klingon
         {
             *b = false;
         }
@@ -2530,7 +2530,7 @@ int parse_string_flag_list (int* dest, flag_def_list defs[], int defs_size) {
 
     for (i = 0; i < num_strings; i++) {
         for (j = 0; j < defs_size; j++) {
-            if (!stricmp (slp[i], defs[j].name)) { (*dest) |= defs[j].def; }
+            if (!strcasecmp (slp[i], defs[j].name)) { (*dest) |= defs[j].def; }
         }
     }
 
@@ -3091,7 +3091,7 @@ int string_lookup (
     for (size_t i = 0; i < max; i++) {
         Assert (strlen (strlist[i]) != 0); //-V805
 
-        if (!stricmp (str1, strlist[i])) return (int)i;
+        if (!strcasecmp (str1, strlist[i])) return (int)i;
     }
 
     if (say_errors)
@@ -3108,7 +3108,7 @@ void find_and_stuff (
     const char* id, int* addr, int f_type, const char* strlist[], size_t max,
     const char* description) {
     char token[128];
-    int checking_ship_classes = (stricmp (id, "$class:") == 0);
+    int checking_ship_classes = (strcasecmp (id, "$class:") == 0);
 
     // Goober5000 - don't say errors when we're checking classes because 1) we
     // have more checking to do; and 2) we will say a redundant error later
@@ -3561,11 +3561,11 @@ int split_str (
 
 // Goober5000
 // accounts for the dumb communications != communication, etc.
-int subsystem_stricmp (const char* str1, const char* str2) {
+int subsystem_strcasecmp (const char* str1, const char* str2) {
     Assert (str1 && str2);
 
     // ensure len-1 will be valid
-    if (!*str1 || !*str2) return stricmp (str1, str2);
+    if (!*str1 || !*str2) return strcasecmp (str1, str2);
 
     // calc lengths
     auto len1 = (int)strlen (str1);
@@ -3583,7 +3583,7 @@ int subsystem_stricmp (const char* str1, const char* str2) {
     if (len1 < len2) return -1;
 
     // now do the comparison
-    return strnicmp (str1, str2, len1);
+    return strncasecmp (str1, str2, len1);
 }
 
 // Goober5000
@@ -3902,7 +3902,7 @@ int strextcmp (const char* s1, const char* s2) {
     // if the lengths aren't the same then it's deffinitely not the same name
     if (s2_len != s1_len) return 1;
 
-    return strnicmp (s1, s2, s1_len);
+    return strncasecmp (s1, s2, s1_len);
 }
 
 // Goober5000

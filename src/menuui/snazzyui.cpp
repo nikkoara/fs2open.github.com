@@ -210,7 +210,7 @@ void read_menu_tbl (
             if (!state) {
                 p2 = strchr (tmp_line, ']');
                 if (p2) *p2 = 0;
-                if (!stricmp (++p1, menu_name)) state = 1;
+                if (!strcasecmp (++p1, menu_name)) state = 1;
             }
             else {
                 cfclose (fp);

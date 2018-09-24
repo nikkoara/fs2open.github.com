@@ -512,7 +512,7 @@ fs_builtin_mission* game_find_builtin_mission (char* filename) {
 
     // look through all existing builtin missions
     for (idx = 0; idx < Game_builtin_mission_count; idx++) {
-        if (!stricmp (Game_builtin_mission_list[idx].filename, filename)) {
+        if (!strcasecmp (Game_builtin_mission_list[idx].filename, filename)) {
             return &Game_builtin_mission_list[idx];
         }
     }
@@ -4886,7 +4886,7 @@ void game_process_event (int current_state, int event) {
         // did we end the campaign in the main freespace 2 single player
         // campaign? (specifically, did we successfully jump out when the
         // supernova was in progress and the campaign was ending?)
-        if (Campaign_ending_via_supernova && (Game_mode & GM_CAMPAIGN_MODE) /* && !stricmp(Campaign.filename, "freespace2")*/) {
+        if (Campaign_ending_via_supernova && (Game_mode & GM_CAMPAIGN_MODE) /* && !strcasecmp(Campaign.filename, "freespace2")*/) {
             gameseq_post_event (GS_EVENT_END_CAMPAIGN);
         }
         else {
@@ -5840,7 +5840,7 @@ void game_enter_state (int old_state, int new_state) {
             ((old_state == GS_STATE_MAIN_MENU) ||
              (old_state == GS_STATE_DEATH_BLEW_UP) ||
              (old_state == GS_STATE_GAME_PLAY))) {
-            if (!stricmp (
+            if (!strcasecmp (
                     Player_loadout.filename, Game_current_mission_filename)) {
                 wss_direct_restore_loadout ();
             }
@@ -7509,9 +7509,9 @@ void game_title_screen_display () {
     MAX_FILENAME_LEN)) { p = strchr( find.name, '.' ); if(p) { *p = '\0';
                     }
 
-                    if(stricmp(find.name,
+                    if(strcasecmp(find.name,
     Game_logo_screen_fname[gr_screen.res])
-                        && stricmp(find.name,
+                        && strcasecmp(find.name,
     Game_title_screen_fname[gr_screen.res]))
                     {
                         strcpy_s(Splash_screens[i], find.name);

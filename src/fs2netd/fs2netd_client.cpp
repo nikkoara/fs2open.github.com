@@ -1316,7 +1316,7 @@ bool fs2netd_player_banned (net_addr* addr) {
     while (!cfeof (banlist_cfg) && !retval) {
         cfgets (line, 32, banlist_cfg);
 
-        if (!strnicmp (ip_str, line, strlen (line))) {
+        if (!strncasecmp (ip_str, line, strlen (line))) {
             retval = true; // BANNINATED!!!
         }
     }
@@ -1435,7 +1435,7 @@ int fs2netd_get_valid_missions_do () {
             for (std::vector< file_record >::iterator fr =
                      FS2NetD_file_list.begin ();
                  fr != FS2NetD_file_list.end () && !found; ++fr) {
-                if (!stricmp (full_name, fr->name)) {
+                if (!strcasecmp (full_name, fr->name)) {
                     if (fr->crc32 == checksum) {
                         found = true;
                         valid_status = MVALID_STATUS_VALID;

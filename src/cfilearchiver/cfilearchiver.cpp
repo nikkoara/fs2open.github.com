@@ -239,7 +239,7 @@ int verify_directory (char* filespec) {
 
     // make sure last directory is named "data", ignoring case
     dd = filespec + (strlen (filespec) - 4);
-    if (stricmp (dd, "data")) data_error = 1;
+    if (strcasecmp (dd, "data")) data_error = 1;
 
     return data_error;
 }

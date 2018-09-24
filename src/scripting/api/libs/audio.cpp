@@ -246,11 +246,11 @@ ADE_FUNC (
 
     if (music_type == NULL) { audiostream_close_file (ah, fade); }
     else {
-        if (!stricmp (music_type, "briefing")) { briefing_stop_music (fade); }
-        else if (!stricmp (music_type, "credits")) {
+        if (!strcasecmp (music_type, "briefing")) { briefing_stop_music (fade); }
+        else if (!strcasecmp (music_type, "credits")) {
             credits_stop_music (fade);
         }
-        else if (!stricmp (music_type, "mainhall")) {
+        else if (!strcasecmp (music_type, "mainhall")) {
             main_hall_stop_music (fade);
         }
         else {

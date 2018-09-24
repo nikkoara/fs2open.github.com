@@ -28,13 +28,13 @@ int model_anim_match_type (char* p) {
 
     // standard match
     for (i = 0; i < MAX_TRIGGER_ANIMATION_TYPES; i++) {
-        if (!strnicmp (
+        if (!strncasecmp (
                 p, Animation_type_names[i], strlen (Animation_type_names[i])))
             return i;
     }
 
     // Goober5000 - misspelling
-    if (!strnicmp (p, "inital", 6) || !strnicmp (p, "\"inital\"", 8)) {
+    if (!strncasecmp (p, "inital", 6) || !strncasecmp (p, "\"inital\"", 8)) {
         Warning (
             LOCATION,
             "Spelling error in table file.  Please change \"inital\" to "
@@ -43,7 +43,7 @@ int model_anim_match_type (char* p) {
     }
 
     // Goober5000 - deprecation
-    if (!strnicmp (p, "docking", 7) || !strnicmp (p, "\"docking\"", 9)) {
+    if (!strncasecmp (p, "docking", 7) || !strncasecmp (p, "\"docking\"", 9)) {
         mprintf (
             ("The \"docking\" animation type name is deprecated.  Specify "
              "\"%s\" instead.\n",
@@ -51,8 +51,8 @@ int model_anim_match_type (char* p) {
         return TRIGGER_TYPE_DOCKING_STAGE_2;
     }
     else if (
-        !strnicmp (p, "primary_bank", 12) ||
-        !strnicmp (p, "\"primary_bank\"", 14)) {
+        !strncasecmp (p, "primary_bank", 12) ||
+        !strncasecmp (p, "\"primary_bank\"", 14)) {
         mprintf (
             ("The \"primary_bank\" animation type name is deprecated.  "
              "Specify \"%s\" instead.\n",
@@ -60,15 +60,15 @@ int model_anim_match_type (char* p) {
         return TRIGGER_TYPE_PRIMARY_BANK;
     }
     else if (
-        !strnicmp (p, "secondary_bank", 14) ||
-        !strnicmp (p, "\"secondary_bank\"", 16)) {
+        !strncasecmp (p, "secondary_bank", 14) ||
+        !strncasecmp (p, "\"secondary_bank\"", 16)) {
         mprintf (
             ("The \"secondary_bank\" animation type name is deprecated.  "
              "Specify \"%s\" instead.\n",
              Animation_type_names[TRIGGER_TYPE_SECONDARY_BANK]));
         return TRIGGER_TYPE_SECONDARY_BANK;
     }
-    else if (!strnicmp (p, "door", 4) || !strnicmp (p, "\"door\"", 6)) {
+    else if (!strncasecmp (p, "door", 4) || !strncasecmp (p, "\"door\"", 6)) {
         mprintf (
             ("The \"door\" animation type name is deprecated.  Specify \"%s\" "
              "instead.\n",
@@ -76,8 +76,8 @@ int model_anim_match_type (char* p) {
         return TRIGGER_TYPE_DOCK_BAY_DOOR;
     }
     else if (
-        !strnicmp (p, "turret firing", 13) ||
-        !strnicmp (p, "\"turret firing\"", 15)) {
+        !strncasecmp (p, "turret firing", 13) ||
+        !strncasecmp (p, "\"turret firing\"", 15)) {
         mprintf (
             ("The \"turret firing\" animation type name is deprecated.  "
              "Specify \"%s\" instead.\n",
@@ -92,7 +92,7 @@ int model_anim_match_type (char* p) {
         strcat (quoted_name, Animation_type_names[i]);
         strcat (quoted_name, "\"");
 
-        if (!strnicmp (p, quoted_name, strlen (quoted_name))) {
+        if (!strncasecmp (p, quoted_name, strlen (quoted_name))) {
             mprintf (
                 ("Old usage warning: Please remove quotes from animation type "
                  "%s.\n",

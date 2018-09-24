@@ -274,7 +274,7 @@ void parse_medal_tbl () {
             stuff_string (temp_medal.name, F_NAME, NAME_LENGTH);
 
             // is this rank?  if so, save it
-            if (!stricmp (temp_medal.name, "Rank"))
+            if (!strcasecmp (temp_medal.name, "Rank"))
                 Rank_medal_index = Num_medals;
 
             if (optional_string ("$Alt Name:")) {
@@ -615,10 +615,10 @@ void blit_label (const char* label, int num) {
 
         // set correct string
         if (num > 1) {
-            sprintf_safe (text, NOX ("%s (%d)"), translated_label, num);
+            sprintf (text, NOX ("%s (%d)"), translated_label, num);
         }
         else {
-            sprintf_safe (text, "%s", translated_label);
+            sprintf (text, "%s", translated_label);
         }
     }
     else if (Lcl_pl && !Disable_built_in_translations) {
@@ -628,17 +628,17 @@ void blit_label (const char* label, int num) {
 
         // set correct string
         if (num > 1) {
-            sprintf_safe (text, NOX ("%s (%d)"), translated_label, num);
+            sprintf (text, NOX ("%s (%d)"), translated_label, num);
         }
         else {
-            sprintf_safe (text, "%s", translated_label);
+            sprintf (text, "%s", translated_label);
         }
     }
     else {
         // set correct string
-        if (num > 1) { sprintf_safe (text, NOX ("%s (%d)"), label, num); }
+        if (num > 1) { sprintf (text, NOX ("%s (%d)"), label, num); }
         else {
-            sprintf_safe (text, "%s", label);
+            sprintf (text, "%s", label);
         }
     }
 
@@ -815,12 +815,12 @@ void init_medal_bitmaps () {
                 // then b, etc.
                 char temp[MAX_FILENAME_LEN];
                 strcpy_s (temp, base);
-                sprintf_safe (base, "%s%c", temp, (num_medals - 2) + 'a');
+                sprintf (base, "%s%c", temp, (num_medals - 2) + 'a');
             }
 
             // hi-res support
             if (gr_screen.res == GR_1024) {
-                sprintf_safe (filename, "2_%s", base);
+                sprintf (filename, "2_%s", base);
             }
 
             // base now contains the actual medal bitmap filename needed to
@@ -892,7 +892,7 @@ int medals_info_lookup (const char* name) {
     if (!name) { return -1; }
 
     for (int i = 0; i < Num_medals; i++) {
-        if (!stricmp (name, Medals[i].name)) { return i; }
+        if (!strcasecmp (name, Medals[i].name)) { return i; }
     }
 
     return -1;

@@ -390,7 +390,7 @@ int gameseq_process_events () {
 
 int gameseq_get_event_idx (char* s) {
     for (int i = 0; i < Num_gs_event_text; i++) {
-        if (!stricmp (s, GS_event_text[i])) { return i; }
+        if (!strcasecmp (s, GS_event_text[i])) { return i; }
     }
 
     return -1;
@@ -398,7 +398,7 @@ int gameseq_get_event_idx (char* s) {
 
 int gameseq_get_state_idx (char* s) {
     for (int i = 0; i < Num_gs_state_text; i++) {
-        if (!stricmp (s, GS_state_text[i])) { return i; }
+        if (!strcasecmp (s, GS_state_text[i])) { return i; }
     }
 
     return -1;

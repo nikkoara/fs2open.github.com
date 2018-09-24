@@ -84,7 +84,7 @@ void ChttpGet::GetFile (char* URL, char* localfile) {
     //	ioctlsocket( m_DataSock, FIONBIO, &arg );
 
     char* pURL = URL;
-    if (strnicmp (URL, "http:", 5) == 0) {
+    if (strncasecmp (URL, "http:", 5) == 0) {
         pURL += 5;
         while (*pURL == '/') { pURL++; }
     }
@@ -166,7 +166,7 @@ void ChttpGet::WorkerThread () {
     send (m_DataSock, szCommand, static_cast< int > (strlen (szCommand)), 0);
     p = GetHTTPLine ();
     if (!p) return;
-    if (strnicmp ("HTTP/", p, 5) == 0) {
+    if (strncasecmp ("HTTP/", p, 5) == 0) {
         char* pcode;
         pcode = strchr (p, ' ') + 1;
         if (!pcode) {
@@ -195,7 +195,7 @@ void ChttpGet::WorkerThread () {
                     idataready = 1;
                     break;
                 }
-                if (strnicmp (
+                if (strncasecmp (
                         p, "Content-Length:", strlen ("Content-Length:")) ==
                     0) {
                     char* s = strchr (p, ' ') + 1;

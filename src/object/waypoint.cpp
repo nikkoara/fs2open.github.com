@@ -136,7 +136,7 @@ waypoint_list* find_matching_waypoint_list (const char* name) {
     std::list< waypoint_list >::iterator ii;
 
     for (ii = Waypoint_lists.begin (); ii != Waypoint_lists.end (); ++ii) {
-        if (!stricmp (ii->get_name (), name)) return &(*ii);
+        if (!strcasecmp (ii->get_name (), name)) return &(*ii);
     }
 
     return NULL;
@@ -151,7 +151,7 @@ waypoint* find_matching_waypoint (const char* name) {
         auto len = strlen (ii->get_name ());
 
         // the first half (before the :) matches
-        if (!strnicmp (ii->get_name (), name, len)) {
+        if (!strncasecmp (ii->get_name (), name, len)) {
             // this is ok because it could be "Waypoint path 1" vs. "Waypoint
             // path 10"
             if (*(name + len) != ':') continue;

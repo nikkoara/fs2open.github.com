@@ -348,14 +348,14 @@ const char* popup_get_button_filename (popup_info* pi, int i, int flags) {
 
     // check for special button texts and if found, use specialized buttons for
     // them.
-    if ((!stricmp (pi->button_text[i], POPUP_OK + 1) ||
-         !stricmp (pi->button_text[i], POPUP_YES + 1)) &&
+    if ((!strcasecmp (pi->button_text[i], POPUP_OK + 1) ||
+         !strcasecmp (pi->button_text[i], POPUP_YES + 1)) &&
         !(flags & PF_NO_SPECIAL_BUTTONS)) {
         return Popup_button_filenames[gr_screen.res][is_tiny][BUTTON_POSITIVE];
     }
 
-    if ((!stricmp (pi->button_text[i], POPUP_CANCEL + 1) ||
-         !stricmp (pi->button_text[i], POPUP_NO + 1)) &&
+    if ((!strcasecmp (pi->button_text[i], POPUP_CANCEL + 1) ||
+         !strcasecmp (pi->button_text[i], POPUP_NO + 1)) &&
         !(flags & PF_NO_SPECIAL_BUTTONS)) {
         return Popup_button_filenames[gr_screen.res][is_tiny][BUTTON_NEGATIVE];
     }
@@ -954,7 +954,7 @@ void popup_maybe_assign_keypress (popup_info* pi, int n, char* str) {
                 char first_char_string[2];
                 first_char_string[0] = str[i];
                 first_char_string[1] = 0;
-                strlwr (first_char_string);
+                stolower (first_char_string);
                 pi->keypress[n] = first_char_string[0];
             }
             pi->button_text[n][j++] = str[i];

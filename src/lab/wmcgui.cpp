@@ -71,11 +71,11 @@ bool ObjectClassInfoEntry::Parse () {
 
         // This is where you add specific classes to parse.
         // Follow the current classes' example, this basically involves
-        // a !stricmp(), a resize() (to the number of entries) and multiple
+        // a !strcasecmp(), a resize() (to the number of entries) and multiple
         // Entries[ID].Parse()
 
         //=================================================
-        if (!stricmp (buf, "Window")) {
+        if (!strcasecmp (buf, "Window")) {
             Object = GT_WINDOW;
             Entries.resize (WCI_NUM_ENTRIES);
 
@@ -86,7 +86,7 @@ bool ObjectClassInfoEntry::Parse () {
             Entries[WCI_BODY].Parse ("Body", CIE_IMAGE);
             Entries[WCI_BORDER].Parse ("Border", CIE_IMAGE_BORDER);
         }
-        else if (!stricmp (buf, "Button")) {
+        else if (!strcasecmp (buf, "Button")) {
             Object = GT_BUTTON;
             Entries.resize (BCI_NUM_ENTRIES);
 

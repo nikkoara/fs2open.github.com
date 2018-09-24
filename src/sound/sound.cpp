@@ -215,7 +215,7 @@ void snd_spew_debug_info () {
         for (std::vector< game_snd >::iterator gs = Snds.begin ();
              gs != Snds.end (); ++gs) {
             for (auto& entry : gs->sound_entries) {
-                if (!stricmp (entry.filename, Sounds[idx].filename)) {
+                if (!strcasecmp (entry.filename, Sounds[idx].filename)) {
                     game_sounds++;
                     done = 1;
                 }
@@ -226,7 +226,7 @@ void snd_spew_debug_info () {
             for (std::vector< game_snd >::iterator gs = Snds.begin ();
                  gs != Snds.end (); ++gs) {
                 for (auto& entry : gs->sound_entries) {
-                    if (!stricmp (entry.filename, Sounds[idx].filename)) {
+                    if (!strcasecmp (entry.filename, Sounds[idx].filename)) {
                         interface_sounds++;
                         done = 1;
                     }
@@ -282,7 +282,7 @@ snd_load (game_snd_entry* entry, int flags, int /*allow_hardware_load*/) {
 
     for (n = 0; n < Sounds.size (); n++) {
         if (!(Sounds[n].flags & SND_F_USED)) { break; }
-        else if (!stricmp (Sounds[n].filename, entry->filename)) {
+        else if (!strcasecmp (Sounds[n].filename, entry->filename)) {
             // extra check: make sure the sound is actually loaded in a
             // compatible way (2D vs. 3D)
             //
@@ -342,7 +342,7 @@ snd_load (game_snd_entry* entry, int flags, int /*allow_hardware_load*/) {
 
             bool show_warning = true;
             for (auto& name : warning_ignore_list) {
-                if (!stricmp (name, entry->filename)) {
+                if (!strcasecmp (name, entry->filename)) {
                     show_warning = false;
                     break;
                 }

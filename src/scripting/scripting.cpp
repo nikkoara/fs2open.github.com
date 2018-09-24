@@ -232,7 +232,7 @@ bool ConditionedHook::ConditionsValid (
         switch (scp->condition_type) {
         case CHC_STATE:
             if (gameseq_get_depth () < 0) return false;
-            if (stricmp (
+            if (strcasecmp (
                     GS_state_text[gameseq_get_state (0)], scp->data.name) != 0)
                 return false;
             break;
@@ -240,20 +240,20 @@ bool ConditionedHook::ConditionsValid (
             if (objp == NULL || objp->type != OBJ_SHIP) return false;
             sip = &Ship_info[Ships[objp->instance].ship_info_index];
             if (sip->class_type < 0) return false;
-            if (stricmp (Ship_types[sip->class_type].name, scp->data.name) !=
+            if (strcasecmp (Ship_types[sip->class_type].name, scp->data.name) !=
                 0)
                 return false;
             break;
         case CHC_SHIPCLASS:
             if (objp == NULL || objp->type != OBJ_SHIP) return false;
-            if (stricmp (
+            if (strcasecmp (
                     Ship_info[Ships[objp->instance].ship_info_index].name,
                     scp->data.name) != 0)
                 return false;
             break;
         case CHC_SHIP:
             if (objp == NULL || objp->type != OBJ_SHIP) return false;
-            if (stricmp (Ships[objp->instance].ship_name, scp->data.name) != 0)
+            if (strcasecmp (Ships[objp->instance].ship_name, scp->data.name) != 0)
                 return false;
             break;
         case CHC_MISSION: {
@@ -262,24 +262,24 @@ bool ConditionedHook::ConditionsValid (
             // Mission_filename is valid in both fs2_open and FRED
             size_t len = strlen (Mission_filename);
             if (!len) return false;
-            if (len > 4 && !stricmp (&Mission_filename[len - 4], ".fs2"))
+            if (len > 4 && !strcasecmp (&Mission_filename[len - 4], ".fs2"))
                 len -= 4;
-            if (strnicmp (scp->data.name, Mission_filename, len) != 0)
+            if (strncasecmp (scp->data.name, Mission_filename, len) != 0)
                 return false;
             break;
         }
         case CHC_CAMPAIGN: {
             size_t len = strlen (Campaign.filename);
             if (!len) return false;
-            if (len > 4 && !stricmp (&Mission_filename[len - 4], ".fc2"))
+            if (len > 4 && !strcasecmp (&Mission_filename[len - 4], ".fc2"))
                 len -= 4;
-            if (strnicmp (scp->data.name, Mission_filename, len) != 0)
+            if (strncasecmp (scp->data.name, Mission_filename, len) != 0)
                 return false;
             break;
         }
         case CHC_WEAPONCLASS: {
             if (action == CHA_COLLIDEWEAPON) {
-                if (stricmp (Weapon_info[more_data].name, scp->data.name) != 0)
+                if (strcasecmp (Weapon_info[more_data].name, scp->data.name) != 0)
                     return false;
             }
             else if (!(action == CHA_ONWPSELECTED ||
@@ -291,14 +291,14 @@ bool ConditionedHook::ConditionsValid (
                     return false;
                 else if (
                     (objp->type == OBJ_WEAPON) &&
-                    (stricmp (
+                    (strcasecmp (
                          Weapon_info[Weapons[objp->instance].weapon_info_index]
                              .name,
                          scp->data.name) != 0))
                     return false;
                 else if (
                     (objp->type == OBJ_BEAM) &&
-                    (stricmp (
+                    (strcasecmp (
                          Weapon_info[Beams[objp->instance].weapon_info_index]
                              .name,
                          scp->data.name) != 0))
@@ -316,14 +316,14 @@ bool ConditionedHook::ConditionsValid (
                 switch (action) {
                 case CHA_ONWPSELECTED:
                     primary =
-                        stricmp (
+                        strcasecmp (
                             Weapon_info
                                 [shipp->weapons.primary_bank_weapons
                                      [shipp->weapons.current_primary_bank]]
                                     .name,
                             scp->data.name) == 0;
                     secondary =
-                        stricmp (
+                        strcasecmp (
                             Weapon_info
                                 [shipp->weapons.secondary_bank_weapons
                                      [shipp->weapons.current_secondary_bank]]
@@ -342,28 +342,28 @@ bool ConditionedHook::ConditionsValid (
                     break;
                 case CHA_ONWPDESELECTED:
                     primary =
-                        stricmp (
+                        strcasecmp (
                             Weapon_info
                                 [shipp->weapons.primary_bank_weapons
                                      [shipp->weapons.current_primary_bank]]
                                     .name,
                             scp->data.name) == 0;
                     prev_primary =
-                        stricmp (
+                        strcasecmp (
                             Weapon_info
                                 [shipp->weapons.primary_bank_weapons
                                      [shipp->weapons.previous_primary_bank]]
                                     .name,
                             scp->data.name) == 0;
                     secondary =
-                        stricmp (
+                        strcasecmp (
                             Weapon_info
                                 [shipp->weapons.secondary_bank_weapons
                                      [shipp->weapons.current_secondary_bank]]
                                     .name,
                             scp->data.name) == 0;
                     prev_secondary =
-                        stricmp (
+                        strcasecmp (
                             Weapon_info
                                 [shipp->weapons.secondary_bank_weapons
                                      [shipp->weapons.previous_secondary_bank]]
@@ -406,7 +406,7 @@ bool ConditionedHook::ConditionsValid (
                             (shipp->weapons.primary_bank_weapons[j] >= 0) &&
                             (shipp->weapons.primary_bank_weapons[j] <
                              MAX_WEAPON_TYPES)) {
-                            if (!stricmp (
+                            if (!strcasecmp (
                                     Weapon_info[shipp->weapons
                                                     .primary_bank_weapons[j]]
                                         .name,
@@ -424,7 +424,7 @@ bool ConditionedHook::ConditionsValid (
                                  0) &&
                                 (shipp->weapons.secondary_bank_weapons[j] <
                                  MAX_WEAPON_TYPES)) {
-                                if (!stricmp (
+                                if (!strcasecmp (
                                         Weapon_info
                                             [shipp->weapons
                                                  .secondary_bank_weapons[j]]
@@ -444,7 +444,7 @@ bool ConditionedHook::ConditionsValid (
                 case CHA_ONWPFIRED: {
                     if (more_data == 1) {
                         primary =
-                            stricmp (
+                            strcasecmp (
                                 Weapon_info
                                     [shipp->weapons.primary_bank_weapons
                                          [shipp->weapons.current_primary_bank]]
@@ -455,7 +455,7 @@ bool ConditionedHook::ConditionsValid (
                     else {
                         primary = false;
                         secondary =
-                            stricmp (
+                            strcasecmp (
                                 Weapon_info
                                     [shipp->weapons.secondary_bank_weapons
                                          [shipp->weapons
@@ -476,7 +476,7 @@ bool ConditionedHook::ConditionsValid (
                     break;
                 }
                 case CHA_ONTURRETFIRED: {
-                    if (!(stricmp (
+                    if (!(strcasecmp (
                               Weapon_info[shipp->last_fired_turret
                                               ->last_fired_weapon_info_index]
                                   .name,
@@ -485,7 +485,7 @@ bool ConditionedHook::ConditionsValid (
                     break;
                 }
                 case CHA_PRIMARYFIRE: {
-                    if (stricmp (
+                    if (strcasecmp (
                             Weapon_info
                                 [shipp->weapons.primary_bank_weapons
                                      [shipp->weapons.current_primary_bank]]
@@ -495,7 +495,7 @@ bool ConditionedHook::ConditionsValid (
                     break;
                 }
                 case CHA_SECONDARYFIRE: {
-                    if (stricmp (
+                    if (strcasecmp (
                             Weapon_info
                                 [shipp->weapons.secondary_bank_weapons
                                      [shipp->weapons.current_secondary_bank]]
@@ -505,7 +505,7 @@ bool ConditionedHook::ConditionsValid (
                     break;
                 }
                 case CHA_BEAMFIRE: {
-                    if (!(stricmp (
+                    if (!(strcasecmp (
                               Weapon_info[more_data].name, scp->data.name) ==
                           0))
                         return false;
@@ -517,7 +517,7 @@ bool ConditionedHook::ConditionsValid (
         }
         case CHC_OBJECTTYPE:
             if (objp == NULL) return false;
-            if (stricmp (Object_type_names[objp->type], scp->data.name) != 0)
+            if (strcasecmp (Object_type_names[objp->type], scp->data.name) != 0)
                 return false;
             break;
         case CHC_KEYPRESS: {
@@ -525,7 +525,7 @@ bool ConditionedHook::ConditionsValid (
             if (gameseq_get_depth () < 0) return false;
             if (Current_key_down == 0) return false;
             // WMC - could be more efficient, but whatever.
-            if (stricmp (
+            if (strcasecmp (
                     textify_scancode (Current_key_down), scp->data.name) != 0)
                 return false;
             break;
@@ -536,7 +536,7 @@ bool ConditionedHook::ConditionsValid (
             int action_index = more_data;
 
             if (action_index <= 0 ||
-                stricmp (scp->data.name, Control_config[action_index].text) !=
+                strcasecmp (scp->data.name, Control_config[action_index].text) !=
                     0)
                 return false;
             break;
@@ -548,12 +548,12 @@ bool ConditionedHook::ConditionsValid (
             sprintf (
                 buf, "%i.%i.%i", FS_VERSION_MAJOR, FS_VERSION_MINOR,
                 FS_VERSION_BUILD);
-            if (stricmp (buf, scp->data.name) != 0) {
+            if (strcasecmp (buf, scp->data.name) != 0) {
                 // In case some people are lazy and say "3.7" instead of
                 // "3.7.0" or something
                 if (FS_VERSION_BUILD == 0) {
                     sprintf (buf, "%i.%i", FS_VERSION_MAJOR, FS_VERSION_MINOR);
-                    if (stricmp (buf, scp->data.name) != 0) return false;
+                    if (strcasecmp (buf, scp->data.name) != 0) return false;
                 }
                 else {
                     return false;
@@ -563,17 +563,17 @@ bool ConditionedHook::ConditionsValid (
         }
         case CHC_APPLICATION: {
             if (Fred_running) {
-                if (stricmp ("FRED2_Open", scp->data.name) != 0 &&
-                    stricmp ("FRED2Open", scp->data.name) != 0 &&
-                    stricmp ("FRED 2", scp->data.name) != 0 &&
-                    stricmp ("FRED", scp->data.name) != 0)
+                if (strcasecmp ("FRED2_Open", scp->data.name) != 0 &&
+                    strcasecmp ("FRED2Open", scp->data.name) != 0 &&
+                    strcasecmp ("FRED 2", scp->data.name) != 0 &&
+                    strcasecmp ("FRED", scp->data.name) != 0)
                     return false;
             }
             else {
-                if (stricmp ("FS2_Open", scp->data.name) != 0 &&
-                    stricmp ("FS2Open", scp->data.name) != 0 &&
-                    stricmp ("Freespace 2", scp->data.name) != 0 &&
-                    stricmp ("Freespace", scp->data.name) != 0)
+                if (strcasecmp ("FS2_Open", scp->data.name) != 0 &&
+                    strcasecmp ("FS2Open", scp->data.name) != 0 &&
+                    strcasecmp ("Freespace 2", scp->data.name) != 0 &&
+                    strcasecmp ("Freespace", scp->data.name) != 0)
                     return false;
             }
         }
@@ -866,7 +866,7 @@ void script_state::RemGlobal (const char* name) {
 
 int script_state::LoadBm (char* name) {
     for (int i = 0; i < (int)ScriptImages.size (); i++) {
-        if (!stricmp (name, ScriptImages[i].fname))
+        if (!strcasecmp (name, ScriptImages[i].fname))
             return ScriptImages[i].handle;
     }
 

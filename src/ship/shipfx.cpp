@@ -245,7 +245,7 @@ static void set_ship_submodel_as_blown_off (ship* shipp, const char* name) {
     ship_subsys* pss = NULL;
     for (pss = GET_FIRST (&shipp->subsys_list);
          pss != END_OF_LIST (&shipp->subsys_list); pss = GET_NEXT (pss)) {
-        if (subsystem_stricmp (pss->system_info->subobj_name, name) == 0) {
+        if (subsystem_strcasecmp (pss->system_info->subobj_name, name) == 0) {
             found = TRUE;
             break;
         }
@@ -3829,7 +3829,7 @@ WE_BSG::WE_BSG (object* n_objp, int n_direction)
         strcpy_s (tmp_name, sip->warpin_anim);
     else if (direction == WD_WARP_OUT)
         strcpy_s (tmp_name, sip->warpout_anim);
-    strlwr (tmp_name);
+    stolower (tmp_name);
 
     if (strlen (tmp_name)) {
         // Load anim

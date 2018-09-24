@@ -891,7 +891,7 @@ size_t cam_get_num () { return Cameras.size (); }
 camid cam_lookup (char* name) {
     size_t i, size = Cameras.size ();
     for (i = 0; i < size; i++) {
-        if (Cameras[i] != NULL && !stricmp (Cameras[i]->get_name (), name))
+        if (Cameras[i] != NULL && !strcasecmp (Cameras[i]->get_name (), name))
             return camid (i, Cameras[i]->get_signature ());
     }
 

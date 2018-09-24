@@ -471,7 +471,7 @@ void model_copy_subsystems (
         source = &s_sp[i];
         for (j = 0; j < n_subsystems; j++) {
             dest = &d_sp[j];
-            if (!subsystem_stricmp (source->subobj_name, dest->subobj_name)) {
+            if (!subsystem_strcasecmp (source->subobj_name, dest->subobj_name)) {
                 for (auto const& flag : carry_flags) {
                     if (source->flags[flag]) dest->flags.set (flag);
                 }
@@ -524,7 +524,7 @@ static void set_subsystem_info (
         strcpy_s (subsystemp->name, dname);
 
     strcpy_s (lcdname, dname);
-    strlwr (lcdname);
+    stolower (lcdname);
 
     // check the name for its specific type
     if (strstr (lcdname, "engine")) { subsystemp->type = SUBSYSTEM_ENGINE; }
@@ -739,8 +739,8 @@ void do_new_subsystem (
 
 #ifndef NDEBUG
         // Goober5000 - notify if there's a mismatch
-        if (stricmp (subobj_name, subsystemp->subobj_name) != 0 &&
-            !subsystem_stricmp (subobj_name, subsystemp->subobj_name)) {
+        if (strcasecmp (subobj_name, subsystemp->subobj_name) != 0 &&
+            !subsystem_strcasecmp (subobj_name, subsystemp->subobj_name)) {
             nprintf (
                 ("Model",
                  "NOTE: Subsystem \"%s\" in model \"%s\" is represented as "
@@ -751,7 +751,7 @@ void do_new_subsystem (
         }
 #endif
 
-        if (!subsystem_stricmp (subobj_name, subsystemp->subobj_name)) {
+        if (!subsystem_strcasecmp (subobj_name, subsystemp->subobj_name)) {
             // commented by Goober5000 because this is also set when the table
             // is parsed subsystemp->flags = 0;
 
@@ -1476,7 +1476,7 @@ int read_model_file (
                 char type[64];
 
                 get_user_prop_value (p + 9, type);
-                if (!stricmp (type, "subsystem")) { // if we have a subsystem,
+                if (!strcasecmp (type, "subsystem")) { // if we have a subsystem,
                                                     // put it into the list!
                     do_new_subsystem (
                         n_subsystems, subsystems, n, pm->submodel[n].rad,
@@ -1484,7 +1484,7 @@ int read_model_file (
                         pm->id);
                     rotating_submodel_has_subsystem = true;
                 }
-                else if (!stricmp (type, "no_rotate")) {
+                else if (!strcasecmp (type, "no_rotate")) {
                     // mark those submodels which should not rotate - ie, those
                     // with no subsystem
                     pm->submodel[n].movement_type = MOVEMENT_TYPE_NONE;
@@ -2049,7 +2049,7 @@ int read_model_file (
                     }
 
                     // determine what this docking bay can be used for
-                    if (!strnicmp (bay->name, "cargo", 5))
+                    if (!strncasecmp (bay->name, "cargo", 5))
                         bay->type_flags = DOCK_TYPE_CARGO;
                     else
                         bay->type_flags =
@@ -2284,7 +2284,7 @@ int read_model_file (
                             int table_error = 1;
                             bank->wash_info_pointer = NULL;
                             for (int k = 0; k < n_subsystems; k++) {
-                                if (!subsystem_stricmp (
+                                if (!subsystem_strcasecmp (
                                         subsystems[k].subobj_name,
                                         engine_subsys_name)) {
                                     bank->submodel_num =
@@ -2460,7 +2460,7 @@ int read_model_file (
                     char type[64];
 
                     get_user_prop_value (p + 9, type);
-                    if (!stricmp (
+                    if (!strcasecmp (
                             type, "subsystem")) { // if we have a subsystem,
                                                   // put it into the list!
                         do_new_subsystem (
@@ -2469,7 +2469,7 @@ int read_model_file (
                             pm->id); // skip the first '$' character of the
                                      // name
                     }
-                    else if (!stricmp (type, "shieldpoint")) {
+                    else if (!strcasecmp (type, "shieldpoint")) {
                         pm->shield_points.push_back (pnt);
                     }
                 }
@@ -2565,7 +2565,7 @@ int read_model_file (
                     // of the parent
                     pm->paths[i].parent_submodel = -1;
                     for (j = 0; j < pm->n_models; j++) {
-                        if (!stricmp (
+                        if (!strcasecmp (
                                 pm->submodel[j].name,
                                 pm->paths[i].parent_name)) {
                             pm->paths[i].parent_submodel = j;
@@ -2739,7 +2739,7 @@ void model_load_texture (polymodel* pm, int i, char* file) {
     //       overflow doesn't add it
     char tmp_name[MAX_FILENAME_LEN];
     strcpy_s (tmp_name, file);
-    strlwr (tmp_name);
+    stolower (tmp_name);
 
     texture_map* tmap = &pm->maps[i];
     tmap->Clear ();
@@ -2789,7 +2789,7 @@ void model_load_texture (polymodel* pm, int i, char* file) {
     else {
         strcpy_s (tmp_name, file);
         strcat_s (tmp_name, "-glow");
-        strlwr (tmp_name);
+        stolower (tmp_name);
 
         tglow->LoadTexture (tmp_name, pm->filename);
     }
@@ -2807,14 +2807,14 @@ void model_load_texture (polymodel* pm, int i, char* file) {
         // look for reflectance map
         strcpy_s (tmp_name, file);
         strcat_s (tmp_name, "-reflect");
-        strlwr (tmp_name);
+        stolower (tmp_name);
 
         tspecgloss->LoadTexture (tmp_name, pm->filename);
 
         // look for a legacy shine map as well
         strcpy_s (tmp_name, file);
         strcat_s (tmp_name, "-shine");
-        strlwr (tmp_name);
+        stolower (tmp_name);
 
         tspec->LoadTexture (tmp_name, pm->filename);
     }
@@ -2830,7 +2830,7 @@ void model_load_texture (polymodel* pm, int i, char* file) {
     else {
         strcpy_s (tmp_name, file);
         strcat_s (tmp_name, "-normal");
-        strlwr (tmp_name);
+        stolower (tmp_name);
 
         tnorm->LoadTexture (tmp_name, pm->filename);
     }
@@ -2843,7 +2843,7 @@ void model_load_texture (polymodel* pm, int i, char* file) {
     else {
         strcpy_s (tmp_name, file);
         strcat_s (tmp_name, "-height");
-        strlwr (tmp_name);
+        stolower (tmp_name);
 
         theight->LoadTexture (tmp_name, pm->filename);
     }
@@ -2853,7 +2853,7 @@ void model_load_texture (polymodel* pm, int i, char* file) {
 
     strcpy_s (tmp_name, file);
     strcat_s (tmp_name, "-ao");
-    strlwr (tmp_name);
+    stolower (tmp_name);
 
     tambient->LoadTexture (tmp_name, pm->filename);
 
@@ -2863,7 +2863,7 @@ void model_load_texture (polymodel* pm, int i, char* file) {
 
     strcpy_s (tmp_name, file);
     strcat_s (tmp_name, "-misc");
-    strlwr (tmp_name);
+    stolower (tmp_name);
 
     tmisc->LoadTexture (tmp_name, pm->filename);
 
@@ -2953,7 +2953,7 @@ int model_load (
 
     for (i = 0; i < MAX_POLYGON_MODELS; i++) {
         if (Polygon_models[i]) {
-            if (!stricmp (filename, Polygon_models[i]->filename) &&
+            if (!strcasecmp (filename, Polygon_models[i]->filename) &&
                 !duplicate) {
                 // Model already loaded; just return.
                 Polygon_models[i]->used_this_mission++;
@@ -3047,7 +3047,7 @@ int model_load (
         strcpy_s (destroyed_name, pm->submodel[i].name);
         strcat_s (destroyed_name, "-destroyed");
         for (j = 0; j < pm->n_models; j++) {
-            if (!stricmp (pm->submodel[j].name, destroyed_name)) {
+            if (!strcasecmp (pm->submodel[j].name, destroyed_name)) {
                 pm->submodel[i].my_replacement = j;
                 pm->submodel[j].i_replace = i;
             }
@@ -3363,7 +3363,7 @@ void model_set_subsys_path_nums (
         for (j = 0; j < pm->n_paths; j++) {
             if (((subsystems[i].subobj_num != -1) &&
                  (subsystems[i].subobj_num == pm->paths[j].parent_submodel)) ||
-                (!subsystem_stricmp (
+                (!subsystem_strcasecmp (
                     subsystems[i].subobj_name, pm->paths[j].parent_name))) {
                 if (pm->n_paths > j) {
                     subsystems[i].path_num = j;
@@ -3412,7 +3412,7 @@ void model_set_bay_path_nums (polymodel* pm) {
     // $bayN pathnames
     bool too_many_paths = false;
     for (i = 0; i < pm->n_paths; i++) {
-        if (!strnicmp (pm->paths[i].name, NOX ("$bay"), 4)) {
+        if (!strncasecmp (pm->paths[i].name, NOX ("$bay"), 4)) {
             int bay_num;
             char temp[3];
 
@@ -5554,27 +5554,27 @@ int model_find_dock_name_index (int modelnum, char* name) {
     // check the generic names and call previous function to find first dock
     // point of the specified type
     for (i = 0; i < Num_dock_type_names; i++) {
-        if (!stricmp (name, Dock_type_names[i].name)) {
+        if (!strcasecmp (name, Dock_type_names[i].name)) {
             return model_find_dock_index (modelnum, Dock_type_names[i].def);
         }
     }
     /*
-    if ( !stricmp(name, "cargo") )
+    if ( !strcasecmp(name, "cargo") )
         return model_find_dock_index( modelnum, DOCK_TYPE_CARGO );
-    else if (!stricmp( name, "rearm") )
+    else if (!strcasecmp( name, "rearm") )
         return model_find_dock_index( modelnum, DOCK_TYPE_REARM );
-    else if (!stricmp( name, "generic") )
+    else if (!strcasecmp( name, "generic") )
         return model_find_dock_index( modelnum, DOCK_TYPE_GENERIC );
     */
 
     // look for a dockpoint with this name
     for (i = 0; i < pm->n_docks; i++) {
-        if (!stricmp (pm->docking_bays[i].name, name)) return i;
+        if (!strcasecmp (pm->docking_bays[i].name, name)) return i;
     }
 
     // if the bay does not have a name in the model, the model loading code
     // will assign it a default name... check for that here
-    if (!strnicmp (name, "<unnamed bay ", 13)) {
+    if (!strncasecmp (name, "<unnamed bay ", 13)) {
         int index = (name[13] - 'A');
         if (index >= 0 && index < pm->n_docks) return index;
     }
@@ -5627,7 +5627,7 @@ int model_find_bay_path (int modelnum, char* bay_path_name) {
     if (pm->ship_bay->num_paths <= 0) return -1;
 
     for (i = 0; i < pm->ship_bay->num_paths; i++) {
-        if (!stricmp (
+        if (!strcasecmp (
                 pm->paths[pm->ship_bay->path_indexes[i]].name, bay_path_name))
             return i;
     }
@@ -6061,7 +6061,7 @@ void parse_glowpoint_table (const char* filename) {
 
                 gpo.glow_bitmap_override = true;
 
-                if (stricmp (glow_texture_name, "none") != 0) {
+                if (strcasecmp (glow_texture_name, "none") != 0) {
                     gpo.glow_bitmap = bm_load (glow_texture_name);
 
                     if (gpo.glow_bitmap < 0) {
@@ -6110,16 +6110,16 @@ void parse_glowpoint_table (const char* filename) {
             if (optional_string ("$Pulse type:")) {
                 char pulsetype[33];
                 stuff_string (pulsetype, F_NAME, NAME_LENGTH);
-                if (!stricmp (pulsetype, "sine")) {
+                if (!strcasecmp (pulsetype, "sine")) {
                     gpo.pulse_type = PULSE_SIN;
                 }
-                else if (!stricmp (pulsetype, "cosine")) {
+                else if (!strcasecmp (pulsetype, "cosine")) {
                     gpo.pulse_type = PULSE_COS;
                 }
-                else if (!stricmp (pulsetype, "triangle")) {
+                else if (!strcasecmp (pulsetype, "triangle")) {
                     gpo.pulse_type = PULSE_TRI;
                 }
-                else if (!stricmp (pulsetype, "shiftedtriangle")) {
+                else if (!strcasecmp (pulsetype, "shiftedtriangle")) {
                     gpo.pulse_type = PULSE_SHIFTTRI;
                 }
             }

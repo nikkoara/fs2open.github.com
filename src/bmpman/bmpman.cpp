@@ -594,7 +594,7 @@ int bm_create (int bpp, int w, int h, void* data, int flags) {
 
     memset (entry, 0, sizeof (bitmap_entry));
 
-    sprintf_safe (entry->filename, "TMP%dx%d+%d", w, h, bpp);
+    sprintf (entry->filename, "TMP%dx%d+%d", w, h, bpp);
     entry->type = BM_TYPE_USER;
     entry->comp_type = BM_TYPE_NONE;
     entry->palette_checksum = 0;
@@ -1325,17 +1325,17 @@ bool bm_load_and_parse_eff (
     // done with EFF so unpause parsing so whatever can continue
     unpause_parse ();
 
-    if (!stricmp (NOX ("dds"), ext)) { c_type = BM_TYPE_DDS; }
-    else if (!stricmp (NOX ("tga"), ext)) {
+    if (!strcasecmp (NOX ("dds"), ext)) { c_type = BM_TYPE_DDS; }
+    else if (!strcasecmp (NOX ("tga"), ext)) {
         c_type = BM_TYPE_TGA;
     }
-    else if (!stricmp (NOX ("png"), ext)) {
+    else if (!strcasecmp (NOX ("png"), ext)) {
         c_type = BM_TYPE_PNG;
     }
-    else if (!stricmp (NOX ("jpg"), ext)) {
+    else if (!strcasecmp (NOX ("jpg"), ext)) {
         c_type = BM_TYPE_JPG;
     }
-    else if (!stricmp (NOX ("pcx"), ext)) {
+    else if (!strcasecmp (NOX ("pcx"), ext)) {
         c_type = BM_TYPE_PCX;
     }
     else {
@@ -1709,7 +1709,7 @@ int bm_load_animation (
 
         if (type == BM_TYPE_EFF) {
             entry->info.ani.eff.type = eff_type;
-            sprintf_safe (
+            sprintf (
                 entry->info.ani.eff.filename, "%s_%.4d", clean_name, i);
 
             // bm_load_info() returns non-0 on failure
@@ -1781,13 +1781,13 @@ int bm_load_animation (
 
         entry->load_count++;
 
-        if (i == 0) { sprintf_safe (entry->filename, "%s", filename); }
+        if (i == 0) { sprintf (entry->filename, "%s", filename); }
         else {
             if (type == BM_TYPE_PNG) {
-                sprintf_safe (entry->filename, "%s_%04d", filename, i);
+                sprintf (entry->filename, "%s_%04d", filename, i);
             }
             else {
-                sprintf_safe (entry->filename, "%s[%d]", filename, i);
+                sprintf (entry->filename, "%s[%d]", filename, i);
             }
         }
 
@@ -2609,7 +2609,7 @@ int bm_make_render_target (int width, int height, int flags) {
                       ? BM_TYPE_RENDER_TARGET_STATIC
                       : BM_TYPE_RENDER_TARGET_DYNAMIC;
     entry->signature = Bm_next_signature++;
-    sprintf_safe (entry->filename, "RT_%dx%d+%d", w, h, bpp);
+    sprintf (entry->filename, "RT_%dx%d+%d", w, h, bpp);
     entry->bm.w = (short)w;
     entry->bm.h = (short)h;
     entry->bm.rowsize = (short)w;

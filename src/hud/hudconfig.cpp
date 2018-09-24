@@ -733,7 +733,7 @@ void hud_config_init_ui () {
 
     for (i = 0; i < NUM_HUD_GAUGES; i++) {
         hg = &HC_gauge_regions[gr_screen.res][i];
-        if (!stricmp (hg->filename, NOX ("none"))) { continue; }
+        if (!strcasecmp (hg->filename, NOX ("none"))) { continue; }
         hg->button.create (&HC_ui_window, "", hg->x, hg->y, 60, 30, 0, 1);
         // set up callback for when a mouse first goes over a button
         //		hg->button.set_highlight_action(common_play_highlight_sound);
@@ -1279,7 +1279,7 @@ void hud_config_button_do (int n) {
         if (name[0] != '\0') {
             // if the filename in there already exists
             for (idx = 0; idx < HC_num_files; idx++) {
-                if (!stricmp (HC_filenames[idx], name)) { exists = 1; }
+                if (!strcasecmp (HC_filenames[idx], name)) { exists = 1; }
             }
         }
 
@@ -1702,7 +1702,7 @@ void hud_config_color_load (const char* name) {
             stuff_string (str, F_NAME, sizeof (str));
 
             for (idx = 0; idx < NUM_HUD_GAUGES; idx++) {
-                if (!stricmp (str, Hud_Gauge_Names[idx])) {
+                if (!strcasecmp (str, Hud_Gauge_Names[idx])) {
                     required_string ("+RGBA:");
                     stuff_ubyte (&HUD_config.clr[idx].red);
                     stuff_ubyte (&HUD_config.clr[idx].green);

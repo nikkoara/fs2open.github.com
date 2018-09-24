@@ -213,7 +213,7 @@ void supernova_process () {
                     // positive here if in campaign mode and
                     // sexp_end_campaign() got called - taylor
                     if (Campaign_ending_via_supernova && (Game_mode &
-                                                          GM_CAMPAIGN_MODE) /*&& !stricmp(Campaign.filename, "freespace2")*/) {
+                                                          GM_CAMPAIGN_MODE) /*&& !strcasecmp(Campaign.filename, "freespace2")*/) {
                         gameseq_post_event (GS_EVENT_END_CAMPAIGN);
                     }
                     else {

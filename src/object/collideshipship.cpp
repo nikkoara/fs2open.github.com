@@ -1139,7 +1139,7 @@ static void mcp_1 (object* player_objp, object* planet_objp) {
  */
 static int is_planet (object* objp) {
     return (
-        strnicmp (Ships[objp->instance].ship_name, NOX ("planet"), 6) == 0);
+        strncasecmp (Ships[objp->instance].ship_name, NOX ("planet"), 6) == 0);
 }
 
 /**

@@ -1434,7 +1434,7 @@ void hud_update_frame (float /*frametime*/) {
                 // If the target has an AI class of none, it is a Cargo,
                 // NavBuoy or other non-aggressive ship, so don't start the
                 // battle music
-                if (stricmp (
+                if (strcasecmp (
                         Ai_class_names[Ai_info[target_shipp->ai_index]
                                            .ai_class],
                         NOX ("none")) != 0)
@@ -2164,7 +2164,7 @@ int hud_anim_load (hud_anim* ha) {
 
     // Goober5000 - try to bypass the Volition bug
     if ((ha->first_frame == -1) &&
-        !stricmp (ha->filename, "FadeIconS-FreighterCW")) {
+        !strcasecmp (ha->filename, "FadeIconS-FreighterCW")) {
         ha->first_frame =
             bm_load_animation ("FadeIconS-FreighterWC", &ha->num_frames, &fps);
     }
@@ -2276,8 +2276,8 @@ void hud_start_text_flash (const char* txt, int t, int interval) {
     // An additional hack: don't interrupt other warnings if this is a missile
     // launch alert (Swifty)
     if (!timestamp_elapsed (Hud_text_flash_timer))
-        if (!stricmp (Hud_text_flash, NOX ("Emp")) ||
-            !stricmp (txt, NOX ("Launch")))
+        if (!strcasecmp (Hud_text_flash, NOX ("Emp")) ||
+            !strcasecmp (txt, NOX ("Launch")))
             return;
 
     strncpy (Hud_text_flash, txt, 500);

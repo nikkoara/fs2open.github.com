@@ -1528,7 +1528,7 @@ int intel_info_lookup (char* name) {
     if (!name) return -1;
 
     for (i = 0; i < Intel_info_size; i++)
-        if (!stricmp (name, Intel_info[i].name)) return i;
+        if (!strcasecmp (name, Intel_info[i].name)) return i;
 
     return -1;
 }

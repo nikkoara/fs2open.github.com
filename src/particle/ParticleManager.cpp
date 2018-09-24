@@ -83,7 +83,7 @@ EffectType parseEffectType () {
     stuff_string (type, F_NAME);
 
     for (size_t i = 0; i < static_cast< size_t > (EffectType::MAX); ++i) {
-        if (!stricmp (type.c_str (), effectTypeNames[i])) {
+        if (!strcasecmp (type.c_str (), effectTypeNames[i])) {
             return static_cast< EffectType > (i);
         }
     }
@@ -173,7 +173,7 @@ ParticleManager::getEffectByName (const std::string& name) {
     auto foundIterator = find_if (
         m_effects.begin (), m_effects.end (),
         [&name](const std::shared_ptr< ParticleEffect >& ptr) {
-            return !stricmp (ptr->getName ().c_str (), name.c_str ());
+            return !strcasecmp (ptr->getName ().c_str (), name.c_str ());
         });
 
     if (foundIterator == m_effects.end ()) {

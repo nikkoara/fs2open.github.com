@@ -348,22 +348,22 @@ void iff_init () {
                 int num_strings =
                     stuff_string_list (flag_strings, MAX_IFF_FLAGS);
                 for (string_idx = 0; string_idx < num_strings; string_idx++) {
-                    if (!stricmp (
+                    if (!strcasecmp (
                             NOX ("support allowed"), flag_strings[string_idx]))
                         iff->flags |= IFFF_SUPPORT_ALLOWED;
-                    else if (!stricmp (
+                    else if (!strcasecmp (
                                  NOX ("exempt from all teams at war"),
                                  flag_strings[string_idx]))
                         iff->flags |= IFFF_EXEMPT_FROM_ALL_TEAMS_AT_WAR;
-                    else if (!stricmp (
+                    else if (!strcasecmp (
                                  NOX ("orders hidden"),
                                  flag_strings[string_idx]))
                         iff->flags |= IFFF_ORDERS_HIDDEN;
-                    else if (!stricmp (
+                    else if (!strcasecmp (
                                  NOX ("orders shown"),
                                  flag_strings[string_idx]))
                         iff->flags |= IFFF_ORDERS_SHOWN;
-                    else if (!stricmp (
+                    else if (!strcasecmp (
                                  NOX ("wing name hidden"),
                                  flag_strings[string_idx]))
                         iff->flags |= IFFF_WING_NAME_HIDDEN;
@@ -511,7 +511,7 @@ int iff_lookup (const char* iff_name) {
     if (iff_name == NULL) return -1;
 
     for (int i = 0; i < Num_iffs; i++)
-        if (!stricmp (iff_name, Iff_info[i].iff_name)) return i;
+        if (!strcasecmp (iff_name, Iff_info[i].iff_name)) return i;
 
     return -1;
 }

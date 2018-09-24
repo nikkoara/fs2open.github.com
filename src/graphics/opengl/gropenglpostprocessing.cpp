@@ -559,7 +559,7 @@ void gr_opengl_post_process_set_effect (
     size_t idx;
     int sflags = 0;
 
-    if (!stricmp ("lightshafts", name)) {
+    if (!strcasecmp ("lightshafts", name)) {
         ls_intensity = value / 100.0f;
         ls_on = !!value;
         return;
@@ -568,7 +568,7 @@ void gr_opengl_post_process_set_effect (
     for (idx = 0; idx < Post_effects.size (); idx++) {
         const char* eff_name = Post_effects[idx].name.c_str ();
 
-        if (!stricmp (eff_name, name)) {
+        if (!strcasecmp (eff_name, name)) {
             Post_effects[idx].intensity =
                 (value / Post_effects[idx].div) + Post_effects[idx].add;
             if ((rgb != nullptr) && !(vmd_zero_vector == *rgb)) {

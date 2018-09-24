@@ -84,9 +84,9 @@ CodecContextParameters getCodecParameters (AVStream* stream) {
 }
 
 std::string normalizeLanguage (const char* langauge_name) {
-    if (!stricmp (langauge_name, "eng")) { return "English"; }
-    if (!stricmp (langauge_name, "ger")) { return "German"; }
-    if (!stricmp (langauge_name, "spa")) { return "Spanish"; }
+    if (!strcasecmp (langauge_name, "eng")) { return "English"; }
+    if (!strcasecmp (langauge_name, "ger")) { return "German"; }
+    if (!strcasecmp (langauge_name, "spa")) { return "Spanish"; }
 
     // Print to log so that we can find the actual value more easily later
     mprintf (
@@ -305,7 +305,7 @@ std::unique_ptr< DecoderStatus > initializeStatus (
 
             auto normalized_language = normalizeLanguage (tag->value);
 
-            if (!stricmp (
+            if (!strcasecmp (
                     normalized_language.c_str (),
                     current_language.lang_name)) {
                 status->subtitleStreamIndex = i;

@@ -572,7 +572,7 @@ void brief_preload_icon_anim (brief_icon* bi) {
     if (bii == NULL) return;
 
     generic_anim* ga = &bii->regular;
-    if (!stricmp (NOX ("none"), ga->filename)) return;
+    if (!strcasecmp (NOX ("none"), ga->filename)) return;
 
     // force read of data from disk, so we don't glitch on initial playback
     if (ga->first_frame == -1) {
@@ -586,7 +586,7 @@ void brief_preload_fade_anim (brief_icon* bi) {
     if (bii == NULL) return;
 
     hud_anim* ha = &bii->fade;
-    if (!stricmp (NOX ("none"), ha->filename)) return;
+    if (!strcasecmp (NOX ("none"), ha->filename)) return;
 
     // force read of data from disk, so we don't glitch on initial playback
     if (ha->first_frame == -1) {
@@ -603,7 +603,7 @@ void brief_preload_highlight_anim (brief_icon* bi) {
     if (bii == NULL) return;
 
     hud_anim* ha = &bii->highlight;
-    if (!stricmp (NOX ("none"), ha->filename)) return;
+    if (!strcasecmp (NOX ("none"), ha->filename)) return;
 
     // force read of data from disk, so we don't glitch on initial playback
     if (ha->first_frame == -1) {
@@ -2226,7 +2226,7 @@ void brief_voice_load_all () {
     Assert (Briefing != NULL);
     for (i = 0; i < Briefing->num_stages; i++) {
         bs = &Briefing->stages[i];
-        if (strnicmp (bs->voice, NOX ("none"), 4) != 0) {
+        if (strncasecmp (bs->voice, NOX ("none"), 4) != 0) {
             brief_load_voice_file (i, bs->voice);
         }
     }

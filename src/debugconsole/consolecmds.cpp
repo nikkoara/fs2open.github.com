@@ -56,7 +56,7 @@ debug_command::debug_command (
 
     // Start the insertion sort by finding where to stick the debug command
     for (; i < dc_commands_size; ++i) {
-        ret = stricmp (dc_commands[i]->name, _name);
+        ret = strcasecmp (dc_commands[i]->name, _name);
 
         if (ret == 0) {
             Error (
@@ -102,7 +102,7 @@ DCF (debug, "Runs a command in debug mode.") {
     } // Else, command is present.
 
     for (i = 0; i < dc_commands_size; ++i) {
-        if (stricmp (dc_commands[i]->name, command.c_str ()) == 0) {
+        if (strcasecmp (dc_commands[i]->name, command.c_str ()) == 0) {
             break;
         } // Else, continue
     }
@@ -135,7 +135,7 @@ DCF (help, "Displays the help list.") {
     }
     else if (command != "") {
         for (i = 0; i < dc_commands_size; ++i) {
-            if (stricmp (dc_commands[i]->name, command.c_str ()) == 0) {
+            if (strcasecmp (dc_commands[i]->name, command.c_str ()) == 0) {
                 break;
             } // Else, continue
         }

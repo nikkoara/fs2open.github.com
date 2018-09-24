@@ -128,7 +128,7 @@ static int Red_alert_voice;
 // open and pre-load the stream buffers for the different voice streams
 void red_alert_voice_load () {
     Assert (Briefing != NULL);
-    if (strnicmp (Briefing->stages[0].voice, NOX ("none"), 4) != 0 &&
+    if (strncasecmp (Briefing->stages[0].voice, NOX ("none"), 4) != 0 &&
         (Briefing->stages[0].voice[0] != '\0')) {
         Red_alert_voice =
             audiostream_open (Briefing->stages[0].voice, ASF_VOICE);
@@ -501,7 +501,7 @@ void red_alert_bash_weapons (red_alert_ship_status* ras, p_object* pobjp) {
 
     // parse objects use the "pilot" subsystem
     for (i = 0; i < pobjp->subsys_count; i++) {
-        if (!stricmp (Subsys_status[pobjp->subsys_index + i].name, "pilot")) {
+        if (!strcasecmp (Subsys_status[pobjp->subsys_index + i].name, "pilot")) {
             sssp = &Subsys_status[pobjp->subsys_index + i];
             break;
         }
@@ -823,7 +823,7 @@ void red_alert_bash_wingman_status () {
             red_alert_ship_status* ras = &(*rasii);
 
             // red-alert data matches this ship!
-            if (!stricmp (ras->name.c_str (), shipp->ship_name)) {
+            if (!strcasecmp (ras->name.c_str (), shipp->ship_name)) {
                 // we only want to restore ships which haven't been destroyed,
                 // or were removed by the player
                 if ((ras->ship_class != RED_ALERT_DESTROYED_SHIP_CLASS) &&
@@ -900,7 +900,7 @@ void red_alert_bash_wingman_status () {
         bool from_player_wing = false;
         if (pobjp->wingnum >= 0) {
             for (j = 0; j < MAX_STARTING_WINGS; j++) {
-                if (!stricmp (
+                if (!strcasecmp (
                         Starting_wing_names[j], Wings[pobjp->wingnum].name)) {
                     from_player_wing = true;
                     break;
@@ -923,7 +923,7 @@ void red_alert_bash_wingman_status () {
             red_alert_ship_status* ras = &(*rasii);
 
             // red-alert data matches this ship!
-            if (!stricmp (ras->name.c_str (), pobjp->name)) {
+            if (!strcasecmp (ras->name.c_str (), pobjp->name)) {
                 // we only want to restore ships which haven't been destroyed,
                 // or were removed by the player
                 if ((ras->ship_class != RED_ALERT_DESTROYED_SHIP_CLASS) &&

@@ -458,7 +458,7 @@ void common_set_interface_palette (const char* filename) {
     if (!filename) filename = NOX ("palette01");
 
     Assert (strlen (filename) <= MAX_FILENAME_LEN);
-    if ((InterfacePaletteBitmap != -1) && !stricmp (filename, buf))
+    if ((InterfacePaletteBitmap != -1) && !strcasecmp (filename, buf))
         return; // already set to this palette
 
     strcpy_s (buf, filename);
@@ -584,7 +584,7 @@ void common_select_init () {
     // restore loadout from Player_loadout if this is the same mission as the
     // one previously played
     if (!(Game_mode & GM_MULTIPLAYER)) {
-        if (!stricmp (
+        if (!strcasecmp (
                 Player_loadout.filename, Game_current_mission_filename)) {
             wss_maybe_restore_loadout ();
             ss_synch_interface ();
@@ -1104,7 +1104,7 @@ void wss_maybe_restore_loadout () {
     Assert ((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
 
     // only restore if mission hasn't changed
-    if (stricmp (Player_loadout.last_modified, The_mission.modified) != 0) {
+    if (strcasecmp (Player_loadout.last_modified, The_mission.modified) != 0) {
         return;
     }
 
@@ -1222,7 +1222,7 @@ void wss_direct_restore_loadout () {
     wss_unit* slot;
 
     // only restore if mission hasn't changed
-    if (stricmp (Player_loadout.last_modified, The_mission.modified) != 0) {
+    if (strcasecmp (Player_loadout.last_modified, The_mission.modified) != 0) {
         return;
     }
 

@@ -524,7 +524,7 @@ int escort_compare_func (const void* e1, const void* e2) {
             name1 = Ships[Objects[escort1->objnum].instance].ship_name;
             name2 = Ships[Objects[escort2->objnum].instance].ship_name;
 
-            ret = stricmp (name1, name2);
+            ret = strcasecmp (name1, name2);
         }
     }
 

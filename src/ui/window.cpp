@@ -88,7 +88,7 @@ void UI_WINDOW::set_mask_bmap (int bmap, const char* /*name*/) {
         tt_group = -1;
         /*
         for (i=0; i<Num_tooltip_groups; i++){
-            if (!stricmp(Tooltip_groups[i].mask, name)){
+            if (!strcasecmp(Tooltip_groups[i].mask, name)){
                 tt_group = i;
             }
         }

@@ -565,7 +565,7 @@ bool ds_check_for_openal_soft () {
         mprintf (("ds_check_for_openal_soft: renderer is null!"));
         return false;
     }
-    else if (!stricmp ((const char*)renderer, "OpenAL Soft")) {
+    else if (!strcasecmp ((const char*)renderer, "OpenAL Soft")) {
         return true;
     }
     else {
@@ -1894,7 +1894,7 @@ int ds_eax_get_preset_id (const char* name) {
     size_t count = EFX_presets.size ();
 
     for (size_t i = 0; i < count; i++) {
-        if (!stricmp (name, EFX_presets[i].name.c_str ())) { return (int)i; }
+        if (!strcasecmp (name, EFX_presets[i].name.c_str ())) { return (int)i; }
     }
 
     return -1;
@@ -1960,7 +1960,7 @@ int ds_eax_get_prop (
         *props = &EFX_presets[id];
     }
 
-    if (!stricmp (name, "default")) {
+    if (!strcasecmp (name, "default")) {
         extern unsigned int SND_ENV_DEFAULT;
         SND_ENV_DEFAULT = id;
     }

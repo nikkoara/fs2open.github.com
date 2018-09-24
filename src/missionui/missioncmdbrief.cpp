@@ -165,7 +165,7 @@ void cmd_brief_init_voice () {
     Assert (Cur_cmd_brief);
     for (i = 0; i < Cur_cmd_brief->num_stages; i++) {
         Cur_cmd_brief->stage[i].wave = -1;
-        if (stricmp (Cur_cmd_brief->stage[i].wave_filename, NOX ("none")) !=
+        if (strcasecmp (Cur_cmd_brief->stage[i].wave_filename, NOX ("none")) !=
                 0 &&
             Cur_cmd_brief->stage[i].wave_filename[0]) {
             Cur_cmd_brief->stage[i].wave = audiostream_open (
@@ -475,8 +475,8 @@ void cmd_brief_ani_wave_init (int index) {
 
     // this is the first instance of the given anim filename
     name = Cur_cmd_brief->stage[index].ani_filename;
-    if (!name[0] || !stricmp (name, NOX ("<default>")) ||
-        !stricmp (name, NOX ("none.ani"))) {
+    if (!name[0] || !strcasecmp (name, NOX ("<default>")) ||
+        !strcasecmp (name, NOX ("none.ani"))) {
         name = NOX ("CB_default");
         strcpy_s (Cur_cmd_brief->stage[index].ani_filename, name);
     }

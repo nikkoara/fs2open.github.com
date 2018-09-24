@@ -199,7 +199,7 @@ void parse_species_tbl (const char* filename) {
                 no_create = true;
 
                 for (i = 0; i < (int)Species_info.size (); i++) {
-                    if (!stricmp (
+                    if (!strcasecmp (
                             Species_info[i].species_name, species_name)) {
                         species = &Species_info[i];
                         break;
@@ -218,7 +218,7 @@ void parse_species_tbl (const char* filename) {
 
                 // search for it in iffs
                 for (int iLoop = 0; iLoop < Num_iffs; iLoop++) {
-                    if (!stricmp (Iff_info[iLoop].iff_name, temp_name)) {
+                    if (!strcasecmp (Iff_info[iLoop].iff_name, temp_name)) {
                         species->default_iff = iLoop;
                         iff_found = true;
                     }
@@ -254,24 +254,24 @@ void parse_species_tbl (const char* filename) {
             }
             else if (!no_create) {
                 // set defaults to Volition's originals
-                if (!stricmp (species->species_name, "Terran")) {
+                if (!strcasecmp (species->species_name, "Terran")) {
                     species->fred_color.rgb.r = 0;
                     species->fred_color.rgb.g = 0;
                     species->fred_color.rgb.b = 192;
                 }
-                else if (!stricmp (species->species_name, "Vasudan")) {
+                else if (!strcasecmp (species->species_name, "Vasudan")) {
                     species->fred_color.rgb.r = 0;
                     species->fred_color.rgb.g = 128;
                     species->fred_color.rgb.b = 0;
                 }
-                else if (!stricmp (species->species_name, "Shivan")) {
+                else if (!strcasecmp (species->species_name, "Shivan")) {
                     species->fred_color.rgb.r = 192;
                     species->fred_color.rgb.g = 0;
                     species->fred_color.rgb.b = 0;
                 }
                 else if (
-                    !stricmp (species->species_name, "Ancients") ||
-                    !stricmp (species->species_name, "Ancient")) {
+                    !strcasecmp (species->species_name, "Ancients") ||
+                    !strcasecmp (species->species_name, "Ancient")) {
                     species->fred_color.rgb.r = 192;
                     species->fred_color.rgb.g = 0;
                     species->fred_color.rgb.b = 192;
@@ -330,9 +330,9 @@ void parse_species_tbl (const char* filename) {
             }
             else if (!no_create) {
                 // set defaults to Volition's originals
-                if (!stricmp (species->species_name, "Vasudan"))
+                if (!strcasecmp (species->species_name, "Vasudan"))
                     species->awacs_multiplier = 1.25f;
-                else if (!stricmp (species->species_name, "Shivan"))
+                else if (!strcasecmp (species->species_name, "Shivan"))
                     species->awacs_multiplier = 1.50f;
                 else
                     species->awacs_multiplier = 1.0f;

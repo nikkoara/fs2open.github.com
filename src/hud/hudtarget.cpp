@@ -6201,7 +6201,7 @@ void HudGaugeWeapons::render (float /*frametime*/) {
         }
         else {
             // HACK - make Cluster Bomb fit on the HUD.
-            if (!stricmp (wip->name, "cluster bomb")) {
+            if (!strcasecmp (wip->name, "cluster bomb")) {
                 strcpy_s (weapon_name, NOX ("Cluster"));
             }
             else {

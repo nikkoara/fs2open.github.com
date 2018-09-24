@@ -52,7 +52,7 @@ ushort Multi_options_proxy_port = 0;
             drop_trailing_white_space (tok); \
         }                                    \
     } while (0);
-#define SETTING(s) (!stricmp (tok, s))
+#define SETTING(s) (!strcasecmp (tok, s))
 void multi_options_read_config () {
     CFILE* in;
     char str[512];

@@ -297,7 +297,7 @@ void parse_everything_else (const char* filename) {
                 stuff_string (temp2, F_NAME, NAME_LENGTH);
                 temp = temp2;
 
-                if (!stricmp (temp2, "none")) {
+                if (!strcasecmp (temp2, "none")) {
                     Warning (
                         LOCATION,
                         "Team color in '%s' defined with a name of '%s'; this "

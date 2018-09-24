@@ -756,12 +756,12 @@ gamesnd_id gamesnd_get_by_name (const char* name) {
             auto& entry = Snd.sound_entries.front ();
             char* p = strrchr (entry.filename, '.');
             if (p == NULL) {
-                if (!stricmp (entry.filename, name)) {
+                if (!strcasecmp (entry.filename, name)) {
                     index = i;
                     break;
                 }
             }
-            else if (!strnicmp (entry.filename, name, p - entry.filename)) {
+            else if (!strncasecmp (entry.filename, name, p - entry.filename)) {
                 index = i;
                 break;
             }
@@ -790,12 +790,12 @@ interface_snd_id gamesnd_get_by_iface_name (const char* name) {
             auto& entry = snd.sound_entries.front ();
             char* p = strrchr (entry.filename, '.');
             if (p == NULL) {
-                if (!stricmp (entry.filename, name)) {
+                if (!strcasecmp (entry.filename, name)) {
                     index = i;
                     break;
                 }
             }
-            else if (!strnicmp (entry.filename, name, p - entry.filename)) {
+            else if (!strncasecmp (entry.filename, name, p - entry.filename)) {
                 index = i;
                 break;
             }
@@ -957,7 +957,7 @@ void gamesnd_preload_common_sounds () {
         if (gs->preload) {
             for (auto& entry : gs->sound_entries) {
                 if (entry.filename[0] != 0 &&
-                    strnicmp (entry.filename, NOX ("none.wav"), 4) != 0) {
+                    strncasecmp (entry.filename, NOX ("none.wav"), 4) != 0) {
                     game_busy (NOX (
                         "** preloading common game sounds **")); // Animate
                                                                  // loading
@@ -987,7 +987,7 @@ void gamesnd_load_gameplay_sounds () {
                             // preloaded
             for (auto& entry : gs->sound_entries) {
                 if (entry.filename[0] != 0 &&
-                    strnicmp (entry.filename, NOX ("none.wav"), 4) != 0) {
+                    strncasecmp (entry.filename, NOX ("none.wav"), 4) != 0) {
                     game_busy (NOX (
                         "** preloading gameplay sounds **")); // Animate
                                                               // loading
@@ -1029,7 +1029,7 @@ void gamesnd_load_interface_sounds () {
          si != Snds_iface.end (); ++si) {
         for (auto& entry : si->sound_entries) {
             if (entry.filename[0] != 0 &&
-                strnicmp (entry.filename, NOX ("none.wav"), 4) != 0) {
+                strncasecmp (entry.filename, NOX ("none.wav"), 4) != 0) {
                 entry.id = snd_load (&entry, si->flags);
             }
         }
@@ -1067,7 +1067,7 @@ void parse_gamesnd_old (game_snd* gs) {
 
     stuff_string (entry.filename, F_NAME, MAX_FILENAME_LEN, ",");
 
-    if (!stricmp (entry.filename, NOX ("empty"))) {
+    if (!strcasecmp (entry.filename, NOX ("empty"))) {
         entry.filename[0] = 0;
         advance_to_eoln (NULL);
         return;
@@ -1094,8 +1094,8 @@ void parse_gamesnd_old (game_snd* gs) {
         gs->max = 0;
 
         // silly retail, not abiding by its own format...
-        if (!stricmp (entry.filename, "l_hit.wav") ||
-            !stricmp (entry.filename, "m_hit.wav")) {
+        if (!strcasecmp (entry.filename, "l_hit.wav") ||
+            !strcasecmp (entry.filename, "m_hit.wav")) {
             int temp_min, temp_max;
 
             ignore_gray_space ();
@@ -1134,22 +1134,22 @@ EnhancedSoundPriority convert_to_enhanced_priority (const char* priority_str) {
         priority_str != NULL,
         "convert_to_enhanced_priority given null priority_str!");
 
-    if (!stricmp (priority_str, "Must Play")) {
+    if (!strcasecmp (priority_str, "Must Play")) {
         return SND_ENHANCED_PRIORITY_MUST_PLAY;
     }
-    else if (!stricmp (priority_str, "High")) {
+    else if (!strcasecmp (priority_str, "High")) {
         return SND_ENHANCED_PRIORITY_HIGH;
     }
-    else if (!stricmp (priority_str, "Medium-High")) {
+    else if (!strcasecmp (priority_str, "Medium-High")) {
         return SND_ENHANCED_PRIORITY_MEDIUM_HIGH;
     }
-    else if (!stricmp (priority_str, "Medium")) {
+    else if (!strcasecmp (priority_str, "Medium")) {
         return SND_ENHANCED_PRIORITY_MEDIUM;
     }
-    else if (!stricmp (priority_str, "Medium-Low")) {
+    else if (!strcasecmp (priority_str, "Medium-Low")) {
         return SND_ENHANCED_PRIORITY_MEDIUM_LOW;
     }
-    else if (!stricmp (priority_str, "Low")) {
+    else if (!strcasecmp (priority_str, "Low")) {
         return SND_ENHANCED_PRIORITY_LOW;
     }
     else {
@@ -1287,13 +1287,13 @@ void parse_gamesnd_new (game_snd* gs, bool no_create) {
     // file name
     gs->pitch_range = util::UniformFloatRange (1.0f);
 
-    if (!stricmp (name, NOX ("empty"))) {
+    if (!strcasecmp (name, NOX ("empty"))) {
         entry->filename[0] = 0;
         return;
     }
 
     // If the name _doesn't_ match <same> put it into gs->filename;
-    if (stricmp (name, "<same>") != 0) { strcpy_s (entry->filename, name); }
+    if (strcasecmp (name, "<same>") != 0) { strcpy_s (entry->filename, name); }
     else if (!no_create) {
         // Throw an error if <same> was specified but we are creating a new
         // entry

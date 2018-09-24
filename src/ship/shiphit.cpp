@@ -1137,7 +1137,7 @@ static void ship_hit_music (object* ship_objp, object* other_obj) {
     //
     // If the ship hit has an AI class of none, it is a Cargo, NavBuoy or other
     // non-aggressive ship, so don't start the battle music
-    if (!stricmp (
+    if (!strcasecmp (
             Ai_class_names[Ai_info[ship_p->ai_index].ai_class], NOX ("none")))
         return;
 
@@ -1154,7 +1154,7 @@ static void ship_hit_music (object* ship_objp, object* other_obj) {
         attacker_team = Ships[other_obj->instance].team;
 
         // Nonthreatening ship collided with ship, no big deal
-        if (!stricmp (
+        if (!strcasecmp (
                 Ai_class_names[Ai_info[Ships[other_obj->instance].ai_index]
                                    .ai_class],
                 NOX ("none")))

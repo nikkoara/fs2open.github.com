@@ -993,7 +993,7 @@ void EndAutoPilot () {
                 ai_goal* aigp = &Ai_info[Ships[i].ai_index].goals[j];
 
                 if (((aigp->target_name != NULL) &&
-                     !stricmp (aigp->target_name, goal_name)) &&
+                     !strcasecmp (aigp->target_name, goal_name)) &&
                     (aigp->ai_mode == goal)) {
                     ai_remove_ship_goal (&Ai_info[Ships[i].ai_index], j);
                 }
@@ -1004,7 +1004,7 @@ void EndAutoPilot () {
                     ai_goal* aigp = &Wings[Ships[i].wingnum].ai_goals[j];
 
                     if (((aigp->target_name != NULL) &&
-                         !stricmp (aigp->target_name, goal_name)) &&
+                         !strcasecmp (aigp->target_name, goal_name)) &&
                         (aigp->ai_mode == goal)) {
                         aigp->ai_mode = AI_GOAL_NONE;
                         aigp->signature = -1;
@@ -1024,7 +1024,7 @@ void EndAutoPilot () {
                     ai_goal* aigp = &Wings[i].ai_goals[j];
 
                     if (((aigp->target_name != NULL) &&
-                         !stricmp (aigp->target_name, goal_name)) &&
+                         !strcasecmp (aigp->target_name, goal_name)) &&
                         (aigp->ai_mode == goal)) {
                         aigp->ai_mode = AI_GOAL_NONE;
                         aigp->signature = -1;
@@ -1359,7 +1359,7 @@ void parse_autopilot_table (const char* filename) {
 // Finds a Nav point by name
 int FindNav (char* Nav) {
     for (int i = 0; i < MAX_NAVPOINTS; i++) {
-        if (!stricmp (Navs[i].m_NavName, Nav)) return i;
+        if (!strcasecmp (Navs[i].m_NavName, Nav)) return i;
     }
 
     return -1;
@@ -1412,7 +1412,7 @@ bool AddNav_Ship (char* Nav, char* TargetName, int flags) {
 
     for (i = 0; i < MAX_SHIPS; i++) {
         if (Ships[i].objnum != -1 &&
-            !stricmp (TargetName, Ships[i].ship_name)) {
+            !strcasecmp (TargetName, Ships[i].ship_name)) {
             tnav.target_obj = (void*)&Ships[i];
         }
     }
@@ -1546,7 +1546,7 @@ bool Nav_UnSet_Visited (char* Nav) { return Nav_UnSet_Flag (Nav, NP_VISITED); }
 // Selects a navpoint by name.
 void SelectNav (char* Nav) {
     for (int i = 0; i < MAX_NAVPOINTS; i++) {
-        if (!stricmp (Navs[i].m_NavName, Nav))
+        if (!strcasecmp (Navs[i].m_NavName, Nav))
             if (!(Nav_Get_Flags (Nav) & NP_HIDDEN ||
                   Nav_Get_Flags (Nav) & NP_NOACCESS))
                 CurrentNav = i;

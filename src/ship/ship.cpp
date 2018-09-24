@@ -802,7 +802,7 @@ static int Num_warp_types = sizeof (Warp_types) / sizeof (char*);
 static int warptype_match (char* p) {
     int i;
     for (i = 0; i < Num_warp_types; i++) {
-        if (!stricmp (Warp_types[i], p)) return i;
+        if (!strcasecmp (Warp_types[i], p)) return i;
     }
 
     return -1;
@@ -818,7 +818,7 @@ static int Num_lightning_types = sizeof (Lightning_types) / sizeof (char*);
 static int lightningtype_match (char* p) {
     int i;
     for (i = 0; i < Num_lightning_types; i++) {
-        if (!stricmp (Lightning_types[i], p)) return i;
+        if (!strcasecmp (Lightning_types[i], p)) return i;
     }
 
     return -1;
@@ -2433,10 +2433,10 @@ static int parse_and_add_briefing_icon_info () {
 
     // search among our existing icons
     for (icon = 0; icon < Briefing_icon_info.size (); icon++) {
-        if (!stricmp (
+        if (!strcasecmp (
                 regular_temp, Briefing_icon_info[icon].regular.filename) &&
-            !stricmp (fade_temp, Briefing_icon_info[icon].fade.filename) &&
-            !stricmp (
+            !strcasecmp (fade_temp, Briefing_icon_info[icon].fade.filename) &&
+            !strcasecmp (
                 highlight_temp, Briefing_icon_info[icon].highlight.filename)) {
             bii_index = (int)icon;
             break;
@@ -2505,7 +2505,7 @@ static int parse_ship_values (
         bool found = false;
         for (std::vector< species_info >::iterator sii = Species_info.begin ();
              sii != Species_info.end (); ++sii, ++i_species) {
-            if (!stricmp (temp, sii->species_name)) {
+            if (!strcasecmp (temp, sii->species_name)) {
                 sip->species = i_species;
                 found = true;
                 break;
@@ -2570,11 +2570,11 @@ static int parse_ship_values (
     if (optional_string ("$Selection Effect:")) {
         char effect[NAME_LENGTH];
         stuff_string (effect, F_NAME, NAME_LENGTH);
-        if (!stricmp (effect, "FS2"))
+        if (!strcasecmp (effect, "FS2"))
             sip->selection_effect = 2;
-        else if (!stricmp (effect, "FS1"))
+        else if (!strcasecmp (effect, "FS1"))
             sip->selection_effect = 1;
-        else if (!stricmp (effect, "off"))
+        else if (!strcasecmp (effect, "off"))
             sip->selection_effect = 0;
     }
 
@@ -2792,7 +2792,7 @@ static int parse_ship_values (
         char temp[NAME_LENGTH];
         stuff_string (temp, F_NAME, NAME_LENGTH);
         std::string name = temp;
-        if (!stricmp (temp, "none")) { sip->uses_team_colors = true; }
+        if (!strcasecmp (temp, "none")) { sip->uses_team_colors = true; }
         else {
             if (Team_Colors.find (name) != Team_Colors.end ()) {
                 sip->default_team_name = name;
@@ -3536,15 +3536,15 @@ static int parse_ship_values (
         for (auto i = 0; i < num_strings; i++) {
             const char* str = ctrl_strings[i].c_str ();
 
-            if (!stricmp (str, "front"))
+            if (!strcasecmp (str, "front"))
                 sip->shield_point_augment_ctrls[FRONT_QUAD] = i;
-            else if (!stricmp (str, "rear"))
+            else if (!strcasecmp (str, "rear"))
                 sip->shield_point_augment_ctrls[REAR_QUAD] = i;
-            else if (!stricmp (str, "left"))
+            else if (!strcasecmp (str, "left"))
                 sip->shield_point_augment_ctrls[LEFT_QUAD] = i;
-            else if (!stricmp (str, "right"))
+            else if (!strcasecmp (str, "right"))
                 sip->shield_point_augment_ctrls[RIGHT_QUAD] = i;
-            else if (!stricmp (str, "none"))
+            else if (!strcasecmp (str, "none"))
                 ;
             else
                 Warning (
@@ -3708,15 +3708,15 @@ static int parse_ship_values (
             // specified differently in ships.tbl and the ship type array; this
             // patches those differences so that the ship type lookup will work
             // properly
-            if (!stricmp (ship_type, "sentrygun"))
+            if (!strcasecmp (ship_type, "sentrygun"))
                 ship_type = "sentry gun";
-            else if (!stricmp (ship_type, "escapepod"))
+            else if (!strcasecmp (ship_type, "escapepod"))
                 ship_type = "escape pod";
-            else if (!stricmp (ship_type, "repair_rearm"))
+            else if (!strcasecmp (ship_type, "repair_rearm"))
                 ship_type = "support";
-            else if (!stricmp (ship_type, "supercap"))
+            else if (!strcasecmp (ship_type, "supercap"))
                 ship_type = "super cap";
-            else if (!stricmp (ship_type, "knossos"))
+            else if (!strcasecmp (ship_type, "knossos"))
                 ship_type = "knossos device";
 
             // look it up in the object types table
@@ -3728,7 +3728,7 @@ static int parse_ship_values (
 
             // check various ship flags
             for (size_t idx = 0; idx < Num_ship_flags; idx++) {
-                if (!stricmp (Ship_flags[idx].name, ship_strings[i])) {
+                if (!strcasecmp (Ship_flags[idx].name, ship_strings[i])) {
                     flag_found = true;
 
                     if (!Ship_flags[idx].in_use)
@@ -3745,8 +3745,8 @@ static int parse_ship_values (
             }
 
             // catch typos or deprecations
-            if (!stricmp (ship_strings[i], "no-collide") ||
-                !stricmp (ship_strings[i], "no_collide")) {
+            if (!strcasecmp (ship_strings[i], "no-collide") ||
+                !strcasecmp (ship_strings[i], "no_collide")) {
                 flag_found = true;
                 sip->flags.set (Ship::Info_Flags::No_collide);
             }
@@ -3978,21 +3978,21 @@ static int parse_ship_values (
 
         angles model_icon_angles = { 0.0f, 0.0f, 0.0f };
 
-        if (!stricmp (str, "top")) { model_icon_angles.p = -PI_2; }
-        else if (!stricmp (str, "bottom")) {
+        if (!strcasecmp (str, "top")) { model_icon_angles.p = -PI_2; }
+        else if (!strcasecmp (str, "bottom")) {
             model_icon_angles.p = -PI_2;
             model_icon_angles.b = 2 * PI_2;
         }
-        else if (!stricmp (str, "front")) {
+        else if (!strcasecmp (str, "front")) {
             model_icon_angles.h = 2 * PI_2;
         }
-        else if (!stricmp (str, "back")) {
+        else if (!strcasecmp (str, "back")) {
             model_icon_angles.h = 4 * PI_2;
         }
-        else if (!stricmp (str, "left")) {
+        else if (!strcasecmp (str, "left")) {
             model_icon_angles.h = -PI_2;
         }
-        else if (!stricmp (str, "right")) {
+        else if (!strcasecmp (str, "right")) {
             model_icon_angles.h = PI_2;
         }
         else {
@@ -4486,7 +4486,7 @@ static int parse_ship_values (
         for (auto j = 0; j < num_strings; j++) {
             size_t i;
             for (i = 0; i < num_groups; i++) {
-                if (!stricmp (
+                if (!strcasecmp (
                         target_group_strings[j].c_str (),
                         Ai_tp_list[i].name)) {
                     // so now the string from the list above as well as the ai
@@ -4585,7 +4585,7 @@ static int parse_ship_values (
             stuff_string (name_tmp, F_NAME, sizeof (name_tmp), ",");
             Mp++;
             for (auto i = 0; i < sip->n_subsystems; i++) {
-                if (!subsystem_stricmp (
+                if (!subsystem_strcasecmp (
                         sip->subsystems[i].subobj_name, name_tmp))
                     sp = &sip->subsystems[i];
             }
@@ -4794,7 +4794,7 @@ static int parse_ship_values (
                 for (auto i = 0; i < num_strings; i++) {
                     int j;
                     for (j = 0; j < num_groups; j++) {
-                        if (!stricmp (
+                        if (!strcasecmp (
                                 Ai_tp_list[j].name,
                                 tgt_priorities[i].c_str ())) {
                             sp->target_priority[i] = j;
@@ -4955,7 +4955,7 @@ static int parse_ship_values (
 
             while (optional_string ("$animation:")) {
                 stuff_string (name_tmp, F_NAME, sizeof (name_tmp));
-                if (!stricmp (name_tmp, "triggered")) {
+                if (!strcasecmp (name_tmp, "triggered")) {
                     queued_animation* current_trigger;
 
                     sp->triggers = (queued_animation*)vm_realloc (
@@ -5144,7 +5144,7 @@ static int parse_ship_values (
                     // up and down doesn't make it go farther than the angle
                     queued_animation_correct (current_trigger);
                 }
-                else if (!stricmp (name_tmp, "linked")) {
+                else if (!strcasecmp (name_tmp, "linked")) {
                     mprintf (("TODO: set up linked animation\n"));
                 }
             }
@@ -5197,7 +5197,7 @@ static int parse_ship_values (
 
 static engine_wash_info* get_engine_wash_pointer (char* engine_wash_name) {
     for (int i = 0; i < Num_engine_wash_types; i++) {
-        if (!stricmp (engine_wash_name, Engine_wash_info[i].name)) {
+        if (!strcasecmp (engine_wash_name, Engine_wash_info[i].name)) {
             return &Engine_wash_info[i];
         }
     }
@@ -5224,17 +5224,17 @@ static void parse_ship_type () {
     }
 
     const char* ship_type = NULL;
-    if (!stricmp (stp->name, "sentrygun")) { ship_type = "sentry gun"; }
-    else if (!stricmp (stp->name, "escapepod")) {
+    if (!strcasecmp (stp->name, "sentrygun")) { ship_type = "sentry gun"; }
+    else if (!strcasecmp (stp->name, "escapepod")) {
         ship_type = "escape pod";
     }
-    else if (!stricmp (stp->name, "repair_rearm")) {
+    else if (!strcasecmp (stp->name, "repair_rearm")) {
         ship_type = "support";
     }
-    else if (!stricmp (stp->name, "supercap")) {
+    else if (!strcasecmp (stp->name, "supercap")) {
         ship_type = "super cap";
     }
-    else if (!stricmp (stp->name, "knossos")) {
+    else if (!strcasecmp (stp->name, "knossos")) {
         ship_type = "knossos device";
     }
 
@@ -5263,7 +5263,7 @@ static void parse_ship_type () {
         for (auto j = 0; j < num_strings; j++) {
             size_t i;
             for (i = 0; i < num_groups; i++) {
-                if (!stricmp (
+                if (!strcasecmp (
                         target_group_strings[j].c_str (),
                         Ai_tp_list[i].name)) {
                     // so now the string from the list above as well as the ai
@@ -5500,7 +5500,7 @@ static void parse_shiptype_tbl (const char* filename) {
 int get_default_player_ship_index () {
     if (strlen (default_player_ship)) {
         for (auto it = Ship_info.cbegin (); it != Ship_info.cend (); ++it) {
-            if (stricmp (default_player_ship, it->name) == 0)
+            if (strcasecmp (default_player_ship, it->name) == 0)
                 return (int)std::distance (Ship_info.cbegin (), it);
         }
         return 0;
@@ -6017,7 +6017,7 @@ int ship_find_exited_ship_by_name (const char* name) {
     int i;
 
     for (i = 0; i < (int)Ships_exited.size (); i++) {
-        if (!stricmp (name, Ships_exited[i].ship_name)) return i;
+        if (!strcasecmp (name, Ships_exited[i].ship_name)) return i;
     }
 
     return -1;
@@ -7448,7 +7448,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
     // Fix up animation code references
     for (i = 0; i < sinfo->n_subsystems; i++) {
         for (j = 0; j < sinfo->subsystems[i].n_triggers; j++) {
-            if (subsystem_stricmp (
+            if (subsystem_strcasecmp (
                     sinfo->subsystems[i].triggers[j].sub_name, "<none>")) {
                 int idx = ship_get_subobj_model_num (
                     sinfo, sinfo->subsystems[i].triggers[j].sub_name);
@@ -10276,7 +10276,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
         // check to see if a "real" ship uses this model. if so, load it up for
         // him so that subsystems are setup properly
         for (auto it = Ship_info.begin (); it != Ship_info.end (); ++it) {
-            if (!stricmp (it->pof_file, sip->pof_file_hud)) {
+            if (!strcasecmp (it->pof_file, sip->pof_file_hud)) {
                 it->model_num = model_load (
                     it->pof_file, it->n_subsystems, &it->subsystems[0]);
             }
@@ -10969,7 +10969,7 @@ void change_ship_type (int n, int ship_type, int by_sexp) {
     int ss_index = 0;
     while (ss != END_OF_LIST (&sp->subsys_list)) {
         for (i = 0; i < num_saved_subsystems; i++) {
-            if (!subsystem_stricmp (
+            if (!subsystem_strcasecmp (
                     ss->system_info->subobj_name, subsys_names[i])) {
                 ss->current_hits = ss->max_hits * subsys_pcts[i];
 
@@ -11358,7 +11358,7 @@ int ship_fire_primary_debug (object* objp) {
     //	Debug code!  Make the single laser fire only one bolt and from the
     // object center!
     for (i = 0; i < MAX_WEAPON_TYPES; i++)
-        if (!stricmp (Weapon_info[i].name, NOX ("Debug Laser"))) break;
+        if (!strcasecmp (Weapon_info[i].name, NOX ("Debug Laser"))) break;
 
     vm_vec_add (&wpos, &objp->pos, &(objp->orient.vec.fvec));
     if (i != MAX_WEAPONS) {
@@ -13988,12 +13988,12 @@ int wing_name_lookup (const char* name, int ignore_count) {
 
     if (Fred_running || ignore_count) { // current_count not used for Fred..
         for (i = 0; i < wing_limit; i++)
-            if (Wings[i].wave_count && !stricmp (Wings[i].name, name))
+            if (Wings[i].wave_count && !strcasecmp (Wings[i].name, name))
                 return i;
     }
     else {
         for (i = 0; i < wing_limit; i++)
-            if (Wings[i].current_count && !stricmp (Wings[i].name, name))
+            if (Wings[i].current_count && !strcasecmp (Wings[i].name, name))
                 return i;
     }
 
@@ -14007,7 +14007,7 @@ int wing_name_lookup (const char* name, int ignore_count) {
 int wing_lookup (const char* name) {
     int idx;
     for (idx = 0; idx < Num_wings; idx++)
-        if (stricmp (Wings[idx].name, name) == 0) return idx;
+        if (strcasecmp (Wings[idx].name, name) == 0) return idx;
 
     return -1;
 }
@@ -14017,7 +14017,7 @@ int wing_lookup (const char* name) {
  */
 static int ship_info_lookup_sub (const char* token) {
     for (auto it = Ship_info.cbegin (); it != Ship_info.cend (); ++it)
-        if (!stricmp (token, it->name))
+        if (!strcasecmp (token, it->name))
             return (int)std::distance (Ship_info.cbegin (), it);
 
     return -1;
@@ -14029,7 +14029,7 @@ static int ship_info_lookup_sub (const char* token) {
 static int ship_template_lookup (const char* token) {
     for (auto it = Ship_templates.cbegin (); it != Ship_templates.cend ();
          ++it) {
-        if (!stricmp (token, it->name)) {
+        if (!strcasecmp (token, it->name)) {
             return (int)std::distance (Ship_templates.cbegin (), it);
         }
     }
@@ -14054,7 +14054,7 @@ int ship_info_lookup (const char* token) {
     if (p == NULL) return -1;
 
     // conversion from FS1 missions
-    if (!stricmp (token, "GTD Orion#1 (Galatea)")) {
+    if (!strcasecmp (token, "GTD Orion#1 (Galatea)")) {
         idx = ship_info_lookup_sub ("GTD Orion#Galatea");
         if (idx >= 0) return idx;
 
@@ -14063,7 +14063,7 @@ int ship_info_lookup (const char* token) {
 
         return -1;
     }
-    else if (!stricmp (token, "GTD Orion#2 (Bastion)")) {
+    else if (!strcasecmp (token, "GTD Orion#2 (Bastion)")) {
         idx = ship_info_lookup_sub ("GTD Orion#Bastion");
         if (idx >= 0) return idx;
 
@@ -14072,7 +14072,7 @@ int ship_info_lookup (const char* token) {
 
         return -1;
     }
-    else if (!stricmp (token, "SF Dragon#2 (weakened)")) {
+    else if (!strcasecmp (token, "SF Dragon#2 (weakened)")) {
         idx = ship_info_lookup_sub ("SF Dragon#weakened");
         if (idx >= 0) return idx;
 
@@ -14081,7 +14081,7 @@ int ship_info_lookup (const char* token) {
 
         return -1;
     }
-    else if (!stricmp (token, "SF Dragon#3 (Player)")) {
+    else if (!strcasecmp (token, "SF Dragon#3 (Player)")) {
         idx = ship_info_lookup_sub ("SF Dragon#Terrans");
         if (idx >= 0) return idx;
 
@@ -14090,13 +14090,13 @@ int ship_info_lookup (const char* token) {
 
         return -1;
     }
-    else if (!stricmp (token, "GTSC Faustus#2 (big blast)")) {
+    else if (!strcasecmp (token, "GTSC Faustus#2 (big blast)")) {
         idx = ship_info_lookup_sub ("GTSC Faustus#bigblast");
         if (idx >= 0) return idx;
 
         return -1;
     }
-    else if (!stricmp (token, "GTF Loki (stealth)")) {
+    else if (!strcasecmp (token, "GTF Loki (stealth)")) {
         idx = ship_info_lookup_sub ("GTF Loki#stealth");
         if (idx >= 0) return idx;
 
@@ -14123,7 +14123,7 @@ int ship_info_lookup (const char* token) {
             return -1;
         }
         // assemble using parentheses
-        sprintf_safe (name, "%s (%s)", temp1, temp2);
+        sprintf (name, "%s (%s)", temp1, temp2);
     }
     // found a parenthesis
     else if (*p == '(') {
@@ -14133,7 +14133,7 @@ int ship_info_lookup (const char* token) {
         *p2 = '\0';
 
         // assemble using hash
-        sprintf_safe (name, "%s#%s", temp1, temp2);
+        sprintf (name, "%s#%s", temp1, temp2);
     }
     // oops
     else {
@@ -14158,7 +14158,7 @@ int ship_name_lookup (const char* name, int inc_players) {
         if (Ships[i].objnum >= 0) {
             if (Objects[Ships[i].objnum].type == OBJ_SHIP ||
                 (Objects[Ships[i].objnum].type == OBJ_START && inc_players)) {
-                if (!stricmp (name, Ships[i].ship_name)) { return i; }
+                if (!strcasecmp (name, Ships[i].ship_name)) { return i; }
             }
         }
     }
@@ -14174,7 +14174,7 @@ int ship_type_name_lookup (const char* name) {
     // Look through Ship_types array
     size_t max_size = Ship_types.size ();
     for (size_t idx = 0; idx < max_size; idx++) {
-        if (!stricmp (name, Ship_types[idx].name)) { return (int)idx; }
+        if (!strcasecmp (name, Ship_types[idx].name)) { return (int)idx; }
     }
     // couldn't find it
     return -1;
@@ -14195,7 +14195,7 @@ int ship_query_state (char* name) {
         if (Ships[i].objnum >= 0) {
             if ((Objects[Ships[i].objnum].type == OBJ_SHIP) ||
                 (Objects[Ships[i].objnum].type == OBJ_START)) {
-                if (!stricmp (name, Ships[i].ship_name)) { return 0; }
+                if (!strcasecmp (name, Ships[i].ship_name)) { return 0; }
             }
         }
     }
@@ -14692,7 +14692,7 @@ int ship_get_subsys_index (ship* sp, const char* ss_name, int error_bypass) {
     count = 0;
     ss = GET_FIRST (&sp->subsys_list);
     while (ss != END_OF_LIST (&sp->subsys_list)) {
-        if (!subsystem_stricmp (ss->system_info->subobj_name, ss_name))
+        if (!subsystem_strcasecmp (ss->system_info->subobj_name, ss_name))
             return count;
         count++;
         ss = GET_NEXT (ss);
@@ -16972,7 +16972,7 @@ void ship_maybe_praise_self (ship* deader_sp, ship* killer_sp) {
 static void awacs_maybe_ask_for_help (ship* sp, int multi_team_filter) {
     // Goober5000 - bail if not in main fs2 campaign
     // (stupid coders... it's the FREDder's responsibility to add this message)
-    if (stricmp (Campaign.filename, "freespace2") != 0 ||
+    if (strcasecmp (Campaign.filename, "freespace2") != 0 ||
         !(Game_mode & GM_CAMPAIGN_MODE))
         return;
 
@@ -17493,7 +17493,7 @@ void ship_do_cargo_revealed (ship* shipp, int from_network) {
     shipp->time_cargo_revealed = Missiontime;
 
     // if the cargo is something other than "nothing", then make a log entry
-    if (stricmp (
+    if (strcasecmp (
             Cargo_names[shipp->cargo1 & CARGO_INDEX_MASK], NOX ("nothing")) !=
         0) {
         mission_log_add_entry (
@@ -17522,7 +17522,7 @@ void ship_do_cap_subsys_cargo_revealed (
     subsys->time_subsys_cargo_revealed = Missiontime;
 
     // if the cargo is something other than "nothing", then make a log entry
-    if (stricmp (
+    if (strcasecmp (
             Cargo_names[subsys->subsys_cargo_name & CARGO_INDEX_MASK],
             NOX ("nothing")) != 0) {
         mission_log_add_entry (
@@ -17838,7 +17838,7 @@ void ship_page_in () {
         // See if this model was previously loaded by another ship
         for (auto it = Ship_info.begin (); it != Ship_info.end (); ++it) {
             if ((it->model_num > -1) &&
-                !stricmp (sip->pof_file, it->pof_file)) {
+                !strcasecmp (sip->pof_file, it->pof_file)) {
                 // Model already loaded
                 model_previously_loaded = it->model_num;
 
@@ -18475,7 +18475,7 @@ ship_subsys* ship_get_subsys (ship* shipp, const char* subsys_name) {
     ship_subsys* ss = GET_FIRST (&shipp->subsys_list);
     while (ss != END_OF_LIST (&shipp->subsys_list)) {
         // check subsystem name
-        if (!subsystem_stricmp (ss->system_info->subobj_name, subsys_name)) {
+        if (!subsystem_strcasecmp (ss->system_info->subobj_name, subsys_name)) {
             return ss;
         }
 
@@ -18859,7 +18859,7 @@ void ship_subsystem_set_new_ai_class (
     ss = GET_FIRST (&Ships[ship_num].subsys_list);
     while (ss != END_OF_LIST (&Ships[ship_num].subsys_list)) {
         // if we found the subsystem
-        if (!subsystem_stricmp (ss->system_info->subobj_name, subsystem)) {
+        if (!subsystem_strcasecmp (ss->system_info->subobj_name, subsystem)) {
             // set ai class
             ss->weapons.ai_class = new_ai_class;
             return;
@@ -18984,7 +18984,7 @@ bool ship_fighterbays_all_destroyed (ship* shipp) {
 static bool ship_subsys_is_fighterbay (ship_subsys* ss) {
     Assert (ss);
 
-    if (!strnicmp (NOX ("fighter"), ss->system_info->name, 7)) { return true; }
+    if (!strncasecmp (NOX ("fighter"), ss->system_info->name, 7)) { return true; }
 
     return false;
 }
@@ -19066,7 +19066,7 @@ int ship_has_engine_power (ship* shipp) {
 // Goober5000
 int ship_starting_wing_lookup (const char* wing_name) {
     for (int i = 0; i < MAX_STARTING_WINGS; i++) {
-        if (!stricmp (Starting_wing_names[i], wing_name)) return i;
+        if (!strcasecmp (Starting_wing_names[i], wing_name)) return i;
     }
 
     return -1;
@@ -19077,12 +19077,12 @@ int ship_squadron_wing_lookup (const char* wing_name) {
     // TvT uses a different set of wing names from everything else
     if (MULTI_TEAM) {
         for (int i = 0; i < MAX_TVT_WINGS; i++) {
-            if (!stricmp (TVT_wing_names[i], wing_name)) return i;
+            if (!strcasecmp (TVT_wing_names[i], wing_name)) return i;
         }
     }
     else {
         for (int i = 0; i < MAX_SQUADRON_WINGS; i++) {
-            if (!stricmp (Squadron_wing_names[i], wing_name)) return i;
+            if (!strcasecmp (Squadron_wing_names[i], wing_name)) return i;
         }
     }
 
@@ -19092,7 +19092,7 @@ int ship_squadron_wing_lookup (const char* wing_name) {
 // Goober5000
 int ship_tvt_wing_lookup (const char* wing_name) {
     for (int i = 0; i < MAX_TVT_WINGS; i++) {
-        if (!stricmp (TVT_wing_names[i], wing_name)) return i;
+        if (!strcasecmp (TVT_wing_names[i], wing_name)) return i;
     }
 
     return -1;
@@ -19164,7 +19164,7 @@ int ship_class_compare (int ship_class_1, int ship_class_2) {
 static int damage_type_get_idx (char* name) {
     // This should never be bigger than INT_MAX anyway
     for (int i = 0; i < (int)Damage_types.size (); i++) {
-        if (!stricmp (name, Damage_types[i].name)) return i;
+        if (!strcasecmp (name, Damage_types[i].name)) return i;
     }
 
     return -1;
@@ -19217,7 +19217,7 @@ const int Num_piercing_effect_types =
 static int piercing_type_get (char* str) {
     int i;
     for (i = 0; i < Num_piercing_effect_types; i++) {
-        if (!stricmp (PiercingTypes[i].name, str)) return PiercingTypes[i].def;
+        if (!strcasecmp (PiercingTypes[i].name, str)) return PiercingTypes[i].def;
     }
 
     // default to retail
@@ -19237,7 +19237,7 @@ const int Num_difficulty_scale_types =
 static int difficulty_scale_type_get (char* str) {
     int i;
     for (i = 0; i < Num_difficulty_scale_types; i++) {
-        if (!stricmp (DifficultyScaleTypes[i].name, str))
+        if (!strcasecmp (DifficultyScaleTypes[i].name, str))
             return DifficultyScaleTypes[i].def;
     }
 
@@ -19260,7 +19260,7 @@ const int Num_armor_type_constants =
 static int armor_type_constants_get (char* str) {
     int i;
     for (i = 0; i < Num_armor_type_constants; i++) {
-        if (!stricmp (ArmorTypeConstants[i].name, str))
+        if (!strcasecmp (ArmorTypeConstants[i].name, str))
             return ArmorTypeConstants[i].def;
     }
     // this shouldnt happen, but if it does theirs a define for that
@@ -19330,7 +19330,7 @@ const int Num_armor_calculation_types = sizeof (TypeNames) / sizeof (char*);
 
 int calculation_type_get (char* str) {
     for (int i = 0; i < Num_armor_calculation_types; i++) {
-        if (!stricmp (TypeNames[i], str)) return i;
+        if (!strcasecmp (TypeNames[i], str)) return i;
     }
 
     return -1;
@@ -19893,7 +19893,7 @@ void parse_ai_target_priorities () {
     stuff_string (temp_priority.name, F_NAME, NAME_LENGTH);
     if (first_time == false) {
         for (i = 0; i < n_entries; i++) {
-            if (!strnicmp (
+            if (!strncasecmp (
                     temp_priority.name, Ai_tp_list[i].name, NAME_LENGTH)) {
                 already_exists = i;
             }
@@ -19905,7 +19905,7 @@ void parse_ai_target_priorities () {
         stuff_string (tempname, F_NAME, NAME_LENGTH);
 
         for (j = 0; j < num_ai_tgt_objects; j++) {
-            if (!stricmp (ai_tgt_objects[j].name, tempname)) {
+            if (!strcasecmp (ai_tgt_objects[j].name, tempname)) {
                 temp_priority.obj_type = ai_tgt_objects[j].def;
             }
         }
@@ -19917,7 +19917,7 @@ void parse_ai_target_priorities () {
 
         for (i = 0; i < num_strings; i++) {
             for (j = 0; j < MAX_WEAPON_TYPES; j++) {
-                if (!stricmp (Weapon_info[j].name, temp_strings[i].c_str ())) {
+                if (!strcasecmp (Weapon_info[j].name, temp_strings[i].c_str ())) {
                     temp_priority.weapon_class.push_back (j);
                     break;
                 }
@@ -19938,7 +19938,7 @@ void parse_ai_target_priorities () {
 
         for (i = 0; i < num_strings; i++) {
             for (j = 0; j < num_ai_tgt_obj_flags; j++) {
-                if (!stricmp (
+                if (!strcasecmp (
                         ai_tgt_obj_flags[j].name, temp_strings[i].c_str ())) {
                     temp_priority.obj_flags |= ai_tgt_obj_flags[j].def;
                     break;
@@ -19960,7 +19960,7 @@ void parse_ai_target_priorities () {
 
         for (i = 0; i < num_strings; i++) {
             for (j = 0; j < num_ai_tgt_ship_flags; j++) {
-                if (!stricmp (
+                if (!strcasecmp (
                         ai_tgt_ship_flags[j].name, temp_strings[i].c_str ())) {
                     temp_priority.sif_flags.set (ai_tgt_ship_flags[j].def);
                     break;
@@ -19982,7 +19982,7 @@ void parse_ai_target_priorities () {
 
         for (i = 0; i < num_strings; i++) {
             for (j = 0; j < num_ai_tgt_weapon_info_flags; j++) {
-                if (!stricmp (
+                if (!strcasecmp (
                         ai_tgt_weapon_flags[j].name,
                         temp_strings[i].c_str ())) {
                     temp_priority.wif_flags |= ai_tgt_weapon_flags[j].def;
@@ -20034,7 +20034,7 @@ void parse_weapon_targeting_priorities () {
         stuff_string (tempname, F_NAME, NAME_LENGTH);
 
         for (k = 0; k < MAX_WEAPON_TYPES; k++) {
-            if (!stricmp (Weapon_info[k].name, tempname)) {
+            if (!strcasecmp (Weapon_info[k].name, tempname)) {
                 // found weapon, yay!
                 // no need to keep searching for more
                 break;
@@ -20070,7 +20070,7 @@ void parse_weapon_targeting_priorities () {
 
                 for (i = 0; i < num_strings; i++) {
                     for (j = 0; j < num_groups; j++) {
-                        if (!stricmp (
+                        if (!strcasecmp (
                                 Ai_tp_list[j].name,
                                 tgt_priorities[i].c_str ())) {
                             wip->targeting_priorities[i] = j;
@@ -20092,7 +20092,7 @@ void parse_weapon_targeting_priorities () {
 
 static int ship_get_subobj_model_num (ship_info* sip, char* subobj_name) {
     for (int i = 0; i < sip->n_subsystems; i++) {
-        if (!subsystem_stricmp (sip->subsystems[i].subobj_name, subobj_name))
+        if (!subsystem_strcasecmp (sip->subsystems[i].subobj_name, subobj_name))
             return sip->subsystems[i].subobj_num;
     }
 

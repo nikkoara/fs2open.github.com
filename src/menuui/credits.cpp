@@ -308,9 +308,9 @@ void credits_parse_table (const char* filename) {
 
             stuff_string (mode, F_NAME, NAME_LENGTH);
 
-            if (!stricmp (mode, "Start"))
+            if (!strcasecmp (mode, "Start"))
                 SCP_credits_position = START;
-            else if (!stricmp (mode, "End"))
+            else if (!strcasecmp (mode, "End"))
                 SCP_credits_position = END;
             else
                 Warning (

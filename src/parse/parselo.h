@@ -172,7 +172,7 @@ int parse_string_flag_list (
     for (auto i = 0; i < num_strings; i++) {
         bool string_parsed = false;
         for (size_t j = 0; j < n_defs; j++) {
-            if (!stricmp (slp[i], defs[j].name)) {
+            if (!strcasecmp (slp[i], defs[j].name)) {
                 if (defs[j].in_use) {
                     Assertion (
                         defs[j].def != T::NUM_VALUES,
@@ -347,7 +347,7 @@ sprintf (std::string& dest, SCP_FORMAT_STRING const char* format, ...)
     SCP_FORMAT_STRING_ARGS (2, 3);
 
 // Goober5000
-extern int subsystem_stricmp (const char* str1, const char* str2);
+extern int subsystem_strcasecmp (const char* str1, const char* str2);
 
 // WMC - compares two strings, ignoring the last extension
 extern int strextcmp (const char* s1, const char* s2);

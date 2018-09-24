@@ -799,7 +799,7 @@ void model_draw_bay_paths_htl (int model_num) {
     // iterate through the paths that exist in the polymodel, searching for
     // $bayN pathnames
     for (idx = 0; idx < pm->n_paths; idx++) {
-        if (!strnicmp (pm->paths[idx].name, NOX ("$bay"), 4)) {
+        if (!strncasecmp (pm->paths[idx].name, NOX ("$bay"), 4)) {
             for (s_idx = 0; s_idx < pm->paths[idx].nverts - 1; s_idx++) {
                 v1 = pm->paths[idx].verts[s_idx].pos;
                 v2 = pm->paths[idx].verts[s_idx + 1].pos;
@@ -848,7 +848,7 @@ void model_draw_bay_paths (int model_num) {
     // iterate through the paths that exist in the polymodel, searching for
     // $bayN pathnames
     for (idx = 0; idx < pm->n_paths; idx++) {
-        if (!strnicmp (pm->paths[idx].name, NOX ("$bay"), 4)) {
+        if (!strncasecmp (pm->paths[idx].name, NOX ("$bay"), 4)) {
             for (s_idx = 0; s_idx < pm->paths[idx].nverts - 1; s_idx++) {
                 v1 = pm->paths[idx].verts[s_idx].pos;
                 v2 = pm->paths[idx].verts[s_idx + 1].pos;
@@ -2728,7 +2728,7 @@ bool model_get_team_color (
     fix timestamp, int fadetime) {
     Assert (clr != NULL);
 
-    if (!stricmp (secondaryteam.c_str (), "none")) {
+    if (!strcasecmp (secondaryteam.c_str (), "none")) {
         if (Team_Colors.find (team) != Team_Colors.end ()) {
             *clr = Team_Colors[team];
             return true;

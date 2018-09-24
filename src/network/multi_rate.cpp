@@ -71,7 +71,7 @@ int multi_rate_add (int np_index, const char* type, int size) {
         // empty slot
         if (strlen (Multi_rate[np_index][idx].type) <= 0) { break; }
         // existing
-        else if (!stricmp (Multi_rate[np_index][idx].type, type)) {
+        else if (!strcasecmp (Multi_rate[np_index][idx].type, type)) {
             break;
         }
     }

@@ -141,7 +141,7 @@ void lcl_init (int lang_init) {
         // look it up
         lang = -1;
         for (idx = 0; idx < (int)Lcl_languages.size (); idx++) {
-            if (!stricmp (Lcl_languages[idx].lang_name, lang_string)) {
+            if (!strcasecmp (Lcl_languages[idx].lang_name, lang_string)) {
                 lang = idx;
                 break;
             }
@@ -698,7 +698,7 @@ void lcl_ext_localize_sub (
     }
 
     // otherwise, check to see if it's an XSTR() tag
-    if (strnicmp (in, "XSTR", 4) != 0) {
+    if (strncasecmp (in, "XSTR", 4) != 0) {
         // NOT an XSTR() tag
         if (str_len > max_len)
             error_display (
@@ -1194,64 +1194,64 @@ void lcl_translate_brief_icon_name_gr (char* name) {
     char* pos;
     char buf[128];
 
-    if (!stricmp (name, "Subspace Portal")) {
+    if (!strcasecmp (name, "Subspace Portal")) {
         strcpy (name, "Subraum Portal");
     }
-    else if (!stricmp (name, "Alpha Wing")) {
+    else if (!strcasecmp (name, "Alpha Wing")) {
         strcpy (name, "Alpha");
     }
-    else if (!stricmp (name, "Beta Wing")) {
+    else if (!strcasecmp (name, "Beta Wing")) {
         strcpy (name, "Beta");
     }
-    else if (!stricmp (name, "Zeta Wing")) {
+    else if (!strcasecmp (name, "Zeta Wing")) {
         strcpy (name, "Zeta");
     }
-    else if (!stricmp (name, "Capella Node")) {
+    else if (!strcasecmp (name, "Capella Node")) {
         strcpy (name, "Capella");
     }
-    else if (!stricmp (name, "Hostile")) {
+    else if (!strcasecmp (name, "Hostile")) {
         strcpy (name, "Gegner");
     }
-    else if (!stricmp (name, "Hostile Craft")) {
+    else if (!strcasecmp (name, "Hostile Craft")) {
         strcpy (name, "Gegner");
     }
-    else if (!stricmp (name, "Rebel Wing")) {
+    else if (!strcasecmp (name, "Rebel Wing")) {
         strcpy (name, "Rebellen");
     }
-    else if (!stricmp (name, "Rebel Fleet")) {
+    else if (!strcasecmp (name, "Rebel Fleet")) {
         strcpy (name, "Rebellenflotte");
     }
-    else if (!stricmp (name, "Sentry Gun")) {
+    else if (!strcasecmp (name, "Sentry Gun")) {
         strcpy (name, "Gesch\x81tz");
     }
-    else if (!stricmp (name, "Cargo")) {
+    else if (!strcasecmp (name, "Cargo")) {
         strcpy (name, "Fracht");
     }
-    else if (!stricmp (name, "Knossos Device")) {
+    else if (!strcasecmp (name, "Knossos Device")) {
         strcpy (name, "Knossosger\x84t");
     }
-    else if (!stricmp (name, "Support")) {
+    else if (!strcasecmp (name, "Support")) {
         strcpy (name, "Versorger");
     }
-    else if (!stricmp (name, "Unknown")) {
+    else if (!strcasecmp (name, "Unknown")) {
         strcpy (name, "Unbekannt");
     }
-    else if (!stricmp (name, "Instructor")) {
+    else if (!strcasecmp (name, "Instructor")) {
         strcpy (name, "Ausbilder");
     }
-    else if (!stricmp (name, "Jump Node")) {
+    else if (!strcasecmp (name, "Jump Node")) {
         strcpy (name, "Sprungknoten");
     }
-    else if (!stricmp (name, "Escort")) {
+    else if (!strcasecmp (name, "Escort")) {
         strcpy (name, "Geleitschutz");
     }
-    else if (!stricmp (name, "Asteroid Field")) {
+    else if (!strcasecmp (name, "Asteroid Field")) {
         strcpy (name, "Asteroidenfeld");
     }
-    else if (!stricmp (name, "Enif Station")) {
+    else if (!strcasecmp (name, "Enif Station")) {
         strcpy (name, "Station Enif");
     }
-    else if (!stricmp (name, "Rally Point")) {
+    else if (!strcasecmp (name, "Rally Point")) {
         strcpy (name, "Sammelpunkt");
     }
     else if ((pos = strstr (name, "Transport")) != NULL) {
@@ -1266,96 +1266,96 @@ void lcl_translate_brief_icon_name_gr (char* name) {
         strcat_s (buf, pos);
         strcpy (name, buf);
     }
-    else if (!stricmp (name, "Orion under repair")) {
+    else if (!strcasecmp (name, "Orion under repair")) {
         strcpy (name, "Orion wird repariert");
 
         // SOTY-specific ones below!
     }
-    else if (!stricmp (name, "Wayfarer Station")) {
+    else if (!strcasecmp (name, "Wayfarer Station")) {
         strcpy (name, "Station Wayfarer");
     }
-    else if (!stricmp (name, "Enemy")) {
+    else if (!strcasecmp (name, "Enemy")) {
         strcpy (name, "Gegner");
     }
-    else if (!stricmp (name, "Supply Depot")) {
+    else if (!strcasecmp (name, "Supply Depot")) {
         strcpy (name, "Nachschubdepot");
     }
-    else if (!stricmp (name, "Fighter Escort")) {
+    else if (!strcasecmp (name, "Fighter Escort")) {
         strcpy (name, "Jagdschutz");
     }
-    else if (!stricmp (name, "Shivans")) {
+    else if (!strcasecmp (name, "Shivans")) {
         strcpy (name, "Shivaner");
     }
-    else if (!stricmp (name, "NTF Base of Operations")) {
+    else if (!strcasecmp (name, "NTF Base of Operations")) {
         strcpy (name, "NTF-Operationsbasis");
     }
-    else if (!stricmp (name, "NTF Bombers")) {
+    else if (!strcasecmp (name, "NTF Bombers")) {
         strcpy (name, "NTF-Bomber");
     }
-    else if (!stricmp (name, "NTF Fighters")) {
+    else if (!strcasecmp (name, "NTF Fighters")) {
         strcpy (name, "NTF-J\x84ger");
     }
-    else if (!stricmp (name, "Sentry")) {
+    else if (!strcasecmp (name, "Sentry")) {
         strcpy (name, "Sperrgesch\x81tz");
     }
-    else if (!stricmp (name, "Cargo Containers")) {
+    else if (!strcasecmp (name, "Cargo Containers")) {
         strcpy (name, "Frachtbeh\x84lter");
     }
-    else if (!stricmp (name, "NTF Reinforcements")) {
+    else if (!strcasecmp (name, "NTF Reinforcements")) {
         strcpy (name, "NTF-Verst\x84rkungen");
     }
-    else if (!stricmp (name, "NTF Base")) {
+    else if (!strcasecmp (name, "NTF Base")) {
         strcpy (name, "NTF-St\x81tzpunkt");
     }
-    else if (!stricmp (name, "Refugee Convoy")) {
+    else if (!strcasecmp (name, "Refugee Convoy")) {
         strcpy (
             name,
             "Fl\x81"
             "chtlingskonvoi");
     }
-    else if (!stricmp (name, "Food Convoy")) {
+    else if (!strcasecmp (name, "Food Convoy")) {
         strcpy (name, "Nachschubkonvoi");
     }
-    else if (!stricmp (name, "Governor's Shuttle")) {
+    else if (!strcasecmp (name, "Governor's Shuttle")) {
         strcpy (name, "F\x84hre des Gouverneurs");
     }
-    else if (!stricmp (name, "GTVA Patrol")) {
+    else if (!strcasecmp (name, "GTVA Patrol")) {
         strcpy (name, "GTVA-Patrouille");
     }
-    else if (!stricmp (name, "Escort fighters")) {
+    else if (!strcasecmp (name, "Escort fighters")) {
         strcpy (name, "Geleitschutz");
     }
-    else if (!stricmp (name, "Nagada Outpost")) {
+    else if (!strcasecmp (name, "Nagada Outpost")) {
         strcpy (name, "Nagada-Aussenposten");
     }
-    else if (!stricmp (name, "Fighters")) {
+    else if (!strcasecmp (name, "Fighters")) {
         strcpy (name, "J\x84ger");
     }
-    else if (!stricmp (name, "Bombers")) {
+    else if (!strcasecmp (name, "Bombers")) {
         strcpy (name, "Bomber");
     }
-    else if (!stricmp (name, "Enemy Destroyers")) {
+    else if (!strcasecmp (name, "Enemy Destroyers")) {
         strcpy (name, "Feindliche Zerst\x94rer");
     }
-    else if (!stricmp (name, "Ross 128 System")) {
+    else if (!strcasecmp (name, "Ross 128 System")) {
         strcpy (name, "System Ross 128");
     }
-    else if (!stricmp (name, "Knossos Station")) {
+    else if (!strcasecmp (name, "Knossos Station")) {
         strcpy (name, "Knossos-Station");
     }
-    else if (!stricmp (name, "Transporters")) {
+    else if (!strcasecmp (name, "Transporters")) {
         strcpy (name, "Transporter");
     }
-    else if (!stricmp (name, "Pirates?")) {
+    else if (!strcasecmp (name, "Pirates?")) {
         strcpy (name, "Piraten?");
     }
-    else if (!stricmp (name, "Escorts")) {
+    else if (!strcasecmp (name, "Escorts")) {
         strcpy (name, "Geleitschutz");
     }
-    else if (!stricmp (name, "Shivan Fighters")) {
+    else if (!strcasecmp (name, "Shivan Fighters")) {
         strcpy (name, "J\x84ger");
     }
-    else if (!stricmp (name, "Shivan Territory")) {
+    else if (!strcasecmp (name, "Shivan Territory")) {
         strcpy (name, "Shivaner");
     }
 }
@@ -1370,64 +1370,64 @@ void lcl_translate_brief_icon_name_pl (char* name) {
     char* pos;
     char buf[128];
 
-    if (!stricmp (name, "Subspace Portal")) {
+    if (!strcasecmp (name, "Subspace Portal")) {
         strcpy (name, "Portal podprz.");
     }
-    else if (!stricmp (name, "Alpha Wing")) {
+    else if (!strcasecmp (name, "Alpha Wing")) {
         strcpy (name, "Alfa");
     }
-    else if (!stricmp (name, "Beta Wing")) {
+    else if (!strcasecmp (name, "Beta Wing")) {
         strcpy (name, "Beta");
     }
-    else if (!stricmp (name, "Zeta Wing")) {
+    else if (!strcasecmp (name, "Zeta Wing")) {
         strcpy (name, "Zeta");
     }
-    else if (!stricmp (name, "Capella Node")) {
+    else if (!strcasecmp (name, "Capella Node")) {
         strcpy (name, "Capella");
     }
-    else if (!stricmp (name, "Hostile")) {
+    else if (!strcasecmp (name, "Hostile")) {
         strcpy (name, "Wr\xF3g");
     }
-    else if (!stricmp (name, "Hostile Craft")) {
+    else if (!strcasecmp (name, "Hostile Craft")) {
         strcpy (name, "Wr\xF3g");
     }
-    else if (!stricmp (name, "Rebel Wing")) {
+    else if (!strcasecmp (name, "Rebel Wing")) {
         strcpy (name, "Rebelianci");
     }
-    else if (!stricmp (name, "Rebel Fleet")) {
+    else if (!strcasecmp (name, "Rebel Fleet")) {
         strcpy (name, "Flota Rebelii");
     }
-    else if (!stricmp (name, "Sentry Gun")) {
+    else if (!strcasecmp (name, "Sentry Gun")) {
         strcpy (name, "Dzia\xB3o str.");
     }
-    else if (!stricmp (name, "Cargo")) {
+    else if (!strcasecmp (name, "Cargo")) {
         strcpy (name, "\xA3\x61\x64unek");
     }
-    else if (!stricmp (name, "Knossos Device")) {
+    else if (!strcasecmp (name, "Knossos Device")) {
         strcpy (name, "Urz. Knossos");
     }
-    else if (!stricmp (name, "Support")) {
+    else if (!strcasecmp (name, "Support")) {
         strcpy (name, "Wsparcie");
     }
-    else if (!stricmp (name, "Unknown")) {
+    else if (!strcasecmp (name, "Unknown")) {
         strcpy (name, "Nieznany");
     }
-    else if (!stricmp (name, "Instructor")) {
+    else if (!strcasecmp (name, "Instructor")) {
         strcpy (name, "Instruktor");
     }
-    else if (!stricmp (name, "Jump Node")) {
+    else if (!strcasecmp (name, "Jump Node")) {
         strcpy (name, "W\xEAze\xB3 skokowy");
     }
-    else if (!stricmp (name, "Escort")) {
+    else if (!strcasecmp (name, "Escort")) {
         strcpy (name, "Eskorta");
     }
-    else if (!stricmp (name, "Asteroid Field")) {
+    else if (!strcasecmp (name, "Asteroid Field")) {
         strcpy (name, "Pole asteroid");
     }
-    else if (!stricmp (name, "Enif Station")) {
+    else if (!strcasecmp (name, "Enif Station")) {
         strcpy (name, "Stacja Enif");
     }
-    else if (!stricmp (name, "Rally Point")) {
+    else if (!strcasecmp (name, "Rally Point")) {
         strcpy (name, "Pkt zborny");
     }
     else if ((pos = strstr (name, "Transport")) != NULL) {
@@ -1442,7 +1442,7 @@ void lcl_translate_brief_icon_name_pl (char* name) {
         strcat_s (buf, pos);
         strcpy (name, buf);
     }
-    else if (!stricmp (name, "Orion under repair")) {
+    else if (!strcasecmp (name, "Orion under repair")) {
         strcpy (name, "Naprawiany Orion");
     }
 }
@@ -1499,13 +1499,13 @@ void lcl_translate_targetbox_name_gr (char* name) {
         strcat_s (buf, pos);
         strcpy (name, buf);
     }
-    else if (!stricmp (name, "Instructor")) {
+    else if (!strcasecmp (name, "Instructor")) {
         strcpy (name, "Ausbilder");
     }
-    else if (!stricmp (name, "NTF Vessel")) {
+    else if (!strcasecmp (name, "NTF Vessel")) {
         strcpy (name, "NTF-Schiff");
     }
-    else if (!stricmp (name, "Enif Station")) {
+    else if (!strcasecmp (name, "Enif Station")) {
         strcpy (name, "Station Enif");
     }
 }
@@ -1550,13 +1550,13 @@ void lcl_translate_targetbox_name_pl (char* name) {
         strcat_s (buf, pos);
         strcpy (name, buf);
     }
-    else if (!stricmp (name, "Instructor")) {
+    else if (!strcasecmp (name, "Instructor")) {
         strcpy (name, "Instruktor");
     }
-    else if (!stricmp (name, "NTF Vessel")) {
+    else if (!strcasecmp (name, "NTF Vessel")) {
         strcpy (name, "Okr\xEAt NTF");
     }
-    else if (!stricmp (name, "Enif Station")) {
+    else if (!strcasecmp (name, "Enif Station")) {
         strcpy (name, "Stacja Enif");
     }
 }

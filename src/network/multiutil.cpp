@@ -359,7 +359,7 @@ int multi_ship_class_lookup (const char* ship_name) {
 
     int player_ship_class = -1;
     for (auto it = Ship_info.cbegin (); it != Ship_info.cend (); ++it) {
-        if (!stricmp (it->name, ship_name)) {
+        if (!strcasecmp (it->name, ship_name)) {
             player_ship_class = (int)std::distance (Ship_info.cbegin (), it);
             break;
         }
@@ -516,7 +516,7 @@ int multi_find_player_by_ship_name (
             (Objects[Net_players[idx].m_player->objnum].instance >= 0) &&
             (Objects[Net_players[idx].m_player->objnum].instance <
              MAX_SHIPS) &&
-            !stricmp (
+            !strcasecmp (
                 ship_name,
                 Ships[Objects[Net_players[idx].m_player->objnum].instance]
                     .ship_name)) {
@@ -699,7 +699,7 @@ int multi_create_player (
         // find the ship that matches the string stored in default_player_ship
 
         for (auto it = Ship_info.cbegin (); it != Ship_info.cend (); ++it) {
-            if (!stricmp (it->name, default_player_ship)) {
+            if (!strcasecmp (it->name, default_player_ship)) {
                 player_ship_class =
                     (int)std::distance (Ship_info.cbegin (), it);
                 break;
@@ -3066,19 +3066,19 @@ int multi_get_connection_speed () {
 
     connection_speed = os_config_read_string (NULL, "ConnectionSpeed", "Fast");
 
-    if (!stricmp (connection_speed, NOX ("Slow"))) {
+    if (!strcasecmp (connection_speed, NOX ("Slow"))) {
         cspeed = CONNECTION_SPEED_288;
     }
-    else if (!stricmp (connection_speed, NOX ("56K"))) {
+    else if (!strcasecmp (connection_speed, NOX ("56K"))) {
         cspeed = CONNECTION_SPEED_56K;
     }
-    else if (!stricmp (connection_speed, NOX ("ISDN"))) {
+    else if (!strcasecmp (connection_speed, NOX ("ISDN"))) {
         cspeed = CONNECTION_SPEED_SISDN;
     }
-    else if (!stricmp (connection_speed, NOX ("Cable"))) {
+    else if (!strcasecmp (connection_speed, NOX ("Cable"))) {
         cspeed = CONNECTION_SPEED_CABLE;
     }
-    else if (!stricmp (connection_speed, NOX ("Fast"))) {
+    else if (!strcasecmp (connection_speed, NOX ("Fast"))) {
         cspeed = CONNECTION_SPEED_T1;
     }
     else {

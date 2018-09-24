@@ -246,7 +246,7 @@ int weapon_explosions::GetIndex (char* filename) {
     }
 
     for (size_t i = 0; i < ExplosionInfo.size (); i++) {
-        if (!stricmp (ExplosionInfo[i].lod[0].filename, filename)) {
+        if (!strcasecmp (ExplosionInfo[i].lod[0].filename, filename)) {
             return (int)i;
         }
     }
@@ -446,7 +446,7 @@ void parse_weapon_expl_tbl (const char* filename) {
                 (lod_check.num_lods < MAX_WEAPON_EXPL_LOD)) {
                 // name check, update lod count if it already exists
                 for (i = 0; i < LOD_checker.size (); i++) {
-                    if (!stricmp (
+                    if (!strcasecmp (
                             LOD_checker[i].filename, lod_check.filename)) {
                         LOD_checker[i].num_lods = lod_check.num_lods;
                     }
@@ -547,7 +547,7 @@ int weapon_info_lookup (const char* name) {
     if (name == NULL) return -1;
 
     for (int i = 0; i < Num_weapon_types; i++)
-        if (!stricmp (name, Weapon_info[i].name)) return i;
+        if (!strcasecmp (name, Weapon_info[i].name)) return i;
 
     return -1;
 }
@@ -584,7 +584,7 @@ void parse_wi_flags (
          flag != unparsed_or_special.end (); ++flag) {
         std::string flag_text = *flag;
         // deal with spawn flag
-        if (!strnicmp (spawn_str, flag_text.c_str (), 5)) {
+        if (!strncasecmp (spawn_str, flag_text.c_str (), 5)) {
             if (weaponp->num_spawn_weapons_defined <
                 MAX_SPAWN_TYPES_PER_WEAPON) {
                 // We need more spawning slots
@@ -636,24 +636,24 @@ void parse_wi_flags (
                     MAX_SPAWN_TYPES_PER_WEAPON, weaponp->name);
             }
         }
-        else if (!stricmp (NOX ("beam"), flag_text.c_str ())) {
+        else if (!strcasecmp (NOX ("beam"), flag_text.c_str ())) {
             weaponp->wi_flags.set (Weapon::Info_Flags::Pierce_shields);
         }
-        else if (!stricmp (NOX ("no pierce shields"), flag_text.c_str ())) {
+        else if (!strcasecmp (NOX ("no pierce shields"), flag_text.c_str ())) {
             set_nopierce = true;
         }
-        else if (!stricmp (NOX ("beam no whack"), flag_text.c_str ())) {
+        else if (!strcasecmp (NOX ("beam no whack"), flag_text.c_str ())) {
             Warning (
                 LOCATION,
                 "The \"beam no whack\" flag has been deprecated.  Set the "
                 "beam's mass to 0 instead.  This has been done for you.\n");
             weaponp->mass = 0.0f;
         }
-        else if (!stricmp (NOX ("interceptable"), flag_text.c_str ())) {
+        else if (!strcasecmp (NOX ("interceptable"), flag_text.c_str ())) {
             weaponp->wi_flags.set (Weapon::Info_Flags::Turret_Interceptable);
             weaponp->wi_flags.set (Weapon::Info_Flags::Fighter_Interceptable);
         }
-        else if (!stricmp (NOX ("die on lost lock"), flag_text.c_str ())) {
+        else if (!strcasecmp (NOX ("die on lost lock"), flag_text.c_str ())) {
             if (!(weaponp->is_locked_homing ())) {
                 Warning (
                     LOCATION,
@@ -904,8 +904,8 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
     if (optional_string ("$Subtype:")) {
         stuff_string (fname, F_NAME, NAME_LENGTH);
 
-        if (!stricmp ("Primary", fname)) { wip->subtype = WP_LASER; }
-        else if (!stricmp ("Secondary", fname)) {
+        if (!strcasecmp ("Primary", fname)) { wip->subtype = WP_LASER; }
+        else if (!strcasecmp ("Secondary", fname)) {
             wip->subtype = WP_MISSILE;
         }
         else {
@@ -1003,11 +1003,11 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
     if (optional_string ("$Selection Effect:")) {
         char effect[NAME_LENGTH];
         stuff_string (effect, F_NAME, NAME_LENGTH);
-        if (!stricmp (effect, "FS2"))
+        if (!strcasecmp (effect, "FS2"))
             wip->selection_effect = 2;
-        else if (!stricmp (effect, "FS1"))
+        else if (!strcasecmp (effect, "FS1"))
             wip->selection_effect = 1;
-        else if (!stricmp (effect, "off"))
+        else if (!strcasecmp (effect, "off"))
             wip->selection_effect = 0;
     }
 
@@ -1333,21 +1333,21 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         // homing weapon
         if (optional_string ("+Type:")) {
             stuff_string (temp_type, F_NAME, NAME_LENGTH);
-            if (!stricmp (temp_type, NOX ("HEAT"))) {
+            if (!strcasecmp (temp_type, NOX ("HEAT"))) {
                 wip->wi_flags.remove (Weapon::Info_Flags::Homing_aspect);
                 wip->wi_flags.remove (Weapon::Info_Flags::Homing_javelin);
 
                 wip->wi_flags.set (Weapon::Info_Flags::Homing_heat);
                 wi_flags.set (Weapon::Info_Flags::Homing_heat);
             }
-            else if (!stricmp (temp_type, NOX ("ASPECT"))) {
+            else if (!strcasecmp (temp_type, NOX ("ASPECT"))) {
                 wip->wi_flags.remove (Weapon::Info_Flags::Homing_heat);
                 wip->wi_flags.remove (Weapon::Info_Flags::Homing_javelin);
 
                 wip->wi_flags.set (Weapon::Info_Flags::Homing_aspect);
                 wi_flags.set (Weapon::Info_Flags::Homing_aspect);
             }
-            else if (!stricmp (temp_type, NOX ("JAVELIN"))) {
+            else if (!strcasecmp (temp_type, NOX ("JAVELIN"))) {
                 wip->wi_flags.remove (Weapon::Info_Flags::Homing_heat);
                 wip->wi_flags.remove (Weapon::Info_Flags::Homing_aspect);
 
@@ -1565,13 +1565,13 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
 
         stuff_string (type, F_NAME);
 
-        if (!stricmp (type.c_str (), "TARGETED")) {
+        if (!strcasecmp (type.c_str (), "TARGETED")) {
             wip->in_flight_play_type = TARGETED;
         }
-        else if (!stricmp (type.c_str (), "UNTARGETED")) {
+        else if (!strcasecmp (type.c_str (), "UNTARGETED")) {
             wip->in_flight_play_type = UNTARGETED;
         }
-        else if (!stricmp (type.c_str (), "ALWAYS")) {
+        else if (!strcasecmp (type.c_str (), "ALWAYS")) {
             wip->in_flight_play_type = ALWAYS;
         }
         else {
@@ -2651,26 +2651,26 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                     char temp_pspew_type[NAME_LENGTH];
                     stuff_string (temp_pspew_type, F_NAME, NAME_LENGTH);
 
-                    if (!stricmp (temp_pspew_type, NOX ("DEFAULT"))) {
+                    if (!strcasecmp (temp_pspew_type, NOX ("DEFAULT"))) {
                         wip->particle_spewers[spew_index].particle_spew_type =
                             PSPEW_DEFAULT;
                     }
-                    else if (!stricmp (temp_pspew_type, NOX ("HELIX"))) {
+                    else if (!strcasecmp (temp_pspew_type, NOX ("HELIX"))) {
                         wip->particle_spewers[spew_index].particle_spew_type =
                             PSPEW_HELIX;
                     }
-                    else if (!stricmp (
+                    else if (!strcasecmp (
                                  temp_pspew_type,
                                  NOX ("SPARKLER"))) { // new types can be added
                                                       // here
                         wip->particle_spewers[spew_index].particle_spew_type =
                             PSPEW_SPARKLER;
                     }
-                    else if (!stricmp (temp_pspew_type, NOX ("RING"))) {
+                    else if (!strcasecmp (temp_pspew_type, NOX ("RING"))) {
                         wip->particle_spewers[spew_index].particle_spew_type =
                             PSPEW_RING;
                     }
-                    else if (!stricmp (temp_pspew_type, NOX ("PLUME"))) {
+                    else if (!strcasecmp (temp_pspew_type, NOX ("PLUME"))) {
                         wip->particle_spewers[spew_index].particle_spew_type =
                             PSPEW_PLUME;
                     }
@@ -3104,7 +3104,7 @@ void translate_spawn_types () {
                 Assert (spawn_type < Num_spawn_types);
 
                 for (k = 0; k < Num_weapon_types; k++) {
-                    if (!stricmp (
+                    if (!strcasecmp (
                             Spawn_names[spawn_type], Weapon_info[k].name)) {
                         Weapon_info[i].spawn_info[j].spawn_type = (short)k;
 
@@ -3383,7 +3383,7 @@ void weapon_clean_entries () {
                 // parsed, but then they were inadvertently cleaned up in this
                 // function.  So let's properly set the filename here while not
                 // removing the section.
-                if (!stricmp (bsip->texture.filename, "invisible")) {
+                if (!strcasecmp (bsip->texture.filename, "invisible")) {
                     memset (bsip->texture.filename, 0, MAX_FILENAME_LEN);
                 }
                 // Now remove empty beam sections as before
@@ -3713,7 +3713,7 @@ void weapon_generate_indexes_for_substitution () {
         if (wip->num_substitution_patterns > 0) {
             for (size_t j = 0; j < wip->num_substitution_patterns; j++) {
                 int weapon_index = -1;
-                if (stricmp (
+                if (strcasecmp (
                         "none", wip->weapon_substitution_pattern_names[j]) !=
                     0) {
                     weapon_index = weapon_info_lookup (
@@ -3803,7 +3803,7 @@ void weapon_do_post_parse () {
 
         // set default counter-measure index from the saved name
         if ((Default_cmeasure_index < 0) && strlen (Default_cmeasure_name)) {
-            if (!stricmp (wip->name, Default_cmeasure_name)) {
+            if (!strcasecmp (wip->name, Default_cmeasure_name)) {
                 Default_cmeasure_index = i;
             }
         }

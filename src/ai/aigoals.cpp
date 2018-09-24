@@ -312,7 +312,7 @@ void ai_mission_wing_goal_complete (int wingnum, ai_goal* remove_goalp) {
 
             if ((aigp->ai_mode == mode) && (aigp->ai_submode == submode) &&
                 (aigp->priority == priority) &&
-                !stricmp (name, aigp->target_name)) {
+                !strcasecmp (name, aigp->target_name)) {
                 ai_remove_ship_goal (aip, j);
                 ai_do_default_behavior (
                     &Objects[Ships[aip->shipnum].objnum]); // do the default
@@ -329,7 +329,7 @@ void ai_mission_wing_goal_complete (int wingnum, ai_goal* remove_goalp) {
 
         if ((aigp->ai_mode == mode) && (aigp->ai_submode == submode) &&
             (aigp->priority == priority) &&
-            !stricmp (name, aigp->target_name)) {
+            !strcasecmp (name, aigp->target_name)) {
             wingp->ai_goals[i].ai_mode = AI_GOAL_NONE;
             wingp->ai_goals[i].signature = -1;
             wingp->ai_goals[i].priority = -1;
@@ -398,7 +398,7 @@ void ai_goal_purge_invalid_goals (
             // if the target of the purge goal is the same class of ship we are
             // concerned about, then we have a match; if it is not, then we can
             // continue (see standard ship check below)
-            if (stricmp (
+            if (strcasecmp (
                     purge_goal->target_name,
                     Ship_info[Ships[ship_index].ship_info_index].name) != 0)
                 continue;
@@ -413,7 +413,7 @@ void ai_goal_purge_invalid_goals (
             // -1), then if the names don't match, we can continue;  if the
             // wing is valid, don't process if the wing numbers are different.
             if (purge_wing == -1) {
-                if (stricmp (purge_goal->target_name, name) != 0) continue;
+                if (strcasecmp (purge_goal->target_name, name) != 0) continue;
             }
             else if (purge_wing != wingnum)
                 continue;
@@ -2150,7 +2150,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
     int wingnum, shipnum;
     int original_signature;
 
-    /*	if (!stricmp(Ships[objp->instance].ship_name, "gtt comet")) {
+    /*	if (!strcasecmp(Ships[objp->instance].ship_name, "gtt comet")) {
             for (int i=0; i<MAX_AI_GOALS; i++) {
                 if (aip->goals[i].signature != -1) {
                     nprintf(("AI", "%6.1f: mode=%s, type=%s, ship=%s\n",
@@ -2546,7 +2546,7 @@ void ai_update_goal_references (
 
         if (flag) // is this a valid goal to parse for this conversion?
         {
-            if (!stricmp (goals[i].target_name, old_name)) {
+            if (!strcasecmp (goals[i].target_name, old_name)) {
                 if (*new_name == '<') // target was just deleted..
                     goals[i].ai_mode = AI_GOAL_NONE;
                 else
@@ -2605,7 +2605,7 @@ int query_referenced_in_ai_goals (ai_goal* goals, int type, const char* name) {
 
         if (flag) // is this a valid goal to parse for this conversion?
         {
-            if (!stricmp (goals[i].target_name, name)) return 1;
+            if (!strcasecmp (goals[i].target_name, name)) return 1;
         }
     }
 
@@ -2618,7 +2618,7 @@ char* ai_add_dock_name (const char* str) {
 
     Assert (strlen (str) <= NAME_LENGTH - 1);
     for (i = 0; i < Num_ai_dock_names; i++)
-        if (!stricmp (Ai_dock_names[i], str)) return Ai_dock_names[i];
+        if (!strcasecmp (Ai_dock_names[i], str)) return Ai_dock_names[i];
 
     Assert (Num_ai_dock_names < MAX_AI_DOCK_NAMES);
     ptr = Ai_dock_names[Num_ai_dock_names++];

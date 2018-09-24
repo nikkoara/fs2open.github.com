@@ -356,7 +356,7 @@ CJumpNode* jumpnode_get_by_name (const char* name) {
     std::list< CJumpNode >::iterator jnp;
 
     for (jnp = Jump_nodes.begin (); jnp != Jump_nodes.end (); ++jnp) {
-        if (!stricmp (jnp->GetName (), name)) return &(*jnp);
+        if (!strcasecmp (jnp->GetName (), name)) return &(*jnp);
     }
 
     return NULL;

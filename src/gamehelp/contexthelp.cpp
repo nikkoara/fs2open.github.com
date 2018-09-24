@@ -92,7 +92,7 @@ static int Source_game_state; // state from where F1 was pressed
 
 int help_overlay_get_index (const char* overlay_name) {
     for (int i = 0; i < num_help_overlays; i++) {
-        if (!stricmp (overlay_name, help_overlaylist[i].name)) { return i; }
+        if (!strcasecmp (overlay_name, help_overlaylist[i].name)) { return i; }
     }
 
     return -1;

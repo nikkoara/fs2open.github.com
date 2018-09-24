@@ -744,7 +744,7 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
 
     ptr = first_anim;
     while (ptr) {
-        if (!stricmp (name, ptr->name)) break;
+        if (!strcasecmp (name, ptr->name)) break;
 
         ptr = ptr->next;
     }

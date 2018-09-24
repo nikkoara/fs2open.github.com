@@ -325,7 +325,7 @@ profile_get_value (Profile* profile, const char* section, const char* key) {
     Section* sp = profile->sections;
 
     while (sp != NULL) {
-        if (stricmp (section, sp->name) == 0) {
+        if (strcasecmp (section, sp->name) == 0) {
             KeyValue* kvp = sp->pairs;
 
             while (kvp != NULL) {

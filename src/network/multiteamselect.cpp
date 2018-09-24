@@ -880,7 +880,7 @@ void multi_ts_assign_players_all () {
         // To account for cases where <Wingname> 1 is not a player ship
         for (int i = 0; i < MAX_SHIPS_PER_WING; i++) {
             wing_bash_ship_name (name_lookup, TVT_wing_names[0], i + 1);
-            if (!stricmp (name_lookup, Player_start_shipname)) break;
+            if (!strcasecmp (name_lookup, Player_start_shipname)) break;
         }
     }
 
@@ -910,7 +910,7 @@ void multi_ts_assign_players_all () {
         // find a valid player ship - ignoring the ship which was assigned to
         // the host
         if ((objp->flags[Object::Object_Flags::Player_ship]) &&
-            stricmp (Ships[objp->instance].ship_name, name_lookup) != 0) {
+            strcasecmp (Ships[objp->instance].ship_name, name_lookup) != 0) {
             // determine what team and slot this ship is
             multi_ts_get_team_and_slot (
                 Ships[objp->instance].ship_name, &team_index, &slot_index,
@@ -1925,7 +1925,7 @@ void multi_ts_get_team_and_slot (
         Assert (MAX_TVT_WINGS == MULTI_TS_MAX_TVT_TEAMS);
         for (idx = 0; idx < MAX_TVT_WINGS; idx++) {
             // get team (wing)
-            if (!strnicmp (
+            if (!strncasecmp (
                     ship_name, TVT_wing_names[idx],
                     strlen (TVT_wing_names[idx])) &&
                 multi_ts_validate_ship (ship_name, TVT_wing_names[idx])) {
@@ -1943,7 +1943,7 @@ void multi_ts_get_team_and_slot (
         int wing_index, ship;
         for (idx = 0; idx < MAX_STARTING_WINGS; idx++) {
             // get wing
-            if (!strnicmp (
+            if (!strncasecmp (
                     ship_name, Starting_wing_names[idx],
                     strlen (Starting_wing_names[idx])) &&
                 multi_ts_validate_ship (ship_name, Starting_wing_names[idx])) {
@@ -2861,7 +2861,7 @@ int multi_ts_get_team (char* ship_name) {
     // lookup through all team ship names
     Assert (MAX_TVT_WINGS == MULTI_TS_MAX_TVT_TEAMS);
     for (idx = 0; idx < MAX_TVT_WINGS; idx++) {
-        if (!strnicmp (
+        if (!strncasecmp (
                 ship_name, TVT_wing_names[idx], strlen (TVT_wing_names[idx])))
             return idx;
     }

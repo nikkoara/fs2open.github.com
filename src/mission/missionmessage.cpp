@@ -251,7 +251,7 @@ void persona_parse () {
     required_string ("$Type:");
     stuff_string (type, F_NAME, NAME_LENGTH);
     for (i = 0; i < MAX_PERSONA_TYPES; i++) {
-        if (!stricmp (type, Persona_type_names[i])) {
+        if (!strcasecmp (type, Persona_type_names[i])) {
             Personas[Num_personas].flags |= (1 << i);
 
             // save the Command persona in a global
@@ -305,7 +305,7 @@ int add_avi (char* avi_name) {
 
     // check to see if there is an existing avi being used here
     for (i = 0; i < (int)Message_avis.size (); i++) {
-        if (!stricmp (Message_avis[i].name, avi_name)) return i;
+        if (!strcasecmp (Message_avis[i].name, avi_name)) return i;
     }
 
     // would have returned if a slot existed.
@@ -329,7 +329,7 @@ int add_wave (const char* wave_name) {
 
     // check to see if there is an existing wave being used here
     for (i = 0; i < (int)Message_waves.size (); i++) {
-        if (!stricmp (Message_waves[i].name, wave_name)) return i;
+        if (!strcasecmp (Message_waves[i].name, wave_name)) return i;
     }
 
     generic_anim_init (&extra.anim_data);
@@ -395,7 +395,7 @@ void message_parse (bool importing_from_fsm) {
 
         // Goober5000 - for some reason :V: swapped Head-TP1
         // and Head-TP4 in FS2
-        if (importing_from_fsm && !strnicmp (avi_name, "Head-TP1", 8))
+        if (importing_from_fsm && !strncasecmp (avi_name, "Head-TP1", 8))
             avi_name[7] = '4';
 
         if (!Fred_running) { msg.avi_info.index = add_avi (avi_name); }
@@ -458,7 +458,7 @@ void message_parse (bool importing_from_fsm) {
             for (std::vector< std::string >::iterator iter =
                      Builtin_moods.begin ();
                  iter != Builtin_moods.end (); ++iter) {
-                if (!stricmp (iter->c_str (), parsed_moods->c_str ())) {
+                if (!strcasecmp (iter->c_str (), parsed_moods->c_str ())) {
                     msg.excluded_moods.push_back (
                         (int)std::distance (Builtin_moods.begin (), iter));
                     found = true;
@@ -605,7 +605,7 @@ void parse_msgtbl () {
         // we have messages for
         for (i = 0; i < Num_builtin_messages; i++) {
             for (j = 0; j < MAX_BUILTIN_MESSAGE_TYPES; j++) {
-                if (!(stricmp (Messages[i].name, Builtin_messages[j].name))) {
+                if (!(strcasecmp (Messages[i].name, Builtin_messages[j].name))) {
                     Valid_builtin_message_types[j] = 1;
                     break;
                 }
@@ -639,7 +639,7 @@ void parse_msgtbl () {
                 }
 
                 // test extension
-                if (stricmp (ptr, ".ogg") != 0 && stricmp (ptr, ".wav") != 0) {
+                if (strcasecmp (ptr, ".ogg") != 0 && strcasecmp (ptr, ".wav") != 0) {
                     Warning (
                         LOCATION,
                         "Simulated speech override file '%s' was provided "
@@ -1007,7 +1007,7 @@ bool message_filename_is_generic (char* filename) {
 
     // extension must be a recognized sound file
     if ((ptr == NULL) ||
-        (stricmp (ptr, ".ogg") != 0 && stricmp (ptr, ".wav") != 0))
+        (strcasecmp (ptr, ".ogg") != 0 && strcasecmp (ptr, ".wav") != 0))
         return false;
 
     // truncate it
@@ -1015,7 +1015,7 @@ bool message_filename_is_generic (char* filename) {
 
     // test against the list
     for (unsigned int i = 0; i < generic_message_filenames.size (); i++) {
-        if (!stricmp (
+        if (!strcasecmp (
                 generic_message_filenames[i].c_str (), truncated_filename))
             return true;
     }
@@ -1162,7 +1162,7 @@ void message_play_anim (message_q* q) {
     if ((!anim_info->exists) && // if the base animation doesn't exist, then a,
                                 // b, or c needs to be appended
         ((q->message_num < Num_builtin_messages) ||
-         !(strnicmp (
+         !(strncasecmp (
              HEAD_PREFIX_STRING, ani_name,
              strlen (HEAD_PREFIX_STRING) - 1)))) {
         int subhead_selected = FALSE;
@@ -1192,7 +1192,7 @@ void message_play_anim (message_q* q) {
                     rand_index = ((int)Missiontime % MAX_WINGMAN_HEADS);
                 }
                 strcpy_s (temp, ani_name);
-                sprintf_safe (ani_name, "%s%c", temp, 'a' + rand_index);
+                sprintf (ani_name, "%s%c", temp, 'a' + rand_index);
                 subhead_selected = TRUE;
             }
             else if (
@@ -1202,8 +1202,8 @@ void message_play_anim (message_q* q) {
                 // Goober5000 - *sigh*... if mission designers assign a command
                 // persona to a wingman head, they risk having the death ani
                 // play
-                if (!strnicmp (ani_name, "Head-TP", 7) ||
-                    !strnicmp (ani_name, "Head-VP", 7)) {
+                if (!strncasecmp (ani_name, "Head-TP", 7) ||
+                    !strncasecmp (ani_name, "Head-VP", 7)) {
                     mprintf (
                         ("message '%s' incorrectly assigns a "
                          "command/largeship persona to a wingman animation!\n",
@@ -1215,7 +1215,7 @@ void message_play_anim (message_q* q) {
                 }
 
                 strcpy_s (temp, ani_name);
-                sprintf_safe (ani_name, "%s%c", temp, 'a' + rand_index);
+                sprintf (ani_name, "%s%c", temp, 'a' + rand_index);
                 subhead_selected = TRUE;
             }
             else {
@@ -1229,7 +1229,7 @@ void message_play_anim (message_q* q) {
             // choose between a and b
             rand_index = ((int)Missiontime % MAX_WINGMAN_HEADS);
             strcpy_s (temp, ani_name);
-            sprintf_safe (ani_name, "%s%c", temp, 'a' + rand_index);
+            sprintf (ani_name, "%s%c", temp, 'a' + rand_index);
             mprintf (
                 ("message '%s' with invalid head.  Fix by assigning persona "
                  "to the message.\n",
@@ -1660,7 +1660,7 @@ void message_queue_process () {
         }
     }
 
-    if (!stricmp (who_from, "<none>")) {
+    if (!strcasecmp (who_from, "<none>")) {
         HUD_sourced_printf (q->source, NOX ("%s"), buf);
     }
     else
@@ -1765,7 +1765,7 @@ void message_queue_message (
     // wingman persona attached to this message, then set a bit to tell the
     // wave/anim playing code to play the command version of the wave and head
     MessageQ[i].flags = 0;
-    if (!stricmp (who_from, The_mission.command_sender) && (m_persona != -1) &&
+    if (!strcasecmp (who_from, The_mission.command_sender) && (m_persona != -1) &&
         (Personas[m_persona].flags & PERSONA_FLAG_WINGMAN)) {
         MessageQ[i].flags |= MQF_CONVERT_TO_COMMAND;
         MessageQ[i].source = HUD_SOURCE_TERRAN_CMD;
@@ -1925,7 +1925,7 @@ void message_send_unique_to_player (
     who_from = NULL;
     for (i = 0; i < Num_messages; i++) {
         // find the message
-        if (!stricmp (id, Messages[i].name)) {
+        if (!strcasecmp (id, Messages[i].name)) {
             // if the ship pointer and special_who are both NULL then this is
             // from generic "Terran Command" if the ship is NULL and
             // special_who is not NULL, then this is from special_who
@@ -2097,7 +2097,7 @@ void message_send_builtin_to_player (
     // right message for the given persona
     for (i = 0; i < Num_builtin_messages; i++) {
         // check the type of message
-        if (!stricmp (Messages[i].name, name)) {
+        if (!strcasecmp (Messages[i].name, name)) {
             // condition 1: we have a type match
             current_builtin.message_index = i;
             current_builtin.type_of_match = BUILTIN_MATCHES_TYPE;
@@ -2256,7 +2256,7 @@ void message_send_builtin_to_player (
 
     // maybe change the who from here for special rearm cases (always seems
     // like that is the case :-) )
-    if (!stricmp (who_from, The_mission.command_sender) &&
+    if (!strcasecmp (who_from, The_mission.command_sender) &&
         (type == MESSAGE_REARM_ON_WAY)) {
         who_from = SUPPORT_NAME;
     }
@@ -2311,7 +2311,7 @@ int message_persona_name_lookup (char* name) {
     int i;
 
     for (i = 0; i < Num_personas; i++) {
-        if (!stricmp (Personas[i].name, name)) return i;
+        if (!strcasecmp (Personas[i].name, name)) return i;
     }
 
     return -1;

@@ -41,8 +41,8 @@ typedef int errno_t;
  */
 #ifndef SAFESTRINGS_TEST_APP
 
-#ifndef FREESPACE2_GLOBALINCS_SAFE_STRINGS_H
-#define FREESPACE2_GLOBALINCS_SAFE_STRINGS_H(val)                                  \
+#ifndef __safe_strings_error_handler
+#define __safe_strings_error_handler( val )                                \
     Error (                                                                \
         file, line,                                                        \
         "%s: String error. Please Report.\nTrying to put into " SIZE_T_ARG \
@@ -53,7 +53,8 @@ typedef int errno_t;
 #else
 
 /* For testing only */
-#define FREESPACE2_GLOBALINCS_SAFE_STRINGS_H(errnoVal)                  \
+/* For testing only */
+#	define __safe_strings_error_handler( errnoVal )             \
     extern void error_handler (                                 \
         int errnoValue, const char* errnoStr, const char* file, \
         const char* function, int line);                        \

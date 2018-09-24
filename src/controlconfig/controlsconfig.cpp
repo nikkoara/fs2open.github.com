@@ -1275,7 +1275,7 @@ void control_config_button_pressed (int n) {
 const char* control_config_tooltip_handler (const char* str) {
     int i;
 
-    if (!stricmp (str, NOX ("@conflict"))) {
+    if (!strcasecmp (str, NOX ("@conflict"))) {
         for (i = 0; i < NUM_TABS; i++) {
             if (Conflicts_tabs[i]) { return XSTR ("Conflict!", 205); }
         }

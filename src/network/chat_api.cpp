@@ -194,11 +194,11 @@ int ConnectToChatServer (char* serveraddr, char* nickname, char* trackerid) {
 
                 Socket_connected = 1;
                 memset (signon_str, 0, sizeof (signon_str));
-                sprintf_safe (
+                sprintf (
                     signon_str, NOX ("/USER %s %s %s :%s"), NOX ("user"),
                     NOX ("user"), NOX ("user"), Chat_tracker_id);
                 SendChatString (signon_str, 1);
-                sprintf_safe (signon_str, NOX ("/NICK %s"), Nick_name);
+                sprintf (signon_str, NOX ("/NICK %s"), Nick_name);
                 SendChatString (signon_str, 1);
                 return 0;
                 // Now we are waiting for Chat_server_connected
@@ -271,37 +271,37 @@ const char* SendChatString (const char* line, int raw) {
     if (line[0] == '/') {
         // Start off by getting the command
         strncpy (szCmd, GetWordNum (0, line + 1), sizeof (szCmd) - 1);
-        if (stricmp (szCmd, NOX ("msg")) == 0) {
+        if (strcasecmp (szCmd, NOX ("msg")) == 0) {
             strncpy (
                 szTarget, GetWordNum (1, line + 1), sizeof (szTarget) - 1);
-            sprintf_safe (
+            sprintf (
                 szCmd, NOX ("PRIVMSG %s :%s\n\r"), szTarget,
                 line + strlen (NOX ("/msg ")) + strlen (szTarget) + 1);
             send (Chatsock, szCmd, (int)strlen (szCmd), 0);
             szCmd[strlen (szCmd) - 2] = '\0';
             return ParseIRCMessage (szCmd, MSG_LOCAL);
         }
-        if (stricmp (szCmd, NOX ("me")) == 0) {
-            sprintf_safe (
+        if (strcasecmp (szCmd, NOX ("me")) == 0) {
+            sprintf (
                 szCmd, NOX ("PRIVMSG %s :\001ACTION %s\001\n\r"),
                 szChat_channel, line + strlen (NOX ("/me ")));
             send (Chatsock, szCmd, (int)strlen (szCmd), 0);
             szCmd[strlen (szCmd) - 2] = '\0';
             return ParseIRCMessage (szCmd, MSG_LOCAL);
         }
-        if (stricmp (szCmd, NOX ("xyz")) == 0) {
+        if (strcasecmp (szCmd, NOX ("xyz")) == 0) {
             // Special command to send raw irc commands
-            sprintf_safe (szCmd, "%s\n\r", line + strlen (NOX ("/xyz ")));
+            sprintf (szCmd, "%s\n\r", line + strlen (NOX ("/xyz ")));
             send (Chatsock, szCmd, (int)strlen (szCmd), 0);
             return NULL;
         }
-        if (stricmp (szCmd, NOX ("list")) == 0) {
-            sprintf_safe (szCmd, "%s\n\r", line + 1);
+        if (strcasecmp (szCmd, NOX ("list")) == 0) {
+            sprintf (szCmd, "%s\n\r", line + 1);
             send (Chatsock, szCmd, (int)strlen (szCmd), 0);
             return NULL;
         }
         if (raw) {
-            sprintf_safe (szCmd, "%s\n\r", line + 1);
+            sprintf (szCmd, "%s\n\r", line + 1);
             send (Chatsock, szCmd, (int)strlen (szCmd), 0);
             return NULL;
         }
@@ -309,7 +309,7 @@ const char* SendChatString (const char* line, int raw) {
     }
     else {
         if (szChat_channel[0]) {
-            sprintf_safe (
+            sprintf (
                 szCmd, NOX ("PRIVMSG %s :%s\n\r"), szChat_channel, line);
             send (Chatsock, szCmd, (int)strlen (szCmd), 0);
             if (strlen (szCmd) >= 2) {
@@ -394,11 +394,11 @@ int SetNewChatChannel (char* channel) {
     }
     else {
         if (szChat_channel[0]) {
-            sprintf_safe (partstr, NOX ("/PART %s"), szChat_channel);
+            sprintf (partstr, NOX ("/PART %s"), szChat_channel);
             SendChatString (partstr, 1);
         }
         strncpy (szChat_channel, channel, sizeof (szChat_channel) - 1);
-        sprintf_safe (partstr, NOX ("/JOIN %s"), szChat_channel);
+        sprintf (partstr, NOX ("/JOIN %s"), szChat_channel);
         SendChatString (partstr, 1);
         Joining_channel = 1;
         Joined_channel = 0;
@@ -488,7 +488,7 @@ const char* GetWordNum (int num, const char* l_String) {
 int AddChatUser (const char* nickname) {
     Curruser = Firstuser;
     while (Curruser) {
-        if (stricmp (nickname, Curruser->nick_name) == 0) return 0;
+        if (strcasecmp (nickname, Curruser->nick_name) == 0) return 0;
         Curruser = Curruser->next;
     }
 
@@ -522,7 +522,7 @@ int RemoveChatUser (const char* nickname) {
 
     Curruser = Firstuser;
     while (Curruser) {
-        if (stricmp (nickname, Curruser->nick_name) == 0) {
+        if (strcasecmp (nickname, Curruser->nick_name) == 0) {
             if (prv_user) { prv_user->next = Curruser->next; }
             else {
                 Firstuser = Curruser->next;
@@ -620,7 +620,7 @@ char* ParseIRCMessage (char* Line, int iMode) {
         szRemLine, Line + iPrefixLen + strlen (szCmd) + 2,
         sizeof (szRemLine) - 1);
     // Now parse the commands!
-    if (stricmp (szCmd, NOX ("PRIVMSG")) == 0) {
+    if (strcasecmp (szCmd, NOX ("PRIVMSG")) == 0) {
         pszTempStr = GetWordNum (0, szRemLine);
         strncpy (szTarget, pszTempStr, sizeof (szTarget) - 1);
         strncpy (
@@ -649,9 +649,9 @@ char* ParseIRCMessage (char* Line, int iMode) {
                 sizeof (szRemLine) - 1);
             szRemLine[strlen (szRemLine) - 1] =
                 '\0'; // null out the ending 0x01
-            if (stricmp (szCTCPCmd + 1, NOX ("ACTION")) == 0) {
+            if (strcasecmp (szCTCPCmd + 1, NOX ("ACTION")) == 0) {
                 // Posture
-                sprintf_safe (szResponse, "* %s %s", szNick, szRemLine);
+                sprintf (szResponse, "* %s %s", szNick, szRemLine);
                 return szResponse;
             }
             if (iMode == MSG_LOCAL) {
@@ -660,20 +660,20 @@ char* ParseIRCMessage (char* Line, int iMode) {
                     Line + iPrefixLen + strlen (szCmd) + strlen (szTarget) + 4,
                     sizeof (szHackPrefix) - 1);
                 szRemLine[strlen (szRemLine) - 1] = '\0';
-                sprintf_safe (
+                sprintf (
                     szResponse, NOX ("** CTCP %s %s %s"), szTarget,
                     szCTCPCmd + 1, szRemLine);
                 return szResponse;
             }
-            if (stricmp (szCTCPCmd + 1, NOX ("PING")) == 0) {
-                sprintf_safe (
+            if (strcasecmp (szCTCPCmd + 1, NOX ("PING")) == 0) {
+                sprintf (
                     szResponse, NOX ("/NOTICE %s :\001PING %s\001"), szNick,
                     szRemLine); // Don't need the trailing \001 because
                                 // szremline has it.
                 SendChatString (szResponse, 1);
                 return NULL;
             }
-            if (stricmp (szCTCPCmd + 1, NOX ("VERSION")) == 0) { return NULL; }
+            if (strcasecmp (szCTCPCmd + 1, NOX ("VERSION")) == 0) { return NULL; }
             strncpy (
                 szRemLine,
                 1 + GetWordNum (
@@ -681,7 +681,7 @@ char* ParseIRCMessage (char* Line, int iMode) {
                                strlen (szTarget) + 4),
                 sizeof (szRemLine) - 1);
             szRemLine[strlen (szRemLine) - 1] = '\0';
-            sprintf_safe (
+            sprintf (
                 szResponse, NOX ("** CTCP Message from %s (%s)"), szNick,
                 szRemLine);
             return szResponse;
@@ -689,19 +689,19 @@ char* ParseIRCMessage (char* Line, int iMode) {
         // differentiate between channel and private
         if (szTarget[0] == '#') {
             pszTempStr = GetWordNum (0, szRemLine);
-            sprintf_safe (szResponse, "[%s] %s", szNick, pszTempStr);
+            sprintf (szResponse, "[%s] %s", szNick, pszTempStr);
             return szResponse;
         }
         else {
             if (iMode == MSG_LOCAL) {
                 pszTempStr = GetWordNum (0, szRemLine);
-                sprintf_safe (
+                sprintf (
                     szResponse, NOX ("Private Message to <%s>: %s"), szNick,
                     pszTempStr);
             }
             else {
                 pszTempStr = GetWordNum (0, szRemLine);
-                sprintf_safe (
+                sprintf (
                     szResponse, NOX ("Private Message from <%s>: %s"), szNick,
                     pszTempStr);
             }
@@ -711,7 +711,7 @@ char* ParseIRCMessage (char* Line, int iMode) {
     // don't handle any other messages locally.
     if (iMode == MSG_LOCAL) { return NULL; }
 
-    if (stricmp (szCmd, NOX ("NOTICE")) == 0) {
+    if (strcasecmp (szCmd, NOX ("NOTICE")) == 0) {
         pszTempStr = GetWordNum (0, szRemLine);
         strncpy (szTarget, pszTempStr, sizeof (szTarget) - 1);
         strncpy (
@@ -740,7 +740,7 @@ char* ParseIRCMessage (char* Line, int iMode) {
                 sizeof (szRemLine) - 1);
             szRemLine[strlen (szRemLine) - 1] =
                 '\0'; // null out the ending 0x01
-            if (stricmp (szCTCPCmd + 1, NOX ("PING")) == 0) { return NULL; }
+            if (strcasecmp (szCTCPCmd + 1, NOX ("PING")) == 0) { return NULL; }
 
             // Default message
             strncpy (
@@ -750,19 +750,19 @@ char* ParseIRCMessage (char* Line, int iMode) {
                                strlen (szTarget) + 4),
                 sizeof (szRemLine) - 1);
             szRemLine[strlen (szRemLine) - 1] = '\0';
-            sprintf_safe (
+            sprintf (
                 szResponse, XSTR ("** CTCP Message from %s (%s)", 635), szNick,
                 szRemLine);
             return szResponse;
         }
-        sprintf_safe (szResponse, "%s", szRemLine);
+        sprintf (szResponse, "%s", szRemLine);
         return NULL;
     }
-    if (stricmp (szCmd, NOX ("JOIN")) == 0) {
+    if (strcasecmp (szCmd, NOX ("JOIN")) == 0) {
         // see if it is me!
-        if (stricmp (Nick_name, szNick) == 0) {
+        if (strcasecmp (Nick_name, szNick) == 0) {
             Joined_channel = 1;
-            if (stricmp (szChat_channel, NOX ("#autoselect")) == 0) {
+            if (strcasecmp (szChat_channel, NOX ("#autoselect")) == 0) {
                 strncpy (
                     szChat_channel, GetWordNum (0, szRemLine),
                     sizeof (szChat_channel) - 1);
@@ -776,12 +776,12 @@ char* ParseIRCMessage (char* Line, int iMode) {
         strncpy (szTarget, pszTempStr, sizeof (szTarget) - 1);
 
         AddChatUser (szNick);
-        sprintf_safe (
+        sprintf (
             szResponse, XSTR ("** %s has joined %s", 636), szNick, szTarget);
         return NULL; // szResponse;
         // Add them to the userlist too!
     }
-    if (stricmp (szCmd, NOX ("PART")) == 0) {
+    if (strcasecmp (szCmd, NOX ("PART")) == 0) {
         pszTempStr = GetWordNum (0, szRemLine);
         strncpy (szTarget, pszTempStr, sizeof (szTarget) - 1);
         strncpy (
@@ -789,26 +789,26 @@ char* ParseIRCMessage (char* Line, int iMode) {
             Line + iPrefixLen + strlen (szCmd) + strlen (szTarget) + 3,
             sizeof (szRemLine) - 1);
         // see if it is me!
-        if (stricmp (Nick_name, szNick) == 0) { RemoveAllChatUsers (); }
+        if (strcasecmp (Nick_name, szNick) == 0) { RemoveAllChatUsers (); }
 
         RemoveChatUser (szNick);
         return NULL;
         // Remove them to the userlist too!
     }
-    if (stricmp (szCmd, NOX ("KICK")) == 0) {
+    if (strcasecmp (szCmd, NOX ("KICK")) == 0) {
         pszTempStr = GetWordNum (0, szRemLine);
         strncpy (szTarget, pszTempStr, sizeof (szTarget) - 1);
         pszTempStr = GetWordNum (1, szRemLine);
         strncpy (szHackPrefix, pszTempStr, sizeof (szHackPrefix) - 1);
         pszTempStr = GetWordNum (2, szRemLine);
         // see if it is me!
-        if (stricmp (Nick_name, GetWordNum (1, szRemLine)) == 0) {
+        if (strcasecmp (Nick_name, GetWordNum (1, szRemLine)) == 0) {
             // Yup, it's me!
             szChat_channel[0] = '\0';
             AddChatCommandToQueue (CC_KICKED, NULL, 0);
             RemoveAllChatUsers ();
         }
-        sprintf_safe (
+        sprintf (
             szResponse,
             XSTR ("*** %s has kicked %s from channel %s (%s)", 637), szNick,
             szHackPrefix, szTarget, pszTempStr);
@@ -816,43 +816,43 @@ char* ParseIRCMessage (char* Line, int iMode) {
         RemoveChatUser (szNick);
         return szResponse;
     }
-    if (stricmp (szCmd, NOX ("NICK")) == 0) {
+    if (strcasecmp (szCmd, NOX ("NICK")) == 0) {
         // see if it is me!
-        if (stricmp (Nick_name, szNick) == 0) {
+        if (strcasecmp (Nick_name, szNick) == 0) {
             // Yup, it's me!
             strncpy (
                 Nick_name, GetWordNum (0, szRemLine), sizeof (Nick_name) - 1);
         }
         char nicks[70];
-        sprintf_safe (nicks, "%s %s", szNick, GetWordNum (0, szRemLine));
+        sprintf (nicks, "%s %s", szNick, GetWordNum (0, szRemLine));
         AddChatCommandToQueue (CC_NICKCHANGED, nicks, strlen (nicks) + 1);
         RemoveChatUser (szNick);
         AddChatUser (GetWordNum (0, szRemLine));
-        sprintf_safe (
+        sprintf (
             szResponse, XSTR ("*** %s is now known as %s", 638), szNick,
             GetWordNum (0, szRemLine));
         return szResponse;
     }
-    if (stricmp (szCmd, NOX ("PING")) == 0) {
+    if (strcasecmp (szCmd, NOX ("PING")) == 0) {
         // respond with pong (GetWordNum(0,szRemLine))
-        sprintf_safe (
+        sprintf (
             szResponse, NOX ("/PONG :%s"), GetWordNum (0, szRemLine));
         SendChatString (szResponse, 1);
         return NULL;
     }
-    if (stricmp (szCmd, NOX ("MODE")) == 0) {
+    if (strcasecmp (szCmd, NOX ("MODE")) == 0) {
         // Channel Mode info
         return NULL;
     }
 
-    if (stricmp (szCmd, "403") == 0) {
+    if (strcasecmp (szCmd, "403") == 0) {
         // ERR_NOSUCHCHANNEL - Used to indicate the given channel name is
         // invalid.
         Joined_channel = -1;
         return NULL;
     }
 
-    if (stricmp (szCmd, "401") == 0) {
+    if (strcasecmp (szCmd, "401") == 0) {
         // This is whois user info, we can get their tracker info from here. -5
         char szWhoisUser[33];
         memset (szWhoisUser, 0, sizeof (szWhoisUser));
@@ -861,11 +861,11 @@ char* ParseIRCMessage (char* Line, int iMode) {
         Getting_user_tracker_error = 1;
         Getting_user_channel_error = 1;
 
-        sprintf_safe (
+        sprintf (
             szResponse, XSTR ("**Error: %s is not online!", 639), szWhoisUser);
         return szResponse;
     }
-    if (stricmp (szCmd, "311") == 0) {
+    if (strcasecmp (szCmd, "311") == 0) {
         char szWhoisUser[33];
         memset (szWhoisUser, 0, sizeof (szWhoisUser));
         strncpy (
@@ -876,7 +876,7 @@ char* ParseIRCMessage (char* Line, int iMode) {
             sizeof (User_req_tracker_id) - 1);
         return NULL;
     }
-    if (stricmp (szCmd, "319") == 0) {
+    if (strcasecmp (szCmd, "319") == 0) {
         char szWhoisUser[33];
         memset (szWhoisUser, 0, sizeof (szWhoisUser));
         strncpy (
@@ -889,17 +889,17 @@ char* ParseIRCMessage (char* Line, int iMode) {
     }
 
     // End of whois and we didn't get a channel means they aren't in a channel.
-    if (stricmp (szCmd, "318") == 0) {
+    if (strcasecmp (szCmd, "318") == 0) {
         if (!*User_req_channel) { User_req_channel[0] = '*'; }
     }
 
-    if (stricmp (szCmd, "321") == 0) {
+    if (strcasecmp (szCmd, "321") == 0) {
         // start of channel list
         FlushChannelList ();
         GettingChannelList = 1;
         return NULL;
     }
-    if (stricmp (szCmd, "322") == 0) {
+    if (strcasecmp (szCmd, "322") == 0) {
         // channel list data
         if (GettingChannelList == 1) {
             char channel_list_name[33];
@@ -916,19 +916,19 @@ char* ParseIRCMessage (char* Line, int iMode) {
         }
         return NULL;
     }
-    if (stricmp (szCmd, "323") == 0) {
+    if (strcasecmp (szCmd, "323") == 0) {
         // end of channel list
         GettingChannelList = 2;
         return NULL;
     }
-    if (stricmp (szCmd, "324") == 0) {
+    if (strcasecmp (szCmd, "324") == 0) {
         // Channel Mode info
         return NULL;
     }
 
-    if (stricmp (szCmd, "332") == 0) {
+    if (strcasecmp (szCmd, "332") == 0) {
         // Channel Topic, update status bar.
-        if (stricmp (szChat_channel, szTarget) == 0) {
+        if (strcasecmp (szChat_channel, szTarget) == 0) {
             // strncpy(szChanTopic,GetWordNum(2,szRemLine),70);
         }
         // sprintf(NewMsg.Message,"*** %s has changed the topic to:
@@ -936,21 +936,21 @@ char* ParseIRCMessage (char* Line, int iMode) {
 
         return NULL;
     }
-    if (stricmp (szCmd, NOX ("TOPIC")) == 0) {
+    if (strcasecmp (szCmd, NOX ("TOPIC")) == 0) {
         // Channel Topic, update status bar.
-        if (stricmp (szChat_channel, szTarget) == 0) {
+        if (strcasecmp (szChat_channel, szTarget) == 0) {
             // strncpy(szChanTopic,GetWordNum(1,szRemLine),70);
         }
         // sprintf(NewMsg.Message,"*** %s has changed the topic to:
         // %s",szNick,GetWordNum(1,szRemLine));
         return NULL;
     }
-    if (stricmp (szCmd, NOX ("QUIT")) == 0) {
+    if (strcasecmp (szCmd, NOX ("QUIT")) == 0) {
         // Remove the user!
         RemoveChatUser (szNick);
         return NULL;
     }
-    if (stricmp (szCmd, "376") == 0) // end of motd, trigger autojoin...
+    if (strcasecmp (szCmd, "376") == 0) // end of motd, trigger autojoin...
     {
         if (!Chat_server_connected) { Chat_server_connected = 1; }
 
@@ -959,21 +959,21 @@ char* ParseIRCMessage (char* Line, int iMode) {
             szResponse, PXO_CHAT_END_OF_MOTD_PREFIX, sizeof (szResponse) - 1);
         return szResponse;
     }
-    if ((stricmp (szCmd, "377") == 0) || (stricmp (szCmd, "372") == 0)) {
+    if ((strcasecmp (szCmd, "377") == 0) || (strcasecmp (szCmd, "372") == 0)) {
         // Stip the message, and display it.
         pszTempStr = GetWordNum (3, Line);
-        sprintf_safe (szResponse, "%s%s", PXO_CHAT_MOTD_PREFIX, pszTempStr);
+        sprintf (szResponse, "%s%s", PXO_CHAT_MOTD_PREFIX, pszTempStr);
         return szResponse;
     }
     // Ignore these messages
-    if (((stricmp (szCmd, "366") == 0)) ||
-        (stricmp (szCmd, "333") == 0) || // Who set the topic
-        (stricmp (szCmd, "329") == 0))   // Time Channel created
+    if (((strcasecmp (szCmd, "366") == 0)) ||
+        (strcasecmp (szCmd, "333") == 0) || // Who set the topic
+        (strcasecmp (szCmd, "329") == 0))   // Time Channel created
 
     {
         return NULL;
     }
-    if (stricmp (szCmd, "353") == 0) {
+    if (strcasecmp (szCmd, "353") == 0) {
         // Names in the channel.
         pszTempStr = GetWordNum (3, Line + iPrefixLen + strlen (szCmd) + 2);
         strncpy (szRemLine, pszTempStr, sizeof (szRemLine) - 1);
@@ -992,29 +992,29 @@ char* ParseIRCMessage (char* Line, int iMode) {
         return NULL;
     }
     // MOTD Codes
-    if ((stricmp (szCmd, "001") == 0) || (stricmp (szCmd, "002") == 0) ||
-        (stricmp (szCmd, "003") == 0) || (stricmp (szCmd, "004") == 0) ||
-        (stricmp (szCmd, "251") == 0) || (stricmp (szCmd, "254") == 0) ||
-        (stricmp (szCmd, "255") == 0) || (stricmp (szCmd, "265") == 0) ||
-        (stricmp (szCmd, "372") == 0) || (stricmp (szCmd, "375") == 0)) {
+    if ((strcasecmp (szCmd, "001") == 0) || (strcasecmp (szCmd, "002") == 0) ||
+        (strcasecmp (szCmd, "003") == 0) || (strcasecmp (szCmd, "004") == 0) ||
+        (strcasecmp (szCmd, "251") == 0) || (strcasecmp (szCmd, "254") == 0) ||
+        (strcasecmp (szCmd, "255") == 0) || (strcasecmp (szCmd, "265") == 0) ||
+        (strcasecmp (szCmd, "372") == 0) || (strcasecmp (szCmd, "375") == 0)) {
         return NULL;
         // return szResponse;
     }
-    if (stricmp (szCmd, "432") == 0) {
+    if (strcasecmp (szCmd, "432") == 0) {
         // Channel Mode info
-        sprintf_safe (
+        sprintf (
             szResponse, "%s",
             XSTR ("Your nickname contains invalid characters", 640));
         AddChatCommandToQueue (CC_DISCONNECTED, NULL, 0);
         return szResponse;
     }
-    if (stricmp (szCmd, "433") == 0) {
+    if (strcasecmp (szCmd, "433") == 0) {
         // Channel Mode info
         char new_nick[33];
-        sprintf_safe (new_nick, "%s%d", Orignial_nick_name, Nick_variety);
+        sprintf (new_nick, "%s%d", Orignial_nick_name, Nick_variety);
         strncpy (Nick_name, new_nick, sizeof (Nick_name) - 1);
         Nick_variety++;
-        sprintf_safe (szResponse, NOX ("/NICK %s"), new_nick);
+        sprintf (szResponse, NOX ("/NICK %s"), new_nick);
         SendChatString (szResponse, 1);
         return NULL;
     }
@@ -1163,7 +1163,7 @@ char* GetTrackerIdByUser (char* nickname) {
         strncpy (
             Getting_user_tracker_info_for, nickname,
             sizeof (Getting_user_tracker_info_for) - 1);
-        sprintf_safe (szWhoisCmd, NOX ("/WHOIS %s"), nickname);
+        sprintf (szWhoisCmd, NOX ("/WHOIS %s"), nickname);
         User_req_tracker_id[0] = '\0';
         SendChatString (szWhoisCmd, 1);
         GettingUserTID = 1;
@@ -1190,7 +1190,7 @@ char* GetChannelByUser (char* nickname) {
             Getting_user_channel_info_for, nickname,
             sizeof (Getting_user_channel_info_for) - 1);
         User_req_channel[0] = '\0';
-        sprintf_safe (szWhoisCmd, NOX ("/WHOIS %s"), nickname);
+        sprintf (szWhoisCmd, NOX ("/WHOIS %s"), nickname);
         SendChatString (szWhoisCmd, 1);
         GettingUserChannel = 1;
     }

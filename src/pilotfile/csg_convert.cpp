@@ -374,7 +374,7 @@ void pilotfile_convert::csg_import_missions (bool inferno) {
             list_size = (int)csg->variables.size ();
 
             for (k = 0; k < list_size; k++) {
-                if (!stricmp (
+                if (!strcasecmp (
                         csg->variables[k].variable_name,
                         csg->missions[idx].variables[j].variable_name)) {
                     csg->variables[k] = csg->missions[idx].variables[j];

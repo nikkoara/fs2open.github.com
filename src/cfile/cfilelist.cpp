@@ -26,7 +26,7 @@ void cf_sort_filenames (
             for (i = incr; i < n; i++) {
                 j = i - incr;
                 while (j >= 0) {
-                    if (stricmp (list[j].c_str (), list[j + incr].c_str ()) >
+                    if (strcasecmp (list[j].c_str (), list[j + incr].c_str ()) >
                         0) {
                         t = list[j];
                         list[j] = list[j + incr];
@@ -109,7 +109,7 @@ void cf_sort_filenames (int n, char** list, int sort, file_list_info* info) {
             for (i = incr; i < n; i++) {
                 j = i - incr;
                 while (j >= 0) {
-                    if (stricmp (list[j], list[j + incr]) > 0) {
+                    if (strcasecmp (list[j], list[j + incr]) > 0) {
                         t = list[j];
                         list[j] = list[j + incr];
                         list[j + incr] = t;

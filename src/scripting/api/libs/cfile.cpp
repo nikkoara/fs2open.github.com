@@ -37,7 +37,7 @@ int l_cf_get_path_id (const char* n_path) {
         if (buf[i] == '\\' || buf[i] == '/') buf[i] = DIR_SEPARATOR_CHAR;
     }
     for (i = 0; i < CF_MAX_PATH_TYPES; i++) {
-        if (Pathtypes[i].path != NULL && !stricmp (buf, Pathtypes[i].path)) {
+        if (Pathtypes[i].path != NULL && !strcasecmp (buf, Pathtypes[i].path)) {
             vm_free (buf);
             buf = NULL;
             return Pathtypes[i].index;

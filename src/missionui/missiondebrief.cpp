@@ -410,24 +410,24 @@ void debrief_award_text_clear ();
 
 // functions
 const char* debrief_tooltip_handler (const char* str) {
-    if (!stricmp (str, NOX ("@.Medal"))) {
+    if (!strcasecmp (str, NOX ("@.Medal"))) {
         if (Award_active) { return XSTR ("Medal", 435); }
     }
-    else if (!stricmp (str, NOX ("@.Rank"))) {
+    else if (!strcasecmp (str, NOX ("@.Rank"))) {
         if (Award_active) { return XSTR ("Rank", 436); }
     }
-    else if (!stricmp (str, NOX ("@.Badge"))) {
+    else if (!strcasecmp (str, NOX ("@.Badge"))) {
         if (Award_active) { return XSTR ("Badge", 437); }
     }
-    else if (!stricmp (str, NOX ("@Medal"))) {
+    else if (!strcasecmp (str, NOX ("@Medal"))) {
         if (Medal_bitmap >= 0) {
             return Medals[Player->stats.m_medal_earned].get_display_string ();
         }
     }
-    else if (!stricmp (str, NOX ("@Rank"))) {
+    else if (!strcasecmp (str, NOX ("@Rank"))) {
         if (Rank_bitmap >= 0) { return Ranks[Promoted].name; }
     }
-    else if (!stricmp (str, NOX ("@Badge"))) {
+    else if (!strcasecmp (str, NOX ("@Badge"))) {
         if (Badge_bitmap >= 0) {
             return Medals[Player->stats.m_badge_earned.back ()]
                 .get_display_string ();
@@ -474,7 +474,7 @@ void debrief_voice_load_all () {
 
     for (i = 0; i < Num_debrief_stages; i++) {
         if (strlen (Debrief_stages[i]->voice) <= 0) { continue; }
-        if (strnicmp (Debrief_stages[i]->voice, NOX ("none"), 4) != 0) {
+        if (strncasecmp (Debrief_stages[i]->voice, NOX ("none"), 4) != 0) {
             debrief_load_voice_file (i, Debrief_stages[i]->voice);
             //			Debrief_voices[i] =
             // audiostream_open(Debrief_stages[i]->voice, ASF_VOICE);
@@ -819,12 +819,12 @@ int debrief_find_persona_index () {
 
         // search through all official campaigns for our current campaign
         for (i = 0; i < NUM_VOLITION_CAMPAIGNS; i++) {
-            if (!stricmp (
+            if (!strcasecmp (
                     Campaign.filename, Volition_campaigns[i].campaign_name)) {
                 // now search through the mission filenames
                 for (j = 0; j < Volition_campaigns[i].num_missions; j++) {
                     // found it!
-                    if (!stricmp (
+                    if (!strcasecmp (
                             Campaign.missions[Campaign.current_mission].name,
                             Debrief_promotion_voice_mapping[i][j]
                                 .mission_file)) {

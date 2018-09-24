@@ -302,7 +302,7 @@ int campaign_mission_hash_collision (const char* filename) {
     if (cur_node == NULL) { return 0; }
 
     do {
-        if (!stricmp (filename, cur_node->filename)) { return 1; }
+        if (!strcasecmp (filename, cur_node->filename)) { return 1; }
 
         cur_node = cur_node->next;
     } while (cur_node != NULL);
@@ -761,7 +761,7 @@ int sim_room_can_resume_savegame (char* /*savegame_filename*/) {
         return 0;
     }
 
-    if (stricmp (Game_current_mission_filename, savegame_mission)) {
+    if (strcasecmp (Game_current_mission_filename, savegame_mission)) {
         return 0;
     }
 
@@ -1624,12 +1624,12 @@ void campaign_room_commit () {
     }
 
     // new campaign selected?
-    if (stricmp (
+    if (strcasecmp (
             Campaign_file_names[Selected_campaign_index], Campaign.filename) !=
         0) {
         // Goober5000 - reinitialize tech database if needed
         if ((Campaign.flags & CF_CUSTOM_TECH_DATABASE) ||
-            !stricmp (Campaign.filename, "freespace2")) {
+            !strcasecmp (Campaign.filename, "freespace2")) {
             // reset tech database to what's in the tables
             tech_reset_to_default ();
         }
@@ -1702,7 +1702,7 @@ int campaign_room_button_pressed (int n) {
 
             // Goober5000 - reinitialize tech database if needed
             if ((Campaign.flags & CF_CUSTOM_TECH_DATABASE) ||
-                !stricmp (Campaign.filename, "freespace2")) {
+                !strcasecmp (Campaign.filename, "freespace2")) {
                 // reset tech database to what's in the tables
                 tech_reset_to_default ();
             }
@@ -1798,7 +1798,7 @@ void campaign_room_init () {
     Selected_campaign_index = Active_campaign_index = -1;
     if (!load_failed) {
         for (i = 0; i < Num_campaigns; i++)
-            if (!stricmp (Campaign_file_names[i], Campaign.filename)) {
+            if (!strcasecmp (Campaign_file_names[i], Campaign.filename)) {
                 set_new_campaign_line (i);
                 Active_campaign_index = i;
                 break;
@@ -1938,7 +1938,7 @@ void campaign_room_do_frame (float /*frametime*/) {
             Cr_list_coords[gr_screen.res][2], font_height);
         List_buttons[line - Scroll_offset].enable ();
 
-        if (!stricmp (sim_room_lines[line].filename, Campaign.filename)) {
+        if (!strcasecmp (sim_room_lines[line].filename, Campaign.filename)) {
             gr_set_color_fast (&Color_white);
             i = y + font_height / 2 - 1;
             gr_circle (

@@ -381,9 +381,9 @@ void chatbox_set_mode (int mode_flags) {
 int chatbox_get_msg_target_type (char* msg) {
     if (msg[0] != '/') { return MULTI_MSG_ALL; }
 
-    if (!strnicmp (msg, "/f:", 3)) { return MULTI_MSG_FRIENDLY; }
+    if (!strncasecmp (msg, "/f:", 3)) { return MULTI_MSG_FRIENDLY; }
 
-    if (!strnicmp (msg, "/h:", 3)) { return MULTI_MSG_HOSTILE; }
+    if (!strncasecmp (msg, "/h:", 3)) { return MULTI_MSG_HOSTILE; }
 
     return MULTI_MSG_EXPR;
 }

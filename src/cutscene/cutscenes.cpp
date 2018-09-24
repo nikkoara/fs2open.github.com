@@ -108,13 +108,13 @@ void cutscene_mark_viewable (const char* filename) {
     if (p) { *p = 0; }
 
     // change to lower case
-    strlwr (file);
+    stolower (file);
     int i = 0;
     for (std::vector< cutscene_info >::iterator cut = Cutscenes.begin ();
          cut != Cutscenes.end (); ++cut) {
         // change the cutscene file name to lower case
         strcpy_s (cut_file, cut->filename);
-        strlwr (cut_file);
+        stolower (cut_file);
 
         // see if the stripped filename matches the cutscene filename
         if (strstr (cut_file, file) != NULL) {

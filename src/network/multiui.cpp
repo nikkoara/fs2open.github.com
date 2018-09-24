@@ -2346,7 +2346,7 @@ int multi_start_game_rank_from_name (char* rank) {
     int i;
 
     for (i = 0; i <= MAX_FREESPACE2_RANK; i++) {
-        if (!stricmp (Ranks[i].name, rank)) { return i; }
+        if (!strcasecmp (Ranks[i].name, rank)) { return i; }
     }
 
     return -1;
@@ -3041,7 +3041,7 @@ void multi_sg_rank_build_name (char* in, char* out) {
 
     // if the first part of the string is lieutenant, then abbreivate it and
     // tack on the rest of the string
-    if (stricmp (first, XSTR ("lieutenant", 785)) == 0) {
+    if (strcasecmp (first, XSTR ("lieutenant", 785)) == 0) {
         first = strtok (NULL, NOX ("\n"));
 
         // if he's not just a plain lieutenant
@@ -3520,9 +3520,9 @@ bool multi_create_sort_func (
 
     int test = 0;
 
-    if (Multi_create_sort_mode) { test = stricmp (m1.filename, m2.filename); }
+    if (Multi_create_sort_mode) { test = strcasecmp (m1.filename, m2.filename); }
     else {
-        test = stricmp (m1.name, m2.name);
+        test = strcasecmp (m1.name, m2.name);
     }
 
     return test < 0;
@@ -5782,7 +5782,7 @@ int multi_create_lookup_mission (char* fname) {
     uint idx;
 
     for (idx = 0; idx < Multi_create_mission_list.size (); idx++) {
-        if (!stricmp (fname, Multi_create_mission_list[idx].filename)) {
+        if (!strcasecmp (fname, Multi_create_mission_list[idx].filename)) {
             return idx;
         }
     }
@@ -5796,7 +5796,7 @@ int multi_create_lookup_campaign (char* fname) {
     uint idx;
 
     for (idx = 0; idx < Multi_create_campaign_list.size (); idx++) {
-        if (!stricmp (fname, Multi_create_campaign_list[idx].filename)) {
+        if (!strcasecmp (fname, Multi_create_campaign_list[idx].filename)) {
             return idx;
         }
     }
@@ -8047,7 +8047,7 @@ void multi_sync_close () {
 }
 
 const char* multi_sync_tooltip_handler (const char* str) {
-    if (!stricmp (str, NOX ("@launch"))) {
+    if (!strcasecmp (str, NOX ("@launch"))) {
         if (Multi_launch_button_created) { return XSTR ("Launch", 801); }
     }
 

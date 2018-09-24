@@ -414,7 +414,7 @@ void wl_set_carried_icon (int from_bank, int from_slot, int weapon_class);
 const char* wl_tooltip_handler (const char* str) {
     if (Selected_wl_class < 0) return NULL;
 
-    if (!stricmp (str, "@weapon_desc")) {
+    if (!strcasecmp (str, "@weapon_desc")) {
         char* str2;
         int x, y, w, h;
 
@@ -494,7 +494,7 @@ int wl_get_pilot_subsys_index (p_object* pobjp) {
     end_index = start_index + pobjp->subsys_count;
     pilot_index = -1;
     for (i = start_index; i < end_index; i++) {
-        if (!subsystem_stricmp (Subsys_status[i].name, NOX ("pilot"))) {
+        if (!subsystem_strcasecmp (Subsys_status[i].name, NOX ("pilot"))) {
             pilot_index = i;
             break;
         }

@@ -295,7 +295,7 @@ const ptrdiff_t Lua_type_names_num =
 
 void ade_output_type_link (FILE* fp, const char* typestr) {
     for (int i = 0; i < Lua_type_names_num; i++) {
-        if (!stricmp (Lua_type_names[i], typestr)) {
+        if (!strcasecmp (Lua_type_names[i], typestr)) {
             fputs (typestr, fp);
             return;
         }
@@ -399,7 +399,7 @@ int ade_table_entry::SetTable (lua_State* L, int p_amt_ldx, int p_mtb_ldx) {
             else {
                 // WMC - Member objects prefixed with __ are assumed to be
                 // metatable objects
-                if (strnicmp ("__", GetName (), 2) != 0 &&
+                if (strncasecmp ("__", GetName (), 2) != 0 &&
                     lua_istable (L, p_amt_ldx)) {
                     desttable_ldx = p_amt_ldx;
                 }
@@ -569,7 +569,7 @@ void ade_table_entry::OutputMeta (FILE* fp) {
     // WMC - Hack
     if (ParentIdx != UINT_MAX) {
         for (i = 0; i < Num_subentries; i++) {
-            if (!stricmp (
+            if (!strcasecmp (
                     ade_manager::getInstance ()->getEntry (Subentries[i]).Name,
                     "__indexer")) {
                 ade_manager::getInstance ()
@@ -664,7 +664,7 @@ void ade_table_entry::OutputMeta (FILE* fp) {
                     if (ParentIdx != UINT_MAX &&
                         getTableEntry (ParentIdx).ParentIdx != UINT_MAX &&
                         getTableEntry (ParentIdx).Name != NULL &&
-                        !stricmp (Name, "__indexer")) {
+                        !strcasecmp (Name, "__indexer")) {
                         fprintf (
                             fp, "<b>%s%s", getTableEntry (ParentIdx).Name,
                             ade_Operators[ao].dest);
@@ -749,7 +749,7 @@ void ade_table_entry::OutputMeta (FILE* fp) {
     fputs ("<dd><dl>\n", fp);
     for (i = 0; i < Num_subentries; i++) {
         auto entry = &getTableEntry (Subentries[i]);
-        if (ParentIdx == UINT_MAX || stricmp (entry->Name, "__indexer") != 0)
+        if (ParentIdx == UINT_MAX || strcasecmp (entry->Name, "__indexer") != 0)
             entry->OutputMeta (fp);
     }
     fputs ("</dl></dd>\n", fp);

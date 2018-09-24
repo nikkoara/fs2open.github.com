@@ -1223,7 +1223,7 @@ void mission_goal_mark_invalid (char* name) {
     int i;
 
     for (i = 0; i < Num_goals; i++) {
-        if (!stricmp (Mission_goals[i].name, name)) {
+        if (!strcasecmp (Mission_goals[i].name, name)) {
             mission_goal_validation_change (i, 0);
             return;
         }
@@ -1235,7 +1235,7 @@ void mission_goal_mark_valid (char* name) {
     int i;
 
     for (i = 0; i < Num_goals; i++) {
-        if (!stricmp (Mission_goals[i].name, name)) {
+        if (!strcasecmp (Mission_goals[i].name, name)) {
             mission_goal_validation_change (i, 1);
             return;
         }

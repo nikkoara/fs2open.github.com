@@ -90,7 +90,7 @@ int mission_campaign_get_info (
     strncpy (fname, filename, MAX_FILENAME_LEN - 1);
     auto fname_len = strlen (fname);
     if ((fname_len < 4) ||
-        stricmp (fname + fname_len - 4, FS_CAMPAIGN_FILE_EXT) != 0) {
+        strcasecmp (fname + fname_len - 4, FS_CAMPAIGN_FILE_EXT) != 0) {
         strcat_s (fname, FS_CAMPAIGN_FILE_EXT);
         fname_len += 4;
     }
@@ -115,7 +115,7 @@ int mission_campaign_get_info (
             stuff_string (campaign_type, F_NAME, NAME_LENGTH);
 
             for (i = 0; i < MAX_CAMPAIGN_TYPES; i++) {
-                if (!stricmp (campaign_type, campaign_types[i])) { *type = i; }
+                if (!strcasecmp (campaign_type, campaign_types[i])) { *type = i; }
             }
 
             if (name == NULL) {
@@ -305,11 +305,11 @@ void mission_campaign_build_list (bool desc, bool sort, bool multiplayer) {
                         break;
                     }
 
-                    if (!strnicmp (name1, "the ", 4)) name1 += 4;
+                    if (!strncasecmp (name1, "the ", 4)) name1 += 4;
 
-                    if (!strnicmp (name2, "the ", 4)) name2 += 4;
+                    if (!strncasecmp (name2, "the ", 4)) name2 += 4;
 
-                    if (stricmp (name1, name2) > 0) {
+                    if (strcasecmp (name1, name2) > 0) {
                         // first, do filenames
                         t = Campaign_file_names[j];
                         Campaign_file_names[j] = Campaign_file_names[j + incr];
@@ -448,7 +448,7 @@ int mission_campaign_load (
         stuff_string (type, F_NAME, NAME_LENGTH);
 
         for (i = 0; i < MAX_CAMPAIGN_TYPES; i++) {
-            if (!stricmp (type, campaign_types[i])) {
+            if (!strcasecmp (type, campaign_types[i])) {
                 Campaign.type = i;
                 break;
             }
@@ -827,7 +827,7 @@ void mission_campaign_savefile_delete (char* cfilename) {
     }
 
     // only support the new filename here - taylor
-    sprintf_safe (filename, NOX ("%s.%s.csg"), Player->callsign, base);
+    sprintf (filename, NOX ("%s.%s.csg"), Player->callsign, base);
 
     cf_delete (
         filename, CF_TYPE_PLAYERS,
@@ -1130,7 +1130,7 @@ void mission_campaign_store_variables (
                     // see if we already have a variable with this name
                     for (j = 0; j < (int)Campaign.persistent_variables.size ();
                          j++) {
-                        if (!(stricmp (
+                        if (!(strcasecmp (
                                 Sexp_variables[i].variable_name,
                                 Campaign.persistent_variables[j]
                                     .variable_name))) {
@@ -1159,7 +1159,7 @@ void mission_campaign_store_variables (
                 bool add_it = true;
 
                 for (j = 0; j < (int)Player->variables.size (); j++) {
-                    if (!(stricmp (
+                    if (!(strcasecmp (
                             Sexp_variables[i].variable_name,
                             Player->variables[j].variable_name))) {
                         Player->variables[j] = Sexp_variables[i];
@@ -1564,7 +1564,7 @@ int mission_campaign_find_mission (char* name) {
     }
 
     for (i = 0; i < Campaign.num_missions; i++) {
-        if (!stricmp (realname, Campaign.missions[i].name)) { return i; }
+        if (!strcasecmp (realname, Campaign.missions[i].name)) { return i; }
     }
 
     return -1;
@@ -1619,7 +1619,7 @@ int mission_campaign_parse_is_multi (char* filename, char* name) {
         stuff_string (temp, F_NAME, NAME_LENGTH);
 
         for (i = 0; i < MAX_CAMPAIGN_TYPES; i++) {
-            if (!stricmp (temp, campaign_types[i])) { return i; }
+            if (!strcasecmp (temp, campaign_types[i])) { return i; }
         }
 
         Error (LOCATION, "Unknown campaign type %s", temp);
@@ -1709,11 +1709,11 @@ int mission_load_up_campaign (player* pl) {
             }
 
             // skip current and builtin since they already didn't work
-            if (!stricmp (Campaign_file_names[idx], pl->current_campaign)) {
+            if (!strcasecmp (Campaign_file_names[idx], pl->current_campaign)) {
                 continue;
             }
 
-            if (!stricmp (Campaign_file_names[idx], BUILTIN_CAMPAIGN)) {
+            if (!strcasecmp (Campaign_file_names[idx], BUILTIN_CAMPAIGN)) {
                 continue;
             }
 
@@ -1751,7 +1751,7 @@ void mission_campaign_end_do () {
     // ending)
 
     // this is specific to the FreeSpace 2 single-player campaign
-    if (!stricmp (Campaign.filename, "freespace2")) {
+    if (!strcasecmp (Campaign.filename, "freespace2")) {
         // did the supernova blow?
         if (Supernova_status == SUPERNOVA_HIT) {
             movie::play_two ("endpart1.mve", "endprt2b.mve"); // bad ending
@@ -1858,7 +1858,7 @@ void mission_campaign_jump_to_mission (char* name, bool no_skip) {
     // search for our mission
     for (i = 0; i < Campaign.num_missions; i++) {
         if ((Campaign.missions[i].name != NULL) &&
-            !stricmp (Campaign.missions[i].name, dest_name)) {
+            !strcasecmp (Campaign.missions[i].name, dest_name)) {
             mission_num = i;
             break;
         }
@@ -1917,7 +1917,7 @@ void mission_campaign_save_on_close_variables () {
         if ((Sexp_variables[i].type & SEXP_VARIABLE_SAVE_TO_PLAYER_FILE)) {
             // check if variable already exists and updated it
             for (auto& current_variable : Player->variables) {
-                if (!(stricmp (
+                if (!(strcasecmp (
                         Sexp_variables[i].variable_name,
                         current_variable.variable_name))) {
                     current_variable = Sexp_variables[i];

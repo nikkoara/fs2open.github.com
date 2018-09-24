@@ -295,7 +295,7 @@ int multi_msg_matches_expr (net_player* np, const char* expr) {
     // some error checking
     if ((np == NULL) || (expr == NULL) || (strlen (expr) <= 0)) { return 0; }
 
-    return stricmp (expr, np->m_player->callsign) ? 0 : 1;
+    return strcasecmp (expr, np->m_player->callsign) ? 0 : 1;
 }
 
 // if text input mode is active, clear it
@@ -342,7 +342,7 @@ int multi_msg_check_command (char* str) {
 
     // go through all existing commands and see what we can do
     for (idx = 0; idx < MULTI_MSG_CMD_COUNT; idx++) {
-        if (!stricmp (prefix, Multi_msg_commands[idx])) {
+        if (!strcasecmp (prefix, Multi_msg_commands[idx])) {
             // perform the command
             multi_msg_perform_command (idx, param);
 

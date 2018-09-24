@@ -1491,7 +1491,7 @@ void os_parse_parms (int argc, char* argv[]) {
 
         for (parmp = GET_FIRST (&Parm_list); parmp != END_OF_LIST (&Parm_list);
              parmp = GET_NEXT (parmp)) {
-            if (!stricmp (parmp->name, argv[i])) {
+            if (!strcasecmp (parmp->name, argv[i])) {
                 parmp->name_found = 1;
                 if (parm_stuff_args (parmp, argc, argv, i)) { i++; }
             }
@@ -1518,7 +1518,7 @@ void os_validate_parms (int argc, char* argv[]) {
 
             for (parmp = GET_FIRST (&Parm_list);
                  parmp != END_OF_LIST (&Parm_list); parmp = GET_NEXT (parmp)) {
-                if (!stricmp (parmp->name, token)) {
+                if (!strcasecmp (parmp->name, token)) {
                     parm_found = 1;
                     break;
                 }
@@ -1527,8 +1527,8 @@ void os_validate_parms (int argc, char* argv[]) {
             if (parm_found == 0) {
                 // if we got a -help, --help, -h, or -? then show the help
                 // text, otherwise show unknown option
-                if (!stricmp (token, "-help") || !stricmp (token, "--help") ||
-                    !stricmp (token, "-h") || !stricmp (token, "-?")) {
+                if (!strcasecmp (token, "-help") || !strcasecmp (token, "--help") ||
+                    !strcasecmp (token, "-h") || !strcasecmp (token, "-?")) {
                     printf ("FreeSpace 2 Open, version %s\n", FS_VERSION_FULL);
                     printf ("Website: http://scp.indiegames.us\n");
                     printf (
@@ -1547,7 +1547,7 @@ void os_validate_parms (int argc, char* argv[]) {
                          parmp != END_OF_LIST (&Parm_list);
                          parmp = GET_NEXT (parmp)) {
                         // don't output deprecated flags
-                        if (stricmp ("deprecated", parmp->help) != 0) {
+                        if (strcasecmp ("deprecated", parmp->help) != 0) {
                             sp = strlen (parmp->name);
                             if (parmp->arg_type != AT_NONE) {
                                 atp = strlen (
@@ -1915,7 +1915,7 @@ unix_get_single_dir_names (const std::string& parent, const std::string& dir) {
 
     dirent* dirp;
     while ((dirp = readdir (dp)) != NULL) {
-        if (!stricmp (dirp->d_name, dir.c_str ())) {
+        if (!strcasecmp (dirp->d_name, dir.c_str ())) {
             ret.push_back (dirp->d_name);
         }
     }
