@@ -21,7 +21,7 @@
  * bits; each byte contains 8 bits, so any n bytes hold n*8 bits. And the
  * operation to manipulate this stream or bit array is so easy, just read or
  * change the bit's state or make any Boolean operation on the whole bits
- * array, like ‘AND’, ‘OR’, or ‘XOR’.
+ * array, like AND, OR, or XOR.
  *
  * As each byte contains 8 bits, we need to divide the bit number by 8 to reach
  * the byte that holds the bit. Then, we can seek to the right bit in the

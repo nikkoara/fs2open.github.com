@@ -56,7 +56,7 @@ p_object* dock_find_object_at_dockpoint (p_object* objp, char* dockpoint);
 char* dock_find_dockpoint_used_by_object (
     p_object* objp, p_object* other_objp);
 
-// Überfunction for evaluating all objects that could possibly be docked to
+// Uberfunction for evaluating all objects that could possibly be docked to
 // objp.  This will call "function" for each docked object.  The function
 // should store its intermediate and return values in the p_dock_function_info
 // class.
