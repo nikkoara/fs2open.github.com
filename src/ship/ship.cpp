@@ -1,12 +1,4 @@
-
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include <csetjmp>
 
@@ -495,7 +487,7 @@ flag_def_list_new< Weapon::Info_Flags > ai_tgt_weapon_flags[] = {
     { "esuck", Weapon::Info_Flags::Energy_suck, true, false },
     { "flak", Weapon::Info_Flags::Flak, true, false },
     //{ "beam",						Weapon::Info_Flags::Beam,
-    //true, false
+    // true, false
     //},	// Okay, this one probably doesn't make sense.
     { "tag", Weapon::Info_Flags::Tag, true, false },
     { "shudder", Weapon::Info_Flags::Shudder, true, false },
@@ -14599,8 +14591,8 @@ ship_subsys* ship_get_best_subsys_to_attack (
 // (default value NULL).  If value is non-NULL, try
 //							to select the best subsystem to attack of that type
 //(using
-// line-of-sight) 							and based on the number of ships already
-// attacking the subsystem
+// line-of-sight) 							and based on the number of ships
+// already attacking the subsystem
 ship_subsys*
 ship_get_indexed_subsys (ship* sp, int index, vec3d* attacker_pos) {
     int count;
@@ -16181,16 +16173,16 @@ int ship_return_subsys_path_normal (
 // it
 //				subsys	=>		pointer to the subsystem of interest
 //				eye_pos	=>		world coord for the eye looking at the
-// subsystem 				subsys_pos			=>	world coord for the center of
-// the subsystem of interest 				do_facing_check	=>	OPTIONAL
+// subsystem 				subsys_pos			=>	world coord for the center
+// of the subsystem of interest 				do_facing_check	=>	OPTIONAL
 // PARAMETER (default value is 1), do a dot product check to see if subsystem
 // fvec is facing 											towards the eye
 // position
 //				dot_out	=>		OPTIONAL PARAMETER, output parameter, will
-//return dot
-// between subsys fvec and subsys_to_eye_vec 									(only filled in
-// if do_facing_check is true) 				vec_out	=>		OPTIONAL PARAMETER,
-// vector from eye_pos to absolute subsys_pos.  (only filled in if
+// return dot
+// between subsys fvec and subsys_to_eye_vec 									(only filled
+// in if do_facing_check is true) 				vec_out	=>		OPTIONAL
+// PARAMETER, vector from eye_pos to absolute subsys_pos.  (only filled in if
 // do_facing_check is true)
 int ship_subsystem_in_sight (
     object* objp, ship_subsys* subsys, vec3d* eye_pos, vec3d* subsys_pos,

@@ -1,20 +1,9 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
-#ifndef _PSNET2_H
-#define _PSNET2_H
+#ifndef FREESPACE2_NETWORK_PSNET2_H
+#define FREESPACE2_NETWORK_PSNET2_H
 
-#ifdef _WIN32
-#include <winsock.h>
-#else
 #include <cerrno>
-#endif
 
 #include "globalincs/pstypes.h"
 
@@ -44,9 +33,6 @@ typedef struct net_addr {
 // the same and the new code in unobtrusive
 typedef uint PSNET_SOCKET;
 typedef uint PSNET_SOCKET_RELIABLE;
-#if defined(_WIN32)
-typedef int socklen_t;
-#endif
 
 #undef INVALID_SOCKET
 #define INVALID_SOCKET (PSNET_SOCKET) (~0)
@@ -102,18 +88,10 @@ extern ushort Psnet_default_port;
     4 // We received the connecting message, but haven't told the game yet.
 #define RNF_LIMBO 5 // between connecting and connected
 
-extern SOCKET Unreliable_socket; // all PXO API modules should use this to send
-                                 // and receive on
-
-// -------------------------------------------------------------------------------------------------------
-// PSNET 2 TOP LAYER FUNCTIONS - these functions simply buffer and store
-// packets based upon type (see PSNET_TYPE_* defines)
-//
+extern int Unreliable_socket; // all PXO API modules should use this to send
+                              // and receive on
 
 struct sockaddr;
-#ifdef _WIN32
-struct fd_set;
-#endif
 struct timeval;
 
 // wrappers around select() and recvfrom() for lagging/losing data, and for
@@ -132,10 +110,6 @@ int SENDTO (
 
 // call this once per frame to read everything off of our socket
 void PSNET_TOP_LAYER_PROCESS ();
-
-// -------------------------------------------------------------------------------------------------------
-// PSNET 2 FUNCTIONS
-//
 
 // initialize psnet to use the specified port
 void psnet_init (int protocol, int default_port);
@@ -176,10 +150,6 @@ int psnet_is_valid_ip_string (char* ip_string, int allow_port = 1);
 // mark a socket as having received data
 void psnet_mark_received (PSNET_SOCKET_RELIABLE socket);
 
-// -------------------------------------------------------------------------------------------------------
-// PSNET 2 RELIABLE SOCKET FUNCTIONS
-//
-
 // shutdown a reliable socket
 void psnet_rel_close_socket (PSNET_SOCKET_RELIABLE* sockp);
 
@@ -210,4 +180,4 @@ int psnet_rel_check_for_listen (net_addr* addr);
 void psnet_rel_connect_to_server (
     PSNET_SOCKET_RELIABLE* s, net_addr* server_addr);
 
-#endif
+#endif // FREESPACE2_NETWORK_PSNET2_H

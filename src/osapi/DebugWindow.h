@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_OSAPI_DEBUGWINDOW_H
+#define FREESPACE2_OSAPI_DEBUGWINDOW_H
 
 #include "globalincs/pstypes.h"
 #include "osapi/osapi.h"
@@ -100,3 +103,5 @@ public:
 };
 
 } // namespace osapi
+
+#endif // FREESPACE2_OSAPI_DEBUGWINDOW_H

@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "cmdline/cmdline.h"
 #include "osapi/osregistry.h"
@@ -150,16 +143,9 @@ void multi_options_read_config () {
                     if (tok != NULL) {
                         strncpy (
                             Multi_options_g.std_passwd, tok, STD_PASSWD_LEN);
-#ifdef _WIN32
-                        // yuck
-                        extern HWND Multi_std_host_passwd;
-                        SetWindowText (
-                            Multi_std_host_passwd, Multi_options_g.std_passwd);
-#else
                         // TODO: get password ?
                         // argh, gonna have to figure out how to do this -
                         // mharris 07/07/2002
-#endif
                     }
                 }
                 else
@@ -352,10 +338,6 @@ void multi_options_read_config () {
         cfclose (in);
         in = NULL;
     }
-
-#ifndef _WIN32
-    if (Is_standalone) { std_configLoaded (&Multi_options_g); }
-#endif
 }
 
 // set netgame defaults

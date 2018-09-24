@@ -1,7 +1,7 @@
+// -*- mode: c++; -*-
 
 #ifndef CURSOR_H
 #define CURSOR_H
-#pragma once
 
 #include <SDL2/SDL_mouse.h>
 

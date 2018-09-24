@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include <math/bitarray.h>
 #include "particle/ParticleSource.h"
 #include "weapon/weapon.h"

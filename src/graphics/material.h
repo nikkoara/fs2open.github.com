@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #ifndef _MATERIAL_H
 #define _MATERIAL_H
 

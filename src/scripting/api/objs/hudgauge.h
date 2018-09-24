@@ -1,4 +1,5 @@
-#pragma once
+// -*- mode: c++; -*-
+
 #ifndef FS2_OPEN_HUDGAUGE_H
 #define FS2_OPEN_HUDGAUGE_H
 

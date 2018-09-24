@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_UTILS_ID_H
+#define FREESPACE2_UTILS_ID_H
 
 namespace util {
 
@@ -50,3 +53,5 @@ private:
 };
 
 } // namespace util
+
+#endif // FREESPACE2_UTILS_ID_H

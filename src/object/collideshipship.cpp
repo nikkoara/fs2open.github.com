@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "asteroid/asteroid.h"
 #include "debris/debris.h"
@@ -600,7 +593,7 @@ static bool check_subsystem_landing_allowed (
 // colliding
 // r_A, r_B
 //=>		position to collision from center of mass
-//collision_normal
+// collision_normal
 //=> collision_normal (outward from B)
 //
 //		output:	velocity, angular velocity, impulse

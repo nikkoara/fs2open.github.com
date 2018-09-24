@@ -1,26 +1,12 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include <cstdio>
 #include <cstring>
 #include <csetjmp>
 #include <cerrno>
 
-#ifdef _WIN32
-#include <direct.h>
-#include <io.h>
-#endif
-
-#ifdef SCP_UNIX
 #include <sys/stat.h>
 #include <glob.h>
-#endif
 
 #include "freespace2/freespace.h"
 #include "cfile/cfile.h"
@@ -1566,7 +1552,7 @@ void read_mission_goal_list (int num) {
  */
 int mission_campaign_find_mission (char* name) {
     int i;
-    char realname[_MAX_PATH];
+    char realname[PATH_MAX];
 
     if (name == NULL) return -1;
 

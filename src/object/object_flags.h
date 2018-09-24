@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #ifndef OBJECT_FLAGS_H
 #define OBJECT_FLAGS_H
 

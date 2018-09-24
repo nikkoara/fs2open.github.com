@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 //
 // Copyright (c) 2009-2013 Mikko Mononen memon@inside.org
 //
@@ -1081,8 +1083,8 @@ static void glnvg__stroke (GLNVGcontext* gl, GLNVGcall* call) {
         glDisable (GL_STENCIL_TEST);
 
         //		glnvg__convertPaint(gl, nvg__fragUniformPtr(gl,
-        //call->uniformOffset + gl->fragSize), paint, scissor, strokeWidth,
-        //fringe, 1.0f - 0.5f/255.0f);
+        // call->uniformOffset + gl->fragSize), paint, scissor, strokeWidth,
+        // fringe, 1.0f - 0.5f/255.0f);
     }
     else {
         glnvg__setUniforms (gl, call->uniformOffset, call->image);

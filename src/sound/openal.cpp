@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "globalincs/pstypes.h"
 #include "sound/openal.h"
@@ -5,16 +6,6 @@
 
 #include <string>
 #include <algorithm>
-
-#ifdef _WIN32
-#define VC_EXTRALEAN
-#include <windows.h>
-#endif
-
-// Stupid windows workaround...
-#ifdef MessageBox
-#undef MessageBox
-#endif
 
 static std::string Playback_device;
 static std::string Capture_device;

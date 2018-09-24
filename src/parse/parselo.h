@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _PARSELO_H
 #define _PARSELO_H
@@ -150,7 +143,7 @@ alloc_block (const char* startstr, const char* endstr, int extra_chars = 0);
 
 // Exactly the same as stuff string only Malloc's the buffer.
 //	Supports various FreeSpace primitive types.  If 'len' is supplied, it will
-//override
+// override
 // the default string length if using the F_NAME case.
 extern char* stuff_and_malloc_string (int type, char* terminators = NULL);
 extern void

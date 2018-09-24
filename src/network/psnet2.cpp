@@ -1,20 +1,5 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
-#ifdef _WIN32
-#include <windows.h>
-#include <windowsx.h>
-#include <winsock.h>
-#include <process.h>
-#include <ras.h>
-#include <raserror.h>
-#else
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -25,7 +10,7 @@
 #include <netdb.h>
 
 #define WSAGetLastError() (errno)
-#endif
+
 #include <cstdio>
 #include <climits>
 #include <algorithm>
@@ -235,11 +220,6 @@ network_packet_buffer_list Psnet_top_buffers[PSNET_NUM_TYPES];
 // if the string is a legally formatted ip string
 int psnet_is_valid_numeric_ip (char* ip);
 
-#ifdef _WIN32
-// functions to get the status of a RAS connection
-unsigned int psnet_ras_status ();
-#endif
-
 // set some options on a socket
 void psnet_socket_options (SOCKET sock);
 
@@ -301,12 +281,9 @@ int RECVFROM (
 
     // otherwise, stuff the outgoing data
     switch (Socket_type) {
-    case NET_TCP: ((SOCKADDR_IN*)from)->sin_port = htons (addr.port);
-#ifdef _WIN32
-        memcpy (&((SOCKADDR_IN*)from)->sin_addr.S_un.S_addr, addr.addr, 4);
-#else
+    case NET_TCP:
+        ((SOCKADDR_IN*)from)->sin_port = htons (addr.port);
         memcpy (&((SOCKADDR_IN*)from)->sin_addr.s_addr, addr.addr, 4);
-#endif
         ((SOCKADDR_IN*)from)->sin_family = AF_INET;
         *fromlen = sizeof (SOCKADDR_IN);
         break;
@@ -392,12 +369,8 @@ void PSNET_TOP_LAYER_PROCESS () {
         timeout.tv_sec = 0;
         timeout.tv_usec = 0;
 
-#ifdef _WIN32
-        if (select (-1, &rfds, NULL, NULL, &timeout) == SOCKET_ERROR) {
-#else
         if (select (Unreliable_socket + 1, &rfds, NULL, NULL, &timeout) ==
             SOCKET_ERROR) {
-#endif
             ml_printf (
                 "Error %d doing a socket select on read", WSAGetLastError ());
             break;
@@ -426,11 +399,7 @@ void PSNET_TOP_LAYER_PROCESS () {
         case NET_TCP:
             from_addr.port = ntohs (ip_addr.sin_port);
             memset (from_addr.addr, 0x00, 6);
-#ifdef _WIN32
-            memcpy (from_addr.addr, &ip_addr.sin_addr.S_un.S_addr, 4); //-V512
-#else
             memcpy (from_addr.addr, &ip_addr.sin_addr.s_addr, 4); //-V512
-#endif
             break;
 
         default:
@@ -469,10 +438,6 @@ void PSNET_TOP_LAYER_PROCESS () {
 void psnet_init (int /*protocol*/, int port_num) {
     int idx;
     Tcp_active = 0;
-#ifdef _WIN32
-    const char* internet_connection;
-    WSADATA wsa_data;
-#endif
 
     // GAME PORT INITIALIZATION STUFF
     if (Network_status == NETWORK_STATUS_RUNNING) {
@@ -480,33 +445,10 @@ void psnet_init (int /*protocol*/, int port_num) {
         return;
     }
 
-// sort of a hack; assume unix users are always on LAN :)
-#ifdef _WIN32
-    internet_connection =
-        os_config_read_string (NULL, "NetworkConnection", "none");
-    if (!stricmp (internet_connection, NOX ("dialup"))) {
-        ml_string ("psnet_init() detected dialup connection");
-
-        Psnet_connection = NETWORK_CONNECTION_DIALUP;
-    }
-    else if (!stricmp (internet_connection, NOX ("lan"))) {
-        ml_string ("psnet_init() detected lan connection");
-
-        Psnet_connection = NETWORK_CONNECTION_LAN;
-    }
-    else {
-        ml_string ("psnet_init() detected no connection");
-
-        Psnet_connection = NETWORK_CONNECTION_NONE;
-    }
-#else
+    // sort of a hack; assume unix users are always on LAN :)
     Psnet_connection = NETWORK_CONNECTION_LAN;
-#endif
 
     Network_status = NETWORK_STATUS_NO_WINSOCK;
-#ifdef _WIN32
-    if (WSAStartup (0x101, &wsa_data)) { return; }
-#endif
 
     // get the port for running this game on.  Be careful that it cannot be out
     // of bounds
@@ -549,11 +491,6 @@ void psnet_init (int /*protocol*/, int port_num) {
     Nettimeout = NETTIMEOUT;
     if (Cmdline_timeout > 0) { Nettimeout = Cmdline_timeout; }
 
-#ifdef _WIN32
-    // set ras status
-    psnet_ras_status ();
-#endif
-
     if (Network_status != NETWORK_STATUS_NO_PROTOCOL) {
         // set network to be running
         Network_status = NETWORK_STATUS_RUNNING;
@@ -574,21 +511,10 @@ void psnet_init (int /*protocol*/, int port_num) {
 void psnet_close () {
     if (Network_status != NETWORK_STATUS_RUNNING) { return; }
 
-#ifdef _WIN32
-    WSACancelBlockingCall ();
-
-    if (TCP_socket != INVALID_SOCKET) {
-        shutdown (TCP_socket, 1);
-        closesocket (TCP_socket);
-    }
-
-    if (WSACleanup ()) {}
-#else
     if (TCP_socket != (int)INVALID_SOCKET) {
         shutdown (TCP_socket, 1);
         close (TCP_socket);
     }
-#endif
 
     // close down all reliable sockets - this forces them to
     // send a disconnect to any remote machines
@@ -646,12 +572,8 @@ int psnet_use_protocol (int protocol) {
         if (custom_ip != NULL) {
             SOCKADDR_IN custom_address;
 
-#ifndef WIN32
-            if (inet_aton (custom_ip, &custom_address.sin_addr)) {
-#else
             if ((custom_address.sin_addr.s_addr = inet_addr (custom_ip)) !=
                 INADDR_NONE) {
-#endif
                 memcpy (
                     &ip_addr.sin_addr, &custom_address.sin_addr,
                     sizeof (custom_address.sin_addr));
@@ -841,14 +763,9 @@ int psnet_send (net_addr* who_to, void* data, int len, int np_index) {
     timeout.tv_sec = 0;
     timeout.tv_usec = 0;
 
-#ifdef _WIN32
-    if (SELECT (-1, NULL, &wfds, NULL, &timeout, PSNET_TYPE_UNRELIABLE) ==
-        SOCKET_ERROR) {
-#else
     if (SELECT (
             send_sock + 1, NULL, &wfds, NULL, &timeout,
             PSNET_TYPE_UNRELIABLE) == SOCKET_ERROR) {
-#endif
         ml_printf (
             "Error on blocking select for write %d", WSAGetLastError ());
         return 0;
@@ -1270,14 +1187,9 @@ void psnet_rel_work () {
         if (Tcp_active && (Socket_type == NET_TCP)) {
             FD_ZERO (&read_fds);
             FD_SET (Unreliable_socket, &read_fds);
-#ifdef _WIN32
-            udp_has_data = SELECT (
-                0, &read_fds, NULL, NULL, &timeout, PSNET_TYPE_RELIABLE);
-#else
             udp_has_data = SELECT (
                 Unreliable_socket + 1, &read_fds, NULL, NULL, &timeout,
                 PSNET_TYPE_RELIABLE);
-#endif
         }
         bytesin = 0;
         addrlen = sizeof (SOCKADDR);
@@ -1680,13 +1592,7 @@ int psnet_rel_check_for_listen (net_addr* from_addr) {
                 memset (from_addr, 0x00, sizeof (net_addr));
                 from_addr->port = ntohs (ip_addr->sin_port);
                 from_addr->type = NET_TCP;
-#ifdef _WIN32
-                memcpy (
-                    from_addr->addr, &ip_addr->sin_addr.S_un.S_addr,
-                    4); //-V512
-#else
                 memcpy (from_addr->addr, &ip_addr->sin_addr.s_addr, 4); //-V512
-#endif
                 break;
 
             default: Int3 (); break;
@@ -1735,14 +1641,10 @@ void psnet_rel_connect_to_server (
     if (Tcp_active && (Socket_type == NET_TCP)) {
         FD_ZERO (&read_fds);
         FD_SET (Unreliable_socket, &read_fds);
-#ifdef _WIN32
-        while (
-            SELECT (0, &read_fds, NULL, NULL, &timeout, PSNET_TYPE_RELIABLE)) {
-#else
+
         while (SELECT (
             Unreliable_socket + 1, &read_fds, NULL, NULL, &timeout,
             PSNET_TYPE_RELIABLE)) {
-#endif
             addrlen = sizeof (SOCKADDR);
             bytesin = RECVFROM (
                 Unreliable_socket, (char*)&ack_header,
@@ -1800,13 +1702,9 @@ void psnet_rel_connect_to_server (
 
         FD_ZERO (&read_fds);
         FD_SET (typeless_sock, &read_fds);
-#ifdef _WIN32
-        if (SELECT (0, &read_fds, NULL, NULL, &timeout, PSNET_TYPE_RELIABLE)) {
-#else
         if (SELECT (
                 typeless_sock + 1, &read_fds, NULL, NULL, &timeout,
                 PSNET_TYPE_RELIABLE)) {
-#endif
             ml_string ("selected() in psnet_rel_connect_to_server()");
 
             addrlen = sizeof (SOCKADDR);
@@ -1914,19 +1812,8 @@ void psnet_rel_connect_to_server (
 int psnet_get_ip () {
     SOCKADDR_IN local_address;
 
-#ifdef _WIN32
-    if (Psnet_connection == NETWORK_CONNECTION_DIALUP) {
-        local_address.sin_addr.s_addr = psnet_ras_status ();
-        if (local_address.sin_addr.s_addr == INADDR_NONE) {
-            local_address.sin_addr.s_addr = INADDR_ANY;
-        }
-    }
-    else
-#endif // FIXME - always returns INADDR_ANY for LAN
-    {
-        // Init local address to zero
-        local_address.sin_addr.s_addr = INADDR_ANY;
-    }
+    // Init local address to zero
+    local_address.sin_addr.s_addr = INADDR_ANY;
 
     ml_printf (
         "psnet_get_ip() reports IP : %s", inet_ntoa (local_address.sin_addr));
@@ -2111,128 +1998,6 @@ int psnet_is_valid_numeric_ip (char* ip) {
     // valid
     return 1;
 }
-
-#ifdef _WIN32 // Dial-Up Networking
-// function called from high level FreeSpace code to determine the status of
-// the networking code returns one of a handful of macros
-
-DWORD (__stdcall* pRasEnumConnections)
-(LPRASCONN lprasconn, LPDWORD lpcb, LPDWORD lpcConnections) = NULL;
-DWORD (__stdcall* pRasGetConnectStatus)
-(HRASCONN hrasconn, LPRASCONNSTATUS lprasconnstatus) = NULL;
-DWORD (__stdcall* pRasGetProjectionInfo)
-(HRASCONN hrasconn, RASPROJECTION rasprojection, LPVOID lpprojection,
- LPDWORD lpcb) = NULL;
-
-/**
- * Get the status of a RAS connection
- */
-unsigned int psnet_ras_status () {
-    int rval;
-    unsigned long size, num_connections, i, valid_connections = 0;
-    RASCONN rasbuffer[25];
-    HINSTANCE ras_handle;
-    unsigned long rasip = 0;
-    RASPPPIP projection;
-
-    Ras_connected = 0;
-
-    // first, call a LoadLibrary to load the RAS api
-    ras_handle = LoadLibrary ("rasapi32.dll");
-    if (ras_handle == NULL) { return INADDR_ANY; }
-
-    pRasEnumConnections =
-        (DWORD (__stdcall*) (LPRASCONN, LPDWORD, LPDWORD))GetProcAddress (
-            ras_handle, "RasEnumConnectionsA");
-    if (!pRasEnumConnections) {
-        FreeLibrary (ras_handle);
-        return INADDR_ANY;
-    }
-    pRasGetConnectStatus =
-        (DWORD (__stdcall*) (HRASCONN, LPRASCONNSTATUS))GetProcAddress (
-            ras_handle, "RasGetConnectStatusA");
-    if (!pRasGetConnectStatus) {
-        FreeLibrary (ras_handle);
-        return INADDR_ANY;
-    }
-    pRasGetProjectionInfo =
-        (DWORD (__stdcall*) (HRASCONN, RASPROJECTION, LPVOID, LPDWORD))
-            GetProcAddress (ras_handle, "RasGetProjectionInfoA");
-    if (!pRasGetProjectionInfo) {
-        FreeLibrary (ras_handle);
-        return INADDR_ANY;
-    }
-
-    size = sizeof (rasbuffer);
-    rasbuffer[0].dwSize = sizeof (RASCONN);
-
-    rval = pRasEnumConnections (rasbuffer, &size, &num_connections);
-    if (rval) {
-        FreeLibrary (ras_handle);
-        return INADDR_ANY;
-    }
-
-    // JAS: My computer gets to this point, but I have no RAS connections,
-    // so just exit
-    if (num_connections < 1) {
-        ml_string ("Found no RAS connections");
-        FreeLibrary (ras_handle);
-        return INADDR_ANY;
-    }
-
-    ml_printf ("Found %lu connections", num_connections);
-
-    for (i = 0; i < num_connections; i++) {
-        RASCONNSTATUS status;
-        unsigned long dummySize;
-
-        // don't count VPNs with the non-LAN connections
-        if (!stricmp (rasbuffer[i].szDeviceType, "RASDT_Vpn")) { continue; }
-        else {
-            valid_connections++;
-        }
-
-        ml_printf ("Connection %lu:", i);
-        ml_printf ("Entry Name: %s", rasbuffer[i].szEntryName);
-        ml_printf ("Device Type: %s", rasbuffer[i].szDeviceType);
-        ml_printf ("Device Name: %s", rasbuffer[i].szDeviceName);
-
-        // get the connection status
-        status.dwSize = sizeof (RASCONNSTATUS);
-        rval = pRasGetConnectStatus (rasbuffer[i].hrasconn, &status);
-        if (rval != 0) {
-            FreeLibrary (ras_handle);
-            return INADDR_ANY;
-        }
-
-        // get the projection informatiom
-        size = sizeof (projection);
-        projection.dwSize = size;
-        rval = pRasGetProjectionInfo (
-            rasbuffer[i].hrasconn, RASP_PppIp, &projection, &dummySize);
-        if (rval != 0) {
-            FreeLibrary (ras_handle);
-            return INADDR_ANY;
-        }
-
-        ml_printf ("IP Address: %s", projection.szIpAddress);
-    }
-
-    if (!valid_connections) {
-        FreeLibrary (ras_handle);
-        return INADDR_ANY;
-    }
-
-    Ras_connected = 1;
-
-    FreeLibrary (ras_handle);
-    rasip = inet_addr (projection.szIpAddress);
-    if (rasip == INADDR_NONE) { return INADDR_ANY; }
-
-    // The ip of the RAS connection
-    return rasip;
-}
-#endif // Dial-Up Networking
 
 /**
  * Set some options on a socket

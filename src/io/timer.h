@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _TIMER_H
 #define _TIMER_H
@@ -21,10 +14,6 @@
 // 2-3000 is gonna start slowing down the system.  Count_val should be
 // 1,193,180 divided by your target frequency. Use 0 for the normal 18.2 Hz
 // interrupt rate.
-
-#ifdef _WIN32
-#define TIMER_FREQUENCY 1193180
-#endif
 
 extern void timer_init ();
 extern void timer_close ();

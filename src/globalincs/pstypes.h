@@ -1,14 +1,7 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
-#ifndef _PSTYPES_H
-#define _PSTYPES_H
+#ifndef FREESPACE2_GLOBALINCS_PSTYPES_H
+#define FREESPACE2_GLOBALINCS_PSTYPES_H
 
 #include "windows_stub/config.h"
 #include "globalincs/scp_defines.h"
@@ -33,13 +26,8 @@
 
 #define LOCAL static // make module local varilable static.
 
-#ifdef _WIN32
-#define DIR_SEPARATOR_CHAR '\\'
-#define DIR_SEPARATOR_STR "\\"
-#else
 #define DIR_SEPARATOR_CHAR '/'
 #define DIR_SEPARATOR_STR "/"
-#endif
 
 typedef std::int32_t _fs_time_t; // time_t here is 64-bit and we need 32-bit
 typedef std::int32_t fix;
@@ -266,7 +254,6 @@ extern int Global_error_count;
     } while (0)
 
 // VerifyEx
-#ifndef _MSC_VER // non MS compilers
 #define VerifyEx(x, y, ...)                                                 \
     do {                                                                    \
         if (!(x)) {                                                         \
@@ -276,21 +263,6 @@ extern int Global_error_count;
         }                                                                   \
         ASSUME (x);                                                         \
     } while (0)
-#else
-#if _MSC_VER >= 1400 // VC 2005 or greater
-#define VerifyEx(x, y, ...)                                                 \
-    do {                                                                    \
-        if (!(x)) {                                                         \
-            Error (                                                         \
-                LOCATION, "Verify failure: %s with help text " #y "\n", #x, \
-                __VA_ARGS__);                                               \
-        }                                                                   \
-        ASSUME (x);                                                         \
-    } while (0)
-#else // everything else
-#define VerifyEx(x, y) Verify (x)
-#endif
-#endif
 
 #if defined(NDEBUG)
 // No debug version of Int3
@@ -572,4 +544,4 @@ using std::memset_if_trivial_else_error;
 #endif // HAVE_CXX11
 #endif // NDEBUG
 
-#endif // PS_TYPES_H
+#endif // FREESPACE2_GLOBALINCS_PSTYPES_H

@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "camera/camera.h"
 #include "globalincs/alphacolors.h"
 #include "globalincs/linklist.h"

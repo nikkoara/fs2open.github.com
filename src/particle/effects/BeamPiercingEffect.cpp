@@ -1,4 +1,4 @@
-
+// -*- mode: c++; -*-
 
 #include "particle/effects/BeamPiercingEffect.h"
 #include "particle/ParticleSource.h"

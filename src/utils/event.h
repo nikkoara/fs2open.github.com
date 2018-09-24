@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_UTILS_EVENT_H
+#define FREESPACE2_UTILS_EVENT_H
 
 #include "globalincs/pstypes.h"
 
@@ -35,3 +38,5 @@ private:
 };
 
 } // namespace util
+
+#endif // FREESPACE2_UTILS_EVENT_H

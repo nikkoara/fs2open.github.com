@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include <cstdio>
 #if _M_IX86_FP >= 1
@@ -2084,17 +2077,17 @@ void get_camera_limits (
 //
 //		inputs:		goal_f		=>		goal forward vector
 //						orient		=>		current orientation matrix (with
-//current forward
-// vector) 						w_in			=>		current input angular velocity
-// delta_t
+// current forward
+// vector) 						w_in			=>		current input angular
+// velocity delta_t
 // => time to move toward goal 						delta_bank	=>		desired
 // change in bank in degrees 						next_orient	=> the
 // orientation matrix at time delta_t (with current forward vector)
 // NOTE: this does not include any rotation about z
-//(bank) 						w_out			=>		the angular velocity of the ship
-//at
-// delta_t 						vel_limit	=>		maximum rotational speed 						acc_limit	=>
-// maximum rotational speed
+//(bank) 						w_out			=>		the angular velocity of the
+//ship at
+// delta_t 						vel_limit	=>		maximum rotational speed 						acc_limit
+// => maximum rotational speed
 //
 //		function moves the forward vector toward the goal forward vector taking
 // account of anglular 		momentum (velocity)  Attempt to try to move bank by
@@ -2345,8 +2338,8 @@ void vm_forward_interpolate (
 //				num_pnts		=>		number of points inside pnts array
 //				center		=>		OUTPUT PARAMETER:	contains world pos of
 // bounding
-// sphere center 				radius		=>		OUTPUT PARAMETER:	continas
-// radius of bounding sphere
+// sphere center 				radius		=>		OUTPUT PARAMETER:
+// continas radius of bounding sphere
 //
 #define BIGNUMBER 100000000.0f
 void vm_find_bounding_sphere (

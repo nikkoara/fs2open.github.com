@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_TRACING_MONITOR_H
+#define FREESPACE2_TRACING_MONITOR_H
 
 #include <type_traits>
 
@@ -70,3 +73,5 @@ public:
 // Increments a monitor variable
 #define MONITOR_INC(function_name, inc) \
     do { mon_##function_name += (inc); } while (0)
+
+#endif // FREESPACE2_TRACING_MONITOR_H

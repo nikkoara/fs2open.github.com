@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 //	Parse a symbolic expression.
 //	These are identical to Lisp functions.
@@ -23266,9 +23259,8 @@ void sexp_string_set_substring (int node) {
         // This might have broken the UTF-8 sequence so that needs to be fixed
         // in Unicode mode
         if (Unicode_text_mode) {
-            auto invalid =
-                unicode::detail::find_invalid (
-                    new_text.begin (), new_text.end ());
+            auto invalid = unicode::detail::find_invalid (
+                new_text.begin (), new_text.end ());
 
             if (invalid != new_text.end ()) {
                 // Found an invalid sequence. End the string right before that

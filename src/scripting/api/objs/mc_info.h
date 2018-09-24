@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_MC_INFO_H
+#define FREESPACE2_SCRIPTING_API_OBJS_MC_INFO_H
 
 #include "scripting/ade_api.h"
 #include "model/model.h"
@@ -25,3 +28,5 @@ public:
 DECLARE_ADE_OBJ (l_ColInfo, mc_info_h);
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_OBJS_MC_INFO_H

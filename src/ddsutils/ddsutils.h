@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 // header file to load .dds files
 // these use dxtc texture compression
 

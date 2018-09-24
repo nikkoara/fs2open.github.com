@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_UTIL_GPUMEMORYHEAP_H
+#define FREESPACE2_GRAPHICS_UTIL_GPUMEMORYHEAP_H
 
 #include "globalincs/pstypes.h"
 #include "utils/HeapAllocator.h"
@@ -61,3 +64,5 @@ public:
 
 } // namespace util
 } // namespace graphics
+
+#endif // FREESPACE2_GRAPHICS_UTIL_GPUMEMORYHEAP_H

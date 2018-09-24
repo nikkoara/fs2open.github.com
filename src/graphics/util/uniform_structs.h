@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_UTIL_UNIFORM_STRUCTS_H
+#define FREESPACE2_GRAPHICS_UTIL_UNIFORM_STRUCTS_H
 
 #include "globalincs/pstypes.h"
 
@@ -210,3 +213,5 @@ struct decal_info {
 };
 
 } // namespace graphics
+
+#endif // FREESPACE2_GRAPHICS_UTIL_UNIFORM_STRUCTS_H

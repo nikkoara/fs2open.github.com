@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _CFILEARCHIVE_H
 #define _CFILEARCHIVE_H
@@ -29,13 +22,8 @@ typedef struct Cfile_block {
                       // mem-mapped.
     bool mem_mapped;  // Flag for memory mapped files (if data is not null and
                       // this is false it means that it's an embedded file)
-#ifdef _WIN32
-    HANDLE hInFile;  // Handle from CreateFile()
-    HANDLE hMapFile; // Handle from CreateFileMapping()
-#else
-    //	int		fd;				// file descriptor
+
     size_t data_length; // length of data for mmap
-#endif
     size_t lib_offset;
     size_t raw_position;
     size_t size; // for packed files

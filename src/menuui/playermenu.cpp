@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include <climits>
 #include <cctype>
@@ -65,8 +58,8 @@ const char* Player_select_background_bitmap_name[GR_NUM_RESOLUTIONS] = {
 const char* Player_select_background_mask_bitmap[GR_NUM_RESOLUTIONS] = {
     "ChoosePilot-m", "2_ChoosePilot-m"
 };
-// #define PLAYER_SELECT_PALETTE			NOX("ChoosePilotPalette")	// palette
-// for the screen
+// #define PLAYER_SELECT_PALETTE			NOX("ChoosePilotPalette")	//
+// palette for the screen
 
 #define PLAYER_SELECT_MAIN_HALL_OVERLAY \
     NOX ("MainHall1") // main hall help overlay

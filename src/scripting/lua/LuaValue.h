@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #ifndef LUAVALUE_H
 #define LUAVALUE_H

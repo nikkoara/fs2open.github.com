@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _MISSIONGOAL_H
 #define _MISSIONGOAL_H
@@ -55,7 +48,7 @@ typedef struct mission_goal {
     int type;               // primary/secondary/bonus
     int satisfied;          // has this goal been satisfied
     char message[MAX_GOAL_TEXT]; //	Brief description, such as "Destroy all
-                                 //vile aliens!"
+                                 // vile aliens!"
     int rating;                  //	Some importance figure or something.
     int formula;                 //	Index in Sexp_nodes of this Sexp.
     int score;                   // score for this goal

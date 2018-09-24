@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_STREAMINGANIM_H
+#define FREESPACE2_SCRIPTING_API_OBJS_STREAMINGANIM_H
 
 #include "globalincs/pstypes.h"
 #include "scripting/ade.h"
@@ -20,3 +23,5 @@ DECLARE_ADE_OBJ (l_streaminganim, streaminganim_h);
 
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_OBJS_STREAMINGANIM_H

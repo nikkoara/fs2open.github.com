@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 //
 //
 
@@ -77,13 +79,12 @@ const size_t INVALID_ID =
 /**
  * @warning Utility macro. DO NOT USE!
  */
-#define ADE_OBJ_DERIV_IMPL(field, type, name, desc, deriv)              \
-    const ::scripting::ade_obj< type >& FS2_PASTE (get_, field) () {    \
-        static ::scripting::ade_obj< type > obj (name, desc, deriv);    \
-        return obj;                                                     \
-    }                                                                   \
-    const ::scripting::ade_obj< type >& field =                         \
-        FS2_PASTE (get_, field) ()
+#define ADE_OBJ_DERIV_IMPL(field, type, name, desc, deriv)           \
+    const ::scripting::ade_obj< type >& FS2_PASTE (get_, field) () { \
+        static ::scripting::ade_obj< type > obj (name, desc, deriv); \
+        return obj;                                                  \
+    }                                                                \
+    const ::scripting::ade_obj< type >& field = FS2_PASTE (get_, field) ()
 
 /**
  * @brief Define an API object
@@ -116,9 +117,8 @@ const size_t INVALID_ID =
  *
  * @ingroup ade_api
  */
-#define ADE_OBJ_DERIV(field, type, name, desc, deriv)           \
-    ADE_OBJ_DERIV_IMPL (                                        \
-        field, type, name, desc, &FS2_PASTE (get_, deriv) ())
+#define ADE_OBJ_DERIV(field, type, name, desc, deriv) \
+    ADE_OBJ_DERIV_IMPL (field, type, name, desc, &FS2_PASTE (get_, deriv) ())
 
 /**
  * @brief Declare an API object but don't define it
@@ -131,19 +131,18 @@ const size_t INVALID_ID =
  *
  * @ingroup ade_api
  */
-#define DECLARE_ADE_OBJ(field, type)                        \
-    extern const ::scripting::ade_obj< type >& FS2_PASTE (  \
-        get_, field) ();                                    \
+#define DECLARE_ADE_OBJ(field, type)                                       \
+    extern const ::scripting::ade_obj< type >& FS2_PASTE (get_, field) (); \
     extern const ::scripting::ade_obj< type >& field
 
 /**
  * @warning Utility macro. DO NOT USE!
  */
-#define ADE_LIB_IMPL(field, name, short_name, desc, parent)             \
-    const ::scripting::ade_lib& FS2_PASTE (get_, field) () {            \
+#define ADE_LIB_IMPL(field, name, short_name, desc, parent)               \
+    const ::scripting::ade_lib& FS2_PASTE (get_, field) () {              \
         static ::scripting::ade_lib lib (name, parent, short_name, desc); \
-        return lib;                                                     \
-    }                                                                   \
+        return lib;                                                       \
+    }                                                                     \
     const ::scripting::ade_lib& field = FS2_PASTE (get_, field) ()
 
 /**
@@ -181,9 +180,8 @@ const size_t INVALID_ID =
  *
  * @ingroup ade_api
  */
-#define ADE_LIB_DERIV(field, name, short_name, desc, parent)            \
-    ADE_LIB_IMPL (                                                      \
-        field, name, short_name, desc, &FS2_PASTE (get_, parent) ())
+#define ADE_LIB_DERIV(field, name, short_name, desc, parent) \
+    ADE_LIB_IMPL (field, name, short_name, desc, &FS2_PASTE (get_, parent) ())
 
 /**
  * @brief Declare an API library but don't define it
@@ -195,11 +193,11 @@ const size_t INVALID_ID =
  *
  * @ingroup ade_api
  */
-#define DECLARE_ADE_LIB(field)                                      \
-    extern const ::scripting::ade_lib& FS2_PASTE (get_, field) ();  \
-    extern const ::scripting::ade_lib& field;                       \
-    static const ::scripting::ade_lib* FS2_PASTE (                  \
-        field, reference_dummy) USED_VARIABLE = &(field)
+#define DECLARE_ADE_LIB(field)                                            \
+    extern const ::scripting::ade_lib& FS2_PASTE (get_, field) ();        \
+    extern const ::scripting::ade_lib& field;                             \
+    static const ::scripting::ade_lib* FS2_PASTE (field, reference_dummy) \
+        USED_VARIABLE = &(field)
 
 //*************************Lua return values*************************
 /**

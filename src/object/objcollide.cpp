@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "globalincs/linklist.h"
 #include "io/timer.h"
@@ -673,10 +666,9 @@ int collide_subdivide (
 // used to control the precision of the check. 		If 0.0, then use polygon
 // models to perform check, slow and accurate 		If !0.0, then use as a
 // scale on the radius
-// of the objects.  1.0 is Descent style 			collisions.  Larger values can
-// be used
-// to be sloppy about the collisions which 			is useful if a moving
-// object wants to prevent a collision.
+// of the objects.  1.0 is Descent style 			collisions.  Larger values
+// can be used to be sloppy about the collisions which 			is useful if a
+// moving object wants to prevent a collision.
 int objects_will_collide (
     object* A, object* B, float duration, float radius_scale) {
     vec3d prev_pos;

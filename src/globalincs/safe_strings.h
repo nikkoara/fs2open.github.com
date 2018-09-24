@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #ifndef _SAFE_STRINGS_H_INCLUDED_
 #define _SAFE_STRINGS_H_INCLUDED_
 
@@ -28,9 +30,7 @@
 /* Because errno_t is not (yet) standard, we define it here like this */
 typedef int errno_t;
 
-#if (!defined(_MSC_VER) && !defined(NO_SAFE_STRINGS)) ||             \
-    defined(_MSC_VER) && _MSC_VER >= 1400 /*&& !defined(NDEBUG)*/ && \
-        !defined(NO_SAFE_STRINGS)
+#if !defined(NO_SAFE_STRINGS)
 
 /* In order to compile safe_strings_test.cpp, you must have this defined on the
  * command line */
@@ -82,9 +82,9 @@ inline errno_t scp_strcat_s (
 #define strcpy_s(...) scp_strcpy_s (__FILE__, __LINE__, __VA_ARGS__)
 #define strcat_s(...) scp_strcat_s (__FILE__, __LINE__, __VA_ARGS__)
 
-#elif defined(_MSC_VER) && _MSC_VER < 1400 || defined(NO_SAFE_STRINGS)
+#else
 
-#pragma message("safe_strings disabled - this is not good!")
+#pragma message("safe_strings disabled")
 
 inline errno_t
 strcpy_s (char* strDest, size_t sizeInBytes, const char* strSource) {
@@ -108,6 +108,6 @@ inline errno_t strcat_s (char* strDest, const char* strSource) {
     return 0;
 }
 
-#endif
+#endif // !NO_SAFE_STRINGS
 
 #endif // _SAFE_STRINGS_H_INCLUDED_

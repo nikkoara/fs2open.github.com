@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "graphics/decal_draw_list.h"
 
 #include "graphics/util/uniform_structs.h"

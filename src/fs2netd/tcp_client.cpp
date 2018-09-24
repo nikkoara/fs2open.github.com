@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 // TCP_Client.cpp
 // TCP Client Functions for FS2Open PXO
 // Derek Meek

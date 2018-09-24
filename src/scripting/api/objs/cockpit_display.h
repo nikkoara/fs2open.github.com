@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_COCKPIT_DISPLAY_H
+#define FREESPACE2_SCRIPTING_API_OBJS_COCKPIT_DISPLAY_H
 
 #include "scripting/ade_api.h"
 #include "ship/ship.h"
@@ -71,3 +74,5 @@ DECLARE_ADE_OBJ (l_CockpitDisplays, cockpit_displays_h);
 
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_OBJS_COCKPIT_DISPLAY_H

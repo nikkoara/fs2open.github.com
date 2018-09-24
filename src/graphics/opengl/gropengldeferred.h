@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_OPENGL_GROPENGLDEFERRED_H
+#define FREESPACE2_GRAPHICS_OPENGL_GROPENGLDEFERRED_H
 
 #include "globalincs/pstypes.h"
 
@@ -19,3 +22,5 @@ void gr_opengl_draw_deferred_light_cylinder (
 void gr_opengl_deferred_shutdown ();
 
 void opengl_draw_sphere ();
+
+#endif // FREESPACE2_GRAPHICS_OPENGL_GROPENGLDEFERRED_H

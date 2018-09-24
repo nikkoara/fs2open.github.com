@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_UTIL_UNIFORMBUFFERMANAGER_H
+#define FREESPACE2_GRAPHICS_UTIL_UNIFORMBUFFERMANAGER_H
 
 #include "graphics/2d.h"
 
@@ -47,3 +50,5 @@ public:
 
 } // namespace util
 } // namespace graphics
+
+#endif // FREESPACE2_GRAPHICS_UTIL_UNIFORMBUFFERMANAGER_H

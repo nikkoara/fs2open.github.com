@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #define REDALERT_INTERNAL
 #include "ai/aigoals.h"
@@ -32,7 +25,6 @@
 #include "object/objectdock.h"
 #include "ship/ship.h"
 #include "sound/audiostr.h"
-#include "sound/fsspeech.h"
 #include "weapon/weapon.h"
 
 #include <stdexcept>
@@ -155,52 +147,27 @@ void red_alert_voice_unload () {
 void red_alert_voice_play () {
     if (!Briefing_voice_enabled) { return; }
 
-    if (Red_alert_voice < 0) {
-        // play simulated speech?
-        if (fsspeech_play_from (FSSPEECH_FROM_BRIEFING)) {
-            if (fsspeech_playing ()) { return; }
+    if (audiostream_is_playing (Red_alert_voice)) { return; }
 
-            fsspeech_play (
-                FSSPEECH_FROM_BRIEFING, Briefing->stages[0].text.c_str ());
-            Red_alert_voice_started = 1;
-        }
-    }
-    else {
-        if (audiostream_is_playing (Red_alert_voice)) { return; }
-
-        audiostream_play (Red_alert_voice, Master_voice_volume, 0);
-        Red_alert_voice_started = 1;
-    }
+    audiostream_play (Red_alert_voice, Master_voice_volume, 0);
+    Red_alert_voice_started = 1;
 }
 
 // stop playback of the red alert voice
 void red_alert_voice_stop () {
     if (!Red_alert_voice_started) return;
-
-    if (Red_alert_voice < 0) { fsspeech_stop (); }
-    else {
-        audiostream_stop (
-            Red_alert_voice, 1, 0); // stream is automatically rewound
-    }
+    audiostream_stop (Red_alert_voice, 1, 0); // stream is automatically rewound
 }
 
 // pausing and unpausing of red alert voice
 void red_alert_voice_pause () {
     if (!Red_alert_voice_started) return;
-
-    if (Red_alert_voice < 0) { fsspeech_pause (true); }
-    else {
-        audiostream_pause (Red_alert_voice);
-    }
+    audiostream_pause (Red_alert_voice);
 }
 
 void red_alert_voice_unpause () {
     if (!Red_alert_voice_started) return;
-
-    if (Red_alert_voice < 0) { fsspeech_pause (false); }
-    else {
-        audiostream_unpause (Red_alert_voice);
-    }
+    audiostream_unpause (Red_alert_voice);
 }
 
 // a button was pressed, deal with it
@@ -367,8 +334,6 @@ void red_alert_close () {
     }
 
     Red_alert_inited = 0;
-
-    fsspeech_stop ();
 }
 
 // called once per frame when game state is GS_STATE_RED_ALERT

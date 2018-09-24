@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "cmdline/cmdline.h"
 #include "gamesnd/eventmusic.h"
@@ -20,10 +13,6 @@
 #include "ship/ship.h"
 #include "sound/audiostr.h"
 #include "sound/sound.h"
-
-#ifdef _MSC_VER
-#pragma optimize("", off)
-#endif
 
 #define HULL_VALUE_TO_PLAY_INTENSE_BATTLE_MUSIC 0.75f
 
@@ -553,7 +542,7 @@ void event_music_do_frame () {
 //
 // input:	force_soundtrack	=>		OPTIONAL parameter (default value -1)
 //												forces the soundtrack to ignore
-//the music.tbl assignment
+// the music.tbl assignment
 //
 void event_music_level_init (int force_soundtrack) {
     int i;
@@ -1757,7 +1746,3 @@ void event_music_reset_choices () {
 void event_music_hostile_ship_destroyed () {
     Battle_over_timestamp = timestamp (BATTLE_CHECK_INTERVAL);
 }
-
-#ifdef _MSC_VER
-#pragma optimize("", on)
-#endif

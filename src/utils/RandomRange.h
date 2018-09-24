@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_UTILS_RANDOMRANGE_H
+#define FREESPACE2_UTILS_RANDOMRANGE_H
 
 #include "globalincs/pstypes.h"
 #include "parse/parselo.h"
@@ -260,3 +263,5 @@ UniformRange< Value > parseUniformRange (
     }
 }
 } // namespace util
+
+#endif // FREESPACE2_UTILS_RANDOMRANGE_H

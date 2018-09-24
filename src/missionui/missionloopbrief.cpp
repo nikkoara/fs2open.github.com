@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "anim/animplay.h"
 #include "freespace2/freespace.h"
@@ -20,7 +13,6 @@
 #include "missionui/missionscreencommon.h"
 #include "popup/popup.h"
 #include "sound/audiostr.h"
-#include "sound/fsspeech.h"
 
 extern char default_loop_briefing_color; // Doesn't seem worth including
                                          // alphacolors.h for -MageKing17
@@ -182,8 +174,6 @@ void loop_brief_init () {
             default_loop_briefing_color);
     }
 
-    bool sound_played = false;
-
     // open sound
     if (Campaign.missions[Campaign.current_mission]
             .mission_branch_brief_sound != NULL) {
@@ -194,14 +184,7 @@ void loop_brief_init () {
 
         if (Loop_sound != -1) {
             audiostream_play (Loop_sound, Master_voice_volume, 0);
-            sound_played = true;
         }
-    }
-
-    if (sound_played == false) {
-        fsspeech_play (
-            FSSPEECH_FROM_BRIEFING,
-            Campaign.missions[Campaign.current_mission].mission_branch_desc);
     }
 
     // music
@@ -324,8 +307,6 @@ void loop_brief_close () {
         audiostream_close_file (Loop_sound, 1);
         Loop_sound = -1;
     }
-
-    fsspeech_stop ();
 
     // stop music
     common_music_close ();

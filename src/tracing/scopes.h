@@ -1,7 +1,7 @@
+// -*- mode: c++; -*-
 
 #ifndef FS2_OPEN_SCOPES_H
 #define FS2_OPEN_SCOPES_H
-#pragma once
 
 #include "globalincs/pstypes.h"
 

@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 /*
  * Created by Ian "Goober5000" Warfield for the FreeSpace2 Source Code Project.
  * You may not sell or otherwise commercially exploit the source or things you
@@ -27,7 +29,7 @@
 // from player.h
 #define CALLSIGN_LEN \
     28 //	shortened from 32 to allow .plr to be attached without exceeding
-       //MAX_FILENAME_LEN
+       // MAX_FILENAME_LEN
 #define SHORT_CALLSIGN_PIXEL_W 80 // max width of short_callsign[] in pixels
 
 #define MAX_IFFS 10

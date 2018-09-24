@@ -1,6 +1,7 @@
+// -*- mode: c++; -*-
+
 #ifndef PARTICLE_PARTICLESOURCEWRAPPER_H
 #define PARTICLE_PARTICLESOURCEWRAPPER_H
-#pragma once
 
 #include "globalincs/pstypes.h"
 #include "ParticleSource.h"
@@ -31,8 +32,7 @@ private:
 public:
     ParticleSourceWrapper (const ParticleSourceWrapper&) = delete;
 
-    ParticleSourceWrapper&
-    operator= (const ParticleSourceWrapper&) = delete;
+    ParticleSourceWrapper& operator= (const ParticleSourceWrapper&) = delete;
 
     ParticleSourceWrapper () {}
     explicit ParticleSourceWrapper (std::vector< ParticleSource* >&& sources);
@@ -42,8 +42,7 @@ public:
 
     ParticleSourceWrapper (ParticleSourceWrapper&& other) noexcept;
 
-    ParticleSourceWrapper&
-    operator= (ParticleSourceWrapper&& other) noexcept;
+    ParticleSourceWrapper& operator= (ParticleSourceWrapper&& other) noexcept;
 
     void finish ();
 

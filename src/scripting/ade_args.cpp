@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "scripting/ade_args.h"
 #include "scripting/ade.h"

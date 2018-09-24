@@ -1,3 +1,8 @@
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_FS2NETD_PROTOCOL_H
+#define FREESPACE2_FS2NETD_PROTOCOL_H
+
 // Protocol.h
 // Protocol Definitions for FS2Open PXO
 // Derek Meek
@@ -77,3 +82,5 @@ struct fs2open_ship_typekill {
 };
 
 #endif
+
+#endif // FREESPACE2_FS2NETD_PROTOCOL_H

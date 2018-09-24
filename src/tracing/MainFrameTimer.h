@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_TRACING_MAINFRAMETIMER_H
+#define FREESPACE2_TRACING_MAINFRAMETIMER_H
 
 #include "globalincs/pstypes.h"
 #include "tracing/tracing.h"
@@ -26,3 +29,5 @@ public:
 
 typedef ThreadedEventProcessor< MainFrameTimer > ThreadedMainFrameTimer;
 } // namespace tracing
+
+#endif // FREESPACE2_TRACING_MAINFRAMETIMER_H

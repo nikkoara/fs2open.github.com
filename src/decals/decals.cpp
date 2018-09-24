@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include <nebula/neb.h>
 #include <utility>
 #include "decals/decals.h"

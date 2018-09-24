@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _PLAYER_H
 #define _PLAYER_H
@@ -53,7 +46,7 @@ struct campaign_info;
     (1 << 10) // secondary weapons were linked last mission
 #define PLAYER_FLAGS_NO_CHECK_ALL_ALONE_MSG \
     (1 << 11) //	player can't receive 'you're all alone...' message from
-              //Terran Command
+              // Terran Command
 #define PLAYER_FLAGS_KILLED_BY_EXPLOSION \
     (1 << 12) // player was killed by an instantaneous area-effect explosion
 #define PLAYER_FLAGS_HAS_PLAYED_PXO \
@@ -151,7 +144,7 @@ public:
     float lock_time_to_target;  // time left (in milliseconds) before minimum
                                 // time to lock elapsed
     float lock_dist_to_target;  //	distance from lock indicator to target (in
-                                //pixels)
+                                // pixels)
 
     int last_ship_flown_si_index; // ship info index of ship most recently
                                   // flown on a mission
@@ -164,11 +157,11 @@ public:
 
     int friendly_hits;     //	Number of times hit a friendly ship this mission.
     float friendly_damage; //	Total friendly damage done in mission.
-                           //Diminishes over time.
+                           // Diminishes over time.
     fix friendly_last_hit_time; //	Missiontime of last hit on friendly.  Used
-                                //to decay friendly damage.
+                                // to decay friendly damage.
     fix last_warning_message_time; //	Time at which last message to player
-                                   //was sent regarding friendly damage.
+                                   // was sent regarding friendly damage.
 
     int control_mode; // Used to determine what mode player control is in.  For
                       // worm holes mainly.
@@ -265,7 +258,7 @@ public:
                           // in TEXTURE format. do not try to use this bitmap
                           // to
                           //			 render in screen format
-    int tips; // show tips or not
+    int tips;             // show tips or not
 
     int shield_penalty_stamp; // timestamp for when we can next apply a shield
                               // balance penalty

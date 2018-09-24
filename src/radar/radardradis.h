@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 /*
  * Created by Olivier "LuaPineapple" Hamel for the Freespace 2 Source Code
  * Project. You may not sell or otherwise commercially exploit the source or

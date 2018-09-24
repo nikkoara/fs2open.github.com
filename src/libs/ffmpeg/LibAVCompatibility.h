@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_LIBS_FFMPEG_LIBAVCOMPATIBILITY_H
+#define FREESPACE2_LIBS_FFMPEG_LIBAVCOMPATIBILITY_H
 
 // swresample typedefs and macros
 
@@ -10,3 +13,5 @@ typedef AVAudioResampleContext SwrContext;
 #define swr_init avresample_open
 #define swr_free avresample_free
 #define swr_convert_frame avresample_convert_frame
+
+#endif // FREESPACE2_LIBS_FFMPEG_LIBAVCOMPATIBILITY_H

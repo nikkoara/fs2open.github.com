@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 /*
  * Species_Defs.h
  * Extended Species Support for FS2 Open

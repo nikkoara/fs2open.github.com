@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 /** @defgroup osapi The OS API
  *  Provides a number of function to interact with the operating system. The
@@ -29,23 +22,10 @@
 
 #include <SDL2/SDL_events.h>
 
-// --------------------------------------------------------------------------------------------------
-// OSAPI DEFINES/VARS
-//
-
 // set if running under MsDev - done after os_init(...) has returned
 extern int Os_debugger_running;
 
-#ifdef SCP_UNIX
 const char* os_get_legacy_user_dir ();
-#endif
-
-// --------------------------------------------------------------------------------------------------
-// OSAPI FUNCTIONS
-//
-
-// initialization/shutdown functions
-// -----------------------------------------------
 
 // If app_name is NULL or ommited, then TITLE is used
 // for the app name, which is where registry keys are stored.
@@ -58,14 +38,8 @@ void os_set_title (const char* title);
 // call at program end
 void os_cleanup ();
 
-// window management
-// ---------------------------------------------------------------
-
 // Returns 1 if app is not the foreground app.
 int os_foreground ();
-
-// process management
-// --------------------------------------------------------------
 
 /**
  * @brief Removes all pending events and ignores them

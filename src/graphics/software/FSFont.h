@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_SOFTWARE_FSFONT_H
+#define FREESPACE2_GRAPHICS_SOFTWARE_FSFONT_H
 
 #include "globalincs/pstypes.h"
 
@@ -100,8 +103,8 @@ public:
     float getHeight () const;
 
     /**
-     * @brief	Gets the height of this font in pixels without the top and bottom
-     * offsets.
+     * @brief	Gets the height of this font in pixels without the top and
+     * bottom offsets.
      *
      * @date	29.1.2012
      *
@@ -183,3 +186,5 @@ public:
     float getDescender ();
 };
 } // namespace font
+
+#endif // FREESPACE2_GRAPHICS_SOFTWARE_FSFONT_H

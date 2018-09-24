@@ -1,6 +1,7 @@
+// -*- mode: c++; -*-
+
 #ifndef LuaFunction_H
 #define LuaFunction_H
-#pragma once
 
 #include "LuaConvert.h"
 #include "LuaValue.h"

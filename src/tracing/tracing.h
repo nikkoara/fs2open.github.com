@@ -1,6 +1,7 @@
+// -*- mode: c++; -*-
+
 #ifndef _TRACING_H
 #define _TRACING_H
-#pragma once
 
 #include "globalincs/pstypes.h"
 #include "tracing/categories.h"
@@ -160,8 +161,8 @@ void value (const Category& category, float value);
 
 } // namespace tracing
 
-#define TRACE_SCOPE(category)                               \
-    ::tracing::complete::ScopedCompleteEvent FS2_PASTE (    \
+#define TRACE_SCOPE(category)                            \
+    ::tracing::complete::ScopedCompleteEvent FS2_PASTE ( \
         complete_trace_scope, __LINE__) (category)
 
 #endif //_TRACING_H

@@ -1,18 +1,7 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "globalincs/pstypes.h"
 
-#ifdef _WIN32
-#include <windows.h>
-#include <process.h>
-#else
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -24,7 +13,6 @@
 #include <sys/ioctl.h>
 
 #define WSAGetLastError() (errno)
-#endif
 
 #include <cstring>
 #include <cstdio>
@@ -40,11 +28,7 @@
 #define NW_AGHBN_LOOKUP 2
 #define NW_AGHBN_READ 3
 
-#ifdef WIN32
-void __cdecl http_gethostbynameworker (void* parm);
-#else
 int http_gethostbynameworker (void* parm);
-#endif
 
 int http_Asyncgethostbyname (unsigned int* ip, int command, char* hostname);
 
@@ -325,12 +309,7 @@ int ChttpGet::ConnectSocket () {
             FD_ZERO (&wfds);
             FD_SET (m_DataSock, &wfds);
 
-#ifdef WIN32
-            if (select (0, NULL, &wfds, NULL, &timeout))
-#else
-            if (select (m_DataSock + 1, NULL, &wfds, NULL, &timeout))
-#endif
-            {
+            if (select (m_DataSock + 1, NULL, &wfds, NULL, &timeout)) {
                 serr = 0;
                 break;
             }
@@ -440,11 +419,7 @@ uint ChttpGet::ReadDataChannel () {
 
         if ((m_iBytesTotal) && (m_iBytesIn == m_iBytesTotal)) break;
 
-#ifdef WIN32
-        select (0, &wfds, NULL, NULL, &timeout);
-#else
         select (m_DataSock + 1, &wfds, NULL, NULL, &timeout);
-#endif
 
         if (m_Aborting) {
             fclose (LOCALFILE);
@@ -504,11 +479,7 @@ typedef struct _async_dns_lookup {
 async_dns_lookup httpaslu;
 async_dns_lookup* http_lastaslu = NULL;
 
-#ifdef WIN32
-void __cdecl http_gethostbynameworker (void* parm);
-#else
 int http_gethostbynameworker (void* parm);
-#endif
 
 int http_Asyncgethostbyname (unsigned int* ip, int command, char* hostname) {
     if (command == NW_AGHBN_LOOKUP) {
@@ -524,9 +495,6 @@ int http_Asyncgethostbyname (unsigned int* ip, int command, char* hostname) {
         http_lastaslu = newaslu;
         httpaslu.done = false;
 
-#ifdef WIN32
-        _beginthread (http_gethostbynameworker, 0, newaslu);
-#else
         HOSTENT* he = gethostbyname (hostname);
 
         if (he == NULL) { newaslu->error = true; }
@@ -535,7 +503,6 @@ int http_Asyncgethostbyname (unsigned int* ip, int command, char* hostname) {
             newaslu->done = true;
             memcpy (&httpaslu, newaslu, sizeof (async_dns_lookup));
         }
-#endif
 
         return 1;
     }
@@ -562,24 +529,12 @@ int http_Asyncgethostbyname (unsigned int* ip, int command, char* hostname) {
 }
 
 // This is the worker thread which does the lookup.
-#ifdef WIN32
-void __cdecl http_gethostbynameworker (void* parm)
-#else
-int http_gethostbynameworker (void* parm)
-#endif
-{
-#ifdef SCP_UNIX
-//	df_pthread_detach(df_pthread_self());
-#endif
+int http_gethostbynameworker (void* parm) {
     async_dns_lookup* lookup = (async_dns_lookup*)parm;
     HOSTENT* he = gethostbyname (lookup->host);
     if (he == NULL) {
         lookup->error = true;
-#ifdef WIN32
-        return;
-#else
         return 0;
-#endif
     }
     else if (!lookup->abort) {
         memcpy (&lookup->ip, he->h_addr_list[0], sizeof (unsigned int));
@@ -588,7 +543,5 @@ int http_gethostbynameworker (void* parm)
     }
     vm_free (lookup);
 
-#ifdef SCP_UNIX
     return 0;
-#endif
 }

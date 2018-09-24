@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "io/joy.h"
 #include "io/joy_ff.h"
 #include "io/timer.h"
@@ -18,13 +20,6 @@ std::vector< JoystickPtr > joysticks;
 Joystick* currentJoystick = nullptr;
 
 bool initialized = false;
-
-/**
- * @brief Compatibility conversion from HatPosition to array index
- */
-inline int hatEnumToIdx (HatPosition in) {
-    return static_cast< int > (in - JOY_NUM_BUTTONS);
-}
 
 /**
  * @brief Compatibility conversion from Button index to HatPosition

@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 /*
  * z64555's debug console
  * Created for the FreeSpace Source Code project

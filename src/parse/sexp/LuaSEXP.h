@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_PARSE_SEXP_LUASEXP_H
+#define FREESPACE2_PARSE_SEXP_LUASEXP_H
 
 #include "parse/sexp/DynamicSEXP.h"
 
@@ -54,3 +57,5 @@ public:
 };
 
 } // namespace sexp
+
+#endif // FREESPACE2_PARSE_SEXP_LUASEXP_H

@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "graphics/opengl/gropenglsync.h"
 
 gr_sync gr_opengl_sync_fence () {

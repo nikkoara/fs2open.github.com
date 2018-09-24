@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #ifndef _VMALLOCATOR_H_INCLUDED_
 #define _VMALLOCATOR_H_INCLUDED_
 

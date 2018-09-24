@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_PATHS_PATHRENDERER_H
+#define FREESPACE2_GRAPHICS_PATHS_PATHRENDERER_H
 
 #include <memory>
 
@@ -159,3 +162,5 @@ public:
 };
 } // namespace paths
 } // namespace graphics
+
+#endif // FREESPACE2_GRAPHICS_PATHS_PATHRENDERER_H

@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "particle/ParticleSourceWrapper.h"
 #include "particle/ParticleSource.h"
 
@@ -10,8 +12,8 @@ ParticleSourceWrapper::ParticleSourceWrapper (ParticleSource* source) {
     m_sources.push_back (source);
 }
 
-ParticleSourceWrapper::ParticleSourceWrapper (ParticleSourceWrapper&& other)
-    noexcept {
+ParticleSourceWrapper::ParticleSourceWrapper (
+    ParticleSourceWrapper&& other) noexcept {
     *this = std::move (other);
 }
 

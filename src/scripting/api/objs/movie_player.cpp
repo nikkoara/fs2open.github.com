@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "movie_player.h"
 #include "time_obj.h"

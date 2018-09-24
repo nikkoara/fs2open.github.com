@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "ai/aibig.h"
 #include "ai/aigoals.h"
@@ -19,11 +12,6 @@
 #include "ship/afterburner.h"
 #include "ship/ship.h"
 #include "weapon/weapon.h"
-
-#ifdef _MSC_VER
-#pragma optimize("", off)
-#pragma auto_inline(off)
-#endif
 
 #define SCAN_FIGHTERS_INTERVAL \
     2000 // how often an AI fighter/bomber should scan for enemy
@@ -408,10 +396,10 @@ void ai_big_subsys_path_cleanup (ai_info* aip) {
 // Maybe Pl_objp needs to follow a path to get in line-of-sight to a subsystem
 // input:	do_dot_check	=>	default value 0, flag to indicate whether check
 // should be done to ensure
-//										subsystem is within certain field of view.  We
-//don't want
-// to check fov when 										strafing, since ship is weaving to avoid
-// turret fire
+//										subsystem is within certain field of view.
+//We don't want
+// to check fov when 										strafing, since ship is weaving to
+// avoid turret fire
 int ai_big_maybe_follow_subsys_path (int do_dot_check) {
     ai_info* aip;
     float dot = 1.0f, min_dot;
@@ -584,7 +572,7 @@ int ai_big_maybe_follow_subsys_path (int do_dot_check) {
 //
 // exit:		1	=>	ship should enter strafe mode
 //				0	=> ship should not change ai mode, no fighter/bomber
-//threats are near
+// threats are near
 //
 // NOTE: uses SCAN_FIGHTERS_INTERVAL and ENTER_STRAFE_THREAT_DIST_SQUARED which
 // are defined in AiBig.h

@@ -1,4 +1,4 @@
-
+// -*- mode: c++; -*-
 
 #ifndef _HUDPARSE_H
 #define _HUDPARSE_H

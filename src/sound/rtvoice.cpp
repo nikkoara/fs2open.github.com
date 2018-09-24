@@ -1,22 +1,10 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "globalincs/pstypes.h"
 #include "sound/ds.h"
 #include "sound/dscap.h"
 #include "sound/rtvoice.h"
 #include "sound/sound.h"
-
-#ifdef WIN32
-#define WIN32_LEAN_AN_MEAN
-#include <windows.h>
-#endif
 
 typedef struct rtv_format {
     int nchannels;
@@ -53,11 +41,7 @@ static rtv_out_buffer
 // transmitted with packets
 
 // recording timer data
-#ifdef _WIN32
-static int Rtv_record_timer_id; // unique id for callback timer
-#else
 static SDL_TimerID Rtv_record_timer_id;
-#endif
 static int Rtv_callback_time; // callback time in ms
 
 void (*Rtv_callback) ();
@@ -76,16 +60,6 @@ static int Rtv_playback_uncompressed_buffer_size;
 // RECORD/ENCODE
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifdef _WIN32
-void CALLBACK TimeProc (
-    unsigned int /*id*/, unsigned int /*msg*/, DWORD_PTR /*userdata*/,
-    DWORD_PTR /*dw1*/, DWORD_PTR /*dw2*/) {
-    if (!Rtv_callback) { return; }
-
-    nprintf (("Alan", "In callback\n"));
-    Rtv_callback ();
-}
-#else
 Uint32 TimeProc (Uint32 interval, void* /*param*/) {
     if (!Rtv_callback) {
         SDL_RemoveTimer (Rtv_record_timer_id);
@@ -105,7 +79,6 @@ Uint32 TimeProc (Uint32 interval, void* /*param*/) {
         return 0;
     }
 }
-#endif
 
 // Try to pick the most appropriate recording format
 //
@@ -182,11 +155,7 @@ void rtvoice_stop_recording () {
     dscap_stop_record ();
 
     if (Rtv_record_timer_id) {
-#ifndef _WIN32
         SDL_RemoveTimer (Rtv_record_timer_id);
-#else
-        timeKillEvent (Rtv_record_timer_id);
-#endif
         Rtv_record_timer_id = 0;
     }
 
@@ -225,12 +194,7 @@ int rtvoice_start_recording (void (*user_callback) (), int callback_time) {
     if (dscap_start_record ()) { return -1; }
 
     if (user_callback) {
-#ifndef _WIN32
         Rtv_record_timer_id = SDL_AddTimer (callback_time, TimeProc, NULL);
-#else
-        Rtv_record_timer_id = timeSetEvent (
-            callback_time, callback_time, TimeProc, 0, TIME_PERIODIC);
-#endif
         if (!Rtv_record_timer_id) {
             dscap_stop_record ();
             return -1;

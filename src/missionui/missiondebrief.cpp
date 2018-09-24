@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "cfile/cfile.h"
 #include "gamehelp/contexthelp.h"
@@ -41,7 +34,6 @@
 #include "popup/popup.h"
 #include "ship/ship.h"
 #include "sound/audiostr.h"
-#include "sound/fsspeech.h"
 #include "stats/medals.h"
 #include "stats/stats.h"
 #include "ui/uidefs.h"
@@ -544,8 +536,6 @@ void debrief_voice_stop () {
     audiostream_stop (
         Debrief_voices[Stage_voice], 1, 0); // stream is automatically rewound
     Stage_voice = -1;
-
-    fsspeech_stop ();
 }
 
 extern int Briefing_music_handle;
@@ -564,8 +554,6 @@ void debrief_pause () {
         return;
 
     audiostream_pause (Debrief_voices[Stage_voice]);
-
-    fsspeech_pause (true);
 }
 
 void debrief_unpause () {
@@ -582,8 +570,6 @@ void debrief_unpause () {
         return;
 
     audiostream_unpause (Debrief_voices[Stage_voice]);
-
-    fsspeech_pause (false);
 }
 
 // function to deal with inserting possible promition and badge stages into the
@@ -1834,8 +1820,6 @@ void debrief_text_init () {
         "", Debrief_text_wnd_coords[gr_screen.res][2],
         default_debriefing_color, 0, 0); // Initialize color stuff -MageKing17
 
-    fsspeech_start_buffer ();
-
     if (Current_mode == DEBRIEF_TAB) {
         for (i = 0; i < Num_debrief_stages; i++) {
             if (i)
@@ -1850,11 +1834,6 @@ void debrief_text_init () {
                 Num_text_lines += brief_color_text_init (
                     src, Debrief_text_wnd_coords[gr_screen.res][2],
                     default_debriefing_color, 0, MAX_DEBRIEF_LINES, true);
-
-                if (use_sim_speech && !Recommend_active) {
-                    fsspeech_stuff_buffer (src);
-                    fsspeech_stuff_buffer ("\n");
-                }
             }
 
             if (Recommend_active) {
@@ -1874,18 +1853,13 @@ void debrief_text_init () {
                         default_recommendation_color, 0, MAX_DEBRIEF_LINES,
                         true);
                     r_count++;
-
-                    if (use_sim_speech) {
-                        fsspeech_stuff_buffer (src);
-                        fsspeech_stuff_buffer ("\n");
-                    }
                 }
             }
         }
+
         Brief_text_wipe_time_elapsed =
             BRIEF_TEXT_WIPE_TIME; // Skip the wipe effect
 
-        if (use_sim_speech) { fsspeech_play_buffer (FSSPEECH_FROM_BRIEFING); }
         return;
     }
 

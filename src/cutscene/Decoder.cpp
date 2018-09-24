@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "cutscene/Decoder.h"
 
 #include <memory>

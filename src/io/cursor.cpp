@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include <cmath>
 #include <algorithm>

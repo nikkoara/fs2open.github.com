@@ -1,29 +1,23 @@
+// -*- mode: c++; -*-
 
 #include "renderdoc.h"
 #include "renderdoc_app.h"
 
 #include "globalincs/pstypes.h"
 
-#ifdef SCP_UNIX
 #include <dlfcn.h>
-#endif
 
 namespace {
 bool api_loaded = false;
 RENDERDOC_API_1_1_1* api = nullptr;
 
 pRENDERDOC_GetAPI load_getAPI () {
-#ifdef SCP_UNIX
     auto handle = dlopen ("librenderdoc.so", RTLD_NOLOAD);
     auto symbol = dlsym (handle, "RENDERDOC_GetAPI");
 
     if (handle != nullptr) { dlclose (handle); }
 
     return (pRENDERDOC_GetAPI)symbol;
-#else
-    // Renderdoc API loading is not implemented for this platform yet!
-    return nullptr;
-#endif
 }
 
 } // namespace

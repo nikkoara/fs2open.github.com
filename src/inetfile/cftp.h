@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _CFTP_HEADER_
 #define _CFTP_HEADER_
@@ -13,10 +6,6 @@
 #include "globalincs/pstypes.h"
 
 #include <cstdio>
-
-#ifdef WIN32
-#include <winsock.h>
-#endif
 
 #define FTP_STATE_INTERNAL_ERROR 0
 #define FTP_STATE_SOCKET_ERROR 1

@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_UTILS_HEAPALLOCATOR_H
+#define FREESPACE2_UTILS_HEAPALLOCATOR_H
 
 #include "globalincs/pstypes.h"
 
@@ -76,3 +79,5 @@ public:
 };
 
 } // namespace util
+
+#endif // FREESPACE2_UTILS_HEAPALLOCATOR_H

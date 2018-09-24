@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #ifndef MODEL_FLAGS_H
 #define MODEL_FLAGS_H
 

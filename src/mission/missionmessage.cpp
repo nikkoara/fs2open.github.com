@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "anim/animplay.h"
 #include "gamesequence/gamesequence.h"
@@ -29,7 +22,6 @@
 #include "parse/sexp.h"
 #include "ship/ship.h"
 #include "ship/subsysdamage.h"
-#include "sound/fsspeech.h"
 #include "species_defs/species_defs.h"
 #include "weapon/emp.h"
 
@@ -784,8 +776,6 @@ void message_mission_shutdown () {
         }
     }
 
-    fsspeech_stop ();
-
     // free up remaining anim data - taylor
     for (i = 0; i < Num_message_avis; i++) { message_mission_free_avi (i); }
 
@@ -862,8 +852,6 @@ void message_kill_all (int kill_all) {
     }
 
     if (kill_all) { Num_messages_playing = 0; }
-
-    fsspeech_stop ();
 }
 
 // function to kill nth playing message
@@ -884,8 +872,6 @@ void message_kill_playing (int message_num) {
         snd_stop (Playing_messages[message_num].wave);
 
     Playing_messages[message_num].shipnum = -1;
-
-    fsspeech_stop ();
 }
 
 // returns true if all messages currently playing are builtin messages
@@ -1052,12 +1038,6 @@ bool message_play_wave (message_q* q) {
     if (m->wave_info.index >= 0) {
         index = m->wave_info.index;
         strcpy_s (filename, Message_waves[index].name);
-
-        // Goober5000 - if we're using simulated speech, it should pre-empt the
-        // generic beeps
-        if (fsspeech_play_from (FSSPEECH_FROM_INGAME) &&
-            message_filename_is_generic (filename))
-            return false;
 
         // if we need to bash the wave name because of "conversion" to terran
         // command, do it here
@@ -1342,9 +1322,6 @@ void message_queue_process () {
             if ((Playing_messages[i].wave.isValid ()) &&
                 (snd_time_remaining (Playing_messages[i].wave) > 250))
                 wave_done = 0;
-
-            // Goober5000
-            if (fsspeech_playing ()) wave_done = 0;
 
             // AL 1-20-98: If voice message is done, kill the animation early
             if ((Playing_messages[i].wave.isValid ()) && wave_done) {
@@ -1646,9 +1623,7 @@ void message_queue_process () {
 
     // play wave first, since need to know duration for picking anim start
     // frame
-    if (message_play_wave (q) == false) {
-        fsspeech_play (FSSPEECH_FROM_INGAME, buf);
-    }
+    message_play_wave (q);
 
     // play animation for head
     message_play_anim (q);
@@ -2397,9 +2372,9 @@ void message_maybe_distort () {
 // second case: Message_wave_duration > 0 (occurs when voice playback
 // accompainies message)
 //					 Blank out portions of the sound based on Distort_num, this
-//this is
-// that same 					 data that will be used to blank out portions of the
-// audio playback
+// this is
+// that same 					 data that will be used to blank out portions of
+// the audio playback
 //
 void message_maybe_distort_text (char* text, int shipnum) {
     int voice_duration;
@@ -2421,8 +2396,7 @@ void message_maybe_distort_text (char* text, int shipnum) {
             }
 
             if (run > 0) {
-                unicode::encode (
-                    U'-', std::back_inserter (result_str));
+                unicode::encode (U'-', std::back_inserter (result_str));
                 --run;
 
                 if (run <= 0) { next_distort = i + (5 + myrand () % 5); }
@@ -2456,12 +2430,10 @@ void message_maybe_distort_text (char* text, int shipnum) {
         if (Distort_next & 1) {
             for (size_t i = 0; i < num_chars; ++i, ++curr_iter) {
                 if (*curr_iter != U' ') {
-                    unicode::encode (
-                        U'-', std::back_inserter (result_str));
+                    unicode::encode (U'-', std::back_inserter (result_str));
                 }
                 else {
-                    unicode::encode (
-                        U' ', std::back_inserter (result_str));
+                    unicode::encode (U' ', std::back_inserter (result_str));
                 }
             }
 

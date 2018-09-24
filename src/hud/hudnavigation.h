@@ -1,11 +1,9 @@
-// HUDNavigation.h
-// Derek Meek
-// 4-30-2004
+// -*- mode: c++; -*-
 
-#if !defined(_HUD_NAV_)
-#define _HUD_NAV_
+#ifndef FREESPACE2_HUD_HUDNAVIGATION_H
+#define FREESPACE2_HUD_HUDNAVIGATION_H
 
 // Draws the Navigation stuff on the HUD
 void hud_draw_navigation ();
 
-#endif
+#endif // FREESPACE2_HUD_HUDNAVIGATION_H

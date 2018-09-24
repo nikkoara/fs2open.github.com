@@ -1,12 +1,9 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- */
+// -*- mode: c++; -*-
 
-/**
+#ifndef FREESPACE2_GLOBALINCS_TOOLCHAIN_CLANG_H
+#define FREESPACE2_GLOBALINCS_TOOLCHAIN_CLANG_H
+
+/*
  * @file
  *
  * @brief Macros to abstract compiler capabilities for the Clang toolchain
@@ -36,10 +33,10 @@
     do {                          \
     } while (false)
 #else
-/*
- * NOTE: Assertion() can only use its proper functionality in compilers
- * that support variadic macros.
- */
+ /*
+  * NOTE: Assertion() can only use its proper functionality in compilers
+  * that support variadic macros.
+  */
 #define Assertion(expr, msg, ...)                               \
     do {                                                        \
         if (!(expr)) {                                          \
@@ -49,13 +46,13 @@
     } while (false)
 #endif
 
-/* C++11 Standard Detection */
+ /* C++11 Standard Detection */
 #if !defined(HAVE_CXX11)
-/*
- * Clang does not seem to have a feature check for 'is_trivial'.
- * Assume it will be covered by one of the following checks ...
- * http://clang.llvm.org/docs/LanguageExtensions.html#feature_check
- */
+ /*
+  * Clang does not seem to have a feature check for 'is_trivial'.
+  * Assume it will be covered by one of the following checks ...
+  * http://clang.llvm.org/docs/LanguageExtensions.html#feature_check
+  */
 #if __has_feature(cxx_static_assert) && __has_feature(cxx_auto_type)
 #define HAVE_CXX11
 #endif
@@ -93,3 +90,5 @@
 #else
 #define UNREACHABLE(msg, ...) __builtin_unreachable ()
 #endif
+
+#endif // FREESPACE2_GLOBALINCS_TOOLCHAIN_CLANG_H

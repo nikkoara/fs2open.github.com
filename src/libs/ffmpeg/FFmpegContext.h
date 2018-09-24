@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_LIBS_FFMPEG_FFMPEGCONTEXT_H
+#define FREESPACE2_LIBS_FFMPEG_FFMPEGCONTEXT_H
 
 #include "globalincs/pstypes.h"
 #include "cfile/cfile.h"
@@ -41,3 +44,5 @@ public:
 
 } // namespace ffmpeg
 } // namespace libs
+
+#endif // FREESPACE2_LIBS_FFMPEG_FFMPEGCONTEXT_H

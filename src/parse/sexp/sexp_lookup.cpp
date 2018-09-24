@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "parse/sexp/sexp_lookup.h"
 #include "parse/sexp/LuaSEXP.h"

@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 /*
  * Copyright (C) Freespace Open 2015.  All rights reserved.
  *

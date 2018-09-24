@@ -1,7 +1,7 @@
+// -*- mode: c++; -*-
 
 #ifndef LUA_UTIL_H
 #define LUA_UTIL_H
-#pragma once
 
 #include "LuaValue.h"
 #include "LuaTable.h"

@@ -1,4 +1,5 @@
-#pragma once
+// -*- mode: c++; -*-
+
 #ifndef FS2_OPEN_GAMEEVENT_H
 #define FS2_OPEN_GAMEEVENT_H
 

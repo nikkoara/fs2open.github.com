@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include <cstdio>
 #include <cstdlib>
@@ -912,13 +905,13 @@ void physics_set_rotvel_and_saturate (float* dest, float delta) {
 //	input:	impulse		=>		impulse vector ( force*time = impulse = change
 // in momentum (mv) )
 //				pos			=>		vector from center of mass to location of
-//where the
+// where the
 // force acts 				pi				=>		pointer to phys_info struct
 // of
-// object getting whacked 				orient		=>		orientation matrix (needed to
-// set
-// rotational impulse in body coords) 				mass			=>		mass of the
-// object (may be different from pi.mass if docked)
+// object getting whacked 				orient		=>		orientation matrix (needed
+// to set
+// rotational impulse in body coords) 				mass			=>		mass of
+// the object (may be different from pi.mass if docked)
 //
 #define WHACK_LIMIT 0.001f
 #define ROTVEL_WHACK_CONST 0.12
@@ -1048,9 +1041,9 @@ float glide_ramp (
 // inputs:	direction_vec		=>		a position vector whose direction is
 // from the center of the shock wave to the object
 //				pressure				=>		the pressure of the shock wave
-//at the object 				pi						=>		physics_info
-// structure 				orient				=>		matrix orientation of the object
-// min
+// at the object 				pi						=>		physics_info
+// structure 				orient				=>		matrix orientation of the
+// object min
 //=>		vector of minimum values of the bounding box 				max
 // =>		vector of maximum values of the bounding box 				radius
 // =>
@@ -1200,7 +1193,7 @@ void physics_apply_shock (
 // being applied.
 //
 //	input:	impulse					=>		impulse vector ( force*time =
-//impulse = change in momentum (mv) ) 				world_delta_rotvel	=>
+// impulse = change in momentum (mv) ) 				world_delta_rotvel	=>
 // change in rotational
 // velocity (already calculated) 				pi							=>
 // pointer to phys_info struct of object getting whacked 				orient

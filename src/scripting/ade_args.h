@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 //
 //
 
@@ -8,7 +10,6 @@ extern "C" {
 
 #include "lauxlib.h"
 #include "lualib.h"
-
 }
 
 namespace scripting {

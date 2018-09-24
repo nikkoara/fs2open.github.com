@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_UTILS_ENCODING_H
+#define FREESPACE2_UTILS_ENCODING_H
 
 #include "cfile/cfile.h"
 
@@ -58,3 +61,5 @@ bool guessLatin1Encoding (const char* aBuf, size_t aLen);
 int check_encoding_and_skip_bom (
     CFILE* file, const char* filename, int* start_offset = nullptr);
 } // namespace util
+
+#endif // FREESPACE2_UTILS_ENCODING_H

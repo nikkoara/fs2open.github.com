@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #ifndef SHIP_FLAGS_H
 #define SHIP_FLAGS_H
 
@@ -14,12 +16,9 @@ FLAG_LIST (Weapon_Flags){
 };
 
 FLAG_LIST (Subsystem_Flags){
-    Cargo_revealed = 0,
-    Untargetable,
-    No_SS_targeting,
+    Cargo_revealed = 0, Untargetable, No_SS_targeting,
     Has_fired, // used by scripting to flag a turret as having been fired
-    FOV_Required,
-    FOV_edge_check,
+    FOV_Required, FOV_edge_check,
     No_replace, // prevents 'destroyed' submodel from being rendered if subsys
                 // is destroyed.
     No_live_debris, // prevents subsystem from generating live debris
@@ -60,9 +59,7 @@ FLAG_LIST (Ship_Flags){
     No_arrival_music,  // don't play arrival music when ship arrives
     No_arrival_warp,   // no arrival warp in effect
     No_departure_warp, // no departure warp in effect
-    Kill_before_mission,
-    Dying,
-    Disabled,
+    Kill_before_mission, Dying, Disabled,
     Depart_warp,      // ship is departing via warp-out
     Depart_dockbay,   // ship is departing via docking bay
     Arriving_stage_1, // ship is arriving. In other words, doing warp in
@@ -113,12 +110,13 @@ FLAG_LIST (Ship_Flags){
     Glowmaps_disabled,   // taylor - to disable glow maps
     No_death_scream,     // Goober5000 - for WCS
     Always_death_scream, // Goober5000 - for WCS
-    Navpoint_needslink,  // Kazan	- This ship requires "linking" for autopilot
-                         // (when player ship gets within specified distance
-                         // NAVPOINT_NEEDSLINK is replaced by NAVPOINT_CARRY)
-    Hide_ship_name,      // Karajorma - Hides the ships name (like the -wcsaga
-                         // command line used to but for any selected ship)
-    Afterburner_locked,  // KeldorKatarn - This ship can't use its afterburners
+    Navpoint_needslink,  // Kazan	- This ship requires "linking" for
+                        // autopilot (when player ship gets within specified
+                        // distance NAVPOINT_NEEDSLINK is replaced by
+                        // NAVPOINT_CARRY)
+    Hide_ship_name,     // Karajorma - Hides the ships name (like the -wcsaga
+                        // command line used to but for any selected ship)
+    Afterburner_locked, // KeldorKatarn - This ship can't use its afterburners
     Set_class_dynamically, // Karajorma - This ship should have its class
                            // assigned rather than simply read from the mission
                            // file
@@ -144,14 +142,9 @@ FLAG_LIST (Ship_Flags){
     Draw_as_wireframe,      // The_E -- Ship will be rendered in wireframe mode
     Render_without_diffuse, // The_E -- Ship will be rendered without diffuse
                             // map (needed for the lab)
-    Render_without_glowmap,
-    Render_without_specmap,
-    Render_without_normalmap,
-    Render_without_heightmap,
-    Render_without_ambientmap,
-    Render_without_miscmap,
-    Render_full_detail,
-    Render_without_light,
+    Render_without_glowmap, Render_without_specmap, Render_without_normalmap,
+    Render_without_heightmap, Render_without_ambientmap,
+    Render_without_miscmap, Render_full_detail, Render_without_light,
 
     NUM_VALUES
 
@@ -163,9 +156,7 @@ FLAG_LIST (Exit_Flags){ Destroyed = 0,  Departed,    Cargo_known,
                         NUM_VALUES };
 
 FLAG_LIST (Info_Flags){
-    No_collide = 0,
-    Player_ship,
-    Default_player_ship,
+    No_collide = 0, Player_ship, Default_player_ship,
     Path_fixup,  // when set, path verts have been set for this ship's model
     Support,     // this ship can perform repair/rearm functions
     Afterburner, // this ship has afterburners

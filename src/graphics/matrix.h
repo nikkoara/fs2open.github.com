@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_MATRIX_H
+#define FREESPACE2_GRAPHICS_MATRIX_H
 
 #include "graphics/2d.h"
 
@@ -33,3 +36,5 @@ void gr_reset_matrices ();
 extern matrix4 gr_texture_matrix;
 
 void gr_set_texture_panning (float u, float v, bool enable);
+
+#endif // FREESPACE2_GRAPHICS_MATRIX_H

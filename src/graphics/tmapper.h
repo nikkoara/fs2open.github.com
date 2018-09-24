@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _TMAPPER_H
 #define _TMAPPER_H
@@ -47,7 +40,7 @@ extern void grx_tmapper( int nv, vertex * verts[], uint flags );
              // palette entries
 
 //#define TMAP_HIGHEST_FLAG_BIT		7		// The highest bit used in the
-//TMAP_FLAGS #define TMAP_MAX_SCANLINES		(1<<(TMAP_HIGHEST_FLAG_BIT+1))
+// TMAP_FLAGS #define TMAP_MAX_SCANLINES		(1<<(TMAP_HIGHEST_FLAG_BIT+1))
 
 // Add any entries that don't work for software under here:
 // Make sure to disable them at top of grx_tmapper

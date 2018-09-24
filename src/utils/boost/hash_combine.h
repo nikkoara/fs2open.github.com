@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_UTILS_BOOST_HASH_COMBINE_H
+#define FREESPACE2_UTILS_BOOST_HASH_COMBINE_H
 
 #include <cstddef>
 
@@ -13,3 +16,5 @@ inline void hash_combine (std::size_t& seed, const T& v) {
 }
 
 } // namespace boost
+
+#endif // FREESPACE2_UTILS_BOOST_HASH_COMBINE_H

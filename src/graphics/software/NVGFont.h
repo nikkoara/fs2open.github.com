@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_SOFTWARE_NVGFONT_H
+#define FREESPACE2_GRAPHICS_SOFTWARE_NVGFONT_H
 
 #include "globalincs/pstypes.h"
 #include "graphics/software/FSFont.h"
@@ -45,3 +48,5 @@ public:
     static size_t getTokenLength (const char* string, size_t maxLength);
 };
 } // namespace font
+
+#endif // FREESPACE2_GRAPHICS_SOFTWARE_NVGFONT_H

@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "utils/HeapAllocator.h"
 
 namespace {

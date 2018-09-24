@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include <cstdio>
 #include <cstdlib>
@@ -63,8 +56,7 @@ int is_white_space (char ch) {
 }
 int is_white_space (unicode::codepoint_t cp) {
     return (
-        (cp == U' ') || (cp == U'\t') ||
-        (cp == (unicode::codepoint_t)EOLN));
+        (cp == U' ') || (cp == U'\t') || (cp == (unicode::codepoint_t)EOLN));
 }
 
 // Returns true if this character is gray space, else false (gray space is
@@ -1995,8 +1987,8 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
 
     if (Unicode_text_mode) {
         // Validate the UTF-8 encoding
-        auto invalid = unicode::detail::find_invalid (
-            raw_text, raw_text + file_len);
+        auto invalid =
+            unicode::detail::find_invalid (raw_text, raw_text + file_len);
 
         if (invalid != raw_text + file_len) {
             auto isLatin1 =
@@ -3294,16 +3286,14 @@ char* split_str_once (char* src, int max_pixel_w) {
 // parameters:		src			=>		source string to be broken up
 //						max_pixel_w	=>		max width of line in pixels
 //						n_chars		=>		output array that will hold number
-//of characters in each line 						p_str			=>		output array of pointers to
-//start of
+// of characters in each line 						p_str			=>		output array of pointers
+// to start of
 // lines within src 						max_lines	=>		limit of number
 // of
-// lines to break src up into 						ignore_char	=>		OPTIONAL parameter
-// (default
-// val -1).  Ignore
-// words starting with this character 												This is useful when you
-// want to ignore embedded control information that starts with a specific
-// character, like $ or
+// lines to break src up into 						ignore_char	=>		OPTIONAL
+// parameter (default val -1).  Ignore words starting with this character
+// This is useful when you want to ignore embedded control information that
+// starts with a specific character, like $ or
 //#
 //
 //	returns:			number of lines src is broken into
@@ -3706,14 +3696,7 @@ bool can_construe_as_integer (const char* text) {
 // yoinked gratefully from dbugfile.cpp
 void vsprintf (std::string& dest, const char* format, va_list ap) {
     va_list copy;
-
-#if defined(_MSC_VER) && _MSC_VER < 1800
-    // Only Visual Studio >= 2013 supports va_copy
-    // This isn't portable but should work for Visual Studio
-    copy = ap;
-#else
     va_copy (copy, ap);
-#endif
 
     int needed_length = vsnprintf (nullptr, 0, format, copy);
     va_end (copy);

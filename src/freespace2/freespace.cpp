@@ -1,28 +1,12 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
-#ifdef _WIN32
-#include <direct.h>
-#include <io.h>
-#include <windows.h>
-#include <psapi.h>
-#ifndef _MINGW
-#include <crtdbg.h>
-#endif // !_MINGW
-#else
 #ifdef APPLE_APP
 #include <sys/types.h>
 #include <libproc.h>
 #endif
+
 #include <unistd.h>
 #include <sys/stat.h>
-#endif
 
 #include "freespace2/freespace.h"
 #include "freespaceresource.h"
@@ -41,7 +25,6 @@
 #include "debugconsole/console.h"
 #include "decals/decals.h"
 #include "events/events.h"
-#include "exceptionhandler/exceptionhandler.h"
 #include "fireball/fireballs.h"
 #include "fs2netd/fs2netd_client.h"
 #include "gamehelp/contexthelp.h"
@@ -50,7 +33,6 @@
 #include "gamesnd/eventmusic.h"
 #include "gamesnd/gamesnd.h"
 #include "globalincs/alphacolors.h"
-#include "globalincs/mspdb_callstack.h"
 #include "globalincs/version.h"
 #include "graphics/font.h"
 #include "graphics/light.h"
@@ -156,9 +138,7 @@
 #include "ship/shiphit.h"
 #include "sound/audiostr.h"
 #include "sound/ds.h"
-#include "sound/fsspeech.h"
 #include "sound/sound.h"
-#include "sound/voicerec.h"
 #include "starfield/starfield.h"
 #include "starfield/supernova.h"
 #include "stats/medals.h"
@@ -181,15 +161,6 @@
 #include <SDL2/SDL_main.h>
 
 extern int Om_tracker_flag; // needed for FS2OpenPXO config
-
-#ifdef WIN32
-// According to AMD and NV, these _should_ force their drivers into
-// high-performance mode
-extern "C" {
-__declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
-}
-#endif
 
 #ifdef NDEBUG
 #ifdef FRED
@@ -1694,7 +1665,7 @@ DCF (gamma, "Sets and saves Gamma Factor") {
 
 #ifdef FS2_VOICER
 // This is really awful but thank the guys of X11 for naming something "Window"
-#  include <SDL2/SDL_syswm.h> // For SDL_SysWMinfo
+#include <SDL2/SDL_syswm.h> // For SDL_SysWMinfo
 #endif
 
 /**
@@ -1805,39 +1776,10 @@ void game_init () {
 
     Asteroids_enabled = 1;
 
-    /////////////////////////////
-    // SOUND INIT START
-    /////////////////////////////
-
     if (!Is_standalone) { snd_init (); }
 
-    if (fsspeech_init () == false) {
-        mprintf (("Failed to init speech\n"));
-
-        if (Cmdline_query_speech) {
-            if (!fsspeech_was_compiled ())
-                os::dialogs::Message (
-                    os::dialogs::MESSAGEBOX_WARNING,
-                    "Speech is not compiled in this build in code.lib");
-            else
-                os::dialogs::Message (
-                    os::dialogs::MESSAGEBOX_WARNING,
-                    "Speech is compiled, but failed to init");
-        }
-    }
-    else if (Cmdline_query_speech) {
-        // Its bad practice to use a negative type, this is an exceptional case
-        fsspeech_play (-1, "Welcome to FS2 open");
-        os::dialogs::Message (
-            os::dialogs::MESSAGEBOX_INFORMATION,
-            "Speech is compiled and initialised and should be working");
-    }
-
-    /////////////////////////////
-    // SOUND INIT END
-    /////////////////////////////
-
     std::unique_ptr< SDLGraphicsOperations > sdlGraphicsOperations;
+
     if (!Is_standalone) {
         // Standalone mode doesn't require graphics operations
         sdlGraphicsOperations.reset (new SDLGraphicsOperations ());
@@ -1855,36 +1797,6 @@ void game_init () {
 
     // This needs to happen after graphics initialization
     tracing::init ();
-
-// Karajorma - Moved here from the sound init code cause otherwise windows
-// complains
-#ifdef FS2_VOICER
-    if (Cmdline_voice_recognition) {
-        SDL_SysWMinfo info;
-        SDL_VERSION (
-            &info.version); // initialize info structure with SDL version info
-
-        bool voiceRectOn = false;
-        if (SDL_GetWindowWMInfo (
-                os::getSDLMainWindow (),
-                &info)) { // the call returns true on success
-            // success
-            voiceRectOn = VOICEREC_init (
-                info.info.win.window, WM_RECOEVENT, GRAMMARID1, IDR_CMD_CFG);
-        }
-        else {
-            // call failed
-            mprintf (
-                ("Couldn't get window information: %s\n", SDL_GetError ()));
-        }
-
-        if (voiceRectOn == false) {
-            os::dialogs::Message (
-                os::dialogs::MESSAGEBOX_ERROR, "Failed to init voice rec!");
-        }
-    }
-
-#endif
 
     // D3D's gamma system now works differently. 1.0 is the default value
     ptr = os_config_read_string (NULL, NOX ("GammaD3D"), NOX ("1.0"));
@@ -1937,18 +1849,7 @@ void game_init () {
     }
 
     // If less than 48MB of RAM, use low memory model.
-    if (
-#ifdef _WIN32
-        (FreeSpace_total_ram < 48 * 1024 * 1024) ||
-#endif
-        Use_low_mem) {
-        mprintf (("Using normal memory settings...\n"));
-        bm_set_low_mem (1); // Use every other frame of bitmaps
-    }
-    else {
-        mprintf (("Using high memory settings...\n"));
-        bm_set_low_mem (0); // Use all frames of bitmaps
-    }
+    bm_set_low_mem (0); // Use all frames of bitmaps
 
     // WMC - Initialize my new GUI system
     // This may seem scary, but it should take up 0 processing time and very
@@ -2214,63 +2115,6 @@ void game_show_framerate () {
 
     // possibly show control checking info
     control_check_indicate ();
-
-#ifdef _WIN32
-    if (Cmdline_show_stats && HUD_draw) {
-        int sx, sy;
-        sx = gr_screen.center_offset_x + 20;
-        sy = gr_screen.center_offset_y + 100 + (line_height * 2);
-
-        std::string mem_buffer;
-
-        PROCESS_MEMORY_COUNTERS_EX process_stats;
-        process_stats.cb = sizeof (process_stats);
-
-        if (GetProcessMemoryInfo (
-                GetCurrentProcess (),
-                reinterpret_cast< PPROCESS_MEMORY_COUNTERS > (&process_stats),
-                sizeof (process_stats))) {
-            sprintf (
-                mem_buffer, "Private Usage: " SIZE_T_ARG " Meg",
-                static_cast< size_t > (process_stats.PrivateUsage) / 1024 /
-                    1024);
-            gr_string (sx, sy, mem_buffer.c_str (), GR_RESIZE_NONE);
-            sy += line_height;
-
-            sprintf (
-                mem_buffer, "Working set size: " SIZE_T_ARG " Meg",
-                static_cast< size_t > (process_stats.WorkingSetSize) / 1024 /
-                    1024);
-            gr_string (sx, sy, mem_buffer.c_str (), GR_RESIZE_NONE);
-            sy += line_height;
-            sy += line_height;
-        }
-
-        MEMORYSTATUSEX mem_stats;
-        mem_stats.dwLength = sizeof (mem_stats);
-        if (GlobalMemoryStatusEx (&mem_stats)) {
-            sprintf (
-                mem_buffer, "Physical Free: %" PRIu64 " / %" PRIu64 " Meg",
-                mem_stats.ullAvailPhys / 1024 / 1024,
-                mem_stats.ullTotalPhys / 1024 / 1024);
-            gr_string (sx, sy, mem_buffer.c_str (), GR_RESIZE_NONE);
-            sy += line_height;
-
-            sprintf (
-                mem_buffer, "Pagefile Free: %" PRIu64 " / %" PRIu64 " Meg",
-                mem_stats.ullAvailPageFile / 1024 / 1024,
-                mem_stats.ullTotalPageFile / 1024 / 1024);
-            gr_string (sx, sy, mem_buffer.c_str (), GR_RESIZE_NONE);
-            sy += line_height;
-
-            sprintf (
-                mem_buffer, "Virtual Free:  %" PRIu64 " / %" PRIu64 " Meg",
-                mem_stats.ullAvailVirtual / 1024 / 1024,
-                mem_stats.ullTotalVirtual / 1024 / 1024);
-            gr_string (sx, sy, mem_buffer.c_str (), GR_RESIZE_NONE);
-        }
-    }
-#endif
 
 #ifndef NDEBUG
     if (Show_cpu == 1) {
@@ -4874,8 +4718,9 @@ int game_poll () {
         case GS_STATE_HUD_CONFIG:
         case GS_STATE_CONTROL_CONFIG:
         case GS_STATE_DEATH_DIED:
-            //				case GS_STATE_DEATH_BLEW_UP:	// 	DEATH_BLEW_UP might
-            //be okay but do not comment out DEATH_DIED as otherwise no clean
+            //				case GS_STATE_DEATH_BLEW_UP:	// 	DEATH_BLEW_UP
+            //might be okay but do not comment out DEATH_DIED as otherwise no
+            // clean
             // up is performed on the dead ship
         case GS_STATE_VIEW_MEDALS: break;
 
@@ -5435,7 +5280,6 @@ void game_leave_state (int old_state, int new_state) {
         if ((new_state != GS_STATE_VIEW_MEDALS) &&
             (new_state != GS_STATE_OPTIONS_MENU)) {
             debrief_close ();
-            fsspeech_stop ();
         }
         break;
 
@@ -6555,100 +6399,6 @@ void game_do_state (int state) {
 #endif
 }
 
-#ifdef _WIN32
-// return 0 if there is enough RAM to run FreeSpace, otherwise return -1
-int game_do_ram_check (uint64_t ram_in_bytes) {
-    if (ram_in_bytes < 30 * 1024 * 1024) {
-        int allowed_to_run = 1;
-        if (ram_in_bytes < 25 * 1024 * 1024) { allowed_to_run = 0; }
-
-        char tmp[1024];
-        uint FreeSpace_total_ram_MB;
-        FreeSpace_total_ram_MB = (uint) (ram_in_bytes / (1024 * 1024));
-
-        if (allowed_to_run) {
-            sprintf (
-                tmp,
-                XSTR (
-                    "FreeSpace has detected that you only have %dMB of free "
-                    "memory.\n\nFreeSpace requires at least 32MB of memory to "
-                    "run.  If you think you have more than %dMB of physical "
-                    "memory, ensure that you aren't running SmartDrive "
-                    "(SMARTDRV.EXE).  Any memory allocated to SmartDrive is "
-                    "not usable by applications\n\nPress 'OK' to continue "
-                    "running with less than the minimum required memory\n",
-                    193),
-                FreeSpace_total_ram_MB, FreeSpace_total_ram_MB);
-
-            os::dialogs::Message (
-                os::dialogs::MESSAGEBOX_ERROR, tmp,
-                XSTR ("Not Enough RAM", 194));
-        }
-        else {
-            sprintf (
-                tmp,
-                XSTR (
-                    "FreeSpace has detected that you only have %dMB of free "
-                    "memory.\n\nFreeSpace requires at least 32MB of memory to "
-                    "run.  If you think you have more than %dMB of physical "
-                    "memory, ensure that you aren't running SmartDrive "
-                    "(SMARTDRV.EXE).  Any memory allocated to SmartDrive is "
-                    "not usable by applications\n",
-                    195),
-                FreeSpace_total_ram_MB, FreeSpace_total_ram_MB);
-            os::dialogs::Message (
-                os::dialogs::MESSAGEBOX_ERROR, tmp,
-                XSTR ("Not Enough RAM", 194));
-            return -1;
-        }
-    }
-
-    return 0;
-}
-
-#if 0  // no updater for fs2
-// Check if there is a freespace.exe in the /update directory (relative to where fs.exe is installed).
-// If so, copy it over and remove the update directory.
-void game_maybe_update_launcher(char *exe_dir)
-{
-	char src_filename[MAX_PATH];
-	char dest_filename[MAX_PATH];
-
-	strcpy_s(src_filename, exe_dir);
-	strcat_s(src_filename, NOX("\\update\\freespace.exe"));
-
-	strcpy_s(dest_filename, exe_dir);
-	strcat_s(dest_filename, NOX("\\freespace.exe"));
-
-	// see if src_filename exists
-	FILE *fp;
-	fp = fopen(src_filename, "rb");
-	if ( !fp ) {
-		return;
-	}
-	fclose(fp);
-
-	SetFileAttributes(dest_filename, FILE_ATTRIBUTE_NORMAL);
-
-	// copy updated freespace.exe to freespace exe dir
-	if ( CopyFile(src_filename, dest_filename, 0) == 0 ) {
-		MessageBox( NULL, XSTR("Unable to copy freespace.exe from update directory to installed directory.  You should copy freespace.exe from the update directory (located in your FreeSpace install directory) to your install directory", 988), NULL, MB_OK|MB_TASKMODAL|MB_SETFOREGROUND );
-		return;
-	}
-
-	// delete the file in the update directory
-	DeleteFile(src_filename);
-
-	// safe to assume directory is empty, since freespace.exe should only be the file ever in the update dir
-	char update_dir[MAX_PATH];
-	strcpy_s(update_dir, exe_dir);
-	strcat_s(update_dir, NOX("\\update"));
-	RemoveDirectory(update_dir);
-}
-#endif // no launcher
-
-#endif // ifdef WIN32
-
 void game_spew_pof_info_sub (
     int model_num, polymodel* pm, int sm, CFILE* out, int* out_total,
     int* out_destroyed_total) {
@@ -6805,39 +6555,6 @@ int game_main (int argc, char* argv[]) {
         Networking_disabled = 1;
     }
 
-#ifdef _WIN32
-    // Find out how much RAM is on this machine
-    MEMORYSTATUSEX ms;
-    ms.dwLength = sizeof (ms);
-    GlobalMemoryStatusEx (&ms);
-    FreeSpace_total_ram = ms.ullTotalPhys;
-
-    if (game_do_ram_check (FreeSpace_total_ram) == -1) { return 1; }
-
-    if (ms.ullTotalVirtual < 1024) {
-        os::dialogs::Message (
-            os::dialogs::MESSAGEBOX_ERROR,
-            XSTR ("FreeSpace requires virtual memory to run.\r\n", 196),
-            XSTR ("No Virtual Memory", 197));
-        return 1;
-    }
-
-    char* tmp_mem = (char*)vm_malloc (16 * 1024 * 1024);
-    if (!tmp_mem) {
-        os::dialogs::Message (
-            os::dialogs::MESSAGEBOX_ERROR,
-            XSTR (
-                "Not enough memory to run FreeSpace.\r\nTry closing down some "
-                "other applications.\r\n",
-                198),
-            XSTR ("Not Enough Memory", 199));
-        return 1;
-    }
-
-    vm_free (tmp_mem);
-    tmp_mem = NULL;
-#endif // _WIN32
-
     if (!parse_cmdline (argc, argv)) { return 1; }
 
     if (Is_standalone) { nprintf (("Network", "Standalone running\n")); }
@@ -6945,12 +6662,6 @@ void game_launch_launcher_on_exit()
 // This function is called when FreeSpace terminates normally.
 //
 void game_shutdown (void) {
-    fsspeech_deinit ();
-
-#ifdef FS2_VOICER
-    if (Cmdline_voice_recognition) { VOICEREC_deinit (); }
-#endif
-
     // don't ever flip a page on the standalone!
     if (!(Game_mode & GM_STANDALONE_SERVER)) {
         gr_reset_clip ();
@@ -7998,18 +7709,6 @@ int actual_main (int argc, char* argv[]) {
     int result = -1;
     Assert (argc > 0);
 
-#ifdef WIN32
-    // Don't let more than one instance of FreeSpace run.
-    HWND hwnd = FindWindow (NOX ("FreeSpaceClass"), NULL);
-    if (hwnd) {
-        SetForegroundWindow (hwnd);
-        return 0;
-    }
-
-    ::CoInitialize (NULL);
-
-    SCP_mspdbcs_Initialise ();
-#else
 #ifdef APPLE_APP
     char pathbuf[PROC_PIDPATHINFO_MAXSIZE];
     if (proc_pidpath (getppid (), pathbuf, sizeof (pathbuf)) <= 0) {
@@ -8024,24 +7723,12 @@ int actual_main (int argc, char* argv[]) {
         SDL_free (path_name);
     }
 #endif
-#endif
 
-#if defined(GAME_ERRORLOG_TXT) && defined(_MSC_VER)
-    __try {
-#elif !defined(DONT_CATCH_MAIN_EXCEPTIONS)
+#if !defined(DONT_CATCH_MAIN_EXCEPTIONS)
     try {
 #endif
         result = game_main (argc, argv);
-#if defined(GAME_ERRORLOG_TXT) && defined(_MSC_VER)
-    }
-    __except (RecordExceptionInfo (
-        GetExceptionInformation (), "FreeSpace 2 Main Thread")) {
-        // Do nothing here - RecordExceptionInfo() has already done
-        // everything that is needed. Actually this code won't even
-        // get called unless you return EXCEPTION_EXECUTE_HANDLER from
-        // the __except clause.
-    }
-#elif !defined(DONT_CATCH_MAIN_EXCEPTIONS)
+#if !defined(DONT_CATCH_MAIN_EXCEPTIONS)
     }
     catch (const std::exception& ex) {
         Error (LOCATION, "Caught std::exception in main(): '%s'!", ex.what ());
@@ -8056,16 +7743,6 @@ int actual_main (int argc, char* argv[]) {
 
         result = EXIT_FAILURE;
     }
-#endif
-
-#ifdef WIN32
-    SCP_mspdbcs_Cleanup ();
-
-    ::CoUninitialize ();
-
-#ifndef __MINGW32__
-    _CrtDumpMemoryLeaks ();
-#endif
 #endif
 
     return result;

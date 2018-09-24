@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_PARTICLE_H
+#define FREESPACE2_SCRIPTING_API_OBJS_PARTICLE_H
 
 #include "scripting/ade_api.h"
 #include "particle/particle.h"
@@ -24,3 +27,5 @@ DECLARE_ADE_OBJ (l_Particle, particle_h*);
 
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_OBJS_PARTICLE_H

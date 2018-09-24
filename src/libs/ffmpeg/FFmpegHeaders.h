@@ -1,11 +1,13 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_LIBS_FFMPEGHEADERS_H
+#define FREESPACE2_LIBS_FFMPEGHEADERS_H
 
 // Disable a few warnings that happen in the ffmpeg headers
 // TODO: Also do this for other compilers
-#pragma warning(push)
-#pragma warning(disable : 4244) // conversion from 'int' to '*'
 
 extern "C" {
+
 #include <libavcodec/version.h>
 #include <libavformat/avformat.h>
 #include <libswscale/swscale.h>
@@ -25,8 +27,6 @@ extern "C" {
 #include "LibAVCompatibility.h"
 #endif
 
-#pragma warning(pop)
-
 /**
  * Extract version components from the full ::AV_VERSION_INT int as returned
  * by functions like ::avformat_version() and ::avcodec_version()
@@ -35,9 +35,13 @@ extern "C" {
 #ifndef AV_VERSION_MAJOR
 #define AV_VERSION_MAJOR(a) ((a) >> 16)
 #endif
+
 #ifndef AV_VERSION_MINOR
 #define AV_VERSION_MINOR(a) (((a)&0x00FF00) >> 8)
 #endif
+
 #ifndef AV_VERSION_MICRO
 #define AV_VERSION_MICRO(a) ((a)&0xFF)
 #endif
+
+#endif // FREESPACE2_LIBS_FFMPEGHEADERS_H

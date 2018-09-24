@@ -1,7 +1,7 @@
+// -*- mode: c++; -*-
 
 #ifndef LUA_ARGS_H
 #define LUA_ARGS_H
-#pragma once
 
 #include "LuaHeaders.h"
 #include "LuaException.h"
@@ -13,8 +13,8 @@ namespace luacpp {
 namespace args {
 class ArgumentException : public LuaException {
 public:
-    ArgumentException (const std::string& message = "Argument Error!")
-        noexcept : LuaException (message) {}
+    ArgumentException (const std::string& message = "Argument Error!") noexcept
+        : LuaException (message) {}
 
     ~ArgumentException () noexcept override {}
 };

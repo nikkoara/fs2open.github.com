@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"
 

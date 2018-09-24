@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "graphics/render.h"
 #include "graphics/material.h"

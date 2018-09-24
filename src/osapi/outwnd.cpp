@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef NDEBUG
 
@@ -13,10 +6,6 @@
 #include <cstdarg>
 #include <cstring>
 #include <algorithm>
-
-#ifdef WIN32
-#include <direct.h>
-#endif
 
 #include "osapi/DebugWindow.h"
 #include "osapi/osapi.h"

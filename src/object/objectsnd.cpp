@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "cmdline/cmdline.h"
 #include "debugconsole/console.h"
@@ -721,7 +714,7 @@ void obj_snd_do_frame () {
 // parameters:  objnum		=> index of object that sound is being assigned to
 //              i				=> Index into Snds[] array
 //					 fname		=> filename of sound to play ( so DS3D can load
-//the sound
+// the sound
 //)
 //
 // returns:     -1			=> sound could not be assigned (possible, since
@@ -828,7 +821,7 @@ void obj_snd_delete (int objnum, int index) {
 // parameters:  objnum		=> index of object that sound is being removed
 // from.
 //				sndnum		=> index of sound that we're trying to completely
-//get rid of 								-1 to delete all persistent sounds
+// get rid of 								-1 to delete all persistent sounds
 // on
 // ship.
 //

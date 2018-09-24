@@ -1,7 +1,7 @@
+// -*- mode: c++; -*-
 
 #ifndef _GROPENGLQUERY_H
 #define _GROPENGLQUERY_H
-#pragma once
 
 #include "graphics/2d.h"
 

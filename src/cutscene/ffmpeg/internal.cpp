@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "cutscene/ffmpeg/internal.h"
 

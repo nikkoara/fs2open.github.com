@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 // HUDNavigation.cpp
 // Derek Meek
 // 4-30-2004

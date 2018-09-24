@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 /**
  * @file
@@ -67,11 +60,6 @@
 #include "weapon/weapon.h"
 #include <map>
 #include <climits>
-
-#ifdef _MSC_VER
-#pragma optimize("", off)
-#pragma auto_inline(off)
-#endif
 
 #define UNINITIALIZED_VALUE -99999.9f
 
@@ -4014,8 +4002,8 @@ void set_accel_for_docking (
 //		typedef struct model_path {
 //			char		name[MAX_NAME_LEN];					// name of the
 // subsystem.
-// Probably displayed on HUD 			int		nverts; 			vec3d	*verts;
-// } model_path;
+// Probably displayed on HUD 			int		nverts; 			vec3d
+// *verts; } model_path;
 
 //	The polymodel struct for the object contains the following:
 //		int			n_paths;
@@ -6377,10 +6365,10 @@ int num_nearby_fighters (int enemy_team_mask, vec3d* pos, float threshold) {
 //	set, that weapon will be selected.  If not, apply to priority2.  If
 // neither, return -1, meaning no weapon selected. 	Note, priorityX have
 // default values of -1, meaning if not set, they will match any weapon.
-// Return value: 		bank index 	Should do this: 		Favor aspect seekers when
-// attacking
-// small ships faraway. 		Favor rapid fire dumbfire when attacking a large
-// ship. 		Ignore heat seekers because we're not sure how they'll work.
+// Return value: 		bank index 	Should do this: 		Favor aspect seekers
+// when attacking small ships faraway. 		Favor rapid fire dumbfire when
+// attacking a large ship. 		Ignore heat seekers because we're not sure how
+// they'll work.
 void ai_select_secondary_weapon (
     object* objp, ship_weapon* swp,
     flagset< Weapon::Info_Flags >* priority1 = NULL,
@@ -6606,8 +6594,8 @@ float compute_incoming_payload (object* target_objp) {
 //	--------------------------------------------------------------------------
 //	Return true if OK for *aip to fire its current weapon at its current
 // target. 	Only reason this function returns false is: 		weapon is a
-// homer 		targeted at player 			OR:	player has too many homers targeted at
-// him
+// homer 		targeted at player 			OR:	player has too many homers targeted
+// at him
 //					Missiontime in that dead zone in which can't fire at this
 // player 	Note: If player is attacking a ship, that ship is allowed to fire
 // at player.  Otherwise, we get in a situation in which 	player is attacking
@@ -14133,8 +14121,8 @@ void ai_manage_bay_doors (object* pl_objp, ai_info* aip, bool done) {
 // input:	pl_objp	=>	pointer to object for ship that is arriving
 //				pos		=>	output parameter, it is the starting world pos for
 // path
-// choosen 				fvec		=>	output parameter, this is the forward vector
-// that ship has when arriving
+// choosen 				fvec		=>	output parameter, this is the forward
+// vector that ship has when arriving
 //
 // exit:		-1		=>	path could not be located
 //				 0		=> success
@@ -14345,7 +14333,7 @@ void ai_bay_emerge () {
 // NOTE: this function should only be used for calculating closest depart paths
 // for ai mode
 //			AI_BAY_DEPART.  It tries to find the closest path that isn't
-//already in use
+// already in use
 int ai_find_closest_depart_path (
     ai_info* aip, polymodel* pm, int allowed_path_mask) {
     int i, j, best_path, best_free_path;

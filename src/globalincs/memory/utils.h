@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GLOBALINCS_MEMORY_UTILS_H
+#define FREESPACE2_GLOBALINCS_MEMORY_UTILS_H
 
 #include <cstring>
 
@@ -21,3 +24,5 @@ inline char* vm_strdup (const char* ptr) {
 
     return vm_strndup (ptr, len);
 }
+
+#endif // FREESPACE2_GLOBALINCS_MEMORY_UTILS_H

@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "ddsutils/ddsutils.h"
 #include "cfile/cfile.h"

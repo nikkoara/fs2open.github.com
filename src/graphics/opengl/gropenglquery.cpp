@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "graphics/opengl/gropenglquery.h"
 #include "graphics/opengl/gropengl.h"

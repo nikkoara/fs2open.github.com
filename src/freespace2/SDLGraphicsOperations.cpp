@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 //
 //
 
@@ -126,10 +128,8 @@ public:
 SDLGraphicsOperations::SDLGraphicsOperations () {
     mprintf (("  Initializing SDL video...\n"));
 
-#ifdef SCP_UNIX
     // Slight hack to make Mesa advertise S3TC support without libtxc_dxtn
     setenv ("force_s3tc_enable", "true", 1);
-#endif
 
     if (SDL_InitSubSystem (SDL_INIT_VIDEO) < 0) {
         Error (LOCATION, "Couldn't init SDL video: %s", SDL_GetError ());

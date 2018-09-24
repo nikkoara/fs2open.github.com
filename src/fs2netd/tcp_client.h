@@ -1,3 +1,8 @@
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_FS2NETD_TCP_CLIENT_H
+#define FREESPACE2_FS2NETD_TCP_CLIENT_H
+
 // Client.h
 // Client Functions for FS2Open PXO
 // Derek Meek
@@ -183,3 +188,5 @@ void FS2NetD_Pong (int tstamp);
     }
 
 #endif
+
+#endif // FREESPACE2_FS2NETD_TCP_CLIENT_H

@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "ai/aigoals.h"
 #include "anim/animplay.h"
@@ -2636,13 +2629,13 @@ int ss_return_saindex (int slot_num) {
 //	input:	wing_block	=>		wing block of ship to find
 //				wing_slot	=>		wing slot of ship to find
 //				ship_index	=>		OUTPUT parameter: the Ships[] index of the
-//ship in
-// the wing slot 										This value will be -1 if there is no ship
-// created yet 				ppobjp
+// ship in
+// the wing slot 										This value will be -1 if there is no
+// ship created yet 				ppobjp
 //=>		OUTPUT parameter: returns a pointer to a parse object for
 // the ship
-// that hasn't been created yet.  Set to NULL if the 										ship has
-// already been created
+// that hasn't been created yet.  Set to NULL if the 										ship
+// has already been created
 //
 // returns:	the original ship class of the ship, or -1 if the ship doesn't
 // exist

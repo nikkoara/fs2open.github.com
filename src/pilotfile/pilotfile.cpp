@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "pilotfile/pilotfile.h"
 #include "ship/ship.h"

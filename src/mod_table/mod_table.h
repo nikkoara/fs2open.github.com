@@ -1,3 +1,8 @@
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_MOD_TABLE_MOD_TABLE_H
+#define FREESPACE2_MOD_TABLE_MOD_TABLE_H
+
 /*
  * Created by Hassan "Karajorma" Kazmi for the FreeSpace2 Source Code Project.
  * You may not sell or otherwise commercially exploit the source or things you
@@ -64,3 +69,5 @@ void mod_table_reset ();
  * false otherwise
  */
 bool mod_supports_version (int major, int minor, int build);
+
+#endif // FREESPACE2_MOD_TABLE_MOD_TABLE_H

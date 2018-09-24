@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_TRACING_FRAMEPROFILER_H
+#define FREESPACE2_TRACING_FRAMEPROFILER_H
 
 #include "globalincs/pstypes.h"
 
@@ -85,3 +88,5 @@ public:
 };
 
 } // namespace tracing
+
+#endif // FREESPACE2_TRACING_FRAMEPROFILER_H

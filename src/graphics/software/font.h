@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_SOFTWARE_FONT_H
+#define FREESPACE2_GRAPHICS_SOFTWARE_FONT_H
 
 #include "globalincs/pstypes.h"
 
@@ -7,11 +10,11 @@
 
 namespace font {
 const int FONT1 = 0; //<! The first loaded font. Used to be hardcoded to
-                     //reference font01.vf in retail
+                     // reference font01.vf in retail
 const int FONT2 = 1; //<! The second loaded font. Used to be hardcoded to
-                     //reference font02.vf in retail
+                     // reference font02.vf in retail
 const int FONT3 = 2; //<! The third loaded font. Used to be hardcoded to
-                     //reference font03.vf in retail
+                     // reference font03.vf in retail
 
 struct font;
 
@@ -107,4 +110,7 @@ inline FSFont* get_font (int fontNum) {
  * @return The font pointer or NULL if no font with that name could be found
  */
 FSFont* get_font (const std::string& name);
+
 } // namespace font
+
+#endif // FREESPACE2_GRAPHICS_SOFTWARE_FONT_H

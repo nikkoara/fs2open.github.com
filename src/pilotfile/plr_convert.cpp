@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 /* WARNING:
  *    This is magic-number central, but these numbers are set specifically

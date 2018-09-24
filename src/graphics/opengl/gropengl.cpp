@@ -1,4 +1,4 @@
-
+// -*- mode: c++; -*-
 
 #include "bmpman/bmpman.h"
 #include "cfile/cfile.h"
@@ -33,12 +33,6 @@
 #include "popup/popup.h"
 #include "tracing/tracing.h"
 #include "pngutils/pngutils.h"
-
-#if defined(_WIN32)
-#include <windows.h>
-#include <windowsx.h>
-#include <direct.h>
-#endif
 
 #include <glad/glad.h>
 

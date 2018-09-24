@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "network/multi_voice.h"
 #include "io/timer.h"
@@ -26,8 +19,8 @@
 // MULTI VOICE DEFINES/VARS
 //
 
-// #define MULTI_VOICE_POST_DECOMPRESS									// when we're
-// _not_ using streaming
+// #define MULTI_VOICE_POST_DECOMPRESS									// when
+// we're _not_ using streaming
 #define MULTI_VOICE_PRE_DECOMPRESS // when we _are_ using streaming
 
 #define MULTI_VOICE_VERBOSE // keep this defined for verbose debug output

@@ -1,4 +1,4 @@
-
+// -*- mode: c++; -*-
 
 #include "ai/aibig.h"
 #include "ai/aiinternal.h"

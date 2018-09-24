@@ -1,4 +1,8 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_WING_H
+#define FREESPACE2_SCRIPTING_API_OBJS_WING_H
+
 //
 //
 
@@ -12,3 +16,5 @@ DECLARE_ADE_OBJ (l_Wing, int);
 
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_OBJS_WING_H

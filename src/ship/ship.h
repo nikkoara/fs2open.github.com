@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _SHIP_H
 #define _SHIP_H
@@ -179,10 +172,10 @@ public:
                                   // boostpod)
 
     int last_fired_weapon_index; //	Index of last fired secondary weapon.  Used
-                                 //for remote detonates.
+                                 // for remote detonates.
     int last_fired_weapon_signature; //	Signature of last fired weapon.
     int detonate_weapon_time;        //	time at which last fired weapon can be
-                                     //detonated
+                                     // detonated
     int ai_class;
 
     flagset< Ship::Weapon_Flags > flags;
@@ -368,17 +361,17 @@ public:
     int turret_best_weapon; // best weapon for current target; index into
                             // prim/secondary banks
     vec3d turret_last_fire_direction;  //	direction pointing last time this
-                                       //turret fired
+                                       // turret fired
     int turret_next_enemy_check_stamp; //	time at which to next look for a
-                                       //new enemy.
+                                       // new enemy.
     int turret_next_fire_stamp;        // next time this turret can fire
     int turret_enemy_objnum; //	object index of ship this turret is firing upon
     int turret_enemy_sig;    //	signature of object ship this turret is firing
-                             //upon
+                             // upon
     int turret_next_fire_pos; // counter which tells us which gun position to
                               // fire from next
     float turret_time_enemy_in_range; //	Number of seconds enemy in view
-                                      //cone, accuracy improves over time.
+                                      // cone, accuracy improves over time.
     int turret_targeting_order[NUM_TURRET_ORDER_TYPES]; // Order that turrets
                                                         // target different
                                                         // types of things.
@@ -389,9 +382,9 @@ public:
     int last_fired_weapon_info_index; // which weapon class was last fired
 
     int turret_pick_big_attack_point_timestamp; //	Next time to pick an attack
-                                                //point for this turret
+                                                // point for this turret
     vec3d turret_big_attack_point; //	local coordinate of point for this
-                                   //turret to attack on enemy
+                                   // turret to attack on enemy
 
     EModelAnimationPosition turret_animation_position;
     int turret_animation_done_time;
@@ -637,7 +630,7 @@ public:
                           // stored as afterburner_fuel_capacity in ship_info).
 
     int cmeasure_count;   //	Number of charges of countermeasures this ship can
-                          //hold.
+                          // hold.
     int current_cmeasure; //	Currently selected countermeasure.
 
     int cmeasure_fire_stamp; //	Time at which can fire countermeasure.
@@ -804,8 +797,8 @@ public:
     float primary_rotate_rate[MAX_SHIP_PRIMARY_BANKS];
     float primary_rotate_ang[MAX_SHIP_PRIMARY_BANKS];
 
-    int thrusters_start[MAX_MAN_THRUSTERS]; // Timestamp of when thrusters
-                                            // started
+    int thrusters_start[MAX_MAN_THRUSTERS];  // Timestamp of when thrusters
+                                             // started
     int thrusters_sounds[MAX_MAN_THRUSTERS]; // Sound index for thrusters
 
     std::vector< alt_class > s_alt_classes;
@@ -1035,7 +1028,7 @@ typedef struct ship_collision_physics {
     float both_small_bounce{}; // Bounce factor when both ships are small
                                // This currently only comes into play if one
                                // ship is the player... blame retail for that.
-    float bounce{};   // Bounce factor for all other cases
+    float bounce{};            // Bounce factor for all other cases
     float friction{}; // Controls lateral velocity lost when colliding with a
                       // large ship
     float rotation_factor{}; // Affects the rotational energy of collisions...
@@ -1124,9 +1117,9 @@ public:
     float rotdamp;         // rotational drag
     float delta_bank_const;
     vec3d max_vel;    //	max velocity of the ship in the linear directions --
-                      //read from ships.tbl
+                      // read from ships.tbl
     vec3d min_vel;    //	min velocity of the ship in the linear directions --
-                      //read from ships.tbl
+                      // read from ships.tbl
     vec3d max_rotvel; // maximum rotational velocity
     vec3d rotation_time;  // time to rotate in x/y/z dimension traveling at max
                           // rotvel
@@ -1161,8 +1154,8 @@ public:
 
     flagset< Ship::Info_Flags >
         flags; //	See SIF_xxxx - changed to uint by Goober5000, changed back
-               //by Zacam, and changed to something entirely different by The
-               //E!
+               // by Zacam, and changed to something entirely different by The
+               // E!
     int ai_class; //	Index into Ai_classes[].  Defined in ai.tbl
     float max_speed, min_speed, max_accel;
 
@@ -1222,8 +1215,8 @@ public:
 
     // Afterburner fields
     vec3d afterburner_max_vel; //	max velocity of the ship in the linear
-                               //directions when afterburners are engaged --
-                               //read from ships.tbl
+                               // directions when afterburners are engaged --
+                               // read from ships.tbl
     float afterburner_forward_accel; // forward acceleration with afterburner
                                      // engaged
     float afterburner_fuel_capacity; // maximum afterburner fuel that can be
@@ -1231,14 +1224,14 @@ public:
     float afterburner_burn_rate;     // rate in fuel/second that afterburner
                                      // consumes fuel
     float afterburner_recover_rate;  //	rate in fuel/second that afterburner
-                                     //recovers fuel
+                                     // recovers fuel
     // SparK: reverse afterburner
     float afterburner_max_reverse_vel;
     float afterburner_reverse_accel;
 
     int cmeasure_type; // Type of countermeasures this ship carries
     int cmeasure_max;  //	Number of charges of countermeasures this ship can
-                       //hold.
+                       // hold.
 
     int num_primary_banks; // Actual number of primary banks (property of
                            // model)
@@ -1250,7 +1243,7 @@ public:
         [MAX_SHIP_PRIMARY_BANKS]; // Capacity of primary ballistic bank
 
     int num_secondary_banks; //	Actual number of secondary banks (property of
-                             //model)
+                             // model)
     int secondary_bank_weapons[MAX_SHIP_SECONDARY_BANKS]; // Weapon_info[]
                                                           // index for the
                                                           // weapon in the bank
@@ -1377,8 +1370,8 @@ public:
     bool can_glide;
     float glide_cap; // Backslash - for 'newtonian'-style gliding, the cap on
                      // velocity
-    bool glide_dynamic_cap; // SUSHI: Whether or not we are using a dynamic
-                            // glide cap
+    bool glide_dynamic_cap;  // SUSHI: Whether or not we are using a dynamic
+                             // glide cap
     float glide_accel_mult;  // SUSHI: acceleration multiplier for glide mode
     bool use_newtonian_damp; // SUSHI: Whether or not to use newtonian
                              // dampening for this ship
@@ -1727,8 +1720,8 @@ extern int Player_ship_class;
 //	model_num	= index in Polygon_models[]
 //	centerp		= pos of object, sort of the center of the shield
 //	tcp			= hit point, probably the global hit_point set in
-//polygon_check_face 	tr0			= index of polygon in shield pointer in
-//polymodel.
+// polygon_check_face 	tr0			= index of polygon in shield pointer in
+// polymodel.
 extern void create_shield_explosion (
     int objnum, int model_num, matrix* orient, vec3d* centerp, vec3d* tcp,
     int tr0);
@@ -1933,8 +1926,8 @@ void ship_get_global_turret_gun_info (
     vec3d* targetp);
 
 //	Given an object and a turret on that object, return the global position and
-//forward vector 	of the turret.   The gun normal is the unrotated gun normal,
-//(the center of the FOV cone), not
+// forward vector 	of the turret.   The gun normal is the unrotated gun
+// normal, (the center of the FOV cone), not
 // the actual gun normal given using the current turret heading.  But it _is_
 // rotated into the model's orientation
 //	in global space.

@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "utf8.h"
 
 #include "mod_table/mod_table.h"

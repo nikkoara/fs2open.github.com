@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "anim/animplay.h"
 #include "anim/packunpack.h"
@@ -740,7 +733,7 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
     anim* ptr;
     CFILE* fp;
     int count, idx;
-    char name[_MAX_PATH];
+    char name[PATH_MAX];
 
     Assert (real_filename != NULL);
 
@@ -766,7 +759,7 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
         ptr->flags = 0;
         ptr->next = first_anim;
         first_anim = ptr;
-        Assert (strlen (name) < _MAX_PATH - 1);
+        Assert (strlen (name) < PATH_MAX - 1);
         strcpy_s (ptr->name, name);
         ptr->instance_count = 0;
         ptr->width = 0;

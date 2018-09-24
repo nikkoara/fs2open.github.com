@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 // TCP_Socket.cpp
 // TCP_Socket for FS2Open PXO
 // Derek Meek
@@ -12,7 +14,6 @@
 #include "globalincs/pstypes.h"
 #include "network/multi_log.h"
 
-#ifdef SCP_UNIX
 #include <sys/time.h> // The OS X 10.3 SDK appears to need this for some reason (for timeval struct)
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -24,9 +25,6 @@
 #include <cerrno>
 #include <sys/ioctl.h>
 #include <csignal>
-#ifdef SCP_SOLARIS
-#include <sys/filio.h>
-#endif
 #include <cctype>
 
 #define WSAGetLastError() (errno)
@@ -38,11 +36,6 @@
         while (_res == -1 && errno == EINTR); \
         _res;                                 \
     })
-#else
-#include <windows.h>
-#include <process.h>
-typedef int socklen_t;
-#endif
 
 static bool Connecting = false;
 static bool Connected = false;
@@ -66,21 +59,9 @@ int FS2NetD_ConnectToServer (const char* host, const char* port) {
     char host_str
         [254]; // 253 is max domain name length:
                // http://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax
-#ifdef SCP_UNIX
     int my_error = 0;
-#endif
 
     if (!Connecting) {
-#ifdef WIN32
-        WSADATA wsa;
-        int rc = WSAStartup (MAKEWORD (2, 0), &wsa);
-
-        if (rc != 0) {
-            ml_printf ("FS2NetD ERROR:  Failed to start WinSock!");
-            return -1;
-        }
-#endif
-
         memset (&FS2NetD_addr, 0, sizeof (sockaddr_in));
         FS2NetD_addr.sin_family = AF_INET;
         FS2NetD_addr.sin_addr.s_addr = INADDR_ANY;
@@ -89,27 +70,19 @@ int FS2NetD_ConnectToServer (const char* host, const char* port) {
         mySocket = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
         if (mySocket == (SOCKET)SOCKET_ERROR) {
-#ifdef SCP_UNIX
             my_error = errno;
             ml_printf (
                 "FS2NetD ERROR: Couldn't get socket (\"%s\")!",
                 strerror (my_error));
-#else
-            ml_printf ("FS2NetD ERROR: Couldn't get socket!");
-#endif
             return -1;
         }
 
         if (bind (mySocket, (sockaddr*)&FS2NetD_addr, sizeof (sockaddr)) ==
             SOCKET_ERROR) {
-#ifdef SCP_UNIX
             my_error = errno;
             ml_printf (
                 "FS2NetD ERROR: Couldn't bind socket (\"%s\")!",
                 strerror (my_error));
-#else
-            ml_printf ("FS2NetD ERROR: Couldn't bind socket!");
-#endif
             return -1;
         }
 
@@ -121,7 +94,7 @@ int FS2NetD_ConnectToServer (const char* host, const char* port) {
         // prevent SIGPIPE, which is generated when sending after receiver
         // disconnected on other *nix use MSG_NOSIGNAL flag when sending data,
         // or, failing that, use signal masking see FS2NetD_SendData()
-#if defined(SCP_UNIX) && defined(SO_NOSIGPIPE)
+#if defined(SO_NOSIGPIPE)
         int nosigpipe = 1;
         if (setsockopt (
                 mySocket, SOL_SOCKET, SO_NOSIGPIPE, (void*)&nosigpipe,
@@ -131,7 +104,7 @@ int FS2NetD_ConnectToServer (const char* host, const char* port) {
                 "FS2NetD ERROR: Couldn't set SO_NOSIGPIPE on socket (\"%s\")!",
                 strerror (my_error));
         }
-#endif // SCP_UNIX && SO_NOSIGPIPE
+#endif // SO_NOSIGPIPE
 
         // blasted MS, probably need to use getaddrinfo() here for Win32, but I
         // want to keep this as clean and simple as possible and that means
@@ -187,17 +160,11 @@ int FS2NetD_ConnectToServer (const char* host, const char* port) {
                 return 0;
             }
             else {
-#ifdef SCP_UNIX
                 int errv = errno;
                 ml_printf (
                     "FS2NetD ERROR: Couldn't connect to remote system at %s "
                     "(\"%s\")!",
                     inet_ntoa (FS2NetD_addr.sin_addr), strerror (errv));
-#else
-                ml_printf (
-                    "FS2NetD ERROR: Couldn't connect to remote system at %s!",
-                    inet_ntoa (FS2NetD_addr.sin_addr));
-#endif
             }
 
             return -1;
@@ -283,15 +250,15 @@ int FS2NetD_SendData (char* buffer, int blen) {
     // on Unix with MSG_NOSIGNAL, prevent SIGPIPE, which is generated if
     // receiver has disconnected the MSG_NOSIGNAL flag doesn't work on OS X or
     // Solaris on OS X, use setsockopt() with SO_NOSIGPIPE instead, see above
-#if defined(SCP_UNIX) && defined(MSG_NOSIGNAL)
+#if defined(MSG_NOSIGNAL)
     flags |= MSG_NOSIGNAL;
-#endif // SCP_UNIX && MSG_NOSIGNAL
+#endif // MSG_NOSIGNAL
 
     socklen_t to_len = sizeof (sockaddr);
 
     // Borrowed from Kroki:
     // https://github.com/kroki/XProbes/blob/1447f3d93b6dbf273919af15e59f35cca58fcc23/src/libxprobes.c#L156
-#if defined(SCP_UNIX) && !defined(MSG_NOSIGNAL) && !defined(SO_NOSIGPIPE)
+#if !defined(MSG_NOSIGNAL) && !defined(SO_NOSIGPIPE)
     /*
         We want to ignore possible SIGPIPE that we can generate on write.
         SIGPIPE is delivered *synchronously* and *only* to the thread
@@ -317,13 +284,12 @@ int FS2NetD_SendData (char* buffer, int blen) {
         /* Maybe is was blocked already?  */
         sigpipe_unblock = !sigismember (&blocked, SIGPIPE);
     }
-#endif /* defined(SCP_UNIX) && ! defined(MSG_NOSIGNAL) && ! \
-          defined(SO_NOSIGPIPE) */
+#endif /* !defined(MSG_NOSIGNAL) && !defined(SO_NOSIGPIPE) */
 
     auto sent_chars = sendto (
         mySocket, buffer, blen, flags, (sockaddr*)&FS2NetD_addr, to_len);
 
-#if defined(SCP_UNIX) && !defined(MSG_NOSIGNAL) && !defined(SO_NOSIGPIPE)
+#if !defined(MSG_NOSIGNAL) && !defined(SO_NOSIGPIPE)
     /*
         If SIGPIPE was pending already we do nothing.  Otherwise, if it
         become pending (i.e., we generated it), then we sigwait() it (thus
@@ -347,8 +313,7 @@ int FS2NetD_SendData (char* buffer, int blen) {
             pthread_sigmask (SIG_UNBLOCK, &sigpipe_mask, NULL);
         }
     }
-#endif /* defined(SCP_UNIX) && ! defined(MSG_NOSIGNAL) && ! \
-          defined(SO_NOSIGPIPE) */
+#endif /* !defined(MSG_NOSIGNAL) && !defined(SO_NOSIGPIPE) */
 
     return sent_chars;
 }
@@ -363,11 +328,7 @@ bool FS2NetD_DataReady () {
     FD_ZERO (&recvs);
     FD_SET (mySocket, &recvs);
 
-#ifndef SCP_UNIX
-    int status = select (1, &recvs, NULL, NULL, &wait);
-#else
     int status = select (mySocket + 1, &recvs, NULL, NULL, &wait);
-#endif
 
     return ((status != 0) && (status != -1) && FD_ISSET (mySocket, &recvs));
 }

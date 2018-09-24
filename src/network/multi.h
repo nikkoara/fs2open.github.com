@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _MULTI_H
 #define _MULTI_H
@@ -33,8 +26,8 @@ class player;
 #define PXO_CHECK_VALID_MISSIONS // always check for valid missions in a debug
                                  // build
 #else
-// #define PXO_CHECK_VALID_MISSIONS				// comment this in and out as necessary
-// (for testing or not)
+// #define PXO_CHECK_VALID_MISSIONS				// comment this in and out as
+// necessary (for testing or not)
 #endif
 
 // name of the validated mission file for PXO missions
@@ -639,12 +632,12 @@ typedef struct netgame_info {
     int rank_base; // used to compare against connecting players (rank
                    // above/rank below)
     int max_players;
-    int game_state; // state (briefing, in mission, etc) this game is in
-    int security;   // some random number that should hopefully be unique for
-                  // each game started I'm also using this value to use as a
-                  // starting base for the net_signature for object
-                  // synchronization.
-    float ping_time;      // ping time to this server
+    int game_state;  // state (briefing, in mission, etc) this game is in
+    int security;    // some random number that should hopefully be unique for
+                     // each game started I'm also using this value to use as a
+                     // starting base for the net_signature for object
+                     // synchronization.
+    float ping_time; // ping time to this server
     net_addr server_addr; // address of the server
     net_player* host;
     net_player* server; // pointer to the server

@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 /*
  * Created by Ian "Goober5000" Warfield for the FreeSpace2 Source Code Project.
  * You may not sell or otherwise commercially exploit the source or things you
@@ -607,9 +609,10 @@ color* iff_get_color_by_team (int team, int seen_from_team, int is_bright) {
     // AL 12-26-97:	it seems IFF color needs to be set relative to the player
     // team.  If
     //						the team in question is the same as the player,
-    //then it
-    // should be 						drawn friendly.  If the team is different than
-    // the player's, then draw the 						appropriate IFF.
+    // then it
+    // should be 						drawn friendly.  If the team is different
+    // than the player's, then draw the 						appropriate
+    // IFF.
 
     // assume an observed color is defined; if not, use normal color
     int color_index = Iff_info[seen_from_team].observed_color_index[team];

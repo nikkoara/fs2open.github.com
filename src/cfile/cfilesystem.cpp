@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include <cstdlib>
 #include <cstring>
@@ -14,14 +7,6 @@
 #include <sstream>
 #include <algorithm>
 
-#ifdef _WIN32
-#include <io.h>
-#include <direct.h>
-#include <windows.h>
-#include <winbase.h> /* needed for memory mapping of file functions */
-#endif
-
-#ifdef SCP_UNIX
 #include <glob.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -29,7 +14,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <libgen.h>
-#endif
 
 #include "cfile/cfile.h"
 #include "cfile/cfilesystem.h"
@@ -181,23 +165,6 @@ int cf_get_packfile_count (cf_root* root) {
             }
         }
 
-#if defined _WIN32
-        filespec += "*.vp";
-
-        intptr_t find_handle;
-        _finddata_t find;
-
-        find_handle = _findfirst (filespec.c_str (), &find);
-
-        if (find_handle != -1) {
-            do {
-                if (!(find.attrib & _A_SUBDIR)) { packfile_count++; }
-
-            } while (!_findnext (find_handle, &find));
-
-            _findclose (find_handle);
-        }
-#elif defined SCP_UNIX
         filespec += "*.[vV][pP]";
 
         glob_t globinfo;
@@ -213,7 +180,6 @@ int cf_get_packfile_count (cf_root* root) {
             }
             globfree (&globinfo);
         }
-#endif
     }
 
     return packfile_count;
@@ -261,41 +227,6 @@ void cf_build_pack_list (cf_root* root) {
                 strcat_s (filespec, DIR_SEPARATOR_STR);
         }
 
-#if defined _WIN32
-        strcat_s (filespec, "*.vp");
-
-        intptr_t find_handle;
-        _finddata_t find;
-
-        find_handle = _findfirst (filespec, &find);
-
-        if (find_handle != -1) {
-            do {
-                // add the new item
-                if (!(find.attrib & _A_SUBDIR)) {
-                    Assert (root_index < temp_root_count);
-
-                    // get a temp pointer
-                    rptr_sort = &temp_roots_sort[root_index++];
-
-                    // fill in all the proper info
-                    strcpy_s (rptr_sort->path, root->path);
-
-                    if (strlen (Pathtypes[i].path)) {
-                        strcat_s (rptr_sort->path, Pathtypes[i].path);
-                        strcat_s (rptr_sort->path, DIR_SEPARATOR_STR);
-                    }
-
-                    strcat_s (rptr_sort->path, find.name);
-                    rptr_sort->roottype = CF_ROOTTYPE_PACK;
-                    rptr_sort->cf_type = i;
-                }
-
-            } while (!_findnext (find_handle, &find));
-
-            _findclose (find_handle);
-        }
-#elif defined SCP_UNIX
         strcat_s (filespec, "*.[vV][pP]");
         glob_t globinfo;
 
@@ -325,7 +256,6 @@ void cf_build_pack_list (cf_root* root) {
 
             globfree (&globinfo);
         }
-#endif
     }
 
     // these should always be the same
@@ -424,10 +354,6 @@ void cf_build_root_list (const char* cdrom_dir) {
     cf_root* root = nullptr;
 
     if (os_is_legacy_mode ()) {
-        // =========================================================================
-#ifdef WIN32
-        // Nothing to do here, Windows uses the current directory as the base
-#else
         cf_add_mod_roots (os_get_legacy_user_dir (), CF_LOCATION_ROOT_USER);
 
         root = cf_create_root ();
@@ -452,8 +378,6 @@ void cf_build_root_list (const char* cdrom_dir) {
 
         // Next, check any VP files under the current directory.
         cf_build_pack_list (root);
-#endif
-        // =========================================================================
     }
     else if (!Cmdline_portable_mode) {
         // =========================================================================
@@ -563,11 +487,10 @@ void cf_search_root_path (int root_index) {
     mprintf (("Searching root '%s' ... ", root->path));
 
     char search_path[CF_MAX_PATHNAME_LENGTH];
-#ifdef SCP_UNIX
+
     // This map stores the mapping between a specific path type and the actual
     // path that we use for it
     std::unordered_map< int, std::string > pathTypeToRealPath;
-#endif
 
     for (i = CF_TYPE_ROOT; i < CF_MAX_PATH_TYPES; i++) {
         // we don't want to add player files to the cache - taylor
@@ -584,50 +507,6 @@ void cf_search_root_path (int root_index) {
             }
         }
 
-#if defined _WIN32
-        std::string search_directory = search_path;
-        strcat_s (search_path, "*.*");
-
-        intptr_t find_handle;
-        _finddata_t find;
-
-        find_handle = _findfirst (search_path, &find);
-
-        if (find_handle != -1) {
-            do {
-                if (!(find.attrib & _A_SUBDIR)) {
-                    char* ext = strrchr (find.name, '.');
-                    if (ext) {
-                        if (is_ext_in_list (Pathtypes[i].extensions, ext)) {
-                            // Found a file!!!!
-                            cf_file* file = cf_create_file ();
-
-                            strcpy_s (file->name_ext, find.name);
-                            file->root_index = root_index;
-                            file->pathtype_index = i;
-                            file->write_time = find.time_write;
-                            file->size = find.size;
-                            file->pack_offset = 0; // Mark as a non-packed file
-
-                            std::string file_name;
-                            sprintf (
-                                file_name, "%s%s%s", search_directory.c_str (),
-                                DIR_SEPARATOR_STR, find.name);
-
-                            file->real_name = vm_strdup (file_name.c_str ());
-
-                            num_files++;
-                            // mprintf(( "Found file '%s'\n", file->name_ext
-                            // ));
-                        }
-                    }
-                }
-
-            } while (!_findnext (find_handle, &find));
-
-            _findclose (find_handle);
-        }
-#elif defined SCP_UNIX
         DIR* dirp = nullptr;
         std::string search_dir;
         {
@@ -735,7 +614,6 @@ void cf_search_root_path (int root_index) {
             }
             closedir (dirp);
         }
-#endif
     }
 
     mprintf (("%i files\n", num_files));
@@ -867,8 +745,7 @@ void cf_search_root_pack (int root_index) {
     mprintf (("%i files\n", num_files));
 }
 
-void cf_search_memory_root (int) {
-}
+void cf_search_memory_root (int) {}
 
 void cf_build_file_list () {
     int i;
@@ -971,11 +848,7 @@ CFileLocation cf_find_file_location (
     // of the file
 
     // NOTE: full path should also include localization, if so desired
-#ifdef SCP_UNIX
     if (strpbrk (filespec, "/")) { // do we have a full path already?
-#else
-    if (strpbrk (filespec, "/\\:")) { // do we have a full path already?
-#endif
         FILE* fp = fopen (filespec, "rb");
         if (fp) {
             CFileLocation res (true);
@@ -1026,23 +899,6 @@ CFileLocation cf_find_file_location (
                 longname, sizeof (longname) - 1, search_order[ui], filespec,
                 localize, location_flags);
 
-#if defined _WIN32
-            _finddata_t findstruct;
-
-            intptr_t findhandle = _findfirst (longname, &findstruct);
-            if (findhandle != -1) {
-                CFileLocation res;
-                res.found = true;
-                res.size = static_cast< size_t > (findstruct.size);
-
-                _findclose (findhandle);
-
-                res.offset = 0;
-                res.full_name = longname;
-
-                return res;
-            }
-#endif
             {
                 FILE* fp = fopen (longname, "rb");
 
@@ -1188,11 +1044,7 @@ CFileLocationExt cf_find_file_location_ext (
 
     // if we have a full path already then fail.  this function if for
     // searching via filter only!
-#ifdef SCP_UNIX
     if (strpbrk (filename, "/")) { // do we have a full path already?
-#else
-    if (strpbrk (filename, "/\\:")) { // do we have a full path already?
-#endif
         Int3 ();
         return CFileLocationExt ();
     }
@@ -1248,23 +1100,6 @@ CFileLocationExt cf_find_file_location_ext (
                 longname, sizeof (longname) - 1, search_order[ui], filespec,
                 localize);
 
-#if defined _WIN32
-            _finddata_t findstruct;
-
-            intptr_t findhandle = _findfirst (longname, &findstruct);
-            if (findhandle != -1) {
-                CFileLocationExt res (cur_ext);
-                res.found = true;
-                res.size = static_cast< size_t > (findstruct.size);
-
-                _findclose (findhandle);
-
-                res.offset = 0;
-                res.full_name = longname;
-
-                return res;
-            }
-#endif
             {
                 FILE* fp = fopen (longname, "rb");
 
@@ -1546,51 +1381,6 @@ int cf_get_file_list (
         Get_file_list_child = NULL;
     }
 
-#if defined _WIN32
-    cf_create_default_path_string (
-        filespec, sizeof (filespec) - 1, pathtype, (char*)Get_file_list_child,
-        false, location_flags);
-    strcat_s (filespec, DIR_SEPARATOR_STR);
-    strcat_s (filespec, filter);
-
-    _finddata_t find;
-    intptr_t find_handle;
-
-    find_handle = _findfirst (filespec, &find);
-    if (find_handle != -1) {
-        do {
-            if (strcmp (strrchr (filter, '.'), strrchr (find.name, '.')) != 0)
-                continue;
-
-            if (!(find.attrib & _A_SUBDIR)) {
-                if (!Get_file_list_filter ||
-                    (*Get_file_list_filter) (find.name)) {
-                    if (check_duplicates &&
-                        cf_file_already_in_list (list, find.name)) {
-                        continue;
-                    }
-
-                    ptr = strrchr (find.name, '.');
-                    if (ptr)
-                        l = (size_t) (ptr - find.name);
-                    else
-                        l = strlen (find.name);
-
-                    list.push_back (std::string (find.name, l));
-
-                    if (info) {
-                        tinfo.write_time = find.time_write;
-                        info->push_back (tinfo);
-                    }
-                }
-            }
-
-        } while (!_findnext (find_handle, &find));
-
-        _findclose (find_handle);
-    }
-
-#elif defined SCP_UNIX
     cf_create_default_path_string (
         filespec, sizeof (filespec) - 1, pathtype, (char*)Get_file_list_child,
         false, location_flags);
@@ -1639,7 +1429,6 @@ int cf_get_file_list (
 
         closedir (dirp);
     }
-#endif
 
     bool skip_packfiles = false;
     if ((pathtype == CF_TYPE_PLAYERS) ||
@@ -1768,48 +1557,6 @@ int cf_get_file_list (
 
     char filespec[MAX_PATH_LEN];
 
-#if defined _WIN32
-    cf_create_default_path_string (
-        filespec, sizeof (filespec) - 1, pathtype, filter, false,
-        location_flags);
-
-    _finddata_t find;
-    intptr_t find_handle;
-
-    find_handle = _findfirst (filespec, &find);
-    if (find_handle != -1) {
-        do {
-            if (num_files >= max) break;
-
-            if (strcmp (strrchr (filter, '.'), strrchr (find.name, '.')) != 0)
-                continue;
-
-            if (strlen (find.name) >= MAX_FILENAME_LEN) continue;
-
-            if (!(find.attrib & _A_SUBDIR)) {
-                if (!Get_file_list_filter ||
-                    (*Get_file_list_filter) (find.name)) {
-                    ptr = strrchr (find.name, '.');
-                    if (ptr)
-                        l = ptr - find.name;
-                    else
-                        l = strlen (find.name);
-
-                    list[num_files] = (char*)vm_malloc (l + 1);
-                    strncpy (list[num_files], find.name, l);
-                    list[num_files][l] = 0;
-                    if (info) info[num_files].write_time = find.time_write;
-
-                    num_files++;
-                }
-            }
-
-        } while (!_findnext (find_handle, &find));
-
-        _findclose (find_handle);
-    }
-
-#elif defined SCP_UNIX
     cf_create_default_path_string (
         filespec, sizeof (filespec) - 1, pathtype, nullptr, false,
         location_flags);
@@ -1857,9 +1604,9 @@ int cf_get_file_list (
 
         closedir (dirp);
     }
-#endif
 
     bool skip_packfiles = false;
+
     if ((pathtype == CF_TYPE_PLAYERS) ||
         (pathtype == CF_TYPE_SINGLE_PLAYERS) ||
         (pathtype == CF_TYPE_MULTI_PLAYERS)) {
@@ -1998,44 +1745,6 @@ int cf_get_file_list_preallocated (
     char filespec[MAX_PATH_LEN];
 
     // Search the default directories
-#if defined _WIN32
-    cf_create_default_path_string (
-        filespec, sizeof (filespec) - 1, pathtype, filter, false,
-        location_flags);
-
-    intptr_t find_handle;
-    _finddata_t find;
-
-    find_handle = _findfirst (filespec, &find);
-    if (find_handle != -1) {
-        do {
-            if (num_files >= max) break;
-
-            if (!(find.attrib & _A_SUBDIR)) {
-                if (strcmp (strstr (filter, "."), strstr (find.name, ".")) !=
-                    0)
-                    continue;
-
-                if (strlen (find.name) >= MAX_FILENAME_LEN) continue;
-
-                if (!Get_file_list_filter ||
-                    (*Get_file_list_filter) (find.name)) {
-                    strncpy (arr[num_files], find.name, MAX_FILENAME_LEN - 1);
-                    char* ptr = strrchr (arr[num_files], '.');
-                    if (ptr) { *ptr = 0; }
-
-                    if (info) { info[num_files].write_time = find.time_write; }
-
-                    num_files++;
-                }
-            }
-
-        } while (!_findnext (find_handle, &find));
-
-        _findclose (find_handle);
-    }
-
-#elif defined SCP_UNIX
     cf_create_default_path_string (
         filespec, sizeof (filespec) - 1, pathtype, nullptr, false,
         location_flags);
@@ -2077,9 +1786,9 @@ int cf_get_file_list_preallocated (
         }
         closedir (dirp);
     }
-#endif
 
     bool skip_packfiles = false;
+
     if ((pathtype == CF_TYPE_PLAYERS) ||
         (pathtype == CF_TYPE_SINGLE_PLAYERS) ||
         (pathtype == CF_TYPE_MULTI_PLAYERS)) {
@@ -2173,11 +1882,7 @@ int cf_get_file_list_preallocated (
 int cf_create_default_path_string (
     char* path, uint path_max, int pathtype, const char* filename,
     bool localize, uint32_t location_flags) {
-#ifdef SCP_UNIX
     if (filename && strpbrk (filename, "/")) {
-#else
-    if (filename && strpbrk (filename, "/\\:")) {
-#endif
         // Already has full path
         strncpy (path, filename, path_max);
     }
@@ -2258,11 +1963,7 @@ int cf_create_default_path_string (
 int cf_create_default_path_string (
     std::string& path, int pathtype, const char* filename, bool /*localize*/,
     uint32_t location_flags) {
-#ifdef SCP_UNIX
     if (filename && strpbrk (filename, "/")) {
-#else
-    if (filename && strpbrk (filename, "/\\:")) {
-#endif
         // Already has full path
         path.assign (filename);
     }

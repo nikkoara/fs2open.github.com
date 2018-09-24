@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "graphics/software/NVGFont.h"
 #include "graphics/paths/PathRenderer.h"

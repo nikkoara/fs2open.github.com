@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 //
 //
 #include "LuaSEXP.h"

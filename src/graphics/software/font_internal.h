@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #ifndef FONT_INTERNAL_H
 #define FONT_INTERNAL_H

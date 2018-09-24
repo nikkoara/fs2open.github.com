@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "anim/animplay.h"
 #include "gamesnd/gamesnd.h"
@@ -28,7 +21,6 @@
 #include "render/3d.h"
 #include "ship/ship.h"
 #include "sound/audiostr.h"
-#include "sound/fsspeech.h"
 #include "species_defs/species_defs.h"
 
 // --------------------------------------------------------------------------------------
@@ -678,10 +670,6 @@ void brief_init_map () {
     Num_fade_icons = 0;
 }
 
-#ifdef _MSC_VER
-#pragma optimize("", off)
-#endif
-
 void brief_render_fade_outs (float frametime) {
     int i, bx, by, w, h;
     float bxf, byf;
@@ -1027,10 +1015,6 @@ void brief_render_icon (
 
     } // end if vertex is projected
 }
-
-#ifdef _MSC_VER
-#pragma optimize("", on)
-#endif
 
 // -------------------------------------------------------------------------------------
 // brief_render_icons()
@@ -2273,32 +2257,15 @@ void brief_voice_play (int stage_num) {
 
     if (!Briefing_voice_enabled) { return; }
 
-    if (Brief_voices[stage_num] < 0) {
-        // play simulated speech?
-        if (fsspeech_play_from (FSSPEECH_FROM_BRIEFING)) {
-            if (fsspeech_playing ()) { return; }
-
-            fsspeech_play (
-                FSSPEECH_FROM_BRIEFING,
-                Briefing->stages[stage_num].text.c_str ());
-        }
-    }
-    else {
-        if (audiostream_is_playing (Brief_voices[stage_num])) { return; }
-
-        audiostream_play (Brief_voices[stage_num], Master_voice_volume, 0);
-    }
+    if (audiostream_is_playing (Brief_voices[stage_num])) { return; }
+    audiostream_play (Brief_voices[stage_num], Master_voice_volume, 0);
 }
 
 /**
  * Stop playback of the voice for a particular briefing stage
  */
 void brief_voice_stop (int stage_num) {
-    if (Brief_voices[stage_num] < 0) { fsspeech_stop (); }
-    else {
-        audiostream_stop (
-            Brief_voices[stage_num], 1, 0); // stream is automatically rewound
-    }
+    audiostream_stop (Brief_voices[stage_num], 1, 0); // stream is automatically rewound
 }
 
 /**
@@ -2306,17 +2273,11 @@ void brief_voice_stop (int stage_num) {
  * call brief_voice_unpause() again
  */
 void brief_voice_pause (int stage_num) {
-    if (Brief_voices[stage_num] < 0) { fsspeech_stop (); }
-    else {
-        audiostream_pause (Brief_voices[stage_num]);
-    }
+    audiostream_pause (Brief_voices[stage_num]);
 }
 
 void brief_voice_unpause (int stage_num) {
-    if (Brief_voices[stage_num] < 0) { fsspeech_stop (); }
-    else {
-        audiostream_unpause (Brief_voices[stage_num]);
-    }
+    audiostream_unpause (Brief_voices[stage_num]);
 }
 
 void brief_reset_last_new_stage () { Last_new_stage = -1; }
@@ -2374,18 +2335,6 @@ int brief_time_to_advance (int stage_num) {
     // check normal speech
     if (Briefing_voice_enabled && (Brief_voices[stage_num] >= 0)) {
         if (audiostream_is_playing (Brief_voices[stage_num])) { return 0; }
-
-        if (!Voice_ended_time) {
-            Voice_ended_time = timer_get_milliseconds ();
-        }
-
-        return 0;
-    }
-
-    // check simulated speech
-    if (Briefing_voice_enabled && (Brief_voices[stage_num] < 0) &&
-        fsspeech_play_from (FSSPEECH_FROM_BRIEFING)) {
-        if (fsspeech_playing ()) { return 0; }
 
         if (!Voice_ended_time) {
             Voice_ended_time = timer_get_milliseconds ();

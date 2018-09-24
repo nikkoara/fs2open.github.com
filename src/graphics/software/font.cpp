@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include <cstdio>
 #include <cstdarg>
@@ -566,19 +559,6 @@ void gr_get_string_size (int* w1, int* h1, const char* text, int len) {
 }
 
 MONITOR (FontChars)
-
-#ifdef _WIN32
-
-void gr_string_win (int x, int y, char* s) {
-    using namespace font;
-
-    int old_bitmap = gr_screen.current_bitmap;
-    set_font (FONT1);
-    gr_string (x, y, s);
-    gr_screen.current_bitmap = old_bitmap;
-}
-
-#endif // ifdef _WIN32
 
 char grx_printf_text[2048];
 

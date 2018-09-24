@@ -1,24 +1,10 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #define _CFILE_INTERNAL
 
 #include <cstdlib>
 #include <cstring>
 #include <cstdio>
-
-#ifdef _WIN32
-#include <io.h>
-#include <direct.h>
-#include <windows.h>
-#include <winbase.h> /* needed for memory mapping of file functions */
-#endif
 
 #include "cfile/cfile.h"
 #include "cfile/cfilearchive.h"

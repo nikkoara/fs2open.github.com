@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _DEBRIS_H
 #define _DEBRIS_H
@@ -30,17 +23,17 @@ typedef struct debris {
     float lifeleft;      // When 0 or less object dies
     int must_survive_until; // WMC - timestamp of earliest point that it can be
                             // murthered.
-    int model_num;           // What model this uses
-    int submodel_num;        // What submodel this uses
-    int next_fireball;       // When to start a fireball
-    int is_hull;             // indicates a large hull chunk of debris
-    int species;             // What species this is from.  -1 if don't care.
-    int fire_timeout;        // timestamp that holds time for fireballs to stop
-                             // appearing
-    int sound_delay;         // timestamp to signal when sound should start
-    fix time_started;        // time when debris was created
+    int model_num;          // What model this uses
+    int submodel_num;       // What submodel this uses
+    int next_fireball;      // When to start a fireball
+    int is_hull;            // indicates a large hull chunk of debris
+    int species;            // What species this is from.  -1 if don't care.
+    int fire_timeout;       // timestamp that holds time for fireballs to stop
+                            // appearing
+    int sound_delay;        // timestamp to signal when sound should start
+    fix time_started;       // time when debris was created
     int next_distance_check; //	timestamp to determine whether to delete this
-                             //piece of debris.
+                             // piece of debris.
 
     vec3d arc_pts[MAX_DEBRIS_ARCS][2];  // The endpoints of each arc
     int arc_timestamp[MAX_DEBRIS_ARCS]; // When this times out, the spark goes

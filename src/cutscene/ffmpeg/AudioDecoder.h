@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_CUTSCENE_FFMPEG_AUDIODECODER_H
+#define FREESPACE2_CUTSCENE_FFMPEG_AUDIODECODER_H
 
 #include "cutscene/ffmpeg/internal.h"
 #include "cutscene/ffmpeg/FFMPEGDecoder.h"
@@ -35,3 +38,5 @@ public:
 };
 } // namespace ffmpeg
 } // namespace cutscene
+
+#endif // FREESPACE2_CUTSCENE_FFMPEG_AUDIODECODER_H

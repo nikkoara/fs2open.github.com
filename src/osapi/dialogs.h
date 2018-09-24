@@ -1,7 +1,7 @@
+// -*- mode: c++; -*-
 
 #ifndef _OSAPI_DIALOGS_H
 #define _OSAPI_DIALOGS_H
-#pragma once
 
 #include "globalincs/pstypes.h"
 

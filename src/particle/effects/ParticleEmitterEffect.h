@@ -1,6 +1,7 @@
+// -*- mode: c++; -*-
+
 #ifndef PARTICLE_EMITTER_EFFECT_H
 #define PARTICLE_EMITTER_EFFECT_H
-#pragma once
 
 #include "particle/ParticleEffect.h"
 #include "particle/particle.h"

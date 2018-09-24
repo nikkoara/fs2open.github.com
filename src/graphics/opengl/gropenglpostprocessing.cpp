@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "cmdline/cmdline.h"
 #include "freespace2/freespace.h"

@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "LuaReference.h"
 #include "LuaException.h"
@@ -34,9 +35,9 @@ UniqueLuaReference::UniqueLuaReference (lua_State* state, int reference)
 UniqueLuaReference::UniqueLuaReference ()
     : _luaState (nullptr), _reference (LUA_NOREF) {}
 
-UniqueLuaReference::UniqueLuaReference (UniqueLuaReference&& other)
-    noexcept : _luaState (nullptr),
-                   _reference (LUA_NOREF) {
+UniqueLuaReference::UniqueLuaReference (UniqueLuaReference&& other) noexcept
+    : _luaState (nullptr),
+      _reference (LUA_NOREF) {
     *this = std::move (other);
 }
 UniqueLuaReference& UniqueLuaReference::

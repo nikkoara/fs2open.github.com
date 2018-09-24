@@ -1,20 +1,10 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
+
 #ifndef NDEBUG
 #define BMPMAN_NDEBUG
 #endif
 
 #define BMPMAN_INTERNAL
-
-#ifdef _WIN32
-#include <windows.h>
-#endif
 
 #include "anim/animplay.h"
 #include "anim/packunpack.h"

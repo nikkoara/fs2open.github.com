@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 /*
  * Created by WMCoolmon for the FreeSpace2 Source Code Project.
  * You may not sell or otherwise commercially exploit the source or things you

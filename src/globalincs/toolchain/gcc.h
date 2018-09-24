@@ -1,21 +1,17 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- */
+// -*- mode: c++; -*-
 
-/**
+#ifndef FREESPACE2_GLOBALINCS_TOOLCHAIN_GCC_H
+#define FREESPACE2_GLOBALINCS_TOOLCHAIN_GCC_H
+
  * @file
  *
  * @brief Macros to abstract compiler capabilities for the GCC toolchain
  *
  * @internal
- * This file should never be included directly; instead, one should
- * include toolchain.h which will pull in the file appropriate to
- * the detected toolchain.
- */
+ * This file should never be included directly;
+ instead, one should* include toolchain
+                  .h which will pull in the file appropriate to* the detected
+                      toolchain.* /
 
 #define SCP_FORMAT_STRING
 #define SCP_FORMAT_STRING_ARGS(x, y) __attribute__ ((format (printf, x, y)))
@@ -36,10 +32,10 @@
     do {                          \
     } while (false)
 #else
-/*
- * NOTE: Assertion() can only use its proper functionality in compilers
- * that support variadic macros.
- */
+ /*
+  * NOTE: Assertion() can only use its proper functionality in compilers
+  * that support variadic macros.
+  */
 #define Assertion(expr, msg, ...)                               \
     do {                                                        \
         if (!(expr)) {                                          \
@@ -49,15 +45,15 @@
     } while (false)
 #endif
 
-/* C++11 Standard Detection */
+ /* C++11 Standard Detection */
 #if !defined(HAVE_CXX11)
-/*
- * For GCC with autotools, see AX_CXX_COMPiLE_STDCXX_11 macro in the
- * file "configure.ac". This sets HAVE_CXX11 & -std=c++0x or -std=c++11
- * as appropriate.
- *
- * TODO: Is anything else required here?
- */
+ /*
+  * For GCC with autotools, see AX_CXX_COMPiLE_STDCXX_11 macro in the
+  * file "configure.ac". This sets HAVE_CXX11 & -std=c++0x or -std=c++11
+  * as appropriate.
+  *
+  * TODO: Is anything else required here?
+  */
 #endif
 
 #define SIZE_T_ARG "%zu"
@@ -84,3 +80,5 @@
 #else
 #define UNREACHABLE(msg, ...) __builtin_unreachable ()
 #endif
+
+#endif // FREESPACE2_GLOBALINCS_TOOLCHAIN_GCC_H

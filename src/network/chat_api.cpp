@@ -1,23 +1,12 @@
-/*
- * Copyright (C) Volition, Inc. 2005.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "globalincs/pstypes.h"
 #include "network/chat_api.h"
 
-#ifdef SCP_UNIX
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
-#ifdef SCP_SOLARIS
-#include <sys/filio.h>
-#endif
 #include <netinet/in.h>
 #include <sys/select.h>
 #include <cerrno>
@@ -25,10 +14,6 @@
 #include <netdb.h>
 
 #define WSAGetLastError() (errno)
-#else
-#include <winsock.h>
-typedef int socklen_t;
-#endif
 
 #include <cstdio>
 
@@ -436,12 +421,7 @@ char* ChatGetString (void) {
     FD_ZERO (&read_fds);
     FD_SET (Chatsock, &read_fds);
     // Writable -- that means it's connected
-#ifdef WIN32
-    while (select (0, &read_fds, NULL, NULL, &timeout))
-#else
-    while (select (Chatsock + 1, &read_fds, NULL, NULL, &timeout))
-#endif
-    {
+    while (select (Chatsock + 1, &read_fds, NULL, NULL, &timeout)) {
         bytesread = recv (Chatsock, ch, 1, 0);
         if (bytesread) {
             ch[1] = '\0';

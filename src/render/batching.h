@@ -1,3 +1,8 @@
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_RENDER_BATCHING_H
+#define FREESPACE2_RENDER_BATCHING_H
+
 /*
  * Copyright (C) Freespace Open 2015.  All rights reserved.
  *
@@ -146,3 +151,5 @@ void batching_add_tri (int texture, vertex* verts);
 void batching_render_all (bool render_distortions = false);
 
 void batching_shutdown ();
+
+#endif // FREESPACE2_RENDER_BATCHING_H

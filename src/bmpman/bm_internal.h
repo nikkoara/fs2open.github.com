@@ -1,13 +1,7 @@
+// -*- mode: c++; -*-
+
 #ifndef __BM_INTERNAL_H__
 #define __BM_INTERNAL_H__
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
 
 /**
  * @file bm_internal.h

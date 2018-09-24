@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _AI_H
 #define _AI_H
@@ -46,7 +39,7 @@ extern ai_flag_name Ai_flag_names[];
 #define AIDO_DOCK 1 //	Set goal of docking with object.
 #define AIDO_DOCK_NOW \
     2 //	Immediately move into dock position.  For ships that start mission
-      //docked.
+      // docked.
 #define AIDO_UNDOCK 3 //	Set goal of undocking with object.
 
 //	Submodes for seeking safety.
@@ -70,8 +63,8 @@ extern ai_flag_name Ai_flag_names[];
 #define AIG_TYPE_DYNAMIC 5     // created on the fly
 
 //	Flags to ai_turn_towards_vector().
-#define AITTV_FAST \
-    (1 << 0) //	Turn fast, not slowed down based on skill level.
+#define AITTV_FAST (1 << 0)        //	Turn fast, not slowed down based on skill
+                                   //level.
 #define AITTV_VIA_SEXP (1 << 1)    //	Goober5000 - via sexp
 #define AITTV_IGNORE_BANK (1 << 2) //	Goober5000 - ignore bank when turning
 
@@ -81,7 +74,7 @@ extern ai_flag_name Ai_flag_names[];
 // structure for AI goals
 typedef struct ai_goal {
     int signature;  //	Unique identifier.  All goals ever created (per
-                    //mission) have a unique signature.
+                    // mission) have a unique signature.
     int ai_mode;    // one of the AIM_* modes for this goal
     int ai_submode; // maybe need a submode
     int type;       // one of the AIG_TYPE_* values above
@@ -143,7 +136,7 @@ typedef struct ai_goal {
 #define AIM_SENTRYGUN 19 //  AI mode for sentry guns only (floating turrets)
 #define AIM_WARP_OUT \
     20 //	Commence warp out sequence.  Point in legal direction.  Then call
-       //John's code.
+       // John's code.
 #define AIM_FLY_TO_SHIP \
     21 //  [Kazan] Fly to a ship, doesn't matter if it's hostile or friendly --
        //  for Autopilot usage
@@ -224,7 +217,7 @@ typedef struct ai_class {
 #define SM_FLY_AWAY 11     //	Fly away from target_objnum
 #define SM_ATTACK_FOREVER \
     12 //	Engine subsystem destroyed, so attack, never evading, avoiding,
-       //etc.
+       // etc.
 #define SM_STEALTH_FIND \
     13 // Stealth ship is "targeted", but not visible, so try to find based on
        // predicted pos
@@ -295,9 +288,9 @@ typedef struct ai_class {
 typedef struct pnode {
     vec3d pos;
     int path_num;   //	path number from polymodel, ie in polymodel,
-                    //paths[path_num]
+                    // paths[path_num]
     int path_index; //	index in original model path of point, ie in
-                    //model_path, use verts[path_index]
+                    // model_path, use verts[path_index]
 } pnode;
 
 #define MAX_PATH_POINTS 1000
@@ -315,7 +308,7 @@ typedef struct ai_info {
     int wing;                         //	Member of what wing? -1 means none.
 
     int behavior; //	AI behavior; vestigial field from early development of
-                  //FS1
+                  // FS1
     int mode;
     int previous_mode;
     int mode_time;              //	timestamp at which current mode elapses.
@@ -336,7 +329,7 @@ typedef struct ai_info {
     float target_time; //	Amount of time continuously targeting this ship.
 
     int enemy_wing; //	When picking an enemy wing, only allow to be in
-                    //enemy_wing, unless == -1, in which case don't care.
+                    // enemy_wing, unless == -1, in which case don't care.
     int attacker_objnum;
 
     int goal_objnum; //	mode specific goal.  In DOCK, ship to dock with.
@@ -346,9 +339,9 @@ typedef struct ai_info {
     int guard_signature; //	Signature of ship to guard.
     int guard_wingnum;   //	Wing to guard.  guard_objnum set to leader.
 
-    int ignore_objnum;    //	ship to be ignored, based on player order.
-                          //UNUSED_OBJNUM if none.  -(wing_num+1) if ignoring
-                          //wing.
+    int ignore_objnum; //	ship to be ignored, based on player order.
+                       // UNUSED_OBJNUM if none.  -(wing_num+1) if ignoring
+                       // wing.
     int ignore_signature; //	signature of ship to be ignored
 
     // Goober5000
@@ -372,16 +365,16 @@ typedef struct ai_info {
     int path_flags;  //	loop, backtrack, whatever else.
     int path_objnum; //	Object of interest.  It's model contains the path.
     int path_goal_obj_hash;    //	Hash value of goal object when global path
-                               //created.
+                               // created.
     fix path_next_create_time; //	Next time at which we'll create a global
-                               //path.
+                               // path.
     vec3d
         path_create_pos; //	Object's position at time of global path creation.
     matrix path_create_orient; //	Object's orientation at time of global path
-                               //creation.
+                               // creation.
     int mp_index; //	Model path index.  Index in polymodel:model_paths
     fix path_next_check_time; //	Last time checked to see if would collide
-                              //with model.
+                              // with model.
     int path_goal_dist; // minimum distance to first path point to consider
                         // path reached
     int path_subsystem_next_check; // timestamp to next check if subsystem is
@@ -392,7 +385,7 @@ typedef struct ai_info {
     int submode;
     int previous_submode;    // previous submode, get it?
     float best_dot_to_enemy; //	best dot product to enemy in last BEST_DOT_TIME
-                             //seconds
+                             // seconds
     float best_dot_from_enemy; // best dot product for enemy to player in last
                                // BEST_DOT_TIME seconds
     fix best_dot_to_time;      // time at which best dot occurred
@@ -411,32 +404,33 @@ typedef struct ai_info {
 
     ai_goal goals[MAX_AI_GOALS];
     int active_goal; //	index of active goal, -1 if none,
-                     //AI_ACTIVE_GOAL_DYNAMIC if dynamic (runtime-created) goal
+                     // AI_ACTIVE_GOAL_DYNAMIC if dynamic (runtime-created)
+                     // goal
     int goal_check_time; // timer used for processing goals for this ai object
 
     vec3d last_predicted_enemy_pos; //	Where he thought enemy was last time.
     float time_enemy_in_range;      //	Amount of time enemy continuously in
                                     //"sight", near crosshair.
     float time_enemy_near; //	SUSHI: amount of time enemy continuously "near"
-                           //the player
+                           // the player
     fix last_attack_time;  //	Missiontime of last time this ship attacked its
-                           //enemy.
+                           // enemy.
     fix last_hit_time;     //	Missiontime of last time this ship was hit by
-                           //anyone.
+                           // anyone.
     int last_hit_quadrant; //	Shield section of last hit.
     fix last_hit_target_time; //	Missiontime of last time this ship
-                              //successfully hit target.
+                              // successfully hit target.
     int hitter_objnum;    //	Object index of ship that hit this ship last time.
     int hitter_signature; //	Signature of hitter.  Prevents stupidity if
-                          //hitter gets killed.
+                          // hitter gets killed.
     fix resume_goal_time; //	Time at which to resume interrupted goal, if
-                          //nothing else intervenes.
+                          // nothing else intervenes.
     float prev_accel;     //	Acceleration last frame.
     float prev_dot_to_goal; //	dot of fvec to goal last frame, used to see if
-                            //making progress towards goal.
+                            // making progress towards goal.
     vec3d goal_point;       //	Used in AIM_SAFETY, AIM_STILL and in circling.
     vec3d prev_goal_point;  //	Previous location of goal point, used at least
-                            //for evading.
+                            // for evading.
 
     // Values copied from the AI class
     float ai_accuracy, ai_evasion, ai_courage, ai_patience;
@@ -478,14 +472,14 @@ typedef struct ai_info {
     union {
         float lead_scale;         //	Amount to lead current opponent by.
         float stay_near_distance; //	Distance to stay within for
-                                  //AIM_STAY_NEAR mode.
+                                  // AIM_STAY_NEAR mode.
     };
 
     ship_subsys* targeted_subsys; // Targeted subobject on current target. NULL
                                   // if none;
     ship_subsys* last_subsys_target; // last known subsystem target
     int targeted_subsys_parent; //	Parent objnum of subobject, not necessarily
-                                //targeted
+                                // targeted
 
     float
         aspect_locked_time; //	Time towards acquiring lock for current_target
@@ -496,11 +490,11 @@ typedef struct ai_info {
     int support_ship_signature; // signature of the same
 
     int danger_weapon_objnum;    //	Closest objnum of weapon fired at this
-                                 //ship.
+                                 // ship.
     int danger_weapon_signature; //	Signature of object danger_weapon_objnum.
 
     vec3d guard_vec;           //	vector to object being guarded, only used in
-                               //AIS_GUARD_STATIC submode
+                               // AIS_GUARD_STATIC submode
     int nearest_locked_object; //	Nearest locked object.
     float nearest_locked_distance; //	Distance to nearest locked object.
 
@@ -531,7 +525,7 @@ typedef struct ai_info {
                                  //(AIF_TEMPORARY_IGNORE) expires.
     int warp_out_timestamp; //	Timestamp at which this ship is to warp out.
     int next_rearm_request_timestamp; //	Timestamp at which ship might next
-                                      //request rearm.
+                                      // request rearm.
     int primary_select_timestamp;     //	When to next select a primary weapon.
     int secondary_select_timestamp; //	When to next select a secondary weapon.
 
@@ -539,51 +533,51 @@ typedef struct ai_info {
                                   // sitting still while pounding on a bigship.
                                   // SCAN_FIGHTERS_INTERVAL is defined in
                                   // AiBig.h
-    int choose_enemy_timestamp; //	Time at which it is next legal to choose a
-                                //new enemy (does not apply
+    int choose_enemy_timestamp;   //	Time at which it is next legal to choose a
+                                  // new enemy (does not apply
                                 // to special situations, like getting hit by a
                                 // weapon)
     int force_warp_time; //	time at which to give up avoiding a ship and just
-                         //warp out
+                         // warp out
 
     int shockwave_object; //	Object index of missile that will generate a
-                          //shockwave.  We will try to avoid.
+                          // shockwave.  We will try to avoid.
 
     int shield_manage_timestamp; //	Time at which to next manage shield.
     int self_destruct_timestamp; //	Time at which to self-destruct, probably
-                                 //due to being disabled.
+                                 // due to being disabled.
     int ok_to_target_timestamp;  //	Time at which this ship can dynamically
-                                 //target.
+                                 // target.
 
     int kamikaze_damage; // some damage value used to produce a shockwave from
                          // a kamikaze ship
     vec3d big_attack_point; //	Global point this ship is attacking on a big
-                            //ship.
+                            // ship.
     vec3d big_attack_surface_normal;     // Surface normal at ship at
                                          // big_attack_point;
     int pick_big_attack_point_timestamp; //	timestamp at which to pick a new
-                                         //point to attack on a big ship.
+                                         // point to attack on a big ship.
 
     //	Note: These three avoid_XX terms are shared between the code that
-    //avoids small (only player now) and large ships 	The bits in ai_flags
-    //determine which is occurring.  AIF_AVOID_SMALL_SHIP, AIF_AVOID_BIG_SHIP
+    // avoids small (only player now) and large ships 	The bits in ai_flags
+    // determine which is occurring.  AIF_AVOID_SMALL_SHIP, AIF_AVOID_BIG_SHIP
     int avoid_ship_num;        //	object index of small ship to avoid
     vec3d avoid_goal_point;    //	point to aim at when avoiding a ship
     fix avoid_check_timestamp; //	timestamp at which to next check for having
-                               //to avoid ship
+                               // to avoid ship
 
     vec3d big_collision_normal; // Global normal of collision with big ship.
                                 // Helps find direction to fly away from big
                                 // ship.  Set for each collision.
     vec3d big_recover_pos_1;    //	Global point to fly towards when recovering
-                                //from collision with a big ship, stage 1.
+                                // from collision with a big ship, stage 1.
     vec3d big_recover_pos_2;    //	Global point to fly towards when recovering
-                                //from collision with a big ship, stage 2.
+                                // from collision with a big ship, stage 2.
     int big_recover_timestamp;  //	timestamp at which it's OK to re-enter
-                                //stage 1.
+                                // stage 1.
 
     int abort_rearm_timestamp; //	time at which this rearm should be aborted
-                               //in a multiplayer game.
+                               // in a multiplayer game.
 
     // artillery targeting info
     int artillery_objnum;      // object currently being targeted for artillery

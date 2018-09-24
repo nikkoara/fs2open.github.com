@@ -1,25 +1,13 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#ifdef _WIN32
-#include <direct.h>
-#include <io.h>
-#include <conio.h>
-#else
+
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#endif
 
 #include "globalincs/pstypes.h"
 #include "cfile/cfile.h"
@@ -187,10 +175,6 @@ void add_directory (const char* dirname) {
 }
 
 void pack_directory (char* filespec) {
-#ifdef _WIN32
-    int find_handle;
-    _finddata_t find;
-#endif
     char tmp[512];
     char tmp1[512];
     char* ts;
@@ -206,38 +190,6 @@ void pack_directory (char* filespec) {
 
     printf ("In dir '%s'\n", tmp1);
 
-#ifdef _WIN32
-    find_handle = _findfirst (tmp1, &find);
-    if (find_handle != -1) {
-        if (find.attrib & _A_SUBDIR) {
-            if (strcmp ("..", find.name) && strcmp (".", find.name) &&
-                strcmp (".svn", find.name)) {
-                strcpy_s (tmp, filespec);
-                strcat (tmp, "\\");
-                strcat (tmp, find.name);
-                pack_directory (tmp);
-            }
-        }
-        else {
-            pack_file (filespec, find.name, find.size, find.time_write);
-        }
-
-        while (!_findnext (find_handle, &find)) {
-            if (find.attrib & _A_SUBDIR) {
-                if (strcmp ("..", find.name) && strcmp (".", find.name) &&
-                    strcmp (".svn", find.name)) {
-                    strcpy_s (tmp, filespec);
-                    strcat (tmp, "\\");
-                    strcat (tmp, find.name);
-                    pack_directory (tmp);
-                }
-            }
-            else {
-                pack_file (filespec, find.name, find.size, find.time_write);
-            }
-        }
-    }
-#else
     DIR* dirp;
     struct dirent* dir;
 
@@ -274,7 +226,6 @@ void pack_directory (char* filespec) {
         printf ("Error: Source directory does not exist!\n");
         no_dir = 1;
     }
-#endif
     add_directory ("..");
 }
 
@@ -296,11 +247,7 @@ int verify_directory (char* filespec) {
 void print_instructions () {
     printf ("Creates a vp archive out of a FreeSpace data tree.\n\n");
     printf ("Usage:     cfilearchiver archive_name src_dir\n");
-#ifdef _WIN32
-    printf ("Example:   cfilearchiver freespace c:\\freespace\\data\n");
-#else
     printf ("Example:   cfilearchiver freespace /tmp/freespace/data\n\n");
-#endif
     printf (
         "Creates an archive named freespace out of the freespace data tree\n");
     printf (
@@ -335,25 +282,13 @@ int main (int argc, char* argv[]) {
     fp_out = fopen (archive_dat, "wb");
     if (!fp_out) {
         printf ("Couldn't open '%s'!\n", archive_dat);
-#ifdef _WIN32
-        printf ("Press any key to exit...\n");
-        getch ();
-        return 1;
-#else
         exit (1);
-#endif
     }
 
     fp_out_hdr = fopen (archive_hdr, "wb");
     if (!fp_out_hdr) {
         printf ("Couldn't open '%s'!\n", archive_hdr);
-#ifdef _WIN32
-        printf ("Press any key to exit...\n");
-        getch ();
-        return 1;
-#else
         exit (2);
-#endif
     }
 
     if (verify_directory (argv[2]) != 0) {
@@ -379,10 +314,6 @@ int main (int argc, char* argv[]) {
 
     if (!write_index (archive_hdr, archive_dat)) {
         printf ("Error appending index!\n");
-#ifdef _WIN32
-        printf ("Press any key to exit...\n");
-        getch ();
-#endif
         return 1;
     }
 

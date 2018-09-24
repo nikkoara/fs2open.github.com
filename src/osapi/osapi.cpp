@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "globalincs/pstypes.h"
 #include "gamesequence/gamesequence.h"
@@ -15,13 +8,7 @@
 #include <fstream>
 
 #include <fcntl.h>
-
-#ifdef SCP_UNIX
 #include <sys/stat.h>
-#elif defined(WIN32)
-#include <sys/types.h>
-#include <sys/stat.h>
-#endif
 
 namespace {
 const char* ORGANIZATION_NAME = "HardLightProductions";
@@ -98,93 +85,8 @@ bool quit_handler (const SDL_Event& /*e*/) {
     gameseq_post_event (GS_EVENT_QUIT_GAME);
     return true;
 }
+
 } // namespace
-
-// ----------------------------------------------------------------------------------------------------
-// PLATFORM SPECIFIC FUNCTION FOLLOWING
-//
-
-#ifdef WIN32
-
-// Windows specific includes
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
-// go through all windows and try and find the one that matches the search
-// string
-BOOL __stdcall os_enum_windows (HWND hwnd, LPARAM param) {
-    const char* search_string = reinterpret_cast< const char* > (param);
-    char tmp[128];
-    int len;
-
-    len = GetWindowText (hwnd, tmp, 127);
-
-    if (len) {
-        if (strstr (tmp, search_string)) {
-            Os_debugger_running = 1; // found the search string!
-            return FALSE;            // stop enumerating windows
-        }
-    }
-
-    return TRUE; // continue enumeration
-}
-
-// Fills in the Os_debugger_running with non-zero if debugger detected.
-void os_check_debugger () {
-    HMODULE hMod;
-    char search_string[256];
-    char myname[128];
-    int namelen;
-    char* p;
-
-    Os_debugger_running = 0; // Assume its not
-
-    // Find my EXE file name
-    hMod = GetModuleHandle (NULL);
-    if (!hMod) return;
-    namelen = GetModuleFileName (hMod, myname, 127);
-    if (namelen < 1) return;
-
-    // Strip off the .EXE
-    p = strstr (myname, ".exe");
-    if (!p) return;
-    *p = '\0';
-
-    // Move p to point to first letter of EXE filename
-    while ((*p != '\\') && (*p != '/') && (*p != ':')) p--;
-    p++;
-    if (strlen (p) < 1) return;
-
-    // Build what the debugger's window title would be if the debugger is
-    // running...
-    sprintf (search_string, "[run] - %s -", p);
-
-    // ... and then search for it.
-    EnumWindows (os_enum_windows, reinterpret_cast< LPARAM > (&search_string));
-}
-
-void os_set_process_affinity () {
-    HANDLE pHandle = GetCurrentProcess ();
-    DWORD_PTR pMaskProcess = 0, pMaskSystem = 0;
-
-    if (GetProcessAffinityMask (pHandle, &pMaskProcess, &pMaskSystem)) {
-        // only do this if we have at least 2 procs
-        if (pMaskProcess >= 3) {
-            // prefer running on the second processor by default
-            pMaskProcess = os_config_read_uint (NULL, "ProcessorAffinity", 2);
-
-            if (pMaskProcess > 0) {
-                SetProcessAffinityMask (pHandle, pMaskProcess);
-            }
-        }
-    }
-}
-
-#endif // WIN32
-
-// ----------------------------------------------------------------------------------------------------
-// OSAPI DEFINES/VARS
-//
 
 // os-wide globals
 static char szWinTitle[128];
@@ -195,7 +97,6 @@ static std::vector< SDL_Event > buffered_events;
 
 int Os_debugger_running = 0;
 
-#ifdef SCP_UNIX
 static bool user_dir_initialized = false;
 static std::string Os_user_dir_legacy;
 
@@ -209,19 +110,8 @@ const char* os_get_legacy_user_dir () {
 
     return Os_user_dir_legacy.c_str ();
 }
-#endif
 
-// ----------------------------------------------------------------------------------------------------
-// OSAPI FORWARD DECLARATIONS
-//
 void os_deinit ();
-
-// ----------------------------------------------------------------------------------------------------
-// OSAPI FUNCTIONS
-//
-
-// initialization/shutdown functions
-// -----------------------------------------------
 
 // If app_name is NULL or ommited, then TITLE is used
 // for the app name, which is where registry keys are stored.
@@ -263,16 +153,6 @@ void os_init (const char* wclass, const char* title, const char* app_name) {
 
     // initialized
     Os_inited = 1;
-
-#ifdef WIN32
-    // check to see if we're running under msdev
-    os_check_debugger ();
-
-    if (Cmdline_set_cpu_affinity) {
-        // deal with processor affinity
-        os_set_process_affinity ();
-    }
-#endif // WIN32
 
     os::events::addEventListener (
         SDL_WINDOWEVENT, os::events::DEFAULT_LISTENER_WEIGHT,
@@ -331,18 +211,9 @@ static bool file_exists (const std::string& path) {
 }
 
 static time_t get_file_modification_time (const std::string& path) {
-#ifdef SCP_UNIX
     struct stat file_stats {};
     if (stat (path.c_str (), &file_stats) < 0) { return 0; }
-
     return file_stats.st_mtime;
-#elif defined(WIN32)
-    struct _stat buf {};
-    if (_stat (path.c_str (), &buf) != 0) { return 0; }
-    return buf.st_mtime;
-#else
-#error Unsupported platform!
-#endif
 }
 
 const char* Osapi_legacy_mode_reason = nullptr;
@@ -376,7 +247,6 @@ bool os_is_legacy_mode () {
                     << "cmdline_fso.cfg";
         new_config_time = std::max (
             new_config_time, get_file_modification_time (path_stream.str ()));
-#ifdef SCP_UNIX
         path_stream.str ("");
         path_stream << os_get_legacy_user_dir () << DIR_SEPARATOR_CHAR
                     << Osreg_config_file_name;
@@ -392,20 +262,6 @@ bool os_is_legacy_mode () {
                     << "data" << DIR_SEPARATOR_CHAR << "cmdline_fso.cfg";
         old_config_time = std::max (
             old_config_time, get_file_modification_time (path_stream.str ()));
-#else
-        // At this point we can't determine if the old config exists so just
-        // assume that it does
-        auto old_config_exists = true;
-        time_t old_config_time = os_registry_get_last_modification_time ();
-
-        // On Windows the cmdline_fso file was stored in the game root
-        // directory which should be in the current directory
-        path_stream.str ("");
-        path_stream << "." << DIR_SEPARATOR_CHAR << "data"
-                    << DIR_SEPARATOR_CHAR << "cmdline_fso.cfg";
-        old_config_time = std::max (
-            old_config_time, get_file_modification_time (path_stream.str ()));
-#endif
 
         if (new_config_exists && old_config_exists) {
             // Both config files exists so we need to decide which to use based
@@ -654,16 +510,12 @@ std::string os_get_config_path (const std::string& subpath) {
 
     // Avoid infinite recursion when checking legacy mode
     if (os_is_legacy_mode ()) {
-#ifdef WIN32
-        // Use the current directory
-        ss << ".";
-#else
         extern const char* Osreg_user_dir_legacy;
+
         // Use the home directory
         ss << getenv ("HOME") << DIR_SEPARATOR_CHAR << Osreg_user_dir_legacy;
-#endif
-
         ss << DIR_SEPARATOR_CHAR << compatiblePath;
+
         return ss.str ();
     }
 

@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "pstypes.h"
 
 /* It is a condition of use that safe_strings.cpp, safe_strings.h,
@@ -21,9 +23,7 @@
  * scp safe_strings are used in VS2005+ DEBUG because they give more info
  */
 
-#if !defined(NO_SAFE_STRINGS) && \
-    (!defined(_MSC_VER) ||       \
-     (defined(_MSC_VER) && _MSC_VER >= 1400 /* && !defined(NDEBUG) */))
+#if !defined(NO_SAFE_STRINGS)
 
 /* An implementation of strcpy_s
  * We're not going to actually fully behave like the MS debug version.

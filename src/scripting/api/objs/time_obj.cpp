@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 //
 //
 #include "time_obj.h"

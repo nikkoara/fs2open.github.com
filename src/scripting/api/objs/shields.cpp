@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "shields.h"
 #include "enums.h"

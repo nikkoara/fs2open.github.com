@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "osapi/dialogs.h"
 #include "osapi/osapi.h"
@@ -16,7 +17,6 @@ extern "C" {
 
 #include "lauxlib.h"
 #include "lualib.h"
-
 }
 
 namespace {

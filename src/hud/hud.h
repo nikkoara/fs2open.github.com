@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef __HUD_H__
 #define __HUD_H__
@@ -21,13 +14,13 @@ struct cockpit_display;
 
 typedef struct hud_anim {
     char filename[MAX_FILENAME_LEN];
-    int first_frame; // the bitmap id for the first frame in the animation...
-                     // note that all bitmap id's following this frame are
-                     // numbered sequentially
-    int num_frames;     // number of frames in the animation
-    int sx, sy;         // screen (x,y) of top-left corner of animation
-    float total_time;   // total time in seconds for the animation (depends on
-                        // animation fps)
+    int first_frame;  // the bitmap id for the first frame in the animation...
+                      // note that all bitmap id's following this frame are
+                      // numbered sequentially
+    int num_frames;   // number of frames in the animation
+    int sx, sy;       // screen (x,y) of top-left corner of animation
+    float total_time; // total time in seconds for the animation (depends on
+                      // animation fps)
     float time_elapsed; // time that has elapsed (in seconds) since animation
                         // started playing
 } hud_anim;

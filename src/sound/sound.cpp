@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "cfile/cfile.h"
 #include "cmdline/cmdline.h"
@@ -518,10 +511,11 @@ MONITOR (NumSoundsLoaded)
 //
 // input:	gs				=>	game-level sound description
 //				pan			=>	-1 (full left) to 1.0 (full right), this is a
-// default parm 				vol_scale	=>	factor to scale default volume by
-// (applied before global sound volume applied) 				priority		=>
-// SND_PRIORITY_MUST_PLAY 									SND_PRIORITY_SINGLE_INSTANCE		(default
-// value) SND_PRIORITY_DOUBLE_INSTANCE SND_PRIORITY_TRIPLE_INSTANCE
+// default parm 				vol_scale	=>	factor to scale default volume
+// by (applied before global sound volume applied) 				priority
+// =>
+// SND_PRIORITY_MUST_PLAY 									SND_PRIORITY_SINGLE_INSTANCE
+// (default value) SND_PRIORITY_DOUBLE_INSTANCE SND_PRIORITY_TRIPLE_INSTANCE
 //
 // returns:		-1		=>		sound could not be played
 //					n		=>		handle for instance of sound
@@ -596,15 +590,16 @@ MONITOR (Num3DSoundsLoaded)
 //				source_pos	=>	global pos of where the sound is
 //				listen_pos	=>	global pos of where listener is
 //				radius		=>	optional parameter, this specifes distance at
-//which to apply min/max distances 				source_vel	=>	velocity of the
+// which to apply min/max distances 				source_vel	=>	velocity of
+// the
 // source playing the sound (used for DirectSound3D only)
 //				looping		=>	flag to indicate the sound should loop (default
 // value 0) 				vol_scale	=>	factor to scale the static volume
 // by
 // (applied before attenuation) 				priority		=>
-// SND_PRIORITY_MUST_PLAY 									SND_PRIORITY_SINGLE_INSTANCE	(default
-// value) SND_PRIORITY_DOUBLE_INSTANCE
-// SND_PRIORITY_TRIPLE_INSTANCE sound_fvec
+// SND_PRIORITY_MUST_PLAY 									SND_PRIORITY_SINGLE_INSTANCE
+// (default value) SND_PRIORITY_DOUBLE_INSTANCE SND_PRIORITY_TRIPLE_INSTANCE
+// sound_fvec
 //=> forward vector of where sound is emitting from (RSX use only)
 // range_factor
 //=>	factor N, which increases distance sound is heard by N times (default

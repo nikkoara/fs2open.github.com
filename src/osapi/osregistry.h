@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _FS2_REGISTRY_HEADER_FILE
 #define _FS2_REGISTRY_HEADER_FILE
@@ -27,10 +20,6 @@ extern const char* Osreg_config_file_name;
 // ------------------------------------------------------------------------------------------------------------
 // REGISTRY FUNCTIONS
 //
-
-#ifdef WIN32
-time_t os_registry_get_last_modification_time ();
-#endif
 
 // initialize the registry. setup default keys to use
 void os_init_registry_stuff (const char* company, const char* app);

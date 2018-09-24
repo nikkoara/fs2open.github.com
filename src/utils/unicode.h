@@ -1,3 +1,8 @@
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_UTILS_UNICODE_H
+#define FREESPACE2_UTILS_UNICODE_H
+
 // UTFCPP library inline, copyright 2006 Nemanja Trifunovic
 
 /*
@@ -22,8 +27,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
-#pragma once
-
 #include "globalincs/pstypes.h"
 
 #include "mod_table/mod_table.h"
@@ -44,9 +47,9 @@ enum utf_error {
     INVALID_CODE_POINT
 };
 
-const uint16_t LEAD_SURROGATE_MIN  = 0xd800u;
+const uint16_t LEAD_SURROGATE_MIN = 0xd800u;
 const uint16_t TRAIL_SURROGATE_MAX = 0xdfffu;
-const uint32_t CODE_POINT_MAX      = 0x0010ffffu;
+const uint32_t CODE_POINT_MAX = 0x0010ffffu;
 
 template< typename octet_type >
 inline uint8_t mask8 (octet_type c) {
@@ -54,7 +57,7 @@ inline uint8_t mask8 (octet_type c) {
 }
 
 template< typename T >
-inline bool is_surrogate(T c) {
+inline bool is_surrogate (T c) {
     return c >= LEAD_SURROGATE_MIN && c <= TRAIL_SURROGATE_MAX;
 }
 
@@ -63,15 +66,13 @@ inline bool is_code_point_valid (T c) {
     return c <= CODE_POINT_MAX && !is_surrogate (c);
 }
 
-template<typename octet_type>
-inline bool is_trail(octet_type oc)
-{
-    return ((mask8(oc) >> 6) == 0x2);
+template< typename octet_type >
+inline bool is_trail (octet_type oc) {
+    return ((mask8 (oc) >> 6) == 0x2);
 }
 
 template< typename DifferenceType >
-inline bool is_overlong_sequence (uint32_t c, DifferenceType length)
-{
+inline bool is_overlong_sequence (uint32_t c, DifferenceType length) {
     if (c < 0x80) {
         if (length != 1) return true;
     }
@@ -90,22 +91,22 @@ InputIterator append (uint32_t c, InputIterator iter) {
     if (!is_code_point_valid (c))
         throw std::runtime_error ("invalid_code_point");
 
-    if (c < 0x80)                        // one octet
+    if (c < 0x80) // one octet
         *iter++ = static_cast< uint8_t > (c);
-    else if (c < 0x800) {                // two octets
-        *iter++ = static_cast< uint8_t > ((c >> 6)            | 0xc0);
-        *iter++ = static_cast< uint8_t > ((c & 0x3f)          | 0x80);
+    else if (c < 0x800) { // two octets
+        *iter++ = static_cast< uint8_t > ((c >> 6) | 0xc0);
+        *iter++ = static_cast< uint8_t > ((c & 0x3f) | 0x80);
     }
-    else if (c < 0x10000) {              // three octets
-        *iter++ = static_cast< uint8_t > ((c >> 12)           | 0xe0);
-        *iter++ = static_cast< uint8_t > (((c >> 6) & 0x3f)   | 0x80);
-        *iter++ = static_cast< uint8_t > ((c & 0x3f)          | 0x80);
+    else if (c < 0x10000) { // three octets
+        *iter++ = static_cast< uint8_t > ((c >> 12) | 0xe0);
+        *iter++ = static_cast< uint8_t > (((c >> 6) & 0x3f) | 0x80);
+        *iter++ = static_cast< uint8_t > ((c & 0x3f) | 0x80);
     }
-    else {                                // four octets
-        *iter++ = static_cast< uint8_t > ((c >> 18)           | 0xf0);
-        *iter++ = static_cast< uint8_t > (((c >> 12) & 0x3f)  | 0x80);
-        *iter++ = static_cast< uint8_t > (((c >> 6) & 0x3f)   | 0x80);
-        *iter++ = static_cast< uint8_t > ((c & 0x3f)          | 0x80);
+    else { // four octets
+        *iter++ = static_cast< uint8_t > ((c >> 18) | 0xf0);
+        *iter++ = static_cast< uint8_t > (((c >> 12) & 0x3f) | 0x80);
+        *iter++ = static_cast< uint8_t > (((c >> 6) & 0x3f) | 0x80);
+        *iter++ = static_cast< uint8_t > ((c & 0x3f) | 0x80);
     }
     return iter;
 }
@@ -127,82 +128,76 @@ sequence_length (octet_iterator lead_it) {
         return 0;
 }
 
-template <typename octet_iterator>
-utf_error increase_safely(octet_iterator& it, octet_iterator end)
-{
-    if (++it == end)
-        return NOT_ENOUGH_ROOM;
+template< typename octet_iterator >
+utf_error increase_safely (octet_iterator& it, octet_iterator end) {
+    if (++it == end) return NOT_ENOUGH_ROOM;
 
-    if (!is_trail(*it))
-        return INCOMPLETE_SEQUENCE;
+    if (!is_trail (*it)) return INCOMPLETE_SEQUENCE;
 
     return UTF8_OK;
 }
 
-#define UTF8_CPP_INCREASE_AND_RETURN_ON_ERROR(a, b) {   \
-    utf_error ret = increase_safely (a, b);             \
-    if (ret != UTF8_OK)                                 \
-        return ret;                                     \
-}
+#define UTF8_CPP_INCREASE_AND_RETURN_ON_ERROR(a, b) \
+    {                                               \
+        utf_error ret = increase_safely (a, b);     \
+        if (ret != UTF8_OK) return ret;             \
+    }
 
 /// get_sequence_x functions decode utf-8 sequences of the length x
-template <typename octet_iterator>
-utf_error get_sequence_1(octet_iterator& it, octet_iterator end, uint32_t& code_point)
-{
-    if (it == end)
-        return NOT_ENOUGH_ROOM;
+template< typename octet_iterator >
+utf_error
+get_sequence_1 (octet_iterator& it, octet_iterator end, uint32_t& code_point) {
+    if (it == end) return NOT_ENOUGH_ROOM;
 
-    code_point = mask8(*it);
+    code_point = mask8 (*it);
 
     return UTF8_OK;
 }
 
-template <typename octet_iterator>
-utf_error get_sequence_2(octet_iterator& it, octet_iterator end, uint32_t& code_point)
-{
-    if (it == end)
-        return NOT_ENOUGH_ROOM;
+template< typename octet_iterator >
+utf_error
+get_sequence_2 (octet_iterator& it, octet_iterator end, uint32_t& code_point) {
+    if (it == end) return NOT_ENOUGH_ROOM;
 
-    code_point = mask8(*it);
+    code_point = mask8 (*it);
 
-    UTF8_CPP_INCREASE_AND_RETURN_ON_ERROR(it, end);
+    UTF8_CPP_INCREASE_AND_RETURN_ON_ERROR (it, end);
     code_point = ((code_point << 6) & 0x7ff) + ((*it) & 0x3f);
 
     return UTF8_OK;
 }
 
-template <typename octet_iterator>
-utf_error get_sequence_3(octet_iterator& it, octet_iterator end, uint32_t& code_point)
-{
-    if (it == end)
-        return NOT_ENOUGH_ROOM;
+template< typename octet_iterator >
+utf_error
+get_sequence_3 (octet_iterator& it, octet_iterator end, uint32_t& code_point) {
+    if (it == end) return NOT_ENOUGH_ROOM;
 
-    code_point = mask8(*it);
+    code_point = mask8 (*it);
 
-    UTF8_CPP_INCREASE_AND_RETURN_ON_ERROR(it, end);
-    code_point = ((code_point << 12) & 0xffff) + ((mask8(*it) << 6) & 0xfff);
+    UTF8_CPP_INCREASE_AND_RETURN_ON_ERROR (it, end);
+    code_point = ((code_point << 12) & 0xffff) + ((mask8 (*it) << 6) & 0xfff);
 
-    UTF8_CPP_INCREASE_AND_RETURN_ON_ERROR(it, end);
+    UTF8_CPP_INCREASE_AND_RETURN_ON_ERROR (it, end);
     code_point += (*it) & 0x3f;
 
     return UTF8_OK;
 }
 
-template <typename octet_iterator>
-utf_error get_sequence_4(octet_iterator& it, octet_iterator end, uint32_t& code_point)
-{
-    if (it == end)
-        return NOT_ENOUGH_ROOM;
+template< typename octet_iterator >
+utf_error
+get_sequence_4 (octet_iterator& it, octet_iterator end, uint32_t& code_point) {
+    if (it == end) return NOT_ENOUGH_ROOM;
 
-    code_point = mask8(*it);
+    code_point = mask8 (*it);
 
-    UTF8_CPP_INCREASE_AND_RETURN_ON_ERROR(it, end);
-    code_point = ((code_point << 18) & 0x1fffff) + ((mask8(*it) << 12) & 0x3ffff);
+    UTF8_CPP_INCREASE_AND_RETURN_ON_ERROR (it, end);
+    code_point =
+        ((code_point << 18) & 0x1fffff) + ((mask8 (*it) << 12) & 0x3ffff);
 
-    UTF8_CPP_INCREASE_AND_RETURN_ON_ERROR(it, end);
-    code_point += (mask8(*it) << 6) & 0xfff;
+    UTF8_CPP_INCREASE_AND_RETURN_ON_ERROR (it, end);
+    code_point += (mask8 (*it) << 6) & 0xfff;
 
-    UTF8_CPP_INCREASE_AND_RETURN_ON_ERROR(it, end);
+    UTF8_CPP_INCREASE_AND_RETURN_ON_ERROR (it, end);
     code_point += (*it) & 0x3f;
 
     return UTF8_OK;
@@ -213,8 +208,7 @@ utf_error get_sequence_4(octet_iterator& it, octet_iterator end, uint32_t& code_
 template< typename InputIterator >
 inline utf_error
 validate_next (InputIterator& it, InputIterator end, uint32_t& code_point) {
-	if (it == end)
-        return NOT_ENOUGH_ROOM;
+    if (it == end) return NOT_ENOUGH_ROOM;
 
     // Save the original value of it so we can go back in case of failure
     // Of course, it does not make much sense with i.e. stream iterators
@@ -232,26 +226,17 @@ validate_next (InputIterator& it, InputIterator end, uint32_t& code_point) {
     utf_error err = UTF8_OK;
 
     switch (length) {
-    case 0:
-        return INVALID_LEAD;
-    case 1:
-        err = get_sequence_1 (it, end, cp);
-        break;
-    case 2:
-        err = get_sequence_2 (it, end, cp);
-        break;
-    case 3:
-        err = get_sequence_3 (it, end, cp);
-        break;
-    case 4:
-        err = get_sequence_4 (it, end, cp);
-        break;
+    case 0: return INVALID_LEAD;
+    case 1: err = get_sequence_1 (it, end, cp); break;
+    case 2: err = get_sequence_2 (it, end, cp); break;
+    case 3: err = get_sequence_3 (it, end, cp); break;
+    case 4: err = get_sequence_4 (it, end, cp); break;
     }
 
     if (err == UTF8_OK) {
         // Decoding succeeded. Now, security checks...
         if (is_code_point_valid (cp)) {
-            if (!is_overlong_sequence (cp, length)){
+            if (!is_overlong_sequence (cp, length)) {
                 // Passed! Return here.
                 code_point = cp;
                 ++it;
@@ -267,7 +252,7 @@ validate_next (InputIterator& it, InputIterator end, uint32_t& code_point) {
     return it = save, err;
 }
 
-template <typename InputIterator>
+template< typename InputIterator >
 inline utf_error validate_next (InputIterator& it, InputIterator end) {
     uint32_t ignored;
     return validate_next (it, end, ignored);
@@ -279,39 +264,34 @@ uint32_t next (InputIterator& it, InputIterator end) {
     auto errc = validate_next (it, end, c);
 
     switch (errc) {
-    case UTF8_OK:
-        break;
+    case UTF8_OK: break;
 
-    case NOT_ENOUGH_ROOM:
-        throw std::runtime_error ("not_enough_room");
+    case NOT_ENOUGH_ROOM: throw std::runtime_error ("not_enough_room");
 
     case INVALID_LEAD:
     case INCOMPLETE_SEQUENCE:
-    case OVERLONG_SEQUENCE:
-        throw std::runtime_error ("invalid_utf8");
+    case OVERLONG_SEQUENCE: throw std::runtime_error ("invalid_utf8");
 
-    case INVALID_CODE_POINT:
-        throw std::runtime_error ("invalid_code_point");
+    case INVALID_CODE_POINT: throw std::runtime_error ("invalid_code_point");
     }
 
     return c;
 }
 
-template <typename octet_iterator>
-uint32_t peek_next(octet_iterator it, octet_iterator end) {
+template< typename octet_iterator >
+uint32_t peek_next (octet_iterator it, octet_iterator end) {
     return detail::next (it, end);
 }
 
-template <typename octet_iterator>
-uint32_t prior(octet_iterator& it, octet_iterator start) {
+template< typename octet_iterator >
+uint32_t prior (octet_iterator& it, octet_iterator start) {
     // can't do much if it == start
-    if (it == start)
-        throw std::runtime_error ("not_enough_room");
+    if (it == start) throw std::runtime_error ("not_enough_room");
 
     octet_iterator end = it;
 
     // Go back until we hit either a lead octet or start
-    while (is_trail(*(--it))) {
+    while (is_trail (*(--it))) {
         if (it == start)
             // error - no lead byte in the sequence
             throw std::runtime_error ("invalid_utf8");
@@ -335,21 +315,17 @@ distance (InputIterator iter, InputIterator last) {
 
 template< typename InputIterator, typename DistanceType >
 void advance (InputIterator& it, DistanceType n, InputIterator end) {
-    for (DistanceType i = 0; i < n; ++i)
-        next (it, end);
+    for (DistanceType i = 0; i < n; ++i) next (it, end);
 }
 
-template <typename octet_iterator>
-octet_iterator
-find_invalid (octet_iterator start, octet_iterator end)
-{
+template< typename octet_iterator >
+octet_iterator find_invalid (octet_iterator start, octet_iterator end) {
     octet_iterator result = start;
 
     while (result != end) {
         utf_error errc = validate_next (result, end);
 
-        if (errc != UTF8_OK)
-            return result;
+        if (errc != UTF8_OK) return result;
     }
 
     return result;
@@ -359,13 +335,13 @@ inline size_t encoded_width (uint32_t c) {
     if (!is_code_point_valid (c))
         throw std::runtime_error ("invalid_code_point");
 
-    if (c < 0x80)                        // one octet
+    if (c < 0x80) // one octet
         return 1;
-    else if (c < 0x800)                // two octets
+    else if (c < 0x800) // two octets
         return 2;
-    else if (c < 0x10000)              // three octets
+    else if (c < 0x10000) // three octets
         return 3;
-    else                                // four octets
+    else // four octets
         return 4;
 }
 
@@ -500,8 +476,7 @@ template< typename octet_iterator >
 size_t num_codepoints (octet_iterator start, octet_iterator end) {
     if (Unicode_text_mode) {
         try {
-            return static_cast< size_t > (
-                detail::distance (start, end));
+            return static_cast< size_t > (detail::distance (start, end));
         }
         catch (const std::exception& e) {
             Error (
@@ -517,12 +492,12 @@ size_t num_codepoints (octet_iterator start, octet_iterator end) {
 
 template< typename octet_iterator >
 void advance (octet_iterator& start, size_t n, octet_iterator end) {
-    if (Unicode_text_mode) {
-        detail::advance (start, n, end);
-    }
+    if (Unicode_text_mode) { detail::advance (start, n, end); }
     else {
         start = std::min (start + n, end);
     }
 }
 
 } // namespace unicode
+
+#endif // FREESPACE2_UTILS_UNICODE_H

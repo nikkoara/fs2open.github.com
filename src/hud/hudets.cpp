@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "freespace2/freespace.h"
 #include "gamesnd/gamesnd.h"
@@ -129,7 +122,7 @@ void update_ets (object* objp, float fl_frametime) {
     // sqrt(strength)
     //
     //					 This will translate to 71% max speed at 50% engines,
-    //and 31% max speed at 10% engines
+    // and 31% max speed at 10% engines
     //
     float strength = ship_get_subsystem_strength (ship_p, SUBSYSTEM_ENGINE);
 

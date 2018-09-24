@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 /*
  * Code created by Thomas Whittaker (RT) for a FreeSpace 2 source code project
  *
@@ -91,7 +93,7 @@ public:
 
     // draw a rotated bitmap
     //	void draw_bitmap(vertex *position, float rad, float angle, float
-    //depth);
+    // depth);
 
     void load_buffer (particle_pnt* buffer, size_t* n_verts);
 

@@ -1,6 +1,7 @@
+// -*- mode: c++; -*-
+
 #ifndef FS2_OPEN_EFFECTTIMING_H
 #define FS2_OPEN_EFFECTTIMING_H
-#pragma once
 
 #include "particle/ParticleSource.h"
 #include "utils/RandomRange.h"

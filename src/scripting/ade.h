@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #ifndef FS2_OPEN_ADE_H
 #define FS2_OPEN_ADE_H
 
@@ -9,7 +11,6 @@ extern "C" {
 
 #include "lauxlib.h"
 #include "lualib.h"
-
 }
 
 /**

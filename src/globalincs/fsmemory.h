@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #ifndef _FSMEMORY_H
 #define _FSMEMORY_H

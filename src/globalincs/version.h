@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef __FS2_VERSIONING_HEADER_FILE
 #define __FS2_VERSIONING_HEADER_FILE
@@ -19,9 +12,9 @@
 // Here are the version defines.
 //	Gets displayed as MAJOR.MINOR, or 1.21 if MAJOR = 1, MINOR = 21.
 //	Prior to release, MAJOR should be zero.  After release, it should be 1.
-//Probably never increase to 2 as that could 	cause confusion with a sequel.
+// Probably never increase to 2 as that could 	cause confusion with a sequel.
 //	MINOR should increase by 1 for each minor upgrade and by 10 for major
-//upgrades. 	With each rev we send, we should increase MINOR.
+// upgrades. 	With each rev we send, we should increase MINOR.
 // Version history (full version):
 //		1.0	Initial US/UK release
 //		1.01	Patch for Win95 volume label bug

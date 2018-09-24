@@ -1,6 +1,7 @@
+// -*- mode: c++; -*-
+
 #ifndef LUAUTIL_H
 #define LUAUTIL_H
-#pragma once
 
 #include "LuaHeaders.h"
 #include "LuaException.h"

@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef __CFILE_H__
 #define __CFILE_H__
@@ -473,10 +466,6 @@ CFileLocationExt cf_find_file_location_ext (
 // Functions to change directories
 int cfile_chdir (const char* dir);
 
-#ifdef _WIN32
-int cfile_chdrive (int DriveNum, int flag);
-#endif
-
 // push current directory on a 'stack' (so we can restore it) and change the
 // directory
 int cfile_push_chdir (int type);
@@ -494,9 +483,7 @@ public:
 
     ~cfile_error () noexcept override {}
 
-    const char* what () const noexcept override {
-        return m_excuse.c_str ();
-    }
+    const char* what () const noexcept override { return m_excuse.c_str (); }
 
 private:
     std::string m_excuse;

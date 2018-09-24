@@ -1,14 +1,4 @@
-
-
-#ifdef _WIN32
-#define VC_EXTRALEAN
-#ifndef STRICT
-#define STRICT
-#endif
-
-#include <windows.h>
-#include <mmsystem.h>
-#endif
+// -*- mode: c++; -*-
 
 #include "cfile/cfile.h"
 #include "globalincs/pstypes.h"

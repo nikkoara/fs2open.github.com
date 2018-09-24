@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _WEAPON_H
 #define _WEAPON_H
@@ -41,7 +34,7 @@ extern int Num_weapon_subtypes;
 //	Bitflags controlling weapon behavior
 #define MAX_WEAPON_FLAGS \
     18 //	Maximum number of different bit flags legal to specify in a single
-       //weapons.tbl Flags line
+       // weapons.tbl Flags line
 
 #define WEAPON_EXHAUST_DELTA_TIME \
     75 //	Delay in milliseconds between exhaust blobs
@@ -97,7 +90,7 @@ typedef struct weapon {
 
     int target_num;     //	Object index of target
     int target_sig;     //	So we know if the target is the same one we've been
-                        //tracking
+                        // tracking
     float nearest_dist; //	nearest distance yet attained to target
     fix creation_time;  //	time at which created, stuffed Missiontime
     flagset< Weapon::Weapon_Flags >
@@ -132,7 +125,7 @@ typedef struct weapon {
                                    // glow animation should be on
 
     int pick_big_attack_point_timestamp; //	Timestamp at which to pick a new
-                                         //point to attack.
+                                         // point to attack.
     vec3d big_attack_point; //	Target-relative location of attack point.
 
     std::vector< int >* cmeasure_ignore_list;
@@ -154,9 +147,9 @@ typedef struct weapon {
     fix lssm_warpout_time; // time at which the missile warps out
     fix lssm_warpin_time;  // time at which the missile warps back in
     int lssm_stage;        // what stage its in 1=just launched, 2=warping out.
-                    // 3=warped out, 4=warping back in, 5=terminal dive
-    int lssm_warp_idx;    // warphole index
-    float lssm_warp_time; // length of time warphole stays open
+                           // 3=warped out, 4=warping back in, 5=terminal dive
+    int lssm_warp_idx;     // warphole index
+    float lssm_warp_time;  // length of time warphole stays open
     float lssm_warp_pct; // how much of the warphole's life should be dedicated
                          // to stage 2
     vec3d lssm_target_pos;
@@ -238,7 +231,7 @@ typedef struct particle_spew_info { // this will be used for multi spews
     float particle_spew_z_scale;       // length value for some effects -nuke
     float particle_spew_rotation_rate; // rotation rate for some particle
                                        // effects -nuke
-    vec3d particle_spew_offset; // offsets and normals, yay!
+    vec3d particle_spew_offset;        // offsets and normals, yay!
     vec3d particle_spew_velocity;
     generic_anim particle_spew_anim;
 } particle_spew_info;
@@ -297,7 +290,7 @@ typedef struct weapon_info {
 
     char hud_filename[MAX_FILENAME_LEN]; // Name of image to display on HUD in
                                          // place of text
-    int hud_image_index; // teh index of the image
+    int hud_image_index;                 // teh index of the image
 
     generic_anim laser_bitmap;      // bitmap for a laser
     generic_anim laser_glow_bitmap; // optional laser glow bitmap
@@ -335,15 +328,15 @@ typedef struct weapon_info {
     float det_radius; // How far from target or target subsystem it blows up
     float flak_detonation_accuracy; // How far away from a target a flak shell
                                     // will blow up. Standard is 65.0f
-    float flak_targeting_accuracy; // Determines the amount of jitter applied
-                                   // to flak targeting. USE WITH CAUTION!
+    float flak_targeting_accuracy;  // Determines the amount of jitter applied
+                                    // to flak targeting. USE WITH CAUTION!
     float untargeted_flak_range_penalty; // Untargeted flak shells detonate
                                          // after travelling max range - this
                                          // parameter. Default 20.0f
 
     float armor_factor, shield_factor,
         subsystem_factor; //	in 0.0..2.0, scale of damage done to type of
-                          //thing
+                          // thing
     float life_min;
     float life_max;
     float max_lifetime;    // How long this weapon will actually live for
@@ -384,15 +377,15 @@ typedef struct weapon_info {
 
     gamesnd_id pre_launch_snd;
     int pre_launch_snd_min_interval; // Minimum interval in ms between the last
-                                     // time the pre-launch sound was played and
-                                     // the next time it can play, as a limiter
-                                     // in case the player is pumping the
-                                     // trigger
+                                     // time the pre-launch sound was played
+                                     // and the next time it can play, as a
+                                     // limiter in case the player is pumping
+                                     // the trigger
     gamesnd_id launch_snd;
     gamesnd_id impact_snd;
     gamesnd_id disarmed_impact_snd;
     gamesnd_id flyby_snd; //	whizz-by sound, transmitted through weapon's
-                          //portable atmosphere.
+                          // portable atmosphere.
 
     // Specific to weapons with TRAILS:
     trail_info tr_info;
@@ -475,17 +468,17 @@ typedef struct weapon_info {
     float lssm_warpin_radius;
     float lssm_lock_range;
 
-    float field_of_fire; // cone the weapon will fire in, 0 is strait all the
-                         // time-Bobboau
+    float field_of_fire;   // cone the weapon will fire in, 0 is strait all the
+                           // time-Bobboau
     float fof_spread_rate; // How quickly the FOF will spread for each shot
                            // (primary weapons only, this doesn't really make
                            // sense for turrets)
-    float fof_reset_rate; // How quickly the FOF spread will reset over time
-                          // (primary weapons only, this doesn't really make
-                          // sense for turrets)
+    float fof_reset_rate;  // How quickly the FOF spread will reset over time
+                           // (primary weapons only, this doesn't really make
+                           // sense for turrets)
     float max_fof_spread; // The maximum fof increase that the shots can spread
                           // to
-    int shots; // the number of shots that will be fired at a time,
+    int shots;            // the number of shots that will be fired at a time,
                // only realy usefull when used with FOF to make a shot gun
                // effect now also used for weapon point cycleing
 

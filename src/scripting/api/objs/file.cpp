@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "file.h"
 #include "cfile/cfilesystem.h"

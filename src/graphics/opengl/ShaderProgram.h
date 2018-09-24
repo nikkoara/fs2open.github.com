@@ -1,7 +1,7 @@
+// -*- mode: c++; -*-
 
 #ifndef OPENGL_SHADER_PROGRAM_H
 #define OPENGL_SHADER_PROGRAM_H
-#pragma once
 
 #include "globalincs/pstypes.h"
 #include "gropenglshader.h"

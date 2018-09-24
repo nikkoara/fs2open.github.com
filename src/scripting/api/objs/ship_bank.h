@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_SHIP_BANK_H
+#define FREESPACE2_SCRIPTING_API_OBJS_SHIP_BANK_H
 
 #include <object/object.h>
 #include <ship/ship.h>
@@ -35,3 +38,5 @@ DECLARE_ADE_OBJ (l_WeaponBank, ship_bank_h);
 
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_OBJS_SHIP_BANK_H

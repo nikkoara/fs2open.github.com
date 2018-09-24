@@ -1,18 +1,7 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
-#ifdef _WIN32
-#include <winsock.h> // for inet_addr()
-#else
 #include <arpa/inet.h>
 #include <netinet/in.h>
-#endif
 
 #include "network/multiui.h"
 #include "freespace2/freespace.h"
@@ -2223,10 +2212,10 @@ ui_button_info Multi_sg_buttons[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_BUTTONS] = {
             "MSG_00", 1, 184, 34, 191,
             2), // open
                 //******ui_button_info("MSG_01",	1,		159,	34,	166,
-                //1),
+                // 1),
                 //// closed
                 //******ui_button_info("MSG_02",	1,		184,	34,	191,
-                //2),
+                // 2),
                 //// restricted
         ui_button_info ("MSG_03", 1, 209, 34, 218, 3),     // password
         ui_button_info ("MSG_04", 1, 257, 34, 266, 4),     // rank set
@@ -2244,10 +2233,10 @@ ui_button_info Multi_sg_buttons[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_BUTTONS] = {
             "2_MSG_00", 2, 295, 51, 307,
             2), // open
                 //******ui_button_info("2_MSG_01",	2,		254,	51,	267,
-                //1),
+                // 1),
                 //// closed
                 //******ui_button_info("2_MSG_02",	2,		295,	51,	307,
-                //2),
+                // 2),
                 //// restricted
         ui_button_info ("2_MSG_03", 2, 335, 51, 350, 3),    // password
         ui_button_info ("2_MSG_04", 2, 412, 51, 426, 4),    // rank set
@@ -2269,7 +2258,7 @@ UI_XSTR Multi_sg_text[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_TEXT] = {
         { "Open", 1322, 34, 191, UI_XSTR_COLOR_GREEN, -1,
           &Multi_sg_buttons[0][MSG_OPEN_GAME].button },
         //******{"Closed",				1323,		34,	166,
-        //UI_XSTR_COLOR_GREEN, -1,
+        // UI_XSTR_COLOR_GREEN, -1,
         //&Multi_sg_buttons[0][MSG_CLOSED_GAME].button},
         //******{"Restricted",			1324,		34,	191,
         // UI_XSTR_COLOR_GREEN, -1,
@@ -2297,7 +2286,7 @@ UI_XSTR Multi_sg_text[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_TEXT] = {
         { "Open", 1322, 51, 307, UI_XSTR_COLOR_GREEN, -1,
           &Multi_sg_buttons[1][MSG_OPEN_GAME].button },
         //******{"Closed",				1323,		51,	267,
-        //UI_XSTR_COLOR_GREEN, -1,
+        // UI_XSTR_COLOR_GREEN, -1,
         //&Multi_sg_buttons[1][MSG_CLOSED_GAME].button},
         //******{"Restricted",			1324,		51,	307,
         // UI_XSTR_COLOR_GREEN, -1,

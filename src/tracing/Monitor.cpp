@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "tracing/Monitor.h"
 #include "tracing/tracing.h"
 

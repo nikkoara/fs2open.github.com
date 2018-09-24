@@ -1,9 +1,10 @@
+// -*- mode: c++; -*-
+
 //
 //
 
 #ifndef _SPHERE_SHAPE_H
 #define _SPHERE_SHAPE_H
-#pragma once
 
 #include <math/bitarray.h>
 #include "globalincs/pstypes.h"
@@ -48,8 +49,7 @@ public:
      * with the deviation from the direction
      * @return @c true
      */
-    static constexpr bool
-    scale_velocity_deviation () { return false; }
+    static constexpr bool scale_velocity_deviation () { return false; }
 };
 
 } // namespace effects

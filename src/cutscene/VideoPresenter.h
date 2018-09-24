@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #ifndef FS2_OPEN_OPENGLVIDEOPRESENTER_H
 #define FS2_OPEN_OPENGLVIDEOPRESENTER_H
 

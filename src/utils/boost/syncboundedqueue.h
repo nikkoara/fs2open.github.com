@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_UTILS_BOOST_SYNCBOUNDEDQUEUE_H
+#define FREESPACE2_UTILS_BOOST_SYNCBOUNDEDQUEUE_H
 
 // Migrated from boost::sync_bounded_queue which can be found here:
 // https://github.com/boostorg/thread/blob/d7251f2/include/boost/thread/concurrent_queues/sync_bounded_queue.hpp
@@ -452,3 +455,5 @@ operator>> (sync_bounded_queue< ValueType >& sbq, ValueType& elem) {
     sbq.pull_front (elem);
     return sbq;
 }
+
+#endif // FREESPACE2_UTILS_BOOST_SYNCBOUNDEDQUEUE_H

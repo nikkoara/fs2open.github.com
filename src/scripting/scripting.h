@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #ifndef _SCRIPTING_H
 #define _SCRIPTING_H
 

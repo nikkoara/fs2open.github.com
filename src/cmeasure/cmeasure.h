@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _CMEASURE_H
 #define _CMEASURE_H
@@ -20,7 +13,7 @@ class object;
 
 //	Maximum distance at which a countermeasure can be tracked
 //	If this value is too large, missiles will always be tracking
-//countermeasures.
+// countermeasures.
 #define MAX_CMEASURE_TRACK_DIST 300.0f
 extern const float CMEASURE_DETONATE_DISTANCE;
 

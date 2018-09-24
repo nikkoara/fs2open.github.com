@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "camera/camera.h" //VIEWER_ZOOM_DEFAULT
 #include "cmdline/cmdline.h"
@@ -21,21 +14,15 @@
 #include "globalincs/pstypes.h"
 #include "osapi/osapi.h"
 #include "cfile/cfilesystem.h"
-#include "sound/speech.h"
 #include "sound/openal.h"
 #include "io/joy.h"
 
-#ifdef _WIN32
-#include <io.h>
-#include <direct.h>
-#elif defined(APPLE_APP)
+#if defined(APPLE_APP)
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
-#ifdef SCP_UNIX
 #include "osapi/osapi.h"
 #include <dirent.h>
-#endif
 
 #include <cstring>
 #include <cstdlib>
@@ -637,18 +624,6 @@ Flag exe_params[] = {
         "http://www.hard-light.net/wiki/index.php/"
         "Command-Line_Reference#-nograb",
     },
-#ifdef WIN32
-    {
-        "-fix_registry",
-        "Use a different registry path",
-        true,
-        0,
-        EASY_DEFAULT,
-        "Troubleshoot",
-        "",
-    },
-#endif
-
     {
         "-ingame_join",
         "Allow in-game joining",
@@ -1187,9 +1162,6 @@ cmdline_parm gl_finish ("-gl_finish", NULL, AT_NONE);
 cmdline_parm no_geo_sdr_effects ("-no_geo_effects", NULL, AT_NONE);
 cmdline_parm set_cpu_affinity ("-set_cpu_affinity", NULL, AT_NONE);
 cmdline_parm nograb_arg ("-nograb", NULL, AT_NONE);
-#ifdef WIN32
-cmdline_parm fix_registry ("-fix_registry", NULL, AT_NONE);
-#endif
 
 int Cmdline_load_all_weapons = 0;
 int Cmdline_nomovies = 0;
@@ -1204,9 +1176,6 @@ bool Cmdline_gl_finish = false;
 bool Cmdline_no_geo_sdr_effects = false;
 bool Cmdline_set_cpu_affinity = false;
 bool Cmdline_nograb = false;
-#ifdef WIN32
-bool Cmdline_alternate_registry_path = false;
-#endif
 
 // Developer/Testing related
 cmdline_parm start_mission_arg (
@@ -1751,10 +1720,8 @@ void os_init_cmdline (int argc, char* argv[]) {
                 if (fgets (buf, len - 1, fp) != nullptr) {
                     // replace the newline character with a NULL
                     if ((p = strrchr (buf, '\n')) != NULL) { *p = '\0'; }
-#ifdef SCP_UNIX
                     // append a space for the os_parse_parms() check
                     strcat_s (buf, len, " ");
-#endif
                     os_process_cmdline (buf);
                 }
                 delete[] buf;
@@ -1930,7 +1897,6 @@ char* cmdline_parm::str () {
 }
 bool cmdline_parm::has_param () { return args != nullptr; }
 
-#ifdef SCP_UNIX
 // Return a vector with all filesystem names of "parent/dir" relative to
 // parent. dir must not contain a slash.
 static std::vector< std::string >
@@ -2033,7 +1999,6 @@ static void handle_unix_modlist (char** modlist, size_t* len) {
     *modlist = new_modlist;
     *len = total_len;
 }
-#endif /* SCP_UNIX */
 
 // Sets externed variables used for communication cmdline information
 bool SetCmdlineParams () {
@@ -2210,10 +2175,8 @@ bool SetCmdlineParams () {
         memset (modlist, 0, len + 2);
         strcpy_s (modlist, len + 2, Cmdline_mod);
 
-#ifdef SCP_UNIX
         // handle case-insensitive searching
         handle_unix_modlist (&modlist, &len);
-#endif
 
         // null terminate each individual
         for (size_t i = 0; i < len; i++) {
@@ -2335,10 +2298,6 @@ bool SetCmdlineParams () {
     if (nograb_arg.found ()) { Cmdline_nograb = true; }
 
     if (portable_mode.found ()) { Cmdline_portable_mode = true; }
-
-#ifdef WIN32
-    if (fix_registry.found ()) { Cmdline_alternate_registry_path = true; }
-#endif
 
     if (env.found ()) { Cmdline_env = 0; }
 

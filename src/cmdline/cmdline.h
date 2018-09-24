@@ -1,18 +1,9 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- the
- * source.
- *
-
-*/
+// -*- mode: c++; -*-
 
 #ifndef FS_CMDLINE_HEADER_FILE
 #define FS_CMDLINE_HEADER_FILE
 
-int parse_cmdline (int argc, char* argv[]);
+    int parse_cmdline (int argc, char* argv[]);
 
 // COMMAND LINE SETTINGS
 // This section is for reference by all the *_init() functions. For example,

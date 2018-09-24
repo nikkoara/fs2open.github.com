@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_CUTSCENE_FFMPEG_INTERNAL_H
+#define FREESPACE2_CUTSCENE_FFMPEG_INTERNAL_H
 
 #include <functional>
 
@@ -69,8 +72,7 @@ public:
     virtual ~FFMPEGStreamDecoder ();
 
     FFMPEGStreamDecoder (const FFMPEGStreamDecoder&) = delete;
-    FFMPEGStreamDecoder&
-    operator= (const FFMPEGStreamDecoder&) = delete;
+    FFMPEGStreamDecoder& operator= (const FFMPEGStreamDecoder&) = delete;
 
     virtual void decodePacket (AVPacket* packet) = 0;
 
@@ -109,3 +111,5 @@ FFMPEGStreamDecoder< Frame >::getFrame () {
 }
 } // namespace ffmpeg
 } // namespace cutscene
+
+#endif // FREESPACE2_CUTSCENE_FFMPEG_INTERNAL_H

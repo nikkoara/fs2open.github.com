@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "libs/ffmpeg/FFmpeg.h"
 

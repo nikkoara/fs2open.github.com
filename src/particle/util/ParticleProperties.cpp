@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "particle/util/ParticleProperties.h"
 #include "particle/ParticleManager.h"

@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _HUD_ETS_H
 #define _HUD_ETS_H
@@ -39,8 +32,8 @@ class object;
 #define HAS_SHIELDS (1 << 1)
 #define HAS_WEAPONS (1 << 2)
 
-#define ETS_RECHARGE_RATE \
-    4.0f //	Recharge this percent of total shields/second
+#define ETS_RECHARGE_RATE 4.0f //	Recharge this percent of total
+                               //shields/second
 
 const int num_retail_ets_gauges = 3;
 

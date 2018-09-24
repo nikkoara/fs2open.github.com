@@ -1,4 +1,4 @@
-
+// -*- mode: c++; -*-
 
 #ifndef _GENERIC_H_
 #define _GENERIC_H_
@@ -34,7 +34,7 @@ typedef struct generic_anim {
             anim* animation;
             anim_instance* instance;
             BM_TYPE
-                bg_type; // to store background type to avoid messed up colours
+            bg_type; // to store background type to avoid messed up colours
         } ani;
         struct {
             int next_frame;

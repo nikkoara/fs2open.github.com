@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_UNIFORMS_H
+#define FREESPACE2_GRAPHICS_UNIFORMS_H
 
 #include "graphics/util/uniform_structs.h"
 #include "material.h"
@@ -19,3 +22,5 @@ void convert_model_material (
     size_t transform_buffer_offset);
 }
 } // namespace graphics
+
+#endif // FREESPACE2_GRAPHICS_UNIFORMS_H

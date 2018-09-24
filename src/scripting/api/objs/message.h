@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_MESSAGE_H
+#define FREESPACE2_SCRIPTING_API_OBJS_MESSAGE_H
 
 #include "scripting/ade_api.h"
 
@@ -13,3 +16,5 @@ DECLARE_ADE_OBJ (l_Message, int);
 
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_OBJS_MESSAGE_H

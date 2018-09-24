@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "anim/animplay.h"
 #include "anim/packunpack.h"
@@ -22,16 +15,6 @@
 
 #define BMPMAN_INTERNAL
 #include "bmpman/bm_internal.h"
-
-static inline int is_power_of_two (int w, int h) {
-    // NOTE: OpenGL texture code has a min tex size of 16 (currently), so we
-    // need to be at least
-    //       the min size here to qualify as power-of-2 and not get resized
-    //       later on
-    return (
-        ((w >= GL_min_texture_width) && !(w & (w - 1))) &&
-        ((h >= GL_min_texture_height) && !(h & (h - 1))));
-}
 
 int get_num_mipmap_levels (int w, int h) {
     int size, levels = 0;

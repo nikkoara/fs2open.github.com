@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #ifndef AI_FLAGS_H
 #define AI_FLAGS_H
 
@@ -10,22 +12,22 @@ FLAG_LIST (AI_Flags){
     Being_repaired,  //	Currently docked with repair ship.
     Repairing,       //	Repairing a ship (or going to repair a ship)
     Seek_lock,       //	set if should focus on gaining aspect lock, not hitting
-                     //with lasers
+                     // with lasers
     Formation_object,   //	Fly in formation off a specific object.
     Temporary_ignore,   //	Means current ignore_objnum is only temporary, not
-                        //an order from the player.
+                        // an order from the player.
     Use_exit_path,      //  Used by path code, to flag path as an exit path
     Use_static_path,    //  Used by path code, use fixed path, don't try to
                         //  recreate
     Target_collision,   //	Collided with aip->target_objnum last frame.  Avoid
-                        //that ship for half a second or so.
+                        // that ship for half a second or so.
     Unload_secondaries, //	Fire secondaries as fast as possible!
     On_subsys_path,     //  Current path leads to a subsystem
     Avoid_shockwave_ship,    //	Avoid an existing shockwave from a ship.
     Avoid_shockwave_weapon,  //	Avoid an expected shockwave from a weapon.
-                             //shockwave_object field contains object index.
+                             // shockwave_object field contains object index.
     Avoid_shockwave_started, //	Already started avoiding shockwave, don't keep
-                             //deciding whether to avoid.
+                             // deciding whether to avoid.
     Attack_slowly,           //	Move slowly while attacking.
     Repair_obstructed,   //	Ship wants to be repaired, but path is obstructed.
     Kamikaze,            //	Crash into target
@@ -33,9 +35,9 @@ FLAG_LIST (AI_Flags){
     Avoiding_small_ship, //	Avoiding a player ship.
     Avoiding_big_ship,   //	Avoiding a large ship.
     Big_ship_collide_recover_1, //	Collided into a big ship.  Recovering by
-                                //flying away.
+                                // flying away.
     Big_ship_collide_recover_2, //	Collided into a big ship.  Fly towards big
-                                //ship sphere perimeter.
+                                // ship sphere perimeter.
     Stealth_pursuit,            //  AI is trying to fight stealth ship
     Unload_primaries,           //	Fire primaries as fast as possible!
     Trying_unsuccessfully_to_warp, // Trying to warp, but can't warp at the

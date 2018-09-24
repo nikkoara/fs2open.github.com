@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #ifndef _GROPENGLPOSTPROCESSING_H
 #define _GROPENGLPOSTPROCESSING_H

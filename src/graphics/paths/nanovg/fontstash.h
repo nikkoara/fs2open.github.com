@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 //
 // Copyright (c) 2009-2013 Mikko Mononen memon@inside.org
 //

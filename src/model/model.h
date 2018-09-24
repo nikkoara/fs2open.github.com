@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _MODEL_H
 #define _MODEL_H
@@ -148,20 +141,21 @@ public:
     int armor_type_idx;        // Armor type on teh subsystem -C
 
     //	The following items are specific to turrets and will probably be moved
-    //to 	a separate struct so they don't take up space for all subsystem types.
+    // to 	a separate struct so they don't take up space for all subsystem
+    // types.
     char crewspot[MAX_NAME_LEN]; // unique identifying name for this turret --
                                  // used to assign AI class and multiplayer
                                  // people
     vec3d turret_norm;           //	direction this turret faces
     matrix turret_matrix;        // turret_norm converted to a matrix.
     float turret_fov;     //	dot of turret_norm:vec_to_enemy > this means can
-                          //see
+                          // see
     float turret_max_fov; //  dot of turret_norm:vec_to_enemy <= this means
                           //  barrels can elevate up to the target
     float turret_y_fov;   //  turret's base's fov
     int turret_num_firing_points; // number of firing points on this turret
     vec3d turret_firing_point[MAX_TFP]; //	in parent object's reference frame,
-                                        //point from which to fire.
+                                        // point from which to fire.
     int turret_gun_sobj; // Which subobject in this model the firing points are
                          // linked to.
     float
@@ -402,18 +396,18 @@ public:
     bool no_collisions;            // for $no_collisions property - kazan
     bool nocollide_this_only; // SUSHI: Like no_collisions, but not recursive.
                               // For the "replacement" collision model scheme.
-    bool collide_invisible; // SUSHI: If set, this submodel should allow
-                            // collisions for invisible textures. For the
-                            // "replacement" collision model scheme.
+    bool collide_invisible;   // SUSHI: If set, this submodel should allow
+                              // collisions for invisible textures. For the
+                              // "replacement" collision model scheme.
     bool force_turret_normal; // Wanderer: Sets the turret uvec to override any
                               // input of for turret normal.
     char lod_name[MAX_NAME_LEN]; // FUBAR:  Name to be used for LOD naming
                                  // comparison to preserve compatibility with
                                  // older tables.  Only used on LOD0
-    bool
-        attach_thrusters; // zookeeper: If set and this submodel or any of its
-                          // parents rotates, also rotates associated thrusters.
-    float dumb_turn_rate; // Bobboau
+    bool attach_thrusters; // zookeeper: If set and this submodel or any of its
+                           // parents rotates, also rotates associated
+                           // thrusters.
+    float dumb_turn_rate;  // Bobboau
     // int	look_at;				//Bobboau
     int look_at_num; // VA - number of the submodel to be looked at by this
                      // submodel (-1 if none)
@@ -1250,7 +1244,7 @@ typedef struct mc_info {
         hit_v; // Where on hit_bitmap the ray hit.  Invalid if hit_bitmap < 0
     int shield_hit_tri; // Which triangle on the shield got hit or -1 if none
     vec3d hit_normal;   //	Vector normal of polygon of collision.  (This is in
-                        //submodel RF)
+                        // submodel RF)
     int edge_hit;  // Set if an edge got hit.  Only valid if MC_CHECK_THICK is
                    // set.
     ubyte* f_poly; // pointer to flat poly where we intersected

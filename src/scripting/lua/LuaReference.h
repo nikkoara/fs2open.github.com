@@ -1,6 +1,7 @@
+// -*- mode: c++; -*-
+
 #ifndef LUA_REFERENCE_H
 #define LUA_REFERENCE_H
-#pragma once
 
 #include "LuaHeaders.h"
 

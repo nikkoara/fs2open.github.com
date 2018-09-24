@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_PARTICLE_UTIL_PARTICLEPROPERTIES_H
+#define FREESPACE2_PARTICLE_UTIL_PARTICLEPROPERTIES_H
 
 #include "particle/particle.h"
 #include "utils/RandomRange.h"
@@ -48,3 +51,5 @@ public:
 };
 } // namespace util
 } // namespace particle
+
+#endif // FREESPACE2_PARTICLE_UTIL_PARTICLEPROPERTIES_H

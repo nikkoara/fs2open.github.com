@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_UTIL_UNIFORMBUFFER_H
+#define FREESPACE2_GRAPHICS_UTIL_UNIFORMBUFFER_H
 
 #include "graphics/2d.h"
 #include "UniformAligner.h"
@@ -60,3 +63,5 @@ public:
 
 } // namespace util
 } // namespace graphics
+
+#endif // FREESPACE2_GRAPHICS_UTIL_UNIFORMBUFFER_H

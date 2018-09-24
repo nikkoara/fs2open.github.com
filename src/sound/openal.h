@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #ifndef _AL_H
 #define _AL_H

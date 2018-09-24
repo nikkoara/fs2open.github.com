@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #define _CFILE_INTERNAL
 
@@ -15,17 +8,8 @@
 #include <cerrno>
 #include <sys/stat.h>
 
-#ifdef _WIN32
-#include <io.h>
-#include <direct.h>
-#include <windows.h>
-#include <winbase.h> /* needed for memory mapping of file functions */
-#endif
-
-#ifdef SCP_UNIX
 #include <glob.h>
 #include <sys/mman.h>
-#endif
 
 #include "cfile/cfile.h"
 #include "cfile/cfilearchive.h"
@@ -115,13 +99,8 @@ static CFILE* cf_open_packed_cfblock (
 static CFILE* cf_open_memory_fill_cfblock (
     const char* source, int line, const void* data, size_t size, int dir_type);
 
-#if defined _WIN32
-static CFILE* cf_open_mapped_fill_cfblock (
-    const char* source, int line, HANDLE hFile, int type);
-#elif defined SCP_UNIX
 static CFILE*
 cf_open_mapped_fill_cfblock (const char* source, int line, FILE* fp, int type);
-#endif
 
 static void cf_chksum_long_init ();
 
@@ -143,11 +122,7 @@ void cfile_close () {
     cfile_inited = 0;
 }
 
-#ifdef SCP_UNIX
 #define MIN_NUM_PATH_COMPONENTS 2 /* Directory + file */
-#else
-#define MIN_NUM_PATH_COMPONENTS 3 /* Drive + directory + file */
-#endif
 
 /**
  * @brief Determine if the given path is in the root directory
@@ -245,28 +220,6 @@ int cfile_init (const char* exe_dir, const char* cdrom_dir) {
 // stored in packfiles and on the cdrom.
 void cfile_refresh () { cf_build_secondary_filelist (Cfile_cdrom_dir); }
 
-#ifdef _WIN32
-// Changes to a drive if valid.. 1=A, 2=B, etc
-// If flag, then changes to it.
-// Returns 0 if not-valid, 1 if valid.
-int cfile_chdrive (int DriveNum, int flag) {
-    int Valid = 0;
-    int n, org;
-
-    org = -1;
-    if (!flag) org = _getdrive ();
-
-    _chdrive (DriveNum);
-    n = _getdrive ();
-
-    if (n == DriveNum) Valid = 1;
-
-    if ((!flag) && (n != org)) _chdrive (org);
-
-    return Valid;
-}
-#endif // _WIN32
-
 /**
  * @brief Common code for changing directory
  *
@@ -282,30 +235,13 @@ static int _cfile_chdir (const char* new_dir, const char* cur_dir __UNUSED) {
     const char* path = NULL;
     const char no_dir[] = "\\.";
 
-#ifdef _WIN32
-    const char* colon = strchr (new_dir, ':');
-
-    if (colon) {
-        if (!cfile_chdrive (tolower (*(colon - 1)) - 'a' + 1, 1)) return 1;
-
-        path = colon + 1;
-    }
-    else
-#endif /* _WIN32 */
-    {
-        path = new_dir;
-    }
+    { path = new_dir; }
 
     if (*path == '\0') { path = no_dir; }
 
     /* This chdir might get a critical error! */
     status = _chdir (path);
-    if (status != 0) {
-#ifdef _WIN32
-        cfile_chdrive (tolower (cur_dir[0]) - 'a' + 1, 1);
-#endif /* _WIN32 */
-        return 2;
-    }
+    if (status != 0) { return 2; }
 
     return 0;
 }
@@ -378,23 +314,7 @@ int cfile_flush_dir (int dir_type) {
 
     // proceed to delete the files
     del_count = 0;
-#if defined _WIN32
-    intptr_t find_handle;
-    _finddata_t find;
-    find_handle = _findfirst ("*", &find);
-    if (find_handle != -1) {
-        do {
-            if (!(find.attrib & _A_SUBDIR) && !(find.attrib & _A_RDONLY)) {
-                // delete the file
-                cf_delete (find.name, dir_type);
 
-                // increment the deleted count
-                del_count++;
-            }
-        } while (!_findnext (find_handle, &find));
-        _findclose (find_handle);
-    }
-#elif defined SCP_UNIX
     glob_t globinfo;
     memset (&globinfo, 0, sizeof (globinfo));
     int status = glob ("*", 0, NULL, &globinfo);
@@ -414,7 +334,6 @@ int cfile_flush_dir (int dir_type) {
         }
         globfree (&globinfo);
     }
-#endif
 
     // pop the directory back
     cfile_pop_dir ();
@@ -511,31 +430,12 @@ int cf_exists_full_ext (
         .found;
 }
 
-#ifdef _WIN32
-void cf_attrib (const char* filename, int set, int clear, int dir_type) {
-    char longname[MAX_PATH_LEN];
-
-    Assert (CF_TYPE_SPECIFIED (dir_type));
-
-    cf_create_default_path_string (
-        longname, sizeof (longname) - 1, dir_type, filename);
-
-    FILE* fp = fopen (longname, "rb");
-    if (fp) {
-        fclose (fp);
-
-        DWORD z = GetFileAttributes (longname);
-        SetFileAttributes (longname, z | (set & ~clear));
-    }
-}
-#endif
-
 int cf_rename (const char* old_name, const char* name, int dir_type) {
     Assert (CF_TYPE_SPECIFIED (dir_type));
 
     int ret_code;
-    char old_longname[_MAX_PATH];
-    char new_longname[_MAX_PATH];
+    char old_longname[PATH_MAX];
+    char new_longname[PATH_MAX];
 
     cf_create_default_path_string (
         old_longname, sizeof (old_longname) - 1, dir_type, old_name);
@@ -663,14 +563,10 @@ CFILE* _cfopen (
     // the harddisk.  No fancy packfile stuff here!
 
     if (strchr (mode, 'w') || strchr (mode, '+') || strchr (mode, 'a')) {
-        char longname[_MAX_PATH];
+        char longname[PATH_MAX];
 
         // For write-only files, require a full path or a path type
-#ifdef SCP_UNIX
         if (strpbrk (file_path, "/")) {
-#else
-        if (strpbrk (file_path, "/\\:")) {
-#endif
             // Full path given?
             strcpy_s (longname, file_path);
         }
@@ -742,24 +638,11 @@ CFILE* _cfopen (
         if (type & CFILE_MEMORY_MAPPED) {
             // Can't open memory mapped files out of pack or memory files
             if (find_res.offset == 0 && find_res.data_ptr != nullptr) {
-#if defined _WIN32
-                HANDLE hFile;
-
-                hFile = CreateFile (
-                    find_res.full_name.c_str (), GENERIC_READ, FILE_SHARE_READ,
-                    NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
-                if (hFile != INVALID_HANDLE_VALUE) {
-                    return cf_open_mapped_fill_cfblock (
-                        source, line, hFile, dir_type);
-                }
-#elif defined SCP_UNIX
                 FILE* fp = fopen (find_res.full_name.c_str (), "rb");
                 if (fp) {
                     return cf_open_mapped_fill_cfblock (
                         source, line, fp, dir_type);
                 }
-#endif
             }
         }
         else {
@@ -778,9 +661,9 @@ CFILE* _cfopen (
 //
 // parameters:	*filepath	==> name of file to open (may be path+name)
 //				*mode		==> specifies how file should be opened (eg "rb"
-//for read
-// binary) 								passing NULL to mode deletes the file if it exists
-// and returns NULL
+// for read
+// binary) 								passing NULL to mode deletes the file if it
+// exists and returns NULL
 
 //				dir_type	=>	override extension check, value is one of
 // CF_TYPE* #defines
@@ -901,15 +784,6 @@ int cfclose (CFILE* cfile) {
     result = 0;
     if (cb->data && cb->mem_mapped) {
         // close memory mapped file
-#if defined _WIN32
-        result = UnmapViewOfFile ((void*)cb->data);
-        Assert (result);
-        result = CloseHandle (cb->hInFile);
-        Assert (result); // Ensure file handle is closed properly
-        result = CloseHandle (cb->hMapFile);
-        Assert (result); // Ensure file handle is closed properly
-        result = 0;
-#elif defined SCP_UNIX
         // FIXME: result is wrong after munmap() but it is successful
         // result = munmap(cb->data, cb->data_length);
         // Assert(result);
@@ -917,7 +791,6 @@ int cfclose (CFILE* cfile) {
         // non-const
         munmap (const_cast< void* > (cb->data), cb->data_length);
         if (cb->fp != NULL) result = fclose (cb->fp);
-#endif
     }
     else if (cb->fp != NULL) {
         Assert (cb->fp != NULL);
@@ -1032,21 +905,13 @@ static CFILE* cf_open_packed_cfblock (
 //
 // returns:   ptr CFILE structure.
 //
-#if defined _WIN32
 static CFILE* cf_open_mapped_fill_cfblock (
-    const char* source, int line, HANDLE hFile, int type)
-#elif defined SCP_UNIX
-static CFILE*
-cf_open_mapped_fill_cfblock (const char* source, int line, FILE* fp, int type)
-#endif
-{
+    const char* source, int line, FILE* fp, int type) {
     int cfile_block_index;
 
     cfile_block_index = cfget_cfile_block ();
     if (cfile_block_index == -1) {
-#ifdef SCP_UNIX
         fclose (fp);
-#endif
         return NULL;
     }
     else {
@@ -1060,29 +925,16 @@ cf_open_mapped_fill_cfblock (const char* source, int line, FILE* fp, int type)
         cfbp->max_read_len = 0;
         cfbp->fp = NULL;
         cfbp->mem_mapped = true;
-#if defined _WIN32
-        cfbp->hInFile = hFile;
-#endif
         cfbp->dir_type = type;
 
         cfbp->source_file = source;
         cfbp->line_num = line;
 
         cf_init_lowlevel_read_code (cfp, 0, 0, 0);
-#if defined _WIN32
-        cfbp->hMapFile =
-            CreateFileMapping (cfbp->hInFile, NULL, PAGE_READONLY, 0, 0, NULL);
-        if (cfbp->hMapFile == NULL) {
-            nprintf (("Error", "Could not create file-mapping object.\n"));
-            return NULL;
-        }
 
-        cfbp->data =
-            (ubyte*)MapViewOfFile (cfbp->hMapFile, FILE_MAP_READ, 0, 0, 0);
-        Assert (cfbp->data != NULL);
-#elif defined SCP_UNIX
         cfbp->fp = fp;
         cfbp->data_length = filelength (fileno (fp));
+
         cfbp->data = mmap (
             NULL,              // start
             cfbp->data_length, // length
@@ -1090,8 +942,8 @@ cf_open_mapped_fill_cfblock (const char* source, int line, FILE* fp, int type)
             MAP_SHARED,        // flags
             fileno (fp),       // fd
             0);                // offset
+
         Assert (cfbp->data != NULL);
-#endif
 
         return cfp;
     }

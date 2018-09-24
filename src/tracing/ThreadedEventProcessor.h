@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_TRACING_THREADEDEVENTPROCESSOR_H
+#define FREESPACE2_TRACING_THREADEDEVENTPROCESSOR_H
 
 #include "globalincs/pstypes.h"
 #include "tracing/tracing.h"
@@ -80,3 +83,5 @@ public:
 };
 
 } // namespace tracing
+
+#endif // FREESPACE2_TRACING_THREADEDEVENTPROCESSOR_H

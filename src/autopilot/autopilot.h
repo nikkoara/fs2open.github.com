@@ -1,9 +1,7 @@
-// Autopilot.h
-// Derek Meek
-// 4-30-2004
+// -*- mode: c++; -*-
 
-#if !defined(_AUTOPILOT_H_)
-#define _AUTOPILOT_H_
+#ifndef FREESPACE2_AUTOPILOT_AUTOPILOT_H
+#define FREESPACE2_AUTOPILOT_AUTOPILOT_H
 
 #include "globalincs/pstypes.h"
 #include "object/object.h"
@@ -108,10 +106,10 @@ void EndAutoPilot ();
 
 // Checks for changes every NPS_TICKRATE milliseconds
 // Checks:
-//			* if we've gotten close enough to a nav point for it to be counted as
-//"Visited"
+//			* if we've gotten close enough to a nav point for it to be counted
+//as "Visited"
 //			* If we're current AutoNavigating it checks if we need to
-//autodisengage
+// autodisengage
 void NavSystem_Do ();
 
 // Inits the Nav System
@@ -164,4 +162,5 @@ bool IsVisited (int nav);
 
 void send_autopilot_msg (char* msg, char* snd = NULL);
 void send_autopilot_msgID (int msgid);
-#endif
+
+#endif // FREESPACE2_AUTOPILOT_AUTOPILOT_H

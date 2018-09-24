@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_UTIL_UNIFORMALIGNER_H
+#define FREESPACE2_GRAPHICS_UTIL_UNIFORMALIGNER_H
 
 #include "globalincs/pstypes.h"
 
@@ -102,3 +105,5 @@ public:
 
 } // namespace util
 } // namespace graphics
+
+#endif // FREESPACE2_GRAPHICS_UTIL_UNIFORMALIGNER_H

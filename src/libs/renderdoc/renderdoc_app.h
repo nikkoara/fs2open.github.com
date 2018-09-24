@@ -1,3 +1,8 @@
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_LIBS_RENDERDOC_RENDERDOC_APP_H
+#define FREESPACE2_LIBS_RENDERDOC_RENDERDOC_APP_H
+
 /******************************************************************************
  * The MIT License (MIT)
  *
@@ -22,8 +27,6 @@
  *IN THE SOFTWARE.
  ******************************************************************************/
 
-#pragma once
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Documentation for the API is available at
@@ -34,9 +37,7 @@
 #include <cstdint>
 #endif
 
-#if defined(WIN32)
-#define RENDERDOC_CC __cdecl
-#elif defined(__linux__)
+#if defined(__linux__)
 #define RENDERDOC_CC
 #elif defined(__APPLE__)
 #define RENDERDOC_CC
@@ -654,3 +655,5 @@ typedef int(RENDERDOC_CC* pRENDERDOC_GetAPI) (
 #ifdef __cplusplus
 } // extern "C"
 #endif
+
+#endif // FREESPACE2_LIBS_RENDERDOC_RENDERDOC_APP_H

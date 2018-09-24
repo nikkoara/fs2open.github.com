@@ -1,6 +1,7 @@
+// -*- mode: c++; -*-
+
 #ifndef _TRACEEVENTWRITER_H
 #define _TRACEEVENTWRITER_H
-#pragma once
 
 #include "globalincs/pstypes.h"
 #include "tracing/tracing.h"

@@ -1,7 +1,7 @@
+// -*- mode: c++; -*-
 
 #ifndef _TRACING_CATEGORIES_H
 #define _TRACING_CATEGORIES_H
-#pragma once
 
 /** @file
  *  @ingroup tracing

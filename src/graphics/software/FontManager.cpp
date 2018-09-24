@@ -1,4 +1,4 @@
-
+// -*- mode: c++; -*-
 
 #include "graphics/software/FontManager.h"
 #include "graphics/software/VFNTFont.h"

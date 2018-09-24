@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_PARSE_SEXP_DYNAMICSEXP_H
+#define FREESPACE2_PARSE_SEXP_DYNAMICSEXP_H
 
 #include "globalincs/pstypes.h"
 
@@ -91,3 +94,5 @@ public:
 };
 
 } // namespace sexp
+
+#endif // FREESPACE2_PARSE_SEXP_DYNAMICSEXP_H

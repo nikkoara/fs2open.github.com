@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_EYE_H
+#define FREESPACE2_SCRIPTING_API_OBJS_EYE_H
 
 #include "scripting/ade_api.h"
 #include "model/model.h"
@@ -20,3 +23,5 @@ DECLARE_ADE_OBJ (l_Eyepoint, eye_h);
 
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_OBJS_EYE_H

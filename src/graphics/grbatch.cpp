@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 /*
  * Code created by Thomas Whittaker (RT) for a FreeSpace 2 source code project
  *

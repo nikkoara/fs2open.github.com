@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "physics_info.h"
 #include "vecmath.h"

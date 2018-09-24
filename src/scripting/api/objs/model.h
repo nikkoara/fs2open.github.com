@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_MODEL_H
+#define FREESPACE2_SCRIPTING_API_OBJS_MODEL_H
 
 #include "scripting/ade_api.h"
 
@@ -100,3 +103,5 @@ DECLARE_ADE_OBJ (l_Dockingbay, dockingbay_h);
 
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_OBJS_MODEL_H

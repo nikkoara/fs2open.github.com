@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "EffectTiming.h"
 
 namespace particle {

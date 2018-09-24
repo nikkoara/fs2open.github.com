@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "cutscene/player.h"
 
 #include "cutscene/Decoder.h"

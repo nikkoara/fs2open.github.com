@@ -1,6 +1,7 @@
+// -*- mode: c++; -*-
+
 #ifndef PARTICLE_SOURCE_H
 #define PARTICLE_SOURCE_H
-#pragma once
 
 #include "globalincs/pstypes.h"
 

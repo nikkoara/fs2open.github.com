@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _PHYSICS_H
 #define _PHYSICS_H
@@ -15,7 +8,7 @@
 #define PF_ACCELERATES (1 << 1)
 #define PF_USE_VEL \
     (1 << 2) //	Use velocity present in physics_info struct, don't call
-             //physics_sim_vel.
+             // physics_sim_vel.
 #define PF_AFTERBURNER_ON (1 << 3) //	Afterburner currently engaged.
 #define PF_SLIDE_ENABLED (1 << 4)  // Allow descent style sliding
 #define PF_REDUCED_DAMP \
@@ -34,11 +27,11 @@
 #define PF_WARP_IN (1 << 10) //	Use when ship is warping in
 #define PF_SPECIAL_WARP_IN \
     (1 << 11) //	Use when ship is warping in and we want to slow the ship
-              //faster than normal game physics
+              // faster than normal game physics
 #define PF_WARP_OUT (1 << 12) //	Use when ship is warping out
 #define PF_SPECIAL_WARP_OUT \
     (1 << 13) //	Use when ship is warping out and we want to slow the ship
-              //faster than normal game physics
+              // faster than normal game physics
 #define PF_BOOSTER_ON (1 << 14)
 #define PF_GLIDING (1 << 15)
 #define PF_FORCE_GLIDE (1 << 16)
@@ -100,9 +93,9 @@ typedef struct physics_info {
         speed; // Yes, this can be derived from velocity, but that's expensive!
     float fspeed; //	Speed in the forward direction.
     float heading;
-    vec3d prev_fvec; //	Used in AI for momentum.
-    matrix
-        last_rotmat; //	Used for moving two objects together and for editor.
+    vec3d prev_fvec;    //	Used in AI for momentum.
+    matrix last_rotmat; //	Used for moving two objects together and for
+                        //editor.
 
     int afterburner_decay;  // timestamp used to control how long ship shakes
                             // after afterburner released
@@ -116,14 +109,15 @@ typedef struct physics_info {
                      // ridiculous speeds... unless allowed to)
     float cur_glide_cap; // SUSHI: Used for dynamic glide cap, so we can use
                          // the ramping function on the glide cap
-    float glide_accel_mult; // SUSHI: The acceleration multiplier for glide
-                            // mode. A value < 0 means use glide ramping instead
+    float
+        glide_accel_mult; // SUSHI: The acceleration multiplier for glide
+                          // mode. A value < 0 means use glide ramping instead
     bool use_newtonian_damp; // SUSHI: Whether or not to use newtonian
                              // dampening
     float afterburner_max_reverse_vel; // SparK: This is the reverse
                                        // afterburners top speed vector
-    float afterburner_reverse_accel; // SparK: Afterburner's acceleration on
-                                     // reverse mode
+    float afterburner_reverse_accel;   // SparK: Afterburner's acceleration on
+                                       // reverse mode
 } physics_info;
 
 // All of these are numbers from -1.0 to 1.0 indicating

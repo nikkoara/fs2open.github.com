@@ -1,19 +1,7 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include <cstring>
 #include <cctype>
-#ifdef _WIN32
-#include <io.h>
-#include <direct.h>
-#include <windows.h>
-#endif
 
 #define MODEL_LIB
 
@@ -61,8 +49,8 @@ static int model_initted = 0;
 
 #ifndef NDEBUG
 CFILE* ss_fp = NULL; // file pointer used to dump subsystem information
-char model_filename[_MAX_PATH]; // temp used to store filename
-char debug_name[_MAX_PATH];
+char model_filename[PATH_MAX]; // temp used to store filename
+char debug_name[PATH_MAX];
 int ss_warning_shown =
     0; // have we shown the warning dialog concerning the subsystems?
 #endif
@@ -4358,7 +4346,7 @@ int model_rotate_gun (
 
     Assert (turret->flags[Model::Subsystem_Flags::Turret_matrix]);
     //	Assert( gun->movement_axis == MOVEMENT_AXIS_X );				// Gun
-    //must be able to change pitch 	Assert( base->movement_axis ==
+    // must be able to change pitch 	Assert( base->movement_axis ==
     // MOVEMENT_AXIS_Z );
     //// Parent must be able to change heading
 

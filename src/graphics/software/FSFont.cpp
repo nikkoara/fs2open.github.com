@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "graphics/software/FSFont.h"
 
 namespace font {

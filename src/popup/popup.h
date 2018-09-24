@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef __POPUP_H__
 #define __POPUP_H__
@@ -78,7 +71,7 @@
 // typical usage:
 //
 //	rval = popup(0, 2, POPUP_YES, POPUP_NO, "Hey %s, do you want to quit",
-//pl->callsign);
+// pl->callsign);
 int popup (int flags, int nchoices, ...);
 
 // popup with cancel button and conditional funcrion.
@@ -104,7 +97,7 @@ int popup (int flags, int nchoices, ...);
 // .
 // .
 //	rval = popup_till_condition( condition_function, "Cancel", "Checking to see
-//if %s is an idiot.", pl->callsign);
+// if %s is an idiot.", pl->callsign);
 int popup_till_condition (int (*condition) (), ...);
 
 // popup to return the value from an input box

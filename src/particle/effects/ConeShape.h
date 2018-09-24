@@ -1,6 +1,7 @@
+// -*- mode: c++; -*-
+
 #ifndef CONE_GENERATOR_EFFECT_H
 #define CONE_GENERATOR_EFFECT_H
-#pragma once
 
 #include "globalincs/pstypes.h"
 #include "utils/RandomRange.h"
@@ -49,8 +50,7 @@ public:
      * with the deviation from the direction
      * @return @c true
      */
-    static constexpr bool
-    scale_velocity_deviation () { return true; }
+    static constexpr bool scale_velocity_deviation () { return true; }
 };
 
 } // namespace effects

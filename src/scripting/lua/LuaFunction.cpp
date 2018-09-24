@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "LuaFunction.h"
 #include "LuaException.h"
 

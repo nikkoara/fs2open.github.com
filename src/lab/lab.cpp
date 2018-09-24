@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 /*
  * lab.cpp
  * created by WMCoolmon

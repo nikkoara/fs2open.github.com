@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "tracing/tracing.h"
 #include "graphics/2d.h"
@@ -14,12 +15,7 @@
 #include <mutex>
 
 // A function for getting the id of the current thread
-#ifdef WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
-static int64_t get_tid () { return (int64_t)GetCurrentThreadId (); }
-#elif __LINUX__
+#if __LINUX__
 #include <sys/syscall.h>
 static int64_t get_tid () { return (int64_t)syscall (SYS_gettid); }
 #else
@@ -33,13 +29,9 @@ static int64_t get_tid () {
 #endif
 
 // A function for getting the id of the current process
-#ifdef WIN32
-static int64_t get_pid () { return (int64_t)GetCurrentProcessId (); }
-#else
 #include <unistd.h>
 
 static int64_t get_pid () { return (int64_t)getpid (); }
-#endif
 
 namespace {
 

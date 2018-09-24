@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _COLLIDESTUFF_H
 #define _COLLIDESTUFF_H
@@ -143,11 +136,11 @@ int collide_ship_ship (obj_pair* pair);
 
 //	Predictive functions.
 //	Returns true if vector from curpos to goalpos with radius radius will
-//collide with object goalobjp
+// collide with object goalobjp
 int pp_collide (vec3d* curpos, vec3d* goalpos, object* goalobjp, float radius);
 
 //	Return true if objp will collide with some large ship if it moves distance
-//distance.
+// distance.
 int collide_predict_large_ship (object* objp, float distance);
 
 // function to remove old weapons when no more weapon slots available.

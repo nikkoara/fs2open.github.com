@@ -48,7 +48,6 @@ fs2_SOURCES =                                   \
     debugconsole/consoleparse.cpp               \
     decals/decals.cpp                           \
     events/events.cpp                           \
-    exceptionhandler/exceptionhandler.cpp       \
     fireball/fireballs.cpp                      \
     fireball/warpineffect.cpp                   \
     freespace2/SDLGraphicsOperations.cpp        \
@@ -64,7 +63,6 @@ fs2_SOURCES =                                   \
     gamesnd/gamesnd.cpp                         \
     globalincs/alphacolors.cpp                  \
     globalincs/memory/memory.cpp                \
-    globalincs/mspdb_callstack.cpp              \
     globalincs/safe_strings.cpp                 \
     globalincs/systemvars.cpp                   \
     globalincs/version.cpp                      \
@@ -214,14 +212,12 @@ fs2_SOURCES =                                   \
     network/multi_update.cpp                    \
     network/multi_voice.cpp                     \
     network/multi_xfer.cpp                      \
-    network/multilag.cpp                        \
     network/multimsgs.cpp                       \
     network/multiteamselect.cpp                 \
     network/multiui.cpp                         \
     network/multiutil.cpp                       \
     network/psnet2.cpp                          \
     network/stand_gui-unix.cpp                  \
-    network/stand_gui.cpp                       \
     object/collidedebrisship.cpp                \
     object/collidedebrisweapon.cpp              \
     object/collideshipship.cpp                  \
@@ -365,12 +361,9 @@ fs2_SOURCES =                                   \
     sound/dscap.cpp                             \
     sound/ffmpeg/FFmpegAudioReader.cpp          \
     sound/ffmpeg/WaveFile.cpp                   \
-    sound/fsspeech.cpp                          \
     sound/openal.cpp                            \
     sound/rtvoice.cpp                           \
     sound/sound.cpp                             \
-    sound/speech.cpp                            \
-    sound/voicerec.cpp                          \
     species_defs/species_defs.cpp               \
     starfield/nebula.cpp                        \
     starfield/starfield.cpp                     \
@@ -419,7 +412,7 @@ fs2_CPPFLAGS =                                  \
     -I.                                         \
     -I$(top_srcdir)/src/external/lua            \
     -I$(top_srcdir)/src/external                \
-    -I/opt/local/include/SDL2                   \
+    $(SDL2_CPPFLAGS)                            \
     -I/opt/local/include                        \
     -isystem OpenAL
 
@@ -427,7 +420,7 @@ fs2_LDADD =							                    \
     $(top_srcdir)/src/external/lua/liblua51.a			\
     $(top_srcdir)/src/external/glad/libglad.a			\
     $(top_srcdir)/src/external/mongoose/libmongoose.a	\
-    -L/opt/local/lib -lSDL2								\
+    $(SDL2_LDFLAGS)                                     \
     -lavcodec											\
     -lavdevice											\
     -lavformat											\

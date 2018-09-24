@@ -1,15 +1,14 @@
+// -*- mode: c++; -*-
+
 #include "anim/packunpack.h"
 #include "globalincs/globals.h"
 #include "graphics/2d.h"
 #include "graphics/generic.h"
 #define BMPMAN_INTERNAL
 #include "bmpman/bm_internal.h"
-#ifdef _WIN32
-#include <windows.h> // for MAX_PATH
-#else
+
 #define MAX_PATH 255
-#endif
-//#define TIMER
+
 #ifdef TIMER
 #include "io/timer.h"
 #endif

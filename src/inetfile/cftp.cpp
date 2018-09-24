@@ -1,20 +1,9 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include <cstdio>
 
 #include "globalincs/pstypes.h"
 
-#ifdef WIN32
-#include <windows.h>
-#include <process.h>
-#else
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -25,7 +14,6 @@
 #include <netdb.h>
 
 #define WSAGetLastError() (errno)
-#endif
 
 #include "osapi/osapi.h"
 #include "inetfile/cftp.h"
@@ -262,13 +250,9 @@ uint CFtpGet::GetFile () {
 uint CFtpGet::IssuePort () {
     char szCommandString[200];
     SOCKADDR_IN listenaddr; // Socket address structure
-#ifdef SCP_UNIX
-    socklen_t iLength; // Length of the address structure
-#else
-    int iLength; // Length of the address structure
-#endif
-    uint32_t nLocalPort; // Local port for listening
-    uint32_t nReplyCode; // FTP server reply code
+    socklen_t iLength;      // Length of the address structure
+    uint32_t nLocalPort;    // Local port for listening
+    uint32_t nReplyCode;    // FTP server reply code
 
     // Get the address for the hListenSocket
     iLength = sizeof (listenaddr);
@@ -290,15 +274,6 @@ uint CFtpGet::IssuePort () {
     }
 
     // Format the PORT command with the correct numbers.
-#ifdef WIN32
-    sprintf (
-        szCommandString, "PORT %d,%d,%d,%d,%d,%d\r\n",
-        listenaddr.sin_addr.S_un.S_un_b.s_b1,
-        listenaddr.sin_addr.S_un.S_un_b.s_b2,
-        listenaddr.sin_addr.S_un.S_un_b.s_b3,
-        listenaddr.sin_addr.S_un.S_un_b.s_b4, nLocalPort & 0xFF,
-        nLocalPort >> 8);
-#else
     sprintf (
         szCommandString, "PORT %d,%d,%d,%d,%d,%d\r\n",
         (listenaddr.sin_addr.s_addr & 0xff000000) >> 24,
@@ -306,7 +281,6 @@ uint CFtpGet::IssuePort () {
         (listenaddr.sin_addr.s_addr & 0x0000ff00) >> 8,
         (listenaddr.sin_addr.s_addr & 0x000000ff), nLocalPort & 0xFF,
         nLocalPort >> 8);
-#endif
 
     // Tell the server which port to use for data.
     nReplyCode = SendFTPCommand (szCommandString);
@@ -466,14 +440,8 @@ void CFtpGet::FlushControlChannel () {
     FD_ZERO (&read_fds);
     FD_SET (m_ControlSock, &read_fds);
 
-#ifdef WIN32
-    while (select (0, &read_fds, NULL, NULL, &timeout))
-#else
-    while (select (m_ControlSock + 1, &read_fds, NULL, NULL, &timeout))
-#endif
-    {
+    while (select (m_ControlSock + 1, &read_fds, NULL, NULL, &timeout)) {
         recv (m_ControlSock, flushbuff, 1, 0);
-
         os_sleep (1);
     }
 }

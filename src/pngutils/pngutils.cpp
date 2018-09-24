@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include <cstdio>
 #include <cstring>
 

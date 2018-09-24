@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_LUASEXP_H
+#define FREESPACE2_SCRIPTING_API_OBJS_LUASEXP_H
 
 #include "scripting/ade_api.h"
 #include "parse/sexp/LuaSEXP.h"
@@ -19,3 +22,5 @@ DECLARE_ADE_OBJ (l_LuaSEXP, lua_sexp_h);
 
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_OBJS_LUASEXP_H

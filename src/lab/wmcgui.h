@@ -1,3 +1,8 @@
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_LAB_WMCGUI_H
+#define FREESPACE2_LAB_WMCGUI_H
+
 /*
  * wmcgui.h
  * created by WMCoolmon
@@ -18,7 +23,7 @@
 #include <climits>
 
 //*****************************Low-level
-//abstraction******************************* Lame attempt to keep things from
+// abstraction******************************* Lame attempt to keep things from
 // being exceedingly difficult when switching to ferrium
 #ifndef FERRIUM
 #define IMG_HANDLE int
@@ -223,16 +228,16 @@ public:
 // DoFrame return values
 #define OF_TRUE -1
 #define OF_FALSE -2
-//#define OF_DESTROYED			-3	//If a call to DoFrame results in the object
-//destroying itself (ie the close button was pressed)
+//#define OF_DESTROYED			-3	//If a call to DoFrame results in the
+//object destroying itself (ie the close button was pressed)
 
 class GUIObject : public LinkedList {
     friend class Slider;
     friend class Window; // Hack, because I can't figure out how to let it
                          // access protected
-    friend class Menu; // This too
-    friend class Text; // And this
-    friend class Tree; // By, the way...THIS
+    friend class Menu;   // This too
+    friend class Text;   // And this
+    friend class Tree;   // By, the way...THIS
     friend class Checkbox;
     friend class Button;
     friend class ImageAnim;
@@ -844,3 +849,5 @@ public:
 
 //*****************************GLOBALS*******************************
 extern GUISystem GUI_system;
+
+#endif // FREESPACE2_LAB_WMCGUI_H

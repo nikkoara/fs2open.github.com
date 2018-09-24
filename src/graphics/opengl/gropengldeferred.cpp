@@ -1,4 +1,4 @@
-
+// -*- mode: c++; -*-
 
 #include "graphics/2d.h"
 #include "gropenglstate.h"

@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_SOFTWARE_VFNTFONT_H
+#define FREESPACE2_GRAPHICS_SOFTWARE_VFNTFONT_H
 
 #include "globalincs/pstypes.h"
 #include "graphics/software/FSFont.h"
@@ -68,3 +71,5 @@ public:
         float* height) const override;
 };
 } // namespace font
+
+#endif // FREESPACE2_GRAPHICS_SOFTWARE_VFNTFONT_H

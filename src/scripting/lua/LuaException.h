@@ -1,6 +1,7 @@
+// -*- mode: c++; -*-
+
 #ifndef LUA_EXCEPTION_H
 #define LUA_EXCEPTION_H
-#pragma once
 
 #include <string>
 #include <stdexcept>

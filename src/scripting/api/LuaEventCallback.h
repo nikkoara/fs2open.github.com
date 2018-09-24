@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_LUAEVENTCALLBACK_H
+#define FREESPACE2_SCRIPTING_API_LUAEVENTCALLBACK_H
 
 #include "object/object.h"
 #include "scripting/lua/LuaFunction.h"
@@ -47,3 +50,5 @@ make_lua_callback (const luacpp::LuaFunction& func) {
 
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_LUAEVENTCALLBACK_H

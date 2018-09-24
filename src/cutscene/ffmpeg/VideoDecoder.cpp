@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "cutscene/ffmpeg/VideoDecoder.h"
 
 #include "tracing/tracing.h"

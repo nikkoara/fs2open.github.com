@@ -1,4 +1,4 @@
-
+// -*- mode: c++; -*-
 
 #include "UniformBufferManager.h"
 #include "uniform_structs.h"

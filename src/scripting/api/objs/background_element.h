@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_BACKGROUND_ELEMENT_H
+#define FREESPACE2_SCRIPTING_API_OBJS_BACKGROUND_ELEMENT_H
 
 #include "object/object.h"
 #include "scripting/ade_api.h"
@@ -22,3 +25,5 @@ DECLARE_ADE_OBJ (l_BackgroundElement, background_el_h);
 
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_OBJS_BACKGROUND_ELEMENT_H

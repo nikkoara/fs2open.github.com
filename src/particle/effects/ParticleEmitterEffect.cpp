@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "particle/ParticleSource.h"
 #include "particle/effects/ParticleEmitterEffect.h"

@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #ifndef _PNGUTILS_H
 #define _PNGUTILS_H
 

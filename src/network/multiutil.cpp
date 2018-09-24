@@ -1,22 +1,11 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
-#if defined _WIN32
-#include <winsock.h>
-#elif defined SCP_UNIX
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <cerrno>
-#endif
 #include <cctype>
 
 #include "globalincs/pstypes.h"
@@ -3075,11 +3064,7 @@ int multi_get_connection_speed () {
     int cspeed;
     const char* connection_speed;
 
-#ifdef _WIN32
-    connection_speed = os_config_read_string (NULL, "ConnectionSpeed", "");
-#else
     connection_speed = os_config_read_string (NULL, "ConnectionSpeed", "Fast");
-#endif
 
     if (!stricmp (connection_speed, NOX ("Slow"))) {
         cspeed = CONNECTION_SPEED_288;
@@ -3535,10 +3520,6 @@ void multi_make_fake_players (int count) {
 // ---------------------------------------------------------------------------------------------------------------------
 // PACK UNPACK STUFF
 //
-
-#ifdef _MSC_VER
-#pragma optimize("", off)
-#endif
 
 typedef struct bitbuffer {
     ubyte mask;
@@ -4222,7 +4203,3 @@ void multi_send_anti_timeout_ping () {
         }
     }
 }
-
-#ifdef _MSC_VER
-#pragma optimize("", on)
-#endif

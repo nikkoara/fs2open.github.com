@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "globalincs/pstypes.h"
 #include "graphics/grinternal.h"
 #include "graphics/2d.h"

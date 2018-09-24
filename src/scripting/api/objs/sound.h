@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_SOUND_H
+#define FREESPACE2_SCRIPTING_API_OBJS_SOUND_H
 
 #include <sound/ds.h>
 #include "scripting/ade_api.h"
@@ -46,3 +49,5 @@ DECLARE_ADE_OBJ (l_Sound3D, sound_h);
 DECLARE_ADE_OBJ (l_Soundfile, sound_load_id);
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_OBJS_SOUND_H

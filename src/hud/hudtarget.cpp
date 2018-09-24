@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "asteroid/asteroid.h"
 #include "cmdline/cmdline.h"
@@ -552,8 +545,8 @@ void hud_stuff_reticle_list (
 //
 //	parmeters:	objp		=>		object pointer to target
 //					measure	=>		distance or dot product, depending on
-// dot_flag 					dot_flag	=>		if 0, measure is distance, if 1 measure
-// is dot
+// dot_flag 					dot_flag	=>		if 0, measure is distance, if 1
+// measure is dot
 //
 void hud_reticle_list_update (object* objp, float measure, int dot_flag) {
     reticle_list *rl, *new_rl;

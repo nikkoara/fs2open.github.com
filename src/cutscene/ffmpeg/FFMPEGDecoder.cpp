@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include <limits>
 #include <thread>
 

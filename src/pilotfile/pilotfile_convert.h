@@ -1,3 +1,7 @@
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_PILOTFILE_PILOTFILE_CONVERT_H
+#define FREESPACE2_PILOTFILE_PILOTFILE_CONVERT_H
 
 /* WARNING:
  *    The conversion code is for converting pl2/plr versions 242 & 142 and cs2
@@ -337,3 +341,5 @@ private:
     void csg_export_variables ();
     void csg_export_cutscenes ();
 };
+
+#endif // FREESPACE2_PILOTFILE_PILOTFILE_CONVERT_H

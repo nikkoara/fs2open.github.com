@@ -1,6 +1,4 @@
-
-
-#ifdef SCP_UNIX
+// -*- mode: c++; -*-
 
 #include "defs.hpp"
 
@@ -228,5 +226,3 @@ int MulDiv (int number, int numerator, int denominator) {
 
     return result;
 }
-
-#endif // SCP_UNIX

@@ -1,6 +1,7 @@
+// -*- mode: c++; -*-
+
 #ifndef LUATABLE_H
 #define LUATABLE_H
-#pragma once
 
 #include "LuaConvert.h"
 #include "LuaValue.h"

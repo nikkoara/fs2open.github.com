@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef __FREESPACE2_LOCALIZATION_UTILITIES_HEADER_FILE
 #define __FREESPACE2_LOCALIZATION_UTILITIES_HEADER_FILE
@@ -40,7 +33,7 @@ typedef struct lang_info {
                          // for this language note: treats 0 as "none" since a
                          // zero offset in a font makes no sense i.e. all the
                          // normal chars start at zero
-    int checksum; // used for language auto-detection
+    int checksum;        // used for language auto-detection
 } lang_info;
 
 // These are the original languages supported by FS2. The code expects these

@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "VideoPresenter.h"
 
 #include "graphics/matrix.h"

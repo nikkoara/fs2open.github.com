@@ -1,7 +1,7 @@
+// -*- mode: c++; -*-
 
 #ifndef _FFMPEGAUDIOREADER_H
 #define _FFMPEGAUDIOREADER_H
-#pragma once
 
 #include "globalincs/pstypes.h"
 

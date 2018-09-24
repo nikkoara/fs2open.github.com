@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_DECAL_DRAW_LIST_H
+#define FREESPACE2_GRAPHICS_DECAL_DRAW_LIST_H
 
 #include "globalincs/pstypes.h"
 
@@ -39,3 +42,5 @@ public:
 };
 
 } // namespace graphics
+
+#endif // FREESPACE2_GRAPHICS_DECAL_DRAW_LIST_H

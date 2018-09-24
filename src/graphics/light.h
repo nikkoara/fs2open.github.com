@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_LIGHT_H
+#define FREESPACE2_GRAPHICS_LIGHT_H
 
 #include "globalincs/pstypes.h"
 #include "lighting/lighting.h"
@@ -27,3 +30,5 @@ void gr_calculate_ambient_factor (int ambient_factor = Cmdline_ambient_factor);
 
 void gr_light_init ();
 void gr_light_shutdown ();
+
+#endif // FREESPACE2_GRAPHICS_LIGHT_H

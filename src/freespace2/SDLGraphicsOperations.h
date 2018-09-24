@@ -1,7 +1,7 @@
+// -*- mode: c++; -*-
 
 #ifndef _SDL_GRAPHICS_OPERATIONS
 #define _SDL_GRAPHICS_OPERATIONS
-#pragma once
 
 #include "osapi/osapi.h"
 

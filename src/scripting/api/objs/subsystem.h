@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_SUBSYSTEM_H
+#define FREESPACE2_SCRIPTING_API_OBJS_SUBSYSTEM_H
 
 #include "scripting/ade_api.h"
 #include "object/object.h"
@@ -18,3 +21,5 @@ DECLARE_ADE_OBJ (l_Subsystem, ship_subsys_h);
 
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_OBJS_SUBSYSTEM_H

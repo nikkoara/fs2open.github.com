@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "gamesnd/gamesnd.h"
 #include "globalincs/alphacolors.h"
@@ -16,11 +9,11 @@
 // ---------------------------------------------------------------------------------------
 // input:
 //			do_repeat		=>		property of button, set to 1 to allow
-//pressed events
-// if mouse 										pointer is held over button with left mouse button
-// down, otherwise 0
+// pressed events
+// if mouse 										pointer is held over button with left mouse
+// button down, otherwise 0
 //(useful for buttons that scroll items) 			ignore_focus	=>
-//whether to allow Enter/Spacebar to affect pressed state when
+// whether to allow Enter/Spacebar to affect pressed state when
 // control has focus
 //
 void UI_BUTTON::create (

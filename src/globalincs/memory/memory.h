@@ -1,5 +1,7 @@
+// -*- mode: c++; -*-
 
-#pragma once
+#ifndef FREESPACE2_GLOBALINCS_MEMORY_MEMORY_H
+#define FREESPACE2_GLOBALINCS_MEMORY_MEMORY_H
 
 #include <cstddef>
 #include <cstdlib>
@@ -41,3 +43,5 @@ inline void* vm_realloc (void* ptr, size_t size) {
 
     return ret_ptr;
 }
+
+#endif // FREESPACE2_GLOBALINCS_MEMORY_MEMORY_H

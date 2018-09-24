@@ -1,3 +1,8 @@
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_NETWORK_MULTI_SEXP_H
+#define FREESPACE2_NETWORK_MULTI_SEXP_H
+
 /*
  * Created by Hassan "Karajorma" Kazmi for the FreeSpace2 Source Code Project.
  * You may not sell or otherwise commercially exploit the source or things you
@@ -306,3 +311,5 @@ public:
 };
 
 extern sexp_network_packet Current_sexp_network_packet;
+
+#endif // FREESPACE2_NETWORK_MULTI_SEXP_H

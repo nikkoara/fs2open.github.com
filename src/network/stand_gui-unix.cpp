@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #ifndef _WIN32
 
 #include <cstdlib>
@@ -352,20 +354,18 @@ struct LogResource {
     long currentTimestamp;
     std::list< LogResourceEntry > entries;
 
-    void
-    addEntity (Json::Value value) {
+    void addEntity (Json::Value value) {
         entries.push_back ({ currentTimestamp++, std::move (value) });
         if (entries.size () > 500) entries.pop_front ();
     }
 
-    Json::Value
-    getEntriesAfter (long after) const {
+    Json::Value getEntriesAfter (long after) const {
         Json::Value result;
 
         for (const auto& entry : entries) {
             if (entry.timestamp >= after) {
                 Json::Value data = entry.data;
-                data ["timestamp"] = Json::Value::Int64 (entry.timestamp);
+                data["timestamp"] = Json::Value::Int64 (entry.timestamp);
                 result.append (data);
             }
         }
@@ -439,121 +439,112 @@ struct Resource {
     resourceHandler handler;
 };
 
-static inline Json::Value
-emptyResource (ResourceContext* /*context*/) {
-    return { };
+static inline Json::Value emptyResource (ResourceContext* /*context*/) {
+    return {};
 }
 
-static inline Json::Value
-serverGet (ResourceContext* /*context*/) {
+static inline Json::Value serverGet (ResourceContext* /*context*/) {
     Json::Value result;
 
-    result ["name"]     = Multi_options_g.std_pname;
-    result ["password"] = Multi_options_g.std_passwd;
-    result ["framecap"] = Multi_options_g.std_framecap;
+    result["name"] = Multi_options_g.std_pname;
+    result["password"] = Multi_options_g.std_passwd;
+    result["framecap"] = Multi_options_g.std_framecap;
 
     return result;
 }
 
-static
-Json::Value serverPut (ResourceContext* context) {
+static Json::Value serverPut (ResourceContext* context) {
     auto p = std::make_unique< ChangeServerInformationCommand > ();
 
     const auto& req = context->requestEntity;
 
-    if (req.isMember ("name"))
-        p->setName (req ["name"].asString ());
+    if (req.isMember ("name")) p->setName (req["name"].asString ());
 
-    if (req.isMember ("password"))
-        p->setPasswd (req ["password"].asString ());
+    if (req.isMember ("password")) p->setPasswd (req["password"].asString ());
 
-    if (req.isMember ("password"))
-        p->setFrameCap (req ["framecap"].asInt ());
+    if (req.isMember ("password")) p->setFrameCap (req["framecap"].asInt ());
 
     webapiAddCommand (p.release ());
 
-    return { };
+    return {};
 }
 
 Json::Value serverDelete (ResourceContext* /*context*/) {
     webapiAddCommand (new ShutdownServerCommand ());
-    return { };
+    return {};
 }
 
 Json::Value refreshMissions (ResourceContext* /*context*/) {
     webapiAddCommand (new UpdateMissionsCommand ());
-    return { };
+    return {};
 }
 
 Json::Value serverResetGame (ResourceContext* /*context*/) {
     webapiAddCommand (new ResetGameCommand ());
-    return { };
+    return {};
 }
 
 Json::Value fs2netReset (ResourceContext* /*context*/) {
     webapiAddCommand (new ResetFs2NetCommand ());
-    return { };
+    return {};
 }
 
-Json::Value
-netgameInfoGet (ResourceContext* /*context*/) {
+Json::Value netgameInfoGet (ResourceContext* /*context*/) {
     Json::Value result;
 
-    result["name"]         = webapi_netgameInfo.name;
-    result["mission"]      = webapi_netgameInfo.mission_name;
-    result["campaign"]     = webapi_netgameInfo.campaign_name;
-    result["maxPlayers"]   = webapi_netgameInfo.max_players;
+    result["name"] = webapi_netgameInfo.name;
+    result["mission"] = webapi_netgameInfo.mission_name;
+    result["campaign"] = webapi_netgameInfo.campaign_name;
+    result["maxPlayers"] = webapi_netgameInfo.max_players;
     result["maxObservers"] = webapi_netgameInfo.options.max_observers;
-    result["respawn"]      = webapi_netgameInfo.respawn;
-    result["gameState"]    = webapi_netgameInfo.game_state;
-    result["security"]     = webapi_netgameInfo.security;
+    result["respawn"] = webapi_netgameInfo.respawn;
+    result["gameState"] = webapi_netgameInfo.game_state;
+    result["security"] = webapi_netgameInfo.security;
 
     return result;
 }
 
-Json::Value
-missionGet (ResourceContext* /*context*/) {
+Json::Value missionGet (ResourceContext* /*context*/) {
     Json::Value fpsEntity;
 
-    fpsEntity["fps"]  = webui_fps;
+    fpsEntity["fps"] = webui_fps;
     fpsEntity["time"] = webui_missiontime;
 
     return fpsEntity;
 }
 
-Json::Value
-missionGoalsGet (ResourceContext* /*context*/) {
+Json::Value missionGoalsGet (ResourceContext* /*context*/) {
     Json::Value goals;
 
     for (const auto& goal : webuiMissionGoals) {
         Json::Value goalEntity;
 
-        goalEntity ["name"]    = goal.name;
-        goalEntity ["message"] = goal.message;
-        goalEntity ["score"]   = goal.score;
-        goalEntity ["team"]    = goal.team;
+        goalEntity["name"] = goal.name;
+        goalEntity["message"] = goal.message;
+        goalEntity["score"] = goal.score;
+        goalEntity["team"] = goal.team;
 
         const char* typeString;
 
         switch (goal.type) {
-        case PRIMARY_GOAL:   typeString = "primary";   break;
+        case PRIMARY_GOAL: typeString = "primary"; break;
         case SECONDARY_GOAL: typeString = "secondary"; break;
-        case BONUS_GOAL:     typeString = "bonus";     break;
-        default:             typeString = "error";     break;
+        case BONUS_GOAL: typeString = "bonus"; break;
+        default: typeString = "error"; break;
         };
 
-        goalEntity ["type"] = typeString;
+        goalEntity["type"] = typeString;
 
         const char* statusString;
 
         switch (goal.satisfied) {
-        case GOAL_FAILED: statusString     = "failed";     break;
-        case GOAL_COMPLETE: statusString   = "complete";   break;
+        case GOAL_FAILED: statusString = "failed"; break;
+        case GOAL_COMPLETE: statusString = "complete"; break;
         case GOAL_INCOMPLETE: statusString = "incomplete"; break;
-        default: statusString              = "error";      break;
+        default: statusString = "error"; break;
         };
 
-        goalEntity ["status"] = statusString;
+        goalEntity["status"] = statusString;
 
         goals.append (goalEntity);
     }
@@ -561,8 +552,7 @@ missionGoalsGet (ResourceContext* /*context*/) {
     return goals;
 }
 
-Json::Value
-playerGet (ResourceContext* /*context*/) {
+Json::Value playerGet (ResourceContext* /*context*/) {
     Json::Value playerList;
 
     for (const auto& pair : webapiNetPlayers) {
@@ -571,24 +561,21 @@ playerGet (ResourceContext* /*context*/) {
         const auto& p = pair.second;
 
         sprintf (
-            address, "%u.%u.%u.%u:%u",
-            p.p_info.addr.addr[0],
-            p.p_info.addr.addr[1],
-            p.p_info.addr.addr[2],
-            p.p_info.addr.addr[3],
-            p.p_info.addr.port);
+            address, "%u.%u.%u.%u:%u", p.p_info.addr.addr[0],
+            p.p_info.addr.addr[1], p.p_info.addr.addr[2],
+            p.p_info.addr.addr[3], p.p_info.addr.port);
 
         Json::Value obj;
 
-        obj ["id"] = p.player_id;
-        obj ["address"] = address;
-        obj ["ping"] = p.s_info.ping.ping_avg;
+        obj["id"] = p.player_id;
+        obj["address"] = address;
+        obj["ping"] = p.s_info.ping.ping_avg;
 
-        obj ["host"]     = bool (MULTI_HOST     (p));
-        obj ["observer"] = bool (MULTI_OBSERVER (p));
+        obj["host"] = bool(MULTI_HOST (p));
+        obj["observer"] = bool(MULTI_OBSERVER (p));
 
-        obj ["callsign"] = p.m_player->callsign;
-        obj ["ship"] = Ship_info[p.p_info.ship_class].name;
+        obj["callsign"] = p.m_player->callsign;
+        obj["ship"] = Ship_info[p.p_info.ship_class].name;
 
         playerList.append (obj);
     }
@@ -596,11 +583,10 @@ playerGet (ResourceContext* /*context*/) {
     return playerList;
 }
 
-Json::Value
-playerDelete (ResourceContext* context) {
+Json::Value playerDelete (ResourceContext* context) {
     int playerId = atoi (context->parameters["playerId"].c_str ());
     webapiAddCommand (new KickPlayerCommand (playerId));
-    return { };
+    return {};
 }
 
 net_player* playerForId (int playerId) {
@@ -615,8 +601,7 @@ net_player* playerForId (int playerId) {
     return foundPlayer;
 }
 
-Json::Value
-playerMissionScoreAlltimeGet (ResourceContext* context) {
+Json::Value playerMissionScoreAlltimeGet (ResourceContext* context) {
     net_player* p =
         playerForId (atoi (context->parameters["playerId"].c_str ()));
 
@@ -625,44 +610,42 @@ playerMissionScoreAlltimeGet (ResourceContext* context) {
 
     scoring_struct* scores = &(p->m_player->stats);
 
-    obj2 ["score"] = scores->m_score;
-    obj2 ["kills"] = scores->m_kill_count;
-    obj2 ["kills-enemy"] = scores->m_kill_count_ok;
-    obj2 ["kills-friendly"] = scores->m_bonehead_kills;
-    obj2 ["assists"] = scores->m_assists;
-    obj2 ["shots-primary"] = scores->mp_shots_fired;
-    obj2 ["shots-secondary"] = scores->ms_shots_fired;
-    obj2 ["hits-primary"] = scores->mp_shots_hit;
-    obj2 ["hits-secondary"] = scores->ms_shots_hit;
-    obj2 ["hits-friendly-primary"] = scores->mp_bonehead_hits;
-    obj2 ["hits-friendly-secondary"] = scores->ms_bonehead_hits;
+    obj2["score"] = scores->m_score;
+    obj2["kills"] = scores->m_kill_count;
+    obj2["kills-enemy"] = scores->m_kill_count_ok;
+    obj2["kills-friendly"] = scores->m_bonehead_kills;
+    obj2["assists"] = scores->m_assists;
+    obj2["shots-primary"] = scores->mp_shots_fired;
+    obj2["shots-secondary"] = scores->ms_shots_fired;
+    obj2["hits-primary"] = scores->mp_shots_hit;
+    obj2["hits-secondary"] = scores->ms_shots_hit;
+    obj2["hits-friendly-primary"] = scores->mp_bonehead_hits;
+    obj2["hits-friendly-secondary"] = scores->ms_bonehead_hits;
 
     return obj2;
 }
 
-Json::Value
-playerMissionScoreMissionGet (ResourceContext* context) {
-    net_player* p = playerForId (
-        atoi (context->parameters["playerId"].c_str ()));
+Json::Value playerMissionScoreMissionGet (ResourceContext* context) {
+    net_player* p =
+        playerForId (atoi (context->parameters["playerId"].c_str ()));
 
     Json::Value obj;
 
-    if (0 == p || 0 == p->m_player)
-        return obj;
+    if (0 == p || 0 == p->m_player) return obj;
 
     scoring_struct* scores = &(p->m_player->stats);
 
-    obj ["score"] = scores->score;
-    obj ["kills"] = scores->kill_count;
-    obj ["kills-enemy"] = scores->kill_count_ok;
-    obj ["kills-friendly"] = scores->bonehead_kills;
-    obj ["assists"] = scores->assists;
-    obj ["shots-primary"] = scores->p_shots_fired;
-    obj ["shots-secondary"] = scores->s_shots_fired;
-    obj ["hits-primary"] = scores->p_shots_hit;
-    obj ["hits-secondary"] = scores->s_shots_hit;
-    obj ["hits-friendly-primary"] = scores->p_bonehead_hits;
-    obj ["hits-friendly-secondary"] = scores->s_bonehead_hits;
+    obj["score"] = scores->score;
+    obj["kills"] = scores->kill_count;
+    obj["kills-enemy"] = scores->kill_count_ok;
+    obj["kills-friendly"] = scores->bonehead_kills;
+    obj["assists"] = scores->assists;
+    obj["shots-primary"] = scores->p_shots_fired;
+    obj["shots-secondary"] = scores->s_shots_fired;
+    obj["hits-primary"] = scores->p_shots_hit;
+    obj["hits-secondary"] = scores->s_shots_hit;
+    obj["hits-friendly-primary"] = scores->p_bonehead_hits;
+    obj["hits-friendly-secondary"] = scores->s_bonehead_hits;
 
     return obj;
 }
@@ -677,18 +660,16 @@ int afterTimestamp (ResourceContext* context) {
     return 0;
 }
 
-Json::Value
-chatGet (ResourceContext* context) {
+Json::Value chatGet (ResourceContext* context) {
     int after = afterTimestamp (context);
     return webapi_chatLog.getEntriesAfter (after);
 }
 
-Json::Value
-chatPost (ResourceContext* context) {
+Json::Value chatPost (ResourceContext* context) {
     const auto& req = context->requestEntity;
 
     if (req.isMember ("message")) {
-        const auto s = req ["message"].asString ();
+        const auto s = req["message"].asString ();
         send_game_chat_packet (Net_player, s.c_str (), MULTI_MSG_ALL, 0);
         std_add_chat_text (s.c_str (), 0, 1);
     }
@@ -696,8 +677,7 @@ chatPost (ResourceContext* context) {
     return emptyResource (context);
 }
 
-Json::Value
-debugGet (ResourceContext* context) {
+Json::Value debugGet (ResourceContext* context) {
     int after = afterTimestamp (context);
     return webapi_debugLog.getEntriesAfter (after);
 }
@@ -801,7 +781,7 @@ webserverApiRequest (mg_connection* conn, const mg_request_info* ri) {
 
                 {
                     Json::CharReaderBuilder parser;
-                    parser ["collectComments"] = false;
+                    parser["collectComments"] = false;
 
                     std::stringstream ss (entityBuffer);
 
@@ -865,11 +845,13 @@ void std_configLoaded (multi_global_options* options) {
     char buffer[16];
     sprintf (buffer, "%d", options->webapiPort);
 
-    const char* mgOptions [] = {
-        "listening_ports", buffer,
-        "document_root",   options->webuiRootDirectory.c_str (),
-        "num_threads", "4", 0
-    };
+    const char* mgOptions[] = { "listening_ports",
+                                buffer,
+                                "document_root",
+                                options->webuiRootDirectory.c_str (),
+                                "num_threads",
+                                "4",
+                                0 };
 
     mprintf (
         ("Webapi starting on port: %d with document root at: %s\n",
@@ -880,9 +862,8 @@ void std_configLoaded (multi_global_options* options) {
 
 void std_add_chat_text (
     const char* text, int /*player_index*/, int /*add_id*/) {
-
     Json::Value msg;
-    msg ["message"] = text;
+    msg["message"] = text;
 
     webapi_chatLog.addEntity (msg);
 }
@@ -893,7 +874,7 @@ void std_debug_multilog_add_line (const char* str) {
 
     for (const auto& s : debugMessages) {
         Json::Value msg;
-        msg ["message"] = s;
+        msg["message"] = s;
         webapi_debugLog.addEntity (msg);
     }
 }

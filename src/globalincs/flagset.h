@@ -1,3 +1,8 @@
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GLOBALINCS_FLAGSET_H
+#define FREESPACE2_GLOBALINCS_FLAGSET_H
+
 #ifndef _FLAGSET_
 #define _FLAGSET_
 
@@ -190,3 +195,5 @@ typename std::enable_if< flag_enum_checker< TEnum >::value, flag_combinator< TEn
 };
 
 #endif
+
+#endif // FREESPACE2_GLOBALINCS_FLAGSET_H

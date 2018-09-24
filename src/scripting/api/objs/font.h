@@ -1,5 +1,5 @@
+// -*- mode: c++; -*-
 
-#pragma once
 #ifndef FS2_OPEN_FONT_H
 #define FS2_OPEN_FONT_H
 

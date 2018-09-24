@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_SOFTWARE_FONTMANAGER_H
+#define FREESPACE2_GRAPHICS_SOFTWARE_FONTMANAGER_H
 
 #include "globalincs/pstypes.h"
 
@@ -216,4 +219,7 @@ private:
 
     static FSFont* currentFont;
 };
+
 } // namespace font
+
+#endif // FREESPACE2_GRAPHICS_SOFTWARE_FONTMANAGER_H

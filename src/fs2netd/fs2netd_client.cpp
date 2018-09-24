@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "bmpman/bmpman.h"
 #include "cfile/cfile.h"
@@ -35,12 +28,10 @@
 #include "osapi/osapi.h"
 #include "hud/hudmessage.h"
 
-#ifndef WIN32
 #include <cstdio>
 #include <cstdlib>
 #include <unistd.h>
 #include <cerrno>
-#endif
 
 #include <string>
 #include <climits>

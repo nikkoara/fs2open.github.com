@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "graphics/paths/PathRenderer.h"
 
 #include "graphics/paths/NanoVGRenderer.h"

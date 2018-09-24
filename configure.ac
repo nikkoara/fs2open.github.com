@@ -2,11 +2,10 @@
 
 AC_INIT([freespace2],[3.8.1],)
 
-AC_CONFIG_MACRO_DIR([etc/m4])
-AC_CONFIG_AUX_DIR([etc/m4])
-
 AM_INIT_AUTOMAKE([-Wno-portability subdir-objects dist-bzip2 nostdinc foreign])
 AC_CONFIG_HEADERS([src/_config.hpp:src/config.ac])
+
+AC_CONFIG_MACRO_DIRS([etc/m4])
 
 AC_PROG_OBJC
 AC_PROG_CXX
@@ -19,6 +18,7 @@ AC_PROG_LIBTOOL
 AC_PROG_MAKE_SET(gmake)
 AM_PROG_AS
 
+AC_CONFIG_WITH_SDL2([2.0.8])
 AC_CONFIG_WITH_RANGE3
 
 BOOST_REQUIRE([1.66.0])

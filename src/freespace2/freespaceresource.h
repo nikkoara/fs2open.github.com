@@ -1,3 +1,8 @@
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_FREESPACE2_FREESPACERESOURCE_H
+#define FREESPACE2_FREESPACE2_FREESPACERESOURCE_H
+
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
 // Used by freespace.rc
@@ -107,3 +112,5 @@
 #define _APS_NEXT_SYMED_VALUE 101
 #endif
 #endif
+
+#endif // FREESPACE2_FREESPACE2_FREESPACERESOURCE_H

@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "anim/animplay.h"
 #include "anim/packunpack.h"
@@ -29,7 +22,6 @@
 #include "render/3d.h"
 #include "render/batching.h"
 #include "ship/ship.h"
-#include "sound/fsspeech.h"
 #include "ui/ui.h"
 #include "ui/uidefs.h"
 #include "weapon/weapon.h"
@@ -379,7 +371,6 @@ void techroom_select_new_entry () {
     techroom_init_desc (
         Current_list[Cur_entry].desc,
         Tech_desc_coords[gr_screen.res][SHIP_W_COORD]);
-    fsspeech_play (FSSPEECH_FROM_TECHROOM, Current_list[Cur_entry].desc);
 }
 
 // write out the current description in the bottom window
@@ -1043,24 +1034,20 @@ int techroom_button_pressed (int num) {
     case SHIPS_DATA_TAB:
     case WEAPONS_DATA_TAB:
     case INTEL_DATA_TAB:
-        fsspeech_stop ();
         techroom_change_tab (num);
         break;
 
     case SIMULATOR_TAB:
-        fsspeech_stop ();
         gamesnd_play_iface (InterfaceSounds::SWITCH_SCREENS);
         gameseq_post_event (GS_EVENT_SIMULATOR_ROOM);
         return 1;
 
     case CUTSCENES_TAB:
-        fsspeech_stop ();
         gamesnd_play_iface (InterfaceSounds::SWITCH_SCREENS);
         gameseq_post_event (GS_EVENT_GOTO_VIEW_CUTSCENES_SCREEN);
         return 1;
 
     case CREDITS_TAB:
-        fsspeech_stop ();
         gamesnd_play_iface (InterfaceSounds::SWITCH_SCREENS);
         gameseq_post_event (GS_EVENT_CREDITS);
         return 1;
@@ -1094,7 +1081,6 @@ int techroom_button_pressed (int num) {
         break;
 
     case EXIT_BUTTON:
-        fsspeech_stop ();
         gamesnd_play_iface (InterfaceSounds::COMMIT_PRESSED);
         gameseq_post_event (GS_EVENT_MAIN_MENU);
         break;
@@ -1384,8 +1370,6 @@ void techroom_lists_reset () {
 }
 
 void techroom_close () {
-    fsspeech_stop ();
-
     techroom_lists_reset ();
 
     Techroom_show_all = 0;

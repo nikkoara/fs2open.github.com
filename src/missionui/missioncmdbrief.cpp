@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "anim/animplay.h"
 #include "anim/packunpack.h"
@@ -24,7 +17,6 @@
 #include "missionui/redalert.h"
 #include "playerman/player.h"
 #include "sound/audiostr.h"
-#include "sound/fsspeech.h"
 #include "ui/uidefs.h"
 
 #define NUM_CMD_SETTINGS 2
@@ -212,8 +204,6 @@ int cmd_brief_check_stage_done () {
 
     // check simulated speech
     if (Briefing_voice_enabled && (Cmd_brief_last_stage >= 0)) {
-        if (fsspeech_playing ()) { return 0; }
-
         if (!Voice_ended_time) {
             Voice_ended_time = timer_get_milliseconds ();
         }
@@ -255,45 +245,22 @@ void cmd_brief_voice_play (int stage_num) {
         stage = stage_num;
     }
 
-    // do we need to play simulated speech?
-    if (voice < 0 && fsspeech_play_from (FSSPEECH_FROM_BRIEFING)) {
-        // are we still on the same stage?
-        if (Cmd_brief_last_stage == stage) {
-            return; // no changes, nothing to do.
-        }
-
-        // if previous stage is still playing, stop it first.
-        if (Cmd_brief_last_stage >= 0) {
-            fsspeech_stop ();
-            Cmd_brief_last_stage = -1;
-        }
-
-        // ok, new text needs speaking
-        Cmd_brief_last_stage = stage;
-        if (stage >= 0) {
-            fsspeech_play (
-                FSSPEECH_FROM_BRIEFING,
-                Cur_cmd_brief->stage[stage_num].text.c_str ());
-        }
+    // are we still on same voice that is currently playing/played?
+    if (Cmd_brief_last_voice == voice) {
+        return; // no changes, nothing to do.
     }
-    else {
-        // are we still on same voice that is currently playing/played?
-        if (Cmd_brief_last_voice == voice) {
-            return; // no changes, nothing to do.
-        }
 
-        // if previous wave is still playing, stop it first.
-        if (Cmd_brief_last_voice >= 0) {
-            audiostream_stop (
-                Cmd_brief_last_voice, 1, 0); // stream is automatically rewound
-            Cmd_brief_last_voice = -1;
-        }
-
-        // ok, new wave needs playing, so we can start playing it now (and it
-        // becomes the current wave)
-        Cmd_brief_last_voice = voice;
-        if (voice >= 0) { audiostream_play (voice, Master_voice_volume, 0); }
+    // if previous wave is still playing, stop it first.
+    if (Cmd_brief_last_voice >= 0) {
+        audiostream_stop (
+            Cmd_brief_last_voice, 1, 0); // stream is automatically rewound
+        Cmd_brief_last_voice = -1;
     }
+
+    // ok, new wave needs playing, so we can start playing it now (and it
+    // becomes the current wave)
+    Cmd_brief_last_voice = voice;
+    if (voice >= 0) { audiostream_play (voice, Master_voice_volume, 0); }
 }
 
 /**
@@ -319,7 +286,6 @@ void cmd_brief_stop_anim () {
         Cmd_brief_last_voice = -1;
     }
     if (Cmd_brief_last_stage >= 0) {
-        fsspeech_stop ();
         Cmd_brief_last_stage = -1;
     }
 }
@@ -384,8 +350,6 @@ void cmd_brief_pause () {
     if (Cmd_brief_last_voice >= 0) {
         audiostream_pause (Cmd_brief_last_voice);
     }
-    if (Cmd_brief_last_stage >= 0) { fsspeech_pause (true); }
-
     if (Briefing_music_handle >= 0) {
         audiostream_pause (Briefing_music_handle);
     }
@@ -399,8 +363,6 @@ void cmd_brief_unpause () {
     if (Cmd_brief_last_voice >= 0) {
         audiostream_unpause (Cmd_brief_last_voice);
     }
-    if (Cmd_brief_last_stage >= 0) { fsspeech_pause (false); }
-
     if (Briefing_music_handle >= 0) {
         audiostream_unpause (Briefing_music_handle);
     }
@@ -480,7 +442,6 @@ void cmd_brief_button_pressed (int n) {
 
     case CMD_BRIEF_BUTTON_PAUSE:
         gamesnd_play_iface (InterfaceSounds::USER_SELECT);
-        fsspeech_pause (Player->auto_advance != 0);
         Player->auto_advance ^= 1;
         break;
 
@@ -634,9 +595,6 @@ void cmd_brief_close () {
         game_flush ();
         Cmd_brief_inited = 0;
     }
-
-    // Stop any speech from running over
-    fsspeech_stop ();
 }
 
 void cmd_brief_do_frame (float frametime) {

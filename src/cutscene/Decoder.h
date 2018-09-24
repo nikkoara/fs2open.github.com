@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_CUTSCENE_DECODER_H
+#define FREESPACE2_CUTSCENE_DECODER_H
 
 #include <memory>
 
@@ -181,3 +184,5 @@ protected:
     void pushFrameData (VideoFramePtr&& frame);
 };
 } // namespace cutscene
+
+#endif // FREESPACE2_CUTSCENE_DECODER_H

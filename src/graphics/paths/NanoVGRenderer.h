@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_PATHS_NANOVGRENDERER_H
+#define FREESPACE2_GRAPHICS_PATHS_NANOVGRENDERER_H
 
 #include "graphics/2d.h"
 #include "graphics/material.h"
@@ -145,3 +148,5 @@ public:
 
 } // namespace paths
 } // namespace graphics
+
+#endif // FREESPACE2_GRAPHICS_PATHS_NANOVGRENDERER_H

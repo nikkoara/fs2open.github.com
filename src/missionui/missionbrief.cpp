@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "asteroid/asteroid.h"
 #include "cmdline/cmdline.h"
@@ -44,7 +37,6 @@
 #include "render/3d.h"
 #include "ship/ship.h"
 #include "sound/audiostr.h"
-#include "sound/fsspeech.h"
 
 static int Brief_goals_coords[GR_NUM_RESOLUTIONS][4] = {
     {
@@ -490,17 +482,14 @@ void brief_button_do (int i) {
 
     case BRIEF_BUTTON_PAUSE:
         gamesnd_play_iface (InterfaceSounds::USER_SELECT);
-        fsspeech_pause (Player->auto_advance != 0);
         Player->auto_advance ^= 1;
         break;
 
     case BRIEF_BUTTON_SKIP_TRAINING:
-        fsspeech_stop ();
         brief_skip_training_pressed ();
         break;
 
     case BRIEF_BUTTON_EXIT_LOOP:
-        fsspeech_stop ();
         brief_exit_loop_pressed ();
         break;
 
@@ -1742,7 +1731,6 @@ void brief_do_frame (float frametime) {
             }
 
             brief_voice_stop (Last_brief_stage);
-            fsspeech_stop ();
 
             if (Current_brief_stage < 0) {
                 Int3 ();
@@ -1876,7 +1864,6 @@ void brief_close () {
     nprintf (("Alan", "Entering brief_close()\n"));
 
     ML_objectives_close ();
-    fsspeech_stop ();
 
     // unload the audio streams used for voice playback
     brief_voice_unload_all ();

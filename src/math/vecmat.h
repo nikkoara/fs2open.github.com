@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _VECMAT_H
 #define _VECMAT_H
@@ -75,11 +68,11 @@ extern matrix vmd_identity_matrix;
         }                        \
     }
 //#define IDENTITY_MATRIX {1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-//0.0f, 1.0f}
+// 0.0f, 1.0f}
 // first set of inside braces is for union, second set is for inside union,
 // then for a2d[3][3] (some compiler warning messages just suck)
 //#define IDENTITY_MATRIX { { { {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f,
-//0.0f, 1.0f} } } }
+// 0.0f, 1.0f} } } }
 #define IDENTITY_MATRIX                                                       \
     {                                                                         \
         {                                                                     \
@@ -216,8 +209,8 @@ float vm_vec_copy_normalize (vec3d* dest, const vec3d* src);
 float vm_vec_normalize (vec3d* v);
 
 //	This version of vector normalize checks for the null vector before
-//normalization. 	If it is detected, it generates a Warning() and returns the
-//vector 1, 0, 0.
+// normalization. 	If it is detected, it generates a Warning() and returns the
+// vector 1, 0, 0.
 float vm_vec_normalize_safe (vec3d* v);
 
 // normalize a vector. returns mag of source vec. uses approx mag
@@ -377,8 +370,8 @@ void vm_rotate_matrix_by_angles (matrix* orient, const angles* tangles);
 
 // compute the distance from a point to a plane.  takes the normalized normal
 // of the plane (ebx), a point on the plane (edi), and the point to check
-// (esi). returns distance in eax distance is signed, so negative dist is on the
-// back of the plane
+// (esi). returns distance in eax distance is signed, so negative dist is on
+// the back of the plane
 float vm_dist_to_plane (
     const vec3d* checkp, const vec3d* norm, const vec3d* planep);
 
@@ -395,8 +388,8 @@ void vm_trackball (int idx, int idy, matrix* RotMat);
 //	Find the point on the line between p0 and p1 that is nearest to int_pnt.
 //	Stuff result in nearest_point.
 //	Return value indicated where on the line *nearest_point lies.  Between 0.0f
-//and 1.0f means it's 	in the line segment.  Positive means beyond *p1, negative
-//means before *p0.  2.0f means it's 	beyond *p1 by 2x.
+// and 1.0f means it's 	in the line segment.  Positive means beyond *p1,
+// negative means before *p0.  2.0f means it's 	beyond *p1 by 2x.
 float find_nearest_point_on_line (
     vec3d* nearest_point, const vec3d* p0, const vec3d* p1,
     const vec3d* int_pnt);
@@ -410,9 +403,9 @@ void compute_point_on_plane (vec3d* q, const plane* planep, const vec3d* p);
 // plane)
 //
 //		inputs:		new_point		=>		point on the plane [result]
-//						point				=>		point to compute closest plane
-//point 						plane_normal	=>		plane normal 						plane_point		=>		plane
-//point
+//						point				=>		point to compute closest
+//plane point 						plane_normal	=>		plane normal
+// plane_point		=>		plane point
 void vm_project_point_onto_plane (
     vec3d* new_point, const vec3d* point, const vec3d* plane_normal,
     const vec3d* plane_point);
@@ -454,7 +447,7 @@ int vm_vec_same (const vec3d* v1, const vec3d* v2);
 int vm_matrix_same (matrix* m1, matrix* m2);
 
 //	Interpolate from a start matrix toward a goal matrix, minimizing time
-//between orientations.
+// between orientations.
 // Moves at maximum rotational acceleration toward the goal when far and then
 // max deceleration when close. Subject to constaints on rotational velocity
 // and angular accleleration. Returns next_orientation valid at time delta_t.
@@ -465,7 +458,7 @@ void vm_matrix_interpolate (
     int no_overshoot = 0);
 
 //	Interpolate from a start forward vec toward a goal forward vec, minimizing
-//time between orientations.
+// time between orientations.
 // Moves at maximum rotational acceleration toward the goal when far and then
 // max deceleration when close. Subject to constaints on rotational velocity
 // and angular accleleration. Returns next forward vec valid at time delta_t.

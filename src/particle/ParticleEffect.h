@@ -1,6 +1,7 @@
+// -*- mode: c++; -*-
+
 #ifndef PARTICLE_EFFECT_H
 #define PARTICLE_EFFECT_H
-#pragma once
 
 #include "globalincs/pstypes.h"
 

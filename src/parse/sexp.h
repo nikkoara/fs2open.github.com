@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _SEXP_H
 #define _SEXP_H
@@ -639,7 +632,7 @@ class waypoint_list;
 #define OP_END_MISSION             \
     (0x0041 | OP_CATEGORY_CHANGE | \
      OP_NONCAMPAIGN_FLAG) //-Sesquipedalian. replaces end-mission-delay, which
-                          //did nothing
+                          // did nothing
 #define OP_SET_SCANNED \
     (0x0042 | OP_CATEGORY_CHANGE | OP_NONCAMPAIGN_FLAG) // Goober5000
 #define OP_SET_UNSCANNED \
@@ -1360,15 +1353,15 @@ char* CTEXT (int n);
 #define SEXP_UNKNOWN -32765     //-3
 #define SEXP_NAN \
     -32764 //-4	// not a number -- used when ships/wing part of boolean and
-           //haven't arrived yet
+           // haven't arrived yet
 #define SEXP_NAN_FOREVER \
     -32763 //-5	// not a number and will never change -- used to falsify
-           //boolean sexpressions
+           // boolean sexpressions
 #define SEXP_CANT_EVAL \
     -32762 //-6	// can't evaluate yet for whatever reason (acts like false)
 #define SEXP_NUM_EVAL \
     -32761 //-7	// already completed an arithmetic operation and result is
-           //stored
+           // stored
 
 // defines for check_sexp_syntax
 #define SEXP_CHECK_NONOP_ARGS -1  // non-operator has arguments

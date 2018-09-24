@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_ORDER_H
+#define FREESPACE2_SCRIPTING_API_OBJS_ORDER_H
 
 #include <object/object.h>
 #include <ai/ai.h>
@@ -28,3 +31,5 @@ DECLARE_ADE_OBJ (l_ShipOrders, object_h);
 
 } // namespace api
 } // namespace scripting
+
+#endif // FREESPACE2_SCRIPTING_API_OBJS_ORDER_H

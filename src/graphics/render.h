@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_GRAPHICS_RENDER_H
+#define FREESPACE2_GRAPHICS_RENDER_H
 
 #include "globalincs/pstypes.h"
 #include "graphics/2d.h"
@@ -252,3 +255,5 @@ void gr_render_primitives_immediate (
 void gr_render_primitives_2d_immediate (
     material* material_info, primitive_type prim_type, vertex_layout* layout,
     int n_verts, void* data, size_t size);
+
+#endif // FREESPACE2_GRAPHICS_RENDER_H

@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_CUTSCENE_PLAYER_H
+#define FREESPACE2_CUTSCENE_PLAYER_H
 
 #include <memory>
 
@@ -142,3 +145,5 @@ public:
         const PlaybackProperties& properties = PlaybackProperties ());
 };
 } // namespace cutscene
+
+#endif // FREESPACE2_CUTSCENE_PLAYER_H

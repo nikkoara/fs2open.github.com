@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include <algorithm>
 
@@ -1522,8 +1515,8 @@ static void player_died_start (object* killer_objp) {
     emp_stop_local ();
 }
 
-//#define	DEATHROLL_TIME						3000			//	generic deathroll
-//is 3 seconds (3 * 1000 milliseconds) - Moved to ships.tbl
+//#define	DEATHROLL_TIME						3000			//	generic
+//deathroll is 3 seconds (3 * 1000 milliseconds) - Moved to ships.tbl
 #define MIN_PLAYER_DEATHROLL_TIME \
     1000 // at least one second deathroll for a player
 #define DEATHROLL_ROTVEL_CAP \
@@ -2518,8 +2511,8 @@ static void ship_do_damage (
                 if (weapon_info_index >= 0) {
                     if (Weapon_info[weapon_info_index]
                             .wi_flags[Weapon::Info_Flags::Training]) {
-                        //						diag_printf2("Simulated Hull for
-                        //Ship %s hit, dropping from %.32f to %d.\n",
+                        //						diag_printf2("Simulated Hull
+                        //for Ship %s hit, dropping from %.32f to %d.\n",
                         // shipp->ship_name, (int) (
                         // ship_objp->sim_hull_strength * 100 ), (int) ( (
                         // ship_objp->sim_hull_strength - damage ) * 100 ) );

@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _PCXUTILS_H
 #define _PCXUTILS_H
@@ -34,9 +27,9 @@ extern int pcx_read_header (
 // extern int pcx_read_bitmap_8bpp( const char * filename, ubyte *org_data,
 // ubyte *palette ); extern int pcx_read_bitmap_16bpp( const char * filename,
 // ubyte *org_data ); extern int pcx_read_bitmap_16bpp_aabitmap( const char
-// *filename, ubyte *org_data ); extern int pcx_read_bitmap_16bpp_nondark( const
-// char *filename, ubyte *org_data ); extern int pcx_read_bitmap_32(const char
-// *real_filename, ubyte *data );
+// *filename, ubyte *org_data ); extern int pcx_read_bitmap_16bpp_nondark(
+// const char *filename, ubyte *org_data ); extern int pcx_read_bitmap_32(const
+// char *real_filename, ubyte *data );
 extern int pcx_read_bitmap (
     const char* filename, ubyte* org_data, ubyte* pal, int byte_size,
     int aabitmap = 0, bool mask_bitmap = false, int cf_type = CF_TYPE_ANY);

@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_CUTSCENE_FFMPEG_FFMPEGDECODER_H
+#define FREESPACE2_CUTSCENE_FFMPEG_FFMPEGDECODER_H
 
 #include "cutscene/Decoder.h"
 
@@ -45,3 +48,5 @@ public:
 };
 } // namespace ffmpeg
 } // namespace cutscene
+
+#endif // FREESPACE2_CUTSCENE_FFMPEG_FFMPEGDECODER_H

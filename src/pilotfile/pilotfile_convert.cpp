@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "pilotfile/pilotfile_convert.h"
 #include "playerman/managepilot.h"

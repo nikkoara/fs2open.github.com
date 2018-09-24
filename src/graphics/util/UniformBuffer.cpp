@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 #include "UniformBuffer.h"
 
 namespace graphics {

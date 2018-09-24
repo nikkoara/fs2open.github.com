@@ -1,4 +1,7 @@
-#pragma once
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_DECALS_DECALS_H
+#define FREESPACE2_DECALS_DECALS_H
 
 #include "globalincs/pstypes.h"
 
@@ -93,3 +96,5 @@ void addDecal (
     const matrix& local_orient);
 
 } // namespace decals
+
+#endif // FREESPACE2_DECALS_DECALS_H

@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "events.h"
 

@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #ifndef _OBJECT_H
 #define _OBJECT_H
@@ -97,7 +90,7 @@ extern const char* Object_type_names[MAX_OBJECT_TYPES];
 // {
 //    this should check if a vector from
 //		other_obj->last_pos to other_obj->pos with a radius of
-//other_obj->radius
+// other_obj->radius
 //    collides with object obj.   If it does, then fill in hitpos with the
 //    point of impact and return non-zero, otherwise return 0 if no impact.
 //    Note that this shouldn't take any action... that happens in weapon_hit.
@@ -144,7 +137,7 @@ public:
     physics_info phys_info; // a physics object
     int n_quadrants;        // how many shield quadrants the ship has
     std::vector< float > shield_quadrant; //	Shield is broken into
-                                          //components, quadrants by default.
+                                          // components, quadrants by default.
     float hull_strength;                  //	Remaining hull strength.
     float sim_hull_strength; // Simulated hull strength - used with training
                              // weapons.
@@ -300,10 +293,10 @@ void obj_remove_pairs (object* a);
 void obj_add_pairs (int objnum);
 
 //	Returns true if objects A and B are expected to collide in next duration
-//seconds. 	For purposes of this check, the first object moves from current
-//location to predicted 	location.  The second object is assumed to be where it
-//will be at time duration, NOT 	where it currently is. 	radius_scale: 0.0f means
-//use polygon models, else scale sphere size by radius_scale 	radius_scale
+// seconds. 	For purposes of this check, the first object moves from current
+// location to predicted 	location.  The second object is assumed to be where
+// it will be at time duration, NOT 	where it currently is. 	radius_scale: 0.0f
+// means use polygon models, else scale sphere size by radius_scale radius_scale
 //== 1.0f means Descent style collisions.
 int objects_will_collide (
     object* A, object* B, float duration, float radius_scale);

@@ -1,7 +1,7 @@
+// -*- mode: c++; -*-
 
 #ifndef _WAVEFILE_H
 #define _WAVEFILE_H
-#pragma once
 
 #include "globalincs/pstypes.h"
 #include "sound/audiostr.h"

@@ -1,11 +1,4 @@
-/*
- * Copyright (C) Volition, Inc. 1999.  All rights reserved.
- *
- * All source code herein is the property of Volition, Inc. You may not sell
- * or otherwise commercially exploit the source or things you created based on
- * the source.
- *
- */
+// -*- mode: c++; -*-
 
 #include "cfile/cfile.h"
 #include "cmdline/cmdline.h"
@@ -774,16 +767,11 @@ void opengl_compile_shader_actual (
         }
 
         // bind fragment data locations before we link the shader
-        glBindFragDataLocation (
-            program->getShaderHandle (), 0, "fragOut0");
-        glBindFragDataLocation (
-            program->getShaderHandle (), 1, "fragOut1");
-        glBindFragDataLocation (
-            program->getShaderHandle (), 2, "fragOut2");
-        glBindFragDataLocation (
-            program->getShaderHandle (), 3, "fragOut3");
-        glBindFragDataLocation (
-            program->getShaderHandle (), 4, "fragOut4");
+        glBindFragDataLocation (program->getShaderHandle (), 0, "fragOut0");
+        glBindFragDataLocation (program->getShaderHandle (), 1, "fragOut1");
+        glBindFragDataLocation (program->getShaderHandle (), 2, "fragOut2");
+        glBindFragDataLocation (program->getShaderHandle (), 3, "fragOut3");
+        glBindFragDataLocation (program->getShaderHandle (), 4, "fragOut4");
 
         program->linkProgram ();
     }

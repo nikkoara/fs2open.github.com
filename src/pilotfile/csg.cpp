@@ -1,3 +1,4 @@
+// -*- mode: c++; -*-
 
 #include "cutscene/cutscenes.h"
 #include "freespace2/freespace.h"
@@ -1412,7 +1413,7 @@ bool pilotfile::load_savefile (const char* campaign) {
 
     // the point of all this: read in the CSG contents
     while (!cfeof (cfp)) {
-		ushort section_id = cfread_ushort (cfp);
+        ushort section_id = cfread_ushort (cfp);
         uint section_size = cfread_uint (cfp);
 
         size_t start_pos = cftell (cfp);
@@ -1670,7 +1671,7 @@ bool pilotfile::get_csg_rank (int* rank) {
 
     // the point of all this: read in the CSG contents
     while (!m_have_flags && !cfeof (cfp)) {
-		ushort section_id = cfread_ushort (cfp);
+        ushort section_id = cfread_ushort (cfp);
         uint section_size = cfread_uint (cfp);
 
         size_t start_pos = cftell (cfp);

@@ -1,4 +1,4 @@
-
+// -*- mode: c++; -*-
 
 #include "anim/animplay.h"
 #include "anim/packunpack.h"

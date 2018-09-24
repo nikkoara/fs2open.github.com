@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 // stb_truetype.h - v1.11 - public domain
 // authored from 2009-2015 by Sean Barrett / RAD Game Tools
 //

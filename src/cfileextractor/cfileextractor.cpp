@@ -1,3 +1,5 @@
+// -*- mode: c++; -*-
+
 /*
  * Copyright (C) 2005  Taylor Richards
  *
@@ -13,11 +15,7 @@
 #include <cstring>
 #include <ctime>
 
-#ifdef _WIN32
-#include <direct.h>
-#else
 #include <unistd.h>
-#endif
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -279,12 +277,7 @@ void extract_all_files (char* file) {
             if (c) {
                 *c = '\0'; // NULL at DIR_SEP char
 
-#ifdef _WIN32
-                status = _mkdir (path);
-#else
                 status = mkdir (path, 0777);
-#endif
-
                 m_error = errno;
 
                 if (status && (m_error != EEXIST)) {
