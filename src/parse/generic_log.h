@@ -3,15 +3,8 @@
 #ifndef FREESPACE2_PARSE_GENERIC_LOG_H
 #define FREESPACE2_PARSE_GENERIC_LOG_H
 
-// ----------------------------------------------------------------------------------------------------
-// LOGFILE DEFINES/VARS
-//
 #define LOGFILE_MULTI_LOG 0
 #define LOGFILE_EVENT_LOG 1
-
-// ----------------------------------------------------------------------------------------------------
-// MULTI LOGFILE FUNCTIONS
-//
 
 // initialize the multi logfile
 bool logfile_init (int logfile_type);

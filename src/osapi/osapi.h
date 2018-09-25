@@ -1,14 +1,5 @@
 // -*- mode: c++; -*-
 
-/** @defgroup osapi The OS API
- *  Provides a number of function to interact with the operating system. The
- * API is the same for every platform.
- */
-
-/** @file
- *  @ingroup osapi
- */
-
 #ifndef FREESPACE2_OSAPI_OSAPI_H
 #define FREESPACE2_OSAPI_OSAPI_H
 

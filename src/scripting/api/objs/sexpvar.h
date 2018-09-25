@@ -1,10 +1,7 @@
 // -*- mode: c++; -*-
 
-//
-//
-
-#ifndef FS2_OPEN_SEXPVAR_H
-#define FS2_OPEN_SEXPVAR_H
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_SEXPVAR_H
+#define FREESPACE2_SCRIPTING_API_OBJS_SEXPVAR_H
 
 #include "globalincs/pstypes.h"
 #include "scripting/ade.h"
@@ -40,4 +37,4 @@ DECLARE_ADE_OBJ (l_SEXPVariable, sexpvar_h);
 } // namespace api
 } // namespace scripting
 
-#endif // FS2_OPEN_SEXPVAR_H
+#endif // FREESPACE2_SCRIPTING_API_OBJS_SEXPVAR_H

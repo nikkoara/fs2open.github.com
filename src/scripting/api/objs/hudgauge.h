@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef FS2_OPEN_HUDGAUGE_H
-#define FS2_OPEN_HUDGAUGE_H
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_HUDGAUGE_H
+#define FREESPACE2_SCRIPTING_API_OBJS_HUDGAUGE_H
 
 #include "scripting/ade_api.h"
 #include "hud/hud.h"
@@ -13,4 +13,4 @@ DECLARE_ADE_OBJ (l_HudGauge, HudGauge*);
 }
 } // namespace scripting
 
-#endif // FS2_OPEN_HUDGAUGE_H
+#endif // FREESPACE2_SCRIPTING_API_OBJS_HUDGAUGE_H

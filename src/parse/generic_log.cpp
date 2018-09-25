@@ -7,10 +7,6 @@
 #include "parse/generic_log.h"
 #include "parse/parselo.h"
 
-// ----------------------------------------------------------------------------------------------------
-// MULTI LOGFILE DEFINES/VARS
-//
-
 // max length for a line of the logfile
 #define MAX_LOGFILE_LINE_LEN 256
 
@@ -33,10 +29,6 @@ logfile logfiles[MAX_LOGFILES] = {
     { "multi.log", NULL },
     { "event.log", NULL },
 };
-
-// ----------------------------------------------------------------------------------------------------
-// LOGFILE FUNCTIONS
-//
 
 // initialize the logfile
 bool logfile_init (int logfile_type) {

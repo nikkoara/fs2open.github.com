@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-// defines for game sequencing
-
 #ifndef FREESPACE2_GAMESEQUENCE_GAMESEQUENCE_H
 #define FREESPACE2_GAMESEQUENCE_GAMESEQUENCE_H
 

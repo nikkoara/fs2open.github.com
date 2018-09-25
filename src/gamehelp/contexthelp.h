@@ -1,9 +1,5 @@
 // -*- mode: c++; -*-
 
-// ContextHelp.h
-//
-//
-
 #ifndef FREESPACE2_GAMEHELP_CONTEXTHELP_H
 #define FREESPACE2_GAMEHELP_CONTEXTHELP_H
 

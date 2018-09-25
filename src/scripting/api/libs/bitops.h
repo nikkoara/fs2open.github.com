@@ -1,10 +1,7 @@
 // -*- mode: c++; -*-
 
-//
-//
-
-#ifndef FS2_OPEN_BIT_H
-#define FS2_OPEN_BIT_H
+#ifndef FREESPACE2_SCRIPTING_API_LIBS_BITOPS_H
+#define FREESPACE2_SCRIPTING_API_LIBS_BITOPS_H
 
 #include "scripting/ade_api.h"
 
@@ -15,4 +12,4 @@ DECLARE_ADE_LIB (l_BitOps);
 }
 } // namespace scripting
 
-#endif // FS2_OPEN_BIT_H
+#endif // FREESPACE2_SCRIPTING_API_LIBS_BITOPS_H

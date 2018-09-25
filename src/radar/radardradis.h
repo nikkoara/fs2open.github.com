@@ -1,12 +1,5 @@
 // -*- mode: c++; -*-
 
-/*
- * Created by Olivier "LuaPineapple" Hamel for the Freespace 2 Source Code
- * Project. You may not sell or otherwise commercially exploit the source or
- * things you create based on the source.
- *
- */
-
 #ifndef FREESPACE2_RADAR_RADARDRADIS_H
 #define FREESPACE2_RADAR_RADARDRADIS_H
 

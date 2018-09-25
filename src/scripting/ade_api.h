@@ -1,10 +1,7 @@
 // -*- mode: c++; -*-
 
-//
-//
-
-#ifndef FS2_OPEN_ADE_API_H_H
-#define FS2_OPEN_ADE_API_H_H
+#ifndef FREESPACE2_SCRIPTING_ADE_API_H
+#define FREESPACE2_SCRIPTING_ADE_API_H
 
 #include "scripting/ade.h"
 
@@ -232,4 +229,4 @@ const size_t INVALID_ID =
 
 } // namespace scripting
 
-#endif // FS2_OPEN_ADE_API_H_H
+#endif // FREESPACE2_SCRIPTING_ADE_API_H

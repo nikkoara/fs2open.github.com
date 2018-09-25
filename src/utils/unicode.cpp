@@ -1,8 +1,5 @@
 // -*- mode: c++; -*-
 
-//
-//
-
 #include "unicode.h"
 
 namespace unicode {

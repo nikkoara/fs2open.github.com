@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef FS2_OPEN_OPENGLVIDEOPRESENTER_H
-#define FS2_OPEN_OPENGLVIDEOPRESENTER_H
+#ifndef FREESPACE2_CUTSCENE_VIDEOPRESENTER_H
+#define FREESPACE2_CUTSCENE_VIDEOPRESENTER_H
 
 #include "globalincs/pstypes.h"
 #include "graphics/2d.h"
@@ -37,4 +37,4 @@ public:
 } // namespace player
 } // namespace cutscene
 
-#endif // FS2_OPEN_OPENGLVIDEOPRESENTER_H
+#endif // FREESPACE2_CUTSCENE_VIDEOPRESENTER_H

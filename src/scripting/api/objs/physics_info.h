@@ -1,10 +1,7 @@
 // -*- mode: c++; -*-
 
-//
-//
-
-#ifndef FS2_OPEN_PHYSICS_INFO_H
-#define FS2_OPEN_PHYSICS_INFO_H
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_PHYSICS_INFO_H
+#define FREESPACE2_SCRIPTING_API_OBJS_PHYSICS_INFO_H
 
 #include "globalincs/pstypes.h"
 #include "scripting/ade.h"
@@ -34,4 +31,4 @@ DECLARE_ADE_OBJ (l_Physics, physics_info_h);
 } // namespace api
 } // namespace scripting
 
-#endif // FS2_OPEN_PHYSICS_INFO_H
+#endif // FREESPACE2_SCRIPTING_API_OBJS_PHYSICS_INFO_H

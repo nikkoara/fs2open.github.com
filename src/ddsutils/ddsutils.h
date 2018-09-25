@@ -1,8 +1,5 @@
 // -*- mode: c++; -*-
 
-// header file to load .dds files
-// these use dxtc texture compression
-
 #ifndef FREESPACE2_DDSUTILS_DDSUTILS_H
 #define FREESPACE2_DDSUTILS_DDSUTILS_H
 

@@ -1,14 +1,5 @@
 // -*- mode: c++; -*-
 
-/*
- * Species_Defs.h
- * Extended Species Support for FS2 Open
- *
- * You may not sell or otherwise commercially exploit the source or things you
- * create based on the source.
- *
- */
-
 #ifndef FREESPACE2_SPECIES_DEFS_SPECIES_DEFS_H
 #define FREESPACE2_SPECIES_DEFS_SPECIES_DEFS_H
 

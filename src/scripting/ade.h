@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef FS2_OPEN_ADE_H
-#define FS2_OPEN_ADE_H
+#ifndef FREESPACE2_SCRIPTING_ADE_H
+#define FREESPACE2_SCRIPTING_ADE_H
 
 #include "defs.hpp"
 
@@ -384,4 +384,4 @@ int ade_set_object_with_breed (lua_State* L, int obj_idx);
 void load_default_script (lua_State* L, const char* name);
 } // namespace scripting
 
-#endif // FS2_OPEN_ADE_H
+#endif // FREESPACE2_SCRIPTING_ADE_H

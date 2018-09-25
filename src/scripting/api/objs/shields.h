@@ -1,10 +1,7 @@
 // -*- mode: c++; -*-
 
-//
-//
-
-#ifndef FS2_OPEN_SHIELDS_H
-#define FS2_OPEN_SHIELDS_H
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_SHIELDS_H
+#define FREESPACE2_SCRIPTING_API_OBJS_SHIELDS_H
 
 #include "globalincs/pstypes.h"
 #include "scripting/ade.h"
@@ -18,4 +15,4 @@ DECLARE_ADE_OBJ (l_Shields, object_h);
 }
 } // namespace scripting
 
-#endif // FS2_OPEN_SHIELDS_H
+#endif // FREESPACE2_SCRIPTING_API_OBJS_SHIELDS_H

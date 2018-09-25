@@ -1,13 +1,5 @@
 // -*- mode: c++; -*-
 
-/*
- * Code created by Thomas Whittaker (RT) for a FreeSpace 2 source code project
- *
- * You may not sell or otherwise commercially exploit the source or things you
- * created based on the source.
- *
- */
-
 #ifndef FREESPACE2_GRAPHICS_GRBATCH_H
 #define FREESPACE2_GRAPHICS_GRBATCH_H
 

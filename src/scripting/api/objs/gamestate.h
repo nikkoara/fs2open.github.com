@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef FS2_OPEN_GAMESTATE_H
-#define FS2_OPEN_GAMESTATE_H
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_GAMESTATE_H
+#define FREESPACE2_SCRIPTING_API_OBJS_GAMESTATE_H
 
 #include "scripting/ade_api.h"
 #include "gamesequence/gamesequence.h"
@@ -27,4 +27,4 @@ DECLARE_ADE_OBJ (l_GameState, gamestate_h);
 } // namespace api
 } // namespace scripting
 
-#endif // FS2_OPEN_GAMESTATE_H
+#endif // FREESPACE2_SCRIPTING_API_OBJS_GAMESTATE_H

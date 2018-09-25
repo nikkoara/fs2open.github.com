@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef FS2_OPEN_SCOPES_H
-#define FS2_OPEN_SCOPES_H
+#ifndef FREESPACE2_TRACING_SCOPES_H
+#define FREESPACE2_TRACING_SCOPES_H
 
 #include "globalincs/pstypes.h"
 
@@ -35,4 +35,4 @@ extern Scope MainFrameScope;
 
 } // namespace tracing
 
-#endif // FS2_OPEN_SCOPES_H
+#endif // FREESPACE2_TRACING_SCOPES_H

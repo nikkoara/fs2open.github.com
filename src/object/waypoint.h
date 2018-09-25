@@ -1,12 +1,11 @@
 // -*- mode: c++; -*-
 
-#include "globalincs/globals.h"
-#include "globalincs/pstypes.h"
-
 #ifndef FREESPACE2_OBJECT_WAYPOINT_H
 #define FREESPACE2_OBJECT_WAYPOINT_H
 
-//********************CLASSES********************
+#include "globalincs/globals.h"
+#include "globalincs/pstypes.h"
+
 class waypoint_list;
 
 class waypoint {
@@ -50,13 +49,11 @@ private:
     std::vector< waypoint > waypoints;
 };
 
-//********************GLOBALS********************
 extern std::list< waypoint_list > Waypoint_lists;
 
 // bah
 extern const size_t INVALID_WAYPOINT_POSITION;
 
-//********************FUNCTIONS********************
 void waypoint_parse_init ();
 void waypoint_level_close ();
 

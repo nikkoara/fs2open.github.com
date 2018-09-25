@@ -1,9 +1,9 @@
 // -*- mode: c++; -*-
 
-#ifndef FS_CMDLINE_HEADER_FILE
-#define FS_CMDLINE_HEADER_FILE
+#ifndef FREESPACE2_CMDLINE_HEADER_FILE
+#define FREESPACE2_CMDLINE_HEADER_FILE
 
-    int parse_cmdline (int argc, char* argv[]);
+int parse_cmdline (int argc, char* argv[]);
 
 // COMMAND LINE SETTINGS
 // This section is for reference by all the *_init() functions. For example,
@@ -123,9 +123,6 @@ extern bool Cmdline_gl_finish;
 extern bool Cmdline_no_geo_sdr_effects;
 extern bool Cmdline_set_cpu_affinity;
 extern bool Cmdline_nograb;
-#ifdef WIN32
-extern bool Cmdline_alternate_registry_path;
-#endif
 
 // Developer/Testing related
 extern char* Cmdline_start_mission;

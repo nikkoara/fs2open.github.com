@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef FS2_OPEN_EFFECTTIMING_H
-#define FS2_OPEN_EFFECTTIMING_H
+#ifndef FREESPACE2_PARTICLE_UTIL_EFFECTTIMING_H
+#define FREESPACE2_PARTICLE_UTIL_EFFECTTIMING_H
 
 #include "particle/ParticleSource.h"
 #include "utils/RandomRange.h"
@@ -64,4 +64,4 @@ public:
 } // namespace util
 } // namespace particle
 
-#endif // FS2_OPEN_EFFECTTIMING_H
+#endif // FREESPACE2_PARTICLE_UTIL_EFFECTTIMING_H

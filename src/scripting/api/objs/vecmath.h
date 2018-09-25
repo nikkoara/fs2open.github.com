@@ -1,10 +1,7 @@
 // -*- mode: c++; -*-
 
-//
-//
-
-#ifndef FS2_OPEN_VECMATH_H
-#define FS2_OPEN_VECMATH_H
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_VECMATH_H
+#define FREESPACE2_SCRIPTING_API_OBJS_VECMATH_H
 
 #include "globalincs/pstypes.h"
 #include "scripting/ade.h"
@@ -49,4 +46,4 @@ DECLARE_ADE_OBJ (l_Matrix, matrix_h);
 } // namespace api
 } // namespace scripting
 
-#endif // FS2_OPEN_VECMATH_H
+#endif // FREESPACE2_SCRIPTING_API_OBJS_VECMATH_H

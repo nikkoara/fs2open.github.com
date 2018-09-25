@@ -1,10 +1,7 @@
 // -*- mode: c++; -*-
 
-//
-//
-
-#ifndef FS2_OPEN_ADE_ARGS_H
-#define FS2_OPEN_ADE_ARGS_H
+#ifndef FREESPACE2_SCRIPTING_ADE_ARGS_H
+#define FREESPACE2_SCRIPTING_ADE_ARGS_H
 
 extern "C" {
 
@@ -41,4 +38,4 @@ extern int Ade_get_args_skip;
 extern bool Ade_get_args_lfunction;
 } // namespace scripting
 
-#endif // FS2_OPEN_ADE_ARGS_H
+#endif // FREESPACE2_SCRIPTING_ADE_ARGS_H

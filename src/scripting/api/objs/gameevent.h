@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef FS2_OPEN_GAMEEVENT_H
-#define FS2_OPEN_GAMEEVENT_H
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_GAMEEVENT_H
+#define FREESPACE2_SCRIPTING_API_OBJS_GAMEEVENT_H
 
 #include "scripting/ade_api.h"
 #include "gamesequence/gamesequence.h"
@@ -28,4 +28,4 @@ DECLARE_ADE_OBJ (l_GameEvent, gameevent_h);
 } // namespace api
 } // namespace scripting
 
-#endif
+#endif // FREESPACE2_SCRIPTING_API_OBJS_GAMEEVENT_H

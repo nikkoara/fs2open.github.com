@@ -1,11 +1,5 @@
 // -*- mode: c++; -*-
 
-/*
- * Created by Ian "Goober5000" Warfield for the FreeSpace2 Source Code Project.
- * You may not sell or otherwise commercially exploit the source or things you
- * create based on the source.
- */
-
 #ifndef FREESPACE2_MATH_BITARRAY_H
 #define FREESPACE2_MATH_BITARRAY_H
 

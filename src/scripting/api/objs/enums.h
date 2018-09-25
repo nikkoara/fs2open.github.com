@@ -1,10 +1,7 @@
 // -*- mode: c++; -*-
 
-//
-//
-
-#ifndef FS2_OPEN_ENUMS_H
-#define FS2_OPEN_ENUMS_H
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_ENUMS_H
+#define FREESPACE2_SCRIPTING_API_OBJS_ENUMS_H
 
 #include "globalincs/pstypes.h"
 #include "scripting/ade_api.h"
@@ -109,4 +106,4 @@ DECLARE_ADE_OBJ (l_Enum, enum_h);
 } // namespace api
 } // namespace scripting
 
-#endif // FS2_OPEN_ENUMS_H
+#endif // FREESPACE2_SCRIPTING_API_OBJS_ENUMS_H

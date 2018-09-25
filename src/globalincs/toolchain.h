@@ -1,11 +1,5 @@
 // -*- mode: c++; -*-
 
-/*
- * @file
- *
- * @brief Macros to abstract compiler capabilities for various toolchains
- */
-
 #ifndef FREESPACE2_GLOBALINCS_TOOLCHAIN_H
 #define FREESPACE2_GLOBALINCS_TOOLCHAIN_H
 

@@ -1,7 +1,7 @@
 // -*- mode: c++; -*-
 
-#ifndef FS2_OPEN_FONT_H
-#define FS2_OPEN_FONT_H
+#ifndef FREESPACE2_SCRIPTING_API_OBJS_FONT_H
+#define FREESPACE2_SCRIPTING_API_OBJS_FONT_H
 
 #include "scripting/ade_api.h"
 #include "graphics/font.h"
@@ -27,4 +27,4 @@ DECLARE_ADE_OBJ (l_Font, font_h);
 } // namespace api
 } // namespace scripting
 
-#endif
+#endif // FREESPACE2_SCRIPTING_API_OBJS_FONT_H
