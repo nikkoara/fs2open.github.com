@@ -1,116 +1,68 @@
 // -*- mode: c++; -*-
 
-#include <cstdarg>
-
-#include "cfile/cfile.h"
-#include "globalincs/globals.h"
 #include "parse/generic_log.h"
-#include "parse/parselo.h"
 
-// max length for a line of the logfile
-#define MAX_LOGFILE_LINE_LEN 256
+#include <thread>
+#include <mutex>
 
-// how often we'll write an update to the logfile (in seconds)
-#define MULTI_LOGFILE_UPDATE_TIME 2520 // every 42 minutes
-/*
-// outfile itself
-CFILE *log_file[];
-*/
+#include <boost/log/expressions.hpp>
+#include <boost/log/sinks/text_file_backend.hpp>
+#include <boost/log/sources/severity_channel_logger.hpp>
+#include <boost/log/support/date_time.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/utility/setup/console.hpp>
+#include <boost/log/utility/setup/file.hpp>
 
-#define MAX_LOGFILES 2
+#include <boost/date_time/posix_time/posix_time.hpp>
 
-typedef struct logfile {
-    char filename[NAME_LENGTH];
-    CFILE* log_file;
-} logfile;
+using namespace boost::log;
 
-logfile logfiles[MAX_LOGFILES] = {
-    // Filename, then the CFILE (which should usually be set to NULL)
-    { "multi.log", NULL },
-    { "event.log", NULL },
-};
+BOOST_LOG_ATTRIBUTE_KEYWORD (severity, "Severity", trivial::severity_level)
+BOOST_LOG_ATTRIBUTE_KEYWORD (channel, "Channel", std::string)
 
-// initialize the logfile
-bool logfile_init (int logfile_type) {
-    if ((logfile_type < 0) || (logfile_type >= MAX_LOGFILES)) {
-        Warning (
-            LOCATION, "Attempt to write illegal logfile number %d",
-            logfile_type);
-        return false;
-    }
+namespace fs2 {
+namespace log {
 
-    // attempt to open the file
-    logfiles[logfile_type].log_file = cfopen (
-        logfiles[logfile_type].filename, "wt", CFILE_NORMAL, CF_TYPE_DATA);
+static void
+do_init () {
+    using min_severity_filter = expressions::channel_severity_filter_actor<
+        std::string, trivial::severity_level >;
 
-    if (logfiles[logfile_type].log_file == NULL) {
-        nprintf (
-            ("Network", "Error opening %s for writing!!\n",
-             logfiles[logfile_type].filename));
-        return false;
-    }
+    min_severity_filter filter = expressions::channel_severity_filter (
+        channel, severity);
 
-    return true;
+    filter ["general"]     = trivial::info;
+    filter ["multiplayer"] = trivial::warning;
+
+    add_console_log (
+        std::clog,
+        keywords::filter = filter || severity >= trivial::error,
+        keywords::format = expressions::stream
+        << expressions::format_date_time< boost::posix_time::ptime > (
+            "TimeStamp", "%Y%m%dT%H%M%S.%f") << ": ["
+        << channel << "] "
+        << expressions::attr< trivial::severity_level >("Severity") << ": "
+        << expressions::smessage );
+
+    add_file_log (
+        keywords::file_name = "freespace2_%N.log",
+        keywords::rotation_size = 10 * 1024 * 1024,
+        keywords::filter = filter || severity >= trivial::error,
+        keywords::format =  expressions::stream
+        << expressions::format_date_time< boost::posix_time::ptime > (
+            "TimeStamp", "%Y%m%dT%H%M%S.%f") << ": ["
+        << channel << "] "
+        << expressions::attr< trivial::severity_level >("Severity") << ": "
+        << expressions::smessage
+        );
+
+    add_common_attributes ();
 }
 
-// close down the logfile
-void logfile_close (int logfile_type) {
-    // if we have a valid file, write a trailer and close
-    if (logfiles[logfile_type].log_file != NULL) {
-        cfclose (logfiles[logfile_type].log_file);
-        logfiles[logfile_type].log_file = NULL;
-    }
+void init () {
+    static std::once_flag once;
+    std::call_once (once, do_init);
 }
 
-// printf function itself called by the ml_printf macro
-void log_printf (int logfile_type, const char* format, ...) {
-    std::string temp;
-    va_list args;
-
-    if (format == NULL) { return; }
-
-    // if we don't have a valid logfile do nothing
-    if (logfiles[logfile_type].log_file == NULL) { return; }
-
-    // format the text
-    va_start (args, format);
-    vsprintf (temp, format, args);
-    va_end (args);
-
-    // log the string
-    log_string (logfile_type, temp.c_str ());
-}
-
-// string print function
-void log_string (int logfile_type, const char* string, int add_time) {
-    char tmp[MAX_LOGFILE_LINE_LEN * 4];
-    char time_str[128];
-    time_t timer;
-
-    // if we don't have a valid logfile do nothing
-    if (logfiles[logfile_type].log_file == NULL) { return; }
-
-    // if the passed string is NULL, do nothing
-    if (string == NULL) { return; }
-
-    // maybe add the time
-    if (add_time) {
-        timer = time (NULL);
-
-        strftime (time_str, 128, "%m/%d %H:%M:%S~   ", localtime (&timer));
-        strcpy_s (tmp, time_str);
-        strcat_s (tmp, string);
-    }
-    else {
-        strcpy_s (tmp, string);
-    }
-    strcat_s (tmp, "\n");
-
-    // now print it to the logfile if necessary
-    cfputs (tmp, logfiles[logfile_type].log_file);
-    cflush (logfiles[logfile_type].log_file);
-
-#if defined(LOGFILE_ECHO_TO_DEBUG)
-    mprintf (("Log file type %d %s", logfile_type, tmp));
-#endif
-}
+}}

@@ -1,8 +1,5 @@
 // -*- mode: c++; -*-
 
-//
-//
-
 #include "mission.h"
 
 #include "scripting/api/objs/LuaSEXP.h"

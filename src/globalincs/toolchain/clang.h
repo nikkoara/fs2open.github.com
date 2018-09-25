@@ -61,9 +61,6 @@
 #define SIZE_T_ARG "%zu"
 #define PTRDIFF_T_ARG "%zd"
 
-#define likely(x) __builtin_expect ((long)!!(x), 1L)
-#define unlikely(x) __builtin_expect ((long)!!(x), 0L)
-
 #define USED_VARIABLE __attribute__ ((used))
 
 #if __has_cpp_attribute(fallthough)

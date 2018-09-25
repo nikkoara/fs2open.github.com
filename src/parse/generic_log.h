@@ -3,20 +3,25 @@
 #ifndef FREESPACE2_PARSE_GENERIC_LOG_H
 #define FREESPACE2_PARSE_GENERIC_LOG_H
 
-#define LOGFILE_MULTI_LOG 0
-#define LOGFILE_EVENT_LOG 1
+#include "defs.hpp"
 
-// initialize the multi logfile
-bool logfile_init (int logfile_type);
+#include <string>
 
-// close down the multi logfile
-void logfile_close (int logfile_type);
+#include <boost/log/trivial.hpp>
+#include <boost/log/sources/severity_channel_logger.hpp>
 
-// printf function itself called by the log_printf macro
-void log_printf (int logfile_type, SCP_FORMAT_STRING const char* format, ...)
-    SCP_FORMAT_STRING_ARGS (2, 3);
+#define FS2_LOG(logger, channel, severity) BOOST_LOG_CHANNEL_SEV( \
+        logger, channel, boost::log::trivial::severity)
 
-// string print function
-void log_string (int logfile_type, const char* string, int add_time = 0);
+namespace fs2 {
+namespace log {
 
-#endif
+using logger_type = boost::log::sources::severity_channel_logger<
+    boost::log::trivial::severity_level, std::string >;
+
+void init ();
+
+} // namespace log
+} // namespace fs2
+
+#endif // FREESPACE2_PARSE_GENERIC_LOG_H

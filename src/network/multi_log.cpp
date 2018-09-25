@@ -6,9 +6,8 @@
 #include "cfile/cfile.h"
 #include "parse/parselo.h"
 
-// ----------------------------------------------------------------------------------------------------
-// MULTI LOGFILE DEFINES/VARS
-//
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
 
 // max length for a line of the logfile
 #define MAX_LOGFILE_LINE_LEN 256
@@ -21,40 +20,6 @@ int Multi_log_open_systime = -1;
 
 // time when we last updated the logfile
 int Multi_log_update_systime = -1;
-
-// ----------------------------------------------------------------------------------------------------
-// MULTI LOGFILE FUNCTIONS
-//
-
-// write the standard header to the logfile
-void multi_log_write_header () {
-    char str[1024];
-    time_t timer;
-
-    // header message
-    timer = time (NULL);
-    strftime (
-        str, 1024,
-        "FreeSpace Multi Log - Opened %a, %b %d, %Y  at "
-        "%I:%M%p\n----\n----\n----\n\n",
-        localtime (&timer));
-    log_string (LOGFILE_MULTI_LOG, str, 0);
-}
-
-// write the standard shutdown trailer
-void multi_log_write_trailer () {
-    char str[1024];
-    time_t timer;
-
-    // header message
-    timer = time (NULL);
-    strftime (
-        str, 1024,
-        "\n\n----\n----\n----\nFreeSpace Multi Log - Closing on %a, %b %d, %Y "
-        " at %I:%M%p",
-        localtime (&timer));
-    log_string (LOGFILE_MULTI_LOG, str, 0);
-}
 
 // write out some info about stuff
 void multi_log_write_update () {
@@ -74,19 +39,18 @@ void multi_log_write_update () {
 
 // initialize the multi logfile
 void multi_log_init () {
-    if (logfile_init (LOGFILE_MULTI_LOG)) {
-        multi_log_write_header ();
+    fs2::log::init ();
 
-        // initialize our timer info
-        Multi_log_open_systime = (int)time (NULL);
-        Multi_log_update_systime = Multi_log_open_systime;
-    }
+    fs2::log::logger_type logger;
+    FS2_LOG (logger, "multiplayer", info) << "logging started";
+
+    Multi_log_update_systime = Multi_log_open_systime = time (0);
 }
 
 // close down the multi logfile
 void multi_log_close () {
-    multi_log_write_trailer ();
-    logfile_close (LOGFILE_MULTI_LOG);
+    fs2::log::logger_type logger;
+    FS2_LOG (logger, "multiplayer", info) << "logging closed";
 }
 
 // give some processing time to the logfile system so it can check up on stuff
@@ -101,19 +65,21 @@ void multi_log_process () {
 }
 
 // printf function itself called by the ml_printf macro
-void ml_printf (const char* format, ...) {
+void ml_printf (const char* fmt, ...) {
+    if (0 == fmt || 0 == fmt [0])
+        return;
+
     std::string temp;
     va_list args;
 
-    if (format == NULL) { return; }
-
-    // format the text
-    va_start (args, format);
-    vsprintf (temp, format, args);
+    // fmt the text
+    va_start (args, fmt);
+    vsprintf (temp, fmt, args);
     va_end (args);
 
     // log the string including the time
-    log_string (LOGFILE_MULTI_LOG, temp.c_str (), 1);
+    fs2::log::logger_type logger;
+    FS2_LOG (logger, "multiplayer", info) << temp.c_str ();
 }
 
 // string print function
@@ -139,7 +105,8 @@ void ml_string (const char* string, int add_time) {
     // don't need to add terminating \n since log_string() will do it
 
     // now print it to the logfile if necessary
-    log_string (LOGFILE_MULTI_LOG, tmp, 0);
+    fs2::log::logger_type logger;
+    FS2_LOG (logger, "multiplayer", info) << tmp;
 
     // add to standalone UI too
     extern int Is_standalone;

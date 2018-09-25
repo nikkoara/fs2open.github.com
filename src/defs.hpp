@@ -5,6 +5,8 @@
 
 #include "config.hpp"
 
+#define BOOST_LOG_DYN_LINK 1
+
 #define FS_VERSION_MAJOR 3
 #define FS_VERSION_MINOR 8
 #define FS_VERSION_BUILD 1

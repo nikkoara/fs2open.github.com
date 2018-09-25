@@ -3,6 +3,8 @@
 #ifndef FREESPACE2_GLOBALINCS_PSTYPES_H
 #define FREESPACE2_GLOBALINCS_PSTYPES_H
 
+#include "defs.hpp"
+
 #include "windows_stub/config.h"
 #include "globalincs/scp_defines.h"
 #include "globalincs/toolchain.h"

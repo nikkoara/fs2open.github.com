@@ -94,6 +94,9 @@
 
 #include "parse/sexp/sexp_lookup.h"
 
+#include <boost/log/trivial.hpp>
+#include <boost/log/core.hpp>
+
 #ifndef NDEBUG
 #include "hud/hudmessage.h"
 #endif
@@ -25344,13 +25347,16 @@ void maybe_write_previous_event_to_log (int result) {
         return;
     }
 
-    log_string (LOGFILE_EVENT_LOG, "Event has changed state. Old state");
+    fs2::log::logger_type logger;
+    FS2_LOG (logger, "general", info) << "Event has changed state. Old state";
+
     while (!this_event->backup_log_buffer.empty ()) {
-        log_string (
-            LOGFILE_EVENT_LOG, this_event->backup_log_buffer.back ().c_str ());
+        FS2_LOG (logger, "general", info)
+            << this_event->backup_log_buffer.back ().c_str ();
         this_event->backup_log_buffer.pop_back ();
     }
-    log_string (LOGFILE_EVENT_LOG, "New state");
+
+    FS2_LOG (logger, "general", info) << "New state";
 
     // backup the current buffer as this may be a repeating event
     current_log_to_backup_log_buffer ();
@@ -25388,11 +25394,13 @@ void maybe_write_to_event_log (int result) {
     }
 
     while (!Current_event_log_buffer->empty ()) {
-        log_string (
-            LOGFILE_EVENT_LOG, Current_event_log_buffer->back ().c_str ());
+        fs2::log::logger_type logger;
+
+        FS2_LOG (logger, "general", info)
+            << Current_event_log_buffer->back ().c_str ();
+
         Current_event_log_buffer->pop_back ();
     }
-    log_string (LOGFILE_EVENT_LOG, "");
 }
 
 /**

@@ -1882,9 +1882,8 @@ void game_init () {
 
     multi_init ();
 
-    // start up the mission logfile
-    logfile_init (LOGFILE_EVENT_LOG);
-    log_string (LOGFILE_EVENT_LOG, "FS2_Open Mission Log - Opened \n\n", 1);
+    fs2::log::logger_type logger;
+    FS2_LOG (logger, "general", info) << "Freespace2 Open Source Mission Log";
 
     // standalone's don't use the joystick and it seems to sometimes cause them
     // to not get shutdown properly
@@ -6559,6 +6558,8 @@ int game_main (int argc, char* argv[]) {
 
     if (Is_standalone) { nprintf (("Network", "Standalone running\n")); }
 
+    fs2::log::init ();
+
     game_init ();
 
     game_stop_time ();
@@ -6701,11 +6702,11 @@ void game_shutdown (void) {
                             // mission parsing
     multi_voice_close ();   // close down multiplayer voice (including freeing
                             // buffers, etc)
-    multi_log_close ();
-    logfile_close (LOGFILE_EVENT_LOG); // close down the mission log
+
 #ifdef MULTI_USE_LAG
     multi_lag_close ();
 #endif
+
     fs2netd_close ();
 
     // Free SEXP resources

@@ -63,6 +63,9 @@
 #include "tracing/Monitor.h"
 #include "missionparse.h"
 
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+
 LOCAL struct {
     char docker[NAME_LENGTH];
     char dockee[NAME_LENGTH];
@@ -6105,7 +6108,8 @@ int parse_mission (mission* pm, int flags) {
             1, POPUP_OK, text);
     }
 
-    log_printf (LOGFILE_EVENT_LOG, "Mission %s loaded.\n", pm->name);
+    fs2::log::logger_type logger;
+    FS2_LOG (logger, "general", info) << "load mission : " << pm->name;
 
     // success
     return 0;

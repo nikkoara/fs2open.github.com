@@ -7,6 +7,22 @@ SUBDIRS =                                       \
     external/glad                               \
     external/mongoose
 
+BOOST_CPPFLAGS =                                \
+    $(BOOST_LOG_CPPFLAGS)                       \
+    $(RANGEV3_CPPFLAGS)
+
+BOOST_LDFLAGS =                                 \
+    $(BOOST_LOG_LDFLAGS)                        \
+    $(BOOST_LOG_SETUP_LDFLAGS)                  \
+    $(BOOST_THREAD_LDFLAGS)                     \
+    $(BOOST_SYSTEM_LDFLAGS)
+
+BOOST_LIBS =                                    \
+    $(BOOST_LOG_LIBS)                           \
+    $(BOOST_LOG_SETUP_LIBS)                     \
+    $(BOOST_THREAD_LIBS)                        \
+    $(BOOST_SYSTEM_LIBS)
+
 bin_PROGRAMS = fs2
 
 fs2_SOURCES =                                   \
@@ -412,23 +428,25 @@ fs2_CPPFLAGS =                                  \
     -I.                                         \
     -I$(top_srcdir)/src/external/lua            \
     -I$(top_srcdir)/src/external                \
+    $(BOOST_CPPFLAGS)                           \
     $(SDL2_CPPFLAGS)                            \
     -I/opt/local/include                        \
     -isystem OpenAL
 
-fs2_LDADD =							                    \
-    $(top_srcdir)/src/external/lua/liblua51.a			\
-    $(top_srcdir)/src/external/glad/libglad.a			\
-    $(top_srcdir)/src/external/mongoose/libmongoose.a	\
+fs2_LDADD =                                             \
+    $(top_srcdir)/src/external/lua/liblua51.a           \
+    $(top_srcdir)/src/external/glad/libglad.a           \
+    $(top_srcdir)/src/external/mongoose/libmongoose.a   \
+    $(BOOST_LDFLAGS) $(BOOST_LIBS)                      \
     $(SDL2_LDFLAGS)                                     \
-    -lavcodec											\
-    -lavdevice											\
-    -lavformat											\
-    -lavfilter											\
-    -lavutil											\
-    -lpostproc											\
-    -lswscale											\
-    -lswresample										\
+    -lavcodec                                           \
+    -lavdevice                                          \
+    -lavformat                                          \
+    -lavfilter                                          \
+    -lavutil                                            \
+    -lpostproc                                          \
+    -lswscale                                           \
+    -lswresample                                        \
     -ljsoncpp -ljpeg -lpng
 
 fs2_LDFLAGS = -framework OpenAL
