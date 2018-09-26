@@ -50,7 +50,7 @@ void ui_draw_sunken_border (int x1, int y1, int x2, int y2);
 #define B2_JUST_PRESSED (ui_mouse.b2_status & BUTTON_JUST_PRESSED)
 #define B2_JUST_RELEASED (ui_mouse.b2_status & BUTTON_JUST_RELEASED)
 
-typedef struct UI_MOUSE {
+struct UI_MOUSE  {
     int x, y;
     int dx, dy;
     int b1_status;
@@ -60,7 +60,7 @@ typedef struct UI_MOUSE {
     int b2_last_status;
     int b2_time_lastpressed;
     int timestamp;
-} UI_MOUSE;
+};
 
 extern UI_MOUSE ui_mouse;
 extern void ui_mouse_process ();

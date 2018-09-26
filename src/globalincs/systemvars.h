@@ -65,15 +65,15 @@ extern FadeType Fade_type;
 extern int Fade_start_timestamp;
 extern int Fade_end_timestamp;
 
-typedef struct vei {
+struct vei  {
     angles_t angles; //	Angles defining viewer location.
     float distance;  //	Distance from which to view, plus 2x radius.
-} vei;
+};
 
-typedef struct vci {
+struct vci  {
     angles_t angles;
     float distance; // Distance from which to view, plus 3x radius
-} vci;
+};
 
 extern fix Missiontime;
 extern fix Skybox_timestamp;
@@ -110,7 +110,7 @@ extern int Game_detail_level;
 
 extern uint Game_detail_flags;
 
-extern angles Viewer_slew_angles;
+extern angles_t Viewer_slew_angles;
 extern vei Viewer_external_info;
 extern vci Viewer_chase_info;
 extern vec3d leaning_position;
@@ -164,7 +164,7 @@ extern float Gloss_override;
     4 // The highest valid value for the "analog" detail level settings
 
 // If you change this, update player file in ManagePilot.cpp
-typedef struct detail_levels {
+struct detail_levels  {
     int setting; // Which default setting this was created from.   0=lowest...
                  // NUM_DEFAULT_DETAIL_LEVELS-1, -1=Custom
 
@@ -182,7 +182,7 @@ typedef struct detail_levels {
     int targetview_model; // 0=off, 1=on
     int planets_suns;     // 0=off, 1=on
     int weapon_extras;    // extra weapon details. trails, glows
-} detail_levels;
+};
 
 // Global values used to access detail levels in game and libs
 extern detail_levels Detail;

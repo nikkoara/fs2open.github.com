@@ -83,7 +83,7 @@ void gr_start_instance_matrix (const vec3d* offset, const matrix* rotation) {
 }
 
 void gr_start_angles_instance_matrix (
-    const vec3d* pos, const angles* rotation) {
+    const vec3d* pos, const angles_t* rotation) {
     Assert (htl_view_matrix_set);
 
     matrix m;

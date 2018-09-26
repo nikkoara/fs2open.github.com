@@ -14,9 +14,9 @@ extern bool Perspective_locked;
 
 extern int Ignored_keys[];
 
-typedef struct button_info {
+struct button_info  {
     int status[NUM_BUTTON_FIELDS];
-} button_info;
+};
 
 void button_info_set (button_info* bi, int n);
 void button_info_unset (button_info* bi, int n);

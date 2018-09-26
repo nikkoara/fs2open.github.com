@@ -687,7 +687,7 @@ static matrix* sincos_2_matrix (
 }
 
 // computes a matrix from a set of three angles.  returns ptr to matrix
-matrix* vm_angles_2_matrix (matrix* m, const angles* a) {
+matrix* vm_angles_2_matrix (matrix* m, const angles_t* a) {
     matrix* t;
     float sinp, cosp, sinb, cosb, sinh, cosh;
 
@@ -1004,7 +1004,7 @@ vm_matrix_x_matrix (matrix* dest, const matrix* src0, const matrix* src1) {
 }
 
 // extract angles from a matrix
-angles* vm_extract_angles_matrix (angles* a, const matrix* m) {
+angles_t* vm_extract_angles_matrix (angles_t* a, const matrix* m) {
     float sinh, cosh, cosp;
 
     a->h = atan2_safe (m->vec.fvec.xyz.x, m->vec.fvec.xyz.z);
@@ -1041,7 +1041,7 @@ angles* vm_extract_angles_matrix (angles* a, const matrix* m) {
 // (pages 278-281) of 3D Math Primer for Graphics and Game
 // Development, 2nd Edition
 // http://books.google.com/books?id=X3hmuhBoFF0C&printsec=frontcover#v=onepage&q&f=false
-angles* vm_extract_angles_matrix_alternate (angles* a, const matrix* m) {
+angles_t* vm_extract_angles_matrix_alternate (angles_t* a, const matrix* m) {
     Assert (a != NULL);
     Assert (m != NULL);
 
@@ -1079,8 +1079,8 @@ angles* vm_extract_angles_matrix_alternate (angles* a, const matrix* m) {
 }
 
 // extract heading and pitch from a vector, assuming bank==0
-static angles*
-vm_extract_angles_vector_normalized (angles* a, const vec3d* v) {
+static angles_t*
+vm_extract_angles_vector_normalized (angles_t* a, const vec3d* v) {
     a->b = 0.0f; // always zero bank
 
     a->p = asinf (-v->xyz.y);
@@ -1091,7 +1091,7 @@ vm_extract_angles_vector_normalized (angles* a, const vec3d* v) {
 }
 
 // extract heading and pitch from a vector, assuming bank==0
-angles* vm_extract_angles_vector (angles* a, const vec3d* v) {
+angles_t* vm_extract_angles_vector (angles_t* a, const vec3d* v) {
     vec3d t;
 
     vm_vec_copy_normalize (&t, v);
@@ -1323,7 +1323,7 @@ void vm_fix_matrix (matrix* m) {
 
 // Rotates the orient matrix by the angles in tangles and then
 // makes sure that the matrix is orthogonal.
-void vm_rotate_matrix_by_angles (matrix* orient, const angles* tangles) {
+void vm_rotate_matrix_by_angles (matrix* orient, const angles_t* tangles) {
     matrix rotmat, new_orient;
     vm_angles_2_matrix (&rotmat, tangles);
     vm_matrix_x_matrix (&new_orient, orient, &rotmat);
@@ -1379,7 +1379,7 @@ void vm_rot_point_around_line (
     const vec3d* line_dir) {
     vec3d tmp, tmp1;
     matrix m, r;
-    angles ta;
+    angles_t ta;
 
     vm_vector_2_matrix_norm (&m, line_dir, NULL, NULL);
 

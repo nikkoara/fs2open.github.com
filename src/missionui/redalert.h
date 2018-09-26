@@ -35,7 +35,7 @@ static const int RED_ALERT_PLAYER_DEL_SHIP_CLASS = -2;
 static const int RED_ALERT_LOWEST_VALID_SHIP_CLASS =
     RED_ALERT_PLAYER_DEL_SHIP_CLASS; // for ship index bounds checks
 
-typedef struct red_alert_ship_status {
+struct red_alert_ship_status  {
     std::string name;
     float hull;
     int ship_class;
@@ -43,7 +43,7 @@ typedef struct red_alert_ship_status {
     std::vector< float > subsys_aggregate_current_hits;
     std::vector< wep_t > primary_weapons;
     std::vector< wep_t > secondary_weapons;
-} red_alert_ship_status;
+};
 
 extern std::vector< red_alert_ship_status > Red_alert_wingman_status;
 extern std::string Red_alert_precursor_mission;

@@ -21,13 +21,13 @@
 
 #define DEFAULT_GAME_PORT 7808
 
-typedef struct net_addr {
+struct net_addr  {
     uint type;       // See NET_ defines above
     ubyte net_id[4]; // was used for IPX, now unused
     ubyte addr[6];   // address - IP only uses 4, is 6 because of retail IPX
                      // support
     short port;
-} net_addr;
+};
 
 // define these in such a manner that a call to psnet_send_reliable is exactly
 // the same and the new code in unobtrusive

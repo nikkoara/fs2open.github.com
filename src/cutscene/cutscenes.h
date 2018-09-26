@@ -6,12 +6,12 @@
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"
 
-typedef struct cutscene_info {
+struct cutscene_info  {
     char filename[MAX_FILENAME_LEN];
     char name[NAME_LENGTH];
     char* description;
     bool viewable;
-} cutscene_info;
+};
 
 extern std::vector< cutscene_info > Cutscenes;
 

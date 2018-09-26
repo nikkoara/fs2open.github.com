@@ -56,14 +56,14 @@ extern int Num_medals;
    the packet ot everyone else.
 */
 
-typedef struct rank_stuff {
+struct rank_stuff  {
     char name[NAME_LENGTH]; // name of this rank
     std::map< int, std::string >
         promotion_text; // text to display when promoted to this rank
     int points;         // points needed to reach this rank
     char bitmap[MAX_FILENAME_LEN]; // bitmap of this rank medal
     char promotion_voice_base[MAX_FILENAME_LEN];
-} rank_stuff;
+};
 
 #define STATS_FLAG_INVALID (1 << 0)
 #define STATS_FLAG_CAMPAIGN (1 << 1)

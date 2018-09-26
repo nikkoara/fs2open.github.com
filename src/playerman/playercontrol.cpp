@@ -49,7 +49,7 @@ int lua_game_control = 0;
 physics_info Descent_physics; // used when we want to control the player like
                               // the descent ship
 
-angles chase_slew_angles;
+angles_t chase_slew_angles;
 
 int toggle_glide = 0;
 int press_glide = 0;
@@ -82,9 +82,9 @@ void playercontrol_read_stick (int* axis, float frame_time);
  * @details When furthest away, move fastest. Minimum speed set so that doesn't
  * take too long. When gets close, clamps to the value.
  */
-void chase_angles_to_value (angles* ap, angles* bp, int scale) {
+void chase_angles_to_value (angles_t* ap, angles_t* bp, int scale) {
     float sk;
-    angles delta;
+    angles_t delta;
 
     //	Make sure we actually need to do all this math.
     if ((ap->p == bp->p) && (ap->h == bp->h)) return;
@@ -113,14 +113,14 @@ void chase_angles_to_value (angles* ap, angles* bp, int scale) {
  *
  * @param[in,out] Angles to reset
  */
-void reset_angles (angles* ap) {
+void reset_angles (angles_t* ap) {
     ap->p = 0.0f;
     ap->h = 0.0f;
     ap->b = 0.0f;
 }
 
-angles Viewer_slew_angles_delta;
-angles Viewer_external_angles_delta;
+angles_t Viewer_slew_angles_delta;
+angles_t Viewer_external_angles_delta;
 
 /**
  * @brief Modifies the camera veiw angles according to its current view mode:
@@ -136,7 +136,7 @@ angles Viewer_external_angles_delta;
  * @param[in]   frame_time  The frame time at which this function is called.
  */
 void view_modify (
-    angles* ma, angles* da, float max_p, float max_h, float frame_time) {
+    angles_t* ma, angles_t* da, float max_p, float max_h, float frame_time) {
     // Digital inputs
     float t = 0;
     float u = 0;
@@ -243,8 +243,8 @@ void do_view_track_target (float /*frame_time*/) {
     vec3d playerpos_rotated;
     vec3d forwardvec_rotated;
     vec3d target_pos;
-    angles view_angles;
-    angles forward_angles;
+    angles_t view_angles;
+    angles_t forward_angles;
 
     if ((Player_ai->target_objnum == -1) || (Viewer_mode & VM_OTHER_SHIP)) {
         // If the object isn't targeted or we're viewing from the target's

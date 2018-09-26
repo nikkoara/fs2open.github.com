@@ -1211,7 +1211,7 @@ NoHit:
     // Check all of this subobject's children
     i = sm->first_child;
     while (i >= 0) {
-        angles angs;
+        angles_t angs;
         bool blown_off;
         bool collision_checked;
         bsp_info* csm = &Mc_pm->submodel[i];
@@ -1430,7 +1430,7 @@ void model_collide_preprocess_subobj (
     int i = pm->submodel[subobj_num].first_child;
 
     while (i >= 0) {
-        angles angs = pmi->submodel[i].angs;
+        angles_t angs = pmi->submodel[i].angs;
         bsp_info* csm = &pm->submodel[i];
 
         matrix tm = IDENTITY_MATRIX;

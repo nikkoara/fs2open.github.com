@@ -11,7 +11,7 @@
 // contrail info - similar to that for missile trails
 // place this inside of info structures instead of explicit structs (eg.
 // ship_info instead of ship, or weapon_info instead of weapon)
-typedef struct trail_info {
+struct trail_info  {
     vec3d pt;                // offset from the object's center
     float w_start;           // starting width
     float w_end;             // ending width
@@ -22,9 +22,9 @@ typedef struct trail_info {
     generic_bitmap texture;  // texture to use for trail
     int n_fade_out_sections; // number of initial sections used for fading out
                              // start 'edge' of the effect
-} trail_info;
+};
 
-typedef struct trail {
+struct trail  {
     int head, tail; // pointers into the queue for the trail points
     vec3d pos[NUM_TRAIL_SECTIONS]; // positions of trail points
     float val[NUM_TRAIL_SECTIONS]; // for each point, a value that tells how
@@ -37,7 +37,7 @@ typedef struct trail {
 
     struct trail* next;
 
-} trail;
+};
 
 // Call at the start of freespace to init trails
 

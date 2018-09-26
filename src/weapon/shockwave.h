@@ -22,7 +22,7 @@ class model_draw_list;
 // Data structures
 // -----------------------------------------------------------
 
-typedef struct shockwave_info {
+struct shockwave_info  {
     char filename[MAX_FILENAME_LEN];
     int bitmap_id;
     int model_id;
@@ -34,9 +34,9 @@ typedef struct shockwave_info {
         bitmap_id = -1;
         model_id = -1;
     }
-} shockwave_info;
+};
 
-typedef struct shockwave {
+struct shockwave  {
     shockwave *next, *prev;
     int flags;
     int objnum; // index into Objects[] for shockwave
@@ -54,11 +54,11 @@ typedef struct shockwave {
     float time_elapsed; // in seconds
     float total_time;   // total lifetime of animation in seconds
     int delay_stamp;    // for delayed shockwaves
-    angles rot_angles;
+    angles_t rot_angles;
     int model_id;
-} shockwave;
+};
 
-typedef struct shockwave_create_info {
+struct shockwave_create_info  {
     char name[MAX_FILENAME_LEN];
     char pof_name[MAX_FILENAME_LEN];
 
@@ -67,13 +67,13 @@ typedef struct shockwave_create_info {
     float damage;
     float blast;
     float speed;
-    angles rot_angles;
+    angles_t rot_angles;
 
     int damage_type_idx;
     int damage_type_idx_sav; // stored value from table used to reset
                              // damage_type_idx
 
-} shockwave_create_info;
+};
 
 extern void shockwave_create_info_init (shockwave_create_info* sci);
 extern void shockwave_create_info_load (shockwave_create_info* sci);

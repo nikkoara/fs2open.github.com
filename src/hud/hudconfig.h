@@ -37,7 +37,7 @@ extern int HUD_default_popup_mask2;
 extern int HUD_config_default_flags;
 extern int HUD_config_default_flags2;
 
-typedef struct HUD_CONFIG_TYPE {
+struct HUD_CONFIG_TYPE  {
     int show_flags;   // whether to show gauge
     int show_flags2;  // whether to show gauge
     int popup_flags;  // whether gauge is popup
@@ -50,7 +50,7 @@ typedef struct HUD_CONFIG_TYPE {
 
     // colors for all the gauges
     color clr[NUM_HUD_GAUGES];
-} HUD_CONFIG_TYPE;
+};
 
 extern HUD_CONFIG_TYPE HUD_config;
 

@@ -1103,7 +1103,7 @@ void cfread_vector (vec3d* vec, CFILE* file, int ver, vec3d* deflt) {
     vec->xyz.z = cfread_float (file, ver, deflt ? deflt->xyz.z : 0.0f);
 }
 
-void cfread_angles (angles* ang, CFILE* file, int ver, angles* deflt) {
+void cfread_angles (angles_t* ang, CFILE* file, int ver, angles_t* deflt) {
     if (file->version < ver) {
         if (deflt)
             *ang = *deflt;
@@ -1186,7 +1186,7 @@ int cfwrite_vector (vec3d* vec, CFILE* file) {
     return cfwrite_float (vec->xyz.z, file);
 }
 
-int cfwrite_angles (angles* ang, CFILE* file) {
+int cfwrite_angles (angles_t* ang, CFILE* file) {
     if (!cfwrite_float (ang->p, file)) { return 0; }
     if (!cfwrite_float (ang->b, file)) { return 0; }
     return cfwrite_float (ang->h, file);

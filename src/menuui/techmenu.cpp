@@ -486,7 +486,7 @@ void techroom_ships_render (float frametime) {
 
     // now render the trackball ship, which is unique to the ships tab
     float rev_rate = REVOLUTION_RATE;
-    angles rot_angles, view_angles;
+    angles_t rot_angles, view_angles;
     int i, j;
     ship_info* sip = &Ship_info[Cur_entry_index];
     model_render_params render_info;

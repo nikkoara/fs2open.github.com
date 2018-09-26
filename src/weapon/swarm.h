@@ -8,7 +8,7 @@
 class object;
 class ship_subsys;
 
-typedef struct turret_swarm_info {
+struct turret_swarm_info  {
     int flags;
     int weapon_class;
     int num_to_launch;
@@ -20,9 +20,9 @@ typedef struct turret_swarm_info {
     ship_subsys* target_subsys;
     int time_to_fire;
     int weapon_num;
-} turret_swarm_info;
+};
 
-typedef struct swarm_info {
+struct swarm_info  {
     int flags;
     int change_timestamp;
     vec3d original_target;
@@ -37,7 +37,7 @@ typedef struct swarm_info {
                      // on missile speed
     float angle_offset;
     float last_dist; // last distance to target
-} swarm_info;
+};
 
 #define SWARM_DEFAULT_NUM_MISSILES_FIRED \
     4 // number of swarm missiles that launch when fired

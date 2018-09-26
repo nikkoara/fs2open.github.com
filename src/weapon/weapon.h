@@ -78,7 +78,7 @@ struct WeaponStateHash {
     }
 };
 
-typedef struct weapon {
+struct weapon  {
     int weapon_info_index;  // index into weapon_info array
     int objnum;             // object number for this weapon
     int model_instance_num; // model instance number, if we have any
@@ -170,10 +170,10 @@ typedef struct weapon {
                                         // the weapon is in flight
 
     WeaponState weapon_state; // The current state of the weapon
-} weapon;
+};
 
 // info specific to beam weapons
-typedef struct beam_weapon_section_info {
+struct beam_weapon_section_info  {
     float width;          // width of the section
     float flicker;        // how much it flickers (0.0 to 1.0)
     float z_add;          // is this necessary?
@@ -181,9 +181,9 @@ typedef struct beam_weapon_section_info {
     int tile_type;        // is this beam tiled by it's length, or not
     float translation;    // makes the beam texture move -Bobboau
     generic_anim texture; // texture anim/bitmap
-} beam_weapon_section_info;
+};
 
-typedef struct beam_weapon_info {
+struct beam_weapon_info  {
     int beam_type;                  // beam type
     float beam_life;                // how long it lasts
     int beam_warmup;                // how long it takes to warmup (in ms)
@@ -217,9 +217,9 @@ typedef struct beam_weapon_info {
     float damage_threshold; // point at wich damage will start being atenuated
                             // from 0.0 to 1.0
     float beam_width;       // width of the beam (for certain collision checks)
-} beam_weapon_info;
+};
 
-typedef struct particle_spew_info { // this will be used for multi spews
+struct particle_spew_info  { // this will be used for multi spews
     // particle spew stuff
     int particle_spew_type; // added pspew type field -nuke
     int particle_spew_count;
@@ -234,13 +234,13 @@ typedef struct particle_spew_info { // this will be used for multi spews
     vec3d particle_spew_offset;        // offsets and normals, yay!
     vec3d particle_spew_velocity;
     generic_anim particle_spew_anim;
-} particle_spew_info;
+};
 
-typedef struct spawn_weapon_info {
+struct spawn_weapon_info  {
     short spawn_type;  //	Type of weapon to spawn when detonated.
     short spawn_count; //	Number of weapons of spawn_type to spawn.
     float spawn_angle; //  Angle to spawn the child weapons in.  default is 180
-} spawn_weapon_info;
+};
 
 #define MAX_SPAWN_TYPES_PER_WEAPON 5
 
@@ -255,7 +255,7 @@ enum InFlightSoundType { TARGETED, UNTARGETED, ALWAYS };
 
 #define MAX_SUBSTITUTION_PATTERNS 10
 
-typedef struct weapon_info {
+struct weapon_info  {
     char name[NAME_LENGTH];     // name of this weapon
     char alt_name[NAME_LENGTH]; // alt name of this weapon
     char
@@ -583,22 +583,22 @@ public:
     bool has_alternate_name ();
 
     void reset ();
-} weapon_info;
+};
 
 extern flag_def_list_new< Weapon::Info_Flags > Weapon_Info_Flags[];
 extern const size_t num_weapon_info_flags;
 
 // Data structure to track the active missiles
-typedef struct missile_obj {
+struct missile_obj  {
     missile_obj *next, *prev;
     int flags, objnum;
-} missile_obj;
+};
 extern missile_obj Missile_obj_list;
 
 // WEAPON EXPLOSION INFO
 #define MAX_WEAPON_EXPL_LOD 4
 
-typedef struct weapon_expl_lod {
+struct weapon_expl_lod  {
     char filename[MAX_FILENAME_LEN];
     int bitmap_id;
     int num_frames;
@@ -607,12 +607,12 @@ typedef struct weapon_expl_lod {
     weapon_expl_lod () : bitmap_id (-1), num_frames (0), fps (0) {
         filename[0] = 0;
     }
-} weapon_expl_lod;
+};
 
-typedef struct weapon_expl_info {
+struct weapon_expl_info  {
     int lod_count;
     weapon_expl_lod lod[MAX_WEAPON_EXPL_LOD];
-} weapon_expl_info;
+};
 
 class weapon_explosions {
 private:

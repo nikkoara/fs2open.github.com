@@ -8,12 +8,12 @@
 class p_object;
 
 // info for each docked parse object
-typedef struct p_dock_instance {
+struct p_dock_instance  {
     p_dock_instance* next; // next item in list
 
     char dockpoint_used[NAME_LENGTH]; // name of docking bay
     p_object* docked_objp;            // parse object that is docked to me
-} p_dock_instance;
+};
 
 // class used when a function must be evaluated for all docked objects
 // (it's a class because it has a constructor)

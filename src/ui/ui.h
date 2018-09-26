@@ -165,14 +165,14 @@ public:
 #define UI_NUM_XSTR_COLORS 2
 #define UI_XSTR_COLOR_GREEN 0 // shades of green/gray
 #define UI_XSTR_COLOR_PINK 1  // pinkish hue
-typedef struct UI_XSTR {
+struct UI_XSTR  {
     const char* xstr; // base string
     int xstr_id;      // xstring id
     int x, y;         // coords of the string
     int clr;          // color to use
     int font_id;      // font id
     UI_GADGET* assoc; // the associated gadget
-} UI_XSTR;
+};
 
 #define MAX_UI_XSTRS 100
 
@@ -701,7 +701,7 @@ public:
 };
 
 // 2 extremely useful structs
-typedef struct ui_button_info {
+struct ui_button_info  {
     const char* filename;
     int x, y, xt, yt;
     int hotspot;
@@ -710,7 +710,7 @@ typedef struct ui_button_info {
 
     ui_button_info (const char* name, int x1, int y1, int xt1, int yt1, int h)
         : filename (name), x (x1), y (y1), xt (xt1), yt (yt1), hotspot (h) {}
-} ui_button_info;
+};
 
 int ui_getfilelist (int MaxNum, char** list, char* filespec);
 void ui_sort_filenames (int n, char** list);

@@ -50,7 +50,7 @@ enum CC_type {
 /*!
  * Control configuration item type.
  */
-typedef struct config_item {
+struct config_item  {
     short key_default; //!< default key bound to action
     short joy_default; //!< default joystick button bound to action
     char tab;          //!< what tab (category) it belongs in
@@ -64,7 +64,7 @@ typedef struct config_item {
     bool disabled; //!< whether this action should be available at all
     bool continuous_ongoing; //!< whether this action is a continuous one and
                              //!< is currently ongoing
-} config_item;
+};
 
 /*!
  * All available actions

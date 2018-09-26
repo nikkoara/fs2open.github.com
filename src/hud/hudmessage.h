@@ -20,13 +20,13 @@
 
 #define HUD_SOURCE_TEAM_OFFSET 8 // must be higher than any previous hud source
 
-typedef struct HUD_message_data {
+struct HUD_message_data  {
     std::string text;
     int source; // where this message came from so we can color code it
     int x;
-} HUD_message_data;
+};
 
-typedef struct line_node {
+struct line_node  {
     line_node* next;
     line_node* prev;
     fix time;   // timestamp when message was added
@@ -35,17 +35,17 @@ typedef struct line_node {
     int y;
     int underline_width;
     char* text;
-} line_node;
+};
 
 extern line_node Msg_scrollback_used_list;
 
-typedef struct Hud_display_info {
+struct Hud_display_info  {
     HUD_message_data msg;
     int y; // y Coordinate to draw message at
     int target_y;
     int total_life; // timestamp id to control how long a HUD message stays
                     // alive
-} Hud_display_info;
+};
 
 void hud_scrollback_init ();
 void hud_scrollback_close ();

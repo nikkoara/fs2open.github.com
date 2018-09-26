@@ -53,11 +53,11 @@
 #define ICON_JUMP_NODE 33
 #define ICON_TRANSPORT 34
 
-typedef struct briefing_icon_info {
+struct briefing_icon_info  {
     generic_anim regular;
     hud_anim fade;
     hud_anim highlight;
-} briefing_icon_type;
+};
 
 extern std::vector< briefing_icon_info > Briefing_icon_info;
 
@@ -100,7 +100,7 @@ extern const float BRIEF_TEXT_WIPE_TIME; // time in seconds for wipe to occur
 #define BI_USE_WING_ICON (1 << 4)  // use wing variant of briefing icon
 #define BI_USE_CARGO_ICON (1 << 5) // use cargo variant of briefing icon
 
-typedef struct brief_icon {
+struct brief_icon  {
     int x, y, w, h;
     int hold_x, hold_y; // 2D screen position of icon, used to place animations
     int ship_class;
@@ -118,14 +118,14 @@ typedef struct brief_icon {
     hud_anim fadeout_anim;
     hud_anim highlight_anim;
     int flags; // BI_* flags defined above
-} brief_icon;
+};
 
 #define MAX_BRIEF_STAGE_LINES 20
 
-typedef struct brief_line {
+struct brief_line  {
     int start_icon; // index into icons[], where line starts
     int end_icon;   // index into icons[], where line ends
-} brief_line;
+};
 
 #define BS_FORWARD_CUT (1 << 0)
 #define BS_BACKWARD_CUT (1 << 1)
@@ -238,12 +238,12 @@ extern int Brief_static_coords[GR_NUM_RESOLUTIONS][2];
 
 */
 
-typedef struct brief_screen {
+struct brief_screen  {
     int map_x1, map_x2, map_y1, map_y2;
     /*	int btext_x1, btext_x2, btext_y1, btext_y2;
         int cup_x1, cup_x2, cup_y1, cup_y2;
         int cupinfo_x1, cupinfo_x2, cupinfo_y1, cupinfo_y2;*/
-} brief_sceen;
+};
 
 extern brief_screen bscreen;
 

@@ -1558,7 +1558,7 @@ void draw_model_icon (
     int model_id, int flags, float closeup_zoom, int x, int y, int w, int h,
     ship_info* sip, int resize_mode, const vec3d* closeup_pos) {
     matrix object_orient = IDENTITY_MATRIX;
-    angles rot_angles = { 0.0f, 0.0f, 0.0f };
+    angles_t rot_angles = { 0.0f, 0.0f, 0.0f };
     float zoom = closeup_zoom * 2.5f;
 
     if (sip == NULL) {
@@ -1673,7 +1673,7 @@ void draw_model_rotating (
     if (model_id < 0) return;
 
     float time = (timer_get_milliseconds () - anim_timer_start) / 1000.0f;
-    angles rot_angles, view_angles;
+    angles_t rot_angles, view_angles;
     matrix model_orient;
 
     if (effect ==

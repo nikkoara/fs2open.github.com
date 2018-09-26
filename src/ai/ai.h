@@ -18,10 +18,10 @@ class ship_info;
 
 #define AI_DEFAULT_CLASS 3 // default AI class for new ships (Fred)
 
-typedef struct ai_flag_name {
+struct ai_flag_name  {
     AI::AI_Flags flag;
     char flag_name[TOKEN_LENGTH];
-} ai_flag_name;
+};
 
 #define MAX_AI_FLAG_NAMES 2
 extern ai_flag_name Ai_flag_names[];
@@ -72,7 +72,7 @@ extern ai_flag_name Ai_flag_names[];
     -1000.0f //	Hull strength ship gets set to if it crash-dies.
 
 // structure for AI goals
-typedef struct ai_goal {
+struct ai_goal  {
     int signature;  //	Unique identifier.  All goals ever created (per
                     // mission) have a unique signature.
     int ai_mode;    // one of the AIM_* modes for this goal
@@ -107,7 +107,7 @@ typedef struct ai_goal {
         int index;
     } dockee;
 
-} ai_goal;
+};
 
 #define MAX_GOAL_TARGET_NAMES 100
 
@@ -151,7 +151,7 @@ typedef struct ai_goal {
 
 #define AI_ACTIVE_GOAL_DYNAMIC 999
 
-typedef struct ai_class {
+struct ai_class  {
     char name[NAME_LENGTH];
     float ai_accuracy[NUM_SKILL_LEVELS];
     float ai_evasion[NUM_SKILL_LEVELS];
@@ -199,7 +199,7 @@ typedef struct ai_class {
     bool ai_class_autoscale; // Defaults to true, but can be turned off in
                              // order to disable extra scaling of some AI
                              // behaviors based on AI class index
-} ai_class;
+};
 
 //	Submode definitions.
 //	Note: These need to be renamed to be of the form: AIS_mode_xxxx
@@ -285,13 +285,13 @@ typedef struct ai_class {
 //	Contains hooks back to original path information.
 //	This hook is used to extract information on the point such as whether it is
 //	protected by turrets.
-typedef struct pnode {
+struct pnode  {
     vec3d pos;
     int path_num;   //	path number from polymodel, ie in polymodel,
                     // paths[path_num]
     int path_index; //	index in original model path of point, ie in
                     // model_path, use verts[path_index]
-} pnode;
+};
 
 #define MAX_PATH_POINTS 1000
 extern pnode Path_points[MAX_PATH_POINTS];
@@ -301,7 +301,7 @@ extern pnode* Ppfp; //	Free pointer in path points.
 // memory" assumption)
 #define MAX_IGNORE_NEW_OBJECTS 7
 
-typedef struct ai_info {
+struct ai_info  {
     flagset< AI::AI_Flags > ai_flags; //	Special flags for AI behavior.
     int shipnum;                      // Ship using this slot, -1 means none.
     int type;                         //
@@ -594,10 +594,10 @@ typedef struct ai_info {
                            // systems
     control_info ai_override_ci; // ai override control info
     int ai_override_timestamp;   // mark for when to end the current override
-} ai_info;
+};
 
 // Goober5000
-typedef struct {
+struct rotating_dockpoint_info {
     vec3d docker_point;
     vec3d dockee_point;
     int dock_mode;
@@ -605,7 +605,7 @@ typedef struct {
     vec3d submodel_pos;
     float submodel_r;
     float submodel_w;
-} rotating_dockpoint_info;
+};
 
 #define MAX_AI_INFO MAX_SHIPS
 

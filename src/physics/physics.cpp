@@ -141,7 +141,7 @@ void physics_set_viewer (physics_info* p, int dir) {
 // add rotational velocity & acceleration
 
 void physics_sim_rot (matrix* orient, physics_info* pi, float sim_time) {
-    angles tangles;
+    angles_t tangles;
     vec3d new_vel;
     matrix tmp;
     float shock_amplitude;
@@ -226,10 +226,10 @@ void physics_sim_rot (matrix* orient, physics_info* pi, float sim_time) {
 
 void physics_sim_rot_editor (
     matrix* orient, physics_info* pi, float sim_time) {
-    angles tangles;
+    angles_t tangles;
     vec3d new_vel;
     matrix tmp;
-    angles t1, t2;
+    angles_t t1, t2;
 
     apply_physics (
         pi->rotdamp, pi->desired_rotvel.xyz.x, pi->rotvel.xyz.x, sim_time,

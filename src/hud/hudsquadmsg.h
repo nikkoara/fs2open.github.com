@@ -54,16 +54,16 @@ class object;
 #define NUM_MBOX_FRAMES 3
 
 // data structure to hold character string of commands for comm menu
-typedef struct comm_order {
+struct comm_order  {
     char name[NAME_LENGTH];
     int item;
-} comm_order;
+};
 
-typedef struct sexp_com_order {
+struct sexp_com_order  {
     const char* name;
     int xstring;
     int item;
-} sexp_com_order;
+};
 
 extern comm_order Comm_orders[];
 extern sexp_com_order Sexp_comm_orders[];
@@ -108,7 +108,7 @@ STAY_NEAR_ME_ITEM | STAY_NEAR_TARGET_ITEM | KEEP_SAFE_DIST_ITEM | DEPART_ITEM )
 
 #define TARGET_MESSAGES (ENEMY_TARGET_MESSAGES | FRIENDLY_TARGET_MESSAGES)
 
-typedef struct squadmsg_history {
+struct squadmsg_history  {
     int order_to;      // ship/wing that received the order
     int order;         // order that the ship/wing received (see defines above)
     int target;        // target of the order
@@ -120,20 +120,20 @@ typedef struct squadmsg_history {
     squadmsg_history ()
         : order_to (-1), order (-1), target (-1), order_from (-1),
           special_index (-1), order_time (0) {}
-} squadmsg_history;
+};
 
 extern std::vector< squadmsg_history > Squadmsg_history;
 
 /*
 #define SQUADMSG_HISTORY_MAX 160
 
-typedef struct squadmsg_history {
+struct squadmsg_history  {
     int ship;  // ship that received the order
     int order;  // order that the ship received (see defines above)
     int target;  // ship that is the target of the order
 
     squadmsg_history(): ship(-1), order(-1), target(-1) {};
-} squadmsg_history;
+};
 
 
 extern int squadmsg_history_index;

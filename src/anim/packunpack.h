@@ -17,10 +17,10 @@ struct CFILE;
 
 #define STD_RLE_CODE 0x80
 
-typedef struct key_frame {
+struct key_frame  {
     int frame_num; // which frame number this key frame is
     int offset;    // offset from the start of data block
-} key_frame;
+};
 
 #define ANF_MEM_MAPPED (1 << 0) // animation is memory-mapped file
 #define ANF_STREAMED (1 << 1)
@@ -29,7 +29,7 @@ typedef struct key_frame {
     (1 << 3) // all the frames are keyframes (this is necessary if we want to
              // play the file backwards)
 
-typedef struct anim {
+struct anim  {
     anim* next;
     char name[MAX_PATH_LEN];
     ubyte packer_code;
@@ -57,13 +57,13 @@ typedef struct anim {
     int file_offset; // file offset to start of frame data
     int cache_file_offset;
     ubyte* cache;
-} anim;
+};
 
 // the direction to play the anim (forwards or backwards)
 #define ANIM_DIRECT_FORWARD 0
 #define ANIM_DIRECT_REVERSE 1
 
-typedef struct anim_instance {
+struct anim_instance  {
     anim_instance *next, *prev;
     int x, y; // coordinates anim is played at (top left corner of anim)
     int base_w, base_h; // coordinate scale this anim is played in.
@@ -95,7 +95,7 @@ typedef struct anim_instance {
     int file_offset; // current offset into frame (like data, put offset into
                      // file)
     int loop_count;  // starts at 0, and is incremented each time it loops
-} anim_instance;
+};
 
 int pack_key_frame (
     ubyte* frame, ubyte* save, long size, long max, int compress_type);

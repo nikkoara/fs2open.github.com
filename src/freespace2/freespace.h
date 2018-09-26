@@ -72,11 +72,11 @@ extern int Networking_disabled;
 #define FSB_CAMPAIGN (1 << 3)      // is a campaign mission
 #define FSB_CAMPAIGN_FILE (1 << 4) // is actually a campaign file
 
-typedef struct fs_builtin_mission {
+struct fs_builtin_mission  {
     char filename[MAX_FILENAME_LEN];
     int flags;                        // see FSB_* defines above
     char cd_volume[MAX_FILENAME_LEN]; // cd volume which this needs
-} fs_builtin_mission;
+};
 
 // --------------------------------------------------------------------------------------------------------
 // FREESPACE FUNCTIONS

@@ -46,20 +46,20 @@ typedef std::uint32_t uint;
 typedef unsigned long ulong;
 
 // Stucture to store clipping codes in a word
-typedef struct ccodes {
+struct ccodes  {
     ubyte cc_or, cc_and; // or is low byte, and is high byte
-} ccodes;
+};
 
 struct vertex;
 
-typedef struct vec4 {
+struct vec4  {
     union {
         struct {
             float x, y, z, w;
         } xyzw;
         float a1d[4];
     };
-} vec4;
+};
 
 struct bvec4 {
     bool x;
@@ -69,9 +69,9 @@ struct bvec4 {
 };
 
 // sometimes, you just need some integers
-typedef struct ivec3 {
+struct ivec3  {
     int x, y, z;
-} ivec3;
+};
 
 struct ivec2 {
     int x, y;
@@ -80,24 +80,24 @@ struct ivec2 {
 /** Represents a point in 3d space.
 
 Note: this is a struct, not a class, so no member functions. */
-typedef struct vec3d {
+struct vec3d  {
     union {
         struct {
             float x, y, z;
         } xyz;
         float a1d[3];
     };
-} vec3d;
+};
 
-typedef struct vec2d {
+struct vec2d  {
     float x, y;
-} vec2d;
+};
 
-typedef struct angles {
+struct angles_t  {
     float p, b, h;
-} angles_t;
+};
 
-typedef struct matrix {
+struct matrix  {
     union {
         struct {
             vec3d rvec, uvec, fvec;
@@ -105,9 +105,9 @@ typedef struct matrix {
         float a2d[3][3];
         float a1d[9];
     };
-} matrix;
+};
 
-typedef struct matrix4 {
+struct matrix4  {
     union {
         struct {
             vec4 rvec, uvec, fvec, pos;
@@ -115,11 +115,11 @@ typedef struct matrix4 {
         float a2d[4][4];
         float a1d[16];
     };
-} matrix4;
+};
 
-typedef struct uv_pair {
+struct uv_pair  {
     float u, v;
-} uv_pair;
+};
 
 /** Compares two uv_pairs */
 inline bool operator== (const uv_pair& left, const uv_pair& right) {
@@ -131,14 +131,14 @@ inline bool operator== (const uv_pair& left, const uv_pair& right) {
 Like vec3d but for screens.
 
 Note: this is a struct, not a class, so no member functions. */
-typedef struct screen3d {
+struct screen3d  {
     union {
         struct {
             float x, y, w;
         } xyw;
         float a1d[3];
     };
-} screen3d;
+};
 
 /** Compares two screen3ds */
 inline bool operator== (const screen3d& self, const screen3d& other) {
@@ -150,7 +150,7 @@ inline bool operator== (const screen3d& self, const screen3d& other) {
 /** Used to store rotated points for mines. Has flag to indicate if projected.
 
 Note: this is a struct, not a class, so no memeber functions. */
-typedef struct vertex {
+struct vertex  {
     vec3d world;              // world space position
     screen3d screen;          // screen space position (sw == 1/z)
     uv_pair texture_position; // texture position
@@ -160,14 +160,14 @@ typedef struct vertex {
     ubyte flags; // Projection flags.  Indicates whether it is projected or not
                  // or if projection overflowed.
     ubyte pad[2]; // pad structure to be 4 byte aligned.
-} vertex;
+};
 
-typedef struct effect_vertex {
+struct effect_vertex  {
     vec3d position;
     uv_pair tex_coord;
     float radius;
     ubyte r, g, b, a;
-} effect_vertex;
+};
 
 struct particle_pnt {
     vec3d position;
@@ -192,14 +192,14 @@ struct flag_def_list_new {
 };
 
 // weapon count list (mainly for pilot files)
-typedef struct wep_t {
+struct wep_t  {
     int index;
     int count;
-} wep_t;
+};
 
-typedef struct coord2d {
+struct coord2d  {
     int x, y;
-} coord2d;
+};
 
 #include "osapi/dialogs.h"
 
@@ -339,11 +339,11 @@ int myrand ();
 int rand32 (); // returns a random number between 0 and 0x7fffffff
 
 // lod checker for (modular) table parsing
-typedef struct lod_checker {
+struct lod_checker  {
     char filename[MAX_FILENAME_LEN];
     int num_lods;
     int override;
-} lod_checker;
+};
 
 // Callback Loading function.
 // If you pass a function to this, that function will get called

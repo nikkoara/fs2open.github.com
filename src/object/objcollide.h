@@ -10,7 +10,7 @@ struct CFILE;
 struct mc_info;
 
 // used for ship:ship and ship:debris
-typedef struct collision_info_struct {
+struct collision_info_struct  {
     object* heavy;
     object* light;
     vec3d heavy_collision_cm_pos; // should be zero
@@ -27,7 +27,7 @@ typedef struct collision_info_struct {
     int edge_hit;        // if edge is hit, need to change collision normal
     int submodel_rot_hit; // if collision is against rotating submodel
     bool is_landing;      // SUSHI: Maybe treat current collision as a landing
-} collision_info_struct;
+};
 
 // Collision physics constants
 #define COLLISION_FRICTION_FACTOR 0.0f // Default value if not set in ships.tbl
@@ -42,14 +42,14 @@ typedef struct collision_info_struct {
 //===============================================================================
 
 // Keeps track of pairs of objects for collision detection
-typedef struct obj_pair {
+struct obj_pair  {
     object* a;
     object* b;
     int (*check_collision) (obj_pair* pair);
     int next_check_time; // a timestamp that when elapsed means to check for a
                          // collision
     struct obj_pair* next;
-} obj_pair;
+};
 
 #define COLLISION_OF(a, b) (((a) << 8) | (b))
 

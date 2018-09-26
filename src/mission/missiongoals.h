@@ -43,7 +43,7 @@ extern const char* Goal_type_text (int n);
 #define MGF_NO_MUSIC \
     (1 << 0) // don't play any event music when goal is achieved
 
-typedef struct mission_goal {
+struct mission_goal  {
     char name[NAME_LENGTH]; // used for storing status of goals in player file
     int type;               // primary/secondary/bonus
     int satisfied;          // has this goal been satisfied
@@ -54,7 +54,7 @@ typedef struct mission_goal {
     int score;                   // score for this goal
     int flags;                   // MGF_
     int team;                    // which team is this objective for.
-} mission_goal;
+};
 
 extern mission_goal
     Mission_goals[MAX_GOALS]; // structure for the goals of this mission
@@ -101,7 +101,7 @@ extern int Num_goals;         // number of goals for this mission
     (MLF_FIRST_REPEAT_ONLY | MLF_LAST_REPEAT_ONLY | MLF_FIRST_TRIGGER_ONLY | \
      MLF_LAST_TRIGGER_ONLY)
 
-typedef struct mission_event {
+struct mission_event  {
     char name[NAME_LENGTH]; // used for storing status of events in player file
     int formula;            // index into sexpression array for this formula
     int result;             // result of most recent evaluation of event
@@ -131,7 +131,7 @@ typedef struct mission_event {
     std::vector< std::string > backup_log_buffer;
     int previous_result; // result of previous evaluation of event
 
-} mission_event;
+};
 
 extern int Num_mission_events;
 extern mission_event Mission_events[MAX_MISSION_EVENTS];

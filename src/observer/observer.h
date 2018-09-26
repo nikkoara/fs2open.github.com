@@ -13,12 +13,12 @@ struct matrix;
 
 #define OBS_FLAG_USED (1 << 1)
 
-typedef struct observer {
+struct observer  {
     int objnum;
 
     int target_objnum; // not used as of yet
     int flags;
-} observer;
+};
 
 #define MAX_OBSERVER_OBS 17
 extern observer Observers[MAX_OBSERVER_OBS];

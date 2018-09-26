@@ -39,14 +39,14 @@ struct vec3d;
 #define BEAM_DAMAGE_TIME 170
 
 // uses to define beam behavior ahead of time - needed for multiplayer
-typedef struct beam_info {
+struct beam_info  {
     vec3d dir_a, dir_b;             // direction vectors for beams
     float delta_ang;                // angle between dir_a and dir_b
     ubyte shot_count;               // # of shots
     float shot_aim[MAX_BEAM_SHOTS]; // accuracy. this is a constant multiple of
                                     // radius. anything < 1.0 will guarantee a
                                     // hit
-} beam_info;
+};
 
 #define BFIF_IS_FIGHTER_BEAM (1 << 0)
 #define BFIF_FORCE_FIRING (1 << 1)
@@ -54,7 +54,7 @@ typedef struct beam_info {
 #define BFIF_FLOATING_BEAM (1 << 3)
 
 // pass to beam fire
-typedef struct beam_fire_info {
+struct beam_fire_info  {
     int beam_info_index;          // weapon info index
     object* shooter;              // whos shooting
     vec3d targeting_laser_offset; // offset from the center of the object (for
@@ -76,9 +76,9 @@ typedef struct beam_fire_info {
     int point; // for fighters, which point on the bank it is from
     int bfi_flags;
     char team; // for floating beams, determines which team the beam is on
-} beam_fire_info;
+};
 
-typedef struct fighter_beam_fire_info {
+struct fighter_beam_fire_info  {
     int beam_info_index;          // weapon info index
     object* shooter;              // whos shooting
     vec3d targeting_laser_offset; // offset from the center of the object (for
@@ -97,20 +97,20 @@ typedef struct fighter_beam_fire_info {
     int warmdown_stamp;
     float life_left;
     float life_total;
-} fighter_beam_fire_info;
+};
 
 // max # of collisions we'll allow per frame
 #define MAX_FRAME_COLLISIONS 10
 
 // collision info
-typedef struct beam_collision {
+struct beam_collision  {
     mc_info cinfo;         // collision info
     int c_objnum;          // objnum of the guy we recently collided with
     int c_sig;             // object sig
     int c_stamp;           // when we should next apply damage
     int quadrant;          // shield quadrant this beam hits if any -Bobboau
     int is_exit_collision; // does this occur when the beam is exiting the ship
-} beam_collision;
+};
 
 // beam flag defines
 #define BF_SAFETY \
@@ -123,7 +123,7 @@ typedef struct beam_collision {
 #define BF_FLOATING_BEAM (1 << 5)
 
 // beam struct (the actual weapon/object)
-typedef struct beam {
+struct beam  {
     // low-level data
     int objnum; // our own objnum
     int weapon_info_index;
@@ -189,7 +189,7 @@ typedef struct beam {
     int firingpoint;
 
     float beam_width;
-} beam;
+};
 
 extern beam Beams[MAX_BEAMS]; // all beams
 extern int Beam_count;

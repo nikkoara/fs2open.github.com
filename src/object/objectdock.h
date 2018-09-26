@@ -9,12 +9,12 @@
 class object;
 
 // info for each docked object
-typedef struct dock_instance {
+struct dock_instance  {
     dock_instance* next; // next item in list
 
     int dockpoint_used;  // index into polymodel->docking_bays[]
     object* docked_objp; // object that is docked to me
-} dock_instance;
+};
 
 // class used when a function must be evaluated for all docked objects
 // (it's a class because it has a constructor)

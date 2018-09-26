@@ -9,13 +9,13 @@
 #include "globalincs/pstypes.h"
 #include "gamesnd/gamesnd.h"
 
-typedef struct menu_region {
+struct MENU_REGION {
     int mask;            // mask color for the region
     int key;             // shortcut key for the region
     char text[MAX_CHAR]; // The text associated with this item.
     interface_snd_id
         click_sound; // Id of sound to play when mask area clicked on
-} MENU_REGION;
+};
 
 // These are the actions thare are returned in the action parameter.
 #define SNAZZY_OVER 1    // mouse is over a region

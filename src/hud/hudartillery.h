@@ -16,7 +16,7 @@
 #define SSM_SHAPE_SPHERE 2
 
 // global ssm types
-typedef struct ssm_info {
+struct ssm_info  {
     char name[NAME_LENGTH]; // strike name
     int count;              // # of missiles in this type of strike
     int max_count; // Maximum # of missiles in this type of strike (-1 for no
@@ -35,10 +35,10 @@ typedef struct ssm_info {
     bool send_message;
     gamesnd_id sound_index;
     int shape;
-} ssm_info;
+};
 
 // creation info for the strike (useful for multiplayer)
-typedef struct ssm_firing_info {
+struct ssm_firing_info  {
     std::vector< int > delay_stamp; // timestamps
     std::vector< vec3d > start_pos; // start positions
 
@@ -48,10 +48,10 @@ typedef struct ssm_firing_info {
     class object* target; // target for the strike
     int ssm_team;         // team that fired the ssm.
     float duration;       // how far into the warp effect to fire
-} ssm_firing_info;
+};
 
 // the strike itself
-typedef struct ssm_strike {
+struct ssm_strike  {
     std::vector< int > fireballs; // warpin effect fireballs
     std::vector< bool >
         done_flags; // when we've fired off the individual missiles
@@ -59,7 +59,7 @@ typedef struct ssm_strike {
     // this is the info that controls how the strike behaves (just like for
     // beam weapons)
     ssm_firing_info sinfo;
-} ssm_strike;
+};
 
 extern std::vector< ssm_info > Ssm_info;
 

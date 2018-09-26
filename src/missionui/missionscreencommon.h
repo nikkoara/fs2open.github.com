@@ -162,11 +162,11 @@ extern shader Icon_shaders[NUM_ICON_FRAMES];
 //////////////////////////////////////////////
 // Slots
 //////////////////////////////////////////////
-typedef struct wss_unit {
+struct wss_unit  {
     int ship_class;
     int wep[MAX_SHIP_WEAPONS];
     int wep_count[MAX_SHIP_WEAPONS];
-} wss_unit;
+};
 
 extern wss_unit Wss_slots_teams[MAX_TVT_TEAMS][MAX_WSS_SLOTS];
 extern wss_unit* Wss_slots;
@@ -189,13 +189,13 @@ extern int* Ss_pool;
 //////////////////////////////////////////////
 // Saving loadout
 //////////////////////////////////////////////
-typedef struct loadout_data {
+struct loadout_data  {
     char filename[MAX_FILENAME_LEN];      // mission filename
     char last_modified[DATE_TIME_LENGTH]; // when mission was last modified
     wss_unit unit_data[MAX_WSS_SLOTS];    // ship and weapon data
     int weapon_pool[MAX_WEAPON_TYPES];    // available weapons
     int ship_pool[MAX_SHIP_CLASSES];      // available ships
-} loadout_data;
+};
 
 extern loadout_data Player_loadout;
 

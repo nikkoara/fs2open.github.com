@@ -18,18 +18,18 @@
 #define BACKGROUND_MODEL_FILENAME "spherec.pof"
 
 // starfield list
-typedef struct starfield_list_entry {
+struct starfield_list_entry  {
     char filename[MAX_FILENAME_LEN]; // bitmap filename
     float scale_x, scale_y;          // x and y scale
     int div_x, div_y;                // # of x and y divisions
-    angles ang;                      // angles from FRED
-} starfield_list_entry;
+    angles_t ang;                      // angles from FRED
+};
 
 // backgrounds
-typedef struct background_t {
+struct background_t  {
     std::vector< starfield_list_entry > bitmaps;
     std::vector< starfield_list_entry > suns;
-} background_t;
+};
 
 #define MAX_BACKGROUNDS 2
 

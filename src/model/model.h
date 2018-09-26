@@ -71,10 +71,10 @@ extern const char* Subsystem_types[SUBSYSTEM_MAX];
 // Data specific to a particular instance of a submodel.  This gets
 // stuffed/unstuffed using the model_clear_instance, model_set_instance,
 // model_get_instance functions.
-typedef struct submodel_instance_info {
+struct submodel_instance_info  {
     int blown_off; // If set, this subobject is blown off
-    angles angs;   // The current angle this thing is turned to.
-    angles prev_angs;
+    angles_t angs;   // The current angle this thing is turned to.
+    angles_t prev_angs;
     vec3d pt_on_axis; // in ship RF
     float cur_turn_rate;
     float desired_turn_rate;
@@ -82,38 +82,38 @@ typedef struct submodel_instance_info {
     int axis_set;
     int step_zero_timestamp; // timestamp determines when next step is to begin
                              // (for stepped rotation)
-} submodel_instance_info;
+};
 
-typedef struct submodel_instance {
-    angles angs;
-    angles prev_angs;
+struct submodel_instance  {
+    angles_t angs;
+    angles_t prev_angs;
     vec3d mc_base;
     matrix mc_orient;
     bool collision_checked;
     bool blown_off;
     submodel_instance_info* sii;
-} submodel_instance;
+};
 
 // Data specific to a particular instance of a model.
-typedef struct polymodel_instance {
+struct polymodel_instance  {
     int model_num; // global model num index, same as polymodel->id
     submodel_instance* submodel; // array of submodel instances; mirrors the
                                  // polymodel->submodel array
-} polymodel_instance;
+};
 
 #define MAX_MODEL_SUBSYSTEMS \
     200 // used in ships.cpp (only place?) for local stack variable DTP; bumped
         // to 200 when reading in ships.tbl
 
 // definition of stepped rotation struct
-typedef struct stepped_rotation {
+struct stepped_rotation_t  {
     int num_steps;        // number of steps in complete revolution
     float fraction;       // fraction of time in step spent in accel
     float t_transit;      // time spent moving from one step to next
     float t_pause;        // time at rest between steps
     float max_turn_rate;  // max turn rate going betweens steps
     float max_turn_accel; // max accel going between steps
-} stepped_rotation_t;
+};
 
 struct queued_animation;
 
@@ -222,13 +222,13 @@ public:
     model_subsystem () { reset (); }
 };
 
-typedef struct model_special {
+struct model_special  {
     struct model_special *next, *prev; // for using as a linked list
     int bank; // used for sequencing gun/missile backs. approach/docking points
     int slot; // location for gun or missile in this bank
     vec3d pnt;  // point where this special submodel thingy is at
     vec3d norm; // normal for the special submodel thingy
-} model_special;
+};
 
 // model arc types
 #define MARC_TYPE_NORMAL 0 // standard freespace 1 blue lightning arcs
@@ -236,11 +236,11 @@ typedef struct model_special {
 
 #define MAX_LIVE_DEBRIS 7
 
-typedef struct model_tmap_vert {
+struct model_tmap_vert  {
     ushort vertnum;
     ushort normnum;
     float u, v;
-} model_tmap_vert;
+};
 
 struct bsp_collision_node {
     vec3d min;
@@ -303,7 +303,7 @@ public:
         orientation = vmd_identity_matrix;
 
         memset (&bounding_box, 0, 8 * sizeof (vec3d));
-        memset (&angs, 0, sizeof (angles));
+        memset (&angs, 0, sizeof (angles_t));
         memset (&live_debris, 0, MAX_LIVE_DEBRIS * sizeof (int));
         memset (&details, 0, MAX_MODEL_DETAIL_LEVELS * sizeof (int));
         memset (&arc_pts, 0, MAX_ARC_EFFECTS * 2 * sizeof (vec3d));
@@ -342,7 +342,7 @@ public:
                         // instead of this one
     int i_replace;      // If this is not -1, then this subobject will replace
                         // i_replace when it is damaged
-    angles angs; // The rotation angles of this subobject (Within its own
+    angles_t angs; // The rotation angles of this subobject (Within its own
                  // orientation, NOT relative to parent - KeldorKatarn)
 
     int is_live_debris;  // whether current submodel is a live debris model
@@ -420,15 +420,15 @@ void parse_triggersint (int& n_trig, queued_animation** triggers, char* props);
 #define MP_TYPE_UNUSED 0
 #define MP_TYPE_SUBSYS 1
 
-typedef struct mp_vert {
+struct mp_vert  {
     vec3d pos;    // xyz coordinates of vertex in object's frame of reference
     int nturrets; // number of turrets guarding this vertex
     int* turret_ids; // array of indices into ship_subsys linked list (can't
                      // index using [] though)
     float radius;    // How far the closest obstruction is from this vertex
-} mp_vert;
+};
 
-typedef struct model_path {
+struct model_path  {
     char name[MAX_NAME_LEN]; // name of the subsystem.  Probably displayed on
                              // HUD
     char parent_name[MAX_NAME_LEN]; // parent name of submodel that path is
@@ -443,19 +443,19 @@ typedef struct model_path {
                // For MP_TYPE_UNUSED, this means nothing.
                // For MP_TYPE_SUBSYS, this is the subsystem number this path
                // takes you to.
-} model_path;
+};
 
 // info for gun and missile banks.  Also used for docking points.  There should
 // always only be two slots for each docking bay
 
 #define MAX_SLOTS 25
 
-typedef struct w_bank {
+struct w_bank  {
     int num_slots;
     vec3d pnt[MAX_SLOTS];
     vec3d norm[MAX_SLOTS];
     float radius[MAX_SLOTS];
-} w_bank;
+};
 
 struct glow_point {
     vec3d pnt;
@@ -463,7 +463,7 @@ struct glow_point {
     float radius;
 };
 
-typedef struct thruster_bank {
+struct thruster_bank  {
     int num_points;
     glow_point* points;
 
@@ -473,14 +473,14 @@ typedef struct thruster_bank {
                       // ship_info->subsystems
     int submodel_num; // what submodel number this bank is on; index to
                       // polymodel->submodel/polymodel_instance->submodel
-} thruster_bank;
+};
 
 #define PULSE_SIN 1
 #define PULSE_COS 2
 #define PULSE_TRI 3
 #define PULSE_SHIFTTRI 4
 
-typedef struct glow_point_bank { // glow bank structure -Bobboau
+struct glow_point_bank  { // glow bank structure -Bobboau
     int type;
     int glow_timestamp;
     int on_time;
@@ -493,9 +493,9 @@ typedef struct glow_point_bank { // glow bank structure -Bobboau
     glow_point* points;
     int glow_bitmap;
     int glow_neb_bitmap;
-} glow_point_bank;
+};
 
-typedef struct glow_point_bank_override {
+struct glow_point_bank_override  {
     char name[33];
     int type;
     int on_time;
@@ -530,7 +530,7 @@ typedef struct glow_point_bank_override {
     float rotation_speed;
 
     bool pulse_period_override;
-} glow_point_bank_override;
+};
 
 // defines for docking bay things.  The types are essentially flags since
 // docking bays can probably be used for multiple things in some cases (i.e.
@@ -545,7 +545,7 @@ extern int Num_dock_type_names;
 
 #define MAX_DOCK_SLOTS 2
 
-typedef struct dock_bay {
+struct dock_bay  {
     int num_slots;
     int type_flags; // indicates what this docking bay can be used for (i.e.
                     // cargo/rearm, etc)
@@ -555,7 +555,7 @@ typedef struct dock_bay {
     char name[MAX_NAME_LEN]; // name of this docking location
     vec3d pnt[MAX_DOCK_SLOTS];
     vec3d norm[MAX_DOCK_SLOTS];
-} dock_bay;
+};
 
 // struct that holds the indicies into path information associated with a
 // fighter bay on a capital ship NOTE: Fighter bay paths are identified by the
@@ -564,7 +564,7 @@ typedef struct dock_bay {
 // NOTE: MAX_SHIP_BAY_PATHS cannot be bumped higher than 31 without rewriting
 // the arrival/departure flag logic.
 #define MAX_SHIP_BAY_PATHS 31
-typedef struct ship_bay {
+struct ship_bay_t  {
     int num_paths; // how many paths are associated with the model's fighter
                    // bay
     int path_indexes[MAX_SHIP_BAY_PATHS]; // index into polymodel->paths[]
@@ -573,28 +573,28 @@ typedef struct ship_bay {
                       // for an arrival
     int depart_flags; // bitfield, set to 1 when that path number is reserved
                       // for a departure
-} ship_bay_t;
+};
 
 // three structures now used for representing shields.
 // shield_tri structure stores information concerning each face of the shield.
 // verts indexes into the verts array in the higher level structure
 // neighbors indexes into the tris array in the higher level structure
-typedef struct shield_tri {
+struct shield_tri  {
     int used;
     int verts[3]; // 3 indices into vertex list of the shield.  list found in
                   // shield_info struct
     int neighbors[3]; // indices into array of triangles. neighbor = shares
                       // edge.  list found in shield_info struct
     vec3d norm;       // norm of this triangle
-} shield_tri;
+};
 
 // a list of these shield_vertex structures comprimises the vertex list of the
 // shield. The verts array in the shield_tri structure points to one of these
 // members
-typedef struct shield_vertex {
+struct shield_vertex  {
     vec3d pos;
     float u, v;
-} shield_vertex;
+};
 
 // the high level shield structure.  A ship without any shield has nverts and
 // ntris set to 0. The vertex list and the tris list are used by the shield_tri
@@ -617,16 +617,16 @@ struct shield_info {
 #define BSP_LIGHT_TYPE_WEAPON 1
 #define BSP_LIGHT_TYPE_THRUSTER 2
 
-typedef struct bsp_light {
+struct bsp_light  {
     vec3d pos;
     int type;    // See BSP_LIGHT_TYPE_?? for values
     float value; // How much to light up this light.  0-1.
-} bsp_light;
+};
 
 // model_octant - There are 8 of these per model.  They are a handy way to
 // categorize a lot of model properties to get some easy 8x optimizations for
 // model stuff.
-typedef struct model_octant {
+struct model_octant  {
     vec3d min,
         max; // The bounding box that makes up this octant defined as 2 points.
     int nverts;       // how many vertices are in this octant
@@ -635,27 +635,27 @@ typedef struct model_octant {
     int nshield_tris; // how many shield triangles are in the octant
     shield_tri** shield_tris; // the shield triangles that make up this octant.
                               // A tri could be in multiple octants.
-} model_octant;
+};
 
 #define MAX_EYES 10
 
-typedef struct eye {
+struct eye  {
     int parent; // parent's subobject number
     vec3d pnt;  // the point for the eye
     vec3d norm; // direction the eye faces.  Not used with first eye since
                 // player orient is used
-} eye;
+};
 
-typedef struct cross_section {
+struct cross_section  {
     float z;
     float radius;
-} cross_section;
+};
 
 #define MAX_MODEL_INSIGNIAS 6
 #define MAX_INS_FACE_VECS 3
 #define MAX_INS_VECS 81
 #define MAX_INS_FACES 128
-typedef struct insignia {
+struct insignia  {
     int detail_level;
     int num_faces;
     int faces[MAX_INS_FACES][MAX_INS_FACE_VECS]; // indices into the vecs array
@@ -666,7 +666,7 @@ typedef struct insignia {
     vec3d vecs[MAX_INS_VECS];   // vertex list
     vec3d offset;               // global position offset for this insignia
     vec3d norm[MAX_INS_VECS];   // normal of the insignia-Bobboau
-} insignia;
+};
 
 #define PM_FLAG_ALLOW_TILING (1 << 0) // Allow texture tiling
 #define PM_FLAG_AUTOCEN (1 << 1)      // contains autocentering info
@@ -1058,7 +1058,7 @@ extern int modelstats_num_sortnorms;
 // turret
 extern int model_rotate_gun (
     int model_num, model_subsystem* turret, matrix* orient,
-    angles* base_angles, angles* gun_angles, vec3d* pos, vec3d* dst,
+    angles_t* base_angles, angles_t* gun_angles, vec3d* pos, vec3d* dst,
     int obj_idx, bool reset = false);
 
 // Gets and sets turret rotation matrix
@@ -1216,7 +1216,7 @@ void model_instance_find_obj_dir (
 // This is the interface to model_check_collision.  Rather than passing all
 // these values and returning values in globals, just fill in a temporary
 // variable with the input values and call model_check_collision
-typedef struct mc_info {
+struct mc_info  {
     // Input values
     int model_instance_num;
     int model_num;    // What model to check
@@ -1252,7 +1252,7 @@ typedef struct mc_info {
     bsp_collision_leaf* bsp_leaf;
 
     // flags can be changed for the case of sphere check finds an edge hit
-} mc_info;
+};
 
 inline void mc_info_init (mc_info* mc) {
     mc->model_instance_num = -1;
@@ -1419,7 +1419,7 @@ int model_which_octant (
     vec3d* pnt, int model_num, matrix* model_orient, vec3d* model_pos,
     model_octant** oct);
 
-typedef struct mst_info {
+struct mst_info  {
     int primary_bitmap;
     int primary_glow_bitmap;
     int secondary_glow_bitmap;
@@ -1448,7 +1448,7 @@ typedef struct mst_info {
           tertiary_glow_rad_factor (1.0f), glow_length_factor (1.0f),
           distortion_rad_factor (1.0f), distortion_length_factor (1.0f),
           draw_distortion (true) {}
-} mst_info;
+};
 
 // scale the engines thrusters by this much
 // Only enabled if MR_SHOW_THRUSTERS is on

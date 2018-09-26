@@ -104,11 +104,11 @@ extern const char* Object_type_names[MAX_OBJECT_TYPES];
 //    ... Reducing shields, etc
 // }
 
-typedef struct obj_flag_name {
+struct obj_flag_name  {
     Object::Object_Flags flag;
     char flag_name[TOKEN_LENGTH];
     int flag_list;
-} obj_flag_name;
+};
 
 #define MAX_OBJECT_FLAG_NAMES 10
 extern obj_flag_name Object_flag_names[];
@@ -187,10 +187,10 @@ struct object_h {
 };
 
 // object backup struct used by Fred.
-typedef struct object_orient_pos {
+struct object_orient_pos  {
     vec3d pos;
     matrix orient;
-} object_orient_pos;
+};
 
 #ifdef OBJECT_CHECK
 class checkobject {

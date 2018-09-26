@@ -16,15 +16,15 @@
 #define DEBUG_BOLT 0
 
 // lightning nodes
-typedef struct l_node {
+struct l_node  {
     vec3d pos;        // world position
     l_node* links[3]; // 3 links for lightning children
 
     l_node *next, *prev; // for used and free-lists only
-} l_node;
+};
 
 // lightning bolts
-typedef struct l_bolt {
+struct l_bolt  {
     l_node* head;      // head of the lightning bolt
     int bolt_life;     // remaining life timestamp
     ubyte used;        // used or not
@@ -36,16 +36,16 @@ typedef struct l_bolt {
     int delay;        // delay stamp
     int strikes_left; // #of strikes left
     float width;
-} l_bolt;
+};
 
 // one cross-section of a lightning bolt
-typedef struct l_section {
+struct l_section  {
     vertex vex[3];
     vertex glow_vex[2];
-} l_section;
+};
 
 // bolt_type - see lightning.tbl for explanations of these values
-typedef struct bolt_type {
+struct bolt_type  {
     char name[NAME_LENGTH];
 
     float b_scale;
@@ -65,10 +65,10 @@ typedef struct bolt_type {
     int glow;
 
     float b_bright;
-} bolt_type;
+};
 
 // storm_type - see lightning.tbl for explanations of these values
-typedef struct storm_type {
+struct storm_type  {
     char name[NAME_LENGTH];
     ubyte num_bolt_types; // how many different bolt types you'll see in the
                           // nebula
@@ -79,7 +79,7 @@ typedef struct storm_type {
     int min_count, max_count; // # of bolts spewed
 
     storm_type () : num_bolt_types (0) {}
-} storm_type;
+};
 
 extern std::vector< storm_type > Storm_types;
 extern std::vector< bolt_type > Bolt_types;

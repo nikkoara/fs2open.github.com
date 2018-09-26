@@ -23,7 +23,7 @@ static int num_tris = 0;
 static int tri[MAX_TRIS][3];
 
 static int Nebula_loaded = 0;
-static angles Nebula_pbh;
+static angles_t Nebula_pbh;
 static matrix Nebula_orient;
 
 int Nebula_pitch;
@@ -117,7 +117,7 @@ int load_nebula_sub (char* filename) {
 }
 
 void nebula_init (const char* filename, int pitch, int bank, int heading) {
-    angles a;
+    angles_t a;
 
     a.p = fl_radians (pitch);
     a.b = fl_radians (bank);
@@ -125,7 +125,7 @@ void nebula_init (const char* filename, int pitch, int bank, int heading) {
     nebula_init (filename, &a);
 }
 
-void nebula_init (const char* filename, angles* pbh) {
+void nebula_init (const char* filename, angles_t* pbh) {
     if (Nebula_loaded) { nebula_close (); }
 
     if (load_nebula_sub (cf_add_ext (filename, NOX (".neb")))) {

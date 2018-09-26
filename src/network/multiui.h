@@ -25,7 +25,7 @@ void multi_common_set_text (const char* str, int auto_scroll = 0);
 #define MULTI_JOIN_SERVER_TIMEOUT_LOCAL \
     (MULTI_JOIN_REFRESH_TIME_LOCAL + (MULTI_JOIN_REFRESH_TIME_LOCAL / 2))
 
-typedef struct multi_create_info {
+struct multi_create_info  {
     char filename[MAX_FILENAME_LEN]; // filename of the mission
     char name[NAME_LENGTH];          // name of the mission
     int flags;    // flags to tell what type of multiplayer game (coop, team v.
@@ -40,7 +40,7 @@ typedef struct multi_create_info {
         filename[0] = 0;
         name[0] = 0;
     }
-} multi_create_info;
+};
 
 // load all common icons
 #define MULTI_NUM_COMMON_ICONS 12

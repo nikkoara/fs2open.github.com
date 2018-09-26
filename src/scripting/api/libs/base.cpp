@@ -65,7 +65,7 @@ ADE_FUNC (
             L, "o", l_Matrix.Set (matrix_h (&vmd_identity_matrix)));
     }
     else if (numargs == 3) {
-        angles a = { m.a1d[0], m.a1d[1], m.a1d[2] };
+        angles_t a = { m.a1d[0], m.a1d[1], m.a1d[2] };
         return ade_set_args (L, "o", l_Matrix.Set (matrix_h (&a)));
     }
     else if (numargs == 9) {

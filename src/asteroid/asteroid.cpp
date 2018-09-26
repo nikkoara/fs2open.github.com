@@ -218,7 +218,7 @@ object* asteroid_create (
     asteroid* asp;
     asteroid_info* asip;
     vec3d pos, delta_bound;
-    angles angs;
+    angles_t angs;
     float radius;
     ushort signature;
     int rand_base;
@@ -1080,7 +1080,7 @@ int asteroid_check_collision (
 
                     // set angles for last frame (need to set to prev to get
                     // p0)
-                    angles copy_angles =
+                    angles_t copy_angles =
                         pmi->submodel[submodel_vector[i]].angs;
 
                     // find the start and end positions of the sphere in

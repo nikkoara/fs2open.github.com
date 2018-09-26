@@ -87,16 +87,16 @@
     uint 	dwGBitMask;
     uint 	dwBBitMask;
     uint	dwRGBAlphaBitMask;
-} DDPIXELFORMAT;
+};
 
 typedef struct _DDSCAPS2
 {
     uint		dwCaps1;
     uint		dwCaps2;
     uint		Reserved[2];
-} DDSCAPS2;*/
+};*/
 
-typedef struct _DDSURFACEDESC2 {
+struct DDSURFACEDESC2  {
     uint dwSize;   // size of the DDSURFACEDESC structure
     uint dwFlags;  // determines what fields are valid
     uint dwHeight; // height of surface to be created
@@ -126,7 +126,7 @@ typedef struct _DDSURFACEDESC2 {
     //	DDPIXELFORMAT	ddpfPixelFormat;
     //	DDSCAPS2		ddsCaps;			// direct draw surface capabilities
     uint dwReserved2;
-} DDSURFACEDESC2;
+};
 #pragma pack()
 
 #define DDS_OFFSET \

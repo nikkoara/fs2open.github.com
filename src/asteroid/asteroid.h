@@ -29,19 +29,19 @@ class model_draw_list;
 #define MAX_ASTEROID_DETAIL_LEVELS 5
 
 // Data structure to track the active asteroids
-typedef struct asteroid_obj {
+struct asteroid_obj  {
     asteroid_obj *next, *prev;
     int flags, objnum;
-} asteroid_obj;
+};
 extern asteroid_obj Asteroid_obj_list;
 
 // Data structure for determining a type and amount of other asteroids an
 // asteroid will split to when destroyed.
-typedef struct asteroid_split_info {
+struct asteroid_split_info  {
     int asteroid_type;
     int min;
     int max;
-} asteroid_split_info;
+};
 
 class asteroid_info {
 public:
@@ -86,7 +86,7 @@ public:
 
 #define AF_USED (1 << 0) // Set means used.
 
-typedef struct asteroid {
+struct asteroid  {
     int flags;
     int objnum;
     int model_instance_num;
@@ -103,7 +103,7 @@ typedef struct asteroid {
     vec3d death_hit_pos; // hit pos that caused death
     int target_objnum;   // Yes, hah!  Asteroids can have targets.  See
                          // asteroid_aim_at_target().
-} asteroid;
+};
 
 // TYPEDEF FOR DEBRIS TYPE
 typedef enum { DG_ASTEROID, DG_SHIP } debris_genre_t;
@@ -111,7 +111,7 @@ typedef enum { DG_ASTEROID, DG_SHIP } debris_genre_t;
 // TYPEDEF FOR FIELD TYPE
 typedef enum { FT_ACTIVE, FT_PASSIVE } field_type_t;
 
-typedef struct asteroid_field {
+struct asteroid_field  {
     vec3d min_bound; // Minimum range of field.
     vec3d max_bound; // Maximum range of field.
     float bound_rad;
@@ -126,7 +126,7 @@ typedef struct asteroid_field {
         debris_genre; // type of debris (ship or asteroid)  [generic type]
     int field_debris_type[MAX_ACTIVE_DEBRIS_TYPES]; // one of the debris type
                                                     // defines above
-} asteroid_field;
+};
 
 extern std::vector< asteroid_info > Asteroid_info;
 extern asteroid Asteroids[MAX_ASTEROIDS];

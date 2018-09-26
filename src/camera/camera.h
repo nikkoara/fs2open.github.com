@@ -79,7 +79,7 @@ public:
         float in_rotation_acceleration_time = 0.0f,
         float in_rotation_deceleration_time = 0.0f);
     void set_rotation (
-        angles* in_angles, float in_rotation_time = 0.0f,
+        angles_t* in_angles, float in_rotation_time = 0.0f,
         float in_rotation_acceleration_time = 0.0f,
         float in_rotation_deceleration_time = 0.0f);
     void set_rotation_facing (
@@ -87,7 +87,7 @@ public:
         float in_rotation_acceleration_time = 0.0f,
         float in_rotation_deceleration_time = 0.0f);
     void set_rotation_velocity (
-        angles* in_rotation_rate, float in_acceleration_time = 0.0f);
+        angles_t* in_rotation_rate, float in_acceleration_time = 0.0f);
 
     // Get
     char* get_name () { return name; }

@@ -16,12 +16,12 @@ class ship;
 // will have duplicate avi's for different messages.  Seperate list for wave
 // files since some messages might not have wave file information.
 
-typedef struct message_extra {
+struct message_extra  {
     char name[MAX_FILENAME_LEN];
     sound_load_id num;
     generic_anim anim_data;
     bool exists;
-} message_extra;
+};
 
 extern std::vector< message_extra > Message_avis;
 extern std::vector< message_extra > Message_waves;
@@ -49,12 +49,12 @@ extern std::vector< message_extra > Message_waves;
 // defines for message id's used in FreeSpace code.  Callers to
 // message_send_to_player() should probably use these defines.
 
-typedef struct builtin_message {
+struct builtin_message  {
     const char* name;
     int occurrence_chance;
     int max_count;
     int min_delay;
-} builtin_message;
+};
 
 extern std::vector< std::string > Builtin_moods;
 extern int Current_mission_mood;
@@ -114,7 +114,7 @@ extern builtin_message Builtin_messages[];
 #define MESSAGE_REARM_PRIMARIES 43
 #define MESSAGE_PRIMARIES_LOW 44
 
-typedef struct MissionMessage {
+struct MissionMessage  {
     char name[NAME_LENGTH];       // used to identify this message
     char message[MESSAGE_LENGTH]; // actual message
     int persona_index;            // which persona says this message
@@ -136,11 +136,11 @@ typedef struct MissionMessage {
         char* name;
     } wave_info;
 
-} MMessage;
+};
 
-extern std::vector< MMessage > Messages;
+extern std::vector< MissionMessage > Messages;
 
-typedef struct pmessage {
+struct pmessage  {
     // anim_instance *anim;		// handle of anim currently playing
     generic_anim* anim_data; // animation data to be used by the talking head
                              // HUD gauge handler
@@ -152,7 +152,7 @@ typedef struct pmessage {
     int shipnum; // shipnum of ship sending this message,  -1 if from Terran
                  // command
     int builtin_type; // if a builtin message, type of the message
-} pmessage;
+};
 
 extern pmessage Playing_messages[2];
 
@@ -178,12 +178,12 @@ extern int Message_shipnum; // used to display info on hud when message is sent
 #define PERSONA_FLAG_VASUDAN (1 << 30)
 #define PERSONA_FLAG_USED (1 << 31)
 
-typedef struct persona_s {
+struct Persona {
     char name[NAME_LENGTH];
     int flags;
     int species;
     bool substitute_missing_messages;
-} Persona;
+};
 
 extern Persona* Personas;
 extern int Num_personas;

@@ -12,7 +12,7 @@
 class object;
 struct cockpit_display;
 
-typedef struct hud_anim {
+struct hud_anim  {
     char filename[MAX_FILENAME_LEN];
     int first_frame;  // the bitmap id for the first frame in the animation...
                       // note that all bitmap id's following this frame are
@@ -23,35 +23,35 @@ typedef struct hud_anim {
                       // animation fps)
     float time_elapsed; // time that has elapsed (in seconds) since animation
                         // started playing
-} hud_anim;
+};
 
-typedef struct hud_frames {
+struct hud_frames  {
     int first_frame;
     int num_frames;
-} hud_frames;
+};
 
 // Objective display
-typedef struct objective_display_info {
+struct objective_display_info  {
     int display_timer;
     int goal_type;
     int goal_status;
     int goal_ntotal;
     int goal_nresolved;
 
-} objective_display_info;
+};
 
 // used to track how player subsystems are getting damaged
-typedef struct hud_subsys_info {
+struct hud_subsys_info  {
     float last_str;
     int flash_duration_timestamp;
-} hud_subsys_info;
+};
 
 // used for the display of damaged subsystems
-typedef struct hud_subsys_damage {
+struct hud_subsys_damage  {
     int str;
     int type;
     char* name;
-} hud_subsys_damage;
+};
 
 extern int HUD_draw;
 extern int HUD_contrast;

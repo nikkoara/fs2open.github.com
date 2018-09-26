@@ -1773,7 +1773,7 @@ ship_info::ship_info () {
 
     shield_icon_index = 255; // stored as ubyte
     icon_filename[0] = '\0';
-    memset (&model_icon_angles, 0, sizeof (angles));
+    memset (&model_icon_angles, 0, sizeof (angles_t));
     anim_filename[0] = '\0';
     overhead_filename[0] = '\0';
 
@@ -3976,7 +3976,7 @@ static int parse_ship_values (
         char str[NAME_LENGTH];
         stuff_string (str, F_NAME, NAME_LENGTH);
 
-        angles model_icon_angles = { 0.0f, 0.0f, 0.0f };
+        angles_t model_icon_angles = { 0.0f, 0.0f, 0.0f };
 
         if (!strcasecmp (str, "top")) { model_icon_angles.p = -PI_2; }
         else if (!strcasecmp (str, "bottom")) {
@@ -7473,9 +7473,9 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
 /**
  * Modify the matrix orient by the slew angles a.
  */
-void compute_slew_matrix (matrix* orient, angles* a) {
+void compute_slew_matrix (matrix* orient, angles_t* a) {
     matrix tmp, tmp2;
-    angles t1, t2;
+    angles_t t1, t2;
 
     t1 = t2 = *a;
     t1.h = 0.0f;

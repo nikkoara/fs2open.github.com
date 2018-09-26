@@ -158,7 +158,7 @@ void triggered_rotation::start (queued_animation* q) {
     end_time = q->end_time;
 }
 
-void triggered_rotation::apply_trigger_angles (angles* submodel_angles) {
+void triggered_rotation::apply_trigger_angles (angles_t* submodel_angles) {
     // Vasudan Admiral - And now actually APPLY the angle data to the
     // subobjects themselves!
     submodel_angles->p = current_ang.xyz.x;

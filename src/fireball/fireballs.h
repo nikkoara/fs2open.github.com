@@ -37,18 +37,18 @@ extern int fireball_used[MAX_FIREBALL_TYPES];
 extern int Num_fireball_types;
 
 // all this moved here by Goober5000 because it makes more sense in the H file
-typedef struct fireball_lod {
+struct fireball_lod  {
     char filename[MAX_FILENAME_LEN];
     int bitmap_id;
     int num_frames;
     int fps;
-} fireball_lod;
+};
 
-typedef struct fireball_info {
+struct fireball_info  {
     int lod_count;
     float exp_color[3];
     fireball_lod lod[4];
-} fireball_info;
+};
 
 // flag values for fireball struct flags member
 #define FBF_WARP_CLOSE_SOUND_PLAYED (1 << 0)
@@ -57,7 +57,7 @@ typedef struct fireball_info {
 #define FBF_WARP_3D (1 << 3)       // Goober5000
 #define FBF_WARP_VIA_SEXP (1 << 4) // Goober5000
 
-typedef struct fireball {
+struct fireball  {
     int objnum;              // If -1 this object is unused
     int fireball_info_index; // Index into Fireball_info array
     int fireball_render_type;
@@ -70,7 +70,7 @@ typedef struct fireball {
     float total_time;                 // total lifetime of animation in seconds
     gamesnd_id warp_open_sound_index; // for warp-effect - Goober5000
     gamesnd_id warp_close_sound_index; // for warp-effect - Goober5000
-} fireball;
+};
 // end move
 
 void fireball_init ();

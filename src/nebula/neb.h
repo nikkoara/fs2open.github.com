@@ -49,18 +49,18 @@ extern char Neb2_texture_name[MAX_FILENAME_LEN];
 extern int Neb2_slices;
 
 // nebula poofs
-typedef struct cube_poof {
+struct cube_poof  {
     vec3d pt;        // point in space
     int bmap;        // bitmap in space
     float rot;       // rotation angle
     float rot_speed; // rotation speed
     float flash;     // lightning flash
-} cube_poof;
+};
 #define MAX_CPTS 5 // should always be <= slices
 extern cube_poof Neb2_cubes[MAX_CPTS][MAX_CPTS][MAX_CPTS];
 
 // nebula detail level
-typedef struct neb2_detail {
+struct neb2_detail  {
     float max_alpha_glide; // max alpha for this detail level in Glide
     float max_alpha_d3d;   // max alpha for this detail level in D3d
     float break_alpha;     // break alpha (below which, poofs don't draw). this
@@ -72,7 +72,7 @@ typedef struct neb2_detail {
     float cube_outer;       // outer radius of the player pood cube
     float prad;             // radius of the poofs
     float wj, hj, dj;       // width, height, depth jittering. best left at 1.0
-} neb2_detail;
+};
 
 // --------------------------------------------------------------------------------------------------------
 // NEBULA FUNCTIONS

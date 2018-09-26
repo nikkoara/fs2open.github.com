@@ -98,9 +98,9 @@ extern matrix vmd_identity_matrix;
         (v)->xyz.z = -(v)->xyz.z; \
     } while (0);
 
-typedef struct plane {
+struct plane  {
     float A, B, C, D;
-} plane;
+};
 
 // Functions in library
 
@@ -267,7 +267,7 @@ float vm_vec_delta_ang_norm (
     const vec3d* v0, const vec3d* v1, const vec3d* fvec);
 
 // computes a matrix from a set of three angles.  returns ptr to matrix
-matrix* vm_angles_2_matrix (matrix* m, const angles* a);
+matrix* vm_angles_2_matrix (matrix* m, const angles_t* a);
 
 //	Computes a matrix from a single angle.
 //	angle_index = 0,1,2 for p,b,h
@@ -350,11 +350,11 @@ matrix*
 vm_matrix_x_matrix (matrix* dest, const matrix* src0, const matrix* src1);
 
 // extract angles from a matrix
-angles* vm_extract_angles_matrix (angles* a, const matrix* m);
-angles* vm_extract_angles_matrix_alternate (angles* a, const matrix* m);
+angles_t* vm_extract_angles_matrix (angles_t* a, const matrix* m);
+angles_t* vm_extract_angles_matrix_alternate (angles_t* a, const matrix* m);
 
 // extract heading and pitch from a vector, assuming bank==0
-angles* vm_extract_angles_vector (angles* a, const vec3d* v);
+angles_t* vm_extract_angles_vector (angles_t* a, const vec3d* v);
 
 // make sure matrix is orthogonal
 void vm_orthogonalize_matrix (matrix* m_src);
@@ -366,7 +366,7 @@ void vm_fix_matrix (matrix* m);
 
 // Rotates the orient matrix by the angles in tangles and then
 // makes sure that the matrix is orthogonal.
-void vm_rotate_matrix_by_angles (matrix* orient, const angles* tangles);
+void vm_rotate_matrix_by_angles (matrix* orient, const angles_t* tangles);
 
 // compute the distance from a point to a plane.  takes the normalized normal
 // of the plane (ebx), a point on the plane (edi), and the point to check

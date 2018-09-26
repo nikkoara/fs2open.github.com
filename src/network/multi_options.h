@@ -22,7 +22,7 @@ struct net_player;
 #define STD_PASSWD_LEN 16
 #define STD_NAME_LEN 32
 #define MULTI_OPTIONS_STRING_LEN 256
-typedef struct multi_global_options {
+struct multi_global_options  {
     // common options
     int protocol; // selected network protocol
     ushort port;  // port we're running on - for allowing multiple servers on
@@ -92,7 +92,7 @@ typedef struct multi_global_options {
         webuiRootDirectory = "";
     }
 
-} multi_global_options;
+};
 
 extern multi_global_options Multi_options_g;
 
@@ -110,11 +110,11 @@ extern multi_global_options Multi_options_g;
 
 // BE AWARE : any changes made to this structure will mess with the player
 // file. it will have to be upped!!!!
-typedef struct multi_local_options {
+struct multi_local_options  {
     int flags;            // misc player options
     int obj_update_level; // one off the flags above indicating how often to
                           // refresh objects
-} multi_local_options;
+};
 
 // server options - maintained on the server _and_ clients
 #define MSO_SQUAD_RANK 0   // only highest ranking players can message
@@ -139,7 +139,7 @@ typedef struct multi_local_options {
 
 // BE AWARE : any changes made to this structure will mess with the player
 // file. it will have to be upped!!!!
-typedef struct multi_server_options {
+struct multi_server_options  {
     // misc settings and flags
     ubyte squad_set;   // see MSO_SQUAD_*
     ubyte endgame_set; // see MSO_END_*
@@ -164,7 +164,7 @@ typedef struct multi_server_options {
 
     // kill limit
     int kill_limit; // kill limit for a furball mission
-} multi_server_options;
+};
 
 // ----------------------------------------------------------------------------------
 // MULTI OPTIONS FUNCTIONS

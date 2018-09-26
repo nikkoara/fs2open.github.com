@@ -3699,7 +3699,7 @@ int multi_pack_unpack_orient (int write, ubyte* data, matrix* orient) {
     vec3d rot_axis;
     float theta;
     int a, b, c, d;
-    angles ang;
+    angles_t ang;
     ubyte flag = 0x00;
 
 #define D_SCALE 32768.0f

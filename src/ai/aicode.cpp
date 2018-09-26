@@ -14146,7 +14146,7 @@ int ai_acquire_emerge_path (
 
     polymodel* pm =
         model_get (Ship_info[parent_shipp->ship_info_index].model_num);
-    ship_bay* bay = pm->ship_bay;
+    ship_bay_t* bay = pm->ship_bay;
 
     if (bay == NULL) {
         WarningEx (
@@ -14340,7 +14340,7 @@ int ai_find_closest_depart_path (
     float dist, min_dist, min_free_dist;
     vec3d* source;
     model_path* mp;
-    ship_bay* bay;
+    ship_bay_t* bay;
 
     bay = pm->ship_bay;
 
@@ -14414,7 +14414,7 @@ int ai_acquire_depart_path (
     object* parent_objp = &Objects[parent_objnum];
     polymodel* pm = model_get (
         Ship_info[Ships[parent_objp->instance].ship_info_index].model_num);
-    ship_bay* bay = pm->ship_bay;
+    ship_bay_t* bay = pm->ship_bay;
 
     if (bay == NULL) return -1;
     if (bay->num_paths <= 0) return -1;
@@ -14498,7 +14498,7 @@ void ai_bay_depart () {
 
         // Volition bay code
         polymodel* pm;
-        ship_bay* bay;
+        ship_bay_t* bay;
 
         pm = model_get (Ship_info[Ships[Objects[aip->goal_objnum].instance]
                                       .ship_info_index]

@@ -22,7 +22,7 @@ extern bool Scale_retail_gauges;
 extern int Force_scaling_above_res_global[2];
 extern int Hud_font;
 
-typedef struct gauge_settings {
+struct gauge_settings  {
     int base_res[2];
     int font_num;
     bool scale_gauge;
@@ -53,7 +53,7 @@ typedef struct gauge_settings {
         coords[0] = 0;
         coords[1] = 0;
     }
-} gauge_settings;
+};
 
 // Functions
 int hud_get_gauge_index (char* name);

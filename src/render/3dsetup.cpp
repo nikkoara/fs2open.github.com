@@ -152,7 +152,7 @@ void g3_set_view_matrix (
  * Set view from x,y,z & p,b,h, zoom.  Must call one of g3_set_view_*()
  */
 void g3_set_view_angles (
-    const vec3d* view_pos, const angles* view_orient, float zoom) {
+    const vec3d* view_pos, const angles_t* view_orient, float zoom) {
     matrix tmp;
 
     Assert (G3_count == 1);
@@ -278,7 +278,7 @@ void g3_start_instance_matrix (const matrix4* transform, bool set_api) {
  *
  * If angles==NULL, don't modify matrix.  This will be like doing an offset
  */
-void g3_start_instance_angles (const vec3d* pos, const angles* orient) {
+void g3_start_instance_angles (const vec3d* pos, const angles_t* orient) {
     matrix tm;
 
     Assert (G3_count == 1);

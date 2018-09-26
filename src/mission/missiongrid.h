@@ -9,7 +9,7 @@
 #define MAX_GRIDLINE_POINTS 201
 #define L_MAX_LINES 128
 
-typedef struct grid {
+struct grid  {
     int nrows, ncols;
     vec3d center;
     matrix gmatrix;
@@ -27,11 +27,11 @@ typedef struct grid {
     vec3d gpoints6[MAX_GRIDLINE_POINTS];
     vec3d gpoints7[MAX_GRIDLINE_POINTS];
     vec3d gpoints8[MAX_GRIDLINE_POINTS];
-} grid;
+};
 
-typedef struct tline {
+struct tline  {
     int istart, iend, color;
-} tline;
+};
 
 extern grid Global_grid;
 extern grid* The_grid;

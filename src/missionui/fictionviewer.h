@@ -9,7 +9,7 @@
 
 // since we may now have multiple possible fiction stages, activated by a
 // formula
-typedef struct fiction_viewer_stage {
+struct fiction_viewer_stage  {
     char story_filename[MAX_FILENAME_LEN];
     char font_filename[MAX_FILENAME_LEN];
     char voice_filename[MAX_FILENAME_LEN];
@@ -18,7 +18,7 @@ typedef struct fiction_viewer_stage {
     char background[GR_NUM_RESOLUTIONS][MAX_FILENAME_LEN];
 
     int formula;
-} fiction_viewer_stage;
+};
 
 extern std::vector< fiction_viewer_stage > Fiction_viewer_stages;
 

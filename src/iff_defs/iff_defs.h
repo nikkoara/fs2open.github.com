@@ -29,7 +29,7 @@ class object;
 #define MAX_IFF_FLAGS 5
 
 // Goober5000
-typedef struct iff_info {
+struct iff_info  {
     // required stuff
     char iff_name[NAME_LENGTH];
     int color_index; // treat this as private and use iff_get_color or
@@ -52,7 +52,7 @@ typedef struct iff_info {
     // used internally, not parsed
     int ai_rearm_timestamp;
 
-} iff_info;
+};
 
 extern int Num_iffs;
 extern iff_info Iff_info[MAX_IFFS];

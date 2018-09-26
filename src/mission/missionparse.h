@@ -69,7 +69,7 @@ struct p_dock_instance;
     (The_mission.game_type & MISSION_TYPE_MULTI_DOGFIGHT)
 
 // Goober5000
-typedef struct support_ship_info {
+struct support_ship_info  {
     int arrival_location;        // arrival location
     int arrival_anchor;          // arrival anchor
     int departure_location;      // departure location
@@ -83,7 +83,7 @@ typedef struct support_ship_info {
     int tally;                   // number of support ships so far
     int support_available_for_species; // whether support is available for a
                                        // given species (this is a bitfield)
-} support_ship_info;
+};
 
 // movie type defines
 #define MOVIE_PRE_FICTION 0
@@ -94,13 +94,13 @@ typedef struct support_ship_info {
 #define MOVIE_END_CAMPAIGN 5
 
 // defines a mission cutscene.
-typedef struct mission_cutscene {
+struct mission_cutscene  {
     int type;
     char filename[MAX_FILENAME_LEN];
     int formula;
-} mission_cutscene;
+};
 
-typedef struct mission {
+struct mission  {
     char name[NAME_LENGTH];
     char author[NAME_LENGTH];
     float version;
@@ -187,7 +187,7 @@ typedef struct mission {
     }
 
     mission () { Reset (); }
-} mission;
+};
 
 // cargo defines
 // NOTE: MAX_CARGO MUST REMAIN <= 64 (CARGO_NO_DEPLETE) for NO_DEPLETE to work.
@@ -236,11 +236,11 @@ extern int Mission_callsign_count;
 
 // path restrictions
 #define MAX_PATH_RESTRICTIONS 10
-typedef struct path_restriction_t {
+struct path_restriction_t  {
     int num_paths;
     int cached_mask;
     char path_names[MAX_SHIP_BAY_PATHS][MAX_NAME_LEN];
-} path_restriction_t;
+};
 
 extern const char* Ship_class_names[MAX_SHIP_CLASSES];
 extern const char* Ai_behavior_names[MAX_AI_BEHAVIORS];
@@ -289,7 +289,7 @@ extern int Current_file_length;
 // Squadron Default Name
 #define NO_SQUAD "<none>"
 
-typedef struct subsys_status {
+struct subsys_status  {
     char name[NAME_LENGTH];
     float percent; // percent damaged
     int primary_banks[MAX_SHIP_PRIMARY_BANKS];
@@ -298,22 +298,22 @@ typedef struct subsys_status {
     int secondary_ammo[MAX_SHIP_SECONDARY_BANKS];
     int ai_class;
     int subsys_cargo_name;
-} subsys_status;
+};
 
-typedef struct texture_replace {
+struct texture_replace  {
     char ship_name[NAME_LENGTH];
     char old_texture[MAX_FILENAME_LEN];
     char new_texture[MAX_FILENAME_LEN];
     int new_texture_id;
-} texture_replace;
+};
 
 extern std::vector< texture_replace > Fred_texture_replacements;
 
-typedef struct alt_class {
+struct alt_class  {
     int ship_class;
     int variable_index; // if set allows the class to be set by a variable
     bool default_to_this_class;
-} alt_class;
+};
 
 #define MAX_OBJECT_STATUS 10
 
@@ -434,7 +434,7 @@ extern std::vector< p_object > Parse_objects;
 extern p_object Support_ship_pobj, *Arriving_support_ship;
 extern p_object Ship_arrival_list;
 
-typedef struct {
+struct team_data {
     // ships
     int default_ship; // default ship type for player start point (recommended
                       // choice)
@@ -452,7 +452,7 @@ typedef struct {
     char weaponry_pool_variable[MAX_WEAPON_TYPES][TOKEN_LENGTH];
     char weaponry_amount_variable[MAX_WEAPON_TYPES][TOKEN_LENGTH];
     bool weapon_required[MAX_WEAPON_TYPES];
-} team_data;
+};
 
 #define MAX_P_WINGS 16
 #define MAX_SHIP_LIST 16

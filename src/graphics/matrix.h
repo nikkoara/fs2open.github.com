@@ -14,7 +14,7 @@ extern matrix4 gr_env_texture_matrix;
 
 void gr_start_instance_matrix (const vec3d* offset, const matrix* rotation);
 void gr_start_angles_instance_matrix (
-    const vec3d* pos, const angles* rotation);
+    const vec3d* pos, const angles_t* rotation);
 void gr_end_instance_matrix ();
 
 void gr_set_proj_matrix (float fov, float aspect, float z_near, float z_far);

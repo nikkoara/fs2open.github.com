@@ -6,20 +6,20 @@
 #include "globalincs/pstypes.h"
 
 namespace font {
-typedef struct font_char {
+struct font_char  {
     int spacing;
     int byte_width;
     int offset;
     short kerning_entry;
     short user_data;
-} font_char;
+};
 
-typedef struct font_kernpair {
+struct font_kernpair  {
     char c1, c2;
     signed char offset;
-} font_kernpair;
+};
 
-typedef struct font {
+struct font  {
     char filename[MAX_FILENAME_LEN];
     int id;      //!< Should be 'VFNT'
     int version; //!< font version
@@ -44,7 +44,7 @@ typedef struct font {
 
     font ();
     ~font ();
-} font_data;
+};
 } // namespace font
 
 #endif // FONT_INTERNAL_H

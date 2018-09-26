@@ -1256,7 +1256,7 @@ void model_render_children_buffers (
     // Get submodel rotation data and use submodel orientation matrix
     // to put together a matrix describing the final orientation of
     // the submodel relative to its parent
-    angles ang = model->angs;
+    angles_t ang = model->angs;
 
     if (smi != NULL) { ang = smi->angs; }
 
@@ -2570,7 +2570,7 @@ void model_render_debug_children (
     // Get submodel rotation data and use submodel orientation matrix
     // to put together a matrix describing the final orientation of
     // the submodel relative to its parent
-    angles ang = model->angs;
+    angles_t ang = model->angs;
 
     // Add barrel rotation if needed
     if (model->gun_rotation) {

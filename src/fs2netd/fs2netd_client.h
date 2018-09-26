@@ -14,7 +14,7 @@ extern char Multi_fs_tracker_channel[];
 // channel to use when polling the tracker for games
 extern char Multi_fs_tracker_filter[];
 
-typedef struct tracker_game_data {
+struct tracker_game_data  {
     char name[MAX_GAMENAME_LEN + 1];
     char mission_name[MAX_GAMENAME_LEN + 1];
     char title[NAME_LENGTH + 1];
@@ -30,7 +30,7 @@ typedef struct tracker_game_data {
     ubyte rank_base;
     ubyte game_state;
     ubyte speed;
-} tracker_game_data;
+};
 
 extern tracker_game_data Multi_tracker_game_data;
 

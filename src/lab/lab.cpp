@@ -305,7 +305,7 @@ void labviewer_recalc_camera () {
 }
 
 void labviewer_render_model (float frametime) {
-    angles rot_angles;
+    angles_t rot_angles;
     float rev_rate;
 
     ship_info* sip = NULL;

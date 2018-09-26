@@ -30,14 +30,14 @@ struct EnhancedSoundData;
 
 #define DS_3D (1 << 0)
 
-typedef struct sound_info {
+struct sound_info  {
     uint size;
     int sample_rate;
     int avg_bytes_per_sec;
     int bits;
     int n_channels;
     int duration; // time in ms for duration of sound
-} sound_info;
+};
 
 extern int ds_initialized;
 
@@ -107,7 +107,7 @@ void ds_do_frame ();
 // use this structure for get/set all properties...
 
 // used for const array of default values
-typedef struct EFXREVERBPROPERTIES_list {
+struct EFXREVERBPROPERTIES_list  {
     const char* name;
     float flDensity;
     float flDiffusion;
@@ -132,9 +132,9 @@ typedef struct EFXREVERBPROPERTIES_list {
     float flLFReference;
     float flRoomRolloffFactor;
     int iDecayHFLimit;
-} EFXREVERBPROPERTIES_list;
+};
 
-typedef struct EFXREVERBPROPERTIES {
+struct EFXREVERBPROPERTIES  {
     std::string name;
     float flDensity;
     float flDiffusion;
@@ -161,16 +161,16 @@ typedef struct EFXREVERBPROPERTIES {
     int iDecayHFLimit;
     EFXREVERBPROPERTIES () {}
     EFXREVERBPROPERTIES (const EFXREVERBPROPERTIES_list& list);
-} EFXREVERBPROPERTIES;
+};
 
 extern std::vector< EFXREVERBPROPERTIES > EFX_presets;
 
-typedef struct {
+struct EAX_REVERBPROPERTIES {
     size_t environment;   // 0 to EAX_ENVIRONMENT_COUNT-1
     float fVolume;        // 0 to 1
     float fDecayTime_sec; // seconds, 0.1 to 100
     float fDamping;       // 0 to 1
-} EAX_REVERBPROPERTIES;
+};
 
 enum {
     EAX_ENVIRONMENT_GENERIC,

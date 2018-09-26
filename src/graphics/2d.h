@@ -263,7 +263,7 @@ struct hash< vertex_layout > {
 };
 } // namespace std
 
-typedef enum gr_capability {
+enum gr_capability {
     CAPABILITY_ENVIRONMENT_MAP,
     CAPABILITY_NORMAL_MAP,
     CAPABILITY_HEIGHT_MAP,
@@ -276,7 +276,7 @@ typedef enum gr_capability {
     CAPABILITY_POINT_PARTICLES,
     CAPABILITY_TIMESTAMP_QUERY,
     CAPABILITY_SEPARATE_BLEND_FUNCTIONS,
-} gr_capability;
+};
 
 enum class gr_property {
     UNIFORM_BUFFER_OFFSET_ALIGNMENT,
@@ -290,11 +290,11 @@ extern int gr_stencil_mode;
  * This is a structure used by the shader to keep track
  * of the values you want to use in the shade primitive.
  */
-typedef struct shader {
+struct shader  {
     uint screen_sig;  // current mode this is in
     ubyte r, g, b, c; // factors and constant
     ubyte lookup[256];
-} shader;
+};
 
 #define AC_TYPE_NONE 0 // Not an alphacolor
 #define AC_TYPE_HUD \
@@ -305,7 +305,7 @@ typedef struct shader {
 // NEVER REFERENCE THESE VALUES OUTSIDE OF THE GRAPHICS LIBRARY!!!
 // If you need to get the rgb values of a "color" struct call
 // gr_get_colors after calling gr_set_colors_fast.
-typedef struct color {
+struct color  {
     uint screen_sig;
     int is_alphacolor;
     int alphacolor;
@@ -316,22 +316,22 @@ typedef struct color {
     ubyte alpha;
     ubyte ac_type; // The type of alphacolor.  See AC_TYPE_??? defines
     ubyte raw8;
-} color;
+};
 
 // Used by the team coloring code
-typedef struct team_color {
+struct team_color  {
     struct {
         float r, g, b;
     } base;
     struct {
         float r, g, b;
     } stripe;
-} team_color;
+};
 
-typedef struct tsb_t {
+struct tsb_t  {
     vec3d tangent;
     float scaler;
-} tsb_t;
+};
 
 /**
  * This should be basicly just like it is in the VB
@@ -563,7 +563,7 @@ enum class BufferUsageHint { Static, Dynamic, Streaming };
  */
 typedef void* gr_sync;
 
-typedef struct screen {
+struct screen  {
     uint signature; // changes when mode or palette or width or height changes
     int max_w, max_h; // Width and height
     int max_w_unscaled, max_h_unscaled;
@@ -804,7 +804,7 @@ typedef struct screen {
     void (*gf_sync_delete) (gr_sync sync);
 
     void (*gf_set_viewport) (int x, int y, int width, int height);
-} screen;
+};
 
 // handy macro
 #define GR_MAYBE_CLEAR_RES(bmap)                                        \

@@ -229,7 +229,7 @@ void camera::set_rotation (
 }
 
 void camera::set_rotation (
-    angles* in_angles, float in_rotation_time,
+    angles_t* in_angles, float in_rotation_time,
     float in_rotation_acceleration_time, float in_rotation_deceleration_time) {
     matrix mtx = IDENTITY_MATRIX;
     vm_rotate_matrix_by_angles (&mtx, in_angles);
@@ -265,7 +265,7 @@ void camera::set_rotation_facing (
 }
 
 void camera::set_rotation_velocity (
-    angles* /*in_rotation_rate*/, float /*in_acceleration_time*/) {
+    angles_t* /*in_rotation_rate*/, float /*in_acceleration_time*/) {
     Error (LOCATION, "This function is disabled until further notice.");
 }
 

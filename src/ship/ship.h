@@ -74,7 +74,7 @@ extern vec3d Original_vec_to_deader;
 
 #define RF_IS_AVAILABLE (1 << 0) // reinforcement is now available
 
-typedef struct {
+struct reinforcements {
     char name[NAME_LENGTH]; // ship or wing name (ship and wing names don't
                             // collide)
     int type;          // what operations this reinforcement unit can perform
@@ -88,7 +88,7 @@ typedef struct {
     char yes_messages[MAX_REINFORCEMENT_MESSAGES]
                      [NAME_LENGTH]; // list of messages to acknowledge
                                     // reinforcement on the way
-} reinforcements;
+};
 
 class ship_weapon {
 public:
@@ -285,9 +285,9 @@ extern std::vector< ArmorType > Armor_types;
 //**************************************************************
 // WMC - Damage type handling code
 
-typedef struct DamageTypeStruct {
+struct DamageTypeStruct  {
     char name[NAME_LENGTH];
-} DamageTypeStruct;
+};
 
 extern std::vector< DamageTypeStruct > Damage_types;
 
@@ -308,7 +308,7 @@ extern const char*
     Turret_target_order_names[NUM_TURRET_ORDER_TYPES]; // aiturret.cpp
 
 // Swifty: Cockpit displays
-typedef struct cockpit_display {
+struct cockpit_display  {
     int target;
     int source;
     int foreground;
@@ -316,18 +316,18 @@ typedef struct cockpit_display {
     int offset[2];
     int size[2];
     char name[MAX_FILENAME_LEN];
-} cockpit_display;
+};
 
 extern std::vector< cockpit_display > Player_displays;
 
-typedef struct cockpit_display_info {
+struct cockpit_display_info  {
     char name[MAX_FILENAME_LEN];
     char filename[MAX_FILENAME_LEN];
     char fg_filename[MAX_FILENAME_LEN];
     char bg_filename[MAX_FILENAME_LEN];
     int offset[2];
     int size[2];
-} cockpit_display_info;
+};
 
 // structure definition for a linked list of subsystems for a ship.  Each
 // subsystem has a pointer to the static data for the subsystem.  The
@@ -453,22 +453,22 @@ public:
 // of subsystem (i.e. we might have 3 engines), and the relative strength of
 // the subsystem.  The #defines in model.h for SUBSYSTEM_xxx will be used as
 // indices into this array.
-typedef struct ship_subsys_info {
+struct ship_subsys_info  {
     int type_count;           // number of subsystems of type on this ship;
     float aggregate_max_hits; // maximum number of hits for all subsystems of
                               // this type.
     float aggregate_current_hits; // current count of hits for all subsystems
                                   // of this type.
-} ship_subsys_info;
+};
 
 // Karajorma - Used by the alter-ship-flag SEXP as an alternative to having
 // lots of ship flag SEXPs
-typedef struct ship_flag_name {
+struct ship_flag_name  {
     Ship::Ship_Flags
         flag; // the actual ship flag constant as given by the define below
     char flag_name[TOKEN_LENGTH]; // the name written to the mission file for
                                   // its corresponding parse_object flag
-} ship_flag_name;
+};
 
 #define MAX_SHIP_FLAG_NAMES 19
 extern ship_flag_name Ship_flag_names[];
@@ -485,11 +485,11 @@ extern ship_flag_name Ship_flag_names[];
 #define MAX_SHIP_CONTRAILS 24
 #define MAX_MAN_THRUSTERS 128
 
-typedef struct ship_spark {
+struct ship_spark  {
     vec3d pos;        // position of spark in the submodel's RF
     int submodel_num; // which submodel is making the spark
     int end_time;
-} ship_spark;
+};
 
 // NOTE: Can't be treated as a struct anymore, since it has STL data structures
 // in its object tree!
@@ -885,7 +885,7 @@ ai_target_priority init_ai_target_priorities ();
 // structure and array def for ships that have exited the game.  Keeps track of
 // certain useful information.
 
-typedef struct exited_ship {
+struct exited_ship  {
     char ship_name[NAME_LENGTH];
     std::string display_string;
     int obj_signature;
@@ -900,7 +900,7 @@ typedef struct exited_ship {
                                          // so that we can figure out what
                                          // damaged it
     int damage_ship_id[MAX_DAMAGE_SLOTS];
-} exited_ship;
+};
 
 extern std::vector< exited_ship > Ships_exited;
 
@@ -912,16 +912,16 @@ extern int ship_find_exited_ship_by_signature (int signature);
 #define REGULAR_WEAPON (1 << 0)
 #define DOGFIGHT_WEAPON (1 << 1)
 
-typedef struct thruster_particles {
+struct thruster_particles  {
     generic_anim thruster_bitmap;
     float min_rad;
     float max_rad;
     int n_high;
     int n_low;
     float variance;
-} thruster_particles;
+};
 
-typedef struct particle_effect {
+struct particle_effect  {
     int n_low;
     int n_high;
     float min_rad;
@@ -931,9 +931,9 @@ typedef struct particle_effect {
     float min_vel;
     float max_vel;
     float variance;
-} particle_effect;
+};
 
-typedef struct ship_type_info {
+struct ship_type_info  {
     char name[NAME_LENGTH];
 
     flagset< Ship::Type_Info_Flags > flags;
@@ -975,7 +975,7 @@ typedef struct ship_type_info {
         flags.reset ();
         name[0] = '\0';
     }
-} ship_type_info;
+};
 
 extern std::vector< ship_type_info > Ship_types;
 
@@ -1023,7 +1023,7 @@ public:
 
 // Holds variables for collision physics (Gets its own struct purely for
 // clarity purposes) Most of this only really applies properly to small ships
-typedef struct ship_collision_physics {
+struct ship_collision_physics  {
     // Collision physics definitions: how a ship responds to collisions
     float both_small_bounce{}; // Bounce factor when both ships are small
                                // This currently only comes into play if one
@@ -1065,13 +1065,13 @@ typedef struct ship_collision_physics {
     gamesnd_id
         landing_sound_idx; // Sound to play on successful landing collisions
 
-} ship_collision_physics;
+};
 
-typedef struct path_metadata {
+struct path_metadata  {
     vec3d departure_rvec;
     float arrive_speed_mult;
     float depart_speed_mult;
-} path_metadata;
+};
 
 // The real FreeSpace ship_info struct.
 // NOTE: Can't be treated as a struct anymore, since it has STL data structures
@@ -1297,7 +1297,7 @@ public:
                              // for the shield on HUD
     char icon_filename[MAX_FILENAME_LEN]; // filename for icon that is
                                           // displayed in ship selection
-    angles model_icon_angles; // angle from which the model icon should be
+    angles_t model_icon_angles; // angle from which the model icon should be
                               // rendered (if not 0,0,0)
     char anim_filename[MAX_FILENAME_LEN]; // filename for animation that plays
                                           // in ship selection
@@ -1489,25 +1489,25 @@ extern ship* Player_ship;
 extern int* Player_cockpit_textures;
 
 // Data structure to track the active missiles
-typedef struct ship_obj {
+struct ship_obj  {
     ship_obj *next, *prev;
     int flags, objnum;
-} ship_obj;
+};
 extern ship_obj Ship_obj_list;
 
-typedef struct engine_wash_info {
+struct engine_wash_info  {
     char name[NAME_LENGTH];
     float angle;       // half angle of cone around engine thruster
     float radius_mult; // multiplier for radius
     float length;      // length of engine wash, measured from thruster
     float intensity;   // intensity of engine wash
 
-} engine_wash_info;
+};
 
 extern std::vector< engine_wash_info > Engine_wash_info;
 
 //	Defines a wing of ships.
-typedef struct wing {
+struct wing  {
     char name[NAME_LENGTH];
     char wing_squad_filename[MAX_FILENAME_LEN]; // Goober5000
     int reinforcement_index; // index in reinforcement struct or -1
@@ -1576,7 +1576,7 @@ typedef struct wing {
     // ship uses the wing texture; and it also makes practical sense: no wing
     // has two different squadrons in it :)
     int wing_insignia_texture;
-} wing;
+};
 
 extern wing Wings[MAX_WINGS];
 
@@ -1600,14 +1600,14 @@ extern reinforcements Reinforcements[MAX_REINFORCEMENTS];
 // that particular type has been killed.  When changing any info here, be sure
 // to update the ship_type_names array in Ship.cpp the order of the types here
 // MUST match the order of the types in the array
-typedef struct ship_counts {
+struct ship_counts  {
     int total;
     int killed;
     ship_counts () {
         total = 0;
         killed = 0;
     }
-} ship_counts;
+};
 
 extern std::vector< ship_counts > Ship_type_counts;
 
@@ -1758,7 +1758,7 @@ void ship_model_update_instance (object* objp);
 extern int ship_find_num_crewpoints (object* objp);
 extern int ship_find_num_turrets (object* objp);
 
-extern void compute_slew_matrix (matrix* orient, angles* a);
+extern void compute_slew_matrix (matrix* orient, angles_t* a);
 extern void ship_get_eye (
     vec3d* eye_pos, matrix* eye_orient, object* obj, bool do_slew = true,
     bool from_origin = false); // returns in eye the correct viewing position
@@ -2063,12 +2063,12 @@ void armor_init ();
 // Sushi - Path metadata
 void init_path_metadata (path_metadata& metadata);
 
-typedef struct ship_effect {
+struct ship_effect  {
     char name[NAME_LENGTH];
     bool disables_rendering;
     bool invert_timer;
     int shader_effect;
-} ship_effect;
+};
 
 extern std::vector< ship_effect > Ship_effects;
 

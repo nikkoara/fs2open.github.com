@@ -14,7 +14,7 @@
 #define CFILE_BLOCK_UNUSED 0
 #define CFILE_BLOCK_USED 1
 
-typedef struct Cfile_block {
+struct Cfile_block  {
     int type;         // CFILE_BLOCK_UNUSED, CFILE_BLOCK_USED
     int dir_type;     // directory location
     FILE* fp;         // File pointer if opening an individual file
@@ -32,7 +32,7 @@ typedef struct Cfile_block {
 
     const char* source_file;
     int line_num;
-} Cfile_block;
+};
 
 #define MAX_CFILE_BLOCKS 64
 extern Cfile_block Cfile_block_list[MAX_CFILE_BLOCKS];

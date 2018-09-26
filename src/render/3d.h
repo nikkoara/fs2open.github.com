@@ -54,7 +54,7 @@ extern int g3_in_frame ();
  * Set view from x,y,z & p,b,h, zoom.  Must call one of g3_set_view_*()
  */
 void g3_set_view_angles (
-    const vec3d* view_pos, const angles* view_orient, float zoom);
+    const vec3d* view_pos, const angles_t* view_orient, float zoom);
 
 /**
  * Set view from camera
@@ -108,7 +108,7 @@ void g3_start_instance_matrix (const matrix4* transform, bool set_api = true);
 /**
  * Instance at specified point with specified orientation
  */
-void g3_start_instance_angles (const vec3d* pos, const angles* orient);
+void g3_start_instance_angles (const vec3d* pos, const angles_t* orient);
 
 /**
  * Pops the old context
@@ -279,10 +279,10 @@ void g3_render_shield_icon (
 void g3_render_colored_rect (
     color* clr, int x, int y, int w, int h, int resize_mode);
 
-typedef struct horz_pt {
+struct horz_pt  {
     float x, y;
     int edge;
-} horz_pt;
+};
 
 /**
  * Flash ball

@@ -84,7 +84,7 @@ builtin_message Builtin_messages[] = {
     // XSTR:ON
 };
 
-std::vector< MMessage > Messages;
+std::vector< MissionMessage > Messages;
 
 int Num_messages, Num_message_avis, Num_message_waves;
 int Num_builtin_messages, Num_builtin_avis, Num_builtin_waves;

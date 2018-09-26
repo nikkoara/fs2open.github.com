@@ -159,7 +159,7 @@ int Closeup_bitmap = -1;
 int Closeup_one_revolution_time = ONE_REV_TIME;
 
 brief_icon* Closeup_icon;
-angles Closeup_angles;
+angles_t Closeup_angles;
 matrix Closeup_orient;
 vec3d Closeup_pos;
 int Closeup_font_height;

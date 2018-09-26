@@ -24,7 +24,7 @@
 #define LCL_MAX_FONTS 5
 
 // language info table
-typedef struct lang_info {
+struct lang_info  {
     char lang_name[LCL_LANG_NAME_LEN + 1]; // literal name of the language
     char lang_ext[LCL_LANG_NAME_LEN + 1];  // the extension used for adding to
                                            // names on disk access
@@ -34,7 +34,7 @@ typedef struct lang_info {
                          // zero offset in a font makes no sense i.e. all the
                          // normal chars start at zero
     int checksum;        // used for language auto-detection
-} lang_info;
+};
 
 // These are the original languages supported by FS2. The code expects these
 // languages to be supported even if the tables don't

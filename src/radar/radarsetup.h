@@ -19,11 +19,11 @@
 
 class object;
 
-typedef struct rcol {
+struct rcol  {
     ubyte r, g, b;
-} rcol;
+};
 
-typedef struct blip {
+struct blip  {
     blip *prev, *next;
     int rad;
     int flags;
@@ -37,7 +37,7 @@ typedef struct blip {
 
     float dist;
     object* objp;
-} blip;
+};
 
 #define MAX_BLIPS 150
 

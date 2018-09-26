@@ -90,10 +90,10 @@ struct campaign_info;
 // having the opportunity to skip it
 #define PLAYER_MISSION_FAILURE_LIMIT 5
 
-typedef struct campaign_stats {
+struct campaign_stats  {
     char campaign_name[MAX_FILENAME_LEN + 1]; // insurance
     scoring_struct stats;
-} campaign_stats;
+};
 
 class player {
 public:
@@ -294,7 +294,7 @@ extern player* Player; // pointer to my information
 
 extern int Player_use_ai;
 extern int view_centering;
-extern angles chase_slew_angles; // The viewing angles in which
+extern angles_t chase_slew_angles; // The viewing angles in which
                                  // viewer_slew_angles will chase to.
 
 extern void player_init (); // initialization per level

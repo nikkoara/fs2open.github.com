@@ -76,7 +76,7 @@ extern "C" {
 // RenderDoc capture options
 //
 
-typedef enum {
+enum RENDERDOC_CaptureOption {
     // Allow the application to enable vsync
     //
     // Default - enabled
@@ -203,7 +203,7 @@ typedef enum {
     // 0 - API debugging is displayed as normal
     eRENDERDOC_Option_DebugOutputMute = 11,
 
-} RENDERDOC_CaptureOption;
+};
 
 // Sets an option that controls how RenderDoc behaves on capture.
 //
@@ -226,7 +226,7 @@ typedef uint32_t (RENDERDOC_CC* pRENDERDOC_GetCaptureOptionU32) (
 typedef float(RENDERDOC_CC* pRENDERDOC_GetCaptureOptionF32) (
     RENDERDOC_CaptureOption opt);
 
-typedef enum {
+enum RENDERDOC_InputButton {
     // '0' - '9' matches ASCII values
     eRENDERDOC_Key_0 = 0x30,
     eRENDERDOC_Key_1 = 0x31,
@@ -302,7 +302,7 @@ typedef enum {
     eRENDERDOC_Key_Pause,
 
     eRENDERDOC_Key_Max,
-} RENDERDOC_InputButton;
+};
 
 // Sets which key or keys can be used to toggle focus between multiple windows
 //
@@ -316,7 +316,7 @@ typedef void(RENDERDOC_CC* pRENDERDOC_SetFocusToggleKeys) (
 typedef void(RENDERDOC_CC* pRENDERDOC_SetCaptureKeys) (
     RENDERDOC_InputButton* keys, int num);
 
-typedef enum {
+enum RENDERDOC_OverlayBits {
     // This single bit controls whether the overlay is enabled or disabled
     // globally
     eRENDERDOC_Overlay_Enabled = 0x1,
@@ -340,7 +340,7 @@ typedef enum {
 
     // Disable all bits
     eRENDERDOC_Overlay_None = 0,
-} RENDERDOC_OverlayBits;
+};
 
 // returns the overlay bits that have been set
 typedef uint32_t (RENDERDOC_CC* pRENDERDOC_GetOverlayBits) ();
@@ -513,13 +513,13 @@ typedef uint32_t (RENDERDOC_CC* pRENDERDOC_EndFrameCapture) (
 // have requested. e.g. if you are running against a newer RenderDoc that
 // supports 1.0.1, it will be returned instead of 1.0.0. You can check this
 // with the GetAPIVersion entry point
-typedef enum {
+enum RENDERDOC_Version {
     eRENDERDOC_API_Version_1_0_0 = 10000, // RENDERDOC_API_1_0_0 = 1 00 00
     eRENDERDOC_API_Version_1_0_1 = 10001, // RENDERDOC_API_1_0_1 = 1 00 01
     eRENDERDOC_API_Version_1_0_2 = 10002, // RENDERDOC_API_1_0_2 = 1 00 02
     eRENDERDOC_API_Version_1_1_0 = 10100, // RENDERDOC_API_1_1_0 = 1 01 00
     eRENDERDOC_API_Version_1_1_1 = 10101, // RENDERDOC_API_1_1_1 = 1 01 01
-} RENDERDOC_Version;
+};
 
 // API version changelog:
 //
@@ -537,7 +537,7 @@ typedef enum {
 //         replay/remote server concept in replay UI)
 
 // eRENDERDOC_API_Version_1_1_0
-typedef struct {
+struct RENDERDOC_API_1_1_0 {
     pRENDERDOC_GetAPIVersion GetAPIVersion;
 
     pRENDERDOC_SetCaptureOptionU32 SetCaptureOptionU32;
@@ -573,7 +573,7 @@ typedef struct {
     pRENDERDOC_EndFrameCapture EndFrameCapture;
 
     pRENDERDOC_TriggerMultiFrameCapture TriggerMultiFrameCapture;
-} RENDERDOC_API_1_1_0;
+};
 
 typedef RENDERDOC_API_1_1_0 RENDERDOC_API_1_0_0;
 typedef RENDERDOC_API_1_1_0 RENDERDOC_API_1_0_1;
@@ -587,7 +587,7 @@ typedef RENDERDOC_API_1_1_0 RENDERDOC_API_1_0_2;
 // purely legacy for compilation compatibility
 
 // eRENDERDOC_API_Version_1_1_1
-typedef struct {
+struct RENDERDOC_API_1_1_1 {
     pRENDERDOC_GetAPIVersion GetAPIVersion;
 
     pRENDERDOC_SetCaptureOptionU32 SetCaptureOptionU32;
@@ -623,7 +623,7 @@ typedef struct {
     pRENDERDOC_EndFrameCapture EndFrameCapture;
 
     pRENDERDOC_TriggerMultiFrameCapture TriggerMultiFrameCapture;
-} RENDERDOC_API_1_1_1;
+};
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // RenderDoc API entry point

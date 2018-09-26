@@ -14,15 +14,15 @@
 #define CF_SEEK_CUR (1)
 #define CF_SEEK_END (2)
 
-typedef struct CFILE {
+struct CFILE  {
     int id;      // Index into cfile.cpp specific structure
     int version; // version of this file
-} CFILE;
+};
 
 // extra info that can be returned when getting a file listing
-typedef struct {
+struct file_list_info {
     time_t write_time;
-} file_list_info;
+};
 
 #define CF_MAX_FILENAME_LENGTH \
     32 // Includes null terminater, so real length is 31
@@ -354,7 +354,7 @@ uint cfread_uint (CFILE* file, int ver = 0, uint deflt = 0);
 float cfread_float (CFILE* file, int ver = 0, float deflt = 0.0f);
 void cfread_vector (vec3d* vec, CFILE* file, int ver = 0, vec3d* deflt = NULL);
 void cfread_angles (
-    angles* ang, CFILE* file, int ver = 0, angles* deflt = NULL);
+    angles_t* ang, CFILE* file, int ver = 0, angles_t* deflt = NULL);
 
 // Reads variable length, null-termined string.   Will only read up
 // to n characters.
@@ -380,7 +380,7 @@ int cfwrite_short (short s, CFILE* file);
 int cfwrite_ushort (ushort s, CFILE* file);
 int cfwrite_ubyte (ubyte u, CFILE* file);
 int cfwrite_vector (vec3d* vec, CFILE* file);
-int cfwrite_angles (angles* ang, CFILE* file);
+int cfwrite_angles (angles_t* ang, CFILE* file);
 
 // writes variable length, null-termined string.
 int cfwrite_string (const char* buf, CFILE* file);

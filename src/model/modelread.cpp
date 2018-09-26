@@ -638,7 +638,7 @@ static void set_subsystem_info (
 
         // CASE OF STEPPED ROTATION
         if ((strstr (props, "$stepped")) != NULL) {
-            subsystemp->stepped_rotation = new stepped_rotation;
+            subsystemp->stepped_rotation = new stepped_rotation_t;
             subsystemp->flags.set (Model::Subsystem_Flags::Stepped_rotate);
 
             // get number of steps
@@ -2106,7 +2106,7 @@ int read_model_file (
 
                         // generate a simple rotation matrix in all three
                         // dimensions (though bank is probably not needed)
-                        angles a = { PI_2, PI_2, PI_2 };
+                        angles_t a = { PI_2, PI_2, PI_2 };
                         matrix m;
                         vm_angles_2_matrix (&m, &a);
 
@@ -3397,7 +3397,7 @@ void model_set_bay_path_nums (polymodel* pm) {
     */
 
     // malloc out storage for the path information
-    pm->ship_bay = (ship_bay*)vm_malloc (sizeof (ship_bay));
+    pm->ship_bay = (ship_bay_t*)vm_malloc (sizeof (ship_bay_t));
     Assert (pm->ship_bay != NULL);
 
     pm->ship_bay->num_paths = 0;
@@ -3993,7 +3993,7 @@ void submodel_look_at (polymodel* pm, int mn) {
     if (mn < 0) { return; }
 
     sm = &pm->submodel[mn];
-    angles* angs = &pm->submodel[mn].angs;
+    angles_t* angs = &pm->submodel[mn].angs;
 
     if (sm->movement_type != MOVEMENT_TYPE_LOOK_AT) { return; }
 
@@ -4320,7 +4320,7 @@ void model_make_turret_matrix (int model_num, model_subsystem* turret) {
 //	Returns 1 if rotated gun, 0 if no gun to rotate (rotation handled by AI)
 int model_rotate_gun (
     int model_num, model_subsystem* turret, matrix* orient,
-    angles* base_angles, angles* gun_angles, vec3d* pos, vec3d* dst,
+    angles_t* base_angles, angles_t* gun_angles, vec3d* pos, vec3d* dst,
     int obj_idx, bool reset) {
     polymodel* pm;
     object* objp = &Objects[obj_idx];
@@ -4379,7 +4379,7 @@ int model_rotate_gun (
     // Find the heading and pitch that the gun needs to turn to
     // by extracting them from the of_dst vector.
     // Call this the desired_angles
-    angles desired_angles;
+    angles_t desired_angles;
     //	vm_extract_angles_vector(&desired_angles, &of_dst);
 
     if (reset == false) {
@@ -5454,7 +5454,7 @@ void model_init_submodel_axis_pt (
     }
 
     // copy submodel angs
-    angles copy_angs = pm->submodel[submodel_num].angs;
+    angles_t copy_angs = pm->submodel[submodel_num].angs;
 
     // find two points rotated into model RF when angs set to 0
     vm_vec_copy_scale ((vec3d*)&pm->submodel[submodel_num].angs, &axis, 0.0f);

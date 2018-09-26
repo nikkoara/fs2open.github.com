@@ -37,7 +37,7 @@
 #define PF_FORCE_GLIDE (1 << 16)
 
 // information for physics sim for an object
-typedef struct physics_info {
+struct physics_info  {
     uint flags; // misc physics flags
 
     float mass;           // the mass of this object
@@ -118,11 +118,11 @@ typedef struct physics_info {
                                        // afterburners top speed vector
     float afterburner_reverse_accel;   // SparK: Afterburner's acceleration on
                                        // reverse mode
-} physics_info;
+};
 
 // All of these are numbers from -1.0 to 1.0 indicating
 // what percent of full velocity you want to go.
-typedef struct control_info {
+struct control_info  {
     float pitch; // -1.0 to 1.0
     float vertical;
     float heading;
@@ -143,7 +143,7 @@ typedef struct control_info {
     int afterburner_start;
     int afterburner_stop;
 
-} control_info;
+};
 
 extern int physics_paused; //	Set means don't do physics, except for player.
 

@@ -984,7 +984,7 @@ void obj_move_call_physics (object* objp, float frametime) {
     // THIS IS A FREAKIN' HACK
     // Do not let ship change position on Y axis
     if (The_mission.flags[Mission::Mission_Flags::Mission_2d]) {
-        angles old_angles, new_angles;
+        angles_t old_angles, new_angles;
         objp->pos.xyz.y = objp->last_pos.xyz.y;
         vm_extract_angles_matrix (&old_angles, &objp->last_orient);
         vm_extract_angles_matrix (&new_angles, &objp->orient);

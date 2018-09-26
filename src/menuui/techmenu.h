@@ -8,12 +8,12 @@
 #define MAX_INTEL_ENTRIES 75
 #define TECH_INTEL_DESC_LEN 5120
 
-typedef struct {
+struct intel_data {
     char name[NAME_LENGTH];
     char desc[TECH_INTEL_DESC_LEN];
     char anim_filename[NAME_LENGTH];
     int flags;
-} intel_data;
+};
 
 // flags by Goober5000
 #define IIF_DEFAULT_VALUE 0

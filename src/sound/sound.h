@@ -97,12 +97,12 @@ struct game_snd {
     game_snd ();
 };
 
-typedef struct sound_env {
+struct sound_env  {
     int id;
     float volume;
     float damping;
     float decay;
-} sound_env;
+};
 
 extern int Sound_enabled;
 extern float Default_sound_volume; // 0 -> 1.0

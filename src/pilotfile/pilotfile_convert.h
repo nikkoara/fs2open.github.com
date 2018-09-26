@@ -37,16 +37,16 @@ static const unsigned short MAX_JOY_AXES_CONV = 5;
 static const int MAX_WSS_SLOTS_CONV = 12;   // 3 wings * 4 slots
 static const int MAX_SHIP_WEAPONS_CONV = 7; // 3 primary + 4 secondary
 
-typedef struct index_list_t {
+struct index_list_t  {
     std::string name;
     int index;
     int val;
 
     index_list_t () : index (-1), val (0) {}
-} index_list_t;
+};
 
 // special stats struct, since our use here is not content specific
-typedef struct scoring_special_t {
+struct scoring_special_t  {
     int score;
     int rank;
     int assists;
@@ -76,9 +76,9 @@ typedef struct scoring_special_t {
           p_shots_hit (0), p_bonehead_hits (0), s_shots_fired (0),
           s_shots_hit (0), s_bonehead_hits (0), missions_flown (0),
           flight_time (0), last_flown (0), last_backup (0) {}
-} scoring_special_t;
+};
 
-typedef struct cmission_conv_t {
+struct cmission_conv_t  {
     int index; // index into Campaign.missions[]
     int flags;
 
@@ -87,17 +87,17 @@ typedef struct cmission_conv_t {
     std::vector< sexp_variable > variables;
 
     scoring_special_t stats;
-} cmission_conv_t;
+};
 
-typedef struct wss_unit_conv_t {
+struct wss_unit_conv_t  {
     int ship_index;
     int wep[MAX_SHIP_WEAPONS_CONV];
     int wep_count[MAX_SHIP_WEAPONS_CONV];
 
     wss_unit_conv_t () : ship_index (-1) {}
-} wss_unit_conv_t;
+};
 
-typedef struct loadout_conv_t {
+struct loadout_conv_t  {
     std::string filename;
     std::string last_modified;
 
@@ -105,7 +105,7 @@ typedef struct loadout_conv_t {
 
     std::vector< int > weapon_pool;
     std::vector< int > ship_pool;
-} loadout_conv_t;
+};
 
 struct plr_data {
     plr_data ();

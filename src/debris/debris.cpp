@@ -968,7 +968,7 @@ int debris_check_collision (
 
                     // set angles for last frame (need to set to prev to get
                     // p0)
-                    angles copy_angles = pmi->submodel[*smv].angs;
+                    angles_t copy_angles = pmi->submodel[*smv].angs;
 
                     // find the start and end positions of the sphere in
                     // submodel RF

@@ -6,7 +6,7 @@
 #include "sound/ds.h"
 #include "sound/openal.h"
 
-typedef struct channel {
+struct channel  {
     ds_sound_handle
         sig;          // uniquely identifies the sound playing on the channel
     int snd_id;       // identifies which kind of sound is playing
@@ -23,7 +23,7 @@ typedef struct channel {
         : sig (-1), snd_id (-1), source_id (0), sid (-1), looping (0),
           vol (1.0f), priority (0), last_position (0), is_voice_msg (false),
           is_ambient (false) {}
-} channel;
+};
 
 // #define	MAX_CHANNELS  16
 extern channel* Channels; //[MAX_CHANNELS];

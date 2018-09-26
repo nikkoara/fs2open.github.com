@@ -1440,10 +1440,10 @@ char* CTEXT (int n);
 // numbers used in special_training_check() function
 #define SPECIAL_CHECK_TRAINING_FAILURE 2000
 
-typedef struct sexp_ai_goal_link {
+struct sexp_ai_goal_link  {
     int ai_goal;
     int op_code;
-} sexp_ai_goal_link;
+};
 
 #define SEXP_CONDITIONAL_OPERATOR (1 << 0)
 #define SEXP_ARGUMENT_OPERATOR (1 << 1)
@@ -1456,14 +1456,14 @@ typedef struct sexp_ai_goal_link {
 #define SEXP_TRIGGER_OPERATOR \
     (SEXP_ARITHMETIC_OPERATOR | SEXP_BOOLEAN_OPERATOR | SEXP_INTEGER_OPERATOR)
 
-typedef struct sexp_oper {
+struct sexp_oper  {
     std::string text;
     int value;
     int min, max;
     int type;
-} sexp_oper;
+};
 
-typedef struct sexp_node {
+struct sexp_node  {
     char text[TOKEN_LENGTH];
     int op_index; // the index in the Operators array for the operator at this
                   // node (or -1 if not an operator)
@@ -1473,18 +1473,18 @@ typedef struct sexp_node {
     int rest;     // index into Sexp_nodes of rest of parameters
     int value;    // known to be true, known to be false, or not known
     int flags;    // Goober5000
-} sexp_node;
+};
 
 // Goober5000
 #define SNF_ARGUMENT_VALID (1 << 0)
 #define SNF_ARGUMENT_SELECT (1 << 1)
 #define SNF_DEFAULT_VALUE SNF_ARGUMENT_VALID
 
-typedef struct sexp_variable {
+struct sexp_variable  {
     int type;
     char text[TOKEN_LENGTH];
     char variable_name[TOKEN_LENGTH];
-} sexp_variable;
+};
 
 #define ARG_ITEM_F_DUP (1 << 0)
 
@@ -1660,17 +1660,17 @@ extern void sexp_music_close ();
 extern int Knossos_warp_ani_used;
 
 // WMC - moved here from FRED
-typedef struct sexp_help_struct {
+struct sexp_help_struct  {
     int id;
     std::string help;
-} sexp_help_struct;
+};
 
 extern std::vector< sexp_help_struct > Sexp_help;
 
-typedef struct op_menu_struct {
+struct op_menu_struct  {
     std::string name;
     int id;
-} op_menu_struct;
+};
 
 extern std::vector< op_menu_struct > op_menu;
 extern std::vector< op_menu_struct > op_submenu;

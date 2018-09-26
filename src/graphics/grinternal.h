@@ -12,12 +12,12 @@ extern ubyte Gr_current_palette[768];
 
 extern char Gr_current_palette_name[128];
 
-typedef struct color_gun {
+struct color_gun  {
     int bits;
     int shift;
     int scale;
     int mask;
-} color_gun;
+};
 
 // screen format
 extern color_gun Gr_red, Gr_green, Gr_blue, Gr_alpha;
@@ -48,7 +48,7 @@ extern int Gr_gamma_int;
 
 #define NEBULA_COLORS 20
 
-typedef enum gr_alpha_blend {
+enum gr_alpha_blend {
     ALPHA_BLEND_NONE,                  // 1*SrcPixel + 0*DestPixel
     ALPHA_BLEND_ADDITIVE,              // 1*SrcPixel + 1*DestPixel
     ALPHA_BLEND_ALPHA_ADDITIVE,        // Alpha*SrcPixel + 1*DestPixel
@@ -56,14 +56,14 @@ typedef enum gr_alpha_blend {
     ALPHA_BLEND_ALPHA_BLEND_SRC_COLOR, // Alpha*SrcPixel +
                                        // (1-SrcPixel)*DestPixel
     ALPHA_BLEND_PREMULTIPLIED          // 1*SrcPixel + (1-Alpha)*DestPixel
-} gr_alpha_blend;
+};
 
-typedef enum gr_zbuffer_type {
+enum gr_zbuffer_type {
     ZBUFFER_TYPE_NONE,
     ZBUFFER_TYPE_READ,
     ZBUFFER_TYPE_WRITE,
     ZBUFFER_TYPE_FULL,
     ZBUFFER_TYPE_DEFAULT
-} gr_zbuffer_type;
+};
 
 #endif

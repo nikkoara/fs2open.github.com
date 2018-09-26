@@ -15,7 +15,7 @@
 #define GENERIC_ANIM_DIRECTION_PAUSED 4
 
 // Goober5000
-typedef struct generic_anim {
+struct generic_anim  {
     char filename[MAX_FILENAME_LEN];
     int first_frame;
     int num_frames;
@@ -51,13 +51,13 @@ typedef struct generic_anim {
     int width;
     int bitmap_id;
     bool use_hud_color;
-} generic_anim;
+};
 
 // Goober5000
-typedef struct generic_bitmap {
+struct generic_bitmap  {
     char filename[MAX_FILENAME_LEN];
     int bitmap_id;
-} generic_bitmap;
+};
 
 /*
  * @brief helper class to reduce params passed to generic_anim_render

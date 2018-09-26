@@ -19,7 +19,7 @@ public:
     ConeShape () {}
 
     matrix getDisplacementMatrix () {
-        angles angs;
+        angles_t angs;
 
         angs.b = 0.0f;
 

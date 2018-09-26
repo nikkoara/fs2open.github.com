@@ -63,16 +63,16 @@ extern const char* campaign_types[MAX_CAMPAIGN_TYPES];
 // other interesting information about a campaign and the mission strucuture
 // within.
 
-typedef struct mgoal {
+struct mgoal  {
     char name[NAME_LENGTH]; // name of the goal (same as name in the
                             // mission_goal structure
     char status; // failed, satisfied, or incomplete (same as goal completion);
-} mgoal;
+};
 
-typedef struct mevent {
+struct mevent  {
     char name[NAME_LENGTH];
     char status;
-} mevent;
+};
 
 class cmission {
 public:
@@ -154,11 +154,11 @@ extern int Campaign_ending_via_supernova;
 // structure for players.  Holds the campaign name, number of missions flown in
 // the campaign, and result of the missions flown.  This structure is stored in
 // the player file and thus is persistent across games
-typedef struct campaign_info {
+struct campaign_info  {
     int num_missions_completed;
     char filename[NAME_LENGTH];
     ubyte missions_completed[MAX_CAMPAIGN_MISSIONS];
-} campaign_info;
+};
 
 // extern'ed so the mission loading can get a list of campains.  Only use this
 // data after mission_campaign_build_list() is called

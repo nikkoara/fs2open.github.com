@@ -506,7 +506,7 @@ ADE_FUNC (
     "Draws ship model as if in techroom", "boolean",
     "Whether ship was rendered") {
     int x1, y1, x2, y2;
-    angles rot_angles = { 0.0f, 0.0f, 40.0f };
+    angles_t rot_angles = { 0.0f, 0.0f, 40.0f };
     int idx;
     float zoom = 1.3f;
     if (!ade_get_args (
@@ -538,7 +538,7 @@ ADE_FUNC (
 
     // Handle angles
     matrix orient = vmd_identity_matrix;
-    angles view_angles = { -0.6f, 0.0f, 0.0f };
+    angles_t view_angles = { -0.6f, 0.0f, 0.0f };
     vm_angles_2_matrix (&orient, &view_angles);
 
     rot_angles.p = (rot_angles.p * 0.01f) * PI2;

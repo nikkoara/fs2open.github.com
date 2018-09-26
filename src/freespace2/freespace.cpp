@@ -2207,7 +2207,7 @@ void game_show_eye_pos (camid cid) {
 
     // Do stuff
     int font_height = 2 * gr_get_font_height ();
-    angles rot_angles;
+    angles_t rot_angles;
 
     gr_set_color_fast (&HUD_color_debug);
 
@@ -2940,7 +2940,7 @@ float get_shake (float intensity, int decay_time, int max_decay_time) {
 extern int Wash_on;
 extern float sn_shudder;
 void apply_view_shake (matrix* eye_orient) {
-    angles tangles;
+    angles_t tangles;
     tangles.p = 0.0f;
     tangles.h = 0.0f;
     tangles.b = 0.0f;
@@ -3332,7 +3332,7 @@ camid game_render_frame_setup () {
                 Viewer_obj = NULL;
             }
             else if (Viewer_mode & VM_TOPDOWN) {
-                angles rot_angles = { PI_2, 0.0f, 0.0f };
+                angles_t rot_angles = { PI_2, 0.0f, 0.0f };
                 bool position_override = false;
                 if (Viewer_obj->type == OBJ_SHIP) {
                     ship_info* sip = &Ship_info[Ships[Viewer_obj->instance]
@@ -7072,7 +7072,7 @@ void Time_model (int modelnum) {
 
     fix t1 = timer_get_fixed_seconds ();
 
-    angles ta;
+    angles_t ta;
     ta.p = ta.b = ta.h = 0.0f;
     int framecount = 0;
 

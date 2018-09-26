@@ -33,23 +33,23 @@
 #define MSG_REMOTE 0
 #define MSG_LOCAL 1
 
-typedef struct _Chat_user {
+struct Chat_user  {
     char nick_name[33];
-    _Chat_user* next;
-} Chat_user;
+    Chat_user* next;
+};
 
-typedef struct _Chat_channel {
+struct Chat_channel  {
     char channel_name[33];
     unsigned short users;
     char topic[100];
-    _Chat_channel* next;
-} Chat_channel;
+    Chat_channel* next;
+};
 
-typedef struct _Chat_command {
+struct Chat_command  {
     short command;
     char data[100];
-    _Chat_command* next;
-} Chat_command;
+    Chat_command* next;
+};
 
 // Prototypes
 void ChatInit (void);

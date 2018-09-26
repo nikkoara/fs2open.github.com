@@ -53,11 +53,11 @@ extern int Mission_music[NUM_SCORES]; // indicies into Spooled_music[]
 extern int Current_soundtrack_num; // index into Soundtracks[]
 
 // menu music storage
-typedef struct menu_music {
+struct menu_music  {
     int flags;
     char name[NAME_LENGTH];          // name music is known by
     char filename[MAX_FILENAME_LEN]; // name music is stored on disk as
-} menu_music;
+};
 
 #define MAX_SPOOLED_MUSIC 50 // max number of briefing/mainhall/credits tracks
 
@@ -68,12 +68,12 @@ extern menu_music Spooled_music[MAX_SPOOLED_MUSIC];
 extern int Num_music_files;
 
 // event music soundtrack storage
-typedef struct tagSOUNDTRACK_INFO {
+struct SOUNDTRACK_INFO {
     int flags;
     int num_patterns;
     char name[NAME_LENGTH];
     char pattern_fnames[MAX_PATTERNS][MAX_FILENAME_LEN];
-} SOUNDTRACK_INFO;
+};
 
 #define MAX_SOUNDTRACKS 30 // max number of battle tracks
 

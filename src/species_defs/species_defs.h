@@ -11,21 +11,21 @@
 #include "mission/missionbriefcommon.h"
 
 // for bitmap thrusters
-typedef struct thrust_pair_bitmap {
+struct thrust_pair_bitmap  {
     generic_bitmap normal;
     generic_bitmap afterburn;
-} thrust_pair_bitmap;
+};
 
 // for animated thrusters
-typedef struct thrust_pair {
+struct thrust_pair  {
     generic_anim normal;
     generic_anim afterburn;
-} thrust_pair;
+};
 
-typedef struct thrust_info {
+struct thrust_info  {
     thrust_pair flames;
     thrust_pair glow;
-} thrust_info;
+};
 
 // Currently the only species-specific feature not in species_info is ship
 // debris.  This is because ship debris chunks are treated as asteroids and

@@ -11,7 +11,7 @@ class model_draw_list;
 
 #define MAX_DEBRIS_ARCS 8 // Must be less than MAX_ARC_EFFECTS in model.h
 
-typedef struct debris {
+struct debris  {
     debris *next, *prev; // used for a linked list of the hull debris chunks
     int flags;           // See DEBRIS_??? defines
     int source_objnum;   // What object this came from
@@ -42,7 +42,7 @@ typedef struct debris {
     int parent_alt_name;
     float damage_mult;
 
-} debris;
+};
 
 // flags for debris pieces
 #define DEBRIS_USED (1 << 0)

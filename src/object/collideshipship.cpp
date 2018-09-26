@@ -283,7 +283,7 @@ int ship_ship_check_collision (
                 }
 
                 // set angles for last frame
-                angles copy_angles = pmi->submodel[*smv].angs;
+                angles_t copy_angles = pmi->submodel[*smv].angs;
 
                 // find the start and end positions of the sphere in submodel
                 // RF

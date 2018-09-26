@@ -94,7 +94,7 @@ typedef struct starfield_bitmap {
 typedef struct starfield_bitmap_instance {
     float scale_x, scale_y; // x and y scale
     int div_x, div_y;       // # of x and y divisions
-    angles ang;             // angles from FRED
+    angles_t ang;             // angles from FRED
     int star_bitmap_index;  // index into starfield_bitmap array
     int n_verts;
     vertex* verts;
@@ -260,11 +260,11 @@ static void starfield_create_bitmap_buffer (const int si_idx) {
     matrix m, m_bank;
     int idx, s_idx;
     float ui, vi;
-    angles bank_first;
+    angles_t bank_first;
 
     starfield_bitmap_instance* sbi = &Starfield_bitmap_instances[si_idx];
 
-    angles* a = &sbi->ang;
+    angles_t* a = &sbi->ang;
     float scale_x = sbi->scale_x;
     float scale_y = sbi->scale_y;
     int div_x = sbi->div_x;
@@ -310,7 +310,7 @@ static void starfield_create_bitmap_buffer (const int si_idx) {
     vm_angles_2_matrix (&m_bank, &bank_first);
 
     // convert angles to matrix
-    angles a_temp = *a;
+    angles_t a_temp = *a;
     a_temp.b = 0.0f;
     vm_angles_2_matrix (&m, &a_temp);
 
@@ -1583,7 +1583,7 @@ void subspace_render () {
     }
 
     matrix tmp;
-    angles angs = { 0.0f, 0.0f, 0.0f };
+    angles_t angs = { 0.0f, 0.0f, 0.0f };
 
     angs.b = subspace_offset_v * PI2;
 

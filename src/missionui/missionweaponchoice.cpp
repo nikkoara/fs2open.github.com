@@ -795,7 +795,7 @@ void wl_render_overhead_view (float frametime) {
         }
         else {
             matrix object_orient = IDENTITY_MATRIX;
-            angles rot_angles;
+            angles_t rot_angles;
             float zoom;
             zoom = sip->closeup_zoom * 1.3f;
 

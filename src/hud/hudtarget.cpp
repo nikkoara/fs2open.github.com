@@ -7252,8 +7252,8 @@ void HudGaugeHardpoints::render (float /*frametime*/) {
     sy = position[1];
 
     bool g3_yourself = !g3_in_frame ();
-    angles top_view = { -PI_2, 0.0f, 0.0f };
-    angles front_view = { PI_2 * 2.0f, PI_2 * 2.0f, 0.0f };
+    angles_t top_view = { -PI_2, 0.0f, 0.0f };
+    angles_t front_view = { PI_2 * 2.0f, PI_2 * 2.0f, 0.0f };
     matrix object_orient;
 
     switch (_view_direction) {

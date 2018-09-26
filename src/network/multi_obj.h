@@ -27,14 +27,14 @@ struct net_player;
 // NOTE: no additional flags here unless it's sent in an extra data byte
 
 // update info
-typedef struct np_update {
+struct np_update  {
     ubyte seq;        // sequence #
     int update_stamp; // global update stamp
     int status_update_stamp;
     int subsys_update_stamp;
     ushort pos_chksum;    // positional checksum
     ushort orient_chksum; // orient checksum
-} np_update;
+};
 
 // ---------------------------------------------------------------------------------------------------
 // OBJECT UPDATE FUNCTIONS

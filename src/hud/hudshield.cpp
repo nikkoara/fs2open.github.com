@@ -603,7 +603,7 @@ void HudGaugeShield::showShields (object* objp, int mode) {
         GR_DEBUG_SCOPE ("Render generated shield icon");
 
         bool g3_yourself = !g3_in_frame ();
-        angles rot_angles = { -1.570796327f, 0.0f, 0.0f };
+        angles_t rot_angles = { -1.570796327f, 0.0f, 0.0f };
         matrix object_orient;
 
         vm_angles_2_matrix (&object_orient, &rot_angles);

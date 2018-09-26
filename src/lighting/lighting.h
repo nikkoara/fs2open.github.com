@@ -25,7 +25,7 @@ enum class Light_Type : int {
     Cone = 3         // A cone light, like a flood light
 };
 
-typedef struct light {
+struct light  {
     Light_Type type; // What type of light this is
     vec3d vec; // location in world space of a point light or the direction of
                // a directional light or the first point on the tube for a tube
@@ -48,7 +48,7 @@ typedef struct light {
     float cone_inner_angle; // the inner angle for calculating falloff
     bool dual_cone;         // should the cone be shining in both directions?
     int instance;
-} light;
+};
 
 extern std::vector< light > Static_light;
 

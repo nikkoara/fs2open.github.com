@@ -104,14 +104,14 @@ struct opengl_shader_uniform_reference_t {
     const char* name;
 };
 
-typedef struct opengl_shader_uniform_t {
+struct opengl_shader_uniform_t  {
     std::string text_id;
     GLint location;
 
     opengl_shader_uniform_t () : location (-1) {}
-} opengl_shader_uniform_t;
+};
 
-typedef struct opengl_shader_t {
+struct opengl_shader_t  {
     std::unique_ptr< opengl::ShaderProgram > program;
 
     shader_type shader;
@@ -125,7 +125,7 @@ typedef struct opengl_shader_t {
 
     opengl_shader_t (const opengl_shader_t&) = delete;
     opengl_shader_t& operator= (const opengl_shader_t&) = delete;
-} opengl_shader_t;
+};
 
 extern std::vector< opengl_shader_t > GL_shader;
 

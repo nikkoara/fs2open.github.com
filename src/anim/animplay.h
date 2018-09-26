@@ -11,7 +11,7 @@ struct anim_info;
 struct anim_instance;
 
 // structure passed in when playing an anim.  Talk about overkill..
-typedef struct {
+struct anim_play_struct {
     anim* anim_info;
     int x;
     int y;
@@ -27,7 +27,7 @@ typedef struct {
     int skip_frames;
     int looped;
     int ping_pong;
-} anim_play_struct;
+};
 
 enum { PAGE_FROM_DISK = 0, PAGE_FROM_MEM = 1 };
 

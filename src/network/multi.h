@@ -489,16 +489,16 @@ extern int Om_tracker_flag;
 //
 
 // definition of header packet used in any protocol
-typedef struct header {
+struct header  {
     int bytes_processed; // used to determine how many bytes this packet was
     ubyte net_id[4];     // obtained from network layer header
     ubyte addr[6];       // obtained from network-layer header
     short port;          // obtained from network-layer header
     short id;            // will be stuffed with player_id (short)
-} header;
+};
 
 // NETPLAYER INFORMATION THE SERVER AND THE INDIVIDUAL CLIENT MUST HAVE
-typedef struct net_player_server_info {
+struct net_player_server_info  {
     ping_struct ping;      // evaluated by the ping module
     int wing_index_backup; // in case of fail on the last packet
     int wing_index;        // index of the next wing data item to be sent
@@ -570,10 +570,10 @@ typedef struct net_player_server_info {
                                             // single UDP packet
     int reliable_buffer_size; // length (in bytes) of data in reliable
                               // send_buffer
-} net_player_server_info;
+};
 
 // NETPLAYER INFORMATION ALL COMPUTERS IN THE GAME MUST HAVE
-typedef struct net_player_info {
+struct net_player_info  {
     p_object*
         p_objp; // pointer to parse object for my ship -- used with respawns
     int team;   // valid for team v. team games -- which team is this guy on
@@ -583,10 +583,10 @@ typedef struct net_player_info {
     multi_local_options options; // players options settings
     net_addr addr;
     char pxo_squad_name[LOGIN_LEN]; // PXO squadron name
-} net_player_info;
+};
 
 // NETPLAYER COMMON INFORMATION
-typedef struct net_player {
+struct net_player  {
     player*
         m_player; // stuff pertaining directly to the player (callsign, etc).
     short player_id; // player id (always use this instead of ip address for
@@ -613,11 +613,11 @@ typedef struct net_player {
     // CLIENT-side
     int cl_bytes_recvd; // bytes we've received (as a client)
     int cl_last_pl;     // packet loss
-} net_player;
+};
 
 // structure which describes the state of the multiplayer game currently being
 // played
-typedef struct netgame_info {
+struct netgame_info  {
     char
         name[MAX_GAMENAME_LEN + 1]; // name of the netgame (host can set this!)
     char mission_name[NAME_LENGTH + 1]; // current mission name (filename)
@@ -654,7 +654,7 @@ typedef struct netgame_info {
     multi_server_options options; // server options settings
 
     ubyte debug_flags; // special debug flags (see NETD_FLAG_* defines)
-} netgame_info;
+};
 
 // structure for active games -- kind of like Descent, but using the linked
 // list thing, we will be able to support many more games in the list.
@@ -686,7 +686,7 @@ typedef struct netgame_info {
     (AG_FLAG_FORMING | AG_FLAG_BRIEFING | AG_FLAG_DEBRIEF | AG_FLAG_PAUSE | \
      AG_FLAG_IN_MISSION)
 
-typedef struct active_game {
+struct active_game  {
     active_game *next, *prev; // next and previous elements in the list
     int heard_from_timer;     // when we last heard from the game
 
@@ -698,20 +698,20 @@ typedef struct active_game {
     ushort flags;                // see above AG_FLAG_* defines
     ubyte version, comp_version; // version and compatible version
     ping_struct ping;            // ping time to the server
-} active_game;
+};
 
 // permanent server list (read from tcp.cfg)
-typedef struct server_item {
+struct server_item  {
     server_item *next, *prev;
 
     net_addr server_addr;
-} server_item;
+};
 
 // sent to the server on a join request with various data
 #define JOIN_FLAG_AS_OBSERVER (1 << 0) // wants to join as an aboserver
 #define JOIN_FLAG_HAXOR (1 << 2)       // if the player has hacked data
 
-typedef struct join_request {
+struct join_request  {
     char passwd[MAX_PASSWD_LEN + 1]; // password for a password protected game
     char callsign[CALLSIGN_LEN + 1]; // player's callsign
     char image_filename[MAX_FILENAME_LEN + 1]; // player's image filename
@@ -724,13 +724,13 @@ typedef struct join_request {
 
     // multiplayer squad war info
     char pxo_squad_name[LOGIN_LEN]; // squad name
-} join_request;
+};
 
 // network buffer for sending and receiving packets
-typedef struct network_buffer {
+struct network_buffer  {
     int size;                    // size of the buffer
     ubyte data[MAX_PACKET_SIZE]; // MAX_PACKET_SIZE from psnet2.h
-} network_buffer;
+};
 // -------------------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------------------

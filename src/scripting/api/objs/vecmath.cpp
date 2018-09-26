@@ -33,11 +33,11 @@ matrix_h::matrix_h (matrix* in) {
     mtx = *in;
     status = MatrixState::AnglesOutOfDate;
 }
-matrix_h::matrix_h (angles* in) {
+matrix_h::matrix_h (angles_t* in) {
     ang = *in;
     status = MatrixState::MatrixOutOfdate;
 }
-angles* matrix_h::GetAngles () {
+angles_t* matrix_h::GetAngles () {
     this->ValidateAngles ();
     return &ang;
 }
@@ -85,7 +85,7 @@ ADE_INDEXER (
     // Handle out of date stuff.
     float* val = NULL;
     if (idx < 0) {
-        angles* ang = mh->GetAngles ();
+        angles_t* ang = mh->GetAngles ();
 
         if (idx == -1) { val = &ang->p; }
         if (idx == -2) { val = &ang->b; }

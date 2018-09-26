@@ -53,7 +53,7 @@ enum ParticleType {
 };
 
 // particle creation stuff
-typedef struct particle_info {
+struct particle_info  {
     // old-style particle info
     vec3d pos = vmd_zero_vector;
     vec3d vel = vmd_zero_vector;
@@ -71,9 +71,9 @@ typedef struct particle_info {
     bool lifetime_from_animation =
         true; // if the particle plays an animation then use the anim length
               // for the particle life
-} particle_info;
+};
 
-typedef struct particle {
+struct particle  {
     // old style data
     vec3d pos;         // position
     vec3d velocity;    // velocity
@@ -91,7 +91,7 @@ typedef struct particle {
     bool reverse;        // play any animations in reverse
     int particle_index;  // used to keep particle offset in dynamic array for
                          // orient usage
-} particle;
+};
 
 typedef std::weak_ptr< particle > WeakParticlePtr;
 typedef std::shared_ptr< particle > ParticlePtr;
@@ -139,7 +139,7 @@ WeakParticlePtr createPersistent (particle_info* pinfo);
 //============================================================================
 
 // Use a structure rather than pass a ton of parameters to particle_emit
-typedef struct particle_emitter {
+struct particle_emitter  {
     int num_low;           // Lowest number of particles to create
     int num_high;          // Highest number of particles to create
     vec3d pos;             // Where the particles emit from
@@ -153,7 +153,7 @@ typedef struct particle_emitter {
     float max_vel;         // How fast the fastest particle can move
     float min_rad;         // Min radius
     float max_rad;         // Max radius
-} particle_emitter;
+};
 
 // Creates a bunch of particles. You pass a structure
 // rather than a bunch of parameters.

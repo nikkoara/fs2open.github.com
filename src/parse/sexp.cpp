@@ -9947,7 +9947,7 @@ int sexp_calculate_angle (matrix* orient, int axis) {
     Assert (orient != NULL);
     Assert (axis >= 0 && axis <= 2);
 
-    angles a;
+    angles_t a;
     vm_extract_angles_matrix_alternate (&a, orient);
 
     // blugh
@@ -10148,7 +10148,7 @@ void multi_sexp_set_object_position () {
 
 // Goober5000
 void sexp_set_object_orientation (int n) {
-    angles a;
+    angles_t a;
     matrix target_orient;
     object_ship_wing_point_team oswpt;
 
@@ -17590,7 +17590,7 @@ void sexp_ship_create (int n) {
     int new_ship_class = -1;
     char* new_ship_name;
     vec3d new_ship_pos = vmd_zero_vector;
-    angles new_ship_ang = { 0.0f, 0.0f, 0.0f };
+    angles_t new_ship_ang = { 0.0f, 0.0f, 0.0f };
     matrix new_ship_ori = vmd_identity_matrix;
     bool change_angles = false;
 
@@ -17654,7 +17654,7 @@ void sexp_weapon_create (int n) {
     ship_subsys* targeted_ss;
 
     vec3d weapon_pos = vmd_zero_vector;
-    angles weapon_angles = { 0.0f, 0.0f, 0.0f };
+    angles_t weapon_angles = { 0.0f, 0.0f, 0.0f };
     matrix weapon_orient = vmd_identity_matrix;
     int is_locked;
     bool change_angles = false;
@@ -19666,7 +19666,7 @@ void sexp_set_post_effect (int node) {
 // Goober5000
 void sexp_set_skybox_orientation (int n) {
     matrix m;
-    angles a;
+    angles_t a;
 
     a.p = fl_radians (eval_num (n) % 360);
     n = CDR (n);
@@ -23647,7 +23647,7 @@ void sexp_set_camera_rotation (int n) {
     camera* cam = sexp_get_set_camera ();
     if (cam == NULL) return;
 
-    angles rot_angles;
+    angles_t rot_angles;
     float rot_time = 0.0f;
     float rot_acc_time = 0.0f;
     float rot_dec_time = 0.0f;
@@ -23685,7 +23685,7 @@ void multi_sexp_set_camera_rotation () {
     camera* cam = sexp_get_set_camera ();
     if (cam == NULL) return;
 
-    angles rot_angles;
+    angles_t rot_angles;
     float rot_time = 0.0f;
     float rot_acc_time = 0.0f;
     float rot_dec_time = 0.0f;

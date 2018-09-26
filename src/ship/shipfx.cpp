@@ -92,8 +92,8 @@ static void shipfx_subsystem_maybe_create_live_debris (
     }
 
     // copy angles
-    angles copy_angs = pm->submodel[submodel_num].angs;
-    angles zero_angs = { 0.0f, 0.0f, 0.0f };
+    angles_t copy_angs = pm->submodel[submodel_num].angs;
+    angles_t zero_angs = { 0.0f, 0.0f, 0.0f };
 
     // make sure the axis point is set
     vec3d model_axis, world_axis, rotvel, world_axis_pt;

@@ -21,7 +21,7 @@ private:
     MatrixState status;
 
     matrix mtx;
-    angles ang;
+    angles_t ang;
 
     // WMC - Call these to make sure what you want
     // is up to date
@@ -32,9 +32,9 @@ private:
 public:
     matrix_h ();
     explicit matrix_h (matrix* in);
-    explicit matrix_h (angles* in);
+    explicit matrix_h (angles_t* in);
 
-    angles* GetAngles ();
+    angles_t* GetAngles ();
 
     matrix* GetMatrix ();
 

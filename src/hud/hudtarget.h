@@ -51,12 +51,12 @@ const int CARGO_RADIUS_REAL_DELTA =
 // regular and ballistic weapon gauges
 #define NUM_HUD_SETTINGS 2
 
-typedef struct htarget_list {
+struct htarget_list  {
     struct htarget_list *next, *prev; // for linked lists
     int how_added; // determines how this hotkey was added (mission default or
                    // player)
     object* objp;  // the actual object
-} htarget_list;
+};
 
 // for nebula toggle SEXP
 #define TOGGLE_TEXT_NEBULA_ALPHA 127
@@ -77,7 +77,7 @@ extern void hud_init_targeting_colors ();
 /// \brief An abbreviation for "Evaluate Ship as Closest Target", defines a
 ///        data structure used to hold the required arguments for evaluating
 ///        a prospective closest target to an attacked object.
-typedef struct esct {
+struct esct  {
     int team_mask;
     int filter;
     ship* shipp;
@@ -87,7 +87,7 @@ typedef struct esct {
     int check_all_turrets;
     int turret_attacking_target; // check that turret is actually attacking the
                                  // attacked_objnum
-} esct;
+};
 
 bool evaluate_ship_as_closest_target (esct* esct);
 void hud_init_targeting ();
@@ -184,7 +184,7 @@ void hud_stuff_ship_class (char* ship_class_text, ship* shipp);
 #define TARGET_DISPLAY_NAME (1 << 4)
 #define TARGET_DISPLAY_CLASS (1 << 5)
 
-typedef struct target_display_info {
+struct target_display_info  {
     object* objp;
     vertex target_point;
     vec3d target_pos;
@@ -192,7 +192,7 @@ typedef struct target_display_info {
     int correction;
     int flags;
     char name[32];
-} target_display_info;
+};
 
 extern std::vector< target_display_info > target_display_list;
 

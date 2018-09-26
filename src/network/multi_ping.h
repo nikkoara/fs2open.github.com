@@ -14,7 +14,7 @@ struct net_player;
 // the max ping we'll store to calculate the average
 #define MAX_PINGS 10
 
-typedef struct ping_struct {
+struct ping_struct  {
     fix ping_start; // time the current ping was sent out, or -1 if none. using
                     // fix for higher precision
     fix ping_times[MAX_PINGS]; // ping times for calculating the average, using
@@ -23,7 +23,7 @@ typedef struct ping_struct {
     int ping_add;              // where to add the next ping
 
     int ping_avg; // in ms, this is the only thing we should be concerned with
-} ping_struct;
+};
 
 // ------------------------------------------------------------------------------------
 // MULTIPLAYER PING FUNCTIONS

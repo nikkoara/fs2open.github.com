@@ -10,7 +10,7 @@
     1400 // time a shield quadrant flashes after being hit
 #define SHIELD_FLASH_INTERVAL 200 // time between shield quadrant flashes
 
-typedef struct shield_hit_info {
+struct shield_hit_info  {
     int members;
     int hull_hit_index; // used to access the members in shield_hit_info that
                         // pertain to the hull
@@ -22,7 +22,7 @@ typedef struct shield_hit_info {
                             // that means shield is being hit
     int shield_show_bright; // bitfield, if offset for shield quadrant is set,
                             // that means play bright frame
-} shield_hit_info;
+};
 
 extern ubyte Quadrant_xlate[4];
 
