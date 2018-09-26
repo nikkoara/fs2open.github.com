@@ -200,7 +200,6 @@ void gr_opengl_deferred_lighting_finish () {
                 light_data->coneAngle = l.cone_angle;
                 light_data->coneInnerAngle = l.cone_inner_angle;
                 light_data->coneDir = l.vec2;
-                FALLTHROUGH;
             case Light_Type::Point:
                 light_data->diffuseLightColor = diffuse;
                 light_data->specLightColor = spec;

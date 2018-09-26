@@ -12330,7 +12330,6 @@ int sexp_is_iff (int n) {
                 // information about
                 return SEXP_NAN_FOREVER;
             }
-            FALLTHROUGH;
         }
 
         // we don't handle the other cases
@@ -16113,9 +16112,6 @@ void sexp_alter_ship_flag_helper (
             // set or clear?
             Ai_info[oswpt.shipp->ai_index].ai_flags.set (ai_flag, set_flag);
         }
-
-        // no break statement. We want to fall through.
-        FALLTHROUGH;
 
     case OSWPT_TYPE_PARSE_OBJECT:
         if (!future_ships) { return; }
@@ -29493,7 +29489,6 @@ int query_operator_argument_type (int op, int argnum) {
 
         // fall through
         argnum--;
-        FALLTHROUGH;
 
     case OP_UPDATE_SOUND_ENVIRONMENT: {
         // every two, the value repeats

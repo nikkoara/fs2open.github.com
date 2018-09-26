@@ -9,10 +9,10 @@ if ! pkg-config --exists sdl2 &>/dev/null; then
 fi
 
 ac_sdl2_cppflags="$( pkg-config --cflags sdl2 )"
-ac_sdl2_ldflags="$( pkg-config --libs sdl2 )"
+ac_sdl2_libs="$( pkg-config --libs sdl2 )"
 
 AC_SUBST(SDL2_CPPFLAGS,[$ac_sdl2_cppflags])
-AC_SUBST(SDL2_LDFLAGS,[$ac_sdl2_ldflags])
+AC_SUBST(SDL2_LIBS,[$ac_sdl2_libs])
 
 AC_MSG_RESULT([done])
 ])

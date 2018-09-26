@@ -633,9 +633,6 @@ void credits_do_frame (float /*frametime*/) {
             credits_screen_button_pressed (CUTSCENES_BUTTON);
             break;
         }
-        // else, react like tab key.
-        FALLTHROUGH;
-
     case KEY_CTRLED | KEY_DOWN:
     case KEY_TAB: credits_screen_button_pressed (TECH_DATABASE_BUTTON); break;
 

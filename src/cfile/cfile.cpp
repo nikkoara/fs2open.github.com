@@ -6,6 +6,7 @@
 #include <cstring>
 #include <cstdio>
 #include <cerrno>
+#include <limits.h>
 #include <sys/stat.h>
 
 #include <glob.h>

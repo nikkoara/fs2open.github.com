@@ -226,7 +226,6 @@ int cmd_brief_check_stage_done () {
  */
 void cmd_brief_voice_play (int stage_num) {
     int voice = -1;
-    int stage = -1;
 
     if (!Voice_good_to_go) {
         Voice_started_time = 0;
@@ -242,7 +241,6 @@ void cmd_brief_voice_play (int stage_num) {
 
     if (Cur_stage >= 0 && Cur_stage < Cur_cmd_brief->num_stages) {
         voice = Cur_cmd_brief->stage[stage_num].wave;
-        stage = stage_num;
     }
 
     // are we still on same voice that is currently playing/played?

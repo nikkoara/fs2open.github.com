@@ -1,7 +1,7 @@
 # -*- mode: makefile; -*-
 
 noinst_LIBRARIES = liblua51.a
-liblua51_a_CPPFLAGS = -DLUA_USE_MACOSX -I.
+liblua51_a_CPPFLAGS = -DLUA_CPPFLAGS -I.
 liblua51_a_SOURCES =                            \
     lapi.c                                      \
     lauxlib.c                                   \

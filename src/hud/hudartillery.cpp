@@ -144,7 +144,7 @@ void parse_ssm (const char* filename) {
                     required_string ("Point");
                     s.shape = SSM_SHAPE_POINT;
                     break;
-                case 1: required_string ("Circle"); FALLTHROUGH;
+                case 1: required_string ("Circle");
                 case -1: // If we're ignoring parse errors and can't identify
                          // the shape, go with a circle.
                     s.shape = SSM_SHAPE_CIRCLE;

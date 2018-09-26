@@ -63,14 +63,6 @@
 
 #define USED_VARIABLE __attribute__ ((used))
 
-#if __has_cpp_attribute(fallthough)
-#define FALLTHROUGH [[fallthrough]]
-#elif __has_cpp_attribute(clang::fallthough)
-#define FALLTHROUGH [[clang::fallthrough]]
-#else
-#define FALLTHROUGH
-#endif
-
 #ifndef CLANG_ANALYZER_NORETURN
 #if __has_feature(attribute_analyzer_noreturn)
 #define CLANG_ANALYZER_NORETURN __attribute__ ((analyzer_noreturn))

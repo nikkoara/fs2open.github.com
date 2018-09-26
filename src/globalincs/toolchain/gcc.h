@@ -3,15 +3,16 @@
 #ifndef FREESPACE2_GLOBALINCS_TOOLCHAIN_GCC_H
 #define FREESPACE2_GLOBALINCS_TOOLCHAIN_GCC_H
 
+/*
  * @file
  *
  * @brief Macros to abstract compiler capabilities for the GCC toolchain
  *
  * @internal
- * This file should never be included directly;
- instead, one should* include toolchain
-                  .h which will pull in the file appropriate to* the detected
-                      toolchain.* /
+ * This file should never be included directly instead, one should
+ * include toolchain.h which will pull in the file appropriate to
+ * the detected toolchain.
+ */
 
 #define SCP_FORMAT_STRING
 #define SCP_FORMAT_STRING_ARGS(x, y) __attribute__ ((format (printf, x, y)))
@@ -63,12 +64,6 @@
 #define unlikely(x) __builtin_expect ((long)!!(x), 0L)
 
 #define USED_VARIABLE __attribute__ ((used))
-
-#if SCP_COMPILER_VERSION_MAJOR >= 7
-#define FALLTHROUGH [[fallthrough]]
-#else
-#define FALLTHROUGH
-#endif
 
 #define CLANG_ANALYZER_NORETURN
 

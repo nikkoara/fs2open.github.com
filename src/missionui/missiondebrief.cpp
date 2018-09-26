@@ -1804,10 +1804,8 @@ void debrief_text_init () {
     int i;
 
     // If no wav files are being used use speech simulation
-    bool use_sim_speech = true;
     for (i = 0; i < MAX_DEBRIEF_STAGES; i++) {
         if (Debrief_voices[i] != -1) {
-            use_sim_speech = false;
             break;
         }
     }

@@ -11636,7 +11636,6 @@ void ai_get_dock_goal_indexes (
             LOCATION,
             "Normally dock indexes should be calculated for only AIS_DOCK_0 "
             "and AIS_UNDOCK_0.  Trace out and debug.");
-        FALLTHROUGH;
     case AIS_DOCK_0: {
         // get them from the active goal
         Assert (aigp != NULL);
@@ -11658,7 +11657,6 @@ void ai_get_dock_goal_indexes (
             LOCATION,
             "Normally dock indexes should be calculated for only AIS_DOCK_0 "
             "and AIS_UNDOCK_0.  Trace out and debug.");
-        FALLTHROUGH;
     case AIS_UNDOCK_0: {
         // get them from the guy I'm docked to
         Assert (goal_objp != NULL);
@@ -11724,13 +11722,11 @@ void ai_cleanup_dock_mode_subjective (object* objp) {
                 shipp, TRIGGER_TYPE_DOCKED, docker_index, -1);
             model_anim_start_type (
                 goal_shipp, TRIGGER_TYPE_DOCKED, dockee_index, -1);
-            FALLTHROUGH;
         case AIS_UNDOCK_1:
             model_anim_start_type (
                 shipp, TRIGGER_TYPE_DOCKING_STAGE_3, docker_index, -1);
             model_anim_start_type (
                 goal_shipp, TRIGGER_TYPE_DOCKING_STAGE_3, dockee_index, -1);
-            FALLTHROUGH;
         case AIS_UNDOCK_2:
             model_anim_start_type (
                 shipp, TRIGGER_TYPE_DOCKING_STAGE_2, docker_index, -1);
@@ -11744,13 +11740,11 @@ void ai_cleanup_dock_mode_subjective (object* objp) {
                 shipp, TRIGGER_TYPE_DOCKED, docker_index, -1);
             model_anim_start_type (
                 goal_shipp, TRIGGER_TYPE_DOCKED, dockee_index, -1);
-            FALLTHROUGH;
         case AIS_DOCK_3:
             model_anim_start_type (
                 shipp, TRIGGER_TYPE_DOCKING_STAGE_3, docker_index, -1);
             model_anim_start_type (
                 goal_shipp, TRIGGER_TYPE_DOCKING_STAGE_3, dockee_index, -1);
-            FALLTHROUGH;
         case AIS_DOCK_2:
             model_anim_start_type (
                 shipp, TRIGGER_TYPE_DOCKING_STAGE_2, docker_index, -1);
@@ -13880,7 +13874,6 @@ void ai_maybe_evade_locked_missile (object* objp, ai_info* aip) {
                              [AI::AI_Flags::Repairing,
                               AI::AI_Flags::Being_repaired]))
                         break;
-                    FALLTHROUGH;
                 case AIM_GUARD:
                     //	If in guard mode and far away from guard object, don't
                     // pursue guy that hit me.
@@ -13893,7 +13886,6 @@ void ai_maybe_evade_locked_missile (object* objp, ai_info* aip) {
                             return;
                         }
                     }
-                    FALLTHROUGH;
                 case AIM_EVADE:
                 case AIM_GET_BEHIND:
                 case AIM_STAY_NEAR:

@@ -1847,8 +1847,6 @@ void model_render_glowpoint (
                 else {
                     x %= gpo->pulse_period;
                 }
-                FALLTHROUGH;
-
             case PULSE_TRI:
                 float inv;
                 if (x > period / 2) { inv = -1; }

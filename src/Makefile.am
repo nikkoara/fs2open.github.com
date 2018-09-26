@@ -7,21 +7,15 @@ SUBDIRS =                                       \
     external/glad                               \
     external/mongoose
 
-BOOST_CPPFLAGS =                                \
-    $(BOOST_LOG_CPPFLAGS)                       \
-    $(RANGEV3_CPPFLAGS)
+include $(top_srcdir)/Makefile.common
 
-BOOST_LDFLAGS =                                 \
-    $(BOOST_LOG_LDFLAGS)                        \
-    $(BOOST_LOG_SETUP_LDFLAGS)                  \
-    $(BOOST_THREAD_LDFLAGS)                     \
-    $(BOOST_SYSTEM_LDFLAGS)
+if DARWIN
+include $(top_srcdir)/Makefile.darwin
+endif
 
-BOOST_LIBS =                                    \
-    $(BOOST_LOG_LIBS)                           \
-    $(BOOST_LOG_SETUP_LIBS)                     \
-    $(BOOST_THREAD_LIBS)                        \
-    $(BOOST_SYSTEM_LIBS)
+if LINUX
+include $(top_srcdir)/Makefile.linux
+endif
 
 bin_PROGRAMS = fs2
 
@@ -424,29 +418,18 @@ fs2_SOURCES =                                   \
     windows_stub/stubs.cpp
 
 fs2_CPPFLAGS =                                  \
-    -DLUA_USE_MACOSX -DAPPLE_APP -DSCP_UNIX     \
+    -DLUA_CPPFLAGS -DSCP_UNIX                   \
     -I.                                         \
-    -I$(top_srcdir)/src/external/lua            \
-    -I$(top_srcdir)/src/external                \
+    $(EXTERNAL_CPPFLAGS)                        \
     $(BOOST_CPPFLAGS)                           \
     $(SDL2_CPPFLAGS)                            \
-    -I/opt/local/include                        \
-    -isystem OpenAL
+    $(OPENAL_CPPFLAGS)                          \
+    $(FFMPEG_CPPFLAGS)
 
-fs2_LDADD =                                             \
-    $(top_srcdir)/src/external/lua/liblua51.a           \
-    $(top_srcdir)/src/external/glad/libglad.a           \
-    $(top_srcdir)/src/external/mongoose/libmongoose.a   \
-    $(BOOST_LDFLAGS) $(BOOST_LIBS)                      \
-    $(SDL2_LDFLAGS)                                     \
-    -lavcodec                                           \
-    -lavdevice                                          \
-    -lavformat                                          \
-    -lavfilter                                          \
-    -lavutil                                            \
-    -lpostproc                                          \
-    -lswscale                                           \
-    -lswresample                                        \
-    -ljsoncpp -ljpeg -lpng
-
-fs2_LDFLAGS = -framework OpenAL
+fs2_LDADD =                                     \
+    $(EXTERNAL_LIBS)                            \
+    $(BOOST_LDFLAGS) $(BOOST_LIBS)              \
+    $(SDL2_LIBS)                                \
+    $(OPENAL_LIBS)                              \
+    $(FFMPEG_LIBS)                              \
+    -ljsoncpp -ljpeg -lpng -ldl

@@ -5,6 +5,8 @@
 
 #include "parse/sexp/DynamicSEXP.h"
 
+#include <memory>
+
 namespace sexp {
 
 /**

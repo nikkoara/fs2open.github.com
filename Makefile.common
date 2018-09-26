@@ -1,37 +1,46 @@
 # -*- mode: makefile; -*-
 
-BOOST_CPPFLAGS += -DBOOST_SPIRIT_THREADSAFE
+BOOST_CPPFLAGS =                                \
+    $(BOOST_LOG_CPPFLAGS)                       \
+    $(RANGEV3_CPPFLAGS)
+
+BOOST_LDFLAGS =                                 \
+    $(BOOST_LOG_LDFLAGS)                        \
+    $(BOOST_LOG_SETUP_LDFLAGS)                  \
+    $(BOOST_THREAD_LDFLAGS)                     \
+    $(BOOST_SYSTEM_LDFLAGS)
 
 BOOST_LIBS =                                    \
-    $(BOOST_FILESYSTEM_LIBS)                    \
-    $(BOOST_IOSTREAMS_LIBS)                     \
-    $(BOOST_PROGRAM_OPTIONS_LIBS)               \
-    $(BOOST_SYSTEM_LIBS)                        \
+    $(BOOST_LOG_LIBS)                           \
+    $(BOOST_LOG_SETUP_LIBS)                     \
     $(BOOST_THREAD_LIBS)                        \
-    $(BOOST_TIMER_LIBS)
+    $(BOOST_SYSTEM_LIBS)
 
-OPENCV_LIBS =                                   \
-    $(OPENCV_VIDEOIO_LIBS)                      \
-    $(OPENCV_HIGHGUI_LIBS)                      \
-    $(OPENCV_IMGPROC_LIBS)                      \
-    $(OPENCV_IMGCODECS_LIBS)                    \
-    $(OPENCV_CORE_LIBS)
+FFMPEG_CPPFLAGS =                               \
+    $(FFMPEG_LIBAVCODEC_CPPFLAGS)               \
+    $(FFMPEG_LIBAVDEVICE_CPPFLAGS)              \
+    $(FFMPEG_LIBAVFILTER_CPPFLAGS)              \
+    $(FFMPEG_LIBAVFORMAT_CPPFLAGS)              \
+    $(FFMPEG_LIBAVUTIL_CPPFLAGS)                \
+    $(FFMPEG_LIBPOSTPROC_CPPFLAGS)              \
+    $(FFMPEG_LIBSWRESAMPLE_CPPFLAGS)            \
+    $(FFMPEG_LIBSWSCALE_CPPFLAGS)
 
-AM_CPPFLAGS = -I. -I$(top_srcdir)/include       \
-    $(RANGE3_CPPFLAGS) $(BOOST_CPPFLAGS) $(OPENCV_CPPFLAGS)
+FFMPEG_LIBS =                                           \
+    $(FFMPEG_LIBAVCODEC_LDFLAGS)                        \
+    $(FFMPEG_LIBAVDEVICE_LDFLAGS)                       \
+    $(FFMPEG_LIBAVFILTER_LDFLAGS)                       \
+    $(FFMPEG_LIBAVFORMAT_LDFLAGS)                       \
+    $(FFMPEG_LIBAVUTIL_LDFLAGS)                         \
+    $(FFMPEG_LIBPOSTPROC_LDFLAGS)                       \
+    $(FFMPEG_LIBSWRESAMPLE_LDFLAGS)                     \
+    $(FFMPEG_LIBSWSCALE_LDFLAGS)
 
-AM_LDFLAGS =                                    \
-    $(BOOST_FILESYSTEM_LDFLAGS)                 \
-    $(BOOST_IOSTREAMS_LDFLAGS)                  \
-    $(BOOST_PROGRAM_OPTIONS_LDFLAGS)            \
-    $(BOOST_SYSTEM_LDFLAGS)                     \
-    $(BOOST_THREAD_LDFLAGS)                     \
-    $(BOOST_TIMER_LDFLAGS)                      \
-    $(OPENCV_HIGHGUI_LDFLAGS)                   \
-    $(OPENCV_IMGPROC_LDFLAGS)                   \
-    $(OPENCV_IMGCODECS_LDFLAGS)                 \
-    $(OPENCV_CORE_LDFLAGS)
+EXTERNAL_CPPFLAGS =                             \
+    -I$(top_srcdir)/src/external/lua            \
+    -I$(top_srcdir)/src/external                \
 
-AM_CXXFLAGS = $(OPENMP_CXXFLAGS)
-
-LIBS = $(BOOST_LIBS) $(OPENCV_LIBS)
+EXTERNAL_LIBS =                                         \
+    $(top_srcdir)/src/external/lua/liblua51.a           \
+    $(top_srcdir)/src/external/glad/libglad.a           \
+    $(top_srcdir)/src/external/mongoose/libmongoose.a   \
