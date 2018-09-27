@@ -7,7 +7,7 @@
 #include "io/joy.h"
 #include "osapi/osapi.h"
 
-#include <SDL2/SDL_haptic.h>
+#include <SDL_haptic.h>
 
 #ifndef SDL_INIT_HAPTIC
 #define SDL_INIT_HAPTIC 0x00001000

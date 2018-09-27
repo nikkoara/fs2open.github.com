@@ -30,8 +30,8 @@
 #include "tracing/tracing.h"
 #include "utils/boost/hash_combine.h"
 
-#include <SDL2/SDL_cpuinfo.h>
-#include <SDL2/SDL_surface.h>
+#include <SDL_cpuinfo.h>
+#include <SDL_surface.h>
 
 const char* Resolution_prefixes[GR_NUM_RESOLUTIONS] = { "", "2_" };
 

@@ -3,7 +3,7 @@
 #ifndef CURSOR_H
 #define CURSOR_H
 
-#include <SDL2/SDL_mouse.h>
+#include <SDL_mouse.h>
 
 #include "globalincs/pstypes.h"
 #include "cmdline/cmdline.h"

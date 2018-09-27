@@ -11,7 +11,7 @@
 #include <functional>
 #include <memory>
 
-#include <SDL2/SDL_events.h>
+#include <SDL_events.h>
 
 // set if running under MsDev - done after os_init(...) has returned
 extern int Os_debugger_running;

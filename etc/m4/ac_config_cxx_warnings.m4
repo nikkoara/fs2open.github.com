@@ -23,7 +23,11 @@ case $CXX in
         WARNFLAGS+="$CLANG_WARNFLAGS"
         ;;
     g++)
-        WARNFLAGS+="$GCC_WARNFLAGS"
+        if test x`uname` = x"Darwin"; then
+            WARNFLAGS+="$CLANG_WARNFLAGS"
+        else
+            WARNFLAGS+="$GCC_WARNFLAGS"
+        fi
         ;;
      *) ;;
 esac

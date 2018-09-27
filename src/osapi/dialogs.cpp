@@ -7,8 +7,8 @@
 #include "graphics/2d.h"
 #include "scripting/ade.h"
 
-#include <SDL2/SDL_messagebox.h>
-#include <SDL2/SDL_clipboard.h>
+#include <SDL_messagebox.h>
+#include <SDL_clipboard.h>
 
 #include <string>
 #include <algorithm>

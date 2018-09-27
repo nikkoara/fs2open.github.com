@@ -424,7 +424,10 @@ fs2_CPPFLAGS =                                  \
     $(BOOST_CPPFLAGS)                           \
     $(SDL2_CPPFLAGS)                            \
     $(OPENAL_CPPFLAGS)                          \
-    $(FFMPEG_CPPFLAGS)
+    $(FFMPEG_CPPFLAGS)                          \
+    $(JSONCPP_CPPFLAGS)                         \
+    $(JPEG_CPPFLAGS)                            \
+    $(PNG_CPPFLAGS)
 
 fs2_LDADD =                                     \
     $(EXTERNAL_LIBS)                            \
@@ -432,4 +435,7 @@ fs2_LDADD =                                     \
     $(SDL2_LIBS)                                \
     $(OPENAL_LIBS)                              \
     $(FFMPEG_LIBS)                              \
-    -ljsoncpp -ljpeg -lpng -ldl
+    $(JSONCPP_LIBS)                             \
+    $(LIBJPEG_LIBS)                             \
+    $(LIBPNG_LIBS)                              \
+    -ldl

@@ -5,10 +5,10 @@
 
 #include <cstdio>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #ifndef BYTE_ORDER
-#include <SDL2/SDL_endian.h>
+#include <SDL_endian.h>
 #endif
 
 #ifndef BYTE_ORDER

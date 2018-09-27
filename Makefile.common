@@ -17,30 +17,30 @@ BOOST_LIBS =                                    \
     $(BOOST_SYSTEM_LIBS)
 
 FFMPEG_CPPFLAGS =                               \
-    $(FFMPEG_LIBAVCODEC_CPPFLAGS)               \
-    $(FFMPEG_LIBAVDEVICE_CPPFLAGS)              \
-    $(FFMPEG_LIBAVFILTER_CPPFLAGS)              \
-    $(FFMPEG_LIBAVFORMAT_CPPFLAGS)              \
-    $(FFMPEG_LIBAVUTIL_CPPFLAGS)                \
-    $(FFMPEG_LIBPOSTPROC_CPPFLAGS)              \
-    $(FFMPEG_LIBSWRESAMPLE_CPPFLAGS)            \
-    $(FFMPEG_LIBSWSCALE_CPPFLAGS)
+    $(LIBAVCODEC_CPPFLAGS)                      \
+    $(LIBAVDEVICE_CPPFLAGS)                     \
+    $(LIBAVFILTER_CPPFLAGS)                     \
+    $(LIBAVFORMAT_CPPFLAGS)                     \
+    $(LIBAVUTIL_CPPFLAGS)                       \
+    $(LIBPOSTPROC_CPPFLAGS)                     \
+    $(LIBSWRESAMPLE_CPPFLAGS)                   \
+    $(LIBSWSCALE_CPPFLAGS)
 
-FFMPEG_LIBS =                                           \
-    $(FFMPEG_LIBAVCODEC_LDFLAGS)                        \
-    $(FFMPEG_LIBAVDEVICE_LDFLAGS)                       \
-    $(FFMPEG_LIBAVFILTER_LDFLAGS)                       \
-    $(FFMPEG_LIBAVFORMAT_LDFLAGS)                       \
-    $(FFMPEG_LIBAVUTIL_LDFLAGS)                         \
-    $(FFMPEG_LIBPOSTPROC_LDFLAGS)                       \
-    $(FFMPEG_LIBSWRESAMPLE_LDFLAGS)                     \
-    $(FFMPEG_LIBSWSCALE_LDFLAGS)
+FFMPEG_LIBS =                                   \
+    $(LIBAVCODEC_LIBS)                          \
+    $(LIBAVDEVICE_LIBS)                         \
+    $(LIBAVFILTER_LIBS)                         \
+    $(LIBAVFORMAT_LIBS)                         \
+    $(LIBAVUTIL_LIBS)                           \
+    $(LIBPOSTPROC_LIBS)                         \
+    $(LIBSWRESAMPLE_LIBS)                       \
+    $(LIBSWSCALE_LIBS)
 
 EXTERNAL_CPPFLAGS =                             \
     -I$(top_srcdir)/src/external/lua            \
-    -I$(top_srcdir)/src/external                \
+    -I$(top_srcdir)/src/external
 
 EXTERNAL_LIBS =                                         \
     $(top_srcdir)/src/external/lua/liblua51.a           \
     $(top_srcdir)/src/external/glad/libglad.a           \
-    $(top_srcdir)/src/external/mongoose/libmongoose.a   \
+    $(top_srcdir)/src/external/mongoose/libmongoose.a
