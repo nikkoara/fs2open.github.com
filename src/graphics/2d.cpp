@@ -26,7 +26,6 @@
 #include "parse/parselo.h"
 #include "popup/popup.h"
 #include "render/3d.h"
-#include "scripting/scripting.h"
 #include "tracing/tracing.h"
 #include "utils/boost/hash_combine.h"
 
@@ -2136,17 +2135,6 @@ void gr_set_bitmap (
 }
 
 void gr_flip (bool execute_scripting) {
-    // m!m avoid running CHA_ONFRAME when the "Quit mission" popup is shown.
-    // See mantis 2446 for reference
-    if (execute_scripting && !popup_active ()) {
-        TRACE_SCOPE (tracing::LuaOnFrame);
-
-        // WMC - Do conditional hooks. Yippee!
-        Script_system.RunCondition (CHA_ONFRAME);
-        // WMC - Do scripting reset stuff
-        Script_system.EndFrame ();
-    }
-
     gr_reset_immediate_buffer ();
 
     // Use this opportunity for retiring the uniform buffers

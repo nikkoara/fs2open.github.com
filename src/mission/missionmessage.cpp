@@ -18,7 +18,6 @@
 #include "network/multimsgs.h"
 #include "network/multiutil.h"
 #include "parse/parselo.h"
-#include "scripting/scripting.h"
 #include "parse/sexp.h"
 #include "ship/ship.h"
 #include "ship/subsysdamage.h"
@@ -1670,22 +1669,9 @@ void message_queue_process () {
         hud_target_last_transmit_add (Message_shipnum);
     }
 
-    Script_system.SetHookVar ("Name", 's', m->name);
-    Script_system.SetHookVar ("Message", 's', buf);
-    Script_system.SetHookVar ("SenderString", 's', who_from);
-
-    builtinMessage = q->builtin_type != -1;
-    Script_system.SetHookVar ("Builtin", 'b', &builtinMessage);
-
     if (Message_shipnum >= 0) {
         sender = &Objects[Ships[Message_shipnum].objnum];
     }
-    Script_system.SetHookObject ("Sender", sender);
-
-    Script_system.RunCondition (CHA_MSGRECEIVED, 0, NULL, sender);
-
-    Script_system.RemHookVars (
-        5, "Name", "Message", "SenderString", "Builtin", "Sender");
 
 all_done:
     Num_messages_playing++;

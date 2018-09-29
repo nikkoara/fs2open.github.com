@@ -21,7 +21,6 @@
 #include "object/objectshield.h"
 #include "object/objectsnd.h"
 #include "observer/observer.h"
-#include "scripting/scripting.h"
 #include "playerman/player.h"
 #include "radar/radar.h"
 #include "radar/radarsetup.h"
@@ -1570,11 +1569,7 @@ void obj_move_all (float frametime) {
                 target = NULL;
             if (objp == Player_obj && Player_ai->target_objnum != -1)
                 target = &Objects[Player_ai->target_objnum];
-
-            Script_system.SetHookObjects (2, "User", objp, "Target", target);
-            Script_system.RunCondition (CHA_ONWPEQUIPPED, 0, NULL, objp);
         }
-        Script_system.RemHookVars (2, "User", "Target");
     }
 
     // Now that we've moved all the objects, move all the models that use
@@ -1690,21 +1685,6 @@ void obj_queue_render (object* obj, model_draw_list* scene) {
     TRACE_SCOPE (tracing::QueueRender);
 
     if (obj->flags[Object::Object_Flags::Should_be_dead]) return;
-
-    Script_system.SetHookObject ("Self", obj);
-
-    auto skip_render =
-        Script_system.IsConditionOverride (CHA_OBJECTRENDER, obj);
-
-    // Always execute the hook content
-    Script_system.RunCondition (CHA_OBJECTRENDER, '\0', NULL, obj);
-
-    Script_system.RemHookVar ("Self");
-
-    if (skip_render) {
-        // Script said that it want's to skip rendering
-        return;
-    }
 
     switch (obj->type) {
     case OBJ_NONE:

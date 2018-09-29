@@ -5,7 +5,6 @@
 #include "parse/parselo.h"
 #include "cmdline/cmdline.h"
 #include "graphics/2d.h"
-#include "scripting/ade.h"
 
 #include <SDL_messagebox.h>
 #include <SDL_clipboard.h>
@@ -136,126 +135,6 @@ void AssertMessage (
         "application.\n";
 
     Error (messageText.c_str ());
-}
-
-void LuaError (lua_State* L, const char* format, ...) {
-    std::stringstream msgStream;
-
-    // WMC - if format is set to NULL, assume this is acting as an
-    // error handler for Lua.
-    if (format == NULL) {
-        msgStream << "LUA ERROR: " << lua_tostring (L, -1);
-        lua_pop (L, -1);
-    }
-    else {
-        std::string formatText;
-
-        va_list args;
-        va_start (args, format);
-        vsprintf (formatText, format, args);
-        va_end (args);
-
-        msgStream << formatText;
-    }
-
-    msgStream << "\n";
-    msgStream << "\n";
-
-    msgStream << Separator;
-    msgStream << "ADE Debug:";
-    msgStream << "\n";
-
-    msgStream << Separator;
-    LuaDebugPrint (msgStream, Ade_debug_info);
-    msgStream << Separator;
-
-    msgStream << "\n";
-    msgStream << "\n";
-
-    msgStream << Separator;
-
-    // Get the stack via the debug.traceback() function
-    lua_getglobal (L, LUA_DBLIBNAME);
-
-    if (!lua_isnil (L, -1)) {
-        msgStream << "\n";
-        lua_getfield (L, -1, "traceback");
-        lua_remove (L, -2);
-
-        if (lua_pcall (L, 0, 1, 0) != 0)
-            msgStream << "Error while retrieving stack: "
-                      << lua_tostring (L, -1);
-        else
-            msgStream << lua_tostring (L, -1);
-
-        lua_pop (L, 1);
-    }
-    msgStream << "\n";
-
-    msgStream << Separator;
-
-    char stackText[1024];
-    stackText[0] = '\0';
-    scripting::ade_stackdump (L, stackText);
-    msgStream << stackText;
-    msgStream << "\n";
-    msgStream << Separator;
-
-    mprintf (("Lua Error: %s\n", msgStream.str ().c_str ()));
-
-    if (Cmdline_noninteractive) {
-        abort ();
-        return;
-    }
-
-    if (running_unittests) { throw LuaErrorException (msgStream.str ()); }
-
-    set_clipboard_text (msgStream.str ().c_str ());
-
-    // truncate text
-    auto truncatedText = truncateLines (msgStream, Messagebox_lines);
-
-    std::stringstream boxTextStream;
-    boxTextStream << truncatedText << "\n";
-
-    boxTextStream << "\n[ This info is in the clipboard so you can paste it "
-                     "somewhere now ]\n";
-
-    auto boxText = boxTextStream.str ();
-    const SDL_MessageBoxButtonData buttons[] = {
-        { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 2, "Exit" },
-        { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "Continue" },
-        { /* .flags, .buttonid, .text */ 0, 0, "Debug" },
-    };
-
-    SDL_MessageBoxData boxData;
-    memset (&boxData, 0, sizeof (boxData));
-
-    boxData.buttons = buttons;
-    boxData.numbuttons = 3;
-    boxData.colorScheme = nullptr;
-    boxData.flags = SDL_MESSAGEBOX_ERROR;
-    boxData.message = boxText.c_str ();
-    boxData.title = "Error!";
-    boxData.window = os::getSDLMainWindow ();
-
-    gr_activate (0);
-
-    int buttonId;
-    if (SDL_ShowMessageBox (&boxData, &buttonId) < 0) {
-        // Call failed
-        buttonId = 1; // No action
-    }
-
-    switch (buttonId) {
-    case 2: exit (1);
-
-    case 0: Int3 (); break;
-
-    default: break;
-    }
-
-    gr_activate (1);
 }
 
 void Error (const char* filename, int line, const char* format, ...) {

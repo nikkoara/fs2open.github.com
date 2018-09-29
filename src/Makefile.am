@@ -3,7 +3,6 @@
 ACLOCAL_AMFLAGS = -I etc/m4
 
 SUBDIRS =                                       \
-    external/lua                                \
     external/glad                               \
     external/mongoose
 
@@ -252,9 +251,6 @@ fs2_SOURCES =                                   \
     parse/generic_log.cpp                       \
     parse/parselo.cpp                           \
     parse/sexp.cpp                              \
-    parse/sexp/DynamicSEXP.cpp                  \
-    parse/sexp/LuaSEXP.cpp                      \
-    parse/sexp/sexp_lookup.cpp                  \
     particle/ParticleManager.cpp                \
     particle/ParticleSource.cpp                 \
     particle/ParticleSourceWrapper.cpp          \
@@ -288,76 +284,6 @@ fs2_SOURCES =                                   \
     render/3dmath.cpp                           \
     render/3dsetup.cpp                          \
     render/batching.cpp                         \
-    scripting/ade.cpp                           \
-    scripting/ade_args.cpp                      \
-    scripting/api/LuaEventCallback.cpp          \
-    scripting/api/libs/audio.cpp                \
-    scripting/api/libs/base.cpp                 \
-    scripting/api/libs/bitops.cpp               \
-    scripting/api/libs/cfile.cpp                \
-    scripting/api/libs/graphics.cpp             \
-    scripting/api/libs/hookvars.cpp             \
-    scripting/api/libs/hud.cpp                  \
-    scripting/api/libs/mission.cpp              \
-    scripting/api/libs/parse.cpp                \
-    scripting/api/libs/tables.cpp               \
-    scripting/api/libs/testing.cpp              \
-    scripting/api/libs/time_lib.cpp             \
-    scripting/api/libs/utf8.cpp                 \
-    scripting/api/objs/LuaSEXP.cpp              \
-    scripting/api/objs/asteroid.cpp             \
-    scripting/api/objs/background_element.cpp   \
-    scripting/api/objs/beam.cpp                 \
-    scripting/api/objs/camera.cpp               \
-    scripting/api/objs/cockpit_display.cpp      \
-    scripting/api/objs/control_info.cpp         \
-    scripting/api/objs/controls.cpp             \
-    scripting/api/objs/debris.cpp               \
-    scripting/api/objs/enums.cpp                \
-    scripting/api/objs/event.cpp                \
-    scripting/api/objs/eye.cpp                  \
-    scripting/api/objs/file.cpp                 \
-    scripting/api/objs/font.cpp                 \
-    scripting/api/objs/gameevent.cpp            \
-    scripting/api/objs/gamestate.cpp            \
-    scripting/api/objs/hudgauge.cpp             \
-    scripting/api/objs/mc_info.cpp              \
-    scripting/api/objs/message.cpp              \
-    scripting/api/objs/model.cpp                \
-    scripting/api/objs/movie_player.cpp         \
-    scripting/api/objs/object.cpp               \
-    scripting/api/objs/order.cpp                \
-    scripting/api/objs/particle.cpp             \
-    scripting/api/objs/physics_info.cpp         \
-    scripting/api/objs/player.cpp               \
-    scripting/api/objs/sexpvar.cpp              \
-    scripting/api/objs/shields.cpp              \
-    scripting/api/objs/ship.cpp                 \
-    scripting/api/objs/ship_bank.cpp            \
-    scripting/api/objs/shipclass.cpp            \
-    scripting/api/objs/shiptype.cpp             \
-    scripting/api/objs/sound.cpp                \
-    scripting/api/objs/species.cpp              \
-    scripting/api/objs/streaminganim.cpp        \
-    scripting/api/objs/subsystem.cpp            \
-    scripting/api/objs/team.cpp                 \
-    scripting/api/objs/texture.cpp              \
-    scripting/api/objs/texturemap.cpp           \
-    scripting/api/objs/time_obj.cpp             \
-    scripting/api/objs/vecmath.cpp              \
-    scripting/api/objs/waypoint.cpp             \
-    scripting/api/objs/weapon.cpp               \
-    scripting/api/objs/weaponclass.cpp          \
-    scripting/api/objs/wing.cpp                 \
-    scripting/lua.cpp                           \
-    scripting/lua/LuaArgs.cpp                   \
-    scripting/lua/LuaConvert.cpp                \
-    scripting/lua/LuaFunction.cpp               \
-    scripting/lua/LuaReference.cpp              \
-    scripting/lua/LuaTable.cpp                  \
-    scripting/lua/LuaUtil.cpp                   \
-    scripting/lua/LuaValue.cpp                  \
-    scripting/scripting.cpp                     \
     ship/afterburner.cpp                        \
     ship/awacs.cpp                              \
     ship/shield.cpp                             \

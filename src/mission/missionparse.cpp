@@ -49,7 +49,6 @@
 #include "object/waypoint.h"
 #include "parse/generic_log.h"
 #include "parse/parselo.h"
-#include "scripting/scripting.h"
 #include "playerman/player.h"
 #include "popup/popup.h"
 #include "popup/popupdead.h"
@@ -2575,22 +2574,6 @@ int parse_create_object_sub (p_object* p_objp) {
                     &Objects[objnum],
                     (p_objp == Arriving_support_ship) ? 1 : 0);
         }
-    }
-
-    // If the ship is in a wing, this will be done in
-    // mission_set_wing_arrival_location() instead
-    if (Game_mode & GM_IN_MISSION && shipp->wingnum == -1) {
-        if (anchor_objnum >= 0)
-            Script_system.SetHookObjects (
-                2, "Ship", &Objects[objnum], "Parent",
-                &Objects[anchor_objnum]);
-        else
-            Script_system.SetHookObjects (
-                2, "Ship", &Objects[objnum], "Parent", NULL);
-
-        Script_system.RunCondition (
-            CHA_ONSHIPARRIVE, 0, NULL, &Objects[objnum]);
-        Script_system.RemHookVars (2, "Ship", "Parent");
     }
 
     return objnum;
@@ -6585,15 +6568,6 @@ void mission_set_wing_arrival_location (wing* wingp, int num_to_set) {
         for (index = wingp->current_count - num_to_set;
              index < wingp->current_count; index++) {
             object* objp = &Objects[Ships[wingp->ship_index[index]].objnum];
-
-            if (anchor_objnum >= 0)
-                Script_system.SetHookObjects (
-                    2, "Ship", objp, "Parent", &Objects[anchor_objnum]);
-            else
-                Script_system.SetHookObjects (2, "Ship", objp, "Parent", NULL);
-
-            Script_system.RunCondition (CHA_ONSHIPARRIVE, 0, NULL, objp);
-            Script_system.RemHookVars (2, "Ship", "Parent");
 
             if (wingp->arrival_location != ARRIVE_FROM_DOCK_BAY) {
                 shipfx_warpin_start (objp);

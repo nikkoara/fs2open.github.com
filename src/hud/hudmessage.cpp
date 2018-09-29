@@ -20,7 +20,6 @@
 #include "missionui/missionscreencommon.h"
 #include "network/multi.h"
 #include "parse/parselo.h"
-#include "scripting/scripting.h"
 #include "playerman/player.h"
 #include "ship/ship.h"
 #include "sound/audiostr.h"
@@ -592,14 +591,6 @@ void hud_sourced_print (int source, const char* msg) {
     new_msg.x = 0;
 
     HUD_msg_buffer.push_back (new_msg);
-
-    // Invoke the scripting hook
-    Script_system.SetHookVar ("Text", 's', const_cast< char* > (msg));
-    Script_system.SetHookVar ("SourceType", 'i', &source);
-
-    Script_system.RunCondition (CHA_HUDMSGRECEIVED);
-
-    Script_system.RemHookVars (2, "Text", "SourceType");
 }
 
 int hud_query_scrollback_size () {

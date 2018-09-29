@@ -28,7 +28,6 @@
 #include "object/objectshield.h"
 #include "object/objectsnd.h"
 #include "parse/parselo.h"
-#include "scripting/scripting.h"
 #include "playerman/player.h"
 #include "popup/popup.h"
 #include "render/3d.h"
@@ -1733,19 +1732,6 @@ void ship_hit_kill (
     Assert (ship_objp); // Goober5000 - but not other_obj, not only for sexp
                         // but also for self-destruct
 
-    Script_system.SetHookObject ("Self", ship_objp);
-    if (other_obj != NULL)
-        Script_system.SetHookObject ("Killer", other_obj);
-    else
-        Script_system.SetHookObject ("Killer", 0);
-
-    if (Script_system.IsConditionOverride (CHA_DEATH, ship_objp)) {
-        // WMC - Do scripting stuff
-        Script_system.RunCondition (CHA_DEATH, 0, NULL, ship_objp);
-        Script_system.RemHookVars (2, "Self", "Killer");
-        return;
-    }
-
     ship* sp;
     char* killer_ship_name;
     int killer_damage_percent = 0;
@@ -1895,9 +1881,6 @@ void ship_hit_kill (
 
     // if the player is dying, have wingman lament
     if (ship_objp == Player_obj) { ship_maybe_lament (); }
-
-    Script_system.RunCondition (CHA_DEATH, 0, NULL, ship_objp);
-    Script_system.RemHookVars (2, "Self", "Killer");
 }
 
 // function to simply explode a ship where it is currently at

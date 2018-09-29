@@ -23,7 +23,6 @@
 #include "object/objcollide.h"
 #include "object/object.h"
 #include "parse/parselo.h"
-#include "scripting/scripting.h"
 #include "particle/particle.h"
 #include "render/3d.h"
 #include "ship/ship.h"
@@ -1532,140 +1531,136 @@ static void asteroid_maybe_break_up (object* pasteroid_obj) {
     if (timestamp_elapsed (asp->final_death_time)) {
         vec3d relvec, vfh, tvec;
 
-        Script_system.SetHookObject ("Self", pasteroid_obj);
-        if (!Script_system.IsConditionOverride (CHA_DEATH, pasteroid_obj)) {
-            pasteroid_obj->flags.set (Object::Object_Flags::Should_be_dead);
+        pasteroid_obj->flags.set (Object::Object_Flags::Should_be_dead);
 
-            // multiplayer clients won't go through the following code.
-            // asteroid_sub_create will send a create packet to the client in
-            // the above named function if the second condition isn't true it's
-            // just debris, and debris doesn't break up
-            if (!MULTIPLAYER_CLIENT &&
-                (asp->asteroid_type <= ASTEROID_TYPE_LARGE)) {
-                if (asip->split_info.empty ()) {
-                    switch (asp->asteroid_type) {
-                    case ASTEROID_TYPE_SMALL: break;
-                    case ASTEROID_TYPE_MEDIUM:
-                        asc_get_relvec (
-                            &relvec, pasteroid_obj, &asp->death_hit_pos);
+        // multiplayer clients won't go through the following code.
+        // asteroid_sub_create will send a create packet to the client in
+        // the above named function if the second condition isn't true it's
+        // just debris, and debris doesn't break up
+        if (!MULTIPLAYER_CLIENT &&
+            (asp->asteroid_type <= ASTEROID_TYPE_LARGE)) {
+            if (asip->split_info.empty ()) {
+                switch (asp->asteroid_type) {
+                case ASTEROID_TYPE_SMALL: break;
+                case ASTEROID_TYPE_MEDIUM:
+                    asc_get_relvec (
+                        &relvec, pasteroid_obj, &asp->death_hit_pos);
+                    asteroid_sub_create (
+                        pasteroid_obj, ASTEROID_TYPE_SMALL, &relvec);
+
+                    vm_vec_normalized_dir (
+                        &vfh, &pasteroid_obj->pos, &asp->death_hit_pos);
+                    vm_vec_copy_scale (&tvec, &vfh, 2.0f);
+                    vm_vec_sub2 (&tvec, &relvec);
+                    asteroid_sub_create (
+                        pasteroid_obj, ASTEROID_TYPE_SMALL, &tvec);
+
+                    break;
+                case ASTEROID_TYPE_LARGE:
+                    asc_get_relvec (
+                        &relvec, pasteroid_obj, &asp->death_hit_pos);
+                    asteroid_sub_create (
+                        pasteroid_obj, ASTEROID_TYPE_MEDIUM, &relvec);
+
+                    vm_vec_normalized_dir (
+                        &vfh, &pasteroid_obj->pos, &asp->death_hit_pos);
+                    vm_vec_copy_scale (&tvec, &vfh, 2.0f);
+                    vm_vec_sub2 (&tvec, &relvec);
+                    asteroid_sub_create (
+                        pasteroid_obj, ASTEROID_TYPE_MEDIUM, &tvec);
+
+                    while (frand () > 0.6f) {
+                        vec3d rvec, tvec2;
+                        vm_vec_rand_vec_quick (&rvec);
+                        vm_vec_scale_add (&tvec2, &vfh, &rvec, 0.75f);
                         asteroid_sub_create (
-                            pasteroid_obj, ASTEROID_TYPE_SMALL, &relvec);
-
-                        vm_vec_normalized_dir (
-                            &vfh, &pasteroid_obj->pos, &asp->death_hit_pos);
-                        vm_vec_copy_scale (&tvec, &vfh, 2.0f);
-                        vm_vec_sub2 (&tvec, &relvec);
-                        asteroid_sub_create (
-                            pasteroid_obj, ASTEROID_TYPE_SMALL, &tvec);
-
-                        break;
-                    case ASTEROID_TYPE_LARGE:
-                        asc_get_relvec (
-                            &relvec, pasteroid_obj, &asp->death_hit_pos);
-                        asteroid_sub_create (
-                            pasteroid_obj, ASTEROID_TYPE_MEDIUM, &relvec);
-
-                        vm_vec_normalized_dir (
-                            &vfh, &pasteroid_obj->pos, &asp->death_hit_pos);
-                        vm_vec_copy_scale (&tvec, &vfh, 2.0f);
-                        vm_vec_sub2 (&tvec, &relvec);
-                        asteroid_sub_create (
-                            pasteroid_obj, ASTEROID_TYPE_MEDIUM, &tvec);
-
-                        while (frand () > 0.6f) {
-                            vec3d rvec, tvec2;
-                            vm_vec_rand_vec_quick (&rvec);
-                            vm_vec_scale_add (&tvec2, &vfh, &rvec, 0.75f);
-                            asteroid_sub_create (
-                                pasteroid_obj, ASTEROID_TYPE_SMALL, &tvec2);
-                        }
-                        break;
-
-                    default: // this isn't going to happen.. really
-                        break;
+                            pasteroid_obj, ASTEROID_TYPE_SMALL, &tvec2);
                     }
-                }
-                else {
-                    std::vector< int > roids_to_create;
-                    std::vector< asteroid_split_info >::iterator split;
-                    for (split = asip->split_info.begin ();
-                         split != asip->split_info.end (); ++split) {
-                        int num_roids = split->min;
-                        int num_roids_var = split->max - split->min;
+                    break;
 
-                        if (num_roids_var > 0)
-                            num_roids += rand () % num_roids_var;
-
-                        if (num_roids > 0)
-                            for (int i = 0; i < num_roids; i++)
-                                roids_to_create.push_back (
-                                    split->asteroid_type);
-                    }
-
-                    std::random_device rng;
-                    std::mt19937 urng (rng ());
-
-                    std::shuffle (
-                        roids_to_create.begin (), roids_to_create.end (),
-                        urng);
-
-                    size_t total_roids = roids_to_create.size ();
-                    for (size_t i = 0; i < total_roids; i++) {
-                        vec3d dir_vec, final_vec;
-                        vec3d parent_vel, hit_rel_vec;
-
-                        // The roid directions are picked from the so-called
-                        // "golden section spiral" to prevent them from
-                        // clustering and thus clipping
-
-                        float inc = PI * (3.0f - sqrt (5.0f));
-                        float offset = 2.0f / total_roids;
-
-                        float y = i * offset - 1 + (offset / 2);
-                        float r = sqrt (1.0f - y * y);
-                        float phi = i * inc;
-
-                        dir_vec.xyz.x = cosf (phi) * r;
-                        dir_vec.xyz.y = sinf (phi) * r;
-                        dir_vec.xyz.z = y;
-
-                        // Randomize the direction a bit
-                        vec3d tempv = dir_vec;
-                        vm_vec_random_cone (
-                            &dir_vec, &tempv, (360.0f / total_roids / 2));
-
-                        // Make the roid inherit half of parent's directional
-                        // movement
-                        if (!IS_VEC_NULL (&pasteroid_obj->phys_info.vel)) {
-                            vm_vec_copy_normalize (
-                                &parent_vel, &pasteroid_obj->phys_info.vel);
-                        }
-                        else {
-                            vm_vec_rand_vec_quick (&parent_vel);
-                        }
-                        vm_vec_scale (&parent_vel, 0.5f);
-
-                        // Make the hit position affect the direction, but only
-                        // a little
-                        vm_vec_sub (
-                            &hit_rel_vec, &pasteroid_obj->pos,
-                            &asp->death_hit_pos);
-                        vm_vec_normalize (&hit_rel_vec);
-                        vm_vec_scale (&hit_rel_vec, 0.25f);
-
-                        vm_vec_avg3 (
-                            &final_vec, &parent_vel, &hit_rel_vec, &dir_vec);
-                        vm_vec_normalize (&final_vec);
-
-                        asteroid_sub_create (
-                            pasteroid_obj, roids_to_create[i], &final_vec);
-                    }
+                default: // this isn't going to happen.. really
+                    break;
                 }
             }
+            else {
+                std::vector< int > roids_to_create;
+                std::vector< asteroid_split_info >::iterator split;
+                for (split = asip->split_info.begin ();
+                     split != asip->split_info.end (); ++split) {
+                    int num_roids = split->min;
+                    int num_roids_var = split->max - split->min;
+
+                    if (num_roids_var > 0)
+                        num_roids += rand () % num_roids_var;
+
+                    if (num_roids > 0)
+                        for (int i = 0; i < num_roids; i++)
+                            roids_to_create.push_back (
+                                split->asteroid_type);
+                }
+
+                std::random_device rng;
+                std::mt19937 urng (rng ());
+
+                std::shuffle (
+                    roids_to_create.begin (), roids_to_create.end (),
+                    urng);
+
+                size_t total_roids = roids_to_create.size ();
+                for (size_t i = 0; i < total_roids; i++) {
+                    vec3d dir_vec, final_vec;
+                    vec3d parent_vel, hit_rel_vec;
+
+                    // The roid directions are picked from the so-called
+                    // "golden section spiral" to prevent them from
+                    // clustering and thus clipping
+
+                    float inc = PI * (3.0f - sqrt (5.0f));
+                    float offset = 2.0f / total_roids;
+
+                    float y = i * offset - 1 + (offset / 2);
+                    float r = sqrt (1.0f - y * y);
+                    float phi = i * inc;
+
+                    dir_vec.xyz.x = cosf (phi) * r;
+                    dir_vec.xyz.y = sinf (phi) * r;
+                    dir_vec.xyz.z = y;
+
+                    // Randomize the direction a bit
+                    vec3d tempv = dir_vec;
+                    vm_vec_random_cone (
+                        &dir_vec, &tempv, (360.0f / total_roids / 2));
+
+                    // Make the roid inherit half of parent's directional
+                    // movement
+                    if (!IS_VEC_NULL (&pasteroid_obj->phys_info.vel)) {
+                        vm_vec_copy_normalize (
+                            &parent_vel, &pasteroid_obj->phys_info.vel);
+                    }
+                    else {
+                        vm_vec_rand_vec_quick (&parent_vel);
+                    }
+                    vm_vec_scale (&parent_vel, 0.5f);
+
+                    // Make the hit position affect the direction, but only
+                    // a little
+                    vm_vec_sub (
+                        &hit_rel_vec, &pasteroid_obj->pos,
+                        &asp->death_hit_pos);
+                    vm_vec_normalize (&hit_rel_vec);
+                    vm_vec_scale (&hit_rel_vec, 0.25f);
+
+                    vm_vec_avg3 (
+                        &final_vec, &parent_vel, &hit_rel_vec, &dir_vec);
+                    vm_vec_normalize (&final_vec);
+
+                    asteroid_sub_create (
+                        pasteroid_obj, roids_to_create[i], &final_vec);
+                }
+            }
+
             asp->final_death_time = timestamp (-1);
         }
-        Script_system.RunCondition (CHA_DEATH, '\0', NULL, pasteroid_obj);
-        Script_system.RemHookVar ("Self");
     }
 }
 

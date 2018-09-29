@@ -117,7 +117,6 @@
 #include "parse/generic_log.h"
 #include "parse/parselo.h"
 #include "parse/sexp.h"
-#include "parse/sexp/sexp_lookup.h"
 #include "particle/ParticleManager.h"
 #include "particle/particle.h"
 #include "pilotfile/pilotfile.h"
@@ -129,7 +128,6 @@
 #include "radar/radarsetup.h"
 #include "render/3d.h"
 #include "render/batching.h"
-#include "scripting/scripting.h"
 #include "ship/afterburner.h"
 #include "ship/awacs.h"
 #include "ship/ship.h"
@@ -846,68 +844,57 @@ void game_flash_diminish (float frametime) {
 }
 
 void game_level_close () {
-    // WMC - this is actually pretty damn dangerous, but I don't want a modder
-    // to accidentally use an override here without realizing it.
-    if (!Script_system.IsConditionOverride (CHA_MISSIONEND)) {
-        // save player-persistent variables
-        mission_campaign_save_on_close_variables (); // Goober5000
+    // save player-persistent variables
+    mission_campaign_save_on_close_variables (); // Goober5000
 
-        // De-Initialize the game subsystems
-        obj_delete_all ();
-        sexp_music_close (); // Goober5000
-        event_music_level_close ();
-        game_stop_looped_sounds ();
-        snd_stop_all ();
-        obj_snd_level_close (); // uninit object-linked persistant sounds
-        gamesnd_unload_gameplay_sounds (); // unload gameplay sounds from
-                                           // memory
-        anim_level_close ();         // stop and clean up any anim instances
-        message_mission_shutdown (); // called after anim_level_close() to make
-                                     // sure instances are clear
-        shockwave_level_close ();
-        fireball_close ();
-        shield_hit_close ();
-        mission_event_shutdown ();
-        asteroid_level_close ();
-        jumpnode_level_close ();
-        waypoint_level_close ();
-        flak_level_close (); // unload flak stuff
-        neb2_level_close (); // shutdown gaseous nebula stuff
-        ct_level_close ();
-        beam_level_close ();
-        mflash_level_close ();
-        mission_brief_common_reset (); // close out parsed briefing/mission
-                                       // stuff
-        cam_close ();
-        subtitles_close ();
-        particle::ParticleManager::get ()->clearSources ();
-        particle::close ();
-        trail_level_close ();
-        ship_clear_cockpit_displays ();
-        hud_level_close ();
-        model_instance_free_all ();
-        batch_render_close ();
+    // De-Initialize the game subsystems
+    obj_delete_all ();
+    sexp_music_close (); // Goober5000
+    event_music_level_close ();
+    game_stop_looped_sounds ();
+    snd_stop_all ();
+    obj_snd_level_close (); // uninit object-linked persistant sounds
+    gamesnd_unload_gameplay_sounds (); // unload gameplay sounds from
+    // memory
+    anim_level_close ();         // stop and clean up any anim instances
+    message_mission_shutdown (); // called after anim_level_close() to make
+    // sure instances are clear
+    shockwave_level_close ();
+    fireball_close ();
+    shield_hit_close ();
+    mission_event_shutdown ();
+    asteroid_level_close ();
+    jumpnode_level_close ();
+    waypoint_level_close ();
+    flak_level_close (); // unload flak stuff
+    neb2_level_close (); // shutdown gaseous nebula stuff
+    ct_level_close ();
+    beam_level_close ();
+    mflash_level_close ();
+    mission_brief_common_reset (); // close out parsed briefing/mission
+    // stuff
+    cam_close ();
+    subtitles_close ();
+    particle::ParticleManager::get ()->clearSources ();
+    particle::close ();
+    trail_level_close ();
+    ship_clear_cockpit_displays ();
+    hud_level_close ();
+    model_instance_free_all ();
+    batch_render_close ();
 
-        // be sure to not only reset the time but the lock as well
-        set_time_compression (1.0f, 0.0f);
-        lock_time_compression (false);
+    // be sure to not only reset the time but the lock as well
+    set_time_compression (1.0f, 0.0f);
+    lock_time_compression (false);
 
-        audiostream_unpause_all ();
-        Game_paused = 0;
+    audiostream_unpause_all ();
+    Game_paused = 0;
 
-        gr_set_ambient_light (120, 120, 120);
+    gr_set_ambient_light (120, 120, 120);
 
-        stars_level_close ();
+    stars_level_close ();
 
-        Pilot.save_savefile ();
-    }
-    else {
-        Error (
-            LOCATION,
-            "Scripting Mission End override is not fully supported yet.");
-    }
-
-    Script_system.RunCondition (CHA_MISSIONEND);
+    Pilot.save_savefile ();
 }
 
 uint load_gl_init;
@@ -1163,15 +1150,7 @@ void game_loading_callback (int count) {
     auto progress =
         static_cast< float > (count) / static_cast< float > (COUNT_ESTIMATE);
     CLAMP (progress, 0.0f, 1.0f);
-    Script_system.SetHookVar ("Progress", 'f', &progress);
-
-    if (Script_system.RunCondition (CHA_LOADSCREEN)) {
-        // At least one script exeuted so we probably need to do a flip now
-        do_flip = 1;
-    }
-
-    Script_system.RemHookVar ("Progress");
-
+    
     os_ignore_events ();
 
     if (do_flip) gr_flip ();
@@ -1366,17 +1345,6 @@ void game_post_level_init () {
     }
 
     freespace_mission_load_stuff ();
-
-    // m!m Make hv.Player available in "On Mission Start" hook
-    if (Player_obj) Script_system.SetHookObject ("Player", Player_obj);
-
-    // HACK: That scripting hook should be in mission so GM_IN_MISSION has to
-    // be set
-    Game_mode |= GM_IN_MISSION;
-    Script_system.RunCondition (CHA_MISSIONSTART);
-    Game_mode &= ~GM_IN_MISSION;
-
-    if (Player_obj) Script_system.RemHookVar ("Player");
 }
 
 /**
@@ -1802,8 +1770,6 @@ void game_init () {
     ptr = os_config_read_string (NULL, NOX ("GammaD3D"), NOX ("1.0"));
     FreeSpace_gamma = (float)atof (ptr);
 
-    script_init (); // WMC
-
     font::init (); // loads up all fonts
 
     // add title screen
@@ -1948,17 +1914,12 @@ void game_init () {
 
     if (!Cmdline_reparse_mainhall) { main_hall_table_init (); }
 
-    // Initialize dynamic SEXPs
-    sexp::dynamic_sexp_init ();
-
     // This needs to be done after the dynamic SEXP init so that our
     // documentation contains the dynamic sexps
     if (Cmdline_output_sexp_info) { output_sexps ("sexps.html"); }
 
     Viewer_mode = 0;
     Game_paused = 0;
-
-    Script_system.RunCondition (CHA_GAMEINIT);
 
     game_title_screen_close ();
 
@@ -3132,11 +3093,6 @@ camid game_render_frame_setup () {
                 last_Viewer_objnum = -1;
             }
 
-            if (Viewer_obj)
-                Script_system.SetHookObject ("Viewer", Viewer_obj);
-            else
-                Script_system.RemHookVar ("Viewer");
-
             if (view_from_player) {
                 //	View target from player ship.
                 Viewer_obj = NULL;
@@ -3835,8 +3791,6 @@ void game_simulation_frame () {
         if (Game_subspace_effect) { game_start_subspace_ambient_sound (); }
 #endif
     }
-
-    Script_system.RunCondition (CHA_SIMULATION);
 }
 
 // Maybe render and process the dead-popup
@@ -4098,11 +4052,6 @@ void game_frame (bool paused) {
     // start timing frame
     TRACE_SCOPE (tracing::MainFrame);
 
-    if (Player_obj)
-        Script_system.SetHookObject ("Player", Player_obj);
-    else
-        Script_system.RemHookVar ("Player");
-
     DEBUG_GET_TIME (total_time1)
 
     if (paused) {
@@ -4195,18 +4144,7 @@ void game_frame (bool paused) {
                     &Net_player->s_info.eye_orient);
             }
 
-            Scripting_didnt_draw_hud = 1;
-            Script_system.SetHookObject ("Self", Viewer_obj);
-            if (Script_system.IsConditionOverride (CHA_HUDDRAW, Viewer_obj)) {
-                Scripting_didnt_draw_hud = 0;
-            }
-
-            if (Scripting_didnt_draw_hud) {
-                GR_DEBUG_SCOPE ("Render HUD");
-                TRACE_SCOPE (tracing::RenderHUD);
-
-                game_render_hud (cid);
-            }
+            game_render_hud (cid);
             HUD_reset_clip ();
 
             if ((Game_detail_flags & DETAIL_FLAG_HUD) &&
@@ -4219,11 +4157,7 @@ void game_frame (bool paused) {
             if (!(Viewer_mode & (VM_EXTERNAL | VM_DEAD_VIEW | VM_WARP_CHASE |
                                  VM_PADLOCK_ANY))) {
                 TRACE_SCOPE (tracing::RenderHUDHook);
-
-                Script_system.RunCondition (
-                    CHA_HUDDRAW, '\0', NULL, Viewer_obj);
             }
-            Script_system.RemHookVar ("Self");
 
             // check to see if we should display the death died popup
             if (Game_mode & GM_DEAD_BLEW_UP) {
@@ -4917,13 +4851,6 @@ void game_process_event (int current_state, int event) {
         extern button_info Multi_ship_status_bi;
         memset (&Multi_ship_status_bi, 0, sizeof (button_info));
 
-        // Make hv.Player available in "On Gameplay Start" hook -zookeeper
-        if (Player_obj) Script_system.SetHookObject ("Player", Player_obj);
-
-        Script_system.RunCondition (CHA_GAMEPLAYSTART);
-
-        if (Player_obj) Script_system.RemHookVar ("Player");
-
         Start_time = f2fl (timer_get_approx_seconds ());
         // Framecount = 0;
         mprintf (("Entering game at time = %7.3f\n", Start_time));
@@ -5205,8 +5132,6 @@ void game_process_event (int current_state, int event) {
         gameseq_set_state (GS_STATE_FICTION_VIEWER);
         break;
 
-    case GS_EVENT_SCRIPTING: gameseq_set_state (GS_STATE_SCRIPTING); break;
-
     default: Int3 (); break;
     }
 }
@@ -5237,21 +5162,6 @@ void game_leave_state (int old_state, int new_state) {
         end_mission = 0; // these events shouldn't end a mission
         break;
     }
-
-    // WMC - Scripting override
-    /*
-    if(script_hook_valid(&GS_state_hooks[old_state]) &&
-    Script_system.IsOverride(GS_state_hooks[old_state])) { return;
-    }
-    */
-
-    if (Script_system.IsConditionOverride (CHA_ONSTATEEND)) {
-        Script_system.RunCondition (CHA_ONSTATEEND);
-        return;
-    }
-
-    // WMC - Clear scripting bitmaps
-    Script_system.UnloadImages ();
 
     switch (old_state) {
     case GS_STATE_BRIEFING:
@@ -5567,12 +5477,7 @@ void game_leave_state (int old_state, int new_state) {
         break;
 
     case GS_STATE_LAB: lab_close (); break;
-
-    case GS_STATE_SCRIPTING: scripting_state_close (); break;
     }
-
-    // WMC - Now run scripting stuff
-    Script_system.RunCondition (CHA_ONSTATEEND);
 }
 
 // variable used for automatic netgame starting/joining
@@ -5586,17 +5491,6 @@ int Main_hall_netgame_started = 0;
 // need to post an event, not change the state.
 
 void game_enter_state (int old_state, int new_state) {
-    // WMC - Scripting override
-    /*
-    if(script_hook_valid(&GS_state_hooks[new_state]) &&
-    Script_system.IsOverride(GS_state_hooks[new_state])) { return;
-    }
-    */
-    if (Script_system.IsConditionOverride (CHA_ONSTATESTART)) {
-        Script_system.RunCondition (CHA_ONSTATESTART);
-        return;
-    }
-
     switch (new_state) {
     case GS_STATE_MAIN_MENU:
         // in multiplayer mode, be sure that we are not doing networking
@@ -6061,12 +5955,7 @@ void game_enter_state (int old_state, int new_state) {
     case GS_STATE_LOOP_BRIEF: loop_brief_init (); break;
 
     case GS_STATE_LAB: lab_init (); break;
-
-    case GS_STATE_SCRIPTING: scripting_state_init (); break;
     } // end switch
-
-    // WMC - now do user scripting stuff
-    Script_system.RunCondition (CHA_ONSTATESTART);
 }
 
 // do stuff that may need to be done regardless of state
@@ -6113,23 +6002,6 @@ void game_do_state (int state) {
         state); // do stuff that may need to be done regardless of state
 
     if (Game_do_state_should_skip) { return; }
-
-    if (Script_system.IsConditionOverride (CHA_ONFRAME)) {
-        game_set_frametime (state);
-        gr_clear ();
-        gr_flip (); // Does state hook automagically
-        return;
-    }
-    /*
-    if(Script_system.IsOverride(GS_state_hooks[state]))
-    {
-        game_set_frametime(state);
-        gr_clear();
-        Script_system.RunBytecode(GS_state_hooks[state]);
-        gr_flip();
-        return;
-    }
-    */
 
     switch (state) {
     case GS_STATE_MAIN_MENU:
@@ -6378,12 +6250,6 @@ void game_do_state (int state) {
         game_set_frametime (GS_STATE_LAB);
         lab_do_frame (flFrametime);
         break;
-
-    case GS_STATE_SCRIPTING:
-        game_set_frametime (GS_STATE_SCRIPTING);
-        scripting_state_do_frame (flFrametime);
-        break;
-
     } // end switch(gs_current_state)
 
 #ifndef NDEBUG
@@ -7486,94 +7352,34 @@ int game_hacked_data () {
 }
 
 void game_title_screen_display () {
-    /*	_finddata_t find;
-        long		find_handle;
-        char current_dir[256];
+    Game_title_logo = bm_load (Game_logo_screen_fname[gr_screen.res]);
+    Game_title_bitmap = bm_load (Game_title_screen_fname[gr_screen.res]);
 
-        //Get the find string
-        _getcwd(current_dir, 256);
-        strcat_s(current_dir, DIR_SEPARATOR_STR);
-        strcat_s(current_dir, "*.pcx");
+    if (Game_title_bitmap != -1) {
+        // set
+        gr_set_bitmap (Game_title_bitmap);
 
-        //Let the search begin!
-        find_handle = _findfirst(current_dir, &find);
-        int i = 0;
-        if(find_handle != -1)
-        {
-            char *p;
+        // get bitmap's width and height
+        int width, height;
+        bm_get_info (Game_title_bitmap, &width, &height);
 
-            do {
-                if(!(find.attrib & _A_SUBDIR) && (strlen(find.name) <
-    MAX_FILENAME_LEN)) { p = strchr( find.name, '.' ); if(p) { *p = '\0';
-                    }
+        // set the screen scale to the bitmap's dimensions
+        gr_set_screen_scale (width, height);
 
-                    if(strcasecmp(find.name,
-    Game_logo_screen_fname[gr_screen.res])
-                        && strcasecmp(find.name,
-    Game_title_screen_fname[gr_screen.res]))
-                    {
-                        strcpy_s(Splash_screens[i], find.name);
-                        i++;
-                    }
+        // draw it in the center of the screen
+        gr_bitmap (
+            (gr_screen.max_w_unscaled - width) / 2,
+            (gr_screen.max_h_unscaled - height) / 2, GR_RESIZE_MENU);
 
-                    if(i == MAX_SPLASHSCREENS) {
-                        break;
-                    }
-                }
-            } while(!_findnext(find_handle, &find));
+        if (Game_title_logo != -1) {
+            gr_set_bitmap (Game_title_logo);
+
+            gr_bitmap (0, 0, GR_RESIZE_MENU);
         }
 
-        if(i) {
-            srand(time(NULL));
-            title_bitmap = bm_load(Splash_screens[rand() % i]);
-
-        } else {
-            title_bitmap = bm_load(Game_title_screen_fname[gr_screen.res]);
-        }
-
-        if (title_bitmap == -1 && title_logo == -1) {
-    //		return;
-        }
-        */
-
-    bool condhook_override =
-        Script_system.IsConditionOverride (CHA_SPLASHSCREEN);
-    mprintf (("SCRIPTING: Splash screen overrides checked\n"));
-    if (!condhook_override) {
-        Game_title_logo = bm_load (Game_logo_screen_fname[gr_screen.res]);
-        Game_title_bitmap = bm_load (Game_title_screen_fname[gr_screen.res]);
-
-        if (Game_title_bitmap != -1) {
-            // set
-            gr_set_bitmap (Game_title_bitmap);
-
-            // get bitmap's width and height
-            int width, height;
-            bm_get_info (Game_title_bitmap, &width, &height);
-
-            // set the screen scale to the bitmap's dimensions
-            gr_set_screen_scale (width, height);
-
-            // draw it in the center of the screen
-            gr_bitmap (
-                (gr_screen.max_w_unscaled - width) / 2,
-                (gr_screen.max_h_unscaled - height) / 2, GR_RESIZE_MENU);
-
-            if (Game_title_logo != -1) {
-                gr_set_bitmap (Game_title_logo);
-
-                gr_bitmap (0, 0, GR_RESIZE_MENU);
-            }
-
-            gr_reset_screen_scale ();
-        }
+        gr_reset_screen_scale ();
     }
 
-    Script_system.RunCondition (CHA_SPLASHSCREEN);
-
-    mprintf (("SCRIPTING: Splash screen conditional hook has been run\n"));
-
-    // flip
     gr_flip ();
 }
 

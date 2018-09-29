@@ -4,7 +4,6 @@
 #include "network/multi.h"
 #include "object/objcollide.h"
 #include "object/object.h"
-#include "scripting/scripting.h"
 #include "ship/ship.h"
 #include "stats/scoring.h"
 #include "weapon/weapon.h"
@@ -85,131 +84,104 @@ int collide_weapon_weapon (obj_pair* pair) {
     if (collide_subdivide (
             &A->last_pos, &A->pos, A_radius, &B->last_pos, &B->pos,
             B_radius)) {
-        Script_system.SetHookObjects (
-            4, "Weapon", A, "WeaponB", B, "Self", A, "Object", B);
-        bool a_override =
-            Script_system.IsConditionOverride (CHA_COLLIDEWEAPON, A);
 
-        // Should be reversed
-        Script_system.SetHookObjects (
-            4, "Weapon", B, "WeaponB", A, "Self", B, "Object", A);
-        bool b_override =
-            Script_system.IsConditionOverride (CHA_COLLIDEWEAPON, B);
+        float aDamage = wipA->damage;
+        if (wipB->armor_type_idx >= 0)
+            aDamage = Armor_types[wipB->armor_type_idx].GetDamage (
+                aDamage, wipA->damage_type_idx, 1.0f);
 
-        if (!a_override && !b_override) {
-            float aDamage = wipA->damage;
-            if (wipB->armor_type_idx >= 0)
-                aDamage = Armor_types[wipB->armor_type_idx].GetDamage (
-                    aDamage, wipA->damage_type_idx, 1.0f);
+        float bDamage = wipB->damage;
+        if (wipA->armor_type_idx >= 0)
+            bDamage = Armor_types[wipA->armor_type_idx].GetDamage (
+                bDamage, wipB->damage_type_idx, 1.0f);
 
-            float bDamage = wipB->damage;
-            if (wipA->armor_type_idx >= 0)
-                bDamage = Armor_types[wipA->armor_type_idx].GetDamage (
-                    bDamage, wipB->damage_type_idx, 1.0f);
-
-            if (wipA->weapon_hitpoints > 0) {
-                if (wipB->weapon_hitpoints >
-                    0) { //	Two bombs collide, detonate both.
-                    if ((wipA->wi_flags[Weapon::Info_Flags::Bomb]) &&
-                        (wipB->wi_flags[Weapon::Info_Flags::Bomb])) {
-                        wpA->lifeleft = 0.01f;
-                        wpB->lifeleft = 0.01f;
-                        wpA->weapon_flags.set (
-                            Weapon::Weapon_Flags::Destroyed_by_weapon);
-                        wpB->weapon_flags.set (
-                            Weapon::Weapon_Flags::Destroyed_by_weapon);
-                    }
-                    else {
-                        A->hull_strength -= bDamage;
-                        B->hull_strength -= aDamage;
-
-                        // safety to make sure either of the weapons die -
-                        // allow 'bulkier' to keep going
-                        if ((A->hull_strength > 0.0f) &&
-                            (B->hull_strength > 0.0f)) {
-                            if (wipA->weapon_hitpoints >
-                                wipB->weapon_hitpoints) {
-                                B->hull_strength = -1.0f;
-                            }
-                            else {
-                                A->hull_strength = -1.0f;
-                            }
-                        }
-
-                        if (A->hull_strength < 0.0f) {
-                            wpA->lifeleft = 0.01f;
-                            wpA->weapon_flags.set (
-                                Weapon::Weapon_Flags::Destroyed_by_weapon);
-                        }
-                        if (B->hull_strength < 0.0f) {
-                            wpB->lifeleft = 0.01f;
-                            wpB->weapon_flags.set (
-                                Weapon::Weapon_Flags::Destroyed_by_weapon);
-                        }
-                    }
+        if (wipA->weapon_hitpoints > 0) {
+            if (wipB->weapon_hitpoints >
+                0) { //	Two bombs collide, detonate both.
+                if ((wipA->wi_flags[Weapon::Info_Flags::Bomb]) &&
+                    (wipB->wi_flags[Weapon::Info_Flags::Bomb])) {
+                    wpA->lifeleft = 0.01f;
+                    wpB->lifeleft = 0.01f;
+                    wpA->weapon_flags.set (
+                        Weapon::Weapon_Flags::Destroyed_by_weapon);
+                    wpB->weapon_flags.set (
+                        Weapon::Weapon_Flags::Destroyed_by_weapon);
                 }
                 else {
                     A->hull_strength -= bDamage;
-                    wpB->lifeleft = 0.01f;
-                    wpB->weapon_flags.set (
-                        Weapon::Weapon_Flags::Destroyed_by_weapon);
+                    B->hull_strength -= aDamage;
+
+                    // safety to make sure either of the weapons die -
+                    // allow 'bulkier' to keep going
+                    if ((A->hull_strength > 0.0f) &&
+                        (B->hull_strength > 0.0f)) {
+                        if (wipA->weapon_hitpoints >
+                            wipB->weapon_hitpoints) {
+                            B->hull_strength = -1.0f;
+                        }
+                        else {
+                            A->hull_strength = -1.0f;
+                        }
+                    }
+
                     if (A->hull_strength < 0.0f) {
                         wpA->lifeleft = 0.01f;
                         wpA->weapon_flags.set (
                             Weapon::Weapon_Flags::Destroyed_by_weapon);
                     }
+                    if (B->hull_strength < 0.0f) {
+                        wpB->lifeleft = 0.01f;
+                        wpB->weapon_flags.set (
+                            Weapon::Weapon_Flags::Destroyed_by_weapon);
+                    }
                 }
             }
-            else if (wipB->weapon_hitpoints > 0) {
-                B->hull_strength -= aDamage;
-                wpA->lifeleft = 0.01f;
-                wpA->weapon_flags.set (
+            else {
+                A->hull_strength -= bDamage;
+                wpB->lifeleft = 0.01f;
+                wpB->weapon_flags.set (
                     Weapon::Weapon_Flags::Destroyed_by_weapon);
-                if (B->hull_strength < 0.0f) {
-                    wpB->lifeleft = 0.01f;
-                    wpB->weapon_flags.set (
+                if (A->hull_strength < 0.0f) {
+                    wpA->lifeleft = 0.01f;
+                    wpA->weapon_flags.set (
                         Weapon::Weapon_Flags::Destroyed_by_weapon);
                 }
             }
+        }
+        else if (wipB->weapon_hitpoints > 0) {
+            B->hull_strength -= aDamage;
+            wpA->lifeleft = 0.01f;
+            wpA->weapon_flags.set (
+                Weapon::Weapon_Flags::Destroyed_by_weapon);
+            if (B->hull_strength < 0.0f) {
+                wpB->lifeleft = 0.01f;
+                wpB->weapon_flags.set (
+                    Weapon::Weapon_Flags::Destroyed_by_weapon);
+            }
+        }
 
-            // single player and multiplayer masters evaluate the scoring and
-            // kill stuff
-            if (!MULTIPLAYER_CLIENT) {
-                // If bomb was destroyed, do scoring
-                if (wipA->wi_flags[Weapon::Info_Flags::Bomb]) {
-                    // Update stats. -Halleck
-                    scoring_eval_hit (A, B, 0);
-                    if (wpA->weapon_flags
-                            [Weapon::Weapon_Flags::Destroyed_by_weapon]) {
-                        scoring_eval_kill_on_weapon (A, B);
-                    }
+        // single player and multiplayer masters evaluate the scoring and
+        // kill stuff
+        if (!MULTIPLAYER_CLIENT) {
+            // If bomb was destroyed, do scoring
+            if (wipA->wi_flags[Weapon::Info_Flags::Bomb]) {
+                // Update stats. -Halleck
+                scoring_eval_hit (A, B, 0);
+                if (wpA->weapon_flags
+                    [Weapon::Weapon_Flags::Destroyed_by_weapon]) {
+                    scoring_eval_kill_on_weapon (A, B);
                 }
-                if (wipB->wi_flags[Weapon::Info_Flags::Bomb]) {
-                    // Update stats. -Halleck
-                    scoring_eval_hit (B, A, 0);
-                    if (wpB->weapon_flags
-                            [Weapon::Weapon_Flags::Destroyed_by_weapon]) {
-                        scoring_eval_kill_on_weapon (B, A);
-                    }
+            }
+            if (wipB->wi_flags[Weapon::Info_Flags::Bomb]) {
+                // Update stats. -Halleck
+                scoring_eval_hit (B, A, 0);
+                if (wpB->weapon_flags
+                    [Weapon::Weapon_Flags::Destroyed_by_weapon]) {
+                    scoring_eval_kill_on_weapon (B, A);
                 }
             }
         }
 
-        if (!(b_override && !a_override)) {
-            Script_system.SetHookObjects (
-                4, "Weapon", A, "WeaponB", B, "Self", A, "Object", B);
-            Script_system.RunCondition (
-                CHA_COLLIDEWEAPON, '\0', NULL, A, wpA->weapon_info_index);
-        }
-        else {
-            // Should be reversed
-            Script_system.SetHookObjects (
-                4, "Weapon", B, "WeaponB", A, "Self", B, "Object", A);
-            Script_system.RunCondition (
-                CHA_COLLIDEWEAPON, '\0', NULL, B, wpB->weapon_info_index);
-        }
-
-        Script_system.RemHookVars (4, "Weapon", "WeaponB", "Self", "Object");
         return 1;
     }
 
