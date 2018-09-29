@@ -20,7 +20,6 @@
 #include "network/multimsgs.h"
 #include "network/multiutil.h"
 #include "object/objcollide.h"
-#include "scripting/scripting.h"
 #include "particle/particle.h"
 #include "playerman/player.h"
 #include "radar/radar.h"
@@ -3978,10 +3977,6 @@ const int weapon_glow_alpha = 217; // (0.85 * 255);
 void weapon_delete (object* obj) {
     weapon* wp;
     int num;
-
-    Script_system.SetHookObjects (2, "Weapon", obj, "Self", obj);
-    Script_system.RunCondition (CHA_ONWEAPONDELETE);
-    Script_system.RemHookVars (2, "Weapon", "Self");
 
     num = obj->instance;
 

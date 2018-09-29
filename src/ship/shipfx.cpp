@@ -21,7 +21,6 @@
 #include "object/objectdock.h"
 #include "object/objectsnd.h"
 #include "parse/parselo.h"
-#include "scripting/scripting.h"
 #include "particle/particle.h"
 #include "playerman/player.h"
 #include "render/3d.h" // needed for View_position, which is used when playing a 3D sound
@@ -618,14 +617,6 @@ void shipfx_warpin_start (object* objp) {
         return;
     }
 
-    // WMC - Check if scripting handles this.
-    Script_system.SetHookObject ("Self", objp);
-    if (Script_system.IsConditionOverride (CHA_WARPIN, objp)) {
-        Script_system.RunCondition (CHA_WARPIN, 0, NULL, objp);
-        Script_system.RemHookVar ("Self");
-        return;
-    }
-
     // if there is no arrival warp, then skip the whole thing
     if (shipp->flags[Ship::Ship_Flags::No_arrival_warp]) {
         shipfx_actually_warpin (shipp, objp);
@@ -633,9 +624,6 @@ void shipfx_warpin_start (object* objp) {
     }
 
     shipp->warpin_effect->warpStart ();
-
-    Script_system.RunCondition (CHA_WARPIN, 0, NULL, objp);
-    Script_system.RemHookVar ("Self");
 }
 
 void shipfx_warpin_frame (object* objp, float frametime) {
@@ -838,13 +826,6 @@ void shipfx_warpout_start (object* objp) {
         return;
     }
 
-    Script_system.SetHookObject ("Self", objp);
-    if (Script_system.IsConditionOverride (CHA_WARPOUT, objp)) {
-        Script_system.RunCondition (CHA_WARPOUT, 0, NULL, objp);
-        Script_system.RemHookVar ("Self");
-        return;
-    }
-
     // if we're dying return
     if (shipp->flags[Ship::Ship_Flags::Dying]) { return; }
 
@@ -874,9 +855,6 @@ void shipfx_warpout_start (object* objp) {
     }
 
     shipp->warpout_effect->warpStart ();
-
-    Script_system.RunCondition (CHA_WARPOUT, 0, NULL, objp);
-    Script_system.RemHookVar ("Self");
 }
 
 void shipfx_warpout_frame (object* objp, float frametime) {

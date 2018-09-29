@@ -52,7 +52,6 @@
 #include "object/objectsnd.h"
 #include "object/waypoint.h"
 #include "parse/parselo.h"
-#include "scripting/scripting.h"
 #include "particle/particle.h"
 #include "playerman/player.h"
 #include "radar/radar.h"
@@ -8094,11 +8093,6 @@ void ship_destroy_instantly (object* ship_objp, int shipnum) {
     mission_log_add_entry (
         LOG_SELF_DESTRUCTED, Ships[ship_objp->instance].ship_name, NULL);
 
-    // scripting stuff
-    Script_system.SetHookObject ("Self", ship_objp);
-    Script_system.RunCondition (CHA_DEATH, 0, NULL, ship_objp);
-    Script_system.RemHookVar ("Self");
-
     ship_objp->flags.set (Object::Object_Flags::Should_be_dead);
     ship_cleanup (shipnum, SHIP_DESTROYED);
 }
@@ -12801,12 +12795,6 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
             target = NULL;
         if (objp == Player_obj && Player_ai->target_objnum != -1)
             target = &Objects[Player_ai->target_objnum];
-
-        Script_system.SetHookObjects (2, "User", objp, "Target", target);
-        Script_system.RunCondition (CHA_ONWPFIRED, 0, NULL, objp, 1);
-
-        Script_system.RunCondition (CHA_PRIMARYFIRE, 0, NULL, objp);
-        Script_system.RemHookVars (2, "User", "Target");
     }
 
     return num_fired;
@@ -13527,10 +13515,6 @@ done_secondary:
             target = NULL;
         if (objp == Player_obj && Player_ai->target_objnum != -1)
             target = &Objects[Player_ai->target_objnum];
-        Script_system.SetHookObjects (2, "User", objp, "Target", target);
-        Script_system.RunCondition (CHA_ONWPFIRED, 0, NULL, objp);
-        Script_system.RunCondition (CHA_SECONDARYFIRE, 0, NULL, objp);
-        Script_system.RemHookVars (2, "User", "Target");
     }
 
     // AL 3-7-98: Move to next valid secondary bank if out of ammo
@@ -13800,11 +13784,6 @@ int ship_select_next_primary (object* objp, int direction) {
             target = NULL;
         if (objp == Player_obj && Player_ai->target_objnum != -1)
             target = &Objects[Player_ai->target_objnum];
-        Script_system.SetHookObjects (2, "User", objp, "Target", target);
-        Script_system.RunCondition (CHA_ONWPSELECTED, 0, NULL, objp);
-        Script_system.SetHookObjects (2, "User", objp, "Target", target);
-        Script_system.RunCondition (CHA_ONWPDESELECTED, 0, NULL, objp);
-        Script_system.RemHookVars (2, "User", "Target");
         return 1;
     }
 
@@ -13897,11 +13876,6 @@ int ship_select_next_secondary (object* objp) {
                 target = NULL;
             if (objp == Player_obj && Player_ai->target_objnum != -1)
                 target = &Objects[Player_ai->target_objnum];
-            Script_system.SetHookObjects (2, "User", objp, "Target", target);
-            Script_system.RunCondition (CHA_ONWPSELECTED, 0, NULL, objp);
-            Script_system.SetHookObjects (2, "User", objp, "Target", target);
-            Script_system.RunCondition (CHA_ONWPDESELECTED, 0, NULL, objp);
-            Script_system.RemHookVars (2, "User", "Target");
             return 1;
         }
     } // end if

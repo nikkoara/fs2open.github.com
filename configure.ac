@@ -56,7 +56,6 @@ AC_CONFIG_FILES(etc/Makefile)
 AC_CONFIG_FILES(src/Makefile)
 
 AC_CONFIG_FILES(src/external/glad/Makefile)
-AC_CONFIG_FILES(src/external/lua/Makefile)
 AC_CONFIG_FILES(src/external/mongoose/Makefile)
 
 AC_OUTPUT()

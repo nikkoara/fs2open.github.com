@@ -7,7 +7,6 @@
 
 #include "gamesequence/gamesequence.h"
 #include "globalincs/pstypes.h"
-#include "scripting/scripting.h"
 
 // local defines
 #define MAX_GAMESEQ_EVENTS \
@@ -158,8 +157,7 @@ const char* GS_state_text[] = { "NOT A VALID STATE", // 0
                                 "GS_STATE_LAB",
                                 "GS_STATE_PXO_HELP", // 50
                                 "GS_STATE_START_GAME",
-                                "GS_STATE_FICTION_VIEWER",
-                                "GS_STATE_SCRIPTING" };
+                                "GS_STATE_FICTION_VIEWER" };
 // XSTR:ON
 
 int Num_gs_state_text = sizeof (GS_state_text) / sizeof (char*);

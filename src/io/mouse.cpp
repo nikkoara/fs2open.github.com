@@ -2,7 +2,6 @@
 
 #include "io/mouse.h"
 #include "graphics/2d.h"
-#include "scripting/scripting.h"
 
 #define THREADED // to use the proper set of macros
 #include "osapi/osapi.h"
@@ -221,16 +220,6 @@ void mouse_mark_button (uint flags, int set) {
     }
 
     SDL_UnlockMutex (mouse_lock);
-
-    Script_system.SetHookVar ("MouseButton", 'i', &flags);
-
-    // WMC - On Mouse Pressed and On Mouse Released hooks
-    if (set == 1) { Script_system.RunCondition (CHA_MOUSEPRESSED); }
-    else if (set == 0) {
-        Script_system.RunCondition (CHA_MOUSERELEASED);
-    }
-
-    Script_system.RemHookVar ("MouseButton");
 }
 
 void mouse_flush () {
@@ -424,10 +413,6 @@ void mouse_event (int x, int y, int dx, int dy) {
     // should be reset in gr_flip my mouse_reset_deltas()
     Mouse_dx += dx;
     Mouse_dy += dy;
-
-    if (Mouse_dx != 0 || Mouse_dy != 0) {
-        Script_system.RunCondition (CHA_MOUSEMOVED);
-    }
 }
 
 int mouse_get_pos (int* xpos, int* ypos) {

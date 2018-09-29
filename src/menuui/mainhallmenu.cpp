@@ -26,7 +26,6 @@
 #include "network/multiui.h"
 #include "network/multiutil.h"
 #include "parse/parselo.h"
-#include "scripting/scripting.h"
 #include "playerman/player.h"
 #include "popup/popup.h"
 #include "sound/audiostr.h"
@@ -1073,16 +1072,9 @@ void main_hall_do (float frametime) {
 
         // custom action
         case SCRIPT_REGION:
-            const char* lua = it->lua_action.c_str ();
-            bool success = Script_system.EvalString (lua, NULL, NULL, lua);
-            if (!success)
-                Warning (
-                    LOCATION,
-                    "mainhall '+Door Action / $Script' failed to evaluate "
-                    "\"%s\"; check your syntax",
-                    lua);
+            Assert (0);
             break;
-        } // END switch (code)
+        }
 
         // if the escape key wasn't pressed handle any mouse position related
         // events

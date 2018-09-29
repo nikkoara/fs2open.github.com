@@ -71,7 +71,6 @@
 #include "object/waypoint.h"
 #include "parse/generic_log.h"
 #include "parse/parselo.h"
-#include "scripting/scripting.h"
 #include "parse/sexp.h"
 #include "playerman/player.h"
 #include "render/3d.h"
@@ -91,8 +90,6 @@
 #include "weapon/emp.h"
 #include "weapon/shockwave.h"
 #include "weapon/weapon.h"
-
-#include "parse/sexp/sexp_lookup.h"
 
 #include <boost/log/trivial.hpp>
 #include <boost/log/core.hpp>
@@ -1257,22 +1254,6 @@ std::vector< sexp_oper > Operators = {
         1,
         SEXP_INTEGER_OPERATOR,
     }, // Goober5000
-
-    // Other Sub-Category
-    {
-        "script-eval-num",
-        OP_SCRIPT_EVAL_NUM,
-        1,
-        1,
-        SEXP_INTEGER_OPERATOR,
-    },
-    {
-        "script-eval-string",
-        OP_SCRIPT_EVAL_STRING,
-        2,
-        2,
-        SEXP_ACTION_OPERATOR,
-    },
 
     // Time Category
     {
@@ -3678,27 +3659,6 @@ std::vector< sexp_oper > Operators = {
         SEXP_ACTION_OPERATOR,
     }, // Goober5000
     {
-        "script-eval",
-        OP_SCRIPT_EVAL,
-        1,
-        INT_MAX,
-        SEXP_ACTION_OPERATOR,
-    },
-    {
-        "script-eval-block",
-        OP_SCRIPT_EVAL_BLOCK,
-        1,
-        INT_MAX,
-        SEXP_ACTION_OPERATOR,
-    },
-    {
-        "multi-eval",
-        OP_SCRIPT_EVAL_MULTI,
-        2,
-        INT_MAX,
-        SEXP_ACTION_OPERATOR,
-    },
-    {
         "debug",
         OP_DEBUG,
         2,
@@ -4405,8 +4365,6 @@ void init_sexp () {
 
 void sexp_shutdown () {
     sexp_nodes_close ();
-
-    sexp::dynamic_sexp_shutdown ();
 }
 
 /**
@@ -6202,7 +6160,6 @@ int check_sexp_syntax (
             case OP_INT_TO_STRING:
             case OP_STRING_GET_SUBSTRING:
             case OP_STRING_SET_SUBSTRING:
-            case OP_SCRIPT_EVAL_STRING:
                 if (!(Sexp_variables[var_index].type & SEXP_VARIABLE_STRING))
                     return SEXP_CHECK_INVALID_VARIABLE_TYPE;
                 break;
@@ -24657,201 +24614,6 @@ void multi_sexp_show_hide_jumpnode (bool show) {
     }
 }
 
-// WMC - This is a bit of a hack, however, it's easier than
-// coding in a whole new Script_system function.
-int sexp_script_eval (int node, int return_type, bool concat_args = false) {
-    int n = node;
-
-    switch (return_type) {
-    case OPR_NUMBER: {
-        char* s = CTEXT (n);
-        int r = -1;
-        bool success = Script_system.EvalString (s, "|i", &r);
-
-        if (!success)
-            Warning (
-                LOCATION,
-                "sexp-script-eval failed to evaluate string \"%s\"; check "
-                "your syntax",
-                s);
-
-        return r;
-    }
-    case OPR_STRING: {
-        char* ret = NULL;
-        char* s = CTEXT (n);
-
-        bool success = Script_system.EvalString (s, "|s", &ret);
-        n = CDR (n);
-
-        if (!success)
-            Warning (
-                LOCATION,
-                "sexp-script-eval failed to evaluate string \"%s\"; check "
-                "your syntax",
-                s);
-
-        if (n != -1 && success) {
-            Assert (Sexp_nodes[n].first == -1);
-            int variable_index = atoi (Sexp_nodes[n].text);
-
-            // verify variable set
-            Assert (Sexp_variables[variable_index].type & SEXP_VARIABLE_SET);
-
-            if (!(Sexp_variables[variable_index].type &
-                  SEXP_VARIABLE_STRING)) {
-                Warning (
-                    LOCATION,
-                    "Variable for script-eval has to be a string variable!");
-            }
-            else if (ret != NULL) {
-                // assign to variable
-                sexp_modify_variable (ret, variable_index);
-            }
-
-            n = CDR (n);
-        }
-        break;
-    }
-    case OPR_NULL: {
-        std::string script_cmd;
-        while (n != -1) {
-            char* s = CTEXT (n);
-
-            if (concat_args) { script_cmd.append (CTEXT (n)); }
-            else {
-                bool success = Script_system.EvalString (s, NULL, NULL);
-
-                if (!success)
-                    Warning (
-                        LOCATION,
-                        "sexp-script-eval failed to evaluate string \"%s\"; "
-                        "check your syntax",
-                        s);
-            }
-
-            n = CDR (n);
-        }
-
-        if (concat_args) {
-            bool success =
-                Script_system.EvalString (script_cmd.c_str (), NULL, NULL);
-
-            if (!success)
-                Warning (
-                    LOCATION,
-                    "sexp-script-eval failed to evaluate string \"%s\"; check "
-                    "your syntax",
-                    script_cmd.c_str ());
-        }
-        break;
-    }
-    default:
-        Error (LOCATION, "Bad type passed to sexp_script_eval - get a coder");
-        break;
-    }
-
-    return SEXP_TRUE;
-}
-
-void sexp_script_eval_multi (int node) {
-    char s[TOKEN_LENGTH];
-    bool success = true;
-    bool execute_on_server;
-    int sindex;
-    player* p;
-
-    strcpy_s (s, CTEXT (node));
-
-    node = CDR (node);
-
-    execute_on_server = is_sexp_true (node);
-
-    node = CDR (node);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_string (s);
-    // evalutate on all clients
-    if (node == -1) {
-        Current_sexp_network_packet.send_bool (true);
-        execute_on_server = 1;
-    }
-    // we have to send to all clients but we need to send a list of ships so
-    // that they know if they evaluate or not
-    else {
-        Current_sexp_network_packet.send_bool (false);
-
-        do {
-            p = get_player_from_ship_node (node, true);
-
-            // not a player ship so skip it
-            if (p == NULL) {
-                node = CDR (node);
-                continue;
-            }
-            else {
-                // if this is me, flag that we should execute the script
-                if (p == Player) { execute_on_server = 1; }
-                // otherwise notify the clients
-                else {
-                    sindex = ship_name_lookup (CTEXT (node));
-                    Current_sexp_network_packet.send_ship (sindex);
-                }
-            }
-
-            node = CDR (node);
-        } while (node != -1);
-    }
-
-    Current_sexp_network_packet.end_callback ();
-
-    if (execute_on_server) {
-        success = Script_system.EvalString (s, NULL, NULL, s);
-    }
-
-    if (!success) {
-        Warning (
-            LOCATION,
-            "sexp-script-eval failed to evaluate string \"%s\"; check your "
-            "syntax",
-            s);
-    }
-}
-
-void multi_sexp_script_eval_multi () {
-    int sindex;
-    char s[TOKEN_LENGTH];
-    bool sent_to_all = false;
-    bool success = true;
-
-    Current_sexp_network_packet.get_string (s);
-    Current_sexp_network_packet.get_bool (sent_to_all);
-
-    if (sent_to_all) { success = Script_system.EvalString (s, NULL, NULL, s); }
-    // go through all the ships that were sent and see if any of them match
-    // this client.
-    else {
-        while (Current_sexp_network_packet.get_ship (sindex)) {
-            Assertion (
-                sindex >= 0,
-                "Illegal value for the ship index sent in "
-                "multi_sexp_script_eval_multi()! Ship %d does not exist!",
-                sindex);
-            if (Player->objnum == Ships[sindex].objnum) {
-                success = Script_system.EvalString (s, NULL, NULL, s);
-            }
-        }
-    }
-
-    if (!success) {
-        Warning (
-            LOCATION,
-            "sexp-script-eval failed to evaluate string \"%s\"; check your "
-            "syntax",
-            s);
-    }
-}
-
 void sexp_force_glide (int node) {
     ship* shipp;
     int sindex;
@@ -27500,27 +27262,6 @@ int eval_sexp (int cur_node, int referenced_node) {
             sexp_val = SEXP_TRUE;
             break;
 
-        case OP_SCRIPT_EVAL_NUM:
-            sexp_val = sexp_script_eval (node, OPR_NUMBER);
-            break;
-
-        case OP_SCRIPT_EVAL_STRING:
-            sexp_val = sexp_script_eval (node, OPR_STRING);
-            break;
-
-        case OP_SCRIPT_EVAL:
-            sexp_val = sexp_script_eval (node, OPR_NULL);
-            break;
-
-        case OP_SCRIPT_EVAL_BLOCK:
-            sexp_val = sexp_script_eval (node, OPR_NULL, true);
-            break;
-
-        case OP_SCRIPT_EVAL_MULTI:
-            sexp_script_eval_multi (node);
-            sexp_val = SEXP_TRUE;
-            break;
-
         case OP_CHANGE_IFF_COLOR:
             sexp_change_iff_color (node);
             sexp_val = SEXP_TRUE;
@@ -27630,19 +27371,8 @@ int eval_sexp (int cur_node, int referenced_node) {
             sexp_val = sexp_is_in_turret_fov (node);
             break;
 
-        default: {
-            // Check if we have a dynamic SEXP with this operator and if there
-            // is, execute that
-            auto dynamicSEXP = sexp::get_dynamic_sexp (op_num);
-            if (dynamicSEXP != nullptr) {
-                sexp_val = dynamicSEXP->execute (node);
-            }
-            else {
-                Error (
-                    LOCATION, "Looking for SEXP operator, found '%s'.\n",
-                    CTEXT (cur_node));
-            }
-        }
+        default:
+            break;
         }
 
         if (Log_event) {
@@ -27940,8 +27670,6 @@ void multi_sexp_eval () {
 
         case OP_SET_ETS_VALUES: multi_sexp_set_ets_values (); break;
 
-        case OP_SCRIPT_EVAL_MULTI: multi_sexp_script_eval_multi (); break;
-
         case OP_SET_PRIMARY_AMMO: multi_sexp_set_primary_ammo (); break;
 
         case OP_SET_SECONDARY_AMMO: multi_sexp_set_secondary_ammo (); break;
@@ -28230,7 +27958,6 @@ int query_operator_return_type (int op) {
     case OP_GET_OBJECT_SPEED_X:
     case OP_GET_OBJECT_SPEED_Y:
     case OP_GET_OBJECT_SPEED_Z:
-    case OP_SCRIPT_EVAL_NUM:
     case OP_STRING_TO_INT:
     case OP_GET_THROTTLE_SPEED:
     case OP_GET_VARIABLE_BY_INDEX:
@@ -28565,10 +28292,6 @@ int query_operator_return_type (int op) {
     case OP_SET_PRIMARY_WEAPON:
     case OP_SET_SECONDARY_WEAPON:
     case OP_SET_NUM_COUNTERMEASURES:
-    case OP_SCRIPT_EVAL:
-    case OP_SCRIPT_EVAL_BLOCK:
-    case OP_SCRIPT_EVAL_STRING:
-    case OP_SCRIPT_EVAL_MULTI:
     case OP_ENABLE_BUILTIN_MESSAGES:
     case OP_DISABLE_BUILTIN_MESSAGES:
     case OP_LOCK_PRIMARY_WEAPON:
@@ -28653,17 +28376,9 @@ int query_operator_return_type (int op) {
     case OP_NUMBER_OF:
     case OP_IN_SEQUENCE:
     case OP_FOR_COUNTER: return OPR_FLEXIBLE_ARGUMENT;
-
-    default: {
-        auto dynamicSEXP = sexp::get_dynamic_sexp (op);
-        if (dynamicSEXP != nullptr) { return dynamicSEXP->getReturnType (); }
-
-        Assertion (
-            false,
-            "query_operator_return_type() called for unsupported operator "
-            "type %d!",
-            op);
-    }
+        
+    default:
+        break;
     }
 
     return 0;
@@ -30622,24 +30337,6 @@ int query_operator_argument_type (int op, int argnum) {
         else
             return OPF_BOOL;
 
-    case OP_SCRIPT_EVAL_NUM:
-    case OP_SCRIPT_EVAL_BLOCK:
-    case OP_SCRIPT_EVAL: return OPF_STRING;
-
-    case OP_SCRIPT_EVAL_STRING:
-        if (!argnum)
-            return OPF_STRING;
-        else
-            return OPF_VARIABLE_NAME;
-
-    case OP_SCRIPT_EVAL_MULTI:
-        if (argnum == 0)
-            return OPF_STRING;
-        else if (argnum == 1)
-            return OPF_BOOL;
-        else
-            return OPF_SHIP;
-
     case OP_CHANGE_IFF_COLOR:
         if ((argnum == 0) || (argnum == 1))
             return OPF_IFF;
@@ -30729,18 +30426,8 @@ int query_operator_argument_type (int op, int argnum) {
 
     case OP_SET_MOTION_DEBRIS: return OPF_BOOL;
 
-    default: {
-        auto dynamicSEXP = sexp::get_dynamic_sexp (op);
-        if (dynamicSEXP != nullptr) {
-            return dynamicSEXP->getArgumentType (argnum);
-        }
-
-        Assertion (
-            false,
-            "query_operator_argument_type(%d, %d) called for unsupported "
-            "operator type!",
-            op, argnum);
-    }
+    default:
+        break;
     }
 
     return 0;
@@ -32311,11 +31998,7 @@ int get_subcategory (int sexp_id) {
 
     case OP_DAMAGED_ESCORT_LIST:
     case OP_DAMAGED_ESCORT_LIST_ALL:
-    case OP_SET_SUPPORT_SHIP:
-    case OP_SCRIPT_EVAL_STRING:
-    case OP_SCRIPT_EVAL_BLOCK:
-    case OP_SCRIPT_EVAL:
-    case OP_SCRIPT_EVAL_MULTI: return CHANGE_SUBCATEGORY_OTHER;
+    case OP_SET_SUPPORT_SHIP: return CHANGE_SUBCATEGORY_OTHER;
 
     case OP_NUM_SHIPS_IN_BATTLE:
     case OP_NUM_SHIPS_IN_WING:
@@ -32407,17 +32090,8 @@ int get_subcategory (int sexp_id) {
     case OP_STRING_TO_INT:
     case OP_STRING_GET_LENGTH: return STATUS_SUBCATEGORY_VARIABLES;
 
-    case OP_SCRIPT_EVAL_NUM: return STATUS_SUBCATEGORY_OTHER;
-
-    default: {
-        // Check if we have a dynamic SEXP with this operator and if there is,
-        // execute that
-        auto dynamicSEXP = sexp::get_dynamic_sexp (sexp_id);
-        if (dynamicSEXP != nullptr) { return dynamicSEXP->getSubcategory (); }
-        else {
-            return -1; // sexp doesn't have a subcategory
-        }
-    }
+    default:
+        break;
     }
 }
 
@@ -36010,12 +35684,6 @@ std::vector<sexp_help_struct> Sexp_help = {
 		"\t1:\tNebula background pattern to change to\r\n"
 	},
 
-	{OP_SCRIPT_EVAL_NUM, "script-eval-num\r\n"
-		"\tEvaluates script to return a number"
-		"Takes 1 argument...\r\n"
-		"\t1:\tScript\r\n"
-	},
-
 	{ OP_DISABLE_ETS, "disable-ets\r\n"
 		"\tSwitches a ships' ETS system off\r\n\r\n"
 		"Takes at least 1 argument...\r\n"
@@ -36026,33 +35694,6 @@ std::vector<sexp_help_struct> Sexp_help = {
 		"\tSwitches a ships' ETS system on\r\n\r\n"
 		"Takes at least 1 argument...\r\n"
 		"\tAll:\tList of ships this sexp applies to\r\n"
-	},
-
-	{OP_SCRIPT_EVAL_STRING, "script-eval-string\r\n"
-		"\tEvaluates script to return a string\r\n\r\n"
-		"Takes a multiple of 2 arguments...\r\n"
-		"\t1:\tScript (Without a leading 'return')\r\n"
-		"\t2:\tDestination variable\r\n"
-	},
-
-	{OP_SCRIPT_EVAL, "script-eval\r\n"
-		"\tEvaluates the given script\r\n"
-		"Takes at least 1 argument...\r\n"
-		"\t1:\tScript to evaluate\r\n"
-	},
-
-	{OP_SCRIPT_EVAL_BLOCK, "script-eval-block\r\n"
-		"\tEvaluates the concatenation of all arguments as a script\r\n"
-		"Takes at least 1 argument...\r\n"
-		"\tAll:\tScript to evaluate\r\n"
-	},
-
-	{OP_SCRIPT_EVAL_MULTI, "multi-eval\r\n"
-		"\tEvaluates script\r\n\r\n"
-		"Takes at least 2 arguments...\r\n"
-		"\t1:\tScript to evaluate\r\n"
-		"\t2:\tTrue/False - Should the script evaluate on the server?\r\n"
-		"\t(rest):\tList of players who should evaluate this script. If no player is given, all clients will execute the script\r\n"
 	},
 
 	{OP_FORCE_GLIDE, "force-glide\r\n"

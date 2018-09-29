@@ -11,25 +11,24 @@ struct lua_State;
 
 namespace os {
 namespace dialogs {
+
 class DialogException : public std::runtime_error {
 public:
     explicit DialogException (const std::string& msg)
         : std::runtime_error (msg) {}
 };
+
 class AssertException : public DialogException {
 public:
     explicit AssertException (const std::string& msg)
         : DialogException (msg) {}
 };
-class LuaErrorException : public DialogException {
-public:
-    explicit LuaErrorException (const std::string& msg)
-        : DialogException (msg) {}
-};
+
 class ErrorException : public DialogException {
 public:
     explicit ErrorException (const std::string& msg) : DialogException (msg) {}
 };
+
 class WarningException : public DialogException {
 public:
     explicit WarningException (const std::string& msg)
@@ -58,18 +57,6 @@ void AssertMessage (
     const char* text, const char* filename, int linenum,
     SCP_FORMAT_STRING const char* format = nullptr, ...)
     SCP_FORMAT_STRING_ARGS (4, 5) CLANG_ANALYZER_NORETURN;
-
-/**
- * @brief Shows a lua error.
- * This captures the current state of the given lua_State and displays a dialog
- * describing the error. If @c format is @c nullptr this function pops a string
- * from the top of the lua stack and uses that as the error message.
- * @param L The lua_State to capture the state of
- * @param format The error message to display, may be @c nullptr
- */
-void LuaError (
-    lua_State* L, SCP_FORMAT_STRING const char* format = nullptr, ...)
-    SCP_FORMAT_STRING_ARGS (2, 3);
 
 /**
  * @brief Shows an error dialog.
@@ -140,7 +127,6 @@ void Message (MessageType type, const char* message, const char* title = NULL);
 
 // Make these available in the global namespace for compatibility
 using os::dialogs::Error;
-using os::dialogs::LuaError;
 using os::dialogs::ReleaseWarning;
 using os::dialogs::Warning;
 using os::dialogs::WarningEx;

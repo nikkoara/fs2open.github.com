@@ -14,7 +14,6 @@
 #include "object/object.h"
 #include "object/objectdock.h"
 #include "object/objectshield.h"
-#include "scripting/scripting.h"
 #include "playerman/player.h"
 #include "render/3d.h" // needed for View_position, which is used when playing 3d sound
 #include "ship/ship.h"
@@ -1403,176 +1402,151 @@ int collide_ship_ship (obj_pair* pair) {
         pair->next_check_time = timestamp (0);
 
         if (hit) {
-            Script_system.SetHookObjects (
-                4, "Ship", A, "ShipB", B, "Self", A, "Object", B);
-            bool a_override =
-                Script_system.IsConditionOverride (CHA_COLLIDESHIP, A);
+            float damage;
 
-            // Yes this should be reversed.
-            Script_system.SetHookObjects (
-                4, "Ship", B, "ShipB", A, "Self", B, "Object", A);
-            bool b_override =
-                Script_system.IsConditionOverride (CHA_COLLIDESHIP, B);
-            if (!a_override && !b_override) {
-                float damage;
+            if (player_involved &&
+                (Player->control_mode == PCM_WARPOUT_STAGE1)) {
+                gameseq_post_event (GS_EVENT_PLAYER_WARPOUT_STOP);
+                HUD_printf ("%s", XSTR ("Warpout sequence aborted.", 466));
+            }
 
-                if (player_involved &&
-                    (Player->control_mode == PCM_WARPOUT_STAGE1)) {
-                    gameseq_post_event (GS_EVENT_PLAYER_WARPOUT_STOP);
-                    HUD_printf ("%s", XSTR ("Warpout sequence aborted.", 466));
+            damage = 0.005f *
+                ship_ship_hit_info
+                .impulse; //	Cut collision-based damage in half.
+            //	Decrease heavy damage by 2x.
+            if (damage > 5.0f) { damage = 5.0f + (damage - 5.0f) / 2.0f; }
+
+            do_kamikaze_crash (A, B);
+
+            if (ship_ship_hit_info.impulse > 0) {
+                // Only flash the "Collision" text if not landing
+                if (player_involved && !ship_ship_hit_info.is_landing) {
+                    hud_start_text_flash (XSTR ("Collision", 1431), 2000);
                 }
+            }
 
-                damage = 0.005f *
-                         ship_ship_hit_info
-                             .impulse; //	Cut collision-based damage in half.
-                //	Decrease heavy damage by 2x.
-                if (damage > 5.0f) { damage = 5.0f + (damage - 5.0f) / 2.0f; }
-
-                do_kamikaze_crash (A, B);
-
-                if (ship_ship_hit_info.impulse > 0) {
-                    // Only flash the "Collision" text if not landing
-                    if (player_involved && !ship_ship_hit_info.is_landing) {
-                        hud_start_text_flash (XSTR ("Collision", 1431), 2000);
-                    }
-                }
-
-                // If this is a landing, play a different sound
-                if (ship_ship_hit_info.is_landing) {
-                    if (vm_vec_mag (&ship_ship_hit_info.light_rel_vel) >
-                        MIN_LANDING_SOUND_VEL) {
-                        if (player_involved) {
-                            if (!snd_is_playing (Player_collide_sound)) {
-                                Player_collide_sound = snd_play_3d (
-                                    gamesnd_get_game_sound (
-                                        light_sip->collision_physics
-                                            .landing_sound_idx),
-                                    &world_hit_pos, &View_position);
-                            }
+            // If this is a landing, play a different sound
+            if (ship_ship_hit_info.is_landing) {
+                if (vm_vec_mag (&ship_ship_hit_info.light_rel_vel) >
+                    MIN_LANDING_SOUND_VEL) {
+                    if (player_involved) {
+                        if (!snd_is_playing (Player_collide_sound)) {
+                            Player_collide_sound = snd_play_3d (
+                                gamesnd_get_game_sound (
+                                    light_sip->collision_physics
+                                    .landing_sound_idx),
+                                &world_hit_pos, &View_position);
                         }
-                        else {
-                            if (!snd_is_playing (AI_collide_sound)) {
-                                AI_collide_sound = snd_play_3d (
-                                    gamesnd_get_game_sound (
-                                        light_sip->collision_physics
-                                            .landing_sound_idx),
-                                    &world_hit_pos, &View_position);
-                            }
+                    }
+                    else {
+                        if (!snd_is_playing (AI_collide_sound)) {
+                            AI_collide_sound = snd_play_3d (
+                                gamesnd_get_game_sound (
+                                    light_sip->collision_physics
+                                    .landing_sound_idx),
+                                &world_hit_pos, &View_position);
                         }
                     }
                 }
-                else {
-                    collide_ship_ship_do_sound (
-                        &world_hit_pos, A, B, player_involved);
-                }
+            }
+            else {
+                collide_ship_ship_do_sound (
+                    &world_hit_pos, A, B, player_involved);
+            }
 
-                // check if we should do force feedback stuff
-                if (player_involved && (ship_ship_hit_info.impulse > 0)) {
-                    float scaler;
-                    vec3d v;
+            // check if we should do force feedback stuff
+            if (player_involved && (ship_ship_hit_info.impulse > 0)) {
+                float scaler;
+                vec3d v;
 
-                    scaler = -ship_ship_hit_info.impulse /
-                             Player_obj->phys_info.mass * 300;
-                    vm_vec_copy_normalize (&v, &world_hit_pos);
-                    joy_ff_play_vector_effect (&v, scaler);
-                }
+                scaler = -ship_ship_hit_info.impulse /
+                    Player_obj->phys_info.mass * 300;
+                vm_vec_copy_normalize (&v, &world_hit_pos);
+                joy_ff_play_vector_effect (&v, scaler);
+            }
 
 #ifndef NDEBUG
-                if (!Collide_friendly) {
-                    if (Ships[A->instance].team == Ships[B->instance].team) {
-                        vec3d collision_vec, right_angle_vec;
-                        vm_vec_normalized_dir (
-                            &collision_vec, &ship_ship_hit_info.hit_pos,
-                            &A->pos);
-                        if (vm_vec_dot (&collision_vec, &A->orient.vec.fvec) >
-                            0.999f) {
-                            right_angle_vec = A->orient.vec.rvec;
-                        }
-                        else {
-                            vm_vec_cross (
-                                &right_angle_vec, &A->orient.vec.uvec,
-                                &collision_vec);
-                        }
-
-                        vm_vec_scale_add2 (
-                            &A->phys_info.vel, &right_angle_vec, +2.0f);
-                        vm_vec_scale_add2 (
-                            &B->phys_info.vel, &right_angle_vec, -2.0f);
-
-                        return 0;
+            if (!Collide_friendly) {
+                if (Ships[A->instance].team == Ships[B->instance].team) {
+                    vec3d collision_vec, right_angle_vec;
+                    vm_vec_normalized_dir (
+                        &collision_vec, &ship_ship_hit_info.hit_pos,
+                        &A->pos);
+                    if (vm_vec_dot (&collision_vec, &A->orient.vec.fvec) >
+                        0.999f) {
+                        right_angle_vec = A->orient.vec.rvec;
                     }
+                    else {
+                        vm_vec_cross (
+                            &right_angle_vec, &A->orient.vec.uvec,
+                            &collision_vec);
+                    }
+
+                    vm_vec_scale_add2 (
+                        &A->phys_info.vel, &right_angle_vec, +2.0f);
+                    vm_vec_scale_add2 (
+                        &B->phys_info.vel, &right_angle_vec, -2.0f);
+
+                    return 0;
                 }
+            }
 #endif
 
-                // Only do damage if not a landing
-                if (!ship_ship_hit_info.is_landing) {
-                    //	Scale damage based on skill level for player.
-                    if ((LightOne->flags[Object::Object_Flags::Player_ship]) ||
-                        (HeavyOne->flags[Object::Object_Flags::Player_ship])) {
-                        damage *=
-                            (float)(Game_skill_level * Game_skill_level + 1) /
-                            (NUM_SKILL_LEVELS + 1);
-                    }
-                    else if (
-                        Ships[LightOne->instance].team ==
-                        Ships[HeavyOne->instance].team) {
-                        //	Decrease damage if non-player ships and not large.
-                        //	Looks dumb when fighters are taking damage from
-                        // bumping into each other.
-                        if ((LightOne->radius < 50.0f) &&
-                            (HeavyOne->radius < 50.0f)) {
-                            damage /= 4.0f;
-                        }
-                    }
-
-                    float dam2 = (100.0f * damage / LightOne->phys_info.mass);
-
-                    int quadrant_num = get_ship_quadrant_from_global (
-                        &world_hit_pos, ship_ship_hit_info.heavy);
-                    if ((ship_ship_hit_info.heavy
-                             ->flags[Object::Object_Flags::No_shields]) ||
-                        !ship_is_shield_up (
-                            ship_ship_hit_info.heavy, quadrant_num)) {
-                        quadrant_num = -1;
-                    }
-
-                    ship_apply_local_damage (
-                        ship_ship_hit_info.heavy, ship_ship_hit_info.light,
-                        &world_hit_pos,
-                        100.0f * damage / HeavyOne->phys_info.mass,
-                        quadrant_num, CREATE_SPARKS,
-                        ship_ship_hit_info.submodel_num,
-                        &ship_ship_hit_info.collision_normal);
-                    hud_shield_quadrant_hit (
-                        ship_ship_hit_info.heavy, quadrant_num);
-
-                    // don't draw sparks (using sphere hitpos)
-                    ship_apply_local_damage (
-                        ship_ship_hit_info.light, ship_ship_hit_info.heavy,
-                        &world_hit_pos, dam2, MISS_SHIELDS, NO_SPARKS, -1,
-                        &ship_ship_hit_info.collision_normal);
-                    hud_shield_quadrant_hit (ship_ship_hit_info.light, -1);
-
-                    maybe_push_little_ship_from_fast_big_ship (
-                        ship_ship_hit_info.heavy, ship_ship_hit_info.light,
-                        ship_ship_hit_info.impulse,
-                        &ship_ship_hit_info.collision_normal);
+            // Only do damage if not a landing
+            if (!ship_ship_hit_info.is_landing) {
+                //	Scale damage based on skill level for player.
+                if ((LightOne->flags[Object::Object_Flags::Player_ship]) ||
+                    (HeavyOne->flags[Object::Object_Flags::Player_ship])) {
+                    damage *=
+                        (float)(Game_skill_level * Game_skill_level + 1) /
+                        (NUM_SKILL_LEVELS + 1);
                 }
+                else if (
+                    Ships[LightOne->instance].team ==
+                    Ships[HeavyOne->instance].team) {
+                    //	Decrease damage if non-player ships and not large.
+                    //	Looks dumb when fighters are taking damage from
+                    // bumping into each other.
+                    if ((LightOne->radius < 50.0f) &&
+                        (HeavyOne->radius < 50.0f)) {
+                        damage /= 4.0f;
+                    }
+                }
+
+                float dam2 = (100.0f * damage / LightOne->phys_info.mass);
+
+                int quadrant_num = get_ship_quadrant_from_global (
+                    &world_hit_pos, ship_ship_hit_info.heavy);
+                if ((ship_ship_hit_info.heavy
+                     ->flags[Object::Object_Flags::No_shields]) ||
+                    !ship_is_shield_up (
+                        ship_ship_hit_info.heavy, quadrant_num)) {
+                    quadrant_num = -1;
+                }
+
+                ship_apply_local_damage (
+                    ship_ship_hit_info.heavy, ship_ship_hit_info.light,
+                    &world_hit_pos,
+                    100.0f * damage / HeavyOne->phys_info.mass,
+                    quadrant_num, CREATE_SPARKS,
+                    ship_ship_hit_info.submodel_num,
+                    &ship_ship_hit_info.collision_normal);
+                hud_shield_quadrant_hit (
+                    ship_ship_hit_info.heavy, quadrant_num);
+
+                // don't draw sparks (using sphere hitpos)
+                ship_apply_local_damage (
+                    ship_ship_hit_info.light, ship_ship_hit_info.heavy,
+                    &world_hit_pos, dam2, MISS_SHIELDS, NO_SPARKS, -1,
+                    &ship_ship_hit_info.collision_normal);
+                hud_shield_quadrant_hit (ship_ship_hit_info.light, -1);
+
+                maybe_push_little_ship_from_fast_big_ship (
+                    ship_ship_hit_info.heavy, ship_ship_hit_info.light,
+                    ship_ship_hit_info.impulse,
+                    &ship_ship_hit_info.collision_normal);
             }
 
-            if (!(b_override && !a_override)) {
-                Script_system.SetHookObjects (
-                    4, "Ship", A, "ShipB", B, "Self", A, "Object", B);
-                Script_system.RunCondition (CHA_COLLIDESHIP, '\0', NULL, A);
-            }
-            if ((b_override && !a_override) || (!b_override && !a_override)) {
-                // Yes this should be reversed.
-                Script_system.SetHookObjects (
-                    4, "Ship", B, "ShipB", A, "Self", B, "Object", A);
-                Script_system.RunCondition (CHA_COLLIDESHIP, '\0', NULL, B);
-            }
-
-            Script_system.RemHookVars (4, "Ship", "ShipB", "Self", "Object");
             return 0;
         }
     }

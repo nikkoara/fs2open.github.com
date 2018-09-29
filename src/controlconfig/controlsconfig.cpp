@@ -15,7 +15,6 @@
 #include "missionui/missionscreencommon.h"
 #include "network/multi_pmsg.h"
 #include "network/multiutil.h"
-#include "scripting/scripting.h"
 #include "pilotfile/pilotfile.h"
 #include "popup/popup.h"
 #include "ui/ui.h"
@@ -2363,11 +2362,6 @@ int check_control (int id, int key) {
     if (Control_config[id].continuous_ongoing) {
         // If we reach this point, then it means this is a continuous control
         // which has just been released
-
-        Script_system.SetHookVar ("Action", 's', Control_config[id].text);
-        Script_system.RunCondition (CHA_ONACTIONSTOPPED, '\0', NULL, NULL, id);
-        Script_system.RemHookVar ("Action");
-
         Control_config[id].continuous_ongoing = false;
     }
 
@@ -2426,10 +2420,6 @@ void control_used (int id) {
     // more than once per frame
     if (Control_config[id].used < Last_frame_timestamp) {
         if (!Control_config[id].continuous_ongoing) {
-            Script_system.SetHookVar ("Action", 's', Control_config[id].text);
-            Script_system.RunCondition (CHA_ONACTION, '\0', NULL, NULL, id);
-            Script_system.RemHookVar ("Action");
-
             if (Control_config[id].type == CC_TYPE_CONTINUOUS)
                 Control_config[id].continuous_ongoing = true;
         }

@@ -8,7 +8,6 @@
 #include "network/multiutil.h"
 #include "object/objcollide.h"
 #include "object/object.h"
-#include "scripting/scripting.h"
 #include "playerman/player.h"
 #include "ship/ship.h"
 #include "ship/shipfx.h"
@@ -468,47 +467,19 @@ static int ship_weapon_check_collision (
             new mc_info; // The weapon will free this memory later
         memcpy (wp->collisionInfo, &mc, sizeof (mc_info));
 
-        Script_system.SetHookObjects (
-            4, "Ship", ship_objp, "Weapon", weapon_objp, "Self", ship_objp,
-            "Object", weapon_objp);
-        bool ship_override =
-            Script_system.IsConditionOverride (CHA_COLLIDEWEAPON, ship_objp);
-
-        Script_system.SetHookObjects (
-            2, "Self", weapon_objp, "Object", ship_objp);
-        bool weapon_override =
-            Script_system.IsConditionOverride (CHA_COLLIDESHIP, weapon_objp);
-
-        if (!ship_override && !weapon_override) {
-            if (shield_collision && quadrant_num >= 0) {
-                if ((sip->shield_impact_explosion_anim > -1) &&
-                    (wip->shield_impact_explosion_radius > 0)) {
-                    shield_impact_explosion (
-                        &mc.hit_point, ship_objp,
-                        wip->shield_impact_explosion_radius,
-                        sip->shield_impact_explosion_anim);
-                }
+        if (shield_collision && quadrant_num >= 0) {
+            if ((sip->shield_impact_explosion_anim > -1) &&
+                (wip->shield_impact_explosion_radius > 0)) {
+                shield_impact_explosion (
+                    &mc.hit_point, ship_objp,
+                    wip->shield_impact_explosion_radius,
+                    sip->shield_impact_explosion_anim);
             }
-            ship_weapon_do_hit_stuff (
-                ship_objp, weapon_objp, &mc.hit_point_world, &mc.hit_point,
-                quadrant_num, mc.hit_submodel, mc.hit_normal);
         }
 
-        Script_system.SetHookObjects (
-            2, "Self", ship_objp, "Object", weapon_objp);
-        if (!(weapon_override && !ship_override))
-            Script_system.RunCondition (
-                CHA_COLLIDEWEAPON, '\0', NULL, ship_objp,
-                wp->weapon_info_index);
-
-        Script_system.SetHookObjects (
-            2, "Self", weapon_objp, "Object", ship_objp);
-        if ((weapon_override && !ship_override) ||
-            (!weapon_override && !ship_override))
-            Script_system.RunCondition (
-                CHA_COLLIDESHIP, '\0', NULL, weapon_objp);
-
-        Script_system.RemHookVars (4, "Ship", "Weapon", "Self", "Object");
+        ship_weapon_do_hit_stuff (
+            ship_objp, weapon_objp, &mc.hit_point_world, &mc.hit_point,
+            quadrant_num, mc.hit_submodel, mc.hit_normal);
     }
     else if (
         (Missiontime - wp->creation_time > F1_0 / 2) && (wip->is_homing ()) &&

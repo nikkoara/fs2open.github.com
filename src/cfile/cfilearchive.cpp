@@ -8,7 +8,6 @@
 
 #include "cfile/cfile.h"
 #include "cfile/cfilearchive.h"
-#include "lua/luaconf.h"
 
 #include <sstream>
 #include <limits>
@@ -212,53 +211,4 @@ int cfread (void* buf, int elsize, int nelem, CFILE* cfile) {
 #endif
 
     return (int)(bytes_read / elsize);
-}
-
-int cfread_lua_number (double* buf, CFILE* cfile) {
-    if (!cf_is_valid (cfile)) return 0;
-
-    if (buf == NULL) return 0;
-
-    Cfile_block* cb = &Cfile_block_list[cfile->id];
-
-    // cfread() not supported for memory-mapped files
-    if (cb->data != NULL) {
-        Warning (LOCATION, "Writing is not supported for mem-mapped files");
-        return 0;
-    }
-
-    size_t advance = 0;
-    int items_read;
-    if (cb->fp) {
-        long orig_pos = ftell (cb->fp);
-        items_read = fscanf (cb->fp, LUA_NUMBER_SCAN, buf);
-        advance = (size_t) (ftell (cb->fp) - orig_pos);
-    }
-    else {
-        int read;
-        // %n returns the number of bytes currently read so we append that to
-        // the scan format at the end so it will return how many bytes we have
-        // consumed
-        items_read = sscanf (
-            reinterpret_cast< const char* > (cb->data), LUA_NUMBER_SCAN "%n",
-            buf, &read);
-        if (items_read == 2) {
-            // We need to correct the items read counter since we read one
-            // additional item
-            items_read = 1;
-        }
-        advance = (size_t)read;
-    }
-    cb->raw_position += advance;
-    Assertion (
-        cb->raw_position <= cb->size, "Invalid raw_position value detected!");
-
-#if defined(CHECK_POSITION) && !defined(NDEBUG)
-    if (cb->fp) {
-        auto tmp_offset = ftell (cb->fp) - cb->lib_offset;
-        Assert (tmp_offset == cb->raw_position);
-    }
-#endif
-
-    return items_read;
 }

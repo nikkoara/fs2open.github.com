@@ -7,7 +7,6 @@
 #include "math/fix.h"
 #include "io/timer.h"
 #include "localization/localize.h"
-#include "scripting/scripting.h"
 #include "cmdline/cmdline.h"
 
 #define THREADED // to use the proper set of macros
@@ -590,11 +589,6 @@ void key_mark (uint code, int state, uint latency) {
         if (keyd_pressed[KEY_LCTRL] || keyd_pressed[KEY_RCTRL]) {
             Current_key_down |= KEY_CTRLED;
         }
-
-        Script_system.SetHookVar (
-            "Key", 's', textify_scancode_universal (Current_key_down));
-        Script_system.RunCondition (CHA_KEYRELEASED);
-        Script_system.RemHookVar ("Key");
     }
     else {
         // Key going down
@@ -620,13 +614,6 @@ void key_mark (uint code, int state, uint latency) {
             if (keyd_pressed[KEY_LCTRL] || keyd_pressed[KEY_RCTRL]) {
                 Current_key_down |= KEY_CTRLED;
             }
-
-            // We use the universal value here to keep the scripting interface
-            // consistent regardless of the current language
-            Script_system.SetHookVar (
-                "Key", 's', textify_scancode_universal (Current_key_down));
-            Script_system.RunCondition (CHA_KEYPRESSED);
-            Script_system.RemHookVar ("Key");
         }
         else if (!keyd_repeat) {
             // Don't buffer repeating key if repeat mode is off

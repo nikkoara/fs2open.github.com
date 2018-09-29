@@ -8,7 +8,6 @@
 #include "globalincs/version.h"
 #include "hud/hudconfig.h"
 #include "network/multi.h"
-#include "scripting/scripting.h"
 #include "parse/sexp.h"
 #include "globalincs/version.h"
 #include "globalincs/pstypes.h"
@@ -784,16 +783,6 @@ Flag exe_params[] = {
         "Command-Line_Reference#-output_sexps",
     },
     {
-        "-output_scripting",
-        "Output scripting to scripting.html",
-        true,
-        0,
-        EASY_DEFAULT,
-        "Dev Tool",
-        "http://www.hard-light.net/wiki/index.php/"
-        "Command-Line_Reference#-output_scripting",
-    },
-    {
         "-save_render_target",
         "Save render targets to file",
         true,
@@ -1259,7 +1248,6 @@ bool Cmdline_debug_window = false;
 // Other
 cmdline_parm output_sexp_arg (
     "-output_sexps", NULL, AT_NONE); // WMC - outputs all SEXPs to sexps.html
-cmdline_parm output_scripting_arg ("-output_scripting", NULL, AT_NONE); // WMC
 
 // Deprecated flags - CommanderDJ
 cmdline_parm deprecated_spec_arg ("-spec", "Deprecated", AT_NONE);
@@ -2276,8 +2264,6 @@ bool SetCmdlineParams () {
 
     if (ambient_factor_arg.found ())
         Cmdline_ambient_factor = ambient_factor_arg.get_int ();
-
-    if (output_scripting_arg.found ()) Output_scripting_meta = true;
 
     if (output_sexp_arg.found ()) { Cmdline_output_sexp_info = true; }
 
