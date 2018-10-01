@@ -12,38 +12,11 @@
 #include <string>
 #include <algorithm>
 
-extern "C" {
-
-#include "lauxlib.h"
-#include "lualib.h"
-}
-
 namespace {
 const char* Separator =
     "------------------------------------------------------------------\n";
 
 const int Messagebox_lines = 30;
-
-template< typename Stream >
-void LuaDebugPrint (Stream& stream, lua_Debug& ar) {
-    if (ar.name == nullptr) {
-        // Invalid lua_Debug struct
-        return;
-    }
-
-    stream << "Name:\t\t" << ar.name << "\n";
-    stream << "Name of:\t" << ar.namewhat << "\n";
-    stream << "Function type:\t" << ar.what << "\n";
-    stream << "Defined on:\t" << ar.linedefined << "\n";
-    stream << "Upvalues:\t" << ar.nups << "\n";
-    stream << "\n";
-    stream << "Source:\t\t" << ar.source << "\n";
-    stream << "Short source:\t" << ar.short_src << "\n";
-    stream << "Current line:\t" << ar.currentline << "\n";
-    stream << "- Function line:\t"
-           << (ar.linedefined ? (1 + ar.currentline - ar.linedefined) : 0)
-           << "\n";
-}
 
 std::string truncateLines (std::stringstream& s, int maxLines) {
     std::stringstream outStream;
@@ -84,8 +57,6 @@ void set_clipboard_text (const char* text) {
 
 int Global_warning_count = 0;
 int Global_error_count = 0;
-
-extern lua_Debug Ade_debug_info;
 
 namespace os {
 namespace dialogs {

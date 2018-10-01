@@ -6092,7 +6092,7 @@ int parse_mission (mission* pm, int flags) {
     }
 
     fs2::log::logger_type logger;
-    FS2_LOG (logger, "general", info) << "load mission : " << pm->name;
+    FS2_LOG (logger, "general", info) << "Loaded mission: " << pm->name;
 
     // success
     return 0;

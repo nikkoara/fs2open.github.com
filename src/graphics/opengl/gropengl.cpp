@@ -1221,6 +1221,7 @@ static void APIENTRY debug_callback (
     }
 
     bool print_to_general_log = false;
+    
     switch (severity) {
     case GL_DEBUG_SEVERITY_HIGH_ARB:
         severityStr = "High";
