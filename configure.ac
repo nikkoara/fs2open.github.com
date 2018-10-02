@@ -17,6 +17,8 @@ AC_PROG_LIBTOOL
 AC_PROG_MAKE_SET(gmake)
 AM_PROG_AS
 
+AC_CHECK_HEADERS([cxxabi.h execinfo.h malloc.h])
+
 AC_PKG_CONFIG_WITH([libavcodec])
 AC_PKG_CONFIG_WITH([libavdevice])
 AC_PKG_CONFIG_WITH([libavfilter])
