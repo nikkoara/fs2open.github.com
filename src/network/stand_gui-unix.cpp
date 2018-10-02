@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#ifndef _WIN32
-
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -985,5 +983,3 @@ void std_multi_set_standalone_missiontime (float /*mission_time*/) {}
 
 // stub - not required for *nix standalone
 void std_init_os () {}
-
-#endif

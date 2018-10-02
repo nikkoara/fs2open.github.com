@@ -39,8 +39,6 @@
 
 #if defined(__linux__)
 #define RENDERDOC_CC
-#elif defined(__APPLE__)
-#define RENDERDOC_CC
 #else
 #error "Unknown platform"
 #endif

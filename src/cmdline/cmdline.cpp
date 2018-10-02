@@ -16,10 +16,6 @@
 #include "sound/openal.h"
 #include "io/joy.h"
 
-#if defined(APPLE_APP)
-#include <CoreFoundation/CoreFoundation.h>
-#endif
-
 #include "osapi/osapi.h"
 #include <dirent.h>
 
@@ -1687,17 +1683,8 @@ void os_init_cmdline (int argc, char* argv[]) {
             // command line arguments to the the parse_parms and validate_parms
             // line.  Read these first so anything actually on the command line
             // will take precedence
-#ifdef APPLE_APP
-            char resolved_path[MAX_PATH], data_path[MAX_PATH_LEN];
-
-            getcwd (data_path, sizeof (data_path));
-            snprintf (
-                resolved_path, MAX_PATH, "%s/data/cmdline_fso.cfg", data_path);
-
-            fp = fopen (resolved_path, "rt");
-#else
             fp = fopen ("data" DIR_SEPARATOR_STR "cmdline_fso.cfg", "rt");
-#endif
+            
             // if the file exists, get a single line, and deal with it
             if (fp) {
                 char *buf, *p;

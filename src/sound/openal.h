@@ -3,13 +3,8 @@
 #ifndef FREESPACE2_SOUND_OPENAL_H
 #define FREESPACE2_SOUND_OPENAL_H
 
-#if defined (__APPLE__)
-#  include <OpenAL/al.h>
-#  include <OpenAL/alc.h>
-#elif defined (__linux__)
-#  include <AL/al.h>
-#  include <AL/alc.h>
-#endif // __linux__
+#include <AL/al.h>
+#include <AL/alc.h>
 
 #include <string>
 

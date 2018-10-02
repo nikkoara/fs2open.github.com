@@ -15,11 +15,7 @@ int Os_reg_inited = 0;
 } // namespace
 
 // Initialize path of old pilot files
-#ifdef __APPLE__
-const char* Osreg_user_dir_legacy = "Library/FS2_Open";
-#else
 const char* Osreg_user_dir_legacy = ".fs2_open";
-#endif // __APPLE__
 
 const char* Osreg_company_name = "Volition";
 const char* Osreg_class_name = "FreeSpace2Class";

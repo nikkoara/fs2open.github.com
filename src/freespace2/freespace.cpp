@@ -1,10 +1,5 @@
 // -*- mode: c++; -*-
 
-#ifdef APPLE_APP
-#include <sys/types.h>
-#include <libproc.h>
-#endif
-
 #include <unistd.h>
 #include <sys/stat.h>
 
@@ -7512,21 +7507,6 @@ void game_unpause () {
 int actual_main (int argc, char* argv[]) {
     int result = -1;
     Assert (argc > 0);
-
-#ifdef APPLE_APP
-    char pathbuf[PROC_PIDPATHINFO_MAXSIZE];
-    if (proc_pidpath (getppid (), pathbuf, sizeof (pathbuf)) <= 0) {
-        Warning (LOCATION, "Could not retrieve parent pidpath!");
-    }
-    if (strcmp ("/sbin/launchd", pathbuf) == 0) {
-        // Finder sets the working directory to the root of the drive so we
-        // have to get a little creative to find out where on the disk we
-        // should be running from for CFILE's sake.
-        char* path_name = SDL_GetBasePath ();
-        chdir (path_name);
-        SDL_free (path_name);
-    }
-#endif
 
 #if !defined(DONT_CATCH_MAIN_EXCEPTIONS)
     try {

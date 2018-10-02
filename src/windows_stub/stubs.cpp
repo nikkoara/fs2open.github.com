@@ -12,10 +12,6 @@
 
 #include "windows_stub/config.h"
 
-#if defined(APPLE_APP)
-#include <CoreFoundation/CoreFoundation.h>
-#endif
-
 #if defined(HAVE_MALLOC_H)
 #include <malloc.h>
 #endif
