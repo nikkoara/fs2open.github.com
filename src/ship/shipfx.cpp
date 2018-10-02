@@ -3190,13 +3190,13 @@ void shipfx_stop_engine_wash_sound () {
 
 class CombinedVariable {
 public:
-    static const int TYPE_NONE;
-    static const int TYPE_FLOAT;
-    static const int TYPE_IMAGE;
-    static const int TYPE_INT;
-    static const int TYPE_SOUND;
-    static const int TYPE_STRING;
-
+    static const int TYPE_NONE = 0;
+    static const int TYPE_FLOAT = 1;
+    static const int TYPE_IMAGE = 2;
+    static const int TYPE_INT = 3;
+    static const int TYPE_SOUND = 4;
+    static const int TYPE_STRING = 5;
+    
 private:
     int Type;
     float su_Float;
@@ -3237,14 +3237,6 @@ public:
     // Returns true if TYPE_NONE
     bool isEmpty ();
 };
-
-// Workaround for MSVC6
-const int CombinedVariable::TYPE_NONE = 0;
-const int CombinedVariable::TYPE_FLOAT = 1;
-const int CombinedVariable::TYPE_IMAGE = 2;
-const int CombinedVariable::TYPE_INT = 3;
-const int CombinedVariable::TYPE_SOUND = 4;
-const int CombinedVariable::TYPE_STRING = 5;
 
 // Member functions
 CombinedVariable::CombinedVariable () { Type = TYPE_NONE; }

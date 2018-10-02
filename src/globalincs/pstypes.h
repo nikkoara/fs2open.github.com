@@ -310,27 +310,10 @@ const size_t INVALID_SIZE = static_cast< size_t > (-1);
 #define MAX_PATH_LEN 256    // Length for pathnames, ie "c:\bitmaps\title.pcx"
 
 // contants and defined for byteswapping routines (useful for mac)
-
-#ifdef SCP_SOLARIS // Solaris
 #define INTEL_INT(x) x
 #define INTEL_LONG(x) x
 #define INTEL_SHORT(x) x
 #define INTEL_FLOAT(x) (*x)
-#elif BYTE_ORDER == BIG_ENDIAN
-// turn off inline asm
-#undef USE_INLINE_ASM
-
-#define INTEL_INT(x) SDL_Swap32 (x)
-#define INTEL_LONG(x) SDL_Swap64 (x)
-#define INTEL_SHORT(x) SDL_Swap16 (x)
-#define INTEL_FLOAT(x) SDL_SwapFloat ((*x))
-
-#else // Little Endian -
-#define INTEL_INT(x) x
-#define INTEL_LONG(x) x
-#define INTEL_SHORT(x) x
-#define INTEL_FLOAT(x) (*x)
-#endif // BYTE_ORDER
 
 #define TRUE 1
 #define FALSE 0
@@ -388,10 +371,7 @@ void CAP (T& v, T mn, T mx) {
             (x) = (max);      \
     } while (false)
 
-//=========================================================
 // Memory management functions
-//=========================================================
-
 #include "globalincs/fsmemory.h"
 
 class camid {
@@ -438,112 +418,5 @@ inline bool VALID_FNAME (const std::string& x) {
 
 // Function to generate a stacktrace
 std::string dump_stacktrace ();
-
-// DEBUG compile time catch for dangerous uses of memset/memcpy/memmove
-// This is disabled for VS2013 and lower since that doesn't support the
-// necessary features
-#if !defined(NDEBUG) && !defined(USING_THIRD_PARTY_LIBS) && \
-    (!defined(_MSC_VER) || _MSC_VER >= 1900)
-#if SCP_COMPILER_CXX_AUTO_TYPE && SCP_COMPILER_CXX_STATIC_ASSERT && \
-    defined(HAVE_STD_IS_TRIVIALLY_COPYABLE)
-// feature support seems to be: gcc   clang   msvc
-// auto                         4.4   2.9     2010
-// std::is_trivial              4.5   ?       2012 (2010 only duplicates
-// std::is_pod) static_assert                4.3   2.9     2010
-#include <type_traits>
-#include <cstring>
-
-// MEMSET!
-const auto ptr_memset = std::memset;
-#define memset memset_if_trivial_else_error
-
-// Put into std to be compatible with code that uses std::mem*
-namespace std {
-template< typename T >
-using trivial_check = std::is_trivially_copyable< T >;
-
-template< typename T >
-void* memset_if_trivial_else_error (T* memset_data, int ch, size_t count) {
-    static_assert (trivial_check< T >::value, "memset on non-trivial object");
-    return ptr_memset (memset_data, ch, count);
-}
-
-// assume memset on a void* is "safe"
-// only used in cutscene/mveplayer.cpp:mve_video_createbuf()
-inline void*
-memset_if_trivial_else_error (void* memset_data, int ch, size_t count) {
-    return ptr_memset (memset_data, ch, count);
-}
-
-// MEMCPY!
-const auto ptr_memcpy = std::memcpy;
-#define memcpy memcpy_if_trivial_else_error
-
-template< typename T, typename U >
-void* memcpy_if_trivial_else_error (T* memcpy_dest, U* src, size_t count) {
-    static_assert (
-        trivial_check< T >::value, "memcpy on non-trivial object T");
-    static_assert (
-        trivial_check< U >::value, "memcpy on non-trivial object U");
-    return ptr_memcpy (memcpy_dest, src, count);
-}
-
-// assume memcpy with void* is "safe"
-// used in:
-//   globalincs/systemvars.cpp:insertion_sort()
-//   network/chat_api.cpp:AddChatCommandToQueue()
-//   network/multi_obj.cpp:multi_oo_sort_func()
-//   parse/lua.cpp:ade_get_args() && ade_set_args()
-//
-// probably should setup a static_assert on insertion_sort as well
-template< typename U >
-void* memcpy_if_trivial_else_error (
-    void* memcpy_dest, U* memcpy_src, size_t count) {
-    static_assert (
-        trivial_check< U >::value, "memcpy on non-trivial object U");
-    return ptr_memcpy (memcpy_dest, memcpy_src, count);
-}
-
-template< typename T >
-void* memcpy_if_trivial_else_error (
-    T* memcpy_dest, void* memcpy_src, size_t count) {
-    static_assert (
-        trivial_check< T >::value, "memcpy on non-trivial object T");
-    return ptr_memcpy (memcpy_dest, memcpy_src, count);
-}
-template< typename T >
-void* memcpy_if_trivial_else_error (
-    T* memcpy_dest, const void* memcpy_src, size_t count) {
-    static_assert (
-        trivial_check< T >::value, "memcpy on non-trivial object T");
-    return ptr_memcpy (memcpy_dest, memcpy_src, count);
-}
-
-inline void* memcpy_if_trivial_else_error (
-    void* memcpy_dest, void* memcpy_src, size_t count) {
-    return ptr_memcpy (memcpy_dest, memcpy_src, count);
-}
-
-// MEMMOVE!
-const auto ptr_memmove = std::memmove;
-#define memmove memmove_if_trivial_else_error
-
-template< typename T, typename U >
-void* memmove_if_trivial_else_error (
-    T* memmove_dest, U* memmove_src, size_t count) {
-    static_assert (
-        trivial_check< T >::value, "memmove on non-trivial object T");
-    static_assert (
-        trivial_check< U >::value, "memmove on non-trivial object U");
-    return ptr_memmove (memmove_dest, memmove_src, count);
-}
-} // namespace std
-// Put into global namespace
-using std::memcpy_if_trivial_else_error;
-using std::memmove_if_trivial_else_error;
-using std::memset_if_trivial_else_error;
-
-#endif // HAVE_CXX11
-#endif // NDEBUG
 
 #endif // FREESPACE2_GLOBALINCS_PSTYPES_H

@@ -997,9 +997,7 @@ public:
 
     void reset () {
         length = 0;
-        norm.xyz.x = norm.xyz.y = norm.xyz.z =
-            0.0f; // I wanted to do norm = ZERO_VECTOR here, but apparently
-                  // that breaks the MSVC 2015 compiler....
+        norm.xyz.x = norm.xyz.y = norm.xyz.z = 0.0f;
         pos.xyz.x = pos.xyz.y = pos.xyz.z = 0.0f;
         radius = 0.0f;
         tex_fps = 0;

@@ -10,11 +10,7 @@
 #elif defined(__GNUC__)
 #include "globalincs/toolchain/gcc.h"
 #else
-#error \
-    "Unknown toolchain detected!\n"           \
-		"Currently supported toolchains include:\n" \
-		"\tMingW, Clang, GCC, MSVC\n"               \
-		"Update toolchain.h to add support for additional toolchains.\n"
+#error "unknown toolchain (supported: gcc, clang on Linux)"
 #endif
 
 #endif /* FREESPACE2_GLOBALINCS_TOOLCHAIN_H */

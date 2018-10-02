@@ -20,7 +20,7 @@
 #include <execinfo.h>
 #endif
 
-#ifdef HAVE_CXXAPI_H
+#ifdef HAVE_CXXABI_H
 #include <cxxabi.h>
 #endif
 
@@ -61,7 +61,7 @@ std::string dump_stacktrace () {
     // TODO: Maybe add configure time checks to check if the required features
     // are available
     std::stringstream stackstream;
-#ifdef HAVE_CXXAPI_H
+#ifdef HAVE_CXXABI_H
     size_t funcnamesize = 256;
     char* funcname = reinterpret_cast< char* > (malloc (funcnamesize));
 

@@ -11,8 +11,11 @@
 ** TODO Swap INT_SWAP to Boost
 ** DONE De-Apple-ification
 ** DONE De-Win32-ification
+** TODO De-INTEL_INT-ify.
+** Remove TRUE/FALSE macros
 
 * Re-writes
 
 ** TODO cfile[[de]archiver] to C++17 filesystem API
 ** TODO base64 code move to Boost
+** TODO Convert to BOOST asserts

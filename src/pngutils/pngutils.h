@@ -33,9 +33,6 @@ namespace apng {
 /*
  * @brief read apngs and provide access to their frames
  *
- * @note would prefer to use C++11 "Non-static data member initializers"
- * however MSVC 2013 is the 1st version that supports them and we currently
- * need to support 2010
  */
 class apng_ani {
 public:
