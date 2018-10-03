@@ -418,62 +418,28 @@ void multi_options_local_load (
 // add data from a multi_server_options struct
 void add_server_options (ubyte* data, int* size, multi_server_options* mso) {
     int packet_size = *size;
-    multi_server_options mso_tmp;
-
-    memcpy (&mso_tmp, mso, sizeof (multi_server_options));
-
-    mso_tmp.flags = INTEL_INT (mso->flags);
-    mso_tmp.respawn = INTEL_INT (mso->respawn);
-    mso_tmp.voice_token_wait = INTEL_INT (mso->voice_token_wait);
-    mso_tmp.voice_record_time = INTEL_INT (mso->voice_record_time);
-    //	mso_tmp.mission_time_limit = INTEL_INT(mso->mission_time_limit);
-    mso_tmp.kill_limit = INTEL_INT (mso->kill_limit);
-
-    ADD_DATA (mso_tmp);
-
+    ADD_DATA (*mso);
     *size = packet_size;
 }
 
 // add data from a multi_local_options struct
 void add_local_options (ubyte* data, int* size, multi_local_options* mlo) {
     int packet_size = *size;
-    multi_local_options mlo_tmp;
-
-    memcpy (&mlo_tmp, mlo, sizeof (multi_local_options));
-
-    mlo_tmp.flags = INTEL_INT (mlo->flags);
-    mlo_tmp.obj_update_level = INTEL_INT (mlo->obj_update_level);
-
-    ADD_DATA (mlo_tmp);
-
+    ADD_DATA (*mlo);
     *size = packet_size;
 }
 
 // get data from multi_server_options struct
 void get_server_options (ubyte* data, int* size, multi_server_options* mso) {
     int offset = *size;
-
     GET_DATA (*mso);
-
-    mso->flags = INTEL_INT (mso->flags);                         //-V570
-    mso->respawn = INTEL_INT (mso->respawn);                     //-V570
-    mso->voice_token_wait = INTEL_INT (mso->voice_token_wait);   //-V570
-    mso->voice_record_time = INTEL_INT (mso->voice_record_time); //-V570
-    //	mso->mission_time_limit = INTEL_INT(mso->mission_time_limit);
-    mso->kill_limit = INTEL_INT (mso->kill_limit); //-V570
-
     *size = offset;
 }
 
 // get data from multi_local_options struct
 void get_local_options (ubyte* data, int* size, multi_local_options* mlo) {
     int offset = *size;
-
     GET_DATA (*mlo);
-
-    mlo->flags = INTEL_INT (mlo->flags);                       //-V570
-    mlo->obj_update_level = INTEL_INT (mlo->obj_update_level); //-V570
-
     *size = offset;
 }
 

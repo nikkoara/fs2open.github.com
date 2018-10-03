@@ -1640,10 +1640,6 @@ int bm_load_animation (
                 the_anim.keys[i].frame_num = 0;
                 cfread (&the_anim.keys[i].frame_num, 2, 1, img_cfp);
                 cfread (&the_anim.keys[i].offset, 4, 1, img_cfp);
-                the_anim.keys[i].frame_num =
-                    INTEL_INT (the_anim.keys[i].frame_num); //-V570
-                the_anim.keys[i].offset =
-                    INTEL_INT (the_anim.keys[i].offset); //-V570
             }
             // some retail anis have their keyframes reversed
             key = MAX (the_anim.keys[0].frame_num, the_anim.keys[1].frame_num);
@@ -2289,7 +2285,6 @@ void bm_lock_dds (
 
             for (i = 0; i < be->mem_taken; i += 4) {
                 swap_tmp = (unsigned int*)(data + i);
-                *swap_tmp = INTEL_INT (*swap_tmp);
             }
         }
         else if (dds_bpp == 16) {
@@ -2297,7 +2292,6 @@ void bm_lock_dds (
 
             for (i = 0; i < be->mem_taken; i += 2) {
                 swap_tmp = (unsigned short*)(data + i);
-                *swap_tmp = INTEL_SHORT (*swap_tmp);
             }
         }
     }

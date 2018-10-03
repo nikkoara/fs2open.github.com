@@ -283,11 +283,6 @@ static void targa_read_pixel (
             memset (&pixel32, 0xff, sizeof (int));
             memcpy (&pixel32, *src, bytes_per_pixel);
 
-#if BYTE_ORDER == BIG_ENDIAN
-            // on big-endian it will be used as ARGB so switch it back to BGRA
-            if (dest_size == 4) { pixel32 = INTEL_INT (pixel32); }
-#endif
-
             // should have it's own alpha settings so just copy it out as is
             memcpy (*dst, &pixel32, dest_size);
         }
@@ -295,8 +290,6 @@ static void targa_read_pixel (
         else {
             // stuff the 16 bit pixel
             memcpy (&pixel, *src, bytes_per_pixel);
-
-            pixel = INTEL_SHORT (pixel);
 
             // if the pixel is transparent, make it so...
             if (((pixel & 0x7c00) == 0) && ((pixel & 0x03e0) == 0x03e0) &&

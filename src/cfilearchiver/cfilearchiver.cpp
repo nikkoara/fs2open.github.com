@@ -15,25 +15,9 @@
 static int data_error;
 static int no_dir;
 
-// right out of pstypes.h but we don't want to use the INTEL_INT macro here
-// since it would require SDL which isn't used on WIN32 platforms
-#if BYTE_ORDER == BIG_ENDIAN
-#define INT_SWAP(x)                                             \
-    ((x << 24) | (((ulong)x) >> 24) | ((x & 0x0000ff00) << 8) | \
-     ((x & 0x00ff0000) >> 8))
-#else
-#define INT_SWAP(x) (x)
-#endif
-
-size_t fswrite_int (int* wint, FILE* stream) {
-    int tmp = *wint;
-    tmp = INT_SWAP (tmp);
-
-    return fwrite (&tmp, 1, sizeof (int), stream);
-}
-
 unsigned int Total_size = 16; // Start with size of header
 unsigned int Num_files = 0;
+
 FILE* fp_out = NULL;
 FILE* fp_out_hdr = NULL;
 

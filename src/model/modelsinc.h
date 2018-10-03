@@ -80,12 +80,6 @@ void model_calc_bound_box (vec3d* box, vec3d* big_mn, vec3d* big_mx);
 
 void interp_clear_instance ();
 
-// endian swapping stuff - tigital
-void swap_bsp_data (polymodel* pm, void* model_ptr);
-
-// endian swapping stuff - kaz
-void swap_sldc_data (ubyte* buffer);
-
 extern vec3d** Interp_verts;
 
-#endif
+#endif // FREESPACE2_MODEL_MODELSINC_H

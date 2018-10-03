@@ -1557,19 +1557,6 @@ void obj_move_all (float frametime) {
 
         // move post
         obj_move_all_post (objp, frametime);
-
-        // Equipment script processing
-        if (objp->type == OBJ_SHIP) {
-            ship* shipp = &Ships[objp->instance];
-            object* target;
-
-            if (Ai_info[shipp->ai_index].target_objnum != -1)
-                target = &Objects[Ai_info[shipp->ai_index].target_objnum];
-            else
-                target = NULL;
-            if (objp == Player_obj && Player_ai->target_objnum != -1)
-                target = &Objects[Player_ai->target_objnum];
-        }
     }
 
     // Now that we've moved all the objects, move all the models that use

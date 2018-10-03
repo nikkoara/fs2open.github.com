@@ -30,7 +30,6 @@ int pcx_read_header (
     PCXHeader header;
     CFILE* PCXfile;
     char filename[MAX_FILENAME_LEN];
-    int i, j;
 
     if (img_cfp == NULL) {
         strcpy_s (filename, real_filename);
@@ -49,25 +48,6 @@ int pcx_read_header (
     if (cfread (&header, sizeof (PCXHeader), 1, PCXfile) != 1) {
         if (img_cfp == NULL) cfclose (PCXfile);
         return PCX_ERROR_NO_HEADER;
-    }
-
-    header.Xmin = INTEL_SHORT (header.Xmin); //-V570
-    header.Ymin = INTEL_SHORT (header.Ymin); //-V570
-    header.Xmax = INTEL_SHORT (header.Xmax); //-V570
-    header.Ymax = INTEL_SHORT (header.Ymax); //-V570
-    header.Hdpi = INTEL_SHORT (header.Hdpi); //-V570
-    header.Vdpi = INTEL_SHORT (header.Vdpi); //-V570
-
-    for (i = 0; i < 16; i++) {
-        for (j = 0; j < 3; j++) {
-            header.ColorMap[i][j] = INTEL_INT (header.ColorMap[i][j]); //-V570
-        }
-    }
-
-    header.BytesPerLine = INTEL_SHORT (header.BytesPerLine); //-V570
-
-    for (i = 0; i < 60; i++) {
-        header.filler[i] = INTEL_INT (header.filler[i]); //-V570
     }
 
     // Is it a 256 color PCX file?
@@ -92,118 +72,9 @@ int pcx_read_header (
     return PCX_ERROR_NONE;
 }
 
-// static ubyte Pcx_load[1024*768 + 768 + sizeof(PCXHeader)];
-// int Pcx_load_offset = 0;
-// int Pcx_load_size = 0;
-/*
-// #define GET_BUF()			do { buffer = &Pcx_load[Pcx_load_offset];
-if(Pcx_load_offset + buffer_size > Pcx_load_size) { buffer_size = Pcx_load_size
-- Pcx_load_offset; } } while(0); int pcx_read_bitmap_8bpp( char *
-real_filename, ubyte *org_data, ubyte *palette )
-{
-    PCXHeader header;
-    CFILE * PCXfile;
-    int row, col, count, xsize, ysize;
-    ubyte data=0;
-    int buffer_size, buffer_pos;
-    ubyte buffer[1024];
-    ubyte *pixdata;
-    char filename[MAX_FILENAME_LEN];
-
-    strcpy_s( filename, real_filename );
-    char *p = strchr( filename, '.' );
-    if ( p ) *p = 0;
-    strcat_s( filename, ".pcx" );
-
-    PCXfile = cfopen( filename , "rb" );
-    if ( !PCXfile )
-        return PCX_ERROR_OPENING;
-
-    // read 128 char PCX header
-    if (cfread( &header, sizeof(PCXHeader), 1, PCXfile )!=1)	{
-        cfclose( PCXfile );
-        return PCX_ERROR_NO_HEADER;
-    }
-
-    header.Xmin = INTEL_SHORT( header.Xmin );
-    header.Ymin = INTEL_SHORT( header.Ymin );
-    header.Xmax = INTEL_SHORT( header.Xmax );
-    header.Ymax = INTEL_SHORT( header.Ymax );
-    header.Hdpi = INTEL_SHORT( header.Hdpi );
-    header.Vdpi = INTEL_SHORT( header.Vdpi );
-    header.BytesPerLine = INTEL_SHORT( header.BytesPerLine );
-
-    // Is it a 256 color PCX file?
-    if ((header.Manufacturer != 10)||(header.Encoding != 1)||(header.Nplanes !=
-1)||(header.BitsPerPixel != 8)||(header.Version != 5))	{ cfclose( PCXfile );
-        return PCX_ERROR_WRONG_VERSION;
-    }
-
-    // Find the size of the image
-    xsize = header.Xmax - header.Xmin + 1;
-    ysize = header.Ymax - header.Ymin + 1;
-
-    // Read the extended palette at the end of PCX file
-    // Read in a character which should be 12 to be extended palette file
-
-    cfseek( PCXfile, -768, CF_SEEK_END );
-    cfread( palette, 3, 256, PCXfile );
-
-    for ( int i=0; i<256; i++ ){				//tigital
-        palette[i] = INTEL_INT( palette[i] );
-    }
-
-    cfseek( PCXfile, sizeof(PCXHeader), CF_SEEK_SET );
-
-    buffer_size = 1024;
-    buffer_pos = 0;
-
-    buffer_size = cfread( buffer, 1, buffer_size, PCXfile );
-
-    count = 0;
-
-    for (row=0; row<ysize;row++)      {
-        pixdata = org_data;
-        for (col=0; col<header.BytesPerLine;col++)     {
-            if ( count == 0 )	{
-                data = buffer[buffer_pos++];
-                if ( buffer_pos == buffer_size )	{
-                    buffer_size = cfread( buffer, 1, buffer_size, PCXfile );
-                    Assert( buffer_size > 0 );
-                    buffer_pos = 0;
-                }
-                if ((data & 0xC0) == 0xC0)     {
-                    count = data & 0x3F;
-                    data = buffer[buffer_pos++];
-                    if ( buffer_pos == buffer_size )	{
-                        buffer_size = cfread( buffer, 1, buffer_size, PCXfile
-); Assert( buffer_size > 0 ); buffer_pos = 0;
-                    }
-                } else {
-                    count = 1;
-                }
-            }
-            if ( col < xsize )
-                *pixdata++ = data;
-            count--;
-        }
-        org_data += xsize;
-    }
-    cfclose(PCXfile);
-
-    return PCX_ERROR_NONE;
-}
-*/
-
-#if BYTE_ORDER == BIG_ENDIAN
-typedef struct {
-    ubyte a, r, g, b;
-} COLOR32;
-#else
 typedef struct {
     ubyte b, g, r, a;
 } COLOR32;
-#endif
 
 // int pcx_read_bitmap_16bpp( char * real_filename, ubyte *org_data, ubyte bpp,
 // int aabitmap, int nondark )
@@ -237,14 +108,6 @@ int pcx_read_bitmap (
 
         return PCX_ERROR_NO_HEADER;
     }
-
-    header.Xmin = INTEL_SHORT (header.Xmin);                 //-V570
-    header.Ymin = INTEL_SHORT (header.Ymin);                 //-V570
-    header.Xmax = INTEL_SHORT (header.Xmax);                 //-V570
-    header.Ymax = INTEL_SHORT (header.Ymax);                 //-V570
-    header.Hdpi = INTEL_SHORT (header.Hdpi);                 //-V570
-    header.Vdpi = INTEL_SHORT (header.Vdpi);                 //-V570
-    header.BytesPerLine = INTEL_SHORT (header.BytesPerLine); //-V570
 
     // Is it a 256 color PCX file?
     if ((header.Manufacturer != 10) || (header.Encoding != 1) ||

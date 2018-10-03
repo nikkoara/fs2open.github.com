@@ -265,81 +265,29 @@ int lzw_expand (ubyte* outputbuf, ubyte* inputbuf) {
 // process a join request packet add
 void add_join_request (ubyte* data, int* size, join_request* jr) {
     int packet_size = *size;
-    join_request jr_tmp;
-
-    memcpy (&jr_tmp, jr, sizeof (join_request));
-
-    jr_tmp.tracker_id = INTEL_INT (jr->tracker_id);
-    jr_tmp.player_options.flags = INTEL_INT (jr->player_options.flags);
-    jr_tmp.player_options.obj_update_level =
-        INTEL_INT (jr->player_options.obj_update_level);
-
-    ADD_DATA (jr_tmp);
-
+    ADD_DATA (*jr);
     *size = packet_size;
 }
 
 // process a join request packet get
 void get_join_request (ubyte* data, int* size, join_request* jr) {
     int offset = *size;
-
     GET_DATA (*jr);
-
-    jr->tracker_id = INTEL_INT (jr->tracker_id);                     //-V570
-    jr->player_options.flags = INTEL_INT (jr->player_options.flags); //-V570
-    jr->player_options.obj_update_level =
-        INTEL_INT (jr->player_options.obj_update_level); //-V570
-
     *size = offset;
 }
 
 void add_net_addr (ubyte* data, int* size, net_addr* addr) {
     int packet_size = *size;
-    net_addr addr_tmp;
-
-    memcpy (&addr_tmp, addr, sizeof (net_addr));
-
-    addr_tmp.type = INTEL_INT (addr->type);
-    addr_tmp.port = INTEL_SHORT (addr->port);
-
-    ADD_DATA (addr_tmp);
-
+    ADD_DATA (*addr);
     *size = packet_size;
 }
 
 void get_net_addr (ubyte* data, int* size, net_addr* addr) {
     int offset = *size;
-
     GET_DATA (*addr);
-
-    addr->type = INTEL_INT (addr->type);   //-V570
-    addr->port = INTEL_SHORT (addr->port); //-V570
-
     *size = offset;
 }
-/*
-void add_vector_data(ubyte *data, int *size, vec3d vec)
-{
-    int packet_size = *size;
 
-    ADD_FLOAT(vec.xyz.x);
-    ADD_FLOAT(vec.xyz.y);
-    ADD_FLOAT(vec.xyz.z);
-
-    *size = packet_size;
-}
-
-void get_vector_data(ubyte *data, int *size, vec3d vec)
-{
-    int offset = *size;
-
-    GET_FLOAT(vec.xyz.x);
-    GET_FLOAT(vec.xyz.y);
-    GET_FLOAT(vec.xyz.z);
-
-    *size = offset;
-}
-*/
 // send the specified data packet to all players
 void multi_io_send (net_player* pl, ubyte* data, int len) {
     // invalid
@@ -7962,12 +7910,11 @@ void process_NEW_countermeasure_fired_packet (ubyte* data, header* hinfo) {
 
 void send_beam_fired_packet (
     object* shooter, ship_subsys* turret, object* target, int beam_info_index,
-    beam_info* override, int bfi_flags, int bank_point) {
+    beam_info* pbi, int bfi_flags, int bank_point) {
     ubyte data[MAX_PACKET_SIZE];
     int packet_size = 0;
     short u_beam_info;
     char subsys_index;
-    beam_info b_info;
     ushort target_sig;
 
     // only the server should ever be doing this
@@ -7976,8 +7923,8 @@ void send_beam_fired_packet (
     // setup outgoing data
     Assert (shooter != NULL);
     Assert (turret != NULL);
-    Assert (override != NULL);
-    if ((shooter == NULL) || (turret == NULL) || (override == NULL)) {
+    Assert (pbi != NULL);
+    if ((shooter == NULL) || (turret == NULL) || (pbi == NULL)) {
         return;
     }
 
@@ -8002,30 +7949,14 @@ void send_beam_fired_packet (
     Assert (subsys_index >= 0);
     if (subsys_index < 0) { return; }
 
-    // swap the beam_info override info into little endian byte order
-    b_info.dir_a.xyz.x = INTEL_FLOAT (&override->dir_a.xyz.x);
-    b_info.dir_a.xyz.y = INTEL_FLOAT (&override->dir_a.xyz.y);
-    b_info.dir_a.xyz.z = INTEL_FLOAT (&override->dir_a.xyz.z);
-
-    b_info.dir_b.xyz.x = INTEL_FLOAT (&override->dir_b.xyz.x);
-    b_info.dir_b.xyz.y = INTEL_FLOAT (&override->dir_b.xyz.y);
-    b_info.dir_b.xyz.z = INTEL_FLOAT (&override->dir_b.xyz.z);
-
-    b_info.delta_ang = INTEL_FLOAT (&override->delta_ang);
-    b_info.shot_count = override->shot_count;
-
-    for (int i = 0; i < b_info.shot_count; i++) {
-        b_info.shot_aim[i] = INTEL_FLOAT (&override->shot_aim[i]);
-    }
-
     // build the header
     BUILD_HEADER (BEAM_FIRED);
     ADD_USHORT (shooter->net_signature);
     ADD_DATA (subsys_index);
     ADD_USHORT (target_sig);
     ADD_SHORT (u_beam_info);
-    ADD_DATA (b_info); // FIXME: This is still wrong, we shouldn't be sending
-                       // an entire struct over the wire - taylor
+    ADD_DATA (*pbi); // FIXME: This is still wrong, we shouldn't be sending
+                     // an entire struct over the wire - taylor
     //	ADD_DATA(bfi_flags);	// this breaks the protocol but is here in case
     // we decided to do that in the future - taylor 	ADD_DATA(target_pos);
     // // ditto - Goober5000
@@ -8057,21 +7988,6 @@ void process_beam_fired_packet (ubyte* data, header* hinfo) {
     //	GET_DATA(fighter_beam);  // this breaks the protocol but is here in
     // case we decided to do that in the future - taylor
     PACKET_SET_SIZE ();
-
-    // swap the beam_info override info into native byte order
-    b_info.dir_a.xyz.x = INTEL_FLOAT (&b_info.dir_a.xyz.x);
-    b_info.dir_a.xyz.y = INTEL_FLOAT (&b_info.dir_a.xyz.y);
-    b_info.dir_a.xyz.z = INTEL_FLOAT (&b_info.dir_a.xyz.z);
-
-    b_info.dir_b.xyz.x = INTEL_FLOAT (&b_info.dir_b.xyz.x);
-    b_info.dir_b.xyz.y = INTEL_FLOAT (&b_info.dir_b.xyz.y);
-    b_info.dir_b.xyz.z = INTEL_FLOAT (&b_info.dir_b.xyz.z);
-
-    b_info.delta_ang = INTEL_FLOAT (&b_info.delta_ang);
-
-    for (i = 0; i < b_info.shot_count; i++) {
-        b_info.shot_aim[i] = INTEL_FLOAT (&b_info.shot_aim[i]);
-    }
 
     memset (&fire_info, 0, sizeof (beam_fire_info));
 

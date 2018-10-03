@@ -345,52 +345,59 @@ int multi_oo_pack_client_data (ubyte* data) {
 }
 
 // pack the appropriate info into the data
+
 #define PACK_PERCENT(v)                                                 \
     {                                                                   \
         std::uint8_t upercent;                                          \
         if (v < 0.0f) { v = 0.0f; }                                     \
         upercent = (v * 255.0f) <= 255.0f ? (std::uint8_t) (v * 255.0f) \
-                                          : (std::uint8_t)255;          \
+            : (std::uint8_t)255;                                        \
         memcpy (                                                        \
             data + packet_size + header_bytes, &upercent,               \
             sizeof (std::uint8_t));                                     \
         packet_size++;                                                  \
     }
-#define PACK_BYTE(v)                                       \
-    {                                                      \
-        memcpy (data + packet_size + header_bytes, &v, 1); \
-        packet_size += 1;                                  \
+
+#define PACK_BYTE(v)                                        \
+    {                                                       \
+        memcpy (data + packet_size + header_bytes, &v, 1);  \
+        packet_size += 1;                                   \
     }
-#define PACK_SHORT(v)                                                         \
-    {                                                                         \
-        std::int16_t swap = INTEL_SHORT (v);                                  \
-        memcpy (                                                              \
+
+#define PACK_SHORT(v)                                                   \
+    {                                                                   \
+        std::int16_t swap = v;                                          \
+        memcpy (                                                        \
             data + packet_size + header_bytes, &swap, sizeof (std::int16_t)); \
-        packet_size += sizeof (std::int16_t);                                 \
+        packet_size += sizeof (std::int16_t);                           \
     }
-#define PACK_USHORT(v)                                \
-    {                                                 \
-        std::uint16_t swap = INTEL_SHORT (v);         \
-        memcpy (                                      \
-            data + packet_size + header_bytes, &swap, \
-            sizeof (std::uint16_t));                  \
-        packet_size += sizeof (std::uint16_t);        \
+
+#define PACK_USHORT(v)                                  \
+    {                                                   \
+        std::uint16_t swap = v;                         \
+        memcpy (                                        \
+            data + packet_size + header_bytes, &swap,   \
+            sizeof (std::uint16_t));                    \
+        packet_size += sizeof (std::uint16_t);          \
     }
-#define PACK_INT(v)                                                           \
-    {                                                                         \
-        std::int32_t swap = INTEL_INT (v);                                    \
-        memcpy (                                                              \
+
+#define PACK_INT(v)                                                     \
+    {                                                                   \
+        std::int32_t swap = v;                                          \
+        memcpy (                                                        \
             data + packet_size + header_bytes, &swap, sizeof (std::int32_t)); \
-        packet_size += sizeof (std::int32_t);                                 \
+        packet_size += sizeof (std::int32_t);                           \
     }
-#define PACK_ULONG(v)                                 \
-    {                                                 \
-        std::uint64_t swap = INTEL_LONG (v);          \
-        memcpy (                                      \
-            data + packet_size + header_bytes, &swap, \
-            sizeof (std::uint64_t));                  \
-        packet_size += sizeof (std::uint64_t);        \
+
+#define PACK_ULONG(v)                                   \
+    {                                                   \
+        std::uint64_t swap = v;                         \
+        memcpy (                                        \
+            data + packet_size + header_bytes, &swap,   \
+            sizeof (std::uint64_t));                    \
+        packet_size += sizeof (std::uint64_t);          \
     }
+
 int multi_oo_pack_data (
     net_player* pl, object* objp, ubyte oo_flags, ubyte* data_out) {
     ubyte data[255];

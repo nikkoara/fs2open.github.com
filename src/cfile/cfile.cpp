@@ -1026,66 +1026,43 @@ void cf_set_max_read_len (CFILE* cfile, size_t len) {
 
 float cfread_float (CFILE* file, int ver, float deflt) {
     float f;
-
     if (file->version < ver) return deflt;
-
     if (cfread (&f, sizeof (f), 1, file) != 1) return deflt;
-
-    f = INTEL_FLOAT (&f);
     return f;
 }
 
 int cfread_int (CFILE* file, int ver, int deflt) {
     int i;
-
     if (file->version < ver) return deflt;
-
     if (cfread (&i, sizeof (i), 1, file) != 1) return deflt;
-
-    i = INTEL_INT (i);
     return i;
 }
 
 uint cfread_uint (CFILE* file, int ver, uint deflt) {
     uint i;
-
     if (file->version < ver) return deflt;
-
     if (cfread (&i, sizeof (i), 1, file) != 1) return deflt;
-
-    i = INTEL_INT (i);
     return i;
 }
 
 short cfread_short (CFILE* file, int ver, short deflt) {
     short s;
-
     if (file->version < ver) return deflt;
-
     if (cfread (&s, sizeof (s), 1, file) != 1) return deflt;
-
-    s = INTEL_SHORT (s);
     return s;
 }
 
 ushort cfread_ushort (CFILE* file, int ver, ushort deflt) {
     ushort s;
-
     if (file->version < ver) return deflt;
-
     if (cfread (&s, sizeof (s), 1, file) != 1) return deflt;
-
-    s = INTEL_SHORT (s);
     return s;
 }
 
 ubyte cfread_ubyte (CFILE* file, int ver, ubyte deflt) {
     ubyte b;
-
     if (file->version < ver) return deflt;
-
     if (cfread (&b, sizeof (b), 1, file) != 1) return deflt;
-
     return b;
 }
 
@@ -1153,27 +1130,22 @@ void cfread_string_len (char* buf, int n, CFILE* file) {
 // equivalent write functions of above read functions follow
 
 int cfwrite_float (float f, CFILE* file) {
-    f = INTEL_FLOAT (&f);
     return cfwrite (&f, sizeof (f), 1, file);
 }
 
 int cfwrite_int (int i, CFILE* file) {
-    i = INTEL_INT (i);
     return cfwrite (&i, sizeof (i), 1, file);
 }
 
 int cfwrite_uint (uint i, CFILE* file) {
-    i = INTEL_INT (i);
     return cfwrite (&i, sizeof (i), 1, file);
 }
 
 int cfwrite_short (short s, CFILE* file) {
-    s = INTEL_SHORT (s);
     return cfwrite (&s, sizeof (s), 1, file);
 }
 
 int cfwrite_ushort (ushort s, CFILE* file) {
-    s = INTEL_SHORT (s);
     return cfwrite (&s, sizeof (s), 1, file);
 }
 

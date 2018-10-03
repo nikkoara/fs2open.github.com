@@ -1399,7 +1399,7 @@ int store_wss_data (
     for (i = 0; i < Num_weapon_types; i++) {
         if (Wl_pool[i] > 0) {
             block[offset++] = (ubyte)i;
-            ishort = INTEL_SHORT ((short)Wl_pool[i]);
+            ishort = (short)Wl_pool[i];
             memcpy (block + offset, &ishort, sizeof (short));
             offset += sizeof (short);
         }
@@ -1424,7 +1424,7 @@ int store_wss_data (
             }
 
             Assert (Wss_slots[i].wep_count[j] < SHRT_MAX);
-            ishort = INTEL_SHORT ((short)Wss_slots[i].wep_count[j]);
+            ishort = (short)Wss_slots[i].wep_count[j];
 
             memcpy (&(block[offset]), &(ishort), sizeof (short));
             offset += sizeof (short);
@@ -1448,7 +1448,6 @@ int store_wss_data (
         player_id = Net_players[player_index].player_id;
     }
 
-    player_id = INTEL_SHORT (player_id);
     memcpy (block + offset, &player_id, sizeof (player_id));
     offset += sizeof (player_id);
 
@@ -1503,7 +1502,7 @@ int restore_wss_data (ubyte* block) {
 
         memcpy (&ishort, block + offset, sizeof (short));
         offset += sizeof (short);
-        Wl_pool[b1] = INTEL_SHORT (ishort);
+        Wl_pool[b1] = ishort;
     }
 
     for (i = 0; i < MAX_WSS_SLOTS; i++) {
@@ -1523,7 +1522,6 @@ int restore_wss_data (ubyte* block) {
             }
 
             memcpy (&ishort, &(block[offset]), sizeof (short));
-            ishort = INTEL_SHORT (ishort);
             Wss_slots[i].wep_count[j] = (int)ishort;
             offset += sizeof (short);
         }
@@ -1538,7 +1536,6 @@ int restore_wss_data (ubyte* block) {
 
     // read in the player address
     memcpy (&player_id, block + offset, sizeof (player_id));
-    player_id = INTEL_SHORT (player_id);
     offset += sizeof (short);
 
     // determine if I'm the guy who should be playing the sound

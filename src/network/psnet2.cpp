@@ -889,14 +889,16 @@ int psnet_is_valid_ip_string (char* ip_string, int /*allow_port*/) {
 
 void psnet_rel_send_ack (
     SOCKADDR* raddr, unsigned int sig, ubyte link_type, float time_sent) {
-    int ret, sig_tmp;
+    int ret;
+
     reliable_header ack_header;
+
     ack_header.type = RNT_ACK;
     ack_header.data_len = sizeof (unsigned int);
     ack_header.send_time = time_sent;
-    ack_header.send_time = INTEL_FLOAT (&ack_header.send_time);
-    sig_tmp = INTEL_INT (sig);
-    memcpy (&ack_header.data, &sig_tmp, sizeof (unsigned int));
+    
+    memcpy (&ack_header.data, &sig, sizeof (unsigned int));
+    
     switch (link_type) {
     case NET_TCP:
         if (!Tcp_active) {
@@ -1020,14 +1022,13 @@ int psnet_rel_send (
 
             memcpy (rsocket->sbuffers[i]->buffer, data, length);
 
-            send_header.seq = INTEL_SHORT (rsocket->theirsequence);
+            send_header.seq = rsocket->theirsequence;
             rsocket->ssequence[i] = rsocket->theirsequence;
 
             memcpy (send_header.data, data, length);
-            send_header.data_len = INTEL_SHORT ((ushort)length);
+            send_header.data_len = (ushort)length;
             send_header.type = RNT_DATA;
             send_header.send_time = psnet_get_time ();
-            send_header.send_time = INTEL_FLOAT (&send_header.send_time);
 
             if (send_this_packet) {
                 switch (rsocket->connection_type) {
@@ -1198,15 +1199,16 @@ void psnet_rel_work () {
             SOCKADDR_IN* tcp_addr = (SOCKADDR_IN*)&rcv_addr;
             memset (&d3_rcv_addr, 0, sizeof (net_addr));
             memset (&rcv_addr, 0, sizeof (SOCKADDR));
+
             bytesin = RECVFROM (
                 Unreliable_socket, (char*)&rcv_buff, sizeof (reliable_header),
                 0, (SOCKADDR*)&rcv_addr, &addrlen, PSNET_TYPE_RELIABLE);
-            rcv_buff.seq = INTEL_SHORT (rcv_buff.seq);           //-V570
-            rcv_buff.data_len = INTEL_SHORT (rcv_buff.data_len); //-V570
-            rcv_buff.send_time = INTEL_FLOAT (&rcv_buff.send_time);
+
             memcpy (d3_rcv_addr.addr, &tcp_addr->sin_addr.s_addr, 4); //-V512
+
             d3_rcv_addr.port = tcp_addr->sin_port;
             d3_rcv_addr.type = NET_TCP;
+            
             link_type = NET_TCP;
         }
         else {
@@ -1362,7 +1364,7 @@ void psnet_rel_work () {
                     unsigned int* acksig = (unsigned int*)&rcv_buff.data;
                     if (rsocket) {
                         if (rsocket->sbuffers[i]) {
-                            if (rsocket->ssequence[i] == INTEL_INT (*acksig)) {
+                            if (rsocket->ssequence[i] == *acksig) {
                                 Assert (rsocket->sbuffers[i] != NULL);
                                 vm_free (rsocket->sbuffers[i]);
                                 rsocket->sbuffers[i] = NULL;
@@ -1498,14 +1500,11 @@ void psnet_rel_work () {
                      retry_packet_time)) {
                     reliable_header send_header;
                     send_header.send_time = psnet_get_time ();
-                    send_header.send_time =
-                        INTEL_FLOAT (&send_header.send_time);
-                    send_header.seq = INTEL_SHORT (rsocket->ssequence[i]);
+                    send_header.seq = rsocket->ssequence[i];
                     memcpy (
                         send_header.data, rsocket->sbuffers[i]->buffer,
                         rsocket->send_len[i]);
-                    send_header.data_len =
-                        INTEL_SHORT ((ushort)rsocket->send_len[i]);
+                    send_header.data_len = (ushort)rsocket->send_len[i];
                     send_header.type = RNT_DATA;
                     rcode = SENDTO (
                         Unreliable_socket, (char*)&send_header,
@@ -1534,7 +1533,6 @@ void psnet_rel_work () {
                  NETHEARTBEATTIME)) {
                 reliable_header send_header;
                 send_header.send_time = psnet_get_time ();
-                send_header.send_time = INTEL_FLOAT (&send_header.send_time);
                 send_header.seq = 0;
                 send_header.data_len = 0;
                 send_header.type = RNT_HEARTBEAT;

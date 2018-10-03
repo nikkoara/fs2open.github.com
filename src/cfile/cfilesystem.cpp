@@ -663,10 +663,6 @@ void cf_search_root_pack (int root_index) {
         return;
     }
 
-    VP_header.version = INTEL_INT (VP_header.version);           //-V570
-    VP_header.index_offset = INTEL_INT (VP_header.index_offset); //-V570
-    VP_header.num_files = INTEL_INT (VP_header.num_files);       //-V570
-
     mprintf (("Searching root pack '%s' ... ", root->path));
 
     // Read index info
@@ -688,9 +684,6 @@ void cf_search_root_pack (int root_index) {
             break;
         }
 
-        find.offset = INTEL_INT (find.offset);         //-V570
-        find.size = INTEL_INT (find.size);             //-V570
-        find.write_time = INTEL_INT (find.write_time); //-V570
         find.filename[sizeof (find.filename) - 1] = '\0';
 
         if (find.size == 0) {

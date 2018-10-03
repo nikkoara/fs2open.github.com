@@ -307,53 +307,48 @@ void pilotfile_convert::csg_import_missions (bool inferno) {
             cfread (&t_inf_score, sizeof (scoring_conv_INF_t), 1, cfp);
 
             for (j = 0; j < ship_list_size; j++) {
-                miss.stats.ship_kills[j].val =
-                    INTEL_INT (t_inf_score.kills[j]);
+                miss.stats.ship_kills[j].val = t_inf_score.kills[j];
             }
 
-            miss.stats.score = INTEL_INT (t_inf_score.score);
-            miss.stats.rank = INTEL_INT (t_inf_score.rank);
-            miss.stats.assists = INTEL_INT (t_inf_score.assists);
-            miss.stats.kill_count = INTEL_INT (t_inf_score.kill_count);
-            miss.stats.kill_count_ok = INTEL_INT (t_inf_score.kill_count_ok);
-            miss.stats.p_shots_fired = INTEL_INT (t_inf_score.p_shots_fired);
-            miss.stats.s_shots_fired = INTEL_INT (t_inf_score.s_shots_fired);
-            miss.stats.p_shots_hit = INTEL_INT (t_inf_score.p_shots_hit);
-            miss.stats.s_shots_hit = INTEL_INT (t_inf_score.s_shots_hit);
-            miss.stats.p_bonehead_hits =
-                INTEL_INT (t_inf_score.p_bonehead_hits);
-            miss.stats.s_bonehead_hits =
-                INTEL_INT (t_inf_score.s_bonehead_hits);
-            miss.stats.bonehead_kills = INTEL_INT (t_inf_score.bonehead_kills);
+            miss.stats.score           = t_inf_score.score;
+            miss.stats.rank            = t_inf_score.rank;
+            miss.stats.assists         = t_inf_score.assists;
+            miss.stats.kill_count      = t_inf_score.kill_count;
+            miss.stats.kill_count_ok   = t_inf_score.kill_count_ok;
+            miss.stats.p_shots_fired   = t_inf_score.p_shots_fired;
+            miss.stats.s_shots_fired   = t_inf_score.s_shots_fired;
+            miss.stats.p_shots_hit     = t_inf_score.p_shots_hit;
+            miss.stats.s_shots_hit     = t_inf_score.s_shots_hit;
+            miss.stats.p_bonehead_hits = t_inf_score.p_bonehead_hits;
+            miss.stats.s_bonehead_hits = t_inf_score.s_bonehead_hits;
+            miss.stats.bonehead_kills  = t_inf_score.bonehead_kills;
 
             for (j = 0; j < 18; j++) {
-                miss.stats.medals_earned[j].val =
-                    INTEL_INT (t_inf_score.medals[j]);
+                miss.stats.medals_earned[j].val = t_inf_score.medals[j];
             }
         }
         else {
             cfread (&t_score, sizeof (scoring_conv_t), 1, cfp);
 
             for (j = 0; j < ship_list_size; j++) {
-                miss.stats.ship_kills[j].val = INTEL_INT (t_score.kills[j]);
+                miss.stats.ship_kills[j].val = t_score.kills[j];
             }
 
-            miss.stats.score = INTEL_INT (t_score.score);
-            miss.stats.rank = INTEL_INT (t_score.rank);
-            miss.stats.assists = INTEL_INT (t_score.assists);
-            miss.stats.kill_count = INTEL_INT (t_score.kill_count);
-            miss.stats.kill_count_ok = INTEL_INT (t_score.kill_count_ok);
-            miss.stats.p_shots_fired = INTEL_INT (t_score.p_shots_fired);
-            miss.stats.s_shots_fired = INTEL_INT (t_score.s_shots_fired);
-            miss.stats.p_shots_hit = INTEL_INT (t_score.p_shots_hit);
-            miss.stats.s_shots_hit = INTEL_INT (t_score.s_shots_hit);
-            miss.stats.p_bonehead_hits = INTEL_INT (t_score.p_bonehead_hits);
-            miss.stats.s_bonehead_hits = INTEL_INT (t_score.s_bonehead_hits);
-            miss.stats.bonehead_kills = INTEL_INT (t_score.bonehead_kills);
+            miss.stats.score = t_score.score;
+            miss.stats.rank = t_score.rank;
+            miss.stats.assists = t_score.assists;
+            miss.stats.kill_count = t_score.kill_count;
+            miss.stats.kill_count_ok = t_score.kill_count_ok;
+            miss.stats.p_shots_fired = t_score.p_shots_fired;
+            miss.stats.s_shots_fired = t_score.s_shots_fired;
+            miss.stats.p_shots_hit = t_score.p_shots_hit;
+            miss.stats.s_shots_hit = t_score.s_shots_hit;
+            miss.stats.p_bonehead_hits = t_score.p_bonehead_hits;
+            miss.stats.s_bonehead_hits = t_score.s_bonehead_hits;
+            miss.stats.bonehead_kills = t_score.bonehead_kills;
 
             for (j = 0; j < 18; j++) {
-                miss.stats.medals_earned[j].val =
-                    INTEL_INT (t_score.medals[j]);
+                miss.stats.medals_earned[j].val = t_score.medals[j];
             }
         }
 

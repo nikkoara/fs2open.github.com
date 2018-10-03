@@ -1093,14 +1093,14 @@ void multi_pack_orient_matrix (ubyte* data, matrix* m) {
     if (m->vec.fvec.xyz.x < 0) data[16] |= (1 << 3); // Z
     if (m->vec.fvec.xyz.y < 0) data[16] |= (1 << 4); // W
 
-    x1 = INTEL_FLOAT (&m->vec.rvec.xyz.x);
-    y1 = INTEL_FLOAT (&m->vec.rvec.xyz.y);
-    x2 = INTEL_FLOAT (&m->vec.uvec.xyz.x);
-    y2 = INTEL_FLOAT (&m->vec.uvec.xyz.y);
+    x1 = m->vec.rvec.xyz.x;
+    y1 = m->vec.rvec.xyz.y;
+    x2 = m->vec.uvec.xyz.x;
+    y2 = m->vec.uvec.xyz.y;
 
-    memcpy (&data[0], &x1, 4);  // a
-    memcpy (&data[4], &y1, 4);  // b
-    memcpy (&data[8], &x2, 4);  // c
+    memcpy (&data[ 0], &x1, 4); // a
+    memcpy (&data[ 4], &y1, 4); // b
+    memcpy (&data[ 8], &x2, 4); // c
     memcpy (&data[12], &y2, 4); // d
 }
 
@@ -1109,15 +1109,15 @@ void multi_pack_orient_matrix (ubyte* data, matrix* m) {
 void multi_unpack_orient_matrix (ubyte* data, matrix* m) {
     float x1, y1, x2, y2;
 
-    memcpy (&x1, &data[0], 4);
-    memcpy (&y1, &data[4], 4);
-    memcpy (&x2, &data[8], 4);
+    memcpy (&x1, &data[ 0], 4);
+    memcpy (&y1, &data[ 4], 4);
+    memcpy (&x2, &data[ 8], 4);
     memcpy (&y2, &data[12], 4);
 
-    m->vec.rvec.xyz.x = INTEL_FLOAT (&x1);
-    m->vec.rvec.xyz.y = INTEL_FLOAT (&y1);
-    m->vec.uvec.xyz.x = INTEL_FLOAT (&x2);
-    m->vec.uvec.xyz.y = INTEL_FLOAT (&y2);
+    m->vec.rvec.xyz.x = x1;
+    m->vec.rvec.xyz.y = y1;
+    m->vec.uvec.xyz.x = x2;
+    m->vec.uvec.xyz.y = y2;
 
     m->vec.rvec.xyz.z = fl_sqrt (fl_abs (
         1 - (m->vec.rvec.xyz.x * m->vec.rvec.xyz.x) -

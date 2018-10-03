@@ -535,13 +535,13 @@ int unpack_pixel (
         else {
             if (pixel_size > 2) {
                 ubyte pixel[4];
+
                 pixel[0] = ai->parent->palette[pix * 3 + 2];
                 pixel[1] = ai->parent->palette[pix * 3 + 1];
                 pixel[2] = ai->parent->palette[pix * 3];
                 pixel[3] = 255;
-                memcpy (&bit_24, pixel, sizeof (int));
 
-                if (pixel_size == 4) { bit_24 = INTEL_INT (bit_24); }
+                memcpy (&bit_24, pixel, sizeof (int));
             }
             else {
                 // stuff the 24 bit value
@@ -620,13 +620,13 @@ int unpack_pixel_count (
         else {
             if (pixel_size > 2) {
                 ubyte pixel[4];
+
                 pixel[0] = ai->parent->palette[pix * 3 + 2];
                 pixel[1] = ai->parent->palette[pix * 3 + 1];
                 pixel[2] = ai->parent->palette[pix * 3];
                 pixel[3] = 255;
-                memcpy (&bit_24, pixel, sizeof (int));
 
-                if (pixel_size == 4) { bit_24 = INTEL_INT (bit_24); }
+                memcpy (&bit_24, pixel, sizeof (int));
             }
             else {
                 // stuff the 24 bit value

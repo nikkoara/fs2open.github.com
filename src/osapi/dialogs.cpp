@@ -13,8 +13,6 @@
 #include <algorithm>
 
 namespace {
-const char* Separator =
-    "------------------------------------------------------------------\n";
 
 const int Messagebox_lines = 30;
 

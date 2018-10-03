@@ -789,13 +789,9 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
             ptr->keys[idx].frame_num = 0;
             cfread (&ptr->keys[idx].frame_num, 2, 1, fp);
             cfread (&ptr->keys[idx].offset, 4, 1, fp);
-            ptr->keys[idx].frame_num =
-                INTEL_INT (ptr->keys[idx].frame_num);                  //-V570
-            ptr->keys[idx].offset = INTEL_INT (ptr->keys[idx].offset); //-V570
         }
 
         cfread (&count, 4, 1, fp); // size of compressed data
-        count = INTEL_INT (count);
 
         ptr->cfile_ptr = NULL;
 
