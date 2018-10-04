@@ -28,7 +28,7 @@ int ai_get_slot (int shipnum) {
             return i;
         }
 
-    Warning (LOCATION, "Couldn't get AI slot");
+    fs2::dialog::warning (LOCATION, "Couldn't get AI slot");
     Int3 ();
 
     return -1;

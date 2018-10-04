@@ -331,7 +331,7 @@ void fireball_load_data () {
                 fd->lod[idx].filename, &fd->lod[idx].num_frames,
                 &fd->lod[idx].fps, nullptr, nullptr, true);
             if (fd->lod[idx].bitmap_id < 0) {
-                Error (
+                fs2::dialog::error (
                     LOCATION, "Could not load %s anim file\n",
                     fd->lod[idx].filename);
             }

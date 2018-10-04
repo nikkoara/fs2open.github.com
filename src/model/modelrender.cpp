@@ -2779,7 +2779,7 @@ void model_render_queue (
                 pmi = model_get_instance (
                     Weapons[objp->instance].model_instance_num);
             else
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Unsupported object type %d for rendering "
                     "intrinsic-rotate submodels!",

@@ -220,19 +220,6 @@ extern int Global_error_count;
 
 #define LOCATION __FILE__, __LINE__
 
-// To flag an error, you can do this:
-// Error( __FILE__, __LINE__, "Error opening %s", filename );
-// or,
-// Error( LOCATION, "Error opening %s", filename );
-
-/*******************NEVER UNCOMMENT Assert
- * ************************************************/
-// Please never uncomment the functionality of Assert in debug
-// The code, as with all development like this is littered with Asserts which
-// are designed to throw up an error message if variables are out of range.
-// Disabling this functionality is dangerous, crazy values can run rampent
-// unchecked and the longer its disabled the more likely you are to have
-// problems getting it working again.
 #if defined(NDEBUG)
 #define Assert(expr) \
     do { ASSUME (expr); } while (false)
@@ -240,26 +227,25 @@ extern int Global_error_count;
 #define Assert(expr)                                                \
     do {                                                            \
         if (!(expr)) {                                              \
-            os::dialogs::AssertMessage (#expr, __FILE__, __LINE__); \
+            fs2::dialog::assert_msg (#expr, __FILE__, __LINE__);    \
         }                                                           \
         ASSUME (expr);                                              \
     } while (false)
 #endif
-/*******************NEVER COMMENT Assert
- * ************************************************/
 
 // Goober5000 - define Verify for use in both release and debug mode
-#define Verify(x)                                                   \
-    do {                                                            \
-        if (!(x)) { Error (LOCATION, "Verify failure: %s\n", #x); } \
-        ASSUME (x);                                                 \
+#define Verify(x)                                                       \
+    do {                                                                \
+        if (!(x)) {                                                     \
+            fs2::dialog::error (LOCATION, "Verify failure: %s\n", #x); } \
+        ASSUME (x);                                                     \
     } while (0)
 
 // VerifyEx
 #define VerifyEx(x, y, ...)                                                 \
     do {                                                                    \
         if (!(x)) {                                                         \
-            Error (                                                         \
+            fs2::dialog::error (                                            \
                 LOCATION, "Verify failure: %s with help text " #y "\n", #x, \
                 ##__VA_ARGS__);                                             \
         }                                                                   \
@@ -267,20 +253,16 @@ extern int Global_error_count;
     } while (0)
 
 #if defined(NDEBUG)
-// No debug version of Int3
-#define Int3() \
-    do {       \
-    } while (0)
+#define Int3() do { } while (0)
 #else
 void debug_int3 (const char* file, int line);
-
-// Debug version of Int3
 #define Int3() debug_int3 (__FILE__, __LINE__)
 #endif // NDEBUG
 
 #ifndef MIN
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #endif
+
 #ifndef MAX
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #endif

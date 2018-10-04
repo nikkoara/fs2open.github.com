@@ -537,7 +537,7 @@ int ai_goal_find_dockpoint (int shipnum, int dock_type) {
 
     // insanity?
     if (loop_count >= 100)
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Too many iterations while looking for a dockpoint on %s.\n",
             shipp->ship_name);
@@ -1519,7 +1519,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
             aigp->wp_list = find_matching_waypoint_list (aigp->target_name);
 
             if (aigp->wp_list == NULL) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Unknown waypoint list %s - not found in mission file.  "
                     "Killing ai goal",
@@ -2536,7 +2536,7 @@ void ai_update_goal_references (
             break;
 
         default:
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "unhandled FRED reference type %d in "
                 "ai_update_goal_references",

@@ -36,7 +36,7 @@ CJumpNode::CJumpNode (vec3d* position)
     // Set m_modelnum and m_radius
     m_modelnum = model_load (NOX ("subspacenode.pof"), 0, NULL, 0);
     if (m_modelnum == -1)
-        Warning (LOCATION, "Could not load default model for %s", m_name);
+        fs2::dialog::warning (LOCATION, "Could not load default model for %s", m_name);
     else
         m_radius = model_get_radius (m_modelnum);
 
@@ -167,7 +167,7 @@ void CJumpNode::SetModel (char* model_name, bool show_polys) {
     int new_model = model_load (model_name, 0, NULL, 0);
 
     if (new_model == -1) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Couldn't load model file %s for jump node %s",
             model_name, m_name);
         return;

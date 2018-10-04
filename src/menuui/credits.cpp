@@ -310,7 +310,7 @@ void credits_parse_table (const char* filename) {
             else if (!strcasecmp (mode, "End"))
                 SCP_credits_position = END;
             else
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "Unknown credits position mode \"%s\".", mode);
         }
 
@@ -445,7 +445,7 @@ void credits_init () {
         case END: Credit_text_parts.push_back (fs2_open_credit_text); break;
 
         default:
-            Error (
+            fs2::dialog::error (
                 LOCATION, "Unimplemented credits position %d. Get a coder!",
                 (int)SCP_credits_position);
             break;

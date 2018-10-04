@@ -79,7 +79,7 @@ void parse_rank_tbl () {
                 if (optional_string ("+Persona:")) {
                     stuff_int (&persona);
                     if (persona < 0) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Debriefing text for %s rank is assigned to an "
                             "invalid persona: %i (must be 0 or greater).\n",
@@ -91,7 +91,7 @@ void parse_rank_tbl () {
             }
             if (Ranks[idx].promotion_text.find (-1) ==
                 Ranks[idx].promotion_text.end ()) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "%s rank is missing default debriefing text.\n",
                     Ranks[idx].name);
                 Ranks[idx].promotion_text[-1] = "";
@@ -104,7 +104,7 @@ void parse_rank_tbl () {
         // be sure that all rank points are in order
         for (idx = 0; idx < NUM_RANKS - 1; idx++) {
             if (Ranks[idx].points >= Ranks[idx + 1].points)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Rank #%d (%s) has a higher \"$Points:\" value (%d) than "
                     "the following rank (%s, %d points). This shouldn't "

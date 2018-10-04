@@ -114,7 +114,7 @@ void parse_mflash_tbl (const char* filename) {
             // a mflash of the same name exists, don't add it again
             else {
                 if (!override_mflash) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Muzzle flash \"%s\" already exists!  Using existing "
                         "entry instead.",
@@ -172,7 +172,7 @@ void mflash_page_in (bool load_all) {
                 ++idx;
             }
             else {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Muzleflash \"%s\", blob [%d/" SIZE_T_ARG
                     "]\nMuzzleflash blob \"%s\" not found!  Deleting.",

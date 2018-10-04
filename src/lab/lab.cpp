@@ -1602,7 +1602,7 @@ void labviewer_make_weap_window (Button* /*caller*/) {
     for (i = 0; i < Num_weapon_types; i++) {
         if (Weapon_info[i].subtype == WP_UNUSED) { continue; }
         else if (Weapon_info[i].subtype >= Num_weapon_subtypes) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Invalid weapon subtype found on weapon %s",
                 Weapon_info[i].name);
             continue;
@@ -1801,7 +1801,7 @@ void labviewer_change_background_actual () {
                     }
 
                     if (z == NUM_NEBULAS)
-                        WarningEx (LOCATION, "Unknown nebula %s!", str);
+                        fs2::dialog::warning_ex (LOCATION, "Unknown nebula %s!", str);
 
                     if (optional_string ("+Color:")) {
                         stuff_string (str, F_NAME, MAX_FILENAME_LEN);
@@ -1814,7 +1814,7 @@ void labviewer_change_background_actual () {
                     }
 
                     if (z == NUM_NEBULA_COLORS)
-                        WarningEx (LOCATION, "Unknown nebula color %s!", str);
+                        fs2::dialog::warning_ex (LOCATION, "Unknown nebula color %s!", str);
 
                     if (optional_string ("+Pitch:")) {
                         stuff_int (&Nebula_pitch);
@@ -1858,7 +1858,7 @@ void labviewer_change_background_actual () {
                 // don't allow overflow; just make sure the last background is
                 // the last read
                 if (Num_backgrounds >= MAX_BACKGROUNDS) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Too many backgrounds in mission!  Max is %d.",
                         MAX_BACKGROUNDS);

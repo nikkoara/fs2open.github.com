@@ -3,132 +3,56 @@
 #ifndef FREESPACE2_OSAPI_DIALOGS_H
 #define FREESPACE2_OSAPI_DIALOGS_H
 
+#include "defs.hpp"
 #include "globalincs/pstypes.h"
 
 #include <stdexcept>
 
-struct lua_State;
+namespace fs2 {
+namespace dialog {
 
-namespace os {
-namespace dialogs {
-
-class DialogException : public std::runtime_error {
-public:
-    explicit DialogException (const std::string& msg)
-        : std::runtime_error (msg) {}
+enum struct dialog_type {
+    error, warning, info
 };
 
-class AssertException : public DialogException {
-public:
-    explicit AssertException (const std::string& msg)
-        : DialogException (msg) {}
-};
+//
+// Used by Assert/Assertion, don't use directly.
+//
+void assert_msg (const char*, const char*, int, const char* = 0, ...)
+    __attribute__ ((format (printf, 4, 5)));
 
-class ErrorException : public DialogException {
-public:
-    explicit ErrorException (const std::string& msg) : DialogException (msg) {}
-};
+//
+// Irrecoverable state, stop. Use Assert/Assertion for recoverable states.
+//
+void error (const char*, int, const char*, ...)
+    __attribute__ ((format (printf, 3, 4)));
 
-class WarningException : public DialogException {
-public:
-    explicit WarningException (const std::string& msg)
-        : DialogException (msg) {}
-};
+// 
+// More general version of the above, only displays a dialog.
+//
+void error (const char*);
 
-// These map onto the SDL ShowSimpleMessageBox flags
-enum MessageType {
-    MESSAGEBOX_ERROR,
-    MESSAGEBOX_WARNING,
-    MESSAGEBOX_INFORMATION,
-};
+//
+// Warnings, only enabled in debug builds.
+//
+void warning (const char*, int, const char*, ...)
+    __attribute__ ((format (printf, 3, 4)));
 
-/**
- * @brief Displays an assert message.
- * @note Used by Assert() and Assertion() to display an error message, should
- * not be used directly
- *
- * @param text The text to display
- * @param filename The source code filename where this function was called
- * @param linenum The source code line number where this function was called
- * @param format An optional message to display in addition to the specified
- * text
- */
-void AssertMessage (
-    const char* text, const char* filename, int linenum,
-    SCP_FORMAT_STRING const char* format = nullptr, ...)
-    SCP_FORMAT_STRING_ARGS (4, 5) CLANG_ANALYZER_NORETURN;
+//
+// Debug+Release version of the above.
+//
+void release_warning (const char*, int, const char*, ...)
+    __attribute__ ((format (printf, 3, 4)));
 
-/**
- * @brief Shows an error dialog.
- * Only use this function if the program is in an unrecoverable state because
- * of invalid user data, programming errors should be handled with Assert() and
- * Assertion(). This function usually doesn't return as the generated error is
- * considered fatal.
- *
- * @param filename The source code filename where this function was called
- * @param line The source code line number where this function was called
- * @param format The error message to display (a format string)
- */
-void Error (
-    const char* filename, int line, SCP_FORMAT_STRING const char* format, ...)
-    SCP_FORMAT_STRING_ARGS (3, 4) CLANG_ANALYZER_NORETURN;
+//
+// Extra warning, only shows when command line contains `-extra_warn'
+//
+void warning_ex (const char*, int, const char*, ...)
+    __attribute__ ((format (printf, 3, 4)));
 
-/**
- * @brief Shows an error dialog.
- * This is a more general version of Error(const char*,int,const char*,...)
- * that only displays the dialog.
- *
- * @param text The text to display
- */
-void Error (const char* text) CLANG_ANALYZER_NORETURN;
-;
+void message (dialog_type, const char*, const char* = 0);
 
-/**
- * @brief Shows a warning dialog.
- * A warning should be generated if a recoverable user data error was detected.
- * This function is only enabled in debug builds.
- *
- * @param filename The source code filename where this function was called
- * @param line The source code line number where this function was called
- * @param format The message to display
- */
-void Warning (
-    const char* filename, int line, SCP_FORMAT_STRING const char* format, ...)
-    SCP_FORMAT_STRING_ARGS (3, 4);
-
-/**
- * @brief Shows an extra warning.
- * Same as Warning(const char*,int,const char*) but only Cmdline_extra_warn is
- * set to @c 1.
- *
- * @param filename The source code filename where this function was called
- * @param line The source code line number where this function was called
- * @param format The message to display
- */
-void WarningEx (
-    const char* filename, int line, SCP_FORMAT_STRING const char* format, ...)
-    SCP_FORMAT_STRING_ARGS (3, 4);
-
-/**
- * @brief Shows a warning dialog.
- * Same as #Warning but also appears in release builds.
- *
- * @param filename The source code filename where this function was called
- * @param line The source code line number where this function was called
- * @param format The message to display
- */
-void ReleaseWarning (
-    const char* filename, int line, SCP_FORMAT_STRING const char* format, ...)
-    SCP_FORMAT_STRING_ARGS (3, 4);
-
-void Message (MessageType type, const char* message, const char* title = NULL);
-} // namespace dialogs
-} // namespace os
-
-// Make these available in the global namespace for compatibility
-using os::dialogs::Error;
-using os::dialogs::ReleaseWarning;
-using os::dialogs::Warning;
-using os::dialogs::WarningEx;
+} // namespace dialog
+} // namespace fs2
 
 #endif // FREESPACE2_OSAPI_DIALOGS_H

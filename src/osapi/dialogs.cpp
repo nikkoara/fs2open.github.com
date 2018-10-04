@@ -11,145 +11,102 @@
 
 #include <string>
 #include <algorithm>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 namespace {
 
-const int Messagebox_lines = 30;
+const size_t max_msgbox_lines = 30;
 
-std::string truncateLines (std::stringstream& s, int maxLines) {
-    std::stringstream outStream;
-    s.seekp (0, std::ios::beg);
+std::stringstream
+clip (std::stringstream& ss) {
+    size_t i = 0;
 
-    for (std::string line; std::getline (s, line);) {
-        outStream << line << "\n";
-
-        --maxLines;
-
-        if (maxLines <= 0) {
-            outStream << "[...]";
-            break;
-        }
+    std::string line;
+    std::stringstream out;
+    
+    for (; i < max_msgbox_lines && std::getline (ss, line); ++i) {
+        out << line << "\n";
     }
 
-    return outStream.str ();
+    if (i >= max_msgbox_lines)
+        out << "[...]";
+
+    return out;
 }
 
-const char* clean_filename (const char* filename) {
-    auto separator = strrchr (filename, DIR_SEPARATOR_CHAR);
-    if (separator != nullptr) { filename = separator + 1; }
-
-    return filename;
+inline void
+clipboard_copy (const std::string& s) {
+    if (0 == SDL_InitSubSystem (SDL_INIT_VIDEO))
+        SDL_SetClipboardText (s.c_str ());
 }
 
-char replaceNewline (char in) {
-    if (in == '\n') return ' ';
+} // namespace anonymous
 
-    return in;
-}
-
-void set_clipboard_text (const char* text) {
-    // Make sure video is enabled
-    if (!SDL_InitSubSystem (SDL_INIT_VIDEO)) { SDL_SetClipboardText (text); }
-}
-} // namespace
+////////////////////////////////////////////////////////////////////////
 
 int Global_warning_count = 0;
 int Global_error_count = 0;
 
-namespace os {
-namespace dialogs {
-void AssertMessage (
-    const char* text, const char* filename, int linenum, const char* format,
-    ...) {
-    // We only want to display the file name
-    filename = clean_filename (filename);
+namespace fs2 {
+namespace dialog {
 
-    std::stringstream msgStream;
-    msgStream << "Assert: \"" << text << "\"\n";
-    msgStream << "File: " << filename << "\n";
-    msgStream << "Line: " << linenum << "\n";
+void
+assert_msg (
+    const char* s, const char* filepath, int linenum,
+    const char* fmt, ...) {
+    
+    auto filename = fs::path (filepath).filename ();
 
-    if (format != nullptr) {
-        std::string buffer;
+    std::stringstream ss;
+    
+    ss << "Assert: \"" << s << "\"\nFile: " << filename << "\nLine: "
+       << linenum << "\n";
+
+    if (fmt) {
+        std::string buf;
         va_list args;
 
-        va_start (args, format);
-        vsprintf (buffer, format, args);
+        va_start (args, fmt);
+        vsprintf (buf, fmt, args);
         va_end (args);
 
-        msgStream << buffer << "\n";
-        mprintf (
-            ("ASSERTION: \"%s\" at %s:%d\n %s\n", text, filename, linenum,
-             buffer.c_str ()));
-    }
-    else {
-        // No additional message
-        mprintf (("ASSERTION: \"%s\" at %s:%d\n", text, filename, linenum));
+        ss << buf << "\n";
     }
 
-    if (running_unittests) { throw AssertException (msgStream.str ()); }
+    ss << "\n";
+    ss << dump_stacktrace ();
 
-    msgStream << "\n";
-    msgStream << dump_stacktrace ();
+    mprintf (
+        ("ASSERTION: \"%s\" at %s:%d\n %s\n", s, filename.c_str (), linenum,
+         ss.str ().c_str ()));    
 
-    std::string messageText = msgStream.str ();
-    set_clipboard_text (messageText.c_str ());
+    clipboard_copy (ss.str ());
 
-    messageText = truncateLines (msgStream, Messagebox_lines);
-    messageText +=
-        "\n[ This info is in the clipboard so you can paste it somewhere now "
-        "]\n";
-    messageText +=
-        "\n\nUse Debug to break into Debugger, Exit will close the "
-        "application.\n";
+    ss = clip (ss);
+    ss  << "\n(copied to clipboard)\n\n\nDebug breaks into Debugger, "
+        "Exit closes the program.\n";
 
-    Error (messageText.c_str ());
+    error (ss.str ().c_str ());
 }
 
-void Error (const char* filename, int line, const char* format, ...) {
-    std::string formatText;
-    filename = clean_filename (filename);
-
-    va_list args;
-    va_start (args, format);
-    vsprintf (formatText, format, args);
-    va_end (args);
-
-    std::stringstream messageStream;
-    messageStream << "Error: " << formatText << "\n";
-    messageStream << "File: " << filename << "\n";
-    messageStream << "Line: " << line << "\n";
-
-    Error (messageStream.str ().c_str ());
+static void
+do_error_log (const char* s) {
+    EE ("general") << s;
 }
 
-void Error (const char* text) {
-    mprintf (("\n%s\n", text));
+static void
+do_error_box (const char* s) {
+    std::stringstream ss;
+    ss << s << "\n" << dump_stacktrace ();
 
-    if (Cmdline_noninteractive) {
-        abort ();
-        return;
-    }
+    clipboard_copy (ss.str ());
 
-    if (running_unittests) { throw ErrorException (text); }
+    ss = clip (ss);    
+    ss  << "\n(copied to clipboard)\n\n\nDebug breaks into Debugger, "
+        "Exit closes the program.\n";
 
-    std::stringstream messageStream;
-    messageStream << text << "\n";
-    messageStream << dump_stacktrace ();
-
-    std::string fullText = messageStream.str ();
-    set_clipboard_text (fullText.c_str ());
-
-    fullText = truncateLines (messageStream, Messagebox_lines);
-
-    fullText +=
-        "\n[ This info is in the clipboard so you can paste it somewhere now "
-        "]\n";
-    fullText +=
-        "\n\nUse Debug to break into Debugger, Exit will close the "
-        "application.\n";
-
-    const SDL_MessageBoxButtonData buttons[] = {
+    static const SDL_MessageBoxButtonData buttons [] = {
         { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "Exit" },
         { /* .flags, .buttonid, .text */ 0, 0, "Debug" },
     };
@@ -159,65 +116,84 @@ void Error (const char* text) {
 
     boxData.buttons = buttons;
     boxData.numbuttons = 2;
-    boxData.colorScheme = nullptr;
+    boxData.colorScheme = 0;
     boxData.flags = SDL_MESSAGEBOX_ERROR;
-    boxData.message = text;
+    boxData.message = ss.str ().c_str ();
     boxData.title = "Error!";
     boxData.window = os::getSDLMainWindow ();
 
     gr_activate (0);
 
     int buttonId;
-    if (SDL_ShowMessageBox (&boxData, &buttonId) < 0) {
-        // Call failed
+    
+    if (SDL_ShowMessageBox (&boxData, &buttonId) < 0)
         exit (1);
-    }
 
     switch (buttonId) {
-    case 1: exit (1);
+    case 1:
+        exit (1);
 
-    default: Int3 (); break;
+    default:
+        Int3 (); break;
     }
+    
     gr_activate (1);
 }
 
-// Actual implementation of the warning function. Used by the various warning
-// functions
-void WarningImpl (const char* filename, int line, const std::string& text) {
-    filename = clean_filename (filename);
+void
+error (const char* s) {
+    do_error_log (s);
 
-    // output to the debug log before anything else (so that we have a complete
-    // record)
+    if (Cmdline_noninteractive)
+        std::terminate ();
 
-    std::string printfString = text;
-    std::transform (
-        printfString.begin (), printfString.end (), printfString.begin (),
-        replaceNewline);
+    do_error_box (s);
+}
 
-    mprintf (
-        ("WARNING: \"%s\" at %s:%d\n", printfString.c_str (), filename, line));
+void
+error (const char* filename, int line, const char* fmt, ...) {
+    std::string s;
+    
+    va_list args;
+    va_start (args, fmt);
+    vsprintf (s, fmt, args);
+    va_end (args);
 
-    // now go for the additional popup window, if we want it ...
-    if (Cmdline_noninteractive) { return; }
+    std::stringstream ss;
+    
+    ss << "Error: " << s << "\nFile: "
+       << fs::path (filename).filename () << "\nLine: "
+       << line << "\n";
 
-    if (running_unittests) { throw WarningException (printfString); }
+    error (ss.str ().c_str ());
+}
 
-    std::stringstream boxMsgStream;
-    boxMsgStream << "Warning: " << text << "\n";
-    boxMsgStream << "File: " << filename << "\n";
-    boxMsgStream << "Line: " << line << "\n";
+static void
+do_warning_log (const fs::path& filename, int line, const std::string& text) {
+    //
+    // Output to debug log
+    //
+    std::string s = text;
 
-    set_clipboard_text (boxMsgStream.str ().c_str ());
+    std::transform (s.begin (), s.end (), s.begin (), [](auto c) {
+        return c == '\n' ? ' ' : c; });
 
-    boxMsgStream << "\n";
+    WW ("general") << " file: " << filename << " ,line: " << line << " :" << s;
+}
 
-    std::string boxMessage = truncateLines (boxMsgStream, Messagebox_lines);
-    boxMessage +=
-        "\n[ This info is in the clipboard so you can paste it somewhere now "
-        "]\n";
-    boxMessage += "\n\nUse Debug to break into Debugger\n";
+static void
+do_warning_box (const fs::path& filename, int line, const std::string& text) {
+    std::stringstream ss;
+    
+    ss << "Warning: " << text << "\n" << "File: " << filename << "\n"
+       << "Line: " << line << "\n";
 
-    const SDL_MessageBoxButtonData buttons[] = {
+    clipboard_copy (ss.str ());
+
+    ss = clip (ss);
+    ss  << "\n(copied to clipboard)\n\n\nDebug breaks into Debugger\n";
+
+    static const SDL_MessageBoxButtonData buttons[] = {
         { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 2, "Exit" },
         { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "Continue" },
         { /* .flags, .buttonid, .text */ 0, 0, "Debug" },
@@ -228,99 +204,120 @@ void WarningImpl (const char* filename, int line, const std::string& text) {
 
     boxData.buttons = buttons;
     boxData.numbuttons = 3;
-    boxData.colorScheme = nullptr;
+    boxData.colorScheme = 0;
     boxData.flags = SDL_MESSAGEBOX_WARNING;
-    boxData.message = boxMessage.c_str ();
+    boxData.message = ss.str ().c_str ();
     boxData.title = "Warning!";
     boxData.window = os::getSDLMainWindow ();
 
     gr_activate (0);
 
     int buttonId;
-    if (SDL_ShowMessageBox (&boxData, &buttonId) < 0) {
-        // Call failed
+    
+    if (0 > SDL_ShowMessageBox (&boxData, &buttonId)) {
         exit (1);
     }
 
     switch (buttonId) {
-    case 2: exit (1);
+    case 2:
+        exit (1);
 
-    case 0: Int3 (); break;
+    case 0:
+        Int3 (); break;
 
-    default: break;
+    default:
+        break;
     }
 
     gr_activate (1);
 }
 
-void ReleaseWarning (const char* filename, int line, const char* format, ...) {
-    Global_warning_count++;
+static void
+do_warning (const char* filepath, int line, const std::string& text) {
+    auto filename = fs::path (filepath).filename ();
 
-    std::string msg;
-    va_list args;
+    do_warning_log (filename, line, text);
 
-    va_start (args, format);
-    vsprintf (msg, format, args);
-    va_end (args);
+    if (Cmdline_noninteractive)
+        return;
 
-    WarningImpl (filename, line, msg);
+    do_warning_box (filename, line, text);
 }
 
-void Warning (const char* filename, int line, const char* format, ...) {
-    Global_warning_count++;
+void
+release_warning (const char* file, int line, const char* fmt, ...) {
+    ++Global_warning_count;
 
-#ifndef NDEBUG
-    std::string msg;
+    std::string s;
     va_list args;
 
-    va_start (args, format);
-    vsprintf (msg, format, args);
+    va_start (args, fmt);
+    vsprintf (s, fmt, args);
     va_end (args);
 
-    WarningImpl (filename, line, msg);
+    do_warning (file, line, s);
+}
+
+void
+warning (const char* file, int line, const char* fmt, ...) {
+    ++Global_warning_count;
+
+#ifndef NDEBUG
+    std::string s;
+    va_list args;
+
+    va_start (args, fmt);
+    vsprintf (s, fmt, args);
+    va_end (args);
+
+    do_warning (file, line, s);
 #endif
 }
 
-void WarningEx (const char* filename, int line, const char* format, ...) {
+void
+warning_ex (const char* file, int line, const char* fmt, ...) {
 #ifndef NDEBUG
     if (Cmdline_extra_warn) {
-        std::string msg;
+        std::string s;
         va_list args;
 
-        va_start (args, format);
-        vsprintf (msg, format, args);
+        va_start (args, fmt);
+        vsprintf (s, fmt, args);
         va_end (args);
 
-        Warning (filename, line, "%s", msg.c_str ());
+        warning (file, line, "%s", s.c_str ());
     }
 #endif
 }
 
-void Message (MessageType type, const char* message, const char* title) {
-    if (running_unittests) { throw WarningException (message); }
-
+void
+message (dialog_type type, const char* s, const char* t) {
     int flags = 1;
 
     switch (type) {
-    case MESSAGEBOX_ERROR:
+    case dialog_type::error:
         flags = SDL_MESSAGEBOX_ERROR;
-        if (title == NULL) title = "Error";
+        if (0 == t) t = "Error";
         break;
-    case MESSAGEBOX_INFORMATION:
+        
+    case dialog_type::info:
         flags = SDL_MESSAGEBOX_INFORMATION;
-        if (title == NULL) title = "Information";
+        if (0 == t) t = "Information";
         break;
-    case MESSAGEBOX_WARNING:
+        
+    case dialog_type::warning:
         flags = SDL_MESSAGEBOX_WARNING;
-        if (title == NULL) title = "Warning";
+        if (0 == t) t = "Warning";
         break;
+        
     default:
         Int3 ();
-        title = ""; // Remove warning about unitialized variable
+        t = "";
         break;
     }
 
-    SDL_ShowSimpleMessageBox (flags, title, message, os::getSDLMainWindow ());
+    SDL_ShowSimpleMessageBox (flags, t, s, os::getSDLMainWindow ());
 }
+
 } // namespace dialogs
 } // namespace os

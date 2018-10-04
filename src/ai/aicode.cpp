@@ -627,7 +627,7 @@ void parse_ai_class () {
             if (aicp->ai_glide_attack_percent[i] < 0.0f ||
                 aicp->ai_glide_attack_percent[i] > 100.0f) {
                 aicp->ai_glide_attack_percent[i] = 0.0f;
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "$Glide Attack Percent should be between 0 and 100.0 "
                     "(read %f). Setting to 0.",
@@ -643,7 +643,7 @@ void parse_ai_class () {
             if (aicp->ai_circle_strafe_percent[i] < 0.0f ||
                 aicp->ai_circle_strafe_percent[i] > 100.0f) {
                 aicp->ai_circle_strafe_percent[i] = 0.0f;
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "$Circle Strafe Percent should be between 0 and 100.0 "
                     "(read %f). Setting to 0.",
@@ -659,7 +659,7 @@ void parse_ai_class () {
             if (aicp->ai_glide_strafe_percent[i] < 0.0f ||
                 aicp->ai_glide_strafe_percent[i] > 100.0f) {
                 aicp->ai_glide_strafe_percent[i] = 0.0f;
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "$Glide Strafe Percent should be between 0 and 100.0 "
                     "(read %f). Setting to 0.",
@@ -676,7 +676,7 @@ void parse_ai_class () {
             if (aicp->ai_random_sidethrust_percent[i] < 0.0f ||
                 aicp->ai_random_sidethrust_percent[i] > 100.0f) {
                 aicp->ai_random_sidethrust_percent[i] = 0.0f;
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "$Random Sidethrust Percent should be between 0 and 100.0 "
                     "(read %f). Setting to 0.",
@@ -1462,7 +1462,7 @@ void project_point_to_perimeter (
     mag = vm_vec_mag (&v1);
 
     if (mag == 0.0f) {
-        Warning (LOCATION, "projectable point is at center of sphere.");
+        fs2::dialog::warning (LOCATION, "projectable point is at center of sphere.");
         vm_vec_make (&v1, 0.0f, radius, 0.0f);
     }
     else {
@@ -3060,7 +3060,7 @@ void ai_find_path (
             ship* shipp = &Ships[objp->instance];
             pm = model_get (Ship_info[shipp->ship_info_index].model_num);
             if (path_num >= pm->n_paths)
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "ai_find_path tring to find a path (%d) that doesn't "
                     "exist, on ship %s",
@@ -3197,7 +3197,7 @@ void ai_do_objects_docked_stuff (
 
     // make sure they're not already docked!
     if (dock_check_find_direct_docked_object (docker, dockee)) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Call to ai_do_objects_docked_stuff when objects are already "
             "docked!  Trace out and fix!\n");
@@ -3245,7 +3245,7 @@ void ai_do_objects_undocked_stuff (object* docker, object* dockee) {
 
     // make sure they're not already undocked!
     if (!dock_check_find_direct_docked_object (docker, dockee)) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Call to ai_do_objects_undocked_stuff when objects are already "
             "undocked!  Trace out and fix!\n");
@@ -3368,7 +3368,7 @@ void ai_dock_with_object (
 
         // make sure we have a path
         if (path_num < 0) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Cannot find a dock path for ship %s, dock index %d.  "
                 "Aborting dock.\n",
@@ -3417,7 +3417,7 @@ void ai_start_waypoints (object* objp, waypoint_list* wp_list, int wp_flags) {
 
     if ((aip->mode == AIM_WAYPOINTS) && (aip->wp_list == wp_list)) {
         if (aip->wp_index == INVALID_WAYPOINT_POSITION) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "aip->wp_index should have been assigned already!");
             aip->wp_index = 0;
         }
@@ -4386,7 +4386,7 @@ float ai_path () {
     case AI_PATH_MODE_NORMAL: return ai_path_0 (); break;
     case AI_PATH_MODE_ALT1: return ai_path_1 (); break;
     default:
-        Error (
+        fs2::dialog::error (
             LOCATION, "Invalid path mode found: %d\n",
             The_mission.ai_profile->ai_path_mode);
         return ai_path_0 ();
@@ -4939,11 +4939,11 @@ void ai_waypoints () {
     // sanity checking for stuff that should never happen
     if (aip->wp_index == INVALID_WAYPOINT_POSITION) {
         if (aip->wp_list == NULL) {
-            Warning (LOCATION, "Waypoints should have been assigned already!");
+            fs2::dialog::warning (LOCATION, "Waypoints should have been assigned already!");
             ai_start_waypoints (Pl_objp, &Waypoint_lists.front (), WPF_REPEAT);
         }
         else {
-            Warning (LOCATION, "Waypoints should have been started already!");
+            fs2::dialog::warning (LOCATION, "Waypoints should have been started already!");
             ai_start_waypoints (Pl_objp, aip->wp_list, WPF_REPEAT);
         }
     }
@@ -5006,7 +5006,7 @@ void ai_fly_to_ship () {
     aip = &Ai_info[Ships[Pl_objp->instance].ai_index];
 
     if (aip->mode != AIM_FLY_TO_SHIP) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "ai_fly_to_ship called for '%s' when ai_info.mode not equal to "
             "AIM_FLY_TO_SHIP. Is actually '%d'",
@@ -5015,7 +5015,7 @@ void ai_fly_to_ship () {
         return;
     }
     if (aip->active_goal < 0 || aip->active_goal >= MAX_AI_GOALS) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "'%s' is trying to fly-to a ship without an active AI_GOAL\n\n"
             "Active ai mode is '%d'",
@@ -5025,7 +5025,7 @@ void ai_fly_to_ship () {
     }
     Assert (aip->goals[aip->active_goal].target_name != NULL);
     if (aip->goals[aip->active_goal].target_name[0] == '\0') {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "'%s' is trying to fly-to-ship without a name for the ship",
             Ships[Pl_objp->instance].ship_name);
@@ -5058,7 +5058,7 @@ void ai_fly_to_ship () {
             }
         }
 #endif
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Ship '%s' told to fly to a ship but none of the ships it was "
             "told to fly to exist.\n"
@@ -7286,7 +7286,7 @@ void do_random_sidethrust (ai_info* aip, ship_info* sip) {
             -1.0f, 1.0f);
     }
     else {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Division by zero in do_random_sidethrust averted. Please tell a "
             "coder.\n");
@@ -11632,7 +11632,7 @@ void ai_get_dock_goal_indexes (
     case AIS_DOCK_1:
     case AIS_DOCK_2:
     case AIS_DOCK_3:
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Normally dock indexes should be calculated for only AIS_DOCK_0 "
             "and AIS_UNDOCK_0.  Trace out and debug.");
@@ -11653,7 +11653,7 @@ void ai_get_dock_goal_indexes (
     case AIS_DOCK_4A:
     case AIS_UNDOCK_1:
     case AIS_UNDOCK_2:
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Normally dock indexes should be calculated for only AIS_DOCK_0 "
             "and AIS_UNDOCK_0.  Trace out and debug.");
@@ -11669,7 +11669,7 @@ void ai_get_dock_goal_indexes (
 
     case AIS_UNDOCK_3:
     case AIS_UNDOCK_4: {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Normally dock indexes should be calculated for only AIS_DOCK_0 "
             "and AIS_UNDOCK_0.  Additionally, dock indexes can't always be "
@@ -11681,7 +11681,7 @@ void ai_get_dock_goal_indexes (
     }
 
     default: {
-        Error (LOCATION, "Unknown docking submode!");
+        fs2::dialog::error (LOCATION, "Unknown docking submode!");
         docker_index = -1;
         dockee_index = -1;
         break;
@@ -12549,7 +12549,7 @@ void process_subobjects (int objnum) {
                     ai_fire_from_turret (shipp, pss, objnum);
             }
             else {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Turret %s on ship %s has no firing points assigned to "
                     "it.\nThis needs to be fixed in the model.\n",
@@ -12569,7 +12569,8 @@ void process_subobjects (int objnum) {
         case SUBSYSTEM_SOLAR:
         case SUBSYSTEM_GAS_COLLECT:
         case SUBSYSTEM_ACTIVATION: break;
-        default: Error (LOCATION, "Illegal subsystem type.\n");
+        default:
+            fs2::dialog::error (LOCATION, "Illegal subsystem type.\n");
         }
 
         // do solar/radar/gas/activator rotation here
@@ -14141,7 +14142,7 @@ int ai_acquire_emerge_path (
     ship_bay_t* bay = pm->ship_bay;
 
     if (bay == NULL) {
-        WarningEx (
+        fs2::dialog::warning_ex (
             LOCATION,
             "Ship %s was set to arrive from fighter bay on object %s, but no "
             "fighter bay exists on that ships' model (%s).\n",
@@ -14150,7 +14151,7 @@ int ai_acquire_emerge_path (
     }
 
     if (bay->num_paths <= 0) {
-        WarningEx (
+        fs2::dialog::warning_ex (
             LOCATION,
             "Ship %s was set to arrive from fighter bay on object %s, but no "
             "fighter bay paths exist on that ships' model (%s).\n",
@@ -14386,7 +14387,7 @@ int ai_acquire_depart_path (
     ai_info* aip = &Ai_info[shipp->ai_index];
 
     if (parent_objnum < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "In ai_acquire_depart_path(), specified a negative object number "
             "for the parent ship!  (Departing ship is %s.)  Looking for "
@@ -16041,7 +16042,7 @@ void init_aip_from_class_and_profile (
     // since we use it so much in this function, sanity check the value for
     // Game_skill_level
     if (Game_skill_level < 0 || Game_skill_level >= NUM_SKILL_LEVELS) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Invalid skill level %i! Valid range 0 to %i. Resetting to "
             "default.",

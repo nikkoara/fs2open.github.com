@@ -348,7 +348,7 @@ HudGauge::HudGauge (
         custom_frame.first_frame =
             bm_load_animation (frame_fname, &custom_frame.num_frames);
         if (custom_frame.first_frame < 0) {
-            Warning (LOCATION, "Cannot load hud ani: %s\n", frame_fname);
+            fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", frame_fname);
         }
     }
 }
@@ -1547,7 +1547,7 @@ void HudGaugeMissionTime::initBitmaps (const char* fname) {
     time_gauge.first_frame = bm_load_animation (fname, &time_gauge.num_frames);
 
     if (time_gauge.first_frame == -1) {
-        Warning (LOCATION, "Could not load in ani: %s\n", fname);
+        fs2::dialog::warning (LOCATION, "Could not load in ani: %s\n", fname);
     }
 }
 
@@ -1867,19 +1867,19 @@ void HudGaugeDamage::initBitmaps (
     damage_top.first_frame =
         bm_load_animation (fname_top, &damage_top.num_frames);
     if (damage_top.first_frame == -1) {
-        Warning (LOCATION, "Could not load in the ani: %s\n", fname_top);
+        fs2::dialog::warning (LOCATION, "Could not load in the ani: %s\n", fname_top);
     }
 
     damage_middle.first_frame =
         bm_load_animation (fname_middle, &damage_middle.num_frames);
     if (damage_middle.first_frame == -1) {
-        Warning (LOCATION, "Could not load in the ani: %s\n", fname_middle);
+        fs2::dialog::warning (LOCATION, "Could not load in the ani: %s\n", fname_middle);
     }
 
     damage_bottom.first_frame =
         bm_load_animation (fname_bottom, &damage_bottom.num_frames);
     if (damage_bottom.first_frame == -1) {
-        Warning (LOCATION, "Could not load in the ani: %s\n", fname_bottom);
+        fs2::dialog::warning (LOCATION, "Could not load in the ani: %s\n", fname_bottom);
     }
 }
 
@@ -2170,7 +2170,7 @@ int hud_anim_load (hud_anim* ha) {
     }
 
     if (ha->first_frame == -1) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Couldn't load hud animation for file '%s'",
             ha->filename);
         return -1;
@@ -2352,7 +2352,7 @@ void HudGaugeKills::initBitmaps (const char* fname) {
     Kills_gauge.first_frame =
         bm_load_animation (fname, &Kills_gauge.num_frames);
     if (Kills_gauge.first_frame == -1) {
-        Warning (LOCATION, "Could not load in the ani: %s\n", fname);
+        fs2::dialog::warning (LOCATION, "Could not load in the ani: %s\n", fname);
     }
 }
 
@@ -2413,7 +2413,7 @@ void HudGaugeLag::initBitmaps (const char* fname) {
         bm_load_animation (fname, &Netlag_icon.num_frames);
 
     if (Netlag_icon.first_frame == -1) {
-        Warning (LOCATION, "Could not load in the netlag ani: %s\n", fname);
+        fs2::dialog::warning (LOCATION, "Could not load in the netlag ani: %s\n", fname);
     }
 }
 
@@ -2719,7 +2719,7 @@ void HudGaugeSupport::initTextDockValueOffsetX (int x) {
 void HudGaugeSupport::initBitmaps (const char* fname) {
     background.first_frame = bm_load_animation (fname, &background.num_frames);
     if (background.first_frame == -1) {
-        Warning (LOCATION, "Could not load in ani: %s\n", fname);
+        fs2::dialog::warning (LOCATION, "Could not load in ani: %s\n", fname);
     }
 }
 
@@ -3268,7 +3268,7 @@ void HudGaugeObjectiveNotify::initBitmaps (const char* fname) {
     Objective_display_gauge.first_frame =
         bm_load_animation (fname, &Objective_display_gauge.num_frames);
     if (Objective_display_gauge.first_frame == -1) {
-        Warning (LOCATION, "Could not load in ani: %s\n", fname);
+        fs2::dialog::warning (LOCATION, "Could not load in ani: %s\n", fname);
     }
 }
 
@@ -3847,7 +3847,7 @@ void HudGaugeFlightPath::initBitmap (const char* fname) {
     Marker.first_frame = bm_load_animation (fname, &Marker.num_frames);
 
     if (Marker.first_frame < 0) {
-        Warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 

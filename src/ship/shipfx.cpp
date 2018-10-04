@@ -3353,7 +3353,7 @@ int CombinedVariable::getString (char* output, size_t output_max) {
         return 1;
     }
     if (Type == TYPE_SOUND) {
-        Error (LOCATION, "Sound CombinedVariables are not supported yet.");
+        fs2::dialog::error (LOCATION, "Sound CombinedVariables are not supported yet.");
         /*if(snd_is_valid(su_Sound))
             snprintf(output, output_max, "%s", snd_get_filename(su_Sound));*/
         return 1;

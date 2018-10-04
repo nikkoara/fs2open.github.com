@@ -645,7 +645,7 @@ int multi_oo_unpack_client_data (net_player* pl, ubyte* data) {
     int offset = 0;
 
     if (pl == NULL)
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Invalid net_player pointer passed to multi_oo_unpack_client\n");
 

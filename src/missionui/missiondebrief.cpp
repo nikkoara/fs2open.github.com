@@ -794,7 +794,7 @@ void debrief_ui_init () {
         Debrief_single_name[gr_screen.res], Debrief_multi_name[gr_screen.res]);
 
     if (Background_bitmap < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Could not load the background bitmap for debrief screen");
     }

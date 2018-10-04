@@ -1726,7 +1726,7 @@ void campaign_room_init () {
     Campaign_background_bitmap_mask =
         bm_load (Campaign_mask_filename[gr_screen.res]);
     if (Campaign_background_bitmap_mask < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Error loading campaign room mask %s",
             Campaign_mask_filename[gr_screen.res]);
     }
@@ -1768,7 +1768,7 @@ void campaign_room_init () {
 
     Background_bitmap = bm_load (Campaign_filename[gr_screen.res]);
     if (Background_bitmap < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Error loading campaign room background %s",
             Campaign_filename[gr_screen.res]);
     }

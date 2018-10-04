@@ -588,7 +588,7 @@ static void set_subsystem_info (
         // no special subsystem handling needed here, but make sure we didn't
         // specify both methods
         if (prop_string (props, nullptr, "$rotate") >= 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Subsystem '%s' on ship %s cannot have both rotation and "
                 "dumb-rotation!",
@@ -610,7 +610,7 @@ static void set_subsystem_info (
         if (idx == 0 || idx == 2) {
             float turn_time = static_cast< float > (atof (buf));
             if (turn_time == 0.0f) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Rotation has a turn time of 0 for subsystem '%s' on ship "
                     "%s!",
@@ -773,7 +773,7 @@ void do_new_subsystem (
     if (!ss_warning_shown) {
         _splitpath (model_filename, NULL, NULL, bname, NULL);
         // Lets still give a comment about it and not just erase it
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Not all subsystems in model \"%s\" have a record in "
             "ships.tbl.\nThis can cause game to crash.\n\nList of subsystems "
@@ -1046,10 +1046,10 @@ int read_model_file (
 
     if (!fp) {
         if (ferror == 1) {
-            Error (LOCATION, "Can't open model file <%s>", filename);
+            fs2::dialog::error (LOCATION, "Can't open model file <%s>", filename);
         }
         else if (ferror == 0) {
-            Warning (LOCATION, "Can't open model file <%s>", filename);
+            fs2::dialog::warning (LOCATION, "Can't open model file <%s>", filename);
         }
 
         return -1;
@@ -1084,7 +1084,7 @@ int read_model_file (
     id = cfread_int (fp);
 
     if (id != POF_HEADER_ID)
-        Error (LOCATION, "Bad ID in model file <%s>", filename);
+        fs2::dialog::error (LOCATION, "Bad ID in model file <%s>", filename);
 
     // Version is major*100+minor
     // So, major = version / 100;
@@ -1095,7 +1095,7 @@ int read_model_file (
 
     if (version < PM_COMPATIBLE_VERSION ||
         (version / 100) > PM_OBJFILE_MAJOR_VERSION) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Bad version (%d) in model file <%s>", version,
             filename);
         return 0;
@@ -1148,7 +1148,7 @@ int read_model_file (
 
             // Check for unrealistic radii
             if (pm->rad <= 0.1f) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "Model <%s> has a radius <= 0.1f\n", filename);
             }
 
@@ -1161,7 +1161,7 @@ int read_model_file (
 
             // sanity first!
             if (maybe_swap_mins_maxs (&pm->mins, &pm->maxs)) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Inverted bounding box on model '%s'!  Swapping values to "
                     "compensate.",
@@ -1181,7 +1181,7 @@ int read_model_file (
 
             pm->num_debris_objects = cfread_int (fp);
             if (pm->num_debris_objects > MAX_DEBRIS_OBJECTS) {
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "Model %s specified that it contains %d debris objects "
                     "but only %d are supported by the "
@@ -1207,7 +1207,7 @@ int read_model_file (
                     if (!is_valid_vec (&pm->moment_of_inertia.vec.rvec) ||
                         !is_valid_vec (&pm->moment_of_inertia.vec.uvec) ||
                         !is_valid_vec (&pm->moment_of_inertia.vec.fvec)) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Moment of inertia values for model %s are "
                             "invalid. This has to be fixed.\n",
@@ -1237,7 +1237,7 @@ int read_model_file (
                     if (!is_valid_vec (&pm->moment_of_inertia.vec.rvec) ||
                         !is_valid_vec (&pm->moment_of_inertia.vec.uvec) ||
                         !is_valid_vec (&pm->moment_of_inertia.vec.fvec)) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Moment of inertia values for model %s are "
                             "invalid. This has to be fixed.\n",
@@ -1359,7 +1359,7 @@ int read_model_file (
 
             // Check for unrealistic radii
             if (pm->submodel[n].rad <= 0.1f) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Submodel <%s> in model <%s> has a radius <= 0.1f\n",
                     pm->submodel[n].name, filename);
@@ -1368,7 +1368,7 @@ int read_model_file (
             // sanity first!
             if (maybe_swap_mins_maxs (
                     &pm->submodel[n].min, &pm->submodel[n].max)) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Inverted bounding box on submodel '%s' of model '%s'!  "
                     "Swapping values to compensate.",
@@ -1432,7 +1432,7 @@ int read_model_file (
                 if (idx == 0) {
                     float turn_time = static_cast< float > (atof (buf));
                     if (turn_time == 0.0f) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Dumb-Rotation has a turn time of 0 for subsystem "
                             "'%s' on ship %s!",
@@ -1501,7 +1501,7 @@ int read_model_file (
             // adding a warning if rotation is specified without movement axis.
             if (pm->submodel[n].movement_axis == MOVEMENT_AXIS_NONE) {
                 if (pm->submodel[n].movement_type == MOVEMENT_TYPE_ROT) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Rotation without rotation axis defined on submodel "
                         "'%s' of model '%s'!",
@@ -1510,7 +1510,7 @@ int read_model_file (
                 else if (
                     pm->submodel[n].movement_type ==
                     MOVEMENT_TYPE_INTRINSIC_ROTATE) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Intrinsic rotation (e.g. dumb-rotate) without "
                         "rotation axis defined on submodel '%s' of model "
@@ -1664,7 +1664,7 @@ int read_model_file (
                 // Find end of number
                 parsed_string = strchr (parsed_string, ',');
                 if (parsed_string == NULL) {
-                    Error (
+                    fs2::dialog::error (
                         LOCATION,
                         "Submodel '%s' of model '%s' has an improperly "
                         "formatted $uvec: declaration in its properties."
@@ -1685,7 +1685,7 @@ int read_model_file (
                 // Find end of number
                 parsed_string = strchr (parsed_string, ',');
                 if (parsed_string == NULL) {
-                    Error (
+                    fs2::dialog::error (
                         LOCATION,
                         "Submodel '%s' of model '%s' has an improperly "
                         "formatted $uvec: declaration in its properties."
@@ -1716,7 +1716,7 @@ int read_model_file (
                     // Find end of number
                     parsed_string = strchr (parsed_string, ',');
                     if (parsed_string == NULL) {
-                        Error (
+                        fs2::dialog::error (
                             LOCATION,
                             "Submodel '%s' of model '%s' has an improperly "
                             "formatted $fvec: declaration in its properties."
@@ -1737,7 +1737,7 @@ int read_model_file (
                     // Find end of number
                     parsed_string = strchr (parsed_string, ',');
                     if (parsed_string == NULL) {
-                        Error (
+                        fs2::dialog::error (
                             LOCATION,
                             "Submodel '%s' of model '%s' has an improperly "
                             "formatted $fvec: declaration in its properties."
@@ -1782,7 +1782,7 @@ int read_model_file (
                         *orient = vmd_identity_matrix;
                     }
 
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Improper custom orientation matrix for subsystem %s, "
                         "you must define a up vector, then a forward vector",
@@ -1800,7 +1800,7 @@ int read_model_file (
                 }
 
                 if (strstr (props, "$fvec:") != NULL) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Improper custom orientation matrix for subsystem %s, "
                         "you must define a up vector, then a forward vector",
@@ -1827,7 +1827,7 @@ int read_model_file (
             {
                 int nchunks = cfread_int (fp); // Throw away nchunks
                 if (nchunks > 0) {
-                    Error (
+                    fs2::dialog::error (
                         LOCATION,
                         "Model '%s' is chunked.  See John or Adam!\n",
                         pm->filename);
@@ -1914,7 +1914,7 @@ int read_model_file (
                                              // shield_vertex list
 #ifndef NDEBUG
                         if (pm->shield.tris[i].verts[j] >= pm->shield.nverts) {
-                            Error (
+                            fs2::dialog::error (
                                 LOCATION,
                                 "Ship %s has a bogus shield mesh.\nOnly %i "
                                 "vertices, index %i found.\n",
@@ -1931,7 +1931,7 @@ int read_model_file (
 #ifndef NDEBUG
                         if (pm->shield.tris[i].neighbors[j] >=
                             pm->shield.ntris) {
-                            Error (
+                            fs2::dialog::error (
                                 LOCATION,
                                 "Ship %s has a bogus shield mesh.\nOnly %i "
                                 "triangles, index %i found.\n",
@@ -2056,7 +2056,7 @@ int read_model_file (
                     bay->num_slots = cfread_int (fp);
 
                     if (bay->num_slots != 2) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Model '%s' has %d slots in dock point '%s'; "
                             "models must have exactly %d slots per dock "
@@ -2068,7 +2068,7 @@ int read_model_file (
                         cfread_vector (&(bay->pnt[j]), fp);
                         cfread_vector (&(bay->norm[j]), fp);
                         if (vm_vec_mag (&(bay->norm[j])) <= 0.0f) {
-                            Warning (
+                            fs2::dialog::warning (
                                 LOCATION,
                                 "Model '%s' dock point '%s' has a null "
                                 "normal. ",
@@ -2077,7 +2077,7 @@ int read_model_file (
                     }
 
                     if (vm_vec_same (&bay->pnt[0], &bay->pnt[1])) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Model '%s' has two identical docking slot "
                             "positions on docking port '%s'. This is not "
@@ -2093,7 +2093,7 @@ int read_model_file (
                     vm_vec_normalized_dir (&diff, &bay->pnt[0], &bay->pnt[1]);
                     float dot = vm_vec_dot (&diff, &bay->norm[0]);
                     if (fl_abs (dot) > 0.99f) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Model '%s', docking port '%s' has docking slot "
                             "positions that lie on the same axis as the "
@@ -2170,7 +2170,7 @@ int read_model_file (
                     bank->glow_bitmap = bm_load (glow_texture_name);
 
                     if (bank->glow_bitmap < 0) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Couldn't open glowpoint texture '%s'\nreferenced "
                             "by model '%s'\n",
@@ -2210,7 +2210,7 @@ int read_model_file (
                     // a random texture assigned!
                     bank->glow_bitmap = -1;
                     bank->glow_neb_bitmap = -1;
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "No Glow point texture for bank '%d' referenced by "
                         "model '%s'\n",
@@ -2312,7 +2312,7 @@ int read_model_file (
                                     // filename);
                                 }
                                 else {
-                                    Warning (
+                                    fs2::dialog::warning (
                                         LOCATION,
                                         "Inconsistent model: Engine wash "
                                         "engine subsystem does not match any "
@@ -2378,7 +2378,7 @@ int read_model_file (
                             n_slots = cfread_int (fp);
                             subsystemp->turret_gun_sobj = physical_parent;
                             if (n_slots > MAX_TFP) {
-                                Warning (
+                                fs2::dialog::warning (
                                     LOCATION,
                                     "Model %s has %i turret firing points on "
                                     "subsystem %s, maximum is %i",
@@ -2637,7 +2637,7 @@ int read_model_file (
                 // get the detail level
                 pm->ins[idx].detail_level = cfread_int (fp);
                 if (pm->ins[idx].detail_level < 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Model '%s': insignia uses an invalid LOD (%i)\n",
                         pm->filename, pm->ins[idx].detail_level);
@@ -2770,7 +2770,7 @@ void model_load_texture (polymodel* pm, int i, char* file) {
         tbase->LoadTexture (tmp_name, pm->filename);
 
         if (tbase->GetTexture () < 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Couldn't open texture '%s'\nreferenced by model '%s'\n",
                 tmp_name, pm->filename);
@@ -2966,7 +2966,7 @@ int model_load (
 
     // No empty slot
     if (num == -1) {
-        Error (LOCATION, "Too many models");
+        fs2::dialog::error (LOCATION, "Too many models");
         return -1;
     }
 
@@ -3018,12 +3018,13 @@ int model_load (
 
 #ifdef _DEBUG
     if (Fred_running && Parse_normal_problem_count > 0) {
-        char buffer[100];
-        sprintf (
-            buffer,
-            "Serious problem loading model %s, %d normals capped to zero",
-            filename, Parse_normal_problem_count);
-        os::dialogs::Message (os::dialogs::MESSAGEBOX_ERROR, buffer);
+        std::stringstream ss;
+
+        ss << "loading model " << filename << " failed ("
+           << Parse_normal_problem_count << " errors)";
+
+        using namespace fs2::dialog;
+        message (dialog_type::error, ss.str ().c_str ());
     }
 #endif
 
@@ -3323,7 +3324,7 @@ void model_maybe_fixup_subsys_path (polymodel* pm, int path_num) {
 
     Assert (mp != NULL);
     if (mp->nverts <= 1) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Subsystem Path (%s) Parent (%s) in model (%s) has less than 2 "
             "vertices/points!",
@@ -3421,7 +3422,7 @@ void model_set_bay_path_nums (polymodel* pm) {
             if (bay_num < 1 || bay_num > MAX_SHIP_BAY_PATHS) {
                 if (bay_num > MAX_SHIP_BAY_PATHS) { too_many_paths = true; }
                 if (bay_num < 1) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Model '%s' bay path '%s' index '%d' has an invalid "
                         "bay number of %d",
@@ -3435,7 +3436,7 @@ void model_set_bay_path_nums (polymodel* pm) {
         }
     }
     if (too_many_paths) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Model '%s' has too many bay paths - max is %d",
             pm->filename, MAX_SHIP_BAY_PATHS);
     }
@@ -3476,7 +3477,7 @@ int model_get_parent_submodel_for_live_debris (
         // get next child
         mn = child->next_sibling;
     }
-    Error (LOCATION, "Could not find parent submodel for live debris");
+    fs2::dialog::error (LOCATION, "Could not find parent submodel for live debris");
     return -1;
 }
 
@@ -3506,7 +3507,7 @@ float submodel_get_radius (int modelnum, int submodelnum) {
 
 polymodel* model_get (int model_num) {
     if (model_num < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Invalid model number %d requested. Please post the call stack "
             "where an SCP coder can see it.\n",
@@ -4017,7 +4018,7 @@ void submodel_look_at (polymodel* pm, int mn) {
         }
 
         if (sm->look_at_num == -2) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Invalid submodel name given in $look_at: property in model "
                 "file <%s>. (%s looking for %s)\n",
@@ -5786,7 +5787,7 @@ void parse_glowpoint_table (const char* filename) {
                     gpo.glow_bitmap = bm_load (glow_texture_name);
 
                     if (gpo.glow_bitmap < 0) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Couldn't open texture '%s'\nreferenced by "
                             "glowpoint present '%s'\n",
@@ -5906,7 +5907,7 @@ void parse_glowpoint_table (const char* filename) {
                         vm_vec_normalize (&gpo.cone_direction);
                     }
                     else {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Null vector specified in cone direction for "
                             "glowpoint override %s. Discarding preset.",
@@ -5923,7 +5924,7 @@ void parse_glowpoint_table (const char* filename) {
                             vm_vec_normalize (&gpo.rotation_axis);
                         }
                         else {
-                            Warning (
+                            fs2::dialog::warning (
                                 LOCATION,
                                 "Null vector specified in rotation axis for "
                                 "glowpoint override %s. Discarding preset.",
@@ -5943,7 +5944,7 @@ void parse_glowpoint_table (const char* filename) {
                 }
                 else {
                     if (!replace) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "+nocreate not specified for glowpoint override "
                             "that already exists. Discarding duplicate entry: "

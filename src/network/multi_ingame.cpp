@@ -675,7 +675,7 @@ void multi_ingame_select_init () {
     Multi_ingame_bitmap =
         bm_load (Multi_ingame_join_bitmap_fname[gr_screen.res]);
     if (Multi_ingame_bitmap < 0)
-        Error (LOCATION, "Couldn't load background bitmap for ingame join");
+        fs2::dialog::error (LOCATION, "Couldn't load background bitmap for ingame join");
 
     // create the interface buttons
     for (idx = 0; idx < MULTI_INGAME_JOIN_NUM_BUTTONS; idx++) {

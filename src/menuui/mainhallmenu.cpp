@@ -454,7 +454,7 @@ void main_hall_init (const std::string& main_hall_name) {
 
     // sanity checks
     if (Main_hall_defines.empty ()) {
-        Error (LOCATION, "No main halls were loaded to initialize.");
+        fs2::dialog::error (LOCATION, "No main halls were loaded to initialize.");
     }
     else if (main_hall_name == "") {
         // we were passed a blank main hall name, so load the first available
@@ -462,7 +462,7 @@ void main_hall_init (const std::string& main_hall_name) {
         main_hall_get_name (main_hall_to_load, 0);
     }
     else if (main_hall_get_pointer (main_hall_name) == NULL) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Tried to load a main hall called '%s', but it does not exist; "
             "loading first available main hall.",
@@ -568,7 +568,7 @@ void main_hall_init (const std::string& main_hall_name) {
             "General", "WARNING! Couldn't load main hall background mask %s\n",
             Main_hall->mask.c_str ()));
         if (gr_screen.res == 0) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Could not load in main hall mask '%s'!\n\n(This error most "
                 "likely means that you are missing required 640x480 interface "
@@ -576,7 +576,7 @@ void main_hall_init (const std::string& main_hall_name) {
                 Main_hall->mask.c_str ());
         }
         else {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Could not load in main hall mask '%s'!\n\n(This error most "
                 "likely means that you are missing required 1024x768 "
@@ -958,7 +958,7 @@ void main_hall_do (float frametime) {
             }
 
             if (region_action == -1) {
-                Error (LOCATION, "Region %d doesn't have an action!", code);
+                fs2::dialog::error (LOCATION, "Region %d doesn't have an action!", code);
             }
             else if (region_action == START_REGION) {
                 if (Player->flags & PLAYER_FLAGS_IS_MULTI) {
@@ -1899,7 +1899,7 @@ void main_hall_maybe_blit_tooltips () {
     if (Main_hall_mouse_region < 0) { return; }
 
     if (Main_hall_mouse_region >= (int)Main_hall->regions.size ()) {
-        Error (
+        fs2::dialog::error (
             LOCATION, "Missing region description for index %d!\n",
             Main_hall_mouse_region);
     }
@@ -2287,7 +2287,7 @@ void parse_main_hall_table (const char* filename) {
         }
 
         if (num_resolutions < 1) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "$Num Resolutions in %s is %d. (Must be 1 or greater)",
                 filename, num_resolutions);
@@ -2316,7 +2316,7 @@ void parse_main_hall_table (const char* filename) {
                             m->name = temp_string;
                         }
                         else {
-                            Error (
+                            fs2::dialog::error (
                                 LOCATION,
                                 "A mainhall with the name '%s' already "
                                 "exists. All mainhalls must have unique "
@@ -2345,7 +2345,7 @@ void parse_main_hall_table (const char* filename) {
                                 temp_string, Main_hall_defines.at (count)
                                                  .at (0)
                                                  .name.c_str ()) != 0) {
-                            Error (
+                            fs2::dialog::error (
                                 LOCATION,
                                 "The mainhall '%s' has different names for "
                                 "different resolutions. All resolutions must "
@@ -2370,7 +2370,7 @@ void parse_main_hall_table (const char* filename) {
                         // Since the value is longer than the cheat buffer it
                         // will never match.
 
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "The value '%s' for '+Cheat String:' is too long! "
                             "It can be at most %d characters long.",
@@ -2672,7 +2672,7 @@ void parse_main_hall_table (const char* filename) {
                                 err_msg += Main_hall_region_map[i].name;
                             }
 
-                            Error (
+                            fs2::dialog::error (
                                 LOCATION,
                                 "Unkown Door Region '%s'! Expected one of: %s",
                                 temp_scp_string.c_str (), err_msg.c_str ());

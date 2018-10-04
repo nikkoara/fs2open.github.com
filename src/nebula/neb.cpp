@@ -272,7 +272,7 @@ void neb2_init () {
                 strcpy_s (Neb2_bitmap_filenames[Neb2_bitmap_count++], name);
             }
             else {
-                WarningEx (
+                fs2::dialog::warning_ex (
                     LOCATION,
                     "nebula.tbl\nExceeded maximum number of nebulas "
                     "(%d)!\nSkipping %s.",
@@ -291,7 +291,7 @@ void neb2_init () {
                 strcpy_s (Neb2_poof_filenames[Neb2_poof_count++], name);
             }
             else {
-                WarningEx (
+                fs2::dialog::warning_ex (
                     LOCATION,
                     "nebula.tbl\nExceeded maximum number of nebula poofs "
                     "(%d)!\nSkipping %s.",

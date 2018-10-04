@@ -35,7 +35,7 @@ void FSFont::computeFontMetrics () {
 }
 void FSFont::checkFontMetrics () {
     if (_height <= 1.0f) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "The height of font %s has an invalid height of %f, must be "
             "greater than one!",

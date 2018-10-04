@@ -296,7 +296,7 @@ void fiction_viewer_init () {
 
     // no ui is valid?
     if (Fiction_viewer_ui < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "No fiction viewer graphics -- cannot display fiction viewer!");
         return;
@@ -548,7 +548,7 @@ void fiction_viewer_load (int stage) {
         if (ui_index >= 0)
             Fiction_viewer_ui = ui_index;
         else
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Unrecognized fiction viewer UI: %s",
                 stagep->ui_name);
     }
@@ -564,7 +564,7 @@ void fiction_viewer_load (int stage) {
     CFILE* fp =
         cfopen (stagep->story_filename, "rb", CFILE_NORMAL, CF_TYPE_FICTION);
     if (fp == NULL) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Unable to load story file '%s'.",
             stagep->story_filename);
     }

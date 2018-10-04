@@ -478,7 +478,7 @@ static void asteroid_load (int asteroid_info_index, int asteroid_subtype) {
         if (asip->num_detail_levels != pm->n_detail_levels) {
             if (!Is_standalone) {
                 // just log to file for standalone servers
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "For asteroid '%s', detail level\nmismatch (POF needs %d)",
                     asip->name, pm->n_detail_levels);
@@ -1325,7 +1325,7 @@ static float asteroid_create_explosion (object* objp) {
     if (fireball_type < 0) { fireball_type = FIREBALL_ASTEROID; }
 
     if (fireball_type >= Num_fireball_types) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Invalid fireball type %i specified for an asteroid, only %i "
             "fireball types are defined.",
@@ -1937,7 +1937,7 @@ static void asteroid_parse_section (asteroid_info* asip) {
             asip->split_info.push_back (new_split);
         }
         else
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Invalid asteroid reference %i used for $Split in asteroids "
                 "table, ignoring.",
@@ -1999,12 +1999,12 @@ static void asteroid_parse_tbl () {
 #ifdef NDEBUG
                 // Bump the warning count in release so they get something
                 // even if the message never gets displayed.
-                Warning (LOCATION, "Ignoring extra asteroid/debris");
+                fs2::dialog::warning (LOCATION, "Ignoring extra asteroid/debris");
 #else
                 std::string msg ("Ignoring extra asteroid/debris '");
                 msg.append (new_asteroid.name);
                 msg.append ("'\n");
-                Warning (LOCATION, "%s", msg.c_str ());
+                fs2::dialog::warning (LOCATION, "%s", msg.c_str ());
                 parsed_asteroids.push_back (msg);
 #endif
             }
@@ -2023,7 +2023,7 @@ static void asteroid_parse_tbl () {
                 case ASTEROID_TYPE_MEDIUM: msg.append (" medium\n"); break;
                 case ASTEROID_TYPE_LARGE: msg.append (" large\n"); break;
                 default:
-                    Error (
+                    fs2::dialog::error (
                         LOCATION,
                         "Get a coder! Math has broken!\n"
                         "Important numbers:\n"
@@ -2050,7 +2050,7 @@ static void asteroid_parse_tbl () {
                 mprintf (("%s", iter->c_str ()));
             }
 #endif
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Found " SIZE_T_ARG " asteroids/debris when " SIZE_T_ARG
                 " expected\n\n"

@@ -132,7 +132,7 @@ void debris_page_in () {
         species->debris_texture.bitmap_id =
             bm_load (species->debris_texture.filename);
         if (species->debris_texture.bitmap_id < 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Couldn't load species %s debris\ntexture, '%s'\n",
                 species->species_name, species->debris_texture.filename);
         }

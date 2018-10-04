@@ -86,7 +86,7 @@ void opengl_tcache_init () {
     // available to us 1024 is what we need with the standard resolutions -
     // taylor
     if (GL_max_texture_width < 1024) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "A minimum texture size of \"1024x1024\" is required for FS2_Open "
             "but only \"%ix%i\" was found.  Can not continue.",

@@ -1029,7 +1029,7 @@ void load_wing_icons (const char* filename) {
 
     first_frame = bm_load_animation (filename, &num_frames);
     if (first_frame == -1) {
-        Error (LOCATION, "Could not load icons from %s\n", filename);
+        fs2::dialog::error (LOCATION, "Could not load icons from %s\n", filename);
         return;
     }
 
@@ -1249,7 +1249,7 @@ void wss_direct_restore_loadout () {
                 if (p_objp->wingnum == WING_INDEX (wp)) {
                     // niffiwan: don't overrun the array
                     if (j >= MAX_WING_SLOTS) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Starting Wing '%s' has more than "
                             "'MAX_WING_SLOTS' ships\n",

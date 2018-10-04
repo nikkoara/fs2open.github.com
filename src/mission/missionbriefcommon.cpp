@@ -259,7 +259,7 @@ void brief_parse_icon_tbl () {
         Briefing_icon_info.clear ();
         while (required_string_either ("#End", "$Name:")) {
             if (Briefing_icon_info.size () >= max_icons) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Too many icons in icons.tbl; only the first " SIZE_T_ARG
                     " will be used",
@@ -310,7 +310,7 @@ void brief_parse_icon_tbl () {
                 errormsg += "\n";
             }
 
-            Error (LOCATION, "%s", errormsg.c_str ());
+            fs2::dialog::error (LOCATION, "%s", errormsg.c_str ());
         }
     }
     catch (const parse::ParseException& e) {
@@ -748,7 +748,7 @@ void brief_render_icon_line (int stage_num, int line_num) {
     bs = &Briefing->stages[stage_num];
 
     if (bl->start_icon < 0 || bl->start_icon >= bs->num_icons) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Start icon (%d/%d) missing for line %d in briefing stage %d",
             bl->start_icon, bs->num_icons, line_num, stage_num);
@@ -760,7 +760,7 @@ void brief_render_icon_line (int stage_num, int line_num) {
     }
     if (bl->end_icon < 0 ||
         bl->end_icon >= Briefing->stages[stage_num].num_icons) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "End icon (%d/%d) missing for line %d in briefing stage %d",
             bl->end_icon, bs->num_icons, line_num, stage_num);
@@ -1422,7 +1422,7 @@ bool brief_verify_color_tag (unicode::codepoint_t color_tag) {
         std::string tag_str;
         unicode::encode (color_tag, std::back_inserter (tag_str));
 
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Invalid text color tag '$%s' used in mission: '%s'.\n",
             tag_str.c_str (), Mission_filename);
         return false;
@@ -1430,7 +1430,7 @@ bool brief_verify_color_tag (unicode::codepoint_t color_tag) {
     char char_tag = (char)color_tag;
 
     if (Tagged_Colors.find (char_tag) == Tagged_Colors.end ()) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Invalid text color tag '$%c' used in mission: '%s'.\n",
             char_tag, Mission_filename);
         return false;
@@ -1677,7 +1677,7 @@ int brief_set_move_list (int new_stage, int current_stage, float time) {
                 if (vm_vec_cmp (&cb->icons[i].pos, &newb->icons[j].pos)) {
                     k = brief_get_free_move_icon ();
                     if (k == -1) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Too many briefing icons are moving "
                             "simultaneously!");

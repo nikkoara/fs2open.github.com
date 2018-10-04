@@ -354,7 +354,7 @@ snd_load (game_snd_entry* entry, int flags, int /*allow_hardware_load*/) {
                     // issues since a lot of mods use 3D sounds with more than
                     // one channel. This will silence the warnings for any mod
                     // that does not support 3.8.0.
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Sound '%s' has more than one channel but is used as "
                         "a 3D sound! 3D sounds may only have one channel.",

@@ -864,7 +864,7 @@ void gr_string (
         }
     }
     else {
-        Error (
+        fs2::dialog::error (
             LOCATION, "Invalid type enumeration for font \"%s\". Get a coder!",
             currentFont->getName ().c_str ());
     }

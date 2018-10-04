@@ -2029,7 +2029,7 @@ void player_generate_death_message (player* player_p) {
 
     case OBJ_BEAM:
         if (strlen (player_p->killer_parent_name) <= 0) {
-            Warning (LOCATION, "Killer_parent_name not specified for beam!");
+            fs2::dialog::warning (LOCATION, "Killer_parent_name not specified for beam!");
             sprintf (
                 msg,
                 XSTR ("%s was killed by a beam from an unknown source", 1081),

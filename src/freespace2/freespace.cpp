@@ -1747,10 +1747,9 @@ void game_init () {
         sdlGraphicsOperations.reset (new SDLGraphicsOperations ());
     }
     if (gr_init (std::move (sdlGraphicsOperations)) == false) {
-        os::dialogs::Message (
-            os::dialogs::MESSAGEBOX_ERROR, "Error intializing graphics!");
+        using namespace fs2::dialog;
+        message (dialog_type::error, "error intializing graphics!");
         exit (1);
-        return;
     }
 
 #ifndef NDEBUG
@@ -2991,7 +2990,7 @@ camid game_render_frame_setup () {
     if (!Main_camera.isValid ()) { Main_camera = cam_create ("Main camera"); }
     camera* main_cam = Main_camera.getCamera ();
     if (main_cam == NULL) {
-        Error (LOCATION, "Unable to generate main camera");
+        fs2::dialog::error (LOCATION, "Unable to generate main camera");
         return camid ();
     }
 
@@ -4720,7 +4719,7 @@ int game_poll () {
         // Now we have four digit precision :) -WMC
         if (counter > 9999) {
             // This should pop up a dialogue or something ingame.
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Screenshot count has reached max of 9999. Resetting to 0.");
             counter = 0;
@@ -7511,14 +7510,14 @@ int actual_main (int argc, char* argv[]) {
 #if !defined(DONT_CATCH_MAIN_EXCEPTIONS)
     }
     catch (const std::exception& ex) {
-        Error (LOCATION, "Caught std::exception in main(): '%s'!", ex.what ());
+        fs2::dialog::error (LOCATION, "Caught std::exception in main(): '%s'!", ex.what ());
         fprintf (
             stderr, "Caught std::exception in main(): '%s'!\n", ex.what ());
 
         result = EXIT_FAILURE;
     }
     catch (...) {
-        Error (LOCATION, "Caught exception in main()!");
+        fs2::dialog::error (LOCATION, "Caught exception in main()!");
         fprintf (stderr, "Caught exception in main()!\n");
 
         result = EXIT_FAILURE;

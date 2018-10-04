@@ -274,7 +274,7 @@ int weapon_explosions::Load (char* filename, int expected_lods) {
         nullptr, true);
 
     if (new_wei.lod[0].bitmap_id < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Weapon explosion '%s' does not have an LOD0 anim!",
             filename);
 
@@ -305,12 +305,12 @@ int weapon_explosions::Load (char* filename, int expected_lods) {
         }
 
         if (new_wei.lod_count != expected_lods)
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "For '%s', %i of %i LODs are missing!", filename,
                 expected_lods - new_wei.lod_count, expected_lods);
     }
     else {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Filename '%s' is too long to have any LODs.", filename);
     }
 
@@ -488,7 +488,7 @@ int missile_obj_list_add (int objnum) {
         if (!(Missile_objs[i].flags & MISSILE_OBJ_USED)) break;
     }
     if (i == MAX_MISSILE_OBJS) {
-        Error (LOCATION, "Fatal Error: Ran out of missile object nodes\n");
+        fs2::dialog::error (LOCATION, "Fatal Error: Ran out of missile object nodes\n");
         return -1;
     }
 
@@ -628,7 +628,7 @@ void parse_wi_flags (
                 weaponp->num_spawn_weapons_defined++;
             }
             else {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Illegal to have more than %d spawn types for one "
                     "weapon.\nIgnoring weapon %s",
@@ -642,7 +642,7 @@ void parse_wi_flags (
             set_nopierce = true;
         }
         else if (!strcasecmp (NOX ("beam no whack"), flag_text.c_str ())) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "The \"beam no whack\" flag has been deprecated.  Set the "
                 "beam's mass to 0 instead.  This has been done for you.\n");
@@ -654,7 +654,7 @@ void parse_wi_flags (
         }
         else if (!strcasecmp (NOX ("die on lost lock"), flag_text.c_str ())) {
             if (!(weaponp->is_locked_homing ())) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "\"die on lost lock\" may only be used for Homing Type "
                     "ASPECT/JAVELIN!");
@@ -663,7 +663,7 @@ void parse_wi_flags (
             }
         }
         else {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Unrecognized flag in flag list for weapon %s: \"%s\"",
                 weaponp->name, (*flag).c_str ());
@@ -678,7 +678,7 @@ void parse_wi_flags (
     if (weaponp->wi_flags[Weapon::Info_Flags::Hard_target_bomb] &&
         !weaponp->wi_flags[Weapon::Info_Flags::Bomb]) {
         weaponp->wi_flags.remove (Weapon::Info_Flags::Hard_target_bomb);
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Weapon %s is not a bomb but has \"no radius doubling\" set. "
             "Ignoring this flag",
@@ -693,7 +693,7 @@ void parse_wi_flags (
             weaponp->wi_flags[Weapon::Info_Flags::Corkscrew]) {
             weaponp->wi_flags.remove (Weapon::Info_Flags::Swarm);
             weaponp->wi_flags.remove (Weapon::Info_Flags::Corkscrew);
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Swarm, Corkscrew, and Flak are mutually exclusive!  Removing "
                 "Swarm and Corkscrew attributes from weapon %s.\n",
@@ -704,7 +704,7 @@ void parse_wi_flags (
     if (weaponp->wi_flags[Weapon::Info_Flags::Swarm] &&
         weaponp->wi_flags[Weapon::Info_Flags::Corkscrew]) {
         weaponp->wi_flags.remove (Weapon::Info_Flags::Corkscrew);
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Swarm and Corkscrew are mutually exclusive!  Defaulting to Swarm "
             "on weapon %s.\n",
@@ -713,7 +713,7 @@ void parse_wi_flags (
 
     if (weaponp->wi_flags[Weapon::Info_Flags::Local_ssm]) {
         if (!weaponp->is_homing () || weaponp->subtype != WP_MISSILE) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "local ssm must be guided missile: %s",
                 weaponp->name);
         }
@@ -721,7 +721,7 @@ void parse_wi_flags (
 
     if (weaponp->wi_flags[Weapon::Info_Flags::Small_only] &&
         weaponp->wi_flags[Weapon::Info_Flags::Huge]) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "\"small only\" and \"huge\" flags are mutually exclusive.\nThey "
             "are used together in %s\nAI will most likely not use this weapon",
@@ -730,7 +730,7 @@ void parse_wi_flags (
 
     if (!weaponp->wi_flags[Weapon::Info_Flags::Spawn] &&
         weaponp->wi_flags[Weapon::Info_Flags::Smart_spawn]) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "\"smart spawn\" flag used without \"spawn\" flag in %s\n",
             weaponp->name);
@@ -738,7 +738,7 @@ void parse_wi_flags (
 
     if (weaponp->wi_flags[Weapon::Info_Flags::Inherit_parent_target] &&
         (!weaponp->wi_flags[Weapon::Info_Flags::Child])) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Weapon %s has the \"inherit parent target\" flag, but not the "
             "\"child\" flag.  No changes in behavior will occur.",
@@ -747,7 +747,7 @@ void parse_wi_flags (
 
     if (!weaponp->wi_flags[Weapon::Info_Flags::Homing_heat] &&
         weaponp->wi_flags[Weapon::Info_Flags::Untargeted_heat_seeker]) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Weapon '%s' has the \"untargeted heat seeker\" flag, but Homing "
             "Type is not set to \"HEAT\".",
@@ -757,7 +757,7 @@ void parse_wi_flags (
     if (!weaponp->wi_flags[Weapon::Info_Flags::Cmeasure] &&
         weaponp->wi_flags[Weapon::Info_Flags::Cmeasure_aspect_home_on]) {
         weaponp->wi_flags.remove (Weapon::Info_Flags::Cmeasure_aspect_home_on);
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Weapon %s has the \"pulls aspect seekers\" flag, but is not a "
             "countermeasure.\n",
@@ -788,7 +788,7 @@ void parse_shockwave_info (shockwave_create_info* sci, const char* pre_char) {
     if (optional_string (buf)) { stuff_float (&sci->outer_rad); }
 
     if (sci->outer_rad < sci->inner_rad) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Shockwave outer radius must be greater than or equal to the "
             "inner radius!");
@@ -843,7 +843,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
 
     if (optional_string ("+nocreate")) {
         if (!replace) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "+nocreate flag used for weapon in non-modular table");
         }
@@ -860,7 +860,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
     if (w_id != -1) {
         wip = &Weapon_info[w_id];
         if (!replace) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Weapon name %s already exists in weapons.tbl.  All weapon "
                 "names must be unique; the second entry has been skipped",
@@ -882,7 +882,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         }
 
         if (Num_weapon_types >= MAX_WEAPON_TYPES) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Too many weapon classes before '%s'; maximum is %d.\n", fname,
                 MAX_WEAPON_TYPES);
@@ -908,12 +908,12 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
             wip->subtype = WP_MISSILE;
         }
         else {
-            Warning (LOCATION, "Unknown subtype on weapon '%s'", wip->name);
+            fs2::dialog::warning (LOCATION, "Unknown subtype on weapon '%s'", wip->name);
         }
     }
     else if (wip->subtype != WP_UNUSED && !first_time) {
         if (wip->subtype != subtype) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Type of weapon %s entry does not agree with original entry "
                 "type.",
@@ -1179,7 +1179,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
             stuff_float (&wip->atten_damage);
         }
         else if (optional_string_either ("+Min Damage:", "+Max Damage:")) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "+Min Damage: and +Max Damage: in %s are deprecated, please "
                 "change to +Attenuation Damage:.",
@@ -1255,7 +1255,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
 
         if (wip->life_min < 0.0f) {
             wip->life_min = 0.0f;
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Lifetime min for weapon '%s' cannot be less than 0. Setting "
                 "to 0.\n",
@@ -1268,7 +1268,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
 
         if (wip->life_max < 0.0f) {
             wip->life_max = 0.0f;
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Lifetime max for weapon '%s' cannot be less than 0. Setting "
                 "to 0.\n",
@@ -1276,7 +1276,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         }
         else if (wip->life_max < wip->life_min) {
             wip->life_max = wip->life_min + 0.1f;
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Lifetime max for weapon '%s' cannot be less than its "
                 "Lifetime Min (%f) value. Setting to %f.\n",
@@ -1290,7 +1290,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
     if (wip->life_min >= 0.0f && wip->life_max < 0.0f) {
         wip->lifetime = wip->life_min;
         wip->life_min = -1.0f;
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Lifetime min, but not lifetime max, specified for weapon %s. "
             "Assuming static lifetime of %.2f seconds.\n",
@@ -1299,14 +1299,14 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
 
     if (optional_string ("$Lifetime:")) {
         if (wip->life_min >= 0.0f || wip->life_max >= 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Lifetime min or max specified, but $Lifetime was also "
                 "specified; min or max will be used.");
         }
         stuff_float (&wip->lifetime);
         if (wip->damage_time > wip->lifetime) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Lifetime is lower than Damage Time, setting Damage Time to "
                 "be one half the value of Lifetime.");
@@ -1377,7 +1377,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                 stuff_float (&wip->seeker_strength);
                 wip->wi_flags.set (Weapon::Info_Flags::Custom_seeker_str);
                 if (wip->seeker_strength <= 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Seeker Strength for missile \'%s\' must be greater "
                         "than zero\nReseting value to default.",
@@ -1445,7 +1445,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                 stuff_float (&wip->seeker_strength);
                 wip->wi_flags.set (Weapon::Info_Flags::Custom_seeker_str);
                 if (wip->seeker_strength <= 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Seeker Strength for missile \'%s\' must be greater "
                         "than zero\nReseting value to default.",
@@ -1479,7 +1479,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
             }
         }
         else {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Illegal homing type = %s.\nMust be HEAT, ASPECT or "
                 "JAVELIN.\n",
@@ -1574,7 +1574,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
             wip->in_flight_play_type = ALWAYS;
         }
         else {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Unknown in-flight sound type \"%s\"!",
                 type.c_str ());
             wip->in_flight_play_type = ALWAYS;
@@ -1596,7 +1596,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         stuff_float (&rearm_rate);
         if (rearm_rate > 0.0f) { wip->rearm_rate = 1.0f / rearm_rate; }
         else {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Rearm wait of less than 0 on weapon %s; setting to 1",
                 wip->name);
@@ -1617,7 +1617,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
             wip->WeaponMinRange = MinRange;
         }
         else {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Invalid minimum range on weapon %s; setting to 0",
                 wip->name);
         }
@@ -1632,7 +1632,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         if (wip->wi_flags[Weapon::Info_Flags::Ballistic]) {
             // rearm rate not specified
             if (!primary_rearm_rate_specified && first_time) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "$Rearm Rate for ballistic primary %s not specified.  "
                     "Defaulting to 100...\n",
@@ -1644,7 +1644,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         else {
             // rearm rate specified
             if (primary_rearm_rate_specified) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "$Rearm Rate specified for non-ballistic primary %s\n",
                     wip->name);
@@ -1655,7 +1655,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
     else {
         // ballistic
         if (wip->wi_flags[Weapon::Info_Flags::Ballistic]) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Secondary weapon %s can't be ballistic.  Removing this "
                 "flag...\n",
@@ -1667,7 +1667,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
     // also make sure EMP is friendly - Goober5000
     if (wip->wi_flags[Weapon::Info_Flags::Emp]) {
         if (!wip->shockwave.outer_rad) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Outer blast radius of weapon %s is zero - EMP will not "
                 "work.\nAdd $Outer Radius to weapon table entry.\n",
@@ -1680,7 +1680,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
     if (subtype == WP_MISSILE ||
         wip->wi_flags[Weapon::Info_Flags::Ballistic]) {
         if (wip->cargo_size == 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Cargo size of weapon %s cannot be 0.  Setting to 1.\n",
                 wip->name);
@@ -1746,7 +1746,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                 bitmapIndex = bm_load_animation (fname);
 
                 if (bitmapIndex < 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION, "Couldn't load effect '%s' for weapon '%s'.",
                         fname, wip->name);
                 }
@@ -1819,7 +1819,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                 bitmapID = bm_load_animation (fname);
 
                 if (bitmapID < 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION, "Couldn't load effect '%s' for weapon '%s'.",
                         fname, wip->name);
                 }
@@ -1897,7 +1897,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
             effectIndex = bm_load_animation (fname);
 
             if (effectIndex < 0) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "Failed to load effect '%s' for weapon %s!",
                     fname, wip->name);
             }
@@ -2000,7 +2000,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
     // defined.
     if (optional_string ("$Recoil Modifier:")) {
         if (!(wip->wi_flags[Weapon::Info_Flags::Apply_Recoil])) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "$Recoil Modifier specified for weapon %s but this weapon "
                 "does not have the \"apply recoil\" weapon flag set. "
@@ -2054,7 +2054,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         if (optional_string ("+Intensity:")) {
             float temp;
             stuff_float (&temp);
-            Warning (LOCATION, "+Intensity is deprecated");
+            fs2::dialog::warning (LOCATION, "+Intensity is deprecated");
         }
 
         if (optional_string ("+Lifetime:")) { stuff_int (&wip->elec_time); }
@@ -2063,7 +2063,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         if (optional_string ("+Engine Multiplier:")) {
             stuff_float (&wip->elec_eng_mult);
             if (!wip->elec_use_new_style)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "+Engine multiplier may only be used with new style "
                     "electronics");
@@ -2073,7 +2073,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         if (optional_string ("+Weapon Multiplier:")) {
             stuff_float (&wip->elec_weap_mult);
             if (!wip->elec_use_new_style)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "+Weapon multiplier may only be used with new style "
                     "electronics");
@@ -2083,7 +2083,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         if (optional_string ("+Beam Turret Multiplier:")) {
             stuff_float (&wip->elec_beam_mult);
             if (!wip->elec_use_new_style)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "+Beam turret multiplier may only be used with new style "
                     "electronics");
@@ -2093,7 +2093,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         if (optional_string ("+Sensors Multiplier:")) {
             stuff_float (&wip->elec_sensors_mult);
             if (!wip->elec_use_new_style)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "+Sensors multiplier may only be used with new style "
                     "electronics");
@@ -2143,7 +2143,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
 
     if (optional_string ("$Countermeasure:")) {
         if (!(wip->wi_flags[Weapon::Info_Flags::Cmeasure])) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Weapon \'%s\' has countermeasure information defined, but "
                 "the \"countermeasure\" flag wasn\'t found in the \'$Flags:\' "
@@ -2274,7 +2274,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         // work
         if ((wip->b_info.beam_type == BEAM_TYPE_D) &&
             (wip->b_info.beam_shots < 1)) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Type D beam weapon, '%s', has less than one \"+Shots\" "
                 "specified!  It must be set to at least 1!!",
@@ -2318,7 +2318,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                     bitmapIndex = bm_load_animation (fname);
 
                     if (bitmapIndex < 0) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Failed to load effect '%s' for weapon '%s'!",
                             fname, wip->name);
@@ -2382,7 +2382,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                     bitmapIndex = bm_load_animation (fname);
 
                     if (bitmapIndex < 0) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Failed to load effect '%s' for weapon %s!", fname,
                             wip->name);
@@ -2432,7 +2432,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                 if ((bsw_index_override < 0) ||
                     (!remove &&
                      (bsw_index_override >= wip->b_info.beam_num_sections)))
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Invalid +Index value of %d specified for beam "
                         "section on weapon '%s'; valid values at this point "
@@ -2458,7 +2458,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                         }
                         else {
                             if (!remove)
-                                Warning (
+                                fs2::dialog::warning (
                                     LOCATION,
                                     "Invalid index for manually-indexed beam "
                                     "section %d (max %d) on weapon %s.",
@@ -2473,7 +2473,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                     }
                     else {
                         if (!remove)
-                            Warning (
+                            fs2::dialog::warning (
                                 LOCATION,
                                 "Invalid index for manually-indexed beam "
                                 "section %d, and +nocreate specified, on "
@@ -2493,7 +2493,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                     generic_anim_init (&bsip->texture, NULL);
                 }
                 else {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Too many beam sections for weapon %s - max is %d",
                         wip->name, MAX_BEAM_SECTIONS);
@@ -2572,7 +2572,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         int spew_index = -1;
         // check for pspew flag
         if (!(wip->wi_flags[Weapon::Info_Flags::Particle_spew])) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "$Pspew specified for weapon %s but this weapon does not have "
                 "the \"Particle Spew\" weapon flag set. Automatically setting "
@@ -2584,7 +2584,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         if (optional_string ("+Index:")) {
             stuff_int (&spew_index);
             if (spew_index < 0 || spew_index >= MAX_PARTICLE_SPEWERS) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "+Index in particle spewer out of range. It must be "
                     "between 0 and %i. Tag will be ignored.",
@@ -2595,7 +2595,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         // check for remove flag
         if (optional_string ("+Remove")) {
             if (spew_index < 0) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "+Index not specified or is out of range, can not remove "
                     "spewer.");
@@ -2637,7 +2637,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
             // no empty spot found, the modder tried to define too many
             // spewers, or screwed up the xmts, or my code sucks
             if (spew_index < 0) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Too many particle spewers, max number of spewers is %i.",
                     MAX_PARTICLE_SPEWERS);
@@ -2807,7 +2807,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                 wip->max_fof_spread = max_fof - wip->field_of_fire;
 
                 if (wip->max_fof_spread <= 0.0f) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "WARNING: +Max FOF must be at least as big as $FOF "
                         "for '%s'! Defaulting to match $FOF, no spread will "
@@ -2856,7 +2856,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         if (wip->alpha_max > 1.0f) wip->alpha_max = 1.0f;
 
         if (wip->alpha_max <= 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "WARNING:  Alpha is set to 0 or a negative value for '%s'!  "
                 "Defaulting to 1.0!",
@@ -2872,7 +2872,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
             stuff_float (&wip->alpha_cycle);
 
             if (wip->alpha_max == wip->alpha_min)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "WARNING:  Alpha is set to cycle for '%s', but max and "
                     "min values are the same!",
@@ -2901,7 +2901,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         wip->armor_type_idx = armor_type_get_idx (buf);
 
         if (wip->armor_type_idx == -1)
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Invalid armor name %s specified for weapon %s", buf,
                 wip->name);
     }
@@ -2943,7 +2943,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
     // pretty stupid if a target must be tagged to shoot tag missiles at it
     if ((wip->wi_flags[Weapon::Info_Flags::Tag]) &&
         (wip->wi_flags[Weapon::Info_Flags::Tagged_only])) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "%s is a tag missile, but the target must be tagged to shoot it",
             wip->name);
@@ -2973,7 +2973,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         if (optional_string ("+period:")) {
             stuff_int (&period);
             if (period <= 0) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Substitution '%s' for weapon '%s' requires a period "
                     "greater than 0. Setting period to 1.",
@@ -2983,7 +2983,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
             if (optional_string ("+offset:")) {
                 stuff_int (&offset);
                 if (offset <= 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Period offset for substitution '%s' of weapon '%s' "
                         "has to be greater than 0. Setting offset to 1.",
@@ -2995,7 +2995,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         else if (optional_string ("+index:")) {
             stuff_int (&index);
             if (index < 0) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Substitution '%s' for weapon '%s' requires an index "
                     "greater than 0. Setting index to 0.",
@@ -3022,7 +3022,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                 size_t current_size = wip->num_substitution_patterns;
                 size_t desired_size = current_size * period;
                 if (desired_size > MAX_SUBSTITUTION_PATTERNS) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "The period is too large for the number of "
                         "substitution patterns!  desired size=" SIZE_T_ARG
@@ -3056,7 +3056,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
 
             // make sure that there is enough room
             if (index >= MAX_SUBSTITUTION_PATTERNS) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Substitution pattern index exceeds the maximum size!  "
                     "Index=%d, max size=%d",
@@ -3108,7 +3108,7 @@ void translate_spawn_types () {
                         Weapon_info[i].spawn_info[j].spawn_type = (short)k;
 
                         if (i == k)
-                            Warning (
+                            fs2::dialog::warning (
                                 LOCATION,
                                 "Weapon %s spawns itself.  Infinite "
                                 "recursion?\n",
@@ -3410,7 +3410,7 @@ void weapon_clean_entries () {
             }
 
             if (wip->b_info.beam_num_sections == 0) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "The beam '%s' has 0 usable sections!",
                     wip->name);
             }
@@ -3543,7 +3543,7 @@ void weapon_load_bitmaps (int weapon_index) {
         else if (generic_anim_load (&wip->laser_bitmap)) {
             mprintf (
                 ("Could not find a usable bitmap for '%s'!\n", wip->name));
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Could not find a usable bitmap (%s) for weapon '%s'!\n",
                 wip->laser_bitmap.filename, wip->name);
@@ -3563,7 +3563,7 @@ void weapon_load_bitmaps (int weapon_index) {
                 mprintf (
                     ("Could not find a usable glow bitmap for '%s'!\n",
                      wip->name));
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Could not find a usable glow bitmap (%s) for weapon "
                     "'%s'!\n",
@@ -3595,7 +3595,7 @@ void weapon_load_bitmaps (int weapon_index) {
                         ("Could not find a usable muzzle glow bitmap for "
                          "'%s'!\n",
                          wip->name));
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Could not find a usable muzzle glow bitmap (%s) for "
                         "weapon '%s'!\n",
@@ -3623,7 +3623,7 @@ void weapon_load_bitmaps (int weapon_index) {
                             ("Could not find a usable beam section (%i) "
                              "bitmap for '%s'!\n",
                              i, wip->name));
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Could not find a usable beam section (%i) bitmap "
                             "(%s) for weapon '%s'!\n",
@@ -3665,7 +3665,7 @@ void weapon_load_bitmaps (int weapon_index) {
                             ("Could not find a usable particle spew bitmap "
                              "for '%s'!\n",
                              wip->name));
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Could not find a usable particle spew bitmap "
                             "(%s) for weapon '%s'!\n",
@@ -3719,7 +3719,7 @@ void weapon_generate_indexes_for_substitution () {
                         wip->weapon_substitution_pattern_names[j]);
 
                     if (weapon_index == -1) { // invalid sub weapon
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Weapon '%s' requests substitution with '%s' "
                             "which does not seem to exist",
@@ -3731,7 +3731,7 @@ void weapon_generate_indexes_for_substitution () {
                     if (Weapon_info[weapon_index].subtype != wip->subtype) {
                         // Check to make sure secondaries can't be launched by
                         // primaries and vice versa
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Weapon '%s' requests substitution with '%s' "
                             "which is of a different subtype.",
@@ -3759,7 +3759,7 @@ void weapon_generate_indexes_for_substitution () {
                     weapon_info_lookup (wip->failure_sub_name.c_str ());
 
                 if (wip->failure_sub == -1) { // invalid sub weapon
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Weapon '%s' requests substitution with '%s' which "
                         "does not seem to exist",
@@ -3770,7 +3770,7 @@ void weapon_generate_indexes_for_substitution () {
                 if (Weapon_info[wip->failure_sub].subtype != wip->subtype) {
                     // Check to make sure secondaries can't be launched by
                     // primaries and vice versa
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Weapon '%s' requests substitution with '%s' which is "
                         "of a different subtype.",
@@ -3823,13 +3823,13 @@ void weapon_do_post_parse () {
         if (*ii->cmeasure_name) {
             int index = weapon_info_lookup (ii->cmeasure_name);
             if (index < 0)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Could not find weapon type '%s' to use as countermeasure "
                     "on species '%s'",
                     ii->cmeasure_name, ii->species_name);
             else if (Weapon_info[index].wi_flags[Weapon::Info_Flags::Beam])
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Attempt made to set a beam weapon as a countermeasure on "
                     "species '%s'",
@@ -4862,7 +4862,7 @@ void weapon_home (object* obj, int num, float frame_time) {
                 wp->lifeleft -= flFrametime * (0.95f - old_dot);
         }
         else {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Tried to make weapon '%s' home, but found it wasn't "
                 "aspect-seeking or heat-seeking or a Javelin!",
@@ -5444,7 +5444,7 @@ void weapon_process_post (object* obj, float frame_time) {
             break;
         case ALWAYS: play_sound = true; break;
         default:
-            Error (
+            fs2::dialog::error (
                 LOCATION, "Unknown in-flight sound status %d!",
                 (int)wip->in_flight_play_type);
             break;
@@ -5664,7 +5664,7 @@ int weapon_create (
 
     // beam weapons should never come through here!
     if (wip->wi_flags[Weapon::Info_Flags::Beam]) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "An attempt to fire a beam ('%s') through weapon_create() was "
             "made.\n",
@@ -8474,7 +8474,7 @@ void weapon_render (object* obj, model_draw_list* scene) {
     }
 
     default:
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Unknown weapon rendering type = %i for weapon %s\n",
             wip->render_type, wip->name);
     }
@@ -8503,7 +8503,7 @@ void validate_SSM_entries () {
              it->c_str (), wip->name, wip->SSM_index));
         wip->SSM_index = ssm_info_lookup (dat->ssm_entry.c_str ());
         if (wip->SSM_index < 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Unknown SSM entry '%s' in specification for %s (%s:line "
                 "%d).\n",
@@ -8535,7 +8535,7 @@ void validate_SSM_entries () {
              it->c_str (), wip->name, wip->SSM_index));
         if (wip->SSM_index < -1 ||
             wip->SSM_index >= static_cast< int > (Ssm_info.size ())) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Invalid SSM index '%d' (should be 0-" SIZE_T_ARG
                 ") in specification for %s (%s:line %d).\n",

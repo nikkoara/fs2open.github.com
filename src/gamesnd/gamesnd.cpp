@@ -1119,7 +1119,7 @@ void parse_gamesnd_old (game_snd* gs) {
     // check for extra values per Mantis #2408
     ignore_gray_space ();
     if (stuff_int_optional (&temp, true) == 2) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Unexpected extra value %d found for sound '%s' (filename '%s')!  "
             "Check the format of the sounds.tbl (or .tbm) entry.",
@@ -1364,7 +1364,7 @@ void gamesnd_parse_entry (
     if (!no_create) {
         if (lookupVector != NULL) {
             if (gamesnd_lookup_name (name.c_str (), *lookupVector) >= 0) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "Duplicate sound name \"%s\" found!",
                     name.c_str ());
             }
@@ -1376,7 +1376,7 @@ void gamesnd_parse_entry (
         int vectorIndex = gamesnd_lookup_name (name.c_str (), *lookupVector);
 
         if (vectorIndex < 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "No existing sound entry with name \"%s\" found!",
                 name.c_str ());
             no_create = false;
@@ -1658,7 +1658,7 @@ void gamesnd_parse_soundstbl () {
             errorString.append ("\n");
         }
 
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "The following species are missing flyby sounds in "
             "sounds.tbl:\n%s",

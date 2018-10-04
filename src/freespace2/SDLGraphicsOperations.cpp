@@ -132,7 +132,7 @@ SDLGraphicsOperations::SDLGraphicsOperations () {
     setenv ("force_s3tc_enable", "true", 1);
 
     if (SDL_InitSubSystem (SDL_INIT_VIDEO) < 0) {
-        Error (LOCATION, "Couldn't init SDL video: %s", SDL_GetError ());
+        fs2::dialog::error (LOCATION, "Couldn't init SDL video: %s", SDL_GetError ());
         return;
     }
 }

@@ -40,7 +40,7 @@
 #define Assertion(expr, msg, ...)                               \
     do {                                                        \
         if (!(expr)) {                                          \
-            os::dialogs::AssertMessage (                        \
+            fs2::dialog::assert_msg (                           \
                 #expr, __FILE__, __LINE__, msg, ##__VA_ARGS__); \
         }                                                       \
     } while (false)
@@ -74,7 +74,7 @@
 #ifndef NDEBUG
 #define UNREACHABLE(msg, ...)                                        \
     do {                                                             \
-        os::dialogs::Error (__FILE__, __LINE__, msg, ##__VA_ARGS__); \
+        fs2::dialog::error (__FILE__, __LINE__, msg, ##__VA_ARGS__); \
     } while (false)
 #else
 #define UNREACHABLE(msg, ...) __builtin_unreachable ()

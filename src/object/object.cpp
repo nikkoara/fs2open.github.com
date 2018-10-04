@@ -622,7 +622,7 @@ void obj_delete (int objnum) {
     case OBJ_BEAM: break;
     case OBJ_NONE: Int3 (); break;
     default:
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Unhandled object type %d in obj_delete_all_that_should_be_dead",
             objp->type);
@@ -1207,7 +1207,7 @@ void obj_move_all_pre (object* objp, float frametime) {
     case OBJ_BEAM: break;
     case OBJ_NONE: Int3 (); break;
     default:
-        Error (
+        fs2::dialog::error (
             LOCATION, "Unhandled object type %d in obj_move_all_pre\n",
             objp->type);
     }
@@ -1447,7 +1447,7 @@ void obj_move_all_post (object* objp, float frametime) {
     case OBJ_NONE: Int3 (); break;
 
     default:
-        Error (
+        fs2::dialog::error (
             LOCATION, "Unhandled object type %d in obj_move_all_post\n",
             objp->type);
     }
@@ -1708,7 +1708,7 @@ void obj_queue_render (object* obj, model_draw_list* scene) {
     case OBJ_GHOST: break;
     case OBJ_BEAM: break;
     default:
-        Error (LOCATION, "Unhandled obj type %d in obj_render", obj->type);
+        fs2::dialog::error (LOCATION, "Unhandled obj type %d in obj_render", obj->type);
     }
 }
 

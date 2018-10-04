@@ -1085,7 +1085,7 @@ void g3_render_rod (color* clr, int num_points, vec3d* pvecs, float width) {
         vm_vec_scale_add (&vecs[1], &pvecs[i], &uvec, -width * 0.5f);
 
         if (nv > MAX_ROD_VERTS - 2) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Hit high-water mark (%i) in g3_draw_rod()!!\n",
                 MAX_ROD_VERTS);
             break;

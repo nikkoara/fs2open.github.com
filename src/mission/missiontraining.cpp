@@ -143,19 +143,19 @@ void HudGaugeDirectives::initBitmaps (
     directives_top.first_frame =
         bm_load_animation (fname_top, &directives_top.num_frames);
     if (directives_top.first_frame < 0) {
-        Warning (LOCATION, "Cannot load hud ani: %s\n", fname_top);
+        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_top);
     }
 
     directives_middle.first_frame =
         bm_load_animation (fname_middle, &directives_middle.num_frames);
     if (directives_middle.first_frame < 0) {
-        Warning (LOCATION, "Cannot load hud ani: %s\n", fname_middle);
+        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_middle);
     }
 
     directives_bottom.first_frame =
         bm_load_animation (fname_bottom, &directives_bottom.num_frames);
     if (directives_bottom.first_frame < 0) {
-        Warning (LOCATION, "Cannot load hud ani: %s\n", fname_bottom);
+        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_bottom);
     }
 }
 

@@ -508,7 +508,7 @@ void red_alert_bash_weapons (red_alert_ship_status* ras, p_object* pobjp) {
     }
 
     if (sssp == NULL) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Parse object data for ship '%s' doesn't contain the 'Pilot' "
             "subsystem!",
@@ -773,7 +773,7 @@ void red_alert_delete_ship (p_object* pobjp, int ship_state) {
             pobjp->flags.set (Mission::Parse_Object_Flags::SF_Cannot_arrive);
     }
     else
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Red Alert: asked to delete ship (%s) with invalid ship state "
             "(%d)",

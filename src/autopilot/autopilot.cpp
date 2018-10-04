@@ -340,7 +340,7 @@ bool StartAutopilot () {
     if (speed_cap < 1.0f) {
         /* We need to deal with this so that incorrectly flagged ships will not
         cause the engine to fail to limit all the ships speeds correctly. */
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Ship speed cap is way too small (%f)!\n"
             "This is normally caused by a ship that has nav-carry-status set, "

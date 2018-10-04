@@ -157,7 +157,7 @@ void NVGFont::getStringSize (
                         int spacing;
 
                         if (m_specialCharacters == nullptr) {
-                            Error (
+                            fs2::dialog::error (
                                 LOCATION,
                                 "Font %s has no special characters font! This "
                                 "is usually caused by ignoring a font table "

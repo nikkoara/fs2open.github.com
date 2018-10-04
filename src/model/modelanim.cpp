@@ -35,7 +35,7 @@ int model_anim_match_type (char* p) {
 
     // Goober5000 - misspelling
     if (!strncasecmp (p, "inital", 6) || !strncasecmp (p, "\"inital\"", 8)) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Spelling error in table file.  Please change \"inital\" to "
             "\"initial\".");

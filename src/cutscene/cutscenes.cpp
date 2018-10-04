@@ -124,7 +124,7 @@ void cutscene_mark_viewable (const char* filename) {
         i++;
     }
 
-    Warning (
+    fs2::dialog::warning (
         LOCATION,
         "Could not find cutscene '%s' in listing; cannot mark it viewable...",
         filename);

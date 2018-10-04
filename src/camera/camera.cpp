@@ -250,7 +250,7 @@ void camera::set_rotation_facing (
         if (in_target->xyz.x == position.xyz.x &&
             in_target->xyz.y == position.xyz.y &&
             in_target->xyz.z == position.xyz.z) {
-            Warning (LOCATION, "Camera tried to point to self");
+            fs2::dialog::warning (LOCATION, "Camera tried to point to self");
             return;
         }
 
@@ -266,7 +266,7 @@ void camera::set_rotation_facing (
 
 void camera::set_rotation_velocity (
     angles_t* /*in_rotation_rate*/, float /*in_acceleration_time*/) {
-    Error (LOCATION, "This function is disabled until further notice.");
+    fs2::dialog::error (LOCATION, "This function is disabled until further notice.");
 }
 
 void camera::do_frame (float /*in_frametime*/) {}

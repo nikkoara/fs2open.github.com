@@ -218,7 +218,7 @@ void stars_load_debris_vclips (debris_vclip* vclips) {
             vclips[i].nframes = 1;
 
             if (vclips[i].bm <= 0) {
-                Error (
+                fs2::dialog::error (
                     LOCATION, "Couldn't load animation/bitmap '%s'\n",
                     vclips[i].name);
             }
@@ -441,14 +441,14 @@ void parse_startbl (const char* filename) {
                 if ((idx = stars_find_bitmap (sbm.filename)) >= 0) {
                     if (sbm.xparent == Starfield_bitmaps[idx].xparent) {
                         if (!Parsing_modular_table)
-                            Warning (
+                            fs2::dialog::warning (
                                 LOCATION,
                                 "Starfield bitmap '%s' listed more than "
                                 "once!!  Only using the first entry!",
                                 sbm.filename);
                     }
                     else {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Starfield bitmap '%s' already listed as a %s "
                             "bitmap!!  Only using the xparent version!",
@@ -563,7 +563,7 @@ void parse_startbl (const char* filename) {
                     if (Parsing_modular_table)
                         Sun_bitmaps[idx] = sbm;
                     else
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Sun bitmap '%s' listed more than once!!  Only "
                             "using the first entry!",
@@ -587,7 +587,7 @@ void parse_startbl (const char* filename) {
                         Debris_vclips_normal[Num_debris_normal++].name, name);
                 }
                 else {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Could not load normal motion debris '%s'; maximum of "
                         "%d exceeded.",
@@ -608,7 +608,7 @@ void parse_startbl (const char* filename) {
                         Debris_vclips_nebula[Num_debris_nebula++].name, name);
                 }
                 else {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Could not load nebula motion debris '%s'; maximum of "
                         "%d exceeded.",
@@ -669,7 +669,7 @@ void stars_load_all_bitmaps () {
         }
     }
     if (mprintf_count > 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Unable to load %d starfield bitmap(s)!\n",
             mprintf_count);
     }
@@ -688,7 +688,7 @@ void stars_load_all_bitmaps () {
                     true);
 
                 if (sb->bitmap_id < 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION, "Unable to load sun bitmap: '%s'!\n",
                         sb->filename);
                 }
@@ -706,7 +706,7 @@ void stars_load_all_bitmaps () {
                     nullptr, nullptr, true);
 
                 if (sb->glow_bitmap < 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION, "Unable to load sun glow bitmap: '%s'!\n",
                         sb->glow_filename);
                 }
@@ -722,7 +722,7 @@ void stars_load_all_bitmaps () {
                         bm_load (sb->flare_bitmaps[i].filename);
 
                     if (sb->flare_bitmaps[i].bitmap_id < 0) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Unable to load sun flare bitmap: '%s'!\n",
                             sb->flare_bitmaps[i].filename);
@@ -850,7 +850,7 @@ static void environment_map_gen () {
 
     if (gr_screen.envmap_render_target >= 0) {
         if (!bm_release (gr_screen.envmap_render_target, 1)) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Unable to release environment map render target.");
         }
 
@@ -1999,7 +1999,7 @@ void stars_page_in () {
                         nullptr, true);
 
                     if (sb->bitmap_id < 0) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Unable to load starfield bitmap: '%s'!\n",
                             sb->filename);
@@ -2035,7 +2035,7 @@ void stars_page_in () {
                         nullptr, true);
 
                     if (sb->bitmap_id < 0) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION, "Unable to load sun bitmap: '%s'!\n",
                             sb->filename);
                     }
@@ -2053,7 +2053,7 @@ void stars_page_in () {
                         nullptr, nullptr, true);
 
                     if (sb->glow_bitmap < 0) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Unable to load sun glow bitmap: '%s'!\n",
                             sb->glow_filename);
@@ -2070,7 +2070,7 @@ void stars_page_in () {
                             bm_load (sb->flare_bitmaps[i].filename);
 
                         if (sb->flare_bitmaps[i].bitmap_id < 0) {
-                            Warning (
+                            fs2::dialog::warning (
                                 LOCATION,
                                 "Unable to load sun flare bitmap: '%s'!\n",
                                 sb->flare_bitmaps[i].filename);
@@ -2109,7 +2109,7 @@ void stars_page_in () {
                     true);
 
                 if (sb->bitmap_id < 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION, "Unable to load starfield bitmap: '%s'!\n",
                         sb->filename);
                 }
@@ -2147,7 +2147,7 @@ void stars_page_in () {
                     true);
 
                 if (sb->bitmap_id < 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION, "Unable to load sun bitmap: '%s'!\n",
                         sb->filename);
                 }
@@ -2165,7 +2165,7 @@ void stars_page_in () {
                     nullptr, nullptr, true);
 
                 if (sb->glow_bitmap < 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION, "Unable to load sun glow bitmap: '%s'!\n",
                         sb->glow_filename);
                 }
@@ -2181,7 +2181,7 @@ void stars_page_in () {
                         bm_load (sb->flare_bitmaps[i].filename);
 
                     if (sb->flare_bitmaps[i].bitmap_id < 0) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Unable to load sun flare bitmap: '%s'!\n",
                             sb->flare_bitmaps[i].filename);
@@ -2322,7 +2322,7 @@ int stars_add_sun_entry (starfield_list_entry* sun_ptr) {
     idx = stars_find_sun (sun_ptr->filename);
 
     if (idx == -1) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Trying to add a sun '%s' that does not exist in stars.tbl!",
             sun_ptr->filename);
@@ -2361,7 +2361,7 @@ int stars_add_sun_entry (starfield_list_entry* sun_ptr) {
                     &Sun_bitmaps[idx].glow_fps, nullptr, nullptr, true);
 
                 if (Sun_bitmaps[idx].glow_bitmap < 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION, "Unable to load sun glow bitmap: '%s'!\n",
                         Sun_bitmaps[idx].glow_filename);
                 }
@@ -2377,7 +2377,7 @@ int stars_add_sun_entry (starfield_list_entry* sun_ptr) {
                     fbp->bitmap_id = bm_load (fbp->filename);
 
                     if (fbp->bitmap_id < 0) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Unable to load sun flare bitmap: '%s'!\n",
                             Sun_bitmaps[idx].flare_bitmaps[i].filename);
@@ -2428,7 +2428,7 @@ int stars_add_bitmap_entry (starfield_list_entry* sle) {
     idx = stars_find_bitmap (sle->filename);
 
     if (idx == -1) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Trying to add a bitmap '%s' that does not exist in stars.tbl!",
             sle->filename);
@@ -2779,7 +2779,7 @@ void stars_load_background (int background_idx) {
             }
         }
         if (failed_suns > 0)
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Failed to add %d sun bitmaps to the mission!",
                 failed_suns);
 
@@ -2795,7 +2795,7 @@ void stars_load_background (int background_idx) {
             }
         }
         if (failed_stars > 0)
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Failed to add %d starfield bitmaps to the mission!",
                 failed_stars);
     }

@@ -35,7 +35,7 @@ void check_version (const char* libname, uint32_t current, uint32_t compiled) {
     auto compiled_minor = AV_VERSION_MINOR (compiled);
 
     if (current_major != compiled_major) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "The major version of the %s library is not the same as the one "
             "this executable was compiled with!\n"
@@ -48,7 +48,7 @@ void check_version (const char* libname, uint32_t current, uint32_t compiled) {
     }
 
     if (current_minor < compiled_minor) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "The minor version of the %s library is not the same as the one "
             "this executable was compiled with!\n"

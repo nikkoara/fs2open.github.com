@@ -95,7 +95,7 @@ void parse_ssm (const char* filename) {
                 // 4 seconds!"
                 if ((s.warp_time) < 4.0f) {
                     // So let's warn them before they try to use it, shall we?
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Expected a '+WarpTime:' value equal or greater than "
                         "4.0, found '%f' in weapon '%s'.\n Setting to 4.0, "

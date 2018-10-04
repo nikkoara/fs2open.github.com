@@ -634,7 +634,7 @@ void turret_swarm_maybe_fire_missile (int shipnum) {
                     }
                 }
                 else {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Found turret swarm info on ship: %s with turret: %s, "
                         "but signature does not match.",

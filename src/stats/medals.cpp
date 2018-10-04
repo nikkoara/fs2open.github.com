@@ -295,7 +295,7 @@ void parse_medal_tbl () {
                     Default_medal_coords[GR_640][Num_medals][1];
             }
             else {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "No default GR_640 position for medal '%s'!",
                     temp_medal.name);
                 temp_display.coords[GR_640].x = 0;
@@ -312,7 +312,7 @@ void parse_medal_tbl () {
                     Default_medal_coords[GR_1024][Num_medals][1];
             }
             else {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "No default GR_1024 position for medal '%s'!",
                     temp_medal.name);
                 temp_display.coords[GR_1024].x = 0;
@@ -329,7 +329,7 @@ void parse_medal_tbl () {
                     Default_debriefing_bitmaps[Num_medals]);
             }
             else {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "No default debriefing bitmap for medal '%s'!",
                     temp_medal.name);
                 strcpy_s (temp_medal.debrief_bitmap, "");
@@ -375,7 +375,7 @@ void parse_medal_tbl () {
                     if (optional_string ("+Persona:")) {
                         stuff_int (&persona);
                         if (persona < 0) {
-                            Warning (
+                            fs2::dialog::warning (
                                 LOCATION,
                                 "Debriefing text for %s is assigned to an "
                                 "invalid persona: %i (must be 0 or "
@@ -388,7 +388,7 @@ void parse_medal_tbl () {
                 }
                 if (temp_medal.promotion_text.find (-1) ==
                     temp_medal.promotion_text.end ()) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "%s medal is missing default debriefing text.\n",
                         temp_medal.name);
@@ -405,7 +405,7 @@ void parse_medal_tbl () {
 
         // be sure that we know where the rank is
         if (Rank_medal_index < 0) {
-            Warning (LOCATION, "Could not find the 'Rank' medal!");
+            fs2::dialog::warning (LOCATION, "Could not find the 'Rank' medal!");
             Rank_medal_index = 0;
         }
 
@@ -416,7 +416,7 @@ void parse_medal_tbl () {
         for (i = 0; i < Num_medals; i++) {
             if (Medals[i].kills_needed < prev_badge_kills &&
                 Medals[i].kills_needed != 0)
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "Badges must appear sorted by lowest kill # first in "
                     "medals.tbl\nFind Allender for most information.");
@@ -565,7 +565,7 @@ void medal_main_init (player* pl, int mode) {
 
     Medals_bitmap = bm_load (bitmap_buf);
     if (Medals_bitmap < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Error loading medal background bitmap %s", bitmap_buf);
     }
     else {
@@ -580,7 +580,7 @@ void medal_main_init (player* pl, int mode) {
 
     Medals_bitmap_mask = bm_load (bitmap_buf);
     if (Medals_bitmap_mask < 0) {
-        Warning (LOCATION, "Error loading medal mask file %s", bitmap_buf);
+        fs2::dialog::warning (LOCATION, "Error loading medal mask file %s", bitmap_buf);
     }
     else {
         Init_flags |= MASK_BITMAP_INIT;

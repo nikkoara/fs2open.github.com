@@ -154,7 +154,7 @@ int joy_ff_init () {
     }
     else {
         if (ff_strength != 100) {
-            ReleaseWarning (
+            fs2::dialog::release_warning (
                 LOCATION,
                 "The configuration file is configured with a force feedback "
                 "strength value of %d%% "

@@ -81,7 +81,7 @@ private:
             return out;
         }
         default:
-            Error (LOCATION, "Unhandled direction value!");
+            fs2::dialog::error (LOCATION, "Unhandled direction value!");
             return vmd_zero_vector;
         }
     }

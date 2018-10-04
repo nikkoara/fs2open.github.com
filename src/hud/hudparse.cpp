@@ -202,7 +202,7 @@ void parse_hud_gauges_tbl (const char* filename) {
             stuff_float (&Hud_unit_multiplier);
 
             if (Hud_unit_multiplier <= 0.0f) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "\"$Length Unit Multiplier:\" value of \"%f\" is invalid! "
                     " Resetting to default.",
@@ -215,7 +215,7 @@ void parse_hud_gauges_tbl (const char* filename) {
             stuff_float (&Hud_speed_multiplier);
 
             if (Hud_speed_multiplier <= 0.0f) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "\"$Speed Unit Multiplier:\" value of \"%f\" is invalid!  "
                     "Resetting to default.",
@@ -260,7 +260,7 @@ void parse_hud_gauges_tbl (const char* filename) {
             skip_to_start_of_string ("#Gauge Config");
 
             if (temp < 0)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "Undefined reticle style in hud_gauges.tbl!");
             else
                 Hud_reticle_style = temp;
@@ -513,7 +513,7 @@ void parse_hud_gauges_tbl (const char* filename) {
 
 void hud_positions_init () {
     if (!ships_inited) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Could not initialize hudparse.cpp as ships were not inited "
             "first.");
@@ -1125,7 +1125,7 @@ gauge_load_common (gauge_settings* settings, T* preAllocated = NULL) {
                 }
 
                 if (optional_string ("Offset:")) {
-                    Error (
+                    fs2::dialog::error (
                         LOCATION,
                         "HUD gauges table: Offset must also have Origin "
                         "defined");
@@ -1318,7 +1318,7 @@ void load_gauge_custom (gauge_settings* settings) {
             }
 
             if (optional_string ("Offset:")) {
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "HUD gauges table: Offset must also have Origin defined");
             }
@@ -2834,7 +2834,7 @@ void load_gauge_radar_dradis (gauge_settings* settings) {
             }
 
             if (optional_string ("Offset:")) {
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "HUD gauges table: Offset must also have Origin defined");
             }
@@ -2921,7 +2921,7 @@ void load_gauge_radar_dradis (gauge_settings* settings) {
         stuff_float (&loop_snd_volume);
 
         if (loop_snd_volume <= 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "\"Loop Volume:\" value of \"%f\" is invalid! Must be more "
                 "than zero! Resetting to default.",
@@ -2937,7 +2937,7 @@ void load_gauge_radar_dradis (gauge_settings* settings) {
         stuff_float (&arrival_beep_delay);
 
         if (arrival_beep_delay < 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "\"Minimum Beep Delay:\" value of \"%f\" is invalid! Must be "
                 "more than or equal to zero! Resetting to default.",
@@ -2953,7 +2953,7 @@ void load_gauge_radar_dradis (gauge_settings* settings) {
         stuff_float (&departure_beep_delay);
 
         if (departure_beep_delay < 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "\"Minimum Beep Delay:\" value of \"%f\" is invalid! Must be "
                 "more than or equal to zero! Resetting to default.",

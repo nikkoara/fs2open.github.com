@@ -329,7 +329,7 @@ void waypoint_add_list (const char* name, std::vector< vec3d >& vec_list) {
     Assert (name != NULL);
 
     if (find_matching_waypoint_list (name) != NULL) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Waypoint list '%s' already exists in this mission!  Not adding "
             "the new list...",

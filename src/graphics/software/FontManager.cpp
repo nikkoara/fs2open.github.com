@@ -174,7 +174,7 @@ font* FontManager::loadFontOld (const std::string& typeface) {
             x = 0;
             y += fnt->h + 2;
             if (y + fnt->h > fnt->bm_h) {
-                Error (LOCATION, "Font too big!\n");
+                fs2::dialog::error (LOCATION, "Font too big!\n");
             }
         }
         fnt->bm_u[i] = x;

@@ -176,9 +176,8 @@ int cfile_init (const char* exe_dir, const char* cdrom_dir) {
 
     // are we in a root directory?
     if (cfile_in_root_dir (buf)) {
-        os::dialogs::Message (
-            os::dialogs::MESSAGEBOX_ERROR,
-            "FreeSpace2/Fred2 cannot be run from a drive root directory!");
+        using namespace fs2::dialog;
+        message (dialog_type::error, "cannot run from root directory");
         return 1;
     }
 
@@ -1219,12 +1218,12 @@ int cfwrite (const void* buf, int elsize, int nelem, CFILE* cfile) {
     Cfile_block* cb = &Cfile_block_list[cfile->id];
 
     if (cb->lib_offset != 0) {
-        Error (LOCATION, "Attempt to write to a VP file (unsupported)");
+        fs2::dialog::error (LOCATION, "Attempt to write to a VP file (unsupported)");
         return 0;
     }
 
     if (cb->data != NULL) {
-        Warning (LOCATION, "Writing is not supported for mem-mapped files");
+        fs2::dialog::warning (LOCATION, "Writing is not supported for mem-mapped files");
         return EOF;
     }
 
@@ -1257,13 +1256,13 @@ int cfputc (int c, CFILE* cfile) {
     Cfile_block* cb = &Cfile_block_list[cfile->id];
 
     if (cb->lib_offset != 0) {
-        Error (
+        fs2::dialog::error (
             LOCATION, "Attempt to write character to a VP file (unsupported)");
         return EOF;
     }
 
     if (cb->data != NULL) {
-        Warning (LOCATION, "Writing is not supported for mem-mapped files");
+        fs2::dialog::warning (LOCATION, "Writing is not supported for mem-mapped files");
         return EOF;
     }
 
@@ -1298,13 +1297,13 @@ int cfputs (const char* str, CFILE* cfile) {
     Cfile_block* cb = &Cfile_block_list[cfile->id];
 
     if (cb->lib_offset != 0) {
-        Error (
+        fs2::dialog::error (
             LOCATION, "Attempt to write character to a VP file (unsupported)");
         return EOF;
     }
 
     if (cb->data != NULL) {
-        Warning (LOCATION, "Writing is not supported for mem-mapped files");
+        fs2::dialog::warning (LOCATION, "Writing is not supported for mem-mapped files");
         return EOF;
     }
 

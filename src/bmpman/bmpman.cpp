@@ -412,7 +412,7 @@ DCF (bm_used, "Shows BmpMan Slot Usage") {
                 case BM_TYPE_JPG: eff_jpg++; break;
                 case BM_TYPE_PCX: eff_pcx++; break;
                 default:
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Unhandled EFF image type (%i), get a coder!",
                         block[i].entry.info.ani.eff.type);
@@ -422,7 +422,7 @@ DCF (bm_used, "Shows BmpMan Slot Usage") {
             case BM_TYPE_RENDER_TARGET_STATIC: render_target_static++; break;
             case BM_TYPE_RENDER_TARGET_DYNAMIC: render_target_dynamic++; break;
             default:
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "Unhandled image type (%i), get a coder!",
                     block[i].entry.type);
                 break;
@@ -1107,7 +1107,7 @@ static int bm_load_info (
         case DDS_CUBEMAP_UNCOMPRESSED: *c_type = BM_TYPE_CUBEMAP_DDS; break;
 
         default:
-            Error (
+            fs2::dialog::error (
                 LOCATION, "Bad DDS file compression! Not using DXT1,3,5: %s",
                 filename);
             return -1;
@@ -1196,7 +1196,7 @@ int bm_load (const char* real_filename) {
     // safety catch for strcat...
     // MAX_FILENAME_LEN-5 == '.' plus 3 letter ext plus NULL terminator
     if (strlen (filename) > MAX_FILENAME_LEN - 5) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Passed filename, '%s', is too long to support an "
             "extension!!\n\nMaximum length, minus the extension, is %i "
@@ -1452,7 +1452,7 @@ bm_load_image_data (int handle, int bpp, ubyte flags, bool nodebug) {
             break;
 
         default:
-            Warning (LOCATION, "Unsupported type in bm_lock -- %d\n", c_type);
+            fs2::dialog::warning (LOCATION, "Unsupported type in bm_lock -- %d\n", c_type);
             return -1;
         }
 
@@ -1517,7 +1517,7 @@ int bm_load_animation (
     // safety catch for strcat...
     // MAX_FILENAME_LEN-5 == '.' plus 3 letter ext plus NULL terminator
     if (strlen (filename) > MAX_FILENAME_LEN - 5) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Passed filename, '%s', is too long to support an "
             "extension!!\n\nMaximum length, minus the extension, is %i "
@@ -1570,7 +1570,7 @@ int bm_load_animation (
     // for -5 here since the filename should already have the extension on it,
     // and it must have passed the previous check
     if (strlen (filename) > MAX_FILENAME_LEN - 5) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Passed filename, '%s', is too long to support an extension and "
             "frames!!\n\nMaximum length for an ANI/EFF/APNG, minus the "
@@ -1595,7 +1595,7 @@ int bm_load_animation (
                  filename, anim_frames, anim_fps));
         }
         if (anim_fps == 0) {
-            Error (
+            fs2::dialog::error (
                 LOCATION, "animation (%s) has invalid fps of 0, fix this!",
                 filename);
         }
@@ -1610,7 +1610,7 @@ int bm_load_animation (
         anim_read_header (&the_anim, img_cfp);
 
         if (the_anim.width < 0 || the_anim.height < 0) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Ani file %s has a faulty header and cannot be loaded.",
                 real_filename);
@@ -1619,7 +1619,7 @@ int bm_load_animation (
         anim_frames = the_anim.total_frames;
         anim_fps = the_anim.fps;
         if (anim_fps == 0) {
-            Error (
+            fs2::dialog::error (
                 LOCATION, "animation (%s) has invalid fps of 0, fix this!",
                 filename);
         }
@@ -1670,7 +1670,7 @@ int bm_load_animation (
         }
     }
     else {
-        Warning (LOCATION, "Unsupported image type: %i", type);
+        fs2::dialog::warning (LOCATION, "Unsupported image type: %i", type);
         if (img_cfp != nullptr) cfclose (img_cfp);
         return -1;
     }
@@ -1715,7 +1715,7 @@ int bm_load_animation (
                     &img_size)) {
                 // if we didn't get anything then bail out now
                 if (i == 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "EFF: No frame images were found.  EFF, %s, is "
                         "invalid.\n",
@@ -1726,7 +1726,7 @@ int bm_load_animation (
                     return -1;
                 }
 
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "EFF: Unable to load all frames for '%s', stopping at "
                     "#%d\n",
@@ -1799,7 +1799,7 @@ int bm_load_animation (
             // this can't be used as a texture array
             is_array = false;
 
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Animation '%s' has images that are of different sizes "
                 "(currently at frame %d)."
@@ -1811,7 +1811,7 @@ int bm_load_animation (
             // Different compression type
             is_array = false;
 
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Animation '%s' has images that are of different compression "
                 "formats (currently at frame %d)."
@@ -1823,7 +1823,7 @@ int bm_load_animation (
             // We found a frame with an incompatible pixel format
             is_array = false;
 
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Animation '%s' has images that are of different pixel "
                 "formats (currently at frame %d)."
@@ -1835,7 +1835,7 @@ int bm_load_animation (
             // We found a frame with a different number of mipmaps
             is_array = false;
 
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Animation '%s' has images that have a different number of "
                 "mipmaps (currently at frame %d)."
@@ -2204,7 +2204,7 @@ void bm_lock_apng (
         the_apng.reset (new apng::apng_ani (first_entry->filename));
     }
     catch (const apng::ApngException& e) {
-        Warning (LOCATION, "Failed to load apng: %s", e.what ());
+        fs2::dialog::warning (LOCATION, "Failed to load apng: %s", e.what ());
         return;
     }
 
@@ -2226,7 +2226,7 @@ void bm_lock_apng (
             the_apng->next_frame ();
         }
         catch (const apng::ApngException& e) {
-            Warning (LOCATION, "Failed to get next apng frame: %s", e.what ());
+            fs2::dialog::warning (LOCATION, "Failed to get next apng frame: %s", e.what ());
             bm_release (first_frame);
             return;
         }
@@ -2552,7 +2552,7 @@ void bm_lock_user (
         break;
 
     default:
-        Error (
+        fs2::dialog::error (
             LOCATION, "Unhandled user bitmap conversion from %d to %d bpp",
             be->info.user.bpp, bmp->bpp);
         break;

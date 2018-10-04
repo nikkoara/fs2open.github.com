@@ -1094,7 +1094,7 @@ bool parse_soundtrack_line (int strack_idx, int pattern_idx) {
 
     // Check if we can add this pattern
     if (pattern_idx >= MAX_PATTERNS) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Too many $Name: entries for soundtrack %s",
             Soundtracks[strack_idx].name);
         return false;
@@ -1107,7 +1107,7 @@ bool parse_soundtrack_line (int strack_idx, int pattern_idx) {
         token = strtok (NULL, NOX (" ,\t"));
         // If we have no more items, get out and return
         if (token == NULL && count != 2) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Missing or additional field for soundtrack %s, pattern %s",
                 Soundtracks[strack_idx].name,
@@ -1150,7 +1150,7 @@ void parse_soundtrack () {
     // Get a valid strack_idx
     if (strack_idx < 0 && (nocreate || Num_soundtracks >= MAX_SOUNDTRACKS)) {
         if (Num_soundtracks >= MAX_SOUNDTRACKS) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Maximum number of soundtracks reached after '%s'; max is "
                 "'%d'",
@@ -1220,7 +1220,7 @@ void parse_soundtrack () {
             }
 
             if (i == Num_pattern_types) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Could not find new index for pattern %d of soundtrack "
                     "'%s'",
@@ -1287,7 +1287,7 @@ void parse_menumusic () {
 
     if (idx < 0 && (nocreate || Num_music_files >= MAX_SPOOLED_MUSIC)) {
         if (Num_music_files >= MAX_SPOOLED_MUSIC) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Could not load spooled music file after '%s' as maximum "
                 "number of spooled music was reached (Max is %d)",
@@ -1295,7 +1295,7 @@ void parse_menumusic () {
         }
 
         if (!skip_to_start_of_string_either ("$Name:", "#Menu Music End")) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Couldn't find $Name or #Menu Music End. Music.tbl or "
                 "-mus.tbm is invalid.\n");

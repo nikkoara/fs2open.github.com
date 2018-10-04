@@ -537,7 +537,7 @@ void ds_init_channels () {
         Channels = new channel[MAX_CHANNELS];
     }
     catch (const std::bad_alloc&) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Unable to allocate " SIZE_T_ARG " bytes for %d audio channels.",
             sizeof (channel) * MAX_CHANNELS, MAX_CHANNELS);

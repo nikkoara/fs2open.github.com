@@ -273,7 +273,7 @@ int goal_text::add (const char* text) {
 
     max = MAX_GOAL_LINES - m_num_lines;
     if (max < 1) {
-        Error (LOCATION, "Goal text space exhausted");
+        fs2::dialog::error (LOCATION, "Goal text space exhausted");
         return 0;
     }
 
@@ -425,7 +425,7 @@ void mission_show_goals_init () {
             break;
 
         default:
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Unknown goal priority encountered when displaying goals in "
                 "mission\n");
@@ -483,7 +483,7 @@ void mission_show_goals_init () {
     Goal_failed_bitmap = bm_load ("ObjFail");
 
     if (Goals_screen_bg_bitmap < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Could not load the background bitmap: ObjectivesBG.pcx");
     }
@@ -605,7 +605,7 @@ int ML_objectives_init (int x, int y, int w, int h) {
             break;
 
         default:
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Unknown goal priority encountered when displaying goals in "
                 "mission\n");

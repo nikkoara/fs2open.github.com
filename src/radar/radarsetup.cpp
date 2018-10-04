@@ -127,7 +127,9 @@ void radar_stuff_blip_info (
 
         break;
 
-    default: Error (LOCATION, "Illegal blip type in radar."); break;
+    default:
+        fs2::dialog::error (LOCATION, "Illegal blip type in radar.");
+        break;
     }
 }
 
@@ -448,7 +450,7 @@ void HudGaugeRadar::drawRange () {
         break;
 
     default:
-        Error (LOCATION, "Unknown radar range: %d!\n", HUD_config.rp_dist);
+        fs2::dialog::error (LOCATION, "Unknown radar range: %d!\n", HUD_config.rp_dist);
         break;
     }
 }

@@ -189,7 +189,7 @@ void read_menu_tbl (
 
     fp = cfopen (NOX ("menu.tbl"), "rt");
     if (fp == NULL) {
-        Error (LOCATION, "menu.tbl could not be opened\n");
+        fs2::dialog::error (LOCATION, "menu.tbl could not be opened\n");
 
         return;
     }

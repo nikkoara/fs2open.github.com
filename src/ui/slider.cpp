@@ -172,7 +172,7 @@ void UI_DOT_SLIDER::create (
     sprintf (filename, "%s%.2d", bm, hotspot);
     first_frame = bm_load_animation (filename, &total_frames);
     if (first_frame < 0) {
-        Error (LOCATION, "Could not load %s.ani\n", filename);
+        fs2::dialog::error (LOCATION, "Could not load %s.ani\n", filename);
         disable ();
         hide ();
         return;

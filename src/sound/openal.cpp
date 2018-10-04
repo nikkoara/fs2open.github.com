@@ -250,11 +250,8 @@ bool openal_init_device (std::string* playback, std::string* capture) {
     auto platform_info = openal_get_platform_information ();
 
     if (platform_info.version_major <= 1 && platform_info.version_minor < 1) {
-        os::dialogs::Message (
-            os::dialogs::MESSAGEBOX_ERROR,
-            "OpenAL 1.1 or newer is required for proper operation. On Linux "
-            "and Windows OpenAL Soft is recommended. If you are on Mac OS X "
-            "you need to upgrade your OS.");
+        using namespace fs2::dialog;
+        message (dialog_type::error, "OpenAL version < v1.1");
         return false;
     }
 

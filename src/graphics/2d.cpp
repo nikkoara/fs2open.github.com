@@ -915,7 +915,7 @@ static void init_window_icon () {
 
     auto icon_handle = bm_load (Window_icon_path);
     if (icon_handle < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Failed to load window icon '%s'!",
             Window_icon_path.c_str ());
         return;
@@ -923,7 +923,7 @@ static void init_window_icon () {
 
     auto surface = bm_to_sdl_surface (icon_handle);
     if (surface == nullptr) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Convert icon '%s' to a SDL surface!",
             Window_icon_path.c_str ());
         bm_release (icon_handle);
@@ -1003,7 +1003,7 @@ bool gr_init (
         //       If the format of that string changes you'll have to change
         //       this too!!!
         if (sscanf (ptr + 5, "(%dx%d)x%d ", &width, &height, &depth) != 3) {
-            Error (
+            fs2::dialog::error (
                 LOCATION, "Can't understand 'VideocardFs2open' config entry!");
         }
     }
@@ -1151,7 +1151,7 @@ bool gr_init (
         }
     }
     if (missing_installation) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "\nWeb cursor bitmap not found.  This is most likely due to one "
             "of three reasons:\n"

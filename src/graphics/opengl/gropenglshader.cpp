@@ -598,7 +598,7 @@ static void handle_includes_impl (
 
             if (first_quote == std::string::npos ||
                 second_quote == std::string::npos) {
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "Shader %s:%d: Malformed include line. Could not find "
                     "both quote charaters.",
@@ -618,7 +618,7 @@ static void handle_includes_impl (
                     stack_string << "\t" << name << "\n";
                 }
 
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "Shader %s:%d: Detected cyclic include! Previous includes "
                     "(top level file first):\n%s",
@@ -778,7 +778,7 @@ void opengl_compile_shader_actual (
     catch (const std::exception&) {
         // Since all shaders are required a compilation failure is a fatal
         // error
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "A shader failed to compile! Check the debug log for more "
             "information.");

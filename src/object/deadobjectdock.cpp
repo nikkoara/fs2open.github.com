@@ -48,12 +48,12 @@ void dock_dead_dock_objects (
 #ifndef NDEBUG
     if ((dead_dock_find_instance (objp1, objp2) != NULL) ||
         (dead_dock_find_instance (objp2, objp1) != NULL)) {
-        Error (LOCATION, "Trying to dock an object that's already docked!\n");
+        fs2::dialog::error (LOCATION, "Trying to dock an object that's already docked!\n");
     }
 
     if ((dead_dock_find_instance (objp1, dockpoint1) != NULL) ||
         (dead_dock_find_instance (objp2, dockpoint2) != NULL)) {
-        Error (LOCATION, "Trying to dock to a dockpoint that's in use!\n");
+        fs2::dialog::error (LOCATION, "Trying to dock to a dockpoint that's in use!\n");
     }
 #endif
 

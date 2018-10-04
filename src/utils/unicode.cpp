@@ -21,7 +21,7 @@ text_iterator& unicode::text_iterator::operator++ () {
             detail::next (current_byte, range_end_byte);
         }
         catch (const std::exception& e) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Exception while incrementing UTF-8 sequence near '%.16s': %s",
                 current_byte, e.what ());
@@ -43,7 +43,7 @@ text_iterator& text_iterator::operator-- () {
             detail::prior (current_byte, range_start_byte);
         }
         catch (const std::exception& e) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Exception while decrementing text iterator near '%.16s': %s",
                 current_byte, e.what ());
@@ -64,7 +64,7 @@ text_iterator::value_type text_iterator::operator* () {
             return detail::peek_next (current_byte, range_end_byte);
         }
         catch (const std::exception& e) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Exception while decoding UTF-8 sequence near '%.16s': %s",
                 current_byte, e.what ());
@@ -180,7 +180,7 @@ size_t encoded_size (codepoint_t cp) {
             return detail::encoded_width (cp);
         }
         catch (const std::exception& e) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Exception while computing encoded size of Unicode code point "
                 "%" PRIu32 ": %s",

@@ -610,7 +610,7 @@ void shockwave_level_init () {
         }
 
         if (i < 0)
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "ERROR:  Unable to open neither 3D nor 2D default "
                 "shockwaves!!");

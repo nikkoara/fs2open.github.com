@@ -770,7 +770,7 @@ bool validate_ship_ets_indxes (
         break;
 
     default:
-        Error (
+        fs2::dialog::error (
             LOCATION, "Encountered a ship (%s) with a broken ETS",
             ship_p->ship_name);
         break;
@@ -816,7 +816,7 @@ void HudGaugeEts::initLetter (char _letter) { Letter = _letter; }
 void HudGaugeEts::initBitmaps (char* fname) {
     Ets_bar.first_frame = bm_load_animation (fname, &Ets_bar.num_frames);
     if (Ets_bar.first_frame < 0) {
-        Warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 

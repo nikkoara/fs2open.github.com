@@ -554,7 +554,7 @@ void player_select_close () {
 
     // now read in a the pilot data
     if (!Pilot.load_player (Pilots[Player_select_pilot], Player)) {
-        Error (LOCATION, "Couldn't load pilot file, bailing");
+        fs2::dialog::error (LOCATION, "Couldn't load pilot file, bailing");
         Player = NULL;
     }
     else {
@@ -661,7 +661,7 @@ void player_select_button_pressed (int n) {
 
             // attempt to read in the pilot file of the guy to be cloned
             if (!Pilot.load_player (Pilots[Player_select_pilot], Player)) {
-                Error (LOCATION, "Couldn't load pilot file, bailing");
+                fs2::dialog::error (LOCATION, "Couldn't load pilot file, bailing");
                 Player = NULL;
                 Int3 ();
             }

@@ -1469,7 +1469,7 @@ void send_accept_packet (int new_player_num, int code, int ingame_join_team) {
     // sanity check - reset skill level to default before sending if out of
     // range
     if (Game_skill_level < 0 || Game_skill_level >= NUM_SKILL_LEVELS) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Trying to send packet containing invalid skill level %i! Valid "
             "range 0 to %i. Resetting to default.",
@@ -1577,7 +1577,7 @@ void process_accept_packet (ubyte* data, header* hinfo) {
     // get the skill level setting
     GET_INT (Game_skill_level);
     if (Game_skill_level < 0 || Game_skill_level >= NUM_SKILL_LEVELS) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Received packet containing invalid skill level %i! Valid range 0 "
             "to %i.  Resetting to default.",
@@ -4117,7 +4117,7 @@ void process_netplayer_slot_packet (ubyte* data, header* hinfo) {
             if (!((player_num == 0) && (Game_mode & GM_STANDALONE_SERVER))) {
                 objp = multi_get_network_object (net_sig);
                 if (objp == NULL) {
-                    Error (
+                    fs2::dialog::error (
                         LOCATION,
                         "Could not retrieve net object for signature %d!\n",
                         net_sig);
@@ -8671,7 +8671,7 @@ void send_sexp_packet (ubyte* sexp_packet, int num_ubytes) {
     Assert (MULTIPLAYER_MASTER);
     // must have a bare minimum of OP, COUNT and TERMINATOR
     if (num_ubytes < 9) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Invalid call to send_sexp_packet. Not enough data included!");
         return;

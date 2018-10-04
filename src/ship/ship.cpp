@@ -653,7 +653,7 @@ static int ship_obj_list_add (int objnum) {
         if (!(Ship_objs[i].flags & SHIP_OBJ_USED)) break;
     }
     if (i == MAX_SHIP_OBJS) {
-        Error (LOCATION, "Fatal Error: Ran out of ship object nodes\n");
+        fs2::dialog::error (LOCATION, "Fatal Error: Ran out of ship object nodes\n");
         return -1;
     }
 
@@ -736,7 +736,7 @@ static void parse_engine_wash (bool replace) {
 
     if (optional_string ("+nocreate")) {
         if (!replace) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "+nocreate flag used for engine wash in non-modular table");
         }
@@ -756,7 +756,7 @@ static void parse_engine_wash (bool replace) {
                  ewt.name));
         }
         else {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Error:  Engine wash %s already exists.  All engine wash "
                 "names must be unique.",
@@ -1927,7 +1927,7 @@ static int parse_ship (const char* filename, bool replace) {
 
     if (optional_string ("+nocreate")) {
         if (!replace) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "+nocreate flag used for ship in non-modular table");
         }
         create_if_not_found = false;
@@ -1951,7 +1951,7 @@ static int parse_ship (const char* filename, bool replace) {
     if (ship_id != -1) {
         sip = &Ship_info[ship_id];
         if (!replace) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Error:  Ship name %s already exists in %s.  All ship class "
                 "names must be unique.",
@@ -1974,7 +1974,7 @@ static int parse_ship (const char* filename, bool replace) {
 
         // Check if there are too many ship classes
         if (Ship_info.size () >= MAX_SHIP_CLASSES) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Too many ship classes before '%s'; maximum is %d.\n", buf,
                 MAX_SHIP_CLASSES);
@@ -1991,7 +1991,7 @@ static int parse_ship (const char* filename, bool replace) {
     // Use a template for this ship.
     if (optional_string ("+Use Template:")) {
         if (!create_if_not_found) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Both '+nocreate' and '+Use Template:' were specified for "
                 "ship class '%s', ignoring '+Use Template:'\n",
@@ -2007,7 +2007,7 @@ static int parse_ship (const char* filename, bool replace) {
                 strcpy_s (sip->name, buf);
             }
             else {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Unable to find ship template '%s' requested by ship "
                     "class '%s', ignoring template request...",
@@ -2034,7 +2034,7 @@ static int parse_ship_template () {
     stuff_string (buf, F_NAME, SHIP_MULTITEXT_LENGTH);
 
     if (optional_string ("+nocreate")) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "+nocreate flag used on ship template. Ship templates can not be "
             "modified. Ignoring +nocreate.");
@@ -2047,7 +2047,7 @@ static int parse_ship_template () {
 
     if (template_id != -1) {
         sip = &Ship_templates[template_id];
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "WARNING: Ship template %s already exists. All ship template "
             "names must be unique.",
@@ -2078,7 +2078,7 @@ static int parse_ship_template () {
                 strcpy_s (sip->name, buf);
             }
             else {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Unable to find ship template '%s' requested by ship "
                     "template '%s', ignoring template request...",
@@ -2149,7 +2149,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Max particles:")) {
         stuff_int (&temp);
         if (temp < 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Bad value %i, defined as %s particle number (max) in ship "
                 "'%s'.\nValue should be a non-negative integer.\n",
@@ -2168,7 +2168,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Min particles:")) {
         stuff_int (&temp);
         if (temp < 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Bad value %i, defined as %s particle number (min) in ship "
                 "'%s'.\nValue should be a non-negative integer.\n",
@@ -2183,7 +2183,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Max Radius:")) {
         stuff_float (&tempf);
         if (tempf <= 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Bad value %f, defined as %s particle radius (max) in ship "
                 "'%s'.\nValue should be a positive float.\n",
@@ -2196,7 +2196,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Min Radius:")) {
         stuff_float (&tempf);
         if (tempf < 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Bad value %f, defined as %s particle radius (min) in ship "
                 "'%s'.\nValue should be a non-negative float.\n",
@@ -2211,7 +2211,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Max Lifetime:")) {
         stuff_float (&tempf);
         if (tempf <= 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Bad value %f, defined as %s particle lifetime (max) in ship "
                 "'%s'.\nValue should be a positive float.\n",
@@ -2224,7 +2224,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Min Lifetime:")) {
         stuff_float (&tempf);
         if (tempf < 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Bad value %f, defined as %s particle lifetime (min) in ship "
                 "'%s'.\nValue should be a non-negative float.\n",
@@ -2239,7 +2239,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Max Velocity:")) {
         stuff_float (&tempf);
         if (tempf < 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Bad value %f, defined as %s particle velocity (max) in ship "
                 "'%s'.\nValue should be a non-negative float.\n",
@@ -2252,7 +2252,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Min Velocity:")) {
         stuff_float (&tempf);
         if (tempf < 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Bad value %f, defined as %s particle velocity (min) in ship "
                 "'%s'.\nValue should be a non-negative float.\n",
@@ -2268,7 +2268,7 @@ static void parse_ship_particle_effect (
         stuff_float (&tempf);
         if ((tempf >= 0.0f) && (tempf <= 2.0f)) { pe->variance = tempf; }
         else {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Bad value %f, defined as %s particle normal variance in ship "
                 "'%s'.\nValue should be a float from 0.0 to 2.0.\n",
@@ -2319,7 +2319,7 @@ static void parse_allowed_weapons (
 
             // make sure we don't specify more than we have banks for
             if (bank >= max_banks) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "%s bank-specific loadout for %s exceeds permissible "
                     "number of %s banks.  Ignoring the rest...",
@@ -2395,7 +2395,7 @@ static void parse_weapon_bank (
         // okay for a ship to have 0 primary capacities, since it won't be
         // ammo-enabled
         if (is_primary && num_bank_capacities != 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Ship class '%s' has %d primary banks, but %d primary "
                 "capacities... fix this!!",
@@ -2404,7 +2404,7 @@ static void parse_weapon_bank (
 
         // secondaries have no excuse!
         if (!is_primary) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Ship class '%s' has %d secondary banks, but %d secondary "
                 "capacities... fix this!!",
@@ -2512,7 +2512,7 @@ static int parse_ship_values (
         }
 
         if (!found) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Invalid Species %s defined in table entry for ship %s.\n",
                 temp, sip->name);
@@ -2593,7 +2593,7 @@ static int parse_ship_values (
         if (valid)
             strcpy_s (sip->cockpit_pof_file, temp);
         else
-            WarningEx (
+            fs2::dialog::warning_ex (
                 LOCATION, "Ship %s\nCockpit POF file \"%s\" invalid!",
                 sip->name, temp);
     }
@@ -2631,7 +2631,7 @@ static int parse_ship_values (
         stuff_string (display.name, F_NAME, MAX_FILENAME_LEN);
 
         if (display.offset[0] < 0 || display.offset[1] < 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Negative display offsets given for cockpit display on %s, "
                 "skipping entry",
@@ -2640,7 +2640,7 @@ static int parse_ship_values (
         }
 
         if (display.size[0] <= 0 || display.size[1] <= 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Negative or zero display size given for cockpit display on "
                 "%s, skipping entry",
@@ -2667,7 +2667,7 @@ static int parse_ship_values (
         if (valid)
             strcpy_s (sip->pof_file, temp);
         else
-            WarningEx (
+            fs2::dialog::warning_ex (
                 LOCATION, "Ship %s\nPOF file \"%s\" invalid!", sip->name,
                 temp);
     }
@@ -2688,7 +2688,7 @@ static int parse_ship_values (
         if (valid)
             strcpy_s (sip->pof_file_tech, temp);
         else
-            WarningEx (
+            fs2::dialog::warning_ex (
                 LOCATION, "Ship %s\nTechroom POF file \"%s\" invalid!",
                 sip->name, temp);
     }
@@ -2750,7 +2750,7 @@ static int parse_ship_values (
         if (valid)
             strcpy_s (sip->pof_file_hud, temp);
         else
-            WarningEx (
+            fs2::dialog::warning_ex (
                 LOCATION, "Ship \"%s\" POF target file \"%s\" invalid!",
                 sip->name, temp);
     }
@@ -2798,7 +2798,7 @@ static int parse_ship_values (
                 sip->uses_team_colors = true;
             }
             else {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Team name %s is invalid. Teams must be defined in "
                     "colors.tbl.\n",
@@ -2817,7 +2817,7 @@ static int parse_ship_values (
         auto j = lightningtype_match (buf);
         if (j >= 0) { sip->damage_lightning_type = j; }
         else {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Invalid lightning type '%s' specified for ship '%s'", buf,
                 sip->name);
@@ -2934,7 +2934,7 @@ static int parse_ship_values (
         if (optional_string ("+Min Lifetime:")) {
             stuff_float (&sip->debris_min_lifetime);
             if (sip->debris_min_lifetime < 0.0f)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Debris min lifetime on %s '%s' is below 0 and will be "
                     "ignored",
@@ -2943,7 +2943,7 @@ static int parse_ship_values (
         if (optional_string ("+Max Lifetime:")) {
             stuff_float (&sip->debris_max_lifetime);
             if (sip->debris_max_lifetime < 0.0f)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Debris max lifetime on %s '%s' is below 0 and will be "
                     "ignored",
@@ -2952,7 +2952,7 @@ static int parse_ship_values (
         if (optional_string ("+Min Speed:")) {
             stuff_float (&sip->debris_min_speed);
             if (sip->debris_min_speed < 0.0f)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Debris min speed on %s '%s' is below 0 and will be "
                     "ignored",
@@ -2961,7 +2961,7 @@ static int parse_ship_values (
         if (optional_string ("+Max Speed:")) {
             stuff_float (&sip->debris_max_speed);
             if (sip->debris_max_speed < 0.0f)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Debris max speed on %s '%s' is below 0 and will be "
                     "ignored",
@@ -2970,7 +2970,7 @@ static int parse_ship_values (
         if (optional_string ("+Min Rotation speed:")) {
             stuff_float (&sip->debris_min_rotspeed);
             if (sip->debris_min_rotspeed < 0.0f)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Debris min speed on %s '%s' is below 0 and will be "
                     "ignored",
@@ -2979,7 +2979,7 @@ static int parse_ship_values (
         if (optional_string ("+Max Rotation speed:")) {
             stuff_float (&sip->debris_max_rotspeed);
             if (sip->debris_max_rotspeed < 0.0f)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Debris max speed on %s '%s' is below 0 and will be "
                     "ignored",
@@ -2992,7 +2992,7 @@ static int parse_ship_values (
         if (optional_string ("+Min Hitpoints:")) {
             stuff_float (&sip->debris_min_hitpoints);
             if (sip->debris_min_hitpoints < 0.0f)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Debris min hitpoints on %s '%s' is below 0 and will be "
                     "ignored",
@@ -3001,7 +3001,7 @@ static int parse_ship_values (
         if (optional_string ("+Max Hitpoints:")) {
             stuff_float (&sip->debris_max_hitpoints);
             if (sip->debris_max_hitpoints < 0.0f)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Debris max hitpoints on %s '%s' is below 0 and will be "
                     "ignored",
@@ -3010,7 +3010,7 @@ static int parse_ship_values (
         if (optional_string ("+Damage Multiplier:")) {
             stuff_float (&sip->debris_damage_mult);
             if (sip->debris_damage_mult < 0.0f)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Debris damage multiplier on %s '%s' is below 0 and will "
                     "be ignored",
@@ -3020,7 +3020,7 @@ static int parse_ship_values (
             stuff_float (&sip->debris_arc_percent);
             if (sip->debris_arc_percent < 0.0f ||
                 sip->debris_arc_percent > 100.0f) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Lightning Arc Percent on %s '%s' should be between 0 and "
                     "100.0 (read %f). Entry will be ignored.",
@@ -3035,7 +3035,7 @@ static int parse_ship_values (
     // WMC - sanity checking
     if (sip->debris_min_speed > sip->debris_max_speed &&
         sip->debris_max_speed >= 0.0f) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Debris min speed (%f) on %s '%s' is greater than debris max "
             "speed (%f), and will be set to debris max speed.",
@@ -3045,7 +3045,7 @@ static int parse_ship_values (
     }
     if (sip->debris_min_rotspeed > sip->debris_max_rotspeed &&
         sip->debris_max_rotspeed >= 0.0f) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Debris min rotation speed (%f) on %s '%s' is greater than debris "
             "max rotation speed (%f), and will be set to debris max rotation "
@@ -3056,7 +3056,7 @@ static int parse_ship_values (
     }
     if (sip->debris_min_lifetime > sip->debris_max_lifetime &&
         sip->debris_max_lifetime >= 0.0f) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Debris min lifetime (%f) on %s '%s' is greater than debris max "
             "lifetime (%f), and will be set to debris max lifetime.",
@@ -3066,7 +3066,7 @@ static int parse_ship_values (
     }
     if (sip->debris_min_hitpoints > sip->debris_max_hitpoints &&
         sip->debris_max_hitpoints >= 0.0f) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Debris min hitpoints (%f) on %s '%s' is greater than debris max "
             "hitpoints (%f), and will be set to debris max hitpoints.",
@@ -3107,7 +3107,7 @@ static int parse_ship_values (
         // div/0 safety check.
         if ((sip->rotation_time.xyz.x == 0) ||
             (sip->rotation_time.xyz.y == 0) || (sip->rotation_time.xyz.z == 0))
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Rotation time must have non-zero values in each of the three "
                 "variables.\nFix this in %s %s\n",
@@ -3199,7 +3199,7 @@ static int parse_ship_values (
         auto j = warptype_match (buf);
         if (j >= 0) { sip->warpin_type = j; }
         else {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Invalid warpin type '%s' specified for %s '%s'",
                 buf, info_type_name, sip->name);
             sip->warpin_type = WT_DEFAULT;
@@ -3218,7 +3218,7 @@ static int parse_ship_values (
         stuff_float (&t_time);
         sip->warpin_time = fl2i (t_time * 1000.0f);
         if (sip->warpin_time <= 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Warp-in time specified as 0 or less on %s '%s'; value "
                 "ignored",
@@ -3229,7 +3229,7 @@ static int parse_ship_values (
     if (optional_string ("$Warpin decel exp:")) {
         stuff_float (&sip->warpin_decel_exp);
         if (sip->warpin_decel_exp < 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Warp-in deceleration exponent specified as less than 0 on %s "
                 "'%s'; value ignored",
@@ -3241,7 +3241,7 @@ static int parse_ship_values (
     if (optional_string ("$Warpin radius:")) {
         stuff_float (&sip->warpin_radius);
         if (sip->warpin_radius <= 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Warp-in radius specified as 0 or less on %s '%s'; value "
                 "ignored",
@@ -3258,7 +3258,7 @@ static int parse_ship_values (
         auto j = warptype_match (buf);
         if (j >= 0) { sip->warpout_type = j; }
         else {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Invalid warpout type '%s' specified for %s '%s'",
                 buf, info_type_name, sip->name);
             sip->warpout_type = WT_DEFAULT;
@@ -3274,7 +3274,7 @@ static int parse_ship_values (
         if (t_time >= 0)
             sip->warpout_engage_time = fl2i (t_time * 1000.0f);
         else
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Warp-out engage time specified as 0 or less on %s '%s'; "
                 "value ignored",
@@ -3293,7 +3293,7 @@ static int parse_ship_values (
         stuff_float (&t_time);
         sip->warpout_time = fl2i (t_time * 1000.0f);
         if (sip->warpout_time <= 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Warp-out time specified as 0 or less on %s '%s'; value "
                 "ignored",
@@ -3304,7 +3304,7 @@ static int parse_ship_values (
     if (optional_string ("$Warpout accel exp:")) {
         stuff_float (&sip->warpout_accel_exp);
         if (sip->warpout_accel_exp < 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Warp-out acceleration exponent specified as less than 0 on "
                 "%s '%s'; value ignored",
@@ -3316,7 +3316,7 @@ static int parse_ship_values (
     if (optional_string ("$Warpout radius:")) {
         stuff_float (&sip->warpout_radius);
         if (sip->warpout_radius <= 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Warp-out radius specified as 0 or less on %s '%s'; value "
                 "ignored",
@@ -3331,7 +3331,7 @@ static int parse_ship_values (
     if (optional_string ("$Player warpout speed:")) {
         stuff_float (&sip->warpout_player_speed);
         if (sip->warpout_player_speed == 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Player warp-out speed cannot be 0; value ignored.");
         }
     }
@@ -3358,7 +3358,7 @@ static int parse_ship_values (
         stuff_float (&sip->prop_exp_rad_mult);
         if (sip->prop_exp_rad_mult <= 0) {
             // on invalid value return to default setting
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Propagating explosion radius multiplier was set to "
                 "non-positive value.\nDefaulting multiplier to 1.0 on %s "
@@ -3419,7 +3419,7 @@ static int parse_ship_values (
         stuff_float (&sip->vaporize_chance);
         if (sip->vaporize_chance < 0.0f || sip->vaporize_chance > 100.0f) {
             sip->vaporize_chance = 0.0f;
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "$Vaporize Percent Chance should be between 0 and 100.0 (read "
                 "%f). Setting to 0.",
@@ -3512,7 +3512,7 @@ static int parse_ship_values (
             stuff_int (&temp);
 
             if (temp > sip->num_detail_levels)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "+Spread From LOD for %s was %i whereas ship only has %i "
                     "detail levels, ignoring...",
@@ -3546,7 +3546,7 @@ static int parse_ship_values (
             else if (!strcasecmp (str, "none"))
                 ;
             else
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Unrecognized value \"%s\" passed to $Model Point Shield "
                     "Controls, ignoring...",
@@ -3609,7 +3609,7 @@ static int parse_ship_values (
     if (optional_string ("$Hitpoints:")) {
         stuff_float (&sip->max_hull_strength);
         if (sip->max_hull_strength < 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Max hull strength on %s '%s' cannot be less than 0.  "
                 "Defaulting to 100.\n",
@@ -3662,7 +3662,7 @@ static int parse_ship_values (
         sip->armor_type_idx = armor_type_get_idx (buf);
 
         if (sip->armor_type_idx == -1)
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Invalid armor name %s specified for hull in %s '%s'", buf,
                 info_type_name, sip->name);
@@ -3673,7 +3673,7 @@ static int parse_ship_values (
         sip->shield_armor_type_idx = armor_type_get_idx (buf);
 
         if (sip->shield_armor_type_idx == -1)
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Invalid armor name %s specified for shield in %s '%s'", buf,
                 info_type_name, sip->name);
@@ -3731,7 +3731,7 @@ static int parse_ship_values (
                     flag_found = true;
 
                     if (!Ship_flags[idx].in_use)
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Use of '%s' flag for %s '%s' - this flag is no "
                             "longer needed.",
@@ -3751,7 +3751,7 @@ static int parse_ship_values (
             }
 
             if (!flag_found && (ship_type_index < 0))
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "Bogus string in ship flags: %s\n",
                     ship_strings[i]);
         }
@@ -3765,7 +3765,7 @@ static int parse_ship_values (
 
     // Goober5000 - ensure number of banks checks out
     if (sip->num_primary_banks > MAX_SHIP_PRIMARY_BANKS) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "%s '%s' has too many primary banks (%d).  Maximum for ships is "
             "currently %d.\n",
@@ -3829,7 +3829,7 @@ static int parse_ship_values (
         }
 
         if (!(sip->afterburner_fuel_capacity)) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "%s '%s' has an afterburner but has no afterburner fuel. "
                 "Setting fuel to 1",
@@ -3869,7 +3869,7 @@ static int parse_ship_values (
         }
 
         if (trails_warning)
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "%s %s entry has $Trails field specified, but no properties "
                 "given.",
@@ -3880,14 +3880,14 @@ static int parse_ship_values (
         stuff_string (buf, F_NAME, SHIP_MULTITEXT_LENGTH);
         int res = weapon_info_lookup (buf);
         if (res < 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Could not find weapon type '%s' to use as countermeasure on "
                 "%s '%s'",
                 buf, info_type_name, sip->name);
         }
         else if (Weapon_info[res].wi_flags[Weapon::Info_Flags::Beam]) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Attempt made to set a beam weapon as a countermeasure on %s "
                 "'%s'",
@@ -3995,7 +3995,7 @@ static int parse_ship_values (
             model_icon_angles.h = PI_2;
         }
         else {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Unrecognized value \"%s\" passed to $Model Icon Direction, "
                 "ignoring...",
@@ -4028,14 +4028,14 @@ static int parse_ship_values (
     // check for inconsistencies
     if ((sip->bii_index_wing_with_cargo >= 0) &&
         (sip->bii_index_wing < 0 || sip->bii_index_ship_with_cargo < 0))
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "%s '%s' has a wing-with-cargo briefing icon but is missing a "
             "wing briefing icon or a ship-with-cargo briefing icon!",
             info_type_name, sip->name);
     if ((sip->bii_index_wing_with_cargo < 0) && (sip->bii_index_wing >= 0) &&
         (sip->bii_index_ship_with_cargo >= 0))
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "%s '%s' has both a wing briefing icon and a ship-with-cargo "
             "briefing icon but does not have a wing-with-cargo briefing icon!",
@@ -4113,7 +4113,7 @@ static int parse_ship_values (
 
     if (optional_string ("$Thruster01 Length factor:")) {
         stuff_float (&sip->thruster02_glow_len_factor);
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Deprecated spelling: \"$Thruster01 Length factor:\".  Use "
             "\"$Thruster02 Length factor:\" instead.");
@@ -4185,7 +4185,7 @@ static int parse_ship_values (
         else if (optional_string ("$Afterburner Particle Bitmap:"))
             afterburner = true;
         else
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "formatting error in the thruster's particle section for %s "
                 "'%s'\n",
@@ -4223,7 +4223,7 @@ static int parse_ship_values (
         sip->flags.set (Ship::Info_Flags::Stealth);
     }
     else if (optional_string ("$Stealth")) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "%s '%s' is missing the colon after \"$Stealth\". Note that you "
             "may also use the ship flag \"stealth\".",
@@ -4234,7 +4234,7 @@ static int parse_ship_values (
     if (optional_string ("$max decals:")) {
         int bogus;
         stuff_int (&bogus);
-        WarningEx (
+        fs2::dialog::warning_ex (
             LOCATION,
             "The decal system has been deactivated in FSO builds. Entries "
             "will be discarded.\n");
@@ -4255,7 +4255,7 @@ static int parse_ship_values (
 
         // this means you've reached the max # of contrails for a ship
         if (sip->ct_count >= MAX_SHIP_CONTRAILS) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "%s '%s' has more contrails than the max of %d",
                 info_type_name, sip->name, MAX_SHIP_CONTRAILS);
             break;
@@ -4308,7 +4308,7 @@ static int parse_ship_values (
                 mtp = &sip->maneuvering[sip->num_maneuvering++];
             }
             else {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Too many maneuvering thrusters on %s '%s'; maximum is %d",
                     info_type_name, sip->name, MAX_MAN_THRUSTERS);
@@ -4316,7 +4316,7 @@ static int parse_ship_values (
         }
         else {
             mtp = &manwich;
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Invalid index (%d) specified for maneuvering thruster on %s "
                 "'%s'",
@@ -4371,7 +4371,7 @@ static int parse_ship_values (
             size_t seppos;
             seppos = token->find_first_of (':');
             if (seppos == std::string::npos) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Couldn't find ':' seperator in Glowpoint override for "
                     "ship %s ignoring token",
@@ -4383,7 +4383,7 @@ static int parse_ship_values (
             std::vector< glow_point_bank_override >::iterator gpo =
                 get_glowpoint_bank_override_by_name (name.data ());
             if (gpo == glowpoint_bank_overrides.end ()) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Couldn't find preset %s in glowpoints.tbl when parsing "
                     "ship: %s",
@@ -4458,12 +4458,12 @@ static int parse_ship_values (
         iff_data[1] = iff_lookup (iff_2);
 
         if (iff_data[0] == -1)
-            WarningEx (
+            fs2::dialog::warning_ex (
                 LOCATION, "%s '%s'\nIFF colour seen by \"%s\" invalid!",
                 info_type_name, sip->name, iff_1);
 
         if (iff_data[1] == -1)
-            WarningEx (
+            fs2::dialog::warning_ex (
                 LOCATION, "%s '%s'\nIFF colour when IFF is \"%s\" invalid!",
                 info_type_name, sip->name, iff_2);
 
@@ -4509,7 +4509,7 @@ static int parse_ship_values (
                 }
             }
             if (i == num_groups) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Unidentified priority group '%s' set for %s '%s'\n",
                     target_group_strings[j].c_str (), info_type_name,
@@ -4591,7 +4591,7 @@ static int parse_ship_values (
 
             if (sp == NULL) {
                 if (sip->n_subsystems + n_subsystems >= MAX_MODEL_SUBSYSTEMS) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Number of subsystems for %s '%s' (%d) exceeds max of "
                         "%d; only the first %d will be used",
@@ -4673,7 +4673,7 @@ static int parse_ship_values (
                     }
                 }
                 else {
-                    Error (
+                    fs2::dialog::error (
                         LOCATION,
                         "Malformed $Subsystem entry '%s' in %s '%s'.\n\n"
                         "Specify a turning rate or remove the trailing comma.",
@@ -4696,7 +4696,7 @@ static int parse_ship_values (
                 sp->armor_type_idx = armor_type_get_idx (buf);
 
                 if (sp->armor_type_idx == -1)
-                    WarningEx (
+                    fs2::dialog::warning_ex (
                         LOCATION,
                         "%s '%s', subsystem %s\nInvalid armor type %s!",
                         info_type_name, sip->name, sp->subobj_name, buf);
@@ -4718,7 +4718,7 @@ static int parse_ship_values (
                 sp->engine_wash_pointer = get_engine_wash_pointer (name_tmp);
 
                 if (sp->engine_wash_pointer == NULL)
-                    WarningEx (
+                    fs2::dialog::warning_ex (
                         LOCATION,
                         "Invalid engine wash name %s specified for subsystem "
                         "%s in %s '%s'",
@@ -4802,7 +4802,7 @@ static int parse_ship_values (
                         }
                     }
                     if (j == num_groups) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Unidentified target priority '%s' set "
                             "for\nsubsystem '%s' in %s '%s'.",
@@ -4841,7 +4841,7 @@ static int parse_ship_values (
                         }
                     }
                     else {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "RoF multiplier not set for subsystem\n'%s' in %s "
                             "'%s'.",
@@ -4863,7 +4863,7 @@ static int parse_ship_values (
 
                 if (!errors.empty ()) {
                     for (auto const& error : errors) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION, "Bogus string in subsystem flags: %s\n",
                             error.c_str ());
                     }
@@ -4879,7 +4879,7 @@ static int parse_ship_values (
                 sp->flags.set (Model::Subsystem_Flags::Turret_alt_math);
 
             if (optional_string ("+non-targetable")) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Grammar error in table file.  Please change "
                     "\"+non-targetable\" to \"+untargetable\".");
@@ -4909,7 +4909,7 @@ static int parse_ship_values (
 
             if ((sp->flags[Model::Subsystem_Flags::Turret_fixed_fp]) &&
                 !(sp->flags[Model::Subsystem_Flags::Use_multiple_guns])) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "\"fixed firingpoints\" flag used without \"use multiple "
                     "guns\" flag on a subsystem on %s '%s'.\n\"use multiple "
@@ -4921,7 +4921,7 @@ static int parse_ship_values (
             if ((sp->flags[Model::Subsystem_Flags::Autorepair_if_disabled]) &&
                 (sp->flags
                      [Model::Subsystem_Flags::No_autorepair_if_disabled])) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "\"autorepair if disabled\" flag used with \"don't "
                     "autorepair if disabled\" flag on a subsystem on %s "
@@ -5238,7 +5238,7 @@ static void parse_ship_type () {
     }
 
     if (ship_type != NULL) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Bad ship type name in objecttypes.tbl\n\nUsed ship type is "
             "redirected to another ship type.\nReplace \"%s\" with \"%s\"\nin "
@@ -5279,7 +5279,7 @@ static void parse_ship_type () {
                 }
             }
             if (i == num_groups) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Unidentified priority group '%s' set for objecttype "
                     "'%s'\n",
@@ -5444,7 +5444,7 @@ static void parse_ship_type () {
         stuff_float (&stp->vaporize_chance);
         if (stp->vaporize_chance < 0.0f || stp->vaporize_chance > 100.0f) {
             stp->vaporize_chance = 0.0f;
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "$Vaporize Percent Chance should be between 0 and 100.0 (read "
                 "%f). Setting to 0.",
@@ -5629,7 +5629,7 @@ static void ship_parse_post_cleanup () {
             // be friendly; ensure ballistic flags check out
             if (pbank_capacity_specified) {
                 if (!ballistic_possible_for_this_ship (&(*sip))) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Pbank capacity specified for "
                         "non-ballistic-primary-enabled ship %s.\nResetting "
@@ -5644,7 +5644,7 @@ static void ship_parse_post_cleanup () {
             }
             else {
                 if (ballistic_possible_for_this_ship (&(*sip))) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Pbank capacity not specified for "
                         "ballistic-primary-enabled ship %s.\nDefaulting to "
@@ -5665,7 +5665,7 @@ static void ship_parse_post_cleanup () {
             (sip->flags[Ship::Info_Flags::Afterburner]) &&
             !(sip->flags[Ship::Info_Flags::Generate_hud_icon]) &&
             (sip->flags[Ship::Info_Flags::Player_ship])) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Compatibility warning:\nNo shield icon specified for '%s' "
                 "but the \"generate icon\" flag is not specified.\nEnabling "
@@ -5681,7 +5681,7 @@ static void ship_parse_post_cleanup () {
 
             if (end_string_at_first_hash_symbol (name_tmp)) {
                 if (ship_info_lookup (name_tmp) < 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Ship %s is a copy, but base ship %s couldn't be "
                         "found.",
@@ -5690,7 +5690,7 @@ static void ship_parse_post_cleanup () {
                 }
             }
             else {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Ship %s is defined as a copy (ship flag 'ship copy' is "
                     "set), but is not named like one (no '#').\n",
@@ -5705,7 +5705,7 @@ static void ship_parse_post_cleanup () {
         // collideshipship.cpp:ship_ship_check_collision()
         if (!(sip->flags[Ship::Info_Flags::No_collide]) &&
             (vm_vec_mag_squared (&sip->max_rotvel) * .04) >= (PI * PI / 4)) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "$Rotation time: too low; this will disable rotational "
                 "collisions. All three variables should be >= 1.39.\nFix this "
@@ -5761,7 +5761,7 @@ static void ship_parse_post_cleanup () {
                           Ai_tp_list[i].ship_type.size () ||
                           Ai_tp_list[i].weapon_class.size ())) {
                         // had nothing - time to issue a warning
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Target priority group '%s' had no targeting "
                             "rules issued for it.\n",
@@ -6051,7 +6051,7 @@ void physics_ship_init (object* objp) {
         float amass = 4.65f * (float)pow (vmass, (2.0f / 3.0f));
 
         nprintf (("Physics", "pi->mass==0.0f. setting to %f\n", amass));
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "%s (%s) has no mass! setting to %f", sinfo->name,
             sinfo->pof_file, amass);
         pm->mass = amass;
@@ -6066,7 +6066,7 @@ void physics_ship_init (object* objp) {
         nprintf (
             ("Physics", "pm->moment_of_inertia is invalid for %s!\n",
              pm->filename));
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "%s (%s) has a null moment of inertia!", sinfo->name,
             sinfo->pof_file);
 
@@ -6653,10 +6653,12 @@ static void ship_set (int ship_index, int objnum, int ship_type) {
             Num_ship_subsystems_allocated, Num_ship_subsystems,
             shipp->ship_name);
 
-        if (Fred_running)
-            os::dialogs::Message (os::dialogs::MESSAGEBOX_ERROR, err_msg);
+        if (Fred_running) {
+            using namespace fs2::dialog;
+            message (dialog_type::error, err_msg);
+        }
         else
-            Error (LOCATION, "%s", err_msg);
+            fs2::dialog::error (LOCATION, "%s", err_msg);
     }
 
     ets_init_ship (objp); // init ship fields that are used for the ETS
@@ -7058,7 +7060,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
     for (i = 0; i < sinfo->n_subsystems; i++) {
         model_system = &(sinfo->subsystems[i]);
         if (model_system->model_num < 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Invalid subobj_num or model_num in subsystem '%s' on ship "
                 "type '%s'.\nNot linking into ship!\n\n(This warning means "
@@ -7252,7 +7254,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
                  ->flags[Model::Subsystem_Flags::Turret_salvo]) &&
             (ship_system->system_info
                  ->flags[Model::Subsystem_Flags::Turret_fixed_fp])) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "\"salvo mode\" flag used with \"fixed firingpoints\" "
                 "flag\nsubsystem '%s' on ship type '%s'.\n\"salvo mode\" flag "
@@ -7265,7 +7267,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
         if ((ship_system->system_info
                  ->flags[Model::Subsystem_Flags::Turret_salvo]) &&
             (model_system->turret_num_firing_points < 2)) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "\"salvo mode\" flag used with turret which has less than two "
                 "firingpoints\nsubsystem '%s' on ship type '%s'.\n\"salvo "
@@ -7278,7 +7280,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
         if ((ship_system->system_info
                  ->flags[Model::Subsystem_Flags::Turret_fixed_fp]) &&
             (model_system->turret_num_firing_points < 2)) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "\"fixed firingpoints\" flag used with turret which has less "
                 "than two firingpoints\nsubsystem '%s' on ship type "
@@ -7292,7 +7294,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
                  ->flags[Model::Subsystem_Flags::Turret_salvo]) &&
             (ship_system->system_info
                  ->flags[Model::Subsystem_Flags::Use_multiple_guns])) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "\"salvo mode\" flag used with \"use multiple guns\" "
                 "flag\nsubsystem '%s' on ship type '%s'.\n\"use multiple "
@@ -7306,7 +7308,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
                  ->flags[Model::Subsystem_Flags::Turret_fixed_fp]) &&
             !(ship_system->system_info
                   ->flags[Model::Subsystem_Flags::Use_multiple_guns])) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "\"fixed firingpoints\" flag used without \"use multiple "
                 "guns\" flag\nsubsystem '%s' on ship type '%s'.\n\"use "
@@ -7353,7 +7355,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
                    ->flags[Model::Subsystem_Flags::Turret_salvo]) &&
              !(ship_system->system_info
                    ->flags[Model::Subsystem_Flags::Use_multiple_guns]))) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "\"share fire direction\" flag used with turret which does "
                 "not have the \"salvo mode\" or \"use multiple guns\" flag "
@@ -7455,7 +7457,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
                     sinfo->subsystems[i].triggers[j].subtype = idx;
                 }
                 else {
-                    WarningEx (
+                    fs2::dialog::warning_ex (
                         LOCATION,
                         "Could not find subobject %s in ship class %s. "
                         "Animation triggers will not work correctly.\n",
@@ -7763,7 +7765,7 @@ static void ship_add_cockpit_display (
         new_display.background = bm_load (display->bg_filename);
 
         if (new_display.background < 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Unable to load background %s for cockpit display %s",
                 display->bg_filename, display->name);
@@ -7775,7 +7777,7 @@ static void ship_add_cockpit_display (
         new_display.foreground = bm_load (display->fg_filename);
 
         if (new_display.foreground < 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Unable to load background %s for cockpit display %s",
                 display->fg_filename, display->name);
@@ -9006,7 +9008,7 @@ static int thruster_glow_anim_load (generic_anim* ga) {
 
     ga->first_frame = bm_load (ga->filename);
     if (ga->first_frame < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Couldn't load thruster glow animation '%s'\nPrimary glow type "
             "effect does not accept .EFF or .ANI effects",
@@ -9913,7 +9915,7 @@ static void ship_set_default_weapons (ship* shipp, ship_info* sip) {
     // Primary banks
     if (pm->n_guns > sip->num_primary_banks) {
         Assert (pm->n_guns <= MAX_SHIP_PRIMARY_BANKS);
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "There are %d primary banks in the model file,\nbut only %d "
             "primary banks specified for %s.\nThis must be fixed, as it will "
@@ -9939,7 +9941,7 @@ static void ship_set_default_weapons (ship* shipp, ship_info* sip) {
         sip->num_primary_banks = pm->n_guns;
     }
     else if (pm->n_guns < sip->num_primary_banks) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "There are %d primary banks specified for %s\nbut only %d primary "
             "banks in the model\n",
@@ -9950,7 +9952,7 @@ static void ship_set_default_weapons (ship* shipp, ship_info* sip) {
     // Secondary banks
     if (pm->n_missiles > sip->num_secondary_banks) {
         Assert (pm->n_missiles <= MAX_SHIP_SECONDARY_BANKS);
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "There are %d secondary banks in the model file,\nbut only %d "
             "secondary banks specified for %s.\nThis must be fixed, as it "
@@ -9975,7 +9977,7 @@ static void ship_set_default_weapons (ship* shipp, ship_info* sip) {
         sip->num_secondary_banks = pm->n_missiles;
     }
     else if (pm->n_missiles < sip->num_secondary_banks) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "There are %d secondary banks specified for %s,\n but only %d "
             "secondary banks in the model.\n",
@@ -10230,7 +10232,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
     }
     else {
         if (t >= SHIPS_LIMIT) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 XSTR (
                     "There is a limit of %d ships in the mission at once.  "
@@ -10288,7 +10290,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
     if (sip->num_detail_levels != pm->n_detail_levels) {
         if (!Is_standalone) {
             // just log to file for standalone servers
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "For ship '%s', detail level\nmismatch. Table has %d,\nPOF "
                 "has %d.",
@@ -10413,7 +10415,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
                     }
 
                     if (ss == END_OF_LIST (&Ships[n].subsys_list))
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Couldn't fix up turret indices in spline "
                             "path\n\nModel: %s\nPath: %s\nVertex: %d\nTurret "
@@ -10502,7 +10504,7 @@ static void ship_model_change (int n, int ship_type) {
     if (sip->num_detail_levels != pm->n_detail_levels) {
         if (!Is_standalone) {
             // just log to file for standalone servers
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "For ship '%s', detail level\nmismatch. Table has %d,\nPOF "
                 "has %d.",
@@ -10732,7 +10734,7 @@ void change_ship_type (int n, int ship_type, int by_sexp) {
     ss = GET_FIRST (&sp->subsys_list);
     while (ss != END_OF_LIST (&sp->subsys_list)) {
         if (num_saved_subsystems == sip_orig->n_subsystems) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Subsystem mismatch while changing ship class from '%s' to "
                 "'%s'!",
@@ -14044,7 +14046,7 @@ int ship_info_lookup (const char* token) {
         if (strlen (token) > NAME_LENGTH - 3) {
             // If the below sprintf would exceed NAME_LENGTH (taking \0
             // terminator into account), give a warning and return.
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Token [%s] is too long to be parenthesized by "
                 "ship_info_lookup()!\n",
@@ -14066,7 +14068,7 @@ int ship_info_lookup (const char* token) {
     }
     // oops
     else {
-        Warning (LOCATION, "Unrecognized hash symbol.  Contact a programmer!");
+        fs2::dialog::warning (LOCATION, "Unrecognized hash symbol.  Contact a programmer!");
         return -1;
     }
 
@@ -14206,7 +14208,9 @@ void ship_model_start (object* objp) {
         case SUBSYSTEM_GAS_COLLECT:
         case SUBSYSTEM_ACTIVATION:
         case SUBSYSTEM_TURRET: break;
-        default: Error (LOCATION, "Illegal subsystem type.\n");
+        default:
+            fs2::dialog::error (LOCATION, "Illegal subsystem type.\n");
+            break;
         }
 
         if (psub->subobj_num >= 0) {
@@ -14273,7 +14277,9 @@ void ship_model_update_instance (object* objp) {
         case SUBSYSTEM_GAS_COLLECT:
         case SUBSYSTEM_ACTIVATION:
         case SUBSYSTEM_TURRET: break;
-        default: Error (LOCATION, "Illegal subsystem type.\n");
+        default:
+            fs2::dialog::error (LOCATION, "Illegal subsystem type.\n");
+            break;
         }
 
         if (psub->subobj_num >= 0) {
@@ -14325,7 +14331,9 @@ int ship_find_num_crewpoints (object* objp) {
         case SUBSYSTEM_ENGINE:
         case SUBSYSTEM_GAS_COLLECT:
         case SUBSYSTEM_ACTIVATION: break;
-        default: Error (LOCATION, "Illegal subsystem type.\n");
+        default:
+            fs2::dialog::error (LOCATION, "Illegal subsystem type.\n");
+            break;
         }
     }
     return n;
@@ -14357,7 +14365,9 @@ int ship_find_num_turrets (object* objp) {
         case SUBSYSTEM_ENGINE:
         case SUBSYSTEM_GAS_COLLECT:
         case SUBSYSTEM_ACTIVATION: break;
-        default: Error (LOCATION, "Illegal subsystem type.\n");
+        default:
+            fs2::dialog::error (LOCATION, "Illegal subsystem type.\n");
+            break;
         }
     }
     return n;
@@ -14556,7 +14566,7 @@ ship_get_indexed_subsys (ship* sp, int index, vec3d* attacker_pos) {
 
         // maybe we shouldn't get here, but with possible floating point
         // rounding, I suppose we could
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Unable to get a nonspecific subsystem of index %d on ship %s!",
             index, sp->ship_name);
@@ -14572,7 +14582,7 @@ ship_get_indexed_subsys (ship* sp, int index, vec3d* attacker_pos) {
     }
 
     // get allender -- turret ref didn't fixup correctly!!!!
-    Warning (
+    fs2::dialog::warning (
         LOCATION,
         "In ship_get_indexed_subsys, unable to get a subsystem of index %d on "
         "ship %s, due to a broken subsystem reference!  This is most likely "
@@ -17736,7 +17746,7 @@ void ship_page_in () {
     // pre-allocate the subsystems, this really only needs to happen for ships
     // which don't exist yet (ie, ships NOT in Ships[])
     if (!ship_allocate_subsystems (num_subsystems_needed, true)) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Attempt to page in new subsystems subsystems failed, which "
             "shouldn't be possible anymore. Currently allocated %d subsystems "
@@ -17826,7 +17836,7 @@ void ship_page_in () {
                             (sip->subsystems[j].model_num >= 0)
                                 ? model_get (sip->subsystems[j].model_num)
                                 : NULL;
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "After ship_copy_subsystem_fixup, ship '%s' does "
                             "not have subsystem '%s' linked into the model "
@@ -17856,7 +17866,7 @@ void ship_page_in () {
                             (sip->subsystems[j].model_num >= 0)
                                 ? model_get (sip->subsystems[j].model_num)
                                 : NULL;
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Without ship_copy_subsystem_fixup, ship '%s' "
                             "does not have subsystem '%s' linked into the "
@@ -18220,7 +18230,7 @@ int is_support_allowed (object* objp, bool do_simple_check) {
             0) {
             static bool warned_about_rearm_dockpoint = false;
             if (!warned_about_rearm_dockpoint) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Support not allowed for %s because its model lacks a "
                     "rearming dockpoint!",
@@ -19066,7 +19076,7 @@ static int ship_class_get_priority (int ship_class) {
     else if (sip->flags[Info_Flags::Navbuoy])
         return 16;
 
-    Warning (LOCATION, "Unknown priority for ship class '%s'!", sip->name);
+    fs2::dialog::warning (LOCATION, "Unknown priority for ship class '%s'!", sip->name);
     return 17 + ship_class;
 }
 
@@ -19112,7 +19122,7 @@ int damage_type_add (char* name) {
     strncpy (dts.name, name, NAME_LENGTH - 1);
 
     if (strlen (name) > NAME_LENGTH - 1) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Damage type name '%s' is too long and has been truncated to '%s'",
             name, dts.name);
@@ -19423,7 +19433,7 @@ float ArmorType::GetDamage (
             case AT_TYPE_SET: damage_applied = curr_arg; break;
             case AT_TYPE_STORE:
                 if (using_storage || using_constant) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Cannot use +Stored Value: or +Constant: with "
                         "+Store:, that would be bad. Skipping calculation.");
@@ -19433,7 +19443,7 @@ float ArmorType::GetDamage (
                     // Nuke: idiotproof this, no segfault 4 u
                     if ((storage_idx < 0) ||
                         (storage_idx >= AT_NUM_STORAGE_LOCATIONS)) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "+Value: for +Store: calculation out of range. "
                             "Should be between 0 and %i. Read: %i, Skipping "
@@ -19448,7 +19458,7 @@ float ArmorType::GetDamage (
                 break;
             case AT_TYPE_LOAD:
                 if (using_storage || using_constant) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Cannot use +Stored Value: or +Constant: with +Load:, "
                         "that would be bad. Skipping calculation.");
@@ -19458,7 +19468,7 @@ float ArmorType::GetDamage (
                     // Nuke: idiotproof this, no segfault 4 u
                     if ((storage_idx < 0) ||
                         (storage_idx >= AT_NUM_STORAGE_LOCATIONS)) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "+Value: for +Load: calculation out of range. "
                             "Should be between 0 and %i. Read: %i, Skipping "
@@ -19562,7 +19572,7 @@ float ArmorType::GetPiercingLimit (int damage_type_idx) {
 ArmorType::ArmorType (const char* in_name) {
     auto len = strlen (in_name);
     if (len >= NAME_LENGTH) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Armor name %s is " SIZE_T_ARG
             " characters too long, and will be truncated",
@@ -19599,7 +19609,7 @@ void ArmorType::ParseData () {
 
             // Make sure we have a valid calculation type
             if (calc_type == -1) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Armor '%s': Armor calculation type '%s' is invalid, and "
                     "has been skipped",
@@ -19624,7 +19634,7 @@ void ArmorType::ParseData () {
                     // Nuke: idiot-proof
                     if ((temp_int < 0) ||
                         (temp_int >= AT_NUM_STORAGE_LOCATIONS)) {
-                        Error (
+                        fs2::dialog::error (
                             LOCATION,
                             "+Stored Value: is out of range. Should be "
                             "between 0 and %i. Read: %i, Using value 0.",
@@ -19644,7 +19654,7 @@ void ArmorType::ParseData () {
                     temp_int = armor_type_constants_get (buf);
                     // Nuke: idiot proof some more
                     if (temp_int == AT_CONSTANT_BAD_VAL) {
-                        Error (
+                        fs2::dialog::error (
                             LOCATION,
                             "Invalid +Constant: name, '%s'. Using value 0.",
                             buf);
@@ -19705,7 +19715,7 @@ void ArmorType::ParseData () {
             stuff_string (buf, F_NAME, NAME_LENGTH);
             temp_int = difficulty_scale_type_get (buf);
             if (temp_int == ADT_DIFF_SCALE_BAD_VAL) {
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "Invalid +Difficulty Scale Type: name: '%s'. Reverting to "
                     "default behavior.",
@@ -19721,7 +19731,7 @@ void ArmorType::ParseData () {
         // If we have calculations in this damage type, add it
         if (!no_content) {
             if (adt.Calculations.size () != adt.Arguments.size ()) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Armor '%s', damage type " SIZE_T_ARG
                     ": Armor has a different number of calculation types than "
@@ -19852,7 +19862,7 @@ void parse_ai_target_priorities () {
                 }
             }
             if (j == MAX_WEAPON_TYPES) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Unidentified weapon class '%s' set for target priority "
                     "group '%s'\n",
@@ -19874,7 +19884,7 @@ void parse_ai_target_priorities () {
                 }
             }
             if (j == num_ai_tgt_obj_flags) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Unidentified object flag '%s' set for target priority "
                     "group '%s'\n",
@@ -19896,7 +19906,7 @@ void parse_ai_target_priorities () {
                 }
             }
             if (j == num_ai_tgt_ship_flags) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Unidentified ship class flag '%s' set for target "
                     "priority group '%s'\n",
@@ -19919,7 +19929,7 @@ void parse_ai_target_priorities () {
                 }
             }
             if (j == num_ai_tgt_weapon_info_flags) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Unidentified weapon class flag '%s' set for target "
                     "priority group '%s'\n",

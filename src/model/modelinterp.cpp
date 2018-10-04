@@ -1275,7 +1275,7 @@ void submodel_get_two_random_points (
     // two) to be found
     if (nv <= 0) {
         polymodel* pm = model_get (model_num);
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Model %d ('%s') must have at least one point from "
             "submodel_get_points_internal!",
@@ -1294,7 +1294,7 @@ void submodel_get_two_random_points (
         static int submodel_get_two_random_points_warned = false;
         if (!submodel_get_two_random_points_warned) {
             polymodel* pm = model_get (model_num);
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "RAND_MAX is only %d, but submodel %d for model %s has %d "
                 "vertices!  Explosions will not propagate through the entire "
@@ -1344,7 +1344,7 @@ void submodel_get_two_random_points_better (
         // because of the less immediate expectation for at least one point
         // (preferably two) to be found
         if (nv <= 0) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Model %d ('%s') must have at least one point from "
                 "submodel_get_points_internal!",
@@ -1361,7 +1361,7 @@ void submodel_get_two_random_points_better (
         if (RAND_MAX < nv) {
             static int submodel_get_two_random_points_warned = false;
             if (!submodel_get_two_random_points_warned) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "RAND_MAX is only %d, but submodel %d for model %s has %d "
                     "vertices!  Explosions will not propagate through the "
@@ -2110,7 +2110,7 @@ void interp_pack_vertex_buffers (polymodel* pm, int mn) {
     }
 
     if (!rval) {
-        Error (
+        fs2::dialog::error (
             LOCATION, "Unable to pack vertex buffer for '%s'\n", pm->filename);
     }
 }
@@ -2225,7 +2225,7 @@ void interp_configure_vertex_buffers (polymodel* pm, int mn) {
         // for the moment we can only support INT_MAX worth of verts per index
         // buffer
         if (total_verts > INT_MAX) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Unable to generate vertex buffer data because model '%s' "
                 "with %i verts is over the maximum of %i verts!\n",
@@ -2262,7 +2262,7 @@ void interp_configure_vertex_buffers (polymodel* pm, int mn) {
     poly_list* model_list = new (std::nothrow) poly_list;
 
     if (!model_list) {
-        Error (LOCATION, "Unable to allocate memory for poly_list!\n");
+        fs2::dialog::error (LOCATION, "Unable to allocate memory for poly_list!\n");
     }
 
     model->buffer.model_list = model_list;
@@ -2337,7 +2337,7 @@ void interp_configure_vertex_buffers (polymodel* pm, int mn) {
         model_interp_config_buffer (&pm->vert_source, &model->buffer, false);
 
     if (!rval) {
-        Error (
+        fs2::dialog::error (
             LOCATION, "Unable to configure vertex buffer for '%s'\n",
             pm->filename);
     }

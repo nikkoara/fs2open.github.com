@@ -137,7 +137,7 @@ void FSLight2GLLight (light* FSLight, gr_light* GLLight) {
     case Light_Type::Cone: break;
 
     default:
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Unknown light type in FSLight2GLLight. Expected was 0, 1, 2 or "
             "3, we got %i",

@@ -4588,7 +4588,7 @@ int verify_sexp_tree (int node) {
 
     if ((Sexp_nodes[node].type == SEXP_NOT_USED) ||
         (Sexp_nodes[node].first == node) || (Sexp_nodes[node].rest == node)) {
-        Error (LOCATION, "Sexp node is corrupt");
+        fs2::dialog::error (LOCATION, "Sexp node is corrupt");
         return -1;
     }
 
@@ -6227,7 +6227,8 @@ int check_sexp_syntax (
             }
             break;
 
-        default: Error (LOCATION, "Unhandled argument format");
+        default:
+            fs2::dialog::error (LOCATION, "Unhandled argument format");
         }
 
         node = Sexp_nodes[node].rest;
@@ -6353,7 +6354,7 @@ int get_sexp () {
     while (*Mp != ')') {
         // end of string or end of file
         if (*Mp == '\0') {
-            Error (LOCATION, "Unexpected end of sexp!");
+            fs2::dialog::error (LOCATION, "Unexpected end of sexp!");
             return -1;
         }
 
@@ -6368,7 +6369,7 @@ int get_sexp () {
             auto len = strcspn (Mp + 1, "\"");
             // was closing quote not found?
             if (*(Mp + 1 + len) != '\"') {
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "Unexpected end of quoted string embedded in sexp!");
                 return -1;
@@ -6382,7 +6383,7 @@ int get_sexp () {
                 // reduce length by 1 for end \"
                 auto length = len - 1;
                 if (length >= 2 * TOKEN_LENGTH + 2) {
-                    Error (
+                    fs2::dialog::error (
                         LOCATION,
                         "Variable token %s is too long. Needs to be %d "
                         "characters or shorter.",
@@ -6402,7 +6403,7 @@ int get_sexp () {
             else {
                 // token is too long?
                 if (len >= TOKEN_LENGTH) {
-                    Error (
+                    fs2::dialog::error (
                         LOCATION,
                         "Token %s is too long. Needs to be %d characters or "
                         "shorter.",
@@ -6433,14 +6434,14 @@ int get_sexp () {
 
                 // end of string or end of file?
                 if (*Mp == '\0') {
-                    Error (LOCATION, "Unexpected end of sexp!");
+                    fs2::dialog::error (LOCATION, "Unexpected end of sexp!");
                     return -1;
                 }
 
                 // token is too long?
                 if (len >= TOKEN_LENGTH - 1) {
                     token[TOKEN_LENGTH - 1] = '\0';
-                    Error (
+                    fs2::dialog::error (
                         LOCATION,
                         "Token %s is too long. Needs to be %d characters or "
                         "shorter.",
@@ -6720,7 +6721,7 @@ int stuff_sexp_variable_list () {
         }
         else {
             type = SEXP_VARIABLE_UNKNOWN;
-            Error (
+            fs2::dialog::error (
                 LOCATION, "SEXP variable '%s' is an unknown type!", var_name);
         }
 
@@ -6771,7 +6772,7 @@ int stuff_sexp_variable_list () {
             ignore_white_space ();
 
             // notify of error
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Error parsing sexp variables - unknown persistence type "
                 "encountered.  You can continue from here without trouble.");
@@ -7237,7 +7238,7 @@ int div_sexps (int n) {
             int div = eval_sexp (Sexp_nodes[n].rest);
             n = Sexp_nodes[n].rest;
             if (div == 0) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Division by zero in sexp. Please check all uses of the / "
                     "operator for possible causes.\n");
@@ -7336,7 +7337,7 @@ int pow_sexp (int node) {
     // this is disallowed in FRED, but can still happen through careless
     // arithmetic
     if (num_2 < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Power function pow(%d, %d) attempted to raise to a negative "
             "power!",
@@ -7746,7 +7747,7 @@ int sexp_number_compare (int n, int op) {
             break;
 
         default:
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Unhandled comparison case!  Operator = %d", op);
             break;
         }
@@ -7935,7 +7936,7 @@ void sexp_get_object_ship_wing_point_team (
             else {
                 oswpt->shipp = &Ships[wingp->ship_index[0]];
                 oswpt->objp = &Objects[oswpt->shipp->objnum];
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Substituting ship '%s' at index 0 for nonexistent wing "
                     "leader at index %d!",
@@ -8514,7 +8515,7 @@ int sexp_has_docked_or_undocked (int n, int op_num) {
         eval_num (CDR (CDR (n))); // count of times that we should look for
 
     if (count <= 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Has-%sdocked%s count should be at least 1!  This has been "
             "automatically adjusted.",
@@ -8623,7 +8624,7 @@ int sexp_are_waypoints_done_delay (int node) {
     n = CDR (n);
     count = (n >= 0) ? eval_num (n) : 1;
     if (count <= 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Are-waypoints-done-delay count should be at least 1!  This has "
             "been automatically adjusted.");
@@ -8671,7 +8672,7 @@ int sexp_ship_type_destroyed (int n) {
 
     // bogus if we reach the end of this array!!!!
     if (type < 0) {
-        Warning (LOCATION, "Invalid shiptype passed to ship-type-destroyed");
+        fs2::dialog::warning (LOCATION, "Invalid shiptype passed to ship-type-destroyed");
         return SEXP_FALSE;
     }
 
@@ -8810,7 +8811,7 @@ int sexp_time_docked_or_undocked (int n, bool docked) {
     int count = eval_num (CDR (CDR (n)));
 
     if (count <= 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Time-%sdocked count should be at least 1!  This has been "
             "automatically adjusted.",
@@ -9224,7 +9225,7 @@ int sexp_team_score (int node) {
             // Num_teams in case more become possible in the future
             if (team <= 0 || team > Num_teams) {
                 // invalid team index
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "sexp-team-score: team %d is not a valid team #",
                     team);
                 return 0;
@@ -9287,7 +9288,7 @@ int sexp_hits_left_subsystem (int n) {
 
             // we reached end of ship subsys list without finding subsys_name
             if (ship_class_unchanged (shipnum)) {
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "Invalid subsystem '%s' passed to hits-left-subsystem",
                     subsys_name);
@@ -9335,7 +9336,7 @@ int sexp_hits_left_subsystem_generic (int node) {
 
     // error checking
     if (subsys_type < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Subsystem type '%s' not recognized in "
             "hits-left-subsystem-generic!",
@@ -9347,7 +9348,7 @@ int sexp_hits_left_subsystem_generic (int node) {
         return 0;
     }
     else if (subsys_type == SUBSYSTEM_UNKNOWN) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Cannot use SUBSYSTEM_UNKNOWN in hits-left-subsystem-generic!");
         return SEXP_NAN_FOREVER;
@@ -9389,7 +9390,7 @@ int sexp_hits_left_subsystem_specific (int node) {
 
     // we reached end of ship subsys list without finding subsys_name
     if (ship_class_unchanged (ship_num)) {
-        Error (
+        fs2::dialog::error (
             LOCATION, "Invalid subsystem '%s' passed to hits-left-subsystem",
             subsys_name);
     }
@@ -9592,7 +9593,9 @@ bool sexp_get_subsystem_world_pos (
     Assert (subsys_name);
     Assert (subsys_world_pos);
 
-    if (shipnum < 0) { Error (LOCATION, "Error - nonexistent ship.\n"); }
+    if (shipnum < 0) {
+        fs2::dialog::error (LOCATION, "Error - nonexistent ship.\n");
+    }
 
     // find the ship subsystem
     ship_subsys* ss = ship_get_subsys (&Ships[shipnum], subsys_name);
@@ -9607,7 +9610,7 @@ bool sexp_get_subsystem_world_pos (
     if (ship_class_unchanged (shipnum)) {
         // this ship should have had the subsystem named as it shouldn't have
         // changed class
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "sexp_get_subsystem_world_pos could not find subsystem '%s'",
             subsys_name);
@@ -10176,7 +10179,7 @@ void sexp_set_object_orient_sub (
     vm_vec_sub (&v_orient, location, &objp->pos);
 
     if (IS_VEC_NULL_SQ_SAFE (&v_orient)) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "error in sexp setting ship orientation: can't point to self; "
             "quitting...\n");
@@ -10650,7 +10653,7 @@ int sexp_percent_ships_arrive_depart_destroy_disarm_disable (int n, int what) {
             else if (what == OP_PERCENT_SHIPS_ARRIVED)
                 count += Wings[wingnum].total_arrived_count;
             else
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "Invalid status check '%d' for wing '%s' in "
                     "sexp_percent_ships_arrive_depart_destroy_disarm_disable",
@@ -10684,7 +10687,7 @@ int sexp_percent_ships_arrive_depart_destroy_disarm_disable (int n, int what) {
                     count++;
             }
             else
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "Invalid status check '%d' for ship '%s' in "
                     "sexp_percent_ships_depart_destroy_disarm_disable",
@@ -11101,7 +11104,7 @@ void sexp_set_scanned_unscanned (int n, int flag) {
 
         // if we didn't find the subsystem -- bad
         if (ss == NULL && ship_class_unchanged (shipnum)) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Couldn't find subsystem '%s' on ship '%s' in "
                 "sexp_set_scanned_unscanned",
@@ -11298,7 +11301,7 @@ void eval_when_do_one_exp (int exp) {
 
     case OP_DO_FOR_VALID_ARGUMENTS:
         if (special_argument_appears_in_sexp_tree (exp)) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "<Argument> used within Do-for-valid-arguments SEXP. Skipping "
                 "entire SEXP");
@@ -12005,7 +12008,7 @@ int eval_for_counter (int arg_handler_node, int condition_node) {
 
     // a bunch of error checking
     if (counter_step == 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "A counter increment of 0 is illegal!  (start=%d, stop=%d, "
             "increment=%d)",
@@ -12013,7 +12016,7 @@ int eval_for_counter (int arg_handler_node, int condition_node) {
         return SEXP_KNOWN_FALSE;
     }
     else if (counter_start == counter_stop) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "The counter start and stop values are identical!  (start=%d, "
             "stop=%d, increment=%d)",
@@ -12021,7 +12024,7 @@ int eval_for_counter (int arg_handler_node, int condition_node) {
         return SEXP_KNOWN_FALSE;
     }
     else if (sign (counter_stop - counter_start) != sign (counter_step)) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "The counter cannot complete with the given values!  (start=%d, "
             "stop=%d, increment=%d)",
@@ -12455,7 +12458,7 @@ void sexp_change_iff_color (int n) {
 
     // First node
     if (n == -1) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Detected missing observer team parameter in "
             "sexp-change_iff_color");
@@ -12466,7 +12469,7 @@ void sexp_change_iff_color (int n) {
     // Second node
     n = CDR (n);
     if (n == -1) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Detected missing observed team parameter in "
             "sexp-change_iff_color");
@@ -12478,7 +12481,7 @@ void sexp_change_iff_color (int n) {
     for (i = 0; i < 3; i++) {
         n = CDR (n);
         if (n == -1) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Detected incomplete color parameter list in "
                 "sexp-change_iff_color\n");
@@ -12486,7 +12489,7 @@ void sexp_change_iff_color (int n) {
         }
         rgb[i] = eval_num (n);
         if (rgb[i] > 255) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Invalid argument for iff color in sexp-change-iff-color. "
                 "Valid range is 0 to 255.\n");
@@ -12921,7 +12924,7 @@ void sexp_hud_set_message (int n) {
             HudGauge* cg = hud_get_gauge (gaugename);
             if (cg) { cg->updateCustomGaugeText (message); }
             else {
-                WarningEx (
+                fs2::dialog::warning_ex (
                     LOCATION, "Could not find a hud gauge named %s\n",
                     gaugename);
             }
@@ -12929,7 +12932,7 @@ void sexp_hud_set_message (int n) {
         }
     }
 
-    WarningEx (
+    fs2::dialog::warning_ex (
         LOCATION,
         "sexp_hud_set_message couldn't find a message by the name of %s in "
         "the mission\n",
@@ -12944,7 +12947,7 @@ void sexp_hud_set_directive (int n) {
     message_translate_tokens (message, text);
 
     if (strlen (message) > MESSAGE_LENGTH) {
-        WarningEx (
+        fs2::dialog::warning_ex (
             LOCATION,
             "Message %s is too long for use in a HUD gauge. Please shorten it "
             "to %d characters or less.",
@@ -12955,7 +12958,7 @@ void sexp_hud_set_directive (int n) {
     HudGauge* cg = hud_get_gauge (gaugename);
     if (cg) { cg->updateCustomGaugeText (message); }
     else {
-        WarningEx (
+        fs2::dialog::warning_ex (
             LOCATION, "Could not find a hud gauge named %s\n", gaugename);
     }
 }
@@ -13296,7 +13299,7 @@ gamesnd_id sexp_get_sound_index (int node) {
             sound_index = gamesnd_get_by_name (sound_name);
 
             if (!sound_index.isValid ())
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "unrecognized sound name \"%s\"!", sound_name);
         }
     }
@@ -13749,7 +13752,7 @@ void sexp_explosion_effect (int n)
         fireball_type = FIREBALL_EXPLOSION_LARGE2;
     }
     else if (num >= Num_fireball_types) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "explosion-effect fireball type is out of range; quitting the "
             "explosion...\n");
@@ -13933,7 +13936,7 @@ void sexp_warp_effect (int n)
         fireball_type = FIREBALL_KNOSSOS;
     }
     else {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "warp-effect type is out of range; quitting the warp...\n");
         return;
@@ -13948,7 +13951,7 @@ void sexp_warp_effect (int n)
         extra_flags |= FBF_WARP_3D;
     }
     else {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "warp-effect shape is out of range; quitting the warp...\n");
         return;
@@ -13959,7 +13962,7 @@ void sexp_warp_effect (int n)
     vm_vec_sub (&v_orient, &location, &origin);
 
     if (IS_VEC_NULL_SQ_SAFE (&v_orient)) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "error in warp-effect: warp can't point to itself; quitting the "
             "warp...\n");
@@ -13995,7 +13998,7 @@ void sexp_send_one_message (
     else if (!strcasecmp (priority, "high"))
         ipriority = MESSAGE_PRIORITY_HIGH;
     else {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Encountered invalid priority \"%s\" in send-message",
             priority);
         ipriority = MESSAGE_PRIORITY_NORMAL;
@@ -14104,7 +14107,7 @@ void sexp_send_message_list (int n) {
         // next node
         n = CDR (n);
         if (n == -1) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Detected incomplete parameter list in "
                 "sexp-send-message-list");
@@ -14115,7 +14118,7 @@ void sexp_send_message_list (int n) {
         // next node
         n = CDR (n);
         if (n == -1) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Detected incomplete parameter list in "
                 "sexp-send-message-list");
@@ -14126,7 +14129,7 @@ void sexp_send_message_list (int n) {
         // next node
         n = CDR (n);
         if (n == -1) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Detected incomplete parameter list in "
                 "sexp-send-message-list");
@@ -14197,7 +14200,7 @@ void sexp_next_mission (int n) {
     mission_name = CTEXT (n);
 
     if (mission_name == NULL) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Mission name is NULL in campaign file for next-mission command!");
     }
@@ -14208,7 +14211,7 @@ void sexp_next_mission (int n) {
             return;
         }
     }
-    Error (
+    fs2::dialog::error (
         LOCATION,
         "Mission name %s not found in campaign file for next-mission command",
         mission_name);
@@ -14818,7 +14821,7 @@ void sexp_set_cargo (int n) {
     if (cargo_index == -1) {
         // make new entry if possible
         if (Num_cargo + 1 >= MAX_CARGO) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "set-cargo: Maximum number of cargo names (%d) reached.  "
                 "Ignoring new name.\n",
@@ -14888,7 +14891,7 @@ void sexp_transfer_cargo (int n) {
     if (!dock_check_find_direct_docked_object (
             &Objects[Ships[shipnum1].objnum],
             &Objects[Ships[shipnum2].objnum])) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Tried to transfer cargo between %s and %s although they aren't "
             "docked!",
@@ -14909,7 +14912,7 @@ void sexp_transfer_cargo (int n) {
         if (strcasecmp (
                 Cargo_names[Ships[shipnum2].cargo1 & CARGO_INDEX_MASK],
                 "nothing") != 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Transferring cargo to %s which already\nhas cargo %s.\nCargo "
                 "will be replaced",
@@ -14955,7 +14958,7 @@ void sexp_exchange_cargo (int n) {
     if (!dock_check_find_direct_docked_object (
             &Objects[Ships[shipnum1].objnum],
             &Objects[Ships[shipnum2].objnum])) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Tried to exchange cargo between %s and %s although they aren't "
             "docked!",
@@ -15115,7 +15118,7 @@ void sexp_cargo_no_deplete (int n) {
     if (ship_index < 0) { return; }
 
     if (!(Ship_info[Ships[ship_index].ship_info_index].is_big_or_huge ())) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Trying to make non BIG or HUGE ship %s with non-depletable "
             "cargo.\n",
@@ -15189,7 +15192,7 @@ void sexp_add_background_bitmap (int n) {
 
     // sanity checking
     if (stars_find_bitmap (sle.filename) < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "sexp-add-background-bitmap: Background bitmap %s not found!",
             sle.filename);
@@ -15241,7 +15244,7 @@ void sexp_add_background_bitmap (int n) {
         if (Sexp_variables[sexp_var].type & SEXP_VARIABLE_NUMBER) {
             new_number = stars_add_bitmap_entry (&sle);
             if (new_number < 0) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "Unable to add starfield bitmap: '%s'!",
                     sle.filename);
                 new_number = 0;
@@ -15253,7 +15256,7 @@ void sexp_add_background_bitmap (int n) {
             sexp_modify_variable (number_as_str, sexp_var);
         }
         else {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "sexp-add-background-bitmap: Variable %s must be a number "
                 "variable!",
@@ -15270,7 +15273,7 @@ void sexp_remove_background_bitmap (int n) {
         int instances = stars_get_num_bitmaps ();
         if (instances > slot) { stars_mark_bitmap_unused (slot); }
         else {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "remove-background-bitmap: slot %d does not exist. Slot must "
                 "be less than %d.",
@@ -15291,7 +15294,7 @@ void sexp_add_sun_bitmap (int n) {
 
     // sanity checking
     if (stars_find_sun (sle.filename) < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "sexp-add-sun-bitmap: Sun %s not found!", sle.filename);
         return;
     }
@@ -15336,7 +15339,7 @@ void sexp_add_sun_bitmap (int n) {
             new_number = stars_add_sun_entry (&sle);
 
             if (new_number < 0) {
-                Warning (LOCATION, "Unable to add sun: '%s'!", sle.filename);
+                fs2::dialog::warning (LOCATION, "Unable to add sun: '%s'!", sle.filename);
                 new_number = 0;
             }
 
@@ -15346,7 +15349,7 @@ void sexp_add_sun_bitmap (int n) {
             sexp_modify_variable (number_as_str, sexp_var);
         }
         else {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "sexp-add-sun-bitmap: Variable %s must be a number variable!",
                 Sexp_variables[sexp_var].variable_name);
@@ -15362,7 +15365,7 @@ void sexp_remove_sun_bitmap (int n) {
         int instances = stars_get_num_suns ();
         if (instances > slot) { stars_mark_sun_unused (slot); }
         else {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "remove-sun-bitmap: slot %d does not exist. Slot must be less "
                 "than %d.",
@@ -15511,7 +15514,7 @@ void sexp_grant_medal (int n) {
     if (medal_name == NULL) return;
 
     if (Player->stats.m_medal_earned >= 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Cannot grant more than one medal per mission!  New medal '%s' "
             "will replace old medal '%s'!",
@@ -15545,7 +15548,7 @@ void sexp_change_player_score (int node) {
 
     if (!(Game_mode & GM_MULTIPLAYER)) {
         if ((sindex = ship_name_lookup (CTEXT (node))) == -1) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Invalid shipname '%s' passed to sexp_change_player_score!",
                 CTEXT (node));
@@ -15553,7 +15556,7 @@ void sexp_change_player_score (int node) {
         }
 
         if (Player_ship != &Ships[sindex]) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Can not award points to '%s'. Ship is not a player!",
                 CTEXT (node));
@@ -15594,7 +15597,7 @@ void sexp_change_team_score (int node) {
         Multi_team_score[team - 1] += score;
     }
     else {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Invalid team number. Team %d does not exist", team);
     }
 }
@@ -15613,7 +15616,7 @@ void sexp_tech_add_ship (int node) {
         if (i >= 0)
             Ship_info[i].flags.set (Ship::Info_Flags::In_tech_database);
         else
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "In tech-add-ship, ship class \"%s\" invalid", name);
 
         node = CDR (node);
@@ -15634,7 +15637,7 @@ void sexp_tech_add_weapon (int node) {
         if (i >= 0)
             Weapon_info[i].wi_flags.set (Weapon::Info_Flags::In_tech_database);
         else
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "In tech-add-weapon, weapon class \"%s\" invalid",
                 name);
 
@@ -15657,7 +15660,7 @@ void sexp_tech_add_intel (int node) {
         if (i >= 0)
             Intel_info[i].flags |= IIF_IN_TECH_DATABASE;
         else
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "In tech-add-intel, intel name \"%s\" invalid",
                 name);
 
@@ -15688,7 +15691,7 @@ void sexp_tech_add_intel_xstr (int node) {
         if (i >= 0)
             Intel_info[i].flags |= IIF_IN_TECH_DATABASE;
         else
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Intel entry XSTR(\"%s\", %d) invalid", name, id);
     }
 }
@@ -15873,7 +15876,7 @@ void multi_sexp_deal_with_ship_flag () {
         if (ship_arrived) {
             Current_sexp_network_packet.get_ship (shipp);
             if (shipp == NULL) {
-                WarningEx (
+                fs2::dialog::warning_ex (
                     LOCATION,
                     "Null ship pointer in multi_sexp_deal_with_ship_flag(), "
                     "tell a coder.\n");
@@ -16331,7 +16334,7 @@ void multi_sexp_alter_ship_flag () {
                     oswpt.objp = &Objects[oswpt.shipp->objnum];
                 }
                 else {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "OSWPT had an invalid ship in "
                         "multi_sexp_alter_ship_flag(), skipping");
@@ -16364,7 +16367,7 @@ void multi_sexp_alter_ship_flag () {
                         else {
                             oswpt.shipp = &Ships[oswpt.wingp->ship_index[0]];
                             oswpt.objp = &Objects[oswpt.shipp->objnum];
-                            Warning (
+                            fs2::dialog::warning (
                                 LOCATION,
                                 "Substituting ship '%s' at index 0 for "
                                 "nonexistent wing leader at index %d!",
@@ -16376,7 +16379,7 @@ void multi_sexp_alter_ship_flag () {
                 }
 
                 if (oswpt.wingp == NULL) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Unable to get wing to apply flags to in "
                         "multi_sexp_alter_ship_flag()");
@@ -16528,7 +16531,7 @@ void sexp_set_persona (int node) {
     }
 
     if (persona_index == -1) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Unable to change to persona type: '%s'. Persona is not a "
             "wingman!",
@@ -16587,7 +16590,7 @@ void sexp_set_mission_mood (int node) {
         }
     }
 
-    Warning (
+    fs2::dialog::warning (
         LOCATION,
         "Sexp-mission-mood attempted to set mood %s which does not exist in "
         "messages.tbl",
@@ -16671,7 +16674,7 @@ int sexp_has_weapon (int node, int op_num) {
         break;
 
     default:
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Unrecognised bank type used in has-x-weapon. Returning false");
         return SEXP_FALSE;
@@ -16757,7 +16760,7 @@ int sexp_previous_goal_status (int n, int status) {
             }
 
             if (i == Campaign.missions[mission_num].num_goals) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Couldn't find goal name \"%s\" in mission %s.\nReturning "
                     "%s for goal-true function.",
@@ -16850,7 +16853,7 @@ int sexp_previous_event_status (int n, int status) {
             }
 
             if (i == Campaign.missions[mission_num].num_events) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Couldn't find event name \"%s\" in mission "
                     "%s.\nReturning %s for event_status function.",
@@ -17133,7 +17136,7 @@ void sexp_turret_protect_ships (int n, bool flag) {
             Ship::Ship_Flags::NUM_VALUES,
             Mission::Parse_Object_Flags::OF_Missile_protected, flag);
     else
-        Warning (LOCATION, "Invalid turret type '%s'!", turret_type);
+        fs2::dialog::warning (LOCATION, "Invalid turret type '%s'!", turret_type);
 }
 
 // Goober5000 - sets the "don't collide invisible" flag on a list of ships
@@ -17487,7 +17490,7 @@ void sexp_ship_subsys_guardian_threshold (int num) {
                 ss = ship_get_subsys (&Ships[ship_num], hull_name);
                 if (ss == NULL) {
                     if (ship_class_unchanged (ship_num)) {
-                        Warning (
+                        fs2::dialog::warning (
                             LOCATION,
                             "Invalid subsystem passed to "
                             "ship-subsys-guardian-threshold: %s does not have "
@@ -17558,7 +17561,7 @@ void sexp_ship_create (int n) {
     new_ship_class = ship_info_lookup (CTEXT (n));
 
     if (new_ship_class == -1) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Invalid ship class passed to ship-create; ship type '%s' does "
             "not exist",
@@ -17621,7 +17624,7 @@ void sexp_weapon_create (int n) {
     weapon_class = weapon_info_lookup (CTEXT (n));
     n = CDR (n);
     if (weapon_class < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Invalid weapon class passed to weapon-create; weapon type '%s' "
             "does not exist",
@@ -19444,7 +19447,7 @@ void parse_copy_damage (p_object* target_pobjp, ship* source_shipp) {
 
         // copy
         if (source_ss->max_hits == 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Why does %s's subsystem %s have a maximum strength of 0?",
                 source_shipp->ship_name, source_ss->system_info->subobj_name);
@@ -19667,7 +19670,7 @@ void sexp_set_skybox_model (int n) {
             new_skybox_model_flags |= MR_FORCE_CLAMP;
         }
         else {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Invalid flag passed to set-skybox-model: %s\n",
                 CTEXT (n));
         }
@@ -19783,7 +19786,7 @@ void sexp_beam_fire (int node, bool at_coords) {
 
     // if it has no primary weapons
     if (fire_info.turret->weapons.num_primary_banks <= 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Couldn't fire turret on ship %s; subsystem %s has no primary "
             "weapons",
@@ -19819,7 +19822,7 @@ void sexp_beam_fire (int node, bool at_coords) {
     if (fire_info.beam_info_index != -1) { beam_fire (&fire_info); }
     else {
         // it would appear the turret doesn't have any beam weapons
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Couldn't fire turret on ship %s; subsystem %s has no beam "
             "weapons",
@@ -19839,7 +19842,7 @@ void sexp_beam_floating_fire (int n) {
     fire_info.beam_info_index = weapon_info_lookup (CTEXT (n));
     n = CDR (n);
     if (fire_info.beam_info_index < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Invalid weapon class passed to beam-create; weapon type '%s' "
             "does not exist!\n",
@@ -19848,7 +19851,7 @@ void sexp_beam_floating_fire (int n) {
     }
     if (!(Weapon_info[fire_info.beam_info_index]
               .wi_flags[Weapon::Info_Flags::Beam])) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Invalid weapon class passed to beam-create; weapon type '%s' is "
             "not a beam!\n",
@@ -21039,7 +21042,7 @@ int sexp_is_in_turret_fov (int node) {
     turret_subsys =
         ship_get_subsys (&Ships[turret_shipnum], turret_subsys_name);
     if (turret_subsys == nullptr) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Couldn't find turret subsystem '%s' on ship '%s' in "
             "sexp_is_in_turret_fov!",
@@ -21178,7 +21181,7 @@ void sexp_trigger_submodel_animation (int node) {
     // get the type
     animation_type = model_anim_match_type (CTEXT (n));
     if (animation_type == TRIGGER_TYPE_NONE) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Unable to match animation type \"%s\"!", CTEXT (n));
         return;
     }
@@ -21191,7 +21194,7 @@ void sexp_trigger_submodel_animation (int node) {
     // get the direction, 1 or -1
     direction = eval_num (n);
     if (direction != 1 && direction != -1) {
-        Warning (LOCATION, "Direction is %d; it must be 1 or -1!", direction);
+        fs2::dialog::warning (LOCATION, "Direction is %d; it must be 1 or -1!", direction);
         return;
     }
     n = CDR (n);
@@ -21208,7 +21211,7 @@ void sexp_trigger_submodel_animation (int node) {
     if (n >= 0) {
         ship_subsys* ss = ship_get_subsys (&Ships[ship_num], CTEXT (n));
         if (ss == NULL) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Subsystem \"%s\" not found on ship \"%s\"!",
                 CTEXT (n), CTEXT (node));
             return;
@@ -21381,7 +21384,7 @@ void sexp_set_support_ship (int n) {
         if (!strcasecmp (CTEXT (n), Arrival_location_names[i])) temp_val = i;
     }
     if (temp_val < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Support ship arrival location '%s' not found.\n",
             CTEXT (n));
         return;
@@ -21416,7 +21419,7 @@ void sexp_set_support_ship (int n) {
         if (!strcasecmp (CTEXT (n), Departure_location_names[i])) temp_val = i;
     }
     if (temp_val < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Support ship departure location '%s' not found.\n",
             CTEXT (n));
         return;
@@ -21450,12 +21453,12 @@ void sexp_set_support_ship (int n) {
     if ((temp_val < 0) &&
         ((strcasecmp (CTEXT (n), "<species support ship class>") != 0) &&
          (strcasecmp (CTEXT (n), "<any support ship class>") != 0))) {
-        Warning (LOCATION, "Support ship class '%s' not found.\n", CTEXT (n));
+        fs2::dialog::warning (LOCATION, "Support ship class '%s' not found.\n", CTEXT (n));
         return;
     }
     if ((temp_val >= 0) &&
         !(Ship_info[temp_val].flags[Ship::Info_Flags::Support])) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Ship %s is not a support ship!",
             Ship_info[temp_val].name);
         return;
@@ -21495,7 +21498,7 @@ void sexp_set_arrival_info (int node) {
             arrival_location = i;
     }
     if (arrival_location < 0) {
-        Warning (LOCATION, "Arrival location '%s' not found.\n", CTEXT (n));
+        fs2::dialog::warning (LOCATION, "Arrival location '%s' not found.\n", CTEXT (n));
         return;
     }
     n = CDR (n);
@@ -21589,7 +21592,7 @@ void sexp_set_departure_info (int node) {
             departure_location = i;
     }
     if (departure_location < 0) {
-        Warning (LOCATION, "Departure location '%s' not found.\n", CTEXT (n));
+        fs2::dialog::warning (LOCATION, "Departure location '%s' not found.\n", CTEXT (n));
         return;
     }
     n = CDR (n);
@@ -22391,7 +22394,7 @@ int sexp_return_player_data (int node, int type) {
             break;
 
         default:
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "return-player-data was called with invalid type %d on node "
                 "%d!",
@@ -22537,7 +22540,7 @@ void sexp_subsys_set_random (int node) {
     if (high > 100) { high = 100; }
 
     if (low > high) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "subsys-set-random was passed an invalid range (%d ... %d)!", low,
             high);
@@ -22960,7 +22963,7 @@ void sexp_int_to_string (int n) {
 
     // check variable type
     if (!(Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING)) {
-        Warning (LOCATION, "Cannot assign a string to a non-string variable!");
+        fs2::dialog::warning (LOCATION, "Cannot assign a string to a non-string variable!");
         return;
     }
 
@@ -22993,7 +22996,7 @@ void sexp_string_concatenate (int n) {
 
     // check variable type
     if (!(Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING)) {
-        Warning (LOCATION, "Cannot assign a string to a non-string variable!");
+        fs2::dialog::warning (LOCATION, "Cannot assign a string to a non-string variable!");
         return;
     }
 
@@ -23003,7 +23006,7 @@ void sexp_string_concatenate (int n) {
 
     // check length
     if (strlen (new_text) >= TOKEN_LENGTH) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Concatenated string '%s' has " SIZE_T_ARG
             " characters, but the maximum is %d.  The string will be "
@@ -23034,7 +23037,7 @@ void sexp_string_concatenate_block (int n) {
 
     // check variable type
     if (!(Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING)) {
-        Warning (LOCATION, "Cannot assign a string to a non-string variable!");
+        fs2::dialog::warning (LOCATION, "Cannot assign a string to a non-string variable!");
         return;
     }
 
@@ -23046,7 +23049,7 @@ void sexp_string_concatenate_block (int n) {
 
     // check length
     if (new_text.length () >= TOKEN_LENGTH) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Concatenated string '%s' has " SIZE_T_ARG
             " characters, but the maximum is %d.  The string will be "
@@ -23090,7 +23093,7 @@ void sexp_string_get_substring (int node) {
 
     // check variable type
     if (!(Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING)) {
-        Warning (LOCATION, "Cannot assign a string to a non-string variable!");
+        fs2::dialog::warning (LOCATION, "Cannot assign a string to a non-string variable!");
         return;
     }
 
@@ -23100,7 +23103,7 @@ void sexp_string_get_substring (int node) {
 
     // sanity
     if (pos >= parent_len) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "( string-get-substring %s %d %d ) failed: starting position is "
             "larger than the string length!",
@@ -23154,7 +23157,7 @@ void sexp_string_set_substring (int node) {
 
     // check variable type
     if (!(Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING)) {
-        Warning (LOCATION, "Cannot assign a string to a non-string variable!");
+        fs2::dialog::warning (LOCATION, "Cannot assign a string to a non-string variable!");
         return;
     }
 
@@ -23165,7 +23168,7 @@ void sexp_string_set_substring (int node) {
 
     // sanity
     if (pos >= parent_len) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "( string-set-substring %s %d %d %s ) failed: starting position "
             "is larger than the string length!",
@@ -23202,7 +23205,7 @@ void sexp_string_set_substring (int node) {
         new_substring);
 
     if (new_text.size () >= TOKEN_LENGTH) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Concatenated string is too long and will be truncated.");
 
@@ -23241,7 +23244,7 @@ void sexp_modify_variable_xstr (int n) {
     Assert (Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_SET);
 
     if (!(Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING)) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Variable for modify-variable-xstr has to be a string variable!");
         return;
@@ -23283,10 +23286,10 @@ void sexp_debug (int node) {
 
 // send the message
 #ifndef NDEBUG
-    Warning (LOCATION, "%s", warning_message.c_str ());
+    fs2::dialog::warning (LOCATION, "%s", warning_message.c_str ());
 #else
     if (!no_release_message) {
-        ReleaseWarning (LOCATION, "%s", warning_message.c_str ());
+        fs2::dialog::release_warning (LOCATION, "%s", warning_message.c_str ());
     }
 #endif
 }
@@ -23718,7 +23721,7 @@ void actually_set_camera_facing_object (
 
     switch (oswpt.type) {
     case OSWPT_TYPE_EXITED: {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Camera tried to face destroyed/departed object %s",
             object_name);
         return;
@@ -24784,7 +24787,7 @@ void sexp_manipulate_colgroup (int node, bool add_to_group) {
         int group = eval_num (node);
 
         if (group < 0 || group > 31) {
-            WarningEx (
+            fs2::dialog::warning_ex (
                 LOCATION,
                 "Invalid collision group id %d specified for object %s. Valid "
                 "IDs range from 0 to 31.\n",
@@ -24829,7 +24832,7 @@ void sexp_ship_effect (int n) {
 
     int effect_num = get_effect_from_name (CTEXT (n));
     if (effect_num == -1) {
-        WarningEx (LOCATION, "Invalid effect name passed to ship-effect\n");
+        fs2::dialog::warning_ex (LOCATION, "Invalid effect name passed to ship-effect\n");
         return;
     }
     n = CDR (n);
@@ -25035,7 +25038,10 @@ int generate_event_log_flags_mask (int result) {
 
     case SEXP_FALSE: matches |= MLF_SEXP_FALSE; break;
 
-    default: Error (LOCATION, "SEXP has a value which isn't true or false.");
+    default:
+        fs2::dialog::error (
+            LOCATION, "SEXP has a value which isn't true or false.");
+        break;
     }
 
     if ((result == SEXP_TRUE) || (result == SEXP_KNOWN_TRUE)) {
@@ -25749,7 +25755,7 @@ int eval_sexp (int cur_node, int referenced_node) {
         case OP_DO_FOR_VALID_ARGUMENTS:
             // do-for-valid-arguments should only ever be called within
             // eval_when()
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "do-for-valid-arguments was encountered in eval_sexp()!");
             break;
@@ -27459,7 +27465,7 @@ void multi_sexp_eval () {
         Assert (Current_sexp_network_packet.sexp_bytes_left);
 
         if (op_num < 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Received invalid operator number from host in "
                 "multi_sexp_eval(). Entire packet may be corrupt. Discarding "
@@ -27686,7 +27692,7 @@ void multi_sexp_eval () {
             // probably just a version error where the host supports a SEXP but
             // a client does not
             if (Current_sexp_network_packet.sexp_discard_operator ()) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Received invalid SEXP operator number from host. "
                     "Operator number %d is not supported by this version.",
@@ -27694,7 +27700,7 @@ void multi_sexp_eval () {
             }
             // a more major problem
             else {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Received invalid SEXP packet from host. Function "
                     "involving operator %d lacks termination. Entire packet "
@@ -27723,7 +27729,7 @@ int get_sexp_main () {
         strncpy (buf, Mp, 512);
         if (buf[511] != '\0') strcpy (&buf[506], "[...]");
 
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Expected to find an open parenthesis in the following sexp:\n%s",
             buf);
@@ -27737,7 +27743,7 @@ int get_sexp_main () {
     if (!Fred_running && (start_node >= 0)) {
         op = get_operator_index (CTEXT (start_node));
         if (op < 0) {
-            Error (
+            fs2::dialog::error (
                 LOCATION, "Can't find operator %s in operator list!\n",
                 CTEXT (start_node));
             return -1;
@@ -28388,7 +28394,7 @@ int query_operator_argument_type (int op, int argnum) {
         op = Operators[index].value;
     }
     else {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Possible unnecessary search for operator index.  Trace out and "
             "see if this is necessary.\n");
@@ -30801,7 +30807,7 @@ const char* sexp_error_message (int num) {
     case SEXP_CHECK_INVALID_SSM_CLASS: return "Invalid SSM class";
 
     default:
-        Warning (LOCATION, "Unhandled sexp error code %d!", num);
+        fs2::dialog::warning (LOCATION, "Unhandled sexp error code %d!", num);
         return "Unhandled sexp error code!";
     }
 }
@@ -31102,7 +31108,7 @@ void sexp_modify_variable (int n) {
         sexp_modify_variable (new_text, sexp_variable_index);
     }
     else {
-        Error (LOCATION, "Invalid variable type.\n");
+        fs2::dialog::error (LOCATION, "Invalid variable type.\n");
     }
 }
 
@@ -31138,7 +31144,7 @@ void sexp_set_variable_by_index (int node) {
 
     // check range
     if (sexp_variable_index < 0 || sexp_variable_index >= MAX_SEXP_VARIABLES) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "set-variable-by-index: sexp variable index %d out of range!  min "
             "is 0; max is %d",
@@ -31169,7 +31175,7 @@ void sexp_set_variable_by_index (int node) {
         sexp_modify_variable (new_text, sexp_variable_index);
     }
     else {
-        Error (LOCATION, "Invalid variable type.\n");
+        fs2::dialog::error (LOCATION, "Invalid variable type.\n");
     }
 }
 
@@ -31184,7 +31190,7 @@ int sexp_get_variable_by_index (int node) {
 
     // check range
     if (sexp_variable_index < 0 || sexp_variable_index >= MAX_SEXP_VARIABLES) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "get-variable-by-index: sexp variable index %d out of range!  min "
             "is 0; max is %d",
@@ -31230,7 +31236,7 @@ void sexp_copy_variable_from_index (int node) {
 
     // check range
     if (from_index < 0 || from_index >= MAX_SEXP_VARIABLES) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "copy-variable-from-index: sexp variable index %d out of range!  "
             "min is 0; max is %d",
@@ -31260,7 +31266,7 @@ void sexp_copy_variable_from_index (int node) {
          !(Sexp_variables[to_index].type & SEXP_VARIABLE_NUMBER)) ||
         ((Sexp_variables[from_index].type & SEXP_VARIABLE_STRING) &&
          !(Sexp_variables[to_index].type & SEXP_VARIABLE_STRING))) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "copy-variable-from-index: cannot copy variables of different "
             "types!  source = '%s', destination = '%s'",
@@ -31291,7 +31297,7 @@ void sexp_copy_variable_between_indexes (int node) {
 
     // check ranges
     if (from_index < 0 || from_index >= MAX_SEXP_VARIABLES) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "copy-variable-between-indexes: sexp variable index %d out of "
             "range!  min is 0; max is %d",
@@ -31299,7 +31305,7 @@ void sexp_copy_variable_between_indexes (int node) {
         return;
     }
     if (to_index < 0 || to_index >= MAX_SEXP_VARIABLES) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "copy-variable-between-indexes: sexp variable index %d out of "
             "range!  min is 0; max is %d",
@@ -31330,7 +31336,7 @@ void sexp_copy_variable_between_indexes (int node) {
          !(Sexp_variables[to_index].type & SEXP_VARIABLE_NUMBER)) ||
         ((Sexp_variables[from_index].type & SEXP_VARIABLE_STRING) &&
          !(Sexp_variables[to_index].type & SEXP_VARIABLE_STRING))) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "copy-variable-between-indexes: cannot copy variables of "
             "different types!  source = '%s', destination = '%s'",
@@ -35925,10 +35931,9 @@ static void output_sexp_html (int sexp_idx, FILE* fp) {
 bool output_sexps (const char* filepath) {
     FILE* fp = fopen (filepath, "w");
 
-    if (fp == NULL) {
-        os::dialogs::Message (
-            os::dialogs::MESSAGEBOX_ERROR,
-            "Error creating SEXP operator list");
+    if (0 == fp) {
+        using namespace fs2::dialog;
+        message (dialog_type::error, "error creating SEXP operator list");
         return false;
     }
 

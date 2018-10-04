@@ -717,7 +717,7 @@ void HudGaugeBrackets::initMinSubTargetBoxSizes (int w, int h) {
 void HudGaugeBrackets::initBitmaps (char* fname) {
     attacking_dot = bm_load (fname);
     if (attacking_dot < 0) {
-        Warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 

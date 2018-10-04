@@ -713,14 +713,14 @@ int multi_create_player (
         {
             if (!Ship_info.empty ()) {
                 player_ship_class = 0;
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Invalid default player ship specified in ship tables. "
                     "Setting to %s",
                     Ship_info[player_ship_class].name);
             }
             else {
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "No ships have been loaded, but we are attempting to set "
                     "a ship!!");
@@ -1613,7 +1613,7 @@ void multi_create_standalone_object () {
     objnum = observer_create (&m, &v);
 
     if (objnum < 0) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Failed to create standalone observer object! Please "
             "investigate!");

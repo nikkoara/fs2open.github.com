@@ -827,7 +827,7 @@ void techroom_change_tab (int num) {
                 Ship_list = new tech_list_entry[Ship_info.size ()];
 
                 if (Ship_list == NULL)
-                    Error (LOCATION, "Couldn't init ships list!");
+                    fs2::dialog::error (LOCATION, "Couldn't init ships list!");
             }
 
             Ship_list_size = 0;
@@ -892,7 +892,7 @@ void techroom_change_tab (int num) {
                 Weapon_list = new tech_list_entry[Num_weapon_types];
 
                 if (Weapon_list == NULL)
-                    Error (LOCATION, "Couldn't init ships list!");
+                    fs2::dialog::error (LOCATION, "Couldn't init ships list!");
             }
 
             Weapon_list_size = 0;
@@ -1188,14 +1188,14 @@ void techroom_init () {
     Tech_background_bitmap = bm_load (Tech_background_filename[gr_screen.res]);
     if (Tech_background_bitmap < 0) {
         // failed to load bitmap, not a good thing
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Error loading techroom background bitmap %s",
             Tech_background_filename[gr_screen.res]);
     }
 
     Tech_background_bitmap_mask = bm_load (Tech_mask_filename[gr_screen.res]);
     if (Tech_background_bitmap_mask < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Error loading techroom background mask %s",
             Tech_mask_filename[gr_screen.res]);
         return;

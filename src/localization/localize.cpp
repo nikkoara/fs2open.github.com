@@ -134,7 +134,8 @@ void lcl_init (int lang_init) {
             NULL, "Language",
             Lcl_languages[FS2_OPEN_DEFAULT_LANGUAGE].lang_name);
 
-        if (ret == NULL) { Error (LOCATION, "Default language not found."); }
+        if (ret == NULL)
+            fs2::dialog::error (LOCATION, "Default language not found.");
 
         strcpy_s (lang_string, ret);
 
@@ -281,7 +282,7 @@ void parse_stringstbl_common (const char* filename, const bool external) {
                 return;
             }
             else if (!external && (index < 0 || index >= XSTR_SIZE)) {
-                Error (
+                fs2::dialog::error (
                     LOCATION, "Invalid strings table index specified (%i)",
                     index);
             }
@@ -366,12 +367,12 @@ void parse_stringstbl_common (const char* filename, const bool external) {
             }
 
             if (external && (Lcl_ext_str.find (index) != Lcl_ext_str.end ())) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "Tstrings table index %d used more than once",
                     index);
             }
             else if (!external && (Xstr_table[index].str != NULL)) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "Strings table index %d used more than once",
                     index);
             }
@@ -393,7 +394,7 @@ void parse_stringstbl_common (const char* filename, const bool external) {
                 if (sscanf (p_offset, "%d%d", &offset_lo, &offset_hi) <
                     num_offsets_on_this_line) {
                     // whatever is in the file ain't a proper offset
-                    Error (LOCATION, "%s is corrupt", filename);
+                    fs2::dialog::error (LOCATION, "%s is corrupt", filename);
                 }
             }
 

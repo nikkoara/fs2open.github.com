@@ -194,7 +194,7 @@ int ship_ship_check_collision (
 #ifndef NDEBUG
         static bool Warned_about_fast_rotational_collisions = false;
         if (!Warned_about_fast_rotational_collisions) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Ship '%s' rotates too quickly!  Rotational collision "
                 "detection has been skipped.",

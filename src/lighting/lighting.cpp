@@ -438,7 +438,9 @@ void light_apply_rgb (
         case Light_Type::Cone: continue;
 
         // others. BAD
-        default: Error ("Unknown light type in light_apply_rgb!\n"); continue;
+        default:
+            fs2::dialog::error ("Unknown light type in light_apply_rgb!\n");
+            continue;
         }
 
         dot = vm_vec_dot (&to_light, norm);

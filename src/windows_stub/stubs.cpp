@@ -144,7 +144,7 @@ char* clean_filename (char* name) {
 // retrieve the current working directory
 int _getcwd (char* out_buf, unsigned int len) {
     if (getcwd (out_buf, len) == NULL) {
-        Error (
+        fs2::dialog::error (
             __FILE__, __LINE__, "buffer overflow in getcwd (buf size = %u)",
             len);
     }
@@ -160,7 +160,7 @@ int _chdir (const char* path) {
     int m_error = errno;
 
     if (status) {
-        Warning (
+        fs2::dialog::warning (
             __FILE__, __LINE__, "Cannot chdir to %s: %s", path,
             strerror (m_error));
     }

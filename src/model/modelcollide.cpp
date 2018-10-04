@@ -1284,7 +1284,7 @@ int model_collide (mc_info* mc_info_obj) {
     Mc->edge_hit = 0;
 
     if ((Mc->flags & MC_CHECK_SHIELD) && (Mc->flags & MC_CHECK_MODEL)) {
-        Error (LOCATION, "Checking both shield and model!\n");
+        fs2::dialog::error (LOCATION, "Checking both shield and model!\n");
         return 0;
     }
 
@@ -1324,7 +1324,7 @@ int model_collide (mc_info* mc_info_obj) {
 
     if (Mc->flags & MC_CHECK_SPHERELINE) {
         if (Mc->radius <= 0.0f) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Attempting to collide with a sphere, but the sphere's radius "
                 "is <= 0.0f!\n\n(model file is %s; submodel is %d, mc_flags "

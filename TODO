@@ -13,6 +13,9 @@
 ** DONE De-Win32-ification
 ** TODO De-INTEL_INT-ify.
 ** TODO Remove TRUE/FALSE macros
+** TODO Remove SIZE_T_ARG, PTRDIFF_T_ARG
+** TODO Remove UREACHABLE
+** TODO Get rid of SEXP formatters
 
 * Re-writes
 
@@ -21,3 +24,5 @@
 ** TODO Convert to BOOST asserts
 ** TODO Fix Boost logging
 ** TODO Unicode class text_iterator has defects
+** TODO Redo Assertion
+** TODO Redo vs[n]printf hackery

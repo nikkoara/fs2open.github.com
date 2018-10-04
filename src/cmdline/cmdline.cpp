@@ -1557,13 +1557,11 @@ void os_validate_parms (int argc, char* argv[]) {
                     exit (0);
                 }
                 else {
-                    char buffer[128];
-                    sprintf (
-                        buffer, "Unrecognized command line parameter %s.",
-                        token);
-
-                    os::dialogs::Message (
-                        os::dialogs::MESSAGEBOX_INFORMATION, buffer);
+                    std::string s = "unrecognized command line argument: ";
+                    s += token;
+                    
+                    using namespace fs2::dialog;
+                    message (dialog_type::info, s.c_str ());
                 }
             }
         }
@@ -1786,7 +1784,7 @@ cmdline_parm::~cmdline_parm () {
 // returns true if it is, shows an error box and returns false if not valid.
 bool cmdline_parm::check_if_args_is_valid () {
     if (args == NULL) {
-        Error (
+        fs2::dialog::error (
             __FILE__, __LINE__,
             "Command line flag passed that requires an argument, but the "
             "argument is missing!\r\n"
@@ -1880,7 +1878,7 @@ unix_get_single_dir_names (const std::string& parent, const std::string& dir) {
 
     DIR* dp;
     if ((dp = opendir (parent.c_str ())) == NULL) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Can't open directory '%s' when searching mod paths. Ignoring. "
             "errno=%d",
@@ -1946,7 +1944,7 @@ static void handle_unix_modlist (char** modlist, size_t* len) {
             unix_get_dir_names (".", cur_mod);
         // Ignore non-existing mods for unit tests
         if (!running_unittests && this_mod_paths.empty ()) {
-            ReleaseWarning (
+            fs2::dialog::release_warning (
                 LOCATION, "Can't find mod '%s'. Ignoring.", cur_mod);
         }
         mod_paths.insert (

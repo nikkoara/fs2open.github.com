@@ -239,7 +239,7 @@ void persona_parse () {
         (Persona*)vm_realloc (Personas, sizeof (Persona) * (Num_personas + 1));
 
     if (Personas == NULL)
-        Error (LOCATION, "Not enough memory to allocate Personas!");
+        fs2::dialog::error (LOCATION, "Not enough memory to allocate Personas!");
 
     memset (&Personas[Num_personas], 0, sizeof (Persona));
 
@@ -265,7 +265,7 @@ void persona_parse () {
     }
 
     if (i == MAX_PERSONA_TYPES)
-        WarningEx (
+        fs2::dialog::warning_ex (
             LOCATION, "Unknown persona type in messages.tbl -- %s\n", type);
 
     char cstrtemp[NAME_LENGTH];
@@ -281,7 +281,7 @@ void persona_parse () {
         }
 
         if (j == (int)Species_info.size ())
-            WarningEx (
+            fs2::dialog::warning_ex (
                 LOCATION, "Unknown species in messages.tbl -- %s\n", cstrtemp);
     }
 
@@ -376,7 +376,7 @@ void message_parse (bool importing_from_fsm) {
         msg.persona_index = message_persona_name_lookup (persona_name);
 
         if (msg.persona_index == -1)
-            WarningEx (
+            fs2::dialog::warning_ex (
                 LOCATION,
                 "Unknown persona in message %s in messages.tbl -- %s\n",
                 msg.name, persona_name);
@@ -436,7 +436,7 @@ void message_parse (bool importing_from_fsm) {
         if (!found) {
             // found a mood, but it's not in the list of moods at the start of
             // the table
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Message.tbl has an entry for mood type %s, but this mood is "
                 "not in the #Moods section of the table.",
@@ -468,7 +468,7 @@ void message_parse (bool importing_from_fsm) {
             if (!found) {
                 // found a mood, but it's not in the list of moods at the start
                 // of the table
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Message.tbl has an entry for exclude mood type %s, but "
                     "this mood is not in the #Moods section of the table.",
@@ -497,7 +497,7 @@ void message_frequency_parse () {
     }
 
     if (builtin_type == -1) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Unknown Builtin Message Type Detected. Type : %s not supported",
             name);
@@ -629,7 +629,7 @@ void parse_msgtbl () {
                 // get extension
                 char* ptr = strchr (filename, '.');
                 if (ptr == NULL) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Simulated speech override file '%s' was provided "
                         "with no extension!",
@@ -639,7 +639,7 @@ void parse_msgtbl () {
 
                 // test extension
                 if (strcasecmp (ptr, ".ogg") != 0 && strcasecmp (ptr, ".wav") != 0) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Simulated speech override file '%s' was provided "
                         "with an extension other than .wav or .ogg!",
@@ -2189,7 +2189,7 @@ void message_send_builtin_to_player (
                  "looking for message for any persona of any species\n"));
         break;
     case -1:
-        Error (
+        fs2::dialog::error (
             LOCATION, "Couldn't find any builtin message of type %d\n", type);
         return;
     }

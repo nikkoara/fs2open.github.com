@@ -501,7 +501,7 @@ int wl_get_pilot_subsys_index (p_object* pobjp) {
     }
 
     if (pilot_index == -1) {
-        Error (LOCATION, "Parse object doesn't have a pilot subsystem\n");
+        fs2::dialog::error (LOCATION, "Parse object doesn't have a pilot subsystem\n");
         return -1;
     }
 
@@ -674,7 +674,7 @@ void wl_render_overhead_view (float frametime) {
     ship_class = Wss_slots[Selected_wl_slot].ship_class;
     if (ship_class < 0 ||
         ship_class >= static_cast< int > (Ship_info.size ())) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Invalid ship class (%d) passed for render_overhead_view",
             ship_class);
@@ -753,7 +753,7 @@ void wl_render_overhead_view (float frametime) {
 
             // Did we load anything?
             if (wl_ship->overhead_bitmap < 0) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Unable to load overhead image for ship '%s', generating "
                     "one instead",
@@ -2026,7 +2026,7 @@ void weapon_select_init () {
     WeaponSelectMaskBitmap =
         bm_load (Wl_loadout_select_mask[Uses_apply_all_button][gr_screen.res]);
     if (WeaponSelectMaskBitmap < 0) {
-        Error (
+        fs2::dialog::error (
             LOCATION, "Could not load in '%s'!",
             Wl_loadout_select_mask[Uses_apply_all_button][gr_screen.res]);
     }

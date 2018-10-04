@@ -119,7 +119,7 @@ int mission_campaign_get_info (
             }
 
             if (name == NULL) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "Invalid campaign type \"%s\"\n", campaign_type);
                 break;
             }
@@ -178,7 +178,7 @@ int mission_campaign_get_mission_list (
             if (num < max)
                 list[num++] = vm_strdup (name);
             else
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "Maximum number of missions exceeded (%d)!",
                     max);
         }
@@ -455,7 +455,7 @@ int mission_campaign_load (
         }
 
         if (i == MAX_CAMPAIGN_TYPES)
-            Error (LOCATION, "Unknown campaign type %s!", type);
+            fs2::dialog::error (LOCATION, "Unknown campaign type %s!", type);
 
         Campaign.desc = NULL;
         if (optional_string ("+Description:"))
@@ -708,7 +708,7 @@ int mission_campaign_load_by_name (char* filename) {
         }
     }
     else {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Tried to load campaign file with illegal length/extension!");
     }
@@ -1467,7 +1467,7 @@ void read_mission_goal_list (int num) {
 
                 event_count++;
                 if (event_count > MAX_MISSION_EVENTS) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION, "Maximum number of events exceeded (%d)!",
                         MAX_MISSION_EVENTS);
                     event_count = MAX_MISSION_EVENTS;
@@ -1493,7 +1493,7 @@ void read_mission_goal_list (int num) {
 
                 count++;
                 if (count > MAX_GOALS) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION, "Maximum number of goals exceeded (%d)!",
                         MAX_GOALS);
                     count = MAX_GOALS;
@@ -1622,7 +1622,7 @@ int mission_campaign_parse_is_multi (char* filename, char* name) {
             if (!strcasecmp (temp, campaign_types[i])) { return i; }
         }
 
-        Error (LOCATION, "Unknown campaign type %s", temp);
+        fs2::dialog::error (LOCATION, "Unknown campaign type %s", temp);
         return -1;
     }
     catch (const parse::ParseException& e) {

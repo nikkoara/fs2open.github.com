@@ -226,7 +226,7 @@ void parse_vfnt_font (const std::string& fontFilename) {
 
         if (default_special_char_index < 0 ||
             default_special_char_index >= MAX_SPECIAL_CHAR_IDX) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Default special character index (%d) for font (%s), must be "
                 "0 - %u",
@@ -256,7 +256,7 @@ void parse_vfnt_font (const std::string& fontFilename) {
         }
 
         if (lang_idx == -1) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Ignoring invalid language (%s) specified by font (%s); not "
                 "built-in or in strings.tbl",
@@ -270,7 +270,7 @@ void parse_vfnt_font (const std::string& fontFilename) {
 
             if (special_char_index < 0 ||
                 special_char_index >= MAX_SPECIAL_CHAR_IDX) {
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "Special character index (%d) for font (%s), language "
                     "(%s) is invalid, must be 0 - %u",
@@ -353,7 +353,7 @@ void parse_fonts_tbl () {
 
     // double check
     if (FontManager::numberOfFonts () < 3) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "At least three fonts have to be loaded but only %d valid entries "
             "were found!",
@@ -419,7 +419,7 @@ void stuff_first (std::string& firstFont) {
         parse_type (type, firstFont);
     }
     catch (const parse::ParseException& e) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Failed to setup font parsing. This may be caused by an empty "
             "fonts.tbl file.\nError message: %s",

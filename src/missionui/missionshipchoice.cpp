@@ -651,10 +651,10 @@ void ship_select_init () {
         bm_load (Ship_select_background_mask_fname[gr_screen.res]);
     if (ShipSelectMaskBitmap < 0) {
         if (gr_screen.res == GR_640) {
-            Error (LOCATION, "Could not load in 'shipselect-m'!");
+            fs2::dialog::error (LOCATION, "Could not load in 'shipselect-m'!");
         }
         else if (gr_screen.res == GR_1024) {
-            Error (LOCATION, "Could not load in '2_shipselect-m'!");
+            fs2::dialog::error (LOCATION, "Could not load in '2_shipselect-m'!");
         }
     }
 
@@ -3008,7 +3008,7 @@ void ss_init_wing_info (int wing_num, int starting_wing_num) {
     wp = &Wings[ss_wing->wingnum];
     // niffiwan: don't overrun the array
     if (wp->current_count > MAX_WING_SLOTS) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Starting Wing '%s' has '%d' ships. Truncating ship selection to "
             "'MAX_WING_SLOTS'\n",
@@ -3030,7 +3030,7 @@ void ss_init_wing_info (int wing_num, int starting_wing_num) {
             if (p_objp->wingnum == WING_INDEX (wp)) {
                 // niffiwan: don't overrun the array
                 if (ss_wing->num_slots >= MAX_WING_SLOTS) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Starting Wing '%s' has more than 'MAX_WING_SLOTS' "
                         "ships\n",

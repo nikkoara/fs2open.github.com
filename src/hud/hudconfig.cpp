@@ -712,7 +712,7 @@ void hud_config_init_ui () {
     hud_config_synch_ui ();
     HC_background_bitmap = bm_load (Hud_config_fname[gr_screen.res]);
     if (HC_background_bitmap < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Error loading HUD config menu background %s",
             Hud_config_fname[gr_screen.res]);
     }
@@ -722,7 +722,7 @@ void hud_config_init_ui () {
 
     HC_background_bitmap_mask = bm_load (Hud_config_mask_fname[gr_screen.res]);
     if (HC_background_bitmap_mask < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Error loading HUD config menu mask %s",
             Hud_config_mask_fname[gr_screen.res]);
         return;

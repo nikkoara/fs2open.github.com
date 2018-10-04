@@ -6,7 +6,7 @@ namespace memory {
 const quiet_alloc_t quiet_alloc;
 void out_of_memory () {
     mprintf (("Memory allocation failed!!!!!!!!!!!!!!!!!!!\n"));
-    Error (
+    fs2::dialog::error (
         LOCATION,
         "Out of memory.  Try closing down other applications, increasing "
         "your\n"

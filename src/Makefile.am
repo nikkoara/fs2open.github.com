@@ -364,4 +364,4 @@ fs2_LDADD =                                     \
     $(JSONCPP_LIBS)                             \
     $(LIBJPEG_LIBS)                             \
     $(LIBPNG_LIBS)                              \
-    -ldl
+    -lstdc++fs -ldl

@@ -771,7 +771,7 @@ void parse_mission_info (mission* pm, bool basic = false) {
         if (index >= 0)
             The_mission.ai_profile = &Ai_profiles[index];
         else
-            WarningEx (
+            fs2::dialog::warning_ex (
                 LOCATION, "Mission: %s\nUnknown AI profile %s!", pm->name,
                 temp);
     }
@@ -913,7 +913,7 @@ void parse_player_info2 (mission* pm) {
             stuff_string (str, F_NAME, NAME_LENGTH);
             ptr->default_ship = ship_info_lookup (str);
             if (-1 == ptr->default_ship) {
-                WarningEx (
+                fs2::dialog::warning_ex (
                     LOCATION,
                     "Mission: %s\nUnknown default ship %s!  Defaulting to %s.",
                     pm->name, str, Ship_info[ptr->ship_list[0]].name);
@@ -995,7 +995,7 @@ void parse_player_info2 (mission* pm) {
                     num_choices++;
                 }
                 else {
-                    WarningEx (
+                    fs2::dialog::warning_ex (
                         LOCATION,
                         "Weapon '%s' in weapon pool isn't allowed on player "
                         "loadout! Ignoring it ...\n",
@@ -1018,7 +1018,7 @@ void parse_player_info2 (mission* pm) {
     }
 
     if (nt != Num_teams)
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Not enough ship/weapon pools for mission.  There are %d teams "
             "and only %d pools.",
@@ -1646,7 +1646,7 @@ void parse_briefing (mission* /*pm*/, int flags) {
     }
 
     if (nt != Num_teams)
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Not enough briefings in mission file.  There are %d teams and "
             "only %d briefings.",
@@ -1698,7 +1698,7 @@ void parse_debriefing_new (mission* /*pm*/) {
     }
 
     if (nt != Num_teams)
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Not enough debriefings for mission.  There are %d teams and only "
             "%d debriefings;\n",
@@ -1794,14 +1794,14 @@ void parse_dock_one_docked_object (p_object* pobjp, p_object* parent_pobjp) {
     // check valid
     if ((dockpoint < 0) || (parent_dockpoint < 0)) {
         if (dockpoint < 0)
-            ReleaseWarning (
+            fs2::dialog::release_warning (
                 LOCATION, "Dockpoint %s could not be found on model %s",
                 dockpoint_name,
                 model_get (
                     Ship_info[Ships[objp->instance].ship_info_index].model_num)
                     ->filename);
         if (parent_dockpoint < 0)
-            ReleaseWarning (
+            fs2::dialog::release_warning (
                 LOCATION, "Dockpoint %s could not be found on model %s",
                 parent_dockpoint_name,
                 model_get (
@@ -2170,7 +2170,7 @@ int parse_create_object_sub (p_object* p_objp) {
                 &Ship_info[shipp->ship_info_index]);
             remaining_orders = p_objp->orders_accepted & ~default_orders;
             if (remaining_orders) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Ship %s has orders which it will accept that are\nnot "
                     "part of default orders accepted.\n\nPlease reedit this "
@@ -2603,7 +2603,7 @@ void parse_bring_in_docked_wing (p_object* p_objp, int wingnum, int shipnum) {
     }
     // how did we get more than one wave here?
     else if (wingp->current_wave > 1)
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Wing %s was created from docked ships but somehow has more than "
             "one wave!",
@@ -2663,7 +2663,7 @@ void resolve_parse_flags (
     if (parse_flags[Mission::Parse_Object_Flags::SF_Reinforcement]) {
         // Individual ships in wings can't be reinforcements - FUBAR
         if (shipp->wingnum >= 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Ship %s is a reinforcement unit but is a member of a wing. "
                 "Ignoring reinforcement flag.",
@@ -2676,7 +2676,7 @@ void resolve_parse_flags (
 
     if ((parse_flags[Mission::Parse_Object_Flags::OF_No_shields]) &&
         (parse_flags[Mission::Parse_Object_Flags::OF_Force_shields_on])) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "The parser found a ship with both the \"force-shields-on\" and "
             "\"no-shields\" flags; this is inconsistent!");
@@ -2831,7 +2831,7 @@ void fix_old_special_explosions (p_object* p_objp, int variable_index) {
     // check all the variables are valid
     for (i = variable_index; i < (variable_index + BLOCK_EXP_SIZE); i++) {
         if (!(Block_variables[i].type & SEXP_VARIABLE_BLOCK)) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "%s is using the old special explosions method but does not "
                 "appear to have variables for all the values",
@@ -2869,7 +2869,7 @@ void fix_old_special_hits (p_object* p_objp, int variable_index) {
     // check all the variables are valid
     for (i = variable_index; i < (variable_index + BLOCK_HIT_SIZE); i++) {
         if (!(Block_variables[i].type & SEXP_VARIABLE_BLOCK)) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "%s is using the old special hitpoints method but does not "
                 "appear to have variables for all the values",
@@ -2934,7 +2934,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
         Ship_info.size (), "ship class");
     if (p_objp->ship_class < 0) {
         if (Fred_running) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Ship \"%s\" has an invalid ship type (ships.tbl probably "
                 "changed).  Making it type 0\n",
@@ -2982,7 +2982,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
 
         if (new_alt_class.ship_class < 0) {
             if (!Fred_running) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Ship \"%s\" has an invalid Alternate Ship Class type "
                     "(ships.tbl probably changed). Skipping this entry",
@@ -2992,7 +2992,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
             else {
                 // incorrect initial values for a variable can be fixed in FRED
                 if (new_alt_class.variable_index != -1) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Ship \"%s\" has an invalid Alternate Ship Class "
                         "type.",
@@ -3001,7 +3001,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
                 // but there is little we can do if someone spelled a ship
                 // class incorrectly
                 else {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Ship \"%s\" has an invalid Alternate Ship Class "
                         "type. Skipping this entry",
@@ -3035,7 +3035,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
         // try and find the alternate name
         p_objp->alt_type_index = mission_parse_lookup_alt (name);
         if (p_objp->alt_type_index < 0)
-            WarningEx (
+            fs2::dialog::warning_ex (
                 LOCATION,
                 "Mission %s\nError looking up alternate ship type name %s!\n",
                 pm->name, name);
@@ -3052,7 +3052,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
         // try and find the callsign
         p_objp->callsign_index = mission_parse_lookup_callsign (name);
         if (p_objp->callsign_index < 0)
-            WarningEx (
+            fs2::dialog::warning_ex (
                 LOCATION, "Mission %s\nError looking up callsign %s!\n",
                 pm->name, name);
         else
@@ -3104,7 +3104,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
             F_NAME, Ai_class_names, Num_ai_classes, "AI class");
 
         if (p_objp->ai_class < 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "AI Class for ship %s does not exist in ai.tbl. Setting to "
                 "first available class.\n",
@@ -3168,7 +3168,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
         if ((p_objp->arrival_distance <= 0) &&
             ((p_objp->arrival_location == ARRIVE_NEAR_SHIP) ||
              (p_objp->arrival_location == ARRIVE_IN_FRONT_OF_SHIP))) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Arrival distance for ship %s cannot be %d.  Setting to 1.\n",
                 p_objp->name, p_objp->arrival_distance);
@@ -3191,7 +3191,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
     if (optional_string ("+Arrival Delay:")) {
         stuff_int (&delay);
         if (delay < 0)
-            Error (
+            fs2::dialog::error (
                 LOCATION, "Cannot have arrival delay < 0 (ship %s)",
                 p_objp->name);
     }
@@ -3237,7 +3237,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
     if (optional_string ("+Departure Delay:")) {
         stuff_int (&delay);
         if (delay < 0)
-            Error (
+            fs2::dialog::error (
                 LOCATION, "Cannot have departure delay < 0 (ship %s)",
                 p_objp->name);
     }
@@ -3266,7 +3266,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
             &unparsed);
         if (!unparsed.empty ()) {
             for (size_t k = 0; k < unparsed.size (); ++k) {
-                WarningEx (
+                fs2::dialog::warning_ex (
                     LOCATION, "Unknown flag in parse object flags: %s",
                     unparsed[k].c_str ());
             }
@@ -3288,7 +3288,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
                         Mission::Parse_Object_Flags::OF_No_collide);
                 }
                 else {
-                    WarningEx (
+                    fs2::dialog::warning_ex (
                         LOCATION, "Unknown flag in parse object flags: %s",
                         unparsed[k].c_str ());
                 }
@@ -3832,7 +3832,7 @@ void parse_common_object_data (p_object* objp) {
                     strcpy (Cargo_names[Num_cargo++], cargo_name);
                 }
                 else {
-                    WarningEx (
+                    fs2::dialog::warning_ex (
                         LOCATION,
                         "Maximum number of cargo names (%d) exceeded, "
                         "defaulting to Nothing!",
@@ -4581,7 +4581,7 @@ int parse_wing_create_ships (
                 if (it == wingp->special_ship) continue;
 
                 if (orders != Ships[wingp->ship_index[it]].orders_accepted) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "ships in wing %s are ignoring different player "
                         "orders.  Please find Mark A\nto talk to him about "
@@ -4683,7 +4683,7 @@ void parse_wing (mission* pm) {
         if ((wingp->arrival_distance <= 0) &&
             ((wingp->arrival_location == ARRIVE_NEAR_SHIP) ||
              (wingp->arrival_location == ARRIVE_IN_FRONT_OF_SHIP))) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Arrival distance for wing %s cannot be %d.  Setting to 1.\n",
                 wingp->name, wingp->arrival_distance);
@@ -4705,7 +4705,7 @@ void parse_wing (mission* pm) {
     if (optional_string ("+Arrival delay:")) {
         stuff_int (&delay);
         if (delay < 0)
-            Error (
+            fs2::dialog::error (
                 LOCATION, "Cannot have arrival delay < 0 on wing %s",
                 wingp->name);
     }
@@ -4747,7 +4747,7 @@ void parse_wing (mission* pm) {
     if (optional_string ("+Departure delay:")) {
         stuff_int (&delay);
         if (delay < 0)
-            Error (
+            fs2::dialog::error (
                 LOCATION, "Cannot have departure delay < 0 on wing %s",
                 wingp->name);
     }
@@ -4802,7 +4802,7 @@ void parse_wing (mission* pm) {
             else if (!strcasecmp (wing_flag_strings[i], NOX ("nav-carry-status")))
                 wingp->flags.set (Ship::Wing_Flags::Nav_carry);
             else
-                Warning (
+                fs2::dialog::warning (
                     LOCATION, "unknown wing flag\n%s\n\nSkipping.",
                     wing_flag_strings[i]);
         }
@@ -4874,7 +4874,7 @@ void parse_wing (mission* pm) {
         next_signature =
             wingp->net_signature + (wingp->wave_count * wingp->num_waves);
         if (next_signature > SHIP_SIG_MAX)
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Too many total ships in mission (%d) for network signature "
                 "assignment",
@@ -4928,7 +4928,7 @@ void parse_wing (mission* pm) {
                 if ((p_objp->flags
                          [Mission::Parse_Object_Flags::OF_Player_start]) &&
                     (saved_arrival_delay != 0)) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Wing %s specifies an arrival delay of %ds, but it "
                         "also contains a player.  The arrival delay will be "
@@ -4950,14 +4950,14 @@ void parse_wing (mission* pm) {
 
         // error checking
         if (assigned == 0) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Cannot load mission -- for wing %s, ship %s is not present "
                 "in #Objects section.\n",
                 wingp->name, ship_name);
         }
         else if (assigned > 1) {
-            Error (
+            fs2::dialog::error (
                 LOCATION,
                 "Cannot load mission -- for wing %s, ship %s is specified "
                 "multiple times in wing.\n",
@@ -5079,7 +5079,7 @@ void post_process_ships_wings () {
 
     // error checking for custom wings
     if (strcmp (Starting_wing_names[0], TVT_wing_names[0]) != 0) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "The first starting wing and the first team-versus-team wing must "
             "have the same wing name.\n");
@@ -5190,7 +5190,7 @@ void parse_event (mission* /*pm*/) {
         // sanity check
         if (event->team < -1 || event->team >= MAX_TVT_TEAMS) {
             if (Fred_running && !Warned_about_team_out_of_range) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "+Team: value was out of range in the mission file!  This "
                     "was probably caused by a bug in an older version of "
@@ -5226,7 +5226,7 @@ void parse_event (mission* /*pm*/) {
     // _argv[-1] - negative repeat count is now legal; means repeat
     // indefinitely.
     if (event->repeat_count == 0) {
-        Error (
+        fs2::dialog::error (
             LOCATION,
             "Repeat count for mission event %s is 0.\nMust be >= 1 or "
             "negative!",
@@ -5293,7 +5293,7 @@ void parse_goal (mission* pm) {
         // sanity check
         if (goalp->team < -1 || goalp->team >= Num_iffs) {
             if (Fred_running && !Warned_about_team_out_of_range) {
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "+Team: value was out of range in the mission file!  This "
                     "was probably caused by a bug in an older version of "
@@ -5397,7 +5397,7 @@ void parse_messages (mission* pm, int flags) {
         if (idx >= 0)
             pm->command_persona = idx;
         else
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Supplied Command Persona is invalid!  Defaulting to %s.",
                 Personas[Default_command_persona].name);
@@ -5459,7 +5459,7 @@ void parse_reinforcement (mission* pm) {
 
     if (rforce_obj == NULL) {
         if ((instance = wing_name_lookup (ptr->name, 1)) == -1) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Reinforcement %s not found as ship or wing",
                 ptr->name);
             return;
@@ -5468,7 +5468,7 @@ void parse_reinforcement (mission* pm) {
     else {
         // Individual ships in wings can't be reinforcements - FUBAR
         if (rforce_obj->wingnum >= 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Reinforcement %s is part of a wing - Ignoring reinforcement "
                 "declaration",
@@ -5629,7 +5629,7 @@ void parse_bitmaps (mission* pm) {
             }
 
             if (z == NUM_NEBULAS)
-                WarningEx (
+                fs2::dialog::warning_ex (
                     LOCATION, "Mission %s\nUnknown nebula %s!", pm->name, str);
 
             if (optional_string ("+Color:")) {
@@ -5643,7 +5643,7 @@ void parse_bitmaps (mission* pm) {
             }
 
             if (z == NUM_NEBULA_COLORS)
-                WarningEx (
+                fs2::dialog::warning_ex (
                     LOCATION, "Mission %s\nUnknown nebula color %s!", pm->name,
                     str);
 
@@ -5680,7 +5680,7 @@ void parse_bitmaps (mission* pm) {
         // don't allow overflow; just make sure the last background is the last
         // read
         if (Num_backgrounds >= MAX_BACKGROUNDS) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Too many backgrounds in mission!  Max is %d.",
                 MAX_BACKGROUNDS);
             Num_backgrounds = MAX_BACKGROUNDS - 1;
@@ -6175,7 +6175,7 @@ void post_process_mission () {
         for (i = 0; i < Num_parse_names; i++) {
             indices[i] = ship_name_lookup (Parse_names[i], 1);
             if (indices[i] < 0)
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Ship name \"%s\" referenced, but this ship doesn't exist",
                     Parse_names[i]);
@@ -6232,11 +6232,11 @@ void post_process_mission () {
 
                 if (!Fred_running) {
                     nprintf (("Error", "%s", error_msg.c_str ()));
-                    Error (LOCATION, "%s", error_msg.c_str ());
+                    fs2::dialog::error (LOCATION, "%s", error_msg.c_str ());
                 }
                 else {
                     nprintf (("Warning", "%s", error_msg.c_str ()));
-                    Warning (LOCATION, "%s", error_msg.c_str ());
+                    fs2::dialog::warning (LOCATION, "%s", error_msg.c_str ());
                 }
             }
         }
@@ -6438,7 +6438,7 @@ int parse_main (const char* mission_name, int flags) {
             // fail situation.
             if (!ftemp) {
                 if (!Fred_running)
-                    Error (
+                    fs2::dialog::error (
                         LOCATION, "Couldn't open mission '%s'\n",
                         mission_name);
 
@@ -6746,14 +6746,14 @@ void mission_parse_set_up_initial_docks () {
         // resolve the docker and dockee
         docker = mission_parse_get_parse_object (Initially_docked[i].docker);
         if (docker == NULL) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Could not resolve initially docked object '%s'!",
                 Initially_docked[i].docker);
             continue;
         }
         dockee = mission_parse_get_parse_object (Initially_docked[i].dockee);
         if (dockee == NULL) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Could not resolve docking target '%s' of initially docked "
                 "object '%s'!",
@@ -6772,7 +6772,7 @@ void mission_parse_set_up_initial_docks () {
 
         // docker point in use?
         if (dock_find_object_at_dockpoint (docker, docker_point) != NULL) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Trying to initially dock '%s' and '%s', but the former's "
                 "dockpoint is already in use!",
@@ -6782,7 +6782,7 @@ void mission_parse_set_up_initial_docks () {
 
         // dockee point in use?
         if (dock_find_object_at_dockpoint (dockee, dockee_point) != NULL) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Trying to initially dock '%s' and '%s', but the latter's "
                 "dockpoint is already in use!",
@@ -6813,14 +6813,14 @@ void mission_parse_set_up_initial_docks () {
 
         // display an error if necessary
         if (dfi.maintained_variables.int_value == 0) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "No dock leaders found in the docking group containing %s.  "
                 "The group will not appear in-mission!\n",
                 pobjp->name);
         }
         else if (dfi.maintained_variables.int_value > 1) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "There are multiple dock leaders in the docking group "
                 "containing the leader %s!  Setting %s as the sole "
@@ -7049,7 +7049,7 @@ int mission_set_arrival_location (
         // front of?
         if (dist <= 0) {
             // Goober5000 - default to 100
-            Warning (
+            fs2::dialog::warning (
                 LOCATION,
                 "Distance of %d is invalid in mission_set_arrival_location.  "
                 "Defaulting to 100.\n",
@@ -7219,7 +7219,7 @@ int mission_did_ship_arrive (p_object* objp) {
                 if (mission_parse_get_arrival_ship (name)) return -1;
 
                 mission_parse_mark_non_arrival (objp); // Goober5000
-                WarningEx (
+                fs2::dialog::warning_ex (
                     LOCATION,
                     "Warning: Ship %s cannot arrive from docking bay of "
                     "destroyed or departed %s.\n",
@@ -7229,7 +7229,7 @@ int mission_did_ship_arrive (p_object* objp) {
 
             // Goober5000: aha - also don't create if fighterbay is destroyed
             if (ship_fighterbays_all_destroyed (&Ships[shipnum])) {
-                WarningEx (
+                fs2::dialog::warning_ex (
                     LOCATION,
                     "Warning: Ship %s cannot arrive from destroyed docking "
                     "bay of %s.\n",
@@ -7239,7 +7239,7 @@ int mission_did_ship_arrive (p_object* objp) {
         }
 
         if (objp->flags[Mission::Parse_Object_Flags::SF_Cannot_arrive]) {
-            WarningEx (
+            fs2::dialog::warning_ex (
                 LOCATION,
                 "Warning: Ship %s cannot arrive. Ship not created.\n",
                 objp->name);
@@ -7966,7 +7966,7 @@ int add_path_restriction () {
 
     // check limit
     if (Num_path_restrictions >= MAX_PATH_RESTRICTIONS) {
-        Warning (LOCATION, "Maximum number of path restrictions reached");
+        fs2::dialog::warning (LOCATION, "Maximum number of path restrictions reached");
         return -1;
     }
 
@@ -8372,7 +8372,7 @@ void mission_parse_lookup_alt_index (int index, char* out) {
 
     if ((index < 0) || (index >= Mission_alt_type_count)) {
         if (mission_parse_lookup_alt_index_warn) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Ship with invalid alt_name.  Get a programmer");
             mission_parse_lookup_alt_index_warn = 0;
         }
@@ -8445,7 +8445,7 @@ void mission_parse_lookup_callsign_index (int index, char* out) {
 
     if ((index < 0) || (index >= Mission_callsign_count)) {
         if (mission_parse_lookup_callsign_index_warn) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Ship with invalid callsign.  Get a programmer");
             mission_parse_lookup_callsign_index_warn = 0;
         }

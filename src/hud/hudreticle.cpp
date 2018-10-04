@@ -887,28 +887,28 @@ void HudGaugeWeaponLinking::initBitmaps (
     char* fname_secondary_link_3) {
     arc.first_frame = bm_load_animation (fname_arc, &arc.num_frames);
     if (arc.first_frame < 0) {
-        Warning (LOCATION, "Cannot load hud ani: %s\n", fname_arc);
+        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_arc);
     }
 
     weapon_linking_modes[LINK_ONE_PRIMARY].first_frame = bm_load_animation (
         fname_primary_link_1,
         &weapon_linking_modes[LINK_ONE_PRIMARY].num_frames);
     if (weapon_linking_modes[LINK_ONE_PRIMARY].first_frame < 0) {
-        Warning (LOCATION, "Cannot load hud ani: %s\n", fname_primary_link_1);
+        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_primary_link_1);
     }
 
     weapon_linking_modes[LINK_TWO_PRIMARY].first_frame = bm_load_animation (
         fname_primary_link_2,
         &weapon_linking_modes[LINK_TWO_PRIMARY].num_frames);
     if (weapon_linking_modes[LINK_TWO_PRIMARY].first_frame < 0) {
-        Warning (LOCATION, "Cannot load hud ani: %s\n", fname_primary_link_2);
+        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_primary_link_2);
     }
 
     weapon_linking_modes[LINK_ONE_SECONDARY].first_frame = bm_load_animation (
         fname_secondary_link_1,
         &weapon_linking_modes[LINK_ONE_SECONDARY].num_frames);
     if (weapon_linking_modes[LINK_ONE_SECONDARY].first_frame < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Cannot load hud ani: %s\n", fname_secondary_link_1);
     }
 
@@ -916,7 +916,7 @@ void HudGaugeWeaponLinking::initBitmaps (
         fname_secondary_link_2,
         &weapon_linking_modes[LINK_TWO_SECONDARY].num_frames);
     if (weapon_linking_modes[LINK_TWO_SECONDARY].first_frame < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Cannot load hud ani: %s\n", fname_secondary_link_2);
     }
 
@@ -925,7 +925,7 @@ void HudGaugeWeaponLinking::initBitmaps (
             fname_secondary_link_3,
             &weapon_linking_modes[LINK_THREE_SECONDARY].num_frames);
     if (weapon_linking_modes[LINK_THREE_SECONDARY].first_frame < 0) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Cannot load hud ani: %s\n", fname_secondary_link_3);
     }
 }

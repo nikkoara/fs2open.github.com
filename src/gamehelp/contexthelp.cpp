@@ -308,14 +308,14 @@ void parse_helptbl (const char* filename) {
 
             if (overlay_id < 0) {
                 if (num_help_overlays >= MAX_HELP_OVERLAYS) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Could not load help overlay '%s' as maximum number "
                         "of help overlays was reached (Max is %d)",
                         name, MAX_HELP_OVERLAYS);
 
                     if (!skip_to_string ("$end")) {
-                        Error (
+                        fs2::dialog::error (
                             LOCATION,
                             "Couldn't find $end. Help.tbl or -hlp.tbm is "
                             "invalid.\n");
@@ -350,7 +350,7 @@ void parse_helptbl (const char* filename) {
             }
 
             if (help_overlaylist[overlay_id].num_resolutions < 1) {
-                Error (
+                fs2::dialog::error (
                     LOCATION,
                     "+resolutions in %s is %d. (Must be 1 or greater)",
                     filename, help_overlaylist[overlay_id].num_resolutions);

@@ -66,7 +66,7 @@ ParticleEffectPtr constructEffect (const std::string& name, EffectType type) {
         break;
     }
     default: {
-        Error (
+        fs2::dialog::error (
             LOCATION, "Unimplemented effect type %d encountered! Get a coder!",
             static_cast< int > (type));
         throw std::runtime_error ("Unimplemented effect type encountered!");
@@ -231,7 +231,7 @@ ParticleEffectHandle ParticleManager::addEffect (ParticleEffectPtr effect) {
         auto index = getEffectByName (effect->getName ());
 
         if (index.isValid ()) {
-            Warning (
+            fs2::dialog::warning (
                 LOCATION, "Effect with name '%s' already exists!",
                 effect->getName ().c_str ());
             return index;

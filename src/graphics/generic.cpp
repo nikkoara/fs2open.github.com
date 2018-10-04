@@ -294,7 +294,7 @@ int generic_anim_stream (generic_anim* ga, const bool cache) {
     if (ga->type == BM_TYPE_PNG) { ga->total_time = ga->png.anim->anim_time; }
     else {
         if (anim_fps == 0) {
-            Error (
+            fs2::dialog::error (
                 LOCATION, "animation (%s) has invalid fps of zero, fix this!",
                 ga->filename);
         }
@@ -645,7 +645,7 @@ void generic_anim_render_variable_frame_delay (
         ga->type == BM_TYPE_PNG,
         "only valid for apngs (currently); get a coder!");
     if (ga->keyframe != 0) {
-        Warning (LOCATION, "apngs don't support keyframes");
+        fs2::dialog::warning (LOCATION, "apngs don't support keyframes");
         return;
     }
 
@@ -743,7 +743,7 @@ void generic_anim_render (
     generic_anim* ga, float frametime, int x, int y, bool menu,
     const generic_extras* ge) {
     if ((ge != nullptr) && (ga->use_hud_color == true)) {
-        Warning (
+        fs2::dialog::warning (
             LOCATION, "Monochrome generic anims can't use extra info (yet)");
         return;
     }

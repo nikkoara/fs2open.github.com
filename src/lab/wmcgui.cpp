@@ -140,7 +140,7 @@ bool ScreenClassInfoEntry::Parse () {
 
 void GUISystem::ParseClassInfo (const char* filename) {
     if (ClassInfoParsed) {
-        Warning (LOCATION, "Class info is being parsed twice");
+        fs2::dialog::warning (LOCATION, "Class info is being parsed twice");
         DestroyClassInfo ();
     }
 
@@ -282,7 +282,7 @@ void ClassInfoEntry::Parse (const char* tag, int in_type) {
             if (IMG_HANDLE_IS_VALID (Handles[i].Image)) {
                 IMG_INFO (Handles[i].Image, &cw, &ch);
                 if (cw != w || ch != h) {
-                    Warning (
+                    fs2::dialog::warning (
                         LOCATION,
                         "Grouped image size unequal; Handle number %d under "
                         "$%s: has a different size than base image type",
@@ -451,7 +451,7 @@ GUIObject* GUIScreen::Add (GUIObject* new_gauge) {
             else {
                 // This is icky; we might cast a pointer after this.
                 // So return NULL with a warning
-                Warning (
+                fs2::dialog::warning (
                     LOCATION,
                     "Attempt to create another object with name '%s'; new "
                     "object type was %d, existing object type was %d. This "
@@ -2375,7 +2375,7 @@ void Text::Load () {
         SetText (*ubSavePointer);
     }
     else {
-        Warning (
+        fs2::dialog::warning (
             LOCATION,
             "Unknown type (or no type) given in Text::Load() - nothing "
             "happened.");
