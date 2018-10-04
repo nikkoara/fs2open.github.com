@@ -577,7 +577,7 @@ void pilotfile::plr_write_stats_multi () {
 
 void pilotfile::plr_read_controls () {
     int idx, list_size, list_axis;
-    short id1, id2, id3 __UNUSED;
+    short id1, id2, id3;
     int axi, inv;
 
     list_size = (int)cfread_ushort (cfp);
@@ -888,7 +888,7 @@ bool pilotfile::load_player (const char* callsign, player* _p) {
         if (offset_pos) {
             cfseek (cfp, offset_pos, CF_SEEK_CUR);
             mprintf (
-                ("PLR => WARNING: Advancing to the next section. " SIZE_T_ARG
+                ("PLR => WARNING: Advancing to the next section. %zu"
                  " bytes were skipped!\n",
                  offset_pos));
         }

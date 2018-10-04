@@ -134,7 +134,7 @@ int cfseek (CFILE* cfile, int offset, int where) {
         Assertion (
             goal_position >= cb->lib_offset,
             "Invalid offset values detected while seeking! Goal "
-            "was " SIZE_T_ARG ", lib_offset is " SIZE_T_ARG ".",
+            "was %zu, lib_offset is %zu.",
             goal_position, cb->lib_offset);
     }
     // If we only have a data pointer this will do all the work

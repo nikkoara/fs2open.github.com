@@ -200,7 +200,7 @@ int FS2NetD_GetPlayerData (
         uint rc_total = 0;
         ubyte reply_type = 0;
         int si_index = 0;
-        ushort bogus __UNUSED;
+        ushort bogus;
         ushort num_type_kills = 0, num_medals = 0;
         char ship_name[NAME_LENGTH];
         int idx;
@@ -457,8 +457,8 @@ int FS2NetD_Login (const char* username, const char* password, bool do_send) {
         int rc;
         uint rc_total = 0;
         ubyte login_status = 0;
-        int sid __UNUSED;
-        short pilots __UNUSED;
+        int sid;
+        short pilots;
 
         do {
             rc = FS2NetD_GetData (
@@ -712,7 +712,7 @@ int FS2NetD_ValidateTableList (bool do_send) {
         if (num_tables > (int)Table_valid_status.size ()) {
             ml_printf (
                 "FS2NetD WARNING: Table list contains %i tables, but we only "
-                "requested " SIZE_T_ARG "!  Invalid data!",
+                "requested %zu!  Invalid data!",
                 num_tables, Table_valid_status.size ());
             return -1;
         }

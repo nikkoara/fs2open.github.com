@@ -230,7 +230,7 @@ void cfile_refresh () { cf_build_secondary_filelist (Cfile_cdrom_dir); }
  * @retval 1 Failed to change to new directory's drive (Windows only)
  * @retval 2 Failed to change to new directory
  */
-static int _cfile_chdir (const char* new_dir, const char* cur_dir __UNUSED) {
+static int _cfile_chdir (const char* new_dir, const char* cur_dir) {
     int status;
     const char* path = NULL;
     const char no_dir[] = "\\.";
@@ -1529,7 +1529,7 @@ int cf_chksum_pack (const char* filename, uint* chk_long, bool full) {
 
         Assertion (
             max_size > header_offset,
-            "max_size (" SIZE_T_ARG ") > header_offset in packfile %s",
+            "max_size (%zu) > header_offset in packfile %s",
             max_size, filename);
         max_size -= header_offset;
 

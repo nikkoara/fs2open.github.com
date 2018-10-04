@@ -726,7 +726,7 @@ void copy_to_eoln (
 
     if (count >= max)
         error_display (
-            0, "Token too long: [%s].  Length = " SIZE_T_ARG ".  Max is %i.\n",
+            0, "Token too long: [%s].  Length = %zu.  Max is %i.\n",
             next_tokens (), strlen (next_tokens ()), max);
 
     *outstr = 0;
@@ -783,7 +783,7 @@ void copy_to_next_white (char* outstr, char* instr, int max) {
 
     if (count >= max)
         error_display (
-            0, "Token too long: [%s].  Length = " SIZE_T_ARG ".  Max is %i.\n",
+            0, "Token too long: [%s].  Length = %zu.  Max is %i.\n",
             next_tokens (), strlen (next_tokens ()), max);
 
     *outstr = 0;
@@ -872,7 +872,7 @@ void copy_text_until (
     else {
         nprintf (
             ("Error",
-             "Error.  Too much text (" SIZE_T_ARG
+             "Error.  Too much text (%zu"
              " chars, %i allowed) before %s\n",
              foundstr - instr - strlen (endstr), max_chars, endstr));
 
@@ -1090,7 +1090,7 @@ int get_string (char* str, int max) {
 
     if (max >= 0 && len >= (size_t)max)
         error_display (
-            0, "String too long.  Length = " SIZE_T_ARG ".  Max is %i.\n", len,
+            0, "String too long.  Length = %zu.  Max is %i.\n", len,
             max);
 
     strncpy (str, Mp + 1, len);
@@ -1194,7 +1194,7 @@ void stuff_string (char* outstr, int type, int len, const char* terminators) {
         if (strlen (read_str) > (uint)final_len)
             error_display (
                 0,
-                "Token too long: [%s].  Length = " SIZE_T_ARG
+                "Token too long: [%s].  Length = %zu"
                 ".  Max is %i.\n",
                 read_str, strlen (read_str), final_len);
 
@@ -2039,7 +2039,7 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
                     else {
                         fs2::dialog::warning (
                             LOCATION,
-                            "File reencoding failed (error code " SIZE_T_ARG
+                            "File reencoding failed (error code %zu"
                             ")!\n"
                             "You will probably encounter encoding issues.",
                             err);
@@ -2055,7 +2055,7 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
                 fs2::dialog::warning (
                     LOCATION,
                     "Found invalid UTF-8 encoding in file %s at "
-                    "position " PTRDIFF_T_ARG
+                    "position %zd"
                     "!\n"
                     "This may cause parsing errors and should be fixed!",
                     filename, invalid - raw_text);

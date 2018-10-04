@@ -96,7 +96,7 @@ public:
                 effectID.value () <
                     static_cast< ParticleEffectHandle::impl_type > (
                         m_effects.size ()),
-            "Particle effect index " PTRDIFF_T_ARG " is invalid!",
+            "Particle effect index %zd" " is invalid!",
             effectID.value ());
 
         return m_effects[effectID.value ()].get ();

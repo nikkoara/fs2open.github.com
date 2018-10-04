@@ -489,13 +489,13 @@ void hud_shield_quadrant_hit (object* objp, int quadrant) {
 
     Assertion (
         !shi->shield_hit_timers.empty (),
-        "Shield hit info object for object '%s' has a size " SIZE_T_ARG
+        "Shield hit info object for object '%s' has a size %zu"
         " shield_hit_timers; get a coder!\n",
         Ships[objp->instance].ship_name, shi->shield_hit_timers.size ());
     Assertion (
         shi->hull_hit_index < (int)shi->shield_hit_timers.size (),
         "Shield hit info object for object '%s' has a hull_hit_index of %d "
-        "(should be between 0 and " SIZE_T_ARG "); get a coder!\n",
+        "(should be between 0 and %zu); get a coder!\n",
         Ships[objp->instance].ship_name, shi->hull_hit_index,
         shi->shield_hit_timers.size () - 1);
 

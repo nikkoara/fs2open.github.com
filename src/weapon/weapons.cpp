@@ -947,7 +947,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
             if (line_length >= WEAPON_DESC_MAX_LENGTH) {
                 error_display (
                     0,
-                    "Weapon description line " SIZE_T_ARG
+                    "Weapon description line %zu"
                     " is too long. Maximum is %d.",
                     num_lines + 1, WEAPON_DESC_MAX_LENGTH);
             }
@@ -3025,7 +3025,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                     fs2::dialog::warning (
                         LOCATION,
                         "The period is too large for the number of "
-                        "substitution patterns!  desired size=" SIZE_T_ARG
+                        "substitution patterns!  desired size=%zu"
                         ", max size=%d",
                         desired_size, MAX_SUBSTITUTION_PATTERNS);
                 }
@@ -8537,7 +8537,7 @@ void validate_SSM_entries () {
             wip->SSM_index >= static_cast< int > (Ssm_info.size ())) {
             fs2::dialog::warning (
                 LOCATION,
-                "Invalid SSM index '%d' (should be 0-" SIZE_T_ARG
+                "Invalid SSM index '%d' (should be 0-%zu"
                 ") in specification for %s (%s:line %d).\n",
                 wip->SSM_index, Ssm_info.size () - 1, it->c_str (),
                 dat->filename.c_str (), dat->linenum);

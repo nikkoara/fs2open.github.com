@@ -687,8 +687,8 @@ void lcl_ext_localize_sub (
         if (str_len > max_len)
             error_display (
                 0,
-                "Token too long: [%s].  Length = " SIZE_T_ARG
-                ".  Max is " SIZE_T_ARG ".\n",
+                "Token too long: [%s].  Length = %zu"
+                ".  Max is %zu.\n",
                 in, str_len, max_len);
 
         strncpy (out, in, max_len);
@@ -704,8 +704,8 @@ void lcl_ext_localize_sub (
         if (str_len > max_len)
             error_display (
                 0,
-                "Token too long: [%s].  Length = " SIZE_T_ARG
-                ".  Max is " SIZE_T_ARG ".\n",
+                "Token too long: [%s].  Length = %zu"
+                ".  Max is %zu.\n",
                 in, str_len, max_len);
 
         strncpy (out, in, max_len);
@@ -721,8 +721,8 @@ void lcl_ext_localize_sub (
         if (str_len > max_len)
             error_display (
                 0,
-                "Token too long: [%s].  Length = " SIZE_T_ARG
-                ".  Max is " SIZE_T_ARG ".\n",
+                "Token too long: [%s].  Length = %zu"
+                ".  Max is %zu.\n",
                 in, str_len, max_len);
 
         strncpy (out, in, max_len);
@@ -735,8 +735,8 @@ void lcl_ext_localize_sub (
         if (str_len > max_len)
             error_display (
                 0,
-                "Token too long: [%s].  Length = " SIZE_T_ARG
-                ".  Max is " SIZE_T_ARG ".\n",
+                "Token too long: [%s].  Length = %zu"
+                ".  Max is %zu.\n",
                 in, str_len, max_len);
 
         strncpy (out, in, max_len);
@@ -753,8 +753,8 @@ void lcl_ext_localize_sub (
         if (strlen (text_str) > max_len)
             error_display (
                 0,
-                "Token too long: [%s].  Length = " SIZE_T_ARG
-                ".  Max is " SIZE_T_ARG ".\n",
+                "Token too long: [%s].  Length = %zu"
+                ".  Max is %zu.\n",
                 text_str, strlen (text_str), max_len);
 
         strncpy (out, text_str, max_len);
@@ -770,8 +770,8 @@ void lcl_ext_localize_sub (
         if (strlen (Lcl_ext_str[str_id]) > max_len)
             error_display (
                 0,
-                "Token too long: [%s].  Length = " SIZE_T_ARG
-                ".  Max is " SIZE_T_ARG ".\n",
+                "Token too long: [%s].  Length = %zu"
+                ".  Max is %zu.\n",
                 Lcl_ext_str[str_id], strlen (Lcl_ext_str[str_id]), max_len);
 
         strncpy (out, Lcl_ext_str[str_id], max_len);
@@ -781,8 +781,8 @@ void lcl_ext_localize_sub (
         if (strlen (text_str) > max_len)
             error_display (
                 0,
-                "Token too long: [%s].  Length = " SIZE_T_ARG
-                ".  Max is " SIZE_T_ARG ".\n",
+                "Token too long: [%s].  Length = %zu"
+                ".  Max is %zu.\n",
                 text_str, strlen (text_str), max_len);
 
         strncpy (out, text_str, max_len);

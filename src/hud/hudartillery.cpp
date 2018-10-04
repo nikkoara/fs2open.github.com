@@ -61,7 +61,7 @@ void parse_ssm (const char* filename) {
             // name
             stuff_string (s.name, F_NAME, NAME_LENGTH);
             if (*s.name == 0) {
-                sprintf (s.name, "SSM " SIZE_T_ARG, Ssm_info.size ());
+                sprintf (s.name, "SSM %zu", Ssm_info.size ());
                 mprintf (
                     ("Found an SSM entry without a name.  Assigning \"%s\".\n",
                      s.name));
@@ -242,7 +242,7 @@ void ssm_get_random_start_pos (
         break;
     default:
         UNREACHABLE (
-            "Unknown shape '%d' in SSM type #" SIZE_T_ARG
+            "Unknown shape '%d' in SSM type #%zu"
             " ('%s'). This should not be possible; get a coder!\n",
             s->shape, ssm_index, s->name);
         break;

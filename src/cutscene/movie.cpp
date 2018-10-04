@@ -75,9 +75,9 @@ void showVideoInfo (const PlayerState& state) {
         audio_queue_size += queued;
     }
 
-    y = print_string (x, y, "Audio Queue size: " SIZE_T_ARG, audio_queue_size);
+    y = print_string (x, y, "Audio Queue size: %zu", audio_queue_size);
     y = print_string (
-        x, y, "Video Queue size: " SIZE_T_ARG,
+        x, y, "Video Queue size: %zu",
         state.decoder->getVideoQueueSize ());
     y += font::get_current_font ()->getHeight ();
     // Estimate the size of the video buffer
@@ -86,7 +86,7 @@ void showVideoInfo (const PlayerState& state) {
         (size_t) (state.props.size.width * state.props.size.height * 1.5);
     size_t total_size =
         single_frame_size * state.decoder->getVideoQueueSize ();
-    print_string (x, y, "Video buffer size: " SIZE_T_ARG "B", total_size);
+    print_string (x, y, "Video buffer size: %zuB", total_size);
 }
 
 void displayVideo (Player* player, PlaybackState* state) {

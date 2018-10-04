@@ -115,8 +115,8 @@ void parse_mod_table (const char* filename) {
             if (len > maxlen) {
                 error_display (
                     0,
-                    "Token too long: [%s].  Length = " SIZE_T_ARG
-                    ".  Max is " SIZE_T_ARG ".",
+                    "Token too long: [%s].  Length = %zu"
+                    ".  Max is %zu.",
                     temp, len, maxlen);
                 temp[maxlen] = 0;
             }

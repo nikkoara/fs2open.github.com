@@ -650,7 +650,7 @@ size_t getJoystickCount () { return joysticks.size (); }
 
 Joystick* getJoystick (size_t index) {
     Assertion (
-        index < getJoystickCount (), "Invalid joystick index " SIZE_T_ARG "!",
+        index < getJoystickCount (), "Invalid joystick index %zu!",
         index);
 
     return joysticks[index].get ();

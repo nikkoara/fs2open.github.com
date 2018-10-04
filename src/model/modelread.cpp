@@ -890,9 +890,9 @@ void create_vertex_buffer (polymodel* pm) {
             pm->submodel[i].buffer.stride != stride) {
             Assertion (
                 stride == 0,
-                "Submodel %d of model %s has a stride of " SIZE_T_ARG
+                "Submodel %d of model %s has a stride of %zu"
                 " while the rest of the model has a vertex stride "
-                "of " SIZE_T_ARG "!",
+                "of %zu!",
                 i, pm->filename, pm->submodel[i].buffer.stride, stride);
 
             stride = pm->submodel[i].buffer.stride;

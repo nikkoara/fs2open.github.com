@@ -799,10 +799,10 @@ void shockwave_page_in () {
         else if (it->model_id >= 0) {
             // for a model we have to run model_load() on it again to make sure
             // that it's ref_count is sane for this mission
-            int idx __UNUSED = model_load (it->filename, 0, NULL);
+            int idx = model_load (it->filename, 0, NULL);
             Assertion (
                 idx == it->model_id,
-                "Shockwave_info[" SIZE_T_ARG
+                "Shockwave_info[%zu"
                 "] got two different model_ids: %d and %d. Filename is "
                 "\"%s\". Get a coder!\n",
                 std::distance (Shockwave_info.begin (), it), idx, it->model_id,

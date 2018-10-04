@@ -1183,7 +1183,7 @@ void game_loading_callback_close () {
     // Make sure bar shows all the way over.
     game_loading_callback (COUNT_ESTIMATE);
 
-    int real_count __UNUSED = game_busy_callback (NULL);
+    int real_count = game_busy_callback (NULL);
     io::mouse::CursorManager::get ()->showCursor (true);
 
     Game_loading_callback_inited = 0;
@@ -1347,7 +1347,7 @@ void game_post_level_init () {
 int game_start_mission () {
     mprintf (("=================== STARTING LEVEL LOAD ==================\n"));
 
-    int s1 __UNUSED = timer_get_milliseconds ();
+    int s1 = timer_get_milliseconds ();
 
     // clear post processing settings
     gr_post_process_set_defaults ();
@@ -1407,7 +1407,7 @@ int game_start_mission () {
 
     bm_print_bitmaps ();
 
-    int e1 __UNUSED = timer_get_milliseconds ();
+    int e1 = timer_get_milliseconds ();
 
     mprintf (("Level load took %f seconds.\n", (e1 - s1) / 1000.0f));
     return 1;
@@ -1634,7 +1634,7 @@ DCF (gamma, "Sets and saves Gamma Factor") {
  * Game initialisation
  */
 void game_init () {
-    int s1 __UNUSED, e1 __UNUSED;
+    int s1, e1;
     const char* ptr;
     char whee[MAX_PATH_LEN];
 

@@ -934,7 +934,7 @@ void parse_iface_sound_list (
         // if we're using the old format, double check the size)
         if (!scp_list && (destination.size () != (unsigned)check)) {
             mprintf (
-                ("%s in '%s' has " SIZE_T_ARG
+                ("%s in '%s' has %zu"
                  " entries. This does not match entered size of %i.",
                  tag, object_name, destination.size (), check));
         }

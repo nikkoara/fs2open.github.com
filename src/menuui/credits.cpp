@@ -356,13 +356,13 @@ void credits_parse_table (const char* filename) {
                 Assertion (
                     lines.size () == (size_t)numLines,
                     "split_str reported %d lines but vector "
-                    "contains " SIZE_T_ARG " entries!",
+                    "contains %zu entries!",
                     numLines, lines.size ());
 
                 Assertion (
                     lines.size () <= charNum.size (),
                     "Something has gone wrong while splitting strings. "
-                    "Got " SIZE_T_ARG " lines but only " SIZE_T_ARG
+                    "Got %zu lines but only %zu"
                     " chacter lengths.",
                     lines.size (), charNum.size ());
 

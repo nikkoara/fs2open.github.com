@@ -241,7 +241,7 @@ FontManager::loadNVGFont (const std::string& fileName, float fontSize) {
 
         if (!fontData) {
             mprintf (
-                ("Couldn't allocate " SIZE_T_ARG
+                ("Couldn't allocate %zu"
                  " bytes for reading font file \"%s\"!",
                  size, fileName.c_str ()));
             cfclose (fontFile);

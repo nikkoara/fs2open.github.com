@@ -23008,7 +23008,7 @@ void sexp_string_concatenate (int n) {
     if (strlen (new_text) >= TOKEN_LENGTH) {
         fs2::dialog::warning (
             LOCATION,
-            "Concatenated string '%s' has " SIZE_T_ARG
+            "Concatenated string '%s' has %zu"
             " characters, but the maximum is %d.  The string will be "
             "truncated.",
             new_text, strlen (new_text), TOKEN_LENGTH - 1);
@@ -23051,7 +23051,7 @@ void sexp_string_concatenate_block (int n) {
     if (new_text.length () >= TOKEN_LENGTH) {
         fs2::dialog::warning (
             LOCATION,
-            "Concatenated string '%s' has " SIZE_T_ARG
+            "Concatenated string '%s' has %zu"
             " characters, but the maximum is %d.  The string will be "
             "truncated.",
             new_text.c_str (), new_text.length (), TOKEN_LENGTH - 1);

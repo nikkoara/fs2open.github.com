@@ -5835,7 +5835,7 @@ void ship_init () {
         // We shouldn't already have any subsystem pointers at this point.
         Assertion (
             Ship_subsystems.empty (),
-            "Some pre-allocated subsystems didn't get cleared out: " SIZE_T_ARG
+            "Some pre-allocated subsystems didn't get cleared out: %zu"
             " batches present during ship_init(); get a coder!\n",
             Ship_subsystems.size ());
     }
@@ -7894,7 +7894,7 @@ static void ship_subsystems_delete (ship* shipp) {
 
 void ship_delete (object* obj) {
     ship* shipp;
-    int num, objnum __UNUSED;
+    int num, objnum;
 
     num = obj->instance;
     Assert (num >= 0);
@@ -17758,7 +17758,7 @@ void ship_page_in () {
 
     // Page in all the ship classes that are used on this level
     int num_ship_types_used = 0;
-    int test_id __UNUSED = -1;
+    int test_id = -1;
 
     memset (fireball_used, 0, sizeof (int) * MAX_FIREBALL_TYPES);
 
@@ -19574,7 +19574,7 @@ ArmorType::ArmorType (const char* in_name) {
     if (len >= NAME_LENGTH) {
         fs2::dialog::warning (
             LOCATION,
-            "Armor name %s is " SIZE_T_ARG
+            "Armor name %s is %zu"
             " characters too long, and will be truncated",
             in_name, len - NAME_LENGTH);
     }
@@ -19733,9 +19733,9 @@ void ArmorType::ParseData () {
             if (adt.Calculations.size () != adt.Arguments.size ()) {
                 fs2::dialog::warning (
                     LOCATION,
-                    "Armor '%s', damage type " SIZE_T_ARG
+                    "Armor '%s', damage type %zu"
                     ": Armor has a different number of calculation types than "
-                    "arguments (" SIZE_T_ARG ", " SIZE_T_ARG ")",
+                    "arguments (%zu, %zu)",
                     Name, DamageTypes.size (), adt.Calculations.size (),
                     adt.Arguments.size ());
             }

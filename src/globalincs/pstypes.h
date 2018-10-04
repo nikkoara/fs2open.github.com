@@ -7,7 +7,6 @@
 
 #include "windows_stub/config.h"
 #include "globalincs/scp_defines.h"
-#include "globalincs/toolchain.h"
 #include "utils/strings.h"
 
 #include <cstdio> // For NULL, etc
@@ -218,40 +217,6 @@ extern int Global_error_count;
 #define nprintf(args)
 #endif
 
-#define LOCATION __FILE__, __LINE__
-
-#if defined(NDEBUG)
-#define Assert(expr) \
-    do { ASSUME (expr); } while (false)
-#else
-#define Assert(expr)                                                \
-    do {                                                            \
-        if (!(expr)) {                                              \
-            fs2::dialog::assert_msg (#expr, __FILE__, __LINE__);    \
-        }                                                           \
-        ASSUME (expr);                                              \
-    } while (false)
-#endif
-
-// Goober5000 - define Verify for use in both release and debug mode
-#define Verify(x)                                                       \
-    do {                                                                \
-        if (!(x)) {                                                     \
-            fs2::dialog::error (LOCATION, "Verify failure: %s\n", #x); } \
-        ASSUME (x);                                                     \
-    } while (0)
-
-// VerifyEx
-#define VerifyEx(x, y, ...)                                                 \
-    do {                                                                    \
-        if (!(x)) {                                                         \
-            fs2::dialog::error (                                            \
-                LOCATION, "Verify failure: %s with help text " #y "\n", #x, \
-                ##__VA_ARGS__);                                             \
-        }                                                                   \
-        ASSUME (x);                                                         \
-    } while (0)
-
 #if defined(NDEBUG)
 #define Int3() do { } while (0)
 #else
@@ -275,14 +240,10 @@ const float PI_2 = (PI / 2.0f);
 const int RAND_MAX_2 = (RAND_MAX / 2);
 const float RAND_MAX_1f = (1.0f / RAND_MAX);
 
-extern int Fred_running; // Is Fred running, or FreeSpace?
+extern int Fred_running;
 extern bool running_unittests;
 
 const size_t INVALID_SIZE = static_cast< size_t > (-1);
-
-//======================================================================================
-//======================================================================================
-//======================================================================================
 
 #include "math/fix.h"
 #include "math/floating.h"

@@ -104,7 +104,7 @@ factor_table::~factor_table () {}
 size_t factor_table::getNext (size_t n, size_t current) {
     Assertion (
         n >= 1,
-        "factor_table::getNext() called with " SIZE_T_ARG
+        "factor_table::getNext() called with %zu"
         ", when only natural numbers make sense; get a coder!\n",
         n);
 

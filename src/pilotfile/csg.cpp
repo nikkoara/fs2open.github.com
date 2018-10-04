@@ -1130,7 +1130,7 @@ void pilotfile::csg_read_settings () {
 
     if (csg_ver < 3) {
         // detail
-        int dummy __UNUSED = cfread_int (cfp);
+        int dummy = cfread_int (cfp);
         dummy = cfread_int (cfp);
         dummy = cfread_int (cfp);
         dummy = cfread_int (cfp);
@@ -1169,7 +1169,7 @@ void pilotfile::csg_write_settings () {
 
 void pilotfile::csg_read_controls () {
     int idx, list_size;
-    short id1, id2, id3 __UNUSED;
+    short id1, id2, id3;
 
     list_size = (int)cfread_ushort (cfp);
 
@@ -1574,7 +1574,7 @@ bool pilotfile::save_savefile () {
     // theory)
     Assertion (
         Red_alert_wingman_status.size () <= MAX_SHIPS,
-        "Invalid number of Red_alert_wingman_status entries: " SIZE_T_ARG "\n",
+        "Invalid number of Red_alert_wingman_status entries: %zu\n",
         Red_alert_wingman_status.size ());
 
     // open it, hopefully...

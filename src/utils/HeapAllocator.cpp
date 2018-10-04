@@ -216,7 +216,7 @@ void HeapAllocator::checkRangesMerged () {
         if (!first) {
             Assertion (
                 lastEnd != range.offset,
-                "Found unmerged ranges at offset " SIZE_T_ARG "!", lastEnd);
+                "Found unmerged ranges at offset %zu!", lastEnd);
         }
 
         lastEnd = range.offset + range.size;

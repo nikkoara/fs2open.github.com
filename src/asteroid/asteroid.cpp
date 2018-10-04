@@ -2027,7 +2027,7 @@ static void asteroid_parse_tbl () {
                         LOCATION,
                         "Get a coder! Math has broken!\n"
                         "Important numbers:\n"
-                        "\ttally: " SIZE_T_ARG
+                        "\ttally: %zu"
                         "\n"
                         "\tNUM_DEBRIS_SIZES: %d\n",
                         tally, NUM_DEBRIS_SIZES);
@@ -2052,10 +2052,10 @@ static void asteroid_parse_tbl () {
 #endif
             fs2::dialog::error (
                 LOCATION,
-                "Found " SIZE_T_ARG " asteroids/debris when " SIZE_T_ARG
+                "Found %zu asteroids/debris when %zu"
                 " expected\n\n"
                 "<Number expected> = <Number of species> * %d + %d generic "
-                "asteroids\n" SIZE_T_ARG " = " SIZE_T_ARG
+                "asteroids\n%zu = %zu"
                 "*%d + %d\n\n"
 #ifdef NDEBUG
                 "Run a debug build to see a list of all parsed asteroids\n",

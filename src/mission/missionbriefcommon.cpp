@@ -261,7 +261,7 @@ void brief_parse_icon_tbl () {
             if (Briefing_icon_info.size () >= max_icons) {
                 fs2::dialog::warning (
                     LOCATION,
-                    "Too many icons in icons.tbl; only the first " SIZE_T_ARG
+                    "Too many icons in icons.tbl; only the first %zu"
                     " will be used",
                     max_icons);
                 skip_to_start_of_string ("#End");

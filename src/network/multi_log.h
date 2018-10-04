@@ -23,8 +23,8 @@ void multi_log_close ();
 void multi_log_process ();
 
 // printf function itself called by the ml_printf macro
-void ml_printf (SCP_FORMAT_STRING const char* format, ...)
-    SCP_FORMAT_STRING_ARGS (1, 2);
+void ml_printf (const char* format, ...)
+    __attribute__ ((format (printf, 1, 2)));
 
 // string print function
 void ml_string (const char* string, int add_time = 1);

@@ -487,7 +487,7 @@ DCF (bmpman, "Shows/changes bitmap caching parameters and usage") {
 
     if (dc_optional_string_either ("status", "--status") ||
         dc_optional_string_either ("?", "--?")) {
-        dc_printf ("Total RAM usage: " SIZE_T_ARG " bytes\n", bm_texture_ram);
+        dc_printf ("Total RAM usage: %zu bytes\n", bm_texture_ram);
 
         if (Bm_max_ram > 1024 * 1024) {
             dc_printf (
@@ -509,7 +509,7 @@ DCF (bmpman, "Shows/changes bitmap caching parameters and usage") {
 
     if (dc_optional_string ("flush")) {
         dc_printf (
-            "Total RAM usage before flush: " SIZE_T_ARG " bytes\n",
+            "Total RAM usage before flush: %zu bytes\n",
             bm_texture_ram);
         for (auto& block : bm_blocks) {
             for (size_t i = 0; i < BM_BLOCK_SIZE; ++i) {
@@ -519,7 +519,7 @@ DCF (bmpman, "Shows/changes bitmap caching parameters and usage") {
             }
         }
         dc_printf (
-            "Total RAM after flush: " SIZE_T_ARG " bytes\n", bm_texture_ram);
+            "Total RAM after flush: %zu bytes\n", bm_texture_ram);
     }
     else if (dc_optional_string ("ram")) {
         dc_stuff_int (&Bm_max_ram);
@@ -2240,7 +2240,7 @@ void bm_lock_apng (
         be->info.ani.apng.frame_delay = cumulative_frame_delay;
 
         nprintf (
-            ("apng", "locking apng frame: %s (%i|%i|%i) (%f) " SIZE_T_ARG "\n",
+            ("apng", "locking apng frame: %s (%i|%i|%i) (%f) %zu\n",
              be->filename, bpp, bmp->bpp, bm->true_bpp,
              be->info.ani.apng.frame_delay, be->mem_taken));
     }
@@ -3406,7 +3406,7 @@ static int find_block_of (int n, int start_block) {
     Assertion (
         n < (int)BM_BLOCK_SIZE,
         "Can not allocate bitmap block with %d slots! Block size is "
-        "only " SIZE_T_ARG "!",
+        "only %zu!",
         n, BM_BLOCK_SIZE);
 
     int nstart = 0;

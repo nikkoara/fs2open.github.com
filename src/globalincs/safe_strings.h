@@ -45,7 +45,7 @@ typedef int errno_t;
 #define __safe_strings_error_handler( val )                                \
     fs2::dialog::error (                                                   \
         file, line,                                                        \
-        "%s: String error. Please Report.\nTrying to put into " SIZE_T_ARG \
+        "%s: String error. Please Report.\nTrying to put into %zu" \
         " byte buffer:\n%s",                                               \
         #val, sizeInBytes, strSource)
 #endif

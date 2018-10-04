@@ -26,4 +26,47 @@
 
 #define FS2_UNUSED(x) ((void*)x)
 
+#if defined(NDEBUG)
+#  define Assert(expr)                                              \
+    do {                                                            \
+        if (!(expr)) {                                              \
+            fs2::dialog::assert_msg (#expr, __FILE__, __LINE__);    \
+        }                                                           \
+    } while (0)
+
+#  define Assertion(expr, msg, ...)                             \
+    do {                                                        \
+        if (!(expr)) {                                          \
+            fs2::dialog::assert_msg (                           \
+                #expr, __FILE__, __LINE__, msg, ##__VA_ARGS__); \
+        }                                                       \
+    } while (0)
+
+#  define UNREACHABLE(msg, ...)                                         \
+    do {                                                                \
+        fs2::dialog::error (__FILE__, __LINE__, msg, ##__VA_ARGS__);    \
+    } while (0)
+#else
+#  define Assert(expr) do { } while (0)
+#  define Assertion(expr, msg, ...) do { } while (0)
+#  define UNREACHABLE(msg, ...) __builtin_unreachable ()
+#endif
+
+#define LOCATION __FILE__, __LINE__
+
+#define Verify(x)                                                       \
+    do {                                                                \
+        if (!(x)) {                                                     \
+            fs2::dialog::error (LOCATION, "Verify failure: %s\n", #x); } \
+    } while (0)
+
+#define VerifyEx(x, y, ...)                                                 \
+    do {                                                                    \
+        if (!(x)) {                                                         \
+            fs2::dialog::error (                                            \
+                LOCATION, "Verify failure: %s with help text " #y "\n", #x, \
+                ##__VA_ARGS__);                                             \
+        }                                                                   \
+    } while (0)
+
 #endif // FREESPACE2_DEFS_HPP

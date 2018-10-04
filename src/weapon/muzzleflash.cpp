@@ -174,7 +174,7 @@ void mflash_page_in (bool load_all) {
             else {
                 fs2::dialog::warning (
                     LOCATION,
-                    "Muzleflash \"%s\", blob [%d/" SIZE_T_ARG
+                    "Muzleflash \"%s\", blob [%d/%zu"
                     "]\nMuzzleflash blob \"%s\" not found!  Deleting.",
                     Mflash_info[i].name, original_idx, original_num_blobs,
                     Mflash_info[i].blobs[idx].name);

@@ -1677,7 +1677,7 @@ void obj_queue_render (object* obj, model_draw_list* scene) {
     case OBJ_NONE:
 #ifndef NDEBUG
         mprintf (
-            ("ERROR!!!! Bogus obj " PTRDIFF_T_ARG " is rendering!\n",
+            ("ERROR!!!! Bogus obj %zd" " is rendering!\n",
              obj - Objects));
         Int3 ();
 #endif
