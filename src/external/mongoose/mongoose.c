@@ -958,7 +958,7 @@ static void send_http_error(struct mg_connection *conn, int status,
 
 #if defined(_WIN32) && !defined(__SYMBIAN32__)
 static int pthread_mutex_init(pthread_mutex_t *mutex, void *unused) {
-  unused = NULL;
+    UNUSED(unused);
   *mutex = CreateMutex(NULL, FALSE, NULL);
   return *mutex == NULL ? -1 : 0;
 }
@@ -976,7 +976,7 @@ static int pthread_mutex_unlock(pthread_mutex_t *mutex) {
 }
 
 static int pthread_cond_init(pthread_cond_t *cv, const void *unused) {
-  unused = NULL;
+    UNUSED(unused);
   cv->signal = CreateEvent(NULL, FALSE, FALSE, NULL);
   cv->broadcast = CreateEvent(NULL, TRUE, FALSE, NULL);
   return cv->signal != NULL && cv->broadcast != NULL ? 0 : -1;
@@ -1372,7 +1372,7 @@ static pid_t spawn_process(struct mg_connection *conn, const char *prog,
   pid_t pid;
   const char *interp;
 
-  envblk = NULL; // Unused
+  UNUSED(envblk);
 
   if ((pid = fork()) == -1) {
     // Parent
@@ -4455,8 +4455,8 @@ static const char *ssl_error(void) {
 
 static void ssl_locking_callback(int mode, int mutex_num, const char *file,
                                  int line) {
-  line = 0;    // Unused
-  file = NULL; // Unused
+    UNUSED (line);
+    UNUSED (file);
 
   if (mode & CRYPTO_LOCK) {
     (void) pthread_mutex_lock(&ssl_mutexes[mutex_num]);

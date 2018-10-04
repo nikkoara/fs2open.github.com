@@ -69,7 +69,6 @@
 #include "object/objectshield.h"
 #include "object/objectsnd.h"
 #include "object/waypoint.h"
-#include "parse/generic_log.h"
 #include "parse/parselo.h"
 #include "parse/sexp.h"
 #include "playerman/player.h"
@@ -90,9 +89,6 @@
 #include "weapon/emp.h"
 #include "weapon/shockwave.h"
 #include "weapon/weapon.h"
-
-#include <boost/log/trivial.hpp>
-#include <boost/log/core.hpp>
 
 #ifndef NDEBUG
 #include "hud/hudmessage.h"
@@ -25105,16 +25101,14 @@ void maybe_write_previous_event_to_log (int result) {
         return;
     }
 
-    fs2::log::logger_type logger;
-    FS2_LOG (logger, "general", info) << "Event has changed state. Old state";
+    II ("general") << "Event has changed state. Old state";
 
     while (!this_event->backup_log_buffer.empty ()) {
-        FS2_LOG (logger, "general", info)
-            << this_event->backup_log_buffer.back ().c_str ();
+        II ("general") << this_event->backup_log_buffer.back ().c_str ();
         this_event->backup_log_buffer.pop_back ();
     }
 
-    FS2_LOG (logger, "general", info) << "New state";
+    II ("general") << "New state";
 
     // backup the current buffer as this may be a repeating event
     current_log_to_backup_log_buffer ();
@@ -25152,11 +25146,7 @@ void maybe_write_to_event_log (int result) {
     }
 
     while (!Current_event_log_buffer->empty ()) {
-        fs2::log::logger_type logger;
-
-        FS2_LOG (logger, "general", info)
-            << Current_event_log_buffer->back ().c_str ();
-
+        II ("general") << Current_event_log_buffer->back ().c_str ();
         Current_event_log_buffer->pop_back ();
     }
 }
@@ -32091,6 +32081,7 @@ int get_subcategory (int sexp_id) {
     case OP_STRING_GET_LENGTH: return STATUS_SUBCATEGORY_VARIABLES;
 
     default:
+        BOOST_ASSERT (0);
         break;
     }
 }

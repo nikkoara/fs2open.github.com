@@ -3,19 +3,21 @@
 #ifndef FREESPACE2_CUTSCENE_DECODER_H
 #define FREESPACE2_CUTSCENE_DECODER_H
 
+#include "globalincs/pstypes.h"
+
 #include <memory>
 
-#include "globalincs/pstypes.h"
-#include "utils/boost/syncboundedqueue.h"
+#include <boost/thread/sync_bounded_queue.hpp>
 
 namespace cutscene {
+
 struct FrameSize {
     size_t width = 0;
     size_t height = 0;
     size_t stride = 0;
 
     FrameSize (size_t width, size_t in_height, size_t in_stride);
-    FrameSize ();
+    FrameSize () = default;
 };
 
 class VideoFrame {
@@ -83,10 +85,15 @@ struct PlaybackProperties {
  * filled from a background thread and retrieved by the main thread.
  */
 class Decoder {
+    using    video_queue_type = boost::sync_bounded_queue< VideoFramePtr >;
+    using    audio_queue_type = boost::sync_bounded_queue< AudioFramePtr >;
+    using subtitle_queue_type = boost::sync_bounded_queue< SubtitleFramePtr >;
+
+
 private:
-    std::unique_ptr< sync_bounded_queue< VideoFramePtr > > m_videoQueue;
-    std::unique_ptr< sync_bounded_queue< AudioFramePtr > > m_audioQueue;
-    std::unique_ptr< sync_bounded_queue< SubtitleFramePtr > > m_subtitleQueue;
+    std::unique_ptr<    video_queue_type > m_videoQueue;
+    std::unique_ptr<    audio_queue_type > m_audioQueue;
+    std::unique_ptr< subtitle_queue_type > m_subtitleQueue;
 
     bool m_decoding;
     size_t m_queueSize = 0;

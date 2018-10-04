@@ -252,16 +252,40 @@ public:
 
     size_t hash () const;
 };
-namespace std {
-template<>
-struct hash< vertex_format_data > {
-    size_t operator() (const vertex_format_data& data) const;
+
+template< >
+struct std::hash< vertex_format_data > {
+    size_t operator() (const vertex_format_data& arg) const {
+        size_t seed = 0;
+        boost::hash_combine (seed, (size_t)arg.format_type);
+        boost::hash_combine (seed,         arg.offset);
+        boost::hash_combine (seed,         arg.stride);
+        return seed;
+    }
 };
-template<>
-struct hash< vertex_layout > {
-    size_t operator() (const vertex_layout& data) const;
+
+template< >
+struct std::hash< vertex_layout > {
+    size_t operator() (const vertex_layout& arg) const {
+        return arg.hash ();
+    }
 };
-} // namespace std
+
+inline std::size_t
+hash_value (vertex_format_data const& arg) {
+    size_t seed = 0;
+
+    boost::hash_combine (seed, size_t (arg.format_type));
+    boost::hash_combine (seed,         arg.offset);
+    boost::hash_combine (seed,         arg.stride);
+
+    return seed;
+}
+
+inline std::size_t
+hash_value (vertex_layout const& arg) {
+    return arg.hash ();
+}
 
 enum gr_capability {
     CAPABILITY_ENVIRONMENT_MAP,

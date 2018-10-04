@@ -11774,10 +11774,7 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
     int bank_to_fire, num_fired = 0;
     int banks_fired; // used for multiplayer to help determine whether or not
                      // to send packet
-    banks_fired =
-        0; // used in multiplayer -- bitfield of banks that were fired
-    bool has_fired =
-        false; // used to determine whether we should fire the scripting hook
+    banks_fired = 0; // used in multiplayer -- bitfield of banks that were fired
     bool has_autoaim, has_converging_autoaim,
         needs_target_pos;  // used to flag weapon/ship as having autoaim
     float autoaim_fov = 0; // autoaim limit
@@ -12248,7 +12245,6 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
                     fbfire_info.point = j;
 
                     beam_fire (&fbfire_info);
-                    has_fired = true;
                     num_fired++;
                 }
             }
@@ -12553,7 +12549,6 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
                                 &Weapon_info
                                     [Weapons[Objects[weapon_objnum].instance]
                                          .weapon_info_index];
-                            has_fired = true;
 
                             weapon_set_tracking_info (
                                 weapon_objnum, OBJ_INDEX (obj),
@@ -12786,17 +12781,6 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
         }
     }
 
-    if (has_fired) {
-        object* objp = &Objects[shipp->objnum];
-        object* target;
-        if (Ai_info[shipp->ai_index].target_objnum != -1)
-            target = &Objects[Ai_info[shipp->ai_index].target_objnum];
-        else
-            target = NULL;
-        if (objp == Player_obj && Player_ai->target_objnum != -1)
-            target = &Objects[Player_ai->target_objnum];
-    }
-
     return num_fired;
 }
 
@@ -13012,8 +12996,6 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
     ai_info* aip;
     polymodel* pm;
     vec3d missile_point, pnt, firing_pos;
-    bool has_fired =
-        false; // Used to determine whether to fire the scripting hook
 
     Assert (obj != NULL);
 
@@ -13387,7 +13369,6 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
                 weapon_set_tracking_info (
                     weapon_num, OBJ_INDEX (obj), aip->target_objnum,
                     aip->current_target_is_locked, aip->targeted_subsys);
-                has_fired = true;
 
                 // create the muzzle flash effect
                 if ((obj != Player_obj) ||
@@ -13504,17 +13485,6 @@ done_secondary:
             shipp->num_corkscrew_to_fire = 1;
             shipp->corkscrew_missile_bank = -1;
         }
-    }
-
-    if (has_fired) {
-        object* objp = &Objects[shipp->objnum];
-        object* target;
-        if (Ai_info[shipp->ai_index].target_objnum != -1)
-            target = &Objects[Ai_info[shipp->ai_index].target_objnum];
-        else
-            target = NULL;
-        if (objp == Player_obj && Player_ai->target_objnum != -1)
-            target = &Objects[Player_ai->target_objnum];
     }
 
     // AL 3-7-98: Move to next valid secondary bank if out of ammo
@@ -13775,15 +13745,9 @@ int ship_select_next_primary (object* objp, int direction) {
                     ship_get_sound (objp, GameSounds::PRIMARY_CYCLE)),
                 0.0f);
         }
+
         ship_primary_changed (shipp);
-        objp = &Objects[shipp->objnum];
-        object* target;
-        if (Ai_info[shipp->ai_index].target_objnum != -1)
-            target = &Objects[Ai_info[shipp->ai_index].target_objnum];
-        else
-            target = NULL;
-        if (objp == Player_obj && Player_ai->target_objnum != -1)
-            target = &Objects[Player_ai->target_objnum];
+        
         return 1;
     }
 
@@ -13867,15 +13831,6 @@ int ship_select_next_secondary (object* objp) {
                     0.0f);
             }
             ship_secondary_changed (shipp);
-
-            objp = &Objects[shipp->objnum];
-            object* target;
-            if (Ai_info[shipp->ai_index].target_objnum != -1)
-                target = &Objects[Ai_info[shipp->ai_index].target_objnum];
-            else
-                target = NULL;
-            if (objp == Player_obj && Player_ai->target_objnum != -1)
-                target = &Objects[Player_ai->target_objnum];
             return 1;
         }
     } // end if

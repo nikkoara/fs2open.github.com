@@ -109,7 +109,6 @@
 #include "osapi/osapi.h"
 #include "osapi/osregistry.h"
 #include "parse/encrypt.h"
-#include "parse/generic_log.h"
 #include "parse/parselo.h"
 #include "parse/sexp.h"
 #include "particle/ParticleManager.h"
@@ -1843,8 +1842,7 @@ void game_init () {
 
     multi_init ();
 
-    fs2::log::logger_type logger;
-    FS2_LOG (logger, "general", info) << "Freespace2 Open Source Mission Log";
+    II ("general") << "Freespace2 Open Source Mission Log";
 
     // standalone's don't use the joystick and it seems to sometimes cause them
     // to not get shutdown properly
@@ -6415,8 +6413,6 @@ int game_main (int argc, char* argv[]) {
     if (!parse_cmdline (argc, argv)) { return 1; }
 
     if (Is_standalone) { nprintf (("Network", "Standalone running\n")); }
-
-    fs2::log::init ();
 
     game_init ();
 

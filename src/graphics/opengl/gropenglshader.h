@@ -36,14 +36,11 @@ struct opengl_vert_attrib {
     std::string name;
     vec4 default_value;
 };
-namespace std {
-template<>
-struct hash< opengl_vert_attrib::attrib_id > {
-    size_t operator() (const opengl_vert_attrib::attrib_id& data) const {
-        return std::hash< size_t > () (static_cast< size_t > (data));
-    }
-};
-} // namespace std
+
+inline std::size_t
+hash_value (opengl_vert_attrib::attrib_id const& arg) {
+    return boost::hash< size_t > ()(static_cast< size_t > (arg));
+}
 
 extern std::vector< opengl_vert_attrib > GL_vertex_attrib_info;
 

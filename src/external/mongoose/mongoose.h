@@ -24,6 +24,8 @@
 #include <stdio.h>
 #include <stddef.h>
 
+#define UNUSED(x) ((void)x)
+
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus

@@ -27,7 +27,6 @@
 #include "popup/popup.h"
 #include "render/3d.h"
 #include "tracing/tracing.h"
-#include "utils/boost/hash_combine.h"
 
 #include <SDL_cpuinfo.h>
 #include <SDL_surface.h>
@@ -2134,7 +2133,7 @@ void gr_set_bitmap (
     gr_screen.current_bitmap = bitmap_num;
 }
 
-void gr_flip (bool execute_scripting) {
+void gr_flip (bool /* execute_scripting */) {
     gr_reset_immediate_buffer ();
 
     // Use this opportunity for retiring the uniform buffers
@@ -2246,21 +2245,6 @@ std::vector< DisplayData > gr_enumerate_displays () {
     return data;
 }
 
-namespace std {
-
-size_t hash< vertex_format_data >::
-operator() (const vertex_format_data& data) const {
-    size_t seed = 0;
-    boost::hash_combine (seed, (size_t)data.format_type);
-    boost::hash_combine (seed, data.offset);
-    boost::hash_combine (seed, data.stride);
-    return seed;
-}
-size_t hash< vertex_layout >::operator() (const vertex_layout& data) const {
-    return data.hash ();
-}
-
-} // namespace std
 bool vertex_layout::resident_vertex_format (
     vertex_format_data::vertex_format format_type) const {
     return (Vertex_mask & vertex_format_data::mask (format_type)) ? true
@@ -2293,6 +2277,7 @@ void vertex_layout::add_vertex_component (
     Vertex_components.push_back (
         vertex_format_data (format_type, stride, offset));
 }
+
 bool vertex_layout::operator== (const vertex_layout& other) const {
     if (Vertex_mask != other.Vertex_mask) { return false; }
 
@@ -2304,10 +2289,11 @@ bool vertex_layout::operator== (const vertex_layout& other) const {
         Vertex_components.cbegin (), Vertex_components.cend (),
         other.Vertex_components.cbegin ());
 }
+
 size_t vertex_layout::hash () const {
     size_t seed = 0;
-    boost::hash_combine (seed, Vertex_mask);
 
+    boost::hash_combine (seed, Vertex_mask);
     for (auto& comp : Vertex_components) { boost::hash_combine (seed, comp); }
 
     return seed;

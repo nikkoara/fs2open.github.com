@@ -149,6 +149,7 @@ fs2_SOURCES =                                   \
     lighting/lighting.cpp                       \
     localization/fhash.cpp                      \
     localization/localize.cpp                   \
+    log/log.cpp                                 \
     math/fix.cpp                                \
     math/floating.cpp                           \
     math/fvi.cpp                                \
@@ -248,7 +249,6 @@ fs2_SOURCES =                                   \
     osapi/osregistry.cpp                        \
     osapi/outwnd.cpp                            \
     parse/encrypt.cpp                           \
-    parse/generic_log.cpp                       \
     parse/parselo.cpp                           \
     parse/sexp.cpp                              \
     particle/ParticleManager.cpp                \

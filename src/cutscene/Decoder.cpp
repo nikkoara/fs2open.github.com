@@ -4,10 +4,14 @@
 
 #include <memory>
 
+#include <boost/thread/sync_bounded_queue.hpp>
+using namespace boost::concurrent;
+
 namespace cutscene {
+
 FrameSize::FrameSize (size_t in_width, size_t in_height, size_t in_stride)
-    : width (in_width), height (in_height), stride (in_stride) {}
-FrameSize::FrameSize () = default;
+    : width (in_width), height (in_height), stride (in_stride)
+{ }
 
 Decoder::Decoder () : m_decoding (true) {}
 

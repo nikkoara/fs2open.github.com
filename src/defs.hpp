@@ -3,9 +3,11 @@
 #ifndef FREESPACE2_DEFS_HPP
 #define FREESPACE2_DEFS_HPP
 
+#define BOOST_LOG_DYN_LINK 1
+
 #include "config.hpp"
 
-#define BOOST_LOG_DYN_LINK 1
+#include "log/log.hpp"
 
 #define FS_VERSION_MAJOR 3
 #define FS_VERSION_MINOR 8

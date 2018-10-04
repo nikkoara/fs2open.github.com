@@ -1,6 +1,7 @@
 // -*- mode: c++; -*-
 
-#include "parse/generic_log.h"
+#include "defs.hpp"
+#include "log/log.hpp"
 
 #include <thread>
 #include <mutex>
@@ -17,15 +18,13 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 using namespace boost::log;
-
+    
 BOOST_LOG_ATTRIBUTE_KEYWORD (severity, "Severity", trivial::severity_level)
 BOOST_LOG_ATTRIBUTE_KEYWORD (channel, "Channel", std::string)
 
-namespace fs2 {
-namespace log {
-
-static void
-do_init () {
+BOOST_LOG_GLOBAL_LOGGER_INIT(fs2_logger, fs2_logger_type) {
+    fs2_logger_type logger;
+    
     using min_severity_filter = expressions::channel_severity_filter_actor<
         std::string, trivial::severity_level >;
 
@@ -58,11 +57,6 @@ do_init () {
         );
 
     add_common_attributes ();
-}
 
-void init () {
-    static std::once_flag once;
-    std::call_once (once, do_init);
+    return logger;
 }
-
-}}

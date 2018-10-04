@@ -2,12 +2,8 @@
 
 #include <cstdarg>
 #include "network/multi_log.h"
-#include "parse/generic_log.h"
 #include "cfile/cfile.h"
 #include "parse/parselo.h"
-
-#include <boost/log/core.hpp>
-#include <boost/log/trivial.hpp>
 
 // max length for a line of the logfile
 #define MAX_LOGFILE_LINE_LEN 256
@@ -39,18 +35,13 @@ void multi_log_write_update () {
 
 // initialize the multi logfile
 void multi_log_init () {
-    fs2::log::init ();
-
-    fs2::log::logger_type logger;
-    FS2_LOG (logger, "multiplayer", info) << "logging started";
-
+    II ("multiplayer") << "logging started";
     Multi_log_update_systime = Multi_log_open_systime = time (0);
 }
 
 // close down the multi logfile
 void multi_log_close () {
-    fs2::log::logger_type logger;
-    FS2_LOG (logger, "multiplayer", info) << "logging closed";
+    II ("multiplayer") << "logging closed";
 }
 
 // give some processing time to the logfile system so it can check up on stuff
@@ -59,7 +50,6 @@ void multi_log_process () {
     if (time (NULL) - Multi_log_update_systime > MULTI_LOGFILE_UPDATE_TIME) {
         // write the update
         multi_log_write_update ();
-
         Multi_log_update_systime = (int)time (NULL);
     }
 }
@@ -78,8 +68,7 @@ void ml_printf (const char* fmt, ...) {
     va_end (args);
 
     // log the string including the time
-    fs2::log::logger_type logger;
-    FS2_LOG (logger, "multiplayer", info) << temp.c_str ();
+    II ("multiplayer") << temp.c_str ();
 }
 
 // string print function
@@ -105,8 +94,7 @@ void ml_string (const char* string, int add_time) {
     // don't need to add terminating \n since log_string() will do it
 
     // now print it to the logfile if necessary
-    fs2::log::logger_type logger;
-    FS2_LOG (logger, "multiplayer", info) << tmp;
+    II ("multiplayer") << tmp;
 
     // add to standalone UI too
     extern int Is_standalone;

@@ -1295,9 +1295,6 @@ void message_queue_process () {
     message_q* q;
     int i;
     MissionMessage* m;
-    bool builtinMessage =
-        false; // gcc doesn't like var decls crossed by goto's
-    object* sender = NULL;
 
     // Don't play messages until first frame has been rendered
     if (Framecount < 2) { return; }
@@ -1667,10 +1664,6 @@ void message_queue_process () {
 
     if (Message_shipnum >= 0) {
         hud_target_last_transmit_add (Message_shipnum);
-    }
-
-    if (Message_shipnum >= 0) {
-        sender = &Objects[Ships[Message_shipnum].objnum];
     }
 
 all_done:

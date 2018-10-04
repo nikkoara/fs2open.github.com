@@ -47,7 +47,6 @@
 #include "object/parseobjectdock.h"
 #include "object/objectshield.h"
 #include "object/waypoint.h"
-#include "parse/generic_log.h"
 #include "parse/parselo.h"
 #include "playerman/player.h"
 #include "popup/popup.h"
@@ -61,9 +60,6 @@
 #include "weapon/weapon.h"
 #include "tracing/Monitor.h"
 #include "missionparse.h"
-
-#include <boost/log/core.hpp>
-#include <boost/log/trivial.hpp>
 
 LOCAL struct {
     char docker[NAME_LENGTH];
@@ -1916,7 +1912,6 @@ void parse_bring_in_docked_wing (p_object* p_objp, int wingnum, int shipnum);
  */
 int parse_create_object_sub (p_object* p_objp) {
     int i, j, k, objnum, shipnum;
-    int anchor_objnum = -1;
     ai_info* aip;
     ship_subsys* ptr;
     ship* shipp;
@@ -2521,23 +2516,22 @@ int parse_create_object_sub (p_object* p_objp) {
         if (!Game_restoring) {
             // if this ship isn't in a wing, determine its arrival location
             if (shipp->wingnum == -1) {
-                int location;
-
                 // multiplayer clients set the arrival location of ships to be
                 // at location since their position has already been
                 // determined.  Don't actually set the variable since we don't
                 // want the warp effect to show if coming from a dock bay.
-                location = p_objp->arrival_location;
+                int location = p_objp->arrival_location;
 
                 if (MULTIPLAYER_CLIENT) location = ARRIVE_AT_LOCATION;
 
-                anchor_objnum = mission_set_arrival_location (
+                /* ignore = */ mission_set_arrival_location (
                     p_objp->arrival_anchor, location, p_objp->arrival_distance,
                     objnum, p_objp->arrival_path_mask, NULL, NULL);
 
                 // Goober5000 - warpin start moved to parse_create_object
             }
         }
+
 
         // possibly add this ship to a hotkey set
         // Ships can now have both a ship-hotkey and a wing-hotkey -- FSF
@@ -6091,8 +6085,7 @@ int parse_mission (mission* pm, int flags) {
             1, POPUP_OK, text);
     }
 
-    fs2::log::logger_type logger;
-    FS2_LOG (logger, "general", info) << "Loaded mission: " << pm->name;
+    II ("general") << "Loaded mission: " << pm->name;
 
     // success
     return 0;

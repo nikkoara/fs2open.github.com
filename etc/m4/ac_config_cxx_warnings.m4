@@ -14,6 +14,7 @@ CLANG_WARNFLAGS=" \
     -Wno-logical-op-parentheses"
 
 GCC_WARNFLAGS=" \
+    -Wno-implicit-fallthrough \
     -Wno-format-overflow \
     -Wno-stringop-truncation \
     -Wno-stringop-overflow"
