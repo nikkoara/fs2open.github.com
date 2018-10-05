@@ -263,8 +263,8 @@ bool gr_stub_init () {
 
     gr_screen.gf_clear = gr_stub_clear;
 
-    //	gr_screen.gf_rect				= gr_stub_rect;
-    //	gr_screen.gf_shade				= gr_stub_shade;
+    // gr_screen.gf_rect                               = gr_stub_rect;
+    // gr_screen.gf_shade                              = gr_stub_shade;
 
     gr_screen.gf_print_screen = gr_stub_print_screen;
 

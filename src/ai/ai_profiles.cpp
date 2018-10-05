@@ -96,7 +96,7 @@ void parse_ai_profiles_tbl (const char* filename) {
             else {
                 // don't create multiple profiles with the same name
                 if (previous_profile != NULL) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "An ai profile named '%s' already exists!  The new "
                         "one will not be created.\n",
@@ -105,7 +105,7 @@ void parse_ai_profiles_tbl (const char* filename) {
                 else {
                     // make sure we're under the limit
                     if (Num_ai_profiles >= MAX_AI_PROFILES) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Too many profiles in ai_profiles.tbl!  Max is "
                             "%d.\n",
@@ -251,7 +251,7 @@ void parse_ai_profiles_tbl (const char* filename) {
                     for (i = 0; i < NUM_SKILL_LEVELS; i++) {
                         if (profile->glide_attack_percent[i] < 0.0f ||
                             profile->glide_attack_percent[i] > 100.0f) {
-                            fs2::dialog::warning (
+                            WARNINGF (
                                 LOCATION,
                                 "$Glide Attack Percent should be between 0 "
                                 "and 100.0 (read %f). Setting to 0.",
@@ -271,7 +271,7 @@ void parse_ai_profiles_tbl (const char* filename) {
                     for (i = 0; i < NUM_SKILL_LEVELS; i++) {
                         if (profile->circle_strafe_percent[i] < 0.0f ||
                             profile->circle_strafe_percent[i] > 100.0f) {
-                            fs2::dialog::warning (
+                            WARNINGF (
                                 LOCATION,
                                 "$Circle Strafe Percent should be between 0 "
                                 "and 100.0 (read %f). Setting to 0.",
@@ -291,7 +291,7 @@ void parse_ai_profiles_tbl (const char* filename) {
                     for (i = 0; i < NUM_SKILL_LEVELS; i++) {
                         if (profile->glide_strafe_percent[i] < 0.0f ||
                             profile->glide_strafe_percent[i] > 100.0f) {
-                            fs2::dialog::warning (
+                            WARNINGF (
                                 LOCATION,
                                 "$Glide Strafe Percent should be between 0 "
                                 "and 100.0 (read %f). Setting to 0.",
@@ -311,7 +311,7 @@ void parse_ai_profiles_tbl (const char* filename) {
                     for (i = 0; i < NUM_SKILL_LEVELS; i++) {
                         if (profile->random_sidethrust_percent[i] < 0.0f ||
                             profile->random_sidethrust_percent[i] > 100.0f) {
-                            fs2::dialog::warning (
+                            WARNINGF (
                                 LOCATION,
                                 "$Random Sidethrust Percent should be between "
                                 "0 and 100.0 (read %f). Setting to 0.",
@@ -389,7 +389,7 @@ void parse_ai_profiles_tbl (const char* filename) {
                     for (i = 0; i < NUM_SKILL_LEVELS; i++) {
                         // Enforce range
                         if (fov_list[i] < 0.0f || fov_list[i] >= 360.0f) {
-                            fs2::dialog::warning (
+                            WARNINGF (
                                 LOCATION,
                                 "$Player Autoaim FOV should be >= 0 and < "
                                 "360.0 (read %f). Setting to 0.",
@@ -592,7 +592,7 @@ void parse_ai_profiles_tbl (const char* filename) {
                     int j = ai_path_type_match (buf);
                     if (j >= 0) { profile->ai_path_mode = j; }
                     else {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION, "Invalid ai path mode '%s' specified",
                             buf);
                     }

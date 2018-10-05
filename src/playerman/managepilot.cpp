@@ -263,7 +263,7 @@ void pilot_set_random_pic (player* p) {
     else {
         // pick a random name from the list
         int random_index = rand () % Num_pilot_images;
-        Assert ((random_index >= 0) && (random_index < Num_pilot_images));
+        ASSERT ((random_index >= 0) && (random_index < Num_pilot_images));
         strcpy_s (p->image_filename, Pilot_images_arr[random_index]);
     }
 }
@@ -272,7 +272,7 @@ void pilot_set_random_pic (player* p) {
  * pick a random squad image for the passed player
  * sets single & multi squad pic to the same image
  *
- * @param p	pointer to player
+ * @param p     pointer to player
  */
 void pilot_set_random_squad_pic (player* p) {
     // if there are no available pilot pics, set the image filename to null
@@ -283,7 +283,7 @@ void pilot_set_random_squad_pic (player* p) {
     else {
         // pick a random name from the list
         int random_index = rand () % Num_pilot_squad_images;
-        Assert (
+        ASSERT (
             (random_index >= 0) && (random_index < Num_pilot_squad_images));
         player_set_squad_bitmap (
             p, Pilot_squad_images_arr[random_index], true);

@@ -148,8 +148,8 @@ void multi_campaign_flush_data () {
 
 // call in the debriefing stage to evaluate what we should be doing in regards
 // to the campaign if player_status == 0, nothing should be done
-//                  == 1, players want to continue to the next mission
-//                  == 2, players want to repeat the previous mission
+// == 1, players want to continue to the next mission
+// == 2, players want to repeat the previous mission
 void multi_campaign_do_debrief (int player_status) {
     // the server (standalone or no)
     if ((Net_player->flags & NETINFO_FLAG_AM_MASTER) &&
@@ -398,7 +398,7 @@ void multi_campaign_send_debrief_info () {
     ADD_DATA (val);
 
     // add the filename
-    Assert (Campaign.missions[Campaign.current_mission].name != NULL);
+    ASSERT (Campaign.missions[Campaign.current_mission].name != NULL);
     ADD_STRING (Campaign.missions[Campaign.current_mission].name);
 
     // add the # of goals and events
@@ -468,7 +468,7 @@ void multi_campaign_send_pool_status () {
         }
 
         // make sure it'll all fit into this packet
-        Assert ((wpool_size + spool_size) < 480);
+        ASSERT ((wpool_size + spool_size) < 480);
 
         // add all ship types
         val = (ubyte)spool_size;
@@ -492,7 +492,7 @@ void multi_campaign_send_pool_status () {
     }
 
     // send to all players
-    Assert (Net_player->flags & NETINFO_FLAG_AM_MASTER);
+    ASSERT (Net_player->flags & NETINFO_FLAG_AM_MASTER);
     multi_io_send_to_all_reliable (data, packet_size);
 
     // notification message
@@ -515,7 +515,7 @@ void multi_campaign_send_start (net_player* pl) {
     // add the # of missions, and their filenames
     ADD_DATA (Campaign.num_missions);
     for (idx = 0; idx < Campaign.num_missions; idx++) {
-        Assert (Campaign.missions[idx].name != NULL);
+        ASSERT (Campaign.missions[idx].name != NULL);
         ADD_STRING (Campaign.missions[idx].name);
     }
 
@@ -533,7 +533,7 @@ void multi_campaign_send_ingame_start (net_player* pl) {
     ubyte data[MAX_PACKET_SIZE], packet_type, num_goals, num_events, *ptr;
     int packet_size, i, j;
 
-    Assert (pl != NULL);
+    ASSERT (pl != NULL);
     packet_size = 0;
 
     if (Game_mode & GM_CAMPAIGN_MODE) {
@@ -544,7 +544,7 @@ void multi_campaign_send_ingame_start (net_player* pl) {
         ADD_DATA (packet_type);
         ADD_INT (Campaign.num_missions);
         for (i = 0; i < Campaign.num_missions; i++) {
-            Assert (Campaign.missions[i].name != NULL);
+            ASSERT (Campaign.missions[i].name != NULL);
             ADD_STRING (Campaign.missions[i].name);
         }
         multi_io_send_reliable (pl, data, packet_size);
@@ -556,8 +556,8 @@ void multi_campaign_send_ingame_start (net_player* pl) {
 
             // don't send data for the current mission being played, or if both
             // goals and events are 0
-            Assert (Campaign.missions[i].num_goals < UCHAR_MAX);
-            Assert (Campaign.missions[i].num_events < UCHAR_MAX);
+            ASSERT (Campaign.missions[i].num_goals < UCHAR_MAX);
+            ASSERT (Campaign.missions[i].num_events < UCHAR_MAX);
             num_goals = (ubyte)Campaign.missions[i].num_goals;
             num_events = (ubyte)Campaign.missions[i].num_events;
 
@@ -590,7 +590,7 @@ void multi_campaign_send_ingame_start (net_player* pl) {
             ubyte goal_count, starting_goal_num;
 
             // first the goal names
-            Assert (Campaign.missions[i].num_goals < UCHAR_MAX);
+            ASSERT (Campaign.missions[i].num_goals < UCHAR_MAX);
             num_goals = (ubyte)Campaign.missions[i].num_goals;
 
             // don't do anything if mission hasn't been completed
@@ -639,7 +639,7 @@ void multi_campaign_send_ingame_start (net_player* pl) {
             ubyte event_count, starting_event_num;
 
             // first the goal names
-            Assert (Campaign.missions[i].num_events < UCHAR_MAX);
+            ASSERT (Campaign.missions[i].num_events < UCHAR_MAX);
             num_events = (ubyte)Campaign.missions[i].num_events;
 
             // don't do anything if mission hasn't been completed
@@ -720,7 +720,7 @@ void multi_campaign_process_ingame_start (ubyte* data, header* hinfo) {
         GET_INT (mission_num);
         GET_DATA (num_goals);
         // need to malloc out the data
-        Assert (Campaign.missions[mission_num].num_goals == 0);
+        ASSERT (Campaign.missions[mission_num].num_goals == 0);
         Campaign.missions[mission_num].num_goals = num_goals;
         if (num_goals > 0) {
             Campaign.missions[mission_num].goals =
@@ -738,7 +738,7 @@ void multi_campaign_process_ingame_start (ubyte* data, header* hinfo) {
         // now the events
         GET_DATA (num_events);
         // need to malloc out the data
-        Assert (Campaign.missions[mission_num].num_events == 0);
+        ASSERT (Campaign.missions[mission_num].num_events == 0);
         Campaign.missions[mission_num].num_events = num_events;
         if (num_events > 0) {
             Campaign.missions[mission_num].events =

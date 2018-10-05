@@ -317,8 +317,8 @@ struct alt_class  {
 
 #define MAX_OBJECT_STATUS 10
 
-//	a parse object
-//	information from a $OBJECT: definition is read into this struct to
+// a parse object
+// information from a $OBJECT: definition is read into this struct to
 // be copied into the real object, ship, etc. structs
 class p_object {
 public:
@@ -351,13 +351,13 @@ public:
                            // some ship
     int arrival_anchor;    // ship used for anchoring an arrival point
     int arrival_path_mask; // Goober5000
-    int arrival_cue;       //	Index in Sexp_nodes of this sexp.
+    int arrival_cue;       // Index in Sexp_nodes of this sexp.
     int arrival_delay;
 
     int departure_location;
     int departure_anchor;
     int departure_path_mask; // Goober5000
-    int departure_cue;       //	Index in Sexp_nodes of this sexp.
+    int departure_cue;       // Index in Sexp_nodes of this sexp.
     int departure_delay;
 
     char misc[NAME_LENGTH];

@@ -28,32 +28,32 @@ struct header;
 // 3.) The client then moves into the INGAME_SYNC state to begin receiving data
 // from the server 4.) The first thing he does on this screen is send his
 // filesig packet to the server. At which
-//     point the server will either let him in or deny him. There are no file
-//     transfers ingame.
+// point the server will either let him in or deny him. There are no file
+// transfers ingame.
 // 5.) The server calls multi_handle_ingame_joiners() once per frame, through
 // multi_do_frame() 6.) After verifiying or kicking the player because of his
 // file signature, the server tells the
-//     player to load the mission
+// player to load the mission
 // 7.) When the mission is loaded, the server, sends a netgame update to the
 // client 8.) Without waiting, the server then begins sending data ship packets
 // to the player 9.) Upon confirmation of receiving these packets, the server
 // sends wing data packets 10.) Upon completion of this, the server sends
 // respawn point packets 11.) Upon completion of this, the server sends a post
 // briefing data block packet containing ship class and
-//      weapon information
+// weapon information
 // 12.) After this, the server sends a player settings packet (to all players
 // for good measure) 13.) At this point, the server sends a jump into mission
 // packet 14.) Upon receipt of this packet, the client moves into the ingame
 // ship select state 15.) The first thing the client does in this state is load
 // the mission data (textures, etc) 16.) The player is presented with a list of
 // ships he can choose from. He selects one and sends
-//      an INGAME_SHIP_REQUEST to the server.
+// an INGAME_SHIP_REQUEST to the server.
 // 17.) The server checks to see if this request is acceptable and sends an
 // INGAME_SHIP_REQUEST back
-//      with the appropriate data.
+// with the appropriate data.
 // 18.) If the client received an affirmative, he selects the ship and jumps
 // into the mission, otherwise
-//      he removes it from the list and tries for another ship
+// he removes it from the list and tries for another ship
 // --------------------------------------------------------------------------------------------------
 
 // --------------------------------------------------------------------------------------------------

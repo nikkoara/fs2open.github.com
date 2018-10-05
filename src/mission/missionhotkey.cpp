@@ -55,31 +55,31 @@ static const char* Hotkey_mask_fname[GR_NUM_RESOLUTIONS] = {
     "2_Hotkeys-M" // GR_1024
 };
 
-//#define GROUP_LIST_X	40
-//#define GROUP_LIST_W	160
+//#define GROUP_LIST_X  40
+//#define GROUP_LIST_W  160
 
-// #define ICON_LIST_X	219
-// #define ICON_LIST_W	8
+// #define ICON_LIST_X  219
+// #define ICON_LIST_W  8
 
-// #define ICON_LIST_X	280
-// #define ICON_LIST_W	8
+// #define ICON_LIST_X  280
+// #define ICON_LIST_W  8
 
-//#define SHIP_LIST_X	242
-//#define SHIP_LIST_X2	259
-//#define SHIP_LIST_W	341
-//#define SHIP_LIST_W2	324
+//#define SHIP_LIST_X   242
+//#define SHIP_LIST_X2  259
+//#define SHIP_LIST_W   341
+//#define SHIP_LIST_W2  324
 
-// #define SHIP_LIST_X	302
-// #define SHIP_LIST_X2	319
-// #define SHIP_LIST_W	281
-// #define SHIP_LIST_W2	264
+// #define SHIP_LIST_X  302
+// #define SHIP_LIST_X2 319
+// #define SHIP_LIST_W  281
+// #define SHIP_LIST_W2 264
 
-// #define LIST_Y			70
-// #define LIST_H			280
+// #define LIST_Y                       70
+// #define LIST_H                       280
 
 /*
-#define HOTKEY_X		575
-#define HOTKEY_Y		41
+#define HOTKEY_X                575
+#define HOTKEY_Y                41
 */
 
 #define HOTKEY_LINE_HEADING 1
@@ -139,17 +139,17 @@ static int Hotkey_function_name_coords[GR_NUM_RESOLUTIONS][4] = {
 };
 
 /*
-#define FIELD_LEFT_EDGE		0
-#define FIELD_F5				1
-#define FIELD_F6				2
-#define FIELD_F7				3
-#define FIELD_F8				4
-#define FIELD_F9				5
-#define FIELD_F10				6
-#define FIELD_F11				7
-#define FIELD_F12				8
-#define FIELD_ICON			9
-#define FIELD_RIGHT_EDGE	10
+#define FIELD_LEFT_EDGE         0
+#define FIELD_F5                                1
+#define FIELD_F6                                2
+#define FIELD_F7                                3
+#define FIELD_F8                                4
+#define FIELD_F9                                5
+#define FIELD_F10                               6
+#define FIELD_F11                               7
+#define FIELD_F12                               8
+#define FIELD_ICON                      9
+#define FIELD_RIGHT_EDGE        10
 // x coords of unseen field boundaries (  | field1 | field2 | ... |  )
 // entried will all be centered in fields except FIELD_SHIP which will be left
 justified
@@ -338,7 +338,7 @@ void mission_hotkey_set_defaults () {
             continue;
         }
 
-        Assert (A->instance >= 0 && A->instance < MAX_SHIPS);
+        ASSERT (A->instance >= 0 && A->instance < MAX_SHIPS);
         sp = &Ships[A->instance];
 
         if (sp->hotkey == -1) continue;
@@ -349,7 +349,7 @@ void mission_hotkey_set_defaults () {
         // mission starts
         if (sp->hotkey == MAX_KEYED_TARGETS) continue;
 
-        Assert (sp->objnum >= 0);
+        ASSERT (sp->objnum >= 0);
         hud_target_hotkey_add_remove (
             sp->hotkey, &Objects[sp->objnum], HOTKEY_MISSION_FILE_ADDED);
     }
@@ -404,7 +404,7 @@ void mission_hotkey_maybe_save_sets () {
 
         for (hitem = GET_FIRST (plist); hitem != END_OF_LIST (plist);
              hitem = GET_NEXT (hitem)) {
-            Assert (Num_hotkeys_saved < MAX_HOTKEY_TARGET_ITEMS);
+            ASSERT (Num_hotkeys_saved < MAX_HOTKEY_TARGET_ITEMS);
             hkp->setnum = i;
             strcpy_s (hkp->name, Ships[hitem->objp->instance].ship_name);
             hkp++;
@@ -470,7 +470,7 @@ void mission_hotkey_validate () {
 int get_wing_hotkeys (int n) {
     int i, total = 0xffffffff;
 
-    Assert ((n >= 0) && (n < Num_wings));
+    ASSERT ((n >= 0) && (n < Num_wings));
     for (i = 0; i < Wings[n].current_count; i++) {
         int ship_index;
 
@@ -678,7 +678,7 @@ int hotkey_line_query_visible (int n) {
 void hotkey_scroll_screen_up () {
     if (Scroll_offset) {
         Scroll_offset--;
-        Assert (Selected_line > Scroll_offset);
+        ASSERT (Selected_line > Scroll_offset);
         while (!hotkey_line_query_visible (Selected_line) ||
                (Hotkey_lines[Selected_line].type == HOTKEY_LINE_HEADING))
             Selected_line--;
@@ -710,7 +710,7 @@ void hotkey_scroll_screen_down () {
         while (!hotkey_line_query_visible (Selected_line) ||
                (Hotkey_lines[Selected_line].type == HOTKEY_LINE_HEADING)) {
             Selected_line++;
-            Assert (Selected_line < Num_lines);
+            ASSERT (Selected_line < Num_lines);
         }
 
         gamesnd_play_iface (InterfaceSounds::SCROLL);
@@ -725,7 +725,7 @@ void hotkey_scroll_line_down () {
         while (Hotkey_lines[Selected_line].type == HOTKEY_LINE_HEADING)
             Selected_line++;
 
-        Assert (Selected_line > Scroll_offset);
+        ASSERT (Selected_line > Scroll_offset);
         while (!hotkey_line_query_visible (Selected_line)) Scroll_offset++;
 
         gamesnd_play_iface (InterfaceSounds::SCROLL);
@@ -763,7 +763,7 @@ void reset_hotkeys () {
 
         for (hitem = GET_FIRST (plist); hitem != END_OF_LIST (plist);
              hitem = GET_NEXT (hitem)) {
-            Assert (hitem->objp->type == OBJ_SHIP);
+            ASSERT (hitem->objp->type == OBJ_SHIP);
             Hotkey_bits[hitem->objp->instance] |= (1 << i);
         }
     }
@@ -1144,16 +1144,16 @@ void mission_hotkey_do_frame (float /*frametime*/) {
             i = y + font_height / 2 - h / 2 - 1;
             gr_bitmap (Hotkey_wing_icon_x[gr_screen.res], i, GR_RESIZE_MENU);
 
-            //				i = y + font_height / 2 - 1;
-            //				gr_set_color_fast(&circle_color);
-            //				gr_circle(ICON_LIST_X + 4, i, 5, GR_RESIZE_MENU);
+            // i = y + font_height / 2 - 1;
+            // gr_set_color_fast(&circle_color);
+            // gr_circle(ICON_LIST_X + 4, i, 5, GR_RESIZE_MENU);
 
-            //				gr_set_color_fast(&Color_bright);
-            //				gr_line(ICON_LIST_X, i, ICON_LIST_X + 2, i,
-            // GR_RESIZE_MENU); 				gr_line(ICON_LIST_X + 4, i - 4,
+            // gr_set_color_fast(&Color_bright);
+            // gr_line(ICON_LIST_X, i, ICON_LIST_X + 2, i,
+            // GR_RESIZE_MENU);                                 gr_line(ICON_LIST_X + 4, i - 4,
             // ICON_LIST_X
             // + 4,
-            // i - 2, GR_RESIZE_MENU); 				gr_line(ICON_LIST_X + 6, i,
+            // i - 2, GR_RESIZE_MENU);                          gr_line(ICON_LIST_X + 6, i,
             // ICON_LIST_X + 8, i, GR_RESIZE_MENU);
             // gr_line(ICON_LIST_X + 4, i + 2, ICON_LIST_X + 4, i + 4,
             // GR_RESIZE_MENU);
@@ -1170,7 +1170,7 @@ void mission_hotkey_do_frame (float /*frametime*/) {
         }
 
         if (Hotkey_lines[line].type != HOTKEY_LINE_HEADING) {
-            Assert ((line - Scroll_offset) < LIST_BUTTONS_MAX);
+            ASSERT ((line - Scroll_offset) < LIST_BUTTONS_MAX);
             List_buttons[line - Scroll_offset].update_dimensions (
                 Hotkey_list_coords[gr_screen.res][0], y,
                 Hotkey_list_coords[gr_screen.res][0] +
@@ -1191,7 +1191,7 @@ void mission_hotkey_do_frame (float /*frametime*/) {
             }
         }
         else {
-            Assert ((line - Scroll_offset) < LIST_BUTTONS_MAX);
+            ASSERT ((line - Scroll_offset) < LIST_BUTTONS_MAX);
             List_buttons[line - Scroll_offset].disable ();
         }
 

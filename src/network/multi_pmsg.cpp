@@ -52,7 +52,7 @@ char Multi_msg_text[MULTI_MSG_MAX_TEXT_LEN + 1];
 // can easily tokenize and recognize it as a command instead of a word. they
 // also must be immediately at the beginning of a text string SO : kick dave
 // would not work
-//      kick: dave       would work
+// kick: dave       would work
 // Finally, if no command is found but there is a ":", it uses the text before
 // the : as an expression to lookup players to route the text to
 #define MULTI_MSG_CMD_COUNT 1 // # of commands
@@ -566,8 +566,8 @@ void multi_msg_send_squadmsg_packet (
     char s_val;
     int packet_size;
 
-    Assert (source != NULL);
-    Assert (target != NULL);
+    ASSERT (source != NULL);
+    ASSERT (target != NULL);
     if ((source == NULL) || (target == NULL)) { return; }
 
     // build the header

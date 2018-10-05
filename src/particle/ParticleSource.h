@@ -288,7 +288,7 @@ public:
     inline ParticleEffect* getEffect () { return m_effect; }
 
     inline void setEffect (ParticleEffect* eff) {
-        Assert (eff != nullptr);
+        ASSERT (eff != nullptr);
         m_effect = eff;
     }
 

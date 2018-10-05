@@ -15,7 +15,9 @@ size_t getElementSize (uniform_block_type type) {
         return sizeof (graphics::nanovg_draw_data);
     case uniform_block_type::DecalInfo: return sizeof (graphics::decal_info);
     case uniform_block_type::NUM_BLOCK_TYPES:
-    default: UNREACHABLE ("Invalid block type encountered!"); return 0;
+    default:
+        ASSERT (0);
+        return 0;
     }
 }
 
@@ -28,7 +30,9 @@ size_t getHeaderSize (uniform_block_type type) {
     case uniform_block_type::ModelData:
     case uniform_block_type::NanoVGData: return 0;
     case uniform_block_type::NUM_BLOCK_TYPES:
-    default: UNREACHABLE ("Invalid block type encountered!"); return 0;
+    default:
+        ASSERT (0);
+        return 0;
     }
 }
 
@@ -45,7 +49,7 @@ UniformBuffer* UniformBufferManager::getBuffer () {
         auto buffer = _retiredBuffers.back ();
 
         // Sanity check
-        Assertion (!buffer->isInUse (), "Retired buffer is in use!");
+        ASSERTX (!buffer->isInUse (), "Retired buffer is in use!");
 
         _retiredBuffers.pop_back ();
         _usedBuffers.push_back (buffer);

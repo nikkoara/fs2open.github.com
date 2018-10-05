@@ -16,7 +16,9 @@ const char* getTypeStr (tracing::EventType type) {
     case EventType::AsyncStep: return "n";
     case EventType::AsyncEnd: return "e";
     case EventType::Counter: return "C";
-    default: UNREACHABLE ("Invalid enum value!"); return "";
+    default:
+        ASSERT (0);
+        return "";
     }
 }
 
@@ -32,7 +34,7 @@ void writeTime (std::ofstream& out, std::uint64_t time) {
 }
 
 void writeCompleteEvent (std::ofstream& out_str, const trace_event* evt) {
-    Assertion (
+    ASSERTX (
         evt->type == EventType::Complete, "Event must be a complete event!");
 
     out_str << ",\"dur\":";
@@ -101,9 +103,7 @@ void TraceEventWriter::processEvent (const trace_event* event) {
         break;
     }
     default:
-        UNREACHABLE (
-            "Unhandled enum value! This function should not have been called "
-            "with this value!");
+        ASSERT (0);
         break;
     }
 

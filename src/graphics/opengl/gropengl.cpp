@@ -288,11 +288,11 @@ void gr_opengl_print_screen (const char* filename) {
 
     _mkdir (os_get_config_path ("screenshots").c_str ());
 
-    //	glReadBuffer(GL_FRONT);
+    // glReadBuffer(GL_FRONT);
 
     // now for the data
     if (Use_PBOs) {
-        Assert (!pbo);
+        ASSERT (!pbo);
         glGenBuffers (1, &pbo);
 
         if (!pbo) { return; }
@@ -325,7 +325,7 @@ void gr_opengl_print_screen (const char* filename) {
     if (!png_write_bitmap (
             os_get_config_path (tmp).c_str (), gr_screen.max_w,
             gr_screen.max_h, true, pixels)) {
-        fs2::dialog::release_warning (
+        RELEASE_WARNINGF (
             LOCATION, "Failed to write screenshot to \"%s\".",
             os_get_config_path (tmp).c_str ());
     }
@@ -517,7 +517,7 @@ static void opengl_make_gamma_ramp (float gamma, ushort* ramp) {
     ushort x, y;
     ushort base_ramp[256];
 
-    Assert (ramp != NULL);
+    ASSERT (ramp != NULL);
 
     // generate the base ramp values first off
 
@@ -547,7 +547,7 @@ static void opengl_make_gamma_ramp (float gamma, ushort* ramp) {
         double g = 1.0 / (double)gamma;
         double val;
 
-        Assert (GL_original_gamma_ramp != NULL);
+        ASSERT (GL_original_gamma_ramp != NULL);
 
         for (x = 0; x < 256; x++) {
             val = (pow (x / 255.0, g) * 65535.0 + 0.5);
@@ -598,11 +598,11 @@ void gr_opengl_set_gamma (float gamma) {
 }
 
 void gr_opengl_get_region (int /*front*/, int w, int h, ubyte* data) {
-    //	if (front) {
-    //		glReadBuffer(GL_FRONT);
-    //	} else {
+    // if (front) {
+    // glReadBuffer(GL_FRONT);
+    // } else {
     glReadBuffer (GL_BACK);
-    //	}
+    // }
 
     GL_state.SetAlphaBlendMode (ALPHA_BLEND_NONE);
     GL_state.SetZbufferType (ZBUFFER_TYPE_NONE);
@@ -738,7 +738,7 @@ void gr_opengl_restore_screen (int bmp_id) {
         return;
     }
 
-    Assert ((bmp_id < 0) || (bmp_id == GL_saved_screen_id));
+    ASSERT ((bmp_id < 0) || (bmp_id == GL_saved_screen_id));
 
     if (GL_saved_screen_id < 0) return;
 
@@ -753,7 +753,7 @@ void gr_opengl_free_screen (int bmp_id) {
     vm_free (GL_saved_screen);
     GL_saved_screen = NULL;
 
-    Assert ((bmp_id < 0) || (bmp_id == GL_saved_screen_id));
+    ASSERT ((bmp_id < 0) || (bmp_id == GL_saved_screen_id));
 
     if (GL_saved_screen_id < 0) return;
 
@@ -866,7 +866,7 @@ void gr_opengl_use_viewport (os::Viewport* view) {
 int opengl_init_display_device () {
     int bpp = gr_screen.bits_per_pixel;
 
-    Assertion (
+    ASSERTX (
         (bpp == 16) || (bpp == 32), "Invalid bits-per-pixel value %d!", bpp);
 
     // screen format
@@ -1046,9 +1046,9 @@ void opengl_setup_function_pointers () {
     gr_screen.gf_reset_clip = gr_opengl_reset_clip;
 
     gr_screen.gf_clear = gr_opengl_clear;
-    //	gr_screen.gf_bitmap				= gr_opengl_bitmap;
+    // gr_screen.gf_bitmap                             = gr_opengl_bitmap;
 
-    //	gr_screen.gf_rect				= gr_opengl_rect;
+    // gr_screen.gf_rect                               = gr_opengl_rect;
 
     gr_screen.gf_print_screen = gr_opengl_print_screen;
 
@@ -1176,8 +1176,8 @@ void opengl_setup_function_pointers () {
 
     // NOTE: All function pointers here should have a Cmdline_nohtl check at
     // the top
-    //       if they shouldn't be run in non-HTL mode, Don't keep separate
-    //       entries.
+    // if they shouldn't be run in non-HTL mode, Don't keep separate
+    // entries.
     // *****************************************************************************
 }
 
@@ -1221,7 +1221,7 @@ static void APIENTRY debug_callback (
     }
 
     bool print_to_general_log = false;
-    
+
     switch (severity) {
     case GL_DEBUG_SEVERITY_HIGH_ARB:
         severityStr = "High";
@@ -1310,7 +1310,7 @@ static void init_extensions () {
 
     // we require a minimum GLSL version
     if (GLSL_version < MIN_REQUIRED_GLSL_VERSION) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Current GL Shading Langauge Version of %d is less than the "
             "required version of %d. Switch video modes or update your "
@@ -1339,7 +1339,7 @@ static void init_extensions () {
         Cmdline_height = 0;
     }
     else if (max_texture_units < 4) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Not enough texture units found for proper rendering support! We "
             "need at least 4, we found %d.",
@@ -1363,7 +1363,7 @@ bool gr_opengl_init (std::unique_ptr< os::GraphicsOperations >&& graphicsOps) {
     graphic_operations = std::move (graphicsOps);
 
     if (opengl_init_display_device ()) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Unable to initialize display device!\n"
             "This most likely means that your graphics drivers do not support "
@@ -1373,14 +1373,14 @@ bool gr_opengl_init (std::unique_ptr< os::GraphicsOperations >&& graphicsOps) {
 
     // Initialize function pointers
     if (!gladLoadGLLoader (GL_context->getLoaderFunction ())) {
-        fs2::dialog::error (LOCATION, "Failed to load OpenGL!");
+        ASSERTF (LOCATION, "Failed to load OpenGL!");
     }
 
     // version check
     GL_version = (GLVersion.major * 10) + GLVersion.minor;
 
     if (GL_version < MIN_REQUIRED_GL_VERSION) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Current GL Version of %d.%d is less than the "
             "required version of %d.%d.\n"
@@ -1686,11 +1686,11 @@ DCF (ogl_anisotropy, "toggles anisotropic filtering") {
     if (!dc_maybe_stuff_int (&value)) {
         // No arg passed, set to default
         GL_anisotropy = 1.0f;
-        //	opengl_set_anisotropy();
+        // opengl_set_anisotropy();
         dc_printf ("Anisotropic filter value reset to default level.\n");
     }
     else {
         GL_anisotropy = (GLfloat)value;
-        //	opengl_set_anisotropy( (float)Dc_arg_float );
+        // opengl_set_anisotropy( (float)Dc_arg_float );
     }
 }

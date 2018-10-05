@@ -103,9 +103,9 @@ static float Lab_thrust_len = 1.0f;
 static bool Lab_thrust_afterburn = false;
 
 // Trackball_mode:
-//   1  ==  rotate	(left-mouse)
-//   2  ==  pan		(shift-left-mouse)
-//   3  ==  zoom	(right-mouse)
+// 1  ==  rotate      (left-mouse)
+// 2  ==  pan         (shift-left-mouse)
+// 3  ==  zoom        (right-mouse)
 static int Trackball_mode = 1;
 static int Trackball_active = 0;
 
@@ -608,7 +608,7 @@ void labviewer_flags_add (
     std::vector< lab_flag< T > >& flag_list) {
     int x = 0, y = 0;
 
-    Assert ((Lab_flags_window != NULL) && (flag_name != NULL));
+    ASSERT ((Lab_flags_window != NULL) && (flag_name != NULL));
 
     lab_flag< T > new_flag;
 
@@ -739,7 +739,7 @@ void labviewer_variables_add (int* Y, const char* var_name) {
     int y = 0;
     Text* new_text;
 
-    Assert ((Lab_variables_window != NULL) && (var_name != NULL));
+    ASSERT ((Lab_variables_window != NULL) && (var_name != NULL));
 
     if (Y) { y = *Y; }
 
@@ -863,17 +863,17 @@ void labviewer_populate_variables_window () {
 
 #define VAR_SET_VALUE(value)                 \
     {                                        \
-        Assert (i < Lab_variables.size ());  \
+        ASSERT (i < Lab_variables.size ());  \
         Lab_variables[i]->SetText ((value)); \
         i++;                                 \
     }
 
 #define VAR_SET_VALUE_SAVE(value, max_size)                        \
     {                                                              \
-        Assert (i < Lab_variables.size ());                        \
+        ASSERT (i < Lab_variables.size ());                        \
         Lab_variables[i]->SetText ((value));                       \
         if ((max_size) < 1) {                                      \
-            Assert ((max_size) == 0);                              \
+            ASSERT ((max_size) == 0);                              \
             Lab_variables[i]->SetSaveLoc (&(value), T_ST_ONENTER); \
         }                                                          \
         else {                                                     \
@@ -896,7 +896,7 @@ void labviewer_update_variables_window () {
     // IMPORTANT NOTE: If you add something here, make sure you add it to
     // labviewer_populate_variables_window() as well! ship variables ...
     if (Lab_mode == LAB_MODE_SHIP) {
-        Assert (Lab_selected_index < static_cast< int > (Ship_info.size ()));
+        ASSERT (Lab_selected_index < static_cast< int > (Ship_info.size ()));
         ship_info* sip = &Ship_info[Lab_selected_index];
 
         VAR_SET_VALUE (sip->name);
@@ -924,8 +924,8 @@ void labviewer_update_variables_window () {
         VAR_SET_VALUE_SAVE (sip->power_output, 0);
         VAR_SET_VALUE_SAVE (sip->max_overclocked_speed, 0);
         VAR_SET_VALUE_SAVE (sip->max_weapon_reserve, 0);
-        //	VAR_SET_VALUE_SAVE(sip->max_shield_regen_per_second, 0);
-        //	VAR_SET_VALUE_SAVE(sip->max_weapon_regen_per_second, 0);
+        // VAR_SET_VALUE_SAVE(sip->max_shield_regen_per_second, 0);
+        // VAR_SET_VALUE_SAVE(sip->max_weapon_regen_per_second, 0);
 
         VAR_SET_VALUE_SAVE (sip->afterburner_fuel_capacity, 0);
         VAR_SET_VALUE_SAVE (sip->afterburner_burn_rate, 0);
@@ -946,7 +946,7 @@ void labviewer_update_variables_window () {
     }
     // weapon variables ...
     else if (Lab_mode == LAB_MODE_WEAPON) {
-        Assert (Lab_selected_index < Num_weapon_types);
+        ASSERT (Lab_selected_index < Num_weapon_types);
         weapon_info* wip = &Weapon_info[Lab_selected_index];
 
         VAR_SET_VALUE (wip->get_display_string ());
@@ -1009,7 +1009,7 @@ void labviewer_make_variables_window (Button* /*caller*/) {
 // --------------------   Render Options Window ------------------------------
 void labviewer_change_detail_texture (Tree* caller) {
     int slider_pos = (int)(caller->GetSelectedItem ()->GetData ());
-    Assert ((slider_pos >= 0) && (slider_pos <= MAX_DETAIL_LEVEL));
+    ASSERT ((slider_pos >= 0) && (slider_pos <= MAX_DETAIL_LEVEL));
 
     Detail.hardware_textures = slider_pos;
 }
@@ -1057,7 +1057,7 @@ void labviewer_make_render_options_window (Button* /*caller*/) {
     Lab_render_options_window = (Window*)Lab_screen->Add (new Window (
         "Render Options", gr_screen.center_offset_x + gr_screen.center_w - 300,
         gr_screen.center_offset_y + 200));
-    Assert (Lab_render_options_window != NULL);
+    ASSERT (Lab_render_options_window != NULL);
 
     // add all of the flags that we want/need...
 
@@ -1211,7 +1211,7 @@ void labviewer_make_material_override_window (Button* /*caller*/) {
 
     Lab_material_override_window = (Window*)Lab_screen->Add (
         new Window ("Material Override", gr_screen.max_w - 300, 200));
-    Assert (Lab_material_override_window != NULL);
+    ASSERT (Lab_material_override_window != NULL);
 
     // add all of the flags that we want/need...
 
@@ -1461,7 +1461,7 @@ void labviewer_make_ship_window (Button* /*caller*/) {
 void labviewer_change_ship_lod (Tree* caller) {
     int ship_index =
         (int)(caller->GetSelectedItem ()->GetParentItem ()->GetData ());
-    Assert (ship_index >= 0);
+    ASSERT (ship_index >= 0);
 
     if (Lab_selected_object == -1) {
         // Goober5000 - The lab loads subsystems into its special lab-specific
@@ -1515,7 +1515,7 @@ void labviewer_change_ship (Tree* caller) {
 void labviewer_show_tech_model (Tree* caller) {
     int weap_index =
         (int)(caller->GetSelectedItem ()->GetParentItem ()->GetData ());
-    Assert (weap_index >= 0);
+    ASSERT (weap_index >= 0);
 
     labviewer_change_model (
         Weapon_info[weap_index].tech_model,
@@ -1525,7 +1525,7 @@ void labviewer_show_tech_model (Tree* caller) {
 void labviewer_show_external_model (Tree* caller) {
     int weap_index =
         (int)(caller->GetSelectedItem ()->GetParentItem ()->GetData ());
-    Assert (weap_index >= 0);
+    ASSERT (weap_index >= 0);
 
     labviewer_change_model (
         Weapon_info[weap_index].external_model_name,
@@ -1535,7 +1535,7 @@ void labviewer_show_external_model (Tree* caller) {
 extern void weapon_load_bitmaps (int weapon_index);
 void labviewer_change_weapon (Tree* caller) {
     int weap_index = (int)(caller->GetSelectedItem ()->GetData ());
-    Assert (weap_index >= 0);
+    ASSERT (weap_index >= 0);
 
     if (Lab_selected_object != -1) obj_delete (Lab_selected_object);
 
@@ -1602,7 +1602,7 @@ void labviewer_make_weap_window (Button* /*caller*/) {
     for (i = 0; i < Num_weapon_types; i++) {
         if (Weapon_info[i].subtype == WP_UNUSED) { continue; }
         else if (Weapon_info[i].subtype >= Num_weapon_subtypes) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Invalid weapon subtype found on weapon %s",
                 Weapon_info[i].name);
             continue;
@@ -1620,11 +1620,11 @@ void labviewer_make_weap_window (Button* /*caller*/) {
             labviewer_change_weapon);
 
         // if (Weapon_info[i].tech_model[0] != '\0') {
-        //	cmp->AddItem(cwip, "Tech Model", 0, false,
+        // cmp->AddItem(cwip, "Tech Model", 0, false,
         // labviewer_show_tech_model);
         //}
         // if (Weapon_info[i].external_model_name[0] != '\0') {
-        //	cmp->AddItem(cwip, "External Model", 0, false,
+        // cmp->AddItem(cwip, "External Model", 0, false,
         // labviewer_show_external_model);
         //}
     }
@@ -1801,7 +1801,7 @@ void labviewer_change_background_actual () {
                     }
 
                     if (z == NUM_NEBULAS)
-                        fs2::dialog::warning_ex (LOCATION, "Unknown nebula %s!", str);
+                        WARNINGF (LOCATION, "Unknown nebula %s!", str);
 
                     if (optional_string ("+Color:")) {
                         stuff_string (str, F_NAME, MAX_FILENAME_LEN);
@@ -1814,7 +1814,7 @@ void labviewer_change_background_actual () {
                     }
 
                     if (z == NUM_NEBULA_COLORS)
-                        fs2::dialog::warning_ex (LOCATION, "Unknown nebula color %s!", str);
+                        WARNINGF (LOCATION, "Unknown nebula color %s!", str);
 
                     if (optional_string ("+Pitch:")) {
                         stuff_int (&Nebula_pitch);
@@ -1858,7 +1858,7 @@ void labviewer_change_background_actual () {
                 // don't allow overflow; just make sure the last background is
                 // the last read
                 if (Num_backgrounds >= MAX_BACKGROUNDS) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Too many backgrounds in mission!  Max is %d.",
                         MAX_BACKGROUNDS);
@@ -1994,7 +1994,7 @@ void lab_init () {
 
     // the default insignia bitmap
     Lab_insignia_index = 0;
-    Assert ((Lab_insignia_index < Num_pilot_squad_images));
+    ASSERT ((Lab_insignia_index < Num_pilot_squad_images));
 
     Lab_insignia_bitmap =
         bm_load_duplicate (Pilot_squad_image_names[Lab_insignia_index]);
@@ -2093,7 +2093,7 @@ void lab_do_frame (float frametime) {
 
             Lab_insignia_index =
                 (Lab_insignia_index + 1) % Num_pilot_squad_images;
-            Assert (
+            ASSERT (
                 (Lab_insignia_index >= 0) &&
                 (Lab_insignia_index < Num_pilot_squad_images));
 

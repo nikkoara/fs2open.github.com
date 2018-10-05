@@ -1,11 +1,11 @@
 // -*- mode: c++; -*-
 
-//	Detail level effects (Detail.shield_effects)
-//		0		Nothing rendered
-//		1		An animating bitmap rendered per hit, not shrink-wrapped. Lasts
-// half time.  One per ship. 		2		Animating bitmap per hit, not
-// shrink-wrapped.  Lasts full time.  Unlimited. 		3		Shrink-wrapped
-// texture. Lasts half-time. 		4		Shrink-wrapped texture.  Lasts
+// Detail level effects (Detail.shield_effects)
+// 0               Nothing rendered
+// 1               An animating bitmap rendered per hit, not shrink-wrapped. Lasts
+// half time.  One per ship.            2               Animating bitmap per hit, not
+// shrink-wrapped.  Lasts full time.  Unlimited.                3               Shrink-wrapped
+// texture. Lasts half-time.            4               Shrink-wrapped texture.  Lasts
 // full-time.
 
 #include "render/3d.h"
@@ -21,22 +21,22 @@
 
 int Show_shield_mesh = 0;
 
-//	One unit in 3d means this in the shield hit texture map.
+// One unit in 3d means this in the shield hit texture map.
 #define SHIELD_HIT_SCALE 0.15f // Note, larger constant means smaller effect
-#define MAX_TRIS_PER_HIT 40    //	Number of triangles per shield hit, maximum.
-#define MAX_SHIELD_HITS 200    //	Maximum number of active shield hits.
+#define MAX_TRIS_PER_HIT 40    // Number of triangles per shield hit, maximum.
+#define MAX_SHIELD_HITS 200    // Maximum number of active shield hits.
 #define MAX_SHIELD_TRI_BUFFER \
     (MAX_SHIELD_HITS *        \
-     MAX_TRIS_PER_HIT) //(MAX_SHIELD_HITS*20) //	Persistent buffer of
+     MAX_TRIS_PER_HIT) //(MAX_SHIELD_HITS*20) // Persistent buffer of
                        // triangle comprising all active shield hits.
 #define SHIELD_HIT_DURATION \
-    (3 * F1_0 / 4) //	Duration, in milliseconds, of shield hit effect
+    (3 * F1_0 / 4) // Duration, in milliseconds, of shield hit effect
 
-#define SH_UNUSED -1 //	Indicates an unused record in Shield_hits
-#define SH_TYPE_1 1  //	Indicates Shield_hits record is of type 1.
+#define SH_UNUSED -1 // Indicates an unused record in Shield_hits
+#define SH_TYPE_1 1  // Indicates Shield_hits record is of type 1.
 
 #define UV_MAX \
-    (63.95f / 64.0f) //	max allowed value until tmapper bugs fixed, 1/24/97
+    (63.95f / 64.0f) // max allowed value until tmapper bugs fixed, 1/24/97
 
 float Shield_scale = SHIELD_HIT_SCALE;
 
@@ -48,23 +48,23 @@ float Shield_scale = SHIELD_HIT_SCALE;
  * the vertex list
  */
 typedef struct gshield_tri {
-    int used;               //	Set if this triangle is currently in use.
-    int trinum;             //	a debug parameter
-    fix creation_time;      //	time at which created.
-    shield_vertex verts[4]; //	Triangles, but at lower detail level, a square.
+    int used;               // Set if this triangle is currently in use.
+    int trinum;             // a debug parameter
+    fix creation_time;      // time at which created.
+    shield_vertex verts[4]; // Triangles, but at lower detail level, a square.
 } gshield_tri;
 
 typedef struct shield_hit {
-    int start_time; //	start time of this object
-    int type;     //	type, probably the weapon type, to indicate the bitmap to
+    int start_time; // start time of this object
+    int type;     // type, probably the weapon type, to indicate the bitmap to
                   // use
-    int objnum;   //	Object index, needed to get current orientation, position.
-    int num_tris; //	Number of Shield_tris comprising this shield.
-    int tri_list[MAX_TRIS_PER_HIT]; //	Indices into Shield_tris, triangles for
+    int objnum;   // Object index, needed to get current orientation, position.
+    int num_tris; // Number of Shield_tris comprising this shield.
+    int tri_list[MAX_TRIS_PER_HIT]; // Indices into Shield_tris, triangles for
                                     // this shield hit.
-    ubyte rgb[3];                   //  rgb colors
-    matrix hit_orient;              //	hit rotation
-    vec3d hit_pos;                  //	hit position
+    ubyte rgb[3];                   // rgb colors
+    matrix hit_orient;              // hit rotation
+    vec3d hit_pos;                  // hit position
 } shield_hit;
 
 /**
@@ -72,9 +72,9 @@ typedef struct shield_hit {
  * Gets processed in frame interval.
  */
 typedef struct shield_point {
-    int objnum;      //	Object that was hit.
-    int shield_tri;  //	Triangle in shield mesh that took hit.
-    vec3d hit_point; //	Point in global 3-space of hit.
+    int objnum;      // Object that was hit.
+    int shield_tri;  // Triangle in shield mesh that took hit.
+    vec3d hit_point; // Point in global 3-space of hit.
 } shield_point;
 
 #define MAX_SHIELD_POINTS 100
@@ -82,16 +82,16 @@ shield_point Shield_points[MAX_SHIELD_POINTS];
 int Num_shield_points;
 int Num_multi_shield_points; // used by multiplayer clients
 
-gshield_tri Global_tris[MAX_SHIELD_TRI_BUFFER]; //	The persistent triangles,
+gshield_tri Global_tris[MAX_SHIELD_TRI_BUFFER]; // The persistent triangles,
                                                 // part of shield hits.
-int Num_tris; //	Number of triangles in current shield.  Would be a local,
+int Num_tris; // Number of triangles in current shield.  Would be a local,
               // but needed in numerous routines.
 
 shield_hit Shield_hits[MAX_SHIELD_HITS];
 
 int Shield_bitmaps_loaded = 0;
 
-//	This is a recursive function, so prototype it.
+// This is a recursive function, so prototype it.
 extern void create_shield_from_triangle (
     int trinum, matrix* orient, shield_info* shieldp, vec3d* tcp,
     vec3d* centerp, float radius, vec3d* rvec, vec3d* uvec);
@@ -109,7 +109,7 @@ void load_shield_hit_bitmap () {
                 Species_info[i].shield_anim.filename,
                 &Species_info[i].shield_anim.num_frames, nullptr, nullptr,
                 nullptr, true);
-            Assertion (
+            ASSERTX (
                 (Species_info[i].shield_anim.first_frame >= 0),
                 "Error while loading shield hit ani: %s for species: %s\n",
                 Species_info[i].shield_anim.filename,
@@ -198,8 +198,8 @@ void create_low_detail_poly (
     vm_vec_scale_add (
         &trip->verts[3].pos, &trip->verts[2].pos, rightv, -scale);
 
-    //	Set u, v coordinates.
-    //	Note, this need only be done once, as it's common for all explosions.
+    // Set u, v coordinates.
+    // Note, this need only be done once, as it's common for all explosions.
     trip->verts[0].u = 0.0f;
     trip->verts[0].v = 0.0f;
 
@@ -247,7 +247,7 @@ void rs_compute_uvs (
 void free_global_tri_records (int shnum) {
     int i;
 
-    Assert ((shnum >= 0) && (shnum < MAX_SHIELD_HITS));
+    ASSERT ((shnum >= 0) && (shnum < MAX_SHIELD_HITS));
 
     for (i = 0; i < Shield_hits[shnum].num_tris; i++) {
         Global_tris[Shield_hits[shnum].tri_list[i]].used = 0;
@@ -290,7 +290,7 @@ void shield_render_low_detail_bitmap (
     vec3d norm;
     vm_vec_perp (
         &norm, &trip->verts[0].pos, &trip->verts[1].pos, &trip->verts[2].pos);
-    // vertex	*vertlist[4];
+    // vertex   *vertlist[4];
     vertex vertlist[4];
     if (vm_vec_dot (&norm, &trip->verts[1].pos) < 0.0) {
         vertlist[0] = verts[3];
@@ -327,14 +327,14 @@ void shield_render_low_detail_bitmap (
  * Render one triangle of a shield hit effect on one ship.
  * Each frame, the triangle needs to be rotated into global coords.
  *
- * @param texture	handle to desired bitmap to render with
- * @param alpha		alpha value for color blending
- * @param trip		pointer to triangle in global array
- * @param orient	orientation of object shield is associated with
- * @param pos		center point of object
- * @param r			Red colour
- * @param g			Green colour
- * @param b			Blue colour
+ * @param texture       handle to desired bitmap to render with
+ * @param alpha         alpha value for color blending
+ * @param trip          pointer to triangle in global array
+ * @param orient        orientation of object shield is associated with
+ * @param pos           center point of object
+ * @param r                     Red colour
+ * @param g                     Green colour
+ * @param b                     Blue colour
  */
 void shield_render_triangle (
     int texture, float alpha, gshield_tri* trip, matrix* orient, vec3d* pos,
@@ -346,7 +346,7 @@ void shield_render_triangle (
     memset (&verts, 0, sizeof (verts));
 
     if (trip->trinum == -1)
-        return; //	Means this is a quad, must have switched detail_level.
+        return; // Means this is a quad, must have switched detail_level.
 
     for (j = 0; j < 3; j++) {
         // Rotate point into world coordinates
@@ -360,8 +360,8 @@ void shield_render_triangle (
 
         verts[j].texture_position.u = trip->verts[j].u;
         verts[j].texture_position.v = trip->verts[j].v;
-        Assert ((trip->verts[j].u >= 0.0f) && (trip->verts[j].u <= UV_MAX));
-        Assert ((trip->verts[j].v >= 0.0f) && (trip->verts[j].v <= UV_MAX));
+        ASSERT ((trip->verts[j].u >= 0.0f) && (trip->verts[j].u <= UV_MAX));
+        ASSERT ((trip->verts[j].v >= 0.0f) && (trip->verts[j].v <= UV_MAX));
     }
 
     verts[0].r = r;
@@ -437,20 +437,20 @@ void render_shield (int shield_num) {
 
     if (Shield_hits[shield_num].type == SH_UNUSED) { return; }
 
-    Assert (Shield_hits[shield_num].objnum >= 0);
+    ASSERT (Shield_hits[shield_num].objnum >= 0);
 
     objp = &Objects[Shield_hits[shield_num].objnum];
 
     if (objp->flags[Object::Object_Flags::No_shields]) { return; }
 
-    //	If this object didn't get rendered, don't render its shields.  In fact,
+    // If this object didn't get rendered, don't render its shields.  In fact,
     // make the shield hit go away.
     if (!(objp->flags[Object::Object_Flags::Was_rendered])) {
         Shield_hits[shield_num].type = SH_UNUSED;
         return;
     }
 
-    //	At detail levels 1, 3, animations play at double speed to reduce load.
+    // At detail levels 1, 3, animations play at double speed to reduce load.
     if ((Detail.shield_effects == 1) || (Detail.shield_effects == 3)) {
         Shield_hits[shield_num].start_time -= Frametime;
     }
@@ -461,13 +461,13 @@ void render_shield (int shield_num) {
     si = &Ship_info[shipp->ship_info_index];
     // objp, shipp, and si are now setup correctly
 
-    //	If this ship is in its deathroll, make the shield hit effects go away
+    // If this ship is in its deathroll, make the shield hit effects go away
     // faster.
     if (shipp->flags[Ship::Ship_Flags::Dying]) {
         Shield_hits[shield_num].start_time -= fl2f (2 * flFrametime);
     }
 
-    //	Detail level stuff.  When lots of shield hits, maybe make them go away
+    // Detail level stuff.  When lots of shield hits, maybe make them go away
     // faster.
     if (Poly_count > 50) {
         if (Shield_hits[shield_num].start_time +
@@ -492,7 +492,7 @@ void render_shield (int shield_num) {
     int bitmap_id, frame_num;
 
     // Do some sanity checking
-    Assert ((si->species >= 0) && (si->species < (int)Species_info.size ()));
+    ASSERT ((si->species >= 0) && (si->species < (int)Species_info.size ()));
 
     generic_anim* sa = &Species_info[si->species].shield_anim;
     polymodel* pm = model_get (si->model_num);
@@ -559,7 +559,7 @@ void render_shields () {
     int i;
 
     if (Detail.shield_effects == 0) {
-        return; //	No shield effect rendered at lowest detail level.
+        return; // No shield effect rendered at lowest detail level.
     }
 
     for (i = 0; i < MAX_SHIELD_HITS; i++) {
@@ -616,7 +616,7 @@ int get_free_global_shield_index () {
         gi++;
     }
 
-    //	If couldn't find one, choose a random one.
+    // If couldn't find one, choose a random one.
     if (gi == MAX_SHIELD_TRI_BUFFER)
         gi = (int)(frand () * MAX_SHIELD_TRI_BUFFER);
 
@@ -626,13 +626,13 @@ int get_free_global_shield_index () {
 int get_global_shield_tri () {
     int shnum;
 
-    //	Find unused shield hit buffer
+    // Find unused shield hit buffer
     for (shnum = 0; shnum < MAX_SHIELD_HITS; shnum++)
         if (Shield_hits[shnum].type == SH_UNUSED) break;
 
     if (shnum == MAX_SHIELD_HITS) { shnum = myrand () % MAX_SHIELD_HITS; }
 
-    Assert ((shnum >= 0) && (shnum < MAX_SHIELD_HITS));
+    ASSERT ((shnum >= 0) && (shnum < MAX_SHIELD_HITS));
 
     return shnum;
 }
@@ -665,8 +665,8 @@ void copy_shield_to_globals (
     int objnum, shield_info* shieldp, matrix* hit_orient, vec3d* hit_pos) {
     int i, j;
     int gi = 0;
-    int count = 0; //	Number of triangles in this shield hit.
-    int shnum;     //	shield hit number, index in Shield_hits.
+    int count = 0; // Number of triangles in this shield hit.
+    int shnum;     // shield hit number, index in Shield_hits.
 
     shnum = get_global_shield_tri ();
 
@@ -680,7 +680,7 @@ void copy_shield_to_globals (
                 gi++;
             }
 
-            //	If couldn't find one, choose a random one.
+            // If couldn't find one, choose a random one.
             if (gi == MAX_SHIELD_TRI_BUFFER)
                 gi = (int)(frand () * MAX_SHIELD_TRI_BUFFER);
 
@@ -749,7 +749,7 @@ void create_shield_low_detail (
     gi = get_free_global_shield_index ();
 
     Global_tris[gi].used = 1;
-    Global_tris[gi].trinum = -1; //	This tells triangle renderer to not render
+    Global_tris[gi].trinum = -1; // This tells triangle renderer to not render
                                  // in case detail_level was switched.
     Global_tris[gi].creation_time = Missiontime;
 
@@ -786,13 +786,13 @@ void create_shield_low_detail (
 // - Given a point of intersection, tcp (local to objnum)
 // - Vector to center of shield from tcp is v2c.
 // - Using v2c, compute right and down vectors.  These are the vectors of
-//   increasing u and v, respectively.
+// increasing u and v, respectively.
 // - Triangle of intersection of tcp is tr0.
 // - For 3 points in tr0, compute u,v coordinates using up and down vectors
-//   from center point, tcp.  Need to know size of explosion texture.  N units
-//   along right vector corresponds to O units in explosion texture space.
+// from center point, tcp.  Need to know size of explosion texture.  N units
+// along right vector corresponds to O units in explosion texture space.
 // - For each edge, if either endpoint was outside texture bounds, recursively
-//   apply previous and current step.
+// apply previous and current step.
 //
 // Output of above is a list of triangles with u,v coordinates.  These u,v
 // coordinates will have to be clipped against the explosion texture bounds.
@@ -800,7 +800,7 @@ void create_shield_low_detail (
 void create_shield_explosion (
     int objnum, int model_num, matrix* orient, vec3d* centerp, vec3d* tcp,
     int tr0) {
-    matrix tom; //	Texture Orientation Matrix
+    matrix tom; // Texture Orientation Matrix
     shield_info* shieldp;
     polymodel* pm;
     int i;
@@ -821,16 +821,16 @@ void create_shield_explosion (
 
     for (i = 0; i < Num_tris; i++) shieldp->tris[i].used = 0;
 
-    //	Compute orientation matrix from normal of surface hit.
-    //	Note, this will cause the shape of the bitmap to change abruptly
-    //	as the impact point moves to another triangle.  To prevent this,
-    //	you could average the normals at the vertices, then interpolate the
-    //	normals from the vertices to get a smoothly changing normal across the
-    // face. 	I had tried using the vector from the impact point to the
-    // center, which 	changes smoothly, but this looked surprisingly bad.
+    // Compute orientation matrix from normal of surface hit.
+    // Note, this will cause the shape of the bitmap to change abruptly
+    // as the impact point moves to another triangle.  To prevent this,
+    // you could average the normals at the vertices, then interpolate the
+    // normals from the vertices to get a smoothly changing normal across the
+    // face.    I had tried using the vector from the impact point to the
+    // center, which    changes smoothly, but this looked surprisingly bad.
     vm_vector_2_matrix (&tom, &shieldp->tris[tr0].norm, NULL, NULL);
 
-    //	Create the shield from the current triangle, as well as its neighbors.
+    // Create the shield from the current triangle, as well as its neighbors.
     create_shield_from_triangle (
         tr0, orient, shieldp, tcp, centerp, Objects[objnum].radius,
         &tom.vec.rvec, &tom.vec.uvec);
@@ -851,7 +851,7 @@ MONITOR (NumShieldHits)
 void add_shield_point (int objnum, int tri_num, vec3d* hit_pos) {
     if (Num_shield_points >= MAX_SHIELD_POINTS) return;
 
-    Verify (objnum < MAX_OBJECTS);
+    ASSERT (objnum < MAX_OBJECTS);
 
     MONITOR_INC (NumShieldHits, 1);
 
@@ -886,7 +886,7 @@ void add_shield_point_multi (int objnum, int tri_num, vec3d* hit_pos) {
 void shield_point_multi_setup () {
     int i;
 
-    Assert (MULTIPLAYER_CLIENT);
+    ASSERT (MULTIPLAYER_CLIENT);
 
     if (Num_multi_shield_points == 0) return;
 
@@ -930,8 +930,8 @@ void create_shield_explosion_all (object* objp) {
     // some some reason, clients seem to have a bogus count valud on occation.
     // I"ll chalk it up to missed packets :-)  MWA 2/6/98
     if (!MULTIPLAYER_CLIENT) {
-        Assert (
-            count == 0); //	Couldn't find all the alleged shield hits.  Bogus!
+        ASSERT (
+            count == 0); // Couldn't find all the alleged shield hits.  Bogus!
     }
 }
 
@@ -950,7 +950,7 @@ void ship_draw_shield (object* objp) {
 
     if (objp->flags[Object::Object_Flags::No_shields]) return;
 
-    Assert (objp->instance >= 0);
+    ASSERT (objp->instance >= 0);
 
     model_num = Ship_info[Ships[objp->instance].ship_info_index].model_num;
 
@@ -960,7 +960,7 @@ void ship_draw_shield (object* objp) {
 
     if (pm->shield.ntris < 1) return;
 
-    //	Scan all the triangles in the mesh.
+    // Scan all the triangles in the mesh.
     for (i = 0; i < pm->shield.ntris; i++) {
         int j;
         vec3d gnorm, v2f, tri_point;
@@ -971,9 +971,9 @@ void ship_draw_shield (object* objp) {
 
         if (i == Break_value) Int3 ();
 
-        //	Hack! Only works for object in identity orientation.
-        //	Need to rotate eye position into object's reference frame.
-        //	Only draw facing triangles.
+        // Hack! Only works for object in identity orientation.
+        // Need to rotate eye position into object's reference frame.
+        // Only draw facing triangles.
         vm_vec_rotate (
             &tri_point, &pm->shield.verts[tri->verts[0]].pos, &Eye_matrix);
         vm_vec_add2 (&tri_point, &objp->pos);
@@ -993,8 +993,8 @@ void ship_draw_shield (object* objp) {
 
             gr_set_color (0, 0, intensity);
 
-            //	Process the vertices.
-            //	Note this rotates each vertex each time it's needed, very dumb.
+            // Process the vertices.
+            // Note this rotates each vertex each time it's needed, very dumb.
             for (j = 0; j < 3; j++) {
                 vertex tmp;
 
@@ -1049,12 +1049,12 @@ int ship_is_shield_up (object* obj, int quadrant) {
     return 0; // no shield strength
 }
 
-//	return quadrant containing hit_pnt.
-//	\  1  /.
-//	3 \ / 0
-//	  / \.
-//	/  2  \.
-//	Note: This is in the object's local reference frame.  Do _not_ pass a
+// return quadrant containing hit_pnt.
+// \  1  /.
+// 3 \ / 0
+// / \.
+// /  2  \.
+// Note: This is in the object's local reference frame.  Do _not_ pass a
 // vector in the world frame.
 int get_quadrant (vec3d* hit_pnt, object* shipobjp) {
     if (shipobjp != NULL &&

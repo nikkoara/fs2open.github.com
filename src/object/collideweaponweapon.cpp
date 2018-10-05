@@ -19,19 +19,19 @@ int collide_weapon_weapon (obj_pair* pair) {
     object* A = pair->a;
     object* B = pair->b;
 
-    Assert (A->type == OBJ_WEAPON);
-    Assert (B->type == OBJ_WEAPON);
+    ASSERT (A->type == OBJ_WEAPON);
+    ASSERT (B->type == OBJ_WEAPON);
 
-    //	Don't allow ship to shoot down its own missile.
+    // Don't allow ship to shoot down its own missile.
     if (A->parent_sig == B->parent_sig) return 1;
 
-    //	Only shoot down teammate's missile if not traveling in nearly same
+    // Only shoot down teammate's missile if not traveling in nearly same
     // direction.
     if (Weapons[A->instance].team == Weapons[B->instance].team)
         if (vm_vec_dot (&A->orient.vec.fvec, &B->orient.vec.fvec) > 0.7f)
             return 1;
 
-    //	Ignore collisions involving a bomb if the bomb is not yet armed.
+    // Ignore collisions involving a bomb if the bomb is not yet armed.
     weapon *wpA, *wpB;
     weapon_info *wipA, *wipB;
 
@@ -80,7 +80,7 @@ int collide_weapon_weapon (obj_pair* pair) {
             return 0;
     }
 
-    //	Rats, do collision detection.
+    // Rats, do collision detection.
     if (collide_subdivide (
             &A->last_pos, &A->pos, A_radius, &B->last_pos, &B->pos,
             B_radius)) {
@@ -97,7 +97,7 @@ int collide_weapon_weapon (obj_pair* pair) {
 
         if (wipA->weapon_hitpoints > 0) {
             if (wipB->weapon_hitpoints >
-                0) { //	Two bombs collide, detonate both.
+                0) { // Two bombs collide, detonate both.
                 if ((wipA->wi_flags[Weapon::Info_Flags::Bomb]) &&
                     (wipB->wi_flags[Weapon::Info_Flags::Bomb])) {
                     wpA->lifeleft = 0.01f;

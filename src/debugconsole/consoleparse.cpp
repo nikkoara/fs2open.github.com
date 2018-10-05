@@ -207,7 +207,7 @@ void dc_get_token (std::string& out_str) {
     size_t count = 0;
     char* c_ptr;
 
-    Assert (Cp);
+    ASSERT (Cp);
 
     dc_ignore_gray_space ();
 
@@ -235,7 +235,7 @@ void dc_get_token_no_advance (std::string& out_str) {
     size_t count = 0;
     char* c_ptr;
 
-    Assert (Cp);
+    ASSERT (Cp);
 
     dc_ignore_gray_space ();
 
@@ -346,8 +346,8 @@ bool dc_maybe_stuff_string (char* out_str, size_t maxlen) {
     size_t count = 0;
     char* c_ptr = Cp;
 
-    Assert (Cp);
-    Assert (out_str);
+    ASSERT (Cp);
+    ASSERT (out_str);
 
     // Advance past grayspace, stopping at null terminator
     while (is_gray_space (*c_ptr) && (*c_ptr != '\0')) { c_ptr++; }
@@ -377,7 +377,7 @@ bool dc_maybe_stuff_string (std::string& out_str) {
     size_t count = 0;
     char* c_ptr = Cp;
 
-    Assert (Cp);
+    ASSERT (Cp);
 
     // Advance past grayspace, stopping at null terminator
     while (is_gray_space (*c_ptr) && (*c_ptr != '\0')) { c_ptr++; }
@@ -1115,7 +1115,7 @@ void dc_stuff_boolean (bool* b) {
     if ((token == "yes") || (token == "true") || (token == "ja") // German
         || (token == "Oui")                                      // French
         || (token == "si")                                       // Spanish
-        //		|| (token == "ita vero")    // Latin, not supported
+        // || (token == "ita vero")    // Latin, not supported
         || (token == "HIja") || (token == "HISLaH") // Klingon
         || (token == "1")) {
         *b = true;
@@ -1123,8 +1123,8 @@ void dc_stuff_boolean (bool* b) {
     else if (
         (token == "no") || (token == "false") || (token == "nein") // German
         || (token == "Non")                                        // French
-        //		|| (token == "no")      // Spanish, redundant with English "no"
-        //		|| (token == "minime")  // Latin, not supported
+        // || (token == "no")      // Spanish, redundant with English "no"
+        // || (token == "minime")  // Latin, not supported
         || (token == "ghobe'") // Klingon
         || (token == "0")) {
         *b = false;
@@ -1147,8 +1147,8 @@ void dc_stuff_string (char* out_str, size_t maxlen = MAX_TOKEN_LENGTH) {
     char* c_ptr = Cp;
     std::string token;
 
-    Assert (Cp);
-    Assert (out_str);
+    ASSERT (Cp);
+    ASSERT (out_str);
 
     dc_ignore_gray_space ();
 
@@ -1179,7 +1179,7 @@ void dc_stuff_string (std::string& out_str) {
     size_t count = 0;
     char* c_ptr = Cp;
 
-    Assert (Cp);
+    ASSERT (Cp);
 
     dc_ignore_gray_space ();
 
@@ -1209,8 +1209,8 @@ void dc_stuff_string_white (char* out_str, size_t maxlen) {
     size_t count = 0;
     char* c_ptr = Cp;
 
-    Assert (Cp);
-    Assert (out_str);
+    ASSERT (Cp);
+    ASSERT (out_str);
 
     dc_ignore_gray_space ();
 
@@ -1239,7 +1239,7 @@ void dc_stuff_string_white (std::string& out_str) {
     size_t count = 0;
     char* c_ptr;
 
-    Assert (Cp);
+    ASSERT (Cp);
 
     dc_ignore_gray_space ();
 

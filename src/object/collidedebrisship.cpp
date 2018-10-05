@@ -29,8 +29,8 @@ int collide_debris_ship (obj_pair* pair) {
         if (pship == Player_obj) return 0;
     }
 
-    Assert (pdebris->type == OBJ_DEBRIS);
-    Assert (pship->type == OBJ_SHIP);
+    ASSERT (pdebris->type == OBJ_DEBRIS);
+    ASSERT (pship->type == OBJ_SHIP);
 
     // don't check collision if it's our own debris and we are dying
     if ((pdebris->parent == OBJ_INDEX (pship)) &&
@@ -56,7 +56,7 @@ int collide_debris_ship (obj_pair* pair) {
 
         hit = debris_check_collision (
             pdebris, pship, &hitpos, &debris_hit_info);
-        
+
         if (hit) {
             float ship_damage;
             float debris_damage;
@@ -70,9 +70,9 @@ int collide_debris_ship (obj_pair* pair) {
             ship_damage =
                 0.005f *
                 debris_hit_info
-                .impulse; //	Cut collision-based damage in half.
+                .impulse; // Cut collision-based damage in half.
 
-            //	Decrease heavy damage by 2x.
+            // Decrease heavy damage by 2x.
             if (ship_damage > 5.0f)
                 ship_damage = 5.0f + (ship_damage - 5.0f) / 2.0f;
 
@@ -142,7 +142,7 @@ int collide_debris_ship (obj_pair* pair) {
         }
         return 0;
     }
-    else { //	Bounding spheres don't intersect, set timestamp for next
+    else { // Bounding spheres don't intersect, set timestamp for next
            // collision check.
         float ship_max_speed, debris_speed;
         float time;
@@ -195,8 +195,8 @@ int collide_asteroid_ship (obj_pair* pair) {
 
     if (pasteroid->hull_strength < 0.0f) return 0;
 
-    Assert (pasteroid->type == OBJ_ASTEROID);
-    Assert (pship->type == OBJ_SHIP);
+    ASSERT (pasteroid->type == OBJ_ASTEROID);
+    ASSERT (pship->type == OBJ_SHIP);
 
     dist = vm_vec_dist (&pasteroid->pos, &pship->pos);
 
@@ -245,10 +245,10 @@ int collide_asteroid_ship (obj_pair* pair) {
                 ship_damage =
                     0.001f *
                     asteroid_hit_info
-                    .impulse; //	Cut collision-based damage in half.
+                    .impulse; // Cut collision-based damage in half.
             }
 
-            //	Decrease heavy damage by 2x.
+            // Decrease heavy damage by 2x.
             if (ship_damage > 5.0f)
                 ship_damage = 5.0f + (ship_damage - 5.0f) / 2.0f;
 
@@ -266,7 +266,7 @@ int collide_asteroid_ship (obj_pair* pair) {
                      Ships[pship->instance].ship_max_hull_strength));
             }
 
-            //	Decrease damage during warp out because it's annoying when
+            // Decrease damage during warp out because it's annoying when
             // your escoree dies during warp out.
             if (Ai_info[Ships[pship->instance].ai_index].mode ==
                 AIM_WARP_OUT)

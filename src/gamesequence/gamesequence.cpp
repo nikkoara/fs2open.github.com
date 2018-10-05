@@ -191,7 +191,7 @@ void gameseq_post_event (int event) {
              GS_event_text[event]));
     }
 
-    Assert (gs[gs_current_stack].queue_tail < MAX_GAMESEQ_EVENTS);
+    ASSERT (gs[gs_current_stack].queue_tail < MAX_GAMESEQ_EVENTS);
     gs[gs_current_stack].event_queue[gs[gs_current_stack].queue_tail++] =
         event;
     if (gs[gs_current_stack].queue_tail == MAX_GAMESEQ_EVENTS)
@@ -218,7 +218,7 @@ bool GameState_Stack_Valid () { return (gs_current_stack != -1); }
 
 // returns one of the GS_STATE_ macros
 int gameseq_get_state (int depth) {
-    Assert (depth <= gs_current_stack);
+    ASSERT (depth <= gs_current_stack);
 
     return gs[gs_current_stack - depth].current_state;
 }
@@ -243,8 +243,8 @@ void gameseq_set_state (int new_state, int override) {
              event, old_state, new_state));
     }
 
-    Assert (state_reentry == 1); // Get John! (Invalid state sequencing!)
-    Assert (
+    ASSERT (state_reentry == 1); // Get John! (Invalid state sequencing!)
+    ASSERT (
         state_in_event_processer ==
         1); // can only call from game_process_event
 
@@ -268,19 +268,19 @@ void gameseq_push_state (int new_state) {
     // Flush all events!!
     // I commented out because I'm not sure if we should throw out events when
     // pushing or not.
-    //	int event;
-    //	while( (event = gameseq_get_event()) != -1 )	{
-    //		mprintf(( "Throwing out event %d because of state push from %d to
+    // int event;
+    // while( (event = gameseq_get_event()) != -1 )    {
+    // mprintf(( "Throwing out event %d because of state push from %d to
     //%d\n", event, old_state, new_state ));
-    //	}
+    // }
 
-    Assert (state_reentry == 1); // Get John! (Invalid state sequencing!)
-    Assert (
+    ASSERT (state_reentry == 1); // Get John! (Invalid state sequencing!)
+    ASSERT (
         state_in_event_processer ==
         1); // can only call from game_process_event
 
     gs_current_stack++;
-    Assert (gs_current_stack < GS_STACK_SIZE);
+    ASSERT (gs_current_stack < GS_STACK_SIZE);
 
     state_processing_event_post++;
     state_reentry++;
@@ -299,7 +299,7 @@ void gameseq_push_state (int new_state) {
 void gameseq_pop_state () {
     int popped_state = 0;
 
-    Assert (state_reentry == 1); // Get John! (Invalid state sequencing!)
+    ASSERT (state_reentry == 1); // Get John! (Invalid state sequencing!)
 
     if (gs_current_stack >= 1) {
         int old_state;
@@ -366,7 +366,7 @@ int gameseq_process_events () {
     int event, old_state;
     old_state = gs[gs_current_stack].current_state;
 
-    Assert (state_reentry == 0); // Get John! (Invalid state sequencing!)
+    ASSERT (state_reentry == 0); // Get John! (Invalid state sequencing!)
 
     while ((event = gameseq_get_event ()) != -1) {
         state_reentry++;

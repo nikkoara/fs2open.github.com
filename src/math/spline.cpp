@@ -31,7 +31,7 @@ static float bez_fact_lookup[13] = {
 
 // Limited Factorial
 static float bez_fact (int n) {
-    Assert ((n >= 0) && (n <= 12));
+    ASSERT ((n >= 0) && (n <= 12));
 
     return bez_fact_lookup[n];
 }
@@ -57,7 +57,7 @@ void bez_spline::bez_set_points (int _num_pts, vec3d* _pts[MAX_BEZ_PTS]) {
     // store the points
     num_pts = _num_pts;
     for (idx = 0; idx < _num_pts; idx++) {
-        Assert (_pts[idx] != NULL);
+        ASSERT (_pts[idx] != NULL);
         if (_pts[idx] != NULL) { pts[idx] = *_pts[idx]; }
     }
 }
@@ -77,7 +77,7 @@ void bez_spline::bez_get_point (vec3d* out, float u) {
     int idx;
     float bez_val;
 
-    Assert (out != NULL);
+    ASSERT (out != NULL);
     if (out == NULL) { return; }
 
     // calc
@@ -164,9 +164,9 @@ void herm_spline::herm_set_points (
     // store the points
     num_pts = _num_pts;
     for (idx = 0; idx < _num_pts; idx++) {
-        Assert (_pts[idx] != NULL);
+        ASSERT (_pts[idx] != NULL);
         if (_pts[idx] != NULL) { pts[idx] = *_pts[idx]; }
-        Assert (_d_pts[idx] != NULL);
+        ASSERT (_d_pts[idx] != NULL);
         if (_d_pts[idx] != NULL) { d_pts[idx] = *_d_pts[idx]; }
     }
 }

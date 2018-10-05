@@ -161,7 +161,7 @@ void trail_render (trail* trailp) {
 
     if (num_sections <= 0) return;
 
-    Assertion (
+    ASSERTX (
         ti->texture.bitmap_id != -1, "Weapon trail %s could not be loaded",
         ti->texture.filename); // We can leave this as an assert, but tell them
                                // how to fix it. --Chief
@@ -273,12 +273,12 @@ void trail_render (trail* trailp) {
     if (!nv) return;
 
     if (nv < 3)
-        fs2::dialog::error (LOCATION, "too few verts in trail render\n");
+        ASSERTF (LOCATION, "too few verts in trail render\n");
 
     // there should always be three verts in the last section and 2 everyware
     // else, therefore there should always be an odd number of verts
     if ((nv % 2) != 1)
-        fs2::dialog::warning (LOCATION, "even number of verts in trail render\n");
+        WARNINGF (LOCATION, "even number of verts in trail render\n");
 
     TRACE_SCOPE (tracing::TrailDraw);
     // gr_set_bitmap( ti->texture.bitmap_id, GR_ALPHABLEND_FILTER,

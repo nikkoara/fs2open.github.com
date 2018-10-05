@@ -502,7 +502,7 @@ void model_draw_list::render_all (gr_zbuffer_type depth_mode) {
     GR_DEBUG_SCOPE ("Render draw list");
     TRACE_SCOPE (tracing::SubmitDraws);
 
-    Assertion (
+    ASSERTX (
         Render_initialized,
         "init_render must be called before any render_all call!");
 
@@ -740,7 +740,7 @@ void model_render_add_lightning (
     const int AG2 = 128;
     const int AB2 = 10;
 
-    Assert (sm->num_arcs > 0);
+    ASSERT (sm->num_arcs > 0);
 
     if (interp->get_model_flags () & MR_SHOW_OUTLINE_PRESET) { return; }
 
@@ -830,7 +830,7 @@ int model_render_determine_detail (
 
     polymodel* pm = model_get (model_num);
 
-    Assert (pm->n_detail_levels < MAX_MODEL_DETAIL_LEVELS);
+    ASSERT (pm->n_detail_levels < MAX_MODEL_DETAIL_LEVELS);
 
     int i;
 
@@ -871,8 +871,8 @@ void model_render_buffers (
     const uint debug_flags = interp->get_debug_flags ();
     const int obj_num = interp->get_object_number ();
 
-    Assert (buffer != NULL);
-    Assert (detail_level >= 0);
+    ASSERT (buffer != NULL);
+    ASSERT (detail_level >= 0);
 
     if ((mn >= 0) && (mn < pm->n_models)) { model = &pm->submodel[mn]; }
 
@@ -1458,7 +1458,7 @@ model_render_determine_blend_mode (int base_bitmap, bool blending) {
 
 bool model_render_check_detail_box (
     vec3d* view_pos, polymodel* pm, int submodel_num, uint flags) {
-    Assert (pm != NULL);
+    ASSERT (pm != NULL);
 
     bsp_info* model = &pm->submodel[submodel_num];
 
@@ -2099,7 +2099,7 @@ void model_render_glow_points (
                 continue;
 
             for (j = 0; j < bank->num_points; j++) {
-                Assert (bank->points != NULL);
+                ASSERT (bank->points != NULL);
                 int flick;
 
                 if (pm->submodel[pm->detail[0]].num_arcs) {
@@ -2205,7 +2205,7 @@ void model_queue_render_thrusters (
         }
 
         for (j = 0; j < bank->num_points; j++) {
-            Assert (bank->points != NULL);
+            ASSERT (bank->points != NULL);
 
             float d, D;
             vec3d tempv;
@@ -2540,7 +2540,7 @@ void model_render_arc (
     interp_render_arc_segment (v1, v2, 0);
 
     // use primary color for fist pass
-    Assert (primary);
+    ASSERT (primary);
 
     g3_render_rod (
         primary, Num_arc_segment_points, Arc_segment_points, arc_width);
@@ -2779,7 +2779,7 @@ void model_render_queue (
                 pmi = model_get_instance (
                     Weapons[objp->instance].model_instance_num);
             else
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Unsupported object type %d for rendering "
                     "intrinsic-rotate submodels!",
@@ -2841,13 +2841,13 @@ void model_render_queue (
     }
 
     // #ifndef NDEBUG
-    // 	if ( Interp_detail_level == 0 )	{
-    // 		MONITOR_INC( NumHiModelsRend, 1 );
-    // 	} else if ( Interp_detail_level == pm->n_detail_levels-1 ) {
-    // 		MONITOR_INC( NumLowModelsRend, 1 );
-    // 	}  else {
-    // 		MONITOR_INC( NumMedModelsRend, 1 );
-    // 	}
+    // if ( Interp_detail_level == 0 ) {
+    // MONITOR_INC( NumHiModelsRend, 1 );
+    // } else if ( Interp_detail_level == pm->n_detail_levels-1 ) {
+    // MONITOR_INC( NumLowModelsRend, 1 );
+    // }  else {
+    // MONITOR_INC( NumMedModelsRend, 1 );
+    // }
     // #endif
 
     vec3d auto_back = ZERO_VECTOR;
@@ -2920,7 +2920,7 @@ void model_render_queue (
         rendering_material.set_lighting (false);
     }
 
-    Assertion (
+    ASSERTX (
         !(model_flags & MR_STENCIL_READ && model_flags & MR_STENCIL_WRITE),
         "Enabling stencil read and write at the same time is not supported!");
 

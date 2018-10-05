@@ -228,7 +228,7 @@ public:
 // DoFrame return values
 #define OF_TRUE -1
 #define OF_FALSE -2
-//#define OF_DESTROYED			-3	//If a call to DoFrame results in the
+//#define OF_DESTROYED                  -3      //If a call to DoFrame results in the
 //object destroying itself (ie the close button was pressed)
 
 class GUIObject : public LinkedList {
@@ -490,7 +490,7 @@ public:
 };
 
 //*****************************Button*******************************
-//#define DEFAULT_BUTTON_WIDTH	50
+//#define DEFAULT_BUTTON_WIDTH  50
 #define B_BORDERWIDTH 1
 #define B_BORDERHEIGHT 1
 #define DEFAULT_BUTTON_HEIGHT 15

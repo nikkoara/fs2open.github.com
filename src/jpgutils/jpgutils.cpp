@@ -78,7 +78,7 @@ void jpg_output_message (j_common_ptr cinfo) {
     // don't actually output anything unless we are a debug build, let bmpman
     // give any errors instead for release builds
 #ifndef NDEBUG
-    fs2::dialog::warning (LOCATION, "%s %s", "JPEG Error:", buffer);
+    WARNINGF (LOCATION, "%s %s", "JPEG Error:", buffer);
 #endif
 }
 
@@ -114,7 +114,7 @@ int jpeg_read_header (
         jpeg_file = img_cfp;
     }
 
-    Assert (jpeg_file != NULL);
+    ASSERT (jpeg_file != NULL);
 
     if (jpeg_file == NULL) return JPEG_ERROR_READING;
 
@@ -207,7 +207,7 @@ int jpeg_read_bitmap (
             dest_size; // may need/have to match above
 
         // Actually check the precondition specified in the comment above
-        Assertion (
+        ASSERTX (
             dest_size == 3,
             "JPEG decompression currently only support 24-bit bitmap "
             "locking!");
@@ -260,7 +260,7 @@ int jpeg_read_bitmap (
 // --------------------- handlers for reading of files
 // -------------------------
 // ---- basic copy of source from jdatasrc.c, originally:
-//		Copyright (C) 1994-1996, Thomas G. Lane.
+// Copyright (C) 1994-1996, Thomas G. Lane.
 
 void jpeg_cf_init_source (j_decompress_ptr cinfo) {
     cfile_src_ptr src = (cfile_src_ptr)cinfo->src;

@@ -54,7 +54,7 @@ int main(int argc,char **argv)
 {
     unsigned int LastPrintbytes = time(NULL);
     InetGetFile *inetfile;
-    WSADATA	ws_data;
+    WSADATA     ws_data;
     WORD ver=MAKEWORD(1,1);
 
     int error=WSAStartup(ver,&ws_data);

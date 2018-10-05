@@ -30,17 +30,17 @@ extern void grx_tmapper( int nv, vertex * verts[], uint flags );
 #define TMAP_FLAG_RGB (1 << 3)      // Use RGB lighting (interpolate RGB)
 #define TMAP_FLAG_GOURAUD \
     (1 << 4) // Lighting values differ on each vertex.
-             //   If this is not set, then the texture mapper will use
-             //   the lighting parameters in each vertex, otherwise it
-             //   will use the ones specified in tmapper_set_??
+             // If this is not set, then the texture mapper will use
+             // the lighting parameters in each vertex, otherwise it
+             // will use the ones specified in tmapper_set_??
 #define TMAP_FLAG_XPARENT (1 << 5) // texture could have transparency
 #define TMAP_FLAG_TILED (1 << 6)   // This means uv's can be > 1.0
 #define TMAP_FLAG_NEBULA \
     (1 << 7) // Must be used with RAMP and GOURAUD.  Means l 0-1 is 0-31
              // palette entries
 
-//#define TMAP_HIGHEST_FLAG_BIT		7		// The highest bit used in the
-// TMAP_FLAGS #define TMAP_MAX_SCANLINES		(1<<(TMAP_HIGHEST_FLAG_BIT+1))
+//#define TMAP_HIGHEST_FLAG_BIT         7               // The highest bit used in the
+// TMAP_FLAGS #define TMAP_MAX_SCANLINES                (1<<(TMAP_HIGHEST_FLAG_BIT+1))
 
 // Add any entries that don't work for software under here:
 // Make sure to disable them at top of grx_tmapper

@@ -12,7 +12,7 @@
 
 int Cmeasures_homing_check = 0;
 int Countermeasures_enabled =
-    1; //	Debug, set to 0 means no one can fire countermeasures.
+    1; // Debug, set to 0 means no one can fire countermeasures.
 const float CMEASURE_DETONATE_DISTANCE = 40.0f;
 
 // Used to set a countermeasure velocity after being launched from a ship as a
@@ -50,7 +50,7 @@ void cmeasure_set_ship_launch_vel (
 }
 
 void cmeasure_select_next (ship* shipp) {
-    Assert (shipp != NULL);
+    ASSERT (shipp != NULL);
     int i, new_index;
 
     for (i = 1; i < Num_weapon_types; i++) {
@@ -81,7 +81,7 @@ void cmeasure_maybe_alert_success (object* objp) {
     // Is this a countermeasure, and does it have a parent
     if (objp->type != OBJ_WEAPON || objp->parent < 0) { return; }
 
-    Assert (Weapon_info[Weapons[objp->instance].weapon_info_index]
+    ASSERT (Weapon_info[Weapons[objp->instance].weapon_info_index]
                 .wi_flags[Weapon::Info_Flags::Cmeasure]);
 
     if (objp->parent == OBJ_INDEX (Player_obj)) {

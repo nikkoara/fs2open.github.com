@@ -102,7 +102,7 @@ factor_table::factor_table (size_t size) { resize (size); }
 factor_table::~factor_table () {}
 
 size_t factor_table::getNext (size_t n, size_t current) {
-    Assertion (
+    ASSERTX (
         n >= 1,
         "factor_table::getNext() called with %zu"
         ", when only natural numbers make sense; get a coder!\n",
@@ -125,9 +125,7 @@ size_t factor_table::getNext (size_t n, size_t current) {
         }
     }
 
-    UNREACHABLE (
-        "For some reason, factor_table::getNext() was unable to locate the "
-        "current factor. This should never happen; get a coder!\n");
+    ASSERT (0);
     return 1;
 }
 
@@ -487,7 +485,7 @@ void debug_cycle_targeted_ship (int delta) {
     if (objp->type != OBJ_SHIP) return;
 
     si_index = Ships[objp->instance].ship_info_index;
-    Assert (si_index != -1);
+    ASSERT (si_index != -1);
     species = Ship_info[si_index].species;
 
     int sanity = 0;
@@ -535,7 +533,7 @@ void debug_max_secondary_weapons (object* objp) {
 
 void debug_max_primary_weapons (object* objp) // Goober5000
 {
-    Assert (objp); // Goober5000
+    ASSERT (objp); // Goober5000
 
     int index;
     ship* shipp = &Ships[objp->instance];
@@ -715,7 +713,7 @@ void process_debug_keys (int k) {
         }
         break;
 
-    //	Kill! the currently targeted ship.
+    // Kill! the currently targeted ship.
     case KEY_DEBUGGED + KEY_K:
     case KEY_DEBUGGED1 + KEY_K:
         if (Player_ai->target_objnum != -1) {
@@ -800,7 +798,7 @@ void process_debug_keys (int k) {
         HUD_printf ("Resetting to first mission message");
         break;
 
-    //	Kill! the currently targeted ship.
+    // Kill! the currently targeted ship.
     case KEY_DEBUGGED + KEY_ALTED + KEY_SHIFTED + KEY_K:
     case KEY_DEBUGGED1 + KEY_ALTED + KEY_SHIFTED + KEY_K:
         if (Player_ai->target_objnum != -1) {
@@ -816,7 +814,7 @@ void process_debug_keys (int k) {
         }
         break;
 
-        //	Kill the currently targeted subsystem.
+        // Kill the currently targeted subsystem.
     case KEY_DEBUGGED + KEY_SHIFTED + KEY_K:
     case KEY_DEBUGGED1 + KEY_SHIFTED + KEY_K:
         if ((Player_ai->target_objnum != -1) &&
@@ -870,8 +868,8 @@ void process_debug_keys (int k) {
         break;
     }
 
-    //	Whack down the player's shield and hull by a little more than 50%
-    //	Select next object to be viewed by AI.
+    // Whack down the player's shield and hull by a little more than 50%
+    // Select next object to be viewed by AI.
     case KEY_DEBUGGED + KEY_I:
     case KEY_DEBUGGED1 + KEY_I:
         Player_obj->flags.toggle (Object::Object_Flags::Invulnerable);
@@ -1415,7 +1413,7 @@ void process_player_ship_keys (int k) {
     if (hud_squadmsg_read_key (k)) return;
 
     if (Player->control_mode == PCM_NORMAL) {
-        //	The following things are not legal to do while dead.
+        // The following things are not legal to do while dead.
         if (!(Game_mode & GM_DEAD)) {
             process_set_of_keys (
                 masked_k, Normal_key_set_size, Normal_key_set);
@@ -1731,7 +1729,7 @@ int button_function_critical (int n, net_player* p = NULL) {
     net_player* npl;
     int at_self; // flag indicating the object is local (for hud messages, etc)
 
-    Assert (n >= 0);
+    ASSERT (n >= 0);
 
     // multiplayer clients should leave critical button bits alone and pass
     // them to the server instead
@@ -1807,12 +1805,12 @@ int button_function_critical (int n, net_player* p = NULL) {
                         [shipp->weapons.current_primary_bank])) {
                 shipp->weapons.next_primary_fire_stamp
                     [shipp->weapons.current_primary_bank] =
-                    timestamp (250); //	1/4 second delay until can fire
+                    timestamp (250); // 1/4 second delay until can fire
             }
 
             // multiplayer server should maintain bank/link status here
             if (MULTIPLAYER_MASTER) {
-                Assert (npl != NULL);
+                ASSERT (npl != NULL);
                 multi_server_update_player_weapons (npl, shipp);
             }
         }
@@ -1830,12 +1828,12 @@ int button_function_critical (int n, net_player* p = NULL) {
                         [shipp->weapons.current_primary_bank])) {
                 shipp->weapons.next_primary_fire_stamp
                     [shipp->weapons.current_primary_bank] =
-                    timestamp (250); //	1/4 second delay until can fire
+                    timestamp (250); // 1/4 second delay until can fire
             }
 
             // multiplayer server should maintain bank/link status here
             if (MULTIPLAYER_MASTER) {
-                Assert (npl != NULL);
+                ASSERT (npl != NULL);
                 multi_server_update_player_weapons (npl, shipp);
             }
         }
@@ -1853,12 +1851,12 @@ int button_function_critical (int n, net_player* p = NULL) {
                         [shipp->weapons.current_secondary_bank])) {
                 shipp->weapons.next_secondary_fire_stamp
                     [shipp->weapons.current_secondary_bank] =
-                    timestamp (250); //	1/4 second delay until can fire
+                    timestamp (250); // 1/4 second delay until can fire
             }
 
             // multiplayer server should maintain bank/link status here
             if (MULTIPLAYER_MASTER) {
-                Assert (npl != NULL);
+                ASSERT (npl != NULL);
                 multi_server_update_player_weapons (npl, shipp);
             }
         }
@@ -1914,7 +1912,7 @@ int button_function_critical (int n, net_player* p = NULL) {
 
         // multiplayer server should maintain bank/link status here
         if (MULTIPLAYER_MASTER) {
-            Assert (npl != NULL);
+            ASSERT (npl != NULL);
             multi_server_update_player_weapons (npl, &Ships[objp->instance]);
         }
         break;
@@ -1927,7 +1925,7 @@ int button_function_critical (int n, net_player* p = NULL) {
 
         // multiplayer server should maintain bank/link status here
         if (MULTIPLAYER_MASTER) {
-            Assert (npl != NULL);
+            ASSERT (npl != NULL);
             multi_server_update_player_weapons (npl, &Ships[objp->instance]);
         }
         break;
@@ -1939,7 +1937,7 @@ int button_function_critical (int n, net_player* p = NULL) {
 
         // multiplayer server should maintain bank/link status here
         if (MULTIPLAYER_MASTER) {
-            Assert (npl != NULL);
+            ASSERT (npl != NULL);
             multi_server_update_player_weapons (npl, &Ships[objp->instance]);
         }
         break;
@@ -1951,7 +1949,7 @@ int button_function_critical (int n, net_player* p = NULL) {
 
         // multiplayer server should maintain bank/link status here
         if (MULTIPLAYER_MASTER) {
-            Assert (npl != NULL);
+            ASSERT (npl != NULL);
             multi_server_update_player_weapons (npl, &Ships[objp->instance]);
         }
         break;
@@ -1963,7 +1961,7 @@ int button_function_critical (int n, net_player* p = NULL) {
 
         // multiplayer server should maintain bank/link status here
         if (MULTIPLAYER_MASTER) {
-            Assert (npl != NULL);
+            ASSERT (npl != NULL);
             multi_server_update_player_weapons (npl, &Ships[objp->instance]);
         }
         break;
@@ -1975,7 +1973,7 @@ int button_function_critical (int n, net_player* p = NULL) {
 
         // multiplayer server should maintain bank/link status here
         if (MULTIPLAYER_MASTER) {
-            Assert (npl != NULL);
+            ASSERT (npl != NULL);
             multi_server_update_player_weapons (npl, &Ships[objp->instance]);
         }
         break;
@@ -1987,7 +1985,7 @@ int button_function_critical (int n, net_player* p = NULL) {
 
         // multiplayer server should maintain bank/link status here
         if (MULTIPLAYER_MASTER) {
-            Assert (npl != NULL);
+            ASSERT (npl != NULL);
             multi_server_update_player_weapons (npl, &Ships[objp->instance]);
         }
         break;
@@ -2001,7 +1999,7 @@ int button_function_critical (int n, net_player* p = NULL) {
 
         // multiplayer server should maintain bank/link status here
         if (MULTIPLAYER_MASTER) {
-            Assert (npl != NULL);
+            ASSERT (npl != NULL);
             multi_server_update_player_weapons (npl, &Ships[objp->instance]);
         }
         break;
@@ -2080,7 +2078,7 @@ int button_function_demo_valid (int n) {
     // is one of the keys which is always allowed, even in demo playback.
     int ret = 0;
 
-    //	No keys, not even targeting keys, when player in death roll.  He can
+    // No keys, not even targeting keys, when player in death roll.  He can
     // press keys after he blows up.
     if (Game_mode & GM_DEAD_DIED) { return 0; }
 
@@ -2239,7 +2237,7 @@ bool key_is_targeting (int n) {
  * @return 1 when action was taken
  */
 int button_function (int n) {
-    Assert (n >= 0);
+    ASSERT (n >= 0);
 
     if (Control_config[n].disabled) return 0;
 
@@ -2249,7 +2247,7 @@ int button_function (int n) {
         return 0;
     }
 
-    //	No keys, not even targeting keys, when player in death roll.  He can
+    // No keys, not even targeting keys, when player in death roll.  He can
     // press keys after he blows up.
     if (Game_mode & GM_DEAD_DIED) { return 0; }
 
@@ -2555,7 +2553,7 @@ int button_function (int n) {
     if (keyHasBeenUsed) { return 1; }
 
     /**
-     * 	Update the last used timestamp of this key
+     *  Update the last used timestamp of this key
      */
     control_used (n);
 
@@ -2673,7 +2671,7 @@ int button_function (int n) {
     case TARGET_CLOSEST_REPAIR_SHIP:
         // AL: Try to find the closest repair ship coming to repair the
         // player... if no support
-        //		 ships are coming to rearm the player, just try for the closest
+        // ships are coming to rearm the player, just try for the closest
         // repair ship
         if (hud_target_closest_repair_ship (OBJ_INDEX (Player_obj)) == 0) {
             if (hud_target_closest_repair_ship () == 0) {

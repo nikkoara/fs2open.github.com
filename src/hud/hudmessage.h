@@ -65,7 +65,7 @@ void HUD_ship_sent_printf (int sh, const char* format, ...)
     __attribute__ ((format (printf, 2, 3))); // send hud message from a specific ship
 void HUD_fixed_printf (float duration, color col, const char* format, ...)
     __attribute__ ((format (printf, 3, 4))); // Display a single message for duration seconds.
-void HUD_init_fixed_text (); //	Clear all pending fixed text.
+void HUD_init_fixed_text (); // Clear all pending fixed text.
 
 void HUD_add_to_scrollback (const char* text, int source);
 void hud_add_line_to_scrollback (

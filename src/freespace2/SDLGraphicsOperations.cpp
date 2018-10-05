@@ -38,7 +38,9 @@ void setOGLProperties (const os::ViewPortProperties& props) {
     case os::OpenGLProfile::Compatibility:
         profile = SDL_GL_CONTEXT_PROFILE_COMPATIBILITY;
         break;
-    default: UNREACHABLE ("Unhandled profile value!"); return;
+    default:
+        ASSERT (0);
+        return;
     }
     SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, profile);
 
@@ -81,7 +83,7 @@ class SDLWindowViewPort : public os::Viewport {
 public:
     SDLWindowViewPort (SDL_Window* window, const os::ViewPortProperties& props)
         : _window (window), _props (props) {
-        Assertion (window != nullptr, "Invalid window specified");
+        ASSERTX (window != nullptr, "Invalid window specified");
     }
     ~SDLWindowViewPort () override {
         SDL_DestroyWindow (_window);
@@ -110,7 +112,9 @@ public:
         case os::ViewportState::Fullscreen:
             SDL_SetWindowFullscreen (_window, SDL_WINDOW_FULLSCREEN);
             break;
-        default: UNREACHABLE ("Invalid window state!"); break;
+        default:
+            ASSERT (0);
+            break;
         }
     }
     void minimize () override {
@@ -132,7 +136,7 @@ SDLGraphicsOperations::SDLGraphicsOperations () {
     setenv ("force_s3tc_enable", "true", 1);
 
     if (SDL_InitSubSystem (SDL_INIT_VIDEO) < 0) {
-        fs2::dialog::error (LOCATION, "Couldn't init SDL video: %s", SDL_GetError ());
+        ASSERTF (LOCATION, "Couldn't init SDL video: %s", SDL_GetError ());
         return;
     }
 }
@@ -197,10 +201,10 @@ void SDLGraphicsOperations::makeOpenGLContextCurrent (
         return;
     }
 
-    Assertion (
+    ASSERTX (
         view != nullptr,
         "Both viewport of context must be valid at this point!");
-    Assertion (
+    ASSERTX (
         ctx != nullptr,
         "Both viewport of context must be valid at this point!");
 

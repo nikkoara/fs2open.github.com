@@ -180,7 +180,7 @@ void multi_common_split_text () {
         Multi_common_all_text, Multi_common_text_coords[gr_screen.res][2],
         n_chars, p_str, MULTI_COMMON_TEXT_MAX_LINES,
         MULTI_COMMON_TEXT_META_CHAR);
-    Assert (n_lines != -1);
+    ASSERT (n_lines != -1);
 
     for (i = 0; i < n_lines; i++) {
         // The E -- This check is unnecessary, and will break when fonts that
@@ -778,8 +778,8 @@ void multi_join_game_init () {
 
     // do the multiplayer init stuff - multi_level_init() now does all
     // net_player zeroing. setup various multiplayer things
-    Assert (Game_mode & GM_MULTIPLAYER);
-    Assert (Net_player != NULL);
+    ASSERT (Game_mode & GM_MULTIPLAYER);
+    ASSERT (Net_player != NULL);
 
     switch (Multi_options_g.protocol) {
     case NET_TCP:
@@ -1182,7 +1182,7 @@ void multi_join_button_pressed (int n) {
             }
 
             // send the join request here
-            Assert (Multi_join_selected_item != NULL);
+            ASSERT (Multi_join_selected_item != NULL);
 
             // send a join request packet
             Multi_join_should_send = 0;
@@ -1250,7 +1250,7 @@ void multi_join_button_pressed (int n) {
         }
         else {
             // send the join request here
-            Assert (Multi_join_selected_item != NULL);
+            ASSERT (Multi_join_selected_item != NULL);
 
             Multi_join_should_send = 1;
 
@@ -1614,7 +1614,7 @@ void multi_join_process_select () {
         multi_common_set_text ("");
 
         // I sure hope this doesn't happen
-        Assert (Multi_join_selected_item != NULL);
+        ASSERT (Multi_join_selected_item != NULL);
         return;
     }
     // otherwise see if he's clicked on an item
@@ -1630,7 +1630,7 @@ void multi_join_process_select () {
                 multi_join_get_game (Multi_join_list_selected);
 
             // I sure hope this doesn't happen
-            Assert (Multi_join_selected_item != NULL);
+            ASSERT (Multi_join_selected_item != NULL);
 
             // send a mission description request to this guy
             send_netgame_descript_packet (
@@ -2184,11 +2184,11 @@ int Msg_rank_list_coords[GR_NUM_RESOLUTIONS][4] = { { // GR_640
 
 // button defs
 #define MULTI_SG_NUM_BUTTONS 10
-//#define MULTI_SG_NUM_BUTTONS	12
+//#define MULTI_SG_NUM_BUTTONS  12
 
 #define MSG_OPEN_GAME 0
-//#define MSG_CLOSED_GAME			1
-//#define MSG_RESTRICTED_GAME		2
+//#define MSG_CLOSED_GAME                       1
+//#define MSG_RESTRICTED_GAME           2
 #define MSG_PASSWD_GAME 1
 #define MSG_RANK_SET_GAME 2
 #define MSG_RANK_SCROLL_UP 3
@@ -2211,10 +2211,10 @@ ui_button_info Multi_sg_buttons[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_BUTTONS] = {
         ui_button_info (
             "MSG_00", 1, 184, 34, 191,
             2), // open
-                //******ui_button_info("MSG_01",	1,		159,	34,	166,
+                //******ui_button_info("MSG_01",        1,              159,    34,     166,
                 // 1),
                 //// closed
-                //******ui_button_info("MSG_02",	1,		184,	34,	191,
+                //******ui_button_info("MSG_02",        1,              184,    34,     191,
                 // 2),
                 //// restricted
         ui_button_info ("MSG_03", 1, 209, 34, 218, 3),     // password
@@ -2232,10 +2232,10 @@ ui_button_info Multi_sg_buttons[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_BUTTONS] = {
         ui_button_info (
             "2_MSG_00", 2, 295, 51, 307,
             2), // open
-                //******ui_button_info("2_MSG_01",	2,		254,	51,	267,
+                //******ui_button_info("2_MSG_01",      2,              254,    51,     267,
                 // 1),
                 //// closed
-                //******ui_button_info("2_MSG_02",	2,		295,	51,	307,
+                //******ui_button_info("2_MSG_02",      2,              295,    51,     307,
                 // 2),
                 //// restricted
         ui_button_info ("2_MSG_03", 2, 335, 51, 350, 3),    // password
@@ -2250,17 +2250,17 @@ ui_button_info Multi_sg_buttons[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_BUTTONS] = {
     },
 };
 
-//#define MULTI_SG_NUM_TEXT			13
+//#define MULTI_SG_NUM_TEXT                     13
 #define MULTI_SG_NUM_TEXT 11
 UI_XSTR Multi_sg_text[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_TEXT] = {
     {
         // GR_640
         { "Open", 1322, 34, 191, UI_XSTR_COLOR_GREEN, -1,
           &Multi_sg_buttons[0][MSG_OPEN_GAME].button },
-        //******{"Closed",				1323,		34,	166,
+        //******{"Closed",                              1323,           34,     166,
         // UI_XSTR_COLOR_GREEN, -1,
         //&Multi_sg_buttons[0][MSG_CLOSED_GAME].button},
-        //******{"Restricted",			1324,		34,	191,
+        //******{"Restricted",                  1324,           34,     191,
         // UI_XSTR_COLOR_GREEN, -1,
         //&Multi_sg_buttons[0][MSG_RESTRICTED_GAME].button},
         { "Password Protected", 1325, 34, 218, UI_XSTR_COLOR_GREEN, -1,
@@ -2285,10 +2285,10 @@ UI_XSTR Multi_sg_text[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_TEXT] = {
         // GR_1024
         { "Open", 1322, 51, 307, UI_XSTR_COLOR_GREEN, -1,
           &Multi_sg_buttons[1][MSG_OPEN_GAME].button },
-        //******{"Closed",				1323,		51,	267,
+        //******{"Closed",                              1323,           51,     267,
         // UI_XSTR_COLOR_GREEN, -1,
         //&Multi_sg_buttons[1][MSG_CLOSED_GAME].button},
-        //******{"Restricted",			1324,		51,	307,
+        //******{"Restricted",                  1324,           51,     307,
         // UI_XSTR_COLOR_GREEN, -1,
         //&Multi_sg_buttons[1][MSG_RESTRICTED_GAME].button},
         { "Password Protected", 1325, 51, 350, UI_XSTR_COLOR_GREEN, -1,
@@ -5066,7 +5066,7 @@ void multi_create_list_select_item (int n) {
                 ng->max_players =
                     mission_parse_get_multi_mission_info (ng->mission_name);
 
-                Assert (ng->max_players > 0);
+                ASSERT (ng->max_players > 0);
                 strcpy_s (ng->title, The_mission.name);
 
                 // set the information area text
@@ -6532,7 +6532,7 @@ void multi_ho_button_pressed (int n) {
             break;
         }
     }
-    Assert (radio_index != -1);
+    ASSERT (radio_index != -1);
 
     // check to see if a radio button was pressed
     if (radio_index < MULTI_HO_NUM_RADIO_BUTTONS) {
@@ -6731,20 +6731,20 @@ void multi_ho_get_options () {
     }
 
     // get the voice qos options
-    Assert (
+    ASSERT (
         (Netgame.options.voice_qos >= 1) && (Netgame.options.voice_qos <= 10));
     Multi_ho_sliders[gr_screen.res][MULTI_HO_SLIDER_VOICE_QOS].slider.pos =
         (Netgame.options.voice_qos - 1);
 
     // get the voice duration options
-    Assert (
+    ASSERT (
         (Netgame.options.voice_record_time > 0) &&
         (Netgame.options.voice_record_time <= MULTI_VOICE_MAX_TIME));
     Multi_ho_sliders[gr_screen.res][MULTI_HO_SLIDER_VOICE_DUR].slider.pos =
         ((int)((float)Netgame.options.voice_record_time / 500.0f)) - 1;
 
     // get the current skill level
-    Assert ((Game_skill_level >= 0) && (Game_skill_level < NUM_SKILL_LEVELS));
+    ASSERT ((Game_skill_level >= 0) && (Game_skill_level < NUM_SKILL_LEVELS));
     Multi_ho_sliders[gr_screen.res][MULTI_HO_SLIDER_SKILL].slider.pos =
         Game_skill_level;
 
@@ -6992,7 +6992,7 @@ void multi_ho_display_skill_level () {
         Multi_ho_sliders[gr_screen.res][MULTI_HO_SLIDER_SKILL].slider.pos;
 
     // sanity
-    Assert ((skill_level >= 0) && (skill_level < NUM_SKILL_LEVELS));
+    ASSERT ((skill_level >= 0) && (skill_level < NUM_SKILL_LEVELS));
     if ((skill_level < 0) || (skill_level >= NUM_SKILL_LEVELS)) {
         skill_level = 0;
     }
@@ -8078,7 +8078,7 @@ void multi_sync_common_init () {
 
     Multi_launch_button_created = 0;
 
-    // create the chatbox thingie	(shouldn't be necesary to do this, but
+    // create the chatbox thingie       (shouldn't be necesary to do this, but
     // we'll put it in for good measure)
     chatbox_create ();
 
@@ -8118,7 +8118,7 @@ void multi_sync_common_init () {
         // set the ani for the button
         // this wierdness is necessary because cancel and kick buttons aren't
         // drawn on the background bitmap,
-        //   so we have to load in frame 0, too (the file should exist)
+        // so we have to load in frame 0, too (the file should exist)
         if ((idx == MS_CANCEL) || (idx == MS_KICK) || (idx == MS_LAUNCH)) {
             Multi_sync_buttons[gr_screen.res][idx].button.set_bmaps (
                 Multi_sync_buttons[gr_screen.res][idx].filename, 3, 0);
@@ -8448,7 +8448,7 @@ void multi_sync_pre_init () {
 
     Netgame.game_state = NETGAME_STATE_MISSION_SYNC;
 
-    /* 	if we're in teamplay mode, always force skill level to be medium
+    /*  if we're in teamplay mode, always force skill level to be medium
     Karajorma - disabling cause it's just plain idiotic! if people want to play
     on insane let them
 
@@ -8516,7 +8516,7 @@ void multi_sync_pre_init () {
     }
 
     // we aren't necessarily xferring the mission file yet
-    Assert (Net_player->s_info.xfer_handle == -1);
+    ASSERT (Net_player->s_info.xfer_handle == -1);
 
     // always call this for good measure
     multi_campaign_flush_data ();
@@ -9166,7 +9166,7 @@ void multi_sync_start_countdown () {
     }
     // otherwise send the "start countdown" packet to the standalone
     else {
-        Assert (Net_player->flags & NETINFO_FLAG_GAME_HOST);
+        ASSERT (Net_player->flags & NETINFO_FLAG_GAME_HOST);
         send_countdown_packet (-1);
     }
 }
@@ -9387,7 +9387,7 @@ void multi_debrief_close () {
 void multi_maybe_set_mission_loop () {
     int cur = Campaign.current_mission;
     if (Campaign.missions[cur].flags & CMISSION_FLAG_HAS_LOOP) {
-        Assert (Campaign.loop_mission != CAMPAIGN_LOOP_MISSION_UNINITIALIZED);
+        ASSERT (Campaign.loop_mission != CAMPAIGN_LOOP_MISSION_UNINITIALIZED);
     }
     bool require_repeat_mission =
         (Campaign.current_mission == Campaign.next_mission);
@@ -9590,7 +9590,7 @@ void multi_debrief_esc_hit () {
 
 void multi_debrief_replay_hit () {
     // only the host should ever get here
-    Assert (Net_player->flags & NETINFO_FLAG_GAME_HOST);
+    ASSERT (Net_player->flags & NETINFO_FLAG_GAME_HOST);
 
     // if the button was already pressed, do nothing
     if (Multi_debrief_accept_hit) { return; }

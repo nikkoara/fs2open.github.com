@@ -149,12 +149,12 @@ void awacs_update_all_levels () {
 }
 
 // get the total AWACS level for target to viewer
-// < 0.0f		: untargetable
-// 0.0 - 1.0f	: marginally targetable
-// >= 1.0f			: fully targetable as normal
+// < 0.0f               : untargetable
+// 0.0 - 1.0f   : marginally targetable
+// >= 1.0f                      : fully targetable as normal
 float awacs_get_level (object* target, ship* viewer, int use_awacs) {
-    Assert (target); // Goober5000
-    Assert (viewer); // Goober5000
+    ASSERT (target); // Goober5000
+    ASSERT (viewer); // Goober5000
 
     vec3d dist_vec, subsys_pos;
     float closest = 0.0f;
@@ -220,7 +220,7 @@ float awacs_get_level (object* target, ship* viewer, int use_awacs) {
 
     // check for a tagged ship. TAG'd ships are _always_ visible
     if (target->type == OBJ_SHIP) {
-        Assert (shipp != NULL);
+        ASSERT (shipp != NULL);
         if (shipp->tag_left > 0.0f || shipp->level2_tag_left > 0.0f)
             return FULLY_TARGETABLE;
     }
@@ -387,7 +387,7 @@ void team_visibility_update () {
             // NOTE: we no longer skip our own team because we must adjust
             // visibility for friendly-stealth-invisible ships if (en_team ==
             // cur_team)
-            //	continue;
+            // continue;
 
             // set up enemy team
             en_count = team_count[en_team];
@@ -422,9 +422,9 @@ void team_visibility_update () {
 // Determine is ship is visible by team
 // Goober5000 - now accounts for primitive sensors
 int ship_is_visible_by_team (object* target, ship* viewer) {
-    Assert (target);
-    Assert (viewer);
-    Assert (target->type == OBJ_SHIP);
+    ASSERT (target);
+    ASSERT (viewer);
+    ASSERT (target->type == OBJ_SHIP);
 
     // not visible if viewer has primitive sensors
     if (viewer->flags[Ship::Ship_Flags::Primitive_sensors]) return 0;

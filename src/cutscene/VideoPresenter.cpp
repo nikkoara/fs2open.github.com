@@ -59,7 +59,9 @@ VideoPresenter::VideoPresenter (const MovieProperties& props)
         material_set_unlit (
             &_rgb_material, _planeTextureHandles[0], 1.0f, true, false);
         break;
-    default: UNREACHABLE ("Unhandled enum value!"); break;
+    default:
+        ASSERT (0);
+        break;
     }
 }
 
@@ -89,7 +91,9 @@ void VideoPresenter::uploadVideoFrame (const VideoFramePtr& frame) {
         case FramePixelFormat::YUV420: bpp = 8; break;
         case FramePixelFormat::BGR: bpp = 24; break;
         case FramePixelFormat::BGRA: bpp = 32; break;
-        default: UNREACHABLE ("Unhandled enum value!"); break;
+        default:
+            ASSERT (0);
+            break;
         }
 
         gr_update_texture (

@@ -208,8 +208,8 @@ float vm_vec_dist_quick (const vec3d* v0, const vec3d* v1);
 float vm_vec_copy_normalize (vec3d* dest, const vec3d* src);
 float vm_vec_normalize (vec3d* v);
 
-//	This version of vector normalize checks for the null vector before
-// normalization. 	If it is detected, it generates a Warning() and returns the
+// This version of vector normalize checks for the null vector before
+// normalization.       If it is detected, it generates a Warning() and returns the
 // vector 1, 0, 0.
 float vm_vec_normalize_safe (vec3d* v);
 
@@ -269,8 +269,8 @@ float vm_vec_delta_ang_norm (
 // computes a matrix from a set of three angles.  returns ptr to matrix
 matrix* vm_angles_2_matrix (matrix* m, const angles_t* a);
 
-//	Computes a matrix from a single angle.
-//	angle_index = 0,1,2 for p,b,h
+// Computes a matrix from a single angle.
+// angle_index = 0,1,2 for p,b,h
 matrix* vm_angle_2_matrix (matrix* m, float a, int angle_index);
 
 // computes a matrix from a forward vector and an angle
@@ -327,10 +327,10 @@ vec3d* vm_vec_rotate (vec3d* dest, const vec3d* src, const matrix* m);
 // returns ptr to dest vector
 // dest CANNOT equal source
 // This is a faster replacement for this common code sequence:
-//    vm_copy_transpose(&tempm,src_matrix);
-//    vm_vec_rotate(dst_vec,src_vect,&tempm);
+// vm_copy_transpose(&tempm,src_matrix);
+// vm_vec_rotate(dst_vec,src_vect,&tempm);
 // Replace with:
-//    vm_vec_unrotate(dst_vec,src_vect, src_matrix)
+// vm_vec_unrotate(dst_vec,src_vect, src_matrix)
 //
 // THIS DOES NOT ACTUALLY TRANSPOSE THE SOURCE MATRIX!!! So if
 // you need it transposed later on, you should use the
@@ -379,17 +379,17 @@ float vm_dist_to_plane (
 // Taken from Graphics Gems III, page 51, "The Rolling Ball"
 // Example:
 // if ( (Mouse.dx!=0) || (Mouse.dy!=0) ) {
-//   vm_trackball( Mouse.dx, Mouse.dy, &MouseRotMat );
-//   vm_matrix_x_matrix(&tempm,&LargeView.ev_matrix,&MouseRotMat);
-//   LargeView.ev_matrix = tempm;
+// vm_trackball( Mouse.dx, Mouse.dy, &MouseRotMat );
+// vm_matrix_x_matrix(&tempm,&LargeView.ev_matrix,&MouseRotMat);
+// LargeView.ev_matrix = tempm;
 //}
 void vm_trackball (int idx, int idy, matrix* RotMat);
 
-//	Find the point on the line between p0 and p1 that is nearest to int_pnt.
-//	Stuff result in nearest_point.
-//	Return value indicated where on the line *nearest_point lies.  Between 0.0f
-// and 1.0f means it's 	in the line segment.  Positive means beyond *p1,
-// negative means before *p0.  2.0f means it's 	beyond *p1 by 2x.
+// Find the point on the line between p0 and p1 that is nearest to int_pnt.
+// Stuff result in nearest_point.
+// Return value indicated where on the line *nearest_point lies.  Between 0.0f
+// and 1.0f means it's  in the line segment.  Positive means beyond *p1,
+// negative means before *p0.  2.0f means it's  beyond *p1 by 2x.
 float find_nearest_point_on_line (
     vec3d* nearest_point, const vec3d* p0, const vec3d* p1,
     const vec3d* int_pnt);
@@ -402,15 +402,15 @@ void compute_point_on_plane (vec3d* q, const plane* planep, const vec3d* p);
 // computes the point on a plane closest to a given point (which may be on the
 // plane)
 //
-//		inputs:		new_point		=>		point on the plane [result]
-//						point				=>		point to compute closest
-//plane point 						plane_normal	=>		plane normal
-// plane_point		=>		plane point
+// inputs:         new_point               =>              point on the plane [result]
+// point                           =>              point to compute closest
+//plane point                                           plane_normal    =>              plane normal
+// plane_point          =>              plane point
 void vm_project_point_onto_plane (
     vec3d* new_point, const vec3d* point, const vec3d* plane_normal,
     const vec3d* plane_point);
 
-//	Returns fairly random vector, "quick" normalized
+// Returns fairly random vector, "quick" normalized
 void vm_vec_rand_vec_quick (vec3d* rvec);
 
 // Given an point "in" rotate it by "angle" around an
@@ -446,7 +446,7 @@ int vm_vec_same (const vec3d* v1, const vec3d* v2);
 // see if two matrices are identical
 int vm_matrix_same (matrix* m1, matrix* m2);
 
-//	Interpolate from a start matrix toward a goal matrix, minimizing time
+// Interpolate from a start matrix toward a goal matrix, minimizing time
 // between orientations.
 // Moves at maximum rotational acceleration toward the goal when far and then
 // max deceleration when close. Subject to constaints on rotational velocity
@@ -457,7 +457,7 @@ void vm_matrix_interpolate (
     vec3d* rotvel_out, const vec3d* rotvel_limit, const vec3d* acc_limit,
     int no_overshoot = 0);
 
-//	Interpolate from a start forward vec toward a goal forward vec, minimizing
+// Interpolate from a start forward vec toward a goal forward vec, minimizing
 // time between orientations.
 // Moves at maximum rotational acceleration toward the goal when far and then
 // max deceleration when close. Subject to constaints on rotational velocity
@@ -488,10 +488,10 @@ void vm_estimate_next_orientation (
     const matrix* last_orient, const matrix* current_orient,
     matrix* next_orient);
 
-//	Return true if all elements of *vec are legal, that is, not a NAN.
+// Return true if all elements of *vec are legal, that is, not a NAN.
 int is_valid_vec (const vec3d* vec);
 
-//	Return true if all elements of *m are legal, that is, not a NAN.
+// Return true if all elements of *m are legal, that is, not a NAN.
 int is_valid_matrix (const matrix* m);
 
 // Finds the rotation matrix corresponding to a rotation of theta about axis u

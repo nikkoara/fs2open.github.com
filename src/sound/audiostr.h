@@ -11,8 +11,8 @@
 #define ASF_NONE 4 // used to catch errors
 // NOTE: the only difference between EVENTMUSIC and everything else is that
 // EVENTMUSIC
-//       will always respect the file type, everything else will load first
-//       available type
+// will always respect the file type, everything else will load first
+// available type
 
 #define MAX_AUDIO_STREAMS 30
 

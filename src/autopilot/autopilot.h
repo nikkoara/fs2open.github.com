@@ -72,11 +72,11 @@ bool Sel_NextNav ();
 
 // Tell us if autopilot is allowed
 // This needs:
-//        * Nav point selected
-//        * No enemies within AutopilotMinEnemyDistance meters
-//        * No asteroids within AutopilotMinAsteroidDistance meters
-//        * Destination > 1,000 meters away
-//        * Support ship not present or is actively leaving
+// * Nav point selected
+// * No enemies within AutopilotMinEnemyDistance meters
+// * No asteroids within AutopilotMinAsteroidDistance meters
+// * Destination > 1,000 meters away
+// * Support ship not present or is actively leaving
 bool CanAutopilot (vec3d targetPos, bool send_msg = false);
 
 // Check if autopilot is allowed at player's current position
@@ -87,28 +87,28 @@ inline bool CanAutopilot (bool send_msg = false) {
 
 // Engages autopilot
 // This does:
-//        * Checks if Autopilot is allowed.  See CanAutopilot() for conditions.
-//        * Control switched from player to AI
-//        * Time compression to 32x
-//        * Tell AI to fly to targeted Nav Point (for all nav-status
-//        wings/ships)
-//        * Sets max waypoint speed to the best-speed of the slowest ship
-//        tagged
+// * Checks if Autopilot is allowed.  See CanAutopilot() for conditions.
+// * Control switched from player to AI
+// * Time compression to 32x
+// * Tell AI to fly to targeted Nav Point (for all nav-status
+// wings/ships)
+// * Sets max waypoint speed to the best-speed of the slowest ship
+// tagged
 // Returns false if autopilot cannot be started. True otherwise.
 bool StartAutopilot ();
 
 // Disengages autopilot
 // this does:
-//         * Time compression to 1x
-//         * Delete AI nav goal
-//         * Control switched from AI to player
+// * Time compression to 1x
+// * Delete AI nav goal
+// * Control switched from AI to player
 void EndAutoPilot ();
 
 // Checks for changes every NPS_TICKRATE milliseconds
 // Checks:
-//			* if we've gotten close enough to a nav point for it to be counted
+// * if we've gotten close enough to a nav point for it to be counted
 //as "Visited"
-//			* If we're current AutoNavigating it checks if we need to
+// * If we're current AutoNavigating it checks if we need to
 // autodisengage
 void NavSystem_Do ();
 

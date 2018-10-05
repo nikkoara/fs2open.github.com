@@ -149,7 +149,7 @@ void multi_respawn_check (object* objp) {
                         break;
                     }
                 }
-                Assert (i < MAX_AI_RESPAWNS);
+                ASSERT (i < MAX_AI_RESPAWNS);
             }
         }
 
@@ -161,8 +161,8 @@ void multi_respawn_check (object* objp) {
         pl->s_info.rate_stamp = timestamp ((int)(1000.0f / (float)OO_gran));
     }
 
-    Assert (pl != NULL);
-    Assert (pobjp); // we have a player, and we should have a record of it.
+    ASSERT (pl != NULL);
+    ASSERT (pobjp); // we have a player, and we should have a record of it.
 
     // mark the player as in the state of respawning
     if ((pobjp->respawn_count < Netgame.respawn) ||
@@ -209,8 +209,8 @@ void multi_respawn_player_leave (net_player* pl) {
 // respawn normally
 void multi_respawn_normal () {
     // make sure we should be respawning and _not_ as an observer
-    Assert ((Net_player->flags & NETINFO_FLAG_RESPAWNING));
-    Assert (!(Net_player->flags & NETINFO_FLAG_LIMBO));
+    ASSERT ((Net_player->flags & NETINFO_FLAG_RESPAWNING));
+    ASSERT (!(Net_player->flags & NETINFO_FLAG_LIMBO));
 
     // server respawns immediately
     if (Net_player->flags & NETINFO_FLAG_AM_MASTER) {
@@ -226,7 +226,7 @@ void multi_respawn_normal () {
 // respawn as an observer
 void multi_respawn_observer () {
     // make sure we should be respawning as an observer
-    Assert (
+    ASSERT (
         !(Net_player->flags & NETINFO_FLAG_RESPAWNING) &&
         (Net_player->flags & NETINFO_FLAG_LIMBO));
 
@@ -315,7 +315,7 @@ void multi_respawn_wing_stuff (ship* shipp) {
     wing* wingp;
 
     // deal with re-adding this ship to it's wing
-    Assert (shipp->wingnum != -1);
+    ASSERT (shipp->wingnum != -1);
     wingp = &Wings[shipp->wingnum];
     wingp->ship_index[wingp->current_count] = SHIP_INDEX (shipp);
     wingp->current_count++;
@@ -332,14 +332,14 @@ int multi_respawn_common_stuff (p_object* pobjp) {
 
     // create the object
     objnum = parse_create_object (pobjp);
-    Assert (objnum != -1);
+    ASSERT (objnum != -1);
     objp = &Objects[objnum];
 
     // get the team and slot
     shipp = &Ships[objp->instance];
     multi_ts_get_team_and_slot (shipp->ship_name, &team, &slot_index);
-    Assert (team != -1);
-    Assert (slot_index != -1);
+    ASSERT (team != -1);
+    ASSERT (slot_index != -1);
 
     // reset object update stuff
     for (idx = 0; idx < MAX_PLAYERS; idx++) {
@@ -382,11 +382,11 @@ void multi_respawn_player (
 
     // try and find the parse object
     pobjp = mission_parse_get_arrival_ship (parse_name);
-    Assert (pobjp != NULL);
+    ASSERT (pobjp != NULL);
     if (pobjp == NULL) { return; }
     objnum = multi_respawn_common_stuff (pobjp);
 
-    Assert (objnum != -1);
+    ASSERT (objnum != -1);
     objp = &Objects[objnum];
     shipp = &Ships[objp->instance];
 
@@ -419,7 +419,7 @@ void multi_respawn_player (
         oldplr->flags.set (Object::Object_Flags::Should_be_dead);
         obj_delete (OBJ_INDEX (oldplr));
 
-        //	get rid of the annoying HUD dead message text.
+        // get rid of the annoying HUD dead message text.
         HUD_init_fixed_text ();
     }
 
@@ -444,7 +444,7 @@ void multi_respawn_player (
         shipp->flags.remove (Ship::Ship_Flags::Secondary_dual_fire);
     }
 
-    Assert (ship_ets != 0); // find dave or allender
+    ASSERT (ship_ets != 0); // find dave or allender
 
     // restore the correct ets settings
     shipp->shield_recharge_index = ((ship_ets & 0x0f00) >> 8);
@@ -474,8 +474,8 @@ void multi_respawn_player (
 
     // set throttle based on initial velocity specified in mission (the vel
     // gets calculated
-    //   like a percentage of our max speed, so we can just use it as-is for
-    //   the throttle)
+    // like a percentage of our max speed, so we can just use it as-is for
+    // the throttle)
     pl->m_player->ci.forward_cruise_percent = (float)pobjp->initial_velocity;
     CLAMP (pl->m_player->ci.forward_cruise_percent, 0.0f, 100.0f);
 
@@ -567,7 +567,7 @@ void multi_respawn_send_ai_respawn (ushort net_signature) {
     ADD_USHORT (net_signature);
 
     // broadcast the packet to all players
-    Assert (Net_player->flags & NETINFO_FLAG_AM_MASTER);
+    ASSERT (Net_player->flags & NETINFO_FLAG_AM_MASTER);
     multi_io_send_to_all_reliable (data, packet_size);
 }
 
@@ -598,7 +598,7 @@ void multi_respawn_broadcast (net_player* np) {
     vec3d pos;
 
     // broadcast the packet to all players
-    Assert (Net_player->flags & NETINFO_FLAG_AM_MASTER);
+    ASSERT (Net_player->flags & NETINFO_FLAG_AM_MASTER);
 
     signature = Objects[np->m_player->objnum].net_signature;
     pos = Objects[np->m_player->objnum].pos;
@@ -618,7 +618,7 @@ void multi_respawn_broadcast (net_player* np) {
     ADD_USHORT (np->s_info.ship_ets);
     ADD_STRING (np->p_info.p_objp->name);
 
-    Assert (np->s_info.ship_ets != 0); // find dave or allender
+    ASSERT (np->s_info.ship_ets != 0); // find dave or allender
 
     multi_io_send_to_all_reliable (data, packet_size);
 }
@@ -652,7 +652,7 @@ void multi_respawn_process_packet (ubyte* data, header* hinfo) {
 
         GET_USHORT (net_sig);
         pobjp = mission_parse_get_arrival_ship (net_sig);
-        Assert (pobjp != NULL);
+        ASSERT (pobjp != NULL);
         multi_respawn_ai (pobjp);
         break;
 
@@ -721,7 +721,7 @@ void multi_respawn_process_packet (ubyte* data, header* hinfo) {
         // respawn him as normal
         else {
             // create his new ship, and change him from respawning to respawned
-            Assert (Net_players[player_index].p_info.p_objp != NULL);
+            ASSERT (Net_players[player_index].p_info.p_objp != NULL);
             if (Net_players[player_index].p_info.p_objp != NULL) {
                 multi_respawn_player (
                     &Net_players[player_index],
@@ -740,7 +740,7 @@ void multi_respawn_process_packet (ubyte* data, header* hinfo) {
 
 // respawn the server immediately
 void multi_respawn_server () {
-    Assert (Net_player->flags & NETINFO_FLAG_AM_MASTER);
+    ASSERT (Net_player->flags & NETINFO_FLAG_AM_MASTER);
 
     // respawn me
     multi_respawn_player (
@@ -791,8 +791,8 @@ void multi_respawn_check_ai () {
 // 1. Take the average vector position of all the ships in the game
 // 2. Check to make sure we aren't within the radius of any of the ships in the
 // game
-//    a.) If we are, move away along the vector between the two ships (by the
-//    radius of the ship it collided with) b.) repeat step 2
+// a.) If we are, move away along the vector between the two ships (by the
+// radius of the ship it collided with) b.) repeat step 2
 
 void multi_respawn_place (object* new_obj, int team) {
     ship* pri = NULL;
@@ -880,7 +880,7 @@ void multi_respawn_place (object* new_obj, int team) {
     }
     // otherwise, resort to plain respawn points
     else {
-        Assert (Multi_respawn_point_count > 0);
+        ASSERT (Multi_respawn_point_count > 0);
 
         // get the next appropriate respawn point by team
         lookup = 0;
@@ -976,8 +976,8 @@ void prevent_spawning_collision (object* new_obj) {
 
             hit_check = &Objects[moveup->objnum];
 
-            Assert (hit_check->type == OBJ_SHIP);
-            Assert (hit_check->instance >= 0);
+            ASSERT (hit_check->type == OBJ_SHIP);
+            ASSERT (hit_check->instance >= 0);
             if ((hit_check->type != OBJ_SHIP) || (hit_check->instance < 0))
                 continue;
 

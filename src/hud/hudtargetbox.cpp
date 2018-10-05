@@ -325,20 +325,20 @@ void HudGaugeTargetBox::initBitmaps (
     Monitor_frame.first_frame =
         bm_load_animation (fname_monitor, &Monitor_frame.num_frames);
     if (Monitor_frame.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_monitor);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_monitor);
     }
 
     Integrity_bar.first_frame =
         bm_load_animation (fname_integrity, &Integrity_bar.num_frames);
     if (Integrity_bar.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_integrity);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_integrity);
     }
 
     if (strlen (fname_monitor_mask) > 0) {
         Monitor_mask = bm_load_animation (fname_monitor_mask);
 
         if (Monitor_mask < 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Cannot load bitmap hud mask: %s\n",
                 fname_monitor_mask);
         }
@@ -451,7 +451,7 @@ void HudGaugeTargetBox::renderTargetIntegrity (
         return;
     }
 
-    if (force_obj_num == -1) Assert (Player_ai->target_objnum >= 0);
+    if (force_obj_num == -1) ASSERT (Player_ai->target_objnum >= 0);
 
     clip_h = fl2i ((1 - Pl_target_integrity) * integrity_bar_h);
 
@@ -563,9 +563,9 @@ void HudGaugeTargetBox::renderTargetShip (object* target_objp) {
 
         // IMPORTANT NOTE! Code handling the case 'missile_view == TRUE' in
         // rendering section of renderTargetWeapon()
-        //                 is largely copied over from renderTargetShip(). To
-        //                 keep the codes similar please update both if and
-        //                 when needed
+        // is largely copied over from renderTargetShip(). To
+        // keep the codes similar please update both if and
+        // when needed
         model_render_params render_info;
         render_info.set_object_number (OBJ_INDEX (target_objp));
 
@@ -912,8 +912,8 @@ void HudGaugeTargetBox::renderTargetWeapon (object* target_objp) {
 
         // IMPORTANT NOTE! Code handling the rendering when 'missile_view ==
         // TRUE' is largely copied over from
-        //                 renderTargetShip(). To keep the codes similar please
-        //                 update both if and when needed
+        // renderTargetShip(). To keep the codes similar please
+        // update both if and when needed
         if (missile_view == FALSE) {
             switch (Targetbox_wire) {
             case 0: flags |= MR_NO_LIGHTING; break;
@@ -1375,8 +1375,8 @@ void HudGaugeTargetBox::renderTargetClose () {
 /**
  * Get the shield and hull percentages for a given ship object
  *
- * @param objp		Pointer to ship object that you want strength values for
- * @param shields	OUTPUT parameter:	percentage value of shields (0->1.0)
+ * @param objp          Pointer to ship object that you want strength values for
+ * @param shields       OUTPUT parameter:       percentage value of shields (0->1.0)
  * @param integrity OUTPUT parameter: percentage value of integrity (0->1.0)
  */
 void hud_get_target_strength (object* objp, float* shields, float* integrity) {
@@ -1429,7 +1429,7 @@ void HudGaugeExtraTargetData::initOrderMaxWidth (int width) {
 void HudGaugeExtraTargetData::initBitmaps (char* fname) {
     bracket.first_frame = bm_load_animation (fname, &bracket.num_frames);
     if (bracket.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 
@@ -1595,7 +1595,7 @@ extern flagset< Weapon::Info_Flags >
 turret_weapon_aggregate_flags (ship_weapon* swp);
 extern bool turret_weapon_has_subtype (ship_weapon* swp, int subtype);
 void get_turret_subsys_name (ship_weapon* swp, char* outstr) {
-    Assert (swp != NULL); // Goober5000 //WMC
+    ASSERT (swp != NULL); // Goober5000 //WMC
 
     // WMC - find the first weapon, if there is one
     if (swp->num_primary_banks || swp->num_secondary_banks) {
@@ -1635,7 +1635,7 @@ void get_turret_subsys_name (ship_weapon* swp, char* outstr) {
                     static bool Turret_illegal_subtype_warned = false;
                     if (!Turret_illegal_subtype_warned) {
                         Turret_illegal_subtype_warned = true;
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "This turret has an illegal subtype!  Trace out "
                             "and fix!");
@@ -1663,8 +1663,8 @@ void HudGaugeTargetBox::renderTargetShipInfo (object* target_objp) {
     char outstr_class[NAME_LENGTH];
     float ship_integrity, shield_strength;
 
-    Assert (target_objp); // Goober5000
-    Assert (target_objp->type == OBJ_SHIP);
+    ASSERT (target_objp); // Goober5000
+    ASSERT (target_objp->type == OBJ_SHIP);
     target_shipp = &Ships[target_objp->instance];
 
     // set up colors
@@ -1819,7 +1819,7 @@ void HudGaugeTargetBox::renderTargetShipInfo (object* target_objp) {
 
         // AL 23-3-98: Fighter bays are a special case.  Player cannot destroy
         // them, so don't
-        //					show the subsystem strength
+        // show the subsystem strength
         // Goober5000: don't display any strength if we can't destroy this
         // subsystem - but sometimes fighterbays can be destroyed
         if (ship_subsys_takes_damage (Player_ai->targeted_subsys)) {
@@ -1888,7 +1888,7 @@ int hud_targetbox_subsystem_in_view (object* target_objp, int* sx, int* sy) {
         }
 
         // get screen coords, adjusting for autocenter
-        Assert (target_objp->type == OBJ_SHIP);
+        ASSERT (target_objp->type == OBJ_SHIP);
         if (target_objp->type == OBJ_SHIP) {
             pm = model_get (
                 Ship_info[Ships[target_objp->instance].ship_info_index]
@@ -2050,7 +2050,7 @@ void HudGaugeTargetBox::showTargetData (float /*frametime*/) {
         EG_TBOX_DIST, outstr);
 
 #if 0
-	current_target_speed = vm_vec_dist(&target_objp->pos, &target_objp->last_pos) / frametime;
+        current_target_speed = vm_vec_dist(&target_objp->pos, &target_objp->last_pos) / frametime;
 #endif
     // 7/28/99 DKA: Do not use vec_mag_quick -- the error is too big
     current_target_speed = vm_vec_mag (&target_objp->phys_info.vel);
@@ -2104,16 +2104,16 @@ void HudGaugeTargetBox::showTargetData (float /*frametime*/) {
 
             switch (aip->mode) {
             case AIM_CHASE:
-                Assert (
-                    aip->submode <= SM_BIG_PARALLEL); //	Must be <= largest
+                ASSERT (
+                    aip->submode <= SM_BIG_PARALLEL); // Must be <= largest
                                                       // chase submode value.
                 sprintf (outstr2, " / %s", Submode_text[aip->submode]);
                 strcat_s (outstr, outstr2);
                 break;
             case AIM_STRAFE:
-                Assert (
+                ASSERT (
                     aip->submode <=
-                    AIS_STRAFE_POSITION); //	Must be <= largest chase
+                    AIS_STRAFE_POSITION); // Must be <= largest chase
                                           // submode value.
                 sprintf (
                     outstr2, " / %s",
@@ -2192,7 +2192,7 @@ void HudGaugeTargetBox::showTargetData (float /*frametime*/) {
             gr_printf_no_resize (sx, sy, "%s", outstr);
             sy += dy;
 
-            //	Show information about attacker.
+            // Show information about attacker.
             {
                 int found = 0;
 
@@ -2377,8 +2377,8 @@ void hud_update_target_static () {
  *
  */
 void hud_update_ship_status (object* targetp) {
-    Assert (targetp != NULL);
-    Assert ((targetp->instance >= 0) && (targetp->instance < MAX_SHIPS));
+    ASSERT (targetp != NULL);
+    ASSERT ((targetp->instance >= 0) && (targetp->instance < MAX_SHIPS));
 
     if ((targetp->instance >= 0) && (targetp->instance < MAX_SHIPS)) {
         // print out status of ship for the targetbox
@@ -2408,8 +2408,8 @@ void hud_update_ship_status (object* targetp) {
 /**
  * Start the targetbox item flashing for duration ms
  *
- * @param index		TBOX_FLASH_ define
- * @param duration	optional param (default value TBOX_FLASH_DURATION), how
+ * @param index         TBOX_FLASH_ define
+ * @param duration      optional param (default value TBOX_FLASH_DURATION), how
  * long to flash in ms
  */
 void hud_targetbox_start_flash (int index, int duration) {

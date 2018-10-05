@@ -185,21 +185,21 @@ void HudGaugeEscort::initBitmaps (
     Escort_gauges[0].first_frame =
         bm_load_animation (fname_top, &Escort_gauges[0].num_frames);
     if (Escort_gauges[0].first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Could not load in ani: %s\n", fname_top);
+        WARNINGF (LOCATION, "Could not load in ani: %s\n", fname_top);
         return;
     }
 
     Escort_gauges[1].first_frame =
         bm_load_animation (fname_middle, &Escort_gauges[1].num_frames);
     if (Escort_gauges[1].first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Could not load in ani: %s\n", fname_middle);
+        WARNINGF (LOCATION, "Could not load in ani: %s\n", fname_middle);
         return;
     }
 
     Escort_gauges[2].first_frame =
         bm_load_animation (fname_bottom, &Escort_gauges[2].num_frames);
     if (Escort_gauges[2].first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Could not load in ani: %s\n", fname_bottom);
+        WARNINGF (LOCATION, "Could not load in ani: %s\n", fname_bottom);
         return;
     }
 }
@@ -238,7 +238,7 @@ int HudGaugeEscort::setGaugeColorEscort (int index, int team) {
     // Goober5000 - an alternative; same as original but incorporating teams
     // for non-friendlies
     /*
-    if ((seen_from_team == team) || (seen_from_team < 0))	// :V: sez assume
+    if ((seen_from_team == team) || (seen_from_team < 0))       // :V: sez assume
     friendly if Player_ship is NULL hud_set_gauge_color(HUD_ESCORT_VIEW,
     is_bright ? HUD_C_BRIGHT : HUD_C_DIM); else
         gr_set_color_fast(iff_get_color_by_team(team, seen_from_team,
@@ -247,7 +247,7 @@ int HudGaugeEscort::setGaugeColorEscort (int index, int team) {
 
     // Goober5000 - original color logic
     /*
-    if ((seen_from_team == team) || (seen_from_team < 0))	// :V: sez assume
+    if ((seen_from_team == team) || (seen_from_team < 0))       // :V: sez assume
     friendly if Player_ship is NULL hud_set_gauge_color(HUD_ESCORT_VIEW,
     is_bright ? HUD_C_BRIGHT : HUD_C_DIM); else gr_set_color_fast(is_bright ?
     &Color_bright_red : &Color_red);
@@ -534,7 +534,7 @@ int escort_compare_func (const void* e1, const void* e2) {
 // create complete priority sorted escort list for all active ships
 // escorts - array of escort info
 // num_escorts - number of escorts requests in field of active ships
-//	  This will be culled to MAX_ESCORTS, selecting the top set from escorts
+// This will be culled to MAX_ESCORTS, selecting the top set from escorts
 void hud_create_complete_escort_list (escort_info* escorts, int* num_escorts) {
     ship_obj* so;
     object* objp;
@@ -573,10 +573,10 @@ void hud_create_complete_escort_list (escort_info* escorts, int* num_escorts) {
     else {
         for (so = GET_FIRST (&Ship_obj_list);
              so != END_OF_LIST (&Ship_obj_list); so = GET_NEXT (so)) {
-            Assert (so->objnum >= 0 && so->objnum < MAX_OBJECTS);
+            ASSERT (so->objnum >= 0 && so->objnum < MAX_OBJECTS);
             if ((so->objnum < 0) || (so->objnum >= MAX_OBJECTS)) { continue; }
             objp = &Objects[so->objnum];
-            Assert (objp->type == OBJ_SHIP);
+            ASSERT (objp->type == OBJ_SHIP);
             if (objp->type != OBJ_SHIP) { continue; }
 
             // break out of the loop when we have reached our max
@@ -718,7 +718,7 @@ void merge_escort_lists (
             Escort_ships[i] = complete_escorts[i];
             // check all ships are valid
             int objnum = Escort_ships[i].objnum;
-            Assert (objnum >= 0 && objnum < MAX_OBJECTS);
+            ASSERT (objnum >= 0 && objnum < MAX_OBJECTS);
             if ((objnum < 0) || (objnum >= MAX_OBJECTS)) { continue; }
             if (!valid_hit_info[i]) {
                 Escort_ships[i].escort_hit_timer = 0;
@@ -756,7 +756,7 @@ void hud_remove_ship_from_escort_index (int dead_index, int objnum) {
     for (i = 0; i < count; i++) { Escort_ships[i] = bakup_arr[i]; }
 
     Num_escort_ships--;
-    Assert (Num_escort_ships >= 0);
+    ASSERT (Num_escort_ships >= 0);
 
     // get complete escort list
     hud_create_complete_escort_list (complete_escorts, &num_complete_escorts);
@@ -794,7 +794,7 @@ void hud_escort_cull_list () {
     else {
         for (i = 0; i < Num_escort_ships; i++) {
             int objnum = Escort_ships[i].objnum;
-            Assert (objnum >= 0 && objnum < MAX_OBJECTS);
+            ASSERT (objnum >= 0 && objnum < MAX_OBJECTS);
 
             if (Objects[objnum].flags[Object::Object_Flags::Should_be_dead]) {
                 hud_setup_escort_list (0);
@@ -802,7 +802,7 @@ void hud_escort_cull_list () {
             }
             else if (Objects[objnum].type == OBJ_SHIP) {
                 int shipnum = Objects[objnum].instance;
-                Assert (shipnum >= 0 && shipnum < MAX_SHIPS);
+                ASSERT (shipnum >= 0 && shipnum < MAX_SHIPS);
 
                 if ((Ships[shipnum]
                          .flags[Ship::Ship_Flags::Hidden_from_sensors]) ||
@@ -1025,7 +1025,7 @@ int hud_escort_return_objnum (int index) {
 }
 
 void hud_escort_add_player (short id) {
-    Assert (Game_mode & GM_MULTIPLAYER);
+    ASSERT (Game_mode & GM_MULTIPLAYER);
     if (!(Game_mode & GM_MULTIPLAYER)) { return; }
 
     int idx;
@@ -1040,7 +1040,7 @@ void hud_escort_add_player (short id) {
 }
 
 void hud_escort_remove_player (short id) {
-    Assert (Game_mode & GM_MULTIPLAYER);
+    ASSERT (Game_mode & GM_MULTIPLAYER);
     if (!(Game_mode & GM_MULTIPLAYER)) { return; }
 
     int idx;

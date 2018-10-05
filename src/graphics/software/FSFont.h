@@ -24,12 +24,12 @@ enum FontType {
 };
 
 /**
- * @brief	Abstract font class.
+ * @brief       Abstract font class.
  *
  * An abstract class which is the superclass of every font class
  *
- * @author	m!m
- * @date	23.11.2011
+ * @author      m!m
+ * @date        23.11.2011
  */
 class FSFont {
 private:
@@ -47,45 +47,45 @@ protected:
 
 public:
     /**
-     * @brief	Default constructor.
+     * @brief   Default constructor.
      *
-     * @date	23.11.2011
+     * @date    23.11.2011
      */
     FSFont ();
 
     /**
-     * @brief	Destructor.
+     * @brief   Destructor.
      *
-     * @date	23.11.2011
+     * @date    23.11.2011
      */
     virtual ~FSFont ();
 
     /**
-     * @brief	Sets the name of this font.
+     * @brief   Sets the name of this font.
      *
-     * @date	23.11.2011
+     * @date    23.11.2011
      *
-     * @param	name	The new name.
+     * @param   name    The new name.
      */
     void setName (const std::string& newName);
 
     /**
-     * @brief	Gets the name of this font.
+     * @brief   Gets the name of this font.
      *
-     * @date	23.11.2011
+     * @date    23.11.2011
      *
-     * @return	The name.
+     * @return  The name.
      */
     const std::string& getName () const;
 
     /**
-     * @brief	Gets the type of this font.
+     * @brief   Gets the type of this font.
      *
      * The return value depends on the implementing subclass.
      *
-     * @date	23.11.2011
+     * @date    23.11.2011
      *
-     * @return	The type.
+     * @return  The type.
      *
      * @see FontType::VFNT_FONT
      * @see FontType::FTGL_FONT
@@ -93,37 +93,37 @@ public:
     virtual FontType getType () const = 0;
 
     /**
-     * @brief	Gets the height of this font in pixels with regard to font top
+     * @brief   Gets the height of this font in pixels with regard to font top
      * and bottom offsets.
      *
-     * @date	23.11.2011
+     * @date    23.11.2011
      *
-     * @return	The height.
+     * @return  The height.
      */
     float getHeight () const;
 
     /**
-     * @brief	Gets the height of this font in pixels without the top and
+     * @brief   Gets the height of this font in pixels without the top and
      * bottom offsets.
      *
-     * @date	29.1.2012
+     * @date    29.1.2012
      *
-     * @return	The height.
+     * @return  The height.
      */
     virtual float getTextHeight () const = 0;
 
     /**
-     * @brief	Gets a string size.
+     * @brief   Gets a string size.
      * Computes the size of the given string when it would be drawn by this
      * font
      *
-     * @date	23.11.2011
+     * @date    23.11.2011
      *
-     * @param [in]	text  	If non-null, the text.
-     * @param textLen		Length of the text. Use -1 if the string should be
+     * @param [in]      text    If non-null, the text.
+     * @param textLen           Length of the text. Use -1 if the string should be
      * checked until the next \0 character.
-     * @param [out]	width 	If non-null, the width.
-     * @param [out]	height	If non-null, the height.
+     * @param [out]     width   If non-null, the width.
+     * @param [out]     height  If non-null, the height.
      */
     virtual void getStringSize (
         const char* text,
@@ -132,39 +132,39 @@ public:
         float* height = NULL) const = 0;
 
     /**
-     * @brief	Gets the offset of this font from the top of the drawing line
+     * @brief   Gets the offset of this font from the top of the drawing line
      *
-     * @date	27.11.2012
+     * @date    27.11.2012
      *
-     * @return	The top offset.
+     * @return  The top offset.
      */
     float getTopOffset () const;
 
     /**
-     * @brief	Gets the offset of this font from the bottom of the end of the
+     * @brief   Gets the offset of this font from the bottom of the end of the
      * text to where the next line will start.
      *
-     * @date	27.1.2012
+     * @date    27.1.2012
      *
-     * @return	The bottom offset.
+     * @return  The bottom offset.
      */
     float getBottomOffset () const;
 
     /**
-     * @brief	Sets the top offset for this font
+     * @brief   Sets the top offset for this font
      *
-     * @date	27.1.2012
+     * @date    27.1.2012
      *
-     * @param	newOffset The new top offset for this font
+     * @param   newOffset The new top offset for this font
      */
     void setTopOffset (float newOffset);
 
     /**
-     * @brief	Sets the bottom offset for this font
+     * @brief   Sets the bottom offset for this font
      *
-     * @date	27.1.2012
+     * @date    27.1.2012
      *
-     * @param	newOffset The new bottom offset for this font
+     * @param   newOffset The new bottom offset for this font
      */
     void setBottomOffset (float newOffset);
 

@@ -96,8 +96,8 @@ void obj_collide_retime_cached_pairs (int checkdly = 25);
 int weapon_will_never_hit (
     object* weapon, object* other, obj_pair* current_pair);
 
-//	See if two lines intersect by doing recursive subdivision.
-//	Bails out if larger distance traveled is less than sum of radii + 1.0f.
+// See if two lines intersect by doing recursive subdivision.
+// Bails out if larger distance traveled is less than sum of radii + 1.0f.
 // CODE is locatated in CollideGeneral.cpp
 int collide_subdivide (
     vec3d* p0, vec3d* p1, float prad, vec3d* q0, vec3d* q1, float qrad);
@@ -134,12 +134,12 @@ int collide_asteroid_weapon (obj_pair* pair);
 // CODE is locatated in CollideShipShip.cpp
 int collide_ship_ship (obj_pair* pair);
 
-//	Predictive functions.
-//	Returns true if vector from curpos to goalpos with radius radius will
+// Predictive functions.
+// Returns true if vector from curpos to goalpos with radius radius will
 // collide with object goalobjp
 int pp_collide (vec3d* curpos, vec3d* goalpos, object* goalobjp, float radius);
 
-//	Return true if objp will collide with some large ship if it moves distance
+// Return true if objp will collide with some large ship if it moves distance
 // distance.
 int collide_predict_large_ship (object* objp, float distance);
 

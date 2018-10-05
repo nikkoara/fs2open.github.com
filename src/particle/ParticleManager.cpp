@@ -28,7 +28,7 @@ const char* effectTypeNames[static_cast< int64_t > (EffectType::MAX)] = {
 };
 
 const char* getEffectTypeName (EffectType type) {
-    Assertion (
+    ASSERTX (
         static_cast< int64_t > (type) >=
                 static_cast< int64_t > (EffectType::Single) &&
             static_cast< int64_t > (type) <
@@ -66,7 +66,7 @@ ParticleEffectPtr constructEffect (const std::string& name, EffectType type) {
         break;
     }
     default: {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION, "Unimplemented effect type %d encountered! Get a coder!",
             static_cast< int > (type));
         throw std::runtime_error ("Unimplemented effect type encountered!");
@@ -128,7 +128,7 @@ namespace particle {
 std::unique_ptr< ParticleManager > ParticleManager::m_manager = nullptr;
 
 void ParticleManager::init () {
-    Assertion (
+    ASSERTX (
         m_manager == nullptr, "ParticleManager was not properly shut down!");
 
     m_manager.reset (new ParticleManager ());
@@ -137,7 +137,7 @@ void ParticleManager::init () {
 }
 
 void ParticleManager::shutdown () {
-    Assertion (
+    ASSERTX (
         m_manager != nullptr, "ParticleManager was not properly inited!");
 
     m_manager = nullptr;
@@ -223,7 +223,7 @@ void ParticleManager::doFrame (float) {
 }
 
 ParticleEffectHandle ParticleManager::addEffect (ParticleEffectPtr effect) {
-    Assertion (effect, "Invalid effect pointer passed!");
+    ASSERTX (effect, "Invalid effect pointer passed!");
 
 #ifndef NDEBUG
     if (!effect->getName ().empty ()) {
@@ -231,7 +231,7 @@ ParticleEffectHandle ParticleManager::addEffect (ParticleEffectPtr effect) {
         auto index = getEffectByName (effect->getName ());
 
         if (index.isValid ()) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Effect with name '%s' already exists!",
                 effect->getName ().c_str ());
             return index;

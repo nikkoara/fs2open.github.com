@@ -46,12 +46,12 @@ void SingleParticleEffect::initializeSource (ParticleSource& source) {
 
 SingleParticleEffect* SingleParticleEffect::createInstance (
     int effectID, float minSize, float maxSize, float lifetime) {
-    Assertion (
+    ASSERTX (
         bm_is_valid (effectID), "Invalid effect id %d passed!", effectID);
-    Assertion (
+    ASSERTX (
         minSize <= maxSize, "Maximum size %f is more than minimum size %f!",
         maxSize, minSize);
-    Assertion (
+    ASSERTX (
         minSize >= 0.0f, "Minimum size may not be less than zero, got %f!",
         minSize);
 

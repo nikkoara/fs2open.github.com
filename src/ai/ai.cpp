@@ -28,7 +28,7 @@ int ai_get_slot (int shipnum) {
             return i;
         }
 
-    fs2::dialog::warning (LOCATION, "Couldn't get AI slot");
+    WARNINGF (LOCATION, "Couldn't get AI slot");
     Int3 ();
 
     return -1;
@@ -39,7 +39,7 @@ int ai_get_slot (int shipnum) {
  * @details Only modifies in ::Ai_info struct. Does not modify hook in ship.
  */
 void ai_free_slot (int ai_index) {
-    Assert ((ai_index >= 0) && (ai_index < MAX_AI_INFO));
+    ASSERT ((ai_index >= 0) && (ai_index < MAX_AI_INFO));
 
     Ai_info[ai_index].shipnum = -1;
 }
@@ -57,22 +57,22 @@ int get_wingnum (int objnum) {
 void set_wingnum (int objnum, int wingnum) {
     int shipnum, ai_index;
 
-    Assert (Objects[objnum].type == OBJ_SHIP);
+    ASSERT (Objects[objnum].type == OBJ_SHIP);
 
     shipnum = Objects[objnum].instance;
 
-    Assert ((shipnum >= 0) && (shipnum < MAX_SHIPS));
+    ASSERT ((shipnum >= 0) && (shipnum < MAX_SHIPS));
 
     ai_index = Ships[shipnum].ai_index;
 
-    Assert ((ai_index >= 0) && (ai_index < MAX_AI_INFO));
+    ASSERT ((ai_index >= 0) && (ai_index < MAX_AI_INFO));
 
     Ai_info[ai_index].wing = wingnum;
 }
 
 char* ai_get_goal_target_name (const char* name, int* index) {
-    Assert (name != NULL);
-    Assert (index != NULL);
+    ASSERT (name != NULL);
+    ASSERT (index != NULL);
     int i;
 
     for (i = 0; i < Total_goal_target_names; i++)
@@ -81,8 +81,8 @@ char* ai_get_goal_target_name (const char* name, int* index) {
             return Goal_target_names[i];
         }
 
-    Assert (Total_goal_target_names < MAX_GOAL_TARGET_NAMES);
-    Assertion (
+    ASSERT (Total_goal_target_names < MAX_GOAL_TARGET_NAMES);
+    ASSERTX (
         strlen (name) <= NAME_LENGTH - 1,
         "Goal target name %s is too long. Needs to be 31 characters or less.",
         name);

@@ -109,16 +109,16 @@ std::vector< message_extra > Message_waves;
 int Num_messages_playing; // number of is a message currently playing?
 
 /*typedef struct pmessage {
-    //anim_instance *anim;		// handle of anim currently playing
-    anim *anim_data;			// animation data to be used by the talking
+    //anim_instance *anim;              // handle of anim currently playing
+    anim *anim_data;                    // animation data to be used by the talking
 head HUD gauge handler
-    int start_frame;			// the start frame needed to play the animation
-    bool play_anim;			// used to tell HUD gauges if they should be
-playing or not int wave;					// handle of wave currently playing
-    int id;						// id of message currently playing
-    int priority;				// priority of message currently playing
-    int shipnum;				// shipnum of ship sending this message,  -1 if
-from Terran command int builtin_type;			// if a builtin message, type
+    int start_frame;                    // the start frame needed to play the animation
+    bool play_anim;                     // used to tell HUD gauges if they should be
+playing or not int wave;                                        // handle of wave currently playing
+    int id;                                             // id of message currently playing
+    int priority;                               // priority of message currently playing
+    int shipnum;                                // shipnum of ship sending this message,  -1 if
+from Terran command int builtin_type;                   // if a builtin message, type
 of the message } pmessage;*/
 
 pmessage Playing_messages[MAX_PLAYING_MESSAGES];
@@ -239,7 +239,7 @@ void persona_parse () {
         (Persona*)vm_realloc (Personas, sizeof (Persona) * (Num_personas + 1));
 
     if (Personas == NULL)
-        fs2::dialog::error (LOCATION, "Not enough memory to allocate Personas!");
+        ASSERTF (LOCATION, "Not enough memory to allocate Personas!");
 
     memset (&Personas[Num_personas], 0, sizeof (Persona));
 
@@ -265,7 +265,7 @@ void persona_parse () {
     }
 
     if (i == MAX_PERSONA_TYPES)
-        fs2::dialog::warning_ex (
+        WARNINGF (
             LOCATION, "Unknown persona type in messages.tbl -- %s\n", type);
 
     char cstrtemp[NAME_LENGTH];
@@ -281,7 +281,7 @@ void persona_parse () {
         }
 
         if (j == (int)Species_info.size ())
-            fs2::dialog::warning_ex (
+            WARNINGF (
                 LOCATION, "Unknown species in messages.tbl -- %s\n", cstrtemp);
     }
 
@@ -300,7 +300,7 @@ int add_avi (char* avi_name) {
     int i;
     message_extra extra;
 
-    Assert (strlen (avi_name) < MAX_FILENAME_LEN);
+    ASSERT (strlen (avi_name) < MAX_FILENAME_LEN);
 
     // check to see if there is an existing avi being used here
     for (i = 0; i < (int)Message_avis.size (); i++) {
@@ -324,7 +324,7 @@ int add_wave (const char* wave_name) {
     int i;
     message_extra extra;
 
-    Assert (strlen (wave_name) < MAX_FILENAME_LEN);
+    ASSERT (strlen (wave_name) < MAX_FILENAME_LEN);
 
     // check to see if there is an existing wave being used here
     for (i = 0; i < (int)Message_waves.size (); i++) {
@@ -376,7 +376,7 @@ void message_parse (bool importing_from_fsm) {
         msg.persona_index = message_persona_name_lookup (persona_name);
 
         if (msg.persona_index == -1)
-            fs2::dialog::warning_ex (
+            WARNINGF (
                 LOCATION,
                 "Unknown persona in message %s in messages.tbl -- %s\n",
                 msg.name, persona_name);
@@ -436,7 +436,7 @@ void message_parse (bool importing_from_fsm) {
         if (!found) {
             // found a mood, but it's not in the list of moods at the start of
             // the table
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Message.tbl has an entry for mood type %s, but this mood is "
                 "not in the #Moods section of the table.",
@@ -468,7 +468,7 @@ void message_parse (bool importing_from_fsm) {
             if (!found) {
                 // found a mood, but it's not in the list of moods at the start
                 // of the table
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Message.tbl has an entry for exclude mood type %s, but "
                     "this mood is not in the #Moods section of the table.",
@@ -497,7 +497,7 @@ void message_frequency_parse () {
     }
 
     if (builtin_type == -1) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Unknown Builtin Message Type Detected. Type : %s not supported",
             name);
@@ -629,7 +629,7 @@ void parse_msgtbl () {
                 // get extension
                 char* ptr = strchr (filename, '.');
                 if (ptr == NULL) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Simulated speech override file '%s' was provided "
                         "with no extension!",
@@ -639,7 +639,7 @@ void parse_msgtbl () {
 
                 // test extension
                 if (strcasecmp (ptr, ".ogg") != 0 && strcasecmp (ptr, ".wav") != 0) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Simulated speech override file '%s' was provided "
                         "with an extension other than .wav or .ogg!",
@@ -798,8 +798,8 @@ void message_mission_close () {
 
 // functions to deal with queuing messages to the message system.
 
-//	Compare function for sorting message queue entries based on priority.
-//	Return values set to sort array in _decreasing_ order.  If priorities
+// Compare function for sorting message queue entries based on priority.
+// Return values set to sort array in _decreasing_ order.  If priorities
 // equal, sort based
 // on time added into queue
 int message_queue_priority_compare (const void* a, const void* b) {
@@ -828,7 +828,7 @@ int message_queue_priority_compare (const void* a, const void* b) {
 void message_kill_all (int kill_all) {
     int i;
 
-    Assert (Num_messages_playing);
+    ASSERT (Num_messages_playing);
 
     // kill sounds for all voices currently playing
     for (i = 0; i < Num_messages_playing; i++) {
@@ -855,7 +855,7 @@ void message_kill_all (int kill_all) {
 
 // function to kill nth playing message
 void message_kill_playing (int message_num) {
-    Assert (message_num < Num_messages_playing);
+    ASSERT (message_num < Num_messages_playing);
 
     /*if ( (Playing_messages[message_num].anim != NULL) &&
     anim_playing(Playing_messages[message_num].anim) ) { anim_stop_playing(
@@ -977,7 +977,7 @@ void message_remove_from_queue (message_q* q) {
 // index - index into the Message_waves[] array
 //
 void message_load_wave (int index, const char* filename) {
-    Assertion (index >= 0, "Invalid index passed!");
+    ASSERTX (index >= 0, "Invalid index passed!");
 
     if (Message_waves[index].num.isValid ()) { return; }
 
@@ -1023,7 +1023,7 @@ bool message_filename_is_generic (char* filename) {
 }
 
 // Play wave file associated with message
-// input: m		=>		pointer to message description
+// input: m             =>              pointer to message description
 //
 // note: changes Messave_wave_duration, Playing_messages[].wave, and
 // Message_waves[].num
@@ -1084,9 +1084,9 @@ bool message_play_wave (message_q* q) {
 }
 
 // Determine the starting frame for the animation
-// input:	time	=>		time of voice clip, in ms
-//				ani	=>		pointer to anim data
-//				reverse	=>	flag to indicate that the start should be time ms
+// input:       time    =>              time of voice clip, in ms
+// ani     =>              pointer to anim data
+// reverse =>      flag to indicate that the start should be time ms
 // from the end (used for death screams)
 void message_calc_anim_start_frame (int time, generic_anim* ani, int reverse) {
     float wave_time, anim_time;
@@ -1125,8 +1125,8 @@ void message_calc_anim_start_frame (int time, generic_anim* ani, int reverse) {
 }
 
 // Play animation associated with message
-// input:	m		=>		pointer to message description
-//				q		=>		message queue data
+// input:       m               =>              pointer to message description
+// q               =>              message queue data
 //
 // note: changes Messave_wave_duration, Playing_messages[].wave, and
 // Message_waves[].num
@@ -1313,7 +1313,7 @@ void message_queue_process () {
 
             wave_done = 1;
 
-            //			if ( (Playing_messages[i].wave != -1) &&
+            // if ( (Playing_messages[i].wave != -1) &&
             // snd_is_playing(Playing_messages[i].wave) )
             if ((Playing_messages[i].wave.isValid ()) &&
                 (snd_time_remaining (Playing_messages[i].wave) > 250))
@@ -1355,11 +1355,11 @@ void message_queue_process () {
                     // force this guy to scream
                     // AL 22-2-98: Ensure don't use -1 to index into ships
                     // array.  Mark, something is incorrect
-                    //             here, since message_kill_playing() seems to
-                    //             always set Playing_messages[i].shipnum to -1
+                    // here, since message_kill_playing() seems to
+                    // always set Playing_messages[i].shipnum to -1
                     // MWA 3/24/98 -- save shipnum before killing message
                     //
-                    Assert (shipnum >= 0);
+                    ASSERT (shipnum >= 0);
                     if (!(Ships[shipnum]
                               .flags[Ship::Ship_Flags::Ship_has_screamed]) &&
                         !(Ships[shipnum]
@@ -1462,9 +1462,9 @@ void message_queue_process () {
     }
 
     q = &MessageQ[0];
-    Assert (q->message_num != -1);
-    Assert (q->priority != -1);
-    Assert (q->time_added != -1);
+    ASSERT (q->message_num != -1);
+    ASSERT (q->priority != -1);
+    ASSERT (q->time_added != -1);
 
     if (Num_messages_playing) {
         // peek at the first message on the queue to see if it should
@@ -1472,8 +1472,8 @@ void message_queue_process () {
         // messages will always interrupt builtin messages.  They will never
         // interrupt other mission specific messages.
         //
-        //  Builtin message might interrupt other builtin messages, or overlap
-        //  them, all depending on
+        // Builtin message might interrupt other builtin messages, or overlap
+        // them, all depending on
         // message priority.
 
         if (q->builtin_type == MESSAGE_HAMMER_SWINE) { message_kill_all (1); }
@@ -1606,7 +1606,7 @@ void message_queue_process () {
         goto all_done;
     }
 
-    //	Don't play death scream unless a small ship.
+    // Don't play death scream unless a small ship.
     if (q->builtin_type == MESSAGE_WINGMAN_SCREAM) {
         if (Message_shipnum < 0) { goto all_done; }
         if (!(Ship_info[Ships[Message_shipnum].ship_info_index]
@@ -1790,7 +1790,7 @@ int message_get_persona (ship* shipp) {
     if (shipp != NULL) {
         // see if this ship has a persona
         if (shipp->persona_index != -1) {
-            //	return shipp->persona_index;
+            // return shipp->persona_index;
             i = shipp->persona_index;
             goto I_Done;
         }
@@ -1824,7 +1824,7 @@ int message_get_persona (ship* shipp) {
                 if (!(Personas[i].flags & PERSONA_FLAG_USED)) {
                     // if it hasn't been used - USE IT!
                     Personas[i].flags |= PERSONA_FLAG_USED;
-                    //	return i;
+                    // return i;
                     goto I_Done;
                 }
                 else {
@@ -1852,7 +1852,7 @@ int message_get_persona (ship* shipp) {
     // for now -- we don't support other types of personas (non-wingman
     // personas)
     Int3 ();
-    //	return 0;
+    // return 0;
 
 I_Done:
     delete[] slist;
@@ -2043,7 +2043,7 @@ void message_send_builtin_to_player (
     // assign one!!!
     if (shipp) {
         // Karajorma - the game should assert if a silenced ship gets this far
-        Assert (!(shipp->flags[Ship::Ship_Flags::No_builtin_messages]));
+        ASSERT (!(shipp->flags[Ship::Ship_Flags::No_builtin_messages]));
 
         if (shipp->persona_index == -1)
             shipp->persona_index = message_get_persona (shipp);
@@ -2057,7 +2057,7 @@ void message_send_builtin_to_player (
 
         // be sure that this ship can actually send a message!!! (i.e.
         // not-not-flyable -- get it!)
-        Assert (Ship_info[shipp->ship_info_index]
+        ASSERT (Ship_info[shipp->ship_info_index]
                     .is_flyable ()); // get allender or alan
     }
     else {
@@ -2189,7 +2189,7 @@ void message_send_builtin_to_player (
                  "looking for message for any persona of any species\n"));
         break;
     case -1:
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION, "Couldn't find any builtin message of type %d\n", type);
         return;
     }
@@ -2209,7 +2209,7 @@ void message_send_builtin_to_player (
         }
     }
 
-    Assertion (
+    ASSERTX (
         random_selection == 0,
         "unable to randomly select built in message correctly, still have %d "
         "selections left",
@@ -2311,7 +2311,7 @@ void message_maybe_distort () {
 
     // distort the number of voices currently playing
     for (i = 0; i < Num_messages_playing; i++) {
-        Assert (Playing_messages[i].wave.isValid ());
+        ASSERT (Playing_messages[i].wave.isValid ());
 
         was_muted = 0;
 
@@ -2346,13 +2346,13 @@ void message_maybe_distort () {
 //
 // first case: Message_wave_duration == 0 (this occurs when there is no
 // associated voice playback)
-//					Blank out random runs of characters in the message
+// Blank out random runs of characters in the message
 //
 // second case: Message_wave_duration > 0 (occurs when voice playback
 // accompainies message)
-//					 Blank out portions of the sound based on Distort_num, this
+// Blank out portions of the sound based on Distort_num, this
 // this is
-// that same 					 data that will be used to blank out portions of
+// that same                                     data that will be used to blank out portions of
 // the audio playback
 //
 void message_maybe_distort_text (char* text, int shipnum) {
@@ -2386,7 +2386,7 @@ void message_maybe_distort_text (char* text, int shipnum) {
 
             ++i;
         }
-        Assertion (
+        ASSERTX (
             result_str.size () <= buffer_size,
             "Buffer after scrambling message is bigger than before!");
         strcpy (text, result_str.c_str ());
@@ -2433,7 +2433,7 @@ void message_maybe_distort_text (char* text, int shipnum) {
         Distort_next++;
         if (Distort_next >= MAX_DISTORT_LEVELS) Distort_next = 0;
     }
-    Assertion (
+    ASSERTX (
         result_str.size () <= buffer_size,
         "Buffer after scrambling message is bigger than before!");
     strcpy (text, result_str.c_str ());

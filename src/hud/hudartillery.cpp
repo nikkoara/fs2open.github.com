@@ -95,7 +95,7 @@ void parse_ssm (const char* filename) {
                 // 4 seconds!"
                 if ((s.warp_time) < 4.0f) {
                     // So let's warn them before they try to use it, shall we?
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Expected a '+WarpTime:' value equal or greater than "
                         "4.0, found '%f' in weapon '%s'.\n Setting to 4.0, "
@@ -154,9 +154,7 @@ void parse_ssm (const char* filename) {
                     s.shape = SSM_SHAPE_SPHERE;
                     break;
                 default:
-                    UNREACHABLE (
-                        "Impossible return value from "
-                        "required_string_one_of(); get a coder!\n");
+                    ASSERT (0);
                 }
             }
             else {
@@ -241,10 +239,7 @@ void ssm_get_random_start_pos (
         vm_vec_scale_add (&temp, start, &orient->vec.fvec, radius);
         break;
     default:
-        UNREACHABLE (
-            "Unknown shape '%d' in SSM type #%zu"
-            " ('%s'). This should not be possible; get a coder!\n",
-            s->shape, ssm_index, s->name);
+        ASSERT (0);
         break;
     }
 
@@ -264,9 +259,9 @@ void ssm_create (
     int idx, count;
 
     // sanity
-    Assert (target != NULL);
+    ASSERT (target != NULL);
     if (target == NULL) { return; }
-    Assert (start != NULL);
+    ASSERT (start != NULL);
     if (start == NULL) { return; }
     if (ssm_index >= Ssm_info.size ()) { return; }
 
@@ -364,7 +359,7 @@ void ssm_process () {
     moveup = Ssm_strikes.begin ();
     while (moveup != Ssm_strikes.end ()) {
         // get the type
-        Assertion (
+        ASSERTX (
             moveup->sinfo.ssm_index < Ssm_info.size (),
             "Invalid SSM index detected!");
         si = &Ssm_info[moveup->sinfo.ssm_index];

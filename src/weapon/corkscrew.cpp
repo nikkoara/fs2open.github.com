@@ -63,7 +63,7 @@ void cscrew_maybe_fire_missile (int shipnum) {
     ship_weapon* swp;
     int weapon_info_index;
 
-    Assert (shipnum >= 0 && shipnum < MAX_SHIPS);
+    ASSERT (shipnum >= 0 && shipnum < MAX_SHIPS);
     sp = &Ships[shipnum];
 
     // make sure we're supposed to be firing some missiles
@@ -81,7 +81,7 @@ void cscrew_maybe_fire_missile (int shipnum) {
 
     weapon_info_index =
         swp->secondary_bank_weapons[sp->corkscrew_missile_bank];
-    Assert (weapon_info_index >= 0 && weapon_info_index < MAX_WEAPON_TYPES);
+    ASSERT (weapon_info_index >= 0 && weapon_info_index < MAX_WEAPON_TYPES);
 
     // if current secondary bank is not a corkscrew missile, return
     if (!(Weapon_info[weapon_info_index]
@@ -102,7 +102,7 @@ void cscrew_maybe_fire_missile (int shipnum) {
 // ------------------------------------------------------------------
 // cscrew_create()
 //
-//	Get a free corkscrew missile entry, and initialize the struct members
+// Get a free corkscrew missile entry, and initialize the struct members
 //
 int cscrew_create (object* obj) {
     int i;
@@ -164,9 +164,9 @@ void cscrew_process_pre (object* objp) {
     cscrew_info* ci;
 
     // check stuff
-    Assert (objp->type == OBJ_WEAPON);
-    Assert (Weapons[objp->instance].cscrew_index >= 0);
-    Assert (
+    ASSERT (objp->type == OBJ_WEAPON);
+    ASSERT (Weapons[objp->instance].cscrew_index >= 0);
+    ASSERT (
         Corkscrew_missiles[Weapons[objp->instance].cscrew_index].flags &
         CS_FLAG_USED);
 
@@ -192,9 +192,9 @@ void cscrew_process_post (object* objp) {
     float twist_val;
 
     // check stuff
-    Assert (objp->type == OBJ_WEAPON);
-    Assert (Weapons[objp->instance].cscrew_index >= 0);
-    Assert (
+    ASSERT (objp->type == OBJ_WEAPON);
+    ASSERT (Weapons[objp->instance].cscrew_index >= 0);
+    ASSERT (
         Corkscrew_missiles[Weapons[objp->instance].cscrew_index].flags &
         CS_FLAG_USED);
 
@@ -253,7 +253,7 @@ void cscrew_display_dcf () {
     dc_printf ("Corkscrew settings\n\n");
     dc_printf ("Delay (cscrew_delay) : %d\n", Corkscrew_missile_delay);
     dc_printf ("Count (cscrew_count) : %d\n", Corkscrew_num_missiles_fired);
-    dc_printf ("Radius (cscrew_radius) :	%f\n", Corkscrew_radius);
+    dc_printf ("Radius (cscrew_radius) :        %f\n", Corkscrew_radius);
     dc_printf ("Twist (cscrew_twist) : %f\n", Corkscrew_twist);
     if (Corkscrew_helix) { dc_printf ("Helix (cscrew_helix): ON\n"); }
     else {

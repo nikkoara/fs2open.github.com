@@ -125,10 +125,10 @@ const char* Chatbox_p_bitmap_mask_fname[GR_NUM_RESOLUTIONS] = {
 
 // chatbox coords
 int Chatbox_p_coords[GR_NUM_RESOLUTIONS][2] = { { // GR_640
-                                                  //	192, 0
+                                                  // 192, 0
                                                   0, 0 },
                                                 { // GR_1024
-                                                  //	307, 0
+                                                  // 307, 0
                                                   0, 0 } };
 
 // display area coords
@@ -153,22 +153,22 @@ int Chatbox_p_max_lines[GR_NUM_RESOLUTIONS] = {
 
 // defines for location and other info of chat box MULTI_PAUSED
 /*
-#define CHATBOX_MP_FNAME					NOX("MPPause")
-#define CHATBOX_MP_MASK						NOX("MPPause-m")
-#define CHATBOX_MP_X1						112
-#define CHATBOX_MP_Y1						198
-#define CHATBOX_MP_X2						477
-#define CHATBOX_MP_Y2						308
-#define CHATBOX_MP_ICON_X					(CHATBOX_MP_X1)
-#define CHATBOX_MP_W							(CHATBOX_MP_X2 - CHATBOX_MP_X1
+#define CHATBOX_MP_FNAME                                        NOX("MPPause")
+#define CHATBOX_MP_MASK                                         NOX("MPPause-m")
+#define CHATBOX_MP_X1                                           112
+#define CHATBOX_MP_Y1                                           198
+#define CHATBOX_MP_X2                                           477
+#define CHATBOX_MP_Y2                                           308
+#define CHATBOX_MP_ICON_X                                       (CHATBOX_MP_X1)
+#define CHATBOX_MP_W                                                    (CHATBOX_MP_X2 - CHATBOX_MP_X1
 + 1)
-#define CHATBOX_MP_H							(CHATBOX_MP_Y2 - CHATBOX_MP_Y1
-+ 1) #define CHATBOX_MP_BEGIN_X					(CHATBOX_MP_X1 + 3 +
+#define CHATBOX_MP_H                                                    (CHATBOX_MP_Y2 - CHATBOX_MP_Y1
++ 1) #define CHATBOX_MP_BEGIN_X                                 (CHATBOX_MP_X1 + 3 +
 CHATBOX_TEAM_ICON_SPACE) #define CHATBOX_MP_BEGIN_Y CHATBOX_MP_Y1 #define
-CHATBOX_MP_DISP_W					365 #define CHATBOX_MP_MAX_LINES
-11 #define CHATBOX_MP_INPUTBOX_X				(CHATBOX_MP_X1 + 3) #define
-CHATBOX_MP_INPUTBOX_W				(CHATBOX_MP_W) #define
-CHATBOX_MP_TEXTENTER_Y			329
+CHATBOX_MP_DISP_W                                       365 #define CHATBOX_MP_MAX_LINES
+11 #define CHATBOX_MP_INPUTBOX_X                                (CHATBOX_MP_X1 + 3) #define
+CHATBOX_MP_INPUTBOX_W                           (CHATBOX_MP_W) #define
+CHATBOX_MP_TEXTENTER_Y                  329
 */
 
 // CHATBOX
@@ -489,7 +489,7 @@ int chatbox_create (int mode_flags) {
     if (Chatbox_created) { return -1; }
 
     // probably shouldn't be using the chatbox in single player mode
-    Assert (Game_mode & GM_MULTIPLAYER);
+    ASSERT (Game_mode & GM_MULTIPLAYER);
 
     // setup all data to correspond to our mode flags
     chatbox_set_mode (mode_flags);
@@ -812,11 +812,11 @@ void chatbox_add_line (const char* msg, int pid, int add_id) {
     else {
         strcpy_s (msg_extra, msg);
     }
-    Assert (strlen (msg_extra) < (CHATBOX_STRING_LEN - 2));
+    ASSERT (strlen (msg_extra) < (CHATBOX_STRING_LEN - 2));
 
     // split the text up into as many lines as necessary
     n_lines = split_str (msg_extra, Chatbox_disp_w, n_chars, p_str, 3);
-    Assert (n_lines != -1);
+    ASSERT (n_lines != -1);
 
     // setup the first line -- be sure to clear out the line
     memset (Brief_chat_lines[Brief_current_add_line], 0, CHATBOX_STRING_LEN);
@@ -856,7 +856,7 @@ void chatbox_add_line (const char* msg, int pid, int add_id) {
         n_lines = split_str (
             msg_extra + n_chars[0], Chatbox_disp_w - CHAT_LINE_INDENT, n_chars,
             p_str, 3);
-        Assert (n_lines != -1);
+        ASSERT (n_lines != -1);
 
         // setup these remaining lines
         for (idx = 0; idx < n_lines; idx++) {
@@ -1008,7 +1008,7 @@ void chatbox_toggle_size_adjust_lines () {
     // if the chatbox is now big, move the starting display index _up_ as far
     // as possible
     if (Chatbox_mode_flags & CHATBOX_FLAG_BIG) {
-        // if we've wrapped around	or we have more chatlines then we can
+        // if we've wrapped around      or we have more chatlines then we can
         // display, move back as far as we can
         if ((Num_brief_chat_lines > MAX_BRIEF_CHAT_LINES) ||
             (Num_brief_chat_lines > Chatbox_max_lines)) {

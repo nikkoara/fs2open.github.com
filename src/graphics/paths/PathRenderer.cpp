@@ -37,7 +37,7 @@ PathRenderer::~PathRenderer () {
 }
 
 void PathRenderer::beginFrame () {
-    Assertion (
+    ASSERTX (
         !m_inFrame,
         "beginFrame() was called withoug ending previous frame! Check your "
         "path renderer calls or get a coder!");

@@ -31,13 +31,13 @@ extern int Num_weapon_subtypes;
 #define WRT_LASER 1
 #define WRT_POF 2
 
-//	Bitflags controlling weapon behavior
+// Bitflags controlling weapon behavior
 #define MAX_WEAPON_FLAGS \
-    18 //	Maximum number of different bit flags legal to specify in a single
+    18 // Maximum number of different bit flags legal to specify in a single
        // weapons.tbl Flags line
 
 #define WEAPON_EXHAUST_DELTA_TIME \
-    75 //	Delay in milliseconds between exhaust blobs
+    75 // Delay in milliseconds between exhaust blobs
 
 // particle names go here -nuke
 #define PSPEW_NONE -1   // used to disable a spew, useful for xmts
@@ -88,14 +88,14 @@ struct weapon  {
     float lifeleft;         // life left on this weapon
     vec3d start_pos;
 
-    int target_num;     //	Object index of target
-    int target_sig;     //	So we know if the target is the same one we've been
+    int target_num;     // Object index of target
+    int target_sig;     // So we know if the target is the same one we've been
                         // tracking
-    float nearest_dist; //	nearest distance yet attained to target
-    fix creation_time;  //	time at which created, stuffed Missiontime
+    float nearest_dist; // nearest distance yet attained to target
+    fix creation_time;  // time at which created, stuffed Missiontime
     flagset< Weapon::Weapon_Flags >
-        weapon_flags;           //	bit flags defining behavior, see WF_xxxx
-    object* homing_object;      //	object this weapon is homing on.
+        weapon_flags;           // bit flags defining behavior, see WF_xxxx
+    object* homing_object;      // object this weapon is homing on.
     ship_subsys* homing_subsys; // subsystem this weapon is homing on
     vec3d homing_pos;           // world position missile is homing on
     short swarm_index; // index into swarm missile info, -1 if not WIF_SWARM
@@ -124,9 +124,9 @@ struct weapon  {
     float laser_glow_bitmap_frame; // used to keep track of which frame the
                                    // glow animation should be on
 
-    int pick_big_attack_point_timestamp; //	Timestamp at which to pick a new
+    int pick_big_attack_point_timestamp; // Timestamp at which to pick a new
                                          // point to attack.
-    vec3d big_attack_point; //	Target-relative location of attack point.
+    vec3d big_attack_point; // Target-relative location of attack point.
 
     std::vector< int >* cmeasure_ignore_list;
     int cmeasure_timer;
@@ -237,9 +237,9 @@ struct particle_spew_info  { // this will be used for multi spews
 };
 
 struct spawn_weapon_info  {
-    short spawn_type;  //	Type of weapon to spawn when detonated.
-    short spawn_count; //	Number of weapons of spawn_type to spawn.
-    float spawn_angle; //  Angle to spawn the child weapons in.  default is 180
+    short spawn_type;  // Type of weapon to spawn when detonated.
+    short spawn_count; // Number of weapons of spawn_type to spawn.
+    float spawn_angle; // Angle to spawn the child weapons in.  default is 180
 };
 
 #define MAX_SPAWN_TYPES_PER_WEAPON 5
@@ -262,7 +262,7 @@ struct weapon_info  {
         title[WEAPON_TITLE_LEN]; // official title of weapon (used by tooltips)
     char* desc;                  // weapon's description (used by tooltips)
     int subtype;                 // one of the WP_* macros above
-    int render_type;             //	rendering method, laser, pof, avi
+    int render_type;             // rendering method, laser, pof, avi
     char pofbitmap_name[MAX_FILENAME_LEN]; // Name of the pof representing this
                                            // if POF, or bitmap filename if
                                            // bitmap
@@ -310,10 +310,10 @@ struct weapon_info  {
     float fire_wait; // fire rate -- amount of time before you can refire the
                      // weapon
     float max_delay; // max time to delay a shot (DahBlount)
-    float min_delay; // min time to delay a shot	(DahBlount)
+    float min_delay; // min time to delay a shot        (DahBlount)
 
     float
-        damage; //	damage of weapon (for missile, damage within inner radius)
+        damage; // damage of weapon (for missile, damage within inner radius)
     float damage_time;  // point in the lifetime of the weapon at which damage
                         // starts to attenuate. This applies to non-beam
                         // primaries. (DahBlount)
@@ -335,7 +335,7 @@ struct weapon_info  {
                                          // parameter. Default 20.0f
 
     float armor_factor, shield_factor,
-        subsystem_factor; //	in 0.0..2.0, scale of damage done to type of
+        subsystem_factor; // in 0.0..2.0, scale of damage done to type of
                           // thing
     float life_min;
     float life_max;
@@ -344,7 +344,7 @@ struct weapon_info  {
                            // distance calculations etc)
     float energy_consumed; // Energy used up when weapon is fired
     flagset< Weapon::Info_Flags >
-        wi_flags; //	bit flags defining behavior, see WIF_xxxx
+        wi_flags; // bit flags defining behavior, see WIF_xxxx
     float turn_time;
     float cargo_size; // cargo space taken up by individual weapon (missiles
                       // only)
@@ -361,7 +361,7 @@ struct weapon_info  {
     // swarm count
     short swarm_count; // how many swarm missiles are fired for this weapon
 
-    //	Specific to ASPECT homing missiles.
+    // Specific to ASPECT homing missiles.
     float min_lock_time;        // minimum time (in seconds) to achieve lock
     int lock_pixels_per_sec;    // pixels/sec moved while locking
     int catchup_pixels_per_sec; // pixels/sec moved while catching-up for a
@@ -369,7 +369,7 @@ struct weapon_info  {
     int catchup_pixel_penalty;  // number of extra pixels to move while locking
                                 // as a penalty for catching up for a lock
 
-    //	Specific to HEAT homing missiles.
+    // Specific to HEAT homing missiles.
     float fov;
 
     // Seeker strength - for countermeasures overhaul.
@@ -384,7 +384,7 @@ struct weapon_info  {
     gamesnd_id launch_snd;
     gamesnd_id impact_snd;
     gamesnd_id disarmed_impact_snd;
-    gamesnd_id flyby_snd; //	whizz-by sound, transmitted through weapon's
+    gamesnd_id flyby_snd; // whizz-by sound, transmitted through weapon's
                           // portable atmosphere.
 
     // Specific to weapons with TRAILS:

@@ -113,14 +113,14 @@ struct plr_data {
 
     // -------------------------------------------------------------------------
     // NOTE: we *do not* carry over the following items because they are either
-    //       obsolete, removed functionality, or just not needed.  But we still
-    //       do have to take them into account during read ...
+    // obsolete, removed functionality, or just not needed.  But we still
+    // do have to take them into account during read ...
     //
-    //     - stats (ver 142 only)
-    //     - loadout (ver 142 only)
-    //     - techroom (ver 142 only)
-    //     - recent missions (ver 142 & 242)
-    //     - red alert (ver 142 only)
+    // - stats (ver 142 only)
+    // - loadout (ver 142 only)
+    // - techroom (ver 142 only)
+    // - recent missions (ver 142 & 242)
+    // - red alert (ver 142 only)
     // -------------------------------------------------------------------------
 
     // not carried over, just for reference during conversion process

@@ -241,13 +241,13 @@ int material::get_shader_handle () const {
 }
 
 void material::set_texture_map (int tex_type, int texture_num) {
-    Assert (tex_type > -1 && tex_type < TM_NUM_TYPES);
+    ASSERT (tex_type > -1 && tex_type < TM_NUM_TYPES);
 
     Texture_maps[tex_type] = texture_num;
 }
 
 int material::get_texture_map (int tex_type) const {
-    Assert (tex_type > -1 && tex_type < TM_NUM_TYPES);
+    ASSERT (tex_type > -1 && tex_type < TM_NUM_TYPES);
 
     return Texture_maps[tex_type];
 }
@@ -312,7 +312,7 @@ void material::set_blend_mode (gr_alpha_blend mode) {
 }
 
 void material::set_blend_mode (int buffer, gr_alpha_blend mode) {
-    Assertion (
+    ASSERTX (
         buffer >= 0 && buffer < (int)Buffer_blend_mode.size (),
         "Invalid buffer index %d found!", buffer);
 
@@ -325,7 +325,7 @@ bool material::has_buffer_blend_modes () const { return Has_buffer_blends; }
 gr_alpha_blend material::get_blend_mode (int buffer) const {
     if (!Has_buffer_blends) { return Blend_mode; }
 
-    Assertion (
+    ASSERTX (
         buffer >= 0 && buffer < (int)Buffer_blend_mode.size (),
         "Invalid buffer index %d found!", buffer);
 

@@ -120,7 +120,7 @@ void ai_maybe_add_form_goal (wing* wingp) {
     for (j = 0; j < wingp->current_count; j++) {
         ai_info* aip;
 
-        Assert (wingp->ship_index[j] != -1); // get Allender
+        ASSERT (wingp->ship_index[j] != -1); // get Allender
 
         aip = &Ai_info[Ships[wingp->ship_index[j]].ai_index];
         // don't process Player_ship
@@ -148,7 +148,7 @@ void ai_post_process_mission () {
     //
     // So basically, we are checking for (1)
     if (!Fred_running) {
-        //	MK, 5/9/98: Used to iterate through MAX_STARTING_WINGS, but this
+        // MK, 5/9/98: Used to iterate through MAX_STARTING_WINGS, but this
         // was too many ships forming on player.
         // Goober5000 - MK originally iterated on only the first wing; now we
         // iterate on only the player wing because the player wing may not be
@@ -216,7 +216,7 @@ void ai_remove_ship_goal (ai_info* aip, int index) {
     // only need to set the ai_mode for the particular goal to AI_GOAL_NONE
     // reset ai mode to default behavior.  Might get changed next time through
     // ai goal code look
-    Assert (index >= 0); // must have a valid goal
+    ASSERT (index >= 0); // must have a valid goal
 
     aip->goals[index].ai_mode = AI_GOAL_NONE;
     aip->goals[index].signature = -1;
@@ -292,7 +292,7 @@ void ai_mission_wing_goal_complete (int wingnum, ai_goal* remove_goalp) {
     priority = remove_goalp->priority;
     name = remove_goalp->target_name;
 
-    Assert (name); // should not be NULL!!!!
+    ASSERT (name); // should not be NULL!!!!
 
     // remove the goal from all the ships currently in the wing
     for (i = 0; i < wingp->current_count; i++) {
@@ -300,7 +300,7 @@ void ai_mission_wing_goal_complete (int wingnum, ai_goal* remove_goalp) {
         ai_info* aip;
 
         num = wingp->ship_index[i];
-        Assert (num >= 0);
+        ASSERT (num >= 0);
         aip = &Ai_info[Ships[num].ai_index];
         for (j = 0; j < MAX_AI_GOALS; j++) {
             aigp = &(aip->goals[j]);
@@ -446,7 +446,7 @@ void ai_goal_purge_invalid_goals (
                 }
                 // otherwise we simply grab it from the ship itself
                 else {
-                    Assert (aip != NULL);
+                    ASSERT (aip != NULL);
                     ai_ship_type =
                         Ship_info[Ships[aip->shipnum].ship_info_index]
                             .class_type;
@@ -537,7 +537,7 @@ int ai_goal_find_dockpoint (int shipnum, int dock_type) {
 
     // insanity?
     if (loop_count >= 100)
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Too many iterations while looking for a dockpoint on %s.\n",
             shipp->ship_name);
@@ -554,9 +554,9 @@ int ai_goal_find_dockpoint (int shipnum, int dock_type) {
 void ai_goal_fixup_dockpoints (ai_info* aip, ai_goal* aigp) {
     int shipnum, docker_index, dockee_index;
 
-    Assert (aip->shipnum != -1);
+    ASSERT (aip->shipnum != -1);
     shipnum = ship_name_lookup (aigp->target_name);
-    Assertion (
+    ASSERTX (
         shipnum != -1,
         "Couldn't find ai goal's target_name (%s); get a coder!\n",
         aigp->target_name);
@@ -638,7 +638,7 @@ void ai_goal_fixup_dockpoints (ai_info* aip, ai_goal* aigp) {
 
 void ai_add_goal_sub_player (
     int type, int mode, int submode, char* target_name, ai_goal* aigp) {
-    Assert ((type == AIG_TYPE_PLAYER_WING) || (type == AIG_TYPE_PLAYER_SHIP));
+    ASSERT ((type == AIG_TYPE_PLAYER_WING) || (type == AIG_TYPE_PLAYER_SHIP));
 
     aigp->time = Missiontime;
     aigp->type = type; // from player for sure -- could be to ship or to wing
@@ -649,7 +649,7 @@ void ai_add_goal_sub_player (
     if (mode == AI_GOAL_WARP) {
         if (submode >= 0) {
             aigp->wp_list = find_waypoint_list_at_index (submode);
-            Assert (aigp->wp_list != NULL);
+            ASSERT (aigp->wp_list != NULL);
         }
         else {
             aigp->wp_list = NULL;
@@ -734,7 +734,7 @@ int ai_goal_num (ai_goal* goals) {
 void ai_add_goal_sub_scripting (
     int type, int mode, int submode, int priority, char* target_name,
     ai_goal* aigp) {
-    Assert ((type == AIG_TYPE_PLAYER_WING) || (type == AIG_TYPE_PLAYER_SHIP));
+    ASSERT ((type == AIG_TYPE_PLAYER_WING) || (type == AIG_TYPE_PLAYER_SHIP));
 
     aigp->time = Missiontime;
     aigp->type = type; // from player for sure -- could be to ship or to wing
@@ -849,7 +849,7 @@ void ai_add_goal_sub_sexp (
     int node, dummy, op;
     char* text;
 
-    Assert (Sexp_nodes[sexp].first != -1);
+    ASSERT (Sexp_nodes[sexp].first != -1);
     node = Sexp_nodes[sexp].first;
     text = CTEXT (node);
 
@@ -1083,7 +1083,7 @@ void ai_add_goal_sub_sexp (
  * Returns -1 if not found, or [0, MAX_AI_GOALS)
  */
 int ai_find_goal_index (ai_goal* aigp, int mode, int submode, int priority) {
-    Assert (aigp != NULL);
+    ASSERT (aigp != NULL);
     for (int i = 0; i < MAX_AI_GOALS; i++) {
         if (aigp[i].ai_mode == mode &&
             (submode == -1 || aigp[i].ai_submode == submode) &&
@@ -1101,7 +1101,7 @@ int ai_find_goal_index (ai_goal* aigp, int mode, int submode, int priority) {
  */
 int ai_remove_goal_sexp_sub (int sexp, ai_goal* aigp) {
     /* Sanity check */
-    Assert (Sexp_nodes[sexp].first != -1);
+    ASSERT (Sexp_nodes[sexp].first != -1);
 
     /* The bits we're searching for in the goals list */
     int priority = -1;
@@ -1364,7 +1364,7 @@ void ai_add_goal_ship_internal (
                 aigp->priority = 100;
 
                 aigp->ai_mode = AI_GOAL_DOCK;
-                aigp->ai_submode = AIS_DOCK_0;		// be sure to set the
+                aigp->ai_submode = AIS_DOCK_0;          // be sure to set the
            submode break;
         */
 
@@ -1381,7 +1381,7 @@ void ai_add_goal_ship_internal (
                     aigp->ai_mode = AI_GOAL_GUARD_WING;
                 else
                     aigp->ai_mode = AI_GOAL_GUARD;
-                aigp->priority = PLAYER_PRIORITY_MIN-1;		// make the
+                aigp->priority = PLAYER_PRIORITY_MIN-1;         // make the
            priority always less than what the player's is break;
         */
 
@@ -1419,7 +1419,7 @@ void ai_add_goal_wing_internal (
     int i;
 
     // be sure we are not trying to issue dock or undock goals to wings
-    Assert ((goal_type != AI_GOAL_DOCK) && (goal_type != AI_GOAL_UNDOCK));
+    ASSERT ((goal_type != AI_GOAL_DOCK) && (goal_type != AI_GOAL_UNDOCK));
 
     for (i = 0; i < wingp->current_count; i++) {
         int num = wingp->ship_index[i];
@@ -1466,10 +1466,10 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
     int modelnum = -1;
 
     objp = &Objects[objnum];
-    Assert (objp->instance != -1);
+    ASSERT (objp->instance != -1);
     aip = &Ai_info[Ships[objp->instance].ai_index];
 
-    //  these orders are always achievable.
+    // these orders are always achievable.
     if ((aigp->ai_mode == AI_GOAL_KEEP_SAFE_DISTANCE) ||
         (aigp->ai_mode == AI_GOAL_CHASE_ANY) ||
         (aigp->ai_mode == AI_GOAL_STAY_STILL) ||
@@ -1519,7 +1519,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
             aigp->wp_list = find_matching_waypoint_list (aigp->target_name);
 
             if (aigp->wp_list == NULL) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Unknown waypoint list %s - not found in mission file.  "
                     "Killing ai goal",
@@ -1581,7 +1581,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
         // being stored, mark the status as 0 so we can continue.  (The
         // subsystem name must be turned into an index into the ship's
         // subsystems for this goal to be valid).
-        Assert (aigp->ai_submode >= 0);
+        ASSERT (aigp->ai_submode >= 0);
         ssp = ship_get_indexed_subsys (&Ships[sindex], aigp->ai_submode);
         if (ssp != NULL) {
             status = mission_log_get_time (
@@ -1663,7 +1663,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
         // for chase weapon, we simply need to look at the weapon instance that
         // we are trying to attack and see if the object still exists, and has
         // the same signature that we expect.
-        Assert (aigp->target_instance >= 0);
+        ASSERT (aigp->target_instance >= 0);
 
         if (Weapons[aigp->target_instance].objnum == -1)
             return AI_GOAL_NOT_ACHIEVABLE;
@@ -1770,7 +1770,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
         if (!(aigp->flags[AI::Goal_Flags::Docker_index_valid])) {
             modelnum =
                 Ship_info[Ships[objp->instance].ship_info_index].model_num;
-            Assert (modelnum >= 0);
+            ASSERT (modelnum >= 0);
             index = model_find_dock_name_index (modelnum, aigp->docker.name);
             aigp->docker.index = index;
             aigp->flags.set (AI::Goal_Flags::Docker_index_valid);
@@ -1803,13 +1803,13 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
         // we must also determine if we're prevented from docking for any
         // reason
         sindex = ship_name_lookup (aigp->target_name);
-        Assert (sindex >= 0);
+        ASSERT (sindex >= 0);
         object* goal_objp = &Objects[Ships[sindex].objnum];
 
         // if the ship that I am supposed to dock with is docked with something
         // else, then I need to put my goal on hold
-        //	[MK, 4/23/98: With Mark, we believe this fixes the problem of Comet
-        // refusing to warp out after docking with Omega. 	This bug occurred
+        // [MK, 4/23/98: With Mark, we believe this fixes the problem of Comet
+        // refusing to warp out after docking with Omega.       This bug occurred
         // only when mission goals were validated in the frame in which Comet
         // docked, which happened about
         // once in 10-20 tries.]
@@ -1898,7 +1898,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
         // for ignoring a ship, call the ai_ignore object function, then
         // declare the goal satisfied
         sindex = ship_name_lookup (aigp->target_name);
-        Assert (sindex != -1); // should be true because of above status
+        ASSERT (sindex != -1); // should be true because of above status
         ignored = &Objects[Ships[sindex].objnum];
 
         ai_ignore_object (
@@ -1993,8 +1993,8 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
     return AI_GOAL_NOT_KNOWN;
 }
 
-//	Compare function for sorting ai_goals based on priority.
-//	Return values set to sort array in _decreasing_ order.
+// Compare function for sorting ai_goals based on priority.
+// Return values set to sort array in _decreasing_ order.
 int ai_goal_priority_compare (const void* a, const void* b) {
     ai_goal *ga, *gb;
 
@@ -2045,20 +2045,20 @@ int ai_goal_priority_compare (const void* a, const void* b) {
     return 0;
 }
 
-//	Prioritize goal list.
-//	First sort on priority.
-//	Then sort on time for goals of equivalent priority.
-//	*aip		The AI info to act upon.  Goals are stored at aip->goals
+// Prioritize goal list.
+// First sort on priority.
+// Then sort on time for goals of equivalent priority.
+// *aip            The AI info to act upon.  Goals are stored at aip->goals
 void prioritize_goals (ai_info* aip) {
-    //	First sort based on priority field.
+    // First sort based on priority field.
     insertion_sort (
         aip->goals, MAX_AI_GOALS, sizeof (ai_goal), ai_goal_priority_compare);
 }
 
-//	Scan the list of goals at aip->goals.
-//	Remove obsolete goals.
-//	objnum	Object of interest.  Redundant with *aip.
-//	*aip		contains goals at aip->goals.
+// Scan the list of goals at aip->goals.
+// Remove obsolete goals.
+// objnum  Object of interest.  Redundant with *aip.
+// *aip            contains goals at aip->goals.
 void validate_mission_goals (int objnum, ai_info* aip) {
     int i;
 
@@ -2150,7 +2150,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
     int wingnum, shipnum;
     int original_signature;
 
-    /*	if (!strcasecmp(Ships[objp->instance].ship_name, "gtt comet")) {
+    /*  if (!strcasecmp(Ships[objp->instance].ship_name, "gtt comet")) {
             for (int i=0; i<MAX_AI_GOALS; i++) {
                 if (aip->goals[i].signature != -1) {
                     nprintf(("AI", "%6.1f: mode=%s, type=%s, ship=%s\n",
@@ -2164,25 +2164,25 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
 
     // AL 12-12-97: If a ship is entering/leaving a docking bay, wait until
     // path
-    //					 following is finished before pursuing goals.
+    // following is finished before pursuing goals.
     if (aip->mode == AIM_BAY_EMERGE || aip->mode == AIM_BAY_DEPART) { return; }
 
-    //	Goal #0 is always the active goal, as we maintain a sorted list.
-    //	Get the signature to see if sorting it again changes it.
+    // Goal #0 is always the active goal, as we maintain a sorted list.
+    // Get the signature to see if sorting it again changes it.
     original_signature = aip->goals[0].signature;
 
     validate_mission_goals (objnum, aip);
 
-    //	Sort the goal array by priority and other factors.
+    // Sort the goal array by priority and other factors.
     prioritize_goals (aip);
 
-    //	Make sure there's a goal to pursue, else return.
+    // Make sure there's a goal to pursue, else return.
     if (aip->goals[0].signature == -1) {
         if (aip->mode == AIM_NONE) ai_do_default_behavior (objp);
         return;
     }
 
-    //	If goal didn't change, return.
+    // If goal didn't change, return.
     if ((aip->active_goal != -1) &&
         (aip->goals[0].signature == original_signature))
         return;
@@ -2191,8 +2191,8 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
     // current valid goal to pursue.
     if (aip->goals[0].flags[AI::Goal_Flags::Goal_on_hold]) return;
 
-    //	Kind of a hack for now.  active_goal means the goal currently being
-    // pursued. 	It will always be #0 since the list is prioritized.
+    // Kind of a hack for now.  active_goal means the goal currently being
+    // pursued.         It will always be #0 since the list is prioritized.
     aip->active_goal = 0;
 
     // nprintf(("AI", "New goal for %s = %i\n",
@@ -2222,29 +2222,29 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
     case AI_GOAL_CHASE:
         if (current_goal->target_name) {
             shipnum = ship_name_lookup (current_goal->target_name);
-            Assert (shipnum != -1); // shouldn't get here if this is false!!!!
+            ASSERT (shipnum != -1); // shouldn't get here if this is false!!!!
             other_obj = &Objects[Ships[shipnum].objnum];
         }
         else
             other_obj =
                 NULL; // we get this case when we tell ship to engage enemy!
 
-        //	Mike -- debug code!
-        //	If a ship has a subobject on it, attack that instead of the main
+        // Mike -- debug code!
+        // If a ship has a subobject on it, attack that instead of the main
         // ship!
         ai_attack_object (objp, other_obj, NULL);
         break;
 
     case AI_GOAL_CHASE_WEAPON:
-        Assert (Weapons[current_goal->target_instance].objnum >= 0);
+        ASSERT (Weapons[current_goal->target_instance].objnum >= 0);
         other_obj = &Objects[Weapons[current_goal->target_instance].objnum];
-        Assert (other_obj->signature == current_goal->target_signature);
+        ASSERT (other_obj->signature == current_goal->target_signature);
         ai_attack_object (objp, other_obj, NULL);
         break;
 
     case AI_GOAL_GUARD:
         shipnum = ship_name_lookup (current_goal->target_name);
-        Assert (shipnum != -1); // shouldn't get here if this is false!!!!
+        ASSERT (shipnum != -1); // shouldn't get here if this is false!!!!
         other_obj = &Objects[Ships[shipnum].objnum];
         // shipnum and other_obj are the shipnumber and object pointer of the
         // object that you should guard.
@@ -2263,7 +2263,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
 
     case AI_GOAL_GUARD_WING:
         wingnum = wing_name_lookup (current_goal->target_name);
-        Assert (wingnum != -1); // shouldn't get here if this is false!!!!
+        ASSERT (wingnum != -1); // shouldn't get here if this is false!!!!
         ai_set_guard_wing (objp, wingnum);
         aip->submode_start_time = Missiontime;
         break;
@@ -2279,19 +2279,19 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
 
     case AI_GOAL_FLY_TO_SHIP:
         shipnum = ship_name_lookup (current_goal->target_name);
-        Assert (shipnum != -1); // shouldn't get here if this is false!!!!
+        ASSERT (shipnum != -1); // shouldn't get here if this is false!!!!
         ai_start_fly_to_ship (objp, shipnum);
         break;
 
     case AI_GOAL_DOCK: {
         shipnum = ship_name_lookup (current_goal->target_name);
-        Assert (shipnum != -1); // shouldn't get here if this is false!!!!
+        ASSERT (shipnum != -1); // shouldn't get here if this is false!!!!
         other_obj = &Objects[Ships[shipnum].objnum];
 
         // be sure that we have indices for docking points here!  If we ever
         // had names, they should get fixed up in goal_achievable so that the
         // points can be checked there for validity
-        Assert (
+        ASSERT (
             current_goal->flags[AI::Goal_Flags::Dockee_index_valid] &&
             current_goal->flags[AI::Goal_Flags::Docker_index_valid]);
         ai_dock_with_object (
@@ -2366,7 +2366,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
     case AI_GOAL_DISABLE_SHIP:
     case AI_GOAL_DISARM_SHIP: {
         shipnum = ship_name_lookup (current_goal->target_name);
-        Assert (shipnum >= 0);
+        ASSERT (shipnum >= 0);
         other_obj = &Objects[Ships[shipnum].objnum];
         ai_attack_object (objp, other_obj, NULL);
         ai_set_attack_subsystem (
@@ -2374,7 +2374,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
             current_goal->ai_submode); // submode stored the subsystem type
         if (current_goal->ai_mode != AI_GOAL_DESTROY_SUBSYSTEM) {
             if (aip->target_objnum != -1) {
-                //	Only protect if _not_ a capital ship.  We don't want the
+                // Only protect if _not_ a capital ship.  We don't want the
                 // Lucifer accidentally getting protected.
                 if (Ship_types[Ship_info[Ships[shipnum].ship_info_index]
                                    .class_type]
@@ -2383,7 +2383,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
                         Object::Object_Flags::Protected);
             }
         }
-        else //	Just in case this ship had been protected, unprotect it.
+        else // Just in case this ship had been protected, unprotect it.
             if (aip->target_objnum != -1)
             Objects[aip->target_objnum].flags.remove (
                 Object::Object_Flags::Protected);
@@ -2393,7 +2393,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
 
     case AI_GOAL_CHASE_WING:
         wingnum = wing_name_lookup (current_goal->target_name);
-        Assertion (
+        ASSERTX (
             wingnum >= 0,
             "The target of AI_GOAL_CHASE_WING must refer to a valid wing!");
         ai_attack_wing (objp, wingnum);
@@ -2404,7 +2404,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
     // chase-ship-class is chase-any but restricted to a subset of ships
     case AI_GOAL_CHASE_SHIP_CLASS:
         shipnum = ship_info_lookup (current_goal->target_name);
-        Assertion (
+        ASSERTX (
             shipnum >= 0,
             "The target of AI_GOAL_CHASE_SHIP_CLASS must refer to a valid "
             "ship class!");
@@ -2418,7 +2418,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
 
     case AI_GOAL_EVADE_SHIP:
         shipnum = ship_name_lookup (current_goal->target_name);
-        Assert (shipnum >= 0);
+        ASSERT (shipnum >= 0);
         other_obj = &Objects[Ships[shipnum].objnum];
         ai_evade_object (objp, other_obj);
         break;
@@ -2449,7 +2449,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
         // since we are now what mode to set this AI object to.
         ai_clear_ship_goals (aip);
         shipnum = ship_name_lookup (current_goal->target_name);
-        Assert (shipnum >= 0);
+        ASSERT (shipnum >= 0);
         other_obj = &Objects[Ships[shipnum].objnum];
         ai_form_on_wing (objp, other_obj);
         break;
@@ -2458,12 +2458,12 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
 
     case AI_GOAL_STAY_NEAR_SHIP: {
         shipnum = ship_name_lookup (current_goal->target_name);
-        Assert (shipnum >= 0);
+        ASSERT (shipnum >= 0);
         other_obj = &Objects[Ships[shipnum].objnum];
         // todo MK:  hook to keep support ship near other_obj -- other_obj
         // could be the player object!!!
         float dist =
-            300.0f; //	How far away to stay from ship.  Should be set in SEXP?
+            300.0f; // How far away to stay from ship.  Should be set in SEXP?
         ai_do_stay_near (objp, other_obj, dist);
         break;
     }
@@ -2477,7 +2477,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
 
     case AI_GOAL_REARM_REPAIR:
         shipnum = ship_name_lookup (current_goal->target_name);
-        Assert (shipnum >= 0);
+        ASSERT (shipnum >= 0);
         other_obj = &Objects[Ships[shipnum].objnum];
         ai_rearm_repair (
             objp, current_goal->docker.index, other_obj,
@@ -2536,7 +2536,7 @@ void ai_update_goal_references (
             break;
 
         default:
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "unhandled FRED reference type %d in "
                 "ai_update_goal_references",
@@ -2616,11 +2616,11 @@ char* ai_add_dock_name (const char* str) {
     char* ptr;
     int i;
 
-    Assert (strlen (str) <= NAME_LENGTH - 1);
+    ASSERT (strlen (str) <= NAME_LENGTH - 1);
     for (i = 0; i < Num_ai_dock_names; i++)
         if (!strcasecmp (Ai_dock_names[i], str)) return Ai_dock_names[i];
 
-    Assert (Num_ai_dock_names < MAX_AI_DOCK_NAMES);
+    ASSERT (Num_ai_dock_names < MAX_AI_DOCK_NAMES);
     ptr = Ai_dock_names[Num_ai_dock_names++];
     strcpy (ptr, str);
     return ptr;

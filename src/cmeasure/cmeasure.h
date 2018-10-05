@@ -9,10 +9,10 @@
 class object;
 
 #define CMEASURE_WAIT \
-    333 //	delay in milliseconds between countermeasure firing.
+    333 // delay in milliseconds between countermeasure firing.
 
-//	Maximum distance at which a countermeasure can be tracked
-//	If this value is too large, missiles will always be tracking
+// Maximum distance at which a countermeasure can be tracked
+// If this value is too large, missiles will always be tracking
 // countermeasures.
 #define MAX_CMEASURE_TRACK_DIST 300.0f
 extern const float CMEASURE_DETONATE_DISTANCE;

@@ -78,7 +78,7 @@ class waypoint_list;
     49                // Goober5000 - the name of an intel entry in species.tbl
 #define OPF_STRING 50 // Goober5000 - any old string
 #define OPF_ROTATING_SUBSYSTEM 51 // Goober5000 - a rotating subsystem
-#define OPF_NAV_POINT 52          // Kazan	  - a Nav Point name
+#define OPF_NAV_POINT 52          // Kazan        - a Nav Point name
 #define OPF_SSM_CLASS 53          // Goober5000 - an SSM class
 #define OPF_FLEXIBLE_ARGUMENT \
     54                  // Goober5000 - special to match for when-argument
@@ -191,7 +191,7 @@ class waypoint_list;
 // the 768 possible if the categories
 // had not been bumped.
 /*
-#define	OP_CATEGORY_DEBUG		0x0a00
+#define OP_CATEGORY_DEBUG               0x0a00
 */
 
 // New subcategories! :) -- Goober5000
@@ -1242,7 +1242,7 @@ class waypoint_list;
  */
 #define CDR(n) ((n < 0) ? -1 : Sexp_nodes[n].rest)
 #define CADR(n) CAR (CDR (n))
-// #define CTEXT(n)	(Sexp_nodes[n].text)
+// #define CTEXT(n)     (Sexp_nodes[n].text)
 char* CTEXT (int n);
 
 // added by Goober5000
@@ -1295,20 +1295,20 @@ char* CTEXT (int n);
 #define SEXP_VARIABLE_CHAR ('@')
 // defines for type field of sexp_variable.  Be sure not to conflict with type
 // field of sexp_node
-#define SEXP_VARIABLE_NUMBER (1 << 4)   //	(0x0010)
-#define SEXP_VARIABLE_STRING (1 << 5)   //	(0x0020)
-#define SEXP_VARIABLE_UNKNOWN (1 << 6)  //	(0x0040)
-#define SEXP_VARIABLE_NOT_USED (1 << 7) //	(0x0080)
+#define SEXP_VARIABLE_NUMBER (1 << 4)   // (0x0010)
+#define SEXP_VARIABLE_STRING (1 << 5)   // (0x0020)
+#define SEXP_VARIABLE_UNKNOWN (1 << 6)  // (0x0040)
+#define SEXP_VARIABLE_NOT_USED (1 << 7) // (0x0080)
 
-#define SEXP_VARIABLE_BLOCK (1 << 0) //	(0x0001)
+#define SEXP_VARIABLE_BLOCK (1 << 0) // (0x0001)
 /*
-#define SEXP_VARIABLE_BLOCK_EXP				(1<<1)	//	(0x0002)
-#define SEXP_VARIABLE_BLOCK_HIT				(1<<2)	//	(0x0004)
+#define SEXP_VARIABLE_BLOCK_EXP                         (1<<1)  // (0x0002)
+#define SEXP_VARIABLE_BLOCK_HIT                         (1<<2)  // (0x0004)
 */
-#define SEXP_VARIABLE_SAVE_ON_MISSION_CLOSE (1 << 3) //	(0x0008)
+#define SEXP_VARIABLE_SAVE_ON_MISSION_CLOSE (1 << 3) // (0x0008)
 
 // Goober5000 - hopefully this should work and not conflict with anything
-#define SEXP_VARIABLE_SAVE_ON_MISSION_PROGRESS (1 << 29) //	(0x0100)
+#define SEXP_VARIABLE_SAVE_ON_MISSION_PROGRESS (1 << 29) // (0x0100)
 // Karajorma
 #define SEXP_VARIABLE_NETWORK (1 << 28)
 #define SEXP_VARIABLE_SAVE_TO_PLAYER_FILE (1 << 27)
@@ -1352,15 +1352,15 @@ char* CTEXT (int n);
 #define SEXP_KNOWN_TRUE -32766  //-2
 #define SEXP_UNKNOWN -32765     //-3
 #define SEXP_NAN \
-    -32764 //-4	// not a number -- used when ships/wing part of boolean and
+    -32764 //-4 // not a number -- used when ships/wing part of boolean and
            // haven't arrived yet
 #define SEXP_NAN_FOREVER \
-    -32763 //-5	// not a number and will never change -- used to falsify
+    -32763 //-5 // not a number and will never change -- used to falsify
            // boolean sexpressions
 #define SEXP_CANT_EVAL \
-    -32762 //-6	// can't evaluate yet for whatever reason (acts like false)
+    -32762 //-6 // can't evaluate yet for whatever reason (acts like false)
 #define SEXP_NUM_EVAL \
-    -32761 //-7	// already completed an arithmetic operation and result is
+    -32761 //-7 // already completed an arithmetic operation and result is
            // stored
 
 // defines for check_sexp_syntax
@@ -1570,7 +1570,7 @@ extern int get_operator_const (const char* token);
 extern int check_sexp_syntax (
     int node, int return_type = OPR_BOOL, int recursive = 0,
     int* bad_node = 0 /*NULL*/, int mode = 0);
-extern int get_sexp_main (void);               //	Returns start node
+extern int get_sexp_main (void);               // Returns start node
 extern int run_sexp (const char* sexpression); // debug and lua sexps
 extern int stuff_sexp_variable_list ();
 extern int eval_sexp (int cur_node, int referenced_node = -1);
@@ -1700,9 +1700,9 @@ extern const char* Skybox_flags[];
 They all should be named Sexp_hud_display_*;
 They all should follow the following symantics for the value of the
 variable:
-=0	don't show
-=1	show until canceled
->1	timestamp when gauge should stop showing (set zero when expired)
+=0      don't show
+=1      show until canceled
+>1      timestamp when gauge should stop showing (set zero when expired)
 \sa sexp_hud_display_warpout
 */
 extern int Sexp_hud_display_warpout;

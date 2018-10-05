@@ -160,21 +160,21 @@ extern int Om_tracker_flag; // needed for FS2OpenPXO config
 #endif
 #endif
 
-//	Revision history.
-//	Full version:
-//    1.00.04	5/26/98	MWA -- going final (12 pm)
-//    1.00.03	5/26/98	MWA -- going final (3 am)
-//    1.00.02	5/25/98	MWA -- going final
-//    1.00.01	5/25/98	MWA -- going final
-//		0.90		5/21/98	MWA -- getting ready for final.
-//		0.10		4/9/98.  Set by MK.
+// Revision history.
+// Full version:
+// 1.00.04   5/26/98 MWA -- going final (12 pm)
+// 1.00.03   5/26/98 MWA -- going final (3 am)
+// 1.00.02   5/25/98 MWA -- going final
+// 1.00.01   5/25/98 MWA -- going final
+// 0.90            5/21/98 MWA -- getting ready for final.
+// 0.10            4/9/98.  Set by MK.
 //
-//	OEM version:
-//		1.00		5/28/98	AL.	First release to Interplay QA.
+// OEM version:
+// 1.00            5/28/98 AL.     First release to Interplay QA.
 
-//  This function is defined in code\network\multiutil.cpp so will be linked
-//  from multiutil.obj it's required fro the -missioncrcs command line option -
-//  Kazan
+// This function is defined in code\network\multiutil.cpp so will be linked
+// from multiutil.obj it's required fro the -missioncrcs command line option -
+// Kazan
 void multi_spew_pxo_checksums (int max_files, const char* outfile);
 void fs2netd_spew_table_checksums (const char* outfile);
 
@@ -622,7 +622,7 @@ void big_explosion_flash (float flash) {
     Big_expl_flash.cur_flash_intensity = 0.0f;
 }
 
-//	Amount to diminish palette towards normal, per second.
+// Amount to diminish palette towards normal, per second.
 #define DIMINISH_RATE 0.75f
 #define SUN_DIMINISH_RATE 6.00f
 
@@ -952,7 +952,7 @@ void game_level_init () {
 
     NavSystem_Init (); // zero out the nav system
 
-    ai_level_init (); //	Call this before ship_init() because it reads
+    ai_level_init (); // Call this before ship_init() because it reads
                       // ai.tbl.
     ship_level_init ();
     player_level_init ();
@@ -961,7 +961,7 @@ void game_level_init () {
     particle::init ();    // Reset the particle system
     fireball_init ();
     debris_init ();
-    shield_hit_init (); //	Initialize system for showing shield hits
+    shield_hit_init (); // Initialize system for showing shield hits
 
     mission_init_goals ();
     mission_log_init ();
@@ -977,8 +977,8 @@ void game_level_init () {
     collide_ship_ship_sounds_init ();
     Missiontime = 0;
     Skybox_timestamp = game_get_overall_frametime ();
-    Pre_player_entry = 1; //	Means the player has not yet entered.
-    Entry_delay_time = 0; //	Could get overwritten in mission read.
+    Pre_player_entry = 1; // Means the player has not yet entered.
+    Entry_delay_time = 0; // Could get overwritten in mission read.
     observer_init ();
     flak_level_init ();  // initialize flak - bitmaps, etc
     ct_level_init ();    // initialize ships contrails, etc
@@ -1030,7 +1030,7 @@ void freespace_stop_mission () {
  * Called at frame interval to process networking stuff
  */
 void game_do_networking () {
-    Assert (Net_player != NULL);
+    ASSERT (Net_player != NULL);
     if (!(Game_mode & GM_MULTIPLAYER)) { return; }
 
     // see if this player should be reading/writing data.  Bit is set when at
@@ -1079,8 +1079,8 @@ static int framenum;
 void game_loading_callback (int count) {
     game_do_networking ();
 
-    Assert (Game_loading_callback_inited == 1);
-    Assertion (
+    ASSERT (Game_loading_callback_inited == 1);
+    ASSERTX (
         Game_loading_ani.num_frames > 0,
         "Load Screen animation %s not found, or corrupted. Needs to be an "
         "animation with at least 1 frame.",
@@ -1144,14 +1144,14 @@ void game_loading_callback (int count) {
     auto progress =
         static_cast< float > (count) / static_cast< float > (COUNT_ESTIMATE);
     CLAMP (progress, 0.0f, 1.0f);
-    
+
     os_ignore_events ();
 
     if (do_flip) gr_flip ();
 }
 
 void game_loading_callback_init () {
-    Assert (Game_loading_callback_inited == 0);
+    ASSERT (Game_loading_callback_inited == 0);
 
     Game_loading_background =
         bm_load (The_mission.loading_screen[gr_screen.res]);
@@ -1163,7 +1163,7 @@ void game_loading_callback_init () {
     generic_anim_init (
         &Game_loading_ani, Game_loading_ani_fname[gr_screen.res]);
     generic_anim_load (&Game_loading_ani);
-    Assertion (
+    ASSERTX (
         Game_loading_ani.num_frames > 0,
         "Load Screen animation %s not found, or corrupted. Needs to be an "
         "animation with at least 1 frame.",
@@ -1178,7 +1178,7 @@ void game_loading_callback_init () {
 }
 
 void game_loading_callback_close () {
-    Assert (Game_loading_callback_inited == 1);
+    ASSERT (Game_loading_callback_inited == 1);
 
     // Make sure bar shows all the way over.
     game_loading_callback (COUNT_ESTIMATE);
@@ -1641,7 +1641,7 @@ void game_init () {
     Game_current_mission_filename[0] = 0;
 
     // Moved from rand32, if we're gonna break, break immediately.
-    Assert (RAND_MAX == 0x7fff || RAND_MAX >= 0x7ffffffd);
+    ASSERT (RAND_MAX == 0x7fff || RAND_MAX >= 0x7ffffffd);
     // seed the random number generator
     int game_init_seed = (int)time (NULL);
     srand (game_init_seed);
@@ -1747,8 +1747,7 @@ void game_init () {
         sdlGraphicsOperations.reset (new SDLGraphicsOperations ());
     }
     if (gr_init (std::move (sdlGraphicsOperations)) == false) {
-        using namespace fs2::dialog;
-        message (dialog_type::error, "error intializing graphics!");
+        EE ("general") << "error intializing graphics!";
         exit (1);
     }
 
@@ -2371,7 +2370,7 @@ void game_set_view_clip (float /*frametime*/) {
                 GR_RESIZE_NONE);
         }
         else {
-            //	Numeric constants encouraged by J "pig farmer" S, who shall
+            // Numeric constants encouraged by J "pig farmer" S, who shall
             // remain semi-anonymous.
             // J.S. I've changed my ways!! See the new "no constants" code!!!
             gr_set_clip (
@@ -2865,7 +2864,7 @@ void game_whack_apply (float x, float y) {
     Game_hit_x += x;
     Game_hit_y += y;
 
-    //	mprintf(( "WHACK = %.1f, %.1f\n", Game_hit_x, Game_hit_y ));
+    // mprintf(( "WHACK = %.1f, %.1f\n", Game_hit_x, Game_hit_y ));
 }
 
 // call to apply a "shudder"
@@ -2881,7 +2880,7 @@ float get_shake (float intensity, int decay_time, int max_decay_time) {
     float shake = intensity * (float)(r - RAND_MAX_2) * RAND_MAX_1f;
 
     if (decay_time >= 0) {
-        Assert (max_decay_time > 0);
+        ASSERT (max_decay_time > 0);
         shake *=
             (0.5f - fl_abs (0.5f - (float)decay_time / (float)max_decay_time));
     }
@@ -2959,14 +2958,14 @@ void apply_view_shake (matrix* eye_orient) {
 
     matrix tm, tm2;
     vm_angles_2_matrix (&tm, &tangles);
-    Assert (vm_vec_mag (&tm.vec.fvec) > 0.0f);
-    Assert (vm_vec_mag (&tm.vec.rvec) > 0.0f);
-    Assert (vm_vec_mag (&tm.vec.uvec) > 0.0f);
+    ASSERT (vm_vec_mag (&tm.vec.fvec) > 0.0f);
+    ASSERT (vm_vec_mag (&tm.vec.rvec) > 0.0f);
+    ASSERT (vm_vec_mag (&tm.vec.uvec) > 0.0f);
     vm_matrix_x_matrix (&tm2, eye_orient, &tm);
     *eye_orient = tm2;
 }
 
-//	Player's velocity just before he blew up.  Used to keep camera target
+// Player's velocity just before he blew up.  Used to keep camera target
 // moving.
 vec3d Dead_player_last_vel = { { { 1.0f, 1.0f, 1.0f } } };
 
@@ -2983,14 +2982,14 @@ camid chase_get_camera () {
 
 extern vec3d Dead_camera_pos;
 
-//	Set eye_pos and eye_orient based on view mode.
+// Set eye_pos and eye_orient based on view mode.
 camid game_render_frame_setup () {
     bool fov_changed;
 
     if (!Main_camera.isValid ()) { Main_camera = cam_create ("Main camera"); }
     camera* main_cam = Main_camera.getCamera ();
     if (main_cam == NULL) {
-        fs2::dialog::error (LOCATION, "Unable to generate main camera");
+        ASSERTF (LOCATION, "Unable to generate main camera");
         return camid ();
     }
 
@@ -3071,7 +3070,7 @@ camid game_render_frame_setup () {
             int view_from_player = 1;
 
             if (Viewer_mode & VM_OTHER_SHIP) {
-                //	View from target.
+                // View from target.
                 Viewer_obj = &Objects[Player_ai->target_objnum];
 
                 last_Viewer_objnum = Player_ai->target_objnum;
@@ -3086,7 +3085,7 @@ camid game_render_frame_setup () {
             }
 
             if (view_from_player) {
-                //	View target from player ship.
+                // View target from player ship.
                 Viewer_obj = NULL;
                 eye_pos = Player_obj->pos;
                 vm_vec_normalized_dir (
@@ -3121,7 +3120,7 @@ camid game_render_frame_setup () {
                 view_pos = Objects[Player_ai->target_objnum].pos;
             }
             else {
-                //	Make camera follow explosion, but gradually slow down.
+                // Make camera follow explosion, but gradually slow down.
                 vm_vec_scale_add2 (
                     &Player_obj->pos, &Dead_player_last_vel, flFrametime);
                 view_pos = Player_obj->pos;
@@ -3154,7 +3153,7 @@ camid game_render_frame_setup () {
         supernova_get_eye (&eye_pos, &eye_orient);
     }
     else {
-        //	If already blown up, these other modes can override.
+        // If already blown up, these other modes can override.
         if (!(Game_mode & (GM_DEAD | GM_DEAD_BLEW_UP))) {
             Viewer_mode &= ~VM_DEAD_VIEW;
 
@@ -3194,7 +3193,7 @@ camid game_render_frame_setup () {
                     &eye_orient, &tmp_dir, &Viewer_obj->orient.vec.uvec, NULL);
                 Viewer_obj = NULL;
 
-                //	Modify the orientation based on head orientation.
+                // Modify the orientation based on head orientation.
                 compute_slew_matrix (&eye_orient, &Viewer_slew_angles);
             }
             else if (Viewer_mode & VM_CHASE) {
@@ -3263,7 +3262,7 @@ camid game_render_frame_setup () {
                 vm_vector_2_matrix (&eye_orient, &tmp_dir, &tmp_up, NULL);
                 Viewer_obj = NULL;
 
-                //	Modify the orientation based on head orientation.
+                // Modify the orientation based on head orientation.
                 compute_slew_matrix (&eye_orient, &Viewer_slew_angles);
             }
             else if (Viewer_mode & VM_WARP_CHASE) {
@@ -3529,7 +3528,7 @@ void game_render_frame (camid cid) {
     g3_end_frame ();
 }
 
-//#define JOHNS_DEBUG_CODE	1
+//#define JOHNS_DEBUG_CODE      1
 
 #ifdef JOHNS_DEBUG_CODE
 void john_debug_stuff (vec3d* eye_pos, matrix* eye_orient) {
@@ -3570,7 +3569,7 @@ void john_debug_stuff (vec3d* eye_pos, matrix* eye_orient) {
 
 extern int Player_dead_state;
 
-//	Flip the page and time how long it took.
+// Flip the page and time how long it took.
 void game_flip_page_and_time_it () {
     tracing::async::end (tracing::MainFrame, tracing::MainFrameScope);
     tracing::async::begin (tracing::MainFrame, tracing::MainFrameScope);
@@ -3741,7 +3740,7 @@ void game_simulation_frame () {
     message_maybe_distort (); // maybe distort incoming message if comms
                               // damaged
     player_repair_frame (
-        flFrametime); //	AI objects get repaired in ai_process, called from
+        flFrametime); // AI objects get repaired in ai_process, called from
                       // move code...deal with player.
     player_process_pending_praise ();   // maybe send off a delayed praise
                                         // message to the player
@@ -3884,9 +3883,9 @@ void game_shade_frame (float /*frametime*/) {
     GR_DEBUG_SCOPE ("Shade frame");
 
     if (Fade_type != FI_NONE) {
-        Assert (Fade_start_timestamp > 0);
-        Assert (Fade_end_timestamp > 0);
-        Assert (Fade_end_timestamp > Fade_start_timestamp);
+        ASSERT (Fade_start_timestamp > 0);
+        ASSERT (Fade_end_timestamp > 0);
+        ASSERT (Fade_end_timestamp > Fade_start_timestamp);
 
         if (timestamp () >= Fade_start_timestamp) {
             int startAlpha = 0;
@@ -3929,7 +3928,7 @@ const static int CUTSCENE_BAR_DIVISOR = 8;
 void bars_do_frame (float frametime) {
     if ((Cutscene_bar_flags & CUB_GRADUAL) && Cutscene_bars_progress < 1.0f) {
         // Determine how far along we are
-        Assert (Cutscene_delta_time > 0.0f);
+        ASSERT (Cutscene_delta_time > 0.0f);
 
         Cutscene_bars_progress += frametime / Cutscene_delta_time;
         if (Cutscene_bars_progress >= 1.0f) {
@@ -4058,7 +4057,7 @@ void game_frame (bool paused) {
             ((Game_mode & GM_MULTIPLAYER) &&
              !(Net_player->flags & NETINFO_FLAG_OBSERVER))) {
             if (!(Game_mode & GM_STANDALONE_SERVER)) {
-                Assert (OBJ_INDEX (Player_obj) >= 0);
+                ASSERT (OBJ_INDEX (Player_obj) >= 0);
             }
         }
 
@@ -4068,7 +4067,7 @@ void game_frame (bool paused) {
               // f2fl(Missiontime)));
         }
 
-        //	Note: These are done even before the player enters, else buffers
+        // Note: These are done even before the player enters, else buffers
         // can overflow.
         if (!(Game_mode & GM_STANDALONE_SERVER)) { radar_frame_init (); }
 
@@ -4107,7 +4106,7 @@ void game_frame (bool paused) {
         // if not actually in a game play state, then return.  This condition
         // could only be true in a multiplayer game.
         if (!actually_playing) {
-            Assert (Game_mode & GM_MULTIPLAYER);
+            ASSERT (Game_mode & GM_MULTIPLAYER);
             return;
         }
     }
@@ -4234,8 +4233,8 @@ void game_frame (bool paused) {
 
 #define MAX_FRAMETIME \
     (F1_0 / 4) // Frametime gets saturated at this.  Changed by MK on 11/1/97.
-               //	Some bug was causing Frametime to always get saturated
-               // at 2.0 seconds after the player 	died.  This resulted in
+               // Some bug was causing Frametime to always get saturated
+               // at 2.0 seconds after the player       died.  This resulted in
                // screwed up death sequences.
 
 fix Last_time = 0; // The absolute time of game at end of last frame (beginning
@@ -4255,7 +4254,7 @@ void game_reset_time () {
         return;
     }
 
-    //	Last_time = timer_get_fixed_seconds();
+    // Last_time = timer_get_fixed_seconds();
     game_start_time ();
     timestamp_reset ();
     game_stop_time ();
@@ -4293,7 +4292,7 @@ void game_stop_time () {
 
 void game_start_time () {
     timer_paused--;
-    Assert (timer_paused >= 0);
+    ASSERT (timer_paused >= 0);
     if (timer_paused == 0) {
         fix time;
         time = timer_get_fixed_seconds ();
@@ -4313,7 +4312,7 @@ void game_start_time () {
     // Restore the timer_tick stuff...
     // Normally, you should never access 'timestamp_ticker', consider this a
     // low-level routine
-    Assert (saved_timestamp_ticker > -1); // Called out of order, get JAS
+    ASSERT (saved_timestamp_ticker > -1); // Called out of order, get JAS
     timestamp_set_value (saved_timestamp_ticker);
     saved_timestamp_ticker = -1;
 }
@@ -4357,13 +4356,13 @@ void game_set_frametime (int state) {
     else
         Frametime = thistime - Last_time;
 
-        //	Frametime = F1_0 / 30;
+        // Frametime = F1_0 / 30;
 
 #ifndef NDEBUG
-    fix debug_frametime = Frametime; //	Just used to display frametime.
+    fix debug_frametime = Frametime; // Just used to display frametime.
 #endif
 
-    //	If player hasn't entered mission yet, make frame take 1/4 second.
+    // If player hasn't entered mission yet, make frame take 1/4 second.
     if ((Pre_player_entry) && (state == GS_STATE_GAME_PLAY))
         Frametime = F1_0 / 4;
 #ifndef NDEBUG
@@ -4387,7 +4386,7 @@ void game_set_frametime (int state) {
     }
 #endif
 
-    Assertion (
+    ASSERTX (
         Framerate_cap > 0,
         "Framerate cap %d is too low. Needs to be a positive, non-zero number",
         Framerate_cap);
@@ -4399,8 +4398,8 @@ void game_set_frametime (int state) {
         cap = F1_0 / Framerate_cap;
         if (Frametime < cap) {
             thistime = cap - Frametime;
-            //  			mprintf(("Sleeping for %6.3f seconds.\n",
-            //  f2fl(thistime)));
+            // mprintf(("Sleeping for %6.3f seconds.\n",
+            // f2fl(thistime)));
             os_sleep (static_cast< int > (f2fl (thistime) * 1000.0f));
             Frametime = cap;
             thistime = timer_get_fixed_seconds ();
@@ -4463,7 +4462,7 @@ void game_set_frametime (int state) {
 
     FrametimeOverall += Frametime;
 
-    /*	if ((Framecount > 0) && (Framecount < 10)) {
+    /*  if ((Framecount > 0) && (Framecount < 10)) {
             mprintf(("Frame %2i: frametime = %.3f (%.3f)\n", Framecount,
        f2fl(Frametime), f2fl(debug_frametime)));
         }
@@ -4484,8 +4483,8 @@ void game_do_frame () {
     game_set_frametime (GS_STATE_GAME_PLAY);
     game_update_missiontime ();
 
-    //	if (Player_ship->flags[Ship::Ship_Flags::Dying])
-    //		flFrametime /= 15.0;
+    // if (Player_ship->flags[Ship::Ship_Flags::Dying])
+    // flFrametime /= 15.0;
 
     if (Game_mode & GM_STANDALONE_SERVER) {
         std_multi_set_standalone_missiontime (f2fl (Missiontime));
@@ -4527,7 +4526,7 @@ void game_flush () {
 // function for multiplayer only which calls game_do_state_common() when
 // running the debug console
 void game_do_dc_networking () {
-    Assert (Game_mode & GM_MULTIPLAYER);
+    ASSERT (Game_mode & GM_MULTIPLAYER);
 
     game_do_state_common (gameseq_get_state ());
 }
@@ -4620,7 +4619,7 @@ int game_poll () {
         if (state != GS_STATE_DEATH_BLEW_UP) { return k; }
     }
 
-    //	if ( k ) nprintf(( "General", "Key = %x\n", k ));
+    // if ( k ) nprintf(( "General", "Key = %x\n", k ));
 
     switch (k) {
     case KEY_F1:
@@ -4629,7 +4628,7 @@ int game_poll () {
         break;
 
     case KEY_F2:
-        //			if (state != GS_STATE_INITIAL_PLAYER_SELECT) {
+        // if (state != GS_STATE_INITIAL_PLAYER_SELECT) {
 
         // don't allow f2 while warping out in multiplayer
         if ((Game_mode & GM_MULTIPLAYER) && (Net_player != NULL) &&
@@ -4643,7 +4642,7 @@ int game_poll () {
         case GS_STATE_HUD_CONFIG:
         case GS_STATE_CONTROL_CONFIG:
         case GS_STATE_DEATH_DIED:
-            //				case GS_STATE_DEATH_BLEW_UP:	// 	DEATH_BLEW_UP
+            // case GS_STATE_DEATH_BLEW_UP:    //      DEATH_BLEW_UP
             //might be okay but do not comment out DEATH_DIED as otherwise no
             // clean
             // up is performed on the dead ship
@@ -4719,7 +4718,7 @@ int game_poll () {
         // Now we have four digit precision :) -WMC
         if (counter > 9999) {
             // This should pop up a dialogue or something ingame.
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Screenshot count has reached max of 9999. Resetting to 0.");
             counter = 0;
@@ -5416,7 +5415,7 @@ void game_leave_state (int old_state, int new_state) {
         // else
         if (new_state == GS_STATE_OPTIONS_MENU) { break; }
 
-        Assert (Game_mode & GM_MULTIPLAYER);
+        ASSERT (Game_mode & GM_MULTIPLAYER);
         multi_sync_close ();
         if (new_state == GS_STATE_GAME_PLAY) {
             // palette_restore_palette();
@@ -5488,7 +5487,7 @@ void game_enter_state (int old_state, int new_state) {
         // in multiplayer mode, be sure that we are not doing networking
         // anymore.
         if (Game_mode & GM_MULTIPLAYER) {
-            Assert (Net_player != NULL);
+            ASSERT (Net_player != NULL);
             Net_player->flags &= ~NETINFO_FLAG_DO_NETWORKING;
         }
 
@@ -5496,7 +5495,7 @@ void game_enter_state (int old_state, int new_state) {
         Game_mode &= ~(GM_MULTIPLAYER);
 
         // set the game_mode based on the type of player
-        Assert (Player != NULL);
+        ASSERT (Player != NULL);
 
         if (Player->flags & PLAYER_FLAGS_IS_MULTI) {
             Game_mode = GM_MULTIPLAYER;
@@ -5520,8 +5519,8 @@ void game_enter_state (int old_state, int new_state) {
         }
 
         // if ( (Cmdline_start_netgame || (Cmdline_connect_addr != NULL)) &&
-        // !Main_hall_netgame_started ) { 	Main_hall_netgame_started = 1;
-        //	main_hall_do_multi_ready();
+        // !Main_hall_netgame_started ) {       Main_hall_netgame_started = 1;
+        // main_hall_do_multi_ready();
         //} DTP commented out to keep original source
         if ((Cmdline_start_netgame || (Cmdline_connect_addr != NULL)) && (!Main_hall_netgame_started) /*&& (Game_mode == GM_MULTIPLAYER)*/) { // DTP added "&& (game_mode == GM_multiplayer)" so that ppl don't get thrown into Multiplayer with a Singleplayer Pilot.
             Main_hall_netgame_started = 1;
@@ -5623,9 +5622,9 @@ void game_enter_state (int old_state, int new_state) {
         break;
 
     case GS_STATE_DEBUG_PAUSED:
-        //		game_stop_time();
-        //		os_set_title("FreeSpace - PAUSED");
-        //		break;
+        // game_stop_time();
+        // os_set_title("FreeSpace - PAUSED");
+        // break;
         //
     case GS_STATE_TRAINING_PAUSED:
 #ifndef NDEBUG
@@ -5800,7 +5799,7 @@ void game_enter_state (int old_state, int new_state) {
         joy_ff_mission_init (
             Ship_info[Player_ship->ship_info_index].rotation_time);
 
-        // clear multiplayer button info			i
+        // clear multiplayer button info                        i
         extern button_info Multi_ship_status_bi;
         memset (&Multi_ship_status_bi, 0, sizeof (button_info));
 
@@ -5864,7 +5863,7 @@ void game_enter_state (int old_state, int new_state) {
         emp_stop_local ();
 
         Players[Player_num].flags &=
-            ~PLAYER_FLAGS_AUTO_TARGETING; //	Prevent immediate switch to a
+            ~PLAYER_FLAGS_AUTO_TARGETING; // Prevent immediate switch to a
                                           // hostile ship.
         Game_mode |= GM_DEAD_BLEW_UP;
         Show_viewing_from_self = 0;
@@ -6034,7 +6033,7 @@ void game_do_state (int state) {
 
         if (pause_get_type () == PAUSE_TYPE_VIEWER) {
             read_player_controls (Player_obj, flFrametime);
-            //	game_process_keys();
+            // game_process_keys();
             game_frame (true);
         }
 
@@ -6478,36 +6477,36 @@ int game_main (int argc, char* argv[]) {
 // launch the fslauncher program on exit
 void game_launch_launcher_on_exit()
 {
-	STARTUPINFO si;
-	PROCESS_INFORMATION pi;
-	char cmd_line[2048];
-	char original_path[1024] = "";
-	
-	memset( &si, 0, sizeof(STARTUPINFO) );
-	si.cb = sizeof(si);
+        STARTUPINFO si;
+        PROCESS_INFORMATION pi;
+        char cmd_line[2048];
+        char original_path[1024] = "";
 
-	// directory
-	_getcwd(original_path, 1023);
+        memset( &si, 0, sizeof(STARTUPINFO) );
+        si.cb = sizeof(si);
 
-	// set up command line
-	strcpy_s(cmd_line, original_path);
-	strcat_s(cmd_line, DIR_SEPARATOR_STR);
-	strcat_s(cmd_line, LAUNCHER_FNAME);
-	strcat_s(cmd_line, " -straight_to_update");
+        // directory
+        _getcwd(original_path, 1023);
 
-	BOOL ret = CreateProcess(	NULL,									// pointer to name of executable module 
-										cmd_line,							// pointer to command line string
-										NULL,									// pointer to process security attributes 
-										NULL,									// pointer to thread security attributes 
-										FALSE,								// handle inheritance flag 
-										CREATE_DEFAULT_ERROR_MODE,		// creation flags 
-										NULL,									// pointer to new environment block 
-										NULL,									// pointer to current directory name 
-										&si,									// pointer to STARTUPINFO 
-										&pi									// pointer to PROCESS_INFORMATION  
-										);			
-	// to eliminate build warnings
-	ret;
+        // set up command line
+        strcpy_s(cmd_line, original_path);
+        strcat_s(cmd_line, DIR_SEPARATOR_STR);
+        strcat_s(cmd_line, LAUNCHER_FNAME);
+        strcat_s(cmd_line, " -straight_to_update");
+
+        BOOL ret = CreateProcess(       NULL,                                                                   // pointer to name of executable module
+                                                                                cmd_line,                                                       // pointer to command line string
+                                                                                NULL,                                                                   // pointer to process security attributes
+                                                                                NULL,                                                                   // pointer to thread security attributes
+                                                                                FALSE,                                                          // handle inheritance flag
+                                                                                CREATE_DEFAULT_ERROR_MODE,              // creation flags
+                                                                                NULL,                                                                   // pointer to new environment block
+                                                                                NULL,                                                                   // pointer to current directory name
+                                                                                &si,                                                                    // pointer to STARTUPINFO
+                                                                                &pi                                                                     // pointer to PROCESS_INFORMATION
+                                                                                );
+        // to eliminate build warnings
+        ret;
 }
 #endif
 
@@ -6620,12 +6619,12 @@ void game_shutdown (void) {
     lcl_xstr_close ();
 
 #if 0 // don't have an updater for fs2_open
-	// HACKITY HACK HACK
-	// if this flag is set, we should be firing up the launcher when exiting freespace
-	extern int Multi_update_fireup_launcher_on_exit;
-	if(Multi_update_fireup_launcher_on_exit){
-		game_launch_launcher_on_exit();
-	}
+        // HACKITY HACK HACK
+        // if this flag is set, we should be firing up the launcher when exiting freespace
+        extern int Multi_update_fireup_launcher_on_exit;
+        if(Multi_update_fireup_launcher_on_exit){
+                game_launch_launcher_on_exit();
+        }
 #endif
 }
 
@@ -6676,7 +6675,7 @@ void game_do_training_checks () {
             i = Training_context_goal_waypoint;
             do {
                 waypoint* wpt = find_waypoint_at_index (wplp, i);
-                Assert (wpt != NULL);
+                ASSERT (wpt != NULL);
                 d = vm_vec_dist (wpt->get_pos (), &Player_obj->pos);
                 if (d <= Training_context_distance) {
                     Training_context_at_waypoint = i;
@@ -6865,7 +6864,7 @@ int Tmap_num_too_big = 0;
 int Num_models_needing_splitting = 0;
 
 void Time_model (int modelnum) {
-    //	mprintf(( "Timing ship '%s'\n", si->name ));
+    // mprintf(( "Timing ship '%s'\n", si->name ));
 
     vec3d eye_pos, model_pos;
     matrix eye_orient, model_orient;
@@ -6943,7 +6942,7 @@ void Time_model (int modelnum) {
         vm_matrix_x_matrix (&model_orient, &vmd_identity_matrix, &m1);
 
         gr_reset_clip ();
-        //		gr_clear();
+        // gr_clear();
 
         g3_start_frame (1);
 
@@ -6961,7 +6960,7 @@ void Time_model (int modelnum) {
             &model_pos); //|MR_NO_POLYS );
 
         g3_end_frame ();
-        //		gr_flip();
+        // gr_flip();
 
         framecount++;
         ta.h += 0.1f;
@@ -7016,7 +7015,7 @@ void Do_model_timings_test () {
     if (!Time_fp) return;
 
     fprintf (Time_fp, "Name\tFPS\tTRAM\tPolys\tVerts\tPixels\n");
-    //	fprintf( Time_fp, "FPS\tTRAM\tPolys\tVerts\tPixels\n" );
+    // fprintf( Time_fp, "FPS\tTRAM\tPolys\tVerts\tPixels\n" );
 
     for (i = 0; i < MAX_POLYGON_MODELS; i++) {
         if (model_used[i]) { Time_model (model_id[i]); }
@@ -7086,10 +7085,10 @@ void game_format_time (fix m_time, char* time_str) {
     strcat (time_str, tmp);
 }
 
-//	Stuff version string in *str.
+// Stuff version string in *str.
 void get_version_string (char* str, int max_size) {
     // XSTR:OFF
-    Assert (max_size > 6);
+    ASSERT (max_size > 6);
 
     sprintf (str, "FreeSpace 2 Open v%s", FS_VERSION_FULL);
 
@@ -7201,7 +7200,7 @@ int detect_lang () {
 #define NUM_SHIPS_TBL_CHECKSUMS 1
 
 int Game_ships_tbl_checksums[NUM_SHIPS_TBL_CHECKSUMS] = {
-    //	-1022810006,					// 1.0 FULL
+    // -1022810006,                                    // 1.0 FULL
     -1254285366 // 1.2 FULL (German)
 };
 
@@ -7262,7 +7261,7 @@ DCF (shipspew, "display the checksum for the current ships.tbl") {
 #define NUM_WEAPONS_TBL_CHECKSUMS 1
 
 int Game_weapons_tbl_checksums[NUM_WEAPONS_TBL_CHECKSUMS] = {
-    //	399297860,				// 1.0 FULL
+    // 399297860,                              // 1.0 FULL
     -553984927 // 1.2 FULL (german)
 };
 
@@ -7394,8 +7393,8 @@ bool game_using_low_mem () {
     }
 }
 
-//  place calls here that need to take effect immediately when the game is
-//  minimized.  Called from osapi.cpp
+// place calls here that need to take effect immediately when the game is
+// minimized.  Called from osapi.cpp
 void game_pause () {
     // Protection against flipping out -- Kazan
     if (!GameState_Stack_Valid ()) return;
@@ -7501,7 +7500,7 @@ void game_unpause () {
 
 int actual_main (int argc, char* argv[]) {
     int result = -1;
-    Assert (argc > 0);
+    ASSERT (argc > 0);
 
 #if !defined(DONT_CATCH_MAIN_EXCEPTIONS)
     try {
@@ -7510,14 +7509,14 @@ int actual_main (int argc, char* argv[]) {
 #if !defined(DONT_CATCH_MAIN_EXCEPTIONS)
     }
     catch (const std::exception& ex) {
-        fs2::dialog::error (LOCATION, "Caught std::exception in main(): '%s'!", ex.what ());
+        ASSERTF (LOCATION, "Caught std::exception in main(): '%s'!", ex.what ());
         fprintf (
             stderr, "Caught std::exception in main(): '%s'!\n", ex.what ());
 
         result = EXIT_FAILURE;
     }
     catch (...) {
-        fs2::dialog::error (LOCATION, "Caught exception in main()!");
+        ASSERTF (LOCATION, "Caught exception in main()!");
         fprintf (stderr, "Caught exception in main()!\n");
 
         result = EXIT_FAILURE;

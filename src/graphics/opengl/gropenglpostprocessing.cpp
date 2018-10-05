@@ -472,9 +472,9 @@ void gr_opengl_post_process_end () {
 #ifdef SHADOW_DEBUG
     opengl_shader_set_current (&GL_post_shader[8]);
     GL_state.Texture.SetActiveUnit (0);
-    //	GL_state.Texture.SetTarget(GL_TEXTURE_2D);
+    // GL_state.Texture.SetTarget(GL_TEXTURE_2D);
     GL_state.Texture.SetTarget (GL_TEXTURE_2D_ARRAY);
-    //	GL_state.Texture.Enable(Shadow_map_depth_texture);
+    // GL_state.Texture.Enable(Shadow_map_depth_texture);
     extern GLuint Shadow_map_texture;
     extern GLuint Post_shadow_texture_id;
     GL_state.Texture.Enable (Shadow_map_texture);

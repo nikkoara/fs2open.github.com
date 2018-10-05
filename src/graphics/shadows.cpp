@@ -189,14 +189,14 @@ void shadows_debug_show_frustum (
     vm_vec_add2 (&far_bottom_left, pos);
 
     gr_set_color (0, 255, 255);
-    // 	g3_draw_htl_line(&near_bottom_left, &near_bottom_right);
-    // 	g3_draw_htl_line(&near_bottom_right, &near_top_right);
-    // 	g3_draw_htl_line(&near_bottom_right, &near_top_left);
-    // 	g3_draw_htl_line(&near_top_right, &near_top_left);
-    // 	g3_draw_htl_line(&far_top_left, &far_top_right);
-    // 	g3_draw_htl_line(&far_top_right, &far_bottom_right);
-    // 	g3_draw_htl_line(&far_bottom_right, &far_bottom_left);
-    // 	g3_draw_htl_line(&far_bottom_left, &far_top_left);
+    // g3_draw_htl_line(&near_bottom_left, &near_bottom_right);
+    // g3_draw_htl_line(&near_bottom_right, &near_top_right);
+    // g3_draw_htl_line(&near_bottom_right, &near_top_left);
+    // g3_draw_htl_line(&near_top_right, &near_top_left);
+    // g3_draw_htl_line(&far_top_left, &far_top_right);
+    // g3_draw_htl_line(&far_top_right, &far_bottom_right);
+    // g3_draw_htl_line(&far_bottom_right, &far_bottom_left);
+    // g3_draw_htl_line(&far_bottom_left, &far_top_left);
 
     g3_render_line_3d (true, &near_bottom_left, &near_bottom_right);
     g3_render_line_3d (true, &near_bottom_right, &near_top_right);

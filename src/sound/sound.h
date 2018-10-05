@@ -5,8 +5,8 @@
 
 #include "globalincs/pstypes.h"
 #include "sound/ds.h"
-#include "utils/RandomRange.h"
-#include "utils/id.h"
+#include "util/RandomRange.h"
+#include "util/id.h"
 
 // Used for keeping track which low-level sound library is being used
 #define SOUND_LIB_DIRECTSOUND 0
@@ -114,7 +114,7 @@ extern float aav_voice_volume;
 extern float aav_music_volume;
 extern float aav_effect_volume;
 
-// int	snd_load( char *filename, int hardware=0, int three_d=0, int *sig=NULL
+// int  snd_load( char *filename, int hardware=0, int three_d=0, int *sig=NULL
 // );
 sound_load_id
 snd_load (game_snd_entry* entry, int flags, int allow_hardware_load = 0);

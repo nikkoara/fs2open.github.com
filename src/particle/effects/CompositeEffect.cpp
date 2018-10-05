@@ -11,9 +11,7 @@ CompositeEffect::CompositeEffect (const std::string& name)
     : ParticleEffect (name) {}
 
 bool CompositeEffect::processSource (const ParticleSource*) {
-    UNREACHABLE (
-        "Processing a composite source is not supported! This was caused by a "
-        "coding error, get a coder!");
+    ASSERT (0);
     return false;
 }
 

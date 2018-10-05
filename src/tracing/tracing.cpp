@@ -109,7 +109,7 @@ void submit_event (trace_event* evt) {
 }
 
 void process_gpu_events () {
-    Assertion (
+    ASSERTX (
         get_tid () == main_thread_id,
         "This function must be called from the main thread!");
 
@@ -173,7 +173,7 @@ void process_gpu_events () {
             }
             break;
         default:
-            UNREACHABLE ("Invalid event type!");
+            ASSERT (0);
             gpu_events.pop ();
             break;
         }
@@ -228,14 +228,14 @@ void process_events () {
     }
 }
 void frame_profile_process_frame () {
-    Assertion (
+    ASSERTX (
         frameProfiler, "Frame profiling must be enabled for this function!");
 
     return frameProfiler->processFrame ();
 }
 
 std::string get_frame_profile_output () {
-    Assertion (
+    ASSERTX (
         frameProfiler, "Frame profiling must be enabled for this function!");
 
     return frameProfiler->getContent ();
@@ -275,7 +275,7 @@ void start (const Category& category, trace_event* evt) {
     evt->event_id = ++current_id;
 
     if (do_gpu_queries && category.usesGPUCounter ()) {
-        Assertion (
+        ASSERTX (
             get_tid () == main_thread_id,
             "This function must be called from the main thread!");
 
@@ -301,10 +301,10 @@ void end (trace_event* evt) {
 
     if (!initialized) { return; }
 
-    Assertion (
+    ASSERTX (
         evt->pid == get_pid (),
         "Complete events must be generated from the same process!");
-    Assertion (
+    ASSERTX (
         evt->tid == get_tid (),
         "Complete events must be generated from the same thread!");
 
@@ -316,7 +316,7 @@ void end (trace_event* evt) {
 
     // Create GPU events
     if (do_gpu_queries && evt->category->usesGPUCounter ()) {
-        Assertion (
+        ASSERTX (
             get_tid () == main_thread_id,
             "This function must be called from the main thread!");
 

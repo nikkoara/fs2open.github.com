@@ -177,13 +177,13 @@ struct UI_XSTR  {
 #define MAX_UI_XSTRS 100
 
 // Button terminology:
-//   Up = button is in up state (also called pressed)
-//   Down = button is in down state (also called released)
-//   Just pressed = button has just gone from up to down state
-//   Just released = button has just gone from down to up state
-//   Clicked = a trigger type effect caused by 'just pressed' event or repeat
-//   while 'down' Double clicked = 2 'just pressed' events occuring within a
-//   short amount of time
+// Up = button is in up state (also called pressed)
+// Down = button is in down state (also called released)
+// Just pressed = button has just gone from up to down state
+// Just released = button has just gone from down to up state
+// Clicked = a trigger type effect caused by 'just pressed' event or repeat
+// while 'down' Double clicked = 2 'just pressed' events occuring within a
+// short amount of time
 
 // Button flags
 #define BF_UP (1 << 0)

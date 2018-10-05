@@ -45,7 +45,7 @@ int key_up_count (int scancode);
 int key_checkch ();
 int key_check (int key);
 
-//	Put "key" back in the input buffer.
+// Put "key" back in the input buffer.
 void key_outkey (int key);
 
 extern int Cheats_enabled;

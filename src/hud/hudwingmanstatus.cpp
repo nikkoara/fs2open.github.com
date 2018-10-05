@@ -46,16 +46,16 @@ static int HUD_wingman_flash_is_bright;
 
 // flag a player wing ship as destroyed
 void hud_set_wingman_status_dead (int wing_index, int wing_pos) {
-    Assert (wing_index >= 0 && wing_index < MAX_SQUADRON_WINGS);
-    Assert (wing_pos >= 0 && wing_pos < MAX_SHIPS_PER_WING);
+    ASSERT (wing_index >= 0 && wing_index < MAX_SQUADRON_WINGS);
+    ASSERT (wing_pos >= 0 && wing_pos < MAX_SHIPS_PER_WING);
 
     HUD_wingman_status[wing_index].status[wing_pos] = HUD_WINGMAN_STATUS_DEAD;
 }
 
 // flags a given player wing ship as departed
 void hud_set_wingman_status_departed (int wing_index, int wing_pos) {
-    Assert (wing_index >= 0 && wing_index < MAX_SQUADRON_WINGS);
-    Assert (wing_pos >= 0 && wing_pos < MAX_SHIPS_PER_WING);
+    ASSERT (wing_index >= 0 && wing_index < MAX_SQUADRON_WINGS);
+    ASSERT (wing_pos >= 0 && wing_pos < MAX_SHIPS_PER_WING);
 
     HUD_wingman_status[wing_index].status[wing_pos] =
         HUD_WINGMAN_STATUS_NOT_HERE;
@@ -65,8 +65,8 @@ void hud_set_wingman_status_departed (int wing_index, int wing_pos) {
 void hud_set_wingman_status_none (int wing_index, int wing_pos) {
     int i;
 
-    Assert (wing_index >= 0 && wing_index < MAX_SQUADRON_WINGS);
-    Assert (wing_pos >= 0 && wing_pos < MAX_SHIPS_PER_WING);
+    ASSERT (wing_index >= 0 && wing_index < MAX_SQUADRON_WINGS);
+    ASSERT (wing_pos >= 0 && wing_pos < MAX_SHIPS_PER_WING);
 
     HUD_wingman_status[wing_index].status[wing_pos] = HUD_WINGMAN_STATUS_NONE;
 
@@ -84,8 +84,8 @@ void hud_set_wingman_status_none (int wing_index, int wing_pos) {
 
 // flags a given player wing ship as "alive" (for multiplayer respawns )
 void hud_set_wingman_status_alive (int wing_index, int wing_pos) {
-    Assert (wing_index >= 0 && wing_index < MAX_SQUADRON_WINGS);
-    Assert (wing_pos >= 0 && wing_pos < MAX_SHIPS_PER_WING);
+    ASSERT (wing_index >= 0 && wing_index < MAX_SQUADRON_WINGS);
+    ASSERT (wing_pos >= 0 && wing_pos < MAX_SHIPS_PER_WING);
 
     HUD_wingman_status[wing_index].status[wing_pos] = HUD_WINGMAN_STATUS_ALIVE;
 }
@@ -118,7 +118,7 @@ void hud_wingman_kill_multi_teams () {
 
     if (!IS_MISSION_MULTI_TEAMS) return;
 
-    Assert (MAX_TVT_WINGS == 2); // Goober5000
+    ASSERT (MAX_TVT_WINGS == 2); // Goober5000
 
     wing_index = -1;
     if (Net_player->p_info.team == 0)
@@ -270,25 +270,25 @@ void HudGaugeWingmanStatus::initBitmaps (
     Wingman_status_left.first_frame =
         bm_load_animation (fname_left, &Wingman_status_left.num_frames);
     if (Wingman_status_left.first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Error loading %s\n", fname_left);
+        WARNINGF (LOCATION, "Error loading %s\n", fname_left);
     }
 
     Wingman_status_middle.first_frame =
         bm_load_animation (fname_middle, &Wingman_status_middle.num_frames);
     if (Wingman_status_middle.first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Error loading %s\n", fname_middle);
+        WARNINGF (LOCATION, "Error loading %s\n", fname_middle);
     }
 
     Wingman_status_right.first_frame =
         bm_load_animation (fname_right, &Wingman_status_right.num_frames);
     if (Wingman_status_right.first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Error loading %s\n", fname_right);
+        WARNINGF (LOCATION, "Error loading %s\n", fname_right);
     }
 
     Wingman_status_dots.first_frame =
         bm_load_animation (fname_dots, &Wingman_status_dots.num_frames);
     if (Wingman_status_dots.first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Error loading %s\n", fname_dots);
+        WARNINGF (LOCATION, "Error loading %s\n", fname_dots);
     }
 }
 
@@ -531,8 +531,8 @@ void hud_wingman_status_start_flash (int wing_index, int wing_pos) {
 }
 
 // set the color for flashing dot
-// exit:	1 =>	set bright color
-//			0 =>	set default color
+// exit:        1 =>    set bright color
+// 0 =>    set default color
 int hud_wingman_status_maybe_flash (int wing_index, int wing_pos) {
     int index, draw_bright = 0;
 

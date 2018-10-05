@@ -78,23 +78,23 @@ extern sexp_com_order Sexp_comm_orders[];
      COVER_ME_ITEM | ENGAGE_ENEMY_ITEM | DEPART_ITEM |               \
      DISABLE_SUBSYSTEM_ITEM)
 /*
-#define BOMBER_MESSAGES		FIGHTER_MESSAGES			// bombers can do the
+#define BOMBER_MESSAGES         FIGHTER_MESSAGES                        // bombers can do the
 same things as fighters
 
-#define TRANSPORT_MESSAGES	(ATTACK_TARGET_ITEM | CAPTURE_TARGET_ITEM |
+#define TRANSPORT_MESSAGES      (ATTACK_TARGET_ITEM | CAPTURE_TARGET_ITEM |
 DEPART_ITEM )
-#define FREIGHTER_MESSAGES	TRANSPORT_MESSAGES		// freighters can do the
+#define FREIGHTER_MESSAGES      TRANSPORT_MESSAGES              // freighters can do the
 same things as transports
 
-#define CRUISER_MESSAGES	(ATTACK_TARGET_ITEM | DEPART_ITEM)
+#define CRUISER_MESSAGES        (ATTACK_TARGET_ITEM | DEPART_ITEM)
 
-#define CAPITAL_MESSAGES	(DEPART_ITEM)				// can't order capitals
+#define CAPITAL_MESSAGES        (DEPART_ITEM)                           // can't order capitals
 to do much!!!!
 
-#define SUPERCAP_MESSAGES	(0)							// supercaps ignore you
+#define SUPERCAP_MESSAGES       (0)                                                     // supercaps ignore you
 :p
 
-#define SUPPORT_MESSAGES	(REARM_REPAIR_ME_ITEM | ABORT_REARM_REPAIR_ITEM |
+#define SUPPORT_MESSAGES        (REARM_REPAIR_ME_ITEM | ABORT_REARM_REPAIR_ITEM |
 STAY_NEAR_ME_ITEM | STAY_NEAR_TARGET_ITEM | KEEP_SAFE_DIST_ITEM | DEPART_ITEM )
 */
 // these messages require an active target.  They are also the set of messages

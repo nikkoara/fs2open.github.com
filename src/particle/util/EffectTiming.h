@@ -4,7 +4,7 @@
 #define FREESPACE2_PARTICLE_UTIL_EFFECTTIMING_H
 
 #include "particle/ParticleSource.h"
-#include "utils/RandomRange.h"
+#include "util/RandomRange.h"
 
 namespace particle {
 namespace util {

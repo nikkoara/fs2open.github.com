@@ -133,10 +133,10 @@ void anim_play_init (
  * played
  */
 anim_instance* anim_play (anim_play_struct* aps) {
-    Assert (aps->anim_info != NULL);
-    Assert (aps->start_at >= 0);
-    Assert (aps->stop_at < aps->anim_info->total_frames);
-    Assert (
+    ASSERT (aps->anim_info != NULL);
+    ASSERT (aps->start_at >= 0);
+    ASSERT (aps->stop_at < aps->anim_info->total_frames);
+    ASSERT (
         !(aps->looped &&
           aps->ping_pong)); // shouldn't have these both set at once
 
@@ -146,7 +146,7 @@ anim_instance* anim_play (anim_play_struct* aps) {
 
     // Find next free anim instance slot on queue
     instance = GET_FIRST (&anim_free_list);
-    Assert (instance != &anim_free_list); // shouldn't have the dummy element
+    ASSERT (instance != &anim_free_list); // shouldn't have the dummy element
 
     // remove instance from the free list
     list_remove (&anim_free_list, instance);
@@ -164,7 +164,7 @@ anim_instance* anim_play (anim_play_struct* aps) {
     }
     instance->frame = (ubyte*)vm_malloc (
         instance->parent->width * instance->parent->height * 2);
-    Assert (instance->frame != NULL);
+    ASSERT (instance->frame != NULL);
     memset (
         instance->frame, 0,
         instance->parent->width * instance->parent->height * 2);
@@ -246,7 +246,7 @@ anim_instance* anim_play (anim_play_struct* aps) {
  * the screen. This is normally called by the anim_render_all() function.
  *
  * @param instance Pointer to animation instance
- * @param frametime	Time elapsed since last call, in seconds
+ * @param frametime     Time elapsed since last call, in seconds
  */
 int anim_show_next_frame (anim_instance* instance, float frametime) {
     int bitmap_id, bitmap_flags = 0, new_frame_num, frame_diff = 0, i,
@@ -256,7 +256,7 @@ int anim_show_next_frame (anim_instance* instance, float frametime) {
     int aabitmap = 0;
     int bpp = 16;
 
-    Assert (instance != NULL);
+    ASSERT (instance != NULL);
 
     instance->time_elapsed += frametime;
 
@@ -382,8 +382,8 @@ int anim_show_next_frame (anim_instance* instance, float frametime) {
             frame_diff = 1;
         }
     }
-    Assert (frame_diff >= 0);
-    Assert (
+    ASSERT (frame_diff >= 0);
+    ASSERT (
         instance->frame_num >= 0 &&
         instance->frame_num < instance->parent->total_frames);
 
@@ -519,7 +519,7 @@ int anim_show_next_frame (anim_instance* instance, float frametime) {
 
         // NOTE: there is no need to free the instance, since it was
         // pre-allocated as
-        //       part of the anim_free_list
+        // part of the anim_free_list
     }
     else {
         gr_set_bitmap (bitmap_id);
@@ -548,7 +548,7 @@ int anim_show_next_frame (anim_instance* instance, float frametime) {
         }
         else {
             g3_rotate_vertex (&image_vertex, instance->world_pos);
-            Assert (instance->radius != 0.0f);
+            ASSERT (instance->radius != 0.0f);
             // g3_draw_bitmap(&image_vertex, 0, instance->radius*1.5f,
             // TMAP_FLAG_TEXTURED | TMAP_HTL_2D);
             material mat_params;
@@ -569,7 +569,7 @@ int anim_show_next_frame (anim_instance* instance, float frametime) {
  * @brief Stop an anim instance that is on the anim_render_list from playing
  */
 int anim_stop_playing (anim_instance* instance) {
-    Assert (instance != NULL);
+    ASSERT (instance != NULL);
 
     if (anim_playing (instance)) { anim_release_render_instance (instance); }
     return 0;
@@ -582,7 +582,7 @@ int anim_stop_playing (anim_instance* instance) {
  * that is on the anim_render_list
  */
 void anim_release_render_instance (anim_instance* instance) {
-    Assert (instance != NULL);
+    ASSERT (instance != NULL);
 
     if (instance->frame != NULL) vm_free (instance->frame);
 
@@ -604,7 +604,7 @@ void anim_release_render_instance (anim_instance* instance) {
 /**
  * @brief Free all anim instances that are on the anim_render_list.
  *
- * @param screen_id	Optional parameter that lets you only free a subset of the
+ * @param screen_id     Optional parameter that lets you only free a subset of the
  * anim instances. A screen_id of 0 is the default value, and this is used for
  * animations that always play when they are placed on the aim_render_list.
  */
@@ -625,26 +625,26 @@ void anim_release_all_instances (int screen_id) {
 }
 
 // -----------------------------------------------------------------------------
-//	anim_read_header()
+// anim_read_header()
 //
 // Read the header of a .ani file.  Below is the format of a .ani header
 //
-//	#bytes		|	description
-//	2			|	obsolete, kept for compatibility with old versions
-//	2			|	version number
-//	2			|	fps
-//	1			|	transparent red value
-//  1			|	transparent green value
-//	1			|	transparent blue value
-//	2			|	width
-//	2			|	height
-//	2			|	number of frames
-//	1			|	packer code
-//	763			|	palette
-//	2			|	number of key frames
-//	2			|	key frame number	}		repeats
-//	4			|	key frame offset	}		repeats
-//	4			|	compressed data length
+// #bytes          |       description
+// 2                       |       obsolete, kept for compatibility with old versions
+// 2                       |       version number
+// 2                       |       fps
+// 1                       |       transparent red value
+// 1                   |       transparent green value
+// 1                       |       transparent blue value
+// 2                       |       width
+// 2                       |       height
+// 2                       |       number of frames
+// 1                       |       packer code
+// 763                     |       palette
+// 2                       |       number of key frames
+// 2                       |       key frame number        }               repeats
+// 4                       |       key frame offset        }               repeats
+// 4                       |       compressed data length
 //
 void anim_read_header (anim* ptr, CFILE* fp) {
     ptr->width = cfread_short (fp);
@@ -735,7 +735,7 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
     int count, idx;
     char name[PATH_MAX];
 
-    Assert (real_filename != NULL);
+    ASSERT (real_filename != NULL);
 
     strcpy_s (name, real_filename);
     char* p = strchr (name, '.');
@@ -754,12 +754,12 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
         if (!fp) return NULL;
 
         ptr = (anim*)vm_malloc (sizeof (anim));
-        Assert (ptr);
+        ASSERT (ptr);
 
         ptr->flags = 0;
         ptr->next = first_anim;
         first_anim = ptr;
-        Assert (strlen (name) < PATH_MAX - 1);
+        ASSERT (strlen (name) < PATH_MAX - 1);
         strcpy_s (ptr->name, name);
         ptr->instance_count = 0;
         ptr->width = 0;
@@ -771,7 +771,7 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
         anim_read_header (ptr, fp);
 
         if (ptr->width < 0 || ptr->height < 0) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Ani file %s has a faulty header and cannot be loaded.", name);
         }
@@ -779,7 +779,7 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
         if (ptr->num_keys > 0) {
             ptr->keys =
                 (key_frame*)vm_malloc (sizeof (key_frame) * ptr->num_keys);
-            Assert (ptr->keys != NULL);
+            ASSERT (ptr->keys != NULL);
         }
 
         // store how long the anim should take on playback (in seconds)
@@ -826,7 +826,7 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
                 ptr->data = NULL;
                 ptr->cache_file_offset = ptr->file_offset;
                 ptr->cache = (ubyte*)vm_malloc (ANI_STREAM_CACHE_SIZE + 2);
-                Assert (ptr->cache);
+                ASSERT (ptr->cache);
                 cfseek (ptr->cfile_ptr, offset, CF_SEEK_SET);
                 cfread (ptr->cache, ANI_STREAM_CACHE_SIZE, 1, ptr->cfile_ptr);
             }
@@ -861,7 +861,7 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
  * assert.
  */
 int anim_free (anim* ptr) {
-    Assert (ptr != NULL);
+    ASSERT (ptr != NULL);
     anim *list, **prev_anim;
 
     list = first_anim;
@@ -893,7 +893,7 @@ int anim_free (anim* ptr) {
         }
     }
     else {
-        Assert (ptr->data);
+        ASSERT (ptr->data);
         if (ptr->data != NULL) {
             vm_free (ptr->data);
             ptr->data = NULL;
@@ -909,7 +909,7 @@ int anim_free (anim* ptr) {
  * @brief Return if an anim is playing or not.
  */
 int anim_playing (anim_instance* ai) {
-    Assert (ai != NULL);
+    ASSERT (ai != NULL);
     if (ai->frame == NULL)
         return 0;
     else
@@ -999,14 +999,14 @@ void anim_display_info (char* real_filename) {
     anim_read_header (&A, fp);
 
     if (A.width < 0 || A.height < 0) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION, "Ani file %s has a faulty header and cannot be loaded.",
             filename);
     }
 
     // read the keyframe frame nums and offsets
     key_frame_nums = (int*)vm_malloc (sizeof (int) * A.num_keys);
-    Assert (key_frame_nums != NULL);
+    ASSERT (key_frame_nums != NULL);
     if (key_frame_nums == NULL) return;
 
     for (i = 0; i < A.num_keys; i++) {
@@ -1058,7 +1058,7 @@ void anim_reverse_direction (anim_instance* ai) {
 
     // you're not allowed to call anim_reverse_direction(...) unless every
     // frame is a keyframe!!!! The God of Delta-RLE demands it be thus.
-    Assertion (
+    ASSERTX (
         ai->parent->flags & ANF_ALL_KEYFRAMES,
         "Ani was set to play backwards. In order to enable this, all frames "
         "of the animation MUST be keyframes.");
@@ -1101,7 +1101,7 @@ void anim_unpause (anim_instance* ai) { ai->paused = 0; }
 void anim_ignore_next_frametime () { Anim_ignore_frametime = 1; }
 
 int anim_instance_is_streamed (anim_instance* ai) {
-    Assert (ai);
+    ASSERT (ai);
     return (ai->parent->flags & ANF_STREAMED);
 }
 
@@ -1109,9 +1109,9 @@ unsigned char anim_instance_get_byte (anim_instance* ai, int offset) {
     int absolute_offset;
     anim* parent;
 
-    Assert (ai);
-    Assert (ai->parent->cfile_ptr);
-    Assert (ai->parent->flags & ANF_STREAMED);
+    ASSERT (ai);
+    ASSERT (ai->parent->cfile_ptr);
+    ASSERT (ai->parent->flags & ANF_STREAMED);
 
     parent = ai->parent;
     absolute_offset = ai->file_offset + offset;

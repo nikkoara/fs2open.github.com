@@ -60,7 +60,7 @@ void parse_rank_tbl () {
         skip_to_string ("[RANK NAMES]");
         ignore_white_space ();
         while (required_string_either ("#End", "$Name:")) {
-            Assert (idx < NUM_RANKS);
+            ASSERT (idx < NUM_RANKS);
             required_string ("$Name:");
             stuff_string (Ranks[idx].name, F_NAME, NAME_LENGTH);
             required_string ("$Points:");
@@ -79,7 +79,7 @@ void parse_rank_tbl () {
                 if (optional_string ("+Persona:")) {
                     stuff_int (&persona);
                     if (persona < 0) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Debriefing text for %s rank is assigned to an "
                             "invalid persona: %i (must be 0 or greater).\n",
@@ -91,7 +91,7 @@ void parse_rank_tbl () {
             }
             if (Ranks[idx].promotion_text.find (-1) ==
                 Ranks[idx].promotion_text.end ()) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION, "%s rank is missing default debriefing text.\n",
                     Ranks[idx].name);
                 Ranks[idx].promotion_text[-1] = "";
@@ -104,7 +104,7 @@ void parse_rank_tbl () {
         // be sure that all rank points are in order
         for (idx = 0; idx < NUM_RANKS - 1; idx++) {
             if (Ranks[idx].points >= Ranks[idx + 1].points)
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Rank #%d (%s) has a higher \"$Points:\" value (%d) than "
                     "the following rank (%s, %d points). This shouldn't "
@@ -287,7 +287,7 @@ void scoring_eval_rank (scoring_struct* sc) {
 
     // if the ranks do not match, then "grant" the new rank
     if (old_rank != new_rank) {
-        Assert (new_rank >= 0);
+        ASSERT (new_rank >= 0);
         sc->m_promotion_earned = new_rank;
         sc->rank = new_rank;
     }
@@ -412,13 +412,13 @@ void scoring_backout_accept (scoring_struct* score) {
     // if the player was given a medal, take it back
     if (score->m_medal_earned != -1) {
         score->medal_counts[score->m_medal_earned]--;
-        Assert (score->medal_counts[score->m_medal_earned] >= 0);
+        ASSERT (score->medal_counts[score->m_medal_earned] >= 0);
     }
 
     // if the player was promoted, take it back
     if (score->m_promotion_earned != -1) {
         score->rank--;
-        Assert (score->rank >= 0);
+        ASSERT (score->rank >= 0);
     }
 
     score->flight_time -= (unsigned int)f2fl (Missiontime);
@@ -1117,7 +1117,7 @@ void scoring_eval_assists (ship* sp, int killer_sig, bool is_enemy_player) {
 
                 // Don't scale in TvT and dogfight
                 if (is_enemy_player) {
-                    Assert (Game_mode & GM_MULTIPLAYER);
+                    ASSERT (Game_mode & GM_MULTIPLAYER);
                     scoring_scale_factor = 1.0f;
                 }
                 else {
@@ -1344,7 +1344,7 @@ float scoring_get_scale_factor () {
     if (MULTI_DOGFIGHT) { return 1.0f; }
 
     // check for bogus Skill_level values
-    Assert ((Game_skill_level >= 0) && (Game_skill_level < NUM_SKILL_LEVELS));
+    ASSERT ((Game_skill_level >= 0) && (Game_skill_level < NUM_SKILL_LEVELS));
     if ((Game_skill_level < 0) || (Game_skill_level > NUM_SKILL_LEVELS - 1)) {
         return Scoring_scale_factors[0];
     }

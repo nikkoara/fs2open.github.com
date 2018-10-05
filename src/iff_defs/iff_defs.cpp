@@ -69,13 +69,13 @@ int iff_init_color (int r, int g, int b) {
     static int num_iff_colors = 0;
     static temp_color_t temp_colors[MAX_IFF_COLORS];
 
-    Assert (r >= 0 && r <= 255);
-    Assert (g >= 0 && g <= 255);
-    Assert (b >= 0 && b <= 255);
+    ASSERT (r >= 0 && r <= 255);
+    ASSERT (g >= 0 && g <= 255);
+    ASSERT (b >= 0 && b <= 255);
 
     // make sure we're under the limit
     if (num_iff_colors >= MAX_IFF_COLORS) {
-        fs2::dialog::warning (LOCATION, "Too many iff colors!  Ignoring the rest...\n");
+        WARNINGF (LOCATION, "Too many iff colors!  Ignoring the rest...\n");
         return 0;
     }
 
@@ -178,7 +178,7 @@ void iff_init () {
         if (optional_string ("$Dimmed IFF brightness:")) {
             int dim_iff_brightness;
             stuff_int (&dim_iff_brightness);
-            Assert (
+            ASSERT (
                 dim_iff_brightness >= 0 &&
                 dim_iff_brightness <= HUD_COLOR_ALPHA_MAX);
             *iff_color_brightness = dim_iff_brightness;
@@ -198,7 +198,7 @@ void iff_init () {
             (optional_string ("$Missile Blip Colour:"))) {
             stuff_int_list (rgb, 3, RAW_INTEGER_TYPE);
             for (i = 0; i < 3; i++) {
-                Assert (rgb[i] >= 0 && rgb[i] <= 255);
+                ASSERT (rgb[i] >= 0 && rgb[i] <= 255);
                 radar_iff_color[0][1][i] = rgb[i];
                 radar_iff_color[0][0][i] = rgb[i] / 2;
             }
@@ -208,7 +208,7 @@ void iff_init () {
             (optional_string ("$Navbuoy Blip Colour:"))) {
             stuff_int_list (rgb, 3, RAW_INTEGER_TYPE);
             for (i = 0; i < 3; i++) {
-                Assert (rgb[i] >= 0 && rgb[i] <= 255);
+                ASSERT (rgb[i] >= 0 && rgb[i] <= 255);
                 radar_iff_color[1][1][i] = rgb[i];
                 radar_iff_color[1][0][i] = rgb[i] / 2;
             }
@@ -218,7 +218,7 @@ void iff_init () {
             (optional_string ("$Warping Blip Colour:"))) {
             stuff_int_list (rgb, 3, RAW_INTEGER_TYPE);
             for (i = 0; i < 3; i++) {
-                Assert (rgb[i] >= 0 && rgb[i] <= 255);
+                ASSERT (rgb[i] >= 0 && rgb[i] <= 255);
                 radar_iff_color[2][1][i] = rgb[i];
                 radar_iff_color[2][0][i] = rgb[i] / 2;
             }
@@ -228,7 +228,7 @@ void iff_init () {
             (optional_string ("$Node Blip Colour:"))) {
             stuff_int_list (rgb, 3, RAW_INTEGER_TYPE);
             for (i = 0; i < 3; i++) {
-                Assert (rgb[i] >= 0 && rgb[i] <= 255);
+                ASSERT (rgb[i] >= 0 && rgb[i] <= 255);
                 radar_iff_color[3][1][i] = rgb[i];
                 radar_iff_color[3][0][i] = rgb[i] / 2;
             }
@@ -238,7 +238,7 @@ void iff_init () {
             (optional_string ("$Tagged Blip Colour:"))) {
             stuff_int_list (rgb, 3, RAW_INTEGER_TYPE);
             for (i = 0; i < 3; i++) {
-                Assert (rgb[i] >= 0 && rgb[i] <= 255);
+                ASSERT (rgb[i] >= 0 && rgb[i] <= 255);
                 radar_iff_color[4][1][i] = rgb[i];
                 radar_iff_color[4][0][i] = rgb[i] / 2;
             }
@@ -281,7 +281,7 @@ void iff_init () {
 
             // make sure we're under the limit
             if (Num_iffs >= MAX_IFFS) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION, "Too many iffs in iffs_defs.tbl!  Max is %d.\n",
                     MAX_IFFS);
                 skip_to_start_of_string ("#End", NULL);
@@ -368,7 +368,7 @@ void iff_init () {
                                  flag_strings[string_idx]))
                         iff->flags |= IFFF_WING_NAME_HIDDEN;
                     else
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION, "Bogus string in iff flags: %s\n",
                             flag_strings[string_idx]);
                 }
@@ -403,7 +403,7 @@ void iff_init () {
         Iff_traitor = iff_lookup (traitor_name);
         if (Iff_traitor < 0) {
             Iff_traitor = 0;
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Traitor IFF %s not found in iff_defs.tbl!  Defaulting to "
                 "%s.\n",
@@ -433,7 +433,7 @@ void iff_init () {
                     if (target_iff >= 0)
                         iff->attackee_bitmask |= iff_get_mask (target_iff);
                     else
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Attack target IFF %s not found for IFF %s in "
                             "iff_defs.tbl!\n",
@@ -452,7 +452,7 @@ void iff_init () {
                             observed_color_table[cur_iff][list_index]
                                 .color_index;
                     else
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Observed color IFF %s not found for IFF %s in "
                             "iff_defs.tbl!\n",
@@ -506,7 +506,7 @@ void iff_init () {
  */
 int iff_lookup (const char* iff_name) {
     // bogus
-    Assert (iff_name);
+    ASSERT (iff_name);
 
     if (iff_name == NULL) return -1;
 
@@ -523,9 +523,9 @@ int iff_lookup (const char* iff_name) {
  * @return Bitmask
  */
 int iff_get_attackee_mask (int attacker_team) {
-    Assert (attacker_team >= 0 && attacker_team < Num_iffs);
+    ASSERT (attacker_team >= 0 && attacker_team < Num_iffs);
 
-    //	All teams attack all other teams.
+    // All teams attack all other teams.
     if (Mission_all_attack) {
         return Iff_info[attacker_team].attackee_bitmask_all_teams_at_war;
     }
@@ -542,7 +542,7 @@ int iff_get_attackee_mask (int attacker_team) {
  * @return Bitmask
  */
 int iff_get_attacker_mask (int attackee_team) {
-    Assert (attackee_team >= 0 && attackee_team < Num_iffs);
+    ASSERT (attackee_team >= 0 && attackee_team < Num_iffs);
 
     int i, attacker_bitmask = 0;
     for (i = 0; i < Num_iffs; i++) {
@@ -595,9 +595,9 @@ color* iff_get_color (int color_index, int is_bright) {
  * Get the color index, taking objective vs. subjective into account
  */
 color* iff_get_color_by_team (int team, int seen_from_team, int is_bright) {
-    Assert (team >= 0 && team < Num_iffs);
-    Assert (seen_from_team < Num_iffs);
-    Assert (is_bright == 0 || is_bright == 1);
+    ASSERT (team >= 0 && team < Num_iffs);
+    ASSERT (seen_from_team < Num_iffs);
+    ASSERT (is_bright == 0 || is_bright == 1);
 
     // is this guy being seen by anyone?
     if (seen_from_team < 0)
@@ -606,12 +606,12 @@ color* iff_get_color_by_team (int team, int seen_from_team, int is_bright) {
     // Goober5000 - base the following on "sees X as" from iff code
     // c.f. AL's comment:
 
-    // AL 12-26-97:	it seems IFF color needs to be set relative to the player
+    // AL 12-26-97:     it seems IFF color needs to be set relative to the player
     // team.  If
-    //						the team in question is the same as the player,
+    // the team in question is the same as the player,
     // then it
-    // should be 						drawn friendly.  If the team is different
-    // than the player's, then draw the 						appropriate
+    // should be                                                drawn friendly.  If the team is different
+    // than the player's, then draw the                                                 appropriate
     // IFF.
 
     // assume an observed color is defined; if not, use normal color
@@ -628,9 +628,9 @@ color* iff_get_color_by_team (int team, int seen_from_team, int is_bright) {
  */
 color* iff_get_color_by_team_and_object (
     int team, int seen_from_team, int is_bright, object* objp) {
-    Assert (team >= 0 && team < Num_iffs);
-    Assert (seen_from_team < Num_iffs);
-    Assert (is_bright == 0 || is_bright == 1);
+    ASSERT (team >= 0 && team < Num_iffs);
+    ASSERT (seen_from_team < Num_iffs);
+    ASSERT (is_bright == 0 || is_bright == 1);
 
     int alt_color_index = -1;
 

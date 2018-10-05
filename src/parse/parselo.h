@@ -7,7 +7,7 @@
 #include "globalincs/globals.h"
 #include "globalincs/pstypes.h"
 #include "globalincs/flagset.h"
-#include "utils/unicode.h"
+#include "util/unicode.h"
 
 #include <cinttypes>
 #include <exception>
@@ -48,8 +48,8 @@ extern int Token_found_flag;
 #define SHIP_TYPE \
     0 // used to identify which kind of array to do a search for a name in
 #define SHIP_INFO_TYPE 1
-#define WEAPON_LIST_TYPE 2 //	to parse an int_list of weapons
-#define RAW_INTEGER_TYPE 3 //	to parse a list of integers
+#define WEAPON_LIST_TYPE 2 // to parse an int_list of weapons
+#define RAW_INTEGER_TYPE 3 // to parse a list of integers
 #define WEAPON_POOL_TYPE 4
 
 // Karajorma - Used by the stuff_ship_list and stuff_weapon_list SEXPs
@@ -142,7 +142,7 @@ extern char*
 alloc_block (const char* startstr, const char* endstr, int extra_chars = 0);
 
 // Exactly the same as stuff string only Malloc's the buffer.
-//	Supports various FreeSpace primitive types.  If 'len' is supplied, it will
+// Supports various FreeSpace primitive types.  If 'len' is supplied, it will
 // override
 // the default string length if using the F_NAME case.
 extern char* stuff_and_malloc_string (int type, char* terminators = NULL);
@@ -174,7 +174,7 @@ int parse_string_flag_list (
         for (size_t j = 0; j < n_defs; j++) {
             if (!strcasecmp (slp[i], defs[j].name)) {
                 if (defs[j].in_use) {
-                    Assertion (
+                    ASSERTX (
                         defs[j].def != T::NUM_VALUES,
                         "Error in definition for flag_def_list, flag '%s' has "
                         "been given an invalid value but is still marked as "

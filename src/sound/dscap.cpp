@@ -26,8 +26,8 @@ static ALCdevice* ds_capture_device = NULL;
 static std::string capture_dev_name;
 
 // init the capture system
-// exit:	0	->		success
-//			!0	->		failure
+// exit:        0       ->              success
+// !0      ->              failure
 int dscap_init () {
     if (dscap_inited) { return 0; }
 
@@ -52,8 +52,8 @@ void dscap_release_buffer () {
 }
 
 // create a capture buffer with the specified format
-// exit:	0	->		buffer created successfully
-//			!0	->		error creating the buffer
+// exit:        0       ->              buffer created successfully
+// !0      ->              error creating the buffer
 int dscap_create_buffer (
     int freq, int bits_per_sample, int nchannels, int nseconds) {
     ALenum al_format = AL_FORMAT_MONO8;
@@ -66,8 +66,8 @@ int dscap_create_buffer (
         return -1;
     }
 
-    Assert ((nchannels == 1) || (nchannels == 2));
-    Assert ((bits_per_sample == 8) || (bits_per_sample == 16));
+    ASSERT ((nchannels == 1) || (nchannels == 2));
+    ASSERT ((bits_per_sample == 8) || (bits_per_sample == 16));
 
     if (nchannels == 1) {
         if (bits_per_sample == 8) { al_format = AL_FORMAT_MONO8; }
@@ -116,7 +116,7 @@ int dscap_start_record () {
 
     dscap_recording = 1;
 
-    //	nprintf(("Alan","RTVOICE => start record\n"));
+    // nprintf(("Alan","RTVOICE => start record\n"));
 
     return 0;
 }
@@ -131,7 +131,7 @@ int dscap_stop_record () {
 
     dscap_recording = 0;
 
-    //	nprintf(("Alan","RTVOICE => stop record\n"));
+    // nprintf(("Alan","RTVOICE => stop record\n"));
 
     return 0;
 }

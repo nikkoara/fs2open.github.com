@@ -10,11 +10,11 @@
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
 // 1. The origin of this software must not be misrepresented; you must not
-//    claim that you wrote the original software. If you use this software
-//    in a product, an acknowledgment in the product documentation would be
-//    appreciated but is not required.
+// claim that you wrote the original software. If you use this software
+// in a product, an acknowledgment in the product documentation would be
+// appreciated but is not required.
 // 2. Altered source versions must be plainly marked as such, and must not be
-//    misrepresented as being the original software.
+// misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 //
 
@@ -239,9 +239,9 @@ void nvgGlobalAlpha (NVGcontext* ctx, float alpha);
 // The paths, gradients, patterns and scissor region are transformed by an
 // transformation matrix at the time when they are passed to the API. The
 // current transformation matrix is a affine matrix:
-//   [sx kx tx]
-//   [ky sy ty]
-//   [ 0  0  1]
+// [sx kx tx]
+// [ky sy ty]
+// [ 0  0  1]
 // Where: sx,sy define scaling, kx,ky skewing, and tx,ty translation.
 // The last row is assumed to be 0,0,1 and is not stored.
 //
@@ -257,9 +257,9 @@ void nvgResetTransform (NVGcontext* ctx);
 
 // Premultiplies current coordinate system by specified matrix.
 // The parameters are interpreted as matrix as follows:
-//   [a c e]
-//   [b d f]
-//   [0 0 1]
+// [a c e]
+// [b d f]
+// [0 0 1]
 void nvgTransform (
     NVGcontext* ctx, float a, float b, float c, float d, float e, float f);
 
@@ -282,9 +282,9 @@ void nvgScale (NVGcontext* ctx, float x, float y);
 
 // Stores the top part (a-f) of the current transformation matrix in to the
 // specified buffer.
-//   [a c e]
-//   [b d f]
-//   [0 0 1]
+// [a c e]
+// [b d f]
+// [0 0 1]
 // There should be space for 6 floats in the return buffer for the values a-f.
 void nvgCurrentTransform (NVGcontext* ctx, float* xform);
 
@@ -525,11 +525,11 @@ void nvgStroke (NVGcontext* ctx);
 // While this may sound a little odd, the setup allows you to always render the
 // same way regardless of scaling. I.e. following works regardless of scaling:
 //
-//		const char* txt = "Text me up.";
-//		nvgTextBounds(vg, x,y, txt, NULL, bounds);
-//		nvgBeginPath(vg);
-//		nvgRoundedRect(vg, bounds[0],bounds[1], bounds[2]-bounds[0],
-// bounds[3]-bounds[1]); 		nvgFill(vg);
+// const char* txt = "Text me up.";
+// nvgTextBounds(vg, x,y, txt, NULL, bounds);
+// nvgBeginPath(vg);
+// nvgRoundedRect(vg, bounds[0],bounds[1], bounds[2]-bounds[0],
+// bounds[3]-bounds[1]);                nvgFill(vg);
 //
 // Note: currently only solid color fill is supported for text.
 

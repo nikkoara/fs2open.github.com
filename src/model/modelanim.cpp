@@ -35,7 +35,7 @@ int model_anim_match_type (char* p) {
 
     // Goober5000 - misspelling
     if (!strncasecmp (p, "inital", 6) || !strncasecmp (p, "\"inital\"", 8)) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Spelling error in table file.  Please change \"inital\" to "
             "\"initial\".");
@@ -300,7 +300,7 @@ void triggered_rotation::add_queue (queued_animation* the_queue, int dir) {
         }
     }
 
-    Assert (new_queue.start >= 0);
+    ASSERT (new_queue.start >= 0);
 
     // starts that many milliseconds from now
     new_queue.start_time = timestamp (new_queue.start);
@@ -437,9 +437,9 @@ at
 
 void model_anim_submodel_trigger_rotate (
     model_subsystem* psub, ship_subsys* ss) {
-    Assert (psub != NULL);
-    Assert (ss != NULL);
-    Assert (psub->flags[Model::Subsystem_Flags::Triggered]);
+    ASSERT (psub != NULL);
+    ASSERT (ss != NULL);
+    ASSERT (psub->flags[Model::Subsystem_Flags::Triggered]);
 
     if (ss->triggered_rotation_index < 0) {
         mprintf (
@@ -620,8 +620,8 @@ void model_anim_submodel_trigger_rotate (
 // Checks if the given subtype matches a particular animation
 bool subtype_check (
     model_subsystem* psub, queued_animation* anim_q, int subtype) {
-    Assert (psub != NULL);
-    Assert (anim_q != NULL);
+    ASSERT (psub != NULL);
+    ASSERT (anim_q != NULL);
 
     if ((subtype == ANIMATION_SUBTYPE_ALL) ||
         (anim_q->subtype == ANIMATION_SUBTYPE_ALL))
@@ -651,7 +651,7 @@ bool subtype_check (
 bool model_anim_start_type (
     ship_subsys* pss, int animation_type, int subtype, int direction,
     bool instant) {
-    Assert (pss != NULL);
+    ASSERT (pss != NULL);
 
     if (pss->max_hits > 0 &&
         pss->current_hits <=
@@ -852,7 +852,7 @@ void model_anim_fix_reverse_times (ship_info* sip) {
  */
 int model_anim_get_time_type (
     ship_subsys* pss, int animation_type, int subtype) {
-    Assert (pss != NULL);
+    ASSERT (pss != NULL);
 
     if (pss->max_hits > 0 &&
         pss->current_hits <=
@@ -1027,7 +1027,7 @@ void model_anim_set_initial_states (ship* shipp) {
  * Handles multiplayer-safe, client-side, animations
  */
 void model_anim_handle_multiplayer (ship* shipp) {
-    Assert (shipp != NULL);
+    ASSERT (shipp != NULL);
 
     ship_subsys* pss;
     model_subsystem* psub;

@@ -22,8 +22,8 @@ void UI_LISTBOX::link_hotspot (int up_button_num, int down_button_num) {
 //
 // Call the UI_SCROLLBAR::set_bmaps() function for the scroll bar gadget.
 //
-// returns:		-1 ==> error
-//					 0 ==> success
+// returns:             -1 ==> error
+// 0 ==> success
 //
 int UI_LISTBOX::set_bmaps (
     char* lbox_fname, char* b_up_fname, char* b_down_fname, char* sb_fname) {
@@ -134,7 +134,7 @@ void UI_LISTBOX::draw () {
         if (i != current_item) {
             /*
                         if ((current_item == -1) && (my_wnd->selected_gadget ==
-               this ) && (i == first_item)  )	{ if ( !uses_bmaps ) {
+               this ) && (i == first_item)  )   { if ( !uses_bmaps ) {
                                 gr_set_color_fast( &CBLACK );
                                 gr_rect( x1, y1, w1+2, h1,
                GR_RESIZE_MENU_NO_OFFSET );
@@ -222,9 +222,9 @@ void UI_LISTBOX::process (int focus) {
         old_current_item = current_item;
         old_first_item = first_item;
 
-        //		if (my_wnd->selected_gadget == this) {
-        //			my_wnd->selected_gadget == get_next();
-        //		}
+        // if (my_wnd->selected_gadget == this) {
+        // my_wnd->selected_gadget == get_next();
+        // }
 
         return;
     }
@@ -237,7 +237,7 @@ void UI_LISTBOX::process (int focus) {
     if (has_scrollbar) {
         if (scrollbar.moved) {
             first_item = scrollbar.position;
-            Assert (first_item >= 0);
+            ASSERT (first_item >= 0);
 
             if (current_item < first_item) current_item = first_item;
 

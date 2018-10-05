@@ -7,7 +7,7 @@
 #include "particle/ParticleEffect.h"
 #include "particle/ParticleManager.h"
 #include "particle/util/ParticleProperties.h"
-#include "utils/RandomRange.h"
+#include "util/RandomRange.h"
 
 namespace particle {
 namespace effects {
@@ -81,7 +81,7 @@ private:
             return out;
         }
         default:
-            fs2::dialog::error (LOCATION, "Unhandled direction value!");
+            ASSERTF (LOCATION, "Unhandled direction value!");
             return vmd_zero_vector;
         }
     }

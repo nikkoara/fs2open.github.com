@@ -615,7 +615,7 @@ void multi_ts_do () {
         break;
 
     case KEY_ENTER | KEY_CTRLED:
-        //	multi_ts_commit_pressed();
+        // multi_ts_commit_pressed();
         Commit_pressed = 1;
         break;
     }
@@ -900,7 +900,7 @@ void multi_ts_assign_players_all () {
         NET_PLAYER_INDEX (Netgame.host), &Objects[Ships[shipnum].objnum],
         Ships[shipnum].ship_info_index);
     Netgame.host->p_info.ship_index = slot_index;
-    Assert (Netgame.host->p_info.ship_index >= 0);
+    ASSERT (Netgame.host->p_info.ship_index >= 0);
     Netgame.host->p_info.ship_class = Ships[shipnum].ship_info_index;
     Netgame.host->m_player->objnum = Ships[shipnum].objnum;
 
@@ -915,7 +915,7 @@ void multi_ts_assign_players_all () {
             multi_ts_get_team_and_slot (
                 Ships[objp->instance].ship_name, &team_index, &slot_index,
                 true);
-            Assert ((team_index != -1) && (slot_index != -1));
+            ASSERT ((team_index != -1) && (slot_index != -1));
 
             // in a team vs. team situation
             if (Netgame.type_flags & NG_TYPE_TEAM) {
@@ -952,7 +952,7 @@ void multi_ts_assign_players_all () {
                 multi_assign_player_ship (
                     idx, objp, Ships[objp->instance].ship_info_index);
                 Net_players[idx].p_info.ship_index = slot_index;
-                Assert (Net_players[idx].p_info.ship_index >= 0);
+                ASSERT (Net_players[idx].p_info.ship_index >= 0);
                 Net_players[idx].p_info.ship_class =
                     Ships[objp->instance].ship_info_index;
                 Net_players[idx].m_player->objnum = OBJ_INDEX (objp);
@@ -1018,7 +1018,7 @@ void multi_ts_create_wings () {
     // this function! the standalone and all other clients will have this
     // equivalent function performed whey they receive the
     // post_sync_data_packet!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    Assert (!(Game_mode & GM_STANDALONE_SERVER));
+    ASSERT (!(Game_mode & GM_STANDALONE_SERVER));
 
     // check status of all ships and delete or change ship type as necessary
     Multi_ts_num_deleted = 0;
@@ -1029,7 +1029,7 @@ void multi_ts_create_wings () {
                 int objnum;
 
                 // set the ship type appropriately
-                Assert (Wss_slots_teams[idx][s_idx].ship_class >= 0);
+                ASSERT (Wss_slots_teams[idx][s_idx].ship_class >= 0);
 
                 objnum = Multi_ts_team[idx].multi_ts_objnum[s_idx];
                 change_ship_type (
@@ -1046,7 +1046,7 @@ void multi_ts_create_wings () {
             else if (
                 Multi_ts_team[idx].multi_ts_flag[s_idx] ==
                 MULTI_TS_FLAG_EMPTY) {
-                Assert (Multi_ts_team[idx].multi_ts_objnum[s_idx] >= 0);
+                ASSERT (Multi_ts_team[idx].multi_ts_objnum[s_idx] >= 0);
 
                 // mark the object as having been deleted
                 Multi_ts_deleted_objnums[Multi_ts_num_deleted] =
@@ -1086,7 +1086,7 @@ void multi_ts_handle_player_drop () {
             if ((Multi_ts_team[idx].multi_ts_player[s_idx] != NULL) &&
                 !MULTI_CONNECTED (
                     (*Multi_ts_team[idx].multi_ts_player[s_idx]))) {
-                Assert (Multi_ts_team[idx].multi_ts_objnum[s_idx] != -1);
+                ASSERT (Multi_ts_team[idx].multi_ts_objnum[s_idx] != -1);
                 Multi_ts_team[idx].multi_ts_player[s_idx] = NULL;
                 Objects[Multi_ts_team[idx].multi_ts_objnum[s_idx]]
                     .flags.remove (Object::Object_Flags::Player_ship);
@@ -1112,10 +1112,10 @@ void multi_ts_lock_pressed () {
     }
 
     if (Netgame.type_flags & NG_TYPE_TEAM) {
-        Assert (Net_player->flags & NETINFO_FLAG_TEAM_CAPTAIN);
+        ASSERT (Net_player->flags & NETINFO_FLAG_TEAM_CAPTAIN);
     }
     else {
-        Assert (Net_player->flags & NETINFO_FLAG_GAME_HOST);
+        ASSERT (Net_player->flags & NETINFO_FLAG_GAME_HOST);
     }
     gamesnd_play_iface (InterfaceSounds::USER_SELECT);
 
@@ -1198,7 +1198,7 @@ void multi_ts_button_pressed (int n) {
     case MULTI_TS_SHIPS_UP: multi_ts_avail_scroll_up (); break;
     // free ship/weapon select
     case MULTI_TS_LOCK:
-        Assert (Game_mode & GM_MULTIPLAYER);
+        ASSERT (Game_mode & GM_MULTIPLAYER);
         // the "lock" button has been pressed
         multi_ts_lock_pressed ();
 
@@ -1209,7 +1209,7 @@ void multi_ts_button_pressed (int n) {
         break;
     // commit button
     case MULTI_TS_COMMIT:
-        //	multi_ts_commit_pressed();
+        // multi_ts_commit_pressed();
         Commit_pressed = 1;
         break;
     default: gamesnd_play_iface (InterfaceSounds::GENERAL_FAIL); break;
@@ -1291,11 +1291,11 @@ void multi_ts_init_graphics () {
         &Multi_ts_buttons[gr_screen.res][MULTI_TS_LOCK].button,
         UI_XSTR_COLOR_GREEN);
 
-    //	Multi_ts_window.add_XSTR("Help", 928,
+    // Multi_ts_window.add_XSTR("Help", 928,
     // Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_HELP_BUTTON].xt,
     // Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_HELP_BUTTON].yt,
     //&Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_HELP_BUTTON].button,
-    // UI_XSTR_COLOR_GREEN); 	Multi_ts_window.add_XSTR("Options", 1036,
+    // UI_XSTR_COLOR_GREEN);    Multi_ts_window.add_XSTR("Options", 1036,
     // Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_OPTIONS_BUTTON].xt,
     // Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_OPTIONS_BUTTON].yt,
     //&Multi_ts_buttons[Current_screen-1][gr_screen.res][COMMON_OPTIONS_BUTTON].button,
@@ -1798,7 +1798,7 @@ void multi_ts_blit_ship_info () {
 
     // blit the _short_ text description
 
-    Assert (Multi_ts_ship_info_line_count < 3);
+    ASSERT (Multi_ts_ship_info_line_count < 3);
     gr_set_color_fast (&Color_normal);
     for (int idx = 0; idx < Multi_ts_ship_info_line_count; idx++) {
         gr_string (
@@ -1901,7 +1901,7 @@ bool multi_ts_validate_ship (char* shipname, char* wingname) {
     if (strlen (shipname) < (strlen (wingname) + 2)) { return false; }
 
     wing_idx = wing_lookup (wingname);
-    Assert (wing_idx >= 0 && wing_idx < MAX_WINGS);
+    ASSERT (wing_idx >= 0 && wing_idx < MAX_WINGS);
     wing_number = atoi (shipname + strlen (wingname));
 
     if (wing_number > 0 && wing_number <= Wings[wing_idx].wave_count) {
@@ -1922,7 +1922,7 @@ void multi_ts_get_team_and_slot (
 
     // if we're in team vs. team mode
     if (Netgame.type_flags & NG_TYPE_TEAM) {
-        Assert (MAX_TVT_WINGS == MULTI_TS_MAX_TVT_TEAMS);
+        ASSERT (MAX_TVT_WINGS == MULTI_TS_MAX_TVT_TEAMS);
         for (idx = 0; idx < MAX_TVT_WINGS; idx++) {
             // get team (wing)
             if (!strncasecmp (
@@ -1934,7 +1934,7 @@ void multi_ts_get_team_and_slot (
 
                 // just Assert(), if this is wrong then we're pretty much
                 // screwed either way
-                Assert ((*slot_index >= 0) && (*slot_index < MAX_WSS_SLOTS));
+                ASSERT ((*slot_index >= 0) && (*slot_index < MAX_WSS_SLOTS));
             }
         }
     }
@@ -1952,7 +1952,7 @@ void multi_ts_get_team_and_slot (
 
                 // just Assert(), if this is wrong then we're pretty much
                 // screwed either way
-                Assert ((ship >= 0) && (ship < MULTI_TS_NUM_SHIP_SLOTS_TEAM));
+                ASSERT ((ship >= 0) && (ship < MULTI_TS_NUM_SHIP_SLOTS_TEAM));
 
                 // team is 0, slot is the starting slot for all ships
                 *team_index = 0;
@@ -1961,7 +1961,7 @@ void multi_ts_get_team_and_slot (
         }
     }
     if (mantis2757switch)
-        Assert (
+        ASSERT (
             (*team_index != -1) &&
             (*slot_index != -1)); // For tracking down Mantis 2757 - Valathil
 }
@@ -1970,11 +1970,11 @@ void multi_ts_get_team_and_slot (
 // team and slot parameters
 void multi_ts_get_shipname (char* ship_name, int team, int slot_index) {
     if (Netgame.type_flags & NG_TYPE_TEAM) {
-        Assert ((team >= 0) && (team < MULTI_TS_MAX_TVT_TEAMS));
+        ASSERT ((team >= 0) && (team < MULTI_TS_MAX_TVT_TEAMS));
         wing_bash_ship_name (ship_name, TVT_wing_names[team], slot_index);
     }
     else {
-        Assert (team == 0);
+        ASSERT (team == 0);
         wing_bash_ship_name (
             ship_name,
             Starting_wing_names[slot_index / MULTI_TS_NUM_SHIP_SLOTS_TEAM],
@@ -2075,7 +2075,7 @@ void multi_ts_handle_mouse () {
     ship_class = -1;
     if (snazzy_region != -1) {
         region_type = multi_ts_region_type (snazzy_region);
-        Assert (region_type != -1);
+        ASSERT (region_type != -1);
 
         // determine what type of region the mouse is over and the appropriate
         // index
@@ -2859,7 +2859,7 @@ int multi_ts_get_team (char* ship_name) {
     int idx; //,s_idx;
 
     // lookup through all team ship names
-    Assert (MAX_TVT_WINGS == MULTI_TS_MAX_TVT_TEAMS);
+    ASSERT (MAX_TVT_WINGS == MULTI_TS_MAX_TVT_TEAMS);
     for (idx = 0; idx < MAX_TVT_WINGS; idx++) {
         if (!strncasecmp (
                 ship_name, TVT_wing_names[idx], strlen (TVT_wing_names[idx])))
@@ -2934,7 +2934,7 @@ void multi_ts_select_ship () {
     memset (Multi_ts_ship_info_text, 0, MULTI_TS_SHIP_INFO_MAX_TEXT);
 
     // get the selected ship class
-    Assert (Multi_ts_select_index >= 0);
+    ASSERT (Multi_ts_select_index >= 0);
     Multi_ts_select_ship_class = -1;
     switch (Multi_ts_select_type) {
     case MULTI_TS_SLOT_LIST:
@@ -2955,8 +2955,8 @@ void multi_ts_select_ship () {
 
     // split the text info up
 
-    Assert (Multi_ts_select_ship_class >= 0);
-    //	Assert((Ship_info[Multi_ts_select_ship_class].desc != NULL) &&
+    ASSERT (Multi_ts_select_ship_class >= 0);
+    // Assert((Ship_info[Multi_ts_select_ship_class].desc != NULL) &&
     // strlen(Ship_info[Multi_ts_select_ship_class].desc));
     if (Ship_info[Multi_ts_select_ship_class].desc != NULL) {
         // strip out newlines
@@ -2983,7 +2983,7 @@ void multi_ts_select_ship () {
 
             // copy the split up lines into the text lines array
             for (int idx = 0; idx < n_lines; idx++) {
-                Assert (n_chars[idx] < MULTI_TS_SHIP_INFO_MAX_LINE_LEN);
+                ASSERT (n_chars[idx] < MULTI_TS_SHIP_INFO_MAX_LINE_LEN);
                 strncpy (
                     Multi_ts_ship_info_lines[idx], p_str[idx], n_chars[idx]);
                 Multi_ts_ship_info_lines[idx][n_chars[idx]] = 0;
@@ -3185,7 +3185,7 @@ void send_pslot_update_packet (int team, int code, interface_snd_id sound) {
         break;
     case TS_CODE_PLAYER_UPDATE:
         // only the host should ever be doing this
-        Assert (Net_player->flags & NETINFO_FLAG_GAME_HOST);
+        ASSERT (Net_player->flags & NETINFO_FLAG_GAME_HOST);
 
         // add individual slot data
         for (idx = 0; idx < MAX_WSS_SLOTS; idx++) {
@@ -3280,7 +3280,7 @@ void process_pslot_update_packet (ubyte* data, header* hinfo) {
     if (Net_player->flags & NETINFO_FLAG_AM_MASTER) {
         // fill in the address information of where this came from
         player_index = find_player_id (hinfo->id);
-        Assert (player_index != -1);
+        ASSERT (player_index != -1);
     }
 
     // get the opcode
@@ -3315,13 +3315,13 @@ void process_pslot_update_packet (ubyte* data, header* hinfo) {
             // in team vs team mode, only a team captain should ever be sending
             // this
             if (Netgame.type_flags & NG_TYPE_TEAM) {
-                Assert (
+                ASSERT (
                     Net_players[player_index].flags &
                     NETINFO_FLAG_TEAM_CAPTAIN);
             }
             // in any other mode, it better be coming from the game host
             else {
-                Assert (
+                ASSERT (
                     Net_players[player_index].flags & NETINFO_FLAG_GAME_HOST);
             }
 

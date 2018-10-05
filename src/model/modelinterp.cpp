@@ -233,8 +233,8 @@ void model_allocate_interp_data (int n_verts, int n_norms) {
         dealloc = 1;
     }
 
-    Assert ((n_verts >= 0) && (n_norms >= 0));
-    Assert (
+    ASSERT ((n_verts >= 0) && (n_norms >= 0));
+    ASSERT (
         (n_verts || Num_interp_verts_allocated) &&
         (n_norms || Num_interp_norms_allocated));
 
@@ -298,12 +298,12 @@ void model_allocate_interp_data (int n_verts, int n_norms) {
 
     // check that everything is still usable (works in release and debug
     // builds)
-    Verify (Interp_points != NULL);
-    Verify (Interp_splode_points != NULL);
-    Verify (Interp_verts != NULL);
-    Verify (Interp_splode_verts != NULL);
-    Verify (Interp_norms != NULL);
-    Verify (Interp_light_applied != NULL);
+    ASSERT (Interp_points != NULL);
+    ASSERT (Interp_splode_points != NULL);
+    ASSERT (Interp_verts != NULL);
+    ASSERT (Interp_splode_verts != NULL);
+    ASSERT (Interp_norms != NULL);
+    ASSERT (Interp_light_applied != NULL);
 }
 
 void interp_clear_instance () {
@@ -462,7 +462,7 @@ void model_interp_defpoints (ubyte* p, polymodel* pm, bsp_info* sm) {
 
     dest = Interp_points;
 
-    Assert (dest != NULL);
+    ASSERT (dest != NULL);
 
 #ifndef NDEBUG
     modelstats_num_verts += nverts;
@@ -873,7 +873,7 @@ void interp_render_arc_segment (vec3d* v1, vec3d* v2, int depth) {
     if ((d < scaler) || (depth > 4)) {
         // the real limit appears to be 33, so we should never hit this unless
         // the code changes
-        Assert (Num_arc_segment_points < MAX_ARC_SEGMENT_POINTS);
+        ASSERT (Num_arc_segment_points < MAX_ARC_SEGMENT_POINTS);
 
         memcpy (
             &Arc_segment_points[Num_arc_segment_points++], v2, sizeof (vec3d));
@@ -966,14 +966,14 @@ void model_render_shields (polymodel* pm, uint flags) {
 
     gr_set_color (0, 0, 200);
 
-    //	Scan all the triangles in the mesh.
+    // Scan all the triangles in the mesh.
     for (i = 0; i < pm->shield.ntris; i++) {
         tri = &pm->shield.tris[i];
 
         if (g3_check_normal_facing (
                 &pm->shield.verts[tri->verts[0]].pos, &tri->norm)) {
-            //	Process the vertices.
-            //	Note this rotates each vertex each time it's needed, very dumb.
+            // Process the vertices.
+            // Note this rotates each vertex each time it's needed, very dumb.
             for (j = 0; j < 3; j++) {
                 g3_rotate_vertex (&tmp, &pm->shield.verts[tri->verts[j]].pos);
 
@@ -1009,7 +1009,7 @@ int model_get_rotated_bitmap_points (
     float sa, ca;
     int i;
 
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
     sa = sinf (angle);
     ca = cosf (angle);
@@ -1141,14 +1141,14 @@ float interp_closest_dist_to_box (
 
 // Finds the closest point on a model to a point in space.  Actually only finds
 // a point on the bounding box of the model. Given:
-//   model_num      Which model
-//   orient         Orientation of the model
-//   pos            Position of the model
-//   eye_pos        Point that you want to find the closest point to
+// model_num      Which model
+// orient         Orientation of the model
+// pos            Position of the model
+// eye_pos        Point that you want to find the closest point to
 // Returns:
-//   distance from eye_pos to closest_point.  0 means eye_pos is
-//   on or inside the bounding box.
-//   Also fills in outpnt with the actual closest point.
+// distance from eye_pos to closest_point.  0 means eye_pos is
+// on or inside the bounding box.
+// Also fills in outpnt with the actual closest point.
 float model_find_closest_point (
     vec3d* /*outpnt*/, int model_num, int submodel_num, matrix* orient,
     vec3d* pos, vec3d* eye_pos) {
@@ -1275,7 +1275,7 @@ void submodel_get_two_random_points (
     // two) to be found
     if (nv <= 0) {
         polymodel* pm = model_get (model_num);
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Model %d ('%s') must have at least one point from "
             "submodel_get_points_internal!",
@@ -1294,7 +1294,7 @@ void submodel_get_two_random_points (
         static int submodel_get_two_random_points_warned = false;
         if (!submodel_get_two_random_points_warned) {
             polymodel* pm = model_get (model_num);
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "RAND_MAX is only %d, but submodel %d for model %s has %d "
                 "vertices!  Explosions will not propagate through the entire "
@@ -1344,7 +1344,7 @@ void submodel_get_two_random_points_better (
         // because of the less immediate expectation for at least one point
         // (preferably two) to be found
         if (nv <= 0) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Model %d ('%s') must have at least one point from "
                 "submodel_get_points_internal!",
@@ -1361,7 +1361,7 @@ void submodel_get_two_random_points_better (
         if (RAND_MAX < nv) {
             static int submodel_get_two_random_points_warned = false;
             if (!submodel_get_two_random_points_warned) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "RAND_MAX is only %d, but submodel %d for model %s has %d "
                     "vertices!  Explosions will not propagate through the "
@@ -1688,21 +1688,21 @@ void model_page_out_textures (int model_num, bool release) {
         glow_point_bank* bank = &pm->glow_point_banks[j];
 
         if (bank->glow_bitmap >= 0) {
-            //	if (release) {
-            //		bm_release(bank->glow_bitmap);
-            //		bank->glow_bitmap = -1;
-            //	} else {
+            // if (release) {
+            // bm_release(bank->glow_bitmap);
+            // bank->glow_bitmap = -1;
+            // } else {
             bm_unload (bank->glow_bitmap);
-            //	}
+            // }
         }
 
         if (bank->glow_neb_bitmap >= 0) {
-            //	if (release) {
-            //		bm_release(bank->glow_neb_bitmap);
-            //		bank->glow_neb_bitmap = -1;
-            //	} else {
+            // if (release) {
+            // bm_release(bank->glow_neb_bitmap);
+            // bank->glow_neb_bitmap = -1;
+            // } else {
             bm_unload (bank->glow_neb_bitmap);
-            //	}
+            // }
         }
     }
 }
@@ -1945,7 +1945,7 @@ void find_sortnorm (int offset, ubyte* bsp_data) {
 
 void model_interp_submit_buffers (
     indexed_vertex_source* vert_src, size_t vertex_stride) {
-    Assert (vert_src != NULL);
+    ASSERT (vert_src != NULL);
 
     if (!(vert_src->Vertex_list_size > 0 && vert_src->Index_list_size > 0)) {
         return;
@@ -1959,7 +1959,7 @@ void model_interp_submit_buffers (
 
         // If this happens then someone must have allocated something from the
         // heap with a different stride than what we are using.
-        Assertion (
+        ASSERTX (
             offset % vertex_stride == 0,
             "Offset returned by GPU heap allocation does not match stride "
             "value!");
@@ -1985,7 +1985,7 @@ bool model_interp_pack_buffer (
     indexed_vertex_source* vert_src, vertex_buffer* vb) {
     if (vert_src == NULL) { return false; }
 
-    Assertion (vb != nullptr, "Invalid vertex buffer specified!");
+    ASSERTX (vb != nullptr, "Invalid vertex buffer specified!");
 
     int i, n_verts = 0;
     size_t j;
@@ -2018,7 +2018,7 @@ bool model_interp_pack_buffer (
         auto outVert = &array[i];
 
         // don't try to generate more data than what's available
-        Assert (
+        ASSERT (
             ((i * sizeof (interp_vertex)) + sizeof (interp_vertex)) <=
             (vert_src->Vertex_list_size - vb->vertex_offset));
 
@@ -2034,7 +2034,7 @@ bool model_interp_pack_buffer (
 
         // normals
         if (vb->flags & VB_FLAG_NORMAL) {
-            Assert (vb->model_list->norm != NULL);
+            ASSERT (vb->model_list->norm != NULL);
             outVert->normal = vb->model_list->norm[i];
         }
         else {
@@ -2045,7 +2045,7 @@ bool model_interp_pack_buffer (
 
         // tangent space data
         if (vb->flags & VB_FLAG_TANGENT) {
-            Assert (vb->model_list->tsb != NULL);
+            ASSERT (vb->model_list->tsb != NULL);
             tsb_t* tsb = &vb->model_list->tsb[i];
 
             outVert->tangent.xyzw.x = tsb->tangent.xyz.x;
@@ -2061,7 +2061,7 @@ bool model_interp_pack_buffer (
         }
 
         if (vb->flags & VB_FLAG_MODEL_ID) {
-            Assert (vb->model_list->submodels != NULL);
+            ASSERT (vb->model_list->submodels != NULL);
             outVert->modelId = (float)vb->model_list->submodels[i];
         }
         else {
@@ -2096,7 +2096,7 @@ bool model_interp_pack_buffer (
 }
 
 void interp_pack_vertex_buffers (polymodel* pm, int mn) {
-    Assert ((mn >= 0) && (mn < pm->n_models));
+    ASSERT ((mn >= 0) && (mn < pm->n_models));
 
     bsp_info* model = &pm->submodel[mn];
 
@@ -2110,13 +2110,13 @@ void interp_pack_vertex_buffers (polymodel* pm, int mn) {
     }
 
     if (!rval) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION, "Unable to pack vertex buffer for '%s'\n", pm->filename);
     }
 }
 
 void model_interp_set_buffer_layout (vertex_layout* layout) {
-    Assert (layout != NULL);
+    ASSERT (layout != NULL);
 
     // Similarly to model_interp_config_buffer, we add all vectex components
     // even if they aren't used This reduces the amount of vertex format
@@ -2193,7 +2193,7 @@ void interp_configure_vertex_buffers (polymodel* pm, int mn) {
     uint total_verts = 0;
     std::vector< int > vertex_list;
 
-    Assert ((mn >= 0) && (mn < pm->n_models));
+    ASSERT ((mn >= 0) && (mn < pm->n_models));
 
     bsp_info* model = &pm->submodel[mn];
 
@@ -2225,7 +2225,7 @@ void interp_configure_vertex_buffers (polymodel* pm, int mn) {
         // for the moment we can only support INT_MAX worth of verts per index
         // buffer
         if (total_verts > INT_MAX) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Unable to generate vertex buffer data because model '%s' "
                 "with %i verts is over the maximum of %i verts!\n",
@@ -2262,7 +2262,7 @@ void interp_configure_vertex_buffers (polymodel* pm, int mn) {
     poly_list* model_list = new (std::nothrow) poly_list;
 
     if (!model_list) {
-        fs2::dialog::error (LOCATION, "Unable to allocate memory for poly_list!\n");
+        ASSERTF (LOCATION, "Unable to allocate memory for poly_list!\n");
     }
 
     model->buffer.model_list = model_list;
@@ -2300,7 +2300,7 @@ void interp_configure_vertex_buffers (polymodel* pm, int mn) {
     int vertex_flags = (VB_FLAG_POSITION | VB_FLAG_NORMAL | VB_FLAG_UV1);
 
     if (model_list->tsb != NULL) {
-        Assert (Cmdline_normal);
+        ASSERT (Cmdline_normal);
         vertex_flags |= VB_FLAG_TANGENT;
     }
 
@@ -2313,11 +2313,11 @@ void interp_configure_vertex_buffers (polymodel* pm, int mn) {
 
         buffer_data new_buffer (polygon_list[i].n_verts);
 
-        Verify (new_buffer.get_index () != NULL);
+        ASSERT (new_buffer.get_index () != NULL);
 
         for (j = 0; j < polygon_list[i].n_verts; j++) {
             first_index = model_list->find_index_fast (&polygon_list[i], j);
-            Assert (first_index != -1);
+            ASSERT (first_index != -1);
 
             new_buffer.assign (j, first_index);
         }
@@ -2337,7 +2337,7 @@ void interp_configure_vertex_buffers (polymodel* pm, int mn) {
         model_interp_config_buffer (&pm->vert_source, &model->buffer, false);
 
     if (!rval) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION, "Unable to configure vertex buffer for '%s'\n",
             pm->filename);
     }
@@ -2371,7 +2371,7 @@ void interp_copy_index_buffer (
                         vert_offset)); // take into account the vertex offset.
                 dest_buffer->n_verts++;
 
-                Assert (
+                ASSERT (
                     dest_buffer->n_verts <=
                     index_counts[dest_buffer->texture]);
             }
@@ -2505,9 +2505,9 @@ void interp_create_transparency_index_buffer (polymodel* pm, int mn) {
 
         // skip if this is already designated to be a transparent pass by the
         // modeller
-        // 		if ( tmap->is_transparent ) {
-        // 			continue;
-        // 		}
+        // if ( tmap->is_transparent ) {
+        // continue;
+        // }
 
         int bitmap_handle = tmap->textures[TM_BASE_TYPE].GetTexture ();
 
@@ -2627,7 +2627,7 @@ void model_interp_process_shield_mesh (polymodel* pm) {
 }
 
 // returns 1 if the thruster should be drawn
-//         0 if it shouldn't
+// 0 if it shouldn't
 int model_should_render_engine_glow (int objnum, int bank_obj) {
     if ((bank_obj <= -1) || (objnum <= -1)) return 1;
 
@@ -2638,7 +2638,7 @@ int model_should_render_engine_glow (int objnum, int bank_obj) {
         ship* shipp = &Ships[obj->instance];
         ship_info* sip = &Ship_info[shipp->ship_info_index];
 
-        Assert (bank_obj < sip->n_subsystems);
+        ASSERT (bank_obj < sip->n_subsystems);
 
         char subname[MAX_NAME_LEN];
         // shipp->subsystems isn't always valid here so don't use it
@@ -2681,7 +2681,7 @@ int model_interp_get_texture (texture_info* tinfo, fix base_frametime) {
     // maybe animate it
     if (texture >= 0 && num_frames > 1) {
         // sanity check total_time first thing
-        Assert (total_time > 0.0f);
+        ASSERT (total_time > 0.0f);
 
         cur_time = f2fl (
             (game_get_overall_frametime () - base_frametime) %
@@ -2726,7 +2726,7 @@ void model_mix_two_team_colors (
 bool model_get_team_color (
     team_color* clr, const std::string& team, const std::string& secondaryteam,
     fix timestamp, int fadetime) {
-    Assert (clr != NULL);
+    ASSERT (clr != NULL);
 
     if (!strcasecmp (secondaryteam.c_str (), "none")) {
         if (Team_Colors.find (team) != Team_Colors.end ()) {

@@ -47,8 +47,8 @@ void geometry_batcher::allocate_internal (int n_verts) {
         vert = (vertex*)vm_malloc (sizeof (vertex) * n_verts);
         radius_list = (float*)vm_malloc (sizeof (float) * n_verts);
 
-        Verify ((vert != NULL));
-        Verify ((radius_list != NULL));
+        ASSERT ((vert != NULL));
+        ASSERT ((radius_list != NULL));
 
         memset (vert, 0, sizeof (vertex) * n_verts);
         memset (radius_list, 0, sizeof (float) * n_verts);
@@ -88,8 +88,8 @@ void geometry_batcher::add_allocate (int quad, int n_tri) {
         vert = (vertex*)vm_malloc (sizeof (vertex) * to_alloc);
         radius_list = (float*)vm_malloc (sizeof (float) * to_alloc);
 
-        Verify ((vert != NULL));
-        Verify ((radius_list != NULL));
+        ASSERT ((vert != NULL));
+        ASSERT ((radius_list != NULL));
 
         memset (vert, 0, sizeof (vertex) * to_alloc);
         memset (radius_list, 0, sizeof (float) * to_alloc);
@@ -713,7 +713,7 @@ int batch_add_bitmap (
         item->texture = texture;
     }
 
-    Assertion (
+    ASSERTX (
         (item->laser == false),
         "Particle effect %s used as laser glow or laser bitmap\n",
         bm_get_filename (texture));
@@ -748,7 +748,7 @@ int geometry_batch_add_bitmap (
         item->texture = texture;
     }
 
-    Assertion (
+    ASSERTX (
         (item->laser == false),
         "Particle effect %s used as laser glow or laser bitmap\n",
         bm_get_filename (texture));
@@ -787,7 +787,7 @@ int batch_add_bitmap_rotated (
         item->texture = texture;
     }
 
-    Assertion (
+    ASSERTX (
         (item->laser == false),
         "Particle effect %s used as laser glow or laser bitmap\n",
         bm_get_filename (texture));
@@ -820,7 +820,7 @@ int batch_add_tri (int texture, int tmap_flags, vertex* verts, float alpha) {
         item->texture = texture;
     }
 
-    Assertion (
+    ASSERTX (
         (item->laser == false),
         "Particle effect %s used as laser glow or laser bitmap\n",
         bm_get_filename (texture));
@@ -853,7 +853,7 @@ int batch_add_quad (int texture, int tmap_flags, vertex* verts, float alpha) {
         item->texture = texture;
     }
 
-    Assertion (
+    ASSERTX (
         (item->laser == false),
         "Particle effect %s used as laser glow or laser bitmap\n",
         bm_get_filename (texture));
@@ -874,8 +874,8 @@ int batch_add_polygon (
     // idiot-proof
     if (width == 0 || height == 0) return 0;
 
-    Assert (pos != NULL);
-    Assert (orient != NULL);
+    ASSERT (pos != NULL);
+    ASSERT (orient != NULL);
 
     // Let's begin.
 
@@ -936,7 +936,7 @@ int batch_add_polygon (
         item->texture = texture;
     }
 
-    Assertion (
+    ASSERTX (
         (item->laser == false),
         "Particle effect %s used as laser glow or laser bitmap\n",
         bm_get_filename (texture));
@@ -971,7 +971,7 @@ int batch_add_beam (
         item->texture = texture;
     }
 
-    Assertion (
+    ASSERTX (
         (item->laser == false),
         "Particle effect %s used as laser glow or laser bitmap\n",
         bm_get_filename (texture));
@@ -993,7 +993,7 @@ void batch_render_lasers (int buffer_handle) {
 
         if (!bi->second.batch.need_to_render ()) continue;
 
-        Assert (bi->second.texture >= 0);
+        ASSERT (bi->second.texture >= 0);
         gr_set_bitmap (
             bi->second.texture, GR_ALPHABLEND_FILTER, GR_BITBLT_MODE_NORMAL,
             0.99999f);
@@ -1020,7 +1020,7 @@ void batch_load_buffer_lasers (effect_vertex* buffer, int* n_verts) {
 
         if (!bi->second.batch.need_to_render ()) continue;
 
-        Assert (bi->second.texture >= 0);
+        ASSERT (bi->second.texture >= 0);
         bi->second.batch.load_buffer (buffer, n_verts);
     }
 }
@@ -1032,7 +1032,7 @@ void batch_render_geometry_map_bitmaps (int buffer_handle) {
 
         if (!bi->second.batch.need_to_render ()) continue;
 
-        Assert (bi->second.texture >= 0);
+        ASSERT (bi->second.texture >= 0);
         gr_set_bitmap (
             bi->second.texture, GR_ALPHABLEND_FILTER, GR_BITBLT_MODE_NORMAL,
             bi->second.alpha);
@@ -1054,7 +1054,7 @@ void batch_render_geometry_shader_map_bitmaps (int buffer_handle) {
 
         if (!bi->second.batch.need_to_render ()) continue;
 
-        Assert (bi->second.texture >= 0);
+        ASSERT (bi->second.texture >= 0);
         gr_set_bitmap (
             bi->second.texture, GR_ALPHABLEND_FILTER, GR_BITBLT_MODE_NORMAL,
             bi->second.alpha);
@@ -1070,7 +1070,7 @@ void batch_load_buffer_geometry_map_bitmaps (
 
         if (!bi->second.batch.need_to_render ()) continue;
 
-        Assert (bi->second.texture >= 0);
+        ASSERT (bi->second.texture >= 0);
         bi->second.batch.load_buffer (buffer, n_verts);
     }
 }
@@ -1084,7 +1084,7 @@ void batch_load_buffer_geometry_shader_map_bitmaps (
 
         if (!bi->second.batch.need_to_render ()) continue;
 
-        Assert (bi->second.texture >= 0);
+        ASSERT (bi->second.texture >= 0);
         bi->second.batch.load_buffer (buffer, n_verts);
     }
 }
@@ -1131,7 +1131,7 @@ void batch_render_all (int stream_buffer) {
             (effect_vertex*)Batch_buffer, &n_verts);
         gr_update_buffer_data (stream_buffer, Batch_buffer_size, Batch_buffer);
 
-        Assert (n_verts <= n_to_render);
+        ASSERT (n_verts <= n_to_render);
 
         batch_render_lasers (stream_buffer);
         batch_render_geometry_map_bitmaps (stream_buffer);
@@ -1180,7 +1180,7 @@ int distortion_add_bitmap_rotated (
         item->texture = texture;
     }
 
-    Assertion (
+    ASSERTX (
         (item->laser == false),
         "Distortion particle effect %s used as laser glow or laser bitmap\n",
         bm_get_filename (texture));
@@ -1215,7 +1215,7 @@ int distortion_add_beam (
         item->texture = texture;
     }
 
-    Assertion (
+    ASSERTX (
         (item->laser == false),
         "Distortion particle effect %s used as laser glow or laser bitmap\n",
         bm_get_filename (texture));
@@ -1237,7 +1237,7 @@ void batch_render_distortion_map_bitmaps (int buffer_handle) {
 
         if (!bi->second.batch.need_to_render ()) continue;
 
-        Assert (bi->second.texture >= 0);
+        ASSERT (bi->second.texture >= 0);
         gr_set_bitmap (
             bi->second.texture, GR_ALPHABLEND_NONE, GR_BITBLT_MODE_NORMAL,
             bi->second.alpha);
@@ -1260,7 +1260,7 @@ void batch_load_buffer_distortion_map_bitmaps (
 
         if (!bi->second.batch.need_to_render ()) continue;
 
-        Assert (bi->second.texture >= 0);
+        ASSERT (bi->second.texture >= 0);
         bi->second.batch.load_buffer (buffer, n_verts);
     }
 }

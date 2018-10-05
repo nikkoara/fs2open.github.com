@@ -226,7 +226,7 @@ void parse_vfnt_font (const std::string& fontFilename) {
 
         if (default_special_char_index < 0 ||
             default_special_char_index >= MAX_SPECIAL_CHAR_IDX) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Default special character index (%d) for font (%s), must be "
                 "0 - %u",
@@ -256,7 +256,7 @@ void parse_vfnt_font (const std::string& fontFilename) {
         }
 
         if (lang_idx == -1) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Ignoring invalid language (%s) specified by font (%s); not "
                 "built-in or in strings.tbl",
@@ -270,7 +270,7 @@ void parse_vfnt_font (const std::string& fontFilename) {
 
             if (special_char_index < 0 ||
                 special_char_index >= MAX_SPECIAL_CHAR_IDX) {
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION,
                     "Special character index (%d) for font (%s), language "
                     "(%s) is invalid, must be 0 - %u",
@@ -353,7 +353,7 @@ void parse_fonts_tbl () {
 
     // double check
     if (FontManager::numberOfFonts () < 3) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "At least three fonts have to be loaded but only %d valid entries "
             "were found!",
@@ -392,14 +392,14 @@ int force_fit_string (char* str, int max_str, int max_width) {
     gr_get_string_size (&w, NULL, str);
     if (w > max_width) {
         if ((int)strlen (str) > max_str - 3) {
-            Assert (max_str >= 3);
+            ASSERT (max_str >= 3);
             str[max_str - 3] = 0;
         }
 
         strcpy (str + strlen (str) - 1, "...");
         gr_get_string_size (&w, NULL, str);
         while (w > max_width) {
-            Assert (
+            ASSERT (
                 strlen (str) >=
                 4); // if this is hit, a bad max_width was passed in and the
                     // calling function needs fixing.
@@ -419,7 +419,7 @@ void stuff_first (std::string& firstFont) {
         parse_type (type, firstFont);
     }
     catch (const parse::ParseException& e) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Failed to setup font parsing. This may be caused by an empty "
             "fonts.tbl file.\nError message: %s",
@@ -473,19 +473,19 @@ FSFont* get_font (const std::string& name) {
 }
 
 /**
- * @brief	Gets the width of an character.
+ * @brief       Gets the width of an character.
  *
  * Returns the width of the specified charachter also taking account of
  * kerning.
  *
- * @param fnt				The font data
- * @param c1				The character that should be checked.
- * @param c2				The character which follows this character. Used to
+ * @param fnt                           The font data
+ * @param c1                            The character that should be checked.
+ * @param c2                            The character which follows this character. Used to
  * compute the kerning
- * @param [out]	width   	If non-null, the width.
- * @param [out]	spaceing	If non-null, the spaceing.
+ * @param [out] width           If non-null, the width.
+ * @param [out] spaceing        If non-null, the spaceing.
  *
- * @return	The character width.
+ * @return      The character width.
  */
 int get_char_width_old (
     fo::font* fnt, ubyte c1, ubyte c2, int* width, int* spacing) {

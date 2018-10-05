@@ -3,7 +3,7 @@
 #ifndef FREESPACE2_EVENTS_EVENTS_H
 #define FREESPACE2_EVENTS_EVENTS_H
 
-#include "utils/event.h"
+#include "util/event.h"
 
 namespace events {
 

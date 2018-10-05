@@ -23,7 +23,7 @@ pilotfile::~pilotfile () {
 }
 
 void pilotfile::startSection (Section::id section_id) {
-    Assert (cfp);
+    ASSERT (cfp);
 
     const int zero = 0;
 
@@ -37,12 +37,12 @@ void pilotfile::startSection (Section::id section_id) {
 }
 
 void pilotfile::endSection () {
-    Assert (cfp);
-    Assert (m_size_offset > 0);
+    ASSERT (cfp);
+    ASSERT (m_size_offset > 0);
 
     size_t cur = cftell (cfp);
 
-    Assert (cur >= m_size_offset);
+    ASSERT (cur >= m_size_offset);
 
     size_t section_size = cur - m_size_offset;
 
@@ -204,7 +204,7 @@ void pilotfile::update_stats_backout (scoring_struct* stats, bool training) {
                 std::max (0, p_stats->medals_earned[j].val--);
         }
         else {
-            Assertion (
+            ASSERTX (
                 true,
                 "Medal '%s' not found, should have been added by "
                 "pilotfile::update_stats.",
@@ -242,7 +242,7 @@ void pilotfile::update_stats_backout (scoring_struct* stats, bool training) {
                 break;
             }
         }
-        Assertion (p_stats->rank >= 0, "Rank became negative.");
+        ASSERTX (p_stats->rank >= 0, "Rank became negative.");
     }
 
     // badges
@@ -262,7 +262,7 @@ void pilotfile::update_stats_backout (scoring_struct* stats, bool training) {
 
             if (j >= 0) { p_stats->medals_earned[j].val = 0; }
             else {
-                Assertion (
+                ASSERTX (
                     false,
                     "Badge '%s' not found, should have been added by "
                     "pilotfile::update_stats.",
@@ -288,10 +288,7 @@ void pilotfile::update_stats_backout (scoring_struct* stats, bool training) {
 
             if (j >= 0) { p_stats->ship_kills[j].val -= stats->m_okKills[i]; }
             else {
-                UNREACHABLE (
-                    "Ship kills of '%s' not found, should have been added by "
-                    "pilotfile::update_stats.",
-                    Ship_info[i].name);
+                ASSERT (0);
             }
         }
     }

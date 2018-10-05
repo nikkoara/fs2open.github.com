@@ -1,6 +1,6 @@
 // -*- mode: c++; -*-
 
-#include "utils/HeapAllocator.h"
+#include "util/HeapAllocator.h"
 
 namespace {
 
@@ -100,7 +100,7 @@ void HeapAllocator::addFreeRange (const HeapAllocator::MemoryRange& range) {
         return;
     }
 
-    Assertion (
+    ASSERTX (
         std::is_sorted (_freeRanges.begin (), _freeRanges.end ()),
         "Free ranges were not sorted before adding a free range.");
 
@@ -157,10 +157,10 @@ void HeapAllocator::addFreeRange (const HeapAllocator::MemoryRange& range) {
 }
 void HeapAllocator::addAllocatedRange (
     const HeapAllocator::MemoryRange& range) {
-    Assertion (
+    ASSERTX (
         std::is_sorted (_allocatedRanges.begin (), _allocatedRanges.end ()),
         "Allocated ranges are not sorted!");
-    Assertion (
+    ASSERTX (
         !std::binary_search (
             _allocatedRanges.begin (), _allocatedRanges.end (), range),
         "Allocated ranges already contain the specified range!");
@@ -174,7 +174,7 @@ void HeapAllocator::addAllocatedRange (
     // vector in that case
     _allocatedRanges.insert (it, range);
 
-    Assertion (
+    ASSERTX (
         std::is_sorted (_allocatedRanges.begin (), _allocatedRanges.end ()),
         "Allocated ranges are not sorted!");
 }
@@ -187,10 +187,10 @@ void HeapAllocator::free (size_t offset) {
         _allocatedRanges.begin (), _allocatedRanges.end (), range);
 
     // Make sure that the range is valid
-    Assertion (
+    ASSERTX (
         it != _allocatedRanges.end (),
         "Specified offset was not found in the allocated ranges!");
-    Assertion (
+    ASSERTX (
         it->offset == offset,
         "Specified offset does not point to the start of an allocated range!");
 
@@ -214,7 +214,7 @@ void HeapAllocator::checkRangesMerged () {
     size_t lastEnd = 0;
     for (auto& range : _freeRanges) {
         if (!first) {
-            Assertion (
+            ASSERTX (
                 lastEnd != range.offset,
                 "Found unmerged ranges at offset %zu!", lastEnd);
         }

@@ -74,7 +74,7 @@ void HudGaugeRadarOrb::initBitmaps (char* fname) {
     Radar_gauge.first_frame =
         bm_load_animation (fname, &Radar_gauge.num_frames);
     if (Radar_gauge.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 
@@ -215,7 +215,7 @@ void HudGaugeRadarOrb::drawBlips (int blip_type, int bright, int distort) {
     blip* blip_head = NULL;
     vec3d pos;
 
-    Assert ((blip_type >= 0) && (blip_type < MAX_BLIP_TYPES));
+    ASSERT ((blip_type >= 0) && (blip_type < MAX_BLIP_TYPES));
 
     // Need to set font.
     font::set_font (font::FONT1);
@@ -298,7 +298,7 @@ void HudGaugeRadarOrb::doneDrawingHtl () {
 void HudGaugeRadarOrb::drawOutlines () {
     int i;
     vertex center;
-    //	vertex extents[6];
+    // vertex extents[6];
     vertex proj_orb_lines_xy[NUM_ORB_RING_SLICES];
     vertex proj_orb_lines_xz[NUM_ORB_RING_SLICES];
     vertex proj_orb_lines_yz[NUM_ORB_RING_SLICES];
@@ -344,8 +344,8 @@ void HudGaugeRadarOrb::drawOutlines () {
 }
 
 int HudGaugeRadarOrb::calcAlpha (vec3d* pt) {
-    Assert (pt);
-    Assert (Player_obj);
+    ASSERT (pt);
+    ASSERT (Player_obj);
 
     vec3d new_pt;
     vec3d fvec = { { { 0.0f, 0.0f, 1.0f } } };
@@ -500,7 +500,7 @@ void HudGaugeRadarOrb::drawContactImage (
     // need to get bitmap info
     bm_get_info (idx, &w, &h);
 
-    Assert (w > 0);
+    ASSERT (w > 0);
 
     // get multiplier
     if (h == w) { aspect_mp = 1.0f; }
@@ -518,7 +518,7 @@ void HudGaugeRadarOrb::drawContactImage (
     if (sizef < radius) sizef = radius;
 
     // Make so no evil things happen
-    Assert (mult > 0.0f);
+    ASSERT (mult > 0.0f);
 
     // modify size according to value from tables
     sizef *= mult;

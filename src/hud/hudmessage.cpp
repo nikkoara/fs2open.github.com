@@ -27,13 +27,13 @@
 #include "weapon/weapon.h"
 
 /* replaced with those static ints that follow
-#define LIST_X		46
-#define LIST_X2	108  // second column x start position
-#define LIST_Y		60
-#define LIST_W		558  // total width including both columns
-#define LIST_W2	(LIST_W + LIST_X - LIST_X2)  // width of second column
-#define LIST_H		297
-#define LIST_H_O	275  // applies only to objectives mode
+#define LIST_X          46
+#define LIST_X2 108  // second column x start position
+#define LIST_Y          60
+#define LIST_W          558  // total width including both columns
+#define LIST_W2 (LIST_W + LIST_X - LIST_X2)  // width of second column
+#define LIST_H          297
+#define LIST_H_O        275  // applies only to objectives mode
 */
 
 // 1st column, width includes both columns
@@ -93,17 +93,17 @@ static int Hud_mission_log_time2_coords[GR_NUM_RESOLUTIONS][2] = {
 #define ACCEPT_BUTTON 5
 
 #define HUD_MSG_LENGTH_MAX 2048
-//#define HUD_MSG_MAX_PIXEL_W	439	// maximum number of pixels wide message
-// display area is #define HUD_MSG_MAX_PIXEL_W	619	// maximum number of pixels
+//#define HUD_MSG_MAX_PIXEL_W   439     // maximum number of pixels wide message
+// display area is #define HUD_MSG_MAX_PIXEL_W  619     // maximum number of pixels
 // wide message display area is
 
 /* not used anymore
 static int Hud_mission_log_status_coords[GR_NUM_RESOLUTIONS][2] = {
     {
-        170, 339		// GR_640
+        170, 339                // GR_640
     },
     {
-        361, 542		// GR_1024
+        361, 542                // GR_1024
     }
 };
 */
@@ -136,9 +136,9 @@ line_node Msg_scrollback_used_list;
 #define MAX_HUD_FT 1
 
 typedef struct HUD_ft {
-    int end_time; //	Timestamp at which this message will go away.
-    char text[MAX_HUD_LINE_LEN]; //	Text to display.
-    int color;                   //	0rgb color, 8 bit fields.
+    int end_time; // Timestamp at which this message will go away.
+    char text[MAX_HUD_LINE_LEN]; // Text to display.
+    int color;                   // 0rgb color, 8 bit fields.
 } HUD_ft;
 
 HUD_ft HUD_fixed_text[MAX_HUD_FT];
@@ -158,8 +158,8 @@ static const char* Hud_mission_log_fname[GR_NUM_RESOLUTIONS] = {
 
 /* not used anymore
 static char* Hud_mission_log_status_fname[GR_NUM_RESOLUTIONS] = {
-    "MLStatus",		// GR_640
-    "MLStatus"		// GR_1024
+    "MLStatus",         // GR_640
+    "MLStatus"          // GR_1024
 };
 */
 
@@ -313,7 +313,7 @@ void HudGaugeMessages::processMessageBuffer () {
 }
 
 void HudGaugeMessages::addPending (const char* text, int source, int x) {
-    Assert (text != NULL);
+    ASSERT (text != NULL);
 
     HUD_message_data new_message;
 
@@ -441,7 +441,7 @@ void HudGaugeMessages::render (float /*frametime*/) {
     }
 }
 
-//	Similar to HUD printf, but shows only one message at a time, at a fixed
+// Similar to HUD printf, but shows only one message at a time, at a fixed
 // location.
 void HUD_fixed_printf (float duration, color col, const char* format, ...) {
     va_list args;
@@ -490,7 +490,7 @@ void HUD_fixed_printf (float duration, color col, const char* format, ...) {
     HUD_fixed_text[0].color = col.red << 16 | col.green << 8 | col.blue;
 }
 
-//	Clear all pending text.
+// Clear all pending text.
 void HUD_fixed_printf_reset () { HUD_init_fixed_text (); }
 
 // converts a TEAM_* define to a HUD_SOURCE_* define
@@ -537,9 +537,9 @@ void HUD_ship_sent_printf (int sh, const char* format, ...) {
     vsnprintf (tmp + len, sizeof (tmp) - 1 - len, format, args);
     va_end (args);
 
-    Assert (
+    ASSERT (
         strlen (tmp) <
-        HUD_MSG_LENGTH_MAX); //	If greater than this, probably crashed anyway.
+        HUD_MSG_LENGTH_MAX); // If greater than this, probably crashed anyway.
     hud_sourced_print (HUD_team_get_source (Ships[sh].team), tmp);
 }
 
@@ -634,7 +634,7 @@ void hud_add_line_to_scrollback (
     char* text, int source, int t, int x, int y, int underline_width) {
     line_node* new_line;
 
-    Assert (HUD_msg_inited);
+    ASSERT (HUD_msg_inited);
     if (!text || !strlen (text)) return;
 
     if (EMPTY (&Msg_scrollback_free_list)) {
@@ -667,16 +667,16 @@ void hud_add_msg_to_scrollback (const char* text, int source, int t) {
     if (msg_len == 0) return;
 
     w = 0;
-    Assert (msg_len < HUD_MSG_LENGTH_MAX);
+    ASSERT (msg_len < HUD_MSG_LENGTH_MAX);
     strcpy_s (buf, text);
     ptr = strstr (buf, NOX (": "));
     if (ptr) { gr_get_string_size (&w, NULL, buf, (int)(ptr - buf)); }
 
-    //	if (ptr) {
-    //		gr_get_string_size(&w, NULL, buf, ptr - buf + 2);
-    //		if (w < max_width - 20)
-    //			offset = w;
-    //	}
+    // if (ptr) {
+    // gr_get_string_size(&w, NULL, buf, ptr - buf + 2);
+    // if (w < max_width - 20)
+    // offset = w;
+    // }
 
     x = 0;
     str = buf;
@@ -954,7 +954,7 @@ void hud_scrollback_close () {
     message_log_shutdown_scrollback ();
     if (Background_bitmap >= 0) bm_release (Background_bitmap);
     // if (Status_bitmap >= 0)
-    //	bm_unload(Status_bitmap);
+    // bm_unload(Status_bitmap);
 
     Ui_window.destroy ();
     common_free_interface_palette (); // restore game palette
@@ -1070,7 +1070,7 @@ void hud_scrollback_do_frame (float /*frametime*/) {
         line_node* node_ptr;
 
         Buttons[gr_screen.res][SHOW_MSGS_BUTTON].button.draw_forced (2);
-        //		y = ((LIST_H / font_height) - 1) * font_height;
+        // y = ((LIST_H / font_height) - 1) * font_height;
         y = 0;
         if (!EMPTY (&Msg_scrollback_used_list) && HUD_msg_inited) {
             node_ptr = GET_FIRST (&Msg_scrollback_used_list);
@@ -1220,7 +1220,7 @@ void HudGaugeTalkingHead::initAnimSizes (int w, int h) {
 void HudGaugeTalkingHead::initBitmaps (const char* fname) {
     Head_frame.first_frame = bm_load_animation (fname, &Head_frame.num_frames);
     if (Head_frame.first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Could not load in ani: %s\n", fname);
+        WARNINGF (LOCATION, "Could not load in ani: %s\n", fname);
     }
 }
 

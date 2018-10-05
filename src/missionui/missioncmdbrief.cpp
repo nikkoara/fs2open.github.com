@@ -162,7 +162,7 @@ int Cmd_brief_overlay_id;
 void cmd_brief_init_voice () {
     int i;
 
-    Assert (Cur_cmd_brief);
+    ASSERT (Cur_cmd_brief);
     for (i = 0; i < Cur_cmd_brief->num_stages; i++) {
         Cur_cmd_brief->stage[i].wave = -1;
         if (strcasecmp (Cur_cmd_brief->stage[i].wave_filename, NOX ("none")) !=

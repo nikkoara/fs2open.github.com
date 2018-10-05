@@ -58,10 +58,10 @@ int Ra_flash_y[GR_NUM_RESOLUTIONS] = { 140, 200 };
 /*
 static int Ra_flash_coords[GR_NUM_RESOLUTIONS][2] = {
     {
-        61, 108			// GR_640
+        61, 108                 // GR_640
     },
     {
-        61, 108			// GR_1024
+        61, 108                 // GR_1024
     }
 };
 */
@@ -127,7 +127,7 @@ static int Red_alert_voice;
 
 // open and pre-load the stream buffers for the different voice streams
 void red_alert_voice_load () {
-    Assert (Briefing != NULL);
+    ASSERT (Briefing != NULL);
     if (strncasecmp (Briefing->stages[0].voice, NOX ("none"), 4) != 0 &&
         (Briefing->stages[0].voice[0] != '\0')) {
         Red_alert_voice =
@@ -357,7 +357,7 @@ void red_alert_do_frame (float frametime) {
     k = Ui_window.process () & ~KEY_DEBUGGED;
     switch (k) {
     case KEY_ESC:
-        //			gameseq_post_event(GS_EVENT_ENTER_GAME);
+        // gameseq_post_event(GS_EVENT_ENTER_GAME);
         gameseq_post_event (GS_EVENT_MAIN_MENU);
         break;
     } // end switch
@@ -463,7 +463,7 @@ void red_alert_bash_weapons (red_alert_ship_status* ras, ship_weapon* swp) {
     list_size = (int)ras->primary_weapons.size ();
     CLAMP (list_size, 0, MAX_SHIP_PRIMARY_BANKS);
     for (i = 0; i < list_size; i++) {
-        Assert (ras->primary_weapons[i].index >= 0);
+        ASSERT (ras->primary_weapons[i].index >= 0);
 
         swp->primary_bank_weapons[i] = ras->primary_weapons[i].index;
         swp->primary_bank_ammo[i] = ras->primary_weapons[i].count;
@@ -480,7 +480,7 @@ void red_alert_bash_weapons (red_alert_ship_status* ras, ship_weapon* swp) {
     list_size = (int)ras->secondary_weapons.size ();
     CLAMP (list_size, 0, MAX_SHIP_SECONDARY_BANKS);
     for (i = 0; i < list_size; i++) {
-        Assert (ras->secondary_weapons[i].index >= 0);
+        ASSERT (ras->secondary_weapons[i].index >= 0);
 
         swp->secondary_bank_weapons[i] = ras->secondary_weapons[i].index;
         swp->secondary_bank_ammo[i] = ras->secondary_weapons[i].count;
@@ -508,7 +508,7 @@ void red_alert_bash_weapons (red_alert_ship_status* ras, p_object* pobjp) {
     }
 
     if (sssp == NULL) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Parse object data for ship '%s' doesn't contain the 'Pilot' "
             "subsystem!",
@@ -520,7 +520,7 @@ void red_alert_bash_weapons (red_alert_ship_status* ras, p_object* pobjp) {
     list_size = (int)ras->primary_weapons.size ();
     CLAMP (list_size, 0, MAX_SHIP_PRIMARY_BANKS);
     for (i = 0; i < list_size; i++) {
-        Assert (ras->primary_weapons[i].index >= 0);
+        ASSERT (ras->primary_weapons[i].index >= 0);
         sssp->primary_banks[i] = ras->primary_weapons[i].index;
 
         if (Weapon_info[sssp->primary_banks[i]]
@@ -538,7 +538,7 @@ void red_alert_bash_weapons (red_alert_ship_status* ras, p_object* pobjp) {
     list_size = (int)ras->secondary_weapons.size ();
     CLAMP (list_size, 0, MAX_SHIP_SECONDARY_BANKS);
     for (i = 0; i < list_size; i++) {
-        Assert (ras->secondary_weapons[i].index >= 0);
+        ASSERT (ras->secondary_weapons[i].index >= 0);
         sssp->secondary_banks[i] = ras->secondary_weapons[i].index;
 
         float max_count = sip->secondary_bank_ammo_capacity[i] /
@@ -619,7 +619,7 @@ void red_alert_bash_subsys_status (
             // jam in the new subsystem at the end of the existing list for
             // this parse object
             int new_idx = insert_subsys_status (pobjp);
-            Assert (new_idx == pobjp->subsys_index + j);
+            ASSERT (new_idx == pobjp->subsys_index + j);
             sssp = &Subsys_status[new_idx];
 
             strcpy_s (sssp->name, psub->subobj_name);
@@ -682,7 +682,7 @@ void red_alert_store_wingman_status () {
     for (so = GET_FIRST (&Ship_obj_list); so != END_OF_LIST (&Ship_obj_list);
          so = GET_NEXT (so)) {
         ship_objp = &Objects[so->objnum];
-        Assert (ship_objp->type == OBJ_SHIP);
+        ASSERT (ship_objp->type == OBJ_SHIP);
         shipp = &Ships[ship_objp->instance];
 
         if (shipp->flags[Ship::Ship_Flags::Dying]) { continue; }
@@ -701,7 +701,7 @@ void red_alert_store_wingman_status () {
         Red_alert_wingman_status.push_back (ras);
         // niffiwan: trying to track down red alert bug creating HUGE pilot
         // files
-        Assert ((Red_alert_wingman_status.size () <= MAX_SHIPS));
+        ASSERT ((Red_alert_wingman_status.size () <= MAX_SHIPS));
     }
 
     // store exited ships that did not die
@@ -721,7 +721,7 @@ void red_alert_store_wingman_status () {
             }
             // ... otherwise we want to make sure and carry over the ship class
             else {
-                Assert (Ships_exited[idx].ship_class >= 0);
+                ASSERT (Ships_exited[idx].ship_class >= 0);
                 ras.ship_class = Ships_exited[idx].ship_class;
             }
 
@@ -731,11 +731,11 @@ void red_alert_store_wingman_status () {
             Red_alert_wingman_status.push_back (ras);
             // niffiwan: trying to track down red alert bug creating HUGE pilot
             // files
-            Assert ((Red_alert_wingman_status.size () <= MAX_SHIPS));
+            ASSERT ((Red_alert_wingman_status.size () <= MAX_SHIPS));
         }
     }
 
-    Assert (!Red_alert_wingman_status.empty ());
+    ASSERT (!Red_alert_wingman_status.empty ());
 }
 
 // Delete a ship in a red alert mission (since it must have died/departed in
@@ -753,7 +753,7 @@ void red_alert_delete_ship (int shipnum, int ship_state) {
         cleanup_mode = SHIP_DEPARTED_REDALERT;
         break;
     default:
-        UNREACHABLE ("Red-alert: Unknown delete state '%i'\n", ship_state);
+        ASSERT (0);
         cleanup_mode = SHIP_VANISHED;
         break;
     }
@@ -773,7 +773,7 @@ void red_alert_delete_ship (p_object* pobjp, int ship_state) {
             pobjp->flags.set (Mission::Parse_Object_Flags::SF_Cannot_arrive);
     }
     else
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Red Alert: asked to delete ship (%s) with invalid ship state "
             "(%d)",
@@ -806,7 +806,7 @@ void red_alert_bash_wingman_status () {
     so = GET_FIRST (&Ship_obj_list);
     for (; so != END_OF_LIST (&Ship_obj_list);) {
         object* ship_objp = &Objects[so->objnum];
-        Assert (ship_objp->type == OBJ_SHIP);
+        ASSERT (ship_objp->type == OBJ_SHIP);
         ship* shipp = &Ships[ship_objp->instance];
 
         if (!(shipp->flags[Ship::Ship_Flags::From_player_wing]) &&
@@ -1024,10 +1024,10 @@ int red_alert_mission () {
 // called from sexpression code to start a red alert mission
 void red_alert_start_mission () {
     // if we are not in campaign mode, go to debriefing
-    //	if ( !(Game_mode & GM_CAMPAIGN_MODE) ) {
-    //		gameseq_post_event( GS_EVENT_DEBRIEF );	// proceed to debriefing
-    //		return;
-    //	}
+    // if ( !(Game_mode & GM_CAMPAIGN_MODE) ) {
+    // gameseq_post_event( GS_EVENT_DEBRIEF ); // proceed to debriefing
+    // return;
+    // }
 
     // check player health here.
     // if we're dead (or about to die), don't start red alert mission.

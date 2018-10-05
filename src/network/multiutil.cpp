@@ -189,25 +189,25 @@ ushort multi_get_next_network_signature (int what_kind) {
 // called from client only and is used mainly for firing weapons.  what_kind
 // tells us permanent or non-permanent signature
 void multi_set_network_signature (ushort signature, int what_kind) {
-    Assert (signature != 0);
+    ASSERT (signature != 0);
 
     if (what_kind == MULTI_SIG_SHIP) {
-        Assert ((signature >= SHIP_SIG_MIN) && (signature <= SHIP_SIG_MAX));
+        ASSERT ((signature >= SHIP_SIG_MIN) && (signature <= SHIP_SIG_MAX));
         Next_ship_signature = signature;
     }
     else if (what_kind == MULTI_SIG_DEBRIS) {
-        Assert (
+        ASSERT (
             (signature >= DEBRIS_SIG_MIN) && (signature <= DEBRIS_SIG_MAX));
         Next_debris_signature = signature;
     }
     else if (what_kind == MULTI_SIG_ASTEROID) {
-        Assert (
+        ASSERT (
             (signature >= ASTEROID_SIG_MIN) &&
             (signature <= ASTEROID_SIG_MAX));
         Next_asteroid_signature = signature;
     }
     else if (what_kind == MULTI_SIG_NON_PERMANENT) {
-        Assert (
+        ASSERT (
             (signature >= NPERM_SIG_MIN) /*&& (signature <= NPERM_SIG_MAX)*/);
         Next_non_perm_signature = signature;
     }
@@ -262,9 +262,9 @@ ushort netmisc_calc_checksum (void* vptr, int len) {
 }
 
 // -------------------------------------------------------------------------------------------------
-//	multi_random_death_word() will return a word from the below list at random.
+// multi_random_death_word() will return a word from the below list at random.
 //
-//	Note:  Keep words grouped into sections of 10
+// Note:  Keep words grouped into sections of 10
 
 #define NUM_DEATH_WORDS 40
 
@@ -321,7 +321,7 @@ const char* multi_random_death_word () {
 }
 
 // -------------------------------------------------------------------------------------------------
-//	multi_random_chat_start() will return a word from the below list at random.
+// multi_random_chat_start() will return a word from the below list at random.
 //
 //
 
@@ -348,7 +348,7 @@ const char* multi_random_chat_start () {
 }
 
 // -------------------------------------------------------------------------------------------------
-//	multi_ship_class_lookup() will return the Ship_info[] index for the ship
+// multi_ship_class_lookup() will return the Ship_info[] index for the ship
 // specified as a
 // parameter.
 //
@@ -369,7 +369,7 @@ int multi_ship_class_lookup (const char* ship_name) {
 }
 
 // -------------------------------------------------------------------------------------------------
-//	find_player() is called when a packet arrives, and we need to know which
+// find_player() is called when a packet arrives, and we need to know which
 // net player to update.
 // The matching is done based on the address and port.  Port checking is done
 // in case multiple instances of FreeSpace are running on the same box.
@@ -624,7 +624,7 @@ void multi_assign_player_ship (
     ship* shipp;
     int idx;
 
-    Assert (MULTI_CONNECTED (Net_players[net_player_num]));
+    ASSERT (MULTI_CONNECTED (Net_players[net_player_num]));
 
     shipp = &Ships[objp->instance];
 
@@ -643,7 +643,7 @@ void multi_assign_player_ship (
     // so wingman status gauge works properly.
     Net_players[net_player_num].p_info.p_objp =
         mission_parse_get_arrival_ship (shipp->ship_name);
-    Assert (
+    ASSERT (
         Net_players[net_player_num].p_info.p_objp !=
         NULL); // get allender -- ship should be on list
 
@@ -666,7 +666,7 @@ void multi_assign_player_ship (
 }
 
 // -------------------------------------------------------------------------------------------------
-//	create_player() is called when a net player needs to be instantiated.  The
+// create_player() is called when a net player needs to be instantiated.  The
 // ship that is created
 // depends on the parameter ship_class.  Note that if ship_class is invalid,
 // the ship default_player_ship is used.  Returns 1 on success, 0 otherwise
@@ -677,7 +677,7 @@ int multi_create_player (
     int player_ship_class = ship_class;
     int current_player_count;
 
-    Assert (
+    ASSERT (
         net_player_num < MAX_PLAYERS); // probably shoudln't be able to even
                                        // get into this routine if no room
 
@@ -713,14 +713,14 @@ int multi_create_player (
         {
             if (!Ship_info.empty ()) {
                 player_ship_class = 0;
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Invalid default player ship specified in ship tables. "
                     "Setting to %s",
                     Ship_info[player_ship_class].name);
             }
             else {
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION,
                     "No ships have been loaded, but we are attempting to set "
                     "a ship!!");
@@ -807,7 +807,7 @@ int multi_create_player (
 // other interesting AI information which ought to get set in order to make
 // this new ai object behave correctly.
 void multi_make_player_ai (object* pobj) {
-    Assert (pobj != NULL);
+    ASSERT (pobj != NULL);
 
     if (pobj->type != OBJ_SHIP) return;
 
@@ -1005,7 +1005,7 @@ void delete_player (int player_num, int kicked_reason) {
 #define INACTIVE_LIMIT_WAIT (20 * F1_0)
 
 // -------------------------------------------------------------------------------------------------
-//	multi_cull_zombies() will check if there has been any net players or
+// multi_cull_zombies() will check if there has been any net players or
 // observers that have been inactive for
 // INACTIVE_LIMIT milliseconds since last check.  If so, they are taken out of
 // the net game.
@@ -1014,34 +1014,34 @@ void delete_player (int player_num, int kicked_reason) {
 
 void multi_cull_zombies () {
 #if 0
-	fix current_time;
-	int inactive_limit;
-	int i;
+        fix current_time;
+        int inactive_limit;
+        int i;
 
-	if(gameseq_get_state() == GS_STATE_MULTI_WAIT)
-		inactive_limit = INACTIVE_LIMIT_WAIT;
-	else
-		inactive_limit = INACTIVE_LIMIT_NORMAL;
+        if(gameseq_get_state() == GS_STATE_MULTI_WAIT)
+                inactive_limit = INACTIVE_LIMIT_WAIT;
+        else
+                inactive_limit = INACTIVE_LIMIT_NORMAL;
 
-	current_time = timer_get_fixed_seconds();
+        current_time = timer_get_fixed_seconds();
 
-	for (i = 0; i < MAX_PLAYERS; i++) {
-		if ( !MULTI_CONNECTED(&Net_players[i])){
-			continue;
-		}
+        for (i = 0; i < MAX_PLAYERS; i++) {
+                if ( !MULTI_CONNECTED(&Net_players[i])){
+                        continue;
+                }
 
-		// server will(should) cull out players based on their sockets dying.
-		if ( Net_players[i].flags & NETINFO_FLAG_MASTER ){
-			continue;
-		}
+                // server will(should) cull out players based on their sockets dying.
+                if ( Net_players[i].flags & NETINFO_FLAG_MASTER ){
+                        continue;
+                }
 
-		if ( (current_time - Net_players[i].last_heard_time) > inactive_limit) {
-			HUD_printf(XSTR("Dumping %s after prolonged inactivity",902),Net_players[i].m_player->callsign);
-			nprintf(("Network", "Assuming %s is a zombie, removing from game\n", Net_players[i].m_player->callsign));
+                if ( (current_time - Net_players[i].last_heard_time) > inactive_limit) {
+                        HUD_printf(XSTR("Dumping %s after prolonged inactivity",902),Net_players[i].m_player->callsign);
+                        nprintf(("Network", "Assuming %s is a zombie, removing from game\n", Net_players[i].m_player->callsign));
 
-			multi_kick_player(i,0);			
-		}
-	}
+                        multi_kick_player(i,0);
+                }
+        }
 #endif
 }
 
@@ -1051,8 +1051,8 @@ void multi_cull_zombies () {
 //
 
 void fill_net_addr (net_addr* addr, ubyte* address, ushort port) {
-    Assert (addr != NULL);
-    Assert (address != NULL);
+    ASSERT (addr != NULL);
+    ASSERT (address != NULL);
 
     addr->type = Multi_options_g.protocol;
     memset (addr->addr, 0x00, 6);
@@ -1074,7 +1074,7 @@ char* get_text_address (char* text, ubyte* address) {
         strcpy (text, inet_ntoa (temp_addr));
         break;
 
-    default: Assert (0); break;
+    default: ASSERT (0); break;
 
     } // end switch
 
@@ -1333,7 +1333,7 @@ void server_verify_filesig (short player_id, ushort sum_sig, int length_sig) {
     int is_builtin;
 
     player = find_player_id (player_id);
-    Assert (player >= 0);
+    ASSERT (player >= 0);
     if (player < 0) { return; }
     pl = &Net_players[player];
 
@@ -1587,8 +1587,8 @@ void multi_maybe_send_repair_info (
     // only send information on player objects
     if (!MULTIPLAYER_MASTER) return;
 
-    Assert (dest_objp->type == OBJ_SHIP);
-    Assert (dest_objp != source_objp);
+    ASSERT (dest_objp->type == OBJ_SHIP);
+    ASSERT (dest_objp != source_objp);
 
     send_repair_info_packet (dest_objp, source_objp, code);
 }
@@ -1613,7 +1613,7 @@ void multi_create_standalone_object () {
     objnum = observer_create (&m, &v);
 
     if (objnum < 0) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Failed to create standalone observer object! Please "
             "investigate!");
@@ -1629,7 +1629,7 @@ void multi_create_standalone_object () {
     // create the default player ship object and use that as my default virtual
     // "ship", and make it "invisible"
     pobj_num = parse_create_object (Player_start_pobject);
-    Assert (pobj_num != -1);
+    ASSERT (pobj_num != -1);
     flagset< Object::Object_Flags > tmp_flags;
     obj_set_flags (
         &Objects[pobj_num], tmp_flags + Object::Object_Flags::Player_ship);
@@ -2109,9 +2109,9 @@ int multi_eval_join_request (join_request* jr, net_addr* addr) {
     }
 
     // can't ingame join a non-dogfight game
-    /*	if((Netgame.game_state != NETGAME_STATE_FORMING) &&
+    /*  if((Netgame.game_state != NETGAME_STATE_FORMING) &&
        !(Netgame.type_flags & NG_TYPE_DOGFIGHT)){ return JOIN_DENY_JR_TYPE;
-        }	*/
+        }       */
 
     // if the player was banned by the standalone
     if ((MULTI_IS_TRACKER_GAME && fs2netd_player_banned (addr)) ||
@@ -2416,7 +2416,7 @@ void multi_file_xfer_notify (int handle) {
     // be "file xfer"
     if (is_mission) {
         // we'd better not be xferring a file right now
-        Assert (Net_player->s_info.xfer_handle == -1);
+        ASSERT (Net_player->s_info.xfer_handle == -1);
 
         // force into the multidata directory
         multi_xfer_handle_force_dir (handle, cf_type);
@@ -2461,7 +2461,7 @@ void multi_process_valid_join_request (
     net_player_num = multi_find_open_netplayer_slot ();
     player_num = multi_find_open_player_slot ();
     id_num = multi_get_new_id ();
-    Assert ((net_player_num != -1) && (player_num != -1));
+    ASSERT ((net_player_num != -1) && (player_num != -1));
 
     // if he is requesting to join as an observer
     if (jr->flags & JOIN_FLAG_AS_OBSERVER) {
@@ -2601,7 +2601,7 @@ void multi_process_valid_join_request (
             Net_players[net_player_num].flags & NETINFO_FLAG_INGAME_JOIN) {
             // if we're in team vs. team mode
             if (Netgame.type_flags & NG_TYPE_TEAM) {
-                /*	int i, j;
+                /*      int i, j;
                     int team_nums[MULTI_TS_MAX_TVT_TEAMS] = {0, 0};\
 
                     //First get the number of players on each team
@@ -2839,7 +2839,7 @@ void multi_server_update_player_weapons (net_player* pl, ship* shipp) {
     // engine ets
     pl->s_info.ship_ets |= ((ushort)shipp->engine_recharge_index);
 
-    Assert (pl->s_info.ship_ets != 0);
+    ASSERT (pl->s_info.ship_ets != 0);
 }
 
 // flush the multidata cache directory
@@ -3115,7 +3115,7 @@ void multi_update_valid_missions () {
         std_gen_set_text ("Querying:", 1);
     }
 
-    Assert (MULTI_IS_TRACKER_GAME);
+    ASSERT (MULTI_IS_TRACKER_GAME);
 
     // mark all missions on our list as being MVALID_STATUS_UNKNOWN
     for (idx = 0; idx < Multi_create_mission_list.size (); idx++) {
@@ -3602,7 +3602,7 @@ int bitbuffer_get_signed (bitbuffer* bitbuf, int bit_count) {
 
 // Packs/unpacks an object position.
 // Returns number of bytes read or written.
-// #define OO_POS_RET_SIZE							9
+// #define OO_POS_RET_SIZE                                                      9
 int multi_pack_unpack_position (int write, ubyte* data, vec3d* pos) {
     bitbuffer buf;
 
@@ -3690,7 +3690,7 @@ hack = bitbuffer_get_unsigned(&buf, 32);
 
 // Packs/unpacks an orientation matrix.
 // Returns number of bytes read or written.
-// #define OO_ORIENT_RET_SIZE						6
+// #define OO_ORIENT_RET_SIZE                                           6
 int multi_pack_unpack_orient (int write, ubyte* data, matrix* orient) {
     bitbuffer buf;
 
@@ -3831,7 +3831,7 @@ int multi_pack_unpack_orient (int write, ubyte* data, matrix* orient) {
 
 // Packs/unpacks an orientation matrix.
 // Returns number of bytes read or written.
-// #define OO_ORIENT_RET_SIZE						6
+// #define OO_ORIENT_RET_SIZE                                           6
 /*
 int multi_pack_unpack_orient( int write, ubyte *data, matrix *orient)
 {
@@ -3843,7 +3843,7 @@ int multi_pack_unpack_orient( int write, ubyte *data, matrix *orient)
     float theta;
     int a, b, c, d;
 
-    if ( write )	{
+    if ( write )        {
 
         // if our heading is 3.14 radians
         //angles ang;
@@ -3907,7 +3907,7 @@ int multi_pack_unpack_orient( int write, ubyte *data, matrix *orient)
 
 // Packs/unpacks velocity
 // Returns number of bytes read or written.
-// #define OO_VEL_RET_SIZE							4
+// #define OO_VEL_RET_SIZE                                                      4
 int multi_pack_unpack_vel (
     int write, ubyte* data, matrix* orient, vec3d* /*pos*/, physics_info* pi) {
     bitbuffer buf;
@@ -3956,7 +3956,7 @@ int multi_pack_unpack_vel (
 
 // Packs/unpacks desired_velocity
 // Returns number of bytes read or written.
-// #define OO_DESIRED_VEL_RET_SIZE				3
+// #define OO_DESIRED_VEL_RET_SIZE                              3
 int multi_pack_unpack_desired_vel (
     int write, ubyte* data, matrix* orient, vec3d* /*pos*/, physics_info* pi,
     ship_info* sip) {
@@ -4057,7 +4057,7 @@ int multi_pack_unpack_desired_vel (
 
 // Packs/unpacks rotational velocity
 // Returns number of bytes read or written.
-// #define OO_ROTVEL_RET_SIZE						4
+// #define OO_ROTVEL_RET_SIZE                                           4
 int multi_pack_unpack_rotvel (
     int write, ubyte* data, matrix* /*orient*/, vec3d* /*pos*/,
     physics_info* pi) {
@@ -4096,7 +4096,7 @@ int multi_pack_unpack_rotvel (
 
 // Packs/unpacks desired rotvel
 // Returns number of bytes read or written.
-// #define OO_DESIRED_ROTVEL_RET_SIZE			3
+// #define OO_DESIRED_ROTVEL_RET_SIZE                   3
 int multi_pack_unpack_desired_rotvel (
     int write, ubyte* data, matrix* /*orient*/, vec3d* /*pos*/,
     physics_info* pi, ship_info* sip) {

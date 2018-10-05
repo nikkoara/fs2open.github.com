@@ -106,7 +106,7 @@ public:
         if (_diffuseBitmap == -1 && VALID_FNAME (_diffuseFilename)) {
             _diffuseBitmap = bm_load_either (_diffuseFilename.c_str ());
             if (_diffuseBitmap == -1) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Bitmap '%s' failed to load for decal definition %s!",
                     _diffuseFilename.c_str (), _name.c_str ());
@@ -115,7 +115,7 @@ public:
         if (_glowBitmap == -1 && VALID_FNAME (_glowFilename)) {
             _glowBitmap = bm_load_either (_glowFilename.c_str ());
             if (_glowBitmap == -1) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Bitmap '%s' failed to load for decal definition %s!",
                     _glowFilename.c_str (), _name.c_str ());
@@ -124,7 +124,7 @@ public:
         if (_normalBitmap == -1 && VALID_FNAME (_normalMapFilename)) {
             _normalBitmap = bm_load_either (_normalMapFilename.c_str ());
             if (_normalBitmap == -1) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Bitmap '%s' failed to load for decal definition %s!",
                     _normalMapFilename.c_str (), _name.c_str ());
@@ -240,7 +240,7 @@ struct Decal {
             auto model_instance =
                 model_get_instance (shipp->model_instance_num);
 
-            Assertion (
+            ASSERTX (
                 submodel >= 0 &&
                     submodel < model_get (object_get_model (objp))->n_models,
                 "Invalid submodel number detected!");
@@ -346,7 +346,7 @@ void loadBitmaps (const creation_info& info) {
     // values if the decal option is not present
     if (info.definition_handle < 0) { return; }
 
-    Assertion (
+    ASSERTX (
         info.definition_handle >= 0 &&
             info.definition_handle < (int)decalDefinitions.size (),
         "Invalid decal handle detected!");
@@ -361,7 +361,7 @@ void pageInDecal (const creation_info& info) {
     // values if the decal option is not present
     if (info.definition_handle < 0) { return; }
 
-    Assertion (
+    ASSERTX (
         info.definition_handle >= 0 &&
             info.definition_handle < (int)decalDefinitions.size (),
         "Invalid decal handle detected!");
@@ -372,7 +372,7 @@ void pageInDecal (const creation_info& info) {
 void initializeMission () { active_decals.clear (); }
 
 matrix4 getDecalTransform (Decal& decal) {
-    Assertion (
+    ASSERTX (
         decal.object.objp->type == OBJ_SHIP,
         "Only ships are currently supported for decals!");
 
@@ -444,7 +444,7 @@ void renderAll () {
         int glow_bm = -1;
         int normal_bm = -1;
 
-        Assertion (
+        ASSERTX (
             decal.definition_handle >= 0 &&
                 decal.definition_handle < (int)decalDefinitions.size (),
             "Invalid decal handle detected!");
@@ -495,7 +495,7 @@ void addDecal (
     // values if the decal option is not present
     if (info.definition_handle < 0) { return; }
 
-    Assertion (
+    ASSERTX (
         info.definition_handle >= 0 &&
             info.definition_handle < (int)decalDefinitions.size (),
         "Invalid decal handle detected!");

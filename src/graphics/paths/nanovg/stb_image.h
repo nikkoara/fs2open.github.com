@@ -106,27 +106,27 @@ Floisand      Kevin Schmidt                         github:poppolopoppo
 // DOCUMENTATION
 //
 // Limitations:
-//    - no 16-bit-per-channel PNG
-//    - no 12-bit-per-channel JPEG
-//    - no JPEGs with arithmetic coding
-//    - no 1-bit BMP
-//    - GIF always returns *comp=4
+// - no 16-bit-per-channel PNG
+// - no 12-bit-per-channel JPEG
+// - no JPEGs with arithmetic coding
+// - no 1-bit BMP
+// - GIF always returns *comp=4
 //
 // Basic usage (see HDR discussion below for HDR usage):
-//    int x,y,n;
-//    unsigned char *data = stbi_load(filename, &x, &y, &n, 0);
-//    // ... process data if not NULL ...
-//    // ... x = width, y = height, n = # 8-bit components per pixel ...
-//    // ... replace '0' with '1'..'4' to force that many components per pixel
-//    // ... but 'n' will always be the number that it would have been if you
-//    said 0 stbi_image_free(data)
+// int x,y,n;
+// unsigned char *data = stbi_load(filename, &x, &y, &n, 0);
+// // ... process data if not NULL ...
+// // ... x = width, y = height, n = # 8-bit components per pixel ...
+// // ... replace '0' with '1'..'4' to force that many components per pixel
+// // ... but 'n' will always be the number that it would have been if you
+// said 0 stbi_image_free(data)
 //
 // Standard parameters:
-//    int *x                 -- outputs image width in pixels
-//    int *y                 -- outputs image height in pixels
-//    int *channels_in_file  -- outputs # of image components in image file
-//    int desired_channels   -- if non-zero, # of image components requested in
-//    result
+// int *x                 -- outputs image width in pixels
+// int *y                 -- outputs image height in pixels
+// int *channels_in_file  -- outputs # of image components in image file
+// int desired_channels   -- if non-zero, # of image components requested in
+// result
 //
 // The return value from an image loader is an 'unsigned char *' which points
 // to the pixel data, or NULL on an allocation failure or if the image is
@@ -145,11 +145,11 @@ Floisand      Kevin Schmidt                         github:poppolopoppo
 // An output image with N components has the following components interleaved
 // in this order in each pixel:
 //
-//     N=#comp     components
-//       1           grey
-//       2           grey, alpha
-//       3           red, green, blue
-//       4           red, green, blue, alpha
+// N=#comp     components
+// 1           grey
+// 2           grey, alpha
+// 3           red, green, blue
+// 4           red, green, blue, alpha
 //
 // If image loading fails for any reason, the return value will be NULL,
 // and *x, *y, *channels_in_file will be unchanged. The function
@@ -166,9 +166,9 @@ Floisand      Kevin Schmidt                         github:poppolopoppo
 //
 // stb libraries are designed with the following priorities:
 //
-//    1. easy to use
-//    2. easy to maintain
-//    3. good performance
+// 1. easy to use
+// 2. easy to maintain
+// 3. good performance
 //
 // Sometimes I let "good performance" creep up in priority over "easy to
 // maintain", and for best performance I may provide less-easy-to-use APIs that
@@ -180,9 +180,9 @@ Floisand      Kevin Schmidt                         github:poppolopoppo
 // Some secondary priorities arise directly from the first two, some of which
 // make more explicit reasons why performance can't be emphasized.
 //
-//    - Portable ("ease of use")
-//    - Small source code footprint ("easy to maintain")
-//    - No dependencies ("ease of use")
+// - Portable ("ease of use")
+// - Small source code footprint ("easy to maintain")
+// - No dependencies ("ease of use")
 //
 // ===========================================================================
 //
@@ -229,8 +229,8 @@ Floisand      Kevin Schmidt                         github:poppolopoppo
 // LDR, assuming gamma 2.2 and an arbitrary scale factor defaulting to 1;
 // both of these constants can be reconfigured through this interface:
 //
-//     stbi_hdr_to_ldr_gamma(2.2f);
-//     stbi_hdr_to_ldr_scale(1.0f);
+// stbi_hdr_to_ldr_gamma(2.2f);
+// stbi_hdr_to_ldr_scale(1.0f);
 //
 // (note, do not use _inverse_ constants; stbi_image will invert them
 // appropriately).
@@ -238,21 +238,21 @@ Floisand      Kevin Schmidt                         github:poppolopoppo
 // Additionally, there is a new, parallel interface for loading files as
 // (linear) floats to preserve the full dynamic range:
 //
-//    float *data = stbi_loadf(filename, &x, &y, &n, 0);
+// float *data = stbi_loadf(filename, &x, &y, &n, 0);
 //
 // If you load LDR images through this interface, those images will
 // be promoted to floating point values, run through the inverse of
 // constants corresponding to the above:
 //
-//     stbi_ldr_to_hdr_scale(1.0f);
-//     stbi_ldr_to_hdr_gamma(2.2f);
+// stbi_ldr_to_hdr_scale(1.0f);
+// stbi_ldr_to_hdr_gamma(2.2f);
 //
 // Finally, given a filename (or an open file or memory block--see header
 // file for details) containing image data, you can query for the "most
 // appropriate" interface to use (that is, whether the image is HDR or
 // not), using:
 //
-//     stbi_is_hdr(char *filename);
+// stbi_is_hdr(char *filename);
 //
 // ===========================================================================
 //
@@ -273,36 +273,36 @@ Floisand      Kevin Schmidt                         github:poppolopoppo
 //
 // ADDITIONAL CONFIGURATION
 //
-//  - You can suppress implementation of any of the decoders to reduce
-//    your code footprint by #defining one or more of the following
-//    symbols before creating the implementation.
+// - You can suppress implementation of any of the decoders to reduce
+// your code footprint by #defining one or more of the following
+// symbols before creating the implementation.
 //
-//        STBI_NO_JPEG
-//        STBI_NO_PNG
-//        STBI_NO_BMP
-//        STBI_NO_PSD
-//        STBI_NO_TGA
-//        STBI_NO_GIF
-//        STBI_NO_HDR
-//        STBI_NO_PIC
-//        STBI_NO_PNM   (.ppm and .pgm)
+// STBI_NO_JPEG
+// STBI_NO_PNG
+// STBI_NO_BMP
+// STBI_NO_PSD
+// STBI_NO_TGA
+// STBI_NO_GIF
+// STBI_NO_HDR
+// STBI_NO_PIC
+// STBI_NO_PNM   (.ppm and .pgm)
 //
-//  - You can request *only* certain decoders and suppress all other ones
-//    (this will be more forward-compatible, as addition of new decoders
-//    doesn't require you to disable them explicitly):
+// - You can request *only* certain decoders and suppress all other ones
+// (this will be more forward-compatible, as addition of new decoders
+// doesn't require you to disable them explicitly):
 //
-//        STBI_ONLY_JPEG
-//        STBI_ONLY_PNG
-//        STBI_ONLY_BMP
-//        STBI_ONLY_PSD
-//        STBI_ONLY_TGA
-//        STBI_ONLY_GIF
-//        STBI_ONLY_HDR
-//        STBI_ONLY_PIC
-//        STBI_ONLY_PNM   (.ppm and .pgm)
+// STBI_ONLY_JPEG
+// STBI_ONLY_PNG
+// STBI_ONLY_BMP
+// STBI_ONLY_PSD
+// STBI_ONLY_TGA
+// STBI_ONLY_GIF
+// STBI_ONLY_HDR
+// STBI_ONLY_PIC
+// STBI_ONLY_PNM   (.ppm and .pgm)
 //
-//   - If you use STBI_NO_PNG (or _ONLY_ without PNG), and you still
-//     want the zlib decoder to be available, #define STBI_SUPPORT_ZLIB
+// - If you use STBI_NO_PNG (or _ONLY_ without PNG), and you still
+// want the zlib decoder to be available, #define STBI_SUPPORT_ZLIB
 //
 
 #ifndef STBI_NO_STDIO
@@ -490,7 +490,7 @@ STBIDEF int stbi_zlib_decode_noheader_buffer (
 
 //
 //
-////   end header file   /////////////////////////////////////////////////////
+//// end header file   /////////////////////////////////////////////////////
 #endif // STBI_INCLUDE_STB_IMAGE_H
 
 #ifdef STB_IMAGE_IMPLEMENTATION
@@ -720,7 +720,7 @@ static int stbi__sse2_available (void) {
 
 ///////////////////////////////////////////////
 //
-//  stbi__context struct and start_xxx functions
+// stbi__context struct and start_xxx functions
 
 // stbi__context structure is our basic context used by all images, so it
 // contains all the IO context, plus some basic image information
@@ -1505,14 +1505,14 @@ static stbi__uint32 stbi__get32le (stbi__context* s) {
 
 //////////////////////////////////////////////////////////////////////////////
 //
-//  generic converter from built-in img_n to req_comp
-//    individual types do this automatically as much as possible (e.g. jpeg
-//    does all cases internally since it needs to colorspace convert anyway,
-//    and it never has alpha, so very few cases ). png can automatically
-//    interleave an alpha=255 channel, but falls back to this for other cases
+// generic converter from built-in img_n to req_comp
+// individual types do this automatically as much as possible (e.g. jpeg
+// does all cases internally since it needs to colorspace convert anyway,
+// and it never has alpha, so very few cases ). png can automatically
+// interleave an alpha=255 channel, but falls back to this for other cases
 //
-//  assume data buffer is malloced, so malloc a new one and free that one
-//  only failure mode is malloc failing
+// assume data buffer is malloced, so malloc a new one and free that one
+// only failure mode is malloc failing
 
 static stbi_uc stbi__compute_y (int r, int g, int b) {
     return (stbi_uc) (((r * 77) + (g * 150) + (29 * b)) >> 8);
@@ -1748,24 +1748,24 @@ static stbi_uc* stbi__hdr_to_ldr (float* data, int x, int y, int comp) {
 
 //////////////////////////////////////////////////////////////////////////////
 //
-//  "baseline" JPEG/JFIF decoder
+// "baseline" JPEG/JFIF decoder
 //
-//    simple implementation
-//      - doesn't support delayed output of y-dimension
-//      - simple interface (only one output format: 8-bit interleaved RGB)
-//      - doesn't try to recover corrupt jpegs
-//      - doesn't allow partial loading, loading multiple at once
-//      - still fast on x86 (copying globals into locals doesn't help x86)
-//      - allocates lots of intermediate memory (full size of all components)
-//        - non-interleaved case requires this anyway
-//        - allows good upsampling (see next)
-//    high-quality
-//      - upsampled channels are bilinearly interpolated, even across blocks
-//      - quality integer IDCT derived from IJG's 'slow'
-//    performance
-//      - fast huffman; reasonable integer IDCT
-//      - some SIMD kernels for common paths on targets with SSE2/NEON
-//      - uses a lot of intermediate memory, could cache poorly
+// simple implementation
+// - doesn't support delayed output of y-dimension
+// - simple interface (only one output format: 8-bit interleaved RGB)
+// - doesn't try to recover corrupt jpegs
+// - doesn't allow partial loading, loading multiple at once
+// - still fast on x86 (copying globals into locals doesn't help x86)
+// - allocates lots of intermediate memory (full size of all components)
+// - non-interleaved case requires this anyway
+// - allows good upsampling (see next)
+// high-quality
+// - upsampled channels are bilinearly interpolated, even across blocks
+// - quality integer IDCT derived from IJG's 'slow'
+// performance
+// - fast huffman; reasonable integer IDCT
+// - some SIMD kernels for common paths on targets with SSE2/NEON
+// - uses a lot of intermediate memory, could cache poorly
 
 #ifndef STBI_NO_JPEG
 
@@ -2303,10 +2303,10 @@ static void stbi__idct_block (stbi_uc* out, int out_stride, short data[64]) {
         // if all zeroes, shortcut -- this avoids dequantizing 0s and IDCTing
         if (d[8] == 0 && d[16] == 0 && d[24] == 0 && d[32] == 0 &&
             d[40] == 0 && d[48] == 0 && d[56] == 0) {
-            //    no shortcut                 0     seconds
-            //    (1|2|3|4|5|6|7)==0          0     seconds
-            //    all separate               -0.047 seconds
-            //    1 && 2|3 && 4|5 && 6|7:    -0.047 seconds
+            // no shortcut                 0     seconds
+            // (1|2|3|4|5|6|7)==0          0     seconds
+            // all separate               -0.047 seconds
+            // 1 && 2|3 && 4|5 && 6|7:    -0.047 seconds
             int dcterm = d[0] << 2;
             v[0] = v[8] = v[16] = v[24] = v[32] = v[40] = v[48] = v[56] =
                 dcterm;
@@ -4094,11 +4094,11 @@ static int stbi__jpeg_info (stbi__context* s, int* x, int* y, int* comp) {
 #endif
 
 // public domain zlib decode    v0.2  Sean Barrett 2006-11-18
-//    simple implementation
-//      - all input must be provided in an upfront buffer
-//      - all output is written to a single output buffer (can malloc/realloc)
-//    performance
-//      - fast huffman
+// simple implementation
+// - all input must be provided in an upfront buffer
+// - all output is written to a single output buffer (can malloc/realloc)
+// performance
+// - fast huffman
 
 #ifndef STBI_NO_ZLIB
 
@@ -4179,10 +4179,10 @@ stbi__zbuild_huffman (stbi__zhuffman* z, const stbi_uc* sizelist, int num) {
 }
 
 // zlib-from-memory implementation for PNG reading
-//    because PNG allows splitting the zlib stream arbitrarily,
-//    and it's annoying structurally to have PNG call ZLIB call PNG,
-//    we require PNG read all the IDATs and combine them into a single
-//    memory buffer
+// because PNG allows splitting the zlib stream arbitrarily,
+// and it's annoying structurally to have PNG call ZLIB call PNG,
+// we require PNG read all the IDATs and combine them into a single
+// memory buffer
 
 typedef struct {
     stbi_uc *zbuffer, *zbuffer_end;
@@ -4602,14 +4602,14 @@ STBIDEF int stbi_zlib_decode_noheader_buffer (
 #endif
 
 // public domain "baseline" PNG decoder   v0.10  Sean Barrett 2006-11-18
-//    simple implementation
-//      - only 8-bit samples
-//      - no CRC checking
-//      - allocates lots of intermediate memory
-//        - avoids problem of streaming data between subsystems
-//        - avoids explicit window management
-//    performance
-//      - uses stb_zlib, a PD zlib implementation with fast huffman decoding
+// simple implementation
+// - only 8-bit samples
+// - no CRC checking
+// - allocates lots of intermediate memory
+// - avoids problem of streaming data between subsystems
+// - avoids explicit window management
+// performance
+// - uses stb_zlib, a PD zlib implementation with fast huffman decoding
 
 #ifndef STBI_NO_PNG
 typedef struct {
@@ -5860,7 +5860,7 @@ static int stbi__tga_info (stbi__context* s, int* x, int* y, int* comp) {
         }
         stbi__skip (
             s, 4); // skip index of first colormap entry and number of entries
-        sz = stbi__get8 (s); //   check bits per palette color entry
+        sz = stbi__get8 (s); // check bits per palette color entry
         if ((sz != 8) && (sz != 15) && (sz != 16) && (sz != 24) &&
             (sz != 32)) {
             stbi__rewind (s);
@@ -5918,16 +5918,16 @@ static int stbi__tga_info (stbi__context* s, int* x, int* y, int* comp) {
 static int stbi__tga_test (stbi__context* s) {
     int res = 0;
     int sz, tga_color_type;
-    stbi__get8 (s);                        //   discard Offset
-    tga_color_type = stbi__get8 (s);       //   color type
-    if (tga_color_type > 1) goto errorEnd; //   only RGB or indexed allowed
-    sz = stbi__get8 (s);                   //   image type
+    stbi__get8 (s);                        // discard Offset
+    tga_color_type = stbi__get8 (s);       // color type
+    if (tga_color_type > 1) goto errorEnd; // only RGB or indexed allowed
+    sz = stbi__get8 (s);                   // image type
     if (tga_color_type == 1) {             // colormapped (paletted) image
         if (sz != 1 && sz != 9)
             goto errorEnd; // colortype 1 demands image type 1 or 9
         stbi__skip (
             s, 4); // skip index of first colormap entry and number of entries
-        sz = stbi__get8 (s); //   check bits per palette color entry
+        sz = stbi__get8 (s); // check bits per palette color entry
         if ((sz != 8) && (sz != 15) && (sz != 16) && (sz != 24) && (sz != 32))
             goto errorEnd;
         stbi__skip (s, 4); // skip image x and y origin
@@ -5937,9 +5937,9 @@ static int stbi__tga_test (stbi__context* s) {
             goto errorEnd; // only RGB or grey allowed, +/- RLE
         stbi__skip (s, 9); // skip colormap specification and image x/y origin
     }
-    if (stbi__get16le (s) < 1) goto errorEnd; //   test width
-    if (stbi__get16le (s) < 1) goto errorEnd; //   test height
-    sz = stbi__get8 (s);                      //   bits per pixel
+    if (stbi__get16le (s) < 1) goto errorEnd; // test width
+    if (stbi__get16le (s) < 1) goto errorEnd; // test height
+    sz = stbi__get8 (s);                      // bits per pixel
     if ((tga_color_type == 1) && (sz != 8) && (sz != 16))
         goto errorEnd; // for colormapped images, bpp is size of an index
     if ((sz != 8) && (sz != 15) && (sz != 16) && (sz != 24) && (sz != 32))
@@ -5976,7 +5976,7 @@ static void stbi__tga_read_rgb16 (stbi__context* s, stbi_uc* out) {
 static void* stbi__tga_load (
     stbi__context* s, int* x, int* y, int* comp, int req_comp,
     stbi__result_info* ri) {
-    //   read in the TGA header stuff
+    // read in the TGA header stuff
     int tga_offset = stbi__get8 (s);
     int tga_indexed = stbi__get8 (s);
     int tga_image_type = stbi__get8 (s);
@@ -5993,7 +5993,7 @@ static void* stbi__tga_load (
     int tga_inverted = stbi__get8 (s);
     // int tga_alpha_bits = tga_inverted & 15; // the 4 lowest bits - unused
     // (useless?)
-    //   image data
+    // image data
     unsigned char* tga_data;
     unsigned char* tga_palette = NULL;
     int i, j;
@@ -6003,14 +6003,14 @@ static void* stbi__tga_load (
     int read_next_pixel = 1;
     STBI_NOTUSED (ri);
 
-    //   do a tiny bit of precessing
+    // do a tiny bit of precessing
     if (tga_image_type >= 8) {
         tga_image_type -= 8;
         tga_is_RLE = 1;
     }
     tga_inverted = 1 - ((tga_inverted >> 5) & 1);
 
-    //   If I'm paletted, then I'll use the number of bits from the palette
+    // If I'm paletted, then I'll use the number of bits from the palette
     if (tga_indexed)
         tga_comp = stbi__tga_get_comp (tga_palette_bits, 0, &tga_rgb16);
     else
@@ -6021,7 +6021,7 @@ static void* stbi__tga_load (
                    // ensured basic consistency
         return stbi__errpuc ("bad format", "Can't find out TGA pixelformat");
 
-    //   tga info
+    // tga info
     *x = tga_width;
     *y = tga_height;
     if (comp) *comp = tga_comp;
@@ -6044,11 +6044,11 @@ static void* stbi__tga_load (
         }
     }
     else {
-        //   do I need to load a palette?
+        // do I need to load a palette?
         if (tga_indexed) {
-            //   any data to skip? (offset usually = 0)
+            // any data to skip? (offset usually = 0)
             stbi__skip (s, tga_palette_start);
-            //   load the palette
+            // load the palette
             tga_palette = (unsigned char*)stbi__malloc_mad2 (
                 tga_palette_len, tga_comp, 0);
             if (!tga_palette) {
@@ -6070,12 +6070,12 @@ static void* stbi__tga_load (
                 return stbi__errpuc ("bad palette", "Corrupt TGA");
             }
         }
-        //   load the data
+        // load the data
         for (i = 0; i < tga_width * tga_height; ++i) {
-            //   if I'm in RLE mode, do I need to get a RLE stbi__pngchunk?
+            // if I'm in RLE mode, do I need to get a RLE stbi__pngchunk?
             if (tga_is_RLE) {
                 if (RLE_count == 0) {
-                    //   yep, get the next byte as a RLE command
+                    // yep, get the next byte as a RLE command
                     int RLE_cmd = stbi__get8 (s);
                     RLE_count = 1 + (RLE_cmd & 127);
                     RLE_repeating = RLE_cmd >> 7;
@@ -6088,9 +6088,9 @@ static void* stbi__tga_load (
             else {
                 read_next_pixel = 1;
             }
-            //   OK, if I need to read a pixel, do it now
+            // OK, if I need to read a pixel, do it now
             if (read_next_pixel) {
-                //   load however much data we did have
+                // load however much data we did have
                 if (tga_indexed) {
                     // read in index, then perform the lookup
                     int pal_idx = (tga_bits_per_pixel == 8)
@@ -6110,12 +6110,12 @@ static void* stbi__tga_load (
                     stbi__tga_read_rgb16 (s, raw_data);
                 }
                 else {
-                    //   read in the data raw
+                    // read in the data raw
                     for (j = 0; j < tga_comp; ++j) {
                         raw_data[j] = stbi__get8 (s);
                     }
                 }
-                //   clear the reading flag for the next pixel
+                // clear the reading flag for the next pixel
                 read_next_pixel = 0;
             } // end of reading a pixel
 
@@ -6123,10 +6123,10 @@ static void* stbi__tga_load (
             for (j = 0; j < tga_comp; ++j)
                 tga_data[i * tga_comp + j] = raw_data[j];
 
-            //   in case we're in RLE mode, keep counting down
+            // in case we're in RLE mode, keep counting down
             --RLE_count;
         }
-        //   do I need to invert the image?
+        // do I need to invert the image?
         if (tga_inverted) {
             for (j = 0; j * 2 < tga_height; ++j) {
                 int index1 = j * tga_width * tga_comp;
@@ -6140,7 +6140,7 @@ static void* stbi__tga_load (
                 }
             }
         }
-        //   clear my palette, if I had one
+        // clear my palette, if I had one
         if (tga_palette != NULL) { STBI_FREE (tga_palette); }
     }
 
@@ -6161,11 +6161,11 @@ static void* stbi__tga_load (
         tga_data = stbi__convert_format (
             tga_data, tga_comp, req_comp, tga_width, tga_height);
 
-    //   the things I do to get rid of an error message, and yet keep
-    //   Microsoft's C compilers happy... [8^(
+    // the things I do to get rid of an error message, and yet keep
+    // Microsoft's C compilers happy... [8^(
     tga_palette_start = tga_palette_len = tga_palette_bits = tga_x_origin =
         tga_y_origin = 0;
-    //   OK, done
+    // OK, done
     return tga_data;
 }
 #endif
@@ -6263,14 +6263,14 @@ static void* stbi__psd_load (
 
     // Make sure the color mode is RGB.
     // Valid options are:
-    //   0: Bitmap
-    //   1: Grayscale
-    //   2: Indexed color
-    //   3: RGB color
-    //   4: CMYK color
-    //   7: Multichannel
-    //   8: Duotone
-    //   9: Lab color
+    // 0: Bitmap
+    // 1: Grayscale
+    // 2: Indexed color
+    // 3: RGB color
+    // 4: CMYK color
+    // 7: Multichannel
+    // 8: Duotone
+    // 9: Lab color
     if (stbi__get16be (s) != 3)
         return stbi__errpuc (
             "wrong color format", "PSD is not in RGB color format");
@@ -6287,8 +6287,8 @@ static void* stbi__psd_load (
 
     // Find out if the data is compressed.
     // Known values:
-    //   0: no compression
-    //   1: RLE compressed
+    // 0: no compression
+    // 1: RLE compressed
     compression = stbi__get16be (s);
     if (compression > 1)
         return stbi__errpuc (
@@ -6317,10 +6317,10 @@ static void* stbi__psd_load (
     if (compression) {
         // RLE as used by .PSD and .TIFF
         // Loop until you get the number of unpacked bytes you are expecting:
-        //     Read the next source byte into n.
-        //     If n is between 0 and 127 inclusive, copy the next n+1 bytes
-        //     literally. Else if n is between -127 and -1 inclusive, copy the
-        //     next byte -n+1 times. Else if n is 128, noop.
+        // Read the next source byte into n.
+        // If n is between 0 and 127 inclusive, copy the next n+1 bytes
+        // literally. Else if n is between -127 and -1 inclusive, copy the
+        // next byte -n+1 times. Else if n is 128, noop.
         // Endloop
 
         // The RLE-compressed data is preceeded by a 2-byte data count for each
@@ -7427,9 +7427,9 @@ static int stbi__pic_info (stbi__context* s, int* x, int* y, int* comp) {
 // PPM: http://netpbm.sourceforge.net/doc/ppm.html
 //
 // Known limitations:
-//    Does not support comments in the header section
-//    Does not support ASCII image data (formats P2 and P3)
-//    Does not support 16-bit-per-channel
+// Does not support comments in the header section
+// Does not support ASCII image data (formats P2 and P3)
+// Does not support 16-bit-per-channel
 
 #ifndef STBI_NO_PNM
 

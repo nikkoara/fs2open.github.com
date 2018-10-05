@@ -96,13 +96,13 @@ targa_copy_data (char* to, char* from, int pixels, int fromsize, int tosize) {
         return tosize * pixels;
     }
     else {
-        Assert (fromsize == tosize);
+        ASSERT (fromsize == tosize);
         memcpy (to, from, pixels * fromsize);
         return tosize * pixels;
     }
 }
 
-//	targa_pixels_equal -- Test if two pixels are identical
+// targa_pixels_equal -- Test if two pixels are identical
 //
 // pix1 - first pixel data
 // pix2 - second pixel data
@@ -117,7 +117,7 @@ static int targa_pixels_equal (char* pix1, char* pix2, int pixbytes) {
     return 1;
 }
 
-//	Perform targa RLE on the input data
+// Perform targa RLE on the input data
 //
 // out - Buffer to write it out to
 // in - Buffer to compress
@@ -191,13 +191,13 @@ int targa_compress (
 
         // current pixel == match pixel?
         if (targa_pixels_equal (inputpixel, matchpixel, outsize)) {
-            //	establishing a run of enough length to
-            //	save space by doing it
-            //		-- write the non-run length packet
-            //		-- start run-length packet
+            // establishing a run of enough length to
+            // save space by doing it
+            // -- write the non-run length packet
+            // -- start run-length packet
 
             if (++rlcount == rlthresh) {
-                //	close a non-run packet
+                // close a non-run packet
 
                 if (pixcount > (rlcount + 1)) {
                     // write out length and do not set run flag
@@ -215,9 +215,9 @@ int targa_compress (
         }
         else {
             // no match -- either break a run or continue without one
-            //	if a run exists break it:
-            //		write the bytes in the string (outsize+1)
-            //		start the next string
+            // if a run exists break it:
+            // write the bytes in the string (outsize+1)
+            // start the next string
 
             if (rlcount >= rlthresh) {
                 *flagbyte++ = (char)(0x80 | rlcount);
@@ -227,9 +227,9 @@ int targa_compress (
                 continue;
             }
             else {
-                //	not a match and currently not a run
-                //		- save the current pixel
-                //		- reset the run-length flag
+                // not a match and currently not a run
+                // - save the current pixel
+                // - reset the run-length flag
                 rlcount = 0;
                 matchpixel = inputpixel;
             }
@@ -259,7 +259,7 @@ int targa_compress (
 // returns the number of bytes read into memory.
 // NOTE : for FreeSpace2, this also swizzles data into the proper screen (NOT
 // texture) format - just like
-//        the pcxutils do.
+// the pcxutils do.
 //
 // dst - A pointer to the destination.  Must be at least 4 bytes long.
 // targa_file - The file to read from.
@@ -406,7 +406,7 @@ int targa_read_header (
 
     if ((header.pixel_depth != 16) && (header.pixel_depth != 24) &&
         (header.pixel_depth != 32)) {
-        Assertion (
+        ASSERTX (
             (header.pixel_depth != 16) && (header.pixel_depth != 24) &&
                 (header.pixel_depth != 32),
             "Invalid colour depth (%d) in header of tga file %s\n",
@@ -444,7 +444,7 @@ int targa_uncompress (
         int run_count = *src_pixels++;
 
         // Make sure writing this next run will not overflow the buffer
-        Assert (pixel_count + (run_count & 0x7f) + 1 <= bitmap_width);
+        ASSERT (pixel_count + (run_count & 0x7f) + 1 <= bitmap_width);
 
         // If the run is encoded...
         if (run_count & 0x80) {
@@ -475,7 +475,7 @@ int targa_uncompress (
         }
     }
 
-    Assert (pixel_count == bitmap_width);
+    ASSERT (pixel_count == bitmap_width);
 
     return (int)(src_pixels - src);
 }
@@ -490,7 +490,7 @@ int targa_uncompress (
 int targa_read_bitmap (
     const char* real_filename, ubyte* image_data, ubyte* palette,
     int dest_size, int cf_type) {
-    Assert (real_filename);
+    ASSERT (real_filename);
     targa_header header;
     targa_footer footer;
     CFILE* targa_file;
@@ -572,7 +572,7 @@ int targa_read_bitmap (
 
     // we're only allowing 2 bytes per pixel (16 bit compressed), unless
     // Cmdline_jpgtga is used
-    Assert (
+    ASSERT (
         (bytes_per_pixel == 2) || (bytes_per_pixel == 3) ||
         (bytes_per_pixel == 4));
 
@@ -603,9 +603,9 @@ int targa_read_bitmap (
         Int3 ();
 
         // Determine the size of the color map
-        Assert (header.cmap_depth == 24);
-        Assert (header.cmap_length <= 256);
-        Assert (palette);
+        ASSERT (header.cmap_depth == 24);
+        ASSERT (header.cmap_length <= 256);
+        ASSERT (palette);
 
         // Read the color map data
         int i;
@@ -633,10 +633,10 @@ int targa_read_bitmap (
     int bytes_remaining =
         cfilelength (targa_file) - cftell (targa_file) - xfile_offset;
 
-    Assert (bytes_remaining > 0);
+    ASSERT (bytes_remaining > 0);
 
     ubyte* fileptr = (ubyte*)vm_malloc (bytes_remaining);
-    Assert (fileptr);
+    ASSERT (fileptr);
     if (fileptr == NULL) { return TARGA_ERROR_READING; }
 
     ubyte* src_pixels = fileptr;
@@ -702,7 +702,7 @@ int targa_read_bitmap (
 int targa_write_bitmap (
     char* real_filename, ubyte* data, ubyte* /*palette*/, int w, int h,
     int bpp) {
-    Assert (bpp == 24);
+    ASSERT (bpp == 24);
     char filename[MAX_FILENAME_LEN];
     CFILE* f;
     int bytes_per_pixel = (bpp >> 3);
@@ -718,47 +718,47 @@ int targa_write_bitmap (
 
     // Write the TGA header
     cfwrite_ubyte (0, f);
-    // f.write_ubyte(0);				//	IDLength
+    // f.write_ubyte(0);                                //      IDLength
 
     cfwrite_ubyte (0, f);
-    // f.write_ubyte(0);				//	ColorMapType
+    // f.write_ubyte(0);                                //      ColorMapType
 
     cfwrite_ubyte (10, f);
-    // f.write_ubyte(10);			//	image_type: 2 = 24bpp, uncompressed,
+    // f.write_ubyte(10);                       //      image_type: 2 = 24bpp, uncompressed,
     // 10=24bpp rle compressed
 
     cfwrite_ushort (0, f);
-    // f.write_ushort(0);			// CMapStart
+    // f.write_ushort(0);                       // CMapStart
 
     cfwrite_ushort (0, f);
-    // f.write_ushort(0);			//	CMapLength
+    // f.write_ushort(0);                       //      CMapLength
 
     cfwrite_ubyte (0, f);
-    // f.write_ubyte(0);				// CMapDepth
+    // f.write_ubyte(0);                                // CMapDepth
 
     cfwrite_ushort (0, f);
-    // f.write_ushort(0);			//	XOffset
+    // f.write_ushort(0);                       //      XOffset
 
     cfwrite_ushort (0, f);
-    // f.write_ushort(0);			//	YOffset
+    // f.write_ushort(0);                       //      YOffset
 
     cfwrite_ushort ((ushort)w, f);
-    // f.write_ushort((ushort)w);	//	Width
+    // f.write_ushort((ushort)w);       //      Width
 
     cfwrite_ushort ((ushort)h, f);
-    // f.write_ushort((ushort)h);	//	Height
+    // f.write_ushort((ushort)h);       //      Height
 
     cfwrite_ubyte (24, f);
-    // f.write_ubyte(24);			// pixel_depth
+    // f.write_ubyte(24);                       // pixel_depth
 
     cfwrite_ubyte (0x20, f);
-    // f.write_ubyte(0x20);				// ImageDesc  ( 0x20 = Origin at upper
+    // f.write_ubyte(0x20);                             // ImageDesc  ( 0x20 = Origin at upper
     // left
     // )
 
     ubyte* compressed_data;
     compressed_data = (ubyte*)vm_malloc (w * h * bytes_per_pixel);
-    Assert (compressed_data);
+    ASSERT (compressed_data);
     if (compressed_data == NULL) {
         cfclose (f);
         return -1;

@@ -250,8 +250,7 @@ bool openal_init_device (std::string* playback, std::string* capture) {
     auto platform_info = openal_get_platform_information ();
 
     if (platform_info.version_major <= 1 && platform_info.version_minor < 1) {
-        using namespace fs2::dialog;
-        message (dialog_type::error, "OpenAL version < v1.1");
+        EE ("general") << "OpenAL version < v1.1";
         return false;
     }
 

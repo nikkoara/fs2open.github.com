@@ -22,7 +22,7 @@
 
 // from player.h
 #define CALLSIGN_LEN \
-    28 //	shortened from 32 to allow .plr to be attached without exceeding
+    28 // shortened from 32 to allow .plr to be attached without exceeding
        // MAX_FILENAME_LEN
 #define SHORT_CALLSIGN_PIXEL_W 80 // max width of short_callsign[] in pixels
 

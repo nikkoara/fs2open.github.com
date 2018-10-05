@@ -110,7 +110,7 @@ FLAG_LIST (Ship_Flags){
     Glowmaps_disabled,   // taylor - to disable glow maps
     No_death_scream,     // Goober5000 - for WCS
     Always_death_scream, // Goober5000 - for WCS
-    Navpoint_needslink,  // Kazan	- This ship requires "linking" for
+    Navpoint_needslink,  // Kazan       - This ship requires "linking" for
                         // autopilot (when player ship gets within specified
                         // distance NAVPOINT_NEEDSLINK is replaced by
                         // NAVPOINT_CARRY)

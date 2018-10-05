@@ -141,7 +141,7 @@ struct MissionMessage  {
 extern std::vector< MissionMessage > Messages;
 
 struct pmessage  {
-    // anim_instance *anim;		// handle of anim currently playing
+    // anim_instance *anim;             // handle of anim currently playing
     generic_anim* anim_data; // animation data to be used by the talking head
                              // HUD gauge handler
     int start_frame;         // the start frame needed to play the animation

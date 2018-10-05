@@ -47,10 +47,10 @@ struct mission_goal  {
     char name[NAME_LENGTH]; // used for storing status of goals in player file
     int type;               // primary/secondary/bonus
     int satisfied;          // has this goal been satisfied
-    char message[MAX_GOAL_TEXT]; //	Brief description, such as "Destroy all
+    char message[MAX_GOAL_TEXT]; // Brief description, such as "Destroy all
                                  // vile aliens!"
-    int rating;                  //	Some importance figure or something.
-    int formula;                 //	Index in Sexp_nodes of this Sexp.
+    int rating;                  // Some importance figure or something.
+    int formula;                 // Index in Sexp_nodes of this Sexp.
     int score;                   // score for this goal
     int flags;                   // MGF_
     int team;                    // which team is this objective for.
@@ -89,7 +89,7 @@ extern int Num_goals;         // number of goals for this mission
 
 #define MLF_SEXP_TRUE (1 << 0)
 #define MLF_SEXP_FALSE (1 << 1)
-//#define MLF_SEXP_KNOWN_TRUE			(1 << 2)
+//#define MLF_SEXP_KNOWN_TRUE                   (1 << 2)
 #define MLF_SEXP_KNOWN_FALSE (1 << 3)
 #define MLF_FIRST_REPEAT_ONLY (1 << 4)
 #define MLF_LAST_REPEAT_ONLY (1 << 5)

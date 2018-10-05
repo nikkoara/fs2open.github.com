@@ -52,36 +52,36 @@
 // 3.) The client then moves into the INGAME_SYNC state to begin receiving data
 // from the server 4.) The first thing he does on this screen is send his
 // filesig packet to the server. At which
-//     point the server will either let him in or deny him. There are no file
-//     transfers ingame.
+// point the server will either let him in or deny him. There are no file
+// transfers ingame.
 // 5.) The server calls multi_handle_ingame_joiners() once per frame, through
 // multi_do_frame() 6.) After verifiying or kicking the player because of his
 // file signature, the server tells the
-//     player to load the mission
+// player to load the mission
 // 7.) When the mission is loaded, the server, sends a netgame update to the
 // client 8.) Without waiting, the server then begins sending data ship packets
 // to the player 9.) Upon confirmation of receiving these packets, the server
 // sends wing data packets 10.) Upon completion of this, the server sends
 // respawn point packets 11.) Upon completion of this, the server sends a post
 // briefing data block packet containing ship class and
-//      weapon information
+// weapon information
 // 12.) After this, the server sends a player settings packet (to all players
 // for good measure) 13.) At this point, the server sends a jump into mission
 // packet 14.) Upon receipt of this packet, the client moves into the ingame
 // ship select state 15.) The first thing the client does in this state is load
 // the mission data (textures, etc) 16.) The player is presented with a list of
 // ships he can choose from. He selects one and sends
-//      an INGAME_SHIP_REQUEST to the server.
+// an INGAME_SHIP_REQUEST to the server.
 // 17.) The server checks to see if this request is acceptable and sends an
 // INGAME_SHIP_REQUEST back
-//      with the appropriate data.
+// with the appropriate data.
 // 18.) If the client received an affirmative, he selects the ship and jumps
 // into the mission, otherwise
-//      he removes it from the list and tries for another ship
+// he removes it from the list and tries for another ship
 // --------------------------------------------------------------------------------------------------
 
 LOCAL int Ingame_ships_deleted = 0;
-// LOCAL	int	Ingame_ships_to_delete[MAX_SHIPS];
+// LOCAL        int     Ingame_ships_to_delete[MAX_SHIPS];
 
 // --------------------------------------------------------------------------------------------------
 // INGAME JOIN FORWARD DECLARATIONS
@@ -105,7 +105,7 @@ void multi_ingame_join_button_pressed (int n);
 void multi_handle_ingame_joiners () {
     int idx;
 
-    Assert (MULTIPLAYER_MASTER);
+    ASSERT (MULTIPLAYER_MASTER);
 
     // if my ingame joining flag isn't set, then don't do anything.
     if (!(Netgame.flags & NG_FLAG_INGAME_JOINING)) { return; }
@@ -490,8 +490,8 @@ static int Multi_ingame_timer_coords[GR_NUM_RESOLUTIONS][2] = { { // GR_640
                                                                 { // GR_1024
                                                                   42, 658 } };
 
-//#define MULTI_INGAME_TIME_LEFT_X			26
-//#define MULTI_INGAME_TIME_LEFT_Y			411
+//#define MULTI_INGAME_TIME_LEFT_X                      26
+//#define MULTI_INGAME_TIME_LEFT_Y                      411
 
 #define MULTI_INGAME_TIME_SECONDS (1000 * 15)
 LOCAL int Ingame_time_left;
@@ -675,7 +675,7 @@ void multi_ingame_select_init () {
     Multi_ingame_bitmap =
         bm_load (Multi_ingame_join_bitmap_fname[gr_screen.res]);
     if (Multi_ingame_bitmap < 0)
-        fs2::dialog::error (LOCATION, "Couldn't load background bitmap for ingame join");
+        ASSERTF (LOCATION, "Couldn't load background bitmap for ingame join");
 
     // create the interface buttons
     for (idx = 0; idx < MULTI_INGAME_JOIN_NUM_BUTTONS; idx++) {
@@ -1147,7 +1147,7 @@ void process_ingame_ships_packet (ubyte* data, header* hinfo) {
             multi_ts_get_team_and_slot (
                 Ships[idx].ship_name, &team_val, &slot_index);
             if (team_val != -1) {
-                Assert (slot_index != -1);
+                ASSERT (slot_index != -1);
 
                 // change the ship type and the weapons
                 change_ship_type (
@@ -1216,8 +1216,8 @@ void send_ingame_ships_packet (net_player* player) {
             continue;
         }
 
-        //  add the ship name and other information such as net signature, ship
-        //  and object(?) flags.
+        // add the ship name and other information such as net signature, ship
+        // and object(?) flags.
         p_type = INGAME_SHIP_NEXT;
         ADD_DATA (p_type);
         ADD_STRING (shipp->ship_name);
@@ -1271,7 +1271,7 @@ wings always, so this
 
         GET_DATA( what );
         if ( what == INGAME_WING_NOT_ARRIVED ) {
-            Assert( wingp->total_arrived_count == 0 );			// this had
+            ASSERT (wingp->total_arrived_count == 0 );                  // this had
 better be true!!! } else if ( what == INGAME_WING_DEPARTED ) {
             // mark the wing as gone.  if it isn't, it soon will be.  Maybe we
 should send more information
@@ -1285,8 +1285,8 @@ crucial information about the
 machine GET_DATA( total_arrived_count ); GET_DATA( current_count ); GET_DATA(
 current_wave );
 
-            Assert( current_wave > 0 );
-            Assert( total_arrived_count > 0 );
+            ASSERT (current_wave > 0 );
+            ASSERT (total_arrived_count > 0 );
 
             // for this wing, strip it down to nothing.  Let the parse object
 ocde recreate the
@@ -1303,18 +1303,18 @@ wingp->current_count)); for ( i = 0; i < wingp->current_count; i++ ) { int
 index, objnum;
 
                 index = wingp->ship_index[i];
-                Assert( index != -1 );
+                ASSERT (index != -1 );
                 objnum = Ships[index].objnum;
-                Assert( objnum != -1 );
+                ASSERT (objnum != -1 );
 
                 // delete the object since we are filling the wing again
 anyway. obj_delete( objnum );
-                Objects[objnum].net_signature = 0;				// makes this
+                Objects[objnum].net_signature = 0;                              // makes this
 object "invalid" until dead. if ( Objects[objnum].type == OBJ_GHOST ) {
                     nprintf(("Network", "Marking ghost objnum %d as dead\n",
 objnum)); Objects[objnum].flags |= OF_SHOULD_BE_DEAD;
                 }
-                Ingame_ships_to_delete[index] = 0;		// be sure that this
+                Ingame_ships_to_delete[index] = 0;              // be sure that this
 guy doesn't get deleted, since we already deleted it wingp->ship_index[i] = -1;
             }
             wingp->current_count = 0;
@@ -1332,7 +1332,7 @@ guy doesn't get deleted, since we already deleted it wingp->ship_index[i] = -1;
 signature.  This let's us
                 // know which ship to create (i.e. the total_arrivel_count);
                 which_one = signature - wingp->net_signature;
-                Assert( (which_one >= 0) && (which_one < (wingp->net_signature
+                ASSERT ((which_one >= 0) && (which_one < (wingp->net_signature
 + (wingp->wave_count*wingp->num_waves))) ); wingp->total_arrived_count =
 (ushort)which_one;
 
@@ -1345,11 +1345,11 @@ create 1 ship at a time.  We don't
 either.  We will directly
                 // assign it here.
 
-                wingp->current_wave = 0;						// make it the
+                wingp->current_wave = 0;                                                // make it the
 first wave.  Ensures that ships don't get removed off the list
                 parse_wing_create_ships( wingp, 1, 1, specific_instance );
                 shipnum = wingp->ship_index[wingp->current_count-1];
-                Ingame_ships_to_delete[shipnum] = 0;			// "unmark"
+                Ingame_ships_to_delete[shipnum] = 0;                    // "unmark"
 this ship so it doesn't get deleted.
 
                 // kind of stupid, but bash the name since it won't get
@@ -1367,7 +1367,7 @@ which_one);
 of player wing.  So, if
                 // not -1, then be sure we have a valid slot, then change the
 ship type, etc. multi_ts_get_team_and_slot(shipp->ship_name, &team,
-&slot_index); if ( team != -1 ) { Assert( slot_index != -1 );
+&slot_index); if ( team != -1 ) { ASSERT (slot_index != -1 );
 
                     // change the ship type and the weapons
                     change_ship_type(objp->instance,
@@ -1382,7 +1382,7 @@ Wss_slots_teams[team][slot_index].ship_class);
                 // if this is a player ship, make sure we find out who's it is
 and set their objnum accordingly for( j = 0; j < MAX_PLAYERS; j++){
                     if(MULTI_CONNECTED(Net_players[j]) &&
-(Net_players[j].player->objnum == signature)) { Assert( team != -1 );		//
+(Net_players[j].player->objnum == signature)) { ASSERT (team != -1 );           //
 to help trap errors!!! nprintf(("Network", "Making %s ship for %s\n",
 Ships[shipnum].ship_name, Net_players[j].player->callsign));
                         multi_assign_player_ship( j, objp,
@@ -1534,7 +1534,7 @@ void send_ingame_ship_request_packet (int code, int rdata, net_player* pl) {
 
         // add the # of respawns this ship has left
         pobj = mission_parse_get_arrival_ship (Objects[rdata].net_signature);
-        Assert (pobj != NULL);
+        ASSERT (pobj != NULL);
         ADD_DATA (pobj->respawn_count);
 
         // add the ships ets settings
@@ -1559,7 +1559,7 @@ void send_ingame_ship_request_packet (int code, int rdata, net_player* pl) {
         val = (ubyte)shipp->weapons.num_secondary_banks; // for sanity checking
         ADD_DATA (val);
         for (i = 0; i < shipp->weapons.num_secondary_banks; i++) {
-            Assert (shipp->weapons.secondary_bank_ammo[i] < UCHAR_MAX);
+            ASSERT (shipp->weapons.secondary_bank_ammo[i] < UCHAR_MAX);
             val = (ubyte)shipp->weapons.secondary_bank_ammo[i];
             ADD_DATA (val);
         }
@@ -1569,7 +1569,7 @@ void send_ingame_ship_request_packet (int code, int rdata, net_player* pl) {
         val = (ubyte)shipp->weapons.num_primary_banks; // for sanity checking
         ADD_DATA (val);
         for (i = 0; i < shipp->weapons.num_primary_banks; i++) {
-            Assert (shipp->weapons.primary_bank_ammo[i] < UCHAR_MAX);
+            ASSERT (shipp->weapons.primary_bank_ammo[i] < UCHAR_MAX);
             val = (ubyte)shipp->weapons.primary_bank_ammo[i];
             ADD_DATA (val);
         }
@@ -1589,7 +1589,7 @@ void send_ingame_ship_request_packet (int code, int rdata, net_player* pl) {
 
     // send the packet
     if (Net_player->flags & NETINFO_FLAG_AM_MASTER) {
-        Assert (pl != NULL);
+        ASSERT (pl != NULL);
         multi_io_send_reliable (pl, data, packet_size);
     }
     else {
@@ -1639,14 +1639,14 @@ void multi_ingame_validate_players () {
             multi_ts_get_shipname (
                 ship_name, Net_players[i].p_info.team,
                 Net_players[i].p_info.ship_index);
-            Assert (ship_name != NULL);
+            ASSERT (ship_name != NULL);
             shipnum = ship_name_lookup (ship_name);
             if (shipnum == -1) {
                 // ship could be respawning
                 continue;
             }
             objnum = Ships[shipnum].objnum;
-            Assert (objnum != -1);
+            ASSERT (objnum != -1);
 
             // if this guy's objnum isn't a ship, then it should proably be a
             // ghost!!
@@ -1657,7 +1657,7 @@ void multi_ingame_validate_players () {
                 }
             }
             else {
-                Assert (Objects[objnum].type == OBJ_GHOST);
+                ASSERT (Objects[objnum].type == OBJ_GHOST);
             }
         }
     }
@@ -1697,7 +1697,7 @@ void process_ingame_ship_request_packet (ubyte* data, header* hinfo) {
         }
 
         // make sure this player doesn't already have an object
-        Assert (MULTI_CONNECTED (Net_players[player_num]));
+        ASSERT (MULTI_CONNECTED (Net_players[player_num]));
         if (Net_players[player_num].m_player->objnum != -1) {
             send_ingame_ship_request_packet (
                 INGAME_SR_DENY, 0, &Net_players[player_num]);
@@ -1771,7 +1771,7 @@ void process_ingame_ship_request_packet (ubyte* data, header* hinfo) {
 
         // get the object itself
         objp = multi_get_network_object (Multi_ingame_join_sig);
-        Assert (objp != NULL);
+        ASSERT (objp != NULL);
 
         // get its most recent position and orientation
         GET_VECTOR (objp->pos);
@@ -1797,8 +1797,8 @@ void process_ingame_ship_request_packet (ubyte* data, header* hinfo) {
         // changed.
         multi_ts_get_team_and_slot (
             Player_ship->ship_name, &team, &slot_index);
-        Assert (team != -1);
-        Assert (slot_index != -1);
+        ASSERT (team != -1);
+        ASSERT (slot_index != -1);
         change_ship_type (
             objp->instance, Wss_slots_teams[team][slot_index].ship_class);
         wl_bash_ship_weapons (
@@ -1806,7 +1806,7 @@ void process_ingame_ship_request_packet (ubyte* data, header* hinfo) {
 
         // get the parse object for it and assign the respawn count
         pobj = mission_parse_get_arrival_ship (objp->net_signature);
-        Assert (pobj != NULL);
+        ASSERT (pobj != NULL);
         pobj->respawn_count = respawn_count;
 
         // get the ships ets settings
@@ -1828,7 +1828,7 @@ void process_ingame_ship_request_packet (ubyte* data, header* hinfo) {
 
         // secondary bank ammo data
         GET_DATA (num_secondary_banks);
-        Assert (
+        ASSERT (
             num_secondary_banks == Player_ship->weapons.num_secondary_banks);
         for (i = 0; i < Player_ship->weapons.num_secondary_banks; i++) {
             GET_DATA (val);
@@ -1837,7 +1837,7 @@ void process_ingame_ship_request_packet (ubyte* data, header* hinfo) {
 
         // primary bank ammo data - copied from above - Goober5000
         GET_DATA (num_primary_banks);
-        Assert (num_primary_banks == Player_ship->weapons.num_primary_banks);
+        ASSERT (num_primary_banks == Player_ship->weapons.num_primary_banks);
         for (i = 0; i < Player_ship->weapons.num_primary_banks; i++) {
             GET_DATA (val);
             Player_ship->weapons.primary_bank_ammo[i] = val;
@@ -1877,9 +1877,9 @@ void process_ingame_ship_request_packet (ubyte* data, header* hinfo) {
         // jump into the mission
         // NOTE : we check this flag because its possible that the player could
         // have received an endgame packet in the same
-        //        frame as getting this confirmation. In that case, he should
-        //        be quitting to the main menu. We must not make him continue
-        //        on into the mission
+        // frame as getting this confirmation. In that case, he should
+        // be quitting to the main menu. We must not make him continue
+        // on into the mission
         if (!multi_endgame_ending ()) {
             gameseq_post_event (GS_EVENT_ENTER_GAME);
         }

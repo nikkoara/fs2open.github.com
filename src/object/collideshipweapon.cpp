@@ -26,7 +26,7 @@ extern float flFrametime;
 static void update_danger_weapon (object* pship_obj, object* weapon_obj) {
     ai_info* aip;
 
-    Assert (pship_obj->type == OBJ_SHIP);
+    ASSERT (pship_obj->type == OBJ_SHIP);
 
     aip = &Ai_info[Ships[pship_obj->instance].ai_index];
 
@@ -153,27 +153,27 @@ static int ship_weapon_check_collision (
     weapon* wp;
     weapon_info* wip;
 
-    Assert (ship_objp != NULL);
-    Assert (ship_objp->type == OBJ_SHIP);
-    Assert (ship_objp->instance >= 0);
+    ASSERT (ship_objp != NULL);
+    ASSERT (ship_objp->type == OBJ_SHIP);
+    ASSERT (ship_objp->instance >= 0);
 
     shipp = &Ships[ship_objp->instance];
     sip = &Ship_info[shipp->ship_info_index];
 
-    Assert (weapon_objp != NULL);
-    Assert (weapon_objp->type == OBJ_WEAPON);
-    Assert (weapon_objp->instance >= 0);
+    ASSERT (weapon_objp != NULL);
+    ASSERT (weapon_objp->type == OBJ_WEAPON);
+    ASSERT (weapon_objp->instance >= 0);
 
     wp = &Weapons[weapon_objp->instance];
     wip = &Weapon_info[wp->weapon_info_index];
 
-    Assert (shipp->objnum == OBJ_INDEX (ship_objp));
+    ASSERT (shipp->objnum == OBJ_INDEX (ship_objp));
 
     // Make ships that are warping in not get collision detection done
     if (shipp->is_arriving ()) return 0;
 
-    //	Return information for AI to detect incoming fire.
-    //	Could perhaps be done elsewhere at lower cost --MK, 11/7/97
+    // Return information for AI to detect incoming fire.
+    // Could perhaps be done elsewhere at lower cost --MK, 11/7/97
     float dist = vm_vec_dist_quick (&ship_objp->pos, &weapon_objp->pos);
     if (dist < weapon_objp->phys_info.speed) {
         update_danger_weapon (ship_objp, weapon_objp);
@@ -183,7 +183,7 @@ static int ship_weapon_check_collision (
     int quadrant_num = -1;
     polymodel* pm = model_get (sip->model_num);
 
-    //	total time is flFrametime + time_limit (time_limit used to predict
+    // total time is flFrametime + time_limit (time_limit used to predict
     // collisions into the future)
     vec3d weapon_end_pos;
     vm_vec_scale_add (
@@ -208,20 +208,20 @@ static int ship_weapon_check_collision (
 
     // (btw, these are leftover comments from below...)
     //
-    //	Note: This code is obviously stupid. We want to add the shield point if
+    // Note: This code is obviously stupid. We want to add the shield point if
     // there is shield to hit, but:
-    //		1. We want the size/color of the hit effect to indicate shield
+    // 1. We want the size/color of the hit effect to indicate shield
     // damage done.  (i.e., for already-weak shield, smaller effect)
-    //		2. Currently (8/9/97), shield_apply_damage() passes lefer damage to
-    // hull, which might not make sense.  If 			wouldn't have collided
+    // 2. Currently (8/9/97), shield_apply_damage() passes lefer damage to
+    // hull, which might not make sense.  If                    wouldn't have collided
     // with hull, shouldn't do damage.  Once this is fixed, the code below
-    // needs to cast the 			vector through to the hull if there is
+    // needs to cast the                        vector through to the hull if there is
     // leftover damage.
     //
     // WIF2_PIERCE_SHIELDS pierces shields
     // AL 1-14-97: "Puncture" doesn't mean penetrate shield anymore, it means
     // that it punctures
-    //					hull to inflict maximum subsystem damage
+    // hull to inflict maximum subsystem damage
     //
     // _argv[-1], 16 Jan 2005: Surface shields.
     // Surface shields allow for shields on a ship without a shield mesh.  Good
@@ -428,7 +428,7 @@ static int ship_weapon_check_collision (
     // see which impact we use
     if (shield_collision && valid_hit_occurred) {
         memcpy (&mc, &mc_shield, sizeof (mc_info));
-        Assert (quadrant_num >= 0);
+        ASSERT (quadrant_num >= 0);
     }
     else if (hull_collision) {
         memcpy (&mc, &mc_hull, sizeof (mc_info));
@@ -521,8 +521,8 @@ int collide_ship_weapon (obj_pair* pair) {
     object* ship = pair->a;
     object* weapon_obj = pair->b;
 
-    Assert (ship->type == OBJ_SHIP);
-    Assert (weapon_obj->type == OBJ_WEAPON);
+    ASSERT (ship->type == OBJ_SHIP);
+    ASSERT (weapon_obj->type == OBJ_WEAPON);
 
     ship_info* sip = &Ship_info[Ships[ship->instance].ship_info_index];
 

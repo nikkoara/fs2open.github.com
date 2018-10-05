@@ -33,7 +33,7 @@ int Min_subtarget_box_height[GR_NUM_RESOLUTIONS] = { 12, 24 };
 
 void hud_init_brackets () {}
 
-//	Called by draw_bounding_brackets.
+// Called by draw_bounding_brackets.
 void draw_brackets_square (
     graphics::line_draw_list* draw_list, int x1, int y1, int x2, int y2,
     int resize_mode) {
@@ -46,9 +46,9 @@ void draw_brackets_square (
     }
 
     width = x2 - x1;
-    Assert (width > 0);
+    ASSERT (width > 0);
     height = y2 - y1;
-    Assert (height > 0);
+    ASSERT (height > 0);
 
     // make the brackets extend 25% of the way along the width or height
     int bracket_width = width / 4;
@@ -201,7 +201,7 @@ void draw_brackets_dashed_square_quick (
 }
 
 // draw_brackets_diamond()
-//	Called by draw_bounding_brackets.
+// Called by draw_bounding_brackets.
 
 void draw_brackets_diamond (
     graphics::line_draw_list* draw_list, int x1, int y1, int x2, int y2) {
@@ -291,88 +291,88 @@ void draw_brackets_diamond_quick (
         center_y - y_delta);
 }
 
-//	Draw bounding brackets for a subobject.
+// Draw bounding brackets for a subobject.
 // unused function, candidate for removal
 #if 0
 void draw_bounding_brackets_subobject()
 {
-	if (Player_ai->targeted_subsys_parent == Player_ai->target_objnum)
-		if (Player_ai->targeted_subsys != NULL) {
-			ship_subsys	*subsys;
-			int		target_objnum;
-			object* targetp;
-			vertex subobj_vertex;
-			vec3d	subobj_pos;
-			int x1,x2,y1,y2;
+        if (Player_ai->targeted_subsys_parent == Player_ai->target_objnum)
+                if (Player_ai->targeted_subsys != NULL) {
+                        ship_subsys     *subsys;
+                        int             target_objnum;
+                        object* targetp;
+                        vertex subobj_vertex;
+                        vec3d   subobj_pos;
+                        int x1,x2,y1,y2;
 
-			subsys = Player_ai->targeted_subsys;
-			target_objnum = Player_ai->target_objnum;
-			Assert(target_objnum != -1);
-			targetp = &Objects[target_objnum];
-			Assert( targetp->type == OBJ_SHIP );
+                        subsys = Player_ai->targeted_subsys;
+                        target_objnum = Player_ai->target_objnum;
+                        Assert(target_objnum != -1);
+                        targetp = &Objects[target_objnum];
+                        ASSERT (targetp->type == OBJ_SHIP );
 
-			get_subsystem_world_pos(targetp, subsys, &subobj_pos);
+                        get_subsystem_world_pos(targetp, subsys, &subobj_pos);
 
-			g3_rotate_vertex(&subobj_vertex,&subobj_pos);
+                        g3_rotate_vertex(&subobj_vertex,&subobj_pos);
 
-			g3_project_vertex(&subobj_vertex);
-			if (subobj_vertex.flags & PF_OVERFLOW)  // if overflow, no point in drawing brackets
-				return;
+                        g3_project_vertex(&subobj_vertex);
+                        if (subobj_vertex.flags & PF_OVERFLOW)  // if overflow, no point in drawing brackets
+                                return;
 
-			int subobj_x = fl2i(subobj_vertex.screen.xyw.x + 0.5f);
-			int subobj_y = fl2i(subobj_vertex.screen.xyw.y + 0.5f);
-			int hud_subtarget_w, hud_subtarget_h, bound_rc;
+                        int subobj_x = fl2i(subobj_vertex.screen.xyw.x + 0.5f);
+                        int subobj_y = fl2i(subobj_vertex.screen.xyw.y + 0.5f);
+                        int hud_subtarget_w, hud_subtarget_h, bound_rc;
 
-			bound_rc = subobj_find_2d_bound(subsys->system_info->radius, &targetp->orient, &subobj_pos, &x1,&y1,&x2,&y2);
-			if ( bound_rc != 0 )
-				return;
+                        bound_rc = subobj_find_2d_bound(subsys->system_info->radius, &targetp->orient, &subobj_pos, &x1,&y1,&x2,&y2);
+                        if ( bound_rc != 0 )
+                                return;
 
-			hud_subtarget_w = x2-x1+1;
-			if ( hud_subtarget_w > gr_screen.clip_width ) {
-				hud_subtarget_w = gr_screen.clip_width;
-			}
+                        hud_subtarget_w = x2-x1+1;
+                        if ( hud_subtarget_w > gr_screen.clip_width ) {
+                                hud_subtarget_w = gr_screen.clip_width;
+                        }
 
-			hud_subtarget_h = y2-y1+1;
-			if ( hud_subtarget_h > gr_screen.clip_height ) {
-				hud_subtarget_h = gr_screen.clip_height;
-			}
+                        hud_subtarget_h = y2-y1+1;
+                        if ( hud_subtarget_h > gr_screen.clip_height ) {
+                                hud_subtarget_h = gr_screen.clip_height;
+                        }
 
-			if ( hud_subtarget_w > gr_screen.max_w ) {
-				x1 = subobj_x - (gr_screen.max_w>>1);
-				x2 = subobj_x + (gr_screen.max_w>>1);
-			}
-			if ( hud_subtarget_h > gr_screen.max_h ) {
-				y1 = subobj_y - (gr_screen.max_h>>1);
-				y2 = subobj_y + (gr_screen.max_h>>1);
-			}
+                        if ( hud_subtarget_w > gr_screen.max_w ) {
+                                x1 = subobj_x - (gr_screen.max_w>>1);
+                                x2 = subobj_x + (gr_screen.max_w>>1);
+                        }
+                        if ( hud_subtarget_h > gr_screen.max_h ) {
+                                y1 = subobj_y - (gr_screen.max_h>>1);
+                                y2 = subobj_y + (gr_screen.max_h>>1);
+                        }
 
-			// *** these unsize take care of everything below ***
-			gr_unsize_screen_pos( &hud_subtarget_w, &hud_subtarget_h );
-			gr_unsize_screen_pos( &subobj_x, &subobj_y );
-			gr_unsize_screen_pos( &x1, &y1 );
-			gr_unsize_screen_pos( &x2, &y2 );
+                        // *** these unsize take care of everything below ***
+                        gr_unsize_screen_pos( &hud_subtarget_w, &hud_subtarget_h );
+                        gr_unsize_screen_pos( &subobj_x, &subobj_y );
+                        gr_unsize_screen_pos( &x1, &y1 );
+                        gr_unsize_screen_pos( &x2, &y2 );
 
-			// determine if subsystem is on far or near side of the ship
-			Player->subsys_in_view = ship_subsystem_in_sight(targetp, subsys, &View_position, &subobj_pos, 0);
+                        // determine if subsystem is on far or near side of the ship
+                        Player->subsys_in_view = ship_subsystem_in_sight(targetp, subsys, &View_position, &subobj_pos, 0);
 
-			// AL 29-3-98: If subsystem is destroyed, draw gray brackets
-			// Goober5000: this will now execute for fighterbays if the bay has been given a
-			// percentage subsystem strength in ships.tbl
-			// Goober5000: this will now execute for any subsys that takes damage and will not
-			// execute for any subsys that doesn't take damage
-			if ( (Player_ai->targeted_subsys->current_hits <= 0) && ( ship_subsys_takes_damage(Player_ai->targeted_subsys) ) ) {
-				gr_set_color_fast(iff_get_color(IFF_COLOR_MESSAGE, 1));
-			} else {
-				hud_set_iff_color( targetp, 1 );
-			}
+                        // AL 29-3-98: If subsystem is destroyed, draw gray brackets
+                        // Goober5000: this will now execute for fighterbays if the bay has been given a
+                        // percentage subsystem strength in ships.tbl
+                        // Goober5000: this will now execute for any subsys that takes damage and will not
+                        // execute for any subsys that doesn't take damage
+                        if ( (Player_ai->targeted_subsys->current_hits <= 0) && ( ship_subsys_takes_damage(Player_ai->targeted_subsys) ) ) {
+                                gr_set_color_fast(iff_get_color(IFF_COLOR_MESSAGE, 1));
+                        } else {
+                                hud_set_iff_color( targetp, 1 );
+                        }
 
-			if ( Player->subsys_in_view ) {
-				draw_brackets_square_quick(x1, y1, x2, y2);
-			} else {
-				draw_brackets_diamond_quick(x1, y1, x2, y2);
-			}
-			// mprintf(("Drawing subobject brackets at %4i, %4i\n", sx, sy));
-		}
+                        if ( Player->subsys_in_view ) {
+                                draw_brackets_square_quick(x1, y1, x2, y2);
+                        } else {
+                                draw_brackets_diamond_quick(x1, y1, x2, y2);
+                        }
+                        // mprintf(("Drawing subobject brackets at %4i, %4i\n", sx, sy));
+                }
 }
 #endif
 
@@ -415,179 +415,179 @@ int num_ships_attacking (int target_objnum);
 #if 0
 void draw_bounding_brackets(int x1, int y1, int x2, int y2, int w_correction, int h_correction, float distance, int target_objnum)
 {
-	int width, height;
+        int width, height;
 
-	if ( ( x1 < 0 && x2 < 0 ) || ( y1 < 0 && y2 < 0 ) )
-		return;
+        if ( ( x1 < 0 && x2 < 0 ) || ( y1 < 0 && y2 < 0 ) )
+                return;
 
-	if ( ( x1 > gr_screen.clip_width && x2 > gr_screen.clip_width ) ||
-		  ( y1 > gr_screen.clip_height && y2 > gr_screen.clip_height ) )
-		return;
+        if ( ( x1 > gr_screen.clip_width && x2 > gr_screen.clip_width ) ||
+                  ( y1 > gr_screen.clip_height && y2 > gr_screen.clip_height ) )
+                return;
 
-	// *** everything below is taken care of with this unsize ***
-	gr_unsize_screen_pos(&x1, &y1);
-	gr_unsize_screen_pos(&x2, &y2);
+        // *** everything below is taken care of with this unsize ***
+        gr_unsize_screen_pos(&x1, &y1);
+        gr_unsize_screen_pos(&x2, &y2);
 
-	width = x2-x1;
-	Assert(width>=0);
+        width = x2-x1;
+        Assert(width>=0);
 
-	height = y2-y1;
-	Assert(height>=0);
+        height = y2-y1;
+        Assert(height>=0);
 
-	if ( (width >= (gr_screen.max_w_unscaled)) && (height >= (gr_screen.max_h_unscaled)) ) {
-		return;
-	}
+        if ( (width >= (gr_screen.max_w_unscaled)) && (height >= (gr_screen.max_h_unscaled)) ) {
+                return;
+        }
 
-	if (width < Min_target_box_width[gr_screen.res]) {
-		x1 = x1 - (Min_target_box_width[gr_screen.res]-width)/2;
-		x2 = x2 + (Min_target_box_width[gr_screen.res]-width)/2;
-	}
+        if (width < Min_target_box_width[gr_screen.res]) {
+                x1 = x1 - (Min_target_box_width[gr_screen.res]-width)/2;
+                x2 = x2 + (Min_target_box_width[gr_screen.res]-width)/2;
+        }
 
-	if (height < Min_target_box_height[gr_screen.res]) {
-		y1 = y1 - (Min_target_box_height[gr_screen.res]-height)/2;
-		y2 = y2 + (Min_target_box_height[gr_screen.res]-height)/2;
-	}
-		
-	draw_brackets_square(x1-w_correction, y1-h_correction, x2+w_correction, y2+h_correction);
+        if (height < Min_target_box_height[gr_screen.res]) {
+                y1 = y1 - (Min_target_box_height[gr_screen.res]-height)/2;
+                y2 = y2 + (Min_target_box_height[gr_screen.res]-height)/2;
+        }
 
-	// draw distance to target in lower right corner of box
-	if ( distance > 0 ) {
-		hud_target_show_dist_on_bracket(x2+w_correction,y2+h_correction,distance);
-	}
+        draw_brackets_square(x1-w_correction, y1-h_correction, x2+w_correction, y2+h_correction);
 
-	//	Maybe show + for each additional fighter or bomber attacking target.
-	if ( (target_objnum != -1) && hud_gauge_active(HUD_ATTACKING_TARGET_COUNT) ) {
-		int num_attacking = num_ships_attacking(target_objnum);
+        // draw distance to target in lower right corner of box
+        if ( distance > 0 ) {
+                hud_target_show_dist_on_bracket(x2+w_correction,y2+h_correction,distance);
+        }
 
-		if (Ships_attacking_bitmap == -1){
-			Ships_attacking_bitmap = bm_load(Ships_attack_fname[gr_screen.res]);
-		}
+        // Maybe show + for each additional fighter or bomber attacking target.
+        if ( (target_objnum != -1) && hud_gauge_active(HUD_ATTACKING_TARGET_COUNT) ) {
+                int num_attacking = num_ships_attacking(target_objnum);
 
-		if (Ships_attacking_bitmap == -1) {
-			Int3();
-			return;
-		}
+                if (Ships_attacking_bitmap == -1){
+                        Ships_attacking_bitmap = bm_load(Ships_attack_fname[gr_screen.res]);
+                }
 
-		//	If a ship is attacked by player, show one fewer plus
-		int	k=0;
-		if (Objects[target_objnum].type == OBJ_SHIP) {
-			if (iff_x_attacks_y(Player_ship->team, Ships[Objects[target_objnum].instance].team)) {
-				k = 1;
-			}
-		} else {
-			k = 1;
-		}
+                if (Ships_attacking_bitmap == -1) {
+                        Int3();
+                        return;
+                }
 
-		if (num_attacking > k) {
-			int	i, num_blips;
-			
-			num_blips = num_attacking-k;
-			if (num_blips > 4){
-				num_blips = 4;
-			}
+                // If a ship is attacked by player, show one fewer plus
+                int     k=0;
+                if (Objects[target_objnum].type == OBJ_SHIP) {
+                        if (iff_x_attacks_y(Player_ship->team, Ships[Objects[target_objnum].instance].team)) {
+                                k = 1;
+                        }
+                } else {
+                        k = 1;
+                }
 
-			if (Ships_attacking_bitmap >= 0) {
-				if (num_blips > 3)
-					y1 -= 3;
+                if (num_attacking > k) {
+                        int     i, num_blips;
 
-				for (i=0; i<num_blips; i++) {
-					GR_AABITMAP(Ships_attacking_bitmap, x2+3, y1+i*7);					
-				}
-			}
+                        num_blips = num_attacking-k;
+                        if (num_blips > 4){
+                                num_blips = 4;
+                        }
 
-			//Increment for the position of ship name/class.
-			//DEPENDANT ON ATTACKER SIZE (X)
-			x2 += 7;
-		}
-	}
+                        if (Ships_attacking_bitmap >= 0) {
+                                if (num_blips > 3)
+                                        y1 -= 3;
 
-	if(Cmdline_targetinfo && (target_objnum != -1))
-	{
-		object* t_objp = &Objects[target_objnum];
-		const char* tinfo_name = NULL;
-		const char* tinfo_class = NULL;
-		char temp_name[NAME_LENGTH*2+3];
-		char temp_class[NAME_LENGTH];
-		std::list<CJumpNode>::iterator jnp;
+                                for (i=0; i<num_blips; i++) {
+                                        GR_AABITMAP(Ships_attacking_bitmap, x2+3, y1+i*7);
+                                }
+                        }
 
-		switch(t_objp->type)
-		{
-			case OBJ_SHIP:
-				hud_stuff_ship_name(temp_name, &Ships[t_objp->instance]);
-				hud_stuff_ship_class(temp_class, &Ships[t_objp->instance]);
-				tinfo_name = temp_name;
-				tinfo_class = temp_class;
+                        //Increment for the position of ship name/class.
+                        //DEPENDANT ON ATTACKER SIZE (X)
+                        x2 += 7;
+                }
+        }
 
-				// maybe concatenate the callsign
-				if (*temp_name)
-				{
-					char temp_callsign[NAME_LENGTH];
+        if(Cmdline_targetinfo && (target_objnum != -1))
+        {
+                object* t_objp = &Objects[target_objnum];
+                const char* tinfo_name = NULL;
+                const char* tinfo_class = NULL;
+                char temp_name[NAME_LENGTH*2+3];
+                char temp_class[NAME_LENGTH];
+                std::list<CJumpNode>::iterator jnp;
 
-					hud_stuff_ship_callsign(temp_callsign, &Ships[t_objp->instance]);
-					if (*temp_callsign)
-						sprintf(&temp_name[strlen(temp_name)], " (%s)", temp_callsign);
-				}
-				// maybe substitute the callsign
-				else
-				{
-					hud_stuff_ship_callsign(temp_name, &Ships[t_objp->instance]);
-				}
-				break;
+                switch(t_objp->type)
+                {
+                        case OBJ_SHIP:
+                                hud_stuff_ship_name(temp_name, &Ships[t_objp->instance]);
+                                hud_stuff_ship_class(temp_class, &Ships[t_objp->instance]);
+                                tinfo_name = temp_name;
+                                tinfo_class = temp_class;
 
-			case OBJ_DEBRIS:
-				tinfo_name = XSTR("Debris", 348);
-				break;
-			case OBJ_WEAPON:
-				strcpy_s(temp_name, Weapon_info[Weapons[t_objp->instance].weapon_info_index].name);
-				end_string_at_first_hash_symbol(temp_name);
-				tinfo_name = temp_name;
-				break;
-			case OBJ_ASTEROID:
-				switch(Asteroids[t_objp->instance].asteroid_type)
-				{
-					case ASTEROID_TYPE_SMALL:
-					case ASTEROID_TYPE_MEDIUM:
-					case ASTEROID_TYPE_LARGE:
-						tinfo_name = NOX("Asteroid");
-						break;
-					default:
-						tinfo_name = XSTR("Debris", 348);
-				}
-				break;
-			case OBJ_JUMP_NODE:
-				for (jnp = Jump_nodes.begin(); jnp != Jump_nodes.end(); ++jnp) {
-					if(jnp->GetSCPObject() == t_objp)
-						break;
-				}
-				
-				strcpy_s(temp_name, jnp->GetName());
-				end_string_at_first_hash_symbol(temp_name);
-				tinfo_name = temp_name;
-				break;
-		}
+                                // maybe concatenate the callsign
+                                if (*temp_name)
+                                {
+                                        char temp_callsign[NAME_LENGTH];
 
-		if(tinfo_name)
-		{
-			gr_string(x2+3, y1, tinfo_name);
-		}
-		if(tinfo_class)
-		{
-			gr_string(x2+3, y1+9, tinfo_class);
-		}
+                                        hud_stuff_ship_callsign(temp_callsign, &Ships[t_objp->instance]);
+                                        if (*temp_callsign)
+                                                sprintf(&temp_name[strlen(temp_name)], " (%s)", temp_callsign);
+                                }
+                                // maybe substitute the callsign
+                                else
+                                {
+                                        hud_stuff_ship_callsign(temp_name, &Ships[t_objp->instance]);
+                                }
+                                break;
+
+                        case OBJ_DEBRIS:
+                                tinfo_name = XSTR("Debris", 348);
+                                break;
+                        case OBJ_WEAPON:
+                                strcpy_s(temp_name, Weapon_info[Weapons[t_objp->instance].weapon_info_index].name);
+                                end_string_at_first_hash_symbol(temp_name);
+                                tinfo_name = temp_name;
+                                break;
+                        case OBJ_ASTEROID:
+                                switch(Asteroids[t_objp->instance].asteroid_type)
+                                {
+                                        case ASTEROID_TYPE_SMALL:
+                                        case ASTEROID_TYPE_MEDIUM:
+                                        case ASTEROID_TYPE_LARGE:
+                                                tinfo_name = NOX("Asteroid");
+                                                break;
+                                        default:
+                                                tinfo_name = XSTR("Debris", 348);
+                                }
+                                break;
+                        case OBJ_JUMP_NODE:
+                                for (jnp = Jump_nodes.begin(); jnp != Jump_nodes.end(); ++jnp) {
+                                        if(jnp->GetSCPObject() == t_objp)
+                                                break;
+                                }
+
+                                strcpy_s(temp_name, jnp->GetName());
+                                end_string_at_first_hash_symbol(temp_name);
+                                tinfo_name = temp_name;
+                                break;
+                }
+
+                if(tinfo_name)
+                {
+                        gr_string(x2+3, y1, tinfo_name);
+                }
+                if(tinfo_class)
+                {
+                        gr_string(x2+3, y1+9, tinfo_class);
+                }
 /*
-		if(tinfo_callsign)
-		{
-			gr_string(x2+3, y1+18, tinfo_callsign);
-		}
+                if(tinfo_callsign)
+                {
+                        gr_string(x2+3, y1+18, tinfo_callsign);
+                }
  */
-	}
+        }
 }
 #endif
 
 int draw_subsys_brackets (
     graphics::line_draw_list* draw_list, ship_subsys* subsys, int min_width,
     int min_height, bool draw, bool set_color, int* draw_coords) {
-    Assertion (
+    ASSERTX (
         subsys != NULL,
         "Invalid subsystem pointer passed to draw_subsys_brackets!");
 
@@ -598,9 +598,9 @@ int draw_subsys_brackets (
     int x1, x2, y1, y2;
 
     target_objnum = subsys->parent_objnum;
-    Assert (target_objnum != -1);
+    ASSERT (target_objnum != -1);
     targetp = &Objects[target_objnum];
-    Assert (targetp->type == OBJ_SHIP);
+    ASSERT (targetp->type == OBJ_SHIP);
 
     get_subsystem_world_pos (targetp, subsys, &subobj_pos);
 
@@ -717,7 +717,7 @@ void HudGaugeBrackets::initMinSubTargetBoxSizes (int w, int h) {
 void HudGaugeBrackets::initBitmaps (char* fname) {
     attacking_dot = bm_load (fname);
     if (attacking_dot < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 
@@ -926,10 +926,10 @@ void HudGaugeBrackets::renderBoundingBrackets (
     gr_unsize_screen_pos (&x2, &y2);
 
     width = x2 - x1;
-    Assert (width >= 0);
+    ASSERT (width >= 0);
 
     height = y2 - y1;
-    Assert (height >= 0);
+    ASSERT (height >= 0);
 
     if ((width >= (base_w)) && (height >= (base_h))) { return; }
 
@@ -953,11 +953,11 @@ void HudGaugeBrackets::renderBoundingBrackets (
             x2 + w_correction, y2 + h_correction, distance, font_num);
     }
 
-    //	Maybe show + for each additional fighter or bomber attacking target.
+    // Maybe show + for each additional fighter or bomber attacking target.
     if ((target_objnum != -1)) {
         int num_attacking = num_ships_attacking (target_objnum);
 
-        //	If a ship is attacked by player, show one fewer plus
+        // If a ship is attacked by player, show one fewer plus
         int k = 0;
         if (Objects[target_objnum].type == OBJ_SHIP) {
             if (iff_x_attacks_y (
@@ -1078,9 +1078,9 @@ void HudGaugeBrackets::renderBoundingBracketsSubobject () {
 
             subsys = Player_ai->targeted_subsys;
             target_objnum = Player_ai->target_objnum;
-            Assert (target_objnum != -1);
+            ASSERT (target_objnum != -1);
             targetp = &Objects[target_objnum];
-            Assert (targetp->type == OBJ_SHIP);
+            ASSERT (targetp->type == OBJ_SHIP);
 
             gr_set_screen_scale (base_w, base_h);
 

@@ -137,7 +137,7 @@ void fs2netd_options_config_init () {
             int result;
             result =
                 sprintf (Multi_options_g.tracker_port, "%i", FS2NetD_port);
-            Assertion (
+            ASSERTX (
                 result > 0, "Copying port %i to tracker_port failed\n",
                 FS2NetD_port);
         }
@@ -290,8 +290,8 @@ void fs2netd_connect () {
 
     if (Is_connected) { return; }
 
-    Assert (strlen (Multi_options_g.game_tracker_ip));
-    Assert (strlen (Multi_options_g.tracker_port));
+    ASSERT (strlen (Multi_options_g.game_tracker_ip));
+    ASSERT (strlen (Multi_options_g.tracker_port));
 
     In_process = true;
 
@@ -730,7 +730,7 @@ static void fs2netd_handle_messages () {
         case PCKT_PING: {
             PXO_GET_INT (itemp);
 
-            //	ml_printf("FS2NetD received PING");
+            // ml_printf("FS2NetD received PING");
 
             FS2NetD_Pong (itemp);
 
@@ -814,7 +814,7 @@ static void fs2netd_handle_messages () {
 
             int svr_flags;
             FS2_UNUSED (svr_flags);
-                          
+
             ushort svr_port;
             char svr_ip[16];
             active_game ag;

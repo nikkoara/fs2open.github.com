@@ -40,7 +40,7 @@ int key_inited = 0;
 
 SDL_mutex* key_lock;
 
-// int Backspace_debug=1;	// global flag that will enable/disable the
+// int Backspace_debug=1;       // global flag that will enable/disable the
 // backspace key from stopping execution This flag was created since the
 // backspace key is also used to correct mistakes when typing in your pilots
 // callsign.  This global flag is checked before execution is stopped.
@@ -223,7 +223,7 @@ void FillSDLArray () {
 
     SDLtoFS2[SDL_SCANCODE_PRINTSCREEN] = KEY_PRINT_SCRN;
     SDLtoFS2[SDL_SCANCODE_PAUSE] = KEY_PAUSE;
-    //	SDLtoFS2[SDL_SCANCODE_BREAK] = KEY_BREAK;
+    // SDLtoFS2[SDL_SCANCODE_BREAK] = KEY_BREAK;
 }
 
 int key_numlock_is_on () {
@@ -236,9 +236,9 @@ void key_turn_off_numlock () {}
 
 void key_turn_on_numlock () {}
 
-//	Convert a BIOS scancode to ASCII.
-//	If scancode >= 127, returns 255, meaning there is no corresponding ASCII
-// code. 	Uses ascii_table and shifted_ascii_table to translate scancode to
+// Convert a BIOS scancode to ASCII.
+// If scancode >= 127, returns 255, meaning there is no corresponding ASCII
+// code.        Uses ascii_table and shifted_ascii_table to translate scancode to
 // ASCII.
 int key_to_ascii (int keycode) {
     int shifted;
@@ -256,8 +256,8 @@ int key_to_ascii (int keycode) {
         return ascii_table[keycode];
 }
 
-//	Flush the keyboard buffer.
-//	Clear the keyboard array (keyd_pressed).
+// Flush the keyboard buffer.
+// Clear the keyboard array (keyd_pressed).
 void key_flush () {
     int i;
     uint CurTime;
@@ -290,9 +290,9 @@ void key_flush () {
     SDL_UnlockMutex (key_lock);
 }
 
-//	A nifty function which performs the function:
-//		n = (n+1) % KEY_BUFFER_SIZE
-//	(assuming positive values of n).
+// A nifty function which performs the function:
+// n = (n+1) % KEY_BUFFER_SIZE
+// (assuming positive values of n).
 int add_one (int n) {
     n++;
     if (n >= KEY_BUFFER_SIZE) n = 0;
@@ -314,9 +314,9 @@ int key_checkch () {
     return is_one_waiting;
 }
 
-//	Return key scancode if a key has been pressed,
-//	else return 0.
-//	Reads keys out of the key buffer and updates keyhead.
+// Return key scancode if a key has been pressed,
+// else return 0.
+// Reads keys out of the key buffer and updates keyhead.
 
 // WMC - Added so scripting can get at keys.
 int Current_key_down = 0;
@@ -339,7 +339,7 @@ int key_inkey () {
     return key;
 }
 
-//	Unget a key.  Puts it back in the input queue.
+// Unget a key.  Puts it back in the input queue.
 void key_outkey (int key) {
     int bufp;
 
@@ -358,9 +358,9 @@ void key_outkey (int key) {
     SDL_UnlockMutex (key_lock);
 }
 
-//	Return amount of time last key was held down.
-//	This is currently (July 17, 1996) bogus because our timing is
-//	not accurate.
+// Return amount of time last key was held down.
+// This is currently (July 17, 1996) bogus because our timing is
+// not accurate.
 int key_inkey_time (uint* time) {
     int key = 0;
 
@@ -382,8 +382,8 @@ int key_inkey_time (uint* time) {
     return key;
 }
 
-//	Returns scancode of last key pressed, if any (returns 0 if no key pressed)
-//	but does not update keyhead pointer.
+// Returns scancode of last key pressed, if any (returns 0 if no key pressed)
+// but does not update keyhead pointer.
 int key_peekkey () {
     int key = 0;
 
@@ -400,7 +400,7 @@ int key_peekkey () {
 }
 
 // If not installed, uses BIOS and returns getch();
-//	Else returns pending key (or waits for one if none waiting).
+// Else returns pending key (or waits for one if none waiting).
 int key_getch () {
     int dummy = 0;
     int in;
@@ -417,7 +417,7 @@ int key_getch () {
     return in;
 }
 
-//	Set global shift_status with modifier results (shift, ctrl, alt).
+// Set global shift_status with modifier results (shift, ctrl, alt).
 uint key_get_shift_status () {
     unsigned int shift_status = 0;
 
@@ -452,8 +452,8 @@ uint key_get_shift_status () {
     return shift_status;
 }
 
-//	Returns amount of time key (specified by "code") has been down since last
-// call. 	Returns float, unlike key_down_time() which returns a fix.
+// Returns amount of time key (specified by "code") has been down since last
+// call.        Returns float, unlike key_down_time() which returns a fix.
 float key_down_timef (uint scancode) {
     uint time_down, time;
     uint delta_time;
@@ -530,7 +530,7 @@ int key_up_count (int scancode) {
 
 int key_check (int key) { return key_data.down_check[key]; }
 
-//	Add a key up or down code to the key buffer.  state=1 -> down, state=0 ->
+// Add a key up or down code to the key buffer.  state=1 -> down, state=0 ->
 // up
 // latency => time difference in ms between when key was actually pressed and
 // now
@@ -547,7 +547,7 @@ void key_mark (uint code, int state, uint latency) {
     // ours
     if (code == KEY_SLASH_UK) { code = KEY_SLASH; }
 
-    Assert (code < NUM_KEYS);
+    ASSERT (code < NUM_KEYS);
 
     event_time = timer_get_milliseconds () - latency;
     // event_time = timeGetTime() - latency;

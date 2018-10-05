@@ -57,7 +57,7 @@ inline int get_percent (int count) {
     if (count == 0) return 0;
 
     // this should basically return a scale like:
-    //  50, 75, 100, 125, 150, ...
+    // 50, 75, 100, 125, 150, ...
     // based on value of 'count' (detail level)
     return (50 + (25 * (count - 1)));
 }
@@ -124,7 +124,7 @@ bool init_particle (particle* part, particle_info* info) {
     switch (info->type) {
     case PARTICLE_BITMAP:
     case PARTICLE_BITMAP_PERSISTENT: {
-        Assertion (
+        ASSERTX (
             bm_is_valid (info->optional_data),
             "Invalid bitmap handle passed to particle create.");
 
@@ -197,7 +197,7 @@ void create (
     int optional_data, object* objp, bool reverse) {
     particle_info pinfo;
 
-    Assertion (
+    ASSERTX (
         (type >= 0) && (type < NUM_PARTICLE_TYPES),
         "Invalid particle type %d specified!", type);
 
@@ -375,7 +375,7 @@ static bool render_particle (particle* part) {
     else {
         framenum = part->optional_data;
 
-        Assert (cur_frame < part->nframes);
+        ASSERT (cur_frame < part->nframes);
 
         batching_add_volume_bitmap (
             framenum + cur_frame, &pos, part->particle_index % 8, part->radius,
@@ -415,16 +415,16 @@ void render_all () {
 // Use a structure rather than pass a ton of parameters to particle_emit
 /*
 typedef struct particle_emitter {
-int		num_low;			// Lowest number of particles to create
-int		num_high;			// Highest number of particles to create
-vec3d	pos;				// Where the particles emit from
-vec3d	vel;				// Initial velocity of all the particles
-float	lifetime;			// How long the particles live
-vec3d	normal;				// What normal the particle emit arond
-float	normal_variance;	// How close they stick to that normal 0=good,
-1=360 degree float	min_vel;			// How fast the slowest particle can
-move float	max_vel;			// How fast the fastest particle can move float
-min_rad;			// Min radius float	max_rad;			// Max radius }
+int             num_low;                        // Lowest number of particles to create
+int             num_high;                       // Highest number of particles to create
+vec3d   pos;                            // Where the particles emit from
+vec3d   vel;                            // Initial velocity of all the particles
+float   lifetime;                       // How long the particles live
+vec3d   normal;                         // What normal the particle emit arond
+float   normal_variance;        // How close they stick to that normal 0=good,
+1=360 degree float      min_vel;                        // How fast the slowest particle can
+move float      max_vel;                        // How fast the fastest particle can move float
+min_rad;                        // Min radius float     max_rad;                        // Max radius }
 particle_emitter;
 */
 

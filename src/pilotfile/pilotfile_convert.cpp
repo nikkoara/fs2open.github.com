@@ -22,7 +22,7 @@ pilotfile_convert::~pilotfile_convert () {
 }
 
 void pilotfile_convert::startSection (Section::id section_id) {
-    Assert (cfp);
+    ASSERT (cfp);
 
     const int zero = 0;
 
@@ -36,12 +36,12 @@ void pilotfile_convert::startSection (Section::id section_id) {
 }
 
 void pilotfile_convert::endSection () {
-    Assert (cfp);
-    Assert (m_size_offset > 0);
+    ASSERT (cfp);
+    ASSERT (m_size_offset > 0);
 
     size_t cur = cftell (cfp);
 
-    Assert (cur >= m_size_offset);
+    ASSERT (cur >= m_size_offset);
 
     size_t section_size = cur - m_size_offset;
 
@@ -89,7 +89,7 @@ void convert_pilot_files () {
         for (j = 0; j < count; j++) {
             if (!strcasecmp (fname, old_files[j].c_str ())) {
                 // NOTE: we just clear the name here to avoid the fragmentation
-                //       from resizing the vector
+                // from resizing the vector
                 old_files[j] = "";
                 ++i;
             }

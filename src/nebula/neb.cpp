@@ -75,50 +75,50 @@ float neb2_flash_fade = 0.3f;
 // Why the heck is this still here? Commenting out. -WMC
 /*
 float Neb_ship_fog_vals_glide[MAX_SHIP_TYPE_COUNTS][2] = {
-    {0.0f, 0.0f},				// SHIP_TYPE_NONE
-    {10.0f, 500.0f},			// SHIP_TYPE_CARGO
-    {10.0f, 500.0f},			// SHIP_TYPE_FIGHTER_BOMBER
-    {10.0f, 600.0f},			// SHIP_TYPE_CRUISER
-    {10.0f, 600.0f},			// SHIP_TYPE_FREIGHTER
-    {10.0f, 750.0f},			// SHIP_TYPE_CAPITAL
-    {10.0f, 500.0f},			// SHIP_TYPE_TRANSPORT
-    {10.0f, 500.0f},			// SHIP_TYPE_REPAIR_REARM
-    {10.0f, 500.0f},			// SHIP_TYPE_NAVBUOY
-    {10.0f, 500.0f},			// SHIP_TYPE_SENTRYGUN
-    {10.0f, 600.0f},			// SHIP_TYPE_ESCAPEPOD
-    {10.0f, 1000.0f},			// SHIP_TYPE_SUPERCAP
-    {10.0f, 500.0f},			// SHIP_TYPE_STEALTH
-    {10.0f, 500.0f},			// SHIP_TYPE_FIGHTER
-    {10.0f, 500.0f},			// SHIP_TYPE_BOMBER
-    {10.0f, 750.0f},			// SHIP_TYPE_DRYDOCK
-    {10.0f, 600.0f},			// SHIP_TYPE_AWACS
-    {10.0f, 600.0f},			// SHIP_TYPE_GAS_MINER
-    {10.0f, 600.0f},			// SHIP_TYPE_CORVETTE
-    {10.0f, 1000.0f},			// SHIP_TYPE_KNOSSOS_DEVICE
+    {0.0f, 0.0f},                               // SHIP_TYPE_NONE
+    {10.0f, 500.0f},                    // SHIP_TYPE_CARGO
+    {10.0f, 500.0f},                    // SHIP_TYPE_FIGHTER_BOMBER
+    {10.0f, 600.0f},                    // SHIP_TYPE_CRUISER
+    {10.0f, 600.0f},                    // SHIP_TYPE_FREIGHTER
+    {10.0f, 750.0f},                    // SHIP_TYPE_CAPITAL
+    {10.0f, 500.0f},                    // SHIP_TYPE_TRANSPORT
+    {10.0f, 500.0f},                    // SHIP_TYPE_REPAIR_REARM
+    {10.0f, 500.0f},                    // SHIP_TYPE_NAVBUOY
+    {10.0f, 500.0f},                    // SHIP_TYPE_SENTRYGUN
+    {10.0f, 600.0f},                    // SHIP_TYPE_ESCAPEPOD
+    {10.0f, 1000.0f},                   // SHIP_TYPE_SUPERCAP
+    {10.0f, 500.0f},                    // SHIP_TYPE_STEALTH
+    {10.0f, 500.0f},                    // SHIP_TYPE_FIGHTER
+    {10.0f, 500.0f},                    // SHIP_TYPE_BOMBER
+    {10.0f, 750.0f},                    // SHIP_TYPE_DRYDOCK
+    {10.0f, 600.0f},                    // SHIP_TYPE_AWACS
+    {10.0f, 600.0f},                    // SHIP_TYPE_GAS_MINER
+    {10.0f, 600.0f},                    // SHIP_TYPE_CORVETTE
+    {10.0f, 1000.0f},                   // SHIP_TYPE_KNOSSOS_DEVICE
 };
 */
 /*
 float Neb_ship_fog_vals_d3d[MAX_SHIP_TYPE_COUNTS][2] = {
-    {0.0f, 0.0f},				// SHIP_TYPE_NONE
-    {10.0f, 500.0f},			// SHIP_TYPE_CARGO
-    {10.0f, 500.0f},			// SHIP_TYPE_FIGHTER_BOMBER
-    {10.0f, 600.0f},			// SHIP_TYPE_CRUISER
-    {10.0f, 600.0f},			// SHIP_TYPE_FREIGHTER
-    {10.0f, 750.0f},			// SHIP_TYPE_CAPITAL
-    {10.0f, 500.0f},			// SHIP_TYPE_TRANSPORT
-    {10.0f, 500.0f},			// SHIP_TYPE_REPAIR_REARM
-    {10.0f, 500.0f},			// SHIP_TYPE_NAVBUOY
-    {10.0f, 500.0f},			// SHIP_TYPE_SENTRYGUN
-    {10.0f, 600.0f},			// SHIP_TYPE_ESCAPEPOD
-    {10.0f, 1000.0f},			// SHIP_TYPE_SUPERCAP
-    {10.0f, 500.0f},			// SHIP_TYPE_STEALTH
-    {10.0f, 500.0f},			// SHIP_TYPE_FIGHTER
-    {10.0f, 500.0f},			// SHIP_TYPE_BOMBER
-    {10.0f, 750.0f},			// SHIP_TYPE_DRYDOCK
-    {10.0f, 600.0f},			// SHIP_TYPE_AWACS
-    {10.0f, 600.0f},			// SHIP_TYPE_GAS_MINER
-    {10.0f, 600.0f},			// SHIP_TYPE_CORVETTE
-    {10.0f, 1000.0f},			// SHIP_TYPE_KNOSSOS_DEVICE
+    {0.0f, 0.0f},                               // SHIP_TYPE_NONE
+    {10.0f, 500.0f},                    // SHIP_TYPE_CARGO
+    {10.0f, 500.0f},                    // SHIP_TYPE_FIGHTER_BOMBER
+    {10.0f, 600.0f},                    // SHIP_TYPE_CRUISER
+    {10.0f, 600.0f},                    // SHIP_TYPE_FREIGHTER
+    {10.0f, 750.0f},                    // SHIP_TYPE_CAPITAL
+    {10.0f, 500.0f},                    // SHIP_TYPE_TRANSPORT
+    {10.0f, 500.0f},                    // SHIP_TYPE_REPAIR_REARM
+    {10.0f, 500.0f},                    // SHIP_TYPE_NAVBUOY
+    {10.0f, 500.0f},                    // SHIP_TYPE_SENTRYGUN
+    {10.0f, 600.0f},                    // SHIP_TYPE_ESCAPEPOD
+    {10.0f, 1000.0f},                   // SHIP_TYPE_SUPERCAP
+    {10.0f, 500.0f},                    // SHIP_TYPE_STEALTH
+    {10.0f, 500.0f},                    // SHIP_TYPE_FIGHTER
+    {10.0f, 500.0f},                    // SHIP_TYPE_BOMBER
+    {10.0f, 750.0f},                    // SHIP_TYPE_DRYDOCK
+    {10.0f, 600.0f},                    // SHIP_TYPE_AWACS
+    {10.0f, 600.0f},                    // SHIP_TYPE_GAS_MINER
+    {10.0f, 600.0f},                    // SHIP_TYPE_CORVETTE
+    {10.0f, 1000.0f},                   // SHIP_TYPE_KNOSSOS_DEVICE
 };
 */
 // WMC - these were originally indexed to SHIP_TYPE_FIGHTER_BOMBER
@@ -272,7 +272,7 @@ void neb2_init () {
                 strcpy_s (Neb2_bitmap_filenames[Neb2_bitmap_count++], name);
             }
             else {
-                fs2::dialog::warning_ex (
+                WARNINGF (
                     LOCATION,
                     "nebula.tbl\nExceeded maximum number of nebulas "
                     "(%d)!\nSkipping %s.",
@@ -291,7 +291,7 @@ void neb2_init () {
                 strcpy_s (Neb2_poof_filenames[Neb2_poof_count++], name);
             }
             else {
-                fs2::dialog::warning_ex (
+                WARNINGF (
                     LOCATION,
                     "nebula.tbl\nExceeded maximum number of nebula poofs "
                     "(%d)!\nSkipping %s.",
@@ -300,7 +300,7 @@ void neb2_init () {
         }
 
         // should always have 6 neb poofs
-        Assert (Neb2_poof_count == 6);
+        ASSERT (Neb2_poof_count == 6);
     }
     catch (const parse::ParseException& e) {
         mprintf (
@@ -1093,22 +1093,22 @@ void neb2_eye_changed () { Neb2_regen = 1; }
 
 /*
 //Object types
-#define OBJ_NONE		0	//unused object
-#define OBJ_SHIP		1	//a ship
-#define OBJ_WEAPON		2	//a laser, missile, etc
-#define OBJ_FIREBALL	3	//an explosion
-#define OBJ_START		4	//a starting point marker (player start, etc)
-#define OBJ_WAYPOINT	5	//a waypoint object, maybe only ever used by Fred
-#define OBJ_DEBRIS		6	//a flying piece of ship debris
-#define OBJ_CMEASURE	7	//a countermeasure, such as chaff
-#define OBJ_GHOST		8	//so far, just a placeholder for when a player
-dies. #define OBJ_POINT		9	//generic object type to display a point in
-Fred. #define OBJ_SHOCKWAVE	10	// a shockwave #define OBJ_WING		11	// not
-really a type used anywhere, but I need it for Fred. #define OBJ_OBSERVER	12
+#define OBJ_NONE                0       //unused object
+#define OBJ_SHIP                1       //a ship
+#define OBJ_WEAPON              2       //a laser, missile, etc
+#define OBJ_FIREBALL    3       //an explosion
+#define OBJ_START               4       //a starting point marker (player start, etc)
+#define OBJ_WAYPOINT    5       //a waypoint object, maybe only ever used by Fred
+#define OBJ_DEBRIS              6       //a flying piece of ship debris
+#define OBJ_CMEASURE    7       //a countermeasure, such as chaff
+#define OBJ_GHOST               8       //so far, just a placeholder for when a player
+dies. #define OBJ_POINT         9       //generic object type to display a point in
+Fred. #define OBJ_SHOCKWAVE     10      // a shockwave #define OBJ_WING         11      // not
+really a type used anywhere, but I need it for Fred. #define OBJ_OBSERVER       12
 // used for multiplayer observers (possibly single player later) #define
-OBJ_ASTEROID	13	// An asteroid, you know, a big rock, like debris, sort of.
-#define OBJ_JUMP_NODE	14	// A jump node object, used only in Fred.
-#define OBJ_BEAM		15	// beam weapons. we have to roll them into the
+OBJ_ASTEROID    13      // An asteroid, you know, a big rock, like debris, sort of.
+#define OBJ_JUMP_NODE   14      // A jump node object, used only in Fred.
+#define OBJ_BEAM                15      // beam weapons. we have to roll them into the
 object system to get the benefits of the collision pairs
 */
 // get near and far fog values based upon object type and rendering mode
@@ -1123,7 +1123,7 @@ void neb2_get_fog_values (float* fnear, float* ffar, object* objp) {
 
     // determine what fog index to use
     if (objp->type == OBJ_SHIP) {
-        Assert ((objp->instance >= 0) && (objp->instance < MAX_SHIPS));
+        ASSERT ((objp->instance >= 0) && (objp->instance < MAX_SHIPS));
         if ((objp->instance >= 0) && (objp->instance < MAX_SHIPS)) {
             type_index = ship_query_general_type (objp->instance);
             if (type_index > 0) {
@@ -1260,7 +1260,7 @@ int wacky_scheme = 3;
      ((xv)*gr_screen.bytes_per_pixel))
 void neb2_get_pixel (int x, int y, int* r, int* g, int* b) {
     // we shouldn't ever be here if in htl rendering mode
-    Assert (Neb2_render_mode != NEB2_RENDER_HTL);
+    ASSERT (Neb2_render_mode != NEB2_RENDER_HTL);
 
     int ra, ga, ba;
     ubyte rv, gv, bv;
@@ -1424,11 +1424,11 @@ int neb2_get_bitmap () {
 // TODO: With the new debug parser in place, most of these sub-commands can now
 // be handled by neb2. This should clear up the DCF list a bit
 DCF (neb2, "list nebula console commands") {
-    //	dc_printf("neb2_fog <X> <float> <float>  : set near and far fog planes
-    // for ship type X\n"); 	dc_printf("where X is an integer from 1 -
-    // 11\n"); 	dc_printf("1 = cargo containers, 2 = fighters/bombers, 3 =
-    // cruisers\n"); 	dc_printf("4 = freighters, 5 = capital ships, 6 =
-    // transports, 7 = support ships\n"); 	dc_printf("8 = navbuoys, 9 =
+    // dc_printf("neb2_fog <X> <float> <float>  : set near and far fog planes
+    // for ship type X\n");     dc_printf("where X is an integer from 1 -
+    // 11\n");  dc_printf("1 = cargo containers, 2 = fighters/bombers, 3 =
+    // cruisers\n");    dc_printf("4 = freighters, 5 = capital ships, 6 =
+    // transports, 7 = support ships\n");       dc_printf("8 = navbuoys, 9 =
     // sentryguns, 10 = escape pods, 11 = background nebula polygons\n\n");
 
     dc_printf (
@@ -1458,10 +1458,10 @@ DCF (neb2, "list nebula console commands") {
         "background, lame, or HTL rendering (0, 1, 2, 3 and 4 "
         "respectively)\n\n");
     dc_printf ("neb2_ff          : flash fade/sec\n");
-    dc_printf ("neb2_background	: rgb background color\n");
+    dc_printf ("neb2_background : rgb background color\n");
     dc_printf ("neb2_fog_color   : rgb fog color\n");
 
-    //	dc_printf("neb2_fog_vals    : display all the current settings for all
+    // dc_printf("neb2_fog_vals    : display all the current settings for all
     // above values\n");
 }
 

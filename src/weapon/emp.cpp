@@ -108,9 +108,9 @@ void emp_apply (
         target = &Objects[mo->objnum];
         if (target->type != OBJ_WEAPON) { continue; }
 
-        Assert (target->instance >= 0);
+        ASSERT (target->instance >= 0);
         if (target->instance < 0) { continue; }
-        Assert (Weapons[target->instance].weapon_info_index >= 0);
+        ASSERT (Weapons[target->instance].weapon_info_index >= 0);
         if (Weapons[target->instance].weapon_info_index < 0) { continue; }
 
         // if we have a bomb weapon
@@ -141,9 +141,9 @@ void emp_apply (
         target = &Objects[so->objnum];
         if (target->type != OBJ_SHIP) { continue; }
 
-        Assert (Objects[so->objnum].instance >= 0);
+        ASSERT (Objects[so->objnum].instance >= 0);
         if (Objects[so->objnum].instance < 0) { continue; }
-        Assert (Ships[Objects[so->objnum].instance].ship_info_index >= 0);
+        ASSERT (Ships[Objects[so->objnum].instance].ship_info_index >= 0);
         if (Ships[Objects[so->objnum].instance].ship_info_index < 0) {
             continue;
         }
@@ -246,7 +246,7 @@ void emp_apply (
             // if this is a multiplayer game, notify other players of the
             // effect
             if (Game_mode & GM_MULTIPLAYER) {
-                Assert (MULTIPLAYER_MASTER);
+                ASSERT (MULTIPLAYER_MASTER);
                 send_emp_effect (
                     target->net_signature, actual_intensity, actual_time);
             }
@@ -265,15 +265,15 @@ void emp_start_ship (object* ship_objp, float intensity, float time) {
     float start_intensity;
 
     // make sure this is a ship
-    Assert (ship_objp->type == OBJ_SHIP);
-    Assert (ship_objp->instance >= 0);
+    ASSERT (ship_objp->type == OBJ_SHIP);
+    ASSERT (ship_objp->instance >= 0);
     shipp = &Ships[ship_objp->instance];
 
     // determining pre-existing EMP intensity (if any)
     start_intensity =
         shipp->emp_intensity < 0.0f ? 0.0f : shipp->emp_intensity;
 
-    // setup values (capping them if necessary)	(make sure that we un-normalize
+    // setup values (capping them if necessary) (make sure that we un-normalize
     // start_intensity)
     if (intensity + (start_intensity * EMP_INTENSITY_MAX) >=
         EMP_INTENSITY_MAX) {
@@ -292,7 +292,7 @@ void emp_start_ship (object* ship_objp, float intensity, float time) {
     if (MULTIPLAYER_CLIENT) { return; }
 
     // do any initial AI effects
-    Assert (shipp->ai_index >= 0);
+    ASSERT (shipp->ai_index >= 0);
     aip = &Ai_info[shipp->ai_index];
 
     // lose his current target
@@ -306,9 +306,9 @@ void emp_process_ship (ship* shipp) {
     object* objp;
     ai_info* aip;
 
-    Assert (shipp != NULL);
+    ASSERT (shipp != NULL);
     if (shipp == NULL) { return; }
-    Assert (shipp->objnum >= 0);
+    ASSERT (shipp->objnum >= 0);
     if (shipp->objnum < 0) { return; }
     objp = &Objects[shipp->objnum];
 
@@ -329,7 +329,7 @@ void emp_process_ship (ship* shipp) {
     if (objp->flags[Object::Object_Flags::Player_ship]) { return; }
 
     // lose lock time, etc, etc.
-    Assert (shipp->ai_index >= 0);
+    ASSERT (shipp->ai_index >= 0);
     aip = &Ai_info[shipp->ai_index];
     aip->aspect_locked_time = 0.0f;    // hasn't gotten aspect lock at all
     aip->current_target_is_locked = 0; // isn't locked on his current target
@@ -509,12 +509,12 @@ void emp_maybe_reformat_text (char* text, int /*max_len*/, int gauge_id) {
 
     // if this gauge has not been wacked out, or if the timestamp has expired,
     // we neeed to wack it out again
-    Assert ((gauge_id >= EG_NULL) && (gauge_id < NUM_TEXT_STAMPS));
+    ASSERT ((gauge_id >= EG_NULL) && (gauge_id < NUM_TEXT_STAMPS));
     wt = &Emp_wacky_text[gauge_id];
     if ((wt->stamp == -1) || timestamp_elapsed (wt->stamp)) {
         // reformat specific gauges differently
         switch (gauge_id) {
-        //	weapons
+        // weapons
         case EG_WEAPON_TITLE:
         case EG_WEAPON_P1:
         case EG_WEAPON_P2:

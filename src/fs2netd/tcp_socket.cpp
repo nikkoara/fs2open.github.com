@@ -121,8 +121,8 @@ int FS2NetD_ConnectToServer (const char* host, const char* port) {
             if (my_host == NULL) {
                 // NOTE: that we don't do specific error reporting here since
                 // it's totally different
-                //       on Win32, compared to everything else that is actually
-                //       standard
+                // on Win32, compared to everything else that is actually
+                // standard
                 ml_printf ("Failure from gethostbyname() for host '%s'", host);
                 return -1;
             }

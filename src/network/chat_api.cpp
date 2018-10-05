@@ -440,7 +440,7 @@ char* ChatGetString (void) {
 
                 return p;
             }
-            Assert (strlen (Input_chat_buffer) < MAXCHATBUFFER - 1);
+            ASSERT (strlen (Input_chat_buffer) < MAXCHATBUFFER - 1);
             strcat_s (Input_chat_buffer, ch);
         }
         else {
@@ -495,7 +495,7 @@ int AddChatUser (const char* nickname) {
     Curruser = Firstuser;
     if (Firstuser == NULL) {
         Firstuser = (Chat_user*)vm_malloc (sizeof (Chat_user));
-        Assert (Firstuser);
+        ASSERT (Firstuser);
         strncpy (
             Firstuser->nick_name, nickname, sizeof (Firstuser->nick_name) - 1);
         Firstuser->next = NULL;
@@ -507,7 +507,7 @@ int AddChatUser (const char* nickname) {
         while (Curruser->next) { Curruser = Curruser->next; }
         Curruser->next = (Chat_user*)vm_malloc (sizeof (Chat_user));
         Curruser = Curruser->next;
-        Assert (Curruser);
+        ASSERT (Curruser);
         strncpy (
             Curruser->nick_name, nickname, sizeof (Curruser->nick_name) - 1);
         Curruser->next = NULL;
@@ -881,7 +881,7 @@ char* ParseIRCMessage (char* Line, int iMode) {
         memset (szWhoisUser, 0, sizeof (szWhoisUser));
         strncpy (
             szWhoisUser, GetWordNum (1, szRemLine), sizeof (szWhoisUser) - 1);
-        // This is whois channel info -- what channel they are on		-2
+        // This is whois channel info -- what channel they are on               -2
         strncpy (
             User_req_channel, GetWordNum (2, szRemLine),
             sizeof (User_req_channel) - 1);
@@ -1027,14 +1027,14 @@ void AddChatCommandToQueue (int command, const void* data, size_t len) {
     Currcommand = Firstcommand;
     if (Firstcommand == NULL) {
         Firstcommand = (Chat_command*)vm_malloc (sizeof (Chat_command));
-        Assert (Firstcommand);
+        ASSERT (Firstcommand);
         Firstcommand->next = NULL;
         Currcommand = Firstcommand;
     }
     else {
         while (Currcommand->next) { Currcommand = Currcommand->next; }
         Currcommand->next = (Chat_command*)vm_malloc (sizeof (Chat_command));
-        Assert (Currcommand->next);
+        ASSERT (Currcommand->next);
         Currcommand = Currcommand->next;
     }
     Currcommand->command = (short)command;
@@ -1120,7 +1120,7 @@ void AddChannel (char* channel, unsigned short numusers, char* topic) {
     Currchannel = Firstchannel;
     if (Firstchannel == NULL) {
         Firstchannel = (Chat_channel*)vm_malloc (sizeof (Chat_channel));
-        Assert (Firstchannel);
+        ASSERT (Firstchannel);
         strncpy (
             Firstchannel->channel_name, channel,
             sizeof (Firstchannel->channel_name) - 1);
@@ -1132,7 +1132,7 @@ void AddChannel (char* channel, unsigned short numusers, char* topic) {
     else {
         while (Currchannel->next) { Currchannel = Currchannel->next; }
         Currchannel->next = (Chat_channel*)vm_malloc (sizeof (Chat_channel));
-        Assert (Currchannel->next);
+        ASSERT (Currchannel->next);
         Currchannel = Currchannel->next;
         strncpy (
             Currchannel->channel_name, channel,

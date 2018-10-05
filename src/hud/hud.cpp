@@ -178,7 +178,7 @@ void hud_maybe_display_subspace_notify ();
 int hud_maybe_render_emp_icon ();
 void hud_init_emp_icon ();
 
-//	Saturate a value in minv..maxv.
+// Saturate a value in minv..maxv.
 void saturate (int* i, int minv, int maxv) {
     if (*i < minv)
         *i = minv;
@@ -264,7 +264,7 @@ HudGauge::HudGauge (
       custom_gauge (false), textoffset_x (0), textoffset_y (0),
       texture_target (-1), canvas_w (-1), canvas_h (-1), target_w (-1),
       target_h (-1) {
-    Assert (gauge_config <= NUM_HUD_GAUGES && gauge_config >= 0);
+    ASSERT (gauge_config <= NUM_HUD_GAUGES && gauge_config >= 0);
 
     position[0] = 0;
     position[1] = 0;
@@ -348,7 +348,7 @@ HudGauge::HudGauge (
         custom_frame.first_frame =
             bm_load_animation (frame_fname, &custom_frame.num_frames);
         if (custom_frame.first_frame < 0) {
-            fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", frame_fname);
+            WARNINGF (LOCATION, "Cannot load hud ani: %s\n", frame_fname);
         }
     }
 }
@@ -366,7 +366,7 @@ void HudGauge::getPosition (int* x, int* y) {
 }
 
 void HudGauge::initBaseResolution (int w, int h) {
-    Assert (w >= 640 && h >= 480);
+    ASSERT (w >= 640 && h >= 480);
 
     base_w = w;
     base_h = h;
@@ -445,7 +445,7 @@ void HudGauge::setGaugeColor (int bright_index) {
 
         // intensity
         default:
-            Assert (
+            ASSERT (
                 (bright_index >= 0) && (bright_index < HUD_NUM_COLOR_LEVELS));
             if (bright_index < 0) { bright_index = 0; }
             if (bright_index >= HUD_NUM_COLOR_LEVELS) {
@@ -1322,7 +1322,7 @@ void hud_update_frame (float /*frametime*/) {
     }
 
     if (retarget_turret && can_target) {
-        Assert (!retarget);
+        ASSERT (!retarget);
         void hud_update_closest_turret ();
         hud_update_closest_turret ();
     }
@@ -1390,7 +1390,7 @@ void hud_update_frame (float /*frametime*/) {
     ship* target_shipp = NULL;
 
     if (targetp->type == OBJ_SHIP) {
-        Assert (targetp->instance >= 0 && targetp->instance < MAX_SHIPS);
+        ASSERT (targetp->instance >= 0 && targetp->instance < MAX_SHIPS);
         target_shipp = &Ships[targetp->instance];
         Player->target_is_dying = target_shipp->flags[Ship::Ship_Flags::Dying];
 
@@ -1422,7 +1422,7 @@ void hud_update_frame (float /*frametime*/) {
     // Switch to battle track when a targeted ship is hostile (it attacks you)
     // and within BATTLE_START_MIN_TARGET_DIST
     if (targetp->type == OBJ_SHIP && Event_Music_battle_started == 0) {
-        Assert (target_shipp != NULL);
+        ASSERT (target_shipp != NULL);
 
         // Goober5000
         if (iff_x_attacks_y (target_shipp->team, Player_ship->team)) {
@@ -1497,7 +1497,7 @@ void hud_render_preprocess (float frametime) {
 
     if (Viewer_mode & (VM_EXTERNAL | VM_WARP_CHASE | VM_PADLOCK_ANY)) {
         // If the player is warping out, don't draw the targeting gauges
-        Assert (Player != NULL);
+        ASSERT (Player != NULL);
         if (Player->control_mode != PCM_NORMAL) { return; }
     }
 
@@ -1547,7 +1547,7 @@ void HudGaugeMissionTime::initBitmaps (const char* fname) {
     time_gauge.first_frame = bm_load_animation (fname, &time_gauge.num_frames);
 
     if (time_gauge.first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Could not load in ani: %s\n", fname);
+        WARNINGF (LOCATION, "Could not load in ani: %s\n", fname);
     }
 }
 
@@ -1867,19 +1867,19 @@ void HudGaugeDamage::initBitmaps (
     damage_top.first_frame =
         bm_load_animation (fname_top, &damage_top.num_frames);
     if (damage_top.first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Could not load in the ani: %s\n", fname_top);
+        WARNINGF (LOCATION, "Could not load in the ani: %s\n", fname_top);
     }
 
     damage_middle.first_frame =
         bm_load_animation (fname_middle, &damage_middle.num_frames);
     if (damage_middle.first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Could not load in the ani: %s\n", fname_middle);
+        WARNINGF (LOCATION, "Could not load in the ani: %s\n", fname_middle);
     }
 
     damage_bottom.first_frame =
         bm_load_animation (fname_bottom, &damage_bottom.num_frames);
     if (damage_bottom.first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Could not load in the ani: %s\n", fname_bottom);
+        WARNINGF (LOCATION, "Could not load in the ani: %s\n", fname_bottom);
     }
 }
 
@@ -1970,8 +1970,8 @@ void HudGaugeDamage::render (float /*frametime*/) {
             }
         }
 
-        Assert (best_index >= 0);
-        Assert (best_str >= 0);
+        ASSERT (best_index >= 0);
+        ASSERT (best_str >= 0);
 
         DamageInfo info;
 
@@ -2170,13 +2170,13 @@ int hud_anim_load (hud_anim* ha) {
     }
 
     if (ha->first_frame == -1) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Couldn't load hud animation for file '%s'",
             ha->filename);
         return -1;
     }
 
-    Assert (fps != 0);
+    ASSERT (fps != 0);
     ha->total_time = i2fl (ha->num_frames) / fps;
     return 0;
 }
@@ -2187,14 +2187,14 @@ int hud_anim_load (hud_anim* ha) {
  * @note targetbox static was not implemented by :v:, also used for briefing
  * icons & hud lock icons
  *
- * @param ha			Pointer to ::hud_anim info
- * @param frametime		Seconds elapsed since last frame
- * @param draw_alpha	Draw bitmap as alpha-bitmap (default 0)
- * @param loop			Anim should loop (default 1)
- * @param hold_last		Should last frame be held (default 0)
- * @param reverse		Play animation in reverse (default 0)
- * @param resize_mode		Resize for non-standard resolutions
- * @param mirror		Mirror along y-axis so icon points left instead of
+ * @param ha                    Pointer to ::hud_anim info
+ * @param frametime             Seconds elapsed since last frame
+ * @param draw_alpha    Draw bitmap as alpha-bitmap (default 0)
+ * @param loop                  Anim should loop (default 1)
+ * @param hold_last             Should last frame be held (default 0)
+ * @param reverse               Play animation in reverse (default 0)
+ * @param resize_mode           Resize for non-standard resolutions
+ * @param mirror                Mirror along y-axis so icon points left instead of
  * right
  *
  * @returns  1 on success, 0 on failure
@@ -2352,7 +2352,7 @@ void HudGaugeKills::initBitmaps (const char* fname) {
     Kills_gauge.first_frame =
         bm_load_animation (fname, &Kills_gauge.num_frames);
     if (Kills_gauge.first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Could not load in the ani: %s\n", fname);
+        WARNINGF (LOCATION, "Could not load in the ani: %s\n", fname);
     }
 }
 
@@ -2413,7 +2413,7 @@ void HudGaugeLag::initBitmaps (const char* fname) {
         bm_load_animation (fname, &Netlag_icon.num_frames);
 
     if (Netlag_icon.first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Could not load in the netlag ani: %s\n", fname);
+        WARNINGF (LOCATION, "Could not load in the netlag ani: %s\n", fname);
     }
 }
 
@@ -2637,7 +2637,7 @@ int hud_support_find_closest (int objnum) {
 
             if (!(shipp->flags[Ship::Ship_Flags::Dying] ||
                   shipp->flags[Ship::Ship_Flags::Exploded])) {
-                Assert (objp->type == OBJ_SHIP);
+                ASSERT (objp->type == OBJ_SHIP);
                 aip = &Ai_info[Ships[Objects[sop->objnum].instance].ai_index];
                 pship_index = objp->instance;
 
@@ -2647,7 +2647,7 @@ int hud_support_find_closest (int objnum) {
                     // we can use == in the next statement (and should) since a
                     // ship will only ever be following one order at a time.
                     if (aip->goals[i].ai_mode == AI_GOAL_REARM_REPAIR) {
-                        Assert (aip->goals[i].target_name);
+                        ASSERT (aip->goals[i].target_name);
                         sindex = ship_name_lookup (aip->goals[i].target_name);
                         if (sindex == pship_index) return sop->objnum;
                     }
@@ -2719,7 +2719,7 @@ void HudGaugeSupport::initTextDockValueOffsetX (int x) {
 void HudGaugeSupport::initBitmaps (const char* fname) {
     background.first_frame = bm_load_animation (fname, &background.num_frames);
     if (background.first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Could not load in ani: %s\n", fname);
+        WARNINGF (LOCATION, "Could not load in ani: %s\n", fname);
     }
 }
 
@@ -2777,7 +2777,7 @@ void HudGaugeSupport::render (float /*frametime*/) {
 
     show_time = 0;
     if (Player_ai->ai_flags[AI::AI_Flags::Being_repaired]) {
-        Assert (Player_ship->ship_max_hull_strength > 0);
+        ASSERT (Player_ship->ship_max_hull_strength > 0);
 
         if (!Cmdline_rearm_timer) {
             int i;
@@ -2854,7 +2854,7 @@ void HudGaugeSupport::render (float /*frametime*/) {
     if (show_time) {
         int seconds, minutes;
 
-        Assert (Hud_support_objnum != -1);
+        ASSERT (Hud_support_objnum != -1);
 
         // Ensure support ship is still alive
         if ((Objects[Hud_support_objnum].signature != Hud_support_obj_sig) ||
@@ -2888,7 +2888,7 @@ void HudGaugeSupport::render (float /*frametime*/) {
  * @brief Set the current color to the default HUD color (with default alpha)
  */
 void hud_set_default_color () {
-    Assert (HUD_color_alpha >= 0 && HUD_color_alpha < HUD_NUM_COLOR_LEVELS);
+    ASSERT (HUD_color_alpha >= 0 && HUD_color_alpha < HUD_NUM_COLOR_LEVELS);
     gr_set_color_fast (&HUD_color_defaults[HUD_color_alpha]);
 }
 
@@ -2912,8 +2912,8 @@ void hud_set_dim_color () {
 /**
  * @brief Will set the color to the IFF color based on the team
  *
- * @param objp			Object to test for team color to base on
- * @param is_bright		Default parameter (value 0) which uses bright version
+ * @param objp                  Object to test for team color to base on
+ * @param is_bright             Default parameter (value 0) which uses bright version
  * of IFF color
  */
 void hud_set_iff_color (object* objp, int is_bright) {
@@ -2963,7 +2963,7 @@ static int Vm_other_ship_gauges[NUM_VM_OTHER_SHIP_GAUGES] = {
  * @brief Determine if the specified HUD gauge should be displayed
  */
 int hud_gauge_active (int gauge_index) {
-    Assert (gauge_index >= 0 && gauge_index < NUM_HUD_GAUGES);
+    ASSERT (gauge_index >= 0 && gauge_index < NUM_HUD_GAUGES);
 
     // AL: Special code: Only show two gauges when not viewing from own ship
     if (Viewer_mode & VM_OTHER_SHIP) {
@@ -2980,7 +2980,7 @@ int hud_gauge_active (int gauge_index) {
  * @brief Determine if gauge is in pop-up mode or not
  */
 int hud_gauge_is_popup (int gauge_index) {
-    Assert (gauge_index >= 0 && gauge_index < NUM_HUD_GAUGES);
+    ASSERT (gauge_index >= 0 && gauge_index < NUM_HUD_GAUGES);
     return hud_config_popup_flag_is_set (gauge_index);
 }
 
@@ -2990,7 +2990,7 @@ int hud_gauge_is_popup (int gauge_index) {
  * customized.
  */
 void hud_gauge_popup_start (int gauge_index, int time) {
-    Assert (gauge_index >= 0 && gauge_index < NUM_HUD_GAUGES);
+    ASSERT (gauge_index >= 0 && gauge_index < NUM_HUD_GAUGES);
     if (!hud_gauge_is_popup (gauge_index)) { return; }
 
     size_t num_gauges, i;
@@ -3024,7 +3024,7 @@ void hud_gauge_popup_start (int gauge_index, int time) {
  * customized.
  */
 void hud_gauge_start_flash (int gauge_index) {
-    Assert (gauge_index >= 0 && gauge_index < NUM_HUD_GAUGES);
+    ASSERT (gauge_index >= 0 && gauge_index < NUM_HUD_GAUGES);
 
     size_t num_gauges, i;
 
@@ -3092,7 +3092,7 @@ void hud_set_gauge_color (int gauge_index, int bright_index) {
 
         // Intensity
         default:
-            Assert (
+            ASSERT (
                 (bright_index >= 0) && (bright_index < HUD_NUM_COLOR_LEVELS));
             if (bright_index < 0) { bright_index = 0; }
             if (bright_index >= HUD_NUM_COLOR_LEVELS) {
@@ -3146,7 +3146,7 @@ void hud_set_gauge_color (int gauge_index, int bright_index) {
  * flashing, draw bright 1
  */
 int hud_gauge_maybe_flash (int gauge_index) {
-    Assert (gauge_index >= 0 && gauge_index < NUM_HUD_GAUGES);
+    ASSERT (gauge_index >= 0 && gauge_index < NUM_HUD_GAUGES);
     int flash_status = -1;
     if (!timestamp_elapsed (HUD_gauge_flash_duration[gauge_index])) {
         if (timestamp_elapsed (HUD_gauge_flash_next[gauge_index])) {
@@ -3207,9 +3207,9 @@ void hud_update_objective_message () {
 /**
  * @brief Add objective status on the HUD
  *
- * @param type		Type of goal, one of: ::PRIMARY_GOAL, ::SECONDARY_GOAL,
+ * @param type          Type of goal, one of: ::PRIMARY_GOAL, ::SECONDARY_GOAL,
  * ::BONUS_GOAL
- * @param status	Status of goal, one of:	::GOAL_FAILED, ::GOAL_COMPLETE,
+ * @param status        Status of goal, one of: ::GOAL_FAILED, ::GOAL_COMPLETE,
  * ::GOAL_INCOMPLETE
  * @todo Play a sound?
  */
@@ -3268,7 +3268,7 @@ void HudGaugeObjectiveNotify::initBitmaps (const char* fname) {
     Objective_display_gauge.first_frame =
         bm_load_animation (fname, &Objective_display_gauge.num_frames);
     if (Objective_display_gauge.first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Could not load in ani: %s\n", fname);
+        WARNINGF (LOCATION, "Could not load in ani: %s\n", fname);
     }
 }
 
@@ -3847,7 +3847,7 @@ void HudGaugeFlightPath::initBitmap (const char* fname) {
     Marker.first_frame = bm_load_animation (fname, &Marker.num_frames);
 
     if (Marker.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 

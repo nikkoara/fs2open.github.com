@@ -124,7 +124,7 @@ static bool bm_is_anim (bitmap_entry* entry) {
 }
 
 bitmap_slot* bm_get_slot (int handle, bool separate_ani_frames) {
-    Assertion (
+    ASSERTX (
         handle >= 0, "Invalid handle %d passed to bm_get_slot!", handle);
 
     // The lower 16-bit contain the index in the bitmap block
@@ -132,11 +132,11 @@ bitmap_slot* bm_get_slot (int handle, bool separate_ani_frames) {
     // The upper 16-bit contain the number of the used block
     auto block_index = handle >> 16;
 
-    Assertion (
+    ASSERTX (
         block_index >= 0 && block_index < (int)bm_blocks.size (),
         "Bitmap handle %d has an invalid block number %d!", handle,
         block_index);
-    Assertion (
+    ASSERTX (
         index >= 0 && index < (int)bm_blocks[block_index].size (),
         "Bitmap handle %d has an invalid block index %d!", handle, index);
 
@@ -188,7 +188,7 @@ float bitmap_lookup::map_texture_address (float address) {
 }
 
 float bitmap_lookup::get_channel_red (float u, float v) {
-    Assert (Bitmap_data != NULL);
+    ASSERT (Bitmap_data != NULL);
 
     CLAMP (u, 0.0f, 1.0f);
     CLAMP (v, 0.0f, 1.0f);
@@ -200,7 +200,7 @@ float bitmap_lookup::get_channel_red (float u, float v) {
 }
 
 float bitmap_lookup::get_channel_green (float u, float v) {
-    Assert (Bitmap_data != NULL);
+    ASSERT (Bitmap_data != NULL);
 
     CLAMP (u, 0.0, 1.0f);
     CLAMP (v, 0.0, 1.0f);
@@ -212,7 +212,7 @@ float bitmap_lookup::get_channel_green (float u, float v) {
 }
 
 float bitmap_lookup::get_channel_blue (float u, float v) {
-    Assert (Bitmap_data != NULL);
+    ASSERT (Bitmap_data != NULL);
 
     int x = fl2i (map_texture_address (u) * (Width - 1));
     int y = fl2i (map_texture_address (v) * (Height - 1));
@@ -221,7 +221,7 @@ float bitmap_lookup::get_channel_blue (float u, float v) {
 }
 
 float bitmap_lookup::get_channel_alpha (float u, float v) {
-    Assert (Bitmap_data != NULL);
+    ASSERT (Bitmap_data != NULL);
 
     int x = fl2i (map_texture_address (u) * (Width - 1));
     int y = fl2i (map_texture_address (v) * (Height - 1));
@@ -285,8 +285,8 @@ static int bm_load_sub_fast (
 static int find_block_of (int n, int start_block = 0);
 
 static int get_handle (int block, int index) {
-    Assertion (block >= 0, "Negative block values are not allowed!");
-    Assertion (index >= 0, "Negative index values are not allowed!");
+    ASSERTX (block >= 0, "Negative block values are not allowed!");
+    ASSERTX (index >= 0, "Negative index values are not allowed!");
 
     return (uint32_t)block << 16 | (uint16_t)index;
 }
@@ -412,7 +412,7 @@ DCF (bm_used, "Shows BmpMan Slot Usage") {
                 case BM_TYPE_JPG: eff_jpg++; break;
                 case BM_TYPE_PCX: eff_pcx++; break;
                 default:
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Unhandled EFF image type (%i), get a coder!",
                         block[i].entry.info.ani.eff.type);
@@ -422,7 +422,7 @@ DCF (bm_used, "Shows BmpMan Slot Usage") {
             case BM_TYPE_RENDER_TARGET_STATIC: render_target_static++; break;
             case BM_TYPE_RENDER_TARGET_DYNAMIC: render_target_dynamic++; break;
             default:
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION, "Unhandled image type (%i), get a coder!",
                     block[i].entry.type);
                 break;
@@ -570,12 +570,12 @@ void bm_close () {
 }
 
 int bm_create (int bpp, int w, int h, void* data, int flags) {
-    if (bpp == 8) { Assert (flags & BMP_AABITMAP); }
+    if (bpp == 8) { ASSERT (flags & BMP_AABITMAP); }
     else {
-        Assert ((bpp == 16) || (bpp == 24) || (bpp == 32));
+        ASSERT ((bpp == 16) || (bpp == 24) || (bpp == 32));
     }
 
-    Assertion (
+    ASSERTX (
         bm_inited,
         "bmpman must be initialized before this function can be called!");
 
@@ -634,14 +634,14 @@ void bm_convert_format (bitmap* bmp, ubyte flags) {
     if (!(flags & BMP_AABITMAP) && (bmp->bpp == 24)) return;
 
     if (Is_standalone) {
-        Assert (bmp->bpp == 8);
+        ASSERT (bmp->bpp == 8);
         return;
     }
     else {
         if (flags & BMP_AABITMAP)
-            Assert (bmp->bpp == 8);
+            ASSERT (bmp->bpp == 8);
         else
-            Assert ((bmp->bpp == 16) || (bmp->bpp == 32));
+            ASSERT ((bmp->bpp == 16) || (bmp->bpp == 32));
     }
 
     // maybe swizzle to be an xparent texture
@@ -863,7 +863,7 @@ void bm_get_components (ubyte* pixel, ubyte* r, ubyte* g, ubyte* b, ubyte* a) {
     if (a != NULL) {
         *a = 1;
 
-        Assert (!bit_32);
+        ASSERT (!bit_32);
         if (!(((unsigned short*)pixel)[0] & 0x8000)) { *a = 0; }
     }
 }
@@ -910,7 +910,7 @@ int bm_get_info (
 
     auto entry = bm_get_entry (handle);
 
-    Assertion (
+    ASSERTX (
         entry->handle == handle,
         "Invalid bitmap handle %d passed to bm_get_info().\nThis might be due "
         "to an invalid animation somewhere else.\n",
@@ -967,7 +967,7 @@ void bm_get_palette (int handle, ubyte* pal, char* name) {
 }
 
 uint bm_get_signature (int handle) {
-    Assertion (
+    ASSERTX (
         bm_inited,
         "bmpman must be initialized before this function can be called!");
 
@@ -983,7 +983,7 @@ int bm_get_tcache_type (int num) {
 }
 
 BM_TYPE bm_get_type (int handle) {
-    Assertion (
+    ASSERTX (
         bm_inited,
         "bmpman must be initialized before this function can be called!");
 
@@ -1001,7 +1001,7 @@ bool bm_has_alpha_channel (int handle) {
 }
 
 void bm_init () {
-    Assertion (!bm_inited, "bmpman cannot be initialized more than once!");
+    ASSERTX (!bm_inited, "bmpman cannot be initialized more than once!");
 
     // Allocate one block by default
     allocate_new_block ();
@@ -1062,17 +1062,17 @@ int bm_is_valid (int handle) {
 }
 
 // Load an image and validate it while retrieving information for later use
-// Input:	type		= current BM_TYPE_*
-//			n			= location in bm_bitmaps[]
-//			filename	= name of the current file
-//			img_cfp		= already open CFILE handle, if available
+// Input:       type            = current BM_TYPE_*
+// n                       = location in bm_bitmaps[]
+// filename        = name of the current file
+// img_cfp         = already open CFILE handle, if available
 //
-// Output:	w			= bmp width
-//			h			= bmp height
-//			bpp			= bmp bits per pixel
-//			c_type		= output for an updated BM_TYPE_*
-//			mm_lvl		= number of mipmap levels for the image
-//			size		= size of the data contained in the image
+// Output:      w                       = bmp width
+// h                       = bmp height
+// bpp                     = bmp bits per pixel
+// c_type          = output for an updated BM_TYPE_*
+// mm_lvl          = number of mipmap levels for the image
+// size            = size of the data contained in the image
 static int bm_load_info (
     BM_TYPE type, const char* filename, CFILE* img_cfp, int* w, int* h,
     int* bpp, BM_TYPE* c_type, int* mm_lvl, size_t* size) {
@@ -1107,7 +1107,7 @@ static int bm_load_info (
         case DDS_CUBEMAP_UNCOMPRESSED: *c_type = BM_TYPE_CUBEMAP_DDS; break;
 
         default:
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION, "Bad DDS file compression! Not using DXT1,3,5: %s",
                 filename);
             return -1;
@@ -1146,8 +1146,7 @@ static int bm_load_info (
         }
     }
     else {
-        UNREACHABLE (
-            "Unknown file type specified! This is probably a coding error.");
+        ASSERT (0);
 
         return -1;
     }
@@ -1167,7 +1166,7 @@ int bm_load (const char* real_filename) {
     CFILE* img_cfp = NULL;
     int handle = -1;
 
-    Assertion (
+    ASSERTX (
         bm_inited,
         "bmpman must be initialized before this function can be called!");
 
@@ -1196,7 +1195,7 @@ int bm_load (const char* real_filename) {
     // safety catch for strcat...
     // MAX_FILENAME_LEN-5 == '.' plus 3 letter ext plus NULL terminator
     if (strlen (filename) > MAX_FILENAME_LEN - 5) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Passed filename, '%s', is too long to support an "
             "extension!!\n\nMaximum length, minus the extension, is %i "
@@ -1221,13 +1220,13 @@ int bm_load (const char* real_filename) {
         type = bm_type_list[rval];
     }
 
-    Assert (type != BM_TYPE_NONE);
+    ASSERT (type != BM_TYPE_NONE);
 
     // Find an open slot
     free_slot = find_block_of (1);
 
     if (free_slot < 0) {
-        Assertion (
+        ASSERTX (
             free_slot < 0, "Could not find free BMPMAN slot for bitmap: %s",
             real_filename);
         if (img_cfp != nullptr) cfclose (img_cfp);
@@ -1379,7 +1378,7 @@ bm_load_image_data (int handle, int bpp, ubyte flags, bool nodebug) {
 
     // don't do a bpp check here since it could be different in OGL - taylor
     if (bmp->data == 0) {
-        Assert (be->ref_count == 1);
+        ASSERT (be->ref_count == 1);
 
         if (be->type != BM_TYPE_USER && !nodebug) {
             if (bmp->data == 0)
@@ -1452,7 +1451,7 @@ bm_load_image_data (int handle, int bpp, ubyte flags, bool nodebug) {
             break;
 
         default:
-            fs2::dialog::warning (LOCATION, "Unsupported type in bm_lock -- %d\n", c_type);
+            WARNINGF (LOCATION, "Unsupported type in bm_lock -- %d\n", c_type);
             return -1;
         }
 
@@ -1483,7 +1482,7 @@ int bm_load_animation (
     size_t img_size = 0;
     char clean_name[MAX_FILENAME_LEN];
 
-    Assertion (
+    ASSERTX (
         bm_inited,
         "bmpman must be initialized before this function can be called!");
 
@@ -1517,7 +1516,7 @@ int bm_load_animation (
     // safety catch for strcat...
     // MAX_FILENAME_LEN-5 == '.' plus 3 letter ext plus NULL terminator
     if (strlen (filename) > MAX_FILENAME_LEN - 5) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Passed filename, '%s', is too long to support an "
             "extension!!\n\nMaximum length, minus the extension, is %i "
@@ -1570,7 +1569,7 @@ int bm_load_animation (
     // for -5 here since the filename should already have the extension on it,
     // and it must have passed the previous check
     if (strlen (filename) > MAX_FILENAME_LEN - 5) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Passed filename, '%s', is too long to support an extension and "
             "frames!!\n\nMaximum length for an ANI/EFF/APNG, minus the "
@@ -1595,7 +1594,7 @@ int bm_load_animation (
                  filename, anim_frames, anim_fps));
         }
         if (anim_fps == 0) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION, "animation (%s) has invalid fps of 0, fix this!",
                 filename);
         }
@@ -1610,7 +1609,7 @@ int bm_load_animation (
         anim_read_header (&the_anim, img_cfp);
 
         if (the_anim.width < 0 || the_anim.height < 0) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Ani file %s has a faulty header and cannot be loaded.",
                 real_filename);
@@ -1619,7 +1618,7 @@ int bm_load_animation (
         anim_frames = the_anim.total_frames;
         anim_fps = the_anim.fps;
         if (anim_fps == 0) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION, "animation (%s) has invalid fps of 0, fix this!",
                 filename);
         }
@@ -1634,7 +1633,7 @@ int bm_load_animation (
         if (the_anim.num_keys == 2) {
             the_anim.keys =
                 (key_frame*)vm_malloc (sizeof (key_frame) * the_anim.num_keys);
-            Assert (the_anim.keys != NULL);
+            ASSERT (the_anim.keys != NULL);
 
             for (i = 0; i < the_anim.num_keys; i++) {
                 the_anim.keys[i].frame_num = 0;
@@ -1670,7 +1669,7 @@ int bm_load_animation (
         }
     }
     else {
-        fs2::dialog::warning (LOCATION, "Unsupported image type: %i", type);
+        WARNINGF (LOCATION, "Unsupported image type: %i", type);
         if (img_cfp != nullptr) cfclose (img_cfp);
         return -1;
     }
@@ -1715,7 +1714,7 @@ int bm_load_animation (
                     &img_size)) {
                 // if we didn't get anything then bail out now
                 if (i == 0) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "EFF: No frame images were found.  EFF, %s, is "
                         "invalid.\n",
@@ -1726,7 +1725,7 @@ int bm_load_animation (
                     return -1;
                 }
 
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "EFF: Unable to load all frames for '%s', stopping at "
                     "#%d\n",
@@ -1799,7 +1798,7 @@ int bm_load_animation (
             // this can't be used as a texture array
             is_array = false;
 
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Animation '%s' has images that are of different sizes "
                 "(currently at frame %d)."
@@ -1811,7 +1810,7 @@ int bm_load_animation (
             // Different compression type
             is_array = false;
 
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Animation '%s' has images that are of different compression "
                 "formats (currently at frame %d)."
@@ -1823,7 +1822,7 @@ int bm_load_animation (
             // We found a frame with an incompatible pixel format
             is_array = false;
 
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Animation '%s' has images that are of different pixel "
                 "formats (currently at frame %d)."
@@ -1835,7 +1834,7 @@ int bm_load_animation (
             // We found a frame with a different number of mipmaps
             is_array = false;
 
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Animation '%s' has images that have a different number of "
                 "mipmaps (currently at frame %d)."
@@ -1947,7 +1946,7 @@ int bm_load_sub_slow (
 bitmap* bm_lock (int handle, int bpp, ubyte flags, bool nodebug) {
     bitmap* bmp;
 
-    Assertion (
+    ASSERTX (
         bm_inited,
         "bmpman must be initialized before this function can be called!");
 
@@ -1963,27 +1962,27 @@ bitmap* bm_lock (int handle, int bpp, ubyte flags, bool nodebug) {
     }
     // otherwise do it as normal
     else {
-        if (flags & BMP_AABITMAP) { Assert (bpp == 8); }
+        if (flags & BMP_AABITMAP) { ASSERT (bpp == 8); }
         else if ((flags & BMP_TEX_NONCOMP) && (!(flags & BMP_TEX_COMP))) {
-            Assert (bpp >= 16); // cheating but bpp passed isn't what we
+            ASSERT (bpp >= 16); // cheating but bpp passed isn't what we
                                 // normally end up with
         }
         else if (
             (flags & BMP_TEX_DXT1) || (flags & BMP_TEX_DXT3) ||
             (flags & BMP_TEX_DXT5)) {
-            Assert (bpp >= 16); // cheating but bpp passed isn't what we
+            ASSERT (bpp >= 16); // cheating but bpp passed isn't what we
                                 // normally end up with
         }
         else if (flags & BMP_TEX_CUBEMAP) {
-            Assert (
+            ASSERT (
                 (be->type == BM_TYPE_CUBEMAP_DDS) ||
                 (be->type == BM_TYPE_CUBEMAP_DXT1) ||
                 (be->type == BM_TYPE_CUBEMAP_DXT3) ||
                 (be->type == BM_TYPE_CUBEMAP_DXT5));
-            Assert (bpp >= 16);
+            ASSERT (bpp >= 16);
         }
         else {
-            Assert (0); //?
+            ASSERT (0); //?
         }
     }
 
@@ -1992,10 +1991,10 @@ bitmap* bm_lock (int handle, int bpp, ubyte flags, bool nodebug) {
     // If you hit this assert, chances are that someone freed the
     // wrong bitmap and now someone is trying to use that bitmap.
     // See John.
-    Assert (be->type != BM_TYPE_NONE);
+    ASSERT (be->type != BM_TYPE_NONE);
 
     // Increment ref count for bitmap since lock was made on it.
-    Assert (be->ref_count >= 0);
+    ASSERT (be->ref_count >= 0);
     be->ref_count++; // Lock it before we page in data; this prevents a
                      // callback from freeing this
                      // as it gets read in
@@ -2099,7 +2098,7 @@ void bm_lock_ani (
     size = bm->w * bm->h * (bpp >> 3);
     be->mem_taken = (size_t)size;
 
-    Assert (size > 0);
+    ASSERT (size > 0);
 
     for (i = 0; i < nframes; i++) {
         auto slot = bm_get_slot (first_frame + i);
@@ -2204,7 +2203,7 @@ void bm_lock_apng (
         the_apng.reset (new apng::apng_ani (first_entry->filename));
     }
     catch (const apng::ApngException& e) {
-        fs2::dialog::warning (LOCATION, "Failed to load apng: %s", e.what ());
+        WARNINGF (LOCATION, "Failed to load apng: %s", e.what ());
         return;
     }
 
@@ -2226,7 +2225,7 @@ void bm_lock_apng (
             the_apng->next_frame ();
         }
         catch (const apng::ApngException& e) {
-            fs2::dialog::warning (LOCATION, "Failed to get next apng frame: %s", e.what ());
+            WARNINGF (LOCATION, "Failed to get next apng frame: %s", e.what ());
             bm_release (first_frame);
             return;
         }
@@ -2258,8 +2257,8 @@ void bm_lock_dds (
     // free any existing data
     bm_free_data (bs);
 
-    Assert (be->mem_taken > 0);
-    Assert (&be->bm == bmp);
+    ASSERT (be->mem_taken > 0);
+    ASSERT (&be->bm == bmp);
 
     data = (ubyte*)bm_malloc (handle, be->mem_taken);
 
@@ -2307,7 +2306,7 @@ void bm_lock_dds (
     }
 
 #ifdef BMPMAN_NDEBUG
-    Assert (be->data_size > 0);
+    ASSERT (be->data_size > 0);
 #endif
 }
 
@@ -2329,7 +2328,7 @@ void bm_lock_jpg (
     d_size = (bpp >> 3);
 
     // allocate bitmap data
-    Assert (be->mem_taken > 0);
+    ASSERT (be->mem_taken > 0);
     data = (ubyte*)bm_malloc (handle, be->mem_taken);
 
     if (data == NULL) return;
@@ -2340,7 +2339,7 @@ void bm_lock_jpg (
     bmp->data = (ptr_u)data;
     bmp->palette = NULL;
 
-    Assert (&be->bm == bmp);
+    ASSERT (&be->bm == bmp);
 
     // make sure we are using the correct filename in the case of an EFF.
     // this will populate filename[] whether it's EFF or not
@@ -2354,7 +2353,7 @@ void bm_lock_jpg (
     }
 
 #ifdef BMPMAN_NDEBUG
-    Assert (be->data_size > 0);
+    ASSERT (be->data_size > 0);
 #endif
 }
 
@@ -2376,13 +2375,13 @@ void bm_lock_pcx (
     bmp->palette = NULL;
     memset (data, 0, be->mem_taken);
 
-    Assert (&be->bm == bmp);
+    ASSERT (&be->bm == bmp);
 #ifdef BMPMAN_NDEBUG
-    Assert (be->data_size > 0);
+    ASSERT (be->data_size > 0);
 #endif
 
     // some sanity checks on flags
-    Assert (
+    ASSERT (
         !((flags & BMP_AABITMAP) &&
           (flags & BMP_TEX_ANY))); // no aabitmap textures
 
@@ -2400,7 +2399,7 @@ void bm_lock_pcx (
     }
 
 #ifdef BMPMAN_NDEBUG
-    Assert (be->data_size > 0);
+    ASSERT (be->data_size > 0);
 #endif
 
     bmp->flags = 0;
@@ -2422,7 +2421,7 @@ void bm_lock_png (
     bm_free_data (bs);
 
     // allocate bitmap data
-    Assert (bmp->w * bmp->h > 0);
+    ASSERT (bmp->w * bmp->h > 0);
 
     // if it's not 32-bit, we expand when we read it
     bmp->bpp = 32;
@@ -2435,7 +2434,7 @@ void bm_lock_png (
     bmp->data = (ptr_u)data;
     bmp->palette = NULL;
 
-    Assert (&be->bm == bmp);
+    ASSERT (&be->bm == bmp);
 
     // make sure we are using the correct filename in the case of an EFF.
     // this will populate filename[] whether it's EFF or not
@@ -2451,7 +2450,7 @@ void bm_lock_png (
     }
 
 #ifdef BMPMAN_NDEBUG
-    Assert (be->data_size > 0);
+    ASSERT (be->data_size > 0);
 #endif
 }
 
@@ -2468,16 +2467,16 @@ void bm_lock_tga (
 
     bpp = be->bm.true_bpp;
 
-    if (Is_standalone) { Assert (bpp == 8); }
+    if (Is_standalone) { ASSERT (bpp == 8); }
     else {
-        Assert ((bpp == 16) || (bpp == 24) || (bpp == 32));
+        ASSERT ((bpp == 16) || (bpp == 24) || (bpp == 32));
     }
 
     // allocate bitmap data
     byte_size = (bpp >> 3);
 
-    Assert (byte_size);
-    Assert (be->mem_taken > 0);
+    ASSERT (byte_size);
+    ASSERT (be->mem_taken > 0);
 
     data = (ubyte*)bm_malloc (
         handle, static_cast< size_t > (bmp->w * bmp->h * byte_size));
@@ -2491,9 +2490,9 @@ void bm_lock_tga (
     bmp->data = (ptr_u)data;
     bmp->palette = NULL;
 
-    Assert (&be->bm == bmp);
+    ASSERT (&be->bm == bmp);
 #ifdef BMPMAN_NDEBUG
-    Assert (be->data_size > 0);
+    ASSERT (be->data_size > 0);
 #endif
 
     int tga_error;
@@ -2545,14 +2544,14 @@ void bm_lock_user (
         break;
 
     case 8: // Going from 8 bpp to something (probably only for aabitmaps)
-        Assert (flags & BMP_AABITMAP);
+        ASSERT (flags & BMP_AABITMAP);
         bmp->bpp = bpp;
         bmp->flags = be->info.user.flags;
         bmp->data = (ptr_u)be->info.user.data;
         break;
 
     default:
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION, "Unhandled user bitmap conversion from %d to %d bpp",
             be->info.user.bpp, bmp->bpp);
         break;
@@ -2568,7 +2567,7 @@ int bm_make_render_target (int width, int height, int flags) {
     int bpp = 32;
     int size = 0;
 
-    Assertion (
+    ASSERTX (
         bm_inited,
         "bmpman must be initialized before this function can be called!");
 
@@ -2580,7 +2579,7 @@ int bm_make_render_target (int width, int height, int flags) {
 
     if (!gr_bm_make_render_target (n, &w, &h, &bpp, &mm_lvl, flags)) return -1;
 
-    Assert (mm_lvl > 0);
+    ASSERT (mm_lvl > 0);
 
     if (flags & BMP_FLAG_RENDER_TARGET_STATIC) {
         // data size
@@ -2632,7 +2631,7 @@ void* bm_malloc (int n, size_t size) {
 
 #ifdef BMPMAN_NDEBUG
     auto entry = bm_get_entry (n);
-    Assert (entry->data_size == 0);
+    ASSERT (entry->data_size == 0);
     entry->data_size += size;
     bm_texture_ram += size;
 #endif
@@ -2645,7 +2644,7 @@ void bm_page_in_aabitmap (int handle, int nframes) {
 
     if (handle == -1) return;
 
-    Assert (bm_get_entry (handle)->handle == handle);
+    ASSERT (bm_get_entry (handle)->handle == handle);
 
     for (i = 0; i < nframes; i++) {
         auto frame_entry = bm_get_entry (handle + i);
@@ -2899,7 +2898,7 @@ void bm_print_bitmaps () {
 }
 
 int bm_release (int handle, int clear_render_targets) {
-    Assert (handle >= 0);
+    ASSERT (handle >= 0);
 
     bitmap_entry* be;
 
@@ -2909,7 +2908,7 @@ int bm_release (int handle, int clear_render_targets) {
         return 0; // Already been released?
     }
 
-    Assertion (
+    ASSERTX (
         be->handle == handle,
         "Invalid bitmap handle number %d (expected %d) for %s passed to "
         "bm_release()\n",
@@ -3027,7 +3026,7 @@ int bm_release (int handle, int clear_render_targets) {
 }
 
 int bm_reload (int bitmap_handle, const char* filename) {
-    Assertion (
+    ASSERTX (
         bm_inited,
         "bmpman must be initialized before this function can be called!");
 
@@ -3148,7 +3147,7 @@ void bm_set_components_argb_32_tex (
 }
 
 void bm_set_low_mem (int mode) {
-    Assert ((mode >= 0) && (mode <= 2));
+    ASSERT ((mode >= 0) && (mode <= 2));
 
     CLAMP (mode, 0, 2);
     Bm_low_mem = mode;
@@ -3261,7 +3260,7 @@ int bm_unload (int handle, int clear_render_targets, bool nodebug) {
         return -1; // Already been released
     }
 
-    Assert (be->handle == handle); // INVALID BITMAP HANDLE!
+    ASSERT (be->handle == handle); // INVALID BITMAP HANDLE!
 
     // If it is locked, cannot free it.
     if (be->ref_count != 0 && !nodebug) {
@@ -3366,7 +3365,7 @@ int bm_unload_fast (int handle, int clear_render_targets) {
         return 0;
     }
 
-    Assert (be->handle == handle); // INVALID BITMAP HANDLE!
+    ASSERT (be->handle == handle); // INVALID BITMAP HANDLE!
 
     // unlike bm_unload(), we handle each frame of an animation separately, for
     // safer use in the graphics API
@@ -3381,14 +3380,14 @@ int bm_unload_fast (int handle, int clear_render_targets) {
 void bm_unlock (int handle) {
     bitmap_entry* be;
 
-    Assertion (
+    ASSERTX (
         bm_inited,
         "bmpman must be initialized before this function can be called!");
 
     be = bm_get_entry (handle);
 
     be->ref_count--;
-    Assert (
+    ASSERT (
         be->ref_count >=
         0); // Trying to unlock data more times than lock was called!!!
 }
@@ -3396,14 +3395,14 @@ void bm_unlock (int handle) {
 void bm_update_memory_used (int n, size_t size) {
 #ifdef BMPMAN_NDEBUG
     auto entry = bm_get_entry (n);
-    Assert (entry->data_size == 0);
+    ASSERT (entry->data_size == 0);
     entry->data_size += size;
     bm_texture_ram += size;
 #endif
 }
 
 static int find_block_of (int n, int start_block) {
-    Assertion (
+    ASSERTX (
         n < (int)BM_BLOCK_SIZE,
         "Can not allocate bitmap block with %d slots! Block size is "
         "only %zu!",
@@ -3510,7 +3509,7 @@ int bmpman_count_available_slots () {
 
 bool bm_validate_filename (
     const std::string& file, bool single_frame, bool animation) {
-    Assertion (
+    ASSERTX (
         single_frame || animation,
         "At least one of single_frame or animation must be true!");
 
@@ -3534,7 +3533,7 @@ bool bm_validate_filename (
     return false;
 }
 SDL_Surface* bm_to_sdl_surface (int handle) {
-    Assertion (bm_is_valid (handle), "%d is no valid bitmap handle!", handle);
+    ASSERTX (bm_is_valid (handle), "%d is no valid bitmap handle!", handle);
 
     int w;
     int h;

@@ -65,7 +65,7 @@ GLfloat opengl_get_max_anisotropy () {
     }
 
     // the spec says that it should be a minimum of 2.0
-    Assert (GL_max_anisotropy >= 2.0f);
+    ASSERT (GL_max_anisotropy >= 2.0f);
 
     return GL_max_anisotropy;
 }
@@ -86,7 +86,7 @@ void opengl_tcache_init () {
     // available to us 1024 is what we need with the standard resolutions -
     // taylor
     if (GL_max_texture_width < 1024) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "A minimum texture size of \"1024x1024\" is required for FS2_Open "
             "but only \"%ix%i\" was found.  Can not continue.",
@@ -94,8 +94,8 @@ void opengl_tcache_init () {
     }
 
     // check what mipmap filter we should be using
-    //   0  ==  Bilinear
-    //   1  ==  Trilinear
+    // 0  ==  Bilinear
+    // 1  ==  Trilinear
     GL_mipmap_filter = os_config_read_uint (NULL, "TextureFilter", 1);
 
     if (GL_mipmap_filter > 1) { GL_mipmap_filter = 1; }
@@ -125,7 +125,7 @@ void opengl_tcache_init () {
         CLAMP (GL_anisotropy, 1.0f, GL_max_anisotropy);
     }
 
-    Assert (GL_supported_texture_units >= 2);
+    ASSERT (GL_supported_texture_units >= 2);
 
     GL_last_detail = Detail.hardware_textures;
 
@@ -194,7 +194,7 @@ int opengl_free_texture (tcache_slot_opengl* t) {
         // No texture here anymore
         return 1;
     }
-    Assertion (
+    ASSERTX (
         t->used, "Tried to free unused texture slot. This shouldn't happen!");
 
     // First mark this as unused and then check if all frames are unused. If
@@ -253,7 +253,7 @@ int opengl_free_texture (tcache_slot_opengl* t) {
     }
     else {
         // If we are here then the texture slot must contain an FBO texture
-        Assertion (
+        ASSERTX (
             t->fbo_id >= 0,
             "Found texture slot with invalid bitmap number which wasn't an "
             "FBO!");
@@ -328,7 +328,7 @@ int opengl_texture_set_level (
         glFormat = GL_BGRA;
     }
     else if (byte_mult == 1) {
-        Assertion (
+        ASSERTX (
             bitmap_type == TCACHE_TYPE_AABITMAP,
             "Invalid type for bitmap: %s BMPMAN handle: %d. Type expected was "
             "0, we got %d instead.\nThis can be caused by using texture "
@@ -413,7 +413,7 @@ int opengl_texture_set_level (
         texmem = (ubyte*)vm_malloc (tex_w * tex_h * byte_mult);
         texmemp = texmem;
 
-        Assert (texmem != NULL);
+        ASSERT (texmem != NULL);
 
         int luminance = 0;
         for (auto i = 0; i < tex_h; i++) {
@@ -469,7 +469,7 @@ int opengl_texture_set_level (
             texmem = (ubyte*)vm_malloc (tex_w * tex_h * byte_mult);
             texmemp = texmem;
 
-            Assert (texmem != NULL);
+            ASSERT (texmem != NULL);
 
             for (auto i = 0; i < tex_h; i++) {
                 for (auto j = 0; j < tex_w; j++) {
@@ -498,8 +498,8 @@ int opengl_texture_set_level (
     }
 
     case TCACHE_TYPE_CUBEMAP: {
-        Assert (!resize);
-        Assert (texmem == NULL);
+        ASSERT (!resize);
+        ASSERT (texmem == NULL);
 
         // we have to load in all 6 faces...
         doffset = 0;
@@ -578,7 +578,7 @@ int opengl_texture_set_level (
             texmem = (ubyte*)vm_malloc (tex_w * tex_h * byte_mult);
             texmemp = texmem;
 
-            Assert (texmem != NULL);
+            ASSERT (texmem != NULL);
 
             fix u, utmp, v, du, dv;
 
@@ -601,7 +601,7 @@ int opengl_texture_set_level (
         }
 
         // should never have mipmap levels if we also have to manually resize
-        if ((mipmap_levels > 1) && resize) { Assert (texmem == NULL); }
+        if ((mipmap_levels > 1) && resize) { ASSERT (texmem == NULL); }
 
         for (auto i = 0; i < mipmap_levels; i++) {
             // size of data block (4x4)
@@ -673,7 +673,7 @@ opengl_get_internal_format (int handle, int bitmap_type, int bpp) {
         return GL_RGB5_A1;
     }
     else if (byte_mult == 1) {
-        Assertion (
+        ASSERTX (
             bitmap_type == TCACHE_TYPE_AABITMAP,
             "Invalid type for bitmap: %s BMPMAN handle: %d. Type expected was "
             "0, we got %d instead.\nThis can be caused by using texture "
@@ -756,7 +756,7 @@ void opengl_determine_bpp_and_flags (
             flags |= BMP_TEX_CUBEMAP;
             break;
 
-        default: Assert (0); break;
+        default: ASSERT (0); break;
         }
 
         break;
@@ -767,7 +767,7 @@ void opengl_tex_array_storage (
     GLenum target, GLint levels, GLenum format, GLint width, GLint height,
     GLint frames) {
     if (target == GL_TEXTURE_CUBE_MAP) {
-        Assertion (
+        ASSERTX (
             frames == 1, "Cube map texture arrays aren't supported yet!");
 
         if (GLAD_GL_ARB_texture_storage) {
@@ -836,7 +836,7 @@ int opengl_create_texture (
     auto start_slot =
         bm_get_gr_info< tcache_slot_opengl > (animation_begin, true);
     if (start_slot->bitmap_handle != -1) {
-        Assertion (
+        ASSERTX (
             start_slot->bitmap_handle != animation_begin,
             "opengl_create_texture was called for the same bitmap again!");
 
@@ -874,11 +874,11 @@ int opengl_create_texture (
             // we have mipmap levels so use those as a resize point (image
             // should already be power-of-2)
             base_level = -(Detail.hardware_textures - 4);
-            Assert (base_level >= 0);
+            ASSERT (base_level >= 0);
 
             if (base_level >= max_levels) { base_level = max_levels - 1; }
 
-            Assert ((max_levels - base_level) >= 1);
+            ASSERT ((max_levels - base_level) >= 1);
         }
     }
 
@@ -978,12 +978,12 @@ int opengl_create_texture (
         opengl_determine_bpp_and_flags (
             frame, bitmap_type, debug_flags, debug_bpp);
 
-        Assertion (
+        ASSERTX (
             debug_flags == bitmap_flags,
             "Bitmap flags mismatch detected! Get a coder to take a look at "
             "this bitmap: %s.",
             bm_get_filename (frame));
-        Assertion (
+        ASSERTX (
             debug_bpp == bits_per_pixel,
             "Bits per pixel mismatch detected! Get a coder to take a look at "
             "this bitmap: %s.",
@@ -1027,7 +1027,7 @@ int opengl_create_texture (
     }
 
     if (tslot->mipmap_levels == 1 && bitmap_type == TCACHE_TYPE_CUBEMAP) {
-        Assertion (num_frames == 1, "Cube map arrays are not supported yet!");
+        ASSERTX (num_frames == 1, "Cube map arrays are not supported yet!");
         // generate mip maps for cube maps so we can get glossy reflections;
         // necessary for gloss maps and physically-based lighting
         // OGL_EXT_FRAMEBUFFER_OBJECT required to use glGenerateMipmap()
@@ -1115,9 +1115,9 @@ int gr_opengl_tcache_set_internal (
 int gr_opengl_tcache_set (
     int bitmap_handle, int bitmap_type, float* u_scale, float* v_scale,
     uint32_t* array_index, int stage) {
-    Assertion (u_scale != nullptr, "U scale must be a valid pointer!");
-    Assertion (v_scale != nullptr, "V scale must be a valid pointer!");
-    Assertion (array_index != nullptr, "Array index must be a valid pointer!");
+    ASSERTX (u_scale != nullptr, "U scale must be a valid pointer!");
+    ASSERTX (v_scale != nullptr, "V scale must be a valid pointer!");
+    ASSERTX (array_index != nullptr, "Array index must be a valid pointer!");
 
     int rc = 0;
 
@@ -1144,14 +1144,14 @@ int gr_opengl_tcache_set (
 void opengl_preload_init () {
     if (gr_screen.mode != GR_OPENGL) return;
 
-    //	opengl_tcache_flush ();
+    // opengl_tcache_flush ();
 }
 
 int gr_opengl_preload (int bitmap_num, int is_aabitmap) {
     float u_scale, v_scale;
     int retval;
 
-    Assert (gr_screen.mode == GR_OPENGL);
+    ASSERT (gr_screen.mode == GR_OPENGL);
 
     if (!GL_should_preload) { return 0; }
 
@@ -1187,7 +1187,7 @@ void gr_opengl_set_texture_addressing (int mode) {
 int opengl_compress_image (
     ubyte** compressed_data, ubyte* in_data, int width, int height, int alpha,
     int num_mipmaps) {
-    Assert (in_data != NULL);
+    ASSERT (in_data != NULL);
 
     if (!Texture_compression_available) { return 0; }
 
@@ -1249,11 +1249,11 @@ int opengl_compress_image (
     // if we got this far then it should have worked, but check anyway
     glGetTexLevelParameteriv (
         GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED, &compressed);
-    Assert (compressed != GL_FALSE);
+    ASSERT (compressed != GL_FALSE);
 
     glGetTexLevelParameteriv (
         GL_TEXTURE_2D, 0, GL_TEXTURE_INTERNAL_FORMAT, &compressed);
-    Assert (compressed == intFormat);
+    ASSERT (compressed == intFormat);
 
     // for each mipmap level we generate go ahead and figure up the total
     // memory required
@@ -1265,7 +1265,7 @@ int opengl_compress_image (
 
     out_data = (ubyte*)vm_malloc (compressed_size * sizeof (ubyte));
 
-    Assert (out_data != NULL);
+    ASSERT (out_data != NULL);
 
     memset (out_data, 0, compressed_size * sizeof (ubyte));
 
@@ -1296,7 +1296,7 @@ int opengl_compress_image (
 int opengl_get_texture (
     GLenum target, GLenum pixel_format, GLenum data_format, int num_mipmaps,
     int width, int height, int bytes_per_pixel, void* image_data, int offset) {
-    Assertion (
+    ASSERTX (
         target != GL_TEXTURE_2D_ARRAY,
         "This code does not support texture arrays bitmaps!");
 
@@ -1352,7 +1352,7 @@ void gr_opengl_get_bitmap_from_texture (void* data_out, int bitmap_num) {
     std::unique_ptr< std::uint8_t[] > buffer (
         new std::uint8_t[num_frames * slice_size]);
 
-    Assertion (
+    ASSERTX (
         ts->texture_target == GL_TEXTURE_2D_ARRAY,
         "Unexpected texture target encountered!");
 
@@ -1479,7 +1479,7 @@ void gr_opengl_update_texture (
         texmem = (ubyte*)vm_malloc (width * height * byte_mult);
         ubyte* texmemp = texmem;
 
-        Assert (texmem != NULL);
+        ASSERT (texmem != NULL);
 
         int luminance = 0;
         for (int i = 0; i < height; i++) {
@@ -1580,7 +1580,7 @@ static fbo_t* opengl_get_free_fbo () {
 static void opengl_free_fbo_slot (int id) {
     auto fbo = opengl_get_fbo (id);
 
-    Assertion (fbo != nullptr, "Invalid id passed to opengl_free_fbo_slot!");
+    ASSERTX (fbo != nullptr, "Invalid id passed to opengl_free_fbo_slot!");
 
     // Reset this slot using the default constructor
     *fbo = fbo_t ();
@@ -1707,7 +1707,7 @@ int opengl_set_render_target (int slot, int face, int is_static) {
     }
 
     ts = bm_get_gr_info< tcache_slot_opengl > (slot);
-    Assert (ts != NULL);
+    ASSERT (ts != NULL);
 
     if (!ts->texture_id) {
         Int3 ();
@@ -1726,22 +1726,22 @@ int opengl_set_render_target (int slot, int face, int is_static) {
         return 0;
     }
 
-    //	glBindRenderbuffer(GL_RENDERBUFFER, fbo->renderbuffer_id);
+    // glBindRenderbuffer(GL_RENDERBUFFER, fbo->renderbuffer_id);
     GL_state.BindFrameBuffer (fbo->framebuffer_id);
 
     if (ts->texture_target == GL_TEXTURE_CUBE_MAP) {
         // For cubemaps we can enable one of the six faces for rendering
-        Assert ((face >= 0) && (face < 6));
+        ASSERT ((face >= 0) && (face < 6));
         glFramebufferTexture2D (
             GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
             GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, ts->texture_id, 0);
     }
     else {
         // Check if the face is valid for this case
-        Assert (face <= 0);
+        ASSERT (face <= 0);
     }
 
-    //	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+    // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
     // GL_RENDERBUFFER, fbo->renderbuffer_id);
 
     fbo->working_handle = slot;
@@ -1761,7 +1761,7 @@ int opengl_make_render_target (
     int handle, int* w, int* h, int* bpp, int* mm_lvl, int flags) {
     GR_DEBUG_SCOPE ("Make OpenGL render target");
 
-    Assert (!GL_rendering_to_texture);
+    ASSERT (!GL_rendering_to_texture);
 
     // got to have at least width and height!
     if (!w || !h) {
@@ -1829,9 +1829,9 @@ int opengl_make_render_target (
     GL_state.Texture.Enable (0);
 
     // render buffer
-    //	glGenRenderbuffers(1, &new_fbo.renderbuffer_id);
-    //	glBindRenderbuffer(GL_RENDERBUFFER, new_fbo.renderbuffer_id);
-    //	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, *w, *h);
+    // glGenRenderbuffers(1, &new_fbo.renderbuffer_id);
+    // glBindRenderbuffer(GL_RENDERBUFFER, new_fbo.renderbuffer_id);
+    // glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, *w, *h);
     glBindRenderbuffer (GL_RENDERBUFFER, 0);
 
     // frame buffer
@@ -1850,7 +1850,7 @@ int opengl_make_render_target (
             GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, ts->texture_id, 0, 0);
     }
 
-    //	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+    // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
     // GL_RENDERBUFFER, new_fbo.renderbuffer_id);
 
     if (opengl_check_framebuffer ()) {
@@ -1866,7 +1866,7 @@ int opengl_make_render_target (
 
         glDeleteFramebuffers (1, &new_fbo->framebuffer_id);
 
-        //	glDeleteRenderbuffersEXT(1, &new_fbo.renderbuffer_id);
+        // glDeleteRenderbuffersEXT(1, &new_fbo.renderbuffer_id);
 
         opengl_set_texture_target ();
         opengl_free_fbo_slot (fbo_id);
@@ -1906,19 +1906,19 @@ int opengl_make_render_target (
 }
 
 /**
- * @fn	GLuint opengl_get_rtt_framebuffer()
+ * @fn  GLuint opengl_get_rtt_framebuffer()
  *
- * @brief	Gets the current RTT framebuffer.
+ * @brief       Gets the current RTT framebuffer.
  *
  * Gets the OpenGL framebuffer ID of the currently in use RTT framebuffer.
  * If there is currently none such framebuffer in use then this function
  * returns 0 so it can be used in any place where the framebuffer should be
  * reset to the default drawing surface.
  *
- * @author	m!m
- * @date	14.12.2011
+ * @author      m!m
+ * @date        14.12.2011
  *
- * @return	The current RTT FBO ID or 0 when not doing RTT.
+ * @return      The current RTT FBO ID or 0 when not doing RTT.
  */
 
 GLuint opengl_get_rtt_framebuffer () {

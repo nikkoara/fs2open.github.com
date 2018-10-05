@@ -29,8 +29,8 @@ void multi_campaign_flush_data ();
 
 // call in the debriefing stage to evaluate what we should be doing in regards
 // to the campaign if player_status == 0, nothing should be done
-//                  == 1, players want to continue to the next mission
-//                  == 2, players want to repeat the previous mission
+// == 1, players want to continue to the next mission
+// == 2, players want to repeat the previous mission
 void multi_campaign_do_debrief (int player_status);
 
 // display the done popup

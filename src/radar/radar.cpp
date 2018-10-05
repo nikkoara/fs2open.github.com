@@ -36,7 +36,7 @@ void HudGaugeRadarStd::initBitmaps (char* fname) {
     Radar_gauge.first_frame =
         bm_load_animation (fname, &Radar_gauge.num_frames);
     if (Radar_gauge.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 
@@ -86,7 +86,7 @@ void HudGaugeRadarStd::drawBlips (int blip_type, int bright, int distort) {
     blip* blip_head = NULL;
     int x, y;
 
-    Assert ((blip_type >= 0) && (blip_type < MAX_BLIP_TYPES));
+    ASSERT ((blip_type >= 0) && (blip_type < MAX_BLIP_TYPES));
 
     // Need to set font.
     font::set_font (font::FONT1);
@@ -189,7 +189,7 @@ void HudGaugeRadarStd::drawContactImage (
     else
         scalef = ((float)size) / wf;
 
-    Assert (scalef != 0);
+    ASSERT (scalef != 0);
 
     // animate the targeted icon - option 1 of highlighting the targets
     if (rad == Radar_blip_radius_target) {

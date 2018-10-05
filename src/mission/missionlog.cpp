@@ -204,14 +204,14 @@ void mission_log_add_entry (
 
     entry->type = type;
     if (pname) {
-        Assert (strlen (pname) < NAME_LENGTH);
+        ASSERT (strlen (pname) < NAME_LENGTH);
         strcpy_s (entry->pname, pname);
     }
     else
         strcpy_s (entry->pname, EMPTY_LOG_NAME);
 
     if (sname) {
-        Assert (strlen (sname) < NAME_LENGTH);
+        ASSERT (strlen (sname) < NAME_LENGTH);
         strcpy_s (entry->sname, sname);
     }
     else
@@ -250,7 +250,7 @@ void mission_log_add_entry (
             index = ship_name_lookup (pname);
         }
 
-        Assert (index >= 0);
+        ASSERT (index >= 0);
         entry->primary_team = Ships[index].team;
         entry->pname_display = Ships[index].get_display_string ();
 
@@ -259,7 +259,7 @@ void mission_log_add_entry (
         if ((type == LOG_SHIP_DOCKED) || (type == LOG_SHIP_UNDOCKED)) {
             if (sname) {
                 index = ship_name_lookup (sname);
-                Assert (index >= 0);
+                ASSERT (index >= 0);
                 entry->secondary_team = Ships[index].team;
                 entry->sname_display = Ships[index].get_display_string ();
             }
@@ -330,8 +330,8 @@ void mission_log_add_entry (
     case LOG_WING_DEPARTED:
     case LOG_WING_ARRIVED:
         index = wing_name_lookup (pname, 1);
-        Assert (index != -1);
-        Assert (info_index != -1); // this is the team value
+        ASSERT (index != -1);
+        ASSERT (info_index != -1); // this is the team value
 
         // get the team value for this wing.  Departed or destroyed wings will
         // pass the team value in info_index parameter.  For arriving wings,
@@ -348,7 +348,7 @@ void mission_log_add_entry (
                 si = Wings[index].ship_index[i];
                 if (si >= 0) { break; }
             }
-            Assert (si != -1);
+            ASSERT (si != -1);
             entry->primary_team = Ships[si].team;
         }
         else {
@@ -419,8 +419,8 @@ void mission_log_add_entry_multi (
     log_entry* entry;
 
     // we'd better be in multiplayer and not the master of the game
-    Assert (Game_mode & GM_MULTIPLAYER);
-    Assert (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
+    ASSERT (Game_mode & GM_MULTIPLAYER);
+    ASSERT (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
 
     // mark any entries as obsolete.  Part of the pruning is done based on the
     // type (and name) passed for a new entry
@@ -434,11 +434,11 @@ void mission_log_add_entry_multi (
 
     entry->type = type;
     if (pname) {
-        Assert (strlen (pname) < NAME_LENGTH);
+        ASSERT (strlen (pname) < NAME_LENGTH);
         strcpy_s (entry->pname, pname);
     }
     if (sname) {
-        Assert (strlen (sname) < NAME_LENGTH);
+        ASSERT (strlen (sname) < NAME_LENGTH);
         strcpy_s (entry->sname, sname);
     }
     entry->index = index;
@@ -457,7 +457,7 @@ int mission_log_get_time_indexed (
     LogType type, const char* pname, const char* sname, int count, fix* time) {
     int i, found;
     log_entry* entry;
-    Assertion (
+    ASSERTX (
         count > 0, "The count parameter is %d; it should be greater than 0!",
         count);
 
@@ -594,7 +594,7 @@ void message_log_add_seg (
     while (*parent) parent = &((*parent)->next);
 
     seg = (log_text_seg*)vm_malloc (sizeof (log_text_seg));
-    Assert (seg);
+    ASSERT (seg);
     seg->text = vm_strdup (text);
     seg->color = msg_color;
     seg->x = x;
@@ -830,8 +830,8 @@ void message_log_init_scrollback (int pw) {
             break;
 
         case LOG_CARGO_REVEALED:
-            Assert (entry->index >= 0);
-            Assert (!(entry->index & CARGO_NO_DEPLETE));
+            ASSERT (entry->index >= 0);
+            ASSERT (!(entry->index & CARGO_NO_DEPLETE));
 
             message_log_add_segs (
                 XSTR ("Cargo revealed: ", 418), LOG_COLOR_NORMAL);
@@ -840,8 +840,8 @@ void message_log_init_scrollback (int pw) {
             break;
 
         case LOG_CAP_SUBSYS_CARGO_REVEALED:
-            Assert (entry->index >= 0);
-            Assert (!(entry->index & CARGO_NO_DEPLETE));
+            ASSERT (entry->index >= 0);
+            ASSERT (!(entry->index & CARGO_NO_DEPLETE));
 
             message_log_add_segs (
                 entry->sname_display.c_str (), LOG_COLOR_NORMAL);
@@ -873,7 +873,9 @@ void message_log_init_scrollback (int pw) {
                                                    : LOG_FLAG_GOAL_FAILED));
             break;
         } // matches case statement!
-        default: UNREACHABLE ("Unhandled enum value!"); break;
+        default:
+            ASSERT (0);
+            break;
         }
 
         if (kill) { message_log_remove_segs (Num_log_lines); }

@@ -3,7 +3,7 @@
 //
 //
 
-#include "utils/encoding.h"
+#include "util/encoding.h"
 
 #include "mod_table/mod_table.h"
 
@@ -88,7 +88,7 @@ int check_encoding_and_skip_bom (
     if (Unicode_text_mode) {
         if (encoding != util::Encoding::UTF8) {
             // This is probably fatal, so let's abort right here and now.
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "%s is in an Unicode/UTF format that cannot be read by "
                 "FreeSpace Open. Please convert it to UTF-8\n",
@@ -107,7 +107,7 @@ int check_encoding_and_skip_bom (
     else {
         if (encoding != util::Encoding::ASCII) {
             // This is probably fatal, so let's abort right here and now.
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "%s is in Unicode/UTF format and cannot be read by FreeSpace "
                 "Open without turning on Unicode mode. Please convert it to "

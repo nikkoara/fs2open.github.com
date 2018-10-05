@@ -31,8 +31,8 @@ bool cf_check_location_flags (uint32_t check_flags, uint32_t desired_flags);
 // If filename isn't null it will also tack the filename
 // on the end, creating a completely valid filename.
 // Input:   pathtype  - CF_TYPE_??
-//			path_max  - Maximum characters in the path
-//          filename  - optional, if set, tacks the filename onto end of path.
+// path_max  - Maximum characters in the path
+// filename  - optional, if set, tacks the filename onto end of path.
 // Output:  path      - Fully qualified pathname.
 // Returns 0 if result would be too long (invalid result)
 int cf_create_default_path_string (

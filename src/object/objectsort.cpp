@@ -182,7 +182,7 @@ void obj_render_all (
                 */
                 // Make warp in effect draw after any ship in it
                 if (objp->type == OBJ_FIREBALL) {
-                    // if ( fireball_is_warp(objp) )	{
+                    // if ( fireball_is_warp(objp) )    {
                     osp.z -= 2 * objp->radius;
                     //}
                 }

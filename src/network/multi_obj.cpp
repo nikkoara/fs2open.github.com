@@ -411,7 +411,7 @@ int multi_oo_pack_data (
     int packet_size = 0;
 
     // make sure we have a valid ship
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp->type == OBJ_SHIP);
     if ((objp->instance >= 0) &&
         (Ships[objp->instance].ship_info_index >= 0)) {
         shipp = &Ships[objp->instance];
@@ -429,8 +429,8 @@ int multi_oo_pack_data (
 
     // if i'm the client, make sure I only send certain things
     if (!MULTIPLAYER_MASTER) {
-        Assert (oo_flags & (OO_POS_NEW | OO_ORIENT_NEW));
-        Assert (!(oo_flags & (OO_HULL_NEW | OO_SUBSYSTEMS_AND_AI_NEW)));
+        ASSERT (oo_flags & (OO_POS_NEW | OO_ORIENT_NEW));
+        ASSERT (!(oo_flags & (OO_HULL_NEW | OO_SUBSYSTEMS_AND_AI_NEW)));
     }
     // server
     else {
@@ -488,7 +488,7 @@ int multi_oo_pack_data (
 
     // forward thrust
     percent = (char)(objp->phys_info.forward_thrust * 100.0f);
-    Assert (percent <= 100);
+    ASSERT (percent <= 100);
 
     PACK_BYTE (percent);
 
@@ -608,7 +608,7 @@ int multi_oo_pack_data (
     // Clients: must be able to accomodate the data_size and
     // shipp->np_updates[NET_PLAYER_NUM(pl)].seq before the data itself Server:
     // TODO
-    Assert (packet_size < 255 - 1);
+    ASSERT (packet_size < 255 - 1);
     if (packet_size >= 255 - 1) { return 0; }
     data_size = (ubyte)packet_size;
 
@@ -645,7 +645,7 @@ int multi_oo_unpack_client_data (net_player* pl, ubyte* data) {
     int offset = 0;
 
     if (pl == NULL)
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Invalid net_player pointer passed to multi_oo_unpack_client\n");
 
@@ -912,7 +912,7 @@ int multi_oo_unpack_data (net_player* pl, ubyte* data) {
 
     // forward thrust
     percent = (char)(pobjp->phys_info.forward_thrust * 100.0f);
-    Assert (percent <= 100);
+    ASSERT (percent <= 100);
     GET_DATA (percent);
 
     // now stuff all this new info
@@ -998,7 +998,7 @@ int multi_oo_unpack_data (net_player* pl, ubyte* data) {
             // array of generic system types
             subsys_type = subsysp->system_info
                               ->type; // this is the generic type of subsystem
-            Assert (subsys_type < SUBSYSTEM_MAX);
+            ASSERT (subsys_type < SUBSYSTEM_MAX);
             if (!(subsysp->flags[Ship::Subsystem_Flags::No_aggregate])) {
                 shipp->subsys_info[subsys_type].aggregate_current_hits += val;
             }
@@ -1573,7 +1573,7 @@ void multi_oo_gameplay_init () {
         oo_interp_count[shipp - Ships] = 0;
 
         // increment the time
-        //			cur += split;
+        // cur += split;
     }
     //}
 
@@ -1683,7 +1683,7 @@ void multi_oo_send_changed_object (object* changedobj) {
     ADD_DATA (stop);
 
     // increment sequence #
-    //	Player_ship->np_updates[idx].seq++;
+    // Player_ship->np_updates[idx].seq++;
 
     multi_io_send (&Net_players[idx], data, packet_size);
 }
@@ -1984,7 +1984,7 @@ int multi_oo_is_interp_object (object* objp) {
 // interp
 void multi_oo_interp (object* objp) {
     // make sure its a valid ship
-    Assert (Game_mode & GM_MULTIPLAYER);
+    ASSERT (Game_mode & GM_MULTIPLAYER);
     if (objp->type != OBJ_SHIP) { return; }
     if ((objp->instance < 0) || (objp->instance >= MAX_SHIPS)) { return; }
 
@@ -1992,7 +1992,7 @@ void multi_oo_interp (object* objp) {
     oo_arrive_time_next[objp->instance] += flFrametime;
 
     // do stream weapon firing for this ship
-    Assert (objp != Player_obj);
+    ASSERT (objp != Player_obj);
     if (objp != Player_obj) { ship_fire_primary (objp, 1, 0); }
 
     // if this ship doesn't have enough data points yet, skip it
@@ -2156,7 +2156,7 @@ DCF (
 }
 
 void oo_display () {
-    /*	int idx;
+    /*  int idx;
 
 
         gr_set_color_fast(&Color_bright);
@@ -2177,7 +2177,7 @@ void oo_display () {
             if( (oo_interp_count[idx] == 2) && (display_oo_bez) ){
                 oo_interp_splines[idx][0].bez_render(10, &Color_bright_red);
        // bad path oo_interp_splines[idx][1].bez_render(10,
-       &Color_bright_green);		// good path
+       &Color_bright_green);            // good path
             }
         }
         */

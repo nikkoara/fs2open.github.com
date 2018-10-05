@@ -476,7 +476,7 @@ void debrief_voice_load_all () {
         if (strlen (Debrief_stages[i]->voice) <= 0) { continue; }
         if (strncasecmp (Debrief_stages[i]->voice, NOX ("none"), 4) != 0) {
             debrief_load_voice_file (i, Debrief_stages[i]->voice);
-            //			Debrief_voices[i] =
+            // Debrief_voices[i] =
             // audiostream_open(Debrief_stages[i]->voice, ASF_VOICE);
         }
     }
@@ -656,11 +656,11 @@ void debrief_multi_server_stuff () {
 }
 
 // --------------------------------------------------------------------------------------
-//	debrief_set_stages_and_multi_stuff()
+// debrief_set_stages_and_multi_stuff()
 //
 // Set up the active stages for this debriefing
 //
-// returns:		number of active debriefing stages
+// returns:             number of active debriefing stages
 //
 int debrief_set_stages_and_multi_stuff () {
     int i;
@@ -759,7 +759,7 @@ void debrief_buttons_init () {
 }
 
 // --------------------------------------------------------------------------------------
-//	debrief_ui_init()
+// debrief_ui_init()
 //
 void debrief_ui_init () {
     // init ship selection masks and buttons
@@ -794,7 +794,7 @@ void debrief_ui_init () {
         Debrief_single_name[gr_screen.res], Debrief_multi_name[gr_screen.res]);
 
     if (Background_bitmap < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Could not load the background bitmap for debrief screen");
     }
@@ -868,7 +868,7 @@ void debrief_choose_voice (
 
 void debrief_choose_medal_variant (
     char* buf, int medal_earned, int zero_based_version_index) {
-    Assert (buf != NULL && medal_earned >= 0 && zero_based_version_index >= 0);
+    ASSERT (buf != NULL && medal_earned >= 0 && zero_based_version_index >= 0);
 
     // start with the regular file name, adapted for resolution
     sprintf (
@@ -892,7 +892,7 @@ void debrief_choose_medal_variant (
         if (Medals[medal_earned].version_starts_at_1) version++;
 
         sprintf (number, NOX ("%.2d"), version);
-        Assert (strlen (number) == 2);
+        ASSERT (strlen (number) == 2);
         strncpy (p, number, 2);
     }
 }
@@ -1012,7 +1012,7 @@ void debrief_traitor_init () {
 
             required_string ("$Num stages:");
             stuff_int (&debrief->num_stages);
-            Assert (debrief->num_stages == 1);
+            ASSERT (debrief->num_stages == 1);
 
             stage_num = 0;
             stagep = &debrief->stages[stage_num++];
@@ -1024,12 +1024,12 @@ void debrief_traitor_init () {
             char traitor_voice_file[MAX_FILENAME_LEN];
             stuff_string (traitor_voice_file, F_FILESPEC, MAX_FILENAME_LEN);
 
-            // DKA 9/13/99	Only 1 traitor msg for FS2
-            //		if ( Player->main_hall ) {
-            //			strcpy_s(stagep->voice, NOX("3_"));
-            //		} else {
-            //			strcpy_s(stagep->voice, NOX("1_"));
-            //		}
+            // DKA 9/13/99      Only 1 traitor msg for FS2
+            // if ( Player->main_hall ) {
+            // strcpy_s(stagep->voice, NOX("3_"));
+            // } else {
+            // strcpy_s(stagep->voice, NOX("1_"));
+            // }
 
             // Goober5000
             debrief_choose_voice (
@@ -1247,7 +1247,7 @@ void debrief_multi_list_draw () {
 
 void debrief_kick_selected_player () {
     if (Multi_list_select >= 0) {
-        Assert (Net_player->flags & NETINFO_FLAG_GAME_HOST);
+        ASSERT (Net_player->flags & NETINFO_FLAG_GAME_HOST);
         multi_kick_player (Multi_list[Multi_list_select].net_player_index);
     }
 }
@@ -1255,7 +1255,7 @@ void debrief_kick_selected_player () {
 // get optional mission popup text
 void debrief_assemble_optional_mission_popup_text (
     char* buffer, char* mission_loop_desc) {
-    Assert (buffer != NULL);
+    ASSERT (buffer != NULL);
     // base message
 
     if (mission_loop_desc == NULL) {
@@ -1343,7 +1343,7 @@ void debrief_accept (int ok_to_post_start_game_event) {
                 bool require_repeat_mission =
                     (Campaign.current_mission == Campaign.next_mission);
                 if (Campaign.missions[cur].flags & CMISSION_FLAG_HAS_LOOP) {
-                    Assert (
+                    ASSERT (
                         Campaign.loop_mission !=
                         CAMPAIGN_LOOP_MISSION_UNINITIALIZED);
                 }
@@ -1422,7 +1422,7 @@ void debrief_prev_tab () {
 }
 
 // --------------------------------------------------------------------------------------
-//	debrief_next_stage()
+// debrief_next_stage()
 //
 void debrief_next_stage () {
     if (Current_stage < Num_stages - 1) {
@@ -1434,7 +1434,7 @@ void debrief_next_stage () {
 }
 
 // --------------------------------------------------------------------------------------
-//	debrief_prev_stage()
+// debrief_prev_stage()
 //
 void debrief_prev_stage () {
     if (Current_stage) {
@@ -1446,7 +1446,7 @@ void debrief_prev_stage () {
 }
 
 // --------------------------------------------------------------------------------------
-//	debrief_first_stage()
+// debrief_first_stage()
 void debrief_first_stage () {
     if (Current_stage) {
         New_stage = 0;
@@ -1457,7 +1457,7 @@ void debrief_first_stage () {
 }
 
 // --------------------------------------------------------------------------------------
-//	debrief_last_stage()
+// debrief_last_stage()
 void debrief_last_stage () {
     if (Current_stage != Num_stages - 1) {
         New_stage = Num_stages - 1;
@@ -1557,7 +1557,7 @@ void debrief_stats_render () {
             }
             else if (i > 1) {
                 // Assert: Was debrief_setup_ship_kill_stats called?
-                Assert (Debrief_stats_kills != NULL);
+                ASSERT (Debrief_stats_kills != NULL);
 
                 gr_printf_menu (0, y, "%s", Debrief_stats_kills[i - 2].text);
                 gr_printf_menu (
@@ -1721,7 +1721,7 @@ void debrief_setup_ship_kill_stats (int /*stage_num*/) {
     int* kill_arr; // DTP max ships
     debrief_stats_kill_info* kill_info;
 
-    Assert (Current_stage < DEBRIEF_NUM_STATS_PAGES);
+    ASSERT (Current_stage < DEBRIEF_NUM_STATS_PAGES);
     if (Current_stage == DEBRIEF_MISSION_STATS ||
         Current_stage == DEBRIEF_ALLTIME_STATS)
         return;
@@ -1730,7 +1730,7 @@ void debrief_setup_ship_kill_stats (int /*stage_num*/) {
         Debrief_stats_kills = new debrief_stats_kill_info[Ship_info.size ()];
     }
 
-    Assert (Debrief_player != NULL);
+    ASSERT (Debrief_player != NULL);
 
     // kill_ar points to an array of MAX_SHIP_TYPE ints
     if (Current_stage == DEBRIEF_MISSION_KILLS) {
@@ -1904,8 +1904,8 @@ static void debrief_init_music () {
 void debrief_init () {
     int i;
 
-    Assert (!Debrief_inited);
-    //	Campaign.loop_enabled = 0;
+    ASSERT (!Debrief_inited);
+    // Campaign.loop_enabled = 0;
     Campaign.loop_mission = CAMPAIGN_LOOP_MISSION_UNINITIALIZED;
 
     // MageKing17 - Set the font so that wordwrapping in
@@ -1969,12 +1969,12 @@ void debrief_init () {
 
     debrief_multi_list_init ();
 
-    //	rank_bitmaps_clear();
-    //	rank_bitmaps_load();
+    // rank_bitmaps_clear();
+    // rank_bitmaps_load();
 
     strcpy_s (Debrief_current_callsign, Player->callsign);
     Debrief_player = Player;
-    //	Debrief_current_net_player_index =
+    // Debrief_current_net_player_index =
     // debrief_multi_list[0].net_player_index;
 
     // set up the Debrief_stages[] and Recommendations[] arrays.  Only do the
@@ -2041,12 +2041,12 @@ void debrief_init () {
 }
 
 // --------------------------------------------------------------------------------------
-//	debrief_close()
+// debrief_close()
 void debrief_close () {
     int i;
     scoring_struct* sc;
 
-    Assert (Debrief_inited);
+    ASSERT (Debrief_inited);
 
     // if the mission wasn't accepted, clear out my stats
     // we need to evaluate a little differently for multiplayer since the
@@ -2236,7 +2236,7 @@ void debrief_award_text_clear () {
 // this is the nastiest code I have ever written.  if you are modifying this, i
 // feel bad for you.
 void debrief_add_award_text (const char* str) {
-    Assert (Debrief_award_text_num_lines < AWARD_TEXT_MAX_LINES);
+    ASSERT (Debrief_award_text_num_lines < AWARD_TEXT_MAX_LINES);
     if (Debrief_award_text_num_lines >= AWARD_TEXT_MAX_LINES) { return; }
 
     char* line2;
@@ -2278,13 +2278,13 @@ void debrief_add_award_text (const char* str) {
     }
 }
 
-//	called once per frame to drive all the input reading and rendering
+// called once per frame to drive all the input reading and rendering
 void debrief_do_frame (float frametime) {
     int k = 0, new_k = 0;
     const char* please_wait_str = XSTR ("Please Wait", 1242);
     char buf[256];
 
-    Assert (Debrief_inited);
+    ASSERT (Debrief_inited);
 
     // Goober5000 - accept immediately if skipping debriefing
     if (The_mission.flags[Mission::Mission_Flags::Toggle_debriefing]) {
@@ -2460,7 +2460,7 @@ void debrief_do_frame (float frametime) {
                 Debrief_award_coords[gr_screen.res][1], GR_RESIZE_MENU);
         }
 
-        //  draw medal/badge/rank labels
+        // draw medal/badge/rank labels
         debrief_draw_award_text ();
     }
 
@@ -2496,7 +2496,7 @@ void debrief_do_frame (float frametime) {
     case DEBRIEF_TAB:
         if (Num_debrief_stages <= 0) {
             gr_set_color_fast (&Color_white);
-            Assert (Game_current_mission_filename != NULL);
+            ASSERT (Game_current_mission_filename != NULL);
             gr_printf_menu (
                 Debrief_text_wnd_coords[gr_screen.res][0],
                 Debrief_text_wnd_coords[gr_screen.res][1],
@@ -2545,7 +2545,7 @@ void debrief_do_frame (float frametime) {
 
     // AL 3-6-98: Needed to move key reading here, since popups are launched
     // from this code, and we don't
-    //				  want to include the mouse pointer which is drawn in the
+    // want to include the mouse pointer which is drawn in the
     // flip
 
     if (!help_overlay_active (Debrief_overlay_id)) {
@@ -2594,7 +2594,7 @@ void debrief_do_frame (float frametime) {
     // check to see if we should be showing a pilot info popup in multiplayer
     // (if a guy was double clicked)
     if ((Game_mode & GM_MULTIPLAYER) && Debrief_should_show_popup) {
-        Assert (
+        ASSERT (
             (Multi_list_select >= 0) && (Multi_list_select < Multi_list_size));
         multi_pinfo_popup (
             &Net_players[Multi_list[Multi_list_select].net_player_index]);

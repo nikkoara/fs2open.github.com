@@ -60,7 +60,7 @@ int g3_draw_line (vertex* p0, vertex* p1) {
 
     ubyte codes_or;
 
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
     if (p0->codes & p1->codes) return 0;
 
@@ -86,7 +86,7 @@ int g3_draw_line (vertex* p0, vertex* p1) {
 int g3_check_normal_facing (const vec3d* v, const vec3d* norm) {
     vec3d tempv;
 
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
     vm_vec_sub (&tempv, &View_position, v);
 
@@ -96,7 +96,7 @@ int g3_check_normal_facing (const vec3d* v, const vec3d* norm) {
 // draw a sortof sphere - i.e., the 2d radius is proportional to the 3d
 // radius, but not to the distance from the eye
 int g3_draw_sphere (vertex* pnt, float rad) {
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
     if (!(pnt->codes & CC_BEHIND)) {
         if (!(pnt->flags & PF_PROJECTED)) g3_project_vertex (pnt);
@@ -121,7 +121,7 @@ int g3_draw_sphere_ez (const vec3d* pnt, float rad) {
     vertex pt;
     ubyte flags;
 
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
     flags = g3_rotate_vertex (&pt, pnt);
 
@@ -157,7 +157,7 @@ int g3_get_bitmap_dims (
         width = height = rad * 2.0f;
     }
 
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
     if (pnt->codes & (CC_BEHIND | CC_OFF_USER)) { return 1; }
 
@@ -206,7 +206,7 @@ void g3_draw_horizon_line () {
     vec3d horizon_vec;
     float up_right, down_right, down_left, up_left;
 
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
     // compute horizon_vector
     horizon_vec.xyz.x = Unscaled_matrix.vec.rvec.xyz.y * Matrix_scale.xyz.y *
@@ -473,8 +473,8 @@ void g3_render_rect_oriented_internal (
     // idiot-proof
     if (width == 0 || height == 0) return;
 
-    Assert (pos != NULL);
-    Assert (ori != NULL);
+    ASSERT (pos != NULL);
+    ASSERT (ori != NULL);
 
     // Let's begin.
 
@@ -724,7 +724,7 @@ void g3_render_rect_screen_aligned_2d (
         width = height = rad * 2.0f;
     }
 
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
     if (pnt->codes & (CC_BEHIND | CC_OFF_USER)) return;
 
@@ -920,7 +920,7 @@ void g3_render_laser_2d (
     vertex pt1, pt2;
     float depth;
 
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
     g3_rotate_vertex (&pt1, headp);
 
@@ -1058,8 +1058,8 @@ void g3_render_rod (color* clr, int num_points, vec3d* pvecs, float width) {
     vertex pts[MAX_ROD_VERTS];
     int i, nv = 0;
 
-    Assert (num_points >= 2);
-    Assert ((num_points * 2) <= MAX_ROD_VERTS);
+    ASSERT (num_points >= 2);
+    ASSERT ((num_points * 2) <= MAX_ROD_VERTS);
 
     for (i = 0; i < num_points; i++) {
         vm_vec_sub (&fvec, &View_position, &pvecs[i]);
@@ -1085,7 +1085,7 @@ void g3_render_rod (color* clr, int num_points, vec3d* pvecs, float width) {
         vm_vec_scale_add (&vecs[1], &pvecs[i], &uvec, -width * 0.5f);
 
         if (nv > MAX_ROD_VERTS - 2) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Hit high-water mark (%i) in g3_draw_rod()!!\n",
                 MAX_ROD_VERTS);
             break;
@@ -1113,7 +1113,7 @@ void g3_render_rod (color* clr, int num_points, vec3d* pvecs, float width) {
 
     // we should always have at least 4 verts, and there should always be an
     // even number
-    Assert ((nv >= 4) && !(nv % 2));
+    ASSERT ((nv >= 4) && !(nv % 2));
 
     material material_params;
 
@@ -1552,9 +1552,9 @@ void flash_ball::initialize (
     }
 }
 
-// rad		how wide the ball should be
-// intinsity	how visable it should be
-// life		how far along from start to end should it be
+// rad          how wide the ball should be
+// intinsity    how visable it should be
+// life         how far along from start to end should it be
 void flash_ball::render (int texture, float rad, float intinsity, float life) {
     for (int i = 0; i < n_rays; i++) {
         vec3d end;

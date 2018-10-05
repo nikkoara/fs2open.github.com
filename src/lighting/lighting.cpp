@@ -186,12 +186,12 @@ void light_add_point (
     const vec3d* pos, float r1, float r2, float intensity, float r, float g,
     float b, int light_ignore_objnum, float spec_r, float spec_g, float spec_b,
     bool specular) {
-    Assertion (
+    ASSERTX (
         r1 > 0.0f,
         "Invalid radius r1 specified for light: %f. Radius must be > 0.0f. "
         "Examine stack trace to determine culprit.\n",
         r1);
-    Assertion (
+    ASSERTX (
         r2 > 0.0f,
         "Invalid radius r2 specified for light: %f. Radius must be > 0.0f. "
         "Examine stack trace to determine culprit.\n",
@@ -235,12 +235,12 @@ void light_add_point_unique (
     const vec3d* pos, float r1, float r2, float intensity, float r, float g,
     float b, int affected_objnum, float spec_r, float spec_g, float spec_b,
     bool specular) {
-    Assertion (
+    ASSERTX (
         r1 > 0.0f,
         "Invalid radius r1 specified for light: %f. Radius must be > 0.0f. "
         "Examine stack trace to determine culprit.\n",
         r1);
-    Assertion (
+    ASSERTX (
         r2 > 0.0f,
         "Invalid radius r2 specified for light: %f. Radius must be > 0.0f. "
         "Examine stack trace to determine culprit.\n",
@@ -284,12 +284,12 @@ void light_add_tube (
     const vec3d* p0, const vec3d* p1, float r1, float r2, float intensity,
     float r, float g, float b, int affected_objnum, float spec_r, float spec_g,
     float spec_b, bool specular) {
-    Assertion (
+    ASSERTX (
         r1 > 0.0f,
         "Invalid radius r1 specified for light: %f. Radius must be > 0.0f. "
         "Examine stack trace to determine culprit.\n",
         r1);
-    Assertion (
+    ASSERTX (
         r2 > 0.0f,
         "Invalid radius r2 specified for light: %f. Radius must be > 0.0f. "
         "Examine stack trace to determine culprit.\n",
@@ -439,12 +439,12 @@ void light_apply_rgb (
 
         // others. BAD
         default:
-            fs2::dialog::error ("Unknown light type in light_apply_rgb!\n");
+            ASSERT (0);
             continue;
         }
 
         dot = vm_vec_dot (&to_light, norm);
-        //		dot = 1.0f;
+        // dot = 1.0f;
         if (dot > 0.0f) {
             // indicating that we already calculated the distance
             // (vm_vec_dist_to_line(...) does this for us)
@@ -497,12 +497,12 @@ void light_add_cone (
     bool dual_cone, float r1, float r2, float intensity, float r, float g,
     float b, int light_ignore_objnum, float spec_r, float spec_g, float spec_b,
     bool specular) {
-    Assertion (
+    ASSERTX (
         r1 > 0.0f,
         "Invalid radius r1 specified for light: %f. Radius must be > 0.0f. "
         "Examine stack trace to determine culprit.\n",
         r1);
-    Assertion (
+    ASSERTX (
         r2 > 0.0f,
         "Invalid radius r2 specified for light: %f. Radius must be > 0.0f. "
         "Examine stack trace to determine culprit.\n",
@@ -551,7 +551,7 @@ bool light_compare_by_type (const light& a, const light& b) {
 }
 
 void scene_lights::addLight (const light* light_ptr) {
-    Assert (light_ptr != NULL);
+    ASSERT (light_ptr != NULL);
 
     AllLights.push_back (*light_ptr);
 
@@ -689,7 +689,7 @@ bool scene_lights::setLights (const light_indexing_info* info) {
     }
 
     // we definitely shouldn't be exceeding the number of buffered lights
-    Assert (index_start + num_lights <= BufferedLights.size ());
+    ASSERT (index_start + num_lights <= BufferedLights.size ());
 
     for (size_t i = 0; i < num_lights; ++i) {
         auto buffered_light_index = index_start + i;

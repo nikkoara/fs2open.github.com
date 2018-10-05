@@ -25,7 +25,7 @@
 #define SHIELD_FLASH_INTERVAL_FAST 200 // time between shield quadrant flashes
 
 // CommanderDJ - now dynamic
-// #define MAX_SHIELD_ICONS		80
+// #define MAX_SHIELD_ICONS             80
 
 std::vector< std::string > Hud_shield_filenames;
 
@@ -107,7 +107,7 @@ void hud_shield_level_init () {
     Shield_mini_gauge.first_frame =
         bm_load_animation ("targhit1", &Shield_mini_gauge.num_frames);
     if (Shield_mini_gauge.first_frame == -1) {
-        fs2::dialog::warning (LOCATION, "Could not load in the HUD shield ani: targhit1\n");
+        WARNINGF (LOCATION, "Could not load in the HUD shield ani: targhit1\n");
         return;
     }
     Shield_mini_loaded = 1;
@@ -152,7 +152,7 @@ void hud_ship_icon_page_in (ship_info* sip) {
     if (sip->shield_icon_index == 255) { return; }
 
     // load in shield frames if not already loaded
-    Assert (sip->shield_icon_index < (ubyte)Hud_shield_filenames.size ());
+    ASSERT (sip->shield_icon_index < (ubyte)Hud_shield_filenames.size ());
     sgp = &Shield_gauges.at (sip->shield_icon_index);
 
     if (sgp->first_frame == -1) {
@@ -160,7 +160,7 @@ void hud_ship_icon_page_in (ship_info* sip) {
             Hud_shield_filenames.at (sip->shield_icon_index).c_str (),
             &sgp->num_frames);
         if (sgp->first_frame == -1) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Could not load in the HUD shield ani: %s\n",
                 Hud_shield_filenames.at (sip->shield_icon_index).c_str ());
             return;
@@ -181,13 +181,13 @@ void hud_ship_icon_page_in (ship_info* sip) {
 void hud_shield_equalize (object* objp, player* pl) {
     float penalty;
 
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
     if (objp == NULL) return;
 
-    Assert (pl != NULL);
+    ASSERT (pl != NULL);
     if (pl == NULL) return;
 
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp->type == OBJ_SHIP);
     if (objp->type != OBJ_SHIP) return;
 
     // Goober5000 - quick out if we have no shields
@@ -218,19 +218,19 @@ void hud_shield_equalize (object* objp, player* pl) {
 // hud_augment_shield_quadrant()
 //
 // Transfer shield energy to a shield quadrant from the three other
-//	quadrants.  Works by trying to transfer a fixed amount of shield
-//	energy from the other three quadrants, taking the same percentage
+// quadrants.  Works by trying to transfer a fixed amount of shield
+// energy from the other three quadrants, taking the same percentage
 // from each quadrant.
 //
-//	input:	objp			=>		object to perform shield transfer on
-//				direction	=>		which quadrant to augment:
-//										0 - right
-//										1 - top
-//										2 - bottom
-//										3 - left
+// input:  objp                    =>              object to perform shield transfer on
+// direction       =>              which quadrant to augment:
+// 0 - right
+// 1 - top
+// 2 - bottom
+// 3 - left
 //
 void hud_augment_shield_quadrant (object* objp, int direction) {
-    Assertion (
+    ASSERTX (
         (direction >= 0) && (direction < 4), "Invalid quadrant index %i!",
         direction);
 
@@ -365,7 +365,7 @@ void hud_shield_show_mini (
         range = HUD_color_alpha;
         hud_color_index = (int)std::lround (
             (objp->shield_quadrant[Quadrant_xlate[i]] / max_shield) * range);
-        Assert (hud_color_index >= 0 && hud_color_index <= range);
+        ASSERT (hud_color_index >= 0 && hud_color_index <= range);
 
         if (hud_color_index < 0) { hud_color_index = 0; }
         if (hud_color_index >= HUD_NUM_COLOR_LEVELS) {
@@ -413,10 +413,10 @@ void shield_info_reset (object* objp, shield_hit_info* shi) {
 //
 // This needs to be called whenever the player selects a new target
 //
-// input:	player	=>	optional parameter (default value 0).  This is to
+// input:       player  =>      optional parameter (default value 0).  This is to
 // indicate that player shield hit
-//								info should be reset.  This is normally not the
-// case. 								is for the player's current target
+// info should be reset.  This is normally not the
+// case.                                                                is for the player's current target
 void hud_shield_hit_reset (object* objp, int player) {
     shield_hit_info* shi;
 
@@ -459,8 +459,8 @@ void hud_shield_hit_update () {
 // will draw the quadrant as flashing
 //
 // input:
-//				objp		=>	object pointer for ship that has been hit
-//				quadrant	=> quadrant of shield getting hit (-1 if no shield
+// objp            =>      object pointer for ship that has been hit
+// quadrant        => quadrant of shield getting hit (-1 if no shield
 // is present)
 void hud_shield_quadrant_hit (object* objp, int quadrant) {
     shield_hit_info* shi;
@@ -468,7 +468,7 @@ void hud_shield_quadrant_hit (object* objp, int quadrant) {
 
     if (Game_mode & GM_STANDALONE_SERVER) return;
 
-    Assertion (
+    ASSERTX (
         objp != NULL,
         "hud_shield_quadrant_hit() called with a NULL objp; get a coder!\n");
 
@@ -487,12 +487,12 @@ void hud_shield_quadrant_hit (object* objp, int quadrant) {
         return;
     }
 
-    Assertion (
+    ASSERTX (
         !shi->shield_hit_timers.empty (),
         "Shield hit info object for object '%s' has a size %zu"
         " shield_hit_timers; get a coder!\n",
         Ships[objp->instance].ship_name, shi->shield_hit_timers.size ());
-    Assertion (
+    ASSERTX (
         shi->hull_hit_index < (int)shi->shield_hit_timers.size (),
         "Shield hit info object for object '%s' has a hull_hit_index of %d "
         "(should be between 0 and %zu); get a coder!\n",
@@ -506,7 +506,7 @@ void hud_shield_quadrant_hit (object* objp, int quadrant) {
         else
             num = quadrant;
 
-        Assertion (
+        ASSERTX (
             num < shi->hull_hit_index,
             "Shield hit info object for object '%s' hit on quadrant #%d, "
             "despite having a hull_hit_index of %d; get a coder!\n",
@@ -537,7 +537,7 @@ HudGaugeShield::HudGaugeShield (int _gauge_object, int _gauge_config)
 void HudGaugeShield::render (float /*frametime*/) {}
 
 void HudGaugeShield::showShields (object* objp, int mode) {
-    //	static int fod_model = -1;
+    // static int fod_model = -1;
     float max_shield;
     int hud_color_index, range;
     int sx, sy, i;
@@ -554,7 +554,7 @@ void HudGaugeShield::showShields (object* objp, int mode) {
     sp = &Ships[objp->instance];
     sip = &Ship_info[sp->ship_info_index];
 
-    //	bool digitus_improbus = (fod_model != -2 && strstr(sp->ship_name,
+    // bool digitus_improbus = (fod_model != -2 && strstr(sp->ship_name,
     //"Sathanas") != NULL);
     if (sip->shield_icon_index == 255 &&
         !(sip->flags[Ship::Info_Flags::
@@ -576,7 +576,7 @@ void HudGaugeShield::showShields (object* objp, int mode) {
             if (sgp->first_frame == -1) {
                 if (!shield_ani_warning_displayed_already) {
                     shield_ani_warning_displayed_already = true;
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION, "Could not load in the HUD shield ani: %s\n",
                         Hud_shield_filenames.at (sip->shield_icon_index)
                             .c_str ());
@@ -703,7 +703,7 @@ void HudGaugeShield::showShields (object* objp, int mode) {
             hud_color_index =
                 fl2i ((objp->shield_quadrant[i] / max_shield) * range);
 
-        Assert (hud_color_index >= 0 && hud_color_index <= range);
+        ASSERT (hud_color_index >= 0 && hud_color_index <= range);
 
         if (hud_color_index < 0) { hud_color_index = 0; }
         if (hud_color_index >= HUD_NUM_COLOR_LEVELS) {
@@ -941,7 +941,7 @@ void HudGaugeShieldMini::initBitmaps (char* fname) {
     Shield_mini_gauge.first_frame =
         bm_load_animation (fname, &Shield_mini_gauge.num_frames);
     if (Shield_mini_gauge.first_frame == -1) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Could not load in the HUD shield ani: %s\n", fname);
     }
 }
@@ -999,7 +999,7 @@ void HudGaugeShieldMini::showMiniShields (object* objp) {
         range = HUD_color_alpha;
         hud_color_index = (int)std::lround (
             (objp->shield_quadrant[Quadrant_xlate[i]] / max_shield) * range);
-        Assert (hud_color_index >= 0 && hud_color_index <= range);
+        ASSERT (hud_color_index >= 0 && hud_color_index <= range);
 
         if (hud_color_index < 0) { hud_color_index = 0; }
         if (hud_color_index >= HUD_NUM_COLOR_LEVELS) {

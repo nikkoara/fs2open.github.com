@@ -135,7 +135,7 @@ void lcl_init (int lang_init) {
             Lcl_languages[FS2_OPEN_DEFAULT_LANGUAGE].lang_name);
 
         if (ret == NULL)
-            fs2::dialog::error (LOCATION, "Default language not found.");
+            ASSERTF (LOCATION, "Default language not found.");
 
         strcpy_s (lang_string, ret);
 
@@ -150,7 +150,7 @@ void lcl_init (int lang_init) {
         if (lang < 0) { lang = 0; }
     }
     else {
-        Assert ((lang_init >= 0) && (lang_init < (int)Lcl_languages.size ()));
+        ASSERT ((lang_init >= 0) && (lang_init < (int)Lcl_languages.size ()));
         lang = lang_init;
     }
 
@@ -282,7 +282,7 @@ void parse_stringstbl_common (const char* filename, const bool external) {
                 return;
             }
             else if (!external && (index < 0 || index >= XSTR_SIZE)) {
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION, "Invalid strings table index specified (%i)",
                     index);
             }
@@ -367,12 +367,12 @@ void parse_stringstbl_common (const char* filename, const bool external) {
             }
 
             if (external && (Lcl_ext_str.find (index) != Lcl_ext_str.end ())) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION, "Tstrings table index %d used more than once",
                     index);
             }
             else if (!external && (Xstr_table[index].str != NULL)) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION, "Strings table index %d used more than once",
                     index);
             }
@@ -394,7 +394,7 @@ void parse_stringstbl_common (const char* filename, const bool external) {
                 if (sscanf (p_offset, "%d%d", &offset_lo, &offset_hi) <
                     num_offsets_on_this_line) {
                     // whatever is in the file ain't a proper offset
-                    fs2::dialog::error (LOCATION, "%s is corrupt", filename);
+                    ASSERTF (LOCATION, "%s is corrupt", filename);
                 }
             }
 
@@ -434,7 +434,7 @@ void lcl_xstr_init () {
 
     for (i = 0; i < XSTR_SIZE; i++) Xstr_table[i].str = NULL;
 
-    Assertion (
+    ASSERTX (
         Lcl_ext_str.size () == 0,
         "Localize system was not shut down properly!");
     Lcl_ext_str.clear ();
@@ -488,7 +488,7 @@ void lcl_set_language (int lang) {
     nprintf ((
         "General", "Setting language to %s\n", Lcl_languages[lang].lang_name));
 
-    Assertion (
+    ASSERTX (
         (Lcl_current_lang >= 0) &&
             (Lcl_current_lang < (int)Lcl_languages.size ()),
         "Attempt to set language to an invalid language");
@@ -530,10 +530,10 @@ ubyte lcl_get_font_index (int font_num) {
         return 0;
     }
     else {
-        Assertion (
+        ASSERTX (
             (font_num >= 0) && (font_num < LCL_MAX_FONTS),
             "Passed an invalid font index");
-        Assertion (
+        ASSERTX (
             (Lcl_current_lang >= 0) &&
                 (Lcl_current_lang < (int)Lcl_languages.size ()),
             "Current language is not valid, can't get font indexes");
@@ -609,7 +609,7 @@ int lcl_add_dir_to_path_with_filename (char* current_path, size_t path_max) {
 void lcl_replace_stuff (char* text, size_t max_len) {
     if (Fred_running) return;
 
-    Assert (text); // Goober5000
+    ASSERT (text); // Goober5000
 
     // delegate to std::string for the replacements
     std::string temp_text = text;
@@ -640,7 +640,7 @@ void lcl_replace_stuff (std::string& text) {
 void lcl_fred_replace_stuff (char* text, size_t max_len) {
     if (!Fred_running) return;
 
-    Assert (text); // Goober5000
+    ASSERT (text); // Goober5000
 
     // delegate to std::string for the replacements
     std::string temp_text = text;
@@ -673,8 +673,8 @@ void lcl_ext_localize_sub (
     int str_id;
     size_t str_len;
 
-    Assert (in);
-    Assert (out);
+    ASSERT (in);
+    ASSERT (out);
 
     // default (non-external string) value
     if (id != NULL) { *id = -2; }
@@ -919,8 +919,8 @@ int lcl_ext_get_text (const char* xstr, char* out) {
     size_t str_len;
     const char *p, *p2;
 
-    Assert (xstr != NULL);
-    Assert (out != NULL);
+    ASSERT (xstr != NULL);
+    ASSERT (out != NULL);
     str_len = strlen (xstr);
 
     // this is some crazy wack-ass code.
@@ -1000,8 +1000,8 @@ int lcl_ext_get_id (const char* xstr, int* out) {
     const char *p, *pnext;
     size_t str_len;
 
-    Assert (xstr != NULL);
-    Assert (out != NULL);
+    ASSERT (xstr != NULL);
+    ASSERT (out != NULL);
 
     str_len = strlen (xstr);
 
@@ -1161,7 +1161,7 @@ int lcl_is_valid_numeric_char (char c) {
 }
 
 void lcl_get_language_name (char* lang_name) {
-    Assert (Lcl_current_lang < (int)Lcl_languages.size ());
+    ASSERT (Lcl_current_lang < (int)Lcl_languages.size ());
 
     strcpy (lang_name, Lcl_languages[Lcl_current_lang].lang_name);
 }

@@ -86,9 +86,9 @@ int load_nebula_sub (char* filename) {
     }
 
     cfread (&num_pts, sizeof (int), 1, fp);
-    Assert (num_pts < MAX_POINTS);
+    ASSERT (num_pts < MAX_POINTS);
     cfread (&num_tris, sizeof (int), 1, fp);
-    Assert (num_tris < MAX_TRIS);
+    ASSERT (num_tris < MAX_TRIS);
 
     int i;
     for (i = 0; i < num_pts; i++) {

@@ -36,7 +36,7 @@ void process_begin (
             samples[i].open_profiles++;
             samples[i].profile_instances++;
             samples[i].start_time = evt.timestamp;
-            Assert (samples[i].open_profiles == 1); // max 1 open at once
+            ASSERT (samples[i].open_profiles == 1); // max 1 open at once
             return;
         }
     }
@@ -245,7 +245,7 @@ void FrameProfiler::dump_output (
         uint64_t sample_time;
         uint64_t avg_micro_seconds, min_micro_seconds, max_micro_seconds;
 
-        Assert (samples[i].open_profiles == 0);
+        ASSERT (samples[i].open_profiles == 0);
 
         sample_time = samples[i].accumulator - samples[i].children_sample_time;
 

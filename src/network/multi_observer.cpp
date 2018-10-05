@@ -94,7 +94,7 @@ void multi_obs_create_observer (net_player* pl) {
 
     // create the basic observer object
     objnum = observer_create (&vmd_identity_matrix, &vmd_zero_vector);
-    Assert (objnum != -1);
+    ASSERT (objnum != -1);
     Objects[objnum].flags.set (Object::Object_Flags::Player_ship);
     Objects[objnum].net_signature = 0;
 
@@ -112,7 +112,7 @@ void multi_obs_create_observer (net_player* pl) {
 void multi_obs_create_observer_client () {
     int pobj_num;
 
-    Assert (!(Net_player->flags & NETINFO_FLAG_OBS_PLAYER));
+    ASSERT (!(Net_player->flags & NETINFO_FLAG_OBS_PLAYER));
 
     // make me an observer object
     multi_obs_create_observer (Net_player);
@@ -123,7 +123,7 @@ void multi_obs_create_observer_client () {
     // create the default player ship object and use that as my default virtual
     // "ship", and make it "invisible"
     pobj_num = parse_create_object (Player_start_pobject);
-    Assert (pobj_num != -1);
+    ASSERT (pobj_num != -1);
 
     obj_set_flags (
         &Objects[pobj_num],

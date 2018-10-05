@@ -48,7 +48,7 @@ double playbackGetTime (PlayerState* state) {
 void videoPlaybackInit (PlayerState* state) {
     if (state->videoInited) { return; }
 
-    Assert (state != NULL);
+    ASSERT (state != NULL);
 
     if (gr_screen.mode != GR_STUB) {
         // The video presenter is independent of the underlying graphics API
@@ -102,7 +102,7 @@ void processVideoData (PlayerState* state) {
         auto r = state->decoder->tryPopVideoFrame (firstFrame);
 
         // This shouldn't happen...
-        Assertion (r, "Failed to pop frame!");
+        ASSERTX (r, "Failed to pop frame!");
 
         // At this point the new frame is the next frame
         state->nextFrame = std::move (firstFrame);
@@ -306,7 +306,7 @@ namespace cutscene {
 Player::Player (
     std::unique_ptr< Decoder >&& decoder, const PlaybackProperties& properties)
     : m_decoder (std::move (decoder)) {
-    Assertion (
+    ASSERTX (
         !m_state.videoInited,
         "Internal State has been initialized before! Create a new player for "
         "replaying a movie.");

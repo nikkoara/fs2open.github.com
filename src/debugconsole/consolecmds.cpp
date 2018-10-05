@@ -47,7 +47,7 @@ debug_command::debug_command (
     int ret = 0;
 
     if (dc_commands_size >= DC_MAX_COMMANDS) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Too many debug console commands! Please inform a coder to "
             "increase DC_MAX_COMMANDS.");
@@ -59,7 +59,7 @@ debug_command::debug_command (
         ret = strcasecmp (dc_commands[i]->name, _name);
 
         if (ret == 0) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Debug Command %s already exists! Please inform a coder "
                 "immediately.",

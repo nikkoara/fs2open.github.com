@@ -11,7 +11,7 @@ UniformBuffer::UniformBuffer (size_t element_size, size_t header_size)
     bool success = gr_get_property (
         gr_property::UNIFORM_BUFFER_OFFSET_ALIGNMENT, &offsetAlignment);
 
-    Assertion (
+    ASSERTX (
         success,
         "Uniform buffer usage requires a backend which allows to query the "
         "offset alignment!");
@@ -22,7 +22,7 @@ UniformBuffer::UniformBuffer (size_t element_size, size_t header_size)
     _buffer_obj =
         gr_create_buffer (BufferType::Uniform, BufferUsageHint::Dynamic);
 
-    Assertion (_buffer_obj >= 0, "Creation of buffer object failed!");
+    ASSERTX (_buffer_obj >= 0, "Creation of buffer object failed!");
 }
 UniformBuffer::~UniformBuffer () {
     gr_delete_buffer (_buffer_obj);
@@ -39,7 +39,7 @@ void UniformBuffer::submitData () {
         _buffer_obj, _aligner.getSize (), _aligner.getData ());
 }
 void UniformBuffer::finished () {
-    Assertion (
+    ASSERTX (
         _sync_obj == nullptr,
         "Can't finish using uniform buffer while it's still in use!");
 

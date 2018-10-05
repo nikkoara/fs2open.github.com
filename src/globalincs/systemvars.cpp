@@ -16,7 +16,7 @@ int Game_mode;
 
 int Game_restoring = 0; // If set, this means we are restoring data from disk
 
-int Viewer_mode; //	Viewer's mode, see VM_xxxx flags.
+int Viewer_mode; // Viewer's mode, see VM_xxxx flags.
 
 // CUTSCENE STUFF
 // Cutscene flags
@@ -38,8 +38,8 @@ int Fade_end_timestamp = 0;
 int Game_detail_level = 0;
 uint Game_detail_flags = DETAIL_DEFAULT; // see systemvars.h for explanation
 
-angles_t Viewer_slew_angles; //	Angles of viewer relative to forward.
-vei Viewer_external_info;  //	Viewer angles to ship in external view.
+angles_t Viewer_slew_angles; // Angles of viewer relative to forward.
+vei Viewer_external_info;  // Viewer angles to ship in external view.
 vci Viewer_chase_info;     // View chase camera information
 vec3d leaning_position;
 
@@ -89,7 +89,7 @@ int myrand () {
     int rval;
     rval = rand ();
     Rand_count++;
-    //	nprintf(("Alan","RAND: %d\n", rval));
+    // nprintf(("Alan","RAND: %d\n", rval));
     return rval;
 }
 
@@ -162,7 +162,7 @@ void game_busy (const char* filename) {
 
     cb_counter++;
 
-    //	mprintf(( "CB_COUNTER=%d\n", cb_counter ));
+    // mprintf(( "CB_COUNTER=%d\n", cb_counter ));
 
 #ifndef NDEBUG
     if (filename != NULL) strcpy_s (Processing_filename, filename);
@@ -194,92 +194,92 @@ detail_levels Detail_defaults[NUM_DEFAULT_DETAIL_LEVELS] = {
         // Low
         0, // setting
            // ===== Analogs (0-MAX_DETAIL_LEVEL) ====
-        0, // nebula_detail;				// 0=lowest detail,
+        0, // nebula_detail;                            // 0=lowest detail,
            // MAX_DETAIL_LEVEL=highest detail
-        0, // detail_distance;			// 0=lowest MAX_DETAIL_LEVEL=highest
-        0, //	hardware_textures;			// 0=max culling,
+        0, // detail_distance;                  // 0=lowest MAX_DETAIL_LEVEL=highest
+        0, // hardware_textures;                      // 0=max culling,
            // MAX_DETAIL_LEVEL=no culling
-        0, //	num_small_debris;			// 0=min number,
+        0, // num_small_debris;                       // 0=min number,
            // MAX_DETAIL_LEVEL=max number
-        0, //	num_particles;				// 0=min number,
+        0, // num_particles;                          // 0=min number,
            // MAX_DETAIL_LEVEL=max number
-        0, //	num_stars;					// 0=min number,
+        0, // num_stars;                                      // 0=min number,
            // MAX_DETAIL_LEVEL=max number
-        0, //	shield_effects;			// 0=min, MAX_DETAIL_LEVEL=max
-        2, // lighting;					// 0=min, MAX_DETAIL_LEVEL=max
+        0, // shield_effects;                 // 0=min, MAX_DETAIL_LEVEL=max
+        2, // lighting;                                 // 0=min, MAX_DETAIL_LEVEL=max
 
         // ====  Booleans ====
-        0, //	targetview_model;			// 0=off, 1=on
-        0, //	planets_suns;				// 0=off, 1=on
+        0, // targetview_model;                       // 0=off, 1=on
+        0, // planets_suns;                           // 0=off, 1=on
         0, // weapon_extras
     },
     {
         // Medium
         1, // setting
            // ===== Analogs (0-MAX_DETAIL_LEVEL) ====
-        2, // nebula_detail;				// 0=lowest detail,
+        2, // nebula_detail;                            // 0=lowest detail,
            // MAX_DETAIL_LEVEL=highest detail
-        2, // detail_distance;			// 0=lowest MAX_DETAIL_LEVEL=highest
-        2, //	hardware_textures;			// 0=max culling,
+        2, // detail_distance;                  // 0=lowest MAX_DETAIL_LEVEL=highest
+        2, // hardware_textures;                      // 0=max culling,
            // MAX_DETAIL_LEVEL=no culling
-        2, //	num_small_debris;			// 0=min number,
+        2, // num_small_debris;                       // 0=min number,
            // MAX_DETAIL_LEVEL=max number
-        2, //	num_particles;				// 0=min number,
+        2, // num_particles;                          // 0=min number,
            // MAX_DETAIL_LEVEL=max number
-        2, //	num_stars;					// 0=min number,
+        2, // num_stars;                                      // 0=min number,
            // MAX_DETAIL_LEVEL=max number
-        2, //	shield_effects;			// 0=min, MAX_DETAIL_LEVEL=max
-        3, // lighting;					// 0=min, MAX_DETAIL_LEVEL=max
+        2, // shield_effects;                 // 0=min, MAX_DETAIL_LEVEL=max
+        3, // lighting;                                 // 0=min, MAX_DETAIL_LEVEL=max
 
         // ====  Booleans ====
-        1, //	targetview_model;			// 0=off, 1=on
-        1, //	planets_suns;				// 0=off, 1=on
+        1, // targetview_model;                       // 0=off, 1=on
+        1, // planets_suns;                           // 0=off, 1=on
         1, // weapon extras
     },
     {
         // High level
         2, // setting
            // ===== Analogs (0-MAX_DETAIL_LEVEL) ====
-        2, // nebula_detail;				// 0=lowest detail,
+        2, // nebula_detail;                            // 0=lowest detail,
            // MAX_DETAIL_LEVEL=highest detail
-        2, // detail_distance;			// 0=lowest MAX_DETAIL_LEVEL=highest
-        3, //	hardware_textures;			// 0=max culling,
+        2, // detail_distance;                  // 0=lowest MAX_DETAIL_LEVEL=highest
+        3, // hardware_textures;                      // 0=max culling,
            // MAX_DETAIL_LEVEL=no culling
-        3, //	num_small_debris;			// 0=min number,
+        3, // num_small_debris;                       // 0=min number,
            // MAX_DETAIL_LEVEL=max number
-        3, //	num_particles;				// 0=min number,
+        3, // num_particles;                          // 0=min number,
            // MAX_DETAIL_LEVEL=max number
-        4, //	num_stars;					// 0=min number,
+        4, // num_stars;                                      // 0=min number,
            // MAX_DETAIL_LEVEL=max number
-        3, //	shield_effects;			// 0=min, MAX_DETAIL_LEVEL=max
-        4, // lighting;					// 0=min, MAX_DETAIL_LEVEL=max
+        3, // shield_effects;                 // 0=min, MAX_DETAIL_LEVEL=max
+        4, // lighting;                                 // 0=min, MAX_DETAIL_LEVEL=max
 
         // ====  Booleans ====
-        1, //	targetview_model;			// 0=off, 1=on
-        1, //	planets_suns;				// 0=off, 1=on
+        1, // targetview_model;                       // 0=off, 1=on
+        1, // planets_suns;                           // 0=off, 1=on
         1, // weapon_extras
     },
     {
         // Highest level
         3, // setting
            // ===== Analogs (0-MAX_DETAIL_LEVEL) ====
-        3, // nebula_detail;				// 0=lowest detail,
+        3, // nebula_detail;                            // 0=lowest detail,
            // MAX_DETAIL_LEVEL=highest detail
-        3, // detail_distance;			// 0=lowest MAX_DETAIL_LEVEL=highest
-        4, //	hardware_textures;			// 0=max culling,
+        3, // detail_distance;                  // 0=lowest MAX_DETAIL_LEVEL=highest
+        4, // hardware_textures;                      // 0=max culling,
            // MAX_DETAIL_LEVEL=no culling
-        4, //	num_small_debris;			// 0=min number,
+        4, // num_small_debris;                       // 0=min number,
            // MAX_DETAIL_LEVEL=max number
-        4, //	num_particles;				// 0=min number,
+        4, // num_particles;                          // 0=min number,
            // MAX_DETAIL_LEVEL=max number
-        4, //	num_stars;					// 0=min number,
+        4, // num_stars;                                      // 0=min number,
            // MAX_DETAIL_LEVEL=max number
-        4, //	shield_effects;			// 0=min, MAX_DETAIL_LEVEL=max
-        4, // lighting;					// 0=min, MAX_DETAIL_LEVEL=max
+        4, // shield_effects;                 // 0=min, MAX_DETAIL_LEVEL=max
+        4, // lighting;                                 // 0=min, MAX_DETAIL_LEVEL=max
 
         // ====  Booleans ====
-        1, //	targetview_model;			// 0=off, 1=on
-        1, //	planets_suns;				// 0=off, 1=on
+        1, // targetview_model;                       // 0=off, 1=on
+        1, // planets_suns;                           // 0=off, 1=on
         1, // weapon_extras
     },
 };
@@ -296,8 +296,8 @@ void detail_level_set (int level) {
         Detail.setting = -1;
         return;
     }
-    Assert (level >= 0);
-    Assert (level < NUM_DEFAULT_DETAIL_LEVELS);
+    ASSERT (level >= 0);
+    ASSERT (level < NUM_DEFAULT_DETAIL_LEVELS);
 
     Detail = Detail_defaults[level];
 
@@ -307,7 +307,7 @@ void detail_level_set (int level) {
 
 // Returns the current detail level or -1 if custom.
 int current_detail_level () {
-    //	return Detail.setting;
+    // return Detail.setting;
     int i;
 
     for (i = 0; i < NUM_DEFAULT_DETAIL_LEVELS; i++) {

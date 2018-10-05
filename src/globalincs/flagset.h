@@ -9,7 +9,6 @@
 #include <bitset>
 #include <cstdint>
 
-#include "osapi/dialogs.h"
 
 template< typename TEnum, size_t SIZE >
 struct flag_combinator;
@@ -87,7 +86,7 @@ public:
     void reset () { values.reset (); }
 
     flagset< T >& set (T idx, bool value = true) {
-        Assertion (
+        ASSERTX (
             static_cast< size_t > (idx) < values.size (),
             "Invalid value passed to flagset::set(), get a stacktrace, a "
             "coder, an old priest and a young priest.");

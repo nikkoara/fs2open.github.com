@@ -310,7 +310,7 @@ void credits_parse_table (const char* filename) {
             else if (!strcasecmp (mode, "End"))
                 SCP_credits_position = END;
             else
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION, "Unknown credits position mode \"%s\".", mode);
         }
 
@@ -353,13 +353,13 @@ void credits_parse_table (const char* filename) {
                     charNum, lines);
 
                 // Make sure that we have valid data
-                Assertion (
+                ASSERTX (
                     lines.size () == (size_t)numLines,
                     "split_str reported %d lines but vector "
                     "contains %zu entries!",
                     numLines, lines.size ());
 
-                Assertion (
+                ASSERTX (
                     lines.size () <= charNum.size (),
                     "Something has gone wrong while splitting strings. "
                     "Got %zu lines but only %zu"
@@ -445,7 +445,7 @@ void credits_init () {
         case END: Credit_text_parts.push_back (fs2_open_credit_text); break;
 
         default:
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION, "Unimplemented credits position %d. Get a coder!",
                 (int)SCP_credits_position);
             break;
@@ -686,7 +686,7 @@ void credits_do_frame (float /*frametime*/) {
     if ((bm1 != -1) && (bm2 != -1)) {
         GR_DEBUG_SCOPE ("Render credits bitmap");
 
-        Assert (percent >= 0 && percent <= 100);
+        ASSERT (percent >= 0 && percent <= 100);
 
         // get width and height
         bm_get_info (bm1, &bw1, &bh1, NULL, NULL, NULL);

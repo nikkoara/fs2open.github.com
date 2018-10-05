@@ -1064,7 +1064,7 @@ void multi_pxo_init (int use_last_channel) {
 
     // load up the private channel bitmap
     Multi_pxo_com_bitmap = bm_load (Multi_pxo_com_fname[gr_screen.res]);
-    Assert (Multi_pxo_com_bitmap != -1);
+    ASSERT (Multi_pxo_com_bitmap != -1);
 
     // create the interface window
     Multi_pxo_window.create (
@@ -1559,27 +1559,27 @@ void multi_pxo_strip_space (char* string1, char* string2) {
 // fire up the given URL
 void multi_pxo_url (char* /*url*/) {
 #if 0
-	// execute the shell command
-	int r = (int) ShellExecute(NULL, NOX("open"), url, NULL, NULL, SW_SHOW);
-	if (r < 32) {		
-		switch (r) {
-			case 0:	
-			case ERROR_BAD_FORMAT: 
-			case SE_ERR_ACCESSDENIED: 
-			case SE_ERR_ASSOCINCOMPLETE: 
-			case SE_ERR_DDEBUSY:
-			case SE_ERR_DDEFAIL:
-			case SE_ERR_DDETIMEOUT:
-			case SE_ERR_DLLNOTFOUND:
-			case SE_ERR_OOM:
-			case SE_ERR_SHARE:			
-			case SE_ERR_NOASSOC:
-			case ERROR_FILE_NOT_FOUND:
-			case ERROR_PATH_NOT_FOUND:
-				popup(PF_USE_AFFIRMATIVE_ICON | PF_TITLE_RED | PF_TITLE_BIG,1,POPUP_OK,XSTR("Warning\nCould not locate/launch default Internet Browser",943));
-				break;
-		}					
-	}
+        // execute the shell command
+        int r = (int) ShellExecute(NULL, NOX("open"), url, NULL, NULL, SW_SHOW);
+        if (r < 32) {
+                switch (r) {
+                        case 0:
+                        case ERROR_BAD_FORMAT:
+                        case SE_ERR_ACCESSDENIED:
+                        case SE_ERR_ASSOCINCOMPLETE:
+                        case SE_ERR_DDEBUSY:
+                        case SE_ERR_DDEFAIL:
+                        case SE_ERR_DDETIMEOUT:
+                        case SE_ERR_DLLNOTFOUND:
+                        case SE_ERR_OOM:
+                        case SE_ERR_SHARE:
+                        case SE_ERR_NOASSOC:
+                        case ERROR_FILE_NOT_FOUND:
+                        case ERROR_PATH_NOT_FOUND:
+                                popup(PF_USE_AFFIRMATIVE_ICON | PF_TITLE_RED | PF_TITLE_BIG,1,POPUP_OK,XSTR("Warning\nCould not locate/launch default Internet Browser",943));
+                                break;
+                }
+        }
 #endif
 }
 
@@ -1822,7 +1822,7 @@ int multi_pxo_connect_do () {
     // if we already tried and failed, sit around until the user presses cancel
     if (!mpxo_failed) {
         // try and connect to the server
-        Assert (Player);
+        ASSERT (Player);
 
         // build the tracker id string
         memset (id_string, 0, MAX_PXO_TEXT_LEN);
@@ -2534,7 +2534,7 @@ void multi_pxo_blit_channels () {
 
         // make sure the name fits
         memset (chan_name, 0, MAX_PXO_TEXT_LEN);
-        Assert (moveup->name);
+        ASSERT (moveup->name);
         strcpy_s (chan_name, moveup->name);
         font::force_fit_string (
             chan_name, MAX_PXO_TEXT_LEN - 1,
@@ -2812,7 +2812,7 @@ void multi_pxo_del_player (char* name) {
         if (!strcasecmp (name, lookup->name)) {
             // if this is the only item on the list, free stuff up
             if (lookup->next == lookup) {
-                Assert (lookup == Multi_pxo_players);
+                ASSERT (lookup == Multi_pxo_players);
                 vm_free (lookup);
                 Multi_pxo_players = NULL;
                 multi_pxo_clear_players ();
@@ -2854,7 +2854,7 @@ void multi_pxo_del_player (char* name) {
 
             // new player
             Multi_pxo_player_count--;
-            Assert (Multi_pxo_player_count >= 0);
+            ASSERT (Multi_pxo_player_count >= 0);
 
             // we're done now
             return;
@@ -3042,7 +3042,7 @@ void multi_pxo_chat_init () {
         new_line = (chat_line*)vm_malloc (sizeof (chat_line));
 
         // clear the line out
-        Assert (new_line != NULL);
+        ASSERT (new_line != NULL);
         if (new_line == NULL) { return; }
         memset (new_line, 0, sizeof (chat_line));
         new_line->prev = NULL;
@@ -3113,7 +3113,7 @@ void multi_pxo_chat_add_line (const char* txt, int mode) {
     chat_line* temp;
 
     // copy in the text
-    Assert (Multi_pxo_chat_add != NULL);
+    ASSERT (Multi_pxo_chat_add != NULL);
     strncpy (Multi_pxo_chat_add->text, txt, MAX_CHAT_LINE_LEN);
     Multi_pxo_chat_add->mode = mode;
 
@@ -3162,7 +3162,7 @@ void multi_pxo_chat_process_incoming (const char* txt, int mode) {
     char msg_total[512], line[512];
     int n_lines, idx;
     int n_chars[20];
-    const char* p_str[20]; //  the initial line (unindented)
+    const char* p_str[20]; // the initial line (unindented)
     const char* priv_ptr;
 
     // filter out "has left" channel messages, when switching channels
@@ -3205,7 +3205,7 @@ void multi_pxo_chat_process_incoming (const char* txt, int mode) {
     n_lines = split_str (
         msg_total, Multi_pxo_chat_coords[gr_screen.res][2] - 5, n_chars, p_str,
         3);
-    Assert ((n_lines != -1) && (n_lines <= 20));
+    ASSERT ((n_lines != -1) && (n_lines <= 20));
     if ((n_lines < 0) || (n_lines > 20)) { return; }
 
     // if the string fits on one line
@@ -3376,7 +3376,7 @@ void multi_pxo_goto_bottom () {
         // otherwise move back the right # of items
         backup = Multi_pxo_chat_add;
         for (idx = 0; idx < Multi_pxo_max_chat_display[gr_screen.res]; idx++) {
-            Assert (backup->prev != NULL);
+            ASSERT (backup->prev != NULL);
             backup = backup->prev;
         }
 
@@ -3656,7 +3656,7 @@ void multi_pxo_motd_add_text (const char* text) {
     if (text == NULL) { return; }
 
     // make sure its motd text
-    Assert (multi_pxo_is_motd_text (text));
+    ASSERT (multi_pxo_is_motd_text (text));
     if (!multi_pxo_is_motd_text (text)) { return; }
 
     // if its a 0 line motd
@@ -3893,7 +3893,7 @@ void multi_pxo_com_set_bottom_text (const char* txt) {
  * Initialize the popup
  */
 void multi_pxo_priv_init () {
-    Assert (Multi_pxo_mode != MULTI_PXO_MODE_PRIVATE);
+    ASSERT (Multi_pxo_mode != MULTI_PXO_MODE_PRIVATE);
 
     // initialize the common dialog with the passed max input length
     multi_pxo_com_init (MULTI_PXO_PRIV_MAX_TEXT_LEN);
@@ -4053,7 +4053,7 @@ char name_lookup[MAX_PXO_TEXT_LEN];
  * Initialize the popup
  */
 void multi_pxo_find_init () {
-    Assert (Multi_pxo_mode != MULTI_PXO_MODE_FIND);
+    ASSERT (Multi_pxo_mode != MULTI_PXO_MODE_FIND);
 
     // initialize the common dialog with the passed max input length
     multi_pxo_com_init (MAX_PLAYER_NAME_LEN);
@@ -4581,7 +4581,7 @@ void multi_pxo_pinfo_init () {
         Multi_pxo_pinfo_mask_fname[gr_screen.res]);
 
     Multi_pxo_pinfo_bitmap = bm_load (Multi_pxo_pinfo_fname[gr_screen.res]);
-    Assert (Multi_pxo_pinfo_bitmap != -1);
+    ASSERT (Multi_pxo_pinfo_bitmap != -1);
 
     // create the interface buttons
     for (idx = 0; idx < MULTI_PXO_PINFO_NUM_BUTTONS; idx++) {
@@ -4928,7 +4928,7 @@ void multi_pxo_help_load () {
     // read in the text file
     in = NULL;
     in = cfopen (MULTI_PXO_HELP_FILE, "rt", CFILE_NORMAL, CF_TYPE_DATA);
-    Assert (in != NULL);
+    ASSERT (in != NULL);
     if (in == NULL) { return; }
 
     Multi_pxo_help_num_pages = 0;
@@ -4952,7 +4952,7 @@ void multi_pxo_help_load () {
         // skip to the next page if necessary
         if (cp->num_lines == Multi_pxo_lines_pp[gr_screen.res]) {
             Multi_pxo_help_num_pages++;
-            Assert (Multi_pxo_help_num_pages < MULTI_PXO_MAX_PAGES);
+            ASSERT (Multi_pxo_help_num_pages < MULTI_PXO_MAX_PAGES);
             if (Multi_pxo_help_num_pages >= MULTI_PXO_MAX_PAGES) {
                 Multi_pxo_help_num_pages--;
                 break;

@@ -293,7 +293,7 @@ bool all_turret_weapons_have_flags (
  *
  */
 bool turret_weapon_has_flags (ship_weapon* swp, Weapon::Info_Flags flags) {
-    Assert (swp != NULL);
+    ASSERT (swp != NULL);
 
     int i = 0;
     for (i = 0; i < swp->num_primary_banks; i++) {
@@ -318,7 +318,7 @@ bool turret_weapon_has_flags (ship_weapon* swp, Weapon::Info_Flags flags) {
  */
 flagset< Weapon::Info_Flags >
 turret_weapon_aggregate_flags (ship_weapon* swp) {
-    Assert (swp != NULL);
+    ASSERT (swp != NULL);
 
     int i = 0;
     flagset< Weapon::Info_Flags > flags;
@@ -344,7 +344,7 @@ turret_weapon_aggregate_flags (ship_weapon* swp) {
  * future coding I leave it like this.
  */
 bool turret_weapon_has_subtype (ship_weapon* swp, int subtype) {
-    Assert (swp != NULL);
+    ASSERT (swp != NULL);
 
     int i = 0;
     for (i = 0; i < swp->num_primary_banks; i++) {
@@ -370,8 +370,8 @@ bool turret_weapon_has_subtype (ship_weapon* swp, int subtype) {
  * @return a pointer to the Weapon_info for weapon_num
  */
 weapon_info* get_turret_weapon_wip (ship_weapon* swp, int weapon_num) {
-    Assert (weapon_num < MAX_SHIP_WEAPONS);
-    Assert (weapon_num >= 0);
+    ASSERT (weapon_num < MAX_SHIP_WEAPONS);
+    ASSERT (weapon_num >= 0);
 
     if (weapon_num >= MAX_SHIP_PRIMARY_BANKS)
         return &Weapon_info
@@ -381,8 +381,8 @@ weapon_info* get_turret_weapon_wip (ship_weapon* swp, int weapon_num) {
 }
 
 int get_turret_weapon_next_fire_stamp (ship_weapon* swp, int weapon_num) {
-    Assert (weapon_num < MAX_SHIP_WEAPONS);
-    Assert (weapon_num >= 0);
+    ASSERT (weapon_num < MAX_SHIP_WEAPONS);
+    ASSERT (weapon_num >= 0);
 
     if (weapon_num >= MAX_SHIP_PRIMARY_BANKS)
         return swp
@@ -432,7 +432,7 @@ float longest_turret_weapon_range (ship_weapon* swp) {
  * Is valid turret target?
  *
  * @param objp          Object that turret is considering as an enemy
- * @param turret_parent	Object of ship that turret sits on
+ * @param turret_parent Object of ship that turret sits on
  *
  * @return !0 if objp can be considered for a turret target, 0 otherwise
  */
@@ -442,7 +442,7 @@ int valid_turret_enemy (object* objp, object* turret_parent) {
     if (objp->type == OBJ_ASTEROID) { return 1; }
 
     if (objp->type == OBJ_SHIP) {
-        Assert (objp->instance >= 0);
+        ASSERT (objp->instance >= 0);
         ship* shipp;
         ship_info* sip;
         shipp = &Ships[objp->instance];
@@ -469,7 +469,7 @@ int valid_turret_enemy (object* objp, object* turret_parent) {
     }
 
     if (objp->type == OBJ_WEAPON) {
-        Assert (objp->instance >= 0);
+        ASSERT (objp->instance >= 0);
         weapon* wp = &Weapons[objp->instance];
         weapon_info* wip = &Weapon_info[wp->weapon_info_index];
 
@@ -687,10 +687,10 @@ void evaluate_obj_as_target (object* objp, eval_enemy_obj_struct* eeo) {
     } // end weapon section
 
     // maybe recalculate dist for big or huge ship
-    //	if (shipp && (Ship_info[shipp->ship_info_index].is_big_or_huge())) {
-    //		fvi_ray_boundingbox(min, max, start, direction, hit);
-    //		dist = vm_vec_dist_quick(hit, tvec);
-    //	}
+    // if (shipp && (Ship_info[shipp->ship_info_index].is_big_or_huge())) {
+    // fvi_ray_boundingbox(min, max, start, direction, hit);
+    // dist = vm_vec_dist_quick(hit, tvec);
+    // }
 
     // check for nearest attcker
     if ((shipp) && (dist < eeo->weapon_travel_dist)) {
@@ -698,14 +698,14 @@ void evaluate_obj_as_target (object* objp, eval_enemy_obj_struct* eeo) {
 
         // modify distance based on number of turrets from my ship attacking
         // enemy (add 10% per turret) dist *=
-        // (num_enemies_attacking(OBJ_INDEX(objp))+2)/2;	//	prevents lots
+        // (num_enemies_attacking(OBJ_INDEX(objp))+2)/2;        //      prevents lots
         // of ships from attacking same target
         int num_att_turrets =
             num_turrets_attacking (turret_parent_obj, OBJ_INDEX (objp));
         dist_comp *= (1.0f + 0.1f * num_att_turrets);
 
         // return if we're over the cap
-        //		int max_turrets = 3 + Game_skill_level * Game_skill_level;
+        // int max_turrets = 3 + Game_skill_level * Game_skill_level;
         int max_turrets =
             The_mission.ai_profile->max_turret_ownage_target[Game_skill_level];
         if (objp->flags[Object::Object_Flags::Player_ship]) {
@@ -810,13 +810,13 @@ int is_target_beam_valid (ship_weapon* swp, object* objp) {
  * Given an object and an enemy team, return the index of the nearest enemy
  * object.
  *
- * @param turret_parent_objnum	Parent objnum for the turret
- * @param turret_subsys			Pointer to system_info for the turret subsystem
- * @param enemy_team_mask		OR'ed TEAM_ flags for the enemy of the turret
+ * @param turret_parent_objnum  Parent objnum for the turret
+ * @param turret_subsys                 Pointer to system_info for the turret subsystem
+ * @param enemy_team_mask               OR'ed TEAM_ flags for the enemy of the turret
  * parent ship
  * @param tpos                  Position of turret (world coords)
- * @param tvec					Forward vector of turret (world coords)
- * @param current_enemy			Objnum of current turret target
+ * @param tvec                                  Forward vector of turret (world coords)
+ * @param current_enemy                 Objnum of current turret target
  * @param big_only_flag
  * @param small_only_flag
  * @param tagged_only_flag
@@ -830,7 +830,7 @@ int get_nearest_turret_objnum (
     vec3d* tpos, vec3d* tvec, int current_enemy, bool big_only_flag,
     bool small_only_flag, bool tagged_only_flag, bool beam_flag,
     bool flak_flag, bool laser_flag, bool missile_flag) {
-    // float					weapon_travel_dist;
+    // float                                    weapon_travel_dist;
     int weapon_system_ok;
     object* objp;
     eval_enemy_obj_struct eeo;
@@ -845,7 +845,7 @@ int get_nearest_turret_objnum (
     // wip->weapon_range);
 
     // if (wip->wi_flags[Weapon::Info_Flags::Local_ssm])
-    //	weapon_travel_dist=wip->lssm_lock_range;
+    // weapon_travel_dist=wip->lssm_lock_range;
 
     // Set flag based on strength of weapons subsystem.  If weapons subsystem
     // is destroyed, don't let turrets fire at bombs
@@ -1085,7 +1085,7 @@ int get_nearest_turret_objnum (
                          mo = GET_NEXT (mo)) {
                         objp = &Objects[mo->objnum];
 
-                        Assert (objp->type == OBJ_WEAPON);
+                        ASSERT (objp->type == OBJ_WEAPON);
                         if ((Weapon_info[Weapons[objp->instance]
                                              .weapon_info_index]
                                  .wi_flags[Weapon::Info_Flags::Bomb]) ||
@@ -1119,7 +1119,7 @@ int get_nearest_turret_objnum (
                     evaluate_obj_as_target (objp, &eeo);
                 }
 
-                Assert (
+                ASSERT (
                     eeo.nearest_attacker_objnum < 0 ||
                     is_target_beam_valid (
                         swp, &Objects[eeo.nearest_attacker_objnum]));
@@ -1175,9 +1175,9 @@ DCF_BOOL (use_parent_target, Use_parent_target)
  * Return objnum if enemy found, else return -1;
  *
  * @param turret_subsys     Pointer to turret subsystem
- * @param objnum			Parent objnum for the turret
- * @param tpos				Position of turret (world coords)
- * @param tvec				Forward vector of turret (world coords)
+ * @param objnum                        Parent objnum for the turret
+ * @param tpos                          Position of turret (world coords)
+ * @param tvec                          Forward vector of turret (world coords)
  * @param current_enemy     Objnum of current turret target
  */
 int find_turret_enemy (
@@ -1206,7 +1206,7 @@ int find_turret_enemy (
     bool missile_flag =
         turret_weapon_has_subtype (&turret_subsys->weapons, WP_MISSILE);
 
-    //	If a small ship and target_objnum != -1, use that as goal.
+    // If a small ship and target_objnum != -1, use that as goal.
     ai_info* aip = &Ai_info[Ships[Objects[objnum].instance].ai_index];
     sip = &Ship_info[Ships[Objects[objnum].instance].ship_info_index];
 
@@ -1312,19 +1312,19 @@ int find_turret_enemy (
         big_only_flag, small_only_flag, tagged_only_flag, beam_flag, flak_flag,
         laser_flag, missile_flag);
     if (enemy_objnum >= 0) {
-        Assert (
+        ASSERT (
             !((Objects[enemy_objnum]
                    .flags[Object::Object_Flags::Beam_protected]) &&
               beam_flag));
-        Assert (
+        ASSERT (
             !((Objects[enemy_objnum]
                    .flags[Object::Object_Flags::Flak_protected]) &&
               flak_flag));
-        Assert (
+        ASSERT (
             !((Objects[enemy_objnum]
                    .flags[Object::Object_Flags::Laser_protected]) &&
               laser_flag));
-        Assert (
+        ASSERT (
             !((Objects[enemy_objnum]
                    .flags[Object::Object_Flags::Missile_protected]) &&
               missile_flag));
@@ -1353,7 +1353,7 @@ int find_turret_enemy (
  */
 void ship_get_global_turret_info (
     object* objp, model_subsystem* tp, vec3d* gpos, vec3d* gvec) {
-    //	vm_vec_unrotate(gpos, &tp->turret_avg_firing_point, &objp->orient);
+    // vm_vec_unrotate(gpos, &tp->turret_avg_firing_point, &objp->orient);
     vm_vec_unrotate (gpos, &tp->pnt, &objp->orient);
     vm_vec_add2 (gpos, &objp->pos);
     vm_vec_unrotate (gvec, &tp->turret_norm, &objp->orient);
@@ -1408,7 +1408,7 @@ void ship_get_global_turret_gun_info (
             tp->turret_gun_sobj, &objp->orient, &objp->pos);
 
         if (targetp == nullptr) {
-            Assertion (
+            ASSERTX (
                 ssp->turret_enemy_objnum >= 0,
                 "The turret enemy object number %d for %s on ship number %d "
                 "is invalid.",
@@ -1478,7 +1478,7 @@ void ship_get_global_turret_gun_info (
         vm_vec_normalized_dir (gvec, &tmp_target, &tmp_pos);
     }
     else {
-        // vector	gun_pos2;
+        // vector       gun_pos2;
         // vm_vec_add(&gun_pos2, gpos, gun_pos);
         vm_vec_normalized_dir (gvec, targetp, gpos);
     }
@@ -1510,9 +1510,9 @@ void turret_ai_update_aim (ai_info* aip, object* En_Objp, ship_subsys* ss) {
 /**
  * Rotate a turret towards an enemy.
  *
- *	Some obscure model thing only John Slagel knows about.
- *	Sets predicted enemy position.
- *	If the turret (*ss) has a subsystem targeted, the subsystem is used as the
+ *      Some obscure model thing only John Slagel knows about.
+ *      Sets predicted enemy position.
+ *      If the turret (*ss) has a subsystem targeted, the subsystem is used as the
  *predicted point.
  *
  * @return TRUE if caller should use angles in subsequent rotations.
@@ -1524,7 +1524,7 @@ int aifft_rotate_turret (
     if (ss->turret_enemy_objnum != -1) {
         model_subsystem* tp = ss->system_info;
         vec3d gun_pos, gun_vec, target_moving_direction;
-        // float		weapon_speed;
+        // float                weapon_speed;
         float weapon_system_strength;
         // HACK HACK HACK -WMC
         // This should use the best weapon variable
@@ -1537,7 +1537,7 @@ int aifft_rotate_turret (
         weapon_info* wip =
             get_turret_weapon_wip (&ss->weapons, best_weapon_tidx);
 
-        //	weapon_system_strength scales time enemy in range in 0..1.  So, the
+        // weapon_system_strength scales time enemy in range in 0..1.  So, the
         // lower this is, the worse the aiming will be.
         weapon_system_strength =
             ship_get_subsystem_strength (shipp, SUBSYSTEM_WEAPONS);
@@ -1598,8 +1598,8 @@ int aifft_rotate_turret (
 
             static_randvec (
                 Missiontime >> 18,
-                &rand_vec); //	Return same random number for two seconds.
-            //	Add to predicted_enemy_pos value in .45 to 1.5x radius of enemy
+                &rand_vec); // Return same random number for two seconds.
+            // Add to predicted_enemy_pos value in .45 to 1.5x radius of enemy
             // ship, so will often miss, but not by a huge amount.
             vm_vec_scale_add2 (
                 predicted_enemy_pos, &rand_vec,
@@ -1667,7 +1667,7 @@ int aifft_rotate_turret (
 /**
  * Determine if subsystem *enemy_subsysp is hittable from objp.
  *
- *	@return Dot product of vector from point abs_gunposp to *enemy_subsysp, if
+ *      @return Dot product of vector from point abs_gunposp to *enemy_subsysp, if
  *hittable
  */
 float aifft_compute_turret_dot (
@@ -1713,13 +1713,13 @@ float aifft_compute_turret_dot (
 
 // NOTE:  Do not change this value unless you understand exactly what it means
 // and what it does.
-//        It refers to how many (non-destroyed) subsystems (and turrets) will
-//        be scanned for possible targeting, per turret, per frame.  A higher
-//        value will process more systems at once, but it will be much slower
-//        to scan though them.  It is not necessary to scan all non-destroyed
-//        subsystem each frame for each turret.  Also, "aifft_max_checks" is
-//        balanced against the original value, be sure to account for this
-//        discrepancy with any changes.
+// It refers to how many (non-destroyed) subsystems (and turrets) will
+// be scanned for possible targeting, per turret, per frame.  A higher
+// value will process more systems at once, but it will be much slower
+// to scan though them.  It is not necessary to scan all non-destroyed
+// subsystem each frame for each turret.  Also, "aifft_max_checks" is
+// balanced against the original value, be sure to account for this
+// discrepancy with any changes.
 #define MAX_AIFFT_TURRETS 60
 
 ship_subsys* aifft_list[MAX_AIFFT_TURRETS];
@@ -1753,7 +1753,7 @@ ship_subsys* aifft_find_turret_subsys (
     ship_subsys* best_subsysp = NULL;
     float dot;
 
-    Assert (enemy_objp->type == OBJ_SHIP);
+    ASSERT (enemy_objp->type == OBJ_SHIP);
 
     eshipp = &Ships[enemy_objp->instance];
     esip = &Ship_info[eshipp->ship_info_index];
@@ -1763,12 +1763,12 @@ ship_subsys* aifft_find_turret_subsys (
     float best_dot = 0.0f;
     *dot_out = best_dot;
 
-    //	Compute absolute gun position.
+    // Compute absolute gun position.
     vec3d abs_gun_pos;
     vm_vec_unrotate (&abs_gun_pos, &ssp->system_info->pnt, &objp->orient);
     vm_vec_add2 (&abs_gun_pos, &objp->pos);
 
-    //	Only pick a turret to attack on large ships.
+    // Only pick a turret to attack on large ships.
     if (!esip->is_big_or_huge ()) return best_subsysp;
 
     // Make sure big or huge ship *actually* has subsystems  (ie, knossos)
@@ -1835,7 +1835,7 @@ ship_subsys* aifft_find_turret_subsys (
         }
     }
 
-    Assert (best_subsysp != &eshipp->subsys_list);
+    ASSERT (best_subsysp != &eshipp->subsys_list);
 
     *dot_out = best_dot;
     return best_subsysp;
@@ -1846,7 +1846,7 @@ ship_subsys* aifft_find_turret_subsys (
  * return 0
  */
 int turret_should_pick_new_target (ship_subsys* turret) {
-    //	int target_type;
+    // int target_type;
 
     if (timestamp_elapsed (turret->turret_next_enemy_check_stamp)) {
         return 1;
@@ -1870,7 +1870,7 @@ int turret_should_pick_new_target (ship_subsys* turret) {
  */
 void turret_set_next_fire_timestamp (
     int weapon_num, weapon_info* wip, ship_subsys* turret, ai_info* aip) {
-    Assert (weapon_num < MAX_SHIP_WEAPONS);
+    ASSERT (weapon_num < MAX_SHIP_WEAPONS);
     float wait = 1000.0f;
 
     if (wip->burst_shots > turret->weapons.burst_counter[weapon_num]) {
@@ -2160,7 +2160,7 @@ bool turret_fire_weapon (
 
                         int num_primary_banks = swp->num_primary_banks;
 
-                        Assert (num_primary_banks > 0);
+                        ASSERT (num_primary_banks > 0);
                         if (num_primary_banks < 1) { return false; }
 
                         bank_to_fire = swp->current_primary_bank;
@@ -2302,7 +2302,7 @@ bool turret_fire_weapon (
 
                         subsys_index =
                             ship_get_index_from_subsys (turret, parent_objnum);
-                        Assert (subsys_index != -1);
+                        ASSERT (subsys_index != -1);
                         if (wip->wi_flags[Weapon::Info_Flags::Flak]) {
                             send_flak_fired_packet (
                                 parent_objnum, subsys_index, weapon_objnum,
@@ -2365,26 +2365,26 @@ void turret_swarm_fire_from_turret (turret_swarm_info* tsi) {
     // parent not alive, quick out.
     if (Objects[tsi->parent_objnum].type != OBJ_SHIP) { return; }
 
-    //	if fixed fp make sure to use constant fp
+    // if fixed fp make sure to use constant fp
     if (tsi->turret->system_info
             ->flags[Model::Subsystem_Flags::Turret_fixed_fp])
         tsi->turret->turret_next_fire_pos = tsi->weapon_num;
 
-    //	change firing point
+    // change firing point
     ship_get_global_turret_gun_info (
         &Objects[tsi->parent_objnum], tsi->turret, &turret_pos, &turret_fvec,
         1, NULL);
     tsi->turret->turret_next_fire_pos++;
 
     // check if this really is a swarm. If not, how the hell did it get here?
-    Assert (
+    ASSERT (
         (Weapon_info[tsi->weapon_class].wi_flags[Weapon::Info_Flags::Swarm]) ||
         (Weapon_info[tsi->weapon_class]
              .wi_flags[Weapon::Info_Flags::Corkscrew]));
 
     // *If it's a non-homer, then use the last fire direction instead of turret
     // orientation to fix inaccuracy
-    //  problems with non-homing swarm weapons -Et1
+    // problems with non-homing swarm weapons -Et1
     if ((Weapon_info[tsi->weapon_class].subtype == WP_LASER) ||
         ((The_mission.ai_profile->flags
               [AI::Profile_Flags::
@@ -2441,7 +2441,7 @@ void turret_swarm_fire_from_turret (turret_swarm_info* tsi) {
 
             subsys_index =
                 ship_get_index_from_subsys (tsi->turret, tsi->parent_objnum);
-            Assert (subsys_index != -1);
+            ASSERT (subsys_index != -1);
             send_turret_fired_packet (
                 tsi->parent_objnum, subsys_index, weapon_objnum);
         }
@@ -2464,12 +2464,12 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
     float WeaponMinRange;
 
     vec3d v2e;
-    object* lep; //	Last enemy pointer
+    object* lep; // Last enemy pointer
     model_subsystem* tp = ss->system_info;
     ship_weapon* swp = &ss->weapons;
     vec3d predicted_enemy_pos = vmd_zero_vector;
     object* objp;
-    // ai_info	*aip;
+    // ai_info  *aip;
 
     // Reset the points to target value
     ss->points_to_target = -1.0f;
@@ -2528,10 +2528,10 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
         }
     }
 
-    Assert ((parent_objnum >= 0) && (parent_objnum < MAX_OBJECTS));
+    ASSERT ((parent_objnum >= 0) && (parent_objnum < MAX_OBJECTS));
     objp = &Objects[parent_objnum];
-    Assert (objp->type == OBJ_SHIP);
-    Assert (shipp->objnum == parent_objnum);
+    ASSERT (objp->type == OBJ_SHIP);
+    ASSERT (shipp->objnum == parent_objnum);
 
     // Monitor number of calls to ai_fire_from_turret
     Num_ai_firing++;
@@ -2647,7 +2647,7 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
             }
             else {
                 ss->turret_next_fire_stamp =
-                    timestamp (1000); //	Regardless of firing rate, don't
+                    timestamp (1000); // Regardless of firing rate, don't
                                       // check whether should fire for awhile.
             }
 
@@ -2772,7 +2772,7 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
     // none of our guns can hit the enemy, so find a new one
     if (num_valid < 1) ss->turret_enemy_objnum = -1;
 
-    //	Maybe pick a new enemy, unless targeting has been taken over by
+    // Maybe pick a new enemy, unless targeting has been taken over by
     // scripting
     if (turret_should_pick_new_target (ss) && !ss->scripting_target_override) {
         Num_find_turret_enemy++;
@@ -2816,12 +2816,12 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
         }
         else {
             ss->turret_next_enemy_check_stamp = timestamp (
-                (int)(2000.0f * frand_range (0.9f, 1.1f))); //	Check every two
+                (int)(2000.0f * frand_range (0.9f, 1.1f))); // Check every two
                                                             // seconds
         }
     }
 
-    //	If still don't have an enemy, return.  Or, if enemy is protected,
+    // If still don't have an enemy, return.  Or, if enemy is protected,
     // return.
     if (ss->turret_enemy_objnum != -1) {
         // Don't shoot at ship we're docked with.
@@ -2843,7 +2843,7 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
 
         if (Objects[ss->turret_enemy_objnum]
                 .flags[Object::Object_Flags::Protected]) {
-            //	This can happen if the enemy was selected before it became
+            // This can happen if the enemy was selected before it became
             // protected.
             ss->turret_enemy_objnum = -1;
             return;
@@ -2937,9 +2937,9 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
             }
 
             // Fire if:
-            //		dumbfire and nearly pointing at target.
-            //		heat seeking and target in a fairly wide cone.
-            //		aspect seeking and target is locked.
+            // dumbfire and nearly pointing at target.
+            // heat seeking and target in a fairly wide cone.
+            // aspect seeking and target is locked.
             // turret_weapon_class = tp->turret_weapon_type;
             bool in_sight = false;
 
@@ -3084,7 +3084,7 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
             if (tp->flags
                     [Model::Subsystem_Flags::Turret_only_target_if_can_fire]) {
                 ss->turret_enemy_objnum =
-                    -1; //	Reset enemy objnum, find a new one next frame.
+                    -1; // Reset enemy objnum, find a new one next frame.
                 ss->turret_time_enemy_in_range = 0.0f;
             }
         }
@@ -3127,7 +3127,7 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
     else {
         // Lost him!
         ss->turret_enemy_objnum =
-            -1; //	Reset enemy objnum, find a new one next frame.
+            -1; // Reset enemy objnum, find a new one next frame.
         ss->turret_time_enemy_in_range = 0.0f;
     }
 }

@@ -58,7 +58,7 @@ extern int model_render_flags_size;
 #define SUBSYSTEM_ACTIVATION 10
 #define SUBSYSTEM_UNKNOWN 11
 #define SUBSYSTEM_MAX \
-    12 //	maximum value for subsystem_xxx, for error checking
+    12 // maximum value for subsystem_xxx, for error checking
 
 // Goober5000
 extern const char* Subsystem_types[SUBSYSTEM_MAX];
@@ -140,21 +140,21 @@ public:
     float max_subsys_strength; // maximum hits of this subsystem
     int armor_type_idx;        // Armor type on teh subsystem -C
 
-    //	The following items are specific to turrets and will probably be moved
-    // to 	a separate struct so they don't take up space for all subsystem
+    // The following items are specific to turrets and will probably be moved
+    // to       a separate struct so they don't take up space for all subsystem
     // types.
     char crewspot[MAX_NAME_LEN]; // unique identifying name for this turret --
                                  // used to assign AI class and multiplayer
                                  // people
-    vec3d turret_norm;           //	direction this turret faces
+    vec3d turret_norm;           // direction this turret faces
     matrix turret_matrix;        // turret_norm converted to a matrix.
-    float turret_fov;     //	dot of turret_norm:vec_to_enemy > this means can
+    float turret_fov;     // dot of turret_norm:vec_to_enemy > this means can
                           // see
-    float turret_max_fov; //  dot of turret_norm:vec_to_enemy <= this means
-                          //  barrels can elevate up to the target
-    float turret_y_fov;   //  turret's base's fov
+    float turret_max_fov; // dot of turret_norm:vec_to_enemy <= this means
+                          // barrels can elevate up to the target
+    float turret_y_fov;   // turret's base's fov
     int turret_num_firing_points; // number of firing points on this turret
-    vec3d turret_firing_point[MAX_TFP]; //	in parent object's reference frame,
+    vec3d turret_firing_point[MAX_TFP]; // in parent object's reference frame,
                                         // point from which to fire.
     int turret_gun_sobj; // Which subobject in this model the firing points are
                          // linked to.
@@ -328,8 +328,8 @@ public:
 
     vec3d geometric_center; // geometric center of this subobject.  In the same
                             // Frame Of
-                            //  Reference as all other vertices in this
-                            //  submodel. (Relative to pivot point)
+                            // Reference as all other vertices in this
+                            // submodel. (Relative to pivot point)
     float rad;              // radius for each submodel
 
     vec3d min;             // The min point of this object's geometry
@@ -408,7 +408,7 @@ public:
                            // parents rotates, also rotates associated
                            // thrusters.
     float dumb_turn_rate;  // Bobboau
-    // int	look_at;				//Bobboau
+    // int      look_at;                                //Bobboau
     int look_at_num; // VA - number of the submodel to be looked at by this
                      // submodel (-1 if none)
     char look_at[MAX_NAME_LEN]; // VA - name of submodel to be looked at by
@@ -560,7 +560,7 @@ struct dock_bay  {
 // struct that holds the indicies into path information associated with a
 // fighter bay on a capital ship NOTE: Fighter bay paths are identified by the
 // path_name $bayN (where N is numbered from 1).
-//			Capital ships only have ONE fighter bay on the entire ship
+// Capital ships only have ONE fighter bay on the entire ship
 // NOTE: MAX_SHIP_BAY_PATHS cannot be bumped higher than 31 without rewriting
 // the arrival/departure flag logic.
 #define MAX_SHIP_BAY_PATHS 31
@@ -749,8 +749,8 @@ public:
 // used to describe a polygon model
 // NOTE: Because WMC OOPified the textures, this must now be treated as a
 // class, rather than a struct.
-//       Additionally, a lot of model initialization and de-initialization is
-//       currently done in model_load or model_unload.
+// Additionally, a lot of model initialization and de-initialization is
+// currently done in model_load or model_unload.
 class polymodel {
 public:
     // initialize to 0 and NULL because previously a memset was used
@@ -1243,7 +1243,7 @@ struct mc_info  {
     float hit_u,
         hit_v; // Where on hit_bitmap the ray hit.  Invalid if hit_bitmap < 0
     int shield_hit_tri; // Which triangle on the shield got hit or -1 if none
-    vec3d hit_normal;   //	Vector normal of polygon of collision.  (This is in
+    vec3d hit_normal;   // Vector normal of polygon of collision.  (This is in
                         // submodel RF)
     int edge_hit;  // Set if an edge got hit.  Only valid if MC_CHECK_THICK is
                    // set.
@@ -1283,10 +1283,10 @@ inline void mc_info_init (mc_info* mc) {
 
 //======== MODEL_COLLIDE ============
 
-//	Model Collision flags, used in model_collide()
+// Model Collision flags, used in model_collide()
 #define MC_CHECK_MODEL (1 << 0) // Check the polygons in the model.
 #define MC_CHECK_SHIELD \
-    (1 << 1) //	check for collision against shield, if it exists.
+    (1 << 1) // check for collision against shield, if it exists.
 #define MC_ONLY_SPHERE \
     (1 << 2) // Only check bounding sphere. Not accurate, but fast.
              // NOTE!  This doesn't set hit_point correctly with
@@ -1327,12 +1327,12 @@ inline void mc_info_init (mc_info* mc) {
 
     mc_info mc;
 
-    mc.model_num = ???;			// Fill in the model to check
-    mc.orient = &obj->orient;	// The object's orient
-    mc.pos = &obj->pos;			// The object's position
-    mc.p0 = &p0;					// Point 1 of ray to check
-    mc.p1 = &p1;					// Point 2 of ray to check
-    mc.flags = MC_CHECK_MODEL;	// flags
+    mc.model_num = ???;                 // Fill in the model to check
+    mc.orient = &obj->orient;   // The object's orient
+    mc.pos = &obj->pos;                 // The object's position
+    mc.p0 = &p0;                                        // Point 1 of ray to check
+    mc.p1 = &p1;                                        // Point 2 of ray to check
+    mc.flags = MC_CHECK_MODEL;  // flags
 
 ** TO COLLIDE AGAINST A LINE SEGMENT
 
@@ -1373,20 +1373,20 @@ void model_show_damaged (int model_num, int show_damaged);
 //=========================== MODEL OCTANT STUFF
 //================================
 
-//  Models are now divided into 8 octants.    Shields too.
-//  This made the collision code faster.   Shield is 4x and ship faces
-//  are about 2x faster.
+// Models are now divided into 8 octants.    Shields too.
+// This made the collision code faster.   Shield is 4x and ship faces
+// are about 2x faster.
 
-//  Before, calling model_collide with flags=0 didn't check the shield
-//  but did check the model itself.   Setting the shield flags caused
-//  the shield to get check along with the ship.
-//  Now, you need to explicitly tell the model_collide code to check
-//  the model, so you can check the model or shield or both.
+// Before, calling model_collide with flags=0 didn't check the shield
+// but did check the model itself.   Setting the shield flags caused
+// the shield to get check along with the ship.
+// Now, you need to explicitly tell the model_collide code to check
+// the model, so you can check the model or shield or both.
 
-//  If you need to check them both, do it in one call; this saves some
-//  time.    If checking the shield is sufficient for determining
-//  something   (like if it is under the hud) then use just shield
-//  check, it is at least 5x faster than checking the model itself.
+// If you need to check them both, do it in one call; this saves some
+// time.    If checking the shield is sufficient for determining
+// something   (like if it is under the hud) then use just shield
+// check, it is at least 5x faster than checking the model itself.
 
 // Model octant ordering - this is a made up ordering, but it makes sense.
 // X Y Z  index description
@@ -1457,15 +1457,15 @@ void model_set_thrust (int model_num = -1, mst_info* mst = NULL);
 //=======================================================================================
 // Finds the closest point on a model to a point in space.  Actually only finds
 // a point on the bounding box of the model. Given:
-//   model_num      Which model
-//   submodel_num   Which submodel, -1 for hull
-//   orient         Orientation of the model
-//   pos            Position of the model
-//   eye_pos        Point that you want to find the closest point to
+// model_num      Which model
+// submodel_num   Which submodel, -1 for hull
+// orient         Orientation of the model
+// pos            Position of the model
+// eye_pos        Point that you want to find the closest point to
 // Returns:
-//   distance from eye_pos to closest_point.  0 means eye_pos is
-//   on or inside the bounding box.
-//   Also fills in outpnt with the actual closest point.
+// distance from eye_pos to closest_point.  0 means eye_pos is
+// on or inside the bounding box.
+// Also fills in outpnt with the actual closest point.
 float model_find_closest_point (
     vec3d* outpnt, int model_num, int submodel_num, matrix* orient, vec3d* pos,
     vec3d* eye_pos);

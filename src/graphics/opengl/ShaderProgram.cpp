@@ -13,7 +13,7 @@ namespace {
  * Retrieve the compilation log for a given shader object, and store it in the
  * GLshader_info_log global variable
  *
- * @param shader_object		OpenGL handle of a shader object
+ * @param shader_object         OpenGL handle of a shader object
  */
 std::string get_shader_info_log (GLuint shader_object) {
     GLint length;
@@ -36,7 +36,7 @@ std::string get_shader_info_log (GLuint shader_object) {
  * Retrieve the compilation log for a given shader object, and store it in the
  * GLshader_info_log global variable
  *
- * @param program_object		OpenGL handle of a shader object
+ * @param program_object                OpenGL handle of a shader object
  */
 std::string get_program_info_log (GLuint program_object) {
     GLint length;
@@ -61,10 +61,10 @@ std::string get_program_info_log (GLuint program_object) {
  * only compile shaders into objects, linking them into executables happens
  * later
  *
- * @param shader_source		GLSL sourcecode for the shader
- * @param shader_type		OpenGL ID for the type of shader being used, like
+ * @param shader_source         GLSL sourcecode for the shader
+ * @param shader_type           OpenGL ID for the type of shader being used, like
  * GL_FRAGMENT_SHADER_ARB, GL_VERTEX_SHADER_ARB
- * @return 					OpenGL handle for the compiled shader object
+ * @return                                      OpenGL handle for the compiled shader object
  */
 GLuint compile_shader_object (
     const std::vector< std::string >& shader_source, GLenum shader_type) {
@@ -149,7 +149,9 @@ GLenum get_gl_shader_stage (opengl::ShaderStage stage) {
     case opengl::STAGE_VERTEX: return GL_VERTEX_SHADER;
     case opengl::STAGE_GEOMETRY: return GL_GEOMETRY_SHADER;
     case opengl::STAGE_FRAGMENT: return GL_FRAGMENT_SHADER;
-    default: UNREACHABLE ("Unhandled shader type found!"); return GL_NONE;
+    default:
+        ASSERT (0);
+        return GL_NONE;
     }
 }
 } // namespace
@@ -236,7 +238,7 @@ GLint opengl::ShaderProgram::getAttributeLocation (
 
 opengl::ShaderUniforms::ShaderUniforms (ShaderProgram* shaderProgram)
     : _program (shaderProgram) {
-    Assertion (shaderProgram != nullptr, "Shader program may not be null!");
+    ASSERTX (shaderProgram != nullptr, "Shader program may not be null!");
 }
 
 size_t opengl::ShaderUniforms::findUniform (const std::string& name) {
@@ -249,7 +251,7 @@ size_t opengl::ShaderUniforms::findUniform (const std::string& name) {
 }
 void opengl::ShaderUniforms::setUniformi (
     const std::string& name, const int val) {
-    Assertion (
+    ASSERTX (
         GL_state.IsCurrentProgram (_program->getShaderHandle ()),
         "The program must be current before setting uniforms!");
 
@@ -257,7 +259,7 @@ void opengl::ShaderUniforms::setUniformi (
     bool resident = false;
 
     if (uniform_index != (size_t)-1) {
-        Assert (uniform_index < _uniforms.size ());
+        ASSERT (uniform_index < _uniforms.size ());
 
         uniform_bind* bind_info = &_uniforms[uniform_index];
 
@@ -291,7 +293,7 @@ void opengl::ShaderUniforms::setUniformi (
 
 void opengl::ShaderUniforms::setUniform1iv (
     const std::string& name, const int count, const int* val) {
-    Assertion (
+    ASSERTX (
         GL_state.IsCurrentProgram (_program->getShaderHandle ()),
         "The program must be current before setting uniforms!");
 
@@ -299,7 +301,7 @@ void opengl::ShaderUniforms::setUniform1iv (
     bool resident = false;
 
     if (uniform_index != INVALID_SIZE) {
-        Assert ((size_t)uniform_index < _uniforms.size ());
+        ASSERT ((size_t)uniform_index < _uniforms.size ());
 
         uniform_bind* bind_info = &_uniforms[uniform_index];
 
@@ -334,7 +336,7 @@ void opengl::ShaderUniforms::setUniform1iv (
         uniform_bind new_bind;
         new_bind.count = count;
         new_bind.index = _uniform_data_ints.size () - count;
-        //	new_bind.index = num_matrix_uniforms - count;
+        // new_bind.index = num_matrix_uniforms - count;
         new_bind.type = uniform_bind::INT;
         new_bind.name = name;
 
@@ -349,7 +351,7 @@ void opengl::ShaderUniforms::setUniform1iv (
 
 void opengl::ShaderUniforms::setUniformf (
     const std::string& name, const float val) {
-    Assertion (
+    ASSERTX (
         GL_state.IsCurrentProgram (_program->getShaderHandle ()),
         "The program must be current before setting uniforms!");
 
@@ -357,7 +359,7 @@ void opengl::ShaderUniforms::setUniformf (
     bool resident = false;
 
     if (uniform_index != (size_t)-1) {
-        Assert ((size_t)uniform_index < _uniforms.size ());
+        ASSERT ((size_t)uniform_index < _uniforms.size ());
 
         uniform_bind* bind_info = &_uniforms[uniform_index];
 
@@ -403,7 +405,7 @@ void opengl::ShaderUniforms::setUniform2f (
 
 void opengl::ShaderUniforms::setUniform2f (
     const std::string& name, const vec2d& val) {
-    Assertion (
+    ASSERTX (
         GL_state.IsCurrentProgram (_program->getShaderHandle ()),
         "The program must be current before setting uniforms!");
 
@@ -411,7 +413,7 @@ void opengl::ShaderUniforms::setUniform2f (
     bool resident = false;
 
     if (uniform_index != (size_t)-1) {
-        Assert ((size_t)uniform_index < _uniforms.size ());
+        ASSERT ((size_t)uniform_index < _uniforms.size ());
 
         uniform_bind* bind_info = &_uniforms[uniform_index];
 
@@ -458,7 +460,7 @@ void opengl::ShaderUniforms::setUniform3f (
 
 void opengl::ShaderUniforms::setUniform3f (
     const std::string& name, const vec3d& val) {
-    Assertion (
+    ASSERTX (
         GL_state.IsCurrentProgram (_program->getShaderHandle ()),
         "The program must be current before setting uniforms!");
 
@@ -466,7 +468,7 @@ void opengl::ShaderUniforms::setUniform3f (
     bool resident = false;
 
     if (uniform_index != (size_t)-1) {
-        Assert ((size_t)uniform_index < _uniforms.size ());
+        ASSERT ((size_t)uniform_index < _uniforms.size ());
 
         uniform_bind* bind_info = &_uniforms[uniform_index];
 
@@ -517,7 +519,7 @@ void opengl::ShaderUniforms::setUniform4f (
 
 void opengl::ShaderUniforms::setUniform4f (
     const std::string& name, const vec4& val) {
-    Assertion (
+    ASSERTX (
         GL_state.IsCurrentProgram (_program->getShaderHandle ()),
         "The program must be current before setting uniforms!");
 
@@ -525,7 +527,7 @@ void opengl::ShaderUniforms::setUniform4f (
     bool resident = false;
 
     if (uniform_index != (size_t)-1) {
-        Assert ((size_t)uniform_index < _uniforms.size ());
+        ASSERT ((size_t)uniform_index < _uniforms.size ());
 
         uniform_bind* bind_info = &_uniforms[uniform_index];
 
@@ -564,7 +566,7 @@ void opengl::ShaderUniforms::setUniform4f (
 
 void opengl::ShaderUniforms::setUniform1fv (
     const std::string& name, const int count, const float* val) {
-    Assertion (
+    ASSERTX (
         GL_state.IsCurrentProgram (_program->getShaderHandle ()),
         "The program must be current before setting uniforms!");
 
@@ -572,7 +574,7 @@ void opengl::ShaderUniforms::setUniform1fv (
     bool resident = false;
 
     if (uniform_index != INVALID_SIZE) {
-        Assert ((size_t)uniform_index < _uniforms.size ());
+        ASSERT ((size_t)uniform_index < _uniforms.size ());
 
         uniform_bind* bind_info = &_uniforms[uniform_index];
 
@@ -608,7 +610,7 @@ void opengl::ShaderUniforms::setUniform1fv (
         uniform_bind new_bind;
         new_bind.count = count;
         new_bind.index = _uniform_data_floats.size () - count;
-        //	new_bind.index = num_matrix_uniforms - count;
+        // new_bind.index = num_matrix_uniforms - count;
         new_bind.type = uniform_bind::FLOAT;
         new_bind.name = name;
 
@@ -623,7 +625,7 @@ void opengl::ShaderUniforms::setUniform1fv (
 
 void opengl::ShaderUniforms::setUniform3fv (
     const std::string& name, const int count, const vec3d* val) {
-    Assertion (
+    ASSERTX (
         GL_state.IsCurrentProgram (_program->getShaderHandle ()),
         "The program must be current before setting uniforms!");
 
@@ -631,7 +633,7 @@ void opengl::ShaderUniforms::setUniform3fv (
     bool resident = false;
 
     if (uniform_index != INVALID_SIZE) {
-        Assert ((size_t)uniform_index < _uniforms.size ());
+        ASSERT ((size_t)uniform_index < _uniforms.size ());
 
         uniform_bind* bind_info = &_uniforms[uniform_index];
 
@@ -667,7 +669,7 @@ void opengl::ShaderUniforms::setUniform3fv (
         uniform_bind new_bind;
         new_bind.count = count;
         new_bind.index = _uniform_data_vec3d.size () - count;
-        //	new_bind.index = num_matrix_uniforms - count;
+        // new_bind.index = num_matrix_uniforms - count;
         new_bind.type = uniform_bind::VEC3;
         new_bind.name = name;
 
@@ -682,7 +684,7 @@ void opengl::ShaderUniforms::setUniform3fv (
 
 void opengl::ShaderUniforms::setUniform4fv (
     const std::string& name, const int count, const vec4* val) {
-    Assertion (
+    ASSERTX (
         GL_state.IsCurrentProgram (_program->getShaderHandle ()),
         "The program must be current before setting uniforms!");
 
@@ -690,7 +692,7 @@ void opengl::ShaderUniforms::setUniform4fv (
     bool resident = false;
 
     if (uniform_index != INVALID_SIZE) {
-        Assert ((size_t)uniform_index < _uniforms.size ());
+        ASSERT ((size_t)uniform_index < _uniforms.size ());
 
         uniform_bind* bind_info = &_uniforms[uniform_index];
 
@@ -726,7 +728,7 @@ void opengl::ShaderUniforms::setUniform4fv (
         uniform_bind new_bind;
         new_bind.count = count;
         new_bind.index = _uniform_data_vec4.size () - count;
-        //	new_bind.index = num_matrix_uniforms - count;
+        // new_bind.index = num_matrix_uniforms - count;
         new_bind.type = uniform_bind::VEC4;
         new_bind.name = name;
 
@@ -741,7 +743,7 @@ void opengl::ShaderUniforms::setUniform4fv (
 
 void opengl::ShaderUniforms::setUniformMatrix4f (
     const std::string& name, const matrix4& val) {
-    Assertion (
+    ASSERTX (
         GL_state.IsCurrentProgram (_program->getShaderHandle ()),
         "The program must be current before setting uniforms!");
 
@@ -749,7 +751,7 @@ void opengl::ShaderUniforms::setUniformMatrix4f (
     bool resident = false;
 
     if (uniform_index != (size_t)-1) {
-        Assert ((size_t)uniform_index < _uniforms.size ());
+        ASSERT ((size_t)uniform_index < _uniforms.size ());
 
         uniform_bind* bind_info = &_uniforms[uniform_index];
 
@@ -772,12 +774,12 @@ void opengl::ShaderUniforms::setUniformMatrix4f (
         // memcpy(&(matrix_uniform_data[num_matrix_uniforms]), &val,
         // sizeof(matrix4));
         _uniform_data_matrix4.push_back (val);
-        //	num_matrix_uniforms += 1;
+        // num_matrix_uniforms += 1;
 
         uniform_bind new_bind;
         new_bind.count = 1;
         new_bind.index = _uniform_data_matrix4.size () - 1;
-        //	new_bind.index = num_matrix_uniforms - 1;
+        // new_bind.index = num_matrix_uniforms - 1;
         new_bind.type = uniform_bind::MATRIX4;
         new_bind.name = name;
 
@@ -793,7 +795,7 @@ void opengl::ShaderUniforms::setUniformMatrix4f (
 
 void opengl::ShaderUniforms::setUniformMatrix4fv (
     const std::string& name, const int count, const matrix4* val) {
-    Assertion (
+    ASSERTX (
         GL_state.IsCurrentProgram (_program->getShaderHandle ()),
         "The program must be current before setting uniforms!");
 
@@ -801,7 +803,7 @@ void opengl::ShaderUniforms::setUniformMatrix4fv (
     bool resident = false;
 
     if (uniform_index != (size_t)-1) {
-        Assert ((size_t)uniform_index < _uniforms.size ());
+        ASSERT ((size_t)uniform_index < _uniforms.size ());
 
         uniform_bind* bind_info = &_uniforms[uniform_index];
 
@@ -837,7 +839,7 @@ void opengl::ShaderUniforms::setUniformMatrix4fv (
         uniform_bind new_bind;
         new_bind.count = count;
         new_bind.index = _uniform_data_matrix4.size () - count;
-        //	new_bind.index = num_matrix_uniforms - count;
+        // new_bind.index = num_matrix_uniforms - count;
         new_bind.type = uniform_bind::MATRIX4;
         new_bind.name = name;
 

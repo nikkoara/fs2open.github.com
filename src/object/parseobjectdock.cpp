@@ -46,7 +46,7 @@ bool dock_check_docked_one_on_one (p_object* objp) {
         return false;
 
     // debug check to make sure that we're docked to each other
-    Assert (
+    ASSERT (
         objp == dock_get_first_docked_object (objp)->dock_list->docked_objp);
 
     // success
@@ -87,7 +87,7 @@ char* dock_find_dockpoint_used_by_object (
 void dock_evaluate_all_docked_objects (
     p_object* objp, p_dock_function_info* infop,
     void (*function) (p_object*, p_dock_function_info*)) {
-    Assert ((objp != NULL) && (infop != NULL) && (function != NULL));
+    ASSERT ((objp != NULL) && (infop != NULL) && (function != NULL));
 
     // not docked?
     if (!object_is_docked (objp)) {
@@ -164,7 +164,7 @@ void dock_dock_docked_objects (p_object* objp) {
     // handled already?
     if (objp->flags[Mission::Parse_Object_Flags::Already_handled]) return;
 
-    Assert (objp->flags[Mission::Parse_Object_Flags::SF_Dock_leader]);
+    ASSERT (objp->flags[Mission::Parse_Object_Flags::SF_Dock_leader]);
 
     p_dock_function_info dfi;
 
@@ -210,12 +210,12 @@ void dock_dock_objects (
 #ifndef NDEBUG
     if ((dock_find_instance (objp1, objp2) != NULL) ||
         (dock_find_instance (objp2, objp1) != NULL)) {
-        fs2::dialog::error (LOCATION, "Trying to dock an object that's already docked!\n");
+        ASSERTF (LOCATION, "Trying to dock an object that's already docked!\n");
     }
 
     if ((dock_find_instance (objp1, dockpoint1) != NULL) ||
         (dock_find_instance (objp2, dockpoint2) != NULL)) {
-        fs2::dialog::error (LOCATION, "Trying to dock to a dockpoint that's in use!\n");
+        ASSERTF (LOCATION, "Trying to dock to a dockpoint that's in use!\n");
     }
 #endif
 

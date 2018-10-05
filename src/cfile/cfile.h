@@ -80,7 +80,7 @@ struct file_list_info {
 
 // #define's for the type parameter in cfopen.
 #define CFILE_NORMAL 0               // open file normally
-#define CFILE_MEMORY_MAPPED (1 << 0) //	open file as a memory-mapped file
+#define CFILE_MEMORY_MAPPED (1 << 0) // open file as a memory-mapped file
 
 #define CF_SORT_NONE 0
 #define CF_SORT_NAME 1
@@ -425,12 +425,12 @@ struct CFileLocation {
 // Searches for a file.   Follows all rules and precedence and searches
 // CD's and pack files.
 // Input:  filespace   - Filename & extension
-//         pathtype    - See CF_TYPE_ defines in CFILE.H
-//         max_out     - Maximum string size to be stuffed into pack_filename
+// pathtype    - See CF_TYPE_ defines in CFILE.H
+// max_out     - Maximum string size to be stuffed into pack_filename
 // Output: pack_filename - Absolute path and filename of this file.   Could be
 // a packfile or the actual file.
-//         size        - File size
-//         offset      - Offset into pack file.  0 if not a packfile.
+// size        - File size
+// offset      - Offset into pack file.  0 if not a packfile.
 // Returns: If not found returns 0.
 CFileLocation cf_find_file_location (
     const char* filespec, int pathtype, bool localize = false,
@@ -447,15 +447,15 @@ struct CFileLocationExt : public CFileLocation {
 // Searches for a file.   Follows all rules and precedence and searches
 // CD's and pack files.  Searches all locations in order for first filename
 // using ext filter list. Input:  filename    - Filename & extension
-//         ext_num     - number of extensions to look for
-//         ext_list    - extension filter list
-//         pathtype    - See CF_TYPE_ defines in CFILE.H
-//         max_out     - Maximum string length that should be stuffed into
-//         pack_filename
+// ext_num     - number of extensions to look for
+// ext_list    - extension filter list
+// pathtype    - See CF_TYPE_ defines in CFILE.H
+// max_out     - Maximum string length that should be stuffed into
+// pack_filename
 // Output: pack_filename - Absolute path and filename of this file.   Could be
 // a packfile or the actual file.
-//         size        - File size
-//         offset      - Offset into pack file.  0 if not a packfile.
+// size        - File size
+// offset      - Offset into pack file.  0 if not a packfile.
 // Returns: If not found returns -1, else returns offset into ext_list.
 // (NOTE: This function is exponentially slow, so don't use it unless truely
 // needed!!)

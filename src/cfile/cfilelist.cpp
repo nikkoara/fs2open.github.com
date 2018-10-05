@@ -51,7 +51,7 @@ void cf_sort_filenames (
         return;
     }
     else if (sort == CF_SORT_TIME) {
-        Assert (info);
+        ASSERT (info);
         incr = n / 2;
         while (incr > 0) {
             for (i = incr; i < n; i++) {
@@ -91,13 +91,13 @@ void cf_sort_filenames (
 }
 
 // Sorts a list of filenames using the specified sorting method (CF_SORT_*).
-//   n = number of filenames in list to sort
-//   list = list of filenames to be sorted
-//   sort = sorting method to use (one of the CF_SORT_* defines)
-//   info = extra info for each file.  Only required if sorting by time,
-//   however if you
-//          have extra file info, you should pass it as well to get it sorted
-//          too (so an index into list is the same index for info for that file
+// n = number of filenames in list to sort
+// list = list of filenames to be sorted
+// sort = sorting method to use (one of the CF_SORT_* defines)
+// info = extra info for each file.  Only required if sorting by time,
+// however if you
+// have extra file info, you should pass it as well to get it sorted
+// too (so an index into list is the same index for info for that file
 void cf_sort_filenames (int n, char** list, int sort, file_list_info* info) {
     int i, j, incr;
     char* t;
@@ -133,7 +133,7 @@ void cf_sort_filenames (int n, char** list, int sort, file_list_info* info) {
         return;
     }
     else if (sort == CF_SORT_TIME) {
-        Assert (info);
+        ASSERT (info);
         incr = n / 2;
         while (incr > 0) {
             for (i = incr; i < n; i++) {
@@ -191,12 +191,12 @@ void cf_sort_filenames (int n, char** list, int sort, file_list_info* info) {
 
 #if (0) // these aren't used anywhere now
 
-//	cf_compress - Do Run Length Compression on a block of data. Targa format.
+// cf_compress - Do Run Length Compression on a block of data. Targa format.
 //
-//	Usage:
-//				out			Buffer to write it out to
-//				in				Buffer to compress
-//				bytecount	Number of bytes input
+// Usage:
+// out                     Buffer to write it out to
+// in                              Buffer to compress
+// bytecount       Number of bytes input
 int cf_compress (char* out, char* in, int bytecount) {
     int pixcount;            // number of pixels in the current packet
     char* inputpixel = NULL; // current input pixel position
@@ -254,13 +254,13 @@ int cf_compress (char* out, char* in, int bytecount) {
 
         // current pixel == match pixel?
         if (*inputpixel == *matchpixel) {
-            //	establishing a run of enough length to
-            //	save space by doing it
-            //		-- write the non-run length packet
-            //		-- start run-length packet
+            // establishing a run of enough length to
+            // save space by doing it
+            // -- write the non-run length packet
+            // -- start run-length packet
 
             if (++rlcount == rlthresh) {
-                //	close a non-run packet
+                // close a non-run packet
 
                 if (pixcount > (rlcount + 1)) {
                     // write out length and do not set run flag
@@ -277,9 +277,9 @@ int cf_compress (char* out, char* in, int bytecount) {
         }
         else {
             // no match -- either break a run or continue without one
-            //	if a run exists break it:
-            //		write the bytes in the string (1+1)
-            //		start the next string
+            // if a run exists break it:
+            // write the bytes in the string (1+1)
+            // start the next string
 
             if (rlcount >= rlthresh) {
                 *flagbyte++ = (char)(0x80 | rlcount);
@@ -289,9 +289,9 @@ int cf_compress (char* out, char* in, int bytecount) {
                 continue;
             }
             else {
-                //	not a match and currently not a run
-                //		- save the current pixel
-                //		- reset the run-length flag
+                // not a match and currently not a run
+                // - save the current pixel
+                // - reset the run-length flag
                 rlcount = 0;
                 matchpixel = inputpixel;
             }
@@ -316,13 +316,13 @@ int cf_compress (char* out, char* in, int bytecount) {
     return (flagbyte - out);
 }
 
-//	cf_decompress - Do Decompression on a run-length encoded block of data.
+// cf_decompress - Do Decompression on a run-length encoded block of data.
 // Targa format.
 //
-//	Usage:
-//				out			Buffer to write it out to
-//				in				Buffer to compress
-//				bytecount	Number of bytes input
+// Usage:
+// out                     Buffer to write it out to
+// in                              Buffer to compress
+// bytecount       Number of bytes input
 int cf_decompress (char* out, char* in) {
     int count;
 
@@ -452,13 +452,13 @@ int cfwrite_compressed (
 
         // current pixel == match pixel?
         if (*inputpixel == *matchpixel) {
-            //	establishing a run of enough length to
-            //	save space by doing it
-            //		-- write the non-run length packet
-            //		-- start run-length packet
+            // establishing a run of enough length to
+            // save space by doing it
+            // -- write the non-run length packet
+            // -- start run-length packet
 
             if (++rlcount == rlthresh) {
-                //	close a non-run packet
+                // close a non-run packet
 
                 if (pixcount > (rlcount + 1)) {
                     // write out length and do not set run flag
@@ -474,9 +474,9 @@ int cfwrite_compressed (
         }
         else {
             // no match -- either break a run or continue without one
-            //	if a run exists break it:
-            //		write the bytes in the string (1+1)
-            //		start the next string
+            // if a run exists break it:
+            // write the bytes in the string (1+1)
+            // start the next string
 
             if (rlcount >= rlthresh) {
                 ubyte code = (ubyte) (0x80 | rlcount);
@@ -486,9 +486,9 @@ int cfwrite_compressed (
                 continue;
             }
             else {
-                //	not a match and currently not a run
-                //		- save the current pixel
-                //		- reset the run-length flag
+                // not a match and currently not a run
+                // - save the current pixel
+                // - reset the run-length flag
                 rlcount = 0;
                 matchpixel = inputpixel;
             }

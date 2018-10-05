@@ -244,7 +244,7 @@ void process_player_kick_packet (ubyte* data, header* hinfo) {
     PACKET_SET_SIZE ();
 
     // only the server should ever receive a request to kick a guy
-    Assert (Net_player->flags & NETINFO_FLAG_AM_MASTER);
+    ASSERT (Net_player->flags & NETINFO_FLAG_AM_MASTER);
 
     // determine who sent the packet
     from_player = find_player_id (hinfo->id);

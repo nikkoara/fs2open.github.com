@@ -146,7 +146,7 @@ void model_unload (int modelnum, int force) {
 
     if (!pm) { return; }
 
-    Assert (pm->used_this_mission >= 0);
+    ASSERT (pm->used_this_mission >= 0);
 
     if (!force && (--pm->used_this_mission > 0)) return;
 
@@ -359,7 +359,7 @@ void model_page_in_start () {
 void model_page_in_stop () {
     int i;
 
-    Assert (model_initted);
+    ASSERT (model_initted);
 
     mprintf (("Stopping model page in...\n"));
 
@@ -588,7 +588,7 @@ static void set_subsystem_info (
         // no special subsystem handling needed here, but make sure we didn't
         // specify both methods
         if (prop_string (props, nullptr, "$rotate") >= 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Subsystem '%s' on ship %s cannot have both rotation and "
                 "dumb-rotation!",
@@ -610,7 +610,7 @@ static void set_subsystem_info (
         if (idx == 0 || idx == 2) {
             float turn_time = static_cast< float > (atof (buf));
             if (turn_time == 0.0f) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Rotation has a turn time of 0 for subsystem '%s' on ship "
                     "%s!",
@@ -672,7 +672,7 @@ static void set_subsystem_info (
             if ((p = strstr (props, "$fraction_accel")) != NULL) {
                 get_user_prop_value (p + 15, buf);
                 subsystemp->stepped_rotation->fraction = (float)atof (buf);
-                Assert (
+                ASSERT (
                     subsystemp->stepped_rotation->fraction > 0 &&
                     subsystemp->stepped_rotation->fraction < 0.5);
             }
@@ -773,7 +773,7 @@ void do_new_subsystem (
     if (!ss_warning_shown) {
         _splitpath (model_filename, NULL, NULL, bname, NULL);
         // Lets still give a comment about it and not just erase it
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Not all subsystems in model \"%s\" have a record in "
             "ships.tbl.\nThis can cause game to crash.\n\nList of subsystems "
@@ -888,7 +888,7 @@ void create_vertex_buffer (polymodel* pm) {
     for (i = 0; i < pm->n_models; ++i) {
         if (pm->submodel[i].buffer.model_list != nullptr &&
             pm->submodel[i].buffer.stride != stride) {
-            Assertion (
+            ASSERTX (
                 stride == 0,
                 "Submodel %d of model %s has a stride of %zu"
                 " while the rest of the model has a vertex stride "
@@ -957,46 +957,46 @@ bool maybe_swap_mins_maxs (vec3d* mins, vec3d* maxs) {
 // mins and maxs so that the POF file can be modified in a hex editor.
 // Currently none of the major POF editors allow editing of bounding boxes.
 #if 0
-	if (swap_was_necessary)
-	{
-		// use C hackery to convert float values to raw bytes
-		const int NUM_BYTES = 24;
-		typedef struct converter
-		{
-			union
-			{
-				struct
-				{
-					float min_x, min_y, min_z, max_x, max_y, max_z;
-				} _float;
-				ubyte _byte[NUM_BYTES];
-			};
-		} converter;
+        if (swap_was_necessary)
+        {
+                // use C hackery to convert float values to raw bytes
+                const int NUM_BYTES = 24;
+                typedef struct converter
+                {
+                        union
+                        {
+                                struct
+                                {
+                                        float min_x, min_y, min_z, max_x, max_y, max_z;
+                                } _float;
+                                ubyte _byte[NUM_BYTES];
+                        };
+                } converter;
 
-		// fill in the values
-		converter z;
-		z._float.min_x = mins->xyz.x;
-		z._float.min_y = mins->xyz.y;
-		z._float.min_z = mins->xyz.z;
-		z._float.max_x = maxs->xyz.x;
-		z._float.max_y = maxs->xyz.y;
-		z._float.max_z = maxs->xyz.z;
+                // fill in the values
+                converter z;
+                z._float.min_x = mins->xyz.x;
+                z._float.min_y = mins->xyz.y;
+                z._float.min_z = mins->xyz.z;
+                z._float.max_x = maxs->xyz.x;
+                z._float.max_y = maxs->xyz.y;
+                z._float.max_z = maxs->xyz.z;
 
-		// prep string
-		char hex_str[5];
-		char text[100 + (5 * NUM_BYTES)];
-		strcpy_s(text, "The following is the correct hex string for the minima and maxima:\n");
+                // prep string
+                char hex_str[5];
+                char text[100 + (5 * NUM_BYTES)];
+                strcpy_s(text, "The following is the correct hex string for the minima and maxima:\n");
 
-		// append hex values to the string
-		for (int i = 0; i < NUM_BYTES; i++)
-		{
-			sprintf(hex_str, "%02X ", z._byte[i]);
-			strcat_s(text, hex_str);
-		}
+                // append hex values to the string
+                for (int i = 0; i < NUM_BYTES; i++)
+                {
+                        sprintf(hex_str, "%02X ", z._byte[i]);
+                        strcat_s(text, hex_str);
+                }
 
-		// notify the user
-		Warning(LOCATION, text);
-	}
+                // notify the user
+                Warning(LOCATION, text);
+        }
 #endif
 
     return swap_was_necessary;
@@ -1046,10 +1046,10 @@ int read_model_file (
 
     if (!fp) {
         if (ferror == 1) {
-            fs2::dialog::error (LOCATION, "Can't open model file <%s>", filename);
+            ASSERTF (LOCATION, "Can't open model file <%s>", filename);
         }
         else if (ferror == 0) {
-            fs2::dialog::warning (LOCATION, "Can't open model file <%s>", filename);
+            WARNINGF (LOCATION, "Can't open model file <%s>", filename);
         }
 
         return -1;
@@ -1066,43 +1066,43 @@ int read_model_file (
     // that is read.  This info is essentially debug stuff that is used to help
     // get models into the game quicker
 #if 0
-	{
-		char bname[_MAX_FNAME];
+        {
+                char bname[_MAX_FNAME];
 
-		_splitpath(filename, NULL, NULL, bname, NULL);
-		sprintf(debug_name, "%s.subsystems", bname);
-		ss_fp = cfopen(debug_name, "wb", CFILE_NORMAL, CF_TYPE_TABLES );
-		if ( !ss_fp )	{
-			mprintf(( "Can't open debug file for writing subsystems for %s\n", filename));
-		} else {
-			strcpy_s(model_filename, filename);
-			ss_warning_shown = 0;
-		}
-	}
+                _splitpath(filename, NULL, NULL, bname, NULL);
+                sprintf(debug_name, "%s.subsystems", bname);
+                ss_fp = cfopen(debug_name, "wb", CFILE_NORMAL, CF_TYPE_TABLES );
+                if ( !ss_fp )   {
+                        mprintf(( "Can't open debug file for writing subsystems for %s\n", filename));
+                } else {
+                        strcpy_s(model_filename, filename);
+                        ss_warning_shown = 0;
+                }
+        }
 #endif
 
     id = cfread_int (fp);
 
     if (id != POF_HEADER_ID)
-        fs2::dialog::error (LOCATION, "Bad ID in model file <%s>", filename);
+        ASSERTF (LOCATION, "Bad ID in model file <%s>", filename);
 
     // Version is major*100+minor
     // So, major = version / 100;
-    //     minor = version % 100;
+    // minor = version % 100;
     version = cfread_int (fp);
 
     // Warning( LOCATION, "POF Version = %d", version );
 
     if (version < PM_COMPATIBLE_VERSION ||
         (version / 100) > PM_OBJFILE_MAJOR_VERSION) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Bad version (%d) in model file <%s>", version,
             filename);
         return 0;
     }
 
     pm->version = version;
-    Assert (strlen (filename) < FILESPEC_LENGTH);
+    ASSERT (strlen (filename) < FILESPEC_LENGTH);
     strcpy_s (pm->filename, filename);
 
     memset (&pm->view_positions, 0, sizeof (pm->view_positions));
@@ -1122,8 +1122,8 @@ int read_model_file (
     next_chunk = cftell (fp) + len;
 
     while (!cfeof (fp)) {
-        //		mprintf(("Processing chunk <%c%c%c%c>, len =
-        //%d\n",id,id>>8,id>>16,id>>24,len)); 		key_getch();
+        // mprintf(("Processing chunk <%c%c%c%c>, len =
+        //%d\n",id,id>>8,id>>16,id>>24,len));           key_getch();
 
         switch (id) {
         case ID_OHDR: { // Object header
@@ -1133,22 +1133,22 @@ int read_model_file (
 
 #if defined(FREESPACE1_FORMAT)
             pm->n_models = cfread_int (fp);
-            //				mprintf(( "Num models = %d\n", pm->n_models ));
+            // mprintf(( "Num models = %d\n", pm->n_models ));
             pm->rad = cfread_float (fp);
             pm->flags = cfread_int (fp); // 1=Allow tiling
 #elif defined(FREESPACE2_FORMAT)
             pm->rad = cfread_float (fp);
             pm->flags = cfread_int (fp); // 1=Allow tiling
             pm->n_models = cfread_int (fp);
-//				mprintf(( "Num models = %d\n", pm->n_models ));
+// mprintf(( "Num models = %d\n", pm->n_models ));
 #endif
-            Assertion (
+            ASSERTX (
                 pm->n_models >= 1,
                 "Models without any submodels are not supported!");
 
             // Check for unrealistic radii
             if (pm->rad <= 0.1f) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION, "Model <%s> has a radius <= 0.1f\n", filename);
             }
 
@@ -1161,7 +1161,7 @@ int read_model_file (
 
             // sanity first!
             if (maybe_swap_mins_maxs (&pm->mins, &pm->maxs)) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Inverted bounding box on model '%s'!  Swapping values to "
                     "compensate.",
@@ -1170,18 +1170,18 @@ int read_model_file (
             model_calc_bound_box (pm->bounding_box, &pm->mins, &pm->maxs);
 
             pm->n_detail_levels = cfread_int (fp);
-            //	mprintf(( "There are %d detail levels\n", pm->n_detail_levels
+            // mprintf(( "There are %d detail levels\n", pm->n_detail_levels
             //));
             for (i = 0; i < pm->n_detail_levels; i++) {
                 pm->detail[i] = cfread_int (fp);
                 pm->detail_depth[i] = 0.0f;
-                ///		mprintf(( "Detail level %d is model %d.\n", i,
+                /// mprintf(( "Detail level %d is model %d.\n", i,
                 /// pm->detail[i] ));
             }
 
             pm->num_debris_objects = cfread_int (fp);
             if (pm->num_debris_objects > MAX_DEBRIS_OBJECTS) {
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION,
                     "Model %s specified that it contains %d debris objects "
                     "but only %d are supported by the "
@@ -1207,7 +1207,7 @@ int read_model_file (
                     if (!is_valid_vec (&pm->moment_of_inertia.vec.rvec) ||
                         !is_valid_vec (&pm->moment_of_inertia.vec.uvec) ||
                         !is_valid_vec (&pm->moment_of_inertia.vec.fvec)) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Moment of inertia values for model %s are "
                             "invalid. This has to be fixed.\n",
@@ -1220,7 +1220,7 @@ int read_model_file (
                     // calculation manually
 
                     float vol_mass = cfread_float (fp);
-                    //	Attn: John Slagel:  The following is better done in
+                    // Attn: John Slagel:  The following is better done in
                     // bspgen.
                     // Convert volume (cubic) to surface area (quadratic) and
                     // scale so 100 -> 100
@@ -1237,7 +1237,7 @@ int read_model_file (
                     if (!is_valid_vec (&pm->moment_of_inertia.vec.rvec) ||
                         !is_valid_vec (&pm->moment_of_inertia.vec.uvec) ||
                         !is_valid_vec (&pm->moment_of_inertia.vec.fvec)) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Moment of inertia values for model %s are "
                             "invalid. This has to be fixed.\n",
@@ -1313,14 +1313,14 @@ int read_model_file (
         case ID_SOBJ: { // Subobject header
             int n;
             char *p, props[MAX_PROP_LEN];
-            //				float d;
+            // float d;
 
             // mprintf(0,"Got chunk SOBJ, len=%d\n",len);
 
             n = cfread_int (fp);
             // mprintf(("SOBJ IDed itself as %d", n));
 
-            Assert (n < pm->n_models);
+            ASSERT (n < pm->n_models);
 
 #if defined(FREESPACE2_FORMAT)
             pm->submodel[n].rad = cfread_float (fp); // radius
@@ -1328,12 +1328,12 @@ int read_model_file (
 
             pm->submodel[n].parent = cfread_int (fp);
 
-            //				cfread_vector(&pm->submodel[n].norm,fp);
-            //				d = cfread_float(fp);
-            //				cfread_vector(&pm->submodel[n].pnt,fp);
+            // cfread_vector(&pm->submodel[n].norm,fp);
+            // d = cfread_float(fp);
+            // cfread_vector(&pm->submodel[n].pnt,fp);
             cfread_vector (&pm->submodel[n].offset, fp);
 
-            //			mprintf(( "Subobj %d, offs = %.1f, %.1f, %.1f\n", n,
+            // mprintf(( "Subobj %d, offs = %.1f, %.1f, %.1f\n", n,
             // pm->submodel[n].offset.xyz.x, pm->submodel[n].offset.xyz.y,
             // pm->submodel[n].offset.xyz.z ));
 
@@ -1341,8 +1341,8 @@ int read_model_file (
             pm->submodel[n].rad = cfread_float (fp); // radius
 #endif
 
-            //				pm->submodel[n].tree_offset = cfread_int(fp);
-            ////offset 				pm->submodel[n].data_offset =
+            // pm->submodel[n].tree_offset = cfread_int(fp);
+            ////offset                          pm->submodel[n].data_offset =
             /// cfread_int(fp); /offset
 
             cfread_vector (&pm->submodel[n].geometric_center, fp);
@@ -1359,7 +1359,7 @@ int read_model_file (
 
             // Check for unrealistic radii
             if (pm->submodel[n].rad <= 0.1f) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Submodel <%s> in model <%s> has a radius <= 0.1f\n",
                     pm->submodel[n].name, filename);
@@ -1368,7 +1368,7 @@ int read_model_file (
             // sanity first!
             if (maybe_swap_mins_maxs (
                     &pm->submodel[n].min, &pm->submodel[n].max)) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Inverted bounding box on submodel '%s' of model '%s'!  "
                     "Swapping values to compensate.",
@@ -1432,7 +1432,7 @@ int read_model_file (
                 if (idx == 0) {
                     float turn_time = static_cast< float > (atof (buf));
                     if (turn_time == 0.0f) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Dumb-Rotation has a turn time of 0 for subsystem "
                             "'%s' on ship %s!",
@@ -1493,7 +1493,7 @@ int read_model_file (
                 else {
                     // if submodel rotates (via bspgen), then there is either a
                     // subsys or special=no_rotate
-                    Assert (
+                    ASSERT (
                         pm->submodel[n].movement_type != MOVEMENT_TYPE_ROT);
                 }
             }
@@ -1501,7 +1501,7 @@ int read_model_file (
             // adding a warning if rotation is specified without movement axis.
             if (pm->submodel[n].movement_axis == MOVEMENT_AXIS_NONE) {
                 if (pm->submodel[n].movement_type == MOVEMENT_TYPE_ROT) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Rotation without rotation axis defined on submodel "
                         "'%s' of model '%s'!",
@@ -1510,7 +1510,7 @@ int read_model_file (
                 else if (
                     pm->submodel[n].movement_type ==
                     MOVEMENT_TYPE_INTRINSIC_ROTATE) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Intrinsic rotation (e.g. dumb-rotate) without "
                         "rotation axis defined on submodel '%s' of model "
@@ -1519,14 +1519,14 @@ int read_model_file (
                 }
             }
 
-            /*				if ( strstr(props, "$nontargetable")!= NULL ) {
+            /*                          if ( strstr(props, "$nontargetable")!= NULL ) {
                                 pm->submodel[n].targetable = 0;
                             }else{
                                 pm->submodel[n].targetable = 1;
                             }
             */
-            //				pm->submodel[n].n_triggers = 0;
-            //				pm->submodel[n].triggers = NULL;
+            // pm->submodel[n].n_triggers = 0;
+            // pm->submodel[n].triggers = NULL;
 
             // parse_triggers(pm->submodel[n].n_triggers,
             // &pm->submodel[n].triggers, &props[0]);
@@ -1664,7 +1664,7 @@ int read_model_file (
                 // Find end of number
                 parsed_string = strchr (parsed_string, ',');
                 if (parsed_string == NULL) {
-                    fs2::dialog::error (
+                    ASSERTF (
                         LOCATION,
                         "Submodel '%s' of model '%s' has an improperly "
                         "formatted $uvec: declaration in its properties."
@@ -1685,7 +1685,7 @@ int read_model_file (
                 // Find end of number
                 parsed_string = strchr (parsed_string, ',');
                 if (parsed_string == NULL) {
-                    fs2::dialog::error (
+                    ASSERTF (
                         LOCATION,
                         "Submodel '%s' of model '%s' has an improperly "
                         "formatted $uvec: declaration in its properties."
@@ -1716,7 +1716,7 @@ int read_model_file (
                     // Find end of number
                     parsed_string = strchr (parsed_string, ',');
                     if (parsed_string == NULL) {
-                        fs2::dialog::error (
+                        ASSERTF (
                             LOCATION,
                             "Submodel '%s' of model '%s' has an improperly "
                             "formatted $fvec: declaration in its properties."
@@ -1737,7 +1737,7 @@ int read_model_file (
                     // Find end of number
                     parsed_string = strchr (parsed_string, ',');
                     if (parsed_string == NULL) {
-                        fs2::dialog::error (
+                        ASSERTF (
                             LOCATION,
                             "Submodel '%s' of model '%s' has an improperly "
                             "formatted $fvec: declaration in its properties."
@@ -1782,7 +1782,7 @@ int read_model_file (
                         *orient = vmd_identity_matrix;
                     }
 
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Improper custom orientation matrix for subsystem %s, "
                         "you must define a up vector, then a forward vector",
@@ -1800,7 +1800,7 @@ int read_model_file (
                 }
 
                 if (strstr (props, "$fvec:") != NULL) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Improper custom orientation matrix for subsystem %s, "
                         "you must define a up vector, then a forward vector",
@@ -1827,7 +1827,7 @@ int read_model_file (
             {
                 int nchunks = cfread_int (fp); // Throw away nchunks
                 if (nchunks > 0) {
-                    fs2::dialog::error (
+                    ASSERTF (
                         LOCATION,
                         "Model '%s' is chunked.  See John or Adam!\n",
                         pm->filename);
@@ -1890,7 +1890,7 @@ int read_model_file (
             if (pm->shield.nverts > 0) {
                 pm->shield.verts = (shield_vertex*)vm_malloc (
                     pm->shield.nverts * sizeof (shield_vertex));
-                Assert (pm->shield.verts);
+                ASSERT (pm->shield.verts);
                 for (i = 0; i < pm->shield.nverts;
                      i++) { // read in the vertex list
                     cfread_vector (&(pm->shield.verts[i].pos), fp);
@@ -1903,7 +1903,7 @@ int read_model_file (
             if (pm->shield.ntris > 0) {
                 pm->shield.tris = (shield_tri*)vm_malloc (
                     pm->shield.ntris * sizeof (shield_tri));
-                Assert (pm->shield.tris);
+                ASSERT (pm->shield.tris);
                 for (i = 0; i < pm->shield.ntris; i++) {
                     cfread_vector (&temp_vec, fp);
                     vm_vec_normalize_safe (&temp_vec);
@@ -1914,7 +1914,7 @@ int read_model_file (
                                              // shield_vertex list
 #ifndef NDEBUG
                         if (pm->shield.tris[i].verts[j] >= pm->shield.nverts) {
-                            fs2::dialog::error (
+                            ASSERTF (
                                 LOCATION,
                                 "Ship %s has a bogus shield mesh.\nOnly %i "
                                 "vertices, index %i found.\n",
@@ -1931,7 +1931,7 @@ int read_model_file (
 #ifndef NDEBUG
                         if (pm->shield.tris[i].neighbors[j] >=
                             pm->shield.ntris) {
-                            fs2::dialog::error (
+                            ASSERTF (
                                 LOCATION,
                                 "Ship %s has a bogus shield mesh.\nOnly %i "
                                 "triangles, index %i found.\n",
@@ -1950,13 +1950,13 @@ int read_model_file (
             if (pm->n_guns > 0) {
                 pm->gun_banks =
                     (w_bank*)vm_malloc (sizeof (w_bank) * pm->n_guns);
-                Assert (pm->gun_banks != NULL);
+                ASSERT (pm->gun_banks != NULL);
 
                 for (i = 0; i < pm->n_guns; i++) {
                     w_bank* bank = &pm->gun_banks[i];
 
                     bank->num_slots = cfread_int (fp);
-                    Assert (bank->num_slots < MAX_SLOTS);
+                    ASSERT (bank->num_slots < MAX_SLOTS);
                     for (j = 0; j < bank->num_slots; j++) {
                         cfread_vector (&(bank->pnt[j]), fp);
                         cfread_vector (&temp_vec, fp);
@@ -1973,13 +1973,13 @@ int read_model_file (
             if (pm->n_missiles > 0) {
                 pm->missile_banks =
                     (w_bank*)vm_malloc (sizeof (w_bank) * pm->n_missiles);
-                Assert (pm->missile_banks != NULL);
+                ASSERT (pm->missile_banks != NULL);
 
                 for (i = 0; i < pm->n_missiles; i++) {
                     w_bank* bank = &pm->missile_banks[i];
 
                     bank->num_slots = cfread_int (fp);
-                    Assert (bank->num_slots < MAX_SLOTS);
+                    ASSERT (bank->num_slots < MAX_SLOTS);
                     for (j = 0; j < bank->num_slots; j++) {
                         cfread_vector (&(bank->pnt[j]), fp);
                         cfread_vector (&temp_vec, fp);
@@ -1998,7 +1998,7 @@ int read_model_file (
             if (pm->n_docks > 0) {
                 pm->docking_bays =
                     (dock_bay*)vm_malloc (sizeof (dock_bay) * pm->n_docks);
-                Assert (pm->docking_bays != NULL);
+                ASSERT (pm->docking_bays != NULL);
 
                 for (i = 0; i < pm->n_docks; i++) {
                     char* p;
@@ -2056,7 +2056,7 @@ int read_model_file (
                     bay->num_slots = cfread_int (fp);
 
                     if (bay->num_slots != 2) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Model '%s' has %d slots in dock point '%s'; "
                             "models must have exactly %d slots per dock "
@@ -2068,7 +2068,7 @@ int read_model_file (
                         cfread_vector (&(bay->pnt[j]), fp);
                         cfread_vector (&(bay->norm[j]), fp);
                         if (vm_vec_mag (&(bay->norm[j])) <= 0.0f) {
-                            fs2::dialog::warning (
+                            WARNINGF (
                                 LOCATION,
                                 "Model '%s' dock point '%s' has a null "
                                 "normal. ",
@@ -2077,7 +2077,7 @@ int read_model_file (
                     }
 
                     if (vm_vec_same (&bay->pnt[0], &bay->pnt[1])) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Model '%s' has two identical docking slot "
                             "positions on docking port '%s'. This is not "
@@ -2093,7 +2093,7 @@ int read_model_file (
                     vm_vec_normalized_dir (&diff, &bay->pnt[0], &bay->pnt[1]);
                     float dot = vm_vec_dot (&diff, &bay->norm[0]);
                     if (fl_abs (dot) > 0.99f) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Model '%s', docking port '%s' has docking slot "
                             "positions that lie on the same axis as the "
@@ -2129,7 +2129,7 @@ int read_model_file (
             if (gpb_num > 0) {
                 pm->glow_point_banks = (glow_point_bank*)vm_malloc (
                     sizeof (glow_point_bank) * gpb_num);
-                Assert (pm->glow_point_banks != NULL);
+                ASSERT (pm->glow_point_banks != NULL);
             }
 
             for (int gpb = 0; gpb < gpb_num; gpb++) {
@@ -2159,10 +2159,10 @@ int read_model_file (
 
                 if (length > 0) {
                     auto base_length = strlen ("$glow_texture=");
-                    Assert (
+                    ASSERT (
                         strstr ((const char*)&props, "$glow_texture=") !=
                         NULL);
-                    Assert (length > base_length);
+                    ASSERT (length > base_length);
                     char* glow_texture_name = props + base_length;
 
                     if (glow_texture_name[0] == '$') glow_texture_name++;
@@ -2170,7 +2170,7 @@ int read_model_file (
                     bank->glow_bitmap = bm_load (glow_texture_name);
 
                     if (bank->glow_bitmap < 0) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Couldn't open glowpoint texture '%s'\nreferenced "
                             "by model '%s'\n",
@@ -2193,7 +2193,7 @@ int read_model_file (
                              "Glow point bank nebula texture not found for "
                              "'%s', using normal glowpoint texture instead\n",
                              pm->filename));
-                        //	Error( LOCATION, "Couldn't open texture
+                        // Error( LOCATION, "Couldn't open texture
                         //'%s'\nreferenced by model '%s'\n", glow_texture_name,
                         // pm->filename );
                     }
@@ -2210,7 +2210,7 @@ int read_model_file (
                     // a random texture assigned!
                     bank->glow_bitmap = -1;
                     bank->glow_neb_bitmap = -1;
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "No Glow point texture for bank '%d' referenced by "
                         "model '%s'\n",
@@ -2240,7 +2240,7 @@ int read_model_file (
             if (pm->n_thrusters > 0) {
                 pm->thrusters = (thruster_bank*)vm_malloc (
                     sizeof (thruster_bank) * pm->n_thrusters);
-                Assert (pm->thrusters != NULL);
+                ASSERT (pm->thrusters != NULL);
 
                 for (i = 0; i < pm->n_thrusters; i++) {
                     thruster_bank* bank = &pm->thrusters[i];
@@ -2262,11 +2262,11 @@ int read_model_file (
                         auto length = strlen (props);
                         if (length > 0) {
                             auto base_length = strlen ("$engine_subsystem=");
-                            Assert (
+                            ASSERT (
                                 strstr (
                                     (const char*)&props,
                                     "$engine_subsystem=") != NULL);
-                            Assert (length > base_length);
+                            ASSERT (length > base_length);
                             char* engine_subsys_name = props + base_length;
                             if (engine_subsys_name[0] == '$') {
                                 engine_subsys_name++;
@@ -2307,12 +2307,12 @@ int read_model_file (
                             if ((bank->wash_info_pointer == NULL) &&
                                 (n_subsystems > 0)) {
                                 if (table_error) {
-                                    //	Warning(LOCATION, "No engine wash table
+                                    // Warning(LOCATION, "No engine wash table
                                     // entry in ships.tbl for ship model %s",
                                     // filename);
                                 }
                                 else {
-                                    fs2::dialog::warning (
+                                    WARNINGF (
                                         LOCATION,
                                         "Inconsistent model: Engine wash "
                                         "engine subsystem does not match any "
@@ -2378,7 +2378,7 @@ int read_model_file (
                             n_slots = cfread_int (fp);
                             subsystemp->turret_gun_sobj = physical_parent;
                             if (n_slots > MAX_TFP) {
-                                fs2::dialog::warning (
+                                WARNINGF (
                                     LOCATION,
                                     "Model %s has %i turret firing points on "
                                     "subsystem %s, maximum is %i",
@@ -2396,7 +2396,7 @@ int read_model_file (
                                     cfread_vector (&bogus, fp);
                                 }
                             }
-                            Assertion (
+                            ASSERTX (
                                 n_slots > 0,
                                 "Turret %s in model %s has no firing "
                                 "points.\n",
@@ -2452,7 +2452,7 @@ int read_model_file (
                 if (p != NULL) {
                     pm->split_plane[pm->num_split_plane] = pnt.xyz.z;
                     pm->num_split_plane++;
-                    Assert (pm->num_split_plane <= MAX_SPLIT_PLANE);
+                    ASSERT (pm->num_split_plane <= MAX_SPLIT_PLANE);
                 }
                 else if ((p = strstr (props_spcl, "$special")) != NULL) {
                     char type[64];
@@ -2492,14 +2492,14 @@ int read_model_file (
 
         case ID_TXTR: { // Texture filename list
             int n;
-            //				char name_buf[128];
+            // char name_buf[128];
 
             // mprintf(0,"Got chunk TXTR, len=%d\n",len);
 
             n = cfread_int (fp);
             pm->n_textures = n;
             // Don't overwrite memory!!
-            Verify (pm->n_textures <= MAX_MODEL_TEXTURES);
+            ASSERT (pm->n_textures <= MAX_MODEL_TEXTURES);
             // mprintf(0,"  num textures = %d\n",n);
             for (i = 0; i < n; i++) {
                 char tmp_name[256];
@@ -2511,7 +2511,7 @@ int read_model_file (
             break;
         }
 
-            /*			case ID_IDTA:		//Interpreter data
+            /*                  case ID_IDTA:           //Interpreter data
                             //mprintf(0,"Got chunk IDTA, len=%d\n",len);
 
                             pm->model_data = (ubyte *)vm_malloc(len);
@@ -2528,7 +2528,7 @@ int read_model_file (
 #ifndef NDEBUG
             pm->debug_info_size = len;
             pm->debug_info = (char*)vm_malloc (pm->debug_info_size + 1);
-            Assert (pm->debug_info != NULL);
+            ASSERT (pm->debug_info != NULL);
             memset (pm->debug_info, 0, len + 1);
             cfread (pm->debug_info, 1, len, fp);
 #endif
@@ -2543,7 +2543,7 @@ int read_model_file (
 
             pm->paths =
                 (model_path*)vm_malloc (sizeof (model_path) * pm->n_paths);
-            Assert (pm->paths != NULL);
+            ASSERT (pm->paths != NULL);
 
             memset (pm->paths, 0, sizeof (model_path) * pm->n_paths);
 
@@ -2581,7 +2581,7 @@ int read_model_file (
                 pm->paths[i].goal = pm->paths[i].nverts - 1;
                 pm->paths[i].type = MP_TYPE_UNUSED;
                 pm->paths[i].value = 0;
-                Assert (pm->paths[i].verts != NULL);
+                ASSERT (pm->paths[i].verts != NULL);
                 memset (
                     pm->paths[i].verts, 0,
                     sizeof (mp_vert) * pm->paths[i].nverts);
@@ -2617,7 +2617,7 @@ int read_model_file (
 
             num_eyes = cfread_int (fp);
             pm->n_view_positions = num_eyes;
-            Assert (num_eyes < MAX_EYES);
+            ASSERT (num_eyes < MAX_EYES);
             for (i = 0; i < num_eyes; i++) {
                 pm->view_positions[i].parent = cfread_int (fp);
                 cfread_vector (&pm->view_positions[i].pnt, fp);
@@ -2637,7 +2637,7 @@ int read_model_file (
                 // get the detail level
                 pm->ins[idx].detail_level = cfread_int (fp);
                 if (pm->ins[idx].detail_level < 0) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Model '%s': insignia uses an invalid LOD (%i)\n",
                         pm->filename, pm->ins[idx].detail_level);
@@ -2646,11 +2646,11 @@ int read_model_file (
                 // # of faces
                 num_faces = cfread_int (fp);
                 pm->ins[idx].num_faces = num_faces;
-                Assert (num_faces <= MAX_INS_FACES);
+                ASSERT (num_faces <= MAX_INS_FACES);
 
                 // # of vertices
                 num_verts = cfread_int (fp);
-                Assert (num_verts <= MAX_INS_VECS);
+                ASSERT (num_verts <= MAX_INS_VECS);
 
                 // read in all the vertices
                 for (idx2 = 0; idx2 < num_verts; idx2++) {
@@ -2681,7 +2681,7 @@ int read_model_file (
                     vm_vec_normalize_safe (&tempv);
 
                     pm->ins[idx].norm[idx2] = tempv;
-                    //						mprintf(("insignorm %.2f %.2f
+                    // mprintf(("insignorm %.2f %.2f
                     //%.2f\n",pm->ins[idx].norm[idx2].xyz.x,
                     // pm->ins[idx].norm[idx2].xyz.y,
                     // pm->ins[idx].norm[idx2].xyz.z));
@@ -2733,8 +2733,8 @@ int read_model_file (
 void model_load_texture (polymodel* pm, int i, char* file) {
     // NOTE: it doesn't help to use more than MAX_FILENAME_LEN here as bmpman
     // will use that restriction
-    //       we also have to make sure there is always a trailing NUL since
-    //       overflow doesn't add it
+    // we also have to make sure there is always a trailing NUL since
+    // overflow doesn't add it
     char tmp_name[MAX_FILENAME_LEN];
     strcpy_s (tmp_name, file);
     stolower (tmp_name);
@@ -2770,7 +2770,7 @@ void model_load_texture (polymodel* pm, int i, char* file) {
         tbase->LoadTexture (tmp_name, pm->filename);
 
         if (tbase->GetTexture () < 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Couldn't open texture '%s'\nreferenced by model '%s'\n",
                 tmp_name, pm->filename);
@@ -2966,7 +2966,7 @@ int model_load (
 
     // No empty slot
     if (num == -1) {
-        fs2::dialog::error (LOCATION, "Too many models");
+        ASSERTF (LOCATION, "Too many models");
         return -1;
     }
 
@@ -2988,9 +2988,9 @@ int model_load (
     else {
         Model_signature += MAX_POLYGON_MODELS; // No overflow
     }
-    Assert ((Model_signature % MAX_POLYGON_MODELS) == 0);
+    ASSERT ((Model_signature % MAX_POLYGON_MODELS) == 0);
     pm->id = Model_signature + num;
-    Assert ((pm->id % MAX_POLYGON_MODELS) == num);
+    ASSERT ((pm->id % MAX_POLYGON_MODELS) == num);
 
     extern int Parse_normal_problem_count;
     Parse_normal_problem_count = 0;
@@ -3018,13 +3018,9 @@ int model_load (
 
 #ifdef _DEBUG
     if (Fred_running && Parse_normal_problem_count > 0) {
-        std::stringstream ss;
-
-        ss << "loading model " << filename << " failed ("
-           << Parse_normal_problem_count << " errors)";
-
-        using namespace fs2::dialog;
-        message (dialog_type::error, ss.str ().c_str ());
+        EE ("general")
+            << "loading model " << filename << " failed ("
+            << Parse_normal_problem_count << " errors)";
     }
 #endif
 
@@ -3067,7 +3063,7 @@ int model_load (
                 mprintf (
                     ("Found live debris model for '%s'\n",
                      pm->submodel[i].name));
-                Assert (pm->submodel[i].num_live_debris < MAX_LIVE_DEBRIS);
+                ASSERT (pm->submodel[i].num_live_debris < MAX_LIVE_DEBRIS);
                 pm->submodel[i]
                     .live_debris[pm->submodel[i].num_live_debris++] = j;
                 pm->submodel[j].is_live_debris = 1;
@@ -3274,7 +3270,7 @@ int model_create_instance (bool is_ship, int model_num) {
         }
 
         if (intrinsic_rotate.list.empty ()) {
-            Assertion (
+            ASSERTX (
                 !intrinsic_rotate.list.empty (),
                 "This model has the PM_FLAG_HAS_INTRINSIC_ROTATE flag; why "
                 "doesn't it have an intrinsic-rotating submodel?");
@@ -3288,9 +3284,9 @@ int model_create_instance (bool is_ship, int model_num) {
 }
 
 void model_delete_instance (int model_instance_num) {
-    Assert (model_instance_num >= 0);
-    Assert (model_instance_num < (int)Polygon_model_instances.size ());
-    Assert (Polygon_model_instances[model_instance_num] != NULL);
+    ASSERT (model_instance_num >= 0);
+    ASSERT (model_instance_num < (int)Polygon_model_instances.size ());
+    ASSERT (Polygon_model_instances[model_instance_num] != NULL);
 
     polymodel_instance* pmi = Polygon_model_instances[model_instance_num];
 
@@ -3317,14 +3313,14 @@ void model_maybe_fixup_subsys_path (polymodel* pm, int path_num) {
     float dist;
     int index_1, index_2;
 
-    Assert ((path_num >= 0) && (path_num < pm->n_paths));
+    ASSERT ((path_num >= 0) && (path_num < pm->n_paths));
 
     model_path* mp;
     mp = &pm->paths[path_num];
 
-    Assert (mp != NULL);
+    ASSERT (mp != NULL);
     if (mp->nverts <= 1) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Subsystem Path (%s) Parent (%s) in model (%s) has less than 2 "
             "vertices/points!",
@@ -3349,9 +3345,9 @@ void model_maybe_fixup_subsys_path (polymodel* pm, int path_num) {
 // approach to a subsystem (used for attacking purposes)
 //
 // NOTE: path_num in model_subsystem has the follows the following convention:
-//			> 0	=> index into pm->paths[] for model that subsystem sits on
-//			-1		=> path is not yet determined (may or may not exist)
-//			-2		=> path doesn't yet exist for this subsystem
+// > 0     => index into pm->paths[] for model that subsystem sits on
+// -1              => path is not yet determined (may or may not exist)
+// -2              => path doesn't yet exist for this subsystem
 void model_set_subsys_path_nums (
     polymodel* pm, int n_subsystems, model_subsystem* subsystems) {
     int i, j;
@@ -3397,7 +3393,7 @@ void model_set_bay_path_nums (polymodel* pm) {
 
     // malloc out storage for the path information
     pm->ship_bay = (ship_bay_t*)vm_malloc (sizeof (ship_bay_t));
-    Assert (pm->ship_bay != NULL);
+    ASSERT (pm->ship_bay != NULL);
 
     pm->ship_bay->num_paths = 0;
     // TODO: determine if zeroing out here is affecting any earlier
@@ -3422,7 +3418,7 @@ void model_set_bay_path_nums (polymodel* pm) {
             if (bay_num < 1 || bay_num > MAX_SHIP_BAY_PATHS) {
                 if (bay_num > MAX_SHIP_BAY_PATHS) { too_many_paths = true; }
                 if (bay_num < 1) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Model '%s' bay path '%s' index '%d' has an invalid "
                         "bay number of %d",
@@ -3436,7 +3432,7 @@ void model_set_bay_path_nums (polymodel* pm) {
         }
     }
     if (too_many_paths) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Model '%s' has too many bay paths - max is %d",
             pm->filename, MAX_SHIP_BAY_PATHS);
     }
@@ -3447,7 +3443,7 @@ int model_get_parent_submodel_for_live_debris (
     int model_num, int live_debris_model_num) {
     polymodel* pm = model_get (model_num);
 
-    Assert (pm->submodel[live_debris_model_num].is_live_debris == 1);
+    ASSERT (pm->submodel[live_debris_model_num].is_live_debris == 1);
 
     int mn;
     bsp_info* child;
@@ -3477,7 +3473,7 @@ int model_get_parent_submodel_for_live_debris (
         // get next child
         mn = child->next_sibling;
     }
-    fs2::dialog::error (LOCATION, "Could not find parent submodel for live debris");
+    ASSERTF (LOCATION, "Could not find parent submodel for live debris");
     return -1;
 }
 
@@ -3507,7 +3503,7 @@ float submodel_get_radius (int modelnum, int submodelnum) {
 
 polymodel* model_get (int model_num) {
     if (model_num < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Invalid model number %d requested. Please post the call stack "
             "where an SCP coder can see it.\n",
@@ -3517,19 +3513,19 @@ polymodel* model_get (int model_num) {
 
     int num = model_num % MAX_POLYGON_MODELS;
 
-    Assertion (
+    ASSERTX (
         num >= 0,
         "Model id %d is invalid. Please backtrace and investigate.\n", num);
-    Assertion (
+    ASSERTX (
         num < MAX_POLYGON_MODELS,
         "Model id %d is larger than MAX_POLYGON_MODELS (%d). This is "
         "impossible, thus we have to conclude that math as we know it has "
         "ceased to work.\n",
         num, MAX_POLYGON_MODELS);
-    Assertion (
+    ASSERTX (
         Polygon_models[num],
         "No model with id %d found. Please backtrace and investigate.\n", num);
-    Assertion (
+    ASSERTX (
         Polygon_models[num]->id == model_num,
         "Index collision between model %s and requested model %d. Please "
         "backtrace and investigate.\n",
@@ -3543,8 +3539,8 @@ polymodel* model_get (int model_num) {
 }
 
 polymodel_instance* model_get_instance (int model_instance_num) {
-    Assert (model_instance_num >= 0);
-    Assert (model_instance_num < (int)Polygon_model_instances.size ());
+    ASSERT (model_instance_num >= 0);
+    ASSERT (model_instance_num < (int)Polygon_model_instances.size ());
     if (model_instance_num < 0 ||
         model_instance_num >= (int)Polygon_model_instances.size ()) {
         return NULL;
@@ -3841,7 +3837,7 @@ void model_get_rotating_submodel_axis (
     polymodel* pm = model_get (pmi->model_num);
 
     bsp_info* sm = &pm->submodel[submodel_num];
-    Assert (
+    ASSERT (
         sm->movement_type == MOVEMENT_TYPE_ROT ||
         sm->movement_type == MOVEMENT_TYPE_INTRINSIC_ROTATE);
 
@@ -3852,7 +3848,7 @@ void model_get_rotating_submodel_axis (
         vm_vec_make (model_axis, 0.0f, 1.0f, 0.0f);
     }
     else {
-        Assert (sm->movement_axis == MOVEMENT_AXIS_Z);
+        ASSERT (sm->movement_axis == MOVEMENT_AXIS_Z);
         vm_vec_make (model_axis, 0.0f, 0.0f, 1.0f);
     }
 
@@ -3863,7 +3859,7 @@ void model_get_rotating_submodel_axis (
 // Does stepped rotation of a submodel
 void submodel_stepped_rotate (
     model_subsystem* psub, submodel_instance_info* sii) {
-    Assert (psub->flags[Model::Subsystem_Flags::Stepped_rotate]);
+    ASSERT (psub->flags[Model::Subsystem_Flags::Stepped_rotate]);
 
     if (psub->subobj_num < 0) return;
 
@@ -4018,7 +4014,7 @@ void submodel_look_at (polymodel* pm, int mn) {
         }
 
         if (sm->look_at_num == -2) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Invalid submodel name given in $look_at: property in model "
                 "file <%s>. (%s looking for %s)\n",
@@ -4148,8 +4144,8 @@ void submodel_rotate (bsp_info* sm, submodel_instance_info* sii) {
 
     // Apply rotation in the axis of movement
     // then normalize the angle angle so that we are within a valid range:
-    //  greater than or equal to 0
-    //  less than PI2
+    // greater than or equal to 0
+    // less than PI2
     switch (sm->movement_axis) {
     case MOVEMENT_AXIS_X:
         sii->angs.p += delta;
@@ -4215,7 +4211,7 @@ void submodel_ai_rotate(model_subsystem *psub, submodel_instance_info *sii)
 
     //float delta = psub->turn_rate * flFrametime;
 
-    switch( sm->movement_axis )	{
+    switch( sm->movement_axis ) {
     case MOVEMENT_AXIS_X:
         if (sii->angs.p + delta > psub->ai_rotation.max ){//if it will or has
 gone past it's max then set it to the max/min sii->angs.p =
@@ -4299,7 +4295,7 @@ void model_make_turret_matrix (int model_num, model_subsystem* turret) {
     turret->turret_matrix.vec.rvec = rvec;
     turret->turret_matrix.vec.uvec = uvec;
 
-    //	vm_vector_2_matrix(&turret->turret_matrix,&turret->turret_norm,NULL,NULL);
+    // vm_vector_2_matrix(&turret->turret_matrix,&turret->turret_norm,NULL,NULL);
 
     // HACK!! WARNING!!!
     // I'm doing nothing to verify that this matrix is orthogonal!!
@@ -4316,7 +4312,7 @@ void model_make_turret_matrix (int model_num, model_subsystem* turret) {
 // Tries to move joints so that the turret points to the point dst.
 // turret1 is the angles of the turret, turret2 is the angles of the gun from
 // turret
-//	Returns 1 if rotated gun, 0 if no gun to rotate (rotation handled by AI)
+// Returns 1 if rotated gun, 0 if no gun to rotate (rotation handled by AI)
 int model_rotate_gun (
     int model_num, model_subsystem* turret, matrix* orient,
     angles_t* base_angles, angles_t* gun_angles, vec3d* pos, vec3d* dst,
@@ -4332,9 +4328,9 @@ int model_rotate_gun (
     bool limited_base_rotation = false;
 
     // Check for a valid turret
-    Assert (turret->turret_num_firing_points > 0);
+    ASSERT (turret->turret_num_firing_points > 0);
     // Check for a valid subsystem
-    Assert (ss != NULL);
+    ASSERT (ss != NULL);
 
     // This should not happen
     if (base == gun) { return 0; }
@@ -4343,9 +4339,9 @@ int model_rotate_gun (
     if (!(turret->flags[Model::Subsystem_Flags::Turret_matrix]))
         model_make_turret_matrix (model_num, turret);
 
-    Assert (turret->flags[Model::Subsystem_Flags::Turret_matrix]);
-    //	Assert( gun->movement_axis == MOVEMENT_AXIS_X );				// Gun
-    // must be able to change pitch 	Assert( base->movement_axis ==
+    ASSERT (turret->flags[Model::Subsystem_Flags::Turret_matrix]);
+    // ASSERT (gun->movement_axis == MOVEMENT_AXIS_X );                                // Gun
+    // must be able to change pitch     ASSERT (base->movement_axis ==
     // MOVEMENT_AXIS_Z );
     //// Parent must be able to change heading
 
@@ -4379,7 +4375,7 @@ int model_rotate_gun (
     // by extracting them from the of_dst vector.
     // Call this the desired_angles
     angles_t desired_angles;
-    //	vm_extract_angles_vector(&desired_angles, &of_dst);
+    // vm_extract_angles_vector(&desired_angles, &of_dst);
 
     if (reset == false) {
         desired_angles.p = acosf (of_dst.xyz.z);
@@ -4402,7 +4398,7 @@ int model_rotate_gun (
     if (turret->flags[Model::Subsystem_Flags::Turret_alt_math])
         limited_base_rotation = true;
 
-    //	mprintf(( "Z = %.1f, atan= %.1f\n", of_dst.xyz.z, desired_angles.p ));
+    // mprintf(( "Z = %.1f, atan= %.1f\n", of_dst.xyz.z, desired_angles.p ));
 
     //------------
     // Gradually turn the turret towards the desired angles
@@ -4438,7 +4434,7 @@ int model_rotate_gun (
         }
     }
 
-    //	base_angles->h -=
+    // base_angles->h -=
     // step_size*(key_down_timef(KEY_1)-key_down_timef(KEY_2) );
     // gun_angles->p
     //+= step_size*(key_down_timef(KEY_3)-key_down_timef(KEY_4) );
@@ -4602,7 +4598,7 @@ void model_instance_find_world_point (
 void world_find_model_point (
     vec3d* out, vec3d* world_pt, const polymodel* pm, int submodel_num,
     const matrix* orient, const vec3d* pos) {
-    Assert (
+    ASSERT (
         (pm->submodel[submodel_num].parent == pm->detail[0]) ||
         (pm->submodel[submodel_num].parent == -1));
 
@@ -4642,7 +4638,7 @@ void world_find_model_instance_point (
     int submodel_num, const matrix* orient, const vec3d* pos) {
     polymodel* pm = model_get (pmi->model_num);
 
-    Assert (
+    ASSERT (
         (pm->submodel[submodel_num].parent == pm->detail[0]) ||
         (pm->submodel[submodel_num].parent == -1));
 
@@ -4923,7 +4919,7 @@ int rotating_submodel_has_ship_subsys (int submodel, ship* shipp) {
  */
 void model_get_rotating_submodel_list (
     std::vector< int >* submodel_vector, object* objp) {
-    Assert (
+    ASSERT (
         objp->type == OBJ_SHIP || objp->type == OBJ_WEAPON ||
         objp->type == OBJ_ASTEROID);
 
@@ -5110,12 +5106,12 @@ void model_clear_instance (int model_num) {
 
     interp_clear_instance ();
 
-    //	if ( keyd_pressed[KEY_1] ) pm->lights[0].value = 1.0f/255.0f;
-    //	if ( keyd_pressed[KEY_2] ) pm->lights[1].value = 1.0f/255.0f;
-    //	if ( keyd_pressed[KEY_3] ) pm->lights[2].value = 1.0f/255.0f;
-    //	if ( keyd_pressed[KEY_4] ) pm->lights[3].value = 1.0f/255.0f;
-    //	if ( keyd_pressed[KEY_5] ) pm->lights[4].value = 1.0f/255.0f;
-    //	if ( keyd_pressed[KEY_6] ) pm->lights[5].value = 1.0f/255.0f;
+    // if ( keyd_pressed[KEY_1] ) pm->lights[0].value = 1.0f/255.0f;
+    // if ( keyd_pressed[KEY_2] ) pm->lights[1].value = 1.0f/255.0f;
+    // if ( keyd_pressed[KEY_3] ) pm->lights[2].value = 1.0f/255.0f;
+    // if ( keyd_pressed[KEY_4] ) pm->lights[3].value = 1.0f/255.0f;
+    // if ( keyd_pressed[KEY_5] ) pm->lights[4].value = 1.0f/255.0f;
+    // if ( keyd_pressed[KEY_6] ) pm->lights[5].value = 1.0f/255.0f;
 }
 
 // initialization during ship set
@@ -5186,8 +5182,8 @@ void model_set_instance (
 
     pm = model_get (model_num);
 
-    Assert (sub_model_num >= 0);
-    Assert (sub_model_num < pm->n_models);
+    ASSERT (sub_model_num >= 0);
+    ASSERT (sub_model_num < pm->n_models);
 
     if (sub_model_num < 0) return;
     if (sub_model_num >= pm->n_models) return;
@@ -5236,8 +5232,8 @@ void model_set_instance_techroom (
 
     pm = model_get (model_num);
 
-    Assert (sub_model_num >= 0);
-    Assert (sub_model_num < pm->n_models);
+    ASSERT (sub_model_num >= 0);
+    ASSERT (sub_model_num < pm->n_models);
 
     if (sub_model_num < 0) return;
     if (sub_model_num >= pm->n_models) return;
@@ -5265,7 +5261,7 @@ void model_update_instance (
     pmi = model_get_instance (model_instance_num);
     pm = model_get (pmi->model_num);
 
-    Assertion (
+    ASSERTX (
         sub_model_num >= 0 && sub_model_num < pm->n_models,
         "Sub model number (%d) which should be updated is out of range! Must "
         "be between 0 and %d. This happend on model %s.",
@@ -5312,13 +5308,13 @@ void model_update_instance (
 
 void model_do_intrinsic_rotations_sub (intrinsic_rotation* ir) {
     polymodel_instance* pmi = model_get_instance (ir->model_instance_num);
-    Assert (pmi != nullptr);
+    ASSERT (pmi != nullptr);
 
     // Handle all submodels which have $dumb_rotate
     for (auto submodel_it = ir->list.begin (); submodel_it != ir->list.end ();
          ++submodel_it) {
         polymodel* pm = model_get (pmi->model_num);
-        Assert (pm != nullptr);
+        ASSERT (pm != nullptr);
         bsp_info* sm = &pm->submodel[submodel_it->submodel_num];
 
         // First, calculate the angles for the rotation
@@ -5357,7 +5353,7 @@ void model_do_intrinsic_rotations (int model_instance_num) {
         for (auto intrinsic_it = Intrinsic_rotations.begin ();
              intrinsic_it != Intrinsic_rotations.end (); ++intrinsic_it) {
             if (intrinsic_it->model_instance_num == model_instance_num) {
-                Assertion (
+                ASSERTX (
                     intrinsic_it->is_ship,
                     "This code path is only for ship rotations!  See the "
                     "comments associated with the "
@@ -5418,11 +5414,11 @@ void model_init_submodel_axis_pt (
     vec3d p1, v1, p2, v2, int1;
 
     polymodel* pm = model_get (model_num);
-    Assert (
+    ASSERT (
         pm->submodel[submodel_num].movement_type == MOVEMENT_TYPE_ROT ||
         pm->submodel[submodel_num].movement_type ==
             MOVEMENT_TYPE_INTRINSIC_ROTATE);
-    Assert (sii);
+    ASSERT (sii);
 
     mpoint1 = NULL;
     mpoint2 = NULL;
@@ -5501,8 +5497,8 @@ void model_add_arc (
 
     if (sub_model_num == -1) { sub_model_num = pm->detail[0]; }
 
-    Assert (sub_model_num >= 0);
-    Assert (sub_model_num < pm->n_models);
+    ASSERT (sub_model_num >= 0);
+    ASSERT (sub_model_num < pm->n_models);
 
     if (sub_model_num < 0) return;
     if (sub_model_num >= pm->n_models) return;
@@ -5587,7 +5583,7 @@ char* model_get_dock_name (int modelnum, int index) {
     polymodel* pm;
 
     pm = model_get (modelnum);
-    Assert ((index >= 0) && (index < pm->n_docks));
+    ASSERT ((index >= 0) && (index < pm->n_docks));
     return pm->docking_bays[index].name;
 }
 
@@ -5661,8 +5657,8 @@ int model_create_bsp_collision_tree () {
 }
 
 bsp_collision_tree* model_get_bsp_collision_tree (int tree_index) {
-    Assert (tree_index >= 0);
-    Assert ((uint)tree_index < Bsp_collision_tree_list.size ());
+    ASSERT (tree_index >= 0);
+    ASSERT ((uint)tree_index < Bsp_collision_tree_list.size ());
 
     return &Bsp_collision_tree_list[tree_index];
 }
@@ -5787,7 +5783,7 @@ void parse_glowpoint_table (const char* filename) {
                     gpo.glow_bitmap = bm_load (glow_texture_name);
 
                     if (gpo.glow_bitmap < 0) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Couldn't open texture '%s'\nreferenced by "
                             "glowpoint present '%s'\n",
@@ -5907,7 +5903,7 @@ void parse_glowpoint_table (const char* filename) {
                         vm_vec_normalize (&gpo.cone_direction);
                     }
                     else {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Null vector specified in cone direction for "
                             "glowpoint override %s. Discarding preset.",
@@ -5924,7 +5920,7 @@ void parse_glowpoint_table (const char* filename) {
                             vm_vec_normalize (&gpo.rotation_axis);
                         }
                         else {
-                            fs2::dialog::warning (
+                            WARNINGF (
                                 LOCATION,
                                 "Null vector specified in rotation axis for "
                                 "glowpoint override %s. Discarding preset.",
@@ -5944,7 +5940,7 @@ void parse_glowpoint_table (const char* filename) {
                 }
                 else {
                     if (!replace) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "+nocreate not specified for glowpoint override "
                             "that already exists. Discarding duplicate entry: "

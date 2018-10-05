@@ -111,11 +111,11 @@ static matrix Current_cam_orient; // current camera orientation
 static matrix Target_cam_orient;  // desired camera orientation
 static matrix Start_cam_orient;   // start camera orientation
 static vec3d Start_cam_pos; // position of camera at the start of a translation
-static vec3d Cam_vel;       //	camera velocity
+static vec3d Cam_vel;       // camera velocity
 static vec3d Current_lookat_pos; // lookat point
 static vec3d Target_lookat_pos;  // lookat point
 static vec3d Start_lookat_pos;
-static vec3d Lookat_vel; //	lookat point velocity
+static vec3d Lookat_vel; // lookat point velocity
 
 static float Start_cam_move;  // time at which camera started moving (seconds)
 static float Total_move_time; // time in which camera should move from current
@@ -239,7 +239,7 @@ extern void get_camera_limits (
 int brief_text_wipe_finished ();
 
 // --------------------------------------------------------------------------------------
-//	brief_parse_icon_tbl()
+// brief_parse_icon_tbl()
 //
 //
 void brief_parse_icon_tbl () {
@@ -247,7 +247,7 @@ void brief_parse_icon_tbl () {
     size_t species;
     char name[MAX_FILENAME_LEN];
 
-    Assert (!Species_info.empty ());
+    ASSERT (!Species_info.empty ());
     const size_t max_icons = Species_info.size () * MIN_BRIEF_ICONS;
 
     try {
@@ -259,7 +259,7 @@ void brief_parse_icon_tbl () {
         Briefing_icon_info.clear ();
         while (required_string_either ("#End", "$Name:")) {
             if (Briefing_icon_info.size () >= max_icons) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Too many icons in icons.tbl; only the first %zu"
                     " will be used",
@@ -310,7 +310,7 @@ void brief_parse_icon_tbl () {
                 errormsg += "\n";
             }
 
-            fs2::dialog::error (LOCATION, "%s", errormsg.c_str ());
+            ASSERTF (LOCATION, "%s", errormsg.c_str ());
         }
     }
     catch (const parse::ParseException& e) {
@@ -325,7 +325,7 @@ void brief_set_icon_color (int team) {
 }
 
 // --------------------------------------------------------------------------------------
-//	brief_move_icon_reset()
+// brief_move_icon_reset()
 //
 //
 void brief_move_icon_reset () {
@@ -362,7 +362,7 @@ void mission_brief_common_init () {
                 if (Briefings[i].stages[j].icons == NULL) {
                     Briefings[i].stages[j].icons = (brief_icon*)vm_malloc (
                         sizeof (brief_icon) * MAX_STAGE_ICONS);
-                    Assert (Briefings[i].stages[j].icons != NULL);
+                    ASSERT (Briefings[i].stages[j].icons != NULL);
                     memset (
                         Briefings[i].stages[j].icons, 0,
                         sizeof (brief_icon) * MAX_STAGE_ICONS);
@@ -371,7 +371,7 @@ void mission_brief_common_init () {
                 if (Briefings[i].stages[j].lines == NULL) {
                     Briefings[i].stages[j].lines = (brief_line*)vm_malloc (
                         sizeof (brief_line) * MAX_BRIEF_STAGE_LINES);
-                    Assert (Briefings[i].stages[j].lines != NULL);
+                    ASSERT (Briefings[i].stages[j].lines != NULL);
                     memset (
                         Briefings[i].stages[j].lines, 0,
                         sizeof (brief_line) * MAX_BRIEF_STAGE_LINES);
@@ -473,7 +473,7 @@ void mission_debrief_common_reset () {
 }
 
 // --------------------------------------------------------------------------------------
-//	brief_reset()
+// brief_reset()
 //
 //
 void brief_reset () {
@@ -484,7 +484,7 @@ void brief_reset () {
 }
 
 // --------------------------------------------------------------------------------------
-//	debrief_reset()
+// debrief_reset()
 //
 //
 void debrief_reset () {
@@ -512,7 +512,7 @@ void brief_init_screen (int /*multiplayer_flag*/) {
 }
 
 // --------------------------------------------------------------------------------------
-//	brief_init_colors()
+// brief_init_colors()
 //
 //
 void brief_init_colors () {}
@@ -577,7 +577,7 @@ void brief_preload_icon_anim (brief_icon* bi) {
     // force read of data from disk, so we don't glitch on initial playback
     if (ga->first_frame == -1) {
         ga->first_frame = bm_load_animation (ga->filename, &ga->num_frames);
-        Assert (ga->first_frame >= 0);
+        ASSERT (ga->first_frame >= 0);
     }
 }
 
@@ -591,7 +591,7 @@ void brief_preload_fade_anim (brief_icon* bi) {
     // force read of data from disk, so we don't glitch on initial playback
     if (ha->first_frame == -1) {
         hud_anim_load (ha);
-        Assert (ha->first_frame >= 0);
+        ASSERT (ha->first_frame >= 0);
     }
 
     gr_set_bitmap (ha->first_frame);
@@ -608,7 +608,7 @@ void brief_preload_highlight_anim (brief_icon* bi) {
     // force read of data from disk, so we don't glitch on initial playback
     if (ha->first_frame == -1) {
         hud_anim_load (ha);
-        Assert (ha->first_frame >= 0);
+        ASSERT (ha->first_frame >= 0);
     }
 
     bi->highlight_anim = *ha;
@@ -641,14 +641,14 @@ void brief_preload_anims () {
 }
 
 // --------------------------------------------------------------------------------------
-//	brief_init_map()
+// brief_init_map()
 //
 //
 void brief_init_map () {
     vec3d* pos;
     matrix* orient;
 
-    Assert (Briefing != NULL);
+    ASSERT (Briefing != NULL);
 
     pos = &Briefing->stages[0].camera_pos;
     orient = &Briefing->stages[0].camera_orient;
@@ -748,7 +748,7 @@ void brief_render_icon_line (int stage_num, int line_num) {
     bs = &Briefing->stages[stage_num];
 
     if (bl->start_icon < 0 || bl->start_icon >= bs->num_icons) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Start icon (%d/%d) missing for line %d in briefing stage %d",
             bl->start_icon, bs->num_icons, line_num, stage_num);
@@ -760,7 +760,7 @@ void brief_render_icon_line (int stage_num, int line_num) {
     }
     if (bl->end_icon < 0 ||
         bl->end_icon >= Briefing->stages[stage_num].num_icons) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "End icon (%d/%d) missing for line %d in briefing stage %d",
             bl->end_icon, bs->num_icons, line_num, stage_num);
@@ -805,9 +805,9 @@ void brief_render_icon_line (int stage_num, int line_num) {
 /**
  * Draw a briefing icon
  *
- * @param stage_num	briefing stage number (start at 0)
+ * @param stage_num     briefing stage number (start at 0)
  * @param icon_num icon number in stage
- * @param frametime	time elapsed in seconds
+ * @param frametime     time elapsed in seconds
  * @param selected FRED only (will be 0 or non-zero)
  * @param w_scale_factor scale icon in width by this amount (default 1.0f)
  * @param h_scale_factor scale icon in height by this amount (default 1.0f)
@@ -823,7 +823,7 @@ void brief_render_icon (
     float bxf, byf, dist = 0.0f;
     bool mirror_icon;
 
-    Assert (Briefing != NULL);
+    ASSERT (Briefing != NULL);
 
     bi = &Briefing->stages[stage_num].icons[icon_num];
     mirror_icon = (bi->flags & BI_MIRROR_ICON) ? true : false;
@@ -1022,7 +1022,7 @@ void brief_render_icon (
 void brief_render_icons (int stage_num, float frametime) {
     int i, num_icons, num_lines;
 
-    Assert (Briefing != NULL);
+    ASSERT (Briefing != NULL);
 
     num_icons = Briefing->stages[stage_num].num_icons;
     num_lines = Briefing->stages[stage_num].num_lines;
@@ -1046,7 +1046,7 @@ void brief_start_highlight_anims (int stage_num) {
     brief_icon* bi;
     int x, y, i, anim_w, anim_h;
 
-    Assert (Briefing != NULL);
+    ASSERT (Briefing != NULL);
     bs = &Briefing->stages[stage_num];
 
     for (i = 0; i < bs->num_icons; i++) {
@@ -1084,7 +1084,7 @@ void brief_render_map (int stage_num, float frametime) {
         return;
     }
 
-    Assert (Briefing);
+    ASSERT (Briefing);
 
     g3_start_frame (0);
     g3_set_view_matrix (
@@ -1118,7 +1118,7 @@ void brief_render_map (int stage_num, float frametime) {
 void brief_blit_stage_num (int stage_num, int stage_max) {
     char buf[64];
 
-    Assert (Briefing != NULL);
+    ASSERT (Briefing != NULL);
     gr_set_color_fast (&Color_text_heading);
     sprintf (buf, XSTR ("Stage %d of %d", 394), stage_num + 1, stage_max);
     if (Game_mode & GM_MULTIPLAYER) {
@@ -1145,7 +1145,7 @@ void brief_blit_stage_num (int stage_num, int stage_max) {
  * @param instance index of Colored_stream of the text page to display
  */
 void brief_render_line (int line_num, int x, int y, int instance) {
-    Assert (
+    ASSERT (
         0 <= instance &&
         instance < (int)(sizeof (Colored_stream) / sizeof (*Colored_stream)));
 
@@ -1195,7 +1195,7 @@ void brief_render_line (int line_num, int x, int y, int instance) {
             // sequence is drawn.
             if (current_char.color != last_color) {
                 // add a 0 terminal character to make line a valid C string
-                Assert (char_seq_pos < sizeof (char_seq));
+                ASSERT (char_seq_pos < sizeof (char_seq));
                 char_seq[char_seq_pos] = 0;
                 {
                     // Draw coloured text, and increment cariage position
@@ -1210,14 +1210,14 @@ void brief_render_line (int line_num, int x, int y, int instance) {
                 last_color = current_char.color;
             }
             auto encoded_size = unicode::encoded_size (current_char.letter);
-            Assert (char_seq_pos + encoded_size - 1 < sizeof (char_seq));
+            ASSERT (char_seq_pos + encoded_size - 1 < sizeof (char_seq));
             unicode::encode (current_char.letter, &char_seq[char_seq_pos]);
             char_seq_pos += encoded_size;
         }
 
         // Draw the final chunk of acumulated characters
         // Add a 0 terminal character to make line a valid C string
-        Assert (char_seq_pos < sizeof (char_seq));
+        ASSERT (char_seq_pos < sizeof (char_seq));
         char_seq[char_seq_pos] = 0;
         {
             // Draw coloured text, and increment cariage position
@@ -1236,13 +1236,13 @@ void brief_render_line (int line_num, int x, int y, int instance) {
              current_pos < truncate_len + bright_len; current_pos++) {
             auto encoded_size =
                 unicode::encoded_size (src->at (current_pos).letter);
-            Assert (char_seq_pos + encoded_size - 1 < sizeof (char_seq));
+            ASSERT (char_seq_pos + encoded_size - 1 < sizeof (char_seq));
             unicode::encode (
                 src->at (current_pos).letter, &char_seq[char_seq_pos]);
             char_seq_pos += encoded_size;
         }
 
-        Assert (char_seq_pos < (int)sizeof (char_seq));
+        ASSERT (char_seq_pos < (int)sizeof (char_seq));
         char_seq[char_seq_pos] = 0;
         gr_set_color_fast (&Color_bright_white);
         gr_string (x + offset, y, char_seq, GR_RESIZE_MENU);
@@ -1264,7 +1264,7 @@ int brief_text_wipe_finished () {
  * @param x
  * @param y
  * @param h
- * @param frametime	time in seconds of previous frame
+ * @param frametime     time in seconds of previous frame
  * @param instance optional parameter.  Used to indicate which text stream is
  * used. This value is 0 unless multiple text streams are required
  * @param line_spacing
@@ -1310,7 +1310,7 @@ int brief_render_text (
  *
  */
 void brief_render_elements (vec3d* pos, grid* gridp) {
-    vec3d gpos; //	Location of point on grid.
+    vec3d gpos; // Location of point on grid.
     plane tplane;
     vec3d* gv;
 
@@ -1340,7 +1340,7 @@ void brief_reset_icons (int stage_num) {
     brief_icon* bi;
     int i;
 
-    Assert (Briefing != NULL);
+    ASSERT (Briefing != NULL);
     bs = &Briefing->stages[stage_num];
 
     for (i = 0; i < bs->num_icons; i++) {
@@ -1422,7 +1422,7 @@ bool brief_verify_color_tag (unicode::codepoint_t color_tag) {
         std::string tag_str;
         unicode::encode (color_tag, std::back_inserter (tag_str));
 
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Invalid text color tag '$%s' used in mission: '%s'.\n",
             tag_str.c_str (), Mission_filename);
         return false;
@@ -1430,7 +1430,7 @@ bool brief_verify_color_tag (unicode::codepoint_t color_tag) {
     char char_tag = (char)color_tag;
 
     if (Tagged_Colors.find (char_tag) == Tagged_Colors.end ()) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Invalid text color tag '$%c' used in mission: '%s'.\n",
             char_tag, Mission_filename);
         return false;
@@ -1474,8 +1474,8 @@ bool is_a_word_separator (unicode::codepoint_t character) {
 int brief_text_colorize (
     char* src, int instance, char default_color_stack[],
     int& color_stack_index) {
-    Assert (src);
-    Assert (
+    ASSERT (src);
+    ASSERT (
         (0 <= instance) &&
         (instance <
          (int)(sizeof (Colored_stream) / sizeof (*Colored_stream))));
@@ -1557,7 +1557,7 @@ int brief_text_colorize (
  * Initialise briefing coloured text
  *
  * @param src paragraph of text to process
- * @param w	max width of line in pixels
+ * @param w     max width of line in pixels
  * @param[in] default_color optional, default color for this text (defaults to
  * '\0', which gets converted to the first defined color tag (should be 'w'))
  * @param instance optional parameter, used when multiple text streams are
@@ -1589,9 +1589,9 @@ int brief_color_text_init (
         default_color_stack[0] = default_color;
     }
 
-    Assert (src != NULL);
+    ASSERT (src != NULL);
     n_lines = split_str (src, w, n_chars, p_str, BRIEF_META_CHAR);
-    Assert (n_lines >= 0);
+    ASSERT (n_lines >= 0);
 
     // for compatability reasons truncate text from everything except the
     // fiction viewer
@@ -1610,7 +1610,7 @@ int brief_color_text_init (
         n_chars.push_back (0);
     }
     for (i = 0; i < n_lines; i++) {
-        Assert (n_chars[i] < MAX_BRIEF_LINE_LEN);
+        ASSERT (n_chars[i] < MAX_BRIEF_LINE_LEN);
         strncpy (tmp_brief_line, p_str[i], n_chars[i]);
         tmp_brief_line[n_chars[i]] = 0;
         drop_leading_white_space (tmp_brief_line);
@@ -1652,8 +1652,8 @@ int brief_get_free_move_icon () {
  * Set move list in briefing
  *
  * @param new_stage new stage number that briefing is now moving to
- * @param current_stage	current stage that the briefing is on
- * @param time	time in seconds
+ * @param current_stage current stage that the briefing is on
+ * @param time  time in seconds
  */
 int brief_set_move_list (int new_stage, int current_stage, float time) {
     brief_stage *newb, *cb;
@@ -1661,9 +1661,9 @@ int brief_set_move_list (int new_stage, int current_stage, float time) {
     int i, j, k, num_movers, is_gone = 0;
     vec3d zero_v = ZERO_VECTOR;
 
-    Assert (new_stage != current_stage);
+    ASSERT (new_stage != current_stage);
 
-    Assert (Briefing != NULL);
+    ASSERT (Briefing != NULL);
     newb = &Briefing->stages[new_stage];
     cb = &Briefing->stages[current_stage];
     num_movers = 0;
@@ -1677,7 +1677,7 @@ int brief_set_move_list (int new_stage, int current_stage, float time) {
                 if (vm_vec_cmp (&cb->icons[i].pos, &newb->icons[j].pos)) {
                     k = brief_get_free_move_icon ();
                     if (k == -1) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Too many briefing icons are moving "
                             "simultaneously!");
@@ -1757,14 +1757,14 @@ void brief_clear_fade_out_icons () { Num_fade_icons = 0; }
  * @param pos target position for the camera
  * @param orient target orientation for the camera
  * @param time time in ms to reach target
- * @param stage_num	stage number of briefing (start numbering at 0)
+ * @param stage_num     stage number of briefing (start numbering at 0)
  */
 void brief_set_new_stage (
     vec3d* pos, matrix* orient, int time, int stage_num) {
     const char* msg;
     int num_movers, new_time, not_objv = 1;
 
-    Assert (Briefing != NULL);
+    ASSERT (Briefing != NULL);
     new_time = time;
 
     if (stage_num >= Briefing->num_stages) {
@@ -1993,60 +1993,60 @@ void brief_maybe_create_new_grid (
     }
 }
 
-//	Create a grid
-//	*forward is vector pointing forward
-//	*right is vector pointing right
-//	*center is center point of grid
-//	length is length of grid
-//	width is width of grid
-//	square_size is size of a grid square
-//	For example:
-//		*forward = (0.0, 0.0, 1.0)
-//		*right   = (1.0, 0.0, 0.0)
-//		*center = (0.0, 0.0, 0.0)
-//		nrows = 10
-//		ncols =  50.0
-//		square_size = 10.0
-//	will generate a grid of squares 10 long by 5 wide.
-//	Each grid square will be 10.0 x 10.0 units.
-//	The center of the grid will be at the global origin.
-//	The grid will be parallel to the xz plane (because the normal is 0,1,0).
-//	(In fact, it will be the xz plane because it is centered on the origin.)
+// Create a grid
+// *forward is vector pointing forward
+// *right is vector pointing right
+// *center is center point of grid
+// length is length of grid
+// width is width of grid
+// square_size is size of a grid square
+// For example:
+// *forward = (0.0, 0.0, 1.0)
+// *right   = (1.0, 0.0, 0.0)
+// *center = (0.0, 0.0, 0.0)
+// nrows = 10
+// ncols =  50.0
+// square_size = 10.0
+// will generate a grid of squares 10 long by 5 wide.
+// Each grid square will be 10.0 x 10.0 units.
+// The center of the grid will be at the global origin.
+// The grid will be parallel to the xz plane (because the normal is 0,1,0).
+// (In fact, it will be the xz plane because it is centered on the origin.)
 //
-//	Stuffs grid in *gridp.  If gridp == NULL, mallocs and returns a grid.
+// Stuffs grid in *gridp.  If gridp == NULL, mallocs and returns a grid.
 grid* brief_create_grid (
     grid* gridp, vec3d* forward, vec3d* right, vec3d* center, int nrows,
     int ncols, float square_size) {
     int i, ncols2, nrows2, d = 1;
     vec3d dfvec, drvec, cur, cur2, tvec, uvec, save, save2;
 
-    Assert (square_size > 0.0);
+    ASSERT (square_size > 0.0);
     if (double_fine_gridlines) d = 2;
 
     if (gridp == NULL) gridp = (grid*)vm_malloc (sizeof (grid));
 
-    Assert (gridp);
+    ASSERT (gridp);
 
     gridp->center = *center;
     gridp->square_size = square_size;
 
-    //	Create the plane equation.
-    Assert (!IS_VEC_NULL (forward));
-    Assert (!IS_VEC_NULL (right));
+    // Create the plane equation.
+    ASSERT (!IS_VEC_NULL (forward));
+    ASSERT (!IS_VEC_NULL (right));
 
     vm_vec_copy_normalize (&dfvec, forward);
     vm_vec_copy_normalize (&drvec, right);
 
     vm_vec_cross (&uvec, &dfvec, &drvec);
 
-    Assert (!IS_VEC_NULL (&uvec));
+    ASSERT (!IS_VEC_NULL (&uvec));
 
     gridp->gmatrix.vec.uvec = uvec;
 
     gridp->planeD =
         -(center->xyz.x * uvec.xyz.x + center->xyz.y * uvec.xyz.y +
           center->xyz.z * uvec.xyz.z);
-    Assert (!fl_is_nan (gridp->planeD));
+    ASSERT (!fl_is_nan (gridp->planeD));
 
     gridp->gmatrix.vec.fvec = dfvec;
     gridp->gmatrix.vec.rvec = drvec;
@@ -2065,7 +2065,7 @@ grid* brief_create_grid (
     gridp->nrows = nrows;
     ncols2 = ncols / 2;
     nrows2 = nrows / 2;
-    Assert (ncols < MAX_GRIDLINE_POINTS && nrows < MAX_GRIDLINE_POINTS);
+    ASSERT (ncols < MAX_GRIDLINE_POINTS && nrows < MAX_GRIDLINE_POINTS);
 
     // Create the points along the edges of the grid, so we can just draw lines
     // between them to form the grid.
@@ -2151,11 +2151,11 @@ void brief_render_grid (grid* gridp) {
 
     gr_set_color (30, 30, 30);
 
-    //	Draw the column lines.
+    // Draw the column lines.
     for (i = 0; i <= ncols; i++)
         brief_rpd_line (&gridp->gpoints1[i], &gridp->gpoints2[i]);
 
-    //	Draw the row lines.
+    // Draw the row lines.
     for (i = 0; i <= nrows; i++)
         brief_rpd_line (&gridp->gpoints3[i], &gridp->gpoints4[i]);
 }
@@ -2223,7 +2223,7 @@ void brief_voice_load_all () {
     int i;
     brief_stage* bs;
 
-    Assert (Briefing != NULL);
+    ASSERT (Briefing != NULL);
     for (i = 0; i < Briefing->num_stages; i++) {
         bs = &Briefing->stages[i];
         if (strncasecmp (bs->voice, NOX ("none"), 4) != 0) {
@@ -2286,7 +2286,7 @@ void brief_reset_last_new_stage () { Last_new_stage = -1; }
  * Get the dimensions for a briefing icon
  */
 void brief_common_get_icon_dimensions (int* w, int* h, brief_icon* bi) {
-    Assert (bi != NULL);
+    ASSERT (bi != NULL);
 
     // in case anything goes wrong
     *w = 0;

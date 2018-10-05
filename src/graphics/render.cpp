@@ -302,20 +302,20 @@ void gr_aabitmap_ex (
 
     // Make sure clipping algorithm works
 #ifndef NDEBUG
-    Assert (w > 0);
-    Assert (h > 0);
-    Assert (w == (dx2 - dx1 + 1));
-    Assert (h == (dy2 - dy1 + 1));
-    Assert (sx >= 0);
-    Assert (sy >= 0);
-    Assert (sx + w <= bw);
-    Assert (sy + h <= bh);
-    Assert (dx2 >= dx1);
-    Assert (dy2 >= dy1);
-    Assert ((dx1 >= clip_left) && (dx1 <= clip_right));
-    Assert ((dx2 >= clip_left) && (dx2 <= clip_right));
-    Assert ((dy1 >= clip_top) && (dy1 <= clip_bottom));
-    Assert ((dy2 >= clip_top) && (dy2 <= clip_bottom));
+    ASSERT (w > 0);
+    ASSERT (h > 0);
+    ASSERT (w == (dx2 - dx1 + 1));
+    ASSERT (h == (dy2 - dy1 + 1));
+    ASSERT (sx >= 0);
+    ASSERT (sy >= 0);
+    ASSERT (sx + w <= bw);
+    ASSERT (sy + h <= bh);
+    ASSERT (dx2 >= dx1);
+    ASSERT (dy2 >= dy1);
+    ASSERT ((dx1 >= clip_left) && (dx1 <= clip_right));
+    ASSERT ((dx2 >= clip_left) && (dx2 <= clip_right));
+    ASSERT ((dy1 >= clip_top) && (dy1 <= clip_bottom));
+    ASSERT ((dy2 >= clip_top) && (dy2 <= clip_bottom));
 #endif
 
     // We now have dx1,dy1 and dx2,dy2 and sx, sy all set validly within clip
@@ -418,20 +418,20 @@ void gr_bitmap_ex (
 
     // Make sure clipping algorithm works
 #ifndef NDEBUG
-    Assert (w > 0);
-    Assert (h > 0);
-    Assert (w == (dx2 - dx1 + 1));
-    Assert (h == (dy2 - dy1 + 1));
-    Assert (sx >= 0);
-    Assert (sy >= 0);
-    Assert ((sx + w) <= bw);
-    Assert ((sy + h) <= bh);
-    Assert (dx2 >= dx1);
-    Assert (dy2 >= dy1);
-    Assert ((dx1 >= clip_left) && (dx1 <= clip_right));
-    Assert ((dx2 >= clip_left) && (dx2 <= clip_right));
-    Assert ((dy1 >= clip_top) && (dy1 <= clip_bottom));
-    Assert ((dy2 >= clip_top) && (dy2 <= clip_bottom));
+    ASSERT (w > 0);
+    ASSERT (h > 0);
+    ASSERT (w == (dx2 - dx1 + 1));
+    ASSERT (h == (dy2 - dy1 + 1));
+    ASSERT (sx >= 0);
+    ASSERT (sy >= 0);
+    ASSERT ((sx + w) <= bw);
+    ASSERT ((sy + h) <= bh);
+    ASSERT (dx2 >= dx1);
+    ASSERT (dy2 >= dy1);
+    ASSERT ((dx1 >= clip_left) && (dx1 <= clip_right));
+    ASSERT ((dx2 >= clip_left) && (dx2 <= clip_right));
+    ASSERT ((dy1 >= clip_top) && (dy1 <= clip_bottom));
+    ASSERT ((dy2 >= clip_top) && (dy2 <= clip_bottom));
 #endif
 
     color clr;
@@ -487,7 +487,7 @@ static void gr_string_old (
     bw = i2fl (ibw);
     bh = i2fl (ibh);
 
-    //	if ( (gr_screen.custom_size && resize) ||
+    // if ( (gr_screen.custom_size && resize) ||
     //(gr_screen.rendering_to_texture != -1) ) {
     if (resize_mode != GR_RESIZE_NONE &&
         (gr_screen.custom_size || (gr_screen.rendering_to_texture != -1))) {
@@ -717,7 +717,7 @@ void gr_string (
     using namespace graphics::paths;
     namespace fo = font;
 
-    Assertion (s != NULL, "NULL pointer passed to gr_string!");
+    ASSERTX (s != NULL, "NULL pointer passed to gr_string!");
 
     if (!FontManager::isReady () || (*s == '\0')) { return; }
 
@@ -864,7 +864,7 @@ void gr_string (
         }
     }
     else {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION, "Invalid type enumeration for font \"%s\". Get a coder!",
             currentFont->getName ().c_str ());
     }
@@ -1057,7 +1057,7 @@ void gr_shade (int x, int y, int w, int h, int resize_mode) {
 }
 
 void gr_2d_start_buffer () {
-    Assertion (
+    ASSERTX (
         !buffering_nanovg,
         "Tried to enable 2D buffering but it was already enabled!");
 
@@ -1068,7 +1068,7 @@ void gr_2d_start_buffer () {
 }
 
 void gr_2d_stop_buffer () {
-    Assertion (
+    ASSERTX (
         buffering_nanovg,
         "Tried to stop 2D buffering but it was not enabled!");
 
@@ -1091,7 +1091,7 @@ size_t gr_add_to_immediate_buffer (size_t size, void* data) {
             gr_create_buffer (BufferType::Vertex, BufferUsageHint::Dynamic);
     }
 
-    Assert (size > 0 && data != NULL);
+    ASSERT (size > 0 && data != NULL);
 
     if (immediate_buffer_offset + size > immediate_buffer_size) {
         // incoming data won't fit the immediate buffer. time to reallocate.

@@ -208,7 +208,7 @@ template< typename Value >
 UniformRange< Value > parseUniformRange (
     Value min = std::numeric_limits< Value >::min (),
     Value max = std::numeric_limits< Value >::max ()) {
-    Assertion (min <= max, "Invalid min-max values specified!");
+    ASSERTX (min <= max, "Invalid min-max values specified!");
 
     Value valueList[2];
     auto num = parse_number_list (valueList);

@@ -5,7 +5,6 @@
 
 #include "globalincs/pstypes.h"
 #include "osapi/osregistry.h"
-#include "osapi/dialogs.h"
 #include "globalincs/flagset.h"
 
 #include <functional>

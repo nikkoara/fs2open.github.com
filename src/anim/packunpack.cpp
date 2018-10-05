@@ -38,7 +38,7 @@ anim_instance* init_anim_instance (anim* ptr, int bpp) {
 
     ptr->instance_count++;
     inst = (anim_instance*)vm_malloc (sizeof (anim_instance));
-    Assert (inst);
+    ASSERT (inst);
     memset (inst, 0, sizeof (anim_instance));
     inst->frame_num = -1;
     inst->last_frame_num = -1;
@@ -50,7 +50,7 @@ anim_instance* init_anim_instance (anim* ptr, int bpp) {
 
     inst->frame = (ubyte*)vm_malloc (
         inst->parent->width * inst->parent->height * (bpp >> 3));
-    Assert (inst->frame != NULL);
+    ASSERT (inst->frame != NULL);
     memset (
         inst->frame, 0,
         inst->parent->width * inst->parent->height * (bpp >> 3));
@@ -59,7 +59,7 @@ anim_instance* init_anim_instance (anim* ptr, int bpp) {
 }
 
 void free_anim_instance (anim_instance* inst) {
-    Assert (inst->frame);
+    ASSERT (inst->frame);
     vm_free (inst->frame);
     inst->frame = NULL;
     inst->parent->instance_count--;
@@ -257,7 +257,7 @@ int pack_key_frame (
                     if ((count == 1) && !(last & STD_RLE_CODE)) {
                         *save++ = (ubyte)last;
                         packed_size++;
-                        Assert (last != STD_RLE_CODE);
+                        ASSERT (last != STD_RLE_CODE);
                     }
                     else {
                         count |= STD_RLE_CODE;
@@ -289,7 +289,7 @@ int pack_key_frame (
             if ((count == 1) && !(last & STD_RLE_CODE)) {
                 *save++ = (ubyte)last;
                 packed_size++;
-                Assert (last != STD_RLE_CODE);
+                ASSERT (last != STD_RLE_CODE);
             }
             else {
                 count |= STD_RLE_CODE;
@@ -299,12 +299,12 @@ int pack_key_frame (
             }
         }
 
-        Assert (packed_size == (save - dest_start));
+        ASSERT (packed_size == (save - dest_start));
         return packed_size;
     }
 
     default:
-        Assert (0);
+        ASSERT (0);
         return -1;
         break;
     } // end switch
@@ -416,7 +416,7 @@ int pack_frame (
                     if ((count == 1) && !(last & STD_RLE_CODE)) {
                         *save++ = (ubyte)last;
                         packed_size++;
-                        Assert (last != STD_RLE_CODE);
+                        ASSERT (last != STD_RLE_CODE);
                     }
                     else {
                         count |= STD_RLE_CODE;
@@ -448,7 +448,7 @@ int pack_frame (
             if ((count == 1) && !(last & STD_RLE_CODE)) {
                 *save++ = (ubyte)last;
                 packed_size++;
-                Assert (last != STD_RLE_CODE);
+                ASSERT (last != STD_RLE_CODE);
             }
             else {
                 count |= STD_RLE_CODE;
@@ -458,12 +458,12 @@ int pack_frame (
             }
         }
 
-        Assert (packed_size == (save - dest_start));
+        ASSERT (packed_size == (save - dest_start));
         return packed_size;
     }
 
     default:
-        Assert (0);
+        ASSERT (0);
         return -1;
         break;
     } // end switch
@@ -498,7 +498,7 @@ int unpack_pixel (
     ubyte r, g, b;
     int pixel_size = (bpp / 8);
     anim* a = ai->parent;
-    Assert (a);
+    ASSERT (a);
 
     // if this is an aabitmap, don't run through the palette
     if (aabitmap) {
@@ -583,7 +583,7 @@ int unpack_pixel_count (
     anim* a = ai->parent;
     int pixel_size = (bpp / 8);
     ubyte r, g, b;
-    Assert (a);
+    ASSERT (a);
 
     // if this is an aabitmap, don't run through the palette
     if (aabitmap) {
@@ -745,7 +745,7 @@ ubyte* unpack_frame (
                 if (count > size) count = size;
 
                 size -= count;
-                Assert (size >= 0);
+                ASSERT (size >= 0);
 
                 if (xlate_pal) {
                     stuffed = unpack_pixel_count (
@@ -795,7 +795,7 @@ ubyte* unpack_frame (
                 if (++count > size) { count = size; }
 
                 size -= count;
-                Assert (size >= 0);
+                ASSERT (size >= 0);
 
                 if (value != transparent_code) {
                     if (xlate_pal) {
@@ -846,7 +846,7 @@ ubyte* unpack_frame (
                 if (count > size) count = size;
 
                 size -= count;
-                Assert (size >= 0);
+                ASSERT (size >= 0);
 
                 if (value != transparent_code) {
                     if (xlate_pal) {
@@ -971,7 +971,7 @@ int unpack_frame_from_file (
                 if (count > size) count = size;
 
                 size -= count;
-                Assert (size >= 0);
+                ASSERT (size >= 0);
 
                 if (xlate_pal) {
                     stuffed = unpack_pixel_count (
@@ -1024,7 +1024,7 @@ int unpack_frame_from_file (
                 if (++count > size) { count = size; }
 
                 size -= count;
-                Assert (size >= 0);
+                ASSERT (size >= 0);
 
                 if (value != transparent_code) {
                     if (xlate_pal) {
@@ -1077,7 +1077,7 @@ int unpack_frame_from_file (
                 if (count > size) count = size;
 
                 size -= count;
-                Assert (size >= 0);
+                ASSERT (size >= 0);
 
                 if (value != transparent_code) {
                     if (xlate_pal) {

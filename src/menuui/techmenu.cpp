@@ -275,7 +275,7 @@ void techroom_init_desc (char* src, int w) {
     if (!src) { return; }
 
     Text_size = split_str (src, w, Text_line_size, Text_lines, MAX_TEXT_LINES);
-    Assert (Text_size >= 0 && Text_size < MAX_TEXT_LINES);
+    ASSERT (Text_size >= 0 && Text_size < MAX_TEXT_LINES);
 }
 
 void techroom_unload_animation () {
@@ -308,7 +308,7 @@ void techroom_unload_animation () {
 }
 
 void techroom_select_new_entry () {
-    Assert (Current_list != NULL);
+    ASSERT (Current_list != NULL);
     if (Current_list == NULL || Current_list_size <= 0) {
         Cur_entry_index = Cur_entry = -1;
         techroom_init_desc (NULL, 0);
@@ -316,7 +316,7 @@ void techroom_select_new_entry () {
     }
 
     Cur_entry_index = Current_list[Cur_entry].index;
-    Assert (Cur_entry_index >= 0);
+    ASSERT (Cur_entry_index >= 0);
 
     // if we are in the ships tab, load the ship model
     if (Tab == SHIPS_DATA_TAB) {
@@ -503,7 +503,7 @@ void techroom_ships_render (float frametime) {
     Techroom_ship_rot += PI2 * frametime / rev_rate;
     while (Techroom_ship_rot > PI2) { Techroom_ship_rot -= PI2; }
 
-    //	reorient ship
+    // reorient ship
     if (Trackball_active) {
         int dx, dy;
         matrix mat1, mat2;
@@ -827,7 +827,7 @@ void techroom_change_tab (int num) {
                 Ship_list = new tech_list_entry[Ship_info.size ()];
 
                 if (Ship_list == NULL)
-                    fs2::dialog::error (LOCATION, "Couldn't init ships list!");
+                    ASSERTF (LOCATION, "Couldn't init ships list!");
             }
 
             Ship_list_size = 0;
@@ -892,7 +892,7 @@ void techroom_change_tab (int num) {
                 Weapon_list = new tech_list_entry[Num_weapon_types];
 
                 if (Weapon_list == NULL)
-                    fs2::dialog::error (LOCATION, "Couldn't init ships list!");
+                    ASSERTF (LOCATION, "Couldn't init ships list!");
             }
 
             Weapon_list_size = 0;
@@ -1121,7 +1121,7 @@ void techroom_intel_init () {
 
         Intel_info_size = 0;
         while (optional_string ("$Entry:")) {
-            Assert (Intel_info_size < MAX_INTEL_ENTRIES);
+            ASSERT (Intel_info_size < MAX_INTEL_ENTRIES);
             if (Intel_info_size >= MAX_INTEL_ENTRIES) {
                 mprintf (("TECHMENU: Too many intel entries!\n"));
                 break;
@@ -1188,14 +1188,14 @@ void techroom_init () {
     Tech_background_bitmap = bm_load (Tech_background_filename[gr_screen.res]);
     if (Tech_background_bitmap < 0) {
         // failed to load bitmap, not a good thing
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Error loading techroom background bitmap %s",
             Tech_background_filename[gr_screen.res]);
     }
 
     Tech_background_bitmap_mask = bm_load (Tech_mask_filename[gr_screen.res]);
     if (Tech_background_bitmap_mask < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Error loading techroom background mask %s",
             Tech_mask_filename[gr_screen.res]);
         return;

@@ -102,7 +102,9 @@ static GLenum convertBufferType (BufferType type) {
     case BufferType::Vertex: return GL_ARRAY_BUFFER;
     case BufferType::Index: return GL_ELEMENT_ARRAY_BUFFER;
     case BufferType::Uniform: return GL_UNIFORM_BUFFER;
-    default: UNREACHABLE ("Unhandled enum value!"); return GL_INVALID_ENUM;
+    default:
+        ASSERT (0);
+        return GL_INVALID_ENUM;
     }
 }
 
@@ -111,7 +113,9 @@ static GLenum convertUsageHint (BufferUsageHint usage) {
     case BufferUsageHint::Static: return GL_STATIC_DRAW;
     case BufferUsageHint::Dynamic: return GL_DYNAMIC_DRAW;
     case BufferUsageHint::Streaming: return GL_STREAM_DRAW;
-    default: UNREACHABLE ("Unhandled enum value!"); return GL_INVALID_ENUM;
+    default:
+        ASSERT (0);
+        return GL_INVALID_ENUM;
     }
 }
 
@@ -125,7 +129,9 @@ static GLenum convertStencilOp (const StencilOperation stencil_op) {
     case StencilOperation::Decrement: return GL_DECR;
     case StencilOperation::DecrementWrap: return GL_DECR_WRAP;
     case StencilOperation::Invert: return GL_INVERT;
-    default: UNREACHABLE ("Unhandled enum value encountered!"); return GL_NONE;
+    default:
+        ASSERT (0);
+        return GL_NONE;
     }
 }
 
@@ -141,7 +147,7 @@ static GLenum convertComparisionFunction (ComparisionFunction func) {
     case ComparisionFunction::Never: mode = GL_NEVER; break;
     case ComparisionFunction::NotEqual: mode = GL_NOTEQUAL; break;
     default:
-        UNREACHABLE ("Unhandled comparision function value!");
+        ASSERT (0);
         mode = GL_ALWAYS;
         break;
     }
@@ -167,8 +173,8 @@ int opengl_create_buffer_object (GLenum type, GLenum usage) {
 void opengl_bind_buffer_object (int handle) {
     GR_DEBUG_SCOPE ("Bind buffer handle");
 
-    Assert (handle >= 0);
-    Assert ((size_t)handle < GL_buffer_objects.size ());
+    ASSERT (handle >= 0);
+    ASSERT ((size_t)handle < GL_buffer_objects.size ());
 
     opengl_buffer_object& buffer_obj = GL_buffer_objects[handle];
 
@@ -192,12 +198,12 @@ void opengl_bind_buffer_object (int handle) {
     }
 }
 GLuint opengl_buffer_get_id (GLenum expected_type, int handle) {
-    Assert (handle >= 0);
-    Assert ((size_t)handle < GL_buffer_objects.size ());
+    ASSERT (handle >= 0);
+    ASSERT ((size_t)handle < GL_buffer_objects.size ());
 
     opengl_buffer_object& buffer_obj = GL_buffer_objects[handle];
 
-    Assertion (
+    ASSERTX (
         expected_type == buffer_obj.type,
         "Expected buffer type did not match the actual buffer type!");
 
@@ -207,12 +213,12 @@ GLuint opengl_buffer_get_id (GLenum expected_type, int handle) {
 void gr_opengl_update_buffer_data (int handle, size_t size, void* data) {
     // This has to be verified by the caller or else we will run into OPenGL
     // errors
-    Assertion (size > 0, "Buffer updates must include some data!");
+    ASSERTX (size > 0, "Buffer updates must include some data!");
 
     GR_DEBUG_SCOPE ("Update buffer data");
 
-    Assert (handle >= 0);
-    Assert ((size_t)handle < GL_buffer_objects.size ());
+    ASSERT (handle >= 0);
+    ASSERT ((size_t)handle < GL_buffer_objects.size ());
 
     opengl_buffer_object& buffer_obj = GL_buffer_objects[handle];
 
@@ -249,8 +255,8 @@ void gr_opengl_update_buffer_data_offset (
     int handle, size_t offset, size_t size, void* data) {
     GR_DEBUG_SCOPE ("Update buffer data with offset");
 
-    Assert (handle >= 0);
-    Assert ((size_t)handle < GL_buffer_objects.size ());
+    ASSERT (handle >= 0);
+    ASSERT ((size_t)handle < GL_buffer_objects.size ());
 
     opengl_buffer_object& buffer_obj = GL_buffer_objects[handle];
 
@@ -264,8 +270,8 @@ void gr_opengl_delete_buffer (int handle) {
 
     GR_DEBUG_SCOPE ("Deleting buffer");
 
-    Assert (handle >= 0);
-    Assert ((size_t)handle < GL_buffer_objects.size ());
+    ASSERT (handle >= 0);
+    ASSERT ((size_t)handle < GL_buffer_objects.size ());
 
     opengl_buffer_object& buffer_obj = GL_buffer_objects[handle];
 
@@ -302,12 +308,12 @@ void gr_opengl_bind_uniform_buffer (
     GLuint buffer_handle = 0;
 
     if (buffer != -1) {
-        Assert (buffer >= 0);
-        Assert ((size_t)buffer < GL_buffer_objects.size ());
+        ASSERT (buffer >= 0);
+        ASSERT ((size_t)buffer < GL_buffer_objects.size ());
 
         opengl_buffer_object& buffer_obj = GL_buffer_objects[buffer];
 
-        Assertion (
+        ASSERTX (
             buffer_obj.type == GL_UNIFORM_BUFFER,
             "Only uniform buffers are valid for this function!");
         buffer_handle = buffer_obj.buffer_id;
@@ -396,8 +402,8 @@ void opengl_tnl_init () {
         glTexParameteri (
             GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-        // 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-        // GL_LINEAR); 		glTexParameteri(GL_TEXTURE_2D,
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+        // GL_LINEAR);          glTexParameteri(GL_TEXTURE_2D,
         // GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -438,8 +444,8 @@ void opengl_tnl_init () {
             GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri (
             GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-        // 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-        // GL_LINEAR); 		glTexParameteri(GL_TEXTURE_2D,
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+        // GL_LINEAR);          glTexParameteri(GL_TEXTURE_2D,
         // GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -498,11 +504,11 @@ void opengl_render_model_program (
                               ? GL_UNSIGNED_INT
                               : GL_UNSIGNED_SHORT;
 
-    Assert (vert_source);
-    Assertion (
+    ASSERT (vert_source);
+    ASSERTX (
         vert_source->Vbuffer_handle >= 0,
         "The vertex data must be located in a GPU buffer!");
-    Assertion (
+    ASSERTX (
         vert_source->Ibuffer_handle >= 0,
         "The index values must be located in a GPU buffer!");
 
@@ -548,7 +554,7 @@ void opengl_render_model_program (
 void gr_opengl_render_model (
     model_material* material_info, indexed_vertex_source* vert_source,
     vertex_buffer* bufferp, size_t texi) {
-    Verify (bufferp != NULL);
+    ASSERT (bufferp != NULL);
 
     GL_CHECK_FOR_ERRORS ("start of render_buffer()");
 
@@ -655,12 +661,12 @@ void opengl_tnl_set_material (
     int base_map = material_info->get_texture_map (TM_BASE_TYPE);
     vec4 clr = material_info->get_color ();
 
-    Assert (shader_handle >= 0);
+    ASSERT (shader_handle >= 0);
 
     opengl_shader_set_current (shader_handle);
 
     if (material_info->has_buffer_blend_modes ()) {
-        Assertion (
+        ASSERTX (
             GLAD_GL_ARB_draw_buffers_blend != 0,
             "Buffer blend modes are not supported at the moment! Query the "
             "capability before using this feature.");
@@ -693,7 +699,7 @@ void opengl_tnl_set_material (
         auto& clip_params = material_info->get_clip_plane ();
         if (!clip_params.enabled) { GL_state.ClipDistance (0, false); }
         else {
-            Assertion (
+            ASSERTX (
                 Current_shader != NULL &&
                     (Current_shader->shader == SDR_TYPE_MODEL ||
                      Current_shader->shader == SDR_TYPE_PASSTHROUGH_RENDER ||
@@ -761,7 +767,7 @@ void opengl_tnl_set_model_material (model_material* material_info) {
 
     gr_set_center_alpha (material_info->get_center_alpha ());
 
-    Assert (Current_shader->shader == SDR_TYPE_MODEL);
+    ASSERT (Current_shader->shader == SDR_TYPE_MODEL);
 
     GL_state.Texture.SetShaderMode (GL_TRUE);
 
@@ -819,7 +825,7 @@ void opengl_tnl_set_model_material (model_material* material_info) {
             gr_opengl_tcache_set (
                 ENVMAP, TCACHE_TYPE_CUBEMAP, &u_scale, &v_scale, &array_index,
                 render_pass);
-            Assertion (
+            ASSERTX (
                 array_index == 0, "Cube map arrays are not supported yet!");
 
             ++render_pass;
@@ -943,12 +949,12 @@ void opengl_tnl_set_material_particle (particle_material* material_info) {
     }
 
     if (!Cmdline_no_deferred_lighting) {
-        Assert (Scene_position_texture != 0);
+        ASSERT (Scene_position_texture != 0);
 
         GL_state.Texture.Enable (1, GL_TEXTURE_2D, Scene_position_texture);
     }
     else {
-        Assert (Scene_depth_texture != 0);
+        ASSERT (Scene_depth_texture != 0);
 
         GL_state.Texture.Enable (1, GL_TEXTURE_2D, Scene_depth_texture);
     }
@@ -1007,7 +1013,7 @@ void opengl_tnl_set_material_distortion (distortion_material* material_info) {
         Current_shader->program->Uniforms.setUniformf ("use_offset", 0.0f);
     }
 
-    Assert (Scene_depth_texture != 0);
+    ASSERT (Scene_depth_texture != 0);
 
     GL_state.Texture.Enable (1, GL_TEXTURE_2D, Scene_depth_texture);
 }
@@ -1100,7 +1106,7 @@ void opengl_bind_vertex_component (
     opengl_vert_attrib& attrib_info =
         GL_vertex_attrib_info[bind_info.attribute_id];
 
-    Assert (bind_info.attribute_id == attrib_info.attribute_id);
+    ASSERT (bind_info.attribute_id == attrib_info.attribute_id);
 
     GLubyte* data_src =
         reinterpret_cast< GLubyte* > (base_offset) + vert_component.offset;

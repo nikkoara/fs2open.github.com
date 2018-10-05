@@ -3,6 +3,9 @@
 #ifndef FREESPACE2_LOG_LOG_H
 #define FREESPACE2_LOG_LOG_H
 
+#include "defs.hpp"
+#include "util/fmt.hpp"
+
 #include <string>
 
 #include <boost/log/trivial.hpp>
@@ -32,5 +35,16 @@ BOOST_LOG_GLOBAL_LOGGER(fs2_logger, fs2_logger_type)
 #define FS2_ERROR ERROR
 #define FS2_WARN  WARN
 #define FS2_INFO  INFO
+
+#ifndef NDEBUG
+#  define WARNINGF WW ("general") << fs2_fmt
+#else
+#  define WARNINGF(...) ((void)0)
+#endif // NDEBUG
+
+#define WWF WARNINGF
+#define FS2_WARNINGF WARNINGF
+
+#define RELEASE_WARNINGF WARNINGF
 
 #endif // FREESPACE2_LOG_LOG_H

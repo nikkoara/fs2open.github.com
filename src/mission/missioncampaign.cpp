@@ -84,8 +84,8 @@ int mission_campaign_get_info (
     int i, success = 0;
     char campaign_type[NAME_LENGTH], fname[MAX_FILENAME_LEN];
 
-    Assert (name != NULL);
-    Assert (type != NULL);
+    ASSERT (name != NULL);
+    ASSERT (type != NULL);
 
     strncpy (fname, filename, MAX_FILENAME_LEN - 1);
     auto fname_len = strlen (fname);
@@ -94,7 +94,7 @@ int mission_campaign_get_info (
         strcat_s (fname, FS_CAMPAIGN_FILE_EXT);
         fname_len += 4;
     }
-    Assert (fname_len < MAX_FILENAME_LEN);
+    ASSERT (fname_len < MAX_FILENAME_LEN);
 
     *type = -1;
     do {
@@ -119,7 +119,7 @@ int mission_campaign_get_info (
             }
 
             if (name == NULL) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION, "Invalid campaign type \"%s\"\n", campaign_type);
                 break;
             }
@@ -151,7 +151,7 @@ int mission_campaign_get_info (
         }
     } while (0);
 
-    Assert (success);
+    ASSERT (success);
     return success;
 }
 
@@ -178,7 +178,7 @@ int mission_campaign_get_mission_list (
             if (num < max)
                 list[num++] = vm_strdup (name);
             else
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION, "Maximum number of missions exceeded (%d)!",
                     max);
         }
@@ -284,7 +284,7 @@ void mission_campaign_build_list (bool desc, bool sort, bool multiplayer) {
     rc = cf_get_file_list (
         MAX_CAMPAIGNS, Campaign_file_names, CF_TYPE_MISSIONS, wild_card,
         CF_SORT_NONE);
-    Assert (rc == Num_campaigns);
+    ASSERT (rc == Num_campaigns);
 
     // now sort everything, if we are supposed to
     if (sort) {
@@ -434,7 +434,7 @@ int mission_campaign_load (
 
         // copy filename to campaign structure minus the extension
         auto len = strlen (filename) - 4;
-        Assert (len < MAX_FILENAME_LEN);
+        ASSERT (len < MAX_FILENAME_LEN);
         strncpy (Campaign.filename, filename, len);
         Campaign.filename[len] = '\0';
 
@@ -455,7 +455,7 @@ int mission_campaign_load (
         }
 
         if (i == MAX_CAMPAIGN_TYPES)
-            fs2::dialog::error (LOCATION, "Unknown campaign type %s!", type);
+            ASSERTF (LOCATION, "Unknown campaign type %s!", type);
 
         Campaign.desc = NULL;
         if (optional_string ("+Description:"))
@@ -526,7 +526,7 @@ int mission_campaign_load (
             if (optional_string ("+Formula:")) {
                 cm->formula = get_sexp_main ();
                 if (!Fred_running) {
-                    Assert (cm->formula != -1);
+                    ASSERT (cm->formula != -1);
                     sexp_mark_persistent (cm->formula);
                 }
                 else {
@@ -570,7 +570,7 @@ int mission_campaign_load (
             if (optional_string ("+Formula:")) {
                 cm->mission_loop_formula = get_sexp_main ();
                 if (!Fred_running) {
-                    Assert (cm->mission_loop_formula != -1);
+                    ASSERT (cm->mission_loop_formula != -1);
                     sexp_mark_persistent (cm->mission_loop_formula);
                 }
                 else {
@@ -708,7 +708,7 @@ int mission_campaign_load_by_name (char* filename) {
         }
     }
     else {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Tried to load campaign file with illegal length/extension!");
     }
@@ -776,21 +776,21 @@ void mission_campaign_init () {
 void mission_campaign_savefile_generate_root (char* filename, player* pl) {
     char base[_MAX_FNAME];
 
-    Assert (strlen (Campaign.filename) != 0); //-V805
+    ASSERT (strlen (Campaign.filename) != 0); //-V805
 
     if (pl == NULL) {
-        Assert ((Player_num >= 0) && (Player_num < MAX_PLAYERS));
+        ASSERT ((Player_num >= 0) && (Player_num < MAX_PLAYERS));
         pl = &Players[Player_num];
     }
 
-    Assert (pl != NULL);
+    ASSERT (pl != NULL);
 
     // build up the filename for the save file.  There could be a problem with
     // filename length, but this problem can get fixed in several ways --
     // ignore the problem for now though.
     _splitpath (Campaign.filename, NULL, NULL, base, NULL);
 
-    Assert ((strlen (base) + strlen (pl->callsign) + 1) < _MAX_FNAME);
+    ASSERT ((strlen (base) + strlen (pl->callsign) + 1) < _MAX_FNAME);
 
     sprintf (filename, NOX ("%s.%s."), pl->callsign, base);
 }
@@ -1030,7 +1030,7 @@ void mission_campaign_store_goals_and_events () {
     mission_obj->num_goals = Num_goals;
     if (mission_obj->num_goals > 0) {
         mission_obj->goals = (mgoal*)vm_malloc (sizeof (mgoal) * Num_goals);
-        Assert (mission_obj->goals != NULL);
+        ASSERT (mission_obj->goals != NULL);
     }
 
     // copy the needed info from the Mission_goal struct to our internal
@@ -1044,7 +1044,7 @@ void mission_campaign_store_goals_and_events () {
         }
         else
             strcpy_s (mission_obj->goals[i].name, Mission_goals[i].name);
-        Assert (
+        ASSERT (
             Mission_goals[i].satisfied !=
             GOAL_INCOMPLETE); // should be true or false at this point!!!
         mission_obj->goals[i].status = (char)Mission_goals[i].satisfied;
@@ -1061,7 +1061,7 @@ void mission_campaign_store_goals_and_events () {
     if (mission_obj->num_events > 0) {
         mission_obj->events =
             (mevent*)vm_malloc (sizeof (mevent) * Num_mission_events);
-        Assert (mission_obj->events != NULL);
+        ASSERT (mission_obj->events != NULL);
     }
 
     // copy the needed info from the Mission_goal struct to our internal
@@ -1197,7 +1197,7 @@ void mission_campaign_mission_over (bool do_next_mission) {
     if (!(Game_mode & GM_CAMPAIGN_MODE)) { return; }
 
     mission_num = Campaign.current_mission;
-    Assert (mission_num != -1);
+    ASSERT (mission_num != -1);
     mission_obj = &Campaign.missions[mission_num];
 
     // determine if any ships/weapons were granted this mission
@@ -1375,9 +1375,9 @@ void mission_campaign_clear () {
 /**
  * Extract the mission filenames for a campaign.
  *
- * @param filename	Name of campaign file
- * @param dest		Storage for the mission filename, must be already allocated
- * @param num		Output parameter for the number of mission filenames in the
+ * @param filename      Name of campaign file
+ * @param dest          Storage for the mission filename, must be already allocated
+ * @param num           Output parameter for the number of mission filenames in the
  * campaign
  *
  * note that dest should allocate at least
@@ -1387,7 +1387,7 @@ int mission_campaign_get_filenames (
     char* filename, char dest[][NAME_LENGTH], int* num) {
     // read the mission file and get the list of mission filenames
     try {
-        Assert (strlen (filename) < MAX_FILENAME_LEN); // make sure no overflow
+        ASSERT (strlen (filename) < MAX_FILENAME_LEN); // make sure no overflow
         read_file_text (filename);
         reset_parse ();
 
@@ -1467,7 +1467,7 @@ void read_mission_goal_list (int num) {
 
                 event_count++;
                 if (event_count > MAX_MISSION_EVENTS) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION, "Maximum number of events exceeded (%d)!",
                         MAX_MISSION_EVENTS);
                     event_count = MAX_MISSION_EVENTS;
@@ -1493,7 +1493,7 @@ void read_mission_goal_list (int num) {
 
                 count++;
                 if (count > MAX_GOALS) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION, "Maximum number of goals exceeded (%d)!",
                         MAX_GOALS);
                     count = MAX_GOALS;
@@ -1506,7 +1506,7 @@ void read_mission_goal_list (int num) {
         if (count) {
             Campaign.missions[num].goals =
                 (mgoal*)vm_malloc (count * sizeof (mgoal));
-            Assert (
+            ASSERT (
                 Campaign.missions[num].goals); // make sure we got the memory
             memset (Campaign.missions[num].goals, 0, count * sizeof (mgoal));
 
@@ -1519,7 +1519,7 @@ void read_mission_goal_list (int num) {
         if (event_count) {
             Campaign.missions[num].events =
                 (mevent*)vm_malloc (event_count * sizeof (mevent));
-            Assert (Campaign.missions[num].events);
+            ASSERT (Campaign.missions[num].events);
             memset (
                 Campaign.missions[num].events, 0,
                 event_count * sizeof (mevent));
@@ -1575,12 +1575,12 @@ void mission_campaign_maybe_play_movie (int type) {
     char* filename;
 
     // only support pre mission movies for now.
-    Assert (type == CAMPAIGN_MOVIE_PRE_MISSION);
+    ASSERT (type == CAMPAIGN_MOVIE_PRE_MISSION);
 
     if (!(Game_mode & GM_CAMPAIGN_MODE)) return;
 
     mission_idx = Campaign.current_mission;
-    Assert (mission_idx != -1);
+    ASSERT (mission_idx != -1);
 
     // get a possible filename for a movie to play.
     filename = NULL;
@@ -1622,7 +1622,7 @@ int mission_campaign_parse_is_multi (char* filename, char* name) {
             if (!strcasecmp (temp, campaign_types[i])) { return i; }
         }
 
-        fs2::dialog::error (LOCATION, "Unknown campaign type %s", temp);
+        ASSERTF (LOCATION, "Unknown campaign type %s", temp);
         return -1;
     }
     catch (const parse::ParseException& e) {
@@ -1642,12 +1642,12 @@ void mission_campaign_save_persistent (int type, int sindex) {
     // based on the type of information, save it off for possible saving into
     // the campsign savefile when the mission is over
     if (type == CAMPAIGN_PERSISTENT_SHIP) {
-        Assert (Num_granted_ships < MAX_SHIP_CLASSES);
+        ASSERT (Num_granted_ships < MAX_SHIP_CLASSES);
         Granted_ships[Num_granted_ships] = sindex;
         Num_granted_ships++;
     }
     else if (type == CAMPAIGN_PERSISTENT_WEAPON) {
-        Assert (Num_granted_weapons < MAX_WEAPON_TYPES);
+        ASSERT (Num_granted_weapons < MAX_WEAPON_TYPES);
         Granted_weapons[Num_granted_weapons] = sindex;
         Num_granted_weapons++;
     }
@@ -1676,9 +1676,9 @@ int mission_load_up_campaign (player* pl) {
     if (pl == NULL) pl = Player;
 
     // find best campaign to use:
-    //   1) last used
-    //   2) builtin
-    //   3) anything else
+    // 1) last used
+    // 2) builtin
+    // 3) anything else
 
     // last used...
     if (strlen (pl->current_campaign)) {

@@ -18,8 +18,8 @@ struct matrix;
 
 // Make sparks fly off of ship n
 // sn = spark number to spark, corrosponding to element in
-//      ship->hitpos array.  If this isn't -1, it is a just
-//      got hit by weapon spark, otherwise pick one randomally.
+// ship->hitpos array.  If this isn't -1, it is a just
+// got hit by weapon spark, otherwise pick one randomally.
 void shipfx_emit_spark (int n, int sn);
 
 // Does the special effects to blow a subsystem off a ship
@@ -33,7 +33,7 @@ extern void shipfx_blow_up_model (
     object* obj, int model, int submodel, int ndebris, vec3d* exp_center);
 
 // =================================================
-//          SHIP WARP IN EFFECT STUFF
+// SHIP WARP IN EFFECT STUFF
 // =================================================
 
 // When a ship warps in, this gets called to start the effect
@@ -49,7 +49,7 @@ extern void shipfx_warpout_start (object* objp);
 extern void shipfx_warpout_frame (object* objp, float frametime);
 
 // =================================================
-//          SHIP SHADOW EFFECT STUFF
+// SHIP SHADOW EFFECT STUFF
 // =================================================
 
 // Given point p0, in object's frame of reference, find if
@@ -64,7 +64,7 @@ bool shipfx_in_shadow (object* src_obj);
 bool shipfx_eye_in_shadow (vec3d* eye_pos, object* src_obj, int sun_n);
 
 // =================================================
-//          SHIP GUN FLASH EFFECT STUFF
+// SHIP GUN FLASH EFFECT STUFF
 // =================================================
 
 // Resets the ship flash stuff. Call before
@@ -89,7 +89,7 @@ void shipfx_flash_light_model (object* objp, int model_num);
 void shipfx_flash_do_frame (float frametime);
 
 // =================================================
-//          LARGE SHIP EXPLOSION EFFECT STUFF
+// LARGE SHIP EXPLOSION EFFECT STUFF
 // =================================================
 
 // Call between levels
@@ -113,12 +113,12 @@ void do_sub_expl_sound (
 void shipfx_do_shockwave_stuff (ship* shipp, shockwave_create_info* sci);
 
 // =================================================
-//          ELECTRICAL SPARKS ON DAMAGED SHIPS EFFECT STUFF
+// ELECTRICAL SPARKS ON DAMAGED SHIPS EFFECT STUFF
 // =================================================
 void shipfx_do_damaged_arcs_frame (ship* shipp);
 
 // =================================================
-//				NEBULA LIGHTNING.
+// NEBULA LIGHTNING.
 // =================================================
 void shipfx_do_lightning_frame (ship* shipp);
 

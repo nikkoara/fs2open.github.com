@@ -115,7 +115,7 @@ void Cursor::setCurrentFrame () {
         auto frameIndex = static_cast< size_t > (
             bm_get_anim_frame (mBitmapHandle, diffSeconds, 0.0f, true));
 
-        Assert (frameIndex < mAnimationFrames.size ());
+        ASSERT (frameIndex < mAnimationFrames.size ());
 
         if (mLastFrame != frameIndex) {
             SDL_SetCursor (mAnimationFrames[frameIndex]);
@@ -151,11 +151,11 @@ Cursor* CursorManager::loadCursor (const char* fileName, bool animated) {
 }
 
 Cursor* CursorManager::loadFromBitmap (int bitmapHandle) {
-    Assertion (
+    ASSERTX (
         gr_screen.mode != GR_STUB,
         "Cursors can not be used with the stub renderer!");
 
-    Assertion (
+    ASSERTX (
         bm_is_valid (bitmapHandle), "%d is no valid bitmap handle!",
         bitmapHandle);
 
@@ -181,7 +181,7 @@ Cursor* CursorManager::loadFromBitmap (int bitmapHandle) {
 }
 
 void CursorManager::setCurrentCursor (Cursor* cursor) {
-    Assertion (cursor, "Invalid cursor pointer passed!");
+    ASSERTX (cursor, "Invalid cursor pointer passed!");
 
     mCurrentCursor = cursor;
     mCurrentCursor->enable ();
@@ -205,7 +205,7 @@ void CursorManager::pushStatus () {
 }
 
 std::pair< bool, bool > CursorManager::popStatus () {
-    Assertion (mStatusStack.size () > 1, "Can't pop the last status!");
+    ASSERTX (mStatusStack.size () > 1, "Can't pop the last status!");
 
     auto current = mStatusStack.back ();
 

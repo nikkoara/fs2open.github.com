@@ -132,7 +132,7 @@ int pcx_read_bitmap (
     buffer_size = 1024;
     buffer_pos = 0;
 
-    //	Assert( buffer_size == 1024 );	// AL: removed to avoid optimized
+    // ASSERT (buffer_size == 1024 );  // AL: removed to avoid optimized
     // warning 'unreachable code'
 
     buffer_size = cfread (buffer, 1, buffer_size, PCXfile);
@@ -146,7 +146,7 @@ int pcx_read_bitmap (
                 data = buffer[buffer_pos++];
                 if (buffer_pos == buffer_size) {
                     buffer_size = cfread (buffer, 1, buffer_size, PCXfile);
-                    Assert (buffer_size > 0);
+                    ASSERT (buffer_size > 0);
                     buffer_pos = 0;
                 }
                 if ((data & 0xC0) == 0xC0) {
@@ -154,7 +154,7 @@ int pcx_read_bitmap (
                     data = buffer[buffer_pos++];
                     if (buffer_pos == buffer_size) {
                         buffer_size = cfread (buffer, 1, buffer_size, PCXfile);
-                        Assert (buffer_size > 0);
+                        ASSERT (buffer_size > 0);
                         buffer_pos = 0;
                     }
                 }
@@ -370,13 +370,13 @@ int pcx_write_bitmap (
     }
 
     // Write the extended palette
-    //	for (i=0; i<768; i++ )
-    //		palette[i] <<= 2;
+    // for (i=0; i<768; i++ )
+    // palette[i] <<= 2;
 
     auto retval = fwrite (palette, 768, 1, PCXfile);
 
-    //	for (i=0; i<768; i++ )
-    //		palette[i] >>= 2;
+    // for (i=0; i<768; i++ )
+    // palette[i] >>= 2;
 
     if (retval != 1) {
         fclose (PCXfile);

@@ -46,13 +46,13 @@ ushort chksum_add_short (ushort seed, char* buffer, int size) {
 
 // scramble text data
 //
-// input:	text		=>	ascii data to be scrambled
-//				text_len	=>	number of bytes of ascii data to scramble
-//				scrambled_text	=>	storage for scrambled text (malloc at least
-// text_len) 				scrambled_len	=>	size of text after getting
+// input:       text            =>      ascii data to be scrambled
+// text_len        =>      number of bytes of ascii data to scramble
+// scrambled_text  =>      storage for scrambled text (malloc at least
+// text_len)                            scrambled_len   =>      size of text after getting
 // scrambled use_8bit
 //=> flag to indicate that chars are stored using 8 bits (default value is 0)
-//				new_encrypt => flag to switch between old and new encryption
+// new_encrypt => flag to switch between old and new encryption
 // styles (default = yes)
 void encrypt (
     char* text, int text_len, char* scrambled_text, int* scrambled_len,
@@ -166,10 +166,10 @@ void encrypt (
     for (i = 0; i < len; i++) { scrambled_text[i] ^= i; }
 }
 
-//	input:	scrambled_text	=>	scrambled text
-//				scrambled_len	=>	number of bytes of scrambled text
-//				text				=>	storage for unscrambled ascii data
-//				text_len			=>	actual number of bytes of unscrambled
+// input:  scrambled_text  =>      scrambled text
+// scrambled_len   =>      number of bytes of scrambled text
+// text                            =>      storage for unscrambled ascii data
+// text_len                        =>      actual number of bytes of unscrambled
 // data
 void unencrypt (
     char* scrambled_text, int scrambled_len, char* text, int* text_len) {
@@ -293,10 +293,10 @@ ushort Lvl1_keys[NUM_LVL1_KEYS] = { 0xa820, 0x71f0, 0x88da, 0x1fff,
 
 // scramble text data
 //
-// input:	text		=>	ascii data to be scrambled
-//				text_len	=>	number of bytes of ascii data to scramble
-//				scrambled_text	=>	storage for scrambled text (malloc at least
-// text_len) 				scrambled_len	=>	size of text after getting
+// input:       text            =>      ascii data to be scrambled
+// text_len        =>      number of bytes of ascii data to scramble
+// scrambled_text  =>      storage for scrambled text (malloc at least
+// text_len)                            scrambled_len   =>      size of text after getting
 // scrambled
 void encrypt_new (
     char* text, int text_len, char* scrambled_text, int* scrambled_len) {
@@ -343,10 +343,10 @@ void encrypt_new (
     *scrambled_len += 4;
 }
 
-//	input:	scrambled_text	=>	scrambled text
-//				scrambled_len	=>	number of bytes of scrambled text
-//				text				=>	storage for unscrambled ascii data
-//				text_len			=>	actual number of bytes of unscrambled
+// input:  scrambled_text  =>      scrambled text
+// scrambled_len   =>      number of bytes of scrambled text
+// text                            =>      storage for unscrambled ascii data
+// text_len                        =>      actual number of bytes of unscrambled
 // data
 void unencrypt_new (
     char* scrambled_text, int scrambled_len, char* text, int* text_len) {

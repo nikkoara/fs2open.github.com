@@ -12,15 +12,15 @@
 // ---------------------------------------------------------------------------------------
 // ds3d_update_buffer()
 //
-//	parameters:		channel	=> identifies the 3D sound to update
-//						min		=>	the distance at which sound doesn't get any
-// louder 						max		=>	the distance at which sound doesn't
-// attenuate any further 						pos		=> world position of
+// parameters:             channel => identifies the 3D sound to update
+// min             =>      the distance at which sound doesn't get any
+// louder                                               max             =>      the distance at which sound doesn't
+// attenuate any further                                                pos             => world position of
 // sound
-//						vel		=> velocity of the objects producing the sound
+// vel             => velocity of the objects producing the sound
 //
-//	returns:		0		=>		success
-//					-1		=>		failure
+// returns:                0               =>              success
+// -1              =>              failure
 //
 //
 int ds3d_update_buffer (
@@ -73,8 +73,8 @@ int ds3d_update_buffer (
 // ---------------------------------------------------------------------------------------
 // ds3d_update_listener()
 //
-//	returns:		0		=>		success
-//					-1		=>		failure
+// returns:                0               =>              success
+// -1              =>              failure
 //
 int ds3d_update_listener (vec3d* pos, vec3d* vel, matrix* orient) {
     if (!ds_initialized) { return -1; }

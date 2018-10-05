@@ -103,7 +103,7 @@ void SubtitleDecoder::pushSubtitleFrame (
         for (auto i = 0; i < 8 && comma_pos != std::string::npos; ++i) {
             comma_pos = ass_text.find (',', comma_pos + 1);
         }
-        Assertion (
+        ASSERTX (
             comma_pos != std::string::npos,
             "Received an ill-formed ASS line from FFmpeg! Text was '%s'.",
             subtitle_rect->ass);

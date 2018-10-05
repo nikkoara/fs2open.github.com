@@ -58,7 +58,7 @@ const char* Player_select_background_bitmap_name[GR_NUM_RESOLUTIONS] = {
 const char* Player_select_background_mask_bitmap[GR_NUM_RESOLUTIONS] = {
     "ChoosePilot-m", "2_ChoosePilot-m"
 };
-// #define PLAYER_SELECT_PALETTE			NOX("ChoosePilotPalette")	//
+// #define PLAYER_SELECT_PALETTE                        NOX("ChoosePilotPalette")       //
 // palette for the screen
 
 #define PLAYER_SELECT_MAIN_HALL_OVERLAY \
@@ -123,9 +123,9 @@ UI_BUTTON Player_select_list_region; // button for detecting mouse clicks on
                                      // this screen
 UI_INPUTBOX Player_select_input_box; // input box for adding new pilot names
 
-// #define PLAYER_SELECT_PALETTE_FNAME		NOX("InterfacePalette")
+// #define PLAYER_SELECT_PALETTE_FNAME          NOX("InterfacePalette")
 int Player_select_background_bitmap; // bitmap for this screen
-// int Player_select_palette;				// palette bitmap for this screen
+// int Player_select_palette;                           // palette bitmap for this screen
 int Player_select_autoaccept = 0;
 // int Player_select_palette_set = 0;
 
@@ -350,7 +350,7 @@ void player_select_init () {
     // attempt to load in the background bitmap
     Player_select_background_bitmap =
         bm_load (Player_select_background_bitmap_name[gr_screen.res]);
-    Assert (Player_select_background_bitmap >= 0);
+    ASSERT (Player_select_background_bitmap >= 0);
 
     // load in the palette for the screen
     // Player_select_palette = bm_load(PLAYER_SELECT_PALETTE);
@@ -361,9 +361,9 @@ void player_select_init () {
     Player_select_initial_count = -1;
     memset (Player_select_very_first_pilot_callsign, 0, CALLSIGN_LEN + 2);
 
-    //	if(Player_select_num_pilots == 0){
-    //		Player_select_autoaccept = 1;
-    //	}
+    // if(Player_select_num_pilots == 0){
+    // Player_select_autoaccept = 1;
+    // }
 
     // if we found a pilot
     if (player_select_get_last_pilot_info ()) {
@@ -391,27 +391,6 @@ static bool Startup_warning_dialog_displayed = false;
 
 void player_select_do () {
     int k;
-
-    // Goober5000 - display a popup warning about problems in the mod
-    if ((Global_warning_count > 10 || Global_error_count > 0) &&
-        !Startup_warning_dialog_displayed) {
-        char text[512];
-        sprintf (
-            text,
-            "Warning!\n\nThe currently active mod has generated %d warnings "
-            "and/or errors during program startup.  These could have been "
-            "caused by anything from incorrectly formated table files to "
-            "corrupt models.  While FreeSpace Open will attempt to compensate "
-            "for these issues, it cannot guarantee a trouble-free gameplay "
-            "experience.  Source Code Project staff cannot provide assistance "
-            "or support for these problems, as they are caused by the mod's "
-            "data files, not FreeSpace Open's source code.",
-            Global_warning_count + Global_error_count);
-        popup (
-            PF_TITLE_BIG | PF_TITLE_RED | PF_USE_AFFIRMATIVE_ICON, 1, POPUP_OK,
-            text);
-        Startup_warning_dialog_displayed = true;
-    }
 
     // set the input box at the "virtual" line 0 to be active so the player can
     // enter a callsign
@@ -531,7 +510,7 @@ void player_select_close () {
         Player_select_background_bitmap = -1;
     }
     // if(Player_select_palette >= 0){
-    // 	bm_release(Player_select_palette);
+    // bm_release(Player_select_palette);
     // Player_select_palette = -1;
     // }
 
@@ -554,7 +533,7 @@ void player_select_close () {
 
     // now read in a the pilot data
     if (!Pilot.load_player (Pilots[Player_select_pilot], Player)) {
-        fs2::dialog::error (LOCATION, "Couldn't load pilot file, bailing");
+        ASSERTF (LOCATION, "Couldn't load pilot file, bailing");
         Player = NULL;
     }
     else {
@@ -661,7 +640,7 @@ void player_select_button_pressed (int n) {
 
             // attempt to read in the pilot file of the guy to be cloned
             if (!Pilot.load_player (Pilots[Player_select_pilot], Player)) {
-                fs2::dialog::error (LOCATION, "Couldn't load pilot file, bailing");
+                ASSERTF (LOCATION, "Couldn't load pilot file, bailing");
                 Player = NULL;
                 Int3 ();
             }
@@ -1222,11 +1201,11 @@ void player_select_display_copyright () {
     int sx, sy, w;
     char Copyright_msg1[256], Copyright_msg2[256];
 
-    //	strcpy_s(Copyright_msg1, XSTR("Descent: FreeSpace - The Great War,
+    // strcpy_s(Copyright_msg1, XSTR("Descent: FreeSpace - The Great War,
     // Copyright c 1998, Volition, Inc.", -1));
     gr_set_color_fast (&Color_white);
 
-    //	sprintf(Copyright_msg1, NOX("FreeSpace 2"));
+    // sprintf(Copyright_msg1, NOX("FreeSpace 2"));
     get_version_string (Copyright_msg1, sizeof (Copyright_msg1));
     if (Unicode_text_mode) {
         // Use a Unicode character if we are in unicode mode instead of using
@@ -1323,7 +1302,7 @@ void player_select_eval_very_first_pilot () {
 
 void player_select_commit () {
     // if we've gotten to this point, we should have ensured this was the case
-    Assert (Player_select_num_pilots > 0);
+    ASSERT (Player_select_num_pilots > 0);
 
     gameseq_post_event (GS_EVENT_MAIN_MENU);
     gamesnd_play_iface (InterfaceSounds::COMMIT_PRESSED);
@@ -1390,7 +1369,7 @@ DCF (
     }
 
     if (dc_maybe_stuff_int (&idx)) {
-        Assert (Main_hall_defines.size () < INT_MAX);
+        ASSERT (Main_hall_defines.size () < INT_MAX);
         if ((idx < 0) || (idx >= (int)Main_hall_defines.size ())) {
             dc_printf ("Main hall index out of range\n");
         }

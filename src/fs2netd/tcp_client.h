@@ -56,14 +56,14 @@ void FS2NetD_Pong (int tstamp);
 
 #define PXO_ADD_DATA(d)                                         \
     do {                                                        \
-        Assert (buffer_size + sizeof (d) <= sizeof (buffer));   \
+        ASSERT (buffer_size + sizeof (d) <= sizeof (buffer));   \
         memcpy (buffer + buffer_size, &d, sizeof (d));          \
         buffer_size += sizeof (d);                              \
     } while (0)
 
 #define PXO_ADD_SHORT(d)                                            \
     do {                                                            \
-        Assert (buffer_size + sizeof (short) <= sizeof (buffer));   \
+        ASSERT (buffer_size + sizeof (short) <= sizeof (buffer));   \
         short swap = d;                                             \
         memcpy (buffer + buffer_size, &swap, sizeof (short));       \
         buffer_size += sizeof (short);                              \
@@ -71,7 +71,7 @@ void FS2NetD_Pong (int tstamp);
 
 #define PXO_ADD_USHORT(d)                                           \
     do {                                                            \
-        Assert (buffer_size + sizeof (ushort) <= sizeof (buffer));  \
+        ASSERT (buffer_size + sizeof (ushort) <= sizeof (buffer));  \
         ushort swap = d;                                            \
         memcpy (buffer + buffer_size, &swap, sizeof (ushort));      \
         buffer_size += sizeof (ushort);                             \
@@ -79,7 +79,7 @@ void FS2NetD_Pong (int tstamp);
 
 #define PXO_ADD_INT(d)                                          \
     do {                                                        \
-        Assert (buffer_size + sizeof (int) <= sizeof (buffer)); \
+        ASSERT (buffer_size + sizeof (int) <= sizeof (buffer)); \
         int swap = d;                                           \
         memcpy (buffer + buffer_size, &swap, sizeof (int));     \
         buffer_size += sizeof (int);                            \
@@ -87,7 +87,7 @@ void FS2NetD_Pong (int tstamp);
 
 #define PXO_ADD_UINT(d)                                             \
     do {                                                            \
-        Assert (buffer_size + sizeof (uint) <= sizeof (buffer));    \
+        ASSERT (buffer_size + sizeof (uint) <= sizeof (buffer));    \
         uint swap = d;                                              \
         memcpy (buffer + buffer_size, &swap, sizeof (uint));        \
         buffer_size += sizeof (uint);                               \
@@ -95,7 +95,7 @@ void FS2NetD_Pong (int tstamp);
 
 #define PXO_ADD_STRING(s)                                               \
     do {                                                                \
-        Assert (buffer_size + strlen (s) + sizeof (int) <= sizeof (buffer)); \
+        ASSERT (buffer_size + strlen (s) + sizeof (int) <= sizeof (buffer)); \
         int len = (int)strlen (s);                                      \
         PXO_ADD_INT (len);                                              \
         if (len > 0) {                                                  \
@@ -107,14 +107,14 @@ void FS2NetD_Pong (int tstamp);
 
 #define PXO_GET_DATA(d)                                         \
     do {                                                        \
-        Assert (buffer_offset + sizeof (d) <= sizeof (buffer)); \
+        ASSERT (buffer_offset + sizeof (d) <= sizeof (buffer)); \
         memcpy (&d, buffer + buffer_offset, sizeof (d));        \
         buffer_offset += sizeof (d);                            \
     } while (0)
 
 #define PXO_GET_SHORT(d)                                            \
     do {                                                            \
-        Assert (buffer_offset + sizeof (short) <= sizeof (buffer)); \
+        ASSERT (buffer_offset + sizeof (short) <= sizeof (buffer)); \
         short swap;                                                 \
         memcpy (&swap, buffer + buffer_offset, sizeof (short));     \
         d = swap;                                                   \
@@ -123,7 +123,7 @@ void FS2NetD_Pong (int tstamp);
 
 #define PXO_GET_USHORT(d)                                               \
     do {                                                                \
-        Assert (buffer_offset + sizeof (ushort) <= sizeof (buffer));    \
+        ASSERT (buffer_offset + sizeof (ushort) <= sizeof (buffer));    \
         ushort swap;                                                    \
         memcpy (&swap, buffer + buffer_offset, sizeof (ushort));        \
         d = swap;                                                       \
@@ -132,7 +132,7 @@ void FS2NetD_Pong (int tstamp);
 
 #define PXO_GET_INT(d)                                              \
     do {                                                            \
-        Assert (buffer_offset + sizeof (int) <= sizeof (buffer));   \
+        ASSERT (buffer_offset + sizeof (int) <= sizeof (buffer));   \
         int swap;                                                   \
         memcpy (&swap, buffer + buffer_offset, sizeof (int));       \
         d = swap;                                                   \
@@ -141,7 +141,7 @@ void FS2NetD_Pong (int tstamp);
 
 #define PXO_GET_UINT(d)                                             \
     do {                                                            \
-        Assert (buffer_offset + sizeof (uint) <= sizeof (buffer));  \
+        ASSERT (buffer_offset + sizeof (uint) <= sizeof (buffer));  \
         uint swap;                                                  \
         memcpy (&swap, buffer + buffer_offset, sizeof (uint));      \
         d = swap;                                                   \
@@ -150,7 +150,7 @@ void FS2NetD_Pong (int tstamp);
 
 #define PXO_GET_STRING(s)                                           \
     do {                                                            \
-        Assert (buffer_offset + sizeof (int) <= sizeof (buffer));   \
+        ASSERT (buffer_offset + sizeof (int) <= sizeof (buffer));   \
         s[0] = '\0';                                                \
         int len;                                                    \
         memcpy (&len, buffer + buffer_offset, sizeof (int));        \

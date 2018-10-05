@@ -137,28 +137,28 @@ int HUD_config_default_flags2 = {
 int HUD_default_popup_mask = {
     0 | // (1<<HUD_LEAD_INDICATOR) | //-V578
     0 | // (1<<HUD_ORIENTATION_TEE) |
-    0 | //	(1<<HUD_HOSTILE_TRIANGLE) |
+    0 | // (1<<HUD_HOSTILE_TRIANGLE) |
     0 | // (1<<HUD_TARGET_TRIANGLE) |
-    0 | //	(1<<HUD_MISSION_TIME) |
-    0 | //	(1<<HUD_RETICLE_CIRCLE) |
-    0 | //	(1<<HUD_THROTTLE_GAUGE) |
-    0 | //	(1<<HUD_RADAR) |
-    0 | //	(1<<HUD_TARGET_MONITOR) |
-    0 | //	(1<<HUD_CENTER_RETICLE) |
-    0 | //	(1<<HUD_TARGET_MONITOR_EXTRA_DATA) |
-    0 | //	(1<<HUD_TARGET_SHIELD_ICON) |
-    0 | //	(1<<HUD_PLAYER_SHIELD_ICON) |
-    0 | //	(1<<HUD_ETS_GAUGE) |
-    0 | //	(1<<HUD_AUTO_TARGET) |
-    0 | //	(1<<HUD_AUTO_SPEED) |
-    0 | //	(1<<HUD_WEAPONS_GAUGE) |
-    0 | //	(1<<HUD_ESCORT_VIEW) |
-    0 | //	(1<<HUD_DIRECTIVES_VIEW) |
-    0 | //	(1<<HUD_THREAT_GAUGE) |
-    0 | //	(1<<HUD_AFTERBURNER_ENERGY) |
-    0 | //	(1<<HUD_WEAPONS_ENERGY) |
-    0 | //	(1<<HUD_WEAPON_LINKING_GAUGE) |
-    0 | //	(1<<HUD_TARGET_MINI_ICON) |
+    0 | // (1<<HUD_MISSION_TIME) |
+    0 | // (1<<HUD_RETICLE_CIRCLE) |
+    0 | // (1<<HUD_THROTTLE_GAUGE) |
+    0 | // (1<<HUD_RADAR) |
+    0 | // (1<<HUD_TARGET_MONITOR) |
+    0 | // (1<<HUD_CENTER_RETICLE) |
+    0 | // (1<<HUD_TARGET_MONITOR_EXTRA_DATA) |
+    0 | // (1<<HUD_TARGET_SHIELD_ICON) |
+    0 | // (1<<HUD_PLAYER_SHIELD_ICON) |
+    0 | // (1<<HUD_ETS_GAUGE) |
+    0 | // (1<<HUD_AUTO_TARGET) |
+    0 | // (1<<HUD_AUTO_SPEED) |
+    0 | // (1<<HUD_WEAPONS_GAUGE) |
+    0 | // (1<<HUD_ESCORT_VIEW) |
+    0 | // (1<<HUD_DIRECTIVES_VIEW) |
+    0 | // (1<<HUD_THREAT_GAUGE) |
+    0 | // (1<<HUD_AFTERBURNER_ENERGY) |
+    0 | // (1<<HUD_WEAPONS_ENERGY) |
+    0 | // (1<<HUD_WEAPON_LINKING_GAUGE) |
+    0 | // (1<<HUD_TARGET_MINI_ICON) |
     0 | //(1<<HUD_OFFSCREEN_INDICATOR)
     0 | // talking head
     0 | // damage gauge
@@ -556,9 +556,9 @@ void hud_config_set_rgb (int gauge, int r, int g, int b);
 void hud_config_set_alpha (int gauge, int a);
 
 /*
-#define NUM_HC_SPECIAL_BITMAPS	2
-#define HC_SPECIAL_RETICLE			0
-#define HC_SPECIAL_TEXT				1
+#define NUM_HC_SPECIAL_BITMAPS  2
+#define HC_SPECIAL_RETICLE                      0
+#define HC_SPECIAL_TEXT                         1
 typedef struct HC_special_bitmap
 {
     char *filename;
@@ -584,8 +584,8 @@ static int HC_gauge_selected; // gauge is selected
 
 // slider controls
 /*
-#define HC_NUM_SLIDERS							1
-#define HC_BRIGHTNESS_SLIDER					0
+#define HC_NUM_SLIDERS                                                  1
+#define HC_BRIGHTNESS_SLIDER                                    0
 struct hc_sliders {
     // base slider
     char *filename;
@@ -616,14 +616,14 @@ right_y(_right_y) {}
 
 hc_sliders HC_sliders[GR_NUM_RESOLUTIONS][HC_NUM_SLIDERS] = {
     { // GR_640
-        hc_sliders(	"HCB_22",	419,	379,	-1,	-1,	22,	20,	10,
-                        "HCB_23",	23,	611,	379,
-                        "HCB_21",	21,	391,	379)
+        hc_sliders(     "HCB_22",       419,    379,    -1,     -1,     22,     20,     10,
+                        "HCB_23",       23,     611,    379,
+                        "HCB_21",       21,     391,    379)
     },
     { // GR_1024
-        hc_sliders(	"2_HCB_22",	670,	606,	-1,	-1,	22,	32,	10,
-                        "2_HCB_23",	23,	698,	606,
-                        "2_HCB_21",	21,	625,	606),
+        hc_sliders(     "2_HCB_22",     670,    606,    -1,     -1,     22,     32,     10,
+                        "2_HCB_23",     23,     698,    606,
+                        "2_HCB_21",     21,     625,    606),
     }
 };
 */
@@ -697,7 +697,7 @@ void hud_config_synch_sliders (int i) {
 void hud_config_synch_ui () {
     HUD_init_hud_color_array ();
     // HC_sliders[gr_screen.res][HC_BRIGHTNESS_SLIDER].slider.pos =
-    // HUD_color_alpha-3;		// convert to value from 0-10
+    // HUD_color_alpha-3;               // convert to value from 0-10
 
     // sync sliders to currently selected gauge
     hud_config_synch_sliders (HC_gauge_selected);
@@ -712,7 +712,7 @@ void hud_config_init_ui () {
     hud_config_synch_ui ();
     HC_background_bitmap = bm_load (Hud_config_fname[gr_screen.res]);
     if (HC_background_bitmap < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Error loading HUD config menu background %s",
             Hud_config_fname[gr_screen.res]);
     }
@@ -722,7 +722,7 @@ void hud_config_init_ui () {
 
     HC_background_bitmap_mask = bm_load (Hud_config_mask_fname[gr_screen.res]);
     if (HC_background_bitmap_mask < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Error loading HUD config menu mask %s",
             Hud_config_mask_fname[gr_screen.res]);
         return;
@@ -736,13 +736,13 @@ void hud_config_init_ui () {
         if (!strcasecmp (hg->filename, NOX ("none"))) { continue; }
         hg->button.create (&HC_ui_window, "", hg->x, hg->y, 60, 30, 0, 1);
         // set up callback for when a mouse first goes over a button
-        //		hg->button.set_highlight_action(common_play_highlight_sound);
+        // hg->button.set_highlight_action(common_play_highlight_sound);
         hg->button.hide ();
         hg->button.link_hotspot (hg->hotspot);
 
         // if ( hg->use_iff ) {
-        // 			hg->bitmap = bm_load_animation(hg->filename, &hg->nframes);
-        // 	} else {
+        // hg->bitmap = bm_load_animation(hg->filename, &hg->nframes);
+        // } else {
         hg->bitmap = bm_load (hg->filename);
         hg->nframes = 1;
         // }
@@ -1576,7 +1576,7 @@ void hud_config_unload_gauges () {
 // screen
 //
 void hud_config_close () {
-    //	common_free_interface_palette();		// restore game palette
+    // common_free_interface_palette();                // restore game palette
     hud_config_unload_gauges ();
 
     hud_config_color_close ();

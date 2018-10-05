@@ -30,7 +30,7 @@ void model_octant_find_shields (polymodel* pm, model_octant* oct) {
 
     n = 0;
 
-    //	Scan all the triangles in the mesh to find how many tris there are.
+    // Scan all the triangles in the mesh to find how many tris there are.
     for (i = 0; i < pm->shield.ntris; i++) {
         tri = &pm->shield.tris[i];
 
@@ -55,11 +55,11 @@ void model_octant_find_shields (polymodel* pm, model_octant* oct) {
 
     oct->shield_tris =
         (shield_tri**)vm_malloc (sizeof (shield_tri*) * oct->nshield_tris);
-    Assert (oct->shield_tris != NULL);
+    ASSERT (oct->shield_tris != NULL);
 
     n = 0;
 
-    //	Rescan all the triangles in the mesh.
+    // Rescan all the triangles in the mesh.
     for (i = 0; i < pm->shield.ntris; i++) {
         tri = &pm->shield.tris[i];
 
@@ -72,7 +72,7 @@ void model_octant_find_shields (polymodel* pm, model_octant* oct) {
         }
     }
 
-    Assert (oct->nshield_tris == n);
+    ASSERT (oct->nshield_tris == n);
 }
 
 void moff_defpoints (ubyte* p, int just_count) {
@@ -92,7 +92,7 @@ void moff_defpoints (ubyte* p, int just_count) {
 
     model_allocate_interp_data (nverts, nnorms);
 
-    Assert (Interp_verts != NULL);
+    ASSERT (Interp_verts != NULL);
 
     for (n = 0; n < nverts; n++) {
         Interp_verts[n] = src;
@@ -125,7 +125,7 @@ void moff_tmappoly (
         vec3d center_point;
         vm_vec_zero (&center_point);
 
-        Assert (Interp_verts != NULL);
+        ASSERT (Interp_verts != NULL);
 
         for (i = 0; i < nv; i++) {
             vm_vec_add2 (&center_point, Interp_verts[verts[i].vertnum]);
@@ -184,7 +184,7 @@ void moff_flatpoly (
         vec3d center_point;
         vm_vec_zero (&center_point);
 
-        Assert (Interp_verts != NULL);
+        ASSERT (Interp_verts != NULL);
 
         for (i = 0; i < nv; i++) {
             vm_vec_add2 (&center_point, Interp_verts[verts[i * 2]]);
@@ -280,12 +280,12 @@ void model_octant_find_faces (polymodel* pm, model_octant* oct) {
     }
 
     oct->verts = (vec3d**)vm_malloc (sizeof (vec3d*) * oct->nverts);
-    Assert (oct->verts != NULL);
+    ASSERT (oct->verts != NULL);
 
     oct->nverts = 0;
     model_octant_find_faces_sub (pm, oct, p, 0);
 
-    //	mprintf(( "Octant has %d faces\n", oct->nfaces ));
+    // mprintf(( "Octant has %d faces\n", oct->nfaces ));
 }
 
 // Creates the octants for a given polygon model
@@ -398,9 +398,9 @@ int model_which_octant_distant_many (
     i = ((x << 2) | (y << 1) | z);
 
     octs[0] = i;
-    octs[1] = i ^ 4; //	Adjacent octant in x dimension
-    octs[2] = i ^ 2; //	Adjacent octant in y dimension
-    octs[3] = i ^ 1; //	Adjacent octant in z dimension
+    octs[1] = i ^ 4; // Adjacent octant in x dimension
+    octs[2] = i ^ 2; // Adjacent octant in y dimension
+    octs[3] = i ^ 1; // Adjacent octant in z dimension
 
     return i;
 }

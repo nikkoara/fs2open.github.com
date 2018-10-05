@@ -42,7 +42,7 @@ public:
 
     template< typename T >
     T* addTypedElement () {
-        Assertion (
+        ASSERTX (
             sizeof (T) == _dataSize,
             "Sizes of template parameter and runtime size do not match! This "
             "probably uses the wrong type.");
@@ -52,7 +52,7 @@ public:
 
     template< typename THeader >
     THeader* getHeader () {
-        Assertion (
+        ASSERTX (
             sizeof (THeader) == _headerSize,
             "Header size does not match requested header type!");
 
@@ -63,7 +63,7 @@ public:
 
     template< typename T >
     T* getTypedElement (size_t index) {
-        Assertion (
+        ASSERTX (
             sizeof (T) == _dataSize,
             "Sizes of template parameter and runtime size do not match! This "
             "probably uses the wrong type.");
@@ -81,7 +81,7 @@ public:
 
     template< typename T >
     T* nextTypedElement (T* currentEl) {
-        Assertion (
+        ASSERTX (
             sizeof (T) == _dataSize,
             "Sizes of template parameter and runtime size do not match! This "
             "probably uses the wrong type.");

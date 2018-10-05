@@ -915,7 +915,7 @@ static void init_window_icon () {
 
     auto icon_handle = bm_load (Window_icon_path);
     if (icon_handle < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Failed to load window icon '%s'!",
             Window_icon_path.c_str ());
         return;
@@ -923,7 +923,7 @@ static void init_window_icon () {
 
     auto surface = bm_to_sdl_surface (icon_handle);
     if (surface == nullptr) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Convert icon '%s' to a SDL surface!",
             Window_icon_path.c_str ());
         bm_release (icon_handle);
@@ -996,14 +996,14 @@ bool gr_init (
         }
     }
     else {
-        Assert (ptr != NULL);
+        ASSERT (ptr != NULL);
 
         // NOTE: The "ptr+5" is to skip over the initial "????-" in the video
         // string.
-        //       If the format of that string changes you'll have to change
-        //       this too!!!
+        // If the format of that string changes you'll have to change
+        // this too!!!
         if (sscanf (ptr + 5, "(%dx%d)x%d ", &width, &height, &depth) != 3) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION, "Can't understand 'VideocardFs2open' config entry!");
         }
     }
@@ -1151,7 +1151,7 @@ bool gr_init (
         }
     }
     if (missing_installation) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "\nWeb cursor bitmap not found.  This is most likely due to one "
             "of three reasons:\n"
@@ -1260,9 +1260,9 @@ void gr_init_alphacolor (
 }
 
 void gr_set_color (int r, int g, int b) {
-    Assert ((r >= 0) && (r < 256));
-    Assert ((g >= 0) && (g < 256));
-    Assert ((b >= 0) && (b < 256));
+    ASSERT ((r >= 0) && (r < 256));
+    ASSERT ((g >= 0) && (g < 256));
+    ASSERT ((b >= 0) && (b < 256));
 
     gr_init_color (&gr_screen.current_color, r, g, b);
 }
@@ -1418,18 +1418,18 @@ void gr_bitmap_uv (
 // NEW new bitmap functions -Bobboau
 // void gr_bitmap_list(bitmap_2d_list* list, int n_bm, int resize_mode)
 // {
-// 	for (int i = 0; i < n_bm; i++) {
-// 		bitmap_2d_list *l = &list[i];
+// for (int i = 0; i < n_bm; i++) {
+// bitmap_2d_list *l = &list[i];
 //
-// 		bm_get_info(gr_screen.current_bitmap, &l->w, &l->h, NULL, NULL, NULL);
+// bm_get_info(gr_screen.current_bitmap, &l->w, &l->h, NULL, NULL, NULL);
 //
-// 		if ( resize_mode != GR_RESIZE_NONE && (gr_screen.custom_size ||
+// if ( resize_mode != GR_RESIZE_NONE && (gr_screen.custom_size ||
 // (gr_screen.rendering_to_texture != -1)) ) {
 // gr_resize_screen_pos(&l->x, &l->y, &l->w, &l->h, resize_mode);
-// 		}
-// 	}
+// }
+// }
 //
-// 	g3_draw_2d_poly_bitmap_list(list, n_bm, TMAP_FLAG_INTERFACE);
+// g3_draw_2d_poly_bitmap_list(list, n_bm, TMAP_FLAG_INTERFACE);
 // }
 
 // _->NEW<-_ NEW new bitmap functions -Bobboau
@@ -1880,7 +1880,7 @@ void poly_list::calculate_tangent () {
 
     if (!Cmdline_normal) { return; }
 
-    Assert (!(n_verts % 3));
+    ASSERT (!(n_verts % 3));
 
     for (int i = 0; i < n_verts; i += 3) {
         // vertex (reading)
@@ -1967,7 +1967,7 @@ void poly_list::make_index_buffer (std::vector< int >& vertex_list) {
     // out-of-memory check
     nverts_good = (ubyte*)vm_malloc (n_verts);
 
-    Assert (nverts_good != NULL);
+    ASSERT (nverts_good != NULL);
     if (nverts_good == NULL) return;
 
     memset (nverts_good, 0, n_verts);
@@ -2008,7 +2008,7 @@ void poly_list::make_index_buffer (std::vector< int >& vertex_list) {
         z++;
     }
 
-    Assert (nverts == buffer_list_internal.n_verts);
+    ASSERT (nverts == buffer_list_internal.n_verts);
 
     if (nverts_good != NULL) { vm_free (nverts_good); }
 
@@ -2051,12 +2051,12 @@ bool poly_list::finder::operator() (const uint a, const uint b) {
     vec3d* norm_a;
     vec3d* norm_b;
 
-    Assert (search_list != NULL);
+    ASSERT (search_list != NULL);
 
     if (a == (uint)search_list->n_verts) {
-        Assert (vert_to_find != NULL);
-        Assert (norm_to_find != NULL);
-        Assert (a != b);
+        ASSERT (vert_to_find != NULL);
+        ASSERT (norm_to_find != NULL);
+        ASSERT (a != b);
 
         vert_a = vert_to_find;
         norm_a = norm_to_find;
@@ -2067,9 +2067,9 @@ bool poly_list::finder::operator() (const uint a, const uint b) {
     }
 
     if (b == (uint)search_list->n_verts) {
-        Assert (vert_to_find != NULL);
-        Assert (norm_to_find != NULL);
-        Assert (a != b);
+        ASSERT (vert_to_find != NULL);
+        ASSERT (norm_to_find != NULL);
+        ASSERT (a != b);
 
         vert_b = vert_to_find;
         norm_b = norm_to_find;
@@ -2255,7 +2255,7 @@ void vertex_layout::add_vertex_component (
     size_t offset) {
     // A stride value of 0 is not handled consistently by the graphics API so
     // we must enforce that that does not happen
-    Assertion (
+    ASSERTX (
         stride != 0, "The stride of a vertex component may not be zero!");
 
     if (resident_vertex_format (format_type)) {
@@ -2269,7 +2269,7 @@ void vertex_layout::add_vertex_component (
         Vertex_stride = stride;
     }
 
-    Assertion (
+    ASSERTX (
         Vertex_stride == stride,
         "The strides of all elements must be the same in a vertex layout!");
 
@@ -2315,7 +2315,7 @@ static void gpu_heap_deinit () {
 }
 
 static graphics::util::GPUMemoryHeap* get_gpu_heap (GpuHeap heap_type) {
-    Assertion (
+    ASSERTX (
         heap_type != GpuHeap::NUM_VALUES, "Invalid heap type value detected.");
 
     return gpu_heaps[static_cast< size_t > (heap_type)].get ();

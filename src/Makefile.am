@@ -27,6 +27,7 @@ fs2_SOURCES =                                   \
     ai/aiturret.cpp                             \
     anim/animplay.cpp                           \
     anim/packunpack.cpp                         \
+    assert/assert.cpp                           \
     asteroid/asteroid.cpp                       \
     autopilot/autopilot.cpp                     \
     bmpman/bm_examples.cpp                      \
@@ -244,7 +245,6 @@ fs2_SOURCES =                                   \
     object/waypoint.cpp                         \
     observer/observer.cpp                       \
     osapi/DebugWindow.cpp                       \
-    osapi/dialogs.cpp                           \
     osapi/osapi.cpp                             \
     osapi/osregistry.cpp                        \
     osapi/outwnd.cpp                            \
@@ -329,9 +329,10 @@ fs2_SOURCES =                                   \
     ui/uidraw.cpp                               \
     ui/uimouse.cpp                              \
     ui/window.cpp                               \
-    utils/HeapAllocator.cpp                     \
-    utils/encoding.cpp                          \
-    utils/unicode.cpp                           \
+    util/HeapAllocator.cpp                      \
+    util/encoding.cpp                           \
+    util/fmt.cpp                                \
+    util/unicode.cpp                            \
     weapon/beam.cpp                             \
     weapon/corkscrew.cpp                        \
     weapon/emp.cpp                              \

@@ -32,11 +32,11 @@ void stuff_first (std::string& firstFont);
  * printed. Does this by dropping characters at the end of the string and
  * adding '...' to the end.
  *
- * @param str		string to crop.  Modifies this string directly
- * @param max_str	max characters allowed in str
+ * @param str           string to crop.  Modifies this string directly
+ * @param max_str       max characters allowed in str
  * @param max_width number of pixels to limit string to (less than or equal
  * to).
- * @return			The width of the string
+ * @return                      The width of the string
  */
 int force_fit_string (char* str, int max_str, int max_width);
 

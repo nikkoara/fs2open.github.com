@@ -84,7 +84,7 @@ public:
     draw_bitmap (vertex* position, int orient, float rad, float depth = 0);
 
     // draw a rotated bitmap
-    //	void draw_bitmap(vertex *position, float rad, float angle, float
+    // void draw_bitmap(vertex *position, float rad, float angle, float
     // depth);
 
     void load_buffer (particle_pnt* buffer, size_t* n_verts);

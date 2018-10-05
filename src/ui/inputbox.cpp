@@ -10,7 +10,7 @@
 
 #define INPUTBOX_PASSWD_CHAR '*' // the password protected char
 
-//	Retuen true if c is a letter, else return false.
+// Retuen true if c is a letter, else return false.
 int is_letter (char c) {
     return ((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z'));
 }
@@ -52,7 +52,7 @@ void UI_INPUTBOX::init_cursor () {
     cursor_first_frame =
         bm_load_animation ("cursor1", &cursor_nframes, &cursor_fps);
     if (cursor_first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load input box cursor: cursor1.ani\n");
+        WARNINGF (LOCATION, "Cannot load input box cursor: cursor1.ani\n");
         return;
     }
     cursor_elapsed_time = 0;
@@ -64,8 +64,8 @@ void UI_INPUTBOX::create (
     int _flags, int pixel_lim, color* clr) {
     int tw, th;
 
-    Assert (_text_len >= 0);
-    Assert ((int)strlen (_text) <= _text_len);
+    ASSERT (_text_len >= 0);
+    ASSERT ((int)strlen (_text) <= _text_len);
     font::set_font (wnd->f_id);
     gr_get_string_size (&tw, &th, "*");
 
@@ -411,7 +411,7 @@ void UI_INPUTBOX::set_text (const char* in) {
 
     in_length = (int)strlen (in);
     if (in_length > length)
-        Assert (0); // tried to force text into an input box that won't fit
+        ASSERT (0); // tried to force text into an input box that won't fit
                     // into allocated memory
 
     strcpy (text, in);

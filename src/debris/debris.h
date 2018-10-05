@@ -32,7 +32,7 @@ struct debris  {
                             // appearing
     int sound_delay;        // timestamp to signal when sound should start
     fix time_started;       // time when debris was created
-    int next_distance_check; //	timestamp to determine whether to delete this
+    int next_distance_check; // timestamp to determine whether to delete this
                              // piece of debris.
 
     vec3d arc_pts[MAX_DEBRIS_ARCS][2];  // The endpoints of each arc

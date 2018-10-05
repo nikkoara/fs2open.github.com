@@ -7,7 +7,7 @@
 #include "particle/ParticleEffect.h"
 #include "particle/ParticleSource.h"
 #include "particle/ParticleSourceWrapper.h"
-#include "utils/id.h"
+#include "util/id.h"
 
 namespace particle {
 struct particle_effect_tag {};
@@ -74,7 +74,7 @@ public:
      * @return The particle manager
      */
     static inline ParticleManager* get () {
-        Assertion (
+        ASSERTX (
             m_manager != nullptr, "ParticleManager was not properly inited!");
 
         return m_manager.get ();
@@ -91,7 +91,7 @@ public:
      * @return The particle effect pointer, will not be @c nullptr
      */
     inline ParticleEffectPtr getEffect (ParticleEffectHandle effectID) {
-        Assertion (
+        ASSERTX (
             effectID.value () >= 0 &&
                 effectID.value () <
                     static_cast< ParticleEffectHandle::impl_type > (

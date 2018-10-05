@@ -92,28 +92,28 @@ void HudGaugeRadarDradis::initBitmaps (
     char* fname_target_brackets, char* fname_unknown) {
     xy_plane = bm_load (fname_xy); // Base
     if (xy_plane < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud bitmap: %s\n", fname_xy);
+        WARNINGF (LOCATION, "Cannot load hud bitmap: %s\n", fname_xy);
     }
 
     xz_yz_plane = bm_load (fname_xz_yz); // Two vertical cross rings
     if (xz_yz_plane < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud bitmap: %s\n", fname_xz_yz);
+        WARNINGF (LOCATION, "Cannot load hud bitmap: %s\n", fname_xz_yz);
     }
 
     sweep_plane = bm_load (fname_sweep); // Sweep lines
     if (sweep_plane < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud bitmap: %s\n", fname_sweep);
+        WARNINGF (LOCATION, "Cannot load hud bitmap: %s\n", fname_sweep);
     }
 
     target_brackets = bm_load (fname_target_brackets);
     if (target_brackets < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Cannot load hud bitmap: %s\n", fname_target_brackets);
     }
 
     unknown_contact_icon = bm_load (fname_unknown);
     if (unknown_contact_icon < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud bitmap: %s\n", fname_unknown);
+        WARNINGF (LOCATION, "Cannot load hud bitmap: %s\n", fname_unknown);
     }
 }
 
@@ -274,7 +274,7 @@ void HudGaugeRadarDradis::drawBlips (int blip_type, int bright, int distort) {
     vec3d pos;
     float alpha;
 
-    Assert ((blip_type >= 0) && (blip_type < MAX_BLIP_TYPES));
+    ASSERT ((blip_type >= 0) && (blip_type < MAX_BLIP_TYPES));
 
     // long frametime = timer_get_approx_seconds();
     // Need to set font.
@@ -422,14 +422,14 @@ void HudGaugeRadarDradis::drawSweeps () {
 
     g3_start_instance_matrix (
         &vmd_zero_vector, /*&Player_obj->orient*/ &vmd_identity_matrix, true);
-    //		gr_set_bitmap(sweep_plane, GR_ALPHABLEND_FILTER,
+    // gr_set_bitmap(sweep_plane, GR_ALPHABLEND_FILTER,
     // GR_BITBLT_MODE_NORMAL, 1.0f);
 
-    // 		g3_draw_polygon(&vmd_zero_vector, &sweep_a, scale, scale,
+    // g3_draw_polygon(&vmd_zero_vector, &sweep_a, scale, scale,
     // TMAP_FLAG_TEXTURED | TMAP_HTL_3D_UNLIT);
-    // 		g3_draw_polygon(&vmd_zero_vector, &sweep_b, scale, scale,
+    // g3_draw_polygon(&vmd_zero_vector, &sweep_b, scale, scale,
     // TMAP_FLAG_TEXTURED | TMAP_HTL_3D_UNLIT);
-    // 		g3_draw_polygon(&vmd_zero_vector, &sweep_c, scale, scale,
+    // g3_draw_polygon(&vmd_zero_vector, &sweep_c, scale, scale,
     // TMAP_FLAG_TEXTURED | TMAP_HTL_3D_UNLIT);
 
     material mat_params;
@@ -455,11 +455,11 @@ void HudGaugeRadarDradis::drawSweeps () {
 
     // gr_set_bitmap(sweep_plane, GR_ALPHABLEND_FILTER, GR_BITBLT_MODE_NORMAL);
 
-    // 		g3_draw_polygon(&vmd_zero_vector, &sweep_a, scale, scale,
+    // g3_draw_polygon(&vmd_zero_vector, &sweep_a, scale, scale,
     // TMAP_FLAG_TEXTURED | TMAP_HTL_3D_UNLIT); // Sweep line: XZ
-    // 		g3_draw_polygon(&vmd_zero_vector, &sweep_b, scale, scale,
+    // g3_draw_polygon(&vmd_zero_vector, &sweep_b, scale, scale,
     // TMAP_FLAG_TEXTURED | TMAP_HTL_3D_UNLIT); // Sweep line: YZ
-    // 		g3_draw_polygon(&vmd_zero_vector, &sweep_c, scale, scale,
+    // g3_draw_polygon(&vmd_zero_vector, &sweep_c, scale, scale,
     // TMAP_FLAG_TEXTURED | TMAP_HTL_3D_UNLIT);
 
     g3_render_rect_oriented (
@@ -476,7 +476,7 @@ void HudGaugeRadarDradis::drawSweeps () {
     for(int i = 1; i < dist; i++)
     {
         float rotation = sweep_percent - (i * RADIANS_PER_DEGREE);
-        float alpha	= (1.0f - (float)((float)i / (float)dist)) * 0.25f;
+        float alpha     = (1.0f - (float)((float)i / (float)dist)) * 0.25f;
 
         //if (i < 2)
             //alpha = 1.0f;

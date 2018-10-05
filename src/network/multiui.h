@@ -30,7 +30,7 @@ struct multi_create_info  {
     char name[NAME_LENGTH];          // name of the mission
     int flags;    // flags to tell what type of multiplayer game (coop, team v.
                   // team)
-    uint respawn; //	mission specified respawn count
+    uint respawn; // mission specified respawn count
     ubyte max_players; // max players allowed for this file
     char valid_status; // see MVALID_* defines above
 

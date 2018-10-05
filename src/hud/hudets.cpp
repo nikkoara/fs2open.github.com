@@ -30,7 +30,7 @@ void ets_init_ship (object* obj) {
     // fred should bail here
     if (Fred_running) { return; }
 
-    Assert (obj->type == OBJ_SHIP);
+    ASSERT (obj->type == OBJ_SHIP);
     sp = &Ships[obj->instance];
 
     sp->weapon_energy = Ship_info[sp->ship_info_index].max_weapon_reserve;
@@ -50,7 +50,7 @@ void ets_init_ship (object* obj) {
 // call is passed in as the parameter fl_frametime.
 //
 // parameters:   obj          ==> object that is updating their energy system
-//               fl_frametime ==> game frametime (in seconds)
+// fl_frametime ==> game frametime (in seconds)
 //
 void update_ets (object* objp, float fl_frametime) {
     float max_new_shield_energy, max_new_weapon_energy, _ss;
@@ -65,7 +65,7 @@ void update_ets (object* objp, float fl_frametime) {
 
     if (sinfo_p->power_output == 0) { return; }
 
-    //	new_energy = fl_frametime * sinfo_p->power_output;
+    // new_energy = fl_frametime * sinfo_p->power_output;
 
     // update weapon energy
     max_new_weapon_energy =
@@ -117,11 +117,11 @@ void update_ets (object* objp, float fl_frametime) {
     ship_p->current_max_speed = ets_get_max_speed (objp, y);
 
     // AL 11-15-97: Rules for engine strength affecting max speed:
-    //						1. if strength >= 0.5 no affect
-    //						2. if strength < 0.5 then max_speed =
+    // 1. if strength >= 0.5 no affect
+    // 2. if strength < 0.5 then max_speed =
     // sqrt(strength)
     //
-    //					 This will translate to 71% max speed at 50% engines,
+    // This will translate to 71% max speed at 50% engines,
     // and 31% max speed at 10% engines
     //
     float strength = ship_get_subsystem_strength (ship_p, SUBSYSTEM_ENGINE);
@@ -148,9 +148,9 @@ void update_ets (object* objp, float fl_frametime) {
 }
 
 float ets_get_max_speed (object* objp, float engine_energy) {
-    Assertion (objp != NULL, "Invalid object pointer passed!");
-    Assertion (objp->type == OBJ_SHIP, "Object needs to be a ship object!");
-    Assertion (
+    ASSERTX (objp != NULL, "Invalid object pointer passed!");
+    ASSERTX (objp->type == OBJ_SHIP, "Object needs to be a ship object!");
+    ASSERTX (
         engine_energy >= 0.0f && engine_energy <= 1.0f,
         "Invalid float passed, needs to be in [0, 1], was %f!", engine_energy);
 
@@ -232,7 +232,7 @@ void ai_manage_ets (object* obj) {
         ship_p->weapon_energy / ship_info_p->max_weapon_reserve;
 
     // maximum level check
-    //	MK, changed these, might as well let them go up to 100% if nothing else
+    // MK, changed these, might as well let them go up to 100% if nothing else
     // needs the recharge ability.
     if (weapon_left_percent == 1.0f) { decrease_recharge_rate (obj, WEAPONS); }
 
@@ -770,7 +770,7 @@ bool validate_ship_ets_indxes (
         break;
 
     default:
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION, "Encountered a ship (%s) with a broken ETS",
             ship_p->ship_name);
         break;
@@ -816,7 +816,7 @@ void HudGaugeEts::initLetter (char _letter) { Letter = _letter; }
 void HudGaugeEts::initBitmaps (char* fname) {
     Ets_bar.first_frame = bm_load_animation (fname, &Ets_bar.num_frames);
     if (Ets_bar.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 

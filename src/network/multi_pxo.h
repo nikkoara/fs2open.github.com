@@ -8,7 +8,7 @@
 //
 
 // default url for PXO rankings
-//#define MULTI_PXO_RANKINGS_URL				"http://www.volition-inc.com"
+//#define MULTI_PXO_RANKINGS_URL                                "http://www.volition-inc.com"
 #define MULTI_PXO_RANKINGS_URL "http://www.pxo.net/rankings/fs2full.cfm"
 
 // default url for PXO account creation

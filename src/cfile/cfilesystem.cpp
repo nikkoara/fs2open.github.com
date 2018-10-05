@@ -29,11 +29,11 @@ enum CfileRootType {
     CF_ROOTTYPE_MEMORY = 2,
 };
 
-//  Created by:
-//    specifying hard drive tree
-//    searching for pack files on hard drive		// Found by searching all
-//    known paths specifying cd-rom tree searching for pack files on CD-rom
-//    tree
+// Created by:
+// specifying hard drive tree
+// searching for pack files on hard drive            // Found by searching all
+// known paths specifying cd-rom tree searching for pack files on CD-rom
+// tree
 typedef struct cf_root {
     char path[CF_MAX_PATHNAME_LENGTH]; // Contains something like
                                        // c:\projects\freespace or
@@ -97,7 +97,7 @@ cf_file* cf_get_file (int index) {
 
 // Create a new file and return a pointer to it.
 cf_file* cf_create_file () {
-    Assertion (
+    ASSERTX (
         Num_files < CF_NUM_FILES_PER_BLOCK * CF_MAX_FILE_BLOCKS,
         "Too many files found. CFile cannot handle more than %d files.\n",
         CF_NUM_FILES_PER_BLOCK * CF_MAX_FILE_BLOCKS);
@@ -108,7 +108,7 @@ cf_file* cf_create_file () {
     if (File_blocks[block] == NULL) {
         File_blocks[block] =
             (cf_file_block*)vm_malloc (sizeof (cf_file_block));
-        Assert (File_blocks[block] != NULL);
+        ASSERT (File_blocks[block] != NULL);
         memset (File_blocks[block], 0, sizeof (cf_file_block));
     }
 
@@ -139,7 +139,7 @@ cf_root* cf_create_root () {
     if (Root_blocks[block] == NULL) {
         Root_blocks[block] =
             (cf_root_block*)vm_malloc (sizeof (cf_root_block));
-        Assert (Root_blocks[block] != NULL);
+        ASSERT (Root_blocks[block] != NULL);
     }
 
     Num_roots++;
@@ -242,7 +242,7 @@ void cf_build_pack_list (cf_root* root) {
                 stat (globinfo.gl_pathv[j], &statbuf);
 
                 if (S_ISREG (statbuf.st_mode)) {
-                    Assert (root_index < temp_root_count);
+                    ASSERT (root_index < temp_root_count);
 
                     // get a temp pointer
                     rptr_sort = &temp_roots_sort[root_index++];
@@ -259,7 +259,7 @@ void cf_build_pack_list (cf_root* root) {
     }
 
     // these should always be the same
-    Assert (root_index == temp_root_count);
+    ASSERT (root_index == temp_root_count);
 
     // sort the roots
     std::sort (
@@ -314,7 +314,7 @@ cf_add_mod_roots (const char* rootDirectory, uint32_t basic_location) {
 
             std::string rootPath = ss.str ();
             if (rootPath.size () + 1 >= CF_MAX_PATHNAME_LENGTH) {
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION,
                     "The length of mod directory path '%s' exceeds the "
                     "maximum of %d!\n",
@@ -415,7 +415,7 @@ void cf_build_root_list (const char* cdrom_dir) {
     char working_directory[CF_MAX_PATHNAME_LENGTH];
 
     if (!_getcwd (working_directory, CF_MAX_PATHNAME_LENGTH)) {
-        fs2::dialog::error (LOCATION, "Can't get current working directory -- %d", errno);
+        ASSERTF (LOCATION, "Can't get current working directory -- %d", errno);
     }
 
     cf_add_mod_roots (working_directory, CF_LOCATION_ROOT_GAME);
@@ -637,7 +637,7 @@ void cf_search_root_pack (int root_index) {
     int num_files = 0;
     cf_root* root = cf_get_root (root_index);
 
-    Assert (root != NULL);
+    ASSERT (root != NULL);
 
     // Open data
     FILE* fp = fopen (root->path, "rb");
@@ -653,7 +653,7 @@ void cf_search_root_pack (int root_index) {
 
     VP_FILE_HEADER VP_header;
 
-    Assert (sizeof (VP_header) == 16);
+    ASSERT (sizeof (VP_header) == 16);
     if (fread (&VP_header, sizeof (VP_header), 1, fp) != 1) {
         mprintf (
             ("Skipping VP file ('%s') because the header could not be "
@@ -832,7 +832,7 @@ CFileLocation cf_find_file_location (
     int cfs_slow_search = 0;
     char longname[MAX_PATH_LEN];
 
-    Assert ((filespec != NULL) && (strlen (filespec) > 0)); //-V805
+    ASSERT ((filespec != NULL) && (strlen (filespec) > 0)); //-V805
 
     // see if we have something other than just a filename
     // our current rules say that any file that specifies a direct
@@ -1029,8 +1029,8 @@ CFileLocationExt cf_find_file_location_ext (
     char filespec[MAX_FILENAME_LEN];
     char* p = NULL;
 
-    Assert ((filename != NULL) && (strlen (filename) < MAX_FILENAME_LEN));
-    Assert (
+    ASSERT ((filename != NULL) && (strlen (filename) < MAX_FILENAME_LEN));
+    ASSERT (
         (ext_list != NULL) &&
         (ext_num > 1)); // if we are searching for just one ext
                         // then this is the wrong function to use
@@ -1082,8 +1082,8 @@ CFileLocationExt cf_find_file_location_ext (
             // strip any extension and add the one we want to check for
             // (NOTE: to be fully retail compatible, we need to support
             // multiple periods for something like *_1.5.wav,
-            //        which means that we need to strip a length of >2 only,
-            //        assuming that all valid ext are at least 2 chars)
+            // which means that we need to strip a length of >2 only,
+            // assuming that all valid ext are at least 2 chars)
             p = strrchr (filespec, '.');
             if (p && (strlen (p) > 2)) (*p) = 0;
 
@@ -1118,8 +1118,8 @@ CFileLocationExt cf_find_file_location_ext (
     // first off, make sure that we don't have an extension
     // (NOTE: to be fully retail compatible, we need to support multiple
     // periods for something like *_1.5.wav,
-    //        which means that we need to strip a length of >2 only, assuming
-    //        that all valid ext are at least 2 chars)
+    // which means that we need to strip a length of >2 only, assuming
+    // that all valid ext are at least 2 chars)
     p = strrchr (filespec, '.');
     if (p && (strlen (p) > 2)) (*p) = 0;
 
@@ -1541,7 +1541,7 @@ int cf_get_file_list (
         return 0;
     }
 
-    Assert (list);
+    ASSERT (list);
 
     if (!info && (sort == CF_SORT_TIME)) {
         info = (file_list_info*)vm_malloc (sizeof (file_list_info) * max);
@@ -1851,7 +1851,7 @@ int cf_get_file_list_preallocated (
     }
 
     if (sort != CF_SORT_NONE) {
-        Assert (list);
+        ASSERT (list);
         cf_sort_filenames (num_files, list, sort, info);
     }
 
@@ -1868,8 +1868,8 @@ int cf_get_file_list_preallocated (
 // If filename isn't null it will also tack the filename
 // on the end, creating a completely valid filename.
 // Input:   pathtype  - CF_TYPE_??
-//			path_max  - Maximum characters in the path
-//          filename  - optional, if set, tacks the filename onto end of path.
+// path_max  - Maximum characters in the path
+// filename  - optional, if set, tacks the filename onto end of path.
 // Output:  path      - Fully qualified pathname.
 // Returns 0 if the result would be too long (invalid result)
 int cf_create_default_path_string (
@@ -1899,12 +1899,12 @@ int cf_create_default_path_string (
         }
 
         if (!root) {
-            Assert (filename != NULL);
+            ASSERT (filename != NULL);
             strncpy (path, filename, path_max);
             return 1;
         }
 
-        Assert (CF_TYPE_SPECIFIED (pathtype));
+        ASSERT (CF_TYPE_SPECIFIED (pathtype));
 
         strncpy (path, root->path, path_max);
 
@@ -1950,7 +1950,7 @@ int cf_create_default_path_string (
 // If filename isn't null it will also tack the filename
 // on the end, creating a completely valid filename.
 // Input:   pathtype  - CF_TYPE_??
-//          filename  - optional, if set, tacks the filename onto end of path.
+// filename  - optional, if set, tacks the filename onto end of path.
 // Output:  path      - Fully qualified pathname.
 // Returns 0 if the result would be too long (invalid result)
 int cf_create_default_path_string (
@@ -1980,12 +1980,12 @@ int cf_create_default_path_string (
         }
 
         if (!root) {
-            Assert (filename != NULL);
+            ASSERT (filename != NULL);
             path.assign (filename);
             return 1;
         }
 
-        Assert (CF_TYPE_SPECIFIED (pathtype));
+        ASSERT (CF_TYPE_SPECIFIED (pathtype));
         std::ostringstream s_path;
 
         s_path << root->path;
@@ -1997,9 +1997,9 @@ int cf_create_default_path_string (
             if (*(s_path.str ().rbegin ()) != DIR_SEPARATOR_CHAR) {
                 s_path << DIR_SEPARATOR_STR;
             }
-            //	if ( path[strlen(path)-1] != DIR_SEPARATOR_CHAR ) {
-            //		strcat_s(path, path_max, DIR_SEPARATOR_STR);
-            //	}
+            // if ( path[strlen(path)-1] != DIR_SEPARATOR_CHAR ) {
+            // strcat_s(path, path_max, DIR_SEPARATOR_STR);
+            // }
         }
 
         // add filename
@@ -2057,10 +2057,10 @@ void cfile_spew_pack_file_crcs () {
 }
 
 bool cf_check_location_flags (uint32_t check_flags, uint32_t desired_flags) {
-    Assertion (
+    ASSERTX (
         (check_flags & CF_LOCATION_ROOT_MASK) != 0,
         "check_flags must have a valid root value");
-    Assertion (
+    ASSERTX (
         (check_flags & CF_LOCATION_TYPE_MASK) != 0,
         "check_flags must have a valid type value");
 

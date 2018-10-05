@@ -8,11 +8,11 @@
 
 // ---------------------------------------------------------------------------------------
 // input:
-//			do_repeat		=>		property of button, set to 1 to allow
+// do_repeat               =>              property of button, set to 1 to allow
 // pressed events
-// if mouse 										pointer is held over button with left mouse
+// if mouse                                                                             pointer is held over button with left mouse
 // button down, otherwise 0
-//(useful for buttons that scroll items) 			ignore_focus	=>
+//(useful for buttons that scroll items)                        ignore_focus    =>
 // whether to allow Enter/Spacebar to affect pressed state when
 // control has focus
 //
@@ -163,11 +163,11 @@ void UI_BUTTON::draw () {
 }
 
 // process() is called to process the button, which amounts to:
-//   If mouse is over button, hilight it
-//   If highlighted and mouse button down, flag button as down
-//   If hotkey pressed, flag button as down
-//   If hotkey_if_focus pressed, and button has focus, flag button as down
-//   Set various BF_JUST_* flags if events changed from last frame
+// If mouse is over button, hilight it
+// If highlighted and mouse button down, flag button as down
+// If hotkey pressed, flag button as down
+// If hotkey_if_focus pressed, and button has focus, flag button as down
+// Set various BF_JUST_* flags if events changed from last frame
 //
 void UI_BUTTON::process (int focus) {
     int mouse_on_me, old_flags;

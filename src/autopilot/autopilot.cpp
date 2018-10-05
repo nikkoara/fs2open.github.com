@@ -99,7 +99,7 @@ vec3d* NavPoint::GetPosition () {
     if (flags & NP_WAYPOINT) {
         waypoint* wpt = find_waypoint_at_index (
             (waypoint_list*)target_obj, waypoint_num - 1);
-        Assert (wpt != NULL);
+        ASSERT (wpt != NULL);
         return wpt->get_pos ();
     }
     else {
@@ -205,12 +205,12 @@ extern object* Autopilot_flight_leader;
 // ********************************************************************************************
 // Engages autopilot
 // This does:
-//        * Control switched from player to AI
-//        * Time compression to 32x
-//        * Lock time compression -WMC
-//        * Tell AI to fly to targeted Nav Point (for all nav-status
-//        wings/ships)
-//		  * Sets max waypoint speed to the best-speed of the slowest ship
+// * Control switched from player to AI
+// * Time compression to 32x
+// * Lock time compression -WMC
+// * Tell AI to fly to targeted Nav Point (for all nav-status
+// wings/ships)
+// * Sets max waypoint speed to the best-speed of the slowest ship
 // tagged
 bool StartAutopilot () {
     // Check for support ship and dismiss it if it is not doing anything.
@@ -219,7 +219,7 @@ bool StartAutopilot () {
          objp != END_OF_LIST (&obj_used_list); objp = GET_NEXT (objp)) {
         if ((objp->type == OBJ_SHIP) &&
             !(objp->flags[Object::Object_Flags::Should_be_dead])) {
-            Assertion (
+            ASSERTX (
                 (objp->instance >= 0) && (objp->instance < MAX_SHIPS),
                 "objp does not have a valid pointer to a ship. Pointer is %d, "
                 "which is smaller than 0 or bigger than %d",
@@ -228,7 +228,7 @@ bool StartAutopilot () {
 
             if (shipp->team != Player_ship->team) continue;
 
-            Assertion (
+            ASSERTX (
                 (shipp->ship_info_index >= 0) &&
                     (shipp->ship_info_index <
                      static_cast< int > (Ship_info.size ())),
@@ -243,7 +243,7 @@ bool StartAutopilot () {
             // don't deal with dying or departing support ships
             if (shipp->is_dying_or_departing ()) continue;
 
-            Assert (shipp->ai_index != -1);
+            ASSERT (shipp->ai_index != -1);
             ai_info* support_ship_aip =
                 &(Ai_info[Ships[objp->instance].ai_index]);
 
@@ -340,7 +340,7 @@ bool StartAutopilot () {
     if (speed_cap < 1.0f) {
         /* We need to deal with this so that incorrectly flagged ships will not
         cause the engine to fail to limit all the ships speeds correctly. */
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Ship speed cap is way too small (%f)!\n"
             "This is normally caused by a ship that has nav-carry-status set, "
@@ -933,9 +933,9 @@ bool StartAutopilot () {
 // ********************************************************************************************
 // Disengages autopilot
 // this does:
-//         * Time compression to 1x
-//         * Delete AI nav goal
-//         * Control switched from AI to player
+// * Time compression to 1x
+// * Delete AI nav goal
+// * Control switched from AI to player
 void EndAutoPilot () {
     AutoPilotEngaged = false;
 
@@ -953,7 +953,7 @@ void EndAutoPilot () {
         CinematicStarted = false;
     }
 
-    Assert (CurrentNav >= 0);
+    ASSERT (CurrentNav >= 0);
 
     int goal = 0;
     char* goal_name = NULL;
@@ -1082,7 +1082,7 @@ void nav_warp (bool prewarp = false) {
     /* calcuate the speed that everyone is supposed to be going so that there
     is no need for anyone to accelerate or decelerate (most obvious with
     the player's fighter slowing down as it changes the camera pan speed). */
-    Assert (
+    ASSERT (
         Ai_info[Ships[Autopilot_flight_leader->instance].ai_index]
             .waypoint_speed_cap > 0);
     vm_vec_scale (
@@ -1114,9 +1114,9 @@ void nav_warp (bool prewarp = false) {
 // ********************************************************************************************
 // Checks for changes every NPS_TICKRATE milliseconds
 // Checks:
-//			* if we've gotten close enough to a nav point for it to be counted
+// * if we've gotten close enough to a nav point for it to be counted
 // as "Visited"
-//			* If we're current AutoNavigating it checks if we need to
+// * If we're current AutoNavigating it checks if we need to
 // autodisengage
 void NavSystem_Do () {
     static unsigned int last_update = 0;
@@ -1408,7 +1408,7 @@ bool AddNav_Ship (char* Nav, char* TargetName, int flags) {
     strcpy_s (tnav.m_NavName, Nav);
     tnav.flags = NP_SHIP | flags;
 
-    Assert (!(tnav.flags & NP_WAYPOINT));
+    ASSERT (!(tnav.flags & NP_WAYPOINT));
 
     for (i = 0; i < MAX_SHIPS; i++) {
         if (Ships[i].objnum != -1 &&
@@ -1446,7 +1446,7 @@ bool AddNav_Waypoint (char* Nav, char* WP_Path, int node, int flags) {
     strcpy_s (tnav.m_NavName, Nav);
     tnav.flags = NP_WAYPOINT | flags;
 
-    Assert (!(tnav.flags & NP_SHIP));
+    ASSERT (!(tnav.flags & NP_SHIP));
 
     tnav.target_obj = find_matching_waypoint_list (WP_Path);
     tnav.waypoint_num = node;
@@ -1490,7 +1490,7 @@ int Nav_Get_Flags (char* Nav) {
 
 // Generic
 bool Nav_Set_Flag (char* Nav, int flag) {
-    Assert (!(flag & NP_VALIDTYPE));
+    ASSERT (!(flag & NP_VALIDTYPE));
     int nav = FindNav (Nav);
 
     if (nav != -1) {
@@ -1504,7 +1504,7 @@ bool Nav_Set_Flag (char* Nav, int flag) {
 //+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 bool Nav_UnSet_Flag (char* Nav, int flag) {
-    Assert (!(flag & NP_VALIDTYPE));
+    ASSERT (!(flag & NP_VALIDTYPE));
 
     int nav = FindNav (Nav);
 

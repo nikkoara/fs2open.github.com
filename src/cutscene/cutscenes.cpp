@@ -100,7 +100,7 @@ void cutscene_mark_viewable (const char* filename) {
     char cut_file[MAX_FILENAME_LEN];
     char file[MAX_FILENAME_LEN];
 
-    Assert (filename != NULL);
+    ASSERT (filename != NULL);
 
     // strip off extension
     strcpy_s (file, filename);
@@ -124,7 +124,7 @@ void cutscene_mark_viewable (const char* filename) {
         i++;
     }
 
-    fs2::dialog::warning (
+    WARNINGF (
         LOCATION,
         "Could not find cutscene '%s' in listing; cannot mark it viewable...",
         filename);
@@ -237,12 +237,12 @@ void cutscenes_screen_play () {
     char name[MAX_FILENAME_LEN]; // *full_name
     int which_cutscene;
 
-    Assert (
+    ASSERT (
         (Selected_line >= 0) && (Selected_line < (int)Cutscene_list.size ()));
     which_cutscene = Cutscene_list[Selected_line];
 
     strcpy_s (name, Cutscenes[which_cutscene].filename);
-    //	full_name = cf_add_ext(name, NOX(".mve"));
+    // full_name = cf_add_ext(name, NOX(".mve"));
 
     main_hall_stop_music (true);
     main_hall_stop_ambient ();
@@ -293,7 +293,7 @@ void cutscenes_screen_scroll_screen_up () {
 
     if (Scroll_offset) {
         Scroll_offset--;
-        Assert (Selected_line > Scroll_offset);
+        ASSERT (Selected_line > Scroll_offset);
         h = Cutscene_list_coords[gr_screen.res][3] / gr_get_font_height ();
         while (Selected_line >= Scroll_offset + h) { Selected_line--; }
 
@@ -532,7 +532,7 @@ void cutscenes_screen_do_frame () {
                     src, Cutscene_desc_coords[gr_screen.res][2],
                     Text_line_size, Text_lines,
                     Cutscene_max_text_lines[gr_screen.res]);
-                Assert (
+                ASSERT (
                     Text_size >= 0 &&
                     Text_size < Cutscene_max_text_lines[gr_screen.res]);
             }

@@ -11,8 +11,8 @@ SourceOrigin::SourceOrigin ()
       m_weaponState (WeaponState::INVALID), m_offset (vmd_zero_vector) {}
 
 void SourceOrigin::getGlobalPosition (vec3d* posOut) const {
-    Assertion (posOut != nullptr, "Invalid vector pointer passed!");
-    Assertion (m_originType != SourceOriginType::NONE, "Invalid origin type!");
+    ASSERTX (posOut != nullptr, "Invalid vector pointer passed!");
+    ASSERTX (m_originType != SourceOriginType::NONE, "Invalid origin type!");
 
     vec3d offset;
     switch (m_originType) {
@@ -65,7 +65,7 @@ void SourceOrigin::getHostOrientation (matrix* matOut) const {
 
 void SourceOrigin::applyToParticleInfo (
     particle_info& info, bool allowRelative) const {
-    Assertion (m_originType != SourceOriginType::NONE, "Invalid origin type!");
+    ASSERTX (m_originType != SourceOriginType::NONE, "Invalid origin type!");
 
     if (allowRelative) {
         switch (m_originType) {
@@ -109,15 +109,15 @@ void SourceOrigin::setWeaponState (WeaponState state) {
 }
 
 void SourceOrigin::moveTo (vec3d* pos) {
-    Assertion (pos, "Invalid vector pointer passed!");
+    ASSERTX (pos, "Invalid vector pointer passed!");
 
     m_originType = SourceOriginType::VECTOR;
     m_origin.m_pos = *pos;
 }
 
 void SourceOrigin::moveToObject (object* objp, vec3d* offset) {
-    Assertion (objp, "Invalid object pointer passed!");
-    Assertion (offset, "Invalid vector pointer passed!");
+    ASSERTX (objp, "Invalid object pointer passed!");
+    ASSERTX (offset, "Invalid vector pointer passed!");
 
     m_originType = SourceOriginType::OBJECT;
     m_origin.m_object = object_h (objp);
@@ -201,7 +201,7 @@ vec3d SourceOrientation::getDirectionVector (
 }
 
 bool SourceOrientation::getNormal (vec3d* outNormal) const {
-    Assert (outNormal != nullptr);
+    ASSERT (outNormal != nullptr);
 
     *outNormal = m_normal;
 

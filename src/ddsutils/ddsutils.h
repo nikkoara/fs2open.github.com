@@ -79,21 +79,21 @@
 #pragma pack(1)
 // these structures are the headers for a dds file
 /*typedef struct _DDPIXELFORMAT {
-    uint	dwSize;
-    uint	dwFlags;
-    uint	dwFourCC;
-    uint	dwRGBBitCount;
-    uint	dwRBitMask;
-    uint 	dwGBitMask;
-    uint 	dwBBitMask;
-    uint	dwRGBAlphaBitMask;
+    uint        dwSize;
+    uint        dwFlags;
+    uint        dwFourCC;
+    uint        dwRGBBitCount;
+    uint        dwRBitMask;
+    uint        dwGBitMask;
+    uint        dwBBitMask;
+    uint        dwRGBAlphaBitMask;
 };
 
 typedef struct _DDSCAPS2
 {
-    uint		dwCaps1;
-    uint		dwCaps2;
-    uint		Reserved[2];
+    uint                dwCaps1;
+    uint                dwCaps2;
+    uint                Reserved[2];
 };*/
 
 struct DDSURFACEDESC2  {
@@ -123,8 +123,8 @@ struct DDSURFACEDESC2  {
         uint Reserved[2];
     } ddsCaps;
 
-    //	DDPIXELFORMAT	ddpfPixelFormat;
-    //	DDSCAPS2		ddsCaps;			// direct draw surface capabilities
+    // DDPIXELFORMAT   ddpfPixelFormat;
+    // DDSCAPS2                ddsCaps;                        // direct draw surface capabilities
     uint dwReserved2;
 };
 #pragma pack()

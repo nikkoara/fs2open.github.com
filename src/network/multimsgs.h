@@ -33,7 +33,7 @@ struct log_entry;
 
 #define ADD_DATA(d)                                             \
     do {                                                        \
-        Assert ((packet_size + sizeof (d)) < MAX_PACKET_SIZE);  \
+        ASSERT ((packet_size + sizeof (d)) < MAX_PACKET_SIZE);  \
         memcpy (data + packet_size, &d, sizeof (d));            \
         packet_size += sizeof (d);                              \
     } while (0)
@@ -43,7 +43,7 @@ struct log_entry;
         static_assert (                                         \
             sizeof (d) == sizeof (std::int16_t),                \
             "Size of short is not right!");                     \
-        Assert ((packet_size + sizeof (d)) < MAX_PACKET_SIZE);  \
+        ASSERT ((packet_size + sizeof (d)) < MAX_PACKET_SIZE);  \
         short swap = d;                                         \
         memcpy (data + packet_size, &swap, sizeof (d));         \
         packet_size += sizeof (d);                              \
@@ -54,7 +54,7 @@ struct log_entry;
         static_assert (                                         \
             sizeof (d) == sizeof (std::uint16_t),               \
             "Size of unsigned short is not right!");            \
-        Assert ((packet_size + sizeof (d)) < MAX_PACKET_SIZE);  \
+        ASSERT ((packet_size + sizeof (d)) < MAX_PACKET_SIZE);  \
         ushort swap = d;                                        \
         memcpy (data + packet_size, &swap, sizeof (d));         \
         packet_size += sizeof (d);                              \
@@ -65,7 +65,7 @@ struct log_entry;
         static_assert (                                         \
             sizeof (d) == sizeof (std::int32_t),                \
             "Size of int is not right!");                       \
-        Assert ((packet_size + sizeof (d)) < MAX_PACKET_SIZE);  \
+        ASSERT ((packet_size + sizeof (d)) < MAX_PACKET_SIZE);  \
         int swap = d;                                           \
         memcpy (data + packet_size, &swap, sizeof (d));         \
         packet_size += sizeof (d);                              \
@@ -76,7 +76,7 @@ struct log_entry;
         static_assert (                                         \
             sizeof (d) == sizeof (std::uint32_t),               \
             "Size of unsigned int is not right!");              \
-        Assert ((packet_size + sizeof (d)) < MAX_PACKET_SIZE);  \
+        ASSERT ((packet_size + sizeof (d)) < MAX_PACKET_SIZE);  \
         uint swap = d;                                          \
         memcpy (data + packet_size, &swap, sizeof (d));         \
         packet_size += sizeof (d);                              \
@@ -87,7 +87,7 @@ struct log_entry;
         static_assert (                                         \
             sizeof (d) == sizeof (std::uint64_t),               \
             "Size of unsigned long is not right!");             \
-        Assert ((packet_size + sizeof (d)) < MAX_PACKET_SIZE);  \
+        ASSERT ((packet_size + sizeof (d)) < MAX_PACKET_SIZE);  \
         std::uint64_t swap = d;                                 \
         memcpy (data + packet_size, &swap, sizeof (d));         \
         packet_size += sizeof (d);                              \
@@ -95,7 +95,7 @@ struct log_entry;
 
 #define ADD_FLOAT(d)                                            \
     do {                                                        \
-        Assert ((packet_size + sizeof (d)) < MAX_PACKET_SIZE);  \
+        ASSERT ((packet_size + sizeof (d)) < MAX_PACKET_SIZE);  \
         float swap = d;                                         \
         memcpy (data + packet_size, &swap, sizeof (d));         \
         packet_size += sizeof (d);                              \
@@ -103,7 +103,7 @@ struct log_entry;
 
 #define ADD_STRING(s)                                               \
     do {                                                            \
-        Assert ((packet_size + strlen (s) + 4) < MAX_PACKET_SIZE);  \
+        ASSERT ((packet_size + strlen (s) + 4) < MAX_PACKET_SIZE);  \
         int len = (int)strlen (s);                                  \
         int len_tmp = len;                                          \
         ADD_DATA (len_tmp);                                         \
@@ -113,7 +113,7 @@ struct log_entry;
 
 #define ADD_ORIENT(d)                                   \
     {                                                   \
-        Assert ((packet_size + 17) < MAX_PACKET_SIZE);  \
+        ASSERT ((packet_size + 17) < MAX_PACKET_SIZE);  \
         ubyte dt[17];                                   \
         multi_pack_orient_matrix (dt, &d);              \
         memcpy (data + packet_size, dt, 17);            \
@@ -572,7 +572,7 @@ void process_wss_request_packet (ubyte* data, header* hinfo);
 // wss_data is the pointer to a block of data returned by store_wss_stuff(...)
 //
 // I would reccomend :
-// int store_wss_data(ubyte *block);		// which returns bytes processed
+// int store_wss_data(ubyte *block);            // which returns bytes processed
 //
 // so you would say :
 //
@@ -582,12 +582,12 @@ void process_wss_request_packet (ubyte* data, header* hinfo);
 //
 // also :
 // I would reccomend :
-// int restore_wss_data(ubyte *block);		// which returns bytes processed
+// int restore_wss_data(ubyte *block);          // which returns bytes processed
 //
 // so I would say in the process_wss_update_packet() :
 //
 // int processed = restore_wss_data(block);
-//	do_other_lowlevel_packet_related_stuff_here();
+// do_other_lowlevel_packet_related_stuff_here();
 //
 void send_wss_update_packet (int team_num, ubyte* wss_data, int size);
 void process_wss_update_packet (ubyte* data, header* hinfo);

@@ -14,10 +14,10 @@
 #include "sound/ds3d.h"
 #include "species_defs/species_defs.h"
 
-//  // --mharris port hack--
-//  int ds_using_ds3d();
-//  int ds_get_channel(int);
-//  int ds3d_update_buffer(int, float, float, vec3d *, vec3d *);
+// // --mharris port hack--
+// int ds_using_ds3d();
+// int ds_get_channel(int);
+// int ds3d_update_buffer(int, float, float, vec3d *, vec3d *);
 // --end hack--
 
 // Persistent sounds for objects (pointer to obj_snd is in object struct)
@@ -109,7 +109,7 @@ DCF (objsnd, "Persistent sound stuff") {
             vec3d source_pos;
             float distance;
 
-            Assert (osp != NULL);
+            ASSERT (osp != NULL);
             if (!osp->instance.isValid ()) {
                 continue;
                 // sprintf(buf1,"OFF");
@@ -170,7 +170,7 @@ DCF_BOOL (doppler, Doppler_enabled)
 //
 // Get a free slot in the Objsnds[] array
 //
-//	returns -1 if no slot is available
+// returns -1 if no slot is available
 int obj_snd_get_slot () {
     int i;
 
@@ -215,7 +215,7 @@ void obj_snd_level_init () {
 //
 // Stop a persistent sound from playing.
 //
-// parameters:  objp			=> pointer to object that sound is to be
+// parameters:  objp                    => pointer to object that sound is to be
 // stopped for
 //
 //
@@ -224,7 +224,7 @@ void obj_snd_stop (object* objp, int index) {
 
     // sanity
     if (index >= (int)objp->objsnd_num.size ()) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Object sound index %d is bigger than the actual size %d!", index,
             (int)objp->objsnd_num.size ());
@@ -249,7 +249,7 @@ void obj_snd_stop (object* objp, int index) {
                 case OBJ_DEBRIS:
                 case OBJ_ASTEROID:
                     Num_obj_sounds_playing--;
-                    Assert (Num_obj_sounds_playing >= 0);
+                    ASSERT (Num_obj_sounds_playing >= 0);
                     break;
 
                 default:
@@ -273,7 +273,7 @@ void obj_snd_stop (object* objp, int index) {
             case OBJ_DEBRIS:
             case OBJ_ASTEROID:
                 Num_obj_sounds_playing--;
-                Assert (Num_obj_sounds_playing >= 0);
+                ASSERT (Num_obj_sounds_playing >= 0);
                 break;
 
             default:
@@ -305,7 +305,7 @@ void obj_snd_stop_all () {
 // Calculate the frequency of a sound to be played, based on the relative
 // velocities of the source and observor
 //
-//	returns:		frequency of the sound
+// returns:                frequency of the sound
 //
 int obj_snd_get_freq (
     int source_freq, object* source, object* observor, vec3d* source_pos) {
@@ -340,7 +340,7 @@ int obj_snd_stop_lowest_vol (float new_vol) {
     lowest_vol = 1000.0f;
     for (osp = GET_FIRST (&obj_snd_list); osp != END_OF_LIST (&obj_snd_list);
          osp = GET_NEXT (osp)) {
-        Assert (osp->objnum != -1);
+        ASSERT (osp->objnum != -1);
         objp = &Objects[osp->objnum];
 
         if ((osp->instance.isValid ()) && (osp->vol < lowest_vol)) {
@@ -385,7 +385,7 @@ int obj_snd_stop_lowest_vol (float new_vol) {
 // play a flyby sound.  Only play flyby sound for OBJ_SHIP objects.
 //
 // NOTE: global data Flyby_last_objp, Flyby_next_sound, Flyby_next_repeat are
-//			used.
+// used.
 //
 void maybe_play_flyby_snd (
     float closest_dist, object* closest_objp, object* listener_objp) {
@@ -412,7 +412,7 @@ void maybe_play_flyby_snd (
                         return;
                 }
 
-                Assert (closest_objp->type == OBJ_SHIP);
+                ASSERT (closest_objp->type == OBJ_SHIP);
                 if (closest_objp->type != OBJ_SHIP) { return; }
 
                 // pick a random species-based sound
@@ -437,7 +437,7 @@ void maybe_play_flyby_snd (
                 // &View_position); nprintf(("AI", "Frame %i: Playing flyby
                 // sound, species = %i, size = %i, dist = %7.3f\n", Framecount,
                 // species, ship_size, dist));
-                //				nprintf(("AI", "Frame %i: Playing flyby sound,
+                // nprintf(("AI", "Frame %i: Playing flyby sound,
                 // species = %i, size = %i, dist = %7.3f\n", Framecount,
                 // Debug_1, Debug_2, dist)); Debug_1 = (Debug_1+1)%3; Debug_2 =
                 // (Debug_2+1)%2;
@@ -492,7 +492,7 @@ void obj_snd_do_frame () {
 
     for (osp = GET_FIRST (&obj_snd_list); osp != END_OF_LIST (&obj_snd_list);
          osp = GET_NEXT (osp)) {
-        Assert (osp != NULL);
+        ASSERT (osp != NULL);
         objp = &Objects[osp->objnum];
         if (Player_obj == objp && observer_obj == Player_obj) {
             // we don't play the engine sound if the view is from the player
@@ -641,10 +641,10 @@ void obj_snd_do_frame () {
                         SND_PRIORITY_TRIPLE_INSTANCE, NULL, 1.0f, 0, true);
                     if (osp->instance.isValid ()) { Num_obj_sounds_playing++; }
                 }
-                Assert (Num_obj_sounds_playing <= MAX_OBJ_SOUNDS_PLAYING);
+                ASSERT (Num_obj_sounds_playing <= MAX_OBJ_SOUNDS_PLAYING);
 
-            } // 		end if ( distance < Snds[osp->id].max )
-        }     // 		if ( osp->instance == -1 )
+            } // end if ( distance < Snds[osp->id].max )
+        }     // if ( osp->instance == -1 )
         else {
             if (distance > gamesnd_get_game_sound (osp->id)->max) {
                 int sound_index = -1;
@@ -660,7 +660,7 @@ void obj_snd_do_frame () {
                     }
                 }
 
-                Assert (sound_index != -1);
+                ASSERT (sound_index != -1);
                 obj_snd_stop (objp, sound_index); // currently playing sound
                                                   // has gone past maximum
             }
@@ -674,7 +674,7 @@ void obj_snd_do_frame () {
         channel = ds_get_channel (osp->instance);
         // for DirectSound3D sounds, re-establish the maximum speed based on
         // the
-        //	speed_vol_multiplier
+        // speed_vol_multiplier
         if (sp == NULL ||
             ((sp != NULL) && (sp->flags[Ship::Ship_Flags::Engines_on]))) {
             snd_set_volume (
@@ -711,16 +711,16 @@ void obj_snd_do_frame () {
 //
 // Assign a persistent sound to an object.
 //
-// parameters:  objnum		=> index of object that sound is being assigned to
-//              i				=> Index into Snds[] array
-//					 fname		=> filename of sound to play ( so DS3D can load
+// parameters:  objnum          => index of object that sound is being assigned to
+// i                               => Index into Snds[] array
+// fname          => filename of sound to play ( so DS3D can load
 // the sound
 //)
 //
-// returns:     -1			=> sound could not be assigned (possible, since
+// returns:     -1                      => sound could not be assigned (possible, since
 // only MAX_OBJECT_SOUNDS persistent
-//										sound can be assigned per object).
-//               >= 0			=> sound was successfully assigned
+// sound can be assigned per object).
+// >= 0                   => sound was successfully assigned
 //
 int obj_snd_assign (
     int objnum, gamesnd_id sndnum, vec3d* pos, int main, int flags,
@@ -788,17 +788,17 @@ int obj_snd_assign (
 //
 // Remove a persistent sound that has been assigned to an object.
 //
-// parameters:  objnum		=> index of object that sound is being removed
+// parameters:  objnum          => index of object that sound is being removed
 // from.
-//				index		=> index of sound in objsnd_num
+// index           => index of sound in objsnd_num
 //
 void obj_snd_delete (int objnum, int index) {
     // Sanity checking
-    Assert (objnum > -1 && objnum < MAX_OBJECTS);
+    ASSERT (objnum > -1 && objnum < MAX_OBJECTS);
 
     object* objp = &Objects[objnum];
 
-    Assert (index > -1 && index < (int)objp->objsnd_num.size ());
+    ASSERT (index > -1 && index < (int)objp->objsnd_num.size ());
 
     obj_snd* osp = &Objsnds[objp->objsnd_num[index]];
 
@@ -818,10 +818,10 @@ void obj_snd_delete (int objnum, int index) {
 //
 // Remove every similar persistent sound that has been assigned to an object.
 //
-// parameters:  objnum		=> index of object that sound is being removed
+// parameters:  objnum          => index of object that sound is being removed
 // from.
-//				sndnum		=> index of sound that we're trying to completely
-// get rid of 								-1 to delete all persistent sounds
+// sndnum          => index of sound that we're trying to completely
+// get rid of                                                           -1 to delete all persistent sounds
 // on
 // ship.
 //

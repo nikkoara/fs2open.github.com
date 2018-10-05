@@ -23,7 +23,7 @@ static long double Timer_to_microseconds;
 static long double Timer_to_nanoseconds;
 
 static uint64_t get_performance_counter () {
-    Assertion (
+    ASSERTX (
         Timer_inited,
         "This function can only be used when the timer system is "
         "initialized!");
@@ -149,8 +149,8 @@ int timestamp (int delta_ms) {
     return t2;
 }
 
-//	Returns milliseconds until timestamp will elapse.
-//	Negative value gives milliseconds ago that timestamp elapsed.
+// Returns milliseconds until timestamp will elapse.
+// Negative value gives milliseconds ago that timestamp elapsed.
 int timestamp_until (int stamp) {
     // JAS: FIX
     // HACK!! This doesn't handle rollover!
@@ -159,7 +159,7 @@ int timestamp_until (int stamp) {
     return stamp - timestamp_ms ();
 
     /*
-        uint	delta;
+        uint    delta;
 
         delta = stamp - timestamp_ticker;
 

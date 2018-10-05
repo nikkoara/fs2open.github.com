@@ -5,7 +5,7 @@
 
 #include "globalincs/pstypes.h"
 #include "sound/ffmpeg/WaveFile.h"
-#include "utils/id.h"
+#include "util/id.h"
 
 // Constants that DirectSound should assign, but doesn't
 #define MIN_PITCH 100

@@ -25,7 +25,7 @@ vertex* get_temp_point () {
 }
 
 void free_temp_point (vertex* p) {
-    Assert (p->flags & PF_TEMP_POINT);
+    ASSERT (p->flags & PF_TEMP_POINT);
 
     free_points[--free_point_num] = p;
 

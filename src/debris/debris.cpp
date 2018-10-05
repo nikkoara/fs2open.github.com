@@ -42,8 +42,8 @@ int Debris_model = -1;
 int Debris_vaporize_model = -1;
 int Debris_num_submodels = 0;
 
-#define MAX_DEBRIS_DIST 10000.0f //	Debris goes away if it's this far away.
-#define DEBRIS_DISTANCE_CHECK_TIME (10 * 1000) //	Check every 10 seconds.
+#define MAX_DEBRIS_DIST 10000.0f // Debris goes away if it's this far away.
+#define DEBRIS_DISTANCE_CHECK_TIME (10 * 1000) // Check every 10 seconds.
 #define DEBRIS_INDEX(dp) (int)(dp - Debris)
 
 #define MAX_SPEED_SMALL_DEBRIS 200 // maximum velocity of small debris piece
@@ -132,7 +132,7 @@ void debris_page_in () {
         species->debris_texture.bitmap_id =
             bm_load (species->debris_texture.filename);
         if (species->debris_texture.bitmap_id < 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Couldn't load species %s debris\ntexture, '%s'\n",
                 species->species_name, species->debris_texture.filename);
         }
@@ -153,7 +153,7 @@ void debris_clear_expired_flag (debris* db) {
         if (db->is_hull) {
             Num_hull_pieces--;
             list_remove (Hull_debris_list, db);
-            Assert (Num_hull_pieces >= 0);
+            ASSERT (Num_hull_pieces >= 0);
         }
     }
 }
@@ -168,11 +168,11 @@ void debris_delete (object* obj) {
     debris* db;
 
     num = obj->instance;
-    Assert (Debris[num].objnum == OBJ_INDEX (obj));
+    ASSERT (Debris[num].objnum == OBJ_INDEX (obj));
 
     db = &Debris[num];
 
-    Assert (Num_debris_pieces >= 0);
+    ASSERT (Num_debris_pieces >= 0);
     if (db->is_hull && (db->flags & DEBRIS_EXPIRE)) {
         debris_clear_expired_flag (db);
     }
@@ -192,7 +192,7 @@ void maybe_delete_debris (debris* db) {
 
     if (timestamp_elapsed (db->next_distance_check) &&
         timestamp_elapsed (db->must_survive_until)) {
-        if (!(Game_mode & GM_MULTIPLAYER)) { //	In single player game, just
+        if (!(Game_mode & GM_MULTIPLAYER)) { // In single player game, just
                                              // check against player.
             if (vm_vec_dist_quick (
                     &Player_obj->pos, &Objects[db->objnum].pos) >
@@ -228,15 +228,15 @@ MONITOR (NumHullDebris)
  * Do various updates to debris:  check if time to die, start fireballs
  * Maybe delete debris if it's very far away from player.
  *
- * @param obj			pointer to debris object
- * @param frame_time	time elapsed since last debris_move() called
+ * @param obj                   pointer to debris object
+ * @param frame_time    time elapsed since last debris_move() called
  */
 void debris_process_post (object* obj, float frame_time) {
     int i, num;
     num = obj->instance;
 
     int objnum = OBJ_INDEX (obj);
-    Assert (Debris[num].objnum == objnum);
+    ASSERT (Debris[num].objnum == objnum);
     debris* db = &Debris[num];
 
     if (db->is_hull) {
@@ -258,7 +258,7 @@ void debris_process_post (object* obj, float frame_time) {
     }
 
     maybe_delete_debris (
-        db); //	Make this debris go away if it's very far away.
+        db); // Make this debris go away if it's very far away.
 
     // ================== DO THE ELECTRIC ARCING STUFF =====================
     if (db->arc_frequency <= 0) {
@@ -422,13 +422,13 @@ void calc_debris_physics_properties (physics_info* pi, vec3d* min, vec3d* max);
 /**
  * Create debris from an object
  *
- * @param source_obj	Source object
- * @param model_num		Model number
- * @param submodel_num	Sub-model number
- * @param pos			Position in vector space
- * @param exp_center	Explosion center in vector space
- * @param hull_flag		Hull flag settings
- * @param exp_force		Explosion force, used to assign velocity to
+ * @param source_obj    Source object
+ * @param model_num             Model number
+ * @param submodel_num  Sub-model number
+ * @param pos                   Position in vector space
+ * @param exp_center    Explosion center in vector space
+ * @param hull_flag             Hull flag settings
+ * @param exp_force             Explosion force, used to assign velocity to
  * pieces. 1.0f assigns velocity like before. 2.0f assigns twice as much to
  * non-inherited part of velocity
  */
@@ -446,8 +446,8 @@ object* debris_create (
 
     parent_objnum = OBJ_INDEX (source_obj);
 
-    Assert ((source_obj->type == OBJ_SHIP) || (source_obj->type == OBJ_GHOST));
-    Assert (source_obj->instance >= 0 && source_obj->instance < MAX_SHIPS);
+    ASSERT ((source_obj->type == OBJ_SHIP) || (source_obj->type == OBJ_GHOST));
+    ASSERT (source_obj->instance >= 0 && source_obj->instance < MAX_SHIPS);
     shipp = &Ships[source_obj->instance];
     sip = &Ship_info[shipp->ship_info_index];
     vaporize = (shipp->flags[Ship::Ship_Flags::Vaporize]);
@@ -742,7 +742,7 @@ object* debris_create (
                                    // VOLITION anymore.
 
     // ensure vel is valid
-    Assert (!vm_is_vec_nan (&obj->phys_info.vel));
+    ASSERT (!vm_is_vec_nan (&obj->phys_info.vel));
 
     return obj;
 }
@@ -768,7 +768,7 @@ void debris_hit (
         vm_vec_normalize_safe (&tmp_norm);
 
         pe.normal = tmp_norm;      // What normal the particle emit around
-        pe.normal_variance = 0.3f; //	How close they stick to that normal
+        pe.normal_variance = 0.3f; // How close they stick to that normal
                                    // 0=good, 1=360 degree
         pe.min_rad = 0.20f;        // Min radius
         pe.max_rad = 0.40f;        // Max radius
@@ -776,7 +776,7 @@ void debris_hit (
         // Sparks for first time at this spot
         pe.num_low = 10;           // Lowest number of particles to create
         pe.num_high = 10;          // Highest number of particles to create
-        pe.normal_variance = 0.3f; //	How close they stick to that normal
+        pe.normal_variance = 0.3f; // How close they stick to that normal
                                    // 0=good, 1=360 degree
         pe.min_vel = 0.0f;         // How fast the slowest particle can move
         pe.max_vel = 10.0f;        // How fast the fastest particle can move
@@ -816,17 +816,17 @@ int debris_check_collision (
     mc_info_init (&mc);
     int num;
 
-    Assert (pdebris->type == OBJ_DEBRIS);
+    ASSERT (pdebris->type == OBJ_DEBRIS);
 
     num = pdebris->instance;
-    Assert (num >= 0);
+    ASSERT (num >= 0);
 
-    Assert (Debris[num].objnum == OBJ_INDEX (pdebris));
+    ASSERT (Debris[num].objnum == OBJ_INDEX (pdebris));
 
     // debris_hit_info NULL - so debris-weapon collision
     if (debris_hit_info == NULL) {
         // debris weapon collision
-        Assert (other_obj->type == OBJ_WEAPON);
+        ASSERT (other_obj->type == OBJ_WEAPON);
         mc.model_instance_num = -1;
         mc.model_num = Debris[num].model_num; // Fill in the model to check
         mc.submodel_num = Debris[num].submodel_num;
@@ -860,7 +860,7 @@ int debris_check_collision (
 
     // debris ship collision -- use debris_hit_info to calculate physics
     object* pship_obj = other_obj;
-    Assert (pship_obj->type == OBJ_SHIP);
+    ASSERT (pship_obj->type == OBJ_SHIP);
 
     object* heavy = debris_hit_info->heavy;
     object* lighter = debris_hit_info->light;
@@ -1128,8 +1128,8 @@ int debris_check_collision (
  * Return the team field for a debris object
  */
 int debris_get_team (object* objp) {
-    Assert (objp->type == OBJ_DEBRIS);
-    Assert (objp->instance >= 0 && objp->instance < MAX_DEBRIS_PIECES);
+    ASSERT (objp->type == OBJ_DEBRIS);
+    ASSERT (objp->instance >= 0 && objp->instance < MAX_DEBRIS_PIECES);
     return Debris[objp->instance].team;
 }
 
@@ -1173,10 +1173,10 @@ void debris_render (object* obj, model_draw_list* scene) {
     pm = NULL;
     num = obj->instance;
 
-    Assert (num >= 0 && num < MAX_DEBRIS_PIECES);
+    ASSERT (num >= 0 && num < MAX_DEBRIS_PIECES);
     db = &Debris[num];
 
-    Assert (db->flags & DEBRIS_USED);
+    ASSERT (db->flags & DEBRIS_USED);
 
     texture_info* tbase = NULL;
 

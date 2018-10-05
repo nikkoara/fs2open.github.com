@@ -8,15 +8,15 @@
 #include "math/vecmat.h"
 #include "object/object_flags.h"
 #include "physics/physics.h"
-#include "utils/event.h"
+#include "util/event.h"
 
 #include <functional>
 
 /*
- *		CONSTANTS
+ *              CONSTANTS
  */
 
-#define DEFAULT_SHIELD_SECTIONS 4 //	Number of sections in standard shields.
+#define DEFAULT_SHIELD_SECTIONS 4 // Number of sections in standard shields.
 
 #ifndef NDEBUG
 #define OBJECT_CHECK
@@ -30,7 +30,7 @@
 #define OBJ_START 4    // a starting point marker (player start, etc)
 #define OBJ_WAYPOINT 5 // a waypoint object, maybe only ever used by Fred
 #define OBJ_DEBRIS 6   // a flying piece of ship debris
-//#define OBJ_CMEASURE			7		//a countermeasure, such as chaff
+//#define OBJ_CMEASURE                  7               //a countermeasure, such as chaff
 #define OBJ_GHOST 8      // so far, just a placeholder for when a player dies.
 #define OBJ_POINT 9      // generic object type to display a point in Fred.
 #define OBJ_SHOCKWAVE 10 // a shockwave
@@ -38,7 +38,7 @@
 #define OBJ_OBSERVER \
     12 // used for multiplayer observers (possibly single player later)
 #define OBJ_ASTEROID \
-    13 //	An asteroid, you know, a big rock, like debris, sort of.
+    13 // An asteroid, you know, a big rock, like debris, sort of.
 #define OBJ_JUMP_NODE 14 // A jump node object, used only in Fred.
 #define OBJ_BEAM \
     15 // beam weapons. we have to roll them into the object system to get the
@@ -49,7 +49,7 @@
 
 #define UNUSED_OBJNUM \
     (-MAX_OBJECTS *   \
-     2) //	Newer systems use this instead of -1 for invalid object.
+     2) // Newer systems use this instead of -1 for invalid object.
 
 extern const char* Object_type_names[MAX_OBJECT_TYPES];
 
@@ -58,50 +58,50 @@ extern const char* Object_type_names[MAX_OBJECT_TYPES];
 //
 // int weapon_create( weapon specific parameters )
 // {
-//    ...
-//		objnum = obj_create();
-//		... Do some check to correctly handle obj_create returning  which
-//        means that that object couldn't be created
-//    ... Initialize the weapon-specific info in Objects[objnum]
-//    return objnum;
+// ...
+// objnum = obj_create();
+// ... Do some check to correctly handle obj_create returning  which
+// means that that object couldn't be created
+// ... Initialize the weapon-specific info in Objects[objnum]
+// return objnum;
 // }
 //
 // void weapon_delete( object * obj )
 // {
-//    {Put a call to this in OBJECT.C, function
-//    obj_delete_all_that_should_be_dead } WARNING: To kill an object, set it's
-//    OF_SHOULD_BE_DEAD flag.  Then, this function will get called when it's
-//    time to clean up the data. Assert(
-//    obj->flags[Object::Object_Flags::Should_be_dead] );
-//    ...
-//    ... Free up all weapon-specfic data
-//    obj_delete(objnum);
+// {Put a call to this in OBJECT.C, function
+// obj_delete_all_that_should_be_dead } WARNING: To kill an object, set it's
+// OF_SHOULD_BE_DEAD flag.  Then, this function will get called when it's
+// time to clean up the data. Assert(
+// obj->flags[Object::Object_Flags::Should_be_dead] );
+// ...
+// ... Free up all weapon-specfic data
+// obj_delete(objnum);
 // }
 //
 // void weapon_move( object * obj )
 // {
-//    {Put a call to this in ??? }
-//    ... Do whatever needs to be done each frame.  Usually this amounts
-//        to setting the thrust, seeing if we've died, etc.
+// {Put a call to this in ??? }
+// ... Do whatever needs to be done each frame.  Usually this amounts
+// to setting the thrust, seeing if we've died, etc.
 // }
 //
 // int weapon_check_collision( object * obj, object * other_obj, vec3d * hitpos
 // )
 // {
-//    this should check if a vector from
-//		other_obj->last_pos to other_obj->pos with a radius of
+// this should check if a vector from
+// other_obj->last_pos to other_obj->pos with a radius of
 // other_obj->radius
-//    collides with object obj.   If it does, then fill in hitpos with the
-//    point of impact and return non-zero, otherwise return 0 if no impact.
-//    Note that this shouldn't take any action... that happens in weapon_hit.
+// collides with object obj.   If it does, then fill in hitpos with the
+// point of impact and return non-zero, otherwise return 0 if no impact.
+// Note that this shouldn't take any action... that happens in weapon_hit.
 // }
 
 //
 // void weapon_hit( object * obj, object * other_obj, vec3d * hitpos )
 // {
-//    {Put a call to this in COLLIDE.C}
-//    ... Do what needs to be done when this object gets hit
-//    ... Reducing shields, etc
+// {Put a call to this in COLLIDE.C}
+// ... Do what needs to be done when this object gets hit
+// ... Reducing shields, etc
 // }
 
 struct obj_flag_name  {
@@ -136,9 +136,9 @@ public:
     matrix last_orient;     // how the object was oriented last frame
     physics_info phys_info; // a physics object
     int n_quadrants;        // how many shield quadrants the ship has
-    std::vector< float > shield_quadrant; //	Shield is broken into
+    std::vector< float > shield_quadrant; // Shield is broken into
                                           // components, quadrants by default.
-    float hull_strength;                  //	Remaining hull strength.
+    float hull_strength;                  // Remaining hull strength.
     float sim_hull_strength; // Simulated hull strength - used with training
                              // weapons.
     std::vector< int > objsnd_num; // Index of persistant sound struct.
@@ -206,7 +206,7 @@ public:
 #endif
 
 /*
- *		VARIABLES
+ *              VARIABLES
  */
 
 extern int Object_inited;
@@ -237,7 +237,7 @@ extern object* Player_obj; // Which object is the player. Has to be valid.
 #define OBJ_INDEX(objp) (int)(objp - Objects)
 
 /*
- *		FUNCTIONS
+ *              FUNCTIONS
  */
 
 // do whatever setup needs to be done
@@ -292,10 +292,10 @@ void obj_remove_pairs (object* a);
 // add an object to the pairs list
 void obj_add_pairs (int objnum);
 
-//	Returns true if objects A and B are expected to collide in next duration
-// seconds. 	For purposes of this check, the first object moves from current
-// location to predicted 	location.  The second object is assumed to be where
-// it will be at time duration, NOT 	where it currently is. 	radius_scale: 0.0f
+// Returns true if objects A and B are expected to collide in next duration
+// seconds.     For purposes of this check, the first object moves from current
+// location to predicted        location.  The second object is assumed to be where
+// it will be at time duration, NOT     where it currently is.  radius_scale: 0.0f
 // means use polygon models, else scale sphere size by radius_scale radius_scale
 //== 1.0f means Descent style collisions.
 int objects_will_collide (

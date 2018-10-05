@@ -26,7 +26,7 @@ class player;
 #define PXO_CHECK_VALID_MISSIONS // always check for valid missions in a debug
                                  // build
 #else
-// #define PXO_CHECK_VALID_MISSIONS				// comment this in and out as
+// #define PXO_CHECK_VALID_MISSIONS                             // comment this in and out as
 // necessary (for testing or not)
 #endif
 

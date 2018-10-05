@@ -67,7 +67,7 @@ void hud_obs_render_players_all () {
  * Render any specific observer stuff
  */
 void hud_render_observer () {
-    Assert (
+    ASSERT (
         (Game_mode & GM_MULTIPLAYER) &&
         (Net_player->flags & NETINFO_FLAG_OBSERVER));
 

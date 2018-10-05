@@ -25,7 +25,7 @@ bool initialized = false;
  * @brief Compatibility conversion from Button index to HatPosition
  */
 inline HatPosition hatBtnToEnum (int in) {
-    Assertion (
+    ASSERTX (
         in >= JOY_NUM_BUTTONS,
         "Invalid button value passed to hatBtnToEnum: %i", in);
 
@@ -268,7 +268,7 @@ namespace joystick {
 Joystick::Joystick (int device_id) : _device_id (device_id) {
     _joystick = SDL_JoystickOpen (device_id);
 
-    Assertion (
+    ASSERTX (
         _joystick != nullptr, "Failed to open a joystick, get a coder!");
 
     fillValues ();
@@ -299,20 +299,20 @@ bool Joystick::isAttached () const {
 }
 
 Sint16 Joystick::getAxis (int index) const {
-    Assertion (index >= 0 && index < numAxes (), "Invalid index %d!", index);
+    ASSERTX (index >= 0 && index < numAxes (), "Invalid index %d!", index);
 
     return _axisValues[index];
 }
 
 bool Joystick::isButtonDown (int index) const {
-    Assertion (
+    ASSERTX (
         index >= 0 && index < numButtons (), "Invalid index %d!", index);
 
     return _button[index].DownTimestamp >= 0;
 }
 
 float Joystick::getButtonDownTime (int index) const {
-    Assertion (
+    ASSERTX (
         index >= 0 && index < numButtons (), "Invalid index %d!", index);
 
     if (_button[index].DownTimestamp >= 0) {
@@ -325,7 +325,7 @@ float Joystick::getButtonDownTime (int index) const {
 }
 
 int Joystick::getButtonDownCount (int index, bool reset) {
-    Assertion (
+    ASSERTX (
         index >= 0 && index < numButtons (), "Invalid index %d!", index);
 
     auto val = _button[index].DownCount;
@@ -336,20 +336,20 @@ int Joystick::getButtonDownCount (int index, bool reset) {
 }
 
 coord2d Joystick::getBall (int index) const {
-    Assertion (index >= 0 && index < numBalls (), "Invalid index %d!", index);
+    ASSERTX (index >= 0 && index < numBalls (), "Invalid index %d!", index);
 
     return _ballValues[index];
 }
 
 HatPosition Joystick::getHatPosition (int index) const {
-    Assertion (index >= 0 && index < numHats (), "Invalid index %d!", index);
+    ASSERTX (index >= 0 && index < numHats (), "Invalid index %d!", index);
 
     return _hat[index].Value;
 }
 
 int Joystick::getHatDownCount (
     int index, HatPosition pos, bool ext, bool reset) {
-    Assertion (index >= 0 && index < numHats (), "Invalid index %d!", index);
+    ASSERTX (index >= 0 && index < numHats (), "Invalid index %d!", index);
 
     int val;
 
@@ -372,7 +372,7 @@ int Joystick::getHatDownCount (
 }
 
 float Joystick::getHatDownTime (int index, HatPosition pos, bool ext) const {
-    Assertion (index >= 0 && index < numHats (), "Invalid index %d!", index);
+    ASSERTX (index >= 0 && index < numHats (), "Invalid index %d!", index);
 
     if (pos == HAT_CENTERED) { return 0.0f; }
 
@@ -499,7 +499,7 @@ void Joystick::handleJoyEvent (const SDL_Event& evt) {
 void Joystick::handleAxisEvent (const SDL_JoyAxisEvent& evt) {
     auto axis = evt.axis;
 
-    Assertion (axis < numAxes (), "SDL event contained invalid axis index!");
+    ASSERTX (axis < numAxes (), "SDL event contained invalid axis index!");
 
     _axisValues[axis] = evt.value;
 }
@@ -507,7 +507,7 @@ void Joystick::handleAxisEvent (const SDL_JoyAxisEvent& evt) {
 void Joystick::handleButtonEvent (const SDL_JoyButtonEvent& evt) {
     auto button = evt.button;
 
-    Assertion (
+    ASSERTX (
         button < numButtons (), "SDL event contained invalid button index!");
 
     auto down = evt.state == SDL_PRESSED;
@@ -520,7 +520,7 @@ void Joystick::handleButtonEvent (const SDL_JoyButtonEvent& evt) {
 void Joystick::handleHatEvent (const SDL_JoyHatEvent& evt) {
     auto hat = evt.hat;
 
-    Assertion (hat < numHats (), "SDL event contained invalid hat index!");
+    ASSERTX (hat < numHats (), "SDL event contained invalid hat index!");
 
     std::bitset< 4 > hatset = evt.value;
     auto hatpos = convertSDLHat (evt.value);
@@ -565,7 +565,7 @@ void Joystick::handleHatEvent (const SDL_JoyHatEvent& evt) {
 void Joystick::handleBallEvent (const SDL_JoyBallEvent& evt) {
     auto ball = evt.ball;
 
-    Assertion (ball < numBalls (), "SDL event contained invalid ball index!");
+    ASSERTX (ball < numBalls (), "SDL event contained invalid ball index!");
 
     coord2d newVal;
     newVal.x = evt.xrel;
@@ -649,7 +649,7 @@ bool init () {
 size_t getJoystickCount () { return joysticks.size (); }
 
 Joystick* getJoystick (size_t index) {
-    Assertion (
+    ASSERTX (
         index < getJoystickCount (), "Invalid joystick index %zu!",
         index);
 
@@ -722,7 +722,7 @@ int joystick_read_raw_axis (int num_axes, int* axis) {
         return 0;
     }
 
-    Assert (num_axes <= JOY_NUM_AXES);
+    ASSERT (num_axes <= JOY_NUM_AXES);
 
     for (i = 0; i < num_axes; i++) {
         if (i < current->numAxes ()) {

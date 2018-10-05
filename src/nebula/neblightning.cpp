@@ -214,7 +214,7 @@ void nebl_init () {
 
                     new_storm_type.bolt_types[new_storm_type.num_bolt_types] =
                         nebl_get_bolt_index (name);
-                    Assert (
+                    ASSERT (
                         new_storm_type
                             .bolt_types[new_storm_type.num_bolt_types] !=
                         (size_t)-1);
@@ -309,7 +309,7 @@ void nebl_render_all () {
 
         // if this is being used
         if (b->used) {
-            Assert (b->head != NULL);
+            ASSERT (b->head != NULL);
 
             // bogus bolt
             if (b->head == NULL) {
@@ -637,7 +637,7 @@ l_node* nebl_new () {
 
     // get a new node off the freelist
     lp = GET_FIRST (&Nebl_free_list);
-    Assert (lp != &Nebl_free_list); // shouldn't have the dummy element
+    ASSERT (lp != &Nebl_free_list); // shouldn't have the dummy element
 
     // remove trailp from the free list
     list_remove (&Nebl_free_list, lp);
@@ -981,7 +981,7 @@ void nebl_render (bolt_type* bi, l_node* whee, float width, l_section* prev) {
 
     // if prev is NULL, we're just starting so we need our start point
     if (prev == NULL) {
-        Assert (whee->links[LINK_RIGHT] != NULL);
+        ASSERT (whee->links[LINK_RIGHT] != NULL);
         nebl_generate_section (
             bi, width, whee, whee->links[LINK_RIGHT], &start, NULL, 1, 0);
     }

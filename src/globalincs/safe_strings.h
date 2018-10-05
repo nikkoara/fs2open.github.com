@@ -43,7 +43,7 @@ typedef int errno_t;
 
 #ifndef __safe_strings_error_handler
 #define __safe_strings_error_handler( val )                                \
-    fs2::dialog::error (                                                   \
+    ASSERTF (                                                   \
         file, line,                                                        \
         "%s: String error. Please Report.\nTrying to put into %zu" \
         " byte buffer:\n%s",                                               \
@@ -54,7 +54,7 @@ typedef int errno_t;
 
 /* For testing only */
 /* For testing only */
-#	define __safe_strings_error_handler( errnoVal )             \
+#       define __safe_strings_error_handler( errnoVal )             \
     extern void error_handler (                                 \
         int errnoValue, const char* errnoStr, const char* file, \
         const char* function, int line);                        \

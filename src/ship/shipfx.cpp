@@ -48,7 +48,7 @@ extern float splode_level;
 
 static void
 shipfx_remove_submodel_ship_sparks (ship* shipp, int submodel_num) {
-    Assert (submodel_num != -1);
+    ASSERT (submodel_num != -1);
 
     // maybe no active sparks on submodel
     if (shipp->num_hits == 0) { return; }
@@ -251,7 +251,7 @@ static void set_ship_submodel_as_blown_off (ship* shipp, const char* name) {
     }
 
     // set its blown off flag to TRUE
-    Assert (found);
+    ASSERT (found);
     if (found) { pss->submodel_info_1.blown_off = 1; }
 }
 
@@ -281,7 +281,7 @@ static void shipfx_maybe_create_live_debris_at_ship_death (object* ship_objp) {
                 int model_num, int live_debris_model_num);
             int parent = model_get_parent_submodel_for_live_debris (
                 pm->id, live_debris_submodel);
-            Assert (parent != -1);
+            ASSERT (parent != -1);
 
             // check if already blown off  (ship model set)
             if (!pmi->submodel[parent].blown_off) {
@@ -295,7 +295,7 @@ static void shipfx_maybe_create_live_debris_at_ship_death (object* ship_objp) {
                     if (pss->system_info->subobj_num == parent) { break; }
                 }
 
-                Assert (pss != NULL);
+                ASSERT (pss != NULL);
                 if (pss != NULL) {
                     if (pss->system_info != NULL) {
                         vec3d exp_center, tmp = ZERO_VECTOR;
@@ -446,7 +446,7 @@ void shipfx_blow_up_model (
 }
 
 // =================================================
-//          SHIP WARP IN EFFECT CODE
+// SHIP WARP IN EFFECT CODE
 // =================================================
 
 /**
@@ -553,7 +553,7 @@ float shipfx_calculate_warp_time (object* objp, int warp_dir) {
 float shipfx_calculate_warp_dist (object* objp) {
     float length;
 
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp->type == OBJ_SHIP);
     if (objp->type != OBJ_SHIP) { length = 2.0f * objp->radius; }
     else {
         length = ship_class_get_length (
@@ -734,7 +734,7 @@ static int compute_special_warpout_stuff (
 
 static void compute_warpout_stuff (
     object* objp, float* speed, float* warp_time, vec3d* warp_pos) {
-    Assert (objp); // Goober5000
+    ASSERT (objp); // Goober5000
     ship* shipp = &Ships[objp->instance];
     ship_info* sip = &Ship_info[shipp->ship_info_index];
 
@@ -1081,7 +1081,7 @@ bool shipfx_eye_in_shadow (vec3d* eye_pos, object* src_obj, int sun_n) {
                         polymodel* pm = model_get (sip->cockpit_model_num);
                         int tmap_num = w (mc.t_poly + 40);
 
-                        Assertion (
+                        ASSERTX (
                             tmap_num < MAX_MODEL_TEXTURES,
                             "Texture map index (%i) exceeded max", tmap_num);
                         if (tmap_num >= MAX_MODEL_TEXTURES) { return 0; }
@@ -1100,7 +1100,7 @@ bool shipfx_eye_in_shadow (vec3d* eye_pos, object* src_obj, int sun_n) {
                             polymodel* pm = model_get (sip->cockpit_model_num);
                             int tmap_num = mc.bsp_leaf->tmap_num;
 
-                            Assertion (
+                            ASSERTX (
                                 tmap_num < MAX_MODEL_TEXTURES,
                                 "Texture map index (%i) exceeded max",
                                 tmap_num);
@@ -1137,7 +1137,7 @@ bool shipfx_eye_in_shadow (vec3d* eye_pos, object* src_obj, int sun_n) {
                         polymodel* pm = model_get (sip->model_num);
                         int tmap_num = w (mc.t_poly + 40);
 
-                        Assertion (
+                        ASSERTX (
                             tmap_num < MAX_MODEL_TEXTURES,
                             "Texture map index (%i) exceeded max", tmap_num);
                         if (tmap_num >= MAX_MODEL_TEXTURES) { return 0; }
@@ -1156,7 +1156,7 @@ bool shipfx_eye_in_shadow (vec3d* eye_pos, object* src_obj, int sun_n) {
                             polymodel* pm = model_get (sip->model_num);
                             int tmap_num = mc.bsp_leaf->tmap_num;
 
-                            Assertion (
+                            ASSERTX (
                                 tmap_num < MAX_MODEL_TEXTURES,
                                 "Texture map index (%i) exceeded max",
                                 tmap_num);
@@ -1250,7 +1250,7 @@ void shipfx_flash_create (
     int i;
     int objnum = OBJ_INDEX (objp);
 
-    Assert (Ship_flash_inited);
+    ASSERT (Ship_flash_inited);
 
     polymodel* pm = model_get (model_num);
     int closest_light = -1;
@@ -1316,7 +1316,7 @@ void shipfx_flash_create (
         }
     }
 
-    Assert (Ship_flash[first_slot].objnum == -1);
+    ASSERT (Ship_flash[first_slot].objnum == -1);
 
     Ship_flash[first_slot].objnum = objnum;
     Ship_flash[first_slot].obj_signature = objp->signature;
@@ -1437,8 +1437,8 @@ DCF (particle_life, "Multiplier for the lifetime of particles created") {
 
 // Make sparks fly off of ship n.
 // sn = spark number to spark, corrosponding to element in
-//      ship->hitpos array.  If this isn't -1, it is a just
-//      got hit by weapon spark, otherwise pick one randomally.
+// ship->hitpos array.  If this isn't -1, it is a just
+// got hit by weapon spark, otherwise pick one randomally.
 void shipfx_emit_spark (int n, int sn) {
     int create_spark = 1;
     object* obj;
@@ -1502,10 +1502,10 @@ void shipfx_emit_spark (int n, int sn) {
     }
 
     // WMC - I have two options here:
-    //(A)	Break backwards compatibility and nobody will ever notice (but for
-    // this comment) (B)	implement some hackish workaround with the new
-    // warpeffect system just for this 		utterly minor and trivial
-    // optimization/graphical thing (C)	Contact me if (A) is REALLY necessary
+    //(A)       Break backwards compatibility and nobody will ever notice (but for
+    // this comment) (B)        implement some hackish workaround with the new
+    // warpeffect system just for this          utterly minor and trivial
+    // optimization/graphical thing (C) Contact me if (A) is REALLY necessary
     //
     // phreak: Mantis 1676 - Re-enable warpout clipping.
 
@@ -1600,7 +1600,7 @@ void shipfx_emit_spark (int n, int sn) {
                 pef.n_low; // Lowest number of particles to create (hardware)
             pe.num_high = pef.n_high;
             pe.normal_variance =
-                pef.variance; //	How close they stick to that normal 0=good,
+                pef.variance; // How close they stick to that normal 0=good,
                               // 1=360 degree
             pe.min_life = pef.min_life; // How long the particles live
             pe.max_life = pef.max_life; // How long the particles live
@@ -2128,8 +2128,8 @@ void shipfx_debris_limit_speed (debris* db, ship* shipp) {
         }
     }
 
-    Assert (is_valid_vec (&pi->vel));
-    Assert (is_valid_vec (&pi->rotvel));
+    ASSERT (is_valid_vec (&pi->vel));
+    ASSERT (is_valid_vec (&pi->rotvel));
 }
 
 // ----------------------------------------------------------------------------
@@ -2305,7 +2305,7 @@ maybe_fireball_wipe (clip_ship* half_ship, sound_handle* handle_array) {
 
             pe.normal = vmd_x_vector; // What normal the particle emit around
             pe.normal_variance =
-                pef.variance; //	How close they stick to that normal 0=on
+                pef.variance; // How close they stick to that normal 0=on
                               // normal, 1=180, 2=360 degree
 
             if (pef.max_vel > 0.0f) {
@@ -2344,11 +2344,11 @@ void big_explosion_flash (float);
  * Returns 1 when explosion is done
  */
 int shipfx_large_blowup_do_frame (ship* shipp, float frametime) {
-    Assert (shipp->large_ship_blowup_index > -1);
-    Assert (shipp->large_ship_blowup_index < (int)Split_ships.size ());
+    ASSERT (shipp->large_ship_blowup_index > -1);
+    ASSERT (shipp->large_ship_blowup_index < (int)Split_ships.size ());
 
     split_ship* the_split_ship = &Split_ships[shipp->large_ship_blowup_index];
-    Assert (the_split_ship->used); // Get John
+    ASSERT (the_split_ship->used); // Get John
 
     // Do fireballs, particles, shockwave here
     // Note parent ship is still valid, vel and pos updated in obj_move_all
@@ -2407,11 +2407,11 @@ int shipfx_large_blowup_do_frame (ship* shipp, float frametime) {
 }
 
 void shipfx_large_blowup_queue_render (model_draw_list* scene, ship* shipp) {
-    Assert (shipp->large_ship_blowup_index > -1);
-    Assert (shipp->large_ship_blowup_index < (int)Split_ships.size ());
+    ASSERT (shipp->large_ship_blowup_index > -1);
+    ASSERT (shipp->large_ship_blowup_index < (int)Split_ships.size ());
 
     split_ship* the_split_ship = &Split_ships[shipp->large_ship_blowup_index];
-    Assert (the_split_ship->used); // Get John
+    ASSERT (the_split_ship->used); // Get John
 
     if (the_split_ship->front_ship.length_left > 0) {
         shipfx_queue_render_ship_halves_and_debris (
@@ -2810,13 +2810,13 @@ void shipfx_do_shockwave_stuff (ship* shipp, shockwave_create_info* sci) {
     int idx;
 
     // sanity checks
-    Assert (shipp != NULL);
+    ASSERT (shipp != NULL);
     if (shipp == NULL) { return; }
-    Assert (shipp->ship_info_index >= 0);
+    ASSERT (shipp->ship_info_index >= 0);
     if (shipp->ship_info_index < 0) { return; }
-    Assert (shipp->objnum >= 0);
+    ASSERT (shipp->objnum >= 0);
     if (shipp->objnum < 0) { return; }
-    Assert (sci != NULL);
+    ASSERT (sci != NULL);
     if (sci == NULL) { return; }
 
     // get some pointers
@@ -2896,8 +2896,8 @@ void engine_wash_ship_process (ship* shipp) {
 
     if (!Wash_on) { return; }
 
-    Assert (shipp != NULL);
-    Assert (shipp->objnum >= 0);
+    ASSERT (shipp != NULL);
+    ASSERT (shipp->objnum >= 0);
     objp = &Objects[shipp->objnum];
     ship_obj* so;
 
@@ -3131,7 +3131,7 @@ void engine_wash_ship_process (ship* shipp) {
 
     // apply damage at rate of 1%/sec
     if (shipp->wash_intensity > 0) {
-        Assert (max_ship_intensity_objp != NULL);
+        ASSERT (max_ship_intensity_objp != NULL);
 
         nprintf (("wash", "Wash intensity %.2f\n", shipp->wash_intensity));
 
@@ -3196,7 +3196,7 @@ public:
     static const int TYPE_INT = 3;
     static const int TYPE_SOUND = 4;
     static const int TYPE_STRING = 5;
-    
+
 private:
     int Type;
     float su_Float;
@@ -3353,7 +3353,7 @@ int CombinedVariable::getString (char* output, size_t output_max) {
         return 1;
     }
     if (Type == TYPE_SOUND) {
-        fs2::dialog::error (LOCATION, "Sound CombinedVariables are not supported yet.");
+        ASSERTF (LOCATION, "Sound CombinedVariables are not supported yet.");
         /*if(snd_is_valid(su_Sound))
             snprintf(output, output_max, "%s", snd_get_filename(su_Sound));*/
         return 1;

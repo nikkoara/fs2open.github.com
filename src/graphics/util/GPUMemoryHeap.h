@@ -4,7 +4,7 @@
 #define FREESPACE2_GRAPHICS_UTIL_GPUMEMORYHEAP_H
 
 #include "globalincs/pstypes.h"
-#include "utils/HeapAllocator.h"
+#include "util/HeapAllocator.h"
 #include "graphics/2d.h"
 
 namespace graphics {

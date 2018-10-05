@@ -86,7 +86,7 @@ void chase_angles_to_value (angles_t* ap, angles_t* bp, int scale) {
     float sk;
     angles_t delta;
 
-    //	Make sure we actually need to do all this math.
+    // Make sure we actually need to do all this math.
     if ((ap->p == bp->p) && (ap->h == bp->h)) return;
 
     sk = 1.0f - scale * flRealframetime;
@@ -96,7 +96,7 @@ void chase_angles_to_value (angles_t* ap, angles_t* bp, int scale) {
     delta.p = ap->p - bp->p;
     delta.h = ap->h - bp->h;
 
-    //	If we're very close, put ourselves at goal.
+    // If we're very close, put ourselves at goal.
     if ((fl_abs (delta.p) < 0.005f) && (fl_abs (delta.h) < 0.005f)) {
         ap->p = bp->p;
         ap->h = bp->h;
@@ -380,8 +380,8 @@ void do_view_slew (float frame_time) {
             check_control_timef (VIEW_CENTER) ||
             !(Viewer_mode & VM_CAMERA_LOCKED)) {
             // Start centering the view if:
-            //  VIEW_CENTER was pressed, or
-            //  The player let go of VIEW_SLEW
+            // VIEW_CENTER was pressed, or
+            // The player let go of VIEW_SLEW
             Viewer_mode |= (VM_CENTERING | VM_CAMERA_LOCKED);
         }
     }
@@ -439,7 +439,7 @@ void do_view_external (float frame_time) {
         &Viewer_external_info.angles, &Viewer_external_angles_delta, PI2, PI2,
         frame_time);
 
-    //	Process centering key.
+    // Process centering key.
     if (check_control_timef (VIEW_CENTER)) {
         Viewer_external_info.angles.p = 0.0f;
         Viewer_external_info.angles.h = 0.0f;
@@ -453,7 +453,7 @@ void do_view_external (float frame_time) {
         Viewer_external_info.distance = 0.0f;
     }
 
-    //	Do over-the-top correction.
+    // Do over-the-top correction.
 
     if (Viewer_external_info.angles.p > PI)
         Viewer_external_info.angles.p = -PI2 + Viewer_external_info.angles.p;
@@ -747,7 +747,7 @@ void read_keyboard_controls (
 
                 // maybe need to get speed from docked partner
                 if (tspeed < MATCH_SPEED_THRESHOLD) {
-                    Assert (targeted_objp->type == OBJ_SHIP);
+                    ASSERT (targeted_objp->type == OBJ_SHIP);
 
                     // Goober5000
                     if (object_is_docked (targeted_objp)) {
@@ -756,7 +756,7 @@ void read_keyboard_controls (
                     }
                 }
 
-                //	Note, if closer than 100 units, scale down speed a bit.
+                // Note, if closer than 100 units, scale down speed a bit.
                 // Prevents repeated collisions. -- MK, 12/17/97
                 float dist =
                     vm_vec_dist (&Player_obj->pos, &targeted_objp->pos);
@@ -882,7 +882,7 @@ void read_keyboard_controls (
         // see if the afterburner has been started (keyboard + joystick)
         if (check_control (AFTERBURNER) && !Player_use_ai) {
             if (!afterburner_last) {
-                Assert (Player_ship);
+                ASSERT (Player_ship);
                 if (!(Ship_info[Player_ship->ship_info_index]
                           .flags[Ship::Info_Flags::Afterburner])) {
                     gamesnd_play_error_beep ();
@@ -915,8 +915,8 @@ void read_keyboard_controls (
         // glide_when_pressed button is in a different state than press_glide.
         // Since it sets press_glide equal to glide_when_pressed inside of this
         // if statement,
-        //  this only evaluates to true when the state of the button is
-        //  different than it was last time.
+        // this only evaluates to true when the state of the button is
+        // different than it was last time.
         if (check_control (GLIDE_WHEN_PRESSED) != press_glide) {
             if (Player_obj != NULL &&
                 Ship_info[Player_ship->ship_info_index].can_glide) {
@@ -1224,7 +1224,7 @@ void player_clear_speed_matching () {
  * no target exists
  * @param match_off_text Default parm (NULL), used to overide HUD output when
  * matching toggled off
- * @param match_on_text	Default parm (NULL), used to overide HUD output when
+ * @param match_on_text Default parm (NULL), used to overide HUD output when
  * matching toggled on
  */
 void player_match_target_speed (
@@ -1243,7 +1243,7 @@ void player_match_target_speed (
             }
         }
         else {
-            //			HUD_sourced_printf(HUD_SOURCE_HIDDEN, XSTR("No
+            // HUD_sourced_printf(HUD_SOURCE_HIDDEN, XSTR("No
             // currently selected target.",-1) );
         }
         return;
@@ -1261,7 +1261,7 @@ void player_match_target_speed (
             }
         }
         else {
-            //			HUD_sourced_printf(HUD_SOURCE_HIDDEN, XSTR("No longer
+            // HUD_sourced_printf(HUD_SOURCE_HIDDEN, XSTR("No longer
             // matching speed with current target.",-1) );
         }
     }
@@ -1290,7 +1290,7 @@ void player_match_target_speed (
                 }
             }
             else {
-                //				HUD_sourced_printf(HUD_SOURCE_HIDDEN,
+                // HUD_sourced_printf(HUD_SOURCE_HIDDEN,
                 // XSTR("Matching speed with current target.",-1) );
             }
         }
@@ -1407,7 +1407,7 @@ void player_restore_target_and_weapon_link_prefs () {
     player_sip = &Ship_info[Player_ship->ship_info_index];
     polymodel* pm = model_get (player_sip->model_num);
 
-    //	Don't restores the save flags in training, as we must ensure certain
+    // Don't restores the save flags in training, as we must ensure certain
     // things are off, such as speed matching.
     if (!(The_mission.game_type & MISSION_TYPE_TRAINING)) {
         Player->flags |= Player->save_flags;
@@ -1456,7 +1456,7 @@ void player_level_init () {
     Player->flags = PLAYER_FLAGS_STRUCTURE_IN_USE; // reset the player flags
     Player->flags |= Player->save_flags;
 
-    //	Init variables for friendly fire monitoring.
+    // Init variables for friendly fire monitoring.
     Player->friendly_last_hit_time = 0;
     Player->friendly_hits = 0;
     Player->friendly_damage = 0.0f;
@@ -1553,7 +1553,7 @@ void player_init () {
  * ::game_stop_looped_sounds().
  */
 void player_stop_looped_sounds () {
-    Assert (Player);
+    ASSERT (Player);
     if (Player->repair_sound_loop.isValid ()) {
         snd_stop (Player->repair_sound_loop);
         Player->repair_sound_loop = sound_handle::invalid ();
@@ -1569,7 +1569,7 @@ void player_stop_looped_sounds () {
  * player ship is being repaired by a support ship
  */
 void player_maybe_start_repair_sound () {
-    Assert (Player);
+    ASSERT (Player);
     if (!Player->repair_sound_loop.isValid ()) {
         Player->repair_sound_loop = snd_play_looping (
             gamesnd_get_game_sound (GameSounds::SHIP_REPAIR));
@@ -1580,7 +1580,7 @@ void player_maybe_start_repair_sound () {
  * Stop the player repair sound if it is already playing
  */
 void player_stop_repair_sound () {
-    Assert (Player);
+    ASSERT (Player);
     if (Player->repair_sound_loop.isValid ()) {
         snd_stop (Player->repair_sound_loop);
         Player->repair_sound_loop = sound_handle::invalid ();
@@ -1591,7 +1591,7 @@ void player_stop_repair_sound () {
  * Start the cargo scanning sound if it hasn't already been started
  */
 void player_maybe_start_cargo_scan_sound () {
-    Assert (Player);
+    ASSERT (Player);
     if (!Player->cargo_scan_loop.isValid ()) {
         Player->cargo_scan_loop = snd_play_looping (gamesnd_get_game_sound (
             ship_get_sound (Player_obj, GameSounds::CARGO_SCAN)));
@@ -1602,7 +1602,7 @@ void player_maybe_start_cargo_scan_sound () {
  * Stop the player repair sound if it is already playing
  */
 void player_stop_cargo_scan_sound () {
-    Assert (Player);
+    ASSERT (Player);
     if (Player->cargo_scan_loop.isValid ()) {
         snd_stop (Player->cargo_scan_loop);
         Player->cargo_scan_loop = sound_handle::invalid ();
@@ -1614,7 +1614,7 @@ void player_stop_cargo_scan_sound () {
  * to delay the praise messages a bit, to make them more realistic
  *
  * @return 1 if a praise message was delivered to the player, or a praise is
- * pending; 0	if no praise is pending
+ * pending; 0   if no praise is pending
  */
 int player_process_pending_praise () {
     // in multiplayer, never praise
@@ -1664,7 +1664,7 @@ int player_inspect_cap_subsys_cargo (float frametime, char* outstr);
 /**
  * See if the player should be inspecting cargo, and update progress.
  *
- * @param frametime	Time since last frame in seconds
+ * @param frametime     Time since last frame in seconds
  * @param outstr (output parm) holds string that HUD should display
  *
  * @return 1 if player should display outstr on HUD; 0if don't display cargo on
@@ -1683,7 +1683,7 @@ int player_inspect_cargo (float frametime, char* outstr) {
     if (Player_ai->target_objnum < 0) { return 0; }
 
     cargo_objp = &Objects[Player_ai->target_objnum];
-    Assert (cargo_objp->type == OBJ_SHIP);
+    ASSERT (cargo_objp->type == OBJ_SHIP);
     cargo_sp = &Ships[cargo_objp->instance];
     cargo_sip = &Ship_info[cargo_sp->ship_info_index];
 
@@ -1714,7 +1714,7 @@ int player_inspect_cargo (float frametime, char* outstr) {
         if (!(cargo_sp->flags[Ship::Ship_Flags::Scannable])) {
             char* cargo_name =
                 Cargo_names[cargo_sp->cargo1 & CARGO_INDEX_MASK];
-            Assert (
+            ASSERT (
                 cargo_sip->flags[Ship::Info_Flags::Cargo] ||
                 cargo_sip->flags[Ship::Info_Flags::Transport]);
 
@@ -1803,7 +1803,7 @@ int player_inspect_cap_subsys_cargo (float frametime, char* outstr) {
     if (subsys == NULL) { return 0; }
 
     cargo_objp = &Objects[Player_ai->target_objnum];
-    Assert (cargo_objp->type == OBJ_SHIP);
+    ASSERT (cargo_objp->type == OBJ_SHIP);
     cargo_sp = &Ships[cargo_objp->instance];
     cargo_sip = &Ship_info[cargo_sp->ship_info_index];
 
@@ -1922,7 +1922,7 @@ float player_farthest_weapon_range () {
 /**
  * Determine text name for the weapon that killed the player.
  *
- * @param weapon_info_index	Weapon type that killed the player (can be -1 if no
+ * @param weapon_info_index     Weapon type that killed the player (can be -1 if no
  * weapon involved)
  * @param killer_species Species of ship that fired weapon
  * @param weapon_name (Output parameter) Stores weapon name generated in this
@@ -1980,7 +1980,7 @@ void player_generate_death_message (player* player_p) {
         break;
 
     case OBJ_WEAPON:
-        Assert (weapon_name[0]);
+        ASSERT (weapon_name[0]);
 
         // is this from a friendly ship?
         ship_index = ship_name_lookup (player_p->killer_parent_name, 1);
@@ -2029,7 +2029,7 @@ void player_generate_death_message (player* player_p) {
 
     case OBJ_BEAM:
         if (strlen (player_p->killer_parent_name) <= 0) {
-            fs2::dialog::warning (LOCATION, "Killer_parent_name not specified for beam!");
+            WARNINGF (LOCATION, "Killer_parent_name not specified for beam!");
             sprintf (
                 msg,
                 XSTR ("%s was killed by a beam from an unknown source", 1081),
@@ -2166,7 +2166,7 @@ void player_maybe_play_all_alone_msg () {
 }
 
 void player_get_padlock_orient (matrix* eye_orient) {
-    Assert (Viewer_mode & VM_PADLOCK_ANY);
+    ASSERT (Viewer_mode & VM_PADLOCK_ANY);
 
     matrix old_eye_orient;
     old_eye_orient = *eye_orient;
@@ -2262,7 +2262,7 @@ camid player_get_cam () {
             int view_from_player = 1;
 
             if (Viewer_mode & VM_OTHER_SHIP) {
-                //	View from target.
+                // View from target.
                 viewer_obj = &Objects[Player_ai->target_objnum];
                 if (viewer_obj->type == OBJ_SHIP) {
                     ship_get_eye (&eye_pos, &eye_orient, viewer_obj);
@@ -2271,7 +2271,7 @@ camid player_get_cam () {
             }
 
             if (view_from_player) {
-                //	View target from player ship.
+                // View target from player ship.
                 viewer_obj = NULL;
                 eye_pos = Player_obj->pos;
 
@@ -2299,7 +2299,7 @@ camid player_get_cam () {
                 view_pos = Objects[Player_ai->target_objnum].pos;
             }
             else {
-                //	Make camera follow explosion, but gradually slow down.
+                // Make camera follow explosion, but gradually slow down.
                 vm_vec_scale_add2 (
                     &Player_obj->pos, &Dead_player_last_vel, flFrametime);
                 view_pos = Player_obj->pos;
@@ -2314,7 +2314,7 @@ camid player_get_cam () {
         }
     }
 
-    //	If already blown up, these other modes can override.
+    // If already blown up, these other modes can override.
     if (!(Game_mode & (GM_DEAD | GM_DEAD_BLEW_UP))) {
         if (!(Viewer_mode & VM_FREECAMERA)) viewer_obj = Player_obj;
 
@@ -2328,7 +2328,7 @@ camid player_get_cam () {
             return cam_get_current ();
         }
         else if (Viewer_mode & VM_EXTERNAL) {
-            Assert (viewer_obj != NULL);
+            ASSERT (viewer_obj != NULL);
             matrix tm, tm2;
 
             vm_angles_2_matrix (&tm2, &Viewer_external_info.angles);
@@ -2344,7 +2344,7 @@ camid player_get_cam () {
                 &eye_orient, &tmp_dir, &viewer_obj->orient.vec.uvec, NULL);
             viewer_obj = NULL;
 
-            //	Modify the orientation based on head orientation.
+            // Modify the orientation based on head orientation.
             compute_slew_matrix (&eye_orient, &Viewer_slew_angles);
         }
         else if (Viewer_mode & VM_CHASE) {
@@ -2380,7 +2380,7 @@ camid player_get_cam () {
             vm_vector_2_matrix (&eye_orient, &tmp_dir, &tmp_up, NULL);
             viewer_obj = NULL;
 
-            //	Modify the orientation based on head orientation.
+            // Modify the orientation based on head orientation.
             compute_slew_matrix (&eye_orient, &Viewer_slew_angles);
         }
         else if (Viewer_mode & VM_WARP_CHASE) {

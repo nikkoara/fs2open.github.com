@@ -313,7 +313,7 @@ void multi_io_send (net_player* pl, ubyte* data, int len) {
         pl->s_info.unreliable_buffer_size = 0;
     }
 
-    Assert ((pl->s_info.unreliable_buffer_size + len) <= MAX_PACKET_SIZE);
+    ASSERT ((pl->s_info.unreliable_buffer_size + len) <= MAX_PACKET_SIZE);
 
     memcpy (
         pl->s_info.unreliable_buffer + pl->s_info.unreliable_buffer_size, data,
@@ -323,7 +323,7 @@ void multi_io_send (net_player* pl, ubyte* data, int len) {
 
 void multi_io_send_to_all (ubyte* data, int length, net_player* ignore) {
     int i;
-    Assert (MULTIPLAYER_MASTER);
+    ASSERT (MULTIPLAYER_MASTER);
 
     // need to check for i > 1, hmmm... and connected. I don't know.
     for (i = 0; i < MAX_PLAYERS; i++) {
@@ -395,7 +395,7 @@ void multi_io_send_reliable (net_player* pl, ubyte* data, int len) {
         pl->s_info.reliable_buffer_size = 0;
     }
 
-    Assert ((pl->s_info.reliable_buffer_size + len) <= MAX_PACKET_SIZE);
+    ASSERT ((pl->s_info.reliable_buffer_size + len) <= MAX_PACKET_SIZE);
 
     memcpy (
         pl->s_info.reliable_buffer + pl->s_info.reliable_buffer_size, data,
@@ -406,7 +406,7 @@ void multi_io_send_reliable (net_player* pl, ubyte* data, int len) {
 void multi_io_send_to_all_reliable (
     ubyte* data, int length, net_player* ignore) {
     int i;
-    Assert (MULTIPLAYER_MASTER);
+    ASSERT (MULTIPLAYER_MASTER);
 
     // need to check for i > 1, hmmm... and connected. I don't know.
     for (i = 0; i < MAX_PLAYERS; i++) {
@@ -539,11 +539,11 @@ void send_game_chat_packet (
     ADD_DATA (mode);
     switch (mode) {
     case MULTI_MSG_TARGET:
-        Assert (to != NULL);
+        ASSERT (to != NULL);
         ADD_SHORT (to->player_id);
         break;
     case MULTI_MSG_EXPR:
-        Assert (expr != NULL);
+        ASSERT (expr != NULL);
         ADD_STRING (expr);
         break;
     }
@@ -592,7 +592,7 @@ void send_game_chat_packet (
 
         // message the player's target
         case MULTI_MSG_TARGET:
-            Assert (to != NULL);
+            ASSERT (to != NULL);
             if (MULTI_CONNECTED ((*to)) && !MULTI_STANDALONE ((*to))) {
                 multi_io_send_reliable (to, data, packet_size);
             }
@@ -600,7 +600,7 @@ void send_game_chat_packet (
 
         // message all players who match the expression string
         case MULTI_MSG_EXPR:
-            Assert (expr != NULL);
+            ASSERT (expr != NULL);
             for (idx = 0; idx < MAX_PLAYERS; idx++) {
                 if (MULTI_CONNECTED (Net_players[idx]) &&
                     !MULTI_STANDALONE (Net_players[idx]) &&
@@ -915,7 +915,7 @@ void process_join_packet (ubyte* data, header* hinfo) {
                 XSTR ("Player %s has tried to join, accept y/n ?", 715),
                 jr.callsign);
         }
-        Assert (host_restr_mode != -1);
+        ASSERT (host_restr_mode != -1);
 
         // store the request info
         memcpy (&Multi_restr_join_request, &jr, sizeof (join_request));
@@ -986,7 +986,7 @@ void send_new_player_packet (int new_player_num, net_player* target) {
 
     // add the new player's info
     ADD_INT (new_player_num);
-    //	ADD_DATA(Net_players[new_player_num].p_info.addr);
+    // ADD_DATA(Net_players[new_player_num].p_info.addr);
     add_net_addr (
         data, &packet_size, &Net_players[new_player_num].p_info.addr);
     ADD_SHORT (Net_players[new_player_num].player_id);
@@ -1025,7 +1025,7 @@ void process_new_player_packet (ubyte* data, header* hinfo) {
 
     // get the new players information
     GET_INT (new_player_num);
-    //	GET_DATA(new_addr);
+    // GET_DATA(new_addr);
     get_net_addr (data, &offset, &new_addr);
     GET_SHORT (new_id);
     GET_INT (new_flags);
@@ -1037,7 +1037,7 @@ void process_new_player_packet (ubyte* data, header* hinfo) {
     PACKET_SET_SIZE ();
 
     player_num = multi_find_open_player_slot ();
-    Assert (player_num != -1);
+    ASSERT (player_num != -1);
 
     // note that this new code does not check for duplicate IPs. It merely
     // checks to see if the slot referenced by new_player_num is already
@@ -1182,7 +1182,7 @@ void send_accept_player_data (net_player* npp, int is_ingame) {
         ADD_INT (i);
 
         // add the player's address
-        //	ADD_DATA(Net_players[i].p_info.addr);
+        // ADD_DATA(Net_players[i].p_info.addr);
         add_net_addr (data, &packet_size, &Net_players[i].p_info.addr);
 
         // add his id#
@@ -1243,13 +1243,13 @@ void process_accept_player_data (ubyte* data, header* hinfo) {
     GET_DATA (stop);
     while (stop == APD_NEXT) {
         player_slot_num = multi_find_open_player_slot ();
-        Assert (player_slot_num != -1);
+        ASSERT (player_slot_num != -1);
 
         // get the player's number
         GET_INT (player_num);
 
         // add the player's address
-        //	GET_DATA(addr);
+        // GET_DATA(addr);
         get_net_addr (data, &offset, &addr);
 
         // get the player's id#
@@ -1277,8 +1277,8 @@ void process_accept_player_data (ubyte* data, header* hinfo) {
             }
         }
         else {
-            //  the error handling here is less than stellar.  We should
-            //  probably put up a popup and go
+            // the error handling here is less than stellar.  We should
+            // probably put up a popup and go
             // back to the main menu.  But then again, this should never ever
             // happen!
             if (!multi_create_player (
@@ -1423,7 +1423,7 @@ void send_accept_packet (int new_player_num, int code, int ingame_join_team) {
     char notify_string[256];
 
     // sanity
-    Assert (new_player_num >= 0);
+    ASSERT (new_player_num >= 0);
 
     // setup his "reliable" socket
     Net_players[new_player_num].last_heard_time = timer_get_fixed_seconds ();
@@ -1454,22 +1454,22 @@ void send_accept_packet (int new_player_num, int code, int ingame_join_team) {
     }
 
     if (code & ACCEPT_OBSERVER) {
-        Assert (!(code & (ACCEPT_CLIENT | ACCEPT_HOST)));
+        ASSERT (!(code & (ACCEPT_CLIENT | ACCEPT_HOST)));
     }
 
     if (code & ACCEPT_HOST) {
-        Assert (!(code & (ACCEPT_CLIENT | ACCEPT_OBSERVER | ACCEPT_INGAME)));
+        ASSERT (!(code & (ACCEPT_CLIENT | ACCEPT_OBSERVER | ACCEPT_INGAME)));
     }
 
     if (code & ACCEPT_CLIENT) {
-        Assert (!(code & (ACCEPT_HOST | ACCEPT_OBSERVER | ACCEPT_INGAME)));
+        ASSERT (!(code & (ACCEPT_HOST | ACCEPT_OBSERVER | ACCEPT_INGAME)));
     }
 
     // add the current skill level setting on the host
     // sanity check - reset skill level to default before sending if out of
     // range
     if (Game_skill_level < 0 || Game_skill_level >= NUM_SKILL_LEVELS) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Trying to send packet containing invalid skill level %i! Valid "
             "range 0 to %i. Resetting to default.",
@@ -1560,15 +1560,15 @@ void process_accept_packet (ubyte* data, header* hinfo) {
     }
 
     if (code & ACCEPT_OBSERVER) {
-        Assert (!(code & (ACCEPT_CLIENT | ACCEPT_HOST)));
+        ASSERT (!(code & (ACCEPT_CLIENT | ACCEPT_HOST)));
     }
 
     if (code & ACCEPT_HOST) {
-        Assert (!(code & (ACCEPT_CLIENT | ACCEPT_OBSERVER | ACCEPT_INGAME)));
+        ASSERT (!(code & (ACCEPT_CLIENT | ACCEPT_OBSERVER | ACCEPT_INGAME)));
     }
 
     if (code & ACCEPT_CLIENT) {
-        Assert (!(code & (ACCEPT_HOST | ACCEPT_OBSERVER | ACCEPT_INGAME)));
+        ASSERT (!(code & (ACCEPT_HOST | ACCEPT_OBSERVER | ACCEPT_INGAME)));
     }
 
     // fill in the netgame server address
@@ -1577,7 +1577,7 @@ void process_accept_packet (ubyte* data, header* hinfo) {
     // get the skill level setting
     GET_INT (Game_skill_level);
     if (Game_skill_level < 0 || Game_skill_level >= NUM_SKILL_LEVELS) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Received packet containing invalid skill level %i! Valid range 0 "
             "to %i.  Resetting to default.",
@@ -1694,8 +1694,8 @@ void send_leave_game_packet (
              "Sending a leave game packet to all players (server)\n"));
 
         // a couple of important checks
-        Assert (player_id != Net_player->player_id);
-        Assert (Net_player->flags & NETINFO_FLAG_AM_MASTER);
+        ASSERT (player_id != Net_player->player_id);
+        ASSERT (Net_player->flags & NETINFO_FLAG_AM_MASTER);
 
         // add the id of the guy to be kicked
         ADD_SHORT (player_id);
@@ -1909,7 +1909,7 @@ void send_game_active_packet (net_addr* addr) {
     if (Netgame.campaign_mode == MP_CAMPAIGN) { flags |= AG_FLAG_CAMPAIGN; }
 
     // add the data about the connection speed of the host machine
-    Assert ((Multi_connection_speed >= 0) && (Multi_connection_speed <= 4));
+    ASSERT ((Multi_connection_speed >= 0) && (Multi_connection_speed <= 4));
     flags |= (Multi_connection_speed << AG_FLAG_CONNECTION_BIT);
 
     ADD_USHORT (flags);
@@ -2042,7 +2042,7 @@ void send_netgame_update_packet (net_player* pl) {
         }
     }
     else {
-        Assert (pl == NULL); // I don't think that a host in a standalone game
+        ASSERT (pl == NULL); // I don't think that a host in a standalone game
                              // would get here.
         multi_io_send_reliable (Net_player, data, packet_size);
     }
@@ -2058,8 +2058,8 @@ void process_netgame_update_packet (ubyte* data, header* hinfo) {
     int offset;
     int ng_state;
 
-    Assert (!(Game_mode & GM_STANDALONE_SERVER));
-    Assert (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
+    ASSERT (!(Game_mode & GM_STANDALONE_SERVER));
+    ASSERT (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
 
     // read in the netgame information
     offset = HEADER_LENGTH;
@@ -2187,7 +2187,7 @@ void send_netgame_descript_packet (net_addr* addr, int code) {
         }
     }
 
-    Assert (addr != NULL);
+    ASSERT (addr != NULL);
     if (addr != NULL) { psnet_send (addr, data, packet_size); }
 }
 
@@ -2377,7 +2377,7 @@ void send_netplayer_update_packet (net_player* pl) {
         ADD_DATA (val);
 
         // send the packet to the server
-        Assert (
+        ASSERT (
             pl ==
             NULL); // shouldn't ever be the case that pl is non-null here.
         if (!(Game_mode & GM_IN_MISSION)) {
@@ -2483,7 +2483,7 @@ void send_ship_kill_packet (
     polymodel* pm;
 
     // only sendable from the master
-    Assert (Net_player->flags & NETINFO_FLAG_AM_MASTER);
+    ASSERT (Net_player->flags & NETINFO_FLAG_AM_MASTER);
 
     // special deaths
     vaporized = Ships[objp->instance].flags[Ship::Ship_Flags::Vaporize];
@@ -2545,15 +2545,15 @@ void send_ship_kill_packet (
             was_player = 1;
             ADD_DATA (was_player);
 
-            Assert (Net_players[pnum].m_player->killer_objtype < CHAR_MAX);
+            ASSERT (Net_players[pnum].m_player->killer_objtype < CHAR_MAX);
             temp = (char)Net_players[pnum].m_player->killer_objtype;
             ADD_DATA (temp);
 
-            Assert (Net_players[pnum].m_player->killer_species < CHAR_MAX);
+            ASSERT (Net_players[pnum].m_player->killer_species < CHAR_MAX);
             temp = (char)Net_players[pnum].m_player->killer_species;
             ADD_DATA (temp);
 
-            Assert (
+            ASSERT (
                 Net_players[pnum].m_player->killer_weapon_index < SHRT_MAX);
             temp2 = (short)Net_players[pnum].m_player->killer_weapon_index;
             ADD_SHORT (temp2);
@@ -2691,7 +2691,7 @@ void process_ship_create_packet (ubyte* data, header* hinfo) {
     p_object* objp;
     vec3d pos = ZERO_VECTOR;
 
-    Assert (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
+    ASSERT (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
     offset = HEADER_LENGTH;
     GET_USHORT (signature);
     GET_INT (is_support);
@@ -2713,12 +2713,12 @@ void process_ship_create_packet (ubyte* data, header* hinfo) {
         }
     }
     else {
-        Assert (Arriving_support_ship);
+        ASSERT (Arriving_support_ship);
         if (Arriving_support_ship == NULL) { return; }
         Arriving_support_ship->pos = pos;
         Arriving_support_ship->net_signature = signature;
         objnum = parse_create_object (Arriving_support_ship);
-        Assert (objnum != -1);
+        ASSERT (objnum != -1);
         if (objnum >= 0) { mission_parse_support_arrived (objnum); }
     }
 }
@@ -2895,7 +2895,7 @@ void process_cargo_revealed_packet (ubyte* data, header* hinfo) {
         return;
     }
 
-    // Assert( objp->type == OBJ_SHIP );
+    // ASSERT (objp->type == OBJ_SHIP );
     if ((objp->type != OBJ_SHIP) || (objp->instance < 0) ||
         (objp->instance >= MAX_SHIPS)) {
         return;
@@ -2949,7 +2949,7 @@ void process_cargo_hidden_packet (ubyte* data, header* hinfo) {
         return;
     }
 
-    // Assert( objp->type == OBJ_SHIP );
+    // ASSERT (objp->type == OBJ_SHIP );
     if ((objp->type != OBJ_SHIP) || (objp->instance < 0) ||
         (objp->instance >= MAX_SHIPS)) {
         return;
@@ -2980,7 +2980,7 @@ void send_secondary_fired_packet (
     char t_subsys;
     ai_info* aip;
 
-    // Assert ( starting_count < UCHAR_MAX );
+    // ASSERT ( starting_count < UCHAR_MAX );
 
     // get the object for this ship.  If it is an AI object, send all the info
     // to all player.  Otherwise, we might send the info to the other player
@@ -2993,7 +2993,7 @@ void send_secondary_fired_packet (
     aip = &Ai_info[shipp->ai_index];
 
     current_bank = (ubyte)shipp->weapons.current_secondary_bank;
-    Assert ((current_bank < MAX_SHIP_SECONDARY_BANKS));
+    ASSERT ((current_bank < MAX_SHIP_SECONDARY_BANKS));
 
     // build up the header portion
     BUILD_HEADER (SECONDARY_FIRED_AI);
@@ -3025,12 +3025,12 @@ void send_secondary_fired_packet (
 
             s_index = ship_get_index_from_subsys (
                 aip->targeted_subsys, aip->target_objnum);
-            Assert (s_index < CHAR_MAX); // better be less than this!!!!
+            ASSERT (s_index < CHAR_MAX); // better be less than this!!!!
             t_subsys = (char)s_index;
         }
 
         if (Objects[aip->target_objnum].type == OBJ_WEAPON) {
-            Assert (Weapon_info[Weapons[Objects[aip->target_objnum].instance]
+            ASSERT (Weapon_info[Weapons[Objects[aip->target_objnum].instance]
                                     .weapon_info_index]
                         .wi_flags[Weapon::Info_Flags::Bomb]);
         }
@@ -3142,7 +3142,7 @@ void process_secondary_fired_packet (
         Ship::Ship_Flags::Secondary_dual_fire, (sinfo & SFPF_DUAL_FIRE) != 0);
 
     // determine whether current target is locked
-    Assert (shipp->ai_index != -1);
+    ASSERT (shipp->ai_index != -1);
     aip = &Ai_info[shipp->ai_index];
     if (sinfo & SFPF_TARGET_LOCKED) { aip->current_target_is_locked = 1; }
     else {
@@ -3151,7 +3151,7 @@ void process_secondary_fired_packet (
 
     // find out the current bank
     current_bank = (ubyte) (sinfo & 0x3);
-    Assert ((current_bank < MAX_SHIP_SECONDARY_BANKS));
+    ASSERT ((current_bank < MAX_SHIP_SECONDARY_BANKS));
     shipp->weapons.current_secondary_bank = current_bank;
 
     // make it so we can fire this ship's secondary bank immediately!!!
@@ -3206,7 +3206,7 @@ void send_countermeasure_fired_packet (
 
     Int3 ();
 
-    Assert (cmeasure_count < UCHAR_MAX);
+    ASSERT (cmeasure_count < UCHAR_MAX);
     BUILD_HEADER (COUNTERMEASURE_FIRED);
     ADD_USHORT (objp->net_signature);
     ADD_INT (rand_val);
@@ -3237,7 +3237,7 @@ void process_countermeasure_fired_packet (ubyte* data, header* hinfo) {
         return;
     }
     if (objp->type != OBJ_SHIP) { return; }
-    // Assert ( objp->type == OBJ_SHIP );
+    // ASSERT ( objp->type == OBJ_SHIP );
 
     // make it so ship can fire right away!
     Ships[objp->instance].cmeasure_fire_stamp = timestamp (0);
@@ -3268,7 +3268,7 @@ void send_turret_fired_packet (
 
     // local setup -- be sure we are actually passing a weapon!!!!
     objp = &Objects[weapon_objnum];
-    Assert (objp->type == OBJ_WEAPON);
+    ASSERT (objp->type == OBJ_WEAPON);
     if (Weapon_info[Weapons[objp->instance].weapon_info_index].subtype ==
         WP_MISSILE) {
         has_sig = 1;
@@ -3276,7 +3276,7 @@ void send_turret_fired_packet (
 
     pnet_signature = Objects[ship_objnum].net_signature;
 
-    Assert (subsys_index < UCHAR_MAX);
+    ASSERT (subsys_index < UCHAR_MAX);
     cindex = (ubyte)subsys_index;
 
     ssp = ship_get_indexed_subsys (
@@ -3394,7 +3394,7 @@ void send_mission_log_packet (log_entry* entry) {
     ubyte type;
     int sindex;
 
-    Assert (MULTIPLAYER_MASTER);
+    ASSERT (MULTIPLAYER_MASTER);
 
     // get the data from the log
     type =
@@ -3423,7 +3423,7 @@ void process_mission_log_packet (ubyte* data, header* hinfo) {
     char pname[NAME_LENGTH], sname[NAME_LENGTH];
     fix timestamp;
 
-    Assert (MULTIPLAYER_CLIENT);
+    ASSERT (MULTIPLAYER_CLIENT);
 
     offset = HEADER_LENGTH;
     GET_DATA (type);
@@ -3447,9 +3447,9 @@ void send_mission_message_packet (
     int packet_size;
     ubyte data[MAX_PACKET_SIZE], up, us, utime;
 
-    Assert (Net_player->flags & NETINFO_FLAG_AM_MASTER);
-    Assert ((priority >= 0) && (priority < UCHAR_MAX));
-    Assert ((timing >= 0) && (timing < UCHAR_MAX));
+    ASSERT (Net_player->flags & NETINFO_FLAG_AM_MASTER);
+    ASSERT ((priority >= 0) && (priority < UCHAR_MAX));
+    ASSERT ((timing >= 0) && (timing < UCHAR_MAX));
 
     up = (ubyte)priority;
     us = (ubyte)source;
@@ -3480,7 +3480,7 @@ void process_mission_message_packet (ubyte* data, header* hinfo) {
     char who_from[NAME_LENGTH];
     int multi_team_filter;
 
-    Assert (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
+    ASSERT (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
 
     offset = HEADER_LENGTH;
     GET_INT (id);
@@ -3701,7 +3701,7 @@ void process_mission_item_packet (ubyte* data, header* hinfo) {
     uint respawn;
     multi_create_info mcip;
 
-    Assert (gameseq_get_state () == GS_STATE_MULTI_HOST_SETUP);
+    ASSERT (gameseq_get_state () == GS_STATE_MULTI_HOST_SETUP);
     offset = HEADER_LENGTH;
 
     GET_DATA (type);
@@ -3756,7 +3756,7 @@ void send_multi_pause_packet (int pause) {
     ubyte val;
     int packet_size = 0;
 
-    Assert (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
+    ASSERT (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
 
     // build the header
     BUILD_HEADER (MULTI_PAUSE_REQUEST);
@@ -3849,7 +3849,7 @@ void process_ingame_nak (ubyte* data, header* hinfo) {
 
     switch (state) {
     case ACK_FILE_ACCEPTED:
-        Assert (Net_player->flags & NETINFO_FLAG_INGAME_JOIN);
+        ASSERT (Net_player->flags & NETINFO_FLAG_INGAME_JOIN);
         nprintf (
             ("Network", "Mission file rejected by server, aborting...\n"));
         multi_quit_game (PROMPT_NONE, MULTI_END_NOTIFY_FILE_REJECTED);
@@ -3885,7 +3885,7 @@ void process_force_end_mission_packet (ubyte* /*data*/, header* hinfo) {
 
     // Since only the server sends out these packets it should never receive
     // one
-    Assert (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
+    ASSERT (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
 
     multi_handle_sudden_mission_end ();
     send_debrief_event ();
@@ -3901,7 +3901,7 @@ void send_endgame_packet (net_player* pl) {
 
     // sending to a specific player?
     if (pl != NULL) {
-        Assert (Net_player->flags & NETINFO_FLAG_AM_MASTER);
+        ASSERT (Net_player->flags & NETINFO_FLAG_AM_MASTER);
         multi_io_send_reliable (pl, data, packet_size);
         return;
     }
@@ -3944,7 +3944,7 @@ void process_endgame_packet (ubyte* /*data*/, header* hinfo) {
         // determine who this came from and make sure he is allowed to end the
         // game
         player_num = find_player_id (hinfo->id);
-        Assert (player_num != -1);
+        ASSERT (player_num != -1);
         if (player_num < 0) { return; }
 
         // if the player is allowed to end the mission
@@ -4117,7 +4117,7 @@ void process_netplayer_slot_packet (ubyte* data, header* hinfo) {
             if (!((player_num == 0) && (Game_mode & GM_STANDALONE_SERVER))) {
                 objp = multi_get_network_object (net_sig);
                 if (objp == NULL) {
-                    fs2::dialog::error (
+                    ASSERTF (
                         LOCATION,
                         "Could not retrieve net object for signature %d!\n",
                         net_sig);
@@ -4185,7 +4185,7 @@ void process_ship_weapon_change (ubyte* data, header* hinfo) {
              signature));
         return;
     }
-    // Assert( objp->type == OBJ_SHIP );
+    // ASSERT (objp->type == OBJ_SHIP );
     if (objp->type != OBJ_SHIP) { return; }
 
     // if this is my data, do nothing since I already have my own data
@@ -4208,23 +4208,23 @@ void process_ship_weapon_change (ubyte* data, header* hinfo) {
 // ship status change procedure
 // 1.) <client> - Client runs through the normal button_function procedure. Any
 // remaining control bits are implied as being
-//                server critical.
+// server critical.
 // 2.) <client> - Client puts this button_info item into his last_buttons array
 // and sends a bunch of SHIP_STATUS packets
-//                for added redundancy.
+// for added redundancy.
 // 3.) <server> - Receives the packet. Checks to see if the net_player on his
 // side already has this one defined. If so, it
-//                ignores as a repeat packet. Otherwise it puts it in the
-//                last_buttons array for the net_player
+// ignores as a repeat packet. Otherwise it puts it in the
+// last_buttons array for the net_player
 // 4.) <server> - Server applies the command on his side (with
 // multi_apply_ship_status(...) and sends the ack (also a SHIP_STATUS)
-//                back to the client. Also sends multiple times for redundancy
+// back to the client. Also sends multiple times for redundancy
 // 5.) <client> - Receives the packet back. Does a lookup into his last_buttons
 // array. If he finds the match, apply the functions
-//                and remove the item from the list. If no match is found it
-//                means that either he has received an ack, has acted on it and
-//                removed it, or that it has been "timed out" and replaced by a
-//                newer button_info.
+// and remove the item from the list. If no match is found it
+// means that either he has received an ack, has acted on it and
+// removed it, or that it has been "timed out" and replaced by a
+// newer button_info.
 
 #define SHIP_STATUS_REPEAT 2
 void send_ship_status_packet (net_player* pl, button_info* bi, int id) {
@@ -4274,7 +4274,7 @@ void process_ship_status_packet (ubyte* data, header* hinfo) {
     if (Net_player->flags & NETINFO_FLAG_AM_MASTER) { // SERVER SIDE
         // find which net-player has sent us butotn information
         player_num = find_player_id (hinfo->id);
-        Assert (player_num >= 0);
+        ASSERT (player_num >= 0);
         if (player_num < 0) { return; }
 
         // don't process critical button information for observers
@@ -4295,9 +4295,9 @@ void process_ship_status_packet (ubyte* data, header* hinfo) {
     else { // CLIENT SIDE
         // this is the return from the server, so we should now apply them
         // locally
-        //	if(lookup_ship_status(Net_player,unique_id,1)){
+        // if(lookup_ship_status(Net_player,unique_id,1)){
         multi_apply_ship_status (Net_player, &bi, 1);
-        //	}
+        // }
     }
 }
 
@@ -4339,7 +4339,7 @@ void send_player_order_packet (int type, int index, int cmd) {
 
         s_index = ship_get_index_from_subsys (
             Player_ai->targeted_subsys, Player_ai->target_objnum);
-        Assert (s_index < CHAR_MAX); // better be less than this!!!!
+        ASSERT (s_index < CHAR_MAX); // better be less than this!!!!
         t_subsys = (char)s_index;
     }
     ADD_DATA (t_subsys);
@@ -4363,7 +4363,7 @@ void process_player_order_packet (ubyte* data, header* hinfo) {
     ship* shipp;
     ship_subsys *tsubsys_save, *targeted_subsys;
 
-    Assert (MULTIPLAYER_MASTER);
+    ASSERT (MULTIPLAYER_MASTER);
 
     // packet values - its easier to read all of these in first
 
@@ -4421,7 +4421,7 @@ void process_player_order_packet (ubyte* data, header* hinfo) {
     // check to see if the type of order is a reinforcement call.  If so,
     // intercept it, and then call them in.
     if (type == SQUAD_MSG_REINFORCEMENT) {
-        Assert ((index >= 0) && (index < Num_reinforcements));
+        ASSERT ((index >= 0) && (index < Num_reinforcements));
         hud_squadmsg_call_reinforcement (index, player_num);
         return;
     }
@@ -4437,7 +4437,7 @@ void process_player_order_packet (ubyte* data, header* hinfo) {
 
     targeted_subsys = NULL;
     if (t_subsys != -1) {
-        Assert (target_objp != NULL);
+        ASSERT (target_objp != NULL);
         targeted_subsys =
             ship_get_indexed_subsys (&Ships[target_objp->instance], t_subsys);
     }
@@ -4466,9 +4466,9 @@ void process_player_order_packet (ubyte* data, header* hinfo) {
         hud_squadmsg_send_to_all_fighters (command, player_num);
     }
 
-    Assert (
+    ASSERT (
         tobjnum_save !=
-        Ships[aip->shipnum].objnum); //	make sure not targeting self
+        Ships[aip->shipnum].objnum); // make sure not targeting self
     aip->target_objnum = tobjnum_save;
     aip->targeted_subsys = tsubsys_save;
 }
@@ -4477,13 +4477,13 @@ void process_player_order_packet (ubyte* data, header* hinfo) {
 // there are 2 cases for file signature sending which are handled very
 // differently 1.) Pregame. In this case, the host requires that all clients
 // send a filesig packet (when process_file_sig() is called, it
-//     posts an ACK_FILE_ACCEPTED packet to ack_evaluate, so he thinks they
-//     have acked).
+// posts an ACK_FILE_ACCEPTED packet to ack_evaluate, so he thinks they
+// have acked).
 // 2.) Ingame join. In this case, the client sends his filesig packet
 // automatically to the server and the _client_ waits for
-//     the ack, before continuing to join. It would be way too messy to have
-//     the server wait on the clients ack, since he would have to keep track of
-//     up to potentially 14 other ack handles  (ouch).
+// the ack, before continuing to join. It would be way too messy to have
+// the server wait on the clients ack, since he would have to keep track of
+// up to potentially 14 other ack handles  (ouch).
 void send_file_sig_packet (ushort sum_sig, int length_sig) {
     ubyte data[MAX_PACKET_SIZE];
     int packet_size = 0;
@@ -4502,7 +4502,7 @@ void process_file_sig_packet (ubyte* data, header* hinfo) {
     offset = HEADER_LENGTH;
 
     // should only be received on the server-side
-    Assert (Net_player->flags & NETINFO_FLAG_AM_MASTER);
+    ASSERT (Net_player->flags & NETINFO_FLAG_AM_MASTER);
 
     GET_USHORT (sum_sig);
     GET_INT (length_sig);
@@ -4517,7 +4517,7 @@ void send_file_sig_request (char* file_name) {
     BUILD_HEADER (FILE_SIG_REQUEST);
     ADD_STRING (file_name);
 
-    Assert (Net_player->flags & NETINFO_FLAG_AM_MASTER);
+    ASSERT (Net_player->flags & NETINFO_FLAG_AM_MASTER);
 
     multi_io_send_to_all_reliable (data, packet_size);
 }
@@ -4551,7 +4551,7 @@ void send_subsystem_destroyed_packet (
     vec3d tmp, local_hitpos;
     object* objp;
 
-    Assert (index < UCHAR_MAX);
+    ASSERT (index < UCHAR_MAX);
     uindex = (ubyte) (index);
 
     objp = &Objects[shipp->objnum];
@@ -4587,7 +4587,7 @@ void process_subsystem_destroyed_packet (ubyte* data, header* hinfo) {
         ship_subsys* subsysp;
 
         // be sure we have a ship!!!
-        // Assert ( objp->type == OBJ_SHIP );
+        // ASSERT ( objp->type == OBJ_SHIP );
         if (objp->type != OBJ_SHIP) {
             PACKET_SET_SIZE ();
             return;
@@ -4624,7 +4624,7 @@ void send_subsystem_cargo_revealed_packet (ship* shipp, int index) {
     ubyte data[MAX_PACKET_SIZE], uindex;
     int packet_size;
 
-    Assert (index < UCHAR_MAX);
+    ASSERT (index < UCHAR_MAX);
     uindex = (ubyte) (index);
 
     // build the header and add the data
@@ -4666,7 +4666,7 @@ void process_subsystem_cargo_revealed_packet (ubyte* data, header* hinfo) {
         return;
     }
 
-    // Assert( objp->type == OBJ_SHIP );
+    // ASSERT (objp->type == OBJ_SHIP );
     if ((objp->type != OBJ_SHIP) || (objp->instance < 0) ||
         (objp->instance >= MAX_SHIPS)) {
         return;
@@ -4699,7 +4699,7 @@ void send_subsystem_cargo_hidden_packet (ship* shipp, int index) {
     ubyte data[MAX_PACKET_SIZE], uindex;
     int packet_size;
 
-    Assert (index < UCHAR_MAX);
+    ASSERT (index < UCHAR_MAX);
     uindex = (ubyte) (index);
 
     // build the header and add the data
@@ -4741,7 +4741,7 @@ void process_subsystem_cargo_hidden_packet (ubyte* data, header* hinfo) {
         return;
     }
 
-    // Assert( objp->type == OBJ_SHIP );
+    // ASSERT (objp->type == OBJ_SHIP );
     if ((objp->type != OBJ_SHIP) || (objp->instance < 0) ||
         (objp->instance >= MAX_SHIPS)) {
         return;
@@ -4821,7 +4821,7 @@ void send_jump_into_mission_packet (net_player* pl) {
     ubyte data[MAX_PACKET_SIZE];
     int packet_size = 0;
 
-    Assert (Net_player->flags & NETINFO_FLAG_AM_MASTER);
+    ASSERT (Net_player->flags & NETINFO_FLAG_AM_MASTER);
 
     BUILD_HEADER (JUMP_INTO_GAME);
 
@@ -5036,7 +5036,7 @@ void send_ai_info_update_packet (object* objp, char what, object* other_objp) {
     ai_goal* aigp = NULL;
     ubyte docker_index, dockee_index;
 
-    // Assert( objp->type == OBJ_SHIP );
+    // ASSERT (objp->type == OBJ_SHIP );
     if (objp->type != OBJ_SHIP) { return; }
     aip = &Ai_info[Ships[objp->instance].ai_index];
 
@@ -5046,11 +5046,11 @@ void send_ai_info_update_packet (object* objp, char what, object* other_objp) {
     switch (what) {
     case AI_UPDATE_DOCK:
     case AI_UPDATE_UNDOCK:
-        Assert (other_objp != NULL);
+        ASSERT (other_objp != NULL);
         if (other_objp == NULL) { return; }
         break;
 
-    default: Assert (other_objp == NULL); break;
+    default: ASSERT (other_objp == NULL); break;
     }
 
     BUILD_HEADER (AI_INFO_UPDATE);
@@ -5063,7 +5063,7 @@ void send_ai_info_update_packet (object* objp, char what, object* other_objp) {
     case AI_UPDATE_DOCK:
         // for docking ships, add the signature of the ship that we are docked
         // with.
-        Assert (other_objp != NULL);
+        ASSERT (other_objp != NULL);
         other_signature = other_objp->net_signature;
 
         // Goober5000 - this is sort of weird, but it's the best way to do it
@@ -5079,7 +5079,7 @@ void send_ai_info_update_packet (object* objp, char what, object* other_objp) {
 
     case AI_UPDATE_UNDOCK:
         // same for undocking ships
-        Assert (other_objp != NULL);
+        ASSERT (other_objp != NULL);
         other_signature = other_objp->net_signature;
         ADD_USHORT (other_signature);
 
@@ -5090,7 +5090,7 @@ void send_ai_info_update_packet (object* objp, char what, object* other_objp) {
 
         // for orders, we only need to send a little bit of information here.
         // Be sure that the first order for this ship is active
-        Assert (
+        ASSERT (
             (aip->active_goal != AI_GOAL_NONE) &&
             (aip->active_goal != AI_ACTIVE_GOAL_DYNAMIC));
         aigp = &aip->goals[aip->active_goal];
@@ -5106,7 +5106,7 @@ void send_ai_info_update_packet (object* objp, char what, object* other_objp) {
         // real shipname.  If we don't have a valid shipnum, then don't sweat
         // it since it may not really be a ship.
         if (shipnum != -1) {
-            Assert (Ships[shipnum].objnum != -1);
+            ASSERT (Ships[shipnum].objnum != -1);
             other_signature = Objects[Ships[shipnum].objnum].net_signature;
         }
         else
@@ -5116,12 +5116,12 @@ void send_ai_info_update_packet (object* objp, char what, object* other_objp) {
 
         // for docking, add the dock and dockee index
         if (aigp->ai_mode & (AI_GOAL_DOCK | AI_GOAL_REARM_REPAIR)) {
-            Assert (
+            ASSERT (
                 aigp->flags[AI::Goal_Flags::Dockee_index_valid] &&
                 aigp->flags[AI::Goal_Flags::Docker_index_valid]);
-            Assert (
+            ASSERT (
                 (aigp->docker.index >= 0) && (aigp->docker.index < UCHAR_MAX));
-            Assert (
+            ASSERT (
                 (aigp->dockee.index >= 0) && (aigp->dockee.index < UCHAR_MAX));
             docker_index = (ubyte)aigp->docker.index;
             dockee_index = (ubyte)aigp->dockee.index;
@@ -5252,7 +5252,7 @@ void send_mission_sync_packet (int mode, int start_campaign) {
     ubyte data[MAX_PACKET_SIZE], is_campaign;
     int packet_size = 0;
 
-    Assert (
+    ASSERT (
         (Net_player->flags & NETINFO_FLAG_GAME_HOST) &&
         !(Net_player->flags & NETINFO_FLAG_AM_MASTER));
 
@@ -5295,7 +5295,7 @@ void process_mission_sync_packet (ubyte* data, header* hinfo) {
     ubyte campaign_flag;
     int offset = HEADER_LENGTH;
 
-    Assert (Game_mode & GM_STANDALONE_SERVER);
+    ASSERT (Game_mode & GM_STANDALONE_SERVER);
 
     // if this is a team vs team situation, lock the players send a final team
     // update
@@ -5448,7 +5448,7 @@ void process_debris_update_packet (ubyte* data, header* hinfo) {
     // simply remove it (no explosion)
     case DEBRIS_UPDATE_REMOVE:
         if (objp != &bogus_object) {
-            Assert (objp->type == OBJ_DEBRIS);
+            ASSERT (objp->type == OBJ_DEBRIS);
             obj_delete (OBJ_INDEX (objp));
         }
         break;
@@ -5486,7 +5486,7 @@ void send_wss_request_packet (
     if (p == NULL) { multi_io_send_reliable (Net_player, data, packet_size); }
     // being routed through the standalone to the host of the game
     else {
-        Assert (Game_mode & GM_STANDALONE_SERVER);
+        ASSERT (Game_mode & GM_STANDALONE_SERVER);
         multi_io_send_reliable (p, data, packet_size);
     }
 }
@@ -5514,7 +5514,7 @@ void process_wss_request_packet (ubyte* data, header* hinfo) {
     GET_INT (mode);
     PACKET_SET_SIZE ();
 
-    Assert (player_num != -1);
+    ASSERT (player_num != -1);
     if (player_num == -1) { return; }
 
     // if we're the standalone, we have to route this packet to the host of the
@@ -5546,7 +5546,7 @@ void send_wss_update_packet (int team_num, ubyte* wss_data, int size) {
     ubyte data[MAX_PACKET_SIZE], team;
     int packet_size = 0;
 
-    Assert (size <= (MAX_PACKET_SIZE - 10));
+    ASSERT (size <= (MAX_PACKET_SIZE - 10));
 
     BUILD_HEADER (WSS_UPDATE_PACKET);
 
@@ -5592,7 +5592,7 @@ void process_wss_update_packet (ubyte* data, header* hinfo) {
 
         // determine where this came from
         player_index = find_player_id (hinfo->id);
-        Assert (player_index != -1);
+        ASSERT (player_index != -1);
         if (player_index < 0) { return; }
 
         // route the packet (don't resend it to the host)
@@ -5630,7 +5630,7 @@ void send_firing_info_packet () {
     int packet_size;
     ubyte plinked, sdual;
 
-    Assert (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
+    ASSERT (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
 
     BUILD_HEADER (FIRING_INFO);
     plinked = (ubyte) (
@@ -5649,7 +5649,7 @@ void process_firing_info_packet (ubyte* data, header* hinfo) {
     ship* shipp;
 
     // only the master of the game should be dealing with these packets
-    Assert (Net_player->flags & NETINFO_FLAG_AM_MASTER);
+    ASSERT (Net_player->flags & NETINFO_FLAG_AM_MASTER);
 
     offset = HEADER_LENGTH;
     GET_DATA (plinked);
@@ -5930,10 +5930,10 @@ void process_deny_packet (ubyte* data, header* hinfo) {
 }
 
 // this packet will consist of
-// 1.) netplayer ship classes			(85 bytes max)
-// 2.) ship weapon state data			(277 bytes max)
-// 3.) player settings et. al.		(133 bytes max)
-// TOTAL                            495				NOTE : keep this in mind
+// 1.) netplayer ship classes                   (85 bytes max)
+// 2.) ship weapon state data                   (277 bytes max)
+// 3.) player settings et. al.          (133 bytes max)
+// TOTAL                            495                         NOTE : keep this in mind
 // when/if adding new data to this packet
 void send_post_sync_data_packet (net_player* p, int std_request) {
     ubyte data[MAX_PACKET_SIZE], val;
@@ -6202,12 +6202,12 @@ void process_post_sync_data_packet (ubyte* data, header* hinfo) {
         objp = multi_get_network_object (net_sig);
 
         // make sure we found a ship
-        Assertion (
+        ASSERTX (
             objp != NULL,
             "idx: %d, ship_count: %d, sinfo_index: %u, ts_index: %u, net_sig: "
             "%u",
             idx, ship_count, sinfo_index, ts_index, net_sig);
-        Assertion (
+        ASSERTX (
             objp->type == OBJ_SHIP,
             "type: %d, idx: %d, ship_count: %d, sinfo_index: %u, ts_index: "
             "%u, net_sig: %u",
@@ -6229,18 +6229,18 @@ void process_post_sync_data_packet (ubyte* data, header* hinfo) {
         objp = multi_get_network_object (net_sig);
 
         // make sure we found a ship
-        Assert ((objp != NULL) && (objp->type == OBJ_SHIP));
+        ASSERT ((objp != NULL) && (objp->type == OBJ_SHIP));
 
         // get a pointer to the ship
         shipp = &Ships[objp->instance];
 
         // get number of primary and secondary banks;
         GET_DATA (b);
-        Assert (b != -1);
+        ASSERT (b != -1);
         shipp->weapons.num_primary_banks = (int)b;
 
         GET_DATA (b);
-        Assert (b != -1);
+        ASSERT (b != -1);
         shipp->weapons.num_secondary_banks = (int)b;
 
         // get bank selection info
@@ -6493,7 +6493,7 @@ void send_shield_explosion_packet (
     Int3 ();
     // Assert(!(Netgame.debug_flags & NETD_FLAG_CLIENT_NODAMAGE));
 
-    Assert (tri_num < UCHAR_MAX);
+    ASSERT (tri_num < UCHAR_MAX);
     utri_num = (ubyte)tri_num;
 
     // for each player, determine if this object is behind the player -- if so,
@@ -6555,13 +6555,13 @@ void process_shield_explosion_packet (ubyte* data, header* hinfo) {
 
         // given the tri num, find the local position which is the average of
         // the three vertices of the triangle affected.  Use this average point
-        // as the hit point Assert( objp->type == OBJ_SHIP );
+        // as the hit point ASSERT (objp->type == OBJ_SHIP );
         if (objp->type != OBJ_SHIP) { return; }
 
         pm = model_get (
             Ship_info[Ships[objp->instance].ship_info_index].model_num);
         shieldp = &pm->shield;
-        Assert (utri_num < shieldp->ntris);
+        ASSERT (utri_num < shieldp->ntris);
         stri = shieldp->tris[utri_num];
         vm_vec_zero (&hit_pos);
         for (i = 0; i < 3; i++) {
@@ -6606,7 +6606,7 @@ void send_player_stats_block_packet (
             idx += MAX_SHIPS_PER_PACKET;
         }
 
-        Assert ((Num_medals >= 0) && (Num_medals < USHRT_MAX));
+        ASSERT ((Num_medals >= 0) && (Num_medals < USHRT_MAX));
         ADD_USHORT ((ushort)Num_medals);
 
         // medal information
@@ -6694,7 +6694,7 @@ void send_player_stats_block_packet (
         break;
     }
 
-    Assert (packet_size < MAX_PACKET_SIZE);
+    ASSERT (packet_size < MAX_PACKET_SIZE);
 
     // if we're a client, always send the data to the server
     if (!(Net_player->flags & NETINFO_FLAG_AM_MASTER)) {
@@ -6846,7 +6846,7 @@ void process_player_stats_block_packet (ubyte* data, header* hinfo) {
     // if I'm the server of the game, I should always rebroadcast these stats
     if ((Net_player->flags & NETINFO_FLAG_AM_MASTER) && (sc != &bogus)) {
         // make sure these are alltime stats
-        Assert (val == STATS_ALLTIME || val == STATS_ALLTIME_KILLS);
+        ASSERT (val == STATS_ALLTIME || val == STATS_ALLTIME_KILLS);
 
         multi_broadcast_stats (val);
     }
@@ -6866,7 +6866,7 @@ void send_asteroid_create (
     BUILD_HEADER (ASTEROID_INFO);
     packet_type = ASTEROID_CREATE;
 
-    Assert (asteroid_type < UCHAR_MAX);
+    ASSERT (asteroid_type < UCHAR_MAX);
     atype = (ubyte)asteroid_type;
 
     ADD_DATA (packet_type);
@@ -7043,7 +7043,7 @@ void send_host_restr_packet (const char* callsign, int code, int mode) {
     // otherwise if I'm the host, I should be sending a reply back to the
     // standalone server
     else {
-        Assert (Net_player->flags & NETINFO_FLAG_GAME_HOST);
+        ASSERT (Net_player->flags & NETINFO_FLAG_GAME_HOST);
         multi_io_send_reliable (Net_player, data, packet_size);
     }
 }
@@ -7063,7 +7063,7 @@ void process_host_restr_packet (ubyte* data, header* hinfo) {
     switch (code) {
     // query to the host from standalone
     case 0:
-        Assert (
+        ASSERT (
             (Net_player->flags & NETINFO_FLAG_GAME_HOST) &&
             !(Net_player->flags & NETINFO_FLAG_AM_MASTER));
 
@@ -7082,7 +7082,7 @@ void process_host_restr_packet (ubyte* data, header* hinfo) {
 
     // affirmative reply from the host to the standalone
     case 1:
-        Assert (Game_mode & GM_STANDALONE_SERVER);
+        ASSERT (Game_mode & GM_STANDALONE_SERVER);
 
         // let the player join if the timestamp has not already elapsed on the
         // server
@@ -7094,7 +7094,7 @@ void process_host_restr_packet (ubyte* data, header* hinfo) {
 
     // negative reply
     case 2:
-        Assert (Game_mode & GM_STANDALONE_SERVER);
+        ASSERT (Game_mode & GM_STANDALONE_SERVER);
         Netgame.flags &= ~(NG_FLAG_INGAME_JOINING);
         Multi_restr_query_timestamp = -1;
         break;
@@ -7108,7 +7108,7 @@ void send_netgame_end_error_packet (int notify_code, int err_code) {
 
     // only the server should ever be here - although this might change if for
     // some reason the host wants to end the game
-    Assert (Net_player->flags & NETINFO_FLAG_AM_MASTER);
+    ASSERT (Net_player->flags & NETINFO_FLAG_AM_MASTER);
 
     // build the header and add the notification and error codes
     BUILD_HEADER (NETGAME_END_ERROR);
@@ -7185,14 +7185,14 @@ void send_client_update_packet (net_player* pl) {
         !(NETPLAYER_IS_OBSERVER (pl)) && !(NETPLAYER_IS_DEAD (pl)) &&
         (Objects[pl->m_player->objnum].type == OBJ_SHIP)) {
         val |= UPDATE_HULL_INFO;
-        Assert (Player_ship); // I"d better have one of these!!!!
+        ASSERT (Player_ship); // I"d better have one of these!!!!
     }
 
     ADD_DATA (val);
 
     // if paused, add the net address of the guy who paused
     if (val & UPDATE_IS_PAUSED) {
-        Assert (Multi_pause_pauser != NULL);
+        ASSERT (Multi_pause_pauser != NULL);
         ADD_DATA (Multi_pause_pauser->player_id);
     }
 
@@ -7207,11 +7207,11 @@ void send_client_update_packet (net_player* pl) {
         int i;
 
         // get the object for the player
-        Assert (pl->m_player->objnum != -1);
+        ASSERT (pl->m_player->objnum != -1);
 
         objp = &Objects[pl->m_player->objnum];
 
-        Assert (objp->type == OBJ_SHIP);
+        ASSERT (objp->type == OBJ_SHIP);
         shipp = &Ships[objp->instance];
         sip = &Ship_info[shipp->ship_info_index];
 
@@ -7384,7 +7384,7 @@ void process_client_update_packet (ubyte* data, header* hinfo) {
                     subsys_type =
                         subsysp->system_info
                             ->type; // this is the generic type of subsystem
-                    Assert (subsys_type < SUBSYSTEM_MAX);
+                    ASSERT (subsys_type < SUBSYSTEM_MAX);
                     if (!(subsysp
                               ->flags[Ship::Subsystem_Flags::No_aggregate])) {
                         shipp->subsys_info[subsys_type]
@@ -7439,7 +7439,7 @@ void send_countdown_packet (int time) {
     }
     // otherwise we'de better be a host sending to the standalone
     else {
-        Assert (Net_player->flags & NETINFO_FLAG_GAME_HOST);
+        ASSERT (Net_player->flags & NETINFO_FLAG_GAME_HOST);
         multi_io_send_reliable (Net_player, data, packet_size);
     }
 }
@@ -7458,7 +7458,7 @@ void process_countdown_packet (ubyte* data, header* hinfo) {
     // if we're the standalone, this should be a -1 telling us to start the
     // countdown
     if (Game_mode & GM_STANDALONE_SERVER) {
-        Assert ((int)time == -1);
+        ASSERT ((int)time == -1);
 
         // start the countdown
         multi_sync_start_countdown ();
@@ -7517,7 +7517,7 @@ void process_debrief_info (ubyte* data, header* hinfo) {
     // now that we have the stage data for the debriefing stages, call debrief
     // function with the data so that clients can now see the debriefing stuff.
     // Do it only for my team.
-    Assert (
+    ASSERT (
         (Net_player->p_info.team >= 0) &&
         (Net_player->p_info.team < Num_teams));
     debrief_set_multi_clients (
@@ -7557,7 +7557,7 @@ void send_homing_weapon_info (int weapon_num) {
 
             s_index = ship_get_index_from_subsys (
                 wp->homing_subsys, OBJ_INDEX (homing_object), 1);
-            Assert (s_index < CHAR_MAX); // better be less than this!!!!
+            ASSERT (s_index < CHAR_MAX); // better be less than this!!!!
             t_subsys = (char)s_index;
         }
     }
@@ -7597,7 +7597,7 @@ void process_homing_weapon_info (ubyte* data, header* hinfo) {
              "update\n"));
         return;
     }
-    Assert (weapon_objp->type == OBJ_WEAPON);
+    ASSERT (weapon_objp->type == OBJ_WEAPON);
     wp = &Weapons[weapon_objp->instance];
 
     // be sure that we can find these weapons and
@@ -7613,7 +7613,7 @@ void process_homing_weapon_info (ubyte* data, header* hinfo) {
             Weapon_info[Weapons[homing_object->instance].weapon_info_index]
                 .wi_flags;
 
-        //	Assert( (flags & WIF_BOMB) || (flags & WIF_CMEASURE) );
+        // ASSERT ((flags & WIF_BOMB) || (flags & WIF_CMEASURE) );
 
         if (!((flags
                    [Weapon::Info_Flags::Bomb,
@@ -7629,7 +7629,7 @@ void process_homing_weapon_info (ubyte* data, header* hinfo) {
     wp->target_num = OBJ_INDEX (homing_object);
     wp->target_sig = homing_object->signature;
     if (h_subsys != -1) {
-        Assert (homing_object->type == OBJ_SHIP);
+        ASSERT (homing_object->type == OBJ_SHIP);
         wp->homing_subsys = ship_get_indexed_subsys (
             &Ships[homing_object->instance], h_subsys);
     }
@@ -7646,7 +7646,7 @@ void send_emp_effect (ushort net_sig, float intensity, float time) {
     ubyte data[25];
     int packet_size;
 
-    Assert (MULTIPLAYER_MASTER);
+    ASSERT (MULTIPLAYER_MASTER);
 
     // build the packet and add the opcode
     BUILD_HEADER (EMP_EFFECT);
@@ -7729,7 +7729,7 @@ void send_NEW_primary_fired_packet (ship* shipp, int banks_fired) {
 
     // ubanks_fired = (ubyte)banks_fired;
     // current_bank = (ubyte)shipp->weapons.current_primary_bank;
-    // Assert( current_bank <= 3 );
+    // ASSERT (current_bank <= 3 );
 
     // insert the current primary bank into this byte
     // ubanks_fired |= (current_bank << CURRENT_BANK_BIT);
@@ -7804,7 +7804,7 @@ void process_NEW_primary_fired_packet (ubyte* data, header* hinfo) {
     // get the current primary bank
     // current_bank = (ubyte)(banks_fired >> CURRENT_BANK_BIT);
     // current_bank &= 0x3;
-    // Assert( (current_bank >= 0) && (current_bank < MAX_SHIP_PRIMARY_BANKS)
+    // ASSERT ((current_bank >= 0) && (current_bank < MAX_SHIP_PRIMARY_BANKS)
     // ); shipp->weapons.current_primary_bank = current_bank;
 
     // strip off all remaining bits and just keep which banks were actually
@@ -7812,7 +7812,7 @@ void process_NEW_primary_fired_packet (ubyte* data, header* hinfo) {
 
     // set the link status of the ship if not the player.  If it is the player,
     // we will do sanity checking only (for now). if ( !linked ){
-    // 		shipp->flags &= ~SF_PRIMARY_LINKED;
+    // shipp->flags &= ~SF_PRIMARY_LINKED;
     // } else {
     // shipp->flags.set(Ship::Ship_Flags::Primary_linked);
     // }
@@ -7846,7 +7846,7 @@ void send_NEW_countermeasure_fired_packet (
     // for anyone except me
     if (MULTIPLAYER_CLIENT && (Player_obj != objp)) { return; }
 
-    Assert (cmeasure_count < UCHAR_MAX);
+    ASSERT (cmeasure_count < UCHAR_MAX);
     BUILD_HEADER (COUNTERMEASURE_NEW);
     ADD_USHORT (objp->net_signature);
     ADD_INT (rand_val);
@@ -7918,18 +7918,18 @@ void send_beam_fired_packet (
     ushort target_sig;
 
     // only the server should ever be doing this
-    Assert (MULTIPLAYER_MASTER);
+    ASSERT (MULTIPLAYER_MASTER);
 
     // setup outgoing data
-    Assert (shooter != NULL);
-    Assert (turret != NULL);
-    Assert (pbi != NULL);
+    ASSERT (shooter != NULL);
+    ASSERT (turret != NULL);
+    ASSERT (pbi != NULL);
     if ((shooter == NULL) || (turret == NULL) || (pbi == NULL)) {
         return;
     }
 
     if (!(bfi_flags & BFIF_IS_FIGHTER_BEAM)) {
-        Assert (target != NULL);
+        ASSERT (target != NULL);
         if (target == NULL) { return; }
     }
 
@@ -7938,7 +7938,7 @@ void send_beam_fired_packet (
     u_beam_info = (short)beam_info_index;
 
     if (bfi_flags & BFIF_IS_FIGHTER_BEAM) {
-        Assert ((bank_point >= 0) && (bank_point < UCHAR_MAX));
+        ASSERT ((bank_point >= 0) && (bank_point < UCHAR_MAX));
         subsys_index = (char)bank_point;
     }
     else {
@@ -7946,7 +7946,7 @@ void send_beam_fired_packet (
             (char)ship_get_index_from_subsys (turret, OBJ_INDEX (shooter), 1);
     }
 
-    Assert (subsys_index >= 0);
+    ASSERT (subsys_index >= 0);
     if (subsys_index < 0) { return; }
 
     // build the header
@@ -7957,8 +7957,8 @@ void send_beam_fired_packet (
     ADD_SHORT (u_beam_info);
     ADD_DATA (*pbi); // FIXME: This is still wrong, we shouldn't be sending
                      // an entire struct over the wire - taylor
-    //	ADD_DATA(bfi_flags);	// this breaks the protocol but is here in case
-    // we decided to do that in the future - taylor 	ADD_DATA(target_pos);
+    // ADD_DATA(bfi_flags);    // this breaks the protocol but is here in case
+    // we decided to do that in the future - taylor     ADD_DATA(target_pos);
     // // ditto - Goober5000
 
     // send to all clients
@@ -7972,10 +7972,10 @@ void process_beam_fired_packet (ubyte* data, header* hinfo) {
     short u_beam_info;
     beam_info b_info;
     beam_fire_info fire_info;
-    //	ubyte fighter_beam = 0;
+    // ubyte fighter_beam = 0;
 
     // only clients should ever get this
-    Assert (MULTIPLAYER_CLIENT);
+    ASSERT (MULTIPLAYER_CLIENT);
 
     // read in packet data
     offset = HEADER_LENGTH;
@@ -7985,7 +7985,7 @@ void process_beam_fired_packet (ubyte* data, header* hinfo) {
     GET_SHORT (u_beam_info);
     GET_DATA (b_info); // FIXME: This is still wrong, we shouldn't be sending
                        // an entire struct over the wire - taylor
-    //	GET_DATA(fighter_beam);  // this breaks the protocol but is here in
+    // GET_DATA(fighter_beam);  // this breaks the protocol but is here in
     // case we decided to do that in the future - taylor
     PACKET_SET_SIZE ();
 
@@ -8087,15 +8087,15 @@ void send_sw_query_packet (ubyte code, char* txt) {
 
     // if I'm the host, send to standalone
     if (MULTIPLAYER_HOST) {
-        Assert (!MULTIPLAYER_MASTER);
-        Assert (code == SW_STD_START);
+        ASSERT (!MULTIPLAYER_MASTER);
+        ASSERT (code == SW_STD_START);
         multi_io_send_reliable (Net_player, data, packet_size);
     }
     // otherwise standalone sends back to host
     else {
-        Assert (Game_mode & GM_STANDALONE_SERVER);
-        Assert (code != SW_STD_START);
-        Assert (Netgame.host != NULL);
+        ASSERT (Game_mode & GM_STANDALONE_SERVER);
+        ASSERT (code != SW_STD_START);
+        ASSERT (Netgame.host != NULL);
         if (Netgame.host != NULL) {
             multi_io_send_reliable (Netgame.host, data, packet_size);
         }
@@ -8199,9 +8199,9 @@ void send_weapon_detonate_packet (object* objp) {
     int packet_size = 0;
 
     // sanity checks
-    Assert (MULTIPLAYER_MASTER);
+    ASSERT (MULTIPLAYER_MASTER);
     if (!MULTIPLAYER_MASTER) { return; }
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
     if (objp == NULL) { return; }
 
     // build the header and add the data
@@ -8248,10 +8248,10 @@ void send_flak_fired_packet (
 
     // local setup -- be sure we are actually passing a weapon!!!!
     objp = &Objects[weapon_objnum];
-    Assert (objp->type == OBJ_WEAPON);
+    ASSERT (objp->type == OBJ_WEAPON);
     pnet_signature = Objects[ship_objnum].net_signature;
 
-    Assert (subsys_index < UCHAR_MAX);
+    ASSERT (subsys_index < UCHAR_MAX);
     cindex = (ubyte)subsys_index;
 
     ssp = ship_get_indexed_subsys (
@@ -8362,7 +8362,7 @@ void process_flak_fired_packet (ubyte* data, header* hinfo) {
 
 #define ADD_NORM_VEC(d)                                               \
     do {                                                              \
-        Assert ((packet_size + 3) < MAX_PACKET_SIZE);                 \
+        ASSERT ((packet_size + 3) < MAX_PACKET_SIZE);                 \
         char vnorm[3] = { (char)(d.x * 127.0f), (char)(d.y * 127.0f), \
                           (char)(d.z * 127.0f) };                     \
         memcpy (data + packet_size, vnorm, 3);                        \
@@ -8386,9 +8386,9 @@ void send_player_pain_packet (
     ushort udamage;
     int packet_size = 0;
 
-    Assert (MULTIPLAYER_MASTER);
+    ASSERT (MULTIPLAYER_MASTER);
     if (!MULTIPLAYER_MASTER) { return; }
-    Assert (pl != NULL);
+    ASSERT (pl != NULL);
     if (pl == NULL) { return; }
 
     // build the packet and add the code
@@ -8428,7 +8428,7 @@ void process_player_pain_packet (ubyte* data, header* hinfo) {
     // mprintf(("PAIN!\n"));
 
     // get weapon info pointer
-    Assert (
+    ASSERT (
         (windex < Num_weapon_types) &&
         (Weapon_info[windex].subtype == WP_LASER));
     if (!((windex < Num_weapon_types) &&
@@ -8438,7 +8438,7 @@ void process_player_pain_packet (ubyte* data, header* hinfo) {
     wip = &Weapon_info[windex];
 
     // play the weapon hit sound
-    Assert (Player_obj != NULL);
+    ASSERT (Player_obj != NULL);
     if (Player_obj == NULL) { return; }
 
     // Assume the weapon is armed -WMC
@@ -8610,7 +8610,7 @@ void send_self_destruct_packet () {
     if (Net_player == NULL) { return; }
 
     // if i'm the server, I shouldn't be here
-    Assert (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
+    ASSERT (!(Net_player->flags & NETINFO_FLAG_AM_MASTER));
     if (Net_player->flags & NETINFO_FLAG_AM_MASTER) { return; }
 
     // only if this is valid
@@ -8668,10 +8668,10 @@ void send_sexp_packet (ubyte* sexp_packet, int num_ubytes) {
     int i;
     ushort val;
 
-    Assert (MULTIPLAYER_MASTER);
+    ASSERT (MULTIPLAYER_MASTER);
     // must have a bare minimum of OP, COUNT and TERMINATOR
     if (num_ubytes < 9) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Invalid call to send_sexp_packet. Not enough data included!");
         return;
@@ -8683,7 +8683,7 @@ void send_sexp_packet (ubyte* sexp_packet, int num_ubytes) {
     ADD_USHORT (val);
 
     for (i = 0; i < num_ubytes; i++) {
-        Assert (packet_size < MAX_PACKET_SIZE);
+        ASSERT (packet_size < MAX_PACKET_SIZE);
         data[packet_size] = sexp_packet[i];
         packet_size++;
     }

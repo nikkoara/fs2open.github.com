@@ -15,19 +15,19 @@ class player;
 static const unsigned int PLR_FILE_ID = 0x5f524c50; // "PLR_" in file
 static const unsigned int CSG_FILE_ID = 0x5f475343; // "CSG_" in file
 // NOTE: Version should be bumped only for adding/removing sections or section
-//       content.  It should *NOT* be bumped for limit bumps or anything of
-//       that sort!
-//   0 - initial version
-//   1 - Adding support for the player is multi flag
-//   2 - Add language in use when pilot was created
-//	     (due to intel entries using translated text as the primary key)
+// content.  It should *NOT* be bumped for limit bumps or anything of
+// that sort!
+// 0 - initial version
+// 1 - Adding support for the player is multi flag
+// 2 - Add language in use when pilot was created
+// (due to intel entries using translated text as the primary key)
 static const ubyte PLR_VERSION = 2;
-//   0 - initial version
-//   1 - re-add recent missions
-//   2 - separate single/multi squad name & pic
-//   3 - remove separate detail settings for campaigns
-//   4 - add CPV rollback for Red Alert missions
-//   5 - save rank to flags for quick access
+// 0 - initial version
+// 1 - re-add recent missions
+// 2 - separate single/multi squad name & pic
+// 3 - remove separate detail settings for campaigns
+// 4 - add CPV rollback for Red Alert missions
+// 5 - save rank to flags for quick access
 static const ubyte CSG_VERSION = 5;
 
 class pilotfile {

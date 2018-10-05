@@ -69,7 +69,7 @@ int FS2NetD_CheckSingleMission (const char* m_name, uint crc32, bool do_send) {
 
         ubyte status = 0;
         PXO_GET_DATA (status);
-        Assert ((status == 0) || (status == 1));
+        ASSERT ((status == 0) || (status == 1));
 
         // anything beyond 'true' is considered a failure of some kind
         if (status > 1) { status = 0; }
@@ -114,14 +114,14 @@ int FS2NetD_SendPlayerData (
 
         for (i = 0; i < MAX_SHIP_CLASSES; i++) {
             if (pl->stats.kills[i] > 0) {
-                Assert (
+                ASSERT (
                     (pl->stats.kills[i] >= 0) &&
                     (pl->stats.kills[i] < USHRT_MAX));
                 num_type_kills++;
             }
         }
 
-        Assert ((num_type_kills >= 0) && (num_type_kills < USHRT_MAX));
+        ASSERT ((num_type_kills >= 0) && (num_type_kills < USHRT_MAX));
         PXO_ADD_USHORT ((ushort)num_type_kills);
 
         for (i = 0; i < MAX_SHIP_CLASSES; i++) {
@@ -131,7 +131,7 @@ int FS2NetD_SendPlayerData (
             }
         }
 
-        Assert ((Num_medals >= 0) && (Num_medals < USHRT_MAX));
+        ASSERT ((Num_medals >= 0) && (Num_medals < USHRT_MAX));
         PXO_ADD_USHORT ((ushort)Num_medals);
 
         for (i = 0; i < Num_medals; i++) {
@@ -165,7 +165,7 @@ int FS2NetD_SendPlayerData (
 
         ubyte status;
         PXO_GET_DATA (status);
-        Assert ((status == 0) || (status == 1) || (status == 2));
+        ASSERT ((status == 0) || (status == 1) || (status == 2));
 
         if (status > 2) { status = 2; }
 
@@ -203,7 +203,7 @@ int FS2NetD_GetPlayerData (
 
         ushort bogus;
         FS2_UNUSED (bogus);
-        
+
         ushort num_type_kills = 0, num_medals = 0;
         char ship_name[NAME_LENGTH];
         int idx;
@@ -726,7 +726,7 @@ int FS2NetD_ValidateTableList (bool do_send) {
                  Table_valid_status.begin ();
              tvs != Table_valid_status.end (); ++tvs) {
             PXO_GET_DATA (tbl_valid_status);
-            Assert ((tbl_valid_status == 0) || (tbl_valid_status == 1));
+            ASSERT ((tbl_valid_status == 0) || (tbl_valid_status == 1));
 
             tvs->valid = tbl_valid_status;
         }
@@ -782,7 +782,7 @@ void FS2NetD_CheckDuplicateLogin () {
 
     PXO_ADD_INT (Multi_tracker_id);
 
-    Assert (MAX_PLAYERS <= 255);
+    ASSERT (MAX_PLAYERS <= 255);
 
     ubyte tvar = (ubyte)ids_count;
     PXO_ADD_DATA (tvar);

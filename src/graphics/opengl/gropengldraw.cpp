@@ -794,7 +794,7 @@ void opengl_render_primitives (
     int buffer_handle, size_t vert_offset, size_t byte_offset) {
     GR_DEBUG_SCOPE ("Render primitives");
 
-    Assertion (
+    ASSERTX (
         buffer_handle >= 0,
         "A valid buffer handle is required! Use the immediate buffer if data "
         "is not in GPU buffer yet.");

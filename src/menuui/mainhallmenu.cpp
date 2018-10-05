@@ -191,8 +191,8 @@ MENU_REGION Main_hall_region[NUM_MAIN_HALL_MAX_REGIONS];
 // region over which the mouse is currently residing, or -1 if over no region
 // NOTE : you should nevery change this directly. Always use
 // main_hall_handle_mouse_location(int)
-//        to do this. Otherwise, the door opening and closing animations will
-//        get screwed up
+// to do this. Otherwise, the door opening and closing animations will
+// get screwed up
 int Main_hall_mouse_region;
 
 // set this to skip a frame
@@ -454,7 +454,7 @@ void main_hall_init (const std::string& main_hall_name) {
 
     // sanity checks
     if (Main_hall_defines.empty ()) {
-        fs2::dialog::error (LOCATION, "No main halls were loaded to initialize.");
+        ASSERTF (LOCATION, "No main halls were loaded to initialize.");
     }
     else if (main_hall_name == "") {
         // we were passed a blank main hall name, so load the first available
@@ -462,7 +462,7 @@ void main_hall_init (const std::string& main_hall_name) {
         main_hall_get_name (main_hall_to_load, 0);
     }
     else if (main_hall_get_pointer (main_hall_name) == NULL) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Tried to load a main hall called '%s', but it does not exist; "
             "loading first available main hall.",
@@ -484,7 +484,7 @@ void main_hall_init (const std::string& main_hall_name) {
 
     // assign the proper main hall data
     Main_hall = main_hall_get_pointer (main_hall_to_load);
-    Assertion (
+    ASSERTX (
         Main_hall != NULL,
         "Failed to obtain pointer to main hall '%s'; get a coder!\n",
         main_hall_to_load.c_str ());
@@ -510,7 +510,7 @@ void main_hall_init (const std::string& main_hall_name) {
             it->description.c_str (), it->mask, it->key, interface_snd_id ());
     }
 
-    // init tooltip shader						// nearly black
+    // init tooltip shader                                              // nearly black
     gr_create_shader (&Main_hall_tooltip_shader, 5, 5, 5, 168);
 
     // are we funny?
@@ -568,7 +568,7 @@ void main_hall_init (const std::string& main_hall_name) {
             "General", "WARNING! Couldn't load main hall background mask %s\n",
             Main_hall->mask.c_str ()));
         if (gr_screen.res == 0) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Could not load in main hall mask '%s'!\n\n(This error most "
                 "likely means that you are missing required 640x480 interface "
@@ -576,7 +576,7 @@ void main_hall_init (const std::string& main_hall_name) {
                 Main_hall->mask.c_str ());
         }
         else {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Could not load in main hall mask '%s'!\n\n(This error most "
                 "likely means that you are missing required 1024x768 "
@@ -958,7 +958,7 @@ void main_hall_do (float frametime) {
             }
 
             if (region_action == -1) {
-                fs2::dialog::error (LOCATION, "Region %d doesn't have an action!", code);
+                ASSERTF (LOCATION, "Region %d doesn't have an action!", code);
             }
             else if (region_action == START_REGION) {
                 if (Player->flags & PLAYER_FLAGS_IS_MULTI) {
@@ -1072,7 +1072,7 @@ void main_hall_do (float frametime) {
 
         // custom action
         case SCRIPT_REGION:
-            Assert (0);
+            ASSERT (0);
             break;
         }
 
@@ -1280,7 +1280,7 @@ void main_hall_start_music () {
     }
 
     filename = Spooled_music[Main_hall_music_index].filename;
-    Assert (filename != NULL);
+    ASSERT (filename != NULL);
 
     // get handle
     Main_hall_music_handle = audiostream_open (filename, ASF_MENUMUSIC);
@@ -1343,7 +1343,7 @@ void main_hall_render_misc_anims (float frametime, bool over_doors) {
                                  jdx++) {
                                 if (Main_hall->misc_anim_group.at (jdx) ==
                                     Main_hall->misc_anim_group.at (idx)) {
-                                    Assert (
+                                    ASSERT (
                                         group_anims_weve_checked.size () <
                                         INT_MAX);
                                     if ((int)group_anims_weve_checked
@@ -1370,7 +1370,7 @@ void main_hall_render_misc_anims (float frametime, bool over_doors) {
                             // if the entire group is paused and off, pick a
                             // random one to regenerate
                             if (all_neg1) {
-                                Assert (group_indexes.size () < INT_MAX);
+                                ASSERT (group_indexes.size () < INT_MAX);
                                 regen_idx = group_indexes
                                     [rand () % (int)group_indexes.size ()];
                             }
@@ -1404,7 +1404,7 @@ void main_hall_render_misc_anims (float frametime, bool over_doors) {
                     Main_hall->misc_anim_delay.at (idx).at (0) = -1;
 
                     // reset the "should be playing" flags
-                    Assert (
+                    ASSERT (
                         Main_hall->misc_anim_sound_flag.at (idx).size () <
                         INT_MAX);
                     for (s_idx = 0;
@@ -1417,7 +1417,7 @@ void main_hall_render_misc_anims (float frametime, bool over_doors) {
                 }
             }
             else { // animation is not paused
-                Assert (
+                ASSERT (
                     Main_hall->misc_anim_special_sounds.at (idx).size () <
                     INT_MAX);
                 for (s_idx = 0;
@@ -1465,7 +1465,7 @@ void main_hall_render_misc_anims (float frametime, bool over_doors) {
                     if (Main_hall->misc_anim_modes.at (idx) !=
                         MISC_ANIM_MODE_HOLD) {
                         // reset the "should be playing" flags
-                        Assert (
+                        ASSERT (
                             Main_hall->misc_anim_sound_flag.at (idx).size () <
                             INT_MAX);
                         for (s_idx = 0;
@@ -1500,7 +1500,7 @@ void main_hall_render_door_anims (float frametime) {
     int idx;
 
     // render all door animations
-    Assert (Main_hall_door_anim.size () < INT_MAX);
+    ASSERT (Main_hall_door_anim.size () < INT_MAX);
     for (idx = 0; idx < (int)Main_hall_door_anim.size (); idx++) {
         if (Main_hall_door_anim.at (idx).num_frames > 0) {
             // first pair : coords of where to play a given door anim
@@ -1600,10 +1600,10 @@ void main_hall_mouse_release_region (int region) {
 
         // TODO: track current frame
         snd_set_pos(Main_hall_door_sound_handles.at(region),
-					(float) ((Main_hall_door_anim.at(region).keyframe) ? Main_hall_door_anim.at(region).keyframe :
-							 Main_hall_door_anim.at(region).num_frames - Main_hall_door_anim.at(region).current_frame)
-						/ (float) Main_hall_door_anim.at(region).num_frames,
-					1);
+                                        (float) ((Main_hall_door_anim.at(region).keyframe) ? Main_hall_door_anim.at(region).keyframe :
+                                                         Main_hall_door_anim.at(region).num_frames - Main_hall_door_anim.at(region).current_frame)
+                                                / (float) Main_hall_door_anim.at(region).num_frames,
+                                        1);
     }
 }
 
@@ -1706,7 +1706,7 @@ void main_hall_cull_door_sounds () {
     int idx;
     // basically just set the handle of any finished sound to be -1, so that we
     // know its free any where else in the code we may need it
-    Assert (Main_hall_door_sound_handles.size () < INT_MAX);
+    ASSERT (Main_hall_door_sound_handles.size () < INT_MAX);
     for (idx = 0; idx < (int)Main_hall_door_sound_handles.size (); idx++) {
         if ((Main_hall_door_sound_handles.at (idx).isValid ()) &&
             !snd_is_playing (Main_hall_door_sound_handles.at (idx))) {
@@ -1727,9 +1727,9 @@ void main_hall_handle_random_intercom_sounds () {
     // if we have no timestamp for the next random sound, then set on
     if ((Main_hall_next_intercom_sound_stamp == -1) &&
         (!Main_hall_intercom_sound_handle.isValid ())) {
-        Main_hall_next_intercom_sound_stamp = timestamp((int)((rand() * RAND_MAX_1f) * 
-			(float)(Main_hall->intercom_delay.at(Main_hall_next_intercom_sound).at(1) 
-				- Main_hall->intercom_delay.at(Main_hall_next_intercom_sound).at(0))) );
+        Main_hall_next_intercom_sound_stamp = timestamp((int)((rand() * RAND_MAX_1f) *
+                        (float)(Main_hall->intercom_delay.at(Main_hall_next_intercom_sound).at(1)
+                                - Main_hall->intercom_delay.at(Main_hall_next_intercom_sound).at(0))) );
     }
 
     // if the there is no sound playing
@@ -1769,9 +1769,9 @@ void main_hall_handle_random_intercom_sounds () {
             }
 
             // set the timestamp
-            Main_hall_next_intercom_sound_stamp = timestamp((int)((rand() * RAND_MAX_1f) * 
-				(float)(Main_hall->intercom_delay.at(Main_hall_next_intercom_sound).at(1) 
-					- Main_hall->intercom_delay.at(Main_hall_next_intercom_sound).at(0))) );
+            Main_hall_next_intercom_sound_stamp = timestamp((int)((rand() * RAND_MAX_1f) *
+                                (float)(Main_hall->intercom_delay.at(Main_hall_next_intercom_sound).at(1)
+                                        - Main_hall->intercom_delay.at(Main_hall_next_intercom_sound).at(0))) );
 
             // release the sound handle
             Main_hall_intercom_sound_handle = sound_handle::invalid ();
@@ -1899,7 +1899,7 @@ void main_hall_maybe_blit_tooltips () {
     if (Main_hall_mouse_region < 0) { return; }
 
     if (Main_hall_mouse_region >= (int)Main_hall->regions.size ()) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION, "Missing region description for index %d!\n",
             Main_hall_mouse_region);
     }
@@ -2287,7 +2287,7 @@ void parse_main_hall_table (const char* filename) {
         }
 
         if (num_resolutions < 1) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "$Num Resolutions in %s is %d. (Must be 1 or greater)",
                 filename, num_resolutions);
@@ -2316,7 +2316,7 @@ void parse_main_hall_table (const char* filename) {
                             m->name = temp_string;
                         }
                         else {
-                            fs2::dialog::error (
+                            ASSERTF (
                                 LOCATION,
                                 "A mainhall with the name '%s' already "
                                 "exists. All mainhalls must have unique "
@@ -2344,7 +2344,7 @@ void parse_main_hall_table (const char* filename) {
                                 temp_string, Main_hall_defines.at (count)
                                                  .at (0)
                                                  .name.c_str ()) != 0) {
-                            fs2::dialog::error (
+                            ASSERTF (
                                 LOCATION,
                                 "The mainhall '%s' has different names for "
                                 "different resolutions. All resolutions must "
@@ -2369,7 +2369,7 @@ void parse_main_hall_table (const char* filename) {
                         // Since the value is longer than the cheat buffer it
                         // will never match.
 
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "The value '%s' for '+Cheat String:' is too long! "
                             "It can be at most %d characters long.",
@@ -2563,7 +2563,7 @@ void parse_main_hall_table (const char* filename) {
                     }
 
                     // we need one flag for each sound
-                    Assert (
+                    ASSERT (
                         m->misc_anim_special_sounds.at (idx).size () <
                         INT_MAX);
                     for (s_idx = 0;
@@ -2671,7 +2671,7 @@ void parse_main_hall_table (const char* filename) {
                                 err_msg += Main_hall_region_map[i].name;
                             }
 
-                            fs2::dialog::error (
+                            ASSERTF (
                                 LOCATION,
                                 "Unkown Door Region '%s'! Expected one of: %s",
                                 temp_scp_string.c_str (), err_msg.c_str ());

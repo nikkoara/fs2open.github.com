@@ -41,15 +41,15 @@ inline bool fl_is_nan (float fl) { return std::isnan (fl); }
 
 // use this instead of:
 // for:  (int)floor(x+0.5f) use fl_round_2048(x)
-//       (int)ceil(x-0.5f)  use fl_round_2048(x)
-//       (int)floor(x-0.5f) use fl_round_2048(x-1.0f)
-//       (int)floor(x)      use fl_round_2048(x-0.5f)
+// (int)ceil(x-0.5f)  use fl_round_2048(x)
+// (int)floor(x-0.5f) use fl_round_2048(x-1.0f)
+// (int)floor(x)      use fl_round_2048(x-0.5f)
 // for values in the range -2048 to 2048
 // use this instead of:
 // for:  (int)floor(x+0.5f) use fl_round_2048(x)
-//       (int)ceil(x-0.5f)  use fl_round_2048(x)
-//       (int)floor(x-0.5f) use fl_round_2048(x-1.0f)
-//       (int)floor(x)      use fl_round_2048(x-0.5f)
+// (int)ceil(x-0.5f)  use fl_round_2048(x)
+// (int)floor(x-0.5f) use fl_round_2048(x-1.0f)
+// (int)floor(x)      use fl_round_2048(x-0.5f)
 // for values in the range -2048 to 2048
 
 /*

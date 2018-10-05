@@ -5,4 +5,6 @@
 
 #include <_config.hpp>
 
+#define FS2_VSNPRINTF vsnprintf
+
 #endif // FREESPACE2_CONFIG_HPP

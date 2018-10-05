@@ -64,7 +64,7 @@ void g3_start_frame_func (
     int width, height;
     float aspect;
 
-    Assert (G3_count == 0);
+    ASSERT (G3_count == 0);
     G3_count++;
 
     // Get the values from the 2d...
@@ -100,7 +100,7 @@ void g3_start_frame_func (
  */
 void g3_end_frame_func (const char* /*filename*/, int /*lineno*/) {
     G3_count--;
-    Assert (G3_count == 0);
+    ASSERT (G3_count == 0);
 
     free_point_num = 0;
 }
@@ -124,7 +124,7 @@ void g3_set_view (camera* cam) {
  */
 void g3_set_view_matrix (
     const vec3d* view_pos, const matrix* view_matrix, float zoom) {
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
     View_zoom = zoom;
     View_position = *view_pos;
@@ -155,7 +155,7 @@ void g3_set_view_angles (
     const vec3d* view_pos, const angles_t* view_orient, float zoom) {
     matrix tmp;
 
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
     vm_angles_2_matrix (&tmp, view_orient);
     g3_set_view_matrix (view_pos, &tmp, zoom);
@@ -184,9 +184,9 @@ void scale_matrix (void) {
 ubyte g3_rotate_vertex_popped (vertex* dest, const vec3d* src) {
     vec3d tempv;
 
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
-    Assert (instance_depth > 0);
+    ASSERT (instance_depth > 0);
 
     vm_vec_sub (&tempv, src, &instance_stack[0].p);
     vm_vec_rotate (&dest->world, &tempv, &instance_stack[0].m);
@@ -205,9 +205,9 @@ void g3_start_instance_matrix (
     vec3d tempv;
     matrix tempm, tempm2;
 
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
-    Assert (instance_depth < MAX_INSTANCE_DEPTH);
+    ASSERT (instance_depth < MAX_INSTANCE_DEPTH);
 
     instance_stack[instance_depth].m = View_matrix;
     instance_stack[instance_depth].p = View_position;
@@ -281,7 +281,7 @@ void g3_start_instance_matrix (const matrix4* transform, bool set_api) {
 void g3_start_instance_angles (const vec3d* pos, const angles_t* orient) {
     matrix tm;
 
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
     if (orient == NULL) {
         g3_start_instance_matrix (pos, NULL);
@@ -299,11 +299,11 @@ void g3_start_instance_angles (const vec3d* pos, const angles_t* orient) {
  * Pops the old context
  */
 void g3_done_instance (bool use_api) {
-    Assert (G3_count == 1);
+    ASSERT (G3_count == 1);
 
     instance_depth--;
 
-    Assert (instance_depth >= 0);
+    ASSERT (instance_depth >= 0);
 
     View_position = instance_stack[instance_depth].p;
     View_matrix = instance_stack[instance_depth].m;

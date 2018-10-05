@@ -33,7 +33,7 @@
     30 // change in velocity at which reduced_damp_time is 2000 ms
 #define REDUCED_DAMP_TIME 2000 // ms (2.0 sec)
 #define WEAPON_SHAKE_TIME \
-    500 //	ms (0.5 sec)	viewer shake time after hit by weapon (implemented
+    500 // ms (0.5 sec)    viewer shake time after hit by weapon (implemented
         // via afterburner shake)
 #define SPECIAL_WARP_T_CONST \
     0.651 // special warp time constant (loose 99 % of excess speed in 3 sec)
@@ -92,16 +92,16 @@ void physics_init (physics_info* pi) {
 // apply_physics - This does correct physics independent of frame rate.
 //
 // Given:
-//    damping = damping factor.  Setting this to zero make the object instantly
-//              go to the target velocity.  Increasing it makes the object ramp
-//              up or down to the target velocity.
-//    desired_vel = the target velocity
-//    initial_vel = velocity at last call
-//    t = elapsed time since last call
+// damping = damping factor.  Setting this to zero make the object instantly
+// go to the target velocity.  Increasing it makes the object ramp
+// up or down to the target velocity.
+// desired_vel = the target velocity
+// initial_vel = velocity at last call
+// t = elapsed time since last call
 //
 // Returns:
-//    new_vel = current velocity
-//    delta_pos = delta position (framevec)
+// new_vel = current velocity
+// delta_pos = delta position (framevec)
 // You can extend this to 3d by calling it 3 times, once for each x,y,z
 // component.
 
@@ -137,7 +137,7 @@ void physics_set_viewer (physics_info* p, int dir) {
     }
 }
 
-//	-----------------------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------------------
 // add rotational velocity & acceleration
 
 void physics_sim_rot (matrix* orient, physics_info* pi, float sim_time) {
@@ -148,9 +148,9 @@ void physics_sim_rot (matrix* orient, physics_info* pi, float sim_time) {
     float rotdamp;
     float shock_fraction_time_left;
 
-    Assert (is_valid_matrix (orient));
-    Assert (is_valid_vec (&pi->rotvel));
-    Assert (is_valid_vec (&pi->desired_rotvel));
+    ASSERT (is_valid_matrix (orient));
+    ASSERT (is_valid_vec (&pi->rotvel));
+    ASSERT (is_valid_vec (&pi->desired_rotvel));
 
     // Handle special case of shockwave
     shock_amplitude = 0.0f;
@@ -183,7 +183,7 @@ void physics_sim_rot (matrix* orient, physics_info* pi, float sim_time) {
         rotdamp, pi->desired_rotvel.xyz.z, pi->rotvel.xyz.z, sim_time,
         &new_vel.xyz.z, NULL);
 
-    Assert (is_valid_vec (&new_vel));
+    ASSERT (is_valid_vec (&new_vel));
 
     pi->rotvel = new_vel;
 
@@ -191,9 +191,9 @@ void physics_sim_rot (matrix* orient, physics_info* pi, float sim_time) {
     tangles.h = pi->rotvel.xyz.y * sim_time;
     tangles.b = pi->rotvel.xyz.z * sim_time;
 
-    /*	//	Make ship shake due to afterburner.
+    /*  // Make ship shake due to afterburner.
         if (pi->flags & PF_AFTERBURNER_ON ||
-       !timestamp_elapsed(pi->afterburner_decay) ) { float	max_speed;
+       !timestamp_elapsed(pi->afterburner_decay) ) { float      max_speed;
 
             max_speed = vm_vec_mag_quick(&pi->max_vel);
             tangles.p += (float) (rand()-RAND_MAX_2) * RAND_MAX_1f *
@@ -221,7 +221,7 @@ void physics_sim_rot (matrix* orient, physics_info* pi, float sim_time) {
     vm_orthogonalize_matrix (orient);
 }
 
-//	-----------------------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------------------
 // add rotational velocity & acceleration
 
 void physics_sim_rot_editor (
@@ -276,9 +276,9 @@ void physics_sim_vel (
     vec3d local_v_out;       // velocity in local coords following this frame
     vec3d damp;
 
-    //	Maybe clear the reduced_damp flag.
-    //	This fixes the problem of the player getting near-instantaneous
-    // acceleration under unknown circumstances. 	The larger problem is
+    // Maybe clear the reduced_damp flag.
+    // This fixes the problem of the player getting near-instantaneous
+    // acceleration under unknown circumstances.        The larger problem is
     // probably that PF_USE_VEL is getting stuck set.
     if ((pi->flags & PF_REDUCED_DAMP) &&
         (timestamp_elapsed (pi->reduced_damp_decay))) {
@@ -355,8 +355,8 @@ void physics_sim_vel (
     // find updated LOCAL velocity and position in the local z direction
     // for player ship, damp should normally be zero, but may be altered in a
     // shockwave
-    //  in death, shockwave,etc. we want damping time const large for all 3
-    //  axes
+    // in death, shockwave,etc. we want damping time const large for all 3
+    // axes
     // warp in test - make excessive speed drop exponentially from max allowed
     // become (0.01x in 3 sec)
 
@@ -405,7 +405,7 @@ void physics_sim_vel (
     }
 }
 
-//	-----------------------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------------------
 // Simulate a physics object for this frame
 void physics_sim (
     vec3d* position, matrix* orient, physics_info* pi, float sim_time) {
@@ -418,7 +418,7 @@ void physics_sim (
         physics_sim_rot (orient, pi, sim_time);
 
         pi->speed =
-            vm_vec_mag (&pi->vel); //	Note, cannot use quick version, causes
+            vm_vec_mag (&pi->vel); // Note, cannot use quick version, causes
                                    // cumulative error, increasing speed.
         pi->fspeed = vm_vec_dot (
             &orient->vec.fvec,
@@ -428,7 +428,7 @@ void physics_sim (
     }
 }
 
-//	-----------------------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------------------
 // Simulate a physics object for this frame.  Used by the editor.  The
 // difference between this function and physics_sim() is that this one uses a
 // heading change to rotate around the universal Y axis, rather than the local
@@ -499,10 +499,10 @@ void physics_predict_pos_and_vel (
 
 // physics_read_flying_controls()
 //
-// parmeters:  *orient	==>
-//					*pi		==>
-//					*ci		==>
-//	Adam: Uncomment-out this define to enable banking while turning.
+// parmeters:  *orient  ==>
+// *pi             ==>
+// *ci             ==>
+// Adam: Uncomment-out this define to enable banking while turning.
 #define BANK_WHEN_TURN
 
 // function looks at the flying controls and the current velocity to determine
@@ -594,9 +594,9 @@ void physics_read_flying_controls (
     float delta_bank;
 
 #ifdef BANK_WHEN_TURN
-    //	To change direction of bank, negate the whole expression.
-    //	To increase magnitude of banking, decrease denominator.
-    //	Adam: The following statement is all the math for banking while
+    // To change direction of bank, negate the whole expression.
+    // To increase magnitude of banking, decrease denominator.
+    // Adam: The following statement is all the math for banking while
     // turning.
     delta_bank = -(ci->heading * pi->max_rotvel.xyz.y) * pi->delta_bank_const;
 #else
@@ -637,7 +637,7 @@ void physics_read_flying_controls (
         // Determine *resultant* DESIRED VELOCITY (desired_vel) accounting for
         // RAMPING of velocity Use LOCAL coordinates if slide_enabled, ramp
         // velocity for x and y, otherwise set goal (0)
-        //    always ramp velocity for z
+        // always ramp velocity for z
         //
 
         // If reduced damp in effect, then adjust ramp_velocity and
@@ -876,10 +876,10 @@ void physics_read_flying_controls (
         pi->desired_vel = pi->vel;
 }
 
-//	----------------------------------------------------------------
-//	Do *dest = *delta unless:
-//				*delta is pretty small
-//		and	they are of different signs.
+// ----------------------------------------------------------------
+// Do *dest = *delta unless:
+// *delta is pretty small
+// and     they are of different signs.
 void physics_set_rotvel_and_saturate (float* dest, float delta) {
     /*
     if ((delta ^ *dest) < 0) {
@@ -902,15 +902,15 @@ void physics_set_rotvel_and_saturate (float* dest, float delta) {
 // both the objects velocity and the rotational velocity based on the impulse
 // being applied.
 //
-//	input:	impulse		=>		impulse vector ( force*time = impulse = change
+// input:  impulse         =>              impulse vector ( force*time = impulse = change
 // in momentum (mv) )
-//				pos			=>		vector from center of mass to location of
+// pos                     =>              vector from center of mass to location of
 // where the
-// force acts 				pi				=>		pointer to phys_info struct
+// force acts                           pi                              =>              pointer to phys_info struct
 // of
-// object getting whacked 				orient		=>		orientation matrix (needed
+// object getting whacked                               orient          =>              orientation matrix (needed
 // to set
-// rotational impulse in body coords) 				mass			=>		mass of
+// rotational impulse in body coords)                           mass                    =>              mass of
 // the object (may be different from pi.mass if docked)
 //
 #define WHACK_LIMIT 0.001f
@@ -918,9 +918,9 @@ void physics_set_rotvel_and_saturate (float* dest, float delta) {
 void physics_apply_whack (
     vec3d* impulse, vec3d* pos, physics_info* pi, matrix* orient, float mass) {
     vec3d local_torque, torque;
-    //	vec3d	npos;
+    // vec3d   npos;
 
-    //	Detect null vector.
+    // Detect null vector.
     if ((fl_abs (impulse->xyz.x) <= WHACK_LIMIT) &&
         (fl_abs (impulse->xyz.y) <= WHACK_LIMIT) &&
         (fl_abs (impulse->xyz.z) <= WHACK_LIMIT))
@@ -1038,18 +1038,18 @@ float glide_ramp (
 // physics_apply_whack since a shock wave is a pressure wave which acts over
 // the *surface* of the object, not a point.
 //
-// inputs:	direction_vec		=>		a position vector whose direction is
+// inputs:      direction_vec           =>              a position vector whose direction is
 // from the center of the shock wave to the object
-//				pressure				=>		the pressure of the shock wave
-// at the object 				pi						=>		physics_info
-// structure 				orient				=>		matrix orientation of the
+// pressure                                =>              the pressure of the shock wave
+// at the object                                pi                                              =>              physics_info
+// structure                            orient                          =>              matrix orientation of the
 // object min
-//=>		vector of minimum values of the bounding box 				max
-// =>		vector of maximum values of the bounding box 				radius
+//=>            vector of minimum values of the bounding box                            max
+// =>           vector of maximum values of the bounding box                            radius
 // =>
 // bounding box radius of the object, used for scaling rotation
 //
-// outputs:	makes changes to physics_info structure rotvel and vel variables
+// outputs:     makes changes to physics_info structure rotvel and vel variables
 //
 #define STD_PRESSURE 1000 // amplitude of standard shockwave blasts
 #define MIN_RADIUS 10     // radius within which full rotvel and shake applied
@@ -1085,13 +1085,13 @@ void physics_apply_shock (
     vm_vec_make (&torque, 0.0f, 0.0f, 0.0f);
 
     // find the torque exerted due to the shockwave hitting each face
-    //  model the effect of the shockwave as if the shockwave were a plane of
-    //  projectiles, all moving in the direction direction_vec.  then find the
-    //  torque as the cross prod of the force (pressure * area * normal * sin *
-    //  scale * mass) normal takes account the fraction of the surface exposed
-    //  to the shockwave the sin term is not technically needed but "feels"
-    //  better scale factors out the increase in area with larger objects more
-    //  massive objects get less rotation
+    // model the effect of the shockwave as if the shockwave were a plane of
+    // projectiles, all moving in the direction direction_vec.  then find the
+    // torque as the cross prod of the force (pressure * area * normal * sin *
+    // scale * mass) normal takes account the fraction of the surface exposed
+    // to the shockwave the sin term is not technically needed but "feels"
+    // better scale factors out the increase in area with larger objects more
+    // massive objects get less rotation
 
     // find torque due to forces on the right/left face
     if (normal.xyz.x < 0.0f) // normal < 0, hits the right face
@@ -1192,11 +1192,11 @@ void physics_apply_shock (
 // both the objects velocity and the rotational velocity based on the impulse
 // being applied.
 //
-//	input:	impulse					=>		impulse vector ( force*time =
-// impulse = change in momentum (mv) ) 				world_delta_rotvel	=>
+// input:  impulse                                 =>              impulse vector ( force*time =
+// impulse = change in momentum (mv) )                          world_delta_rotvel      =>
 // change in rotational
-// velocity (already calculated) 				pi							=>
-// pointer to phys_info struct of object getting whacked 				orient
+// velocity (already calculated)                                pi                                                      =>
+// pointer to phys_info struct of object getting whacked                                orient
 // => orientation matrix (needed to set rotational impulse in body coords)
 //
 
@@ -1209,14 +1209,14 @@ void physics_collide_whack (
     matrix* orient, bool is_landing) {
     vec3d body_delta_rotvel;
 
-    //	Detect null vector.
+    // Detect null vector.
     if ((fl_abs (impulse->xyz.x) <= WHACK_LIMIT) &&
         (fl_abs (impulse->xyz.y) <= WHACK_LIMIT) &&
         (fl_abs (impulse->xyz.z) <= WHACK_LIMIT))
         return;
 
     vm_vec_rotate (&body_delta_rotvel, world_delta_rotvel, orient);
-    //	vm_vec_scale( &body_delta_rotvel, (float)	ROTVEL_COLLIDE_WHACK_CONST
+    // vm_vec_scale( &body_delta_rotvel, (float)       ROTVEL_COLLIDE_WHACK_CONST
     //);
     vm_vec_add2 (&pi->rotvel, &body_delta_rotvel);
 
@@ -1260,11 +1260,11 @@ int check_rotvel_limit (physics_info* pi) {
     int change_made = 0;
     if (!(pi->flags & PF_DEAD_DAMP)) {
         // case of normal, live ship
-        // -- Commented out by MK: Assert( vm_vec_mag_squared(&pi->max_rotvel)
-        // > ROTVEL_TOL ); Assert( (pi->max_rotvel.xyz.x <= ROTVEL_CAP) &&
+        // -- Commented out by MK: ASSERT (vm_vec_mag_squared(&pi->max_rotvel)
+        // > ROTVEL_TOL ); ASSERT ((pi->max_rotvel.xyz.x <= ROTVEL_CAP) &&
         // (pi->max_rotvel.xyz.y <= ROTVEL_CAP) && (pi->max_rotvel.xyz.z <=
         // ROTVEL_CAP) );
-        //		Warning(LOCATION,"Excessive rotvel (wx: %f, wy: %f, wz:%f)\n",
+        // Warning(LOCATION,"Excessive rotvel (wx: %f, wy: %f, wz:%f)\n",
         // pi->rotvel.xyz.x, pi->rotvel.xyz.y, pi->rotvel.xyz.z);
         if (fl_abs (pi->rotvel.xyz.x) > pi->max_rotvel.xyz.x) {
             pi->rotvel.xyz.x = (pi->rotvel.xyz.x / fl_abs (pi->rotvel.xyz.x)) *

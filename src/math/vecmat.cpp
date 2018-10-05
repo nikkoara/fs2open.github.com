@@ -6,7 +6,7 @@
 #endif
 
 #include "math/vecmat.h"
-#include "utils/RandomRange.h"
+#include "util/RandomRange.h"
 
 #define SMALL_NUM 1e-7
 #define SMALLER_NUM 1e-20
@@ -86,7 +86,7 @@ float atan2_safe (float y, float x) {
 float vm_vec_projection_parallel (
     vec3d* component, const vec3d* src, const vec3d* unit_vec) {
     float mag;
-    Assert (vm_vec_mag (unit_vec) > 0.999f && vm_vec_mag (unit_vec) < 1.001f);
+    ASSERT (vm_vec_mag (unit_vec) > 0.999f && vm_vec_mag (unit_vec) < 1.001f);
 
     mag = vm_vec_dot (src, unit_vec);
     vm_vec_copy_scale (component, unit_vec, mag);
@@ -101,7 +101,7 @@ float vm_vec_projection_parallel (
 void vm_vec_projection_onto_plane (
     vec3d* projection, const vec3d* src, const vec3d* unit_normal) {
     float mag;
-    Assert (
+    ASSERT (
         vm_vec_mag (unit_normal) > 0.999f &&
         vm_vec_mag (unit_normal) < 1.001f);
 
@@ -123,7 +123,7 @@ void vm_project_point_onto_plane (
     float D; // plane constant in Ax+By+Cz+D = 0   or   dot(X,n) - dot(Xp,n) =
              // 0, so D = -dot(Xp,n)
     float dist;
-    Assert (
+    ASSERT (
         vm_vec_mag (plane_normal) > 0.999f &&
         vm_vec_mag (plane_normal) < 1.001f);
 
@@ -134,7 +134,7 @@ void vm_project_point_onto_plane (
     vm_vec_scale_add2 (new_point, plane_normal, -dist);
 }
 
-//	Take abs(x), then sqrt.  Could insert warning message if desired.
+// Take abs(x), then sqrt.  Could insert warning message if desired.
 float asqrt (float x) {
     if (x < 0.0f)
         return fl_sqrt (-x);
@@ -407,7 +407,7 @@ float vm_vec_copy_normalize (vec3d* dest, const vec3d* src) {
 
     m = vm_vec_mag (src);
 
-    //	Mainly here to trap attempts to normalize a null vector.
+    // Mainly here to trap attempts to normalize a null vector.
     if (m <= 0.0f) {
         mprintf (
             ("Null vec3d in vec3d normalize.\n"
@@ -437,15 +437,15 @@ float vm_vec_normalize (vec3d* v) {
 }
 
 // Normalize a vector.
-//	If vector is 0,0,0, return 1,0,0.
-//	Don't generate a Warning().
+// If vector is 0,0,0, return 1,0,0.
+// Don't generate a Warning().
 // returns mag of source vec
 float vm_vec_normalize_safe (vec3d* v) {
     float m;
 
     m = vm_vec_mag (v);
 
-    //	Mainly here to trap attempts to normalize a null vector.
+    // Mainly here to trap attempts to normalize a null vector.
     if (m <= 0.0f) {
         v->xyz.x = 1.0f;
         v->xyz.y = 0.0f;
@@ -481,12 +481,12 @@ static float vm_vec_imag (const vec3d* v) {
 
 // normalize a vector. returns 1/mag of source vec. uses approx 1/mag
 float vm_vec_copy_normalize_quick (vec3d* dest, const vec3d* src) {
-    //	return vm_vec_copy_normalize(dest, src);
+    // return vm_vec_copy_normalize(dest, src);
     float im;
 
     im = vm_vec_imag (src);
 
-    Assert (im > 0.0f);
+    ASSERT (im > 0.0f);
 
     dest->xyz.x = src->xyz.x * im;
     dest->xyz.y = src->xyz.y * im;
@@ -497,13 +497,13 @@ float vm_vec_copy_normalize_quick (vec3d* dest, const vec3d* src) {
 
 // normalize a vector. returns mag of source vec. uses approx mag
 float vm_vec_normalize_quick (vec3d* src) {
-    //	return vm_vec_normalize(src);
+    // return vm_vec_normalize(src);
 
     float im;
 
     im = vm_vec_imag (src);
 
-    Assert (im > 0.0f);
+    ASSERT (im > 0.0f);
 
     src->xyz.x = src->xyz.x * im;
     src->xyz.y = src->xyz.y * im;
@@ -514,13 +514,13 @@ float vm_vec_normalize_quick (vec3d* src) {
 
 // normalize a vector. returns mag of source vec. uses approx mag
 float vm_vec_copy_normalize_quick_mag (vec3d* dest, const vec3d* src) {
-    //	return vm_vec_copy_normalize(dest, src);
+    // return vm_vec_copy_normalize(dest, src);
 
     float m;
 
     m = vm_vec_mag_quick (src);
 
-    Assert (m > 0.0f);
+    ASSERT (m > 0.0f);
 
     float im = 1.0f / m;
 
@@ -559,9 +559,9 @@ float vm_vec_normalized_dir_quick (
 // dest CANNOT equal either source
 vec3d* vm_vec_normal (
     vec3d* dest, const vec3d* p0, const vec3d* p1, const vec3d* p2) {
-    Assert (dest != p0);
-    Assert (dest != p1);
-    Assert (dest != p2);
+    ASSERT (dest != p0);
+    ASSERT (dest != p1);
+    ASSERT (dest != p2);
 
     vm_vec_perp (dest, p0, p1, p2);
 
@@ -611,9 +611,9 @@ int vm_test_parallel (const vec3d* src0, const vec3d* src1) {
 // dest CANNOT equal either source
 vec3d*
 vm_vec_perp (vec3d* dest, const vec3d* p0, const vec3d* p1, const vec3d* p2) {
-    Assert (dest != p0);
-    Assert (dest != p1);
-    Assert (dest != p2);
+    ASSERT (dest != p0);
+    ASSERT (dest != p1);
+    ASSERT (dest != p2);
 
     vec3d t0, t1;
 
@@ -704,7 +704,7 @@ matrix* vm_angles_2_matrix (matrix* m, const angles_t* a) {
 }
 
 // computes a matrix from one angle.
-//	angle_index = 0,1,2 for p,b,h
+// angle_index = 0,1,2 for p,b,h
 matrix* vm_angle_2_matrix (matrix* m, float a, int angle_index) {
     matrix* t;
     float sinp, cosp, sinb, cosb, sinh, cosh;
@@ -824,7 +824,7 @@ matrix* vm_vector_2_matrix_norm (
     vec3d* yvec = &temp.vec.uvec;
     vec3d* zvec = &temp.vec.fvec;
 
-    Assert (fvec != NULL);
+    ASSERT (fvec != NULL);
 
     *zvec = *fvec;
 
@@ -880,7 +880,7 @@ matrix* vm_vector_2_matrix_norm (
 // rotation matrix will also be a normalized vector.  It took me awhile to
 // verify online that this was true. ;)
 vec3d* vm_vec_rotate (vec3d* dest, const vec3d* src, const matrix* m) {
-    Assert (dest != src);
+    ASSERT (dest != src);
 
     dest->xyz.x = (src->xyz.x * m->vec.rvec.xyz.x) +
                   (src->xyz.y * m->vec.rvec.xyz.y) +
@@ -899,10 +899,10 @@ vec3d* vm_vec_rotate (vec3d* dest, const vec3d* src, const matrix* m) {
 // returns ptr to dest vector
 // dest CANNOT equal source
 // This is a faster replacement for this common code sequence:
-//    vm_copy_transpose(&tempm,src_matrix);
-//    vm_vec_rotate(dst_vec,src_vect,&tempm);
+// vm_copy_transpose(&tempm,src_matrix);
+// vm_vec_rotate(dst_vec,src_vect,&tempm);
 // Replace with:
-//    vm_vec_unrotate(dst_vec,src_vect, src_matrix)
+// vm_vec_unrotate(dst_vec,src_vect, src_matrix)
 //
 // THIS DOES NOT ACTUALLY TRANSPOSE THE SOURCE MATRIX!!! So if
 // you need it transposed later on, you should use the
@@ -912,7 +912,7 @@ vec3d* vm_vec_rotate (vec3d* dest, const vec3d* src, const matrix* m) {
 // rotation matrix will also be a normalized vector.  It took me awhile to
 // verify online that this was true. ;)
 vec3d* vm_vec_unrotate (vec3d* dest, const vec3d* src, const matrix* m) {
-    Assert (dest != src);
+    ASSERT (dest != src);
 
     dest->xyz.x = (src->xyz.x * m->vec.rvec.xyz.x) +
                   (src->xyz.y * m->vec.uvec.xyz.x) +
@@ -947,7 +947,7 @@ matrix* vm_transpose (matrix* m) {
 // copy and transpose a matrix. returns ptr to matrix
 // dest CANNOT equal source. use vm_transpose() if this is the case
 matrix* vm_copy_transpose (matrix* dest, const matrix* src) {
-    Assert (dest != src);
+    ASSERT (dest != src);
 
     dest->vec.rvec.xyz.x = src->vec.rvec.xyz.x;
     dest->vec.rvec.xyz.y = src->vec.uvec.xyz.x;
@@ -968,7 +968,7 @@ matrix* vm_copy_transpose (matrix* dest, const matrix* src) {
 // dest CANNOT equal either source
 matrix*
 vm_matrix_x_matrix (matrix* dest, const matrix* src0, const matrix* src1) {
-    Assert (dest != src0 && dest != src1);
+    ASSERT (dest != src0 && dest != src1);
 
     dest->vec.rvec.xyz.x = vm_vec_dot3 (
         src0->vec.rvec.xyz.x, src0->vec.uvec.xyz.x, src0->vec.fvec.xyz.x,
@@ -1042,8 +1042,8 @@ angles_t* vm_extract_angles_matrix (angles_t* a, const matrix* m) {
 // Development, 2nd Edition
 // http://books.google.com/books?id=X3hmuhBoFF0C&printsec=frontcover#v=onepage&q&f=false
 angles_t* vm_extract_angles_matrix_alternate (angles_t* a, const matrix* m) {
-    Assert (a != NULL);
-    Assert (m != NULL);
+    ASSERT (a != NULL);
+    ASSERT (m != NULL);
 
     // Extract pitch from m32, being careful for domain errors with
     // asin().  We could have values slightly out of range due to
@@ -1120,9 +1120,9 @@ float vm_dist_to_plane (
 // Taken from Graphics Gems III, page 51, "The Rolling Ball"
 // Example:
 // if ( (Mouse.dx!=0) || (Mouse.dy!=0) ) {
-//   GetMouseRotation( Mouse.dx, Mouse.dy, &MouseRotMat );
-//   vm_matrix_x_matrix(&tempm,&LargeView.ev_matrix,&MouseRotMat);
-//   LargeView.ev_matrix = tempm;
+// GetMouseRotation( Mouse.dx, Mouse.dy, &MouseRotMat );
+// vm_matrix_x_matrix(&tempm,&LargeView.ev_matrix,&MouseRotMat);
+// LargeView.ev_matrix = tempm;
 //}
 
 void vm_trackball (int idx, int idy, matrix* RotMat) {
@@ -1161,7 +1161,7 @@ void vm_trackball (int idx, int idy, matrix* RotMat) {
     RotMat->vec.fvec.xyz.z = cos_theta;
 }
 
-//	Compute the outer product of A = A * transpose(A).  1x3 vector becomes 3x3
+// Compute the outer product of A = A * transpose(A).  1x3 vector becomes 3x3
 // matrix.
 static void vm_vec_outer_product (matrix* mat, const vec3d* vec) {
     mat->vec.rvec.xyz.x = vec->xyz.x * vec->xyz.x;
@@ -1177,12 +1177,12 @@ static void vm_vec_outer_product (matrix* mat, const vec3d* vec) {
     mat->vec.fvec.xyz.z = vec->xyz.z * vec->xyz.z;
 }
 
-//	Find the point on the line between p0 and p1 that is nearest to int_pnt.
-//	Stuff result in nearest_point.
-//	Uses algorithm from page 148 of Strang, Linear Algebra and Its
-// Applications. 	Returns value indicating whether *nearest_point is between
-// *p0 and *p1. 	0.0f means *nearest_point is *p0, 1.0f means it's *p1. 2.0f
-// means it's beyond p1 by 2x. 	-1.0f means it's "before" *p0 by 1x.
+// Find the point on the line between p0 and p1 that is nearest to int_pnt.
+// Stuff result in nearest_point.
+// Uses algorithm from page 148 of Strang, Linear Algebra and Its
+// Applications.        Returns value indicating whether *nearest_point is between
+// *p0 and *p1.         0.0f means *nearest_point is *p0, 1.0f means it's *p1. 2.0f
+// means it's beyond p1 by 2x.  -1.0f means it's "before" *p0 by 1x.
 float find_nearest_point_on_line (
     vec3d* nearest_point, const vec3d* p0, const vec3d* p1,
     const vec3d* int_pnt) {
@@ -1199,7 +1199,7 @@ float find_nearest_point_on_line (
     }
 
     mag = vm_vec_normalize (
-        &norm); //	Normalize vector so we don't have to divide by dot product.
+        &norm); // Normalize vector so we don't have to divide by dot product.
 
     if (mag < 0.01f) {
         *nearest_point = *int_pnt;
@@ -1331,7 +1331,7 @@ void vm_rotate_matrix_by_angles (matrix* orient, const angles_t* tangles) {
     vm_orthogonalize_matrix (orient);
 }
 
-//	dir must be normalized!
+// dir must be normalized!
 float vm_vec_dot_to_point (
     const vec3d* dir, const vec3d* p1, const vec3d* p2) {
     vec3d tvec;
@@ -1344,8 +1344,8 @@ float vm_vec_dot_to_point (
 }
 
 /////////////////////////////////////////////////////////
-//	Given a plane and a point, return the point on the plane closest the the
-// point. 	Result returned in q.
+// Given a plane and a point, return the point on the plane closest the the
+// point.       Result returned in q.
 void compute_point_on_plane (vec3d* q, const plane* planep, const vec3d* p) {
     float k;
     vec3d normal;
@@ -1359,7 +1359,7 @@ void compute_point_on_plane (vec3d* q, const plane* planep, const vec3d* p) {
     vm_vec_scale_add (q, p, &normal, -k);
 }
 
-//	Generate a fairly random vector that's fairly near normalized.
+// Generate a fairly random vector that's fairly near normalized.
 void vm_vec_rand_vec_quick (vec3d* rvec) {
     rvec->xyz.x = (frand () - 0.5f) * 2;
     rvec->xyz.y = (frand () - 0.5f) * 2;
@@ -1410,7 +1410,7 @@ int vm_matrix_cmp (const matrix* a, const matrix* b) {
     tmp1 = fl_abs (vm_vec_dot (&a->vec.uvec, &b->vec.uvec) - 1.0f);
     tmp2 = fl_abs (vm_vec_dot (&a->vec.fvec, &b->vec.fvec) - 1.0f);
     tmp3 = fl_abs (vm_vec_dot (&a->vec.rvec, &b->vec.rvec) - 1.0f);
-    //	mprintf(( "Mat=%.16f, %.16f, %.16f\n", tmp1, tmp2, tmp3 ));
+    // mprintf(( "Mat=%.16f, %.16f, %.16f\n", tmp1, tmp2, tmp3 ));
 
     if (tmp1 > 0.0000005f) return 1;
     if (tmp2 > 0.0000005f) return 1;
@@ -1520,12 +1520,12 @@ int vm_matrix_same (matrix* m1, matrix* m2) {
 // --------------------------------------------------------------------------------------
 
 void vm_quaternion_rotate (matrix* M, float theta, const vec3d* u)
-//  given an arbitrary rotation axis and rotation angle, function generates the
-//  corresponding rotation matrix
+// given an arbitrary rotation axis and rotation angle, function generates the
+// corresponding rotation matrix
 //
-//  M is the return rotation matrix  theta is the angle of rotation
-//  u is the direction of the axis.
-//  this is adapted from Computer Graphics (Hearn and Bker 2nd ed.) p. 420
+// M is the return rotation matrix  theta is the angle of rotation
+// u is the direction of the axis.
+// this is adapted from Computer Graphics (Hearn and Bker 2nd ed.) p. 420
 //
 {
     float a, b, c, s;
@@ -1575,7 +1575,7 @@ void vm_matrix_to_rot_axis_and_angle (
     else if (cos_theta > -0.999999875f) { // angle is within limits between 0
                                           // and PI
         *theta = acosf (cos_theta);
-        Assert (!fl_is_nan (*theta));
+        ASSERT (!fl_is_nan (*theta));
 
         rot_axis->xyz.x = (m->vec.uvec.xyz.z - m->vec.fvec.xyz.y);
         rot_axis->xyz.y = (m->vec.fvec.xyz.x - m->vec.rvec.xyz.z);
@@ -1642,9 +1642,9 @@ void vm_matrix_to_rot_axis_and_angle (
 // velocity in trying to reach a goal given an angular velocity APPROACHing a
 // goal.  It uses maximal acceleration to a point (called peak), then maximal
 // deceleration to arrive at the goal with zero angular velocity.  This can
-// occasionally cause overshoot. w_in			> 0 w_max			> 0
-// theta_goal	> 0
-// aa				> 0
+// occasionally cause overshoot. w_in                   > 0 w_max                       > 0
+// theta_goal   > 0
+// aa                           > 0
 // returns delta_theta
 static float away (
     float w_in, float w_max, float theta_goal, float aa, float delta_t,
@@ -1653,8 +1653,8 @@ static float approach (
     float w_in, float w_max, float theta_goal, float aa, float delta_t,
     float* w_out, int no_overshoot) {
     float delta_theta; // amount rotated during time delta_t
-    Assert (w_in >= 0);
-    Assert (theta_goal > 0);
+    ASSERT (w_in >= 0);
+    ASSERT (theta_goal > 0);
     float effective_aa;
 
     if (aa == 0) {
@@ -1677,7 +1677,7 @@ static float approach (
                  fl_sqrt (w_in * w_in + 2.0f * effective_aa * theta_goal)) /
                 effective_aa;
             // get time to theta_goal and away
-            Assert (t_goal < delta_t);
+            ASSERT (t_goal < delta_t);
             w_in -= effective_aa * t_goal;
             delta_theta =
                 w_in * t_goal + 0.5f * effective_aa * t_goal * t_goal;
@@ -1703,7 +1703,7 @@ static float approach (
                                                              // condition
         // find peak angular velocity
         float wp_sqr = fl_abs (aa * theta_goal + 0.5f * w_in * w_in);
-        Assert (wp_sqr >= 0);
+        ASSERT (wp_sqr >= 0);
 
         if (wp_sqr > w_max * w_max) {
             float time_to_w_max = (w_max - w_in) / aa;
@@ -1741,7 +1741,7 @@ static float approach (
                 // reaches wp this frame
                 float wp = fl_sqrt (wp_sqr);
                 float time_to_wp = (wp - w_in) / aa;
-                // Assert(time_to_wp > 0);	//WMC - this is not needed, right?
+                // Assert(time_to_wp > 0);      //WMC - this is not needed, right?
 
                 // accel
                 *w_out = wp;
@@ -1770,7 +1770,7 @@ static float approach (
         else {
             // move toward goal
             *w_out = w_in - aa * delta_t;
-            Assert (*w_out >= 0);
+            ASSERT (*w_out >= 0);
             delta_theta = 0.5f * (w_in + *w_out) * delta_t;
             return delta_theta;
         }
@@ -1783,10 +1783,10 @@ static float approach (
 // velocity in trying to reach a goal given an angular velocity AWAY from a
 // goal.  It uses maximal acceleration to a point (called peak), then maximal
 // deceleration to arrive at the goal with zero angular acceleration.
-// w_in			< 0
-// w_max			> 0
-// theta_goal	> 0
-// aa				> 0
+// w_in                 < 0
+// w_max                        > 0
+// theta_goal   > 0
+// aa                           > 0
 // returns angle rotated this frame
 static float away (
     float w_in, float w_max, float theta_goal, float aa, float delta_t,
@@ -1797,8 +1797,8 @@ static float away (
     float t0;          // time to velocity is 0
     float t_excess;    // time remaining in interval after velocity is 0
 
-    Assert (theta_goal >= 0);
-    Assert (w_in <= 0);
+    ASSERT (theta_goal >= 0);
+    ASSERT (w_in <= 0);
 
     if ((-w_in < 1e-5) && (theta_goal < 1e-5)) {
         *w_out = 0.0f;
@@ -1842,7 +1842,7 @@ void vm_matrix_interpolate (
     vec3d theta_end; // actual angular position at the end of the time interval
     float theta;     // magnitude of rotation about the rotation axis
 
-    //	FIND ROTATION NEEDED FOR GOAL
+    // FIND ROTATION NEEDED FOR GOAL
     // goal_orient = R curr_orient,  so R = goal_orient curr_orient^-1
     vm_copy_transpose (&Mtemp1, curr_orient); // Mtemp1 = curr ^-1
     vm_matrix_x_matrix (
@@ -2009,10 +2009,10 @@ void vm_matrix_interpolate (
     // functions approach and away.  first find the magnitude
     // of the rotation and then normalize the axis
     rot_axis = theta_end;
-    Assert (is_valid_vec (&rot_axis));
-    Assert (vm_vec_mag (&rot_axis) > 0);
+    ASSERT (is_valid_vec (&rot_axis));
+    ASSERT (vm_vec_mag (&rot_axis) > 0);
 
-    //	normalize rotation axis and determine total rotation angle
+    // normalize rotation axis and determine total rotation angle
     theta = vm_vec_normalize (&rot_axis);
 
     // arrived at goal?
@@ -2024,7 +2024,7 @@ void vm_matrix_interpolate (
     else {
         // otherwise rotate to better position
         vm_quaternion_rotate (&Mtemp1, theta, &rot_axis);
-        Assert (is_valid_matrix (&Mtemp1));
+        ASSERT (is_valid_matrix (&Mtemp1));
         vm_matrix_x_matrix (next_orient, curr_orient, &Mtemp1);
         vm_orthogonalize_matrix (next_orient);
     }
@@ -2075,24 +2075,24 @@ void get_camera_limits (
 
 // ---------------------------------------------------------------------------------------------
 //
-//		inputs:		goal_f		=>		goal forward vector
-//						orient		=>		current orientation matrix (with
+// inputs:         goal_f          =>              goal forward vector
+// orient          =>              current orientation matrix (with
 // current forward
-// vector) 						w_in			=>		current input angular
+// vector)                                              w_in                    =>              current input angular
 // velocity delta_t
-// => time to move toward goal 						delta_bank	=>		desired
-// change in bank in degrees 						next_orient	=> the
+// => time to move toward goal                                          delta_bank      =>              desired
+// change in bank in degrees                                            next_orient     => the
 // orientation matrix at time delta_t (with current forward vector)
 // NOTE: this does not include any rotation about z
-//(bank) 						w_out			=>		the angular velocity of the
+//(bank)                                                w_out                   =>              the angular velocity of the
 //ship at
-// delta_t 						vel_limit	=>		maximum rotational speed 						acc_limit
+// delta_t                                              vel_limit       =>              maximum rotational speed                                                acc_limit
 // => maximum rotational speed
 //
-//		function moves the forward vector toward the goal forward vector taking
-// account of anglular 		momentum (velocity)  Attempt to try to move bank by
+// function moves the forward vector toward the goal forward vector taking
+// account of anglular          momentum (velocity)  Attempt to try to move bank by
 // goal
-// delta_bank.  Rotational velocity 		on x/y is rotated with bank, giving
+// delta_bank.  Rotational velocity             on x/y is rotated with bank, giving
 // smoother motion.
 void vm_forward_interpolate (
     const vec3d* goal_f, const matrix* orient, const vec3d* w_in,
@@ -2312,7 +2312,7 @@ void vm_forward_interpolate (
     theta_end.xyz.z = bank;
     rot_axis = theta_end;
 
-    //	normalize rotation axis and determine total rotation angle
+    // normalize rotation axis and determine total rotation angle
     theta = vm_vec_mag (&rot_axis);
     if (theta > SMALL_NUM) vm_vec_scale (&rot_axis, 1 / theta);
 
@@ -2323,7 +2323,7 @@ void vm_forward_interpolate (
     else {
         vm_quaternion_rotate (&Mtemp1, theta, &rot_axis);
         vm_matrix_x_matrix (next_orient, orient, &Mtemp1);
-        Assert (is_valid_matrix (next_orient));
+        ASSERT (is_valid_matrix (next_orient));
         vtemp = *w_out;
         vm_vec_rotate (w_out, &vtemp, &Mtemp1);
     }
@@ -2334,11 +2334,11 @@ void vm_forward_interpolate (
 //
 // Calculate a bounding sphere for a set of points.
 //
-//	input:	pnts			=>		array of world positions
-//				num_pnts		=>		number of points inside pnts array
-//				center		=>		OUTPUT PARAMETER:	contains world pos of
+// input:  pnts                    =>              array of world positions
+// num_pnts                =>              number of points inside pnts array
+// center          =>              OUTPUT PARAMETER:       contains world pos of
 // bounding
-// sphere center 				radius		=>		OUTPUT PARAMETER:
+// sphere center                                radius          =>              OUTPUT PARAMETER:
 // continas radius of bounding sphere
 //
 #define BIGNUMBER 100000000.0f
@@ -2400,7 +2400,7 @@ void vm_find_bounding_sphere (
     vm_vec_sub (&diff, &dia2, center);
     rad_sq = vm_vec_mag_squared (&diff);
     rad = fl_sqrt (rad_sq);
-    Assert (!fl_is_nan (rad));
+    ASSERT (!fl_is_nan (rad));
 
     // second pass
     for (i = 0; i < num_pnts; i++) {
@@ -2434,9 +2434,9 @@ void vm_find_bounding_sphere (
 //
 // rotates a vector from world coordinates to body coordinates
 //
-// inputs:	body_vec		=>		vector in body coordinates
-//				world_vec	=>		vector in world coordinates
-//				orient		=>		orientation matrix
+// inputs:      body_vec                =>              vector in body coordinates
+// world_vec       =>              vector in world coordinates
+// orient          =>              orientation matrix
 //
 vec3d* vm_rotate_vec_to_body (
     vec3d* body_vec, const vec3d* world_vec, const matrix* orient) {
@@ -2448,9 +2448,9 @@ vec3d* vm_rotate_vec_to_body (
 //
 // rotates a vector from body coordinates to world coordinates
 //
-//	inputs		world_vec	=>		vector in world coordinates
-//				body_vec	=>		vector in body coordinates
-//				orient		=>		orientation matrix
+// inputs          world_vec       =>              vector in world coordinates
+// body_vec        =>              vector in body coordinates
+// orient          =>              orientation matrix
 //
 vec3d* vm_rotate_vec_to_world (
     vec3d* world_vec, const vec3d* body_vec, const matrix* orient) {
@@ -2463,16 +2463,16 @@ vec3d* vm_rotate_vec_to_world (
 // given a last orientation and current orientation, estimate the next
 // orientation
 //
-//	inputs:		last_orient		=>		last orientation matrix
-//				current_orient	=>		current orientation matrix
-//				next_orient		=>		next orientation matrix		[the
+// inputs:         last_orient             =>              last orientation matrix
+// current_orient  =>              current orientation matrix
+// next_orient             =>              next orientation matrix         [the
 // result]
 //
 void vm_estimate_next_orientation (
     const matrix* last_orient, const matrix* current_orient,
     matrix* next_orient) {
-    //		R L = C		=>		R = C (L)^-1
-    //		N = R C		=>		N = C (L)^-1 C
+    // R L = C         =>              R = C (L)^-1
+    // N = R C         =>              N = C (L)^-1 C
 
     matrix Mtemp;
     matrix Rot_matrix;
@@ -2481,13 +2481,13 @@ void vm_estimate_next_orientation (
     vm_matrix_x_matrix (next_orient, current_orient, &Rot_matrix);
 }
 
-//	Return true if all elements of *vec are legal, that is, not a NAN.
+// Return true if all elements of *vec are legal, that is, not a NAN.
 int is_valid_vec (const vec3d* vec) {
     return !std::isnan (vec->xyz.x) && !std::isnan (vec->xyz.y) &&
            !std::isnan (vec->xyz.z);
 }
 
-//	Return true if all elements of *m are legal, that is, not a NAN.
+// Return true if all elements of *m are legal, that is, not a NAN.
 int is_valid_matrix (const matrix* m) {
     return is_valid_vec (&m->vec.fvec) && is_valid_vec (&m->vec.uvec) &&
            is_valid_vec (&m->vec.rvec);
@@ -2693,12 +2693,12 @@ void vm_vec_boxscale (vec2d* vec, float /*scale*/) {
 
 // TODO Remove this function if we ever move to a math library like glm
 /**
- * @brief							Attempts to invert a 4x4 matrix
- * @param[in]			m			Pointer to the matrix we want to invert
- * @param[inout]		invOut		The inverted matrix, or nullptr if
+ * @brief                                                       Attempts to invert a 4x4 matrix
+ * @param[in]                   m                       Pointer to the matrix we want to invert
+ * @param[inout]                invOut          The inverted matrix, or nullptr if
  * inversion is impossible
  *
- * @returns							Whether or not the matrix is invertible
+ * @returns                                                     Whether or not the matrix is invertible
  */
 bool vm_inverse_matrix4 (const matrix4* m, matrix4* invOut) {
     matrix4 inv; // create a temp matrix so we can avoid getting a determinant

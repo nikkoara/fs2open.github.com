@@ -143,19 +143,19 @@ void HudGaugeDirectives::initBitmaps (
     directives_top.first_frame =
         bm_load_animation (fname_top, &directives_top.num_frames);
     if (directives_top.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_top);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_top);
     }
 
     directives_middle.first_frame =
         bm_load_animation (fname_middle, &directives_middle.num_frames);
     if (directives_middle.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_middle);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_middle);
     }
 
     directives_bottom.first_frame =
         bm_load_animation (fname_bottom, &directives_bottom.num_frames);
     if (directives_bottom.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_bottom);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_bottom);
     }
 }
 
@@ -277,7 +277,7 @@ void HudGaugeDirectives::render (float /*frametime*/) {
 
         // maybe split the directives line
         second_line = split_str_once (buf, max_line_width);
-        Assert (second_line != buf);
+        ASSERT (second_line != buf);
 
         // blit the background frames
         setGaugeColor ();
@@ -320,7 +320,7 @@ void HudGaugeDirectives::render (float /*frametime*/) {
 void training_mission_init () {
     int i;
 
-    Assert (!Training_num_lines);
+    ASSERT (!Training_num_lines);
     Training_obj_num_lines = 0;
     Training_message_queue_count = 0;
     Training_failure = 0;
@@ -882,7 +882,7 @@ void message_training_setup (int m, int length, char* special_message) {
         Training_buf, TRAINING_LINE_WIDTH, Training_line_lengths,
         Training_lines, MAX_TRAINING_MESSAGE_LINES);
 
-    Assert (Training_num_lines >= 0);
+    ASSERT (Training_num_lines >= 0);
 
     if (message_play_training_voice (Messages[m].wave_info.index) < 0) {
         if (length > 0)
@@ -904,14 +904,14 @@ void message_training_queue (const char* text, int timestamp, int length) {
     int m;
     char temp_buf[TRAINING_MESSAGE_LENGTH];
 
-    Assert (Training_message_queue_count < TRAINING_MESSAGE_QUEUE_MAX);
+    ASSERT (Training_message_queue_count < TRAINING_MESSAGE_QUEUE_MAX);
     if (Training_message_queue_count < TRAINING_MESSAGE_QUEUE_MAX) {
         if (!strcasecmp (text, NOX ("none"))) { m = -1; }
         else {
             for (m = 0; m < Num_messages; m++)
                 if (!strcasecmp (text, Messages[m].name)) break;
 
-            Assert (m < Num_messages);
+            ASSERT (m < Num_messages);
             if (m >= Num_messages) return;
         }
 
@@ -1138,7 +1138,7 @@ void training_process_message (char* message) {
     dest = Training_buf;
     while (*src) {
         if (!strncasecmp (src, NOX ("<b>"), 3)) {
-            Assert (count < MAX_TRAINING_MESSAGE_MODS);
+            ASSERT (count < MAX_TRAINING_MESSAGE_MODS);
             src += 3;
             Training_message_mods[count].pos = dest;
             Training_message_mods[count].mode = TMMOD_BOLD;
@@ -1146,7 +1146,7 @@ void training_process_message (char* message) {
         }
 
         if (!strncasecmp (src, NOX ("</b>"), 4)) {
-            Assert (count < MAX_TRAINING_MESSAGE_MODS);
+            ASSERT (count < MAX_TRAINING_MESSAGE_MODS);
             src += 4;
             Training_message_mods[count].pos = dest;
             Training_message_mods[count].mode = TMMOD_NORMAL;
@@ -1163,8 +1163,8 @@ void training_process_message (char* message) {
 
 void training_fail () {
     Training_failure = 1;
-    //	JasonH: Add code here to suspend training and display a directive to
-    // warp out. 	Suspend training. 	Give directive to warp out. 	Also
+    // JasonH: Add code here to suspend training and display a directive to
+    // warp out.        Suspend training.       Give directive to warp out.     Also
     // ensure that a special failure debriefing is given.  Must mention firing
-    // at instructor. 	Ask Sandeep to write it (or you can).
+    // at instructor.   Ask Sandeep to write it (or you can).
 }

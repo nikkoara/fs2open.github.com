@@ -29,7 +29,7 @@ int Num_recent_missions;
 // -----------------------------------------------------
 // ml_update_recent_missions()
 //
-//	Update the Recent_missions[][] array
+// Update the Recent_missions[][] array
 //
 void ml_update_recent_missions (char* filename) {
     char tmp[MAX_RECENT_MISSIONS][MAX_FILENAME_LEN], *p;
@@ -46,7 +46,7 @@ void ml_update_recent_missions (char* filename) {
         p++;
     }
 
-    Assert (strlen (p) < MAX_FILENAME_LEN);
+    ASSERT (strlen (p) < MAX_FILENAME_LEN);
     strcpy_s (Recent_missions[0], p);
 
     j = 1;
@@ -58,7 +58,7 @@ void ml_update_recent_missions (char* filename) {
     }
 
     Num_recent_missions = j;
-    Assert (Num_recent_missions <= MAX_RECENT_MISSIONS);
+    ASSERT (Num_recent_missions <= MAX_RECENT_MISSIONS);
 }
 
 bool mission_is_ignored (const char* filename) {
@@ -77,7 +77,7 @@ bool mission_is_ignored (const char* filename) {
 
 // Mission_load takes no parameters.
 // It sets the following global variables
-//   Game_current_mission_filename
+// Game_current_mission_filename
 
 // returns -1 if failed, 0 if successful
 int mission_load (char* filename_ext) {
@@ -118,7 +118,7 @@ int mission_load (char* filename_ext) {
     if (Select_default_ship) {
         int ret;
         ret = create_default_player_ship ();
-        Assert (!ret);
+        ASSERT (!ret);
     }
 
     ml_update_recent_missions (
@@ -182,7 +182,7 @@ extern int mission_campaign_get_filenames (
 void mission_load_menu_init () {
     int i;
     char wild_card[256];
-    Assert (mlm_active == 0);
+    ASSERT (mlm_active == 0);
     mlm_active = 1;
 
     memset (wild_card, 0, 256);
@@ -193,7 +193,7 @@ void mission_load_menu_init () {
         CF_SORT_NAME);
     jtmp_nfiles = 0;
 
-    Assert (mlm_nfiles <= MLM_MAX_MISSIONS);
+    ASSERT (mlm_nfiles <= MLM_MAX_MISSIONS);
 
     mlm_window.create (100, 100, 500, 300, 0); // WIN_DIALOG
 
@@ -233,7 +233,7 @@ void mission_load_menu_init () {
 void mission_load_menu_do () {
     int selected, key_in, recent_current, mlm_current, use_recent_flag, i;
 
-    Assert (mlm_active == 1);
+    ASSERT (mlm_active == 1);
 
     key_in = mlm_window.process ();
 
@@ -364,7 +364,7 @@ void mission_load_menu_do () {
 void mission_load_menu_close () {
     int i;
 
-    Assert (mlm_active == 1);
+    ASSERT (mlm_active == 1);
     mlm_active = 0;
 
     for (i = 0; i < mlm_nfiles; i++) {

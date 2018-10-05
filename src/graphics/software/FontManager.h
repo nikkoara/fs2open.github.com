@@ -9,15 +9,15 @@
 
 namespace font {
 /**
- * @struct	TrueTypeFontData
+ * @struct      TrueTypeFontData
  *
- * @brief	True type font data to save data for already read fonts.
+ * @brief       True type font data to save data for already read fonts.
  *
  * Used to store the data of a true type font which can be used by multiple
  * FTFont objects which are all using the same data.
  *
- * @author	m!m
- * @date	24.11.2011
+ * @author      m!m
+ * @date        24.11.2011
  */
 struct TrueTypeFontData {
     size_t size;                     //<! Size of allocated memory
@@ -87,7 +87,7 @@ public:
      * @return Font pointer
      */
     inline static FSFont* getFont (int index) {
-        Assertion (
+        ASSERTX (
             index >= 0 && index < (int)fonts.size (),
             "Invalid font index %d given!", index);
 
@@ -194,7 +194,7 @@ public:
     static font* loadFontOld (const std::string& name);
 
     /**
-     *	@brief Initializes the font system
+     *  @brief Initializes the font system
      */
     static void init ();
 

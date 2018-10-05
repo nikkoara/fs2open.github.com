@@ -40,10 +40,10 @@
 #define GOAL_SCREEN_H_COORD 3
 
 /*
-#define GOAL_SCREEN_TEXT_X	81
-#define GOAL_SCREEN_TEXT_Y	95
-#define GOAL_SCREEN_TEXT_W	385
-#define GOAL_SCREEN_TEXT_H	299
+#define GOAL_SCREEN_TEXT_X      81
+#define GOAL_SCREEN_TEXT_Y      95
+#define GOAL_SCREEN_TEXT_W      385
+#define GOAL_SCREEN_TEXT_H      299
 #define GOAL_SCREEN_ICON_X 45
 */
 
@@ -211,7 +211,7 @@ void goal_screen_scroll_down ();
 //
 
 void goal_list::add (mission_goal* m) {
-    Assert (count < MAX_GOALS_PER_LIST);
+    ASSERT (count < MAX_GOALS_PER_LIST);
     list[count++] = m;
 }
 
@@ -273,7 +273,7 @@ int goal_text::add (const char* text) {
 
     max = MAX_GOAL_LINES - m_num_lines;
     if (max < 1) {
-        fs2::dialog::error (LOCATION, "Goal text space exhausted");
+        ASSERTF (LOCATION, "Goal text space exhausted");
         return 0;
     }
 
@@ -294,8 +294,8 @@ int goal_text::add (const char* text) {
 }
 
 // Display a line of goal text
-//   n = goal text line number
-//   y = y offset to draw relative to goal text area top
+// n = goal text line number
+// y = y offset to draw relative to goal text area top
 void goal_text::display (int n, int y) {
     int y1, w, h;
     char buf[MAX_GOAL_TEXT];
@@ -303,7 +303,7 @@ void goal_text::display (int n, int y) {
     if ((n < 0) || (n >= m_num_lines) || (m_line_sizes[n] < 1))
         return; // out of range, don't draw anything
 
-    Assert (m_line_sizes[n] < MAX_GOAL_TEXT);
+    ASSERT (m_line_sizes[n] < MAX_GOAL_TEXT);
     y += Goal_screen_text_y;
     if (*m_lines[n] == '*') { // header line
         gr_set_color_fast (&Color_text_heading);
@@ -425,7 +425,7 @@ void mission_show_goals_init () {
             break;
 
         default:
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Unknown goal priority encountered when displaying goals in "
                 "mission\n");
@@ -483,7 +483,7 @@ void mission_show_goals_init () {
     Goal_failed_bitmap = bm_load ("ObjFail");
 
     if (Goals_screen_bg_bitmap < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Could not load the background bitmap: ObjectivesBG.pcx");
     }
@@ -605,7 +605,7 @@ int ML_objectives_init (int x, int y, int w, int h) {
             break;
 
         default:
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Unknown goal priority encountered when displaying goals in "
                 "mission\n");
@@ -726,7 +726,7 @@ void ML_render_objectives_key () {
     }
 }
 
-//  maybe distribute the event/goal score between the players on that team
+// maybe distribute the event/goal score between the players on that team
 void multi_player_maybe_add_score (int score, int team) {
     int players_in_team = 0;
     int idx;
@@ -764,8 +764,8 @@ void multi_player_maybe_add_score (int score, int team) {
 void mission_goal_status_change (int goal_num, int new_status) {
     int type;
 
-    Assert (goal_num < Num_goals);
-    Assert ((new_status == GOAL_FAILED) || (new_status == GOAL_COMPLETE));
+    ASSERT (goal_num < Num_goals);
+    ASSERT ((new_status == GOAL_FAILED) || (new_status == GOAL_COMPLETE));
 
     // if in a multiplayer game, send a status change to clients
     if (MULTIPLAYER_MASTER) {
@@ -820,10 +820,10 @@ void mission_goal_status_change (int goal_num, int new_status) {
 }
 
 // return value:
-//   EVENT_UNBORN    = event has yet to be available (not yet evaluatable)
-//   EVENT_CURRENT   = current (evaluatable), but not yet true
-//   EVENT_SATISFIED = event has occured (true)
-//   EVENT_FAILED    = event failed, can't possibly become true anymore
+// EVENT_UNBORN    = event has yet to be available (not yet evaluatable)
+// EVENT_CURRENT   = current (evaluatable), but not yet true
+// EVENT_SATISFIED = event has occured (true)
+// EVENT_FAILED    = event failed, can't possibly become true anymore
 int mission_get_event_status (int event) {
     // check for directive special events first.  We will always return from
     // this part of the if statement
@@ -1149,10 +1149,10 @@ void mission_eval_goals () {
     Snapshot_all_events = false;
 }
 
-//	evaluate_primary_goals() will determine if the primary goals for a mission
+// evaluate_primary_goals() will determine if the primary goals for a mission
 // are complete
 //
-//	returns 1 - all primary goals are all complete or imcomplete (or there are
+// returns 1 - all primary goals are all complete or imcomplete (or there are
 // no primary goals at all)
 // returns 0 - not all primary goals are complete
 int mission_evaluate_primary_goals () {

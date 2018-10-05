@@ -95,8 +95,8 @@ static int Gameplay_help_inited = 0;
 static int Current_help_page;
 
 // generate a line for the on-line help for a control item with specified id
-// input:	id		=>	index for control item within Control_config[]
-//				buf	=> buffer with enough space to hold ouput string
+// input:       id              =>      index for control item within Control_config[]
+// buf     => buffer with enough space to hold ouput string
 const char* gameplay_help_control_text (int id, char* buf) {
     int has_key = 0, has_joy = 0;
     config_item* ci;
@@ -146,7 +146,7 @@ void gameplay_help_blit_control_line (int x, int y, int id) {
 
     gr_string (x, y, buf, GR_RESIZE_MENU);
 
-    //	gr_string(x+KEY_DESCRIPTION_OFFSET,y,ci->text,GR_RESIZE_MENU);
+    // gr_string(x+KEY_DESCRIPTION_OFFSET,y,ci->text,GR_RESIZE_MENU);
     gr_string (
         x + KEY_DESCRIPTION_OFFSET, y,
         XSTR (ci->text, CONTROL_CONFIG_XSTR + id), GR_RESIZE_MENU);
@@ -269,7 +269,7 @@ void gameplay_help_process_key (int k) {
 
     case KEY_SHIFTED | KEY_TAB:
         Buttons[gr_screen.res][PREVIOUS_PAGE_BUTTON].button.press_button ();
-        //			gameplay_help_goto_prev_screen();
+        // gameplay_help_goto_prev_screen();
         break;
 
     default: break;
@@ -824,7 +824,7 @@ void gameplay_help_draw_text () {
         break;
     }
 
-    } //	end switch
+    } // end switch
 }
 
 // gameplay_help_do_frame() is the function that displays help when acutally

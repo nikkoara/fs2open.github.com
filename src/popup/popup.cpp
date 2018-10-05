@@ -105,7 +105,7 @@ static int Title_coords[GR_NUM_RESOLUTIONS][5] = { {
                                                        137, // x-left
                                                        106, // y-top
                                                        343, // width
-                                                       26,  //	height
+                                                       26,  // height
                                                        308  // center
                                                    },
                                                    {
@@ -113,7 +113,7 @@ static int Title_coords[GR_NUM_RESOLUTIONS][5] = { {
                                                        220, // x-left
                                                        169, // y-top
                                                        553, // width
-                                                       26,  //	height
+                                                       26,  // height
                                                        496  // center
                                                    } };
 
@@ -195,8 +195,8 @@ int Popup_default_choice; // which choice is highlighted (ie what gets choosen
                           // when enter is pressed)
 
 // see if any popup buttons have been pressed
-// exit: POPUP_NOCHANGE		=> no buttons pressed
-//			>=0					=>	button index that was pressed
+// exit: POPUP_NOCHANGE         => no buttons pressed
+// >=0                                     =>      button index that was pressed
 int popup_check_buttons (popup_info* pi) {
     int i;
     UI_BUTTON* b;
@@ -241,12 +241,12 @@ void popup_play_default_change_sound (popup_info* pi) {
 }
 
 // do any key processing here
-// input:	pi					=>	data about the popup
-//				k					=> key that was pressed
+// input:       pi                                      =>      data about the popup
+// k                                       => key that was pressed
 //
-// exit: 0 .. nchoices-1	=> choice selected through keypress
-//			POPUP_ABORT			=>	abort the popup
-//			POPUP_NOCHANGE		=> nothing happenned
+// exit: 0 .. nchoices-1        => choice selected through keypress
+// POPUP_ABORT                     =>      abort the popup
+// POPUP_NOCHANGE          => nothing happenned
 int popup_process_keys (popup_info* pi, int k, int flags) {
     int i, masked_k;
 
@@ -312,7 +312,7 @@ void popup_split_lines (popup_info* pi, int flags) {
     n_chars[0] = 0;
 
     nlines = split_str (pi->raw_text, 1000, n_chars, p_str, POPUP_MAX_LINES);
-    Assert (nlines >= 0 && nlines <= POPUP_MAX_LINES);
+    ASSERT (nlines >= 0 && nlines <= POPUP_MAX_LINES);
 
     if (flags & (PF_TITLE | PF_TITLE_BIG)) {
         // get first line out
@@ -326,12 +326,12 @@ void popup_split_lines (popup_info* pi, int flags) {
     nlines = split_str (
         pi->raw_text, Popup_text_coords[gr_screen.res][2], n_chars, p_str,
         POPUP_MAX_LINES);
-    Assert (nlines >= 0 && nlines <= POPUP_MAX_LINES);
+    ASSERT (nlines >= 0 && nlines <= POPUP_MAX_LINES);
 
     pi->nlines = nlines - body_offset;
 
     for (i = 0; i < pi->nlines; i++) {
-        Assert (n_chars[i + body_offset] < POPUP_MAX_LINE_CHARS);
+        ASSERT (n_chars[i + body_offset] < POPUP_MAX_LINE_CHARS);
         strncpy (
             pi->msg_lines[i], p_str[i + body_offset],
             n_chars[i + body_offset]);
@@ -799,8 +799,8 @@ void popup_force_draw_buttons (popup_info* pi) {
     }
 }
 
-// exit: -1						=>	error
-//			0..nchoices-1		=> choice
+// exit: -1                                             =>      error
+// 0..nchoices-1           => choice
 int popup_do (popup_info* pi, int flags) {
     int screen_id, choice = -1, done = 0;
 
@@ -927,9 +927,9 @@ int popup_do_with_condition (popup_info* pi, int flags, int (*condition) ()) {
 }
 
 // maybe assign a keyboard shortcut to this button
-// input:	pi		=>	popup information so far
-//				i		=>	number of choice
-//				str	=> string for button press
+// input:       pi              =>      popup information so far
+// i               =>      number of choice
+// str     => string for button press
 void popup_maybe_assign_keypress (popup_info* pi, int n, char* str) {
     int i, j, len = 0, next_char_is_shortcut = 0;
 
@@ -962,21 +962,21 @@ void popup_maybe_assign_keypress (popup_info* pi, int n, char* str) {
     }
 }
 
-// input:	flags			=>		flags			=>		formatting
+// input:       flags                   =>              flags                   =>              formatting
 // specificatons (PF_...)
-//				nchoices		=>		number of choices popup has
-//				text_1		=>		text for first button
-//				...			=>
-//				text_n		=>		text for last button
-//				msg text		=>		text msg for popup (can be of form
+// nchoices                =>              number of choices popup has
+// text_1          =>              text for first button
+// ...                     =>
+// text_n          =>              text for last button
+// msg text                =>              text msg for popup (can be of form
 //"%s",pl->text)
 //
 // exit: choice selected (0..nchoices-1)
-//			will return -1 if there was an error or popup was aborted
+// will return -1 if there was an error or popup was aborted
 //
 // typical usage:
 //
-//	rval = popup(0, 2, POPUP_OK, POPUP_CANCEL, "Sorry %s, try again",
+// rval = popup(0, 2, POPUP_OK, POPUP_CANCEL, "Sorry %s, try again",
 // pl->callsign);
 int popup (int flags, int nchoices, ...) {
     int i, choice;
@@ -990,7 +990,7 @@ int popup (int flags, int nchoices, ...) {
 
     Popup_flags = flags;
 
-    Assert (nchoices > 0 && nchoices <= POPUP_MAX_CHOICES);
+    ASSERT (nchoices > 0 && nchoices <= POPUP_MAX_CHOICES);
     Popup_info.nchoices = nchoices;
 
     va_start (args, nchoices);
@@ -1096,9 +1096,9 @@ char* popup_input (int flags, const char* caption, int max_output_len) {
     // popup_maybe_assign_keypress(&Popup_info, 0, "&Cancel");
 
     // get msg text
-    Assert (caption != NULL);
+    ASSERT (caption != NULL);
     strcpy_s (Popup_info.raw_text, caption);
-    Assert (strlen (Popup_info.raw_text) < POPUP_MAX_CHARS);
+    ASSERT (strlen (Popup_info.raw_text) < POPUP_MAX_CHARS);
 
     // set input text length
     if ((max_output_len > POPUP_INPUT_MAX_CHARS) || (max_output_len == -1)) {

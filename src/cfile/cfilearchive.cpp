@@ -18,10 +18,10 @@
 
 void cf_init_lowlevel_read_code (
     CFILE* cfile, size_t lib_offset, size_t size, size_t pos) {
-    Assert (cfile != NULL);
+    ASSERT (cfile != NULL);
 
     Cfile_block* cb;
-    Assert (cfile->id >= 0 && cfile->id < MAX_CFILE_BLOCKS);
+    ASSERT (cfile->id >= 0 && cfile->id < MAX_CFILE_BLOCKS);
     cb = &Cfile_block_list[cfile->id];
 
     cb->lib_offset = lib_offset;
@@ -33,7 +33,7 @@ void cf_init_lowlevel_read_code (
 
 #if defined(CHECK_POSITION) && !defined(NDEBUG)
         auto raw_position = ftell (cb->fp) - cb->lib_offset;
-        Assert (raw_position == cb->raw_position);
+        ASSERT (raw_position == cb->raw_position);
 #endif
     }
 }
@@ -45,10 +45,10 @@ void cf_init_lowlevel_read_code (
 // file. There is no error return.
 
 int cfeof (CFILE* cfile) {
-    Assert (cfile != NULL);
+    ASSERT (cfile != NULL);
 
     Cfile_block* cb;
-    Assert (cfile->id >= 0 && cfile->id < MAX_CFILE_BLOCKS);
+    ASSERT (cfile->id >= 0 && cfile->id < MAX_CFILE_BLOCKS);
     cb = &Cfile_block_list[cfile->id];
 
     int result = 0;
@@ -56,7 +56,7 @@ int cfeof (CFILE* cfile) {
 #if defined(CHECK_POSITION) && !defined(NDEBUG)
     if (cb->fp) {
         auto raw_position = ftell (cb->fp) - cb->lib_offset;
-        Assert (raw_position == cb->raw_position);
+        ASSERT (raw_position == cb->raw_position);
     }
 #endif
 
@@ -71,24 +71,24 @@ int cfeof (CFILE* cfile) {
 // cftell() returns offset into file
 //
 // returns:  success ==> offset into the file
-//           error   ==> -1
+// error   ==> -1
 //
 int cftell (CFILE* cfile) {
-    Assert (cfile != NULL);
+    ASSERT (cfile != NULL);
     Cfile_block* cb;
-    Assert (cfile->id >= 0 && cfile->id < MAX_CFILE_BLOCKS);
+    ASSERT (cfile->id >= 0 && cfile->id < MAX_CFILE_BLOCKS);
     cb = &Cfile_block_list[cfile->id];
 
 #if defined(CHECK_POSITION) && !defined(NDEBUG)
     if (cb->fp) {
         auto raw_position = ftell (cb->fp) - cb->lib_offset;
-        Assert (raw_position == cb->raw_position);
+        ASSERT (raw_position == cb->raw_position);
     }
 #endif
 
     // The rest of the code still uses ints, do an overflow check to detect
     // cases where this fails
-    Assertion (
+    ASSERTX (
         cb->raw_position <=
             static_cast< size_t > (std::numeric_limits< int >::max ()),
         "Integer overflow in cftell, a file is probably too large (but I "
@@ -99,16 +99,16 @@ int cftell (CFILE* cfile) {
 // cfseek() moves the file pointer
 //
 // returns:   success ==> 0
-//            error   ==> non-zero
+// error   ==> non-zero
 //
 int cfseek (CFILE* cfile, int offset, int where) {
-    Assert (cfile != NULL);
+    ASSERT (cfile != NULL);
     Cfile_block* cb;
-    Assert (cfile->id >= 0 && cfile->id < MAX_CFILE_BLOCKS);
+    ASSERT (cfile->id >= 0 && cfile->id < MAX_CFILE_BLOCKS);
     cb = &Cfile_block_list[cfile->id];
 
     // TODO: seek to offset in memory mapped file
-    Assert (!cb->mem_mapped);
+    ASSERT (!cb->mem_mapped);
 
     size_t goal_position;
 
@@ -131,7 +131,7 @@ int cfseek (CFILE* cfile, int offset, int where) {
     if (cb->fp) {
         // If we have a file pointer we can also seek in that file
         result = fseek (cb->fp, (long)goal_position, SEEK_SET);
-        Assertion (
+        ASSERTX (
             goal_position >= cb->lib_offset,
             "Invalid offset values detected while seeking! Goal "
             "was %zu, lib_offset is %zu.",
@@ -139,13 +139,13 @@ int cfseek (CFILE* cfile, int offset, int where) {
     }
     // If we only have a data pointer this will do all the work
     cb->raw_position = goal_position - cb->lib_offset;
-    Assertion (
+    ASSERTX (
         cb->raw_position <= cb->size, "Invalid raw_position value detected!");
 
 #if defined(CHECK_POSITION) && !defined(NDEBUG)
     if (cb->fp) {
         auto tmp_offset = ftell (cb->fp) - cb->lib_offset;
-        Assert (tmp_offset == cb->raw_position);
+        ASSERT (tmp_offset == cb->raw_position);
     }
 #endif
 
@@ -167,7 +167,7 @@ int cfread (void* buf, int elsize, int nelem, CFILE* cfile) {
     Cfile_block* cb = &Cfile_block_list[cfile->id];
 
     if ((cb->raw_position + size) > cb->size) {
-        Assertion (
+        ASSERTX (
             cb->raw_position <= cb->size,
             "Invalid raw_position value detected!");
         size = cb->size - cb->raw_position;
@@ -198,7 +198,7 @@ int cfread (void* buf, int elsize, int nelem, CFILE* cfile) {
     }
     if (bytes_read > 0) {
         cb->raw_position += bytes_read;
-        Assertion (
+        ASSERTX (
             cb->raw_position <= cb->size,
             "Invalid raw_position value detected!");
     }
@@ -206,7 +206,7 @@ int cfread (void* buf, int elsize, int nelem, CFILE* cfile) {
 #if defined(CHECK_POSITION) && !defined(NDEBUG)
     if (cb->fp) {
         auto tmp_offset = ftell (cb->fp) - cb->lib_offset;
-        Assert (tmp_offset == cb->raw_position);
+        ASSERT (tmp_offset == cb->raw_position);
     }
 #endif
 

@@ -56,7 +56,7 @@ void sexp_network_packet::ensure_space_remains (size_t data_size) {
 
     // At very least must include OP, COUNT, TERMINATOR
     if (packet_end < 9 && !packet_flagged_invalid) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Sexp %s has attempted to write too much data to a single packet. "
             "It is advised that you split this SEXP up into smaller ones",
@@ -88,7 +88,7 @@ void sexp_network_packet::ensure_space_remains (size_t data_size) {
         argument_count_index = argument_count_index - sub_packet_size;
     }
 
-    Assert (argument_count_index >= 0);
+    ASSERT (argument_count_index >= 0);
 }
 
 void sexp_network_packet::reduce_counts (int amount) {
@@ -96,7 +96,7 @@ void sexp_network_packet::reduce_counts (int amount) {
     current_argument_count -= amount;
 
     if (sexp_bytes_left < 0 || current_argument_count < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "multi_get_x function call has read an invalid amount of data. "
             "Trace out and fix this!");
@@ -114,7 +114,7 @@ bool sexp_network_packet::argument_count_is_valid () {
             sexp_bytes_left--;
 
             if (possible_terminator == CALLBACK_TERMINATOR) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "%s has returned to multi_sexp_eval() claiming %d "
                     "arguments left. %d actually found. Trace out and fix "
@@ -135,7 +135,7 @@ bool sexp_network_packet::argument_count_is_valid () {
             if (possible_terminator != CALLBACK_TERMINATOR) {
                 // discard remainder of packet if we still haven't found the
                 // terminator as it is hopelessly corrupt
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "%s has returned to multi_sexp_eval() without finding the "
                     "terminator. Discarding packet! Trace out and fix this!",
@@ -146,7 +146,7 @@ bool sexp_network_packet::argument_count_is_valid () {
             else {
                 // the previous SEXP hasn't removed all it's data from the
                 // packet correctly but it appears we've managed to fix it
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "%s has returned to multi_sexp_eval() without removing "
                     "all the data the server wrote during its callback. Trace "
@@ -196,7 +196,7 @@ void sexp_network_packet::start_callback () {
     // Write OP into the Type buffer.
     type[packet_size] = packet_data_type::SEXP_OPERATOR;
     // Write the SEXP_Operator number into the data buffer.
-    Assert (!Current_sexp_operator.empty ());
+    ASSERT (!Current_sexp_operator.empty ());
     ADD_INT (Current_sexp_operator.back ());
 
     // Store the next data index as we'll need it later to write the COUNT.
@@ -248,8 +248,8 @@ void sexp_network_packet::sexp_flush_packet () {
 
     // possible to get here when there is nothing in the packet to send
     if (packet_size == 0) { return; }
-    Assert (type[packet_size - 1] == packet_data_type::DATA_TERMINATES);
-    Assert (!packet_flagged_invalid);
+    ASSERT (type[packet_size - 1] == packet_data_type::DATA_TERMINATES);
+    ASSERT (!packet_flagged_invalid);
 
     send_sexp_packet (data, packet_size);
 
@@ -260,7 +260,7 @@ bool sexp_network_packet::cannot_send_data () {
     if (!MULTIPLAYER_MASTER || packet_flagged_invalid) { return true; }
 
     if (!callback_started) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Attempt to send data in multi_sexp.cpp without first starting a "
             "callback");
@@ -431,7 +431,7 @@ bool sexp_network_packet::get_ship (int& value) {
         return true;
     }
 
-    fs2::dialog::warning (
+    WARNINGF (
         LOCATION,
         "Current_sexp_network_packet.get_ship called for object %d even "
         "though it is not a ship",
@@ -463,7 +463,7 @@ bool sexp_network_packet::get_object (object*& value) {
     value = multi_get_network_object (netsig);
     if ((value != NULL) && (value->instance >= 0)) { return true; }
 
-    fs2::dialog::warning (LOCATION, "multi_get_object called for non-existent object");
+    WARNINGF (LOCATION, "multi_get_object called for non-existent object");
     return false;
 }
 
@@ -551,7 +551,7 @@ int sexp_network_packet::get_next_operator () {
     GET_INT (current_argument_count);
     sexp_bytes_left -= sizeof (int);
 
-    Assert (sexp_bytes_left);
+    ASSERT (sexp_bytes_left);
     return op_num;
 }
 
@@ -560,12 +560,12 @@ int sexp_network_packet::get_operator () { return op_num; }
 void sexp_network_packet::finished_callback () {
     ubyte terminator;
 
-    Assert (current_argument_count == 0);
+    ASSERT (current_argument_count == 0);
 
     // read in the terminator
     GET_DATA (terminator);
     if (terminator != CALLBACK_TERMINATOR) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "multi_get_x function call has been called on an improperly "
             "terminated callback. Trace out and fix this!");
@@ -603,7 +603,7 @@ bool sexp_network_packet::sexp_discard_operator () {
 
 void sexp_network_packet::discard_remaining_callback_data () {
     if (!sexp_discard_operator ()) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Attempt to discard remaining data failed! Callback lacks proper "
             "termination. Entire packet may be corrupt. Discarding remaining "

@@ -74,7 +74,7 @@ void pause_init () {
     // if we're already paused. do nothing
     if (Paused) { return; }
 
-    Assert (!(Game_mode & GM_MULTIPLAYER));
+    ASSERT (!(Game_mode & GM_MULTIPLAYER));
 
     // pause all weapon sounds
     weapon_pause_sounds ();
@@ -109,9 +109,9 @@ void pause_do () {
     static int previous_Viewer_mode = -1;
     static int previous_hud_state = -1;
 
-    Assert (!(Game_mode & GM_MULTIPLAYER));
+    ASSERT (!(Game_mode & GM_MULTIPLAYER));
 
-    //	RENDER A GAME FRAME HERE AS THE BACKGROUND (if normal pause)
+    // RENDER A GAME FRAME HERE AS THE BACKGROUND (if normal pause)
 
     if (Pause_type == PAUSE_TYPE_NORMAL) {
         // Fall back to viewer just incase saved screen is invalid
@@ -213,7 +213,7 @@ void pause_close () {
     // if we're not paused - do nothing
     if (!Paused) { return; }
 
-    Assert (!(Game_mode & GM_MULTIPLAYER));
+    ASSERT (!(Game_mode & GM_MULTIPLAYER));
 
     // unpause all weapon sounds
     weapon_unpause_sounds ();
@@ -314,7 +314,7 @@ void pause_debug_do () {
 
     if (Pause_continue.pressed () ||
         (key ==
-         KEY_PAUSE)) { //	Changed, MK, 11/9/97, only Pause break pause.
+         KEY_PAUSE)) { // Changed, MK, 11/9/97, only Pause break pause.
         gameseq_post_event (GS_EVENT_PREVIOUS_STATE);
     }
 

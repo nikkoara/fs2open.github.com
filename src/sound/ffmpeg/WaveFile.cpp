@@ -65,7 +65,7 @@ AudioProperties getAdjustedAudioProps (const AudioProperties& baseProps) {
     case 2: adjusted.format = AV_SAMPLE_FMT_S16; break;
     case 4: adjusted.format = AV_SAMPLE_FMT_FLT; break;
     default:
-        UNREACHABLE ("Unhandled switch value!");
+        ASSERT (0);
         adjusted.format = AV_SAMPLE_FMT_NONE;
         break;
     }
@@ -255,7 +255,7 @@ void WaveFile::setAdjustedAudioProperties (const AudioProperties& props) {
     m_audioProps = props;
     m_resampleCtx = getSWRContext (m_baseAudioProps, m_audioProps);
 
-    Assertion (
+    ASSERTX (
         m_resampleCtx != nullptr,
         "Resample context creation failed! This should not happen!");
 }
@@ -286,7 +286,7 @@ size_t WaveFile::getBufferedData (uint8_t* buffer, size_t buffer_size) {
             swr_convert (m_resampleCtx, &buffer, dest_num_samples, nullptr, 0);
 
         auto advance = (size_t) (written * sample_size);
-        Assertion (
+        ASSERTX (
             advance <= buffer_size,
             "Buffer overrun!!! Decoding has written more data into the buffer "
             "than available!");
@@ -307,7 +307,7 @@ int WaveFile::Read (uint8_t* pbDest, size_t cbSize) {
             m_decodeFrame, pbDest + buffer_pos, cbSize - buffer_pos);
 
         buffer_pos += advance;
-        Assertion (
+        ASSERTX (
             buffer_pos <= cbSize,
             "Buffer overrun!!! Decoding has written more data into the buffer "
             "than available!");

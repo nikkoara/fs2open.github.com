@@ -162,7 +162,7 @@ ushort Multi_current_file_checksum = 0;
 int Multi_current_file_length = -1;
 
 // -------------------------------------------------------------------------------------------------
-//	multi_init() is called only once, at game start-up.  Get player address +
+// multi_init() is called only once, at game start-up.  Get player address +
 // port, initialize the
 // network players list.
 //
@@ -174,7 +174,7 @@ void multi_init () {
     // read in config file
     multi_options_read_config ();
 
-    Assert (Net_player == NULL);
+    ASSERT (Net_player == NULL);
     Multi_id_num = 0;
 
     // clear out all netplayers
@@ -242,8 +242,8 @@ void multi_vars_init () {
     // unset the "have cd" var
     // NOTE: we unset this here because we are going to be calling
     // multi_common_verify_cd()
-    //       immediately after this (in multi_level_init() to re-check the
-    //       status)
+    // immediately after this (in multi_level_init() to re-check the
+    // status)
     Multi_has_cd = 0;
 
     // current file checksum
@@ -258,7 +258,7 @@ void multi_vars_init () {
 }
 
 // -------------------------------------------------------------------------------------------------
-//	multi_level_init() is called whenever the player starts a multiplayer game
+// multi_level_init() is called whenever the player starts a multiplayer game
 //
 //
 
@@ -452,7 +452,7 @@ int multi_client_wait_on_server () {
 void multi_client_check_server () {
     int rval;
 
-    Assert (MULTIPLAYER_CLIENT);
+    ASSERT (MULTIPLAYER_CLIENT);
 
     // this function can get called while in the popup code below.  So we
     // include this check as a reentrancy check.
@@ -491,8 +491,8 @@ void multi_client_check_server () {
 }
 
 // -------------------------------------------------------------------------------------------------
-//	process_packet_normal() will determine what sort of packet it is, and send
-// it to the appropriate spot. 	Prelimiary verification of the magic number and
+// process_packet_normal() will determine what sort of packet it is, and send
+// it to the appropriate spot.  Prelimiary verification of the magic number and
 // checksum are done here.
 //
 
@@ -567,7 +567,7 @@ void process_packet_normal (ubyte* data, header* header_info) {
     case PONG: process_pong_packet (data, header_info); break;
 
     case XFER_PACKET:
-        Assert (header_info->id >= 0);
+        ASSERT (header_info->id >= 0);
         int np_index;
         PSNET_SOCKET_RELIABLE sock;
         sock = INVALID_SOCKET;
@@ -845,7 +845,7 @@ void process_packet_normal (ubyte* data, header* header_info) {
 
 // Takes a bunch of messages, check them for validity,
 // and pass them to multi_process_data.
-//  --------------------^
+// --------------------^
 // this should be process_packet() I think, or with the new code
 // process_tracker_packet() as defined in MultiTracker.[h,cpp]
 void multi_process_bigdata (
@@ -991,7 +991,7 @@ void multi_process_incoming () {
     ubyte *data, *savep;
     net_addr from_addr;
 
-    Assert (Multi_read_count < NUM_REENTRANT_LEVELS);
+    ASSERT (Multi_read_count < NUM_REENTRANT_LEVELS);
     savep = net_buffer[Multi_read_count];
 
     Multi_read_count++;
@@ -1049,7 +1049,7 @@ void multi_process_incoming () {
 }
 
 // -------------------------------------------------------------------------------------------------
-//	multi_do_frame() is called once per game loop do update all the multiplayer
+// multi_do_frame() is called once per game loop do update all the multiplayer
 // objects, and send
 // the player data to all the other net players.
 //
@@ -1288,7 +1288,7 @@ void multi_do_frame () {
 }
 
 // -------------------------------------------------------------------------------------------------
-//	multi_pause_do_frame() is called once per game loop do update all the
+// multi_pause_do_frame() is called once per game loop do update all the
 // multiplayer objects, and send
 // the player data to all the other net players when the multiplayer game is
 // paused. It only will do checking for a few specialized packets
@@ -1532,10 +1532,10 @@ void standalone_main_init () {
 
 // DESCRIPTION : the standalone server will wait in this state until the host
 // of the game
-//               is "Waiting". That is, his state==NETPLAYER_STATE_WAITING, and
-//               he has finished doing everything and wants to play the game.
-//               Once this happens, we will jump into
-//               GS_STATE_MULTI_SERVER_WAIT
+// is "Waiting". That is, his state==NETPLAYER_STATE_WAITING, and
+// he has finished doing everything and wants to play the game.
+// Once this happens, we will jump into
+// GS_STATE_MULTI_SERVER_WAIT
 
 void standalone_main_do () {
     os_sleep (10); // since nothing will really be going on here, we can afford
@@ -1602,10 +1602,10 @@ void multi_standalone_wait_init () {
 
 // DESCRIPTION : we will be in this state once the host of the game is waiting
 // for everyone
-//               to be finished and ready to go, at which point, we will will
-//               tell everyone to enter the game, and we will start simulating
-//               ourselves. Note that most of this code is lifted from
-//               multi_wait_do_frame()
+// to be finished and ready to go, at which point, we will will
+// tell everyone to enter the game, and we will start simulating
+// ourselves. Note that most of this code is lifted from
+// multi_wait_do_frame()
 void multi_standalone_wait_do () {}
 
 // --------------------------------------------------------------------------------

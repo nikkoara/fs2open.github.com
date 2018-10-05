@@ -87,13 +87,13 @@ static int Closeup_coords[GR_NUM_RESOLUTIONS][4] = {
 
 /* no longer used - taylor
 static int Closeup_img_h[GR_NUM_RESOLUTIONS] = {
-    150,	// GR_640
-    150		// GR_1024
+    150,        // GR_640
+    150         // GR_1024
 };
 
 static int Closeup_text_h[GR_NUM_RESOLUTIONS][4] = {
-    63,		// GR_640
-    63		// GR_1024
+    63,         // GR_640
+    63          // GR_1024
 }; */
 
 static int Brief_infobox_coords[GR_NUM_RESOLUTIONS][2] = { { // GR_640
@@ -147,7 +147,7 @@ const char* Closeup_button_filename[GR_NUM_RESOLUTIONS] = {
 
 int Closeup_button_hotspot = 14;
 
-// static int			Closeup_button_coords[2] =
+// static int                   Closeup_button_coords[2] =
 // {CLOSEUP_X+164,CLOSEUP_Y+227};
 int Closeup_button_coords[GR_NUM_RESOLUTIONS][2] = {
     { 374, 316 }, // GR_640
@@ -341,7 +341,7 @@ void brief_skip_training_pressed () {
 }
 
 // --------------------------------------------------------------------------------------
-//	brief_do_next_pressed()
+// brief_do_next_pressed()
 //
 //
 void brief_do_next_pressed (int play_sound) {
@@ -362,11 +362,11 @@ void brief_do_next_pressed (int play_sound) {
         }
     }
 
-    Assert (Current_brief_stage >= 0);
+    ASSERT (Current_brief_stage >= 0);
 }
 
 // --------------------------------------------------------------------------------------
-//	brief_do_prev_pressed()
+// brief_do_prev_pressed()
 //
 //
 void brief_do_prev_pressed () {
@@ -384,11 +384,11 @@ void brief_do_prev_pressed () {
     else {
         gamesnd_play_iface (InterfaceSounds::BRIEF_STAGE_CHG);
     }
-    Assert (Current_brief_stage >= 0);
+    ASSERT (Current_brief_stage >= 0);
 }
 
 // --------------------------------------------------------------------------------------
-//	brief_do_start_pressed()
+// brief_do_start_pressed()
 //
 //
 void brief_do_start_pressed () {
@@ -404,11 +404,11 @@ void brief_do_start_pressed () {
     else {
         gamesnd_play_iface (InterfaceSounds::GENERAL_FAIL);
     }
-    Assert (Current_brief_stage >= 0);
+    ASSERT (Current_brief_stage >= 0);
 }
 
 // --------------------------------------------------------------------------------------
-//	brief_do_end_pressed()
+// brief_do_end_pressed()
 //
 //
 void brief_do_end_pressed () {
@@ -420,7 +420,7 @@ void brief_do_end_pressed () {
     else {
         gamesnd_play_iface (InterfaceSounds::GENERAL_FAIL);
     }
-    Assert (Current_brief_stage >= 0);
+    ASSERT (Current_brief_stage >= 0);
 }
 
 void brief_scroll_up_text () {
@@ -494,7 +494,7 @@ void brief_button_do (int i) {
         break;
 
     case BRIEF_BUTTON_MULTI_LOCK:
-        Assert (Game_mode & GM_MULTIPLAYER);
+        ASSERT (Game_mode & GM_MULTIPLAYER);
         // the "lock" button has been pressed
         multi_ts_lock_pressed ();
 
@@ -556,7 +556,7 @@ void brief_buttons_init () {
     int i;
 
     // if ( Briefing->num_stages <= 0 )
-    //	return;
+    // return;
 
     for (i = 0; i < NUM_BRIEF_BUTTONS; i++) {
         b = &Brief_buttons[gr_screen.res][i].button;
@@ -678,7 +678,7 @@ void brief_buttons_init () {
 }
 
 // --------------------------------------------------------------------------------------
-//	brief_get_closeup_icon()
+// brief_get_closeup_icon()
 //
 //
 // changed from uint for 64-bit support - taylor
@@ -696,7 +696,7 @@ void brief_turn_off_closeup_icon () {
 }
 
 // --------------------------------------------------------------------------------------
-//	brief_load_bitmaps()
+// brief_load_bitmaps()
 //
 //
 void brief_load_bitmaps () {
@@ -709,7 +709,7 @@ void brief_load_bitmaps () {
 }
 
 // --------------------------------------------------------------------------------------
-//	brief_ui_init()
+// brief_ui_init()
 //
 //
 void brief_ui_init () {
@@ -723,7 +723,7 @@ void brief_ui_init () {
 }
 
 // --------------------------------------------------------------------------------------
-//	brief_set_default_closeup()
+// brief_set_default_closeup()
 //
 //
 void brief_set_default_closeup () {
@@ -990,11 +990,11 @@ void brief_init () {
 #define CLOSEUP_TEXT_OFFSET 10
 void brief_render_closeup_text () {
     /*
-        brief_icon	*bi;
-        char			line[MAX_ICON_TEXT_LINE_LEN];
-        int			n_lines, i, render_x, render_y;
-        int			n_chars[MAX_ICON_TEXT_LINES];
-        char			*p_str[MAX_ICON_TEXT_LINES];
+        brief_icon      *bi;
+        char                    line[MAX_ICON_TEXT_LINE_LEN];
+        int                     n_lines, i, render_x, render_y;
+        int                     n_chars[MAX_ICON_TEXT_LINES];
+        char                    *p_str[MAX_ICON_TEXT_LINES];
 
         if ( Closeup_icon == NULL ) {
             Int3();
@@ -1009,7 +1009,7 @@ void brief_render_closeup_text () {
         gr_set_clip(render_x+CLOSEUP_TEXT_OFFSET, render_y,
     CLOSEUP_W,CLOSEUP_TEXT_H, GR_RESIZE_MENU); gr_set_color_fast(&Color_white);
 
-    //	n_lines = split_str(bi->text, CLOSEUP_W - 2*CLOSEUP_TEXT_OFFSET,
+    // n_lines = split_str(bi->text, CLOSEUP_W - 2*CLOSEUP_TEXT_OFFSET,
     n_chars, p_str, MAX_ICON_TEXT_LINES); Assert(n_lines != -1);
 
         for ( i = 0; i < n_lines; i++ ) {
@@ -1102,7 +1102,7 @@ void brief_render_closeup (int ship_class, float frametime) {
     gr_string (
         (gr_screen.clip_width_unscaled - w) / 2, 2,
         Closeup_icon->closeup_label, GR_RESIZE_MENU);
-    //	brief_render_closeup_text();
+    // brief_render_closeup_text();
 
     Closeup_close_button.enable ();
     Closeup_close_button.unhide ();
@@ -1113,13 +1113,13 @@ void brief_render_closeup (int ship_class, float frametime) {
 // -------------------------------------------------------------------------------------
 // brief_render()
 //
-//	frametime is in seconds
+// frametime is in seconds
 void brief_render (float frametime) {
     int z, w, h;
 
     if (Num_brief_stages <= 0) {
         gr_set_color_fast (&Color_white);
-        Assert (Game_current_mission_filename != NULL);
+        ASSERT (Game_current_mission_filename != NULL);
 
         gr_get_string_size (
             &w, NULL, XSTR ("No Briefing exists for mission: %s", 430));
@@ -1266,8 +1266,8 @@ void brief_get_closeup_ship_modelnum (brief_icon* ci) {
 // -------------------------------------------------------------------------------------
 // brief_setup_closeup()
 //
-// exit: 0	=>		set-up icon sucessfully
-//			-1	=>		could not setup closeup icon
+// exit: 0      =>              set-up icon sucessfully
+// -1      =>              could not setup closeup icon
 int brief_setup_closeup (brief_icon* bi) {
     char pof_filename[NAME_LENGTH];
     ship_info* sip = NULL;
@@ -1313,7 +1313,7 @@ int brief_setup_closeup (brief_icon* bi) {
         break;
     default:
         brief_get_closeup_ship_modelnum (Closeup_icon);
-        Assert (Closeup_icon->ship_class != -1);
+        ASSERT (Closeup_icon->ship_class != -1);
         sip = &Ship_info[Closeup_icon->ship_class];
 
         strcpy_s (
@@ -1364,8 +1364,8 @@ int brief_setup_closeup (brief_icon* bi) {
 // -------------------------------------------------------------------------------------
 // brief_update_closeup_icon()
 //
-//	input:	mode	=>		how to update the closeup view
-//								0 -> disable
+// input:  mode    =>              how to update the closeup view
+// 0 -> disable
 //
 void brief_update_closeup_icon (int mode) {
     brief_stage* bs;
@@ -1415,9 +1415,9 @@ void brief_check_for_anim () {
 
     // if mouse click is over the VCR controls, don't launch an icon
     // FIXME - should prolly push these into defines instead of hardcoding this
-    //	if ( mx >= 0 && mx <= 115 && my >= 136 && my <= 148 ) {
-    //		return;
-    //	}
+    // if ( mx >= 0 && mx <= 115 && my >= 136 && my <= 148 ) {
+    // return;
+    // }
 
     // same as above but without the hardcoded values, which were wrong anyway.
     // don't know how this will work longterm but will hopefully keep things
@@ -1694,7 +1694,7 @@ void brief_do_frame (float frametime) {
                 if (abs (Current_brief_stage - Last_brief_stage) > 1) {
                     Quick_transition_stage = Current_brief_stage;
                     Current_brief_stage = Last_brief_stage;
-                    Assert (Current_brief_stage >= 0);
+                    ASSERT (Current_brief_stage >= 0);
                     Start_fade_up_anim = 1;
                     goto Transition_done;
                 }
@@ -1706,7 +1706,7 @@ void brief_do_frame (float frametime) {
                         BS_FORWARD_CUT) {
                         Quick_transition_stage = Current_brief_stage;
                         Current_brief_stage = Last_brief_stage;
-                        Assert (Current_brief_stage >= 0);
+                        ASSERT (Current_brief_stage >= 0);
                         Start_fade_up_anim = 1;
                         goto Transition_done;
                     }
@@ -1720,7 +1720,7 @@ void brief_do_frame (float frametime) {
                         BS_BACKWARD_CUT) {
                         Quick_transition_stage = Current_brief_stage;
                         Current_brief_stage = Last_brief_stage;
-                        Assert (Current_brief_stage >= 0);
+                        ASSERT (Current_brief_stage >= 0);
                         Start_fade_up_anim = 1;
                         goto Transition_done;
                     }
@@ -1825,7 +1825,7 @@ void brief_do_frame (float frametime) {
 }
 
 // --------------------------------------------------------------------------------------
-//	brief_unload_bitmaps()
+// brief_unload_bitmaps()
 //
 //
 void brief_unload_bitmaps () {
@@ -1958,7 +1958,7 @@ void brief_maybe_blit_scene_cut (float frametime) {
                 Current_brief_stage = Last_brief_stage;
             }
 
-            Assert (Current_brief_stage >= 0);
+            ASSERT (Current_brief_stage >= 0);
             goto Fade_down_anim_start;
         }
 

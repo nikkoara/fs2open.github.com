@@ -52,7 +52,7 @@ void Decoder::stopDecoder () {
 bool Decoder::canPushAudioData () { return !isAudioQueueFull (); }
 
 void Decoder::pushAudioData (AudioFramePtr&& data) {
-    Assertion (data, "Invalid audio data passed!");
+    ASSERTX (data, "Invalid audio data passed!");
 
     try {
         m_audioQueue->push_back (std::move (data));
@@ -64,7 +64,7 @@ void Decoder::pushAudioData (AudioFramePtr&& data) {
 
 bool Decoder::canPushSubtitleData () { return !isSubtitleQueueFull (); }
 void Decoder::pushSubtitleData (SubtitleFramePtr&& data) {
-    Assertion (data, "Invalid audio data passed!");
+    ASSERTX (data, "Invalid audio data passed!");
 
     try {
         m_subtitleQueue->push_back (std::move (data));
@@ -77,7 +77,7 @@ void Decoder::pushSubtitleData (SubtitleFramePtr&& data) {
 bool Decoder::canPushVideoData () { return !isVideoQueueFull (); }
 
 void Decoder::pushFrameData (VideoFramePtr&& frame) {
-    Assertion (frame, "Invalid video data passed!");
+    ASSERTX (frame, "Invalid video data passed!");
 
     try {
         m_videoQueue->push_back (std::move (frame));

@@ -122,7 +122,7 @@ void loop_brief_init () {
 
     // load the background bitmap
     Loop_brief_bitmap = bm_load (Loop_brief_fname[gr_screen.res]);
-    Assert (Loop_brief_bitmap != -1);
+    ASSERT (Loop_brief_bitmap != -1);
 
     // window
     Loop_brief_window.create (

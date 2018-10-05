@@ -53,7 +53,7 @@ class polymodel;
 #define ID_TMIS 0x53494d54 // SIMT (TMIS): turret missile points
 #define ID_FUEL 0x4c455546 // LEUF (FUEL): thruster points
 #define ID_SHLD 0x444c4853 // DLHS (SHLD): shield definition
-#define ID_EYE 0x20455945  //  EYE (EYE ): eye information
+#define ID_EYE 0x20455945  // EYE (EYE ): eye information
 #define ID_INSG 0x47534e49 // GSNI (INSG): insignia information
 #define ID_ACEN 0x4e454341 // NECA (ACEN): autocentering information
 #define ID_GLOW 0x574f4c47 // WOLG (GLOW): glow points -Bobboau

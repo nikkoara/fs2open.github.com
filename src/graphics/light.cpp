@@ -137,7 +137,7 @@ void FSLight2GLLight (light* FSLight, gr_light* GLLight) {
     case Light_Type::Cone: break;
 
     default:
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Unknown light type in FSLight2GLLight. Expected was 0, 1, 2 or "
             "3, we got %i",
@@ -147,7 +147,7 @@ void FSLight2GLLight (light* FSLight, gr_light* GLLight) {
 }
 
 static void set_light (int light_num, gr_light* ltp) {
-    Assert (light_num < (int)graphics::MAX_UNIFORM_LIGHTS);
+    ASSERT (light_num < (int)graphics::MAX_UNIFORM_LIGHTS);
 
     vm_vec_transform (
         &gr_light_uniforms[light_num].position, &ltp->Position,

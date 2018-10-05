@@ -32,7 +32,7 @@ class object;
 #define HAS_SHIELDS (1 << 1)
 #define HAS_WEAPONS (1 << 2)
 
-#define ETS_RECHARGE_RATE 4.0f //	Recharge this percent of total
+#define ETS_RECHARGE_RATE 4.0f // Recharge this percent of total
                                //shields/second
 
 const int num_retail_ets_gauges = 3;

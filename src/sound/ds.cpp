@@ -466,8 +466,8 @@ int ds_get_sid () {
 }
 
 int ds_load_buffer (int* sid, int /*flags*/, ffmpeg::WaveFile* file) {
-    Assert (sid != NULL);
-    Assert (file != NULL);
+    ASSERT (sid != NULL);
+    ASSERT (file != NULL);
 
     // All sounds are required to have a software buffer
     *sid = ds_get_sid ();
@@ -537,7 +537,7 @@ void ds_init_channels () {
         Channels = new channel[MAX_CHANNELS];
     }
     catch (const std::bad_alloc&) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Unable to allocate %zu bytes for %d audio channels.",
             sizeof (channel) * MAX_CHANNELS, MAX_CHANNELS);
@@ -884,7 +884,7 @@ void ds_close () {
  * @param priority ::DS_MUST_PLAY, ::DS_LIMIT_ONE, ::DS_LIMIT_TWO,
  * ::DS_LIMIT_THREE
  *
- * @returns	Channel number to play sound on, or -1 if no channel could be found
+ * @returns     Channel number to play sound on, or -1 if no channel could be found
  *
  * NOTE: snd_id is needed since we limit the number of concurrent samples
  */
@@ -1018,7 +1018,7 @@ int ds_get_free_channel_retail (float new_volume, int snd_id, int priority) {
  * gamesnd.h
  * @param enhanced_limit Per-sound concurrency limit
  *
- * @returns	Channel number to play sound on, or -1 if no channel could be found
+ * @returns     Channel number to play sound on, or -1 if no channel could be found
  *
  * NOTE: snd_id is needed since we limit the number of concurrent samples
  */
@@ -1167,7 +1167,7 @@ int ds_get_free_channel_enhanced (
  * @param enhanced_priority Output param that's updated with correct priority
  * if enhanced sound is enabled
  *
- * @returns	Channel number to play sound on, or -1 if no channel could be found
+ * @returns     Channel number to play sound on, or -1 if no channel could be found
  *
  * NOTE: snd_id is needed since we limit the number of concurrent samples
  */
@@ -1254,7 +1254,7 @@ int ds_lock_data (int sid, unsigned char* data, int size) {
  * Stop a buffer from playing directly
  */
 void ds_stop_easy (int sid) {
-    Assert (sid >= 0);
+    ASSERT (sid >= 0);
 
     int cid = sound_buffers[sid].channel_id;
 
@@ -1522,7 +1522,7 @@ float ds_get_pitch (int channel_id) {
 }
 
 void ds_set_pitch (int channel_id, float pitch) {
-    Assertion (pitch > 0.0f, "Pitch may not be less than zero!");
+    ASSERTX (pitch > 0.0f, "Pitch may not be less than zero!");
 
     ALint status;
 
@@ -1562,7 +1562,7 @@ void ds_chg_loop_status (int channel_id, int loop) {
  * @param max Distance at which sound becomes inaudible
  * @param looping Whether to loop the sound or not
  * @param max_volume Volume (0 to 1) for 3d sound at maximum
- * @param estimated_vol	Manual estimated volume
+ * @param estimated_vol Manual estimated volume
  * @param priority ::DS_MUST_PLAY, ::DS_LIMIT_ONE, ::DS_LIMIT_TWO,
  * ::DS_LIMIT_THREE
  *
@@ -1745,7 +1745,7 @@ int ds_get_data (int /*sid*/, char* /*data*/) { return -1; }
  * Return the size of the raw sound data
  */
 int ds_get_size (int sid, int* size) {
-    Assert (sid >= 0);
+    ASSERT (sid >= 0);
 
     if ((sid < 0) || ((size_t)sid >= sound_buffers.size ())) { return 0; }
 
@@ -1902,9 +1902,9 @@ int ds_eax_get_preset_id (const char* name) {
 
 int ds_eax_get_prop (
     EFXREVERBPROPERTIES** props, const char* name, const char* template_name) {
-    Assert (props != NULL);
-    Assert (name != NULL);
-    Assert (strlen (name) > 0); //-V805
+    ASSERT (props != NULL);
+    ASSERT (name != NULL);
+    ASSERT (strlen (name) > 0); //-V805
 
     int template_id = -1;
 
@@ -2126,7 +2126,7 @@ void ds_do_frame () {
 
     for (i = 0; i < MAX_CHANNELS; i++) {
         cp = &Channels[i];
-        Assert (cp != NULL);
+        ASSERT (cp != NULL);
 
         if (cp->is_voice_msg) {
             if (cp->source_id == 0) { continue; }
@@ -2148,7 +2148,7 @@ void ds_do_frame () {
  * Given a valid channel return the sound id
  */
 int ds_get_sound_id (int channel_id) {
-    Assert (channel_id >= 0);
+    ASSERT (channel_id >= 0);
 
     return Channels[channel_id].snd_id;
 }
@@ -2160,7 +2160,7 @@ int ds_get_sound_id (int channel_id) {
  * @return
  */
 int ds_get_sound_index (int channel_id) {
-    Assert (channel_id >= 0);
+    ASSERT (channel_id >= 0);
 
     return Channels[channel_id].sid;
 }

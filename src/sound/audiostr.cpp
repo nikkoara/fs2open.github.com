@@ -142,9 +142,9 @@ bool Timer::Create (
     uint nPeriod, uint nRes, ptr_u dwUser, TIMERCALLBACK pfnCallback) {
     bool bRtn = true; // assume success
 
-    Assert (pfnCallback);
-    Assert (nPeriod > 10);
-    Assert (nPeriod >= nRes);
+    ASSERT (pfnCallback);
+    ASSERT (nPeriod > 10);
+    ASSERT (nPeriod >= nRes);
 
     m_nPeriod = nPeriod;
     m_nRes = nRes;
@@ -228,7 +228,7 @@ void AudioStream::Init_Data () {
 bool AudioStream::Create (char* pszFilename) {
     bool fRtn = true; // assume success
 
-    Assert (pszFilename);
+    ASSERT (pszFilename);
 
     Init_Data ();
 
@@ -238,7 +238,7 @@ bool AudioStream::Create (char* pszFilename) {
 
         // Create a new WaveFile object
         m_pwavefile.reset (new ffmpeg::WaveFile ());
-        Assert (m_pwavefile);
+        ASSERT (m_pwavefile);
 
         if (m_pwavefile) {
             // Open given file
@@ -254,7 +254,7 @@ bool AudioStream::Create (char* pszFilename) {
                 m_cbBufSize =
                     (m_cbBufSize > BIGBUF_SIZE) ? BIGBUF_SIZE : m_cbBufSize;
 
-                //				nprintf(("SOUND", "SOUND => Stream buffer
+                // nprintf(("SOUND", "SOUND => Stream buffer
                 // created using %d bytes\n", m_cbBufSize));
 
                 OpenAL_ErrorCheck (alGenSources (1, &m_source_id), {
@@ -468,7 +468,7 @@ uint AudioStream::GetMaxWriteSize (void) {
     if (!n && (q >= MAX_STREAM_BUFFERS)) // all buffers queued
         dwMaxSize = 0;
 
-    //	nprintf(("Alan","Max write size: %d\n", dwMaxSize));
+    // nprintf(("Alan","Max write size: %d\n", dwMaxSize));
     return (dwMaxSize);
 }
 
@@ -492,16 +492,16 @@ bool AudioStream::ServiceBuffer (void) {
     if (m_bFade == true) {
         if (m_lCutoffVolume == 0.0f) {
             vol = Get_Volume ();
-            //			nprintf(("Alan","Volume is: %d\n",vol));
+            // nprintf(("Alan","Volume is: %d\n",vol));
             m_lCutoffVolume = vol * VOLUME_ATTENUATION_BEFORE_CUTOFF;
         }
 
         vol = Get_Volume () * VOLUME_ATTENUATION;
-        //		nprintf(("Alan","Volume is now: %d\n",vol));
+        // nprintf(("Alan","Volume is now: %d\n",vol));
         Set_Volume (vol);
 
-        //		nprintf(("Sound","SOUND => Volume for stream sound is
-        //%d\n",vol)); 		nprintf(("Alan","Cuttoff Volume is:
+        // nprintf(("Sound","SOUND => Volume for stream sound is
+        //%d\n",vol));          nprintf(("Alan","Cuttoff Volume is:
         //%d\n",m_lCutoffVolume));
         if (vol < m_lCutoffVolume) {
             m_bFade = false;
@@ -535,7 +535,7 @@ bool AudioStream::ServiceBuffer (void) {
         uint num_bytes_written;
 
         if (WriteWaveData (dwFreeSpace, &num_bytes_written) == true) {
-            //			nprintf(("Alan","Num bytes written: %d\n",
+            // nprintf(("Alan","Num bytes written: %d\n",
             // num_bytes_written));
 
             if (m_total_uncompressed_bytes_read >=
@@ -783,26 +783,26 @@ void audiostream_init () {
     // that is streamed from the disk during a load/cue
     if (Wavedata_load_buffer == NULL) {
         Wavedata_load_buffer = (ubyte*)vm_malloc (BIGBUF_SIZE);
-        Assert (Wavedata_load_buffer != NULL);
+        ASSERT (Wavedata_load_buffer != NULL);
     }
 
     // Allocate memory for the buffer which holds the uncompressed wave data
     // that is streamed from the disk during a service interval
     if (Wavedata_service_buffer == NULL) {
         Wavedata_service_buffer = (ubyte*)vm_malloc (BIGBUF_SIZE);
-        Assert (Wavedata_service_buffer != NULL);
+        ASSERT (Wavedata_service_buffer != NULL);
     }
 
     // Allocate memory for the buffer which holds the compressed wave data that
     // is read from the hard disk
     if (Compressed_buffer == NULL) {
         Compressed_buffer = (ubyte*)vm_malloc (COMPRESSED_BUFFER_SIZE);
-        Assert (Compressed_buffer != NULL);
+        ASSERT (Compressed_buffer != NULL);
     }
 
     if (Compressed_service_buffer == NULL) {
         Compressed_service_buffer = (ubyte*)vm_malloc (COMPRESSED_BUFFER_SIZE);
-        Assert (Compressed_service_buffer != NULL);
+        ASSERT (Compressed_service_buffer != NULL);
     }
 
     for (i = 0; i < MAX_AUDIO_STREAMS; i++) {
@@ -861,15 +861,15 @@ void audiostream_close () {
 
 // Open a digital sound file for streaming
 //
-// input:	filename	=>	disk filename of sound file
-//				type	=>	what type of audio stream do we want to open:
-//								ASF_SOUNDFX
-//								ASF_EVENTMUSIC
-//								ASF_MENUMUSIC
-//								ASF_VOICE
+// input:       filename        =>      disk filename of sound file
+// type    =>      what type of audio stream do we want to open:
+// ASF_SOUNDFX
+// ASF_EVENTMUSIC
+// ASF_MENUMUSIC
+// ASF_VOICE
 //
-// returns:	success => handle to identify streaming sound
-//				failure => -1
+// returns:     success => handle to identify streaming sound
+// failure => -1
 int audiostream_open (const char* filename, int type) {
     int i, rc;
     char fname[MAX_FILENAME_LEN];
@@ -924,7 +924,7 @@ void audiostream_close_file (int i, bool fade) {
 
     if (i == -1) return;
 
-    Assert (i >= 0 && i < MAX_AUDIO_STREAMS);
+    ASSERT (i >= 0 && i < MAX_AUDIO_STREAMS);
 
     if (Audio_streams[i].status == ASF_USED) {
         if (fade)
@@ -949,15 +949,15 @@ void audiostream_play (int i, float volume, int looping) {
 
     if (i == -1) return;
 
-    Assert (looping >= 0);
-    Assert (i >= 0 && i < MAX_AUDIO_STREAMS);
+    ASSERT (looping >= 0);
+    ASSERT (i >= 0 && i < MAX_AUDIO_STREAMS);
 
     if (volume == -1.0f) { volume = Audio_streams[i].Get_Default_Volume (); }
 
-    Assert (volume >= 0.0f && volume <= 1.0f);
+    ASSERT (volume >= 0.0f && volume <= 1.0f);
     CAP (volume, 0.0f, 1.0f);
 
-    Assert (Audio_streams[i].status == ASF_USED);
+    ASSERT (Audio_streams[i].status == ASF_USED);
     Audio_streams[i].Set_Default_Volume (volume);
     Audio_streams[i].Play (volume, looping);
 }
@@ -966,7 +966,7 @@ void audiostream_play (int i, float volume, int looping) {
 int audiostream_is_playing (int i) {
     if (i == -1) return 0;
 
-    Assert (i >= 0 && i < MAX_AUDIO_STREAMS);
+    ASSERT (i >= 0 && i < MAX_AUDIO_STREAMS);
 
     if (Audio_streams[i].status != ASF_USED) return 0;
 
@@ -978,8 +978,8 @@ void audiostream_stop (int i, int rewind, int paused) {
 
     if (i == -1) return;
 
-    Assert (i >= 0 && i < MAX_AUDIO_STREAMS);
-    Assert (Audio_streams[i].status == ASF_USED);
+    ASSERT (i >= 0 && i < MAX_AUDIO_STREAMS);
+    ASSERT (Audio_streams[i].status == ASF_USED);
 
     if (rewind)
         Audio_streams[i].Stop_and_Rewind ();
@@ -1004,8 +1004,8 @@ void audiostream_set_volume_all (float volume, int type) {
 void audiostream_set_volume (int i, float volume) {
     if (i == -1) return;
 
-    Assert (i >= 0 && i < MAX_AUDIO_STREAMS);
-    Assert (volume >= 0.0f && volume <= 1.0f);
+    ASSERT (i >= 0 && i < MAX_AUDIO_STREAMS);
+    ASSERT (volume >= 0.0f && volume <= 1.0f);
 
     if (Audio_streams[i].status == ASF_FREE) return;
 
@@ -1015,7 +1015,7 @@ void audiostream_set_volume (int i, float volume) {
 int audiostream_is_paused (int i) {
     if (i == -1) return 0;
 
-    Assert (i >= 0 && i < MAX_AUDIO_STREAMS);
+    ASSERT (i >= 0 && i < MAX_AUDIO_STREAMS);
 
     if (Audio_streams[i].status == ASF_FREE) return -1;
 
@@ -1025,8 +1025,8 @@ int audiostream_is_paused (int i) {
 void audiostream_set_sample_cutoff (int i, uint cutoff) {
     if (i == -1) return;
 
-    Assert (i >= 0 && i < MAX_AUDIO_STREAMS);
-    Assert (cutoff > 0);
+    ASSERT (i >= 0 && i < MAX_AUDIO_STREAMS);
+    ASSERT (cutoff > 0);
 
     if (Audio_streams[i].status == ASF_FREE) return;
 
@@ -1036,7 +1036,7 @@ void audiostream_set_sample_cutoff (int i, uint cutoff) {
 uint audiostream_get_samples_committed (int i) {
     if (i == -1) return 0;
 
-    Assert (i >= 0 && i < MAX_AUDIO_STREAMS);
+    ASSERT (i >= 0 && i < MAX_AUDIO_STREAMS);
 
     if (Audio_streams[i].status == ASF_FREE) return 0;
 
@@ -1046,7 +1046,7 @@ uint audiostream_get_samples_committed (int i) {
 int audiostream_done_reading (int i) {
     if (i == -1) return 0;
 
-    Assert (i >= 0 && i < MAX_AUDIO_STREAMS);
+    ASSERT (i >= 0 && i < MAX_AUDIO_STREAMS);
 
     if (Audio_streams[i].status == ASF_FREE) return 0;
 
@@ -1058,7 +1058,7 @@ int audiostream_is_inited () { return Audiostream_inited; }
 void audiostream_pause (int i, bool via_sexp_or_script) {
     if (i == -1) return;
 
-    Assert (i >= 0 && i < MAX_AUDIO_STREAMS);
+    ASSERT (i >= 0 && i < MAX_AUDIO_STREAMS);
 
     if (Audio_streams[i].status == ASF_FREE) return;
 
@@ -1070,7 +1070,7 @@ void audiostream_pause (int i, bool via_sexp_or_script) {
 void audiostream_unpause (int i, bool via_sexp_or_script) {
     if (i == -1) return;
 
-    Assert (i >= 0 && i < MAX_AUDIO_STREAMS);
+    ASSERT (i >= 0 && i < MAX_AUDIO_STREAMS);
 
     if (Audio_streams[i].status == ASF_FREE) return;
 

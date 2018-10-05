@@ -14,7 +14,7 @@
 #include "ship/ship.h"        //compute_slew_matrix
 
 //*************************IMPORTANT GLOBALS*************************
-float VIEWER_ZOOM_DEFAULT = 0.75f; //	Default viewer zoom, 0.625 as per
+float VIEWER_ZOOM_DEFAULT = 0.75f; // Default viewer zoom, 0.625 as per
                                    // multi-lateral agreement on 3/24/97
 float Sexp_fov = 0.0f;
 warp_camera Warp_camera;
@@ -250,7 +250,7 @@ void camera::set_rotation_facing (
         if (in_target->xyz.x == position.xyz.x &&
             in_target->xyz.y == position.xyz.y &&
             in_target->xyz.z == position.xyz.z) {
-            fs2::dialog::warning (LOCATION, "Camera tried to point to self");
+            WARNINGF (LOCATION, "Camera tried to point to self");
             return;
         }
 
@@ -266,7 +266,7 @@ void camera::set_rotation_facing (
 
 void camera::set_rotation_velocity (
     angles_t* /*in_rotation_rate*/, float /*in_acceleration_time*/) {
-    fs2::dialog::error (LOCATION, "This function is disabled until further notice.");
+    ASSERTF (LOCATION, "This function is disabled until further notice.");
 }
 
 void camera::do_frame (float /*in_frametime*/) {}
@@ -324,7 +324,7 @@ void camera::get_info (vec3d* position, matrix* orientation) {
             else {
                 eyep = get_submodel_eye (pm, object_host_submodel);
                 if (eyep) {
-                    Assertion (
+                    ASSERTX (
                         objp->type == OBJ_SHIP,
                         "This part of the code expects the object to be a "
                         "ship");

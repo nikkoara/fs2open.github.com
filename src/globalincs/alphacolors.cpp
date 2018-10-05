@@ -195,7 +195,7 @@ void alpha_colors_init () {
 }
 
 void parse_colors (const char* filename) {
-    Assertion (
+    ASSERTX (
         filename != NULL, "parse_colors() called on NULL; get a coder!\n");
 
     try {
@@ -230,7 +230,7 @@ void parse_colors (const char* filename) {
                     stuff_int_list (rgba, 4, RAW_INTEGER_TYPE);
                     for (j = 0; j < 4; j++) {
                         if (rgba[j] < 0) {
-                            fs2::dialog::warning (
+                            WARNINGF (
                                 LOCATION,
                                 "RGBA value for '%s' in %s too low (%d), "
                                 "capping to 0.\n",
@@ -238,7 +238,7 @@ void parse_colors (const char* filename) {
                             rgba[j] = 0;
                         }
                         else if (rgba[j] > 255) {
-                            fs2::dialog::warning (
+                            WARNINGF (
                                 LOCATION,
                                 "RGBA value for '%s' in %s too high (%d), "
                                 "capping to 255.\n",
@@ -247,7 +247,7 @@ void parse_colors (const char* filename) {
                         }
                     }
                     //} else {
-                    //	stuff_hex_list(rgba, 4);
+                    // stuff_hex_list(rgba, 4);
                     //}
                     gr_init_alphacolor (
                         COLOR_LIST[i], rgba[0], rgba[1], rgba[2], rgba[3]);
@@ -265,7 +265,7 @@ void parse_colors (const char* filename) {
 }
 
 void parse_everything_else (const char* filename) {
-    Assertion (
+    ASSERTX (
         filename != NULL,
         "parse_everything_else() called on NULL; get a coder!\n");
 
@@ -298,7 +298,7 @@ void parse_everything_else (const char* filename) {
                 temp = temp2;
 
                 if (!strcasecmp (temp2, "none")) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Team color in '%s' defined with a name of '%s'; this "
                         "won't be usable due to 'None' being used for a lack "
@@ -364,7 +364,7 @@ void parse_everything_else (const char* filename) {
                         stuff_int_list (rgba, 4, RAW_INTEGER_TYPE);
                         for (j = 0; j < 4; j++) {
                             if (rgba[j] < 0) {
-                                fs2::dialog::warning (
+                                WARNINGF (
                                     LOCATION,
                                     "RGBA value for '%s' in %s too low (%d), "
                                     "capping to 0.\n",
@@ -372,7 +372,7 @@ void parse_everything_else (const char* filename) {
                                 rgba[j] = 0;
                             }
                             else if (rgba[j] > 255) {
-                                fs2::dialog::warning (
+                                WARNINGF (
                                     LOCATION,
                                     "RGBA value for '%s' in %s too high (%d), "
                                     "capping to 255.\n",
@@ -384,8 +384,8 @@ void parse_everything_else (const char* filename) {
                             interface_colors[i], rgba[0], rgba[1], rgba[2],
                             rgba[3]);
                         //} else if (check_for_string("#")) {
-                        //	stuff_hex_list(rgba, 4);
-                        //	gr_init_alphacolor(interface_colors[i], rgba[0],
+                        // stuff_hex_list(rgba, 4);
+                        // gr_init_alphacolor(interface_colors[i], rgba[0],
                         // rgba[1], rgba[2], rgba[3]);
                     }
                     else {
@@ -396,7 +396,7 @@ void parse_everything_else (const char* filename) {
                             if (temp == COLOR_NAMES[j]) { break; }
                         }
                         if (j == TOTAL_COLORS) {
-                            fs2::dialog::warning (
+                            WARNINGF (
                                 LOCATION,
                                 "Unknown color '%s' in %s, for definition of "
                                 "'%s'; using default ('%s').\n",
@@ -404,7 +404,7 @@ void parse_everything_else (const char* filename) {
                                 COLOR_NAMES[interface_defaults[i]]);
                         }
                         else {
-                            Assertion (
+                            ASSERTX (
                                 j >= 0 && j < TOTAL_COLORS,
                                 "Attempting to copy nonexistant color (%d out "
                                 "of 0-%d)!\n",
@@ -430,7 +430,7 @@ void parse_everything_else (const char* filename) {
                 stuff_string (temp, F_RAW);
                 if (temp[0] == '$') {
                     if (temp[1] == '\0') {
-                        fs2::dialog::error (
+                        ASSERTF (
                             LOCATION,
                             "%s - found a '$Tag:' entry with a solitary "
                             "'$'.\n",
@@ -438,7 +438,7 @@ void parse_everything_else (const char* filename) {
                     }
                     tag = temp[1];
                     if (temp[2] != '\0') {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "%s - tag '$%c' has extra text in its "
                             "definition.\n",
@@ -446,14 +446,14 @@ void parse_everything_else (const char* filename) {
                     }
                 }
                 else if (temp[0] == '\0') {
-                    fs2::dialog::error (
+                    ASSERTF (
                         LOCATION, "%s - found a '$Tag:' entry with no tag.\n",
                         filename);
                 }
                 else {
                     tag = temp[0];
                     if (temp[1] != '\0') {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "%s - tag '$%c' has extra text in its "
                             "definition.\n",
@@ -481,7 +481,7 @@ void parse_everything_else (const char* filename) {
                         stuff_int_list (rgba, 4, RAW_INTEGER_TYPE);
                         for (j = 0; j < 4; j++) {
                             if (rgba[j] < 0) {
-                                fs2::dialog::warning (
+                                WARNINGF (
                                     LOCATION,
                                     "RGBA value for '$%c' in %s too low (%d), "
                                     "capping to 0.\n",
@@ -489,7 +489,7 @@ void parse_everything_else (const char* filename) {
                                 rgba[j] = 0;
                             }
                             else if (rgba[j] > 255) {
-                                fs2::dialog::warning (
+                                WARNINGF (
                                     LOCATION,
                                     "RGBA value for '$%c' in %s too high "
                                     "(%d), capping to 255.\n",
@@ -502,10 +502,10 @@ void parse_everything_else (const char* filename) {
                         Custom_Colors[tag] = temp_color;
                         Tagged_Colors[tag] = &Custom_Colors[tag];
                         //} else if ( check_for_string ("#") ) {
-                        //	stuff_hex_list(rgba, 4);
-                        //	gr_init_alphacolor(&temp_color, rgba[0], rgba[1],
-                        // rgba[2], rgba[3]); 	Custom_Colors[tag] =
-                        // temp_color; 	Tagged_Colors[tag] =
+                        // stuff_hex_list(rgba, 4);
+                        // gr_init_alphacolor(&temp_color, rgba[0], rgba[1],
+                        // rgba[2], rgba[3]);   Custom_Colors[tag] =
+                        // temp_color;  Tagged_Colors[tag] =
                         // &Custom_Colors[tag];
                     }
                     else {
@@ -516,7 +516,7 @@ void parse_everything_else (const char* filename) {
                             if (temp == COLOR_NAMES[j]) { break; }
                         }
                         if (j == TOTAL_COLORS) {
-                            fs2::dialog::error (
+                            ASSERTF (
                                 LOCATION,
                                 "Unknown color '%s' in %s, for definition of "
                                 "tag '$%c'.\n",
@@ -547,16 +547,14 @@ void parse_everything_else (const char* filename) {
                     }
                     break;
                 default:
-                    UNREACHABLE (
-                        "MageKing17 made a coding error somewhere, and you "
-                        "should laugh at him (and report this error).\n");
+                    ASSERT (0);
                     break;
                 }
             }
 
             required_string ("#End");
         }
-        Assertion (
+        ASSERTX (
             Color_Tags.size () == Tagged_Colors.size (),
             "Color_Tags and Tagged_Colors size mismatch; get a coder!\n");
 
@@ -583,7 +581,7 @@ void parse_everything_else (const char* filename) {
                     stuff_string (temp, F_RAW);
                     if (temp[0] == '$') {
                         if (temp[1] == '\0') {
-                            fs2::dialog::error (
+                            ASSERTF (
                                 LOCATION,
                                 "%s - default text color '%s' entry with a "
                                 "solitary '$'.\n",
@@ -591,7 +589,7 @@ void parse_everything_else (const char* filename) {
                         }
                         *color_value[i] = temp[1];
                         if (temp[2] != '\0') {
-                            fs2::dialog::warning (
+                            WARNINGF (
                                 LOCATION,
                                 "%s - default text color '%s' has extra text "
                                 "after the tag '$%c'.\n",
@@ -599,7 +597,7 @@ void parse_everything_else (const char* filename) {
                         }
                     }
                     else if (temp[0] == '\0') {
-                        fs2::dialog::error (
+                        ASSERTF (
                             LOCATION,
                             "%s - default text color '%s' entry with no "
                             "tag.\n",
@@ -608,7 +606,7 @@ void parse_everything_else (const char* filename) {
                     else {
                         *color_value[i] = temp[0];
                         if (temp[1] != '\0') {
-                            fs2::dialog::warning (
+                            WARNINGF (
                                 LOCATION,
                                 "%s - default text color '%s' has extra text "
                                 "after the tag '$%c'.\n",

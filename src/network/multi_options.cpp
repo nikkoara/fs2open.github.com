@@ -448,7 +448,7 @@ void multi_options_update_netgame () {
     ubyte data[MAX_PACKET_SIZE], code;
     int packet_size = 0;
 
-    Assert (Net_player->flags & NETINFO_FLAG_GAME_HOST);
+    ASSERT (Net_player->flags & NETINFO_FLAG_GAME_HOST);
 
     // build the header and add the opcode
     BUILD_HEADER (OPTIONS_UPDATE);
@@ -494,7 +494,7 @@ void multi_options_update_start_game (netgame_info* ng) {
     int packet_size = 0;
 
     // should be a host on a standalone
-    Assert (
+    ASSERT (
         (Net_player->flags & NETINFO_FLAG_GAME_HOST) &&
         !(Net_player->flags & NETINFO_FLAG_AM_MASTER));
 
@@ -526,7 +526,7 @@ void multi_options_update_mission (netgame_info* ng, int campaign_mode) {
     int packet_size = 0;
 
     // should be a host on a standalone
-    Assert (
+    ASSERT (
         (Net_player->flags & NETINFO_FLAG_GAME_HOST) &&
         !(Net_player->flags & NETINFO_FLAG_AM_MASTER));
 
@@ -578,7 +578,7 @@ void multi_options_process_packet (unsigned char* data, header* hinfo) {
     switch (code) {
     // get the start game options
     case MULTI_OPTION_START_GAME:
-        Assert (Game_mode & GM_STANDALONE_SERVER);
+        ASSERT (Game_mode & GM_STANDALONE_SERVER);
 
         // get the netgame name
         GET_STRING (Netgame.name);
@@ -609,7 +609,7 @@ void multi_options_process_packet (unsigned char* data, header* hinfo) {
 
         memset (&ng, 0, sizeof (netgame_info));
 
-        Assert (Game_mode & GM_STANDALONE_SERVER);
+        ASSERT (Game_mode & GM_STANDALONE_SERVER);
 
         // coop or team vs. team mode
         GET_INT (ng.type_flags);

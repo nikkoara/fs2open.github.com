@@ -34,7 +34,7 @@ void convert_model_material (
     size_t transform_buffer_offset) {
     auto shader_flags = material.get_shader_flags ();
 
-    Assertion (
+    ASSERTX (
         gr_model_matrix_stack.depth () == 1,
         "Uniform conversion does not respect previous transforms! "
         "Model matrix stack must be empty!");

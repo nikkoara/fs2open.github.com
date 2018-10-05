@@ -218,7 +218,7 @@ void stars_load_debris_vclips (debris_vclip* vclips) {
             vclips[i].nframes = 1;
 
             if (vclips[i].bm <= 0) {
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION, "Couldn't load animation/bitmap '%s'\n",
                     vclips[i].name);
             }
@@ -271,7 +271,7 @@ static void starfield_create_bitmap_buffer (const int si_idx) {
     int div_y = sbi->div_y;
 
     // cap division values
-    //	div_x = div_x > MAX_PERSPECTIVE_DIVISIONS ? MAX_PERSPECTIVE_DIVISIONS :
+    // div_x = div_x > MAX_PERSPECTIVE_DIVISIONS ? MAX_PERSPECTIVE_DIVISIONS :
     // div_x;
     div_x = 1;
     div_y =
@@ -368,7 +368,7 @@ static void starfield_create_bitmap_buffer (const int si_idx) {
         }
     }
 
-    Assert (j == sbi->n_verts);
+    ASSERT (j == sbi->n_verts);
 }
 
 // take the Starfield_bitmap_instances[] and make all the vertex buffers that
@@ -390,7 +390,7 @@ static void starfield_generate_bitmap_buffers () {
 static void starfield_bitmap_entry_init (starfield_bitmap* sbm) {
     int i;
 
-    Assert (sbm != NULL);
+    ASSERT (sbm != NULL);
 
     memset (sbm, 0, sizeof (starfield_bitmap));
 
@@ -441,14 +441,14 @@ void parse_startbl (const char* filename) {
                 if ((idx = stars_find_bitmap (sbm.filename)) >= 0) {
                     if (sbm.xparent == Starfield_bitmaps[idx].xparent) {
                         if (!Parsing_modular_table)
-                            fs2::dialog::warning (
+                            WARNINGF (
                                 LOCATION,
                                 "Starfield bitmap '%s' listed more than "
                                 "once!!  Only using the first entry!",
                                 sbm.filename);
                     }
                     else {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Starfield bitmap '%s' already listed as a %s "
                             "bitmap!!  Only using the xparent version!",
@@ -517,7 +517,7 @@ void parse_startbl (const char* filename) {
                                 sbm.flare_bitmaps[idx].filename, F_NAME,
                                 MAX_FILENAME_LEN);
                         }
-                        //	else break; //don't allow flaretexture1 and then 3,
+                        // else break; //don't allow flaretexture1 and then 3,
                         // etc.
                     }
 
@@ -550,7 +550,7 @@ void parse_startbl (const char* filename) {
                             required_string ("+FlareScale:");
                             stuff_float (&sbm.flare_infos[idx].scale);
                         }
-                        //	else break; //don't allow "flare 1" and then "flare
+                        // else break; //don't allow "flare 1" and then "flare
                         // 3"
                     }
                 }
@@ -563,7 +563,7 @@ void parse_startbl (const char* filename) {
                     if (Parsing_modular_table)
                         Sun_bitmaps[idx] = sbm;
                     else
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Sun bitmap '%s' listed more than once!!  Only "
                             "using the first entry!",
@@ -587,7 +587,7 @@ void parse_startbl (const char* filename) {
                         Debris_vclips_normal[Num_debris_normal++].name, name);
                 }
                 else {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Could not load normal motion debris '%s'; maximum of "
                         "%d exceeded.",
@@ -608,7 +608,7 @@ void parse_startbl (const char* filename) {
                         Debris_vclips_nebula[Num_debris_nebula++].name, name);
                 }
                 else {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Could not load nebula motion debris '%s'; maximum of "
                         "%d exceeded.",
@@ -669,7 +669,7 @@ void stars_load_all_bitmaps () {
         }
     }
     if (mprintf_count > 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Unable to load %d starfield bitmap(s)!\n",
             mprintf_count);
     }
@@ -688,7 +688,7 @@ void stars_load_all_bitmaps () {
                     true);
 
                 if (sb->bitmap_id < 0) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION, "Unable to load sun bitmap: '%s'!\n",
                         sb->filename);
                 }
@@ -706,7 +706,7 @@ void stars_load_all_bitmaps () {
                     nullptr, nullptr, true);
 
                 if (sb->glow_bitmap < 0) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION, "Unable to load sun glow bitmap: '%s'!\n",
                         sb->glow_filename);
                 }
@@ -722,7 +722,7 @@ void stars_load_all_bitmaps () {
                         bm_load (sb->flare_bitmaps[i].filename);
 
                     if (sb->flare_bitmaps[i].bitmap_id < 0) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Unable to load sun flare bitmap: '%s'!\n",
                             sb->flare_bitmaps[i].filename);
@@ -789,12 +789,12 @@ void stars_pre_level_init (bool clear_backgrounds) {
     // mark all starfield and sun bitmaps as unused for this mission and
     // release any current bitmaps NOTE: that because of how we have to load
     // the bitmaps it's important to release all of
-    //       them first thing rather than after we have marked and loaded only
-    //       what's needed
+    // them first thing rather than after we have marked and loaded only
+    // what's needed
     // NOTE2: there is a reason that we don't check for release before setting
     // the handle to -1 so
-    //        be aware that this is NOT a bug. also, bmpman should NEVER return
-    //        0 as a valid handle!
+    // be aware that this is NOT a bug. also, bmpman should NEVER return
+    // 0 as a valid handle!
     if (!Fred_running) {
         for (idx = 0; idx < Starfield_bitmaps.size (); idx++) {
             sb = &Starfield_bitmaps[idx];
@@ -850,7 +850,7 @@ static void environment_map_gen () {
 
     if (gr_screen.envmap_render_target >= 0) {
         if (!bm_release (gr_screen.envmap_render_target, 1)) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Unable to release environment map render target.");
         }
 
@@ -1152,7 +1152,7 @@ void stars_camera_cut () {
     reload_old_debris = 1;
 }
 
-//#define TIME_STAR_CODE		// enable to time star code
+//#define TIME_STAR_CODE                // enable to time star code
 
 extern int Sun_drew;
 
@@ -1162,7 +1162,7 @@ void stars_get_sun_pos (int sun_n, vec3d* pos) {
     matrix rot;
 
     // sanity
-    Assert (sun_n < (int)Suns.size ());
+    ASSERT (sun_n < (int)Suns.size ());
 
     if ((sun_n >= (int)Suns.size ()) || (sun_n < 0)) { return; }
 
@@ -1259,8 +1259,8 @@ void stars_draw_sun (int show_sun) {
             &mat_params, &sun_vex, 0, 0.05f * Suns[idx].scale_x * local_scale);
         Sun_drew++;
 
-        // 		if ( !g3_draw_bitmap(&sun_vex, 0, 0.05f * Suns[idx].scale_x *
-        // local_scale, TMAP_FLAG_TEXTURED) ) 			Sun_drew++;
+        // if ( !g3_draw_bitmap(&sun_vex, 0, 0.05f * Suns[idx].scale_x *
+        // local_scale, TMAP_FLAG_TEXTURED) )                   Sun_drew++;
     }
 }
 
@@ -1272,7 +1272,7 @@ void stars_draw_lens_flare (vertex* sun_vex, int sun_n) {
     vertex flare_vex =
         *sun_vex; // copy over to flare_vex to get all sorts of properties
 
-    Assert (sun_n < (int)Suns.size ());
+    ASSERT (sun_n < (int)Suns.size ());
 
     if ((sun_n >= (int)Suns.size ()) || (sun_n < 0)) { return; }
 
@@ -1330,7 +1330,7 @@ void stars_draw_sun_glow (int sun_n) {
 
     // sanity
     // WMC - Dunno why this is getting hit...
-    // Assert( sun_n < (int)Suns.size() );
+    // ASSERT (sun_n < (int)Suns.size() );
 
     if ((sun_n >= (int)Suns.size ()) || (sun_n < 0)) { return; }
 
@@ -1540,17 +1540,17 @@ void subspace_render () {
 
     if (Subspace_model_inner == -1) {
         Subspace_model_inner = model_load ("subspace_small.pof", 0, NULL);
-        Assert (Subspace_model_inner >= 0);
+        ASSERT (Subspace_model_inner >= 0);
     }
 
     if (Subspace_model_outer == -1) {
         Subspace_model_outer = model_load ("subspace_big.pof", 0, NULL);
-        Assert (Subspace_model_outer >= 0);
+        ASSERT (Subspace_model_outer >= 0);
     }
 
     if (Subspace_glow_bitmap == -1) {
         Subspace_glow_bitmap = bm_load (NOX ("SunGlow01"));
-        Assert (Subspace_glow_bitmap >= 0);
+        ASSERT (Subspace_glow_bitmap >= 0);
     }
 
     if (!Rendering_to_env) {
@@ -1947,9 +1947,9 @@ void stars_page_in () {
 
     if (Game_subspace_effect) {
         Subspace_model_inner = model_load ("subspace_small.pof", 0, NULL);
-        Assert (Subspace_model_inner >= 0);
+        ASSERT (Subspace_model_inner >= 0);
         Subspace_model_outer = model_load ("subspace_big.pof", 0, NULL);
-        Assert (Subspace_model_outer >= 0);
+        ASSERT (Subspace_model_outer >= 0);
 
         polymodel* pm;
 
@@ -1999,7 +1999,7 @@ void stars_page_in () {
                         nullptr, true);
 
                     if (sb->bitmap_id < 0) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Unable to load starfield bitmap: '%s'!\n",
                             sb->filename);
@@ -2035,7 +2035,7 @@ void stars_page_in () {
                         nullptr, true);
 
                     if (sb->bitmap_id < 0) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION, "Unable to load sun bitmap: '%s'!\n",
                             sb->filename);
                     }
@@ -2053,7 +2053,7 @@ void stars_page_in () {
                         nullptr, nullptr, true);
 
                     if (sb->glow_bitmap < 0) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Unable to load sun glow bitmap: '%s'!\n",
                             sb->glow_filename);
@@ -2070,7 +2070,7 @@ void stars_page_in () {
                             bm_load (sb->flare_bitmaps[i].filename);
 
                         if (sb->flare_bitmaps[i].bitmap_id < 0) {
-                            fs2::dialog::warning (
+                            WARNINGF (
                                 LOCATION,
                                 "Unable to load sun flare bitmap: '%s'!\n",
                                 sb->flare_bitmaps[i].filename);
@@ -2109,7 +2109,7 @@ void stars_page_in () {
                     true);
 
                 if (sb->bitmap_id < 0) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION, "Unable to load starfield bitmap: '%s'!\n",
                         sb->filename);
                 }
@@ -2147,7 +2147,7 @@ void stars_page_in () {
                     true);
 
                 if (sb->bitmap_id < 0) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION, "Unable to load sun bitmap: '%s'!\n",
                         sb->filename);
                 }
@@ -2165,7 +2165,7 @@ void stars_page_in () {
                     nullptr, nullptr, true);
 
                 if (sb->glow_bitmap < 0) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION, "Unable to load sun glow bitmap: '%s'!\n",
                         sb->glow_filename);
                 }
@@ -2181,7 +2181,7 @@ void stars_page_in () {
                         bm_load (sb->flare_bitmaps[i].filename);
 
                     if (sb->flare_bitmaps[i].bitmap_id < 0) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Unable to load sun flare bitmap: '%s'!\n",
                             sb->flare_bitmaps[i].filename);
@@ -2308,7 +2308,7 @@ int stars_add_sun_entry (starfield_list_entry* sun_ptr) {
     int idx, i;
     starfield_bitmap_instance sbi;
 
-    Assert (sun_ptr != NULL);
+    ASSERT (sun_ptr != NULL);
 
     // copy information
     sbi.ang.p = sun_ptr->ang.p;
@@ -2322,7 +2322,7 @@ int stars_add_sun_entry (starfield_list_entry* sun_ptr) {
     idx = stars_find_sun (sun_ptr->filename);
 
     if (idx == -1) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Trying to add a sun '%s' that does not exist in stars.tbl!",
             sun_ptr->filename);
@@ -2361,7 +2361,7 @@ int stars_add_sun_entry (starfield_list_entry* sun_ptr) {
                     &Sun_bitmaps[idx].glow_fps, nullptr, nullptr, true);
 
                 if (Sun_bitmaps[idx].glow_bitmap < 0) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION, "Unable to load sun glow bitmap: '%s'!\n",
                         Sun_bitmaps[idx].glow_filename);
                 }
@@ -2377,7 +2377,7 @@ int stars_add_sun_entry (starfield_list_entry* sun_ptr) {
                     fbp->bitmap_id = bm_load (fbp->filename);
 
                     if (fbp->bitmap_id < 0) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Unable to load sun flare bitmap: '%s'!\n",
                             Sun_bitmaps[idx].flare_bitmaps[i].filename);
@@ -2414,7 +2414,7 @@ int stars_add_bitmap_entry (starfield_list_entry* sle) {
     int idx;
     starfield_bitmap_instance sbi;
 
-    Assert (sle != NULL);
+    ASSERT (sle != NULL);
 
     // copy information
     sbi.ang.p = sle->ang.p;
@@ -2428,7 +2428,7 @@ int stars_add_bitmap_entry (starfield_list_entry* sle) {
     idx = stars_find_bitmap (sle->filename);
 
     if (idx == -1) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Trying to add a bitmap '%s' that does not exist in stars.tbl!",
             sle->filename);
@@ -2504,7 +2504,7 @@ starfield_bitmap* stars_get_bitmap_entry (int index, bool is_a_sun) {
                                : (int)Starfield_bitmap_instances.size ();
 
     // WMC - Commented out because it keeps happening, and I don't know what
-    // this means. Assert( (index >= 0) && (index < max_index) );
+    // this means. ASSERT ((index >= 0) && (index < max_index) );
 
     if ((index < 0) || (index >= max_index)) return NULL;
 
@@ -2531,7 +2531,7 @@ starfield_bitmap_instance* stars_get_instance (int index, bool is_a_sun) {
     int max_index = (is_a_sun) ? (int)Suns.size ()
                                : (int)Starfield_bitmap_instances.size ();
 
-    Assert ((index >= 0) && (index < max_index));
+    ASSERT ((index >= 0) && (index < max_index));
 
     if ((index < 0) || (index >= max_index)) return NULL;
 
@@ -2546,7 +2546,7 @@ void stars_mark_instance_unused (int index, bool is_a_sun) {
     int max_index = (is_a_sun) ? (int)Suns.size ()
                                : (int)Starfield_bitmap_instances.size ();
 
-    Assert ((index >= 0) && (index < max_index));
+    ASSERT ((index >= 0) && (index < max_index));
 
     if ((index < 0) || (index >= max_index)) return;
 
@@ -2570,7 +2570,7 @@ const char* stars_get_name_from_instance (int index, bool is_a_sun) {
     int max_index = (is_a_sun) ? (int)Suns.size ()
                                : (int)Starfield_bitmap_instances.size ();
 
-    Assert ((index >= 0) && (index < max_index));
+    ASSERT ((index >= 0) && (index < max_index));
 
     if ((index < 0) || (index >= max_index)) return NOX ("<none>");
 
@@ -2630,7 +2630,7 @@ const char* stars_get_name_FRED (int index, bool is_a_sun) {
     int max_index =
         (is_a_sun) ? (int)Sun_bitmaps.size () : (int)Starfield_bitmaps.size ();
 
-    Assert ((index >= 0) && (index < max_index));
+    ASSERT ((index >= 0) && (index < max_index));
 
     if ((index < 0) || (index >= max_index)) return NULL;
 
@@ -2651,8 +2651,8 @@ void stars_modify_entry_FRED (
     int add_new = index > ((is_a_sun) ? (int)Sun_bitmaps.size ()
                                       : (int)Starfield_bitmaps.size ());
 
-    Assert (index >= 0);
-    Assert (sbi_new != NULL);
+    ASSERT (index >= 0);
+    ASSERT (sbi_new != NULL);
 
     // copy information
     sbi.ang.p = sbi_new->ang.p;
@@ -2698,7 +2698,7 @@ void stars_delete_entry_FRED (int index, bool is_a_sun) {
     int max_index = (is_a_sun) ? (int)Suns.size ()
                                : (int)Starfield_bitmap_instances.size ();
 
-    Assert ((index >= 0) && (index < max_index));
+    ASSERT ((index >= 0) && (index < max_index));
 
     if ((index < 0) || (index >= max_index)) return;
 
@@ -2779,7 +2779,7 @@ void stars_load_background (int background_idx) {
             }
         }
         if (failed_suns > 0)
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Failed to add %d sun bitmaps to the mission!",
                 failed_suns);
 
@@ -2795,7 +2795,7 @@ void stars_load_background (int background_idx) {
             }
         }
         if (failed_stars > 0)
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Failed to add %d starfield bitmaps to the mission!",
                 failed_stars);
     }
@@ -2909,13 +2909,13 @@ void stars_setup_environment_mapping (camid cid) {
     /*
      * Envmap matrix setup -- left-handed
      * -------------------------------------------------
-     * Face --	Forward		Up		Right
-     * px		+X			+Y		-Z
-     * nx		-X			+Y		+Z
-     * py		+Y			-Z		+X
-     * ny		-Y			+Z		+X
-     * pz		+Z 			+Y		+X
-     * nz		-Z			+Y		-X
+     * Face --  Forward         Up              Right
+     * px               +X                      +Y              -Z
+     * nx               -X                      +Y              +Z
+     * py               +Y                      -Z              +X
+     * ny               -Y                      +Z              +X
+     * pz               +Z                      +Y              +X
+     * nz               -Z                      +Y              -X
      */
     // NOTE: OpenGL needs up/down reversed
 

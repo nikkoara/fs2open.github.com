@@ -8,7 +8,7 @@
 #include "gamesnd/gamesnd.h"
 
 // CommanderDJ - this is now dynamic
-// #define MAIN_HALLS_MAX			10
+// #define MAIN_HALLS_MAX                       10
 
 class main_hall_region {
 public:

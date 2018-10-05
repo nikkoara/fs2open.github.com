@@ -15,7 +15,7 @@ const char* const TOKEN_SEPARATORS = "\n\t\r";
 
 namespace font {
 size_t NVGFont::getTokenLength (const char* string, size_t maxLength) {
-    Assert (string != NULL);
+    ASSERT (string != NULL);
 
     size_t length = 0;
 
@@ -67,27 +67,27 @@ NVGFont::NVGFont ()
 NVGFont::~NVGFont () {}
 
 void NVGFont::setHandle (int handle) {
-    Assertion (handle >= 0, "Invalid font handle passed!");
+    ASSERTX (handle >= 0, "Invalid font handle passed!");
     m_handle = handle;
 }
 
 void NVGFont::setSize (float size) {
-    Assertion (size > 0.f, "Invalid size %f passed!", size);
+    ASSERTX (size > 0.f, "Invalid size %f passed!", size);
     m_size = size;
 }
 
 void NVGFont::setLetterSpacing (float spacing) {
-    Assertion (spacing >= 0.0f, "Invalid letter spacing passed!");
+    ASSERTX (spacing >= 0.0f, "Invalid letter spacing passed!");
     m_letterSpacing = spacing;
 }
 
 void NVGFont::setTabWidth (float tabWidth) {
-    Assertion (tabWidth >= 0.0f, "Invalid tab width passed!");
+    ASSERTX (tabWidth >= 0.0f, "Invalid tab width passed!");
     m_tabWidth = tabWidth;
 }
 
 void NVGFont::setSpecialCharacterFont (font* fontData) {
-    Assertion (fontData != nullptr, "Invalid font data pointer passed!");
+    ASSERTX (fontData != nullptr, "Invalid font data pointer passed!");
     m_specialCharacters = fontData;
 }
 
@@ -157,7 +157,7 @@ void NVGFont::getStringSize (
                         int spacing;
 
                         if (m_specialCharacters == nullptr) {
-                            fs2::dialog::error (
+                            ASSERTF (
                                 LOCATION,
                                 "Font %s has no special characters font! This "
                                 "is usually caused by ignoring a font table "

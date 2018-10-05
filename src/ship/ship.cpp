@@ -86,10 +86,10 @@ using namespace Ship;
     200 // Reduced from 1000 to 400 by MK on 4/1/98.  DTP; bumped from 700 to
         // 2100 Reduced to 200 by taylor on 3/13/07  --  it's managed in
         // dynamically allocated sets now
-        //    Highest I saw was 164 in sm2-03a which Sandeep says has a lot of
-        //    ships. JAS: sm3-01 needs 460.   You cannot know this number until
-        //    *all* ships have warped in.   So I put code in the paging code
-        //    which knows all ships that will warp in.
+        // Highest I saw was 164 in sm2-03a which Sandeep says has a lot of
+        // ships. JAS: sm3-01 needs 460.   You cannot know this number until
+        // *all* ships have warped in.   So I put code in the paging code
+        // which knows all ships that will warp in.
 
 static int Num_ship_subsystems = 0;
 static int Num_ship_subsystems_allocated = 0;
@@ -485,9 +485,9 @@ flag_def_list_new< Weapon::Info_Flags > ai_tgt_weapon_flags[] = {
     { "particle spew", Weapon::Info_Flags::Particle_spew, true, false },
     { "esuck", Weapon::Info_Flags::Energy_suck, true, false },
     { "flak", Weapon::Info_Flags::Flak, true, false },
-    //{ "beam",						Weapon::Info_Flags::Beam,
+    //{ "beam",                                         Weapon::Info_Flags::Beam,
     // true, false
-    //},	// Okay, this one probably doesn't make sense.
+    //},        // Okay, this one probably doesn't make sense.
     { "tag", Weapon::Info_Flags::Tag, true, false },
     { "shudder", Weapon::Info_Flags::Shudder, true, false },
     { "lockarm", Weapon::Info_Flags::Lockarm, true, false },
@@ -561,9 +561,9 @@ const int num_ai_tgt_weapon_info_flags =
 
 std::vector< ai_target_priority > Ai_tp_list;
 
-//	Constant for flag,				Name of flag,				In flags or
+// Constant for flag,                              Name of flag,                           In flags or
 // flags2
-//  When adding new flags remember to bump MAX_SHIP_FLAG_NAMES in ship.h
+// When adding new flags remember to bump MAX_SHIP_FLAG_NAMES in ship.h
 ship_flag_name Ship_flag_names[] = {
     { Ship_Flags::Vaporize, "vaporize" },
     { Ship_Flags::Warp_broken, "break-warp" },
@@ -653,7 +653,7 @@ static int ship_obj_list_add (int objnum) {
         if (!(Ship_objs[i].flags & SHIP_OBJ_USED)) break;
     }
     if (i == MAX_SHIP_OBJS) {
-        fs2::dialog::error (LOCATION, "Fatal Error: Ran out of ship object nodes\n");
+        ASSERTF (LOCATION, "Fatal Error: Ran out of ship object nodes\n");
         return -1;
     }
 
@@ -670,7 +670,7 @@ static int ship_obj_list_add (int objnum) {
  * called from ::ship_delete()
  */
 static void ship_obj_list_remove (int index) {
-    Assert (index >= 0 && index < MAX_SHIP_OBJS);
+    ASSERT (index >= 0 && index < MAX_SHIP_OBJS);
     list_remove (Ship_obj_list, &Ship_objs[index]);
     ship_obj_list_reset_slot (index);
 }
@@ -693,7 +693,7 @@ void ship_obj_list_rebuild () {
 }
 
 ship_obj* get_ship_obj_ptr_from_index (int index) {
-    Assert (index >= 0 && index < MAX_SHIP_OBJS);
+    ASSERT (index >= 0 && index < MAX_SHIP_OBJS);
     return &Ship_objs[index];
 }
 
@@ -736,7 +736,7 @@ static void parse_engine_wash (bool replace) {
 
     if (optional_string ("+nocreate")) {
         if (!replace) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "+nocreate flag used for engine wash in non-modular table");
         }
@@ -756,7 +756,7 @@ static void parse_engine_wash (bool replace) {
                  ewt.name));
         }
         else {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Error:  Engine wash %s already exists.  All engine wash "
                 "names must be unique.",
@@ -972,7 +972,7 @@ void ship_info::clone (const ship_info& other) {
                 subsystems, sizeof (model_subsystem) * other.n_subsystems);
         }
 
-        Assert (subsystems != NULL);
+        ASSERT (subsystems != NULL);
         for (int i = n_subsystems; i < other.n_subsystems; i++) {
             subsystems[i].triggers = (queued_animation*)vm_malloc (
                 sizeof (queued_animation) * (other.subsystems[i].n_triggers));
@@ -1188,7 +1188,7 @@ void ship_info::clone (const ship_info& other) {
     // when we are at this point. Since this function is only needed before HUD
     // gauge parsing it should be save to assume that the other HUD gauge
     // vector is empty
-    Assertion (
+    ASSERTX (
         other.hud_gauges.empty (),
         "Ship_info cloning is only possible if there are no HUD gauges in the "
         "ship class.");
@@ -1927,7 +1927,7 @@ static int parse_ship (const char* filename, bool replace) {
 
     if (optional_string ("+nocreate")) {
         if (!replace) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "+nocreate flag used for ship in non-modular table");
         }
         create_if_not_found = false;
@@ -1951,7 +1951,7 @@ static int parse_ship (const char* filename, bool replace) {
     if (ship_id != -1) {
         sip = &Ship_info[ship_id];
         if (!replace) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Error:  Ship name %s already exists in %s.  All ship class "
                 "names must be unique.",
@@ -1974,7 +1974,7 @@ static int parse_ship (const char* filename, bool replace) {
 
         // Check if there are too many ship classes
         if (Ship_info.size () >= MAX_SHIP_CLASSES) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Too many ship classes before '%s'; maximum is %d.\n", buf,
                 MAX_SHIP_CLASSES);
@@ -1991,7 +1991,7 @@ static int parse_ship (const char* filename, bool replace) {
     // Use a template for this ship.
     if (optional_string ("+Use Template:")) {
         if (!create_if_not_found) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Both '+nocreate' and '+Use Template:' were specified for "
                 "ship class '%s', ignoring '+Use Template:'\n",
@@ -2007,7 +2007,7 @@ static int parse_ship (const char* filename, bool replace) {
                 strcpy_s (sip->name, buf);
             }
             else {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Unable to find ship template '%s' requested by ship "
                     "class '%s', ignoring template request...",
@@ -2034,7 +2034,7 @@ static int parse_ship_template () {
     stuff_string (buf, F_NAME, SHIP_MULTITEXT_LENGTH);
 
     if (optional_string ("+nocreate")) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "+nocreate flag used on ship template. Ship templates can not be "
             "modified. Ignoring +nocreate.");
@@ -2047,7 +2047,7 @@ static int parse_ship_template () {
 
     if (template_id != -1) {
         sip = &Ship_templates[template_id];
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "WARNING: Ship template %s already exists. All ship template "
             "names must be unique.",
@@ -2078,7 +2078,7 @@ static int parse_ship_template () {
                 strcpy_s (sip->name, buf);
             }
             else {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Unable to find ship template '%s' requested by ship "
                     "template '%s', ignoring template request...",
@@ -2094,7 +2094,7 @@ static int parse_ship_template () {
 
 static void
 parse_ship_sound (const char* name, GameSounds id, ship_info* sip) {
-    Assert (name != NULL);
+    ASSERT (name != NULL);
 
     gamesnd_id temp_index;
 
@@ -2149,7 +2149,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Max particles:")) {
         stuff_int (&temp);
         if (temp < 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Bad value %i, defined as %s particle number (max) in ship "
                 "'%s'.\nValue should be a non-negative integer.\n",
@@ -2168,7 +2168,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Min particles:")) {
         stuff_int (&temp);
         if (temp < 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Bad value %i, defined as %s particle number (min) in ship "
                 "'%s'.\nValue should be a non-negative integer.\n",
@@ -2183,7 +2183,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Max Radius:")) {
         stuff_float (&tempf);
         if (tempf <= 0.0f) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Bad value %f, defined as %s particle radius (max) in ship "
                 "'%s'.\nValue should be a positive float.\n",
@@ -2196,7 +2196,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Min Radius:")) {
         stuff_float (&tempf);
         if (tempf < 0.0f) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Bad value %f, defined as %s particle radius (min) in ship "
                 "'%s'.\nValue should be a non-negative float.\n",
@@ -2211,7 +2211,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Max Lifetime:")) {
         stuff_float (&tempf);
         if (tempf <= 0.0f) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Bad value %f, defined as %s particle lifetime (max) in ship "
                 "'%s'.\nValue should be a positive float.\n",
@@ -2224,7 +2224,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Min Lifetime:")) {
         stuff_float (&tempf);
         if (tempf < 0.0f) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Bad value %f, defined as %s particle lifetime (min) in ship "
                 "'%s'.\nValue should be a non-negative float.\n",
@@ -2239,7 +2239,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Max Velocity:")) {
         stuff_float (&tempf);
         if (tempf < 0.0f) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Bad value %f, defined as %s particle velocity (max) in ship "
                 "'%s'.\nValue should be a non-negative float.\n",
@@ -2252,7 +2252,7 @@ static void parse_ship_particle_effect (
     if (optional_string ("+Min Velocity:")) {
         stuff_float (&tempf);
         if (tempf < 0.0f) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Bad value %f, defined as %s particle velocity (min) in ship "
                 "'%s'.\nValue should be a non-negative float.\n",
@@ -2268,7 +2268,7 @@ static void parse_ship_particle_effect (
         stuff_float (&tempf);
         if ((tempf >= 0.0f) && (tempf <= 2.0f)) { pe->variance = tempf; }
         else {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Bad value %f, defined as %s particle normal variance in ship "
                 "'%s'.\nValue should be a float from 0.0 to 2.0.\n",
@@ -2319,7 +2319,7 @@ static void parse_allowed_weapons (
 
             // make sure we don't specify more than we have banks for
             if (bank >= max_banks) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "%s bank-specific loadout for %s exceeds permissible "
                     "number of %s banks.  Ignoring the rest...",
@@ -2362,9 +2362,9 @@ static void parse_allowed_weapons (
 static void parse_weapon_bank (
     ship_info* sip, bool is_primary, int* num_banks, int* bank_default_weapons,
     int* bank_capacities) {
-    Assert (sip != NULL);
-    Assert (bank_default_weapons != NULL);
-    Assert (bank_capacities != NULL);
+    ASSERT (sip != NULL);
+    ASSERT (bank_default_weapons != NULL);
+    ASSERT (bank_capacities != NULL);
     const int max_banks =
         is_primary ? MAX_SHIP_PRIMARY_BANKS : MAX_SHIP_SECONDARY_BANKS;
     const char* default_banks_str =
@@ -2395,7 +2395,7 @@ static void parse_weapon_bank (
         // okay for a ship to have 0 primary capacities, since it won't be
         // ammo-enabled
         if (is_primary && num_bank_capacities != 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Ship class '%s' has %d primary banks, but %d primary "
                 "capacities... fix this!!",
@@ -2404,7 +2404,7 @@ static void parse_weapon_bank (
 
         // secondaries have no excuse!
         if (!is_primary) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Ship class '%s' has %d secondary banks, but %d secondary "
                 "capacities... fix this!!",
@@ -2512,7 +2512,7 @@ static int parse_ship_values (
         }
 
         if (!found) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Invalid Species %s defined in table entry for ship %s.\n",
                 temp, sip->name);
@@ -2593,7 +2593,7 @@ static int parse_ship_values (
         if (valid)
             strcpy_s (sip->cockpit_pof_file, temp);
         else
-            fs2::dialog::warning_ex (
+            WARNINGF (
                 LOCATION, "Ship %s\nCockpit POF file \"%s\" invalid!",
                 sip->name, temp);
     }
@@ -2631,7 +2631,7 @@ static int parse_ship_values (
         stuff_string (display.name, F_NAME, MAX_FILENAME_LEN);
 
         if (display.offset[0] < 0 || display.offset[1] < 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Negative display offsets given for cockpit display on %s, "
                 "skipping entry",
@@ -2640,7 +2640,7 @@ static int parse_ship_values (
         }
 
         if (display.size[0] <= 0 || display.size[1] <= 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Negative or zero display size given for cockpit display on "
                 "%s, skipping entry",
@@ -2667,7 +2667,7 @@ static int parse_ship_values (
         if (valid)
             strcpy_s (sip->pof_file, temp);
         else
-            fs2::dialog::warning_ex (
+            WARNINGF (
                 LOCATION, "Ship %s\nPOF file \"%s\" invalid!", sip->name,
                 temp);
     }
@@ -2688,7 +2688,7 @@ static int parse_ship_values (
         if (valid)
             strcpy_s (sip->pof_file_tech, temp);
         else
-            fs2::dialog::warning_ex (
+            WARNINGF (
                 LOCATION, "Ship %s\nTechroom POF file \"%s\" invalid!",
                 sip->name, temp);
     }
@@ -2750,7 +2750,7 @@ static int parse_ship_values (
         if (valid)
             strcpy_s (sip->pof_file_hud, temp);
         else
-            fs2::dialog::warning_ex (
+            WARNINGF (
                 LOCATION, "Ship \"%s\" POF target file \"%s\" invalid!",
                 sip->name, temp);
     }
@@ -2798,7 +2798,7 @@ static int parse_ship_values (
                 sip->uses_team_colors = true;
             }
             else {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Team name %s is invalid. Teams must be defined in "
                     "colors.tbl.\n",
@@ -2817,7 +2817,7 @@ static int parse_ship_values (
         auto j = lightningtype_match (buf);
         if (j >= 0) { sip->damage_lightning_type = j; }
         else {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Invalid lightning type '%s' specified for ship '%s'", buf,
                 sip->name);
@@ -2934,7 +2934,7 @@ static int parse_ship_values (
         if (optional_string ("+Min Lifetime:")) {
             stuff_float (&sip->debris_min_lifetime);
             if (sip->debris_min_lifetime < 0.0f)
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Debris min lifetime on %s '%s' is below 0 and will be "
                     "ignored",
@@ -2943,7 +2943,7 @@ static int parse_ship_values (
         if (optional_string ("+Max Lifetime:")) {
             stuff_float (&sip->debris_max_lifetime);
             if (sip->debris_max_lifetime < 0.0f)
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Debris max lifetime on %s '%s' is below 0 and will be "
                     "ignored",
@@ -2952,7 +2952,7 @@ static int parse_ship_values (
         if (optional_string ("+Min Speed:")) {
             stuff_float (&sip->debris_min_speed);
             if (sip->debris_min_speed < 0.0f)
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Debris min speed on %s '%s' is below 0 and will be "
                     "ignored",
@@ -2961,7 +2961,7 @@ static int parse_ship_values (
         if (optional_string ("+Max Speed:")) {
             stuff_float (&sip->debris_max_speed);
             if (sip->debris_max_speed < 0.0f)
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Debris max speed on %s '%s' is below 0 and will be "
                     "ignored",
@@ -2970,7 +2970,7 @@ static int parse_ship_values (
         if (optional_string ("+Min Rotation speed:")) {
             stuff_float (&sip->debris_min_rotspeed);
             if (sip->debris_min_rotspeed < 0.0f)
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Debris min speed on %s '%s' is below 0 and will be "
                     "ignored",
@@ -2979,7 +2979,7 @@ static int parse_ship_values (
         if (optional_string ("+Max Rotation speed:")) {
             stuff_float (&sip->debris_max_rotspeed);
             if (sip->debris_max_rotspeed < 0.0f)
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Debris max speed on %s '%s' is below 0 and will be "
                     "ignored",
@@ -2992,7 +2992,7 @@ static int parse_ship_values (
         if (optional_string ("+Min Hitpoints:")) {
             stuff_float (&sip->debris_min_hitpoints);
             if (sip->debris_min_hitpoints < 0.0f)
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Debris min hitpoints on %s '%s' is below 0 and will be "
                     "ignored",
@@ -3001,7 +3001,7 @@ static int parse_ship_values (
         if (optional_string ("+Max Hitpoints:")) {
             stuff_float (&sip->debris_max_hitpoints);
             if (sip->debris_max_hitpoints < 0.0f)
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Debris max hitpoints on %s '%s' is below 0 and will be "
                     "ignored",
@@ -3010,7 +3010,7 @@ static int parse_ship_values (
         if (optional_string ("+Damage Multiplier:")) {
             stuff_float (&sip->debris_damage_mult);
             if (sip->debris_damage_mult < 0.0f)
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Debris damage multiplier on %s '%s' is below 0 and will "
                     "be ignored",
@@ -3020,7 +3020,7 @@ static int parse_ship_values (
             stuff_float (&sip->debris_arc_percent);
             if (sip->debris_arc_percent < 0.0f ||
                 sip->debris_arc_percent > 100.0f) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Lightning Arc Percent on %s '%s' should be between 0 and "
                     "100.0 (read %f). Entry will be ignored.",
@@ -3035,7 +3035,7 @@ static int parse_ship_values (
     // WMC - sanity checking
     if (sip->debris_min_speed > sip->debris_max_speed &&
         sip->debris_max_speed >= 0.0f) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Debris min speed (%f) on %s '%s' is greater than debris max "
             "speed (%f), and will be set to debris max speed.",
@@ -3045,7 +3045,7 @@ static int parse_ship_values (
     }
     if (sip->debris_min_rotspeed > sip->debris_max_rotspeed &&
         sip->debris_max_rotspeed >= 0.0f) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Debris min rotation speed (%f) on %s '%s' is greater than debris "
             "max rotation speed (%f), and will be set to debris max rotation "
@@ -3056,7 +3056,7 @@ static int parse_ship_values (
     }
     if (sip->debris_min_lifetime > sip->debris_max_lifetime &&
         sip->debris_max_lifetime >= 0.0f) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Debris min lifetime (%f) on %s '%s' is greater than debris max "
             "lifetime (%f), and will be set to debris max lifetime.",
@@ -3066,7 +3066,7 @@ static int parse_ship_values (
     }
     if (sip->debris_min_hitpoints > sip->debris_max_hitpoints &&
         sip->debris_max_hitpoints >= 0.0f) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Debris min hitpoints (%f) on %s '%s' is greater than debris max "
             "hitpoints (%f), and will be set to debris max hitpoints.",
@@ -3107,7 +3107,7 @@ static int parse_ship_values (
         // div/0 safety check.
         if ((sip->rotation_time.xyz.x == 0) ||
             (sip->rotation_time.xyz.y == 0) || (sip->rotation_time.xyz.z == 0))
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Rotation time must have non-zero values in each of the three "
                 "variables.\nFix this in %s %s\n",
@@ -3199,7 +3199,7 @@ static int parse_ship_values (
         auto j = warptype_match (buf);
         if (j >= 0) { sip->warpin_type = j; }
         else {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Invalid warpin type '%s' specified for %s '%s'",
                 buf, info_type_name, sip->name);
             sip->warpin_type = WT_DEFAULT;
@@ -3218,7 +3218,7 @@ static int parse_ship_values (
         stuff_float (&t_time);
         sip->warpin_time = fl2i (t_time * 1000.0f);
         if (sip->warpin_time <= 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Warp-in time specified as 0 or less on %s '%s'; value "
                 "ignored",
@@ -3229,7 +3229,7 @@ static int parse_ship_values (
     if (optional_string ("$Warpin decel exp:")) {
         stuff_float (&sip->warpin_decel_exp);
         if (sip->warpin_decel_exp < 0.0f) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Warp-in deceleration exponent specified as less than 0 on %s "
                 "'%s'; value ignored",
@@ -3241,7 +3241,7 @@ static int parse_ship_values (
     if (optional_string ("$Warpin radius:")) {
         stuff_float (&sip->warpin_radius);
         if (sip->warpin_radius <= 0.0f) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Warp-in radius specified as 0 or less on %s '%s'; value "
                 "ignored",
@@ -3258,7 +3258,7 @@ static int parse_ship_values (
         auto j = warptype_match (buf);
         if (j >= 0) { sip->warpout_type = j; }
         else {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Invalid warpout type '%s' specified for %s '%s'",
                 buf, info_type_name, sip->name);
             sip->warpout_type = WT_DEFAULT;
@@ -3274,7 +3274,7 @@ static int parse_ship_values (
         if (t_time >= 0)
             sip->warpout_engage_time = fl2i (t_time * 1000.0f);
         else
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Warp-out engage time specified as 0 or less on %s '%s'; "
                 "value ignored",
@@ -3293,7 +3293,7 @@ static int parse_ship_values (
         stuff_float (&t_time);
         sip->warpout_time = fl2i (t_time * 1000.0f);
         if (sip->warpout_time <= 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Warp-out time specified as 0 or less on %s '%s'; value "
                 "ignored",
@@ -3304,7 +3304,7 @@ static int parse_ship_values (
     if (optional_string ("$Warpout accel exp:")) {
         stuff_float (&sip->warpout_accel_exp);
         if (sip->warpout_accel_exp < 0.0f) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Warp-out acceleration exponent specified as less than 0 on "
                 "%s '%s'; value ignored",
@@ -3316,7 +3316,7 @@ static int parse_ship_values (
     if (optional_string ("$Warpout radius:")) {
         stuff_float (&sip->warpout_radius);
         if (sip->warpout_radius <= 0.0f) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Warp-out radius specified as 0 or less on %s '%s'; value "
                 "ignored",
@@ -3331,7 +3331,7 @@ static int parse_ship_values (
     if (optional_string ("$Player warpout speed:")) {
         stuff_float (&sip->warpout_player_speed);
         if (sip->warpout_player_speed == 0.0f) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Player warp-out speed cannot be 0; value ignored.");
         }
     }
@@ -3358,7 +3358,7 @@ static int parse_ship_values (
         stuff_float (&sip->prop_exp_rad_mult);
         if (sip->prop_exp_rad_mult <= 0) {
             // on invalid value return to default setting
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Propagating explosion radius multiplier was set to "
                 "non-positive value.\nDefaulting multiplier to 1.0 on %s "
@@ -3419,7 +3419,7 @@ static int parse_ship_values (
         stuff_float (&sip->vaporize_chance);
         if (sip->vaporize_chance < 0.0f || sip->vaporize_chance > 100.0f) {
             sip->vaporize_chance = 0.0f;
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "$Vaporize Percent Chance should be between 0 and 100.0 (read "
                 "%f). Setting to 0.",
@@ -3512,7 +3512,7 @@ static int parse_ship_values (
             stuff_int (&temp);
 
             if (temp > sip->num_detail_levels)
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "+Spread From LOD for %s was %i whereas ship only has %i "
                     "detail levels, ignoring...",
@@ -3546,7 +3546,7 @@ static int parse_ship_values (
             else if (!strcasecmp (str, "none"))
                 ;
             else
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Unrecognized value \"%s\" passed to $Model Point Shield "
                     "Controls, ignoring...",
@@ -3609,7 +3609,7 @@ static int parse_ship_values (
     if (optional_string ("$Hitpoints:")) {
         stuff_float (&sip->max_hull_strength);
         if (sip->max_hull_strength < 0.0f) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Max hull strength on %s '%s' cannot be less than 0.  "
                 "Defaulting to 100.\n",
@@ -3662,7 +3662,7 @@ static int parse_ship_values (
         sip->armor_type_idx = armor_type_get_idx (buf);
 
         if (sip->armor_type_idx == -1)
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Invalid armor name %s specified for hull in %s '%s'", buf,
                 info_type_name, sip->name);
@@ -3673,7 +3673,7 @@ static int parse_ship_values (
         sip->shield_armor_type_idx = armor_type_get_idx (buf);
 
         if (sip->shield_armor_type_idx == -1)
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Invalid armor name %s specified for shield in %s '%s'", buf,
                 info_type_name, sip->name);
@@ -3731,7 +3731,7 @@ static int parse_ship_values (
                     flag_found = true;
 
                     if (!Ship_flags[idx].in_use)
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Use of '%s' flag for %s '%s' - this flag is no "
                             "longer needed.",
@@ -3751,7 +3751,7 @@ static int parse_ship_values (
             }
 
             if (!flag_found && (ship_type_index < 0))
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION, "Bogus string in ship flags: %s\n",
                     ship_strings[i]);
         }
@@ -3765,7 +3765,7 @@ static int parse_ship_values (
 
     // Goober5000 - ensure number of banks checks out
     if (sip->num_primary_banks > MAX_SHIP_PRIMARY_BANKS) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "%s '%s' has too many primary banks (%d).  Maximum for ships is "
             "currently %d.\n",
@@ -3829,7 +3829,7 @@ static int parse_ship_values (
         }
 
         if (!(sip->afterburner_fuel_capacity)) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "%s '%s' has an afterburner but has no afterburner fuel. "
                 "Setting fuel to 1",
@@ -3869,7 +3869,7 @@ static int parse_ship_values (
         }
 
         if (trails_warning)
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "%s %s entry has $Trails field specified, but no properties "
                 "given.",
@@ -3880,14 +3880,14 @@ static int parse_ship_values (
         stuff_string (buf, F_NAME, SHIP_MULTITEXT_LENGTH);
         int res = weapon_info_lookup (buf);
         if (res < 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Could not find weapon type '%s' to use as countermeasure on "
                 "%s '%s'",
                 buf, info_type_name, sip->name);
         }
         else if (Weapon_info[res].wi_flags[Weapon::Info_Flags::Beam]) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Attempt made to set a beam weapon as a countermeasure on %s "
                 "'%s'",
@@ -3995,7 +3995,7 @@ static int parse_ship_values (
             model_icon_angles.h = PI_2;
         }
         else {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Unrecognized value \"%s\" passed to $Model Icon Direction, "
                 "ignoring...",
@@ -4028,14 +4028,14 @@ static int parse_ship_values (
     // check for inconsistencies
     if ((sip->bii_index_wing_with_cargo >= 0) &&
         (sip->bii_index_wing < 0 || sip->bii_index_ship_with_cargo < 0))
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "%s '%s' has a wing-with-cargo briefing icon but is missing a "
             "wing briefing icon or a ship-with-cargo briefing icon!",
             info_type_name, sip->name);
     if ((sip->bii_index_wing_with_cargo < 0) && (sip->bii_index_wing >= 0) &&
         (sip->bii_index_ship_with_cargo >= 0))
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "%s '%s' has both a wing briefing icon and a ship-with-cargo "
             "briefing icon but does not have a wing-with-cargo briefing icon!",
@@ -4113,7 +4113,7 @@ static int parse_ship_values (
 
     if (optional_string ("$Thruster01 Length factor:")) {
         stuff_float (&sip->thruster02_glow_len_factor);
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Deprecated spelling: \"$Thruster01 Length factor:\".  Use "
             "\"$Thruster02 Length factor:\" instead.");
@@ -4185,7 +4185,7 @@ static int parse_ship_values (
         else if (optional_string ("$Afterburner Particle Bitmap:"))
             afterburner = true;
         else
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "formatting error in the thruster's particle section for %s "
                 "'%s'\n",
@@ -4223,7 +4223,7 @@ static int parse_ship_values (
         sip->flags.set (Ship::Info_Flags::Stealth);
     }
     else if (optional_string ("$Stealth")) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "%s '%s' is missing the colon after \"$Stealth\". Note that you "
             "may also use the ship flag \"stealth\".",
@@ -4234,7 +4234,7 @@ static int parse_ship_values (
     if (optional_string ("$max decals:")) {
         int bogus;
         stuff_int (&bogus);
-        fs2::dialog::warning_ex (
+        WARNINGF (
             LOCATION,
             "The decal system has been deactivated in FSO builds. Entries "
             "will be discarded.\n");
@@ -4255,7 +4255,7 @@ static int parse_ship_values (
 
         // this means you've reached the max # of contrails for a ship
         if (sip->ct_count >= MAX_SHIP_CONTRAILS) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "%s '%s' has more contrails than the max of %d",
                 info_type_name, sip->name, MAX_SHIP_CONTRAILS);
             break;
@@ -4308,7 +4308,7 @@ static int parse_ship_values (
                 mtp = &sip->maneuvering[sip->num_maneuvering++];
             }
             else {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Too many maneuvering thrusters on %s '%s'; maximum is %d",
                     info_type_name, sip->name, MAX_MAN_THRUSTERS);
@@ -4316,7 +4316,7 @@ static int parse_ship_values (
         }
         else {
             mtp = &manwich;
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Invalid index (%d) specified for maneuvering thruster on %s "
                 "'%s'",
@@ -4371,7 +4371,7 @@ static int parse_ship_values (
             size_t seppos;
             seppos = token->find_first_of (':');
             if (seppos == std::string::npos) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Couldn't find ':' seperator in Glowpoint override for "
                     "ship %s ignoring token",
@@ -4383,7 +4383,7 @@ static int parse_ship_values (
             std::vector< glow_point_bank_override >::iterator gpo =
                 get_glowpoint_bank_override_by_name (name.data ());
             if (gpo == glowpoint_bank_overrides.end ()) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Couldn't find preset %s in glowpoints.tbl when parsing "
                     "ship: %s",
@@ -4458,12 +4458,12 @@ static int parse_ship_values (
         iff_data[1] = iff_lookup (iff_2);
 
         if (iff_data[0] == -1)
-            fs2::dialog::warning_ex (
+            WARNINGF (
                 LOCATION, "%s '%s'\nIFF colour seen by \"%s\" invalid!",
                 info_type_name, sip->name, iff_1);
 
         if (iff_data[1] == -1)
-            fs2::dialog::warning_ex (
+            WARNINGF (
                 LOCATION, "%s '%s'\nIFF colour when IFF is \"%s\" invalid!",
                 info_type_name, sip->name, iff_2);
 
@@ -4509,7 +4509,7 @@ static int parse_ship_values (
                 }
             }
             if (i == num_groups) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Unidentified priority group '%s' set for %s '%s'\n",
                     target_group_strings[j].c_str (), info_type_name,
@@ -4591,7 +4591,7 @@ static int parse_ship_values (
 
             if (sp == NULL) {
                 if (sip->n_subsystems + n_subsystems >= MAX_MODEL_SUBSYSTEMS) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Number of subsystems for %s '%s' (%d) exceeds max of "
                         "%d; only the first %d will be used",
@@ -4673,7 +4673,7 @@ static int parse_ship_values (
                     }
                 }
                 else {
-                    fs2::dialog::error (
+                    ASSERTF (
                         LOCATION,
                         "Malformed $Subsystem entry '%s' in %s '%s'.\n\n"
                         "Specify a turning rate or remove the trailing comma.",
@@ -4696,17 +4696,17 @@ static int parse_ship_values (
                 sp->armor_type_idx = armor_type_get_idx (buf);
 
                 if (sp->armor_type_idx == -1)
-                    fs2::dialog::warning_ex (
+                    WARNINGF (
                         LOCATION,
                         "%s '%s', subsystem %s\nInvalid armor type %s!",
                         info_type_name, sip->name, sp->subobj_name, buf);
             }
 
-            //	Get primary bank weapons
+            // Get primary bank weapons
             parse_weapon_bank (
                 sip, true, NULL, sp->primary_banks, sp->primary_bank_capacity);
 
-            //	Get secondary bank weapons
+            // Get secondary bank weapons
             parse_weapon_bank (
                 sip, false, NULL, sp->secondary_banks,
                 sp->secondary_bank_capacity);
@@ -4718,7 +4718,7 @@ static int parse_ship_values (
                 sp->engine_wash_pointer = get_engine_wash_pointer (name_tmp);
 
                 if (sp->engine_wash_pointer == NULL)
-                    fs2::dialog::warning_ex (
+                    WARNINGF (
                         LOCATION,
                         "Invalid engine wash name %s specified for subsystem "
                         "%s in %s '%s'",
@@ -4802,7 +4802,7 @@ static int parse_ship_values (
                         }
                     }
                     if (j == num_groups) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Unidentified target priority '%s' set "
                             "for\nsubsystem '%s' in %s '%s'.",
@@ -4841,7 +4841,7 @@ static int parse_ship_values (
                         }
                     }
                     else {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "RoF multiplier not set for subsystem\n'%s' in %s "
                             "'%s'.",
@@ -4863,7 +4863,7 @@ static int parse_ship_values (
 
                 if (!errors.empty ()) {
                     for (auto const& error : errors) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION, "Bogus string in subsystem flags: %s\n",
                             error.c_str ());
                     }
@@ -4879,7 +4879,7 @@ static int parse_ship_values (
                 sp->flags.set (Model::Subsystem_Flags::Turret_alt_math);
 
             if (optional_string ("+non-targetable")) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Grammar error in table file.  Please change "
                     "\"+non-targetable\" to \"+untargetable\".");
@@ -4909,7 +4909,7 @@ static int parse_ship_values (
 
             if ((sp->flags[Model::Subsystem_Flags::Turret_fixed_fp]) &&
                 !(sp->flags[Model::Subsystem_Flags::Use_multiple_guns])) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "\"fixed firingpoints\" flag used without \"use multiple "
                     "guns\" flag on a subsystem on %s '%s'.\n\"use multiple "
@@ -4921,7 +4921,7 @@ static int parse_ship_values (
             if ((sp->flags[Model::Subsystem_Flags::Autorepair_if_disabled]) &&
                 (sp->flags
                      [Model::Subsystem_Flags::No_autorepair_if_disabled])) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "\"autorepair if disabled\" flag used with \"don't "
                     "autorepair if disabled\" flag on a subsystem on %s "
@@ -4960,7 +4960,7 @@ static int parse_ship_values (
                     sp->triggers = (queued_animation*)vm_realloc (
                         sp->triggers,
                         sizeof (queued_animation) * (sp->n_triggers + 1));
-                    Verify (sp->triggers != NULL);
+                    ASSERT (sp->triggers != NULL);
 
                     // add a new trigger
                     current_trigger = &sp->triggers[sp->n_triggers];
@@ -5153,8 +5153,7 @@ static int parse_ship_values (
         case -1: // Possible return value if -noparseerrors is used
             break;
         default:
-            UNREACHABLE (
-                "This should never happen.\n"); // Impossible return value from
+            ASSERT (0);
                                                 // required_string_one_of.
         }
     }
@@ -5182,7 +5181,7 @@ static int parse_ship_values (
                 sip->subsystems, sizeof (model_subsystem) * sip->n_subsystems);
         }
 
-        Assert (sip->subsystems != NULL);
+        ASSERT (sip->subsystems != NULL);
     }
 
     for (int i = 0; i < n_subsystems; i++) {
@@ -5238,7 +5237,7 @@ static void parse_ship_type () {
     }
 
     if (ship_type != NULL) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Bad ship type name in objecttypes.tbl\n\nUsed ship type is "
             "redirected to another ship type.\nReplace \"%s\" with \"%s\"\nin "
@@ -5279,7 +5278,7 @@ static void parse_ship_type () {
                 }
             }
             if (i == num_groups) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Unidentified priority group '%s' set for objecttype "
                     "'%s'\n",
@@ -5444,7 +5443,7 @@ static void parse_ship_type () {
         stuff_float (&stp->vaporize_chance);
         if (stp->vaporize_chance < 0.0f || stp->vaporize_chance > 100.0f) {
             stp->vaporize_chance = 0.0f;
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "$Vaporize Percent Chance should be between 0 and 100.0 (read "
                 "%f). Setting to 0.",
@@ -5629,7 +5628,7 @@ static void ship_parse_post_cleanup () {
             // be friendly; ensure ballistic flags check out
             if (pbank_capacity_specified) {
                 if (!ballistic_possible_for_this_ship (&(*sip))) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Pbank capacity specified for "
                         "non-ballistic-primary-enabled ship %s.\nResetting "
@@ -5644,7 +5643,7 @@ static void ship_parse_post_cleanup () {
             }
             else {
                 if (ballistic_possible_for_this_ship (&(*sip))) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Pbank capacity not specified for "
                         "ballistic-primary-enabled ship %s.\nDefaulting to "
@@ -5665,7 +5664,7 @@ static void ship_parse_post_cleanup () {
             (sip->flags[Ship::Info_Flags::Afterburner]) &&
             !(sip->flags[Ship::Info_Flags::Generate_hud_icon]) &&
             (sip->flags[Ship::Info_Flags::Player_ship])) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Compatibility warning:\nNo shield icon specified for '%s' "
                 "but the \"generate icon\" flag is not specified.\nEnabling "
@@ -5681,7 +5680,7 @@ static void ship_parse_post_cleanup () {
 
             if (end_string_at_first_hash_symbol (name_tmp)) {
                 if (ship_info_lookup (name_tmp) < 0) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Ship %s is a copy, but base ship %s couldn't be "
                         "found.",
@@ -5690,7 +5689,7 @@ static void ship_parse_post_cleanup () {
                 }
             }
             else {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Ship %s is defined as a copy (ship flag 'ship copy' is "
                     "set), but is not named like one (no '#').\n",
@@ -5705,7 +5704,7 @@ static void ship_parse_post_cleanup () {
         // collideshipship.cpp:ship_ship_check_collision()
         if (!(sip->flags[Ship::Info_Flags::No_collide]) &&
             (vm_vec_mag_squared (&sip->max_rotvel) * .04) >= (PI * PI / 4)) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "$Rotation time: too low; this will disable rotational "
                 "collisions. All three variables should be >= 1.39.\nFix this "
@@ -5761,7 +5760,7 @@ static void ship_parse_post_cleanup () {
                           Ai_tp_list[i].ship_type.size () ||
                           Ai_tp_list[i].weapon_class.size ())) {
                         // had nothing - time to issue a warning
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Target priority group '%s' had no targeting "
                             "rules issued for it.\n",
@@ -5833,7 +5832,7 @@ void ship_init () {
         }
 
         // We shouldn't already have any subsystem pointers at this point.
-        Assertion (
+        ASSERTX (
             Ship_subsystems.empty (),
             "Some pre-allocated subsystems didn't get cleared out: %zu"
             " batches present during ship_init(); get a coder!\n",
@@ -6051,7 +6050,7 @@ void physics_ship_init (object* objp) {
         float amass = 4.65f * (float)pow (vmass, (2.0f / 3.0f));
 
         nprintf (("Physics", "pi->mass==0.0f. setting to %f\n", amass));
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "%s (%s) has no mass! setting to %f", sinfo->name,
             sinfo->pof_file, amass);
         pm->mass = amass;
@@ -6066,7 +6065,7 @@ void physics_ship_init (object* objp) {
         nprintf (
             ("Physics", "pm->moment_of_inertia is invalid for %s!\n",
              pm->filename));
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "%s (%s) has a null moment of inertia!", sinfo->name,
             sinfo->pof_file);
 
@@ -6608,7 +6607,7 @@ static void ship_set (int ship_index, int objnum, int ship_type) {
     oo_arrive_time_count[shipp - Ships] = 0;
     oo_interp_count[shipp - Ships] = 0;
 
-    Assert (strlen (shipp->ship_name) <= NAME_LENGTH - 1);
+    ASSERT (strlen (shipp->ship_name) <= NAME_LENGTH - 1);
     shipp->ship_info_index = ship_type;
     shipp->objnum = objnum;
     shipp->score = sip->score;
@@ -6654,11 +6653,10 @@ static void ship_set (int ship_index, int objnum, int ship_type) {
             shipp->ship_name);
 
         if (Fred_running) {
-            using namespace fs2::dialog;
-            message (dialog_type::error, err_msg);
+            EE ("general") << err_msg;
         }
         else
-            fs2::dialog::error (LOCATION, "%s", err_msg);
+            ASSERTF (LOCATION, "%s", err_msg);
     }
 
     ets_init_ship (objp); // init ship fields that are used for the ETS
@@ -6720,7 +6718,7 @@ static void ship_set (int ship_index, int objnum, int ship_type) {
     for (i = 0; i < sip->num_secondary_banks; i++) {
         float weapon_size =
             Weapon_info[sip->secondary_bank_weapons[i]].cargo_size;
-        Assertion (
+        ASSERTX (
             weapon_size > 0.0f,
             "Cargo size for secondary weapon %s is invalid, must be greater "
             "than 0.\n",
@@ -6779,7 +6777,7 @@ void ship_recalc_subsys_strength (ship* shipp) {
          ship_system = GET_NEXT (ship_system)) {
         if (!(ship_system->flags[Ship::Subsystem_Flags::No_aggregate])) {
             int type = ship_system->system_info->type;
-            Assert ((type >= 0) && (type < SUBSYSTEM_MAX));
+            ASSERT ((type >= 0) && (type < SUBSYSTEM_MAX));
 
             shipp->subsys_info[type].type_count++;
             shipp->subsys_info[type].aggregate_max_hits +=
@@ -6931,7 +6929,7 @@ static void ship_copy_subsystem_fixup (ship_info* sip) {
         // see if this ship has subsystems and a model for the subsystems.  We
         // only need check the first subsystem since previous error checking
         // would have trapped its loading as an error.
-        Assert (it->n_subsystems == sip->n_subsystems);
+        ASSERT (it->n_subsystems == sip->n_subsystems);
 
         source_msp = &(it->subsystems[0]);
         dest_msp = &(sip->subsystems[0]);
@@ -7036,8 +7034,8 @@ void ship_subsys::clear () {
 /**
  * Set subsystem
  *
- * @param objnum				Object number (used as index into Objects[])
- * @param ignore_subsys_info	Default parameter with value of 0.  This is
+ * @param objnum                                Object number (used as index into Objects[])
+ * @param ignore_subsys_info    Default parameter with value of 0.  This is
  * only set to 1 by the save/restore code
  */
 static int subsys_set (int objnum, int ignore_subsys_info) {
@@ -7060,7 +7058,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
     for (i = 0; i < sinfo->n_subsystems; i++) {
         model_system = &(sinfo->subsystems[i]);
         if (model_system->model_num < 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Invalid subobj_num or model_num in subsystem '%s' on ship "
                 "type '%s'.\nNot linking into ship!\n\n(This warning means "
@@ -7075,7 +7073,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
         ship_system =
             GET_FIRST (&ship_subsys_free_list); // get a new element from the
                                                 // ship_subsystem array
-        Assert (
+        ASSERT (
             ship_system !=
             &ship_subsys_free_list); // shouldn't have the dummy element
         list_remove (
@@ -7254,7 +7252,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
                  ->flags[Model::Subsystem_Flags::Turret_salvo]) &&
             (ship_system->system_info
                  ->flags[Model::Subsystem_Flags::Turret_fixed_fp])) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "\"salvo mode\" flag used with \"fixed firingpoints\" "
                 "flag\nsubsystem '%s' on ship type '%s'.\n\"salvo mode\" flag "
@@ -7267,7 +7265,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
         if ((ship_system->system_info
                  ->flags[Model::Subsystem_Flags::Turret_salvo]) &&
             (model_system->turret_num_firing_points < 2)) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "\"salvo mode\" flag used with turret which has less than two "
                 "firingpoints\nsubsystem '%s' on ship type '%s'.\n\"salvo "
@@ -7280,7 +7278,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
         if ((ship_system->system_info
                  ->flags[Model::Subsystem_Flags::Turret_fixed_fp]) &&
             (model_system->turret_num_firing_points < 2)) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "\"fixed firingpoints\" flag used with turret which has less "
                 "than two firingpoints\nsubsystem '%s' on ship type "
@@ -7294,7 +7292,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
                  ->flags[Model::Subsystem_Flags::Turret_salvo]) &&
             (ship_system->system_info
                  ->flags[Model::Subsystem_Flags::Use_multiple_guns])) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "\"salvo mode\" flag used with \"use multiple guns\" "
                 "flag\nsubsystem '%s' on ship type '%s'.\n\"use multiple "
@@ -7308,7 +7306,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
                  ->flags[Model::Subsystem_Flags::Turret_fixed_fp]) &&
             !(ship_system->system_info
                   ->flags[Model::Subsystem_Flags::Use_multiple_guns])) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "\"fixed firingpoints\" flag used without \"use multiple "
                 "guns\" flag\nsubsystem '%s' on ship type '%s'.\n\"use "
@@ -7355,7 +7353,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
                    ->flags[Model::Subsystem_Flags::Turret_salvo]) &&
              !(ship_system->system_info
                    ->flags[Model::Subsystem_Flags::Use_multiple_guns]))) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "\"share fire direction\" flag used with turret which does "
                 "not have the \"salvo mode\" or \"use multiple guns\" flag "
@@ -7370,7 +7368,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
             float weapon_size =
                 Weapon_info[ship_system->weapons.secondary_bank_weapons[k]]
                     .cargo_size;
-            Assertion (
+            ASSERTX (
                 weapon_size > 0.0f,
                 "Cargo size for secondary weapon %s is invalid, must be "
                 "greater than 0.\n",
@@ -7457,7 +7455,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
                     sinfo->subsystems[i].triggers[j].subtype = idx;
                 }
                 else {
-                    fs2::dialog::warning_ex (
+                    WARNINGF (
                         LOCATION,
                         "Could not find subobject %s in ship class %s. "
                         "Animation triggers will not work correctly.\n",
@@ -7600,7 +7598,7 @@ void ship_render_cockpit (object* objp) {
     if (sip->cockpit_model_num < 0) return;
 
     polymodel* pm = model_get (sip->cockpit_model_num);
-    Assert (pm != NULL);
+    ASSERT (pm != NULL);
 
     // Setup
     gr_reset_clip ();
@@ -7765,7 +7763,7 @@ static void ship_add_cockpit_display (
         new_display.background = bm_load (display->bg_filename);
 
         if (new_display.background < 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Unable to load background %s for cockpit display %s",
                 display->bg_filename, display->name);
@@ -7777,7 +7775,7 @@ static void ship_add_cockpit_display (
         new_display.foreground = bm_load (display->fg_filename);
 
         if (new_display.foreground < 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Unable to load background %s for cockpit display %s",
                 display->fg_filename, display->name);
@@ -7897,10 +7895,10 @@ void ship_delete (object* obj) {
     int num, objnum;
 
     num = obj->instance;
-    Assert (num >= 0);
+    ASSERT (num >= 0);
 
     objnum = OBJ_INDEX (obj);
-    Assert (Ships[num].objnum == objnum);
+    ASSERT (Ships[num].objnum == objnum);
 
     shipp = &Ships[num];
 
@@ -7964,7 +7962,7 @@ void ship_wing_cleanup (int shipnum, wing* wingp) {
         wingp->ship_index[i] = wingp->ship_index[i + 1];
 
     wingp->current_count--;
-    Assert (wingp->current_count >= 0);
+    ASSERT (wingp->current_count >= 0);
     wingp->ship_index[wingp->current_count] = -1;
 
     // if the current count is 0, check to see if the wing departed or was
@@ -8084,9 +8082,9 @@ void ship_actually_depart (int shipnum, int method) {
 // no destruction effects, not for player destruction and multiplayer, only
 // self-destruction
 void ship_destroy_instantly (object* ship_objp, int shipnum) {
-    Assert (ship_objp->type == OBJ_SHIP);
-    Assert (!(ship_objp == Player_obj));
-    Assert (!(Game_mode & GM_MULTIPLAYER));
+    ASSERT (ship_objp->type == OBJ_SHIP);
+    ASSERT (!(ship_objp == Player_obj));
+    ASSERT (!(Game_mode & GM_MULTIPLAYER));
 
     // undocking and death preparation
     ship_stop_fire_primary (ship_objp);
@@ -8103,12 +8101,12 @@ void ship_destroy_instantly (object* ship_objp, int shipnum) {
  * Merge ship_destroyed and ship_departed and ship_vanished
  */
 void ship_cleanup (int shipnum, int cleanup_mode) {
-    Assert (shipnum >= 0 && shipnum < MAX_SHIPS);
-    Assert (
+    ASSERT (shipnum >= 0 && shipnum < MAX_SHIPS);
+    ASSERT (
         cleanup_mode & (SHIP_DESTROYED | SHIP_DEPARTED | SHIP_VANISHED |
                         SHIP_DESTROYED_REDALERT | SHIP_DEPARTED_REDALERT));
-    Assert (Objects[Ships[shipnum].objnum].type == OBJ_SHIP);
-    Assert (Objects[Ships[shipnum].objnum]
+    ASSERT (Objects[Ships[shipnum].objnum].type == OBJ_SHIP);
+    ASSERT (Objects[Ships[shipnum].objnum]
                 .flags[Object::Object_Flags::Should_be_dead]);
 
     ship* shipp = &Ships[shipnum];
@@ -8135,8 +8133,7 @@ void ship_cleanup (int shipnum, int cleanup_mode) {
         break;
     default:
         // Can't Happen
-        UNREACHABLE (
-            "Unknown cleanup_mode '%i' passed to ship_cleanup!", cleanup_mode);
+        ASSERT (0);
         break;
     }
 
@@ -8199,8 +8196,7 @@ void ship_cleanup (int shipnum, int cleanup_mode) {
         break;
     default:
         // Can't Happen, but we should've already caught this
-        UNREACHABLE (
-            "Unknown cleanup_mode '%i' passed to ship_cleanup!", cleanup_mode);
+        ASSERT (0);
         break;
     }
 #endif
@@ -8227,9 +8223,7 @@ void ship_cleanup (int shipnum, int cleanup_mode) {
             break;
         default:
             // Can't Happen, but we should've already caught this
-            UNREACHABLE (
-                "Unknown cleanup_mode '%i' passed to ship_cleanup!",
-                cleanup_mode);
+            ASSERT (0);
             break;
         }
     }
@@ -8248,9 +8242,7 @@ void ship_cleanup (int shipnum, int cleanup_mode) {
         case SHIP_VANISHED: wingp->total_vanished++; break;
         default:
             // Can't Happen, but we should've already caught this
-            UNREACHABLE (
-                "Unknown cleanup_mode '%i' passed to ship_cleanup!",
-                cleanup_mode);
+            ASSERT (0);
             break;
         }
         ship_wing_cleanup (shipnum, wingp);
@@ -8272,16 +8264,16 @@ void ship_cleanup (int shipnum, int cleanup_mode) {
  * Calculates the blast and damage applied to a ship from another ship blowing
  * up.
  *
- * @param pos1			ship explosion position
- * @param pos2			other ship position
- * @param inner_rad		distance from ship center for which full damage is
+ * @param pos1                  ship explosion position
+ * @param pos2                  other ship position
+ * @param inner_rad             distance from ship center for which full damage is
  * applied
- * @param outer_rad		distance from ship center for which no damage is
+ * @param outer_rad             distance from ship center for which no damage is
  * applied
- * @param max_damage	maximum damage applied
- * @param max_blast		maximum impulse applied from blast
- * @param damage		damage applied
- * @param blast			impulse applied from blast
+ * @param max_damage    maximum damage applied
+ * @param max_blast             maximum impulse applied from blast
+ * @param damage                damage applied
+ * @param blast                 impulse applied from blast
  */
 int ship_explode_area_calc_damage (
     vec3d* pos1, vec3d* pos2, float inner_rad, float outer_rad,
@@ -8313,24 +8305,24 @@ static const float MAX_SHOCK_ANGLE_RANGE = 1.99f * PI;
 /**
  * Applies damage to ship close to others when a ship dies and blows up
  *
- * @param exp_objp			ship object pointers
+ * @param exp_objp                      ship object pointers
  */
 static void ship_blow_up_area_apply_blast (object* exp_objp) {
     ship* shipp;
     ship_info* sip;
     float inner_rad, outer_rad, max_damage, max_blast, shockwave_speed;
 
-    //	No area explosion in training missions.
+    // No area explosion in training missions.
     if (The_mission.game_type & MISSION_TYPE_TRAINING) { return; }
 
-    Assert (exp_objp != NULL);
-    Assert (exp_objp->type == OBJ_SHIP);
-    Assert (exp_objp->instance >= 0);
+    ASSERT (exp_objp != NULL);
+    ASSERT (exp_objp->type == OBJ_SHIP);
+    ASSERT (exp_objp->instance >= 0);
 
     shipp = &Ships[exp_objp->instance];
     sip = &Ship_info[shipp->ship_info_index];
 
-    Assert ((shipp != NULL) && (sip != NULL));
+    ASSERT ((shipp != NULL) && (sip != NULL));
 
     if ((exp_objp->hull_strength <= KAMIKAZE_HULL_ON_DEATH) &&
         (Ai_info[Ships[exp_objp->instance].ai_index]
@@ -8428,7 +8420,7 @@ static void ship_blow_up_area_apply_blast (object* exp_objp) {
 static void do_dying_undock_physics (object* dying_objp, ship* dying_shipp) {
     // this function should only be called for an object that was docked...
     // no harm in calling it if it wasn't, but we want to enforce this
-    Assert (object_is_dead_docked (dying_objp));
+    ASSERT (object_is_dead_docked (dying_objp));
 
     object* docked_objp;
 
@@ -8654,7 +8646,7 @@ static void ship_dying_frame (object* objp, int ship_num) {
                 pe.normal = objp->orient.vec
                                 .uvec; // What normal the particle emit around
                 pe.normal_variance =
-                    pef.variance; //	How close they stick to that normal
+                    pef.variance; // How close they stick to that normal
                                   // 0=on normal, 1=180, 2=360 degree
                 pe.min_vel = pef.min_vel;
                 pe.max_vel = pef.max_vel;
@@ -8809,7 +8801,7 @@ static void ship_dying_frame (object* objp, int ship_num) {
                         objp->orient.vec
                             .uvec; // What normal the particle emit around
                     pe.normal_variance =
-                        pef.variance; //	How close they stick to that normal
+                        pef.variance; // How close they stick to that normal
                                       // 0=on normal, 1=180, 2=360 degree
                     pe.min_vel =
                         pef.min_vel; // How fast the slowest particle can move
@@ -8967,7 +8959,7 @@ ship_chase_shield_energy_targets (ship* shipp, object* obj, float frametime) {
     delta = frametime * ETS_RECHARGE_RATE * shipp->ship_max_shield_strength /
             100.0f; // recharge is unaffected by $Max Shield Recharge
 
-    //	Chase target_shields and target_weapon_energy
+    // Chase target_shields and target_weapon_energy
     if (shipp->target_shields_delta > 0.0f) {
         if (delta > shipp->target_shields_delta)
             delta = shipp->target_shields_delta;
@@ -9008,7 +9000,7 @@ static int thruster_glow_anim_load (generic_anim* ga) {
 
     ga->first_frame = bm_load (ga->filename);
     if (ga->first_frame < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Couldn't load thruster glow animation '%s'\nPrimary glow type "
             "effect does not accept .EFF or .ANI effects",
@@ -9017,7 +9009,7 @@ static int thruster_glow_anim_load (generic_anim* ga) {
     }
     ga->num_frames = NOISE_NUM_FRAMES;
 
-    Assert (fps != 0);
+    ASSERT (fps != 0);
     ga->total_time = i2fl (ga->num_frames) / fps;
 
     return 0;
@@ -9114,7 +9106,7 @@ ship_do_thruster_frame (ship* shipp, object* objp, float frametime) {
         rate = 0.67f * (1.0f + objp->phys_info.forward_thrust);
     }
 
-    Assert (frametime > 0.0f);
+    ASSERT (frametime > 0.0f);
 
     // add primary thruster effects ...
 
@@ -9193,7 +9185,7 @@ void ship_do_weapon_thruster_frame (
     else
         glow_anim = &species->thruster_info.glow.normal;
 
-    Assert (frametime > 0.0f);
+    ASSERT (frametime > 0.0f);
 
     if (flame_anim->first_frame >= 0) {
         weaponp->thruster_frame += frametime * rate;
@@ -9253,7 +9245,7 @@ static void ship_auto_repair_frame (int shipnum, float frametime) {
         return;
 #endif
 
-    Assert (shipnum >= 0 && shipnum < MAX_SHIPS);
+    ASSERT (shipnum >= 0 && shipnum < MAX_SHIPS);
     sp = &Ships[shipnum];
     sip = &Ship_info[sp->ship_info_index];
     objp = &Objects[sp->objnum];
@@ -9286,7 +9278,7 @@ static void ship_auto_repair_frame (int shipnum, float frametime) {
     // iterate through subsystems, repair as needed based on elapsed frametime
     for (ssp = GET_FIRST (&sp->subsys_list);
          ssp != END_OF_LIST (&sp->subsys_list); ssp = GET_NEXT (ssp)) {
-        Assert (
+        ASSERT (
             ssp->system_info->type >= 0 &&
             ssp->system_info->type < SUBSYSTEM_MAX);
         ssip = &sp->subsys_info[ssp->system_info->type];
@@ -9391,7 +9383,7 @@ static void ship_check_player_distance_sub (player* p, int multi_target = -1) {
     if (!(p->flags & PLAYER_FLAGS_FORCE_MISSION_OVER) &&
         ((p->distance_warning_count > PLAYER_DISTANCE_MAX_WARNINGS) ||
          (dist > PLAYER_MAX_DIST_END))) {
-        //		DKA 5/17/99 - DON'T force warpout.  Won't work multiplayer.
+        // DKA 5/17/99 - DON'T force warpout.  Won't work multiplayer.
         // Blow up ship.
         if (!(p->flags & PLAYER_FLAGS_DIST_TO_BE_KILLED)) {
             message_send_builtin_to_player (
@@ -9449,11 +9441,11 @@ static void ship_check_player_distance () {
 }
 
 void observer_process_post (object* objp) {
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
 
     if (objp == NULL) return;
 
-    Assert (objp->type == OBJ_OBSERVER);
+    ASSERT (objp->type == OBJ_OBSERVER);
 
     if (Game_mode & GM_MULTIPLAYER) {
         // if I'm just an observer
@@ -9475,7 +9467,7 @@ void observer_process_post (object* objp) {
  * Reset some physics info when ship's engines goes from disabled->enabled
  */
 void ship_reset_disabled_physics (object* objp, int ship_class) {
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
 
     if (objp == NULL) return;
 
@@ -9527,8 +9519,8 @@ static void ship_subsys_disrupted_maybe_check (ship* shipp) {
 /**
  * Determine if a given subsystem is disrupted (ie inoperable)
  *
- * @param ss	pointer to ship subsystem
- * @return		1 if subsystem is disrupted, 0 if subsystem is not disrupted
+ * @param ss    pointer to ship subsystem
+ * @return              1 if subsystem is disrupted, 0 if subsystem is not disrupted
  */
 int ship_subsys_disrupted (ship_subsys* ss) {
     if (!ss) {
@@ -9545,8 +9537,8 @@ int ship_subsys_disrupted (ship_subsys* ss) {
 /**
  * Disrupt a subsystem (ie make it inoperable for a time)
  *
- * @param ss	pointer to ship subsystem to be disrupted
- * @param time	time in ms that subsystem should be disrupted
+ * @param ss    pointer to ship subsystem to be disrupted
+ * @param time  time in ms that subsystem should be disrupted
  */
 void ship_subsys_set_disrupted (ship_subsys* ss, int time) {
     int time_left = 0;
@@ -9565,13 +9557,13 @@ void ship_subsys_set_disrupted (ship_subsys* ss, int time) {
 /**
  * Determine if a given type of subsystem is disrupted (i.e. inoperable)
  *
- * @param sp	pointer to ship containing subsystem
- * @param type	type of subsystem (SUBSYSTEM_*)
- * @return		1 if subsystem is disrupted, 0 if subsystem is not disrupted
+ * @param sp    pointer to ship containing subsystem
+ * @param type  type of subsystem (SUBSYSTEM_*)
+ * @return              1 if subsystem is disrupted, 0 if subsystem is not disrupted
  */
 int ship_subsys_disrupted (ship* sp, int type) {
-    Assert (sp != NULL);
-    Assert (type >= 0 && type < SUBSYSTEM_MAX);
+    ASSERT (sp != NULL);
+    ASSERT (type >= 0 && type < SUBSYSTEM_MAX);
 
     // Bogus pointer to ship to check for disrupted subsystem
     if (sp == NULL) return 0;
@@ -9633,9 +9625,9 @@ void ship_process_pre (object* objp, float frametime) {
 MONITOR (NumShips)
 
 static void ship_radar_process (object* obj, ship* shipp, ship_info* sip) {
-    Assert (obj != NULL);
-    Assert (shipp != NULL);
-    Assert (sip != NULL);
+    ASSERT (obj != NULL);
+    ASSERT (shipp != NULL);
+    ASSERT (sip != NULL);
 
     shipp->radar_last_status = shipp->radar_current_status;
 
@@ -9684,9 +9676,9 @@ void ship_process_post (object* obj, float frametime) {
     MONITOR_INC (NumShips, 1);
 
     num = obj->instance;
-    Assert (num >= 0 && num < MAX_SHIPS);
-    Assert (obj->type == OBJ_SHIP);
-    Assert (Ships[num].objnum == OBJ_INDEX (obj));
+    ASSERT (num >= 0 && num < MAX_SHIPS);
+    ASSERT (obj->type == OBJ_SHIP);
+    ASSERT (Ships[num].objnum == OBJ_INDEX (obj));
 
     shipp = &Ships[num];
 
@@ -9745,7 +9737,7 @@ void ship_process_post (object* obj, float frametime) {
 
         // MWA -- move the spark code to before the check for multiplayer
         // master
-        //	Do ship sparks.  Don't do sparks on my ship (since I cannot see
+        // Do ship sparks.  Don't do sparks on my ship (since I cannot see
         // it).  This
         // code will do sparks on other ships in multiplayer though.
         // JAS: Actually in external view, you can see sparks, so I don't do
@@ -9816,7 +9808,7 @@ void ship_process_post (object* obj, float frametime) {
          ((sip->warpin_type == WT_IN_PLACE_ANIM) &&
           (shipp->flags[Ship_Flags::Arriving_stage_2]))) &&
         !(shipp->flags[Ship_Flags::Depart_warp])) {
-        //	Do AI.
+        // Do AI.
 
         // for multiplayer people.  return here if in multiplay and not the
         // host
@@ -9897,8 +9889,8 @@ static void ship_set_default_weapons (ship* shipp, ship_info* sip) {
     ship_weapon* swp = &shipp->weapons;
     weapon_info* wip;
 
-    //	Copy primary and secondary weapons from ship_info to ship.
-    //	Later, this will happen in the weapon loadout screen.
+    // Copy primary and secondary weapons from ship_info to ship.
+    // Later, this will happen in the weapon loadout screen.
     for (i = 0; i < MAX_SHIP_PRIMARY_BANKS; i++) {
         swp->primary_bank_weapons[i] = sip->primary_bank_weapons[i];
         swp->primary_bank_slot_count[i] = 1; // RSAXVC DYN LINK CODE
@@ -9914,8 +9906,8 @@ static void ship_set_default_weapons (ship* shipp, ship_info* sip) {
 
     // Primary banks
     if (pm->n_guns > sip->num_primary_banks) {
-        Assert (pm->n_guns <= MAX_SHIP_PRIMARY_BANKS);
-        fs2::dialog::error (
+        ASSERT (pm->n_guns <= MAX_SHIP_PRIMARY_BANKS);
+        ASSERTF (
             LOCATION,
             "There are %d primary banks in the model file,\nbut only %d "
             "primary banks specified for %s.\nThis must be fixed, as it will "
@@ -9924,7 +9916,7 @@ static void ship_set_default_weapons (ship* shipp, ship_info* sip) {
         for (i = sip->num_primary_banks; i < pm->n_guns; i++) {
             // Make unspecified weapon for bank be a laser
             for (j = 0; j < Num_player_weapon_precedence; j++) {
-                Assertion (
+                ASSERTX (
                     (Player_weapon_precedence[j] > 0),
                     "Error reading player weapon precedence list. Check "
                     "weapons.tbl for $Player Weapon Precedence entry, and "
@@ -9936,12 +9928,12 @@ static void ship_set_default_weapons (ship* shipp, ship_info* sip) {
                     break;
                 }
             }
-            Assert (swp->primary_bank_weapons[i] >= 0);
+            ASSERT (swp->primary_bank_weapons[i] >= 0);
         }
         sip->num_primary_banks = pm->n_guns;
     }
     else if (pm->n_guns < sip->num_primary_banks) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "There are %d primary banks specified for %s\nbut only %d primary "
             "banks in the model\n",
@@ -9951,8 +9943,8 @@ static void ship_set_default_weapons (ship* shipp, ship_info* sip) {
 
     // Secondary banks
     if (pm->n_missiles > sip->num_secondary_banks) {
-        Assert (pm->n_missiles <= MAX_SHIP_SECONDARY_BANKS);
-        fs2::dialog::error (
+        ASSERT (pm->n_missiles <= MAX_SHIP_SECONDARY_BANKS);
+        ASSERTF (
             LOCATION,
             "There are %d secondary banks in the model file,\nbut only %d "
             "secondary banks specified for %s.\nThis must be fixed, as it "
@@ -9961,7 +9953,7 @@ static void ship_set_default_weapons (ship* shipp, ship_info* sip) {
         for (i = sip->num_secondary_banks; i < pm->n_missiles; i++) {
             // Make unspecified weapon for bank be a missile
             for (j = 0; j < Num_player_weapon_precedence; j++) {
-                Assertion (
+                ASSERTX (
                     (Player_weapon_precedence[j] > 0),
                     "Error reading player weapon precedence list. Check "
                     "weapons.tbl for $Player Weapon Precedence entry, and "
@@ -9972,12 +9964,12 @@ static void ship_set_default_weapons (ship* shipp, ship_info* sip) {
                     break;
                 }
             }
-            Assert (swp->secondary_bank_weapons[i] >= 0);
+            ASSERT (swp->secondary_bank_weapons[i] >= 0);
         }
         sip->num_secondary_banks = pm->n_missiles;
     }
     else if (pm->n_missiles < sip->num_secondary_banks) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "There are %d secondary banks specified for %s,\n but only %d "
             "secondary banks in the model.\n",
@@ -10045,8 +10037,8 @@ int ship_check_collision_fast (object* obj, object* other_obj, vec3d* hitpos) {
     int num;
     mc_info mc;
 
-    Assert (obj->type == OBJ_SHIP);
-    Assert (obj->instance >= 0);
+    ASSERT (obj->type == OBJ_SHIP);
+    ASSERT (obj->instance >= 0);
 
     num = obj->instance;
 
@@ -10140,7 +10132,7 @@ static void show_ship_subsys_count () {
 }
 
 static void ship_init_afterburners (ship* shipp) {
-    Assert (shipp);
+    ASSERT (shipp);
 
     shipp->ab_count = 0;
 
@@ -10150,9 +10142,9 @@ static void ship_init_afterburners (ship* shipp) {
     }
 
     ship_info* sip = &Ship_info[shipp->ship_info_index];
-    Assert (sip->model_num >= 0);
+    ASSERT (sip->model_num >= 0);
     polymodel* pm = model_get (sip->model_num);
-    Assert (pm != NULL);
+    ASSERT (pm != NULL);
 
     if (!(sip->flags[Ship::Info_Flags::Afterburner])) { return; }
 
@@ -10232,7 +10224,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
     }
     else {
         if (t >= SHIPS_LIMIT) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 XSTR (
                     "There is a limit of %d ships in the mission at once.  "
@@ -10250,7 +10242,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
 
     if (n == MAX_SHIPS) { return -1; }
 
-    Assertion (
+    ASSERTX (
         (ship_type >= 0) &&
             (ship_type < static_cast< int > (Ship_info.size ())),
         "Invalid ship_type %d passed to ship_create() (expected value in the "
@@ -10290,7 +10282,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
     if (sip->num_detail_levels != pm->n_detail_levels) {
         if (!Is_standalone) {
             // just log to file for standalone servers
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "For ship '%s', detail level\nmismatch. Table has %d,\nPOF "
                 "has %d.",
@@ -10323,10 +10315,10 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
     objnum = obj_create (
         OBJ_SHIP, -1, n, orient, pos, model_get_radius (sip->model_num),
         default_ship_object_flags);
-    Assert (objnum >= 0);
+    ASSERT (objnum >= 0);
 
     shipp->ai_index = ai_get_slot (n);
-    Assert (shipp->ai_index >= 0);
+    ASSERT (shipp->ai_index >= 0);
 
     // Goober5000 - if no ship name specified, or if specified ship already
     // exists, or if specified ship has exited, use a default name
@@ -10339,7 +10331,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
         auto name_len = std::min (
             NAME_LENGTH - strlen (suffix) - 1,
             strlen (Ship_info[ship_type].name));
-        Assert (name_len > 0);
+        ASSERT (name_len > 0);
 
         strncpy (shipp->ship_name, Ship_info[ship_type].name, name_len);
         strcpy (shipp->ship_name + name_len, suffix);
@@ -10349,7 +10341,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
     }
 
     ship_set_default_weapons (
-        shipp, sip); //	Moved up here because ship_set requires that weapon
+        shipp, sip); // Moved up here because ship_set requires that weapon
                      // info be valid.  MK, 4/28/98
     ship_set (n, objnum, ship_type);
 
@@ -10359,7 +10351,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
                                       // init_ai because it might wipe out
                                       // goals in mission file
 
-    //	Allocate shield and initialize it.
+    // Allocate shield and initialize it.
     if (pm->shield.ntris) {
         shipp->shield_integrity =
             (float*)vm_malloc (sizeof (float) * pm->shield.ntris);
@@ -10415,7 +10407,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
                     }
 
                     if (ss == END_OF_LIST (&Ships[n].subsys_list))
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Couldn't fix up turret indices in spline "
                             "path\n\nModel: %s\nPath: %s\nVertex: %d\nTurret "
@@ -10454,8 +10446,8 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
 /**
  * Change the ship model for a ship to that for ship class 'ship_type'
  *
- * @param n			index of ship in ::Ships[] array
- * @param ship_type	ship class (index into ::Ship_info vector)
+ * @param n                     index of ship in ::Ships[] array
+ * @param ship_type     ship class (index into ::Ship_info vector)
  */
 static void ship_model_change (int n, int ship_type) {
     int i;
@@ -10464,7 +10456,7 @@ static void ship_model_change (int n, int ship_type) {
     polymodel* pm;
     object* objp;
 
-    Assert (n >= 0 && n < MAX_SHIPS);
+    ASSERT (n >= 0 && n < MAX_SHIPS);
     sp = &Ships[n];
     sip = &(Ship_info[ship_type]);
     objp = &Objects[sp->objnum];
@@ -10504,7 +10496,7 @@ static void ship_model_change (int n, int ship_type) {
     if (sip->num_detail_levels != pm->n_detail_levels) {
         if (!Is_standalone) {
             // just log to file for standalone servers
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "For ship '%s', detail level\nmismatch. Table has %d,\nPOF "
                 "has %d.",
@@ -10537,7 +10529,7 @@ static void ship_model_change (int n, int ship_type) {
         sp->shield_integrity = NULL;
     }
 
-    //	Allocate shield and initialize it.
+    // Allocate shield and initialize it.
     if (pm->shield.ntris) {
         sp->shield_integrity =
             (float*)vm_malloc (sizeof (float) * pm->shield.ntris);
@@ -10558,9 +10550,9 @@ static void ship_model_change (int n, int ship_type) {
  * Change the ship class on a ship, and changing all required information
  * for consistency (ie textures, subsystems, weapons, physics)
  *
- * @param n			index of ship in ::Ships[] array
- * @param ship_type	ship class (index into ::Ship_info vector)
- * @param by_sexp	SEXP reference
+ * @param n                     index of ship in ::Ships[] array
+ * @param ship_type     ship class (index into ::Ship_info vector)
+ * @param by_sexp       SEXP reference
  */
 void change_ship_type (int n, int ship_type, int by_sexp) {
     int i;
@@ -10574,7 +10566,7 @@ void change_ship_type (int n, int ship_type, int by_sexp) {
     float hull_pct, shield_pct;
     physics_info ph_inf;
 
-    Assert (n >= 0 && n < MAX_SHIPS);
+    ASSERT (n >= 0 && n < MAX_SHIPS);
     sp = &Ships[n];
 
     // do a quick out if we're already using the new ship class
@@ -10696,7 +10688,7 @@ void change_ship_type (int n, int ship_type, int by_sexp) {
             hull_pct = objp->hull_strength / sp->ship_max_hull_strength;
         }
         else {
-            Assert (Ship_info[sp->ship_info_index].max_hull_strength > 0.0f);
+            ASSERT (Ship_info[sp->ship_info_index].max_hull_strength > 0.0f);
             hull_pct = objp->hull_strength /
                        Ship_info[sp->ship_info_index].max_hull_strength;
         }
@@ -10719,7 +10711,7 @@ void change_ship_type (int n, int ship_type, int by_sexp) {
         }
 
         // extra check
-        Assert (shield_pct >= 0.0f && shield_pct <= 1.0f);
+        ASSERT (shield_pct >= 0.0f && shield_pct <= 1.0f);
         CLAMP (shield_pct, 0.0f, 1.0f);
     }
     else {
@@ -10734,7 +10726,7 @@ void change_ship_type (int n, int ship_type, int by_sexp) {
     ss = GET_FIRST (&sp->subsys_list);
     while (ss != END_OF_LIST (&sp->subsys_list)) {
         if (num_saved_subsystems == sip_orig->n_subsystems) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Subsystem mismatch while changing ship class from '%s' to "
                 "'%s'!",
@@ -10838,7 +10830,7 @@ void change_ship_type (int n, int ship_type, int by_sexp) {
             subsys_pcts[num_saved_subsystems] = ss->max_hits;
 
         // extra check
-        Assert (
+        ASSERT (
             subsys_pcts[num_saved_subsystems] >= 0.0f &&
             subsys_pcts[num_saved_subsystems] <= 1.0f);
         CLAMP (subsys_pcts[num_saved_subsystems], 0.0f, 1.0f);
@@ -10846,22 +10838,22 @@ void change_ship_type (int n, int ship_type, int by_sexp) {
         num_saved_subsystems++;
         ss = GET_NEXT (ss);
     }
-    Assertion (
+    ASSERTX (
         target_matches.empty (),
         "Failed to find matches for every currently-targeted subsystem on "
         "ship %s in change_ship_type(); get a coder!\n",
         sp->ship_name);
-    Assertion (
+    ASSERTX (
         homing_matches.empty (),
         "Failed to find matches for every subsystem being homed in on ship %s "
         "in change_ship_type(); get a coder!\n",
         sp->ship_name);
-    Assertion (
+    ASSERTX (
         weapon_turret_matches.empty (),
         "Failed to find matches for every turret a projectile was fired from "
         "on ship %s in change_ship_type(); get a coder!\n",
         sp->ship_name);
-    Assertion (
+    ASSERTX (
         last_targeted_matches.empty (),
         "Somehow failed to find every subsystem a player was previously "
         "targeting on ship %s in change_ship_type(); get a coder!\n",
@@ -10913,8 +10905,8 @@ void change_ship_type (int n, int ship_type, int by_sexp) {
     }
 
     // Goober5000: div-0 checks
-    Assert (sp->ship_max_hull_strength > 0.0f);
-    Assert (objp->hull_strength > 0.0f);
+    ASSERT (sp->ship_max_hull_strength > 0.0f);
+    ASSERT (objp->hull_strength > 0.0f);
 
     // Mantis 2763: moved down to have access to the right
     // ship_max_shield_strength value make sure that shields are
@@ -11151,7 +11143,7 @@ void change_ship_type (int n, int ship_type, int by_sexp) {
         for (int h = 0; h < pm->n_thrusters; h++) {
             for (int j = 0; j < pm->thrusters[h].num_points; j++) {
                 // this means you've reached the max # of AB trails for a ship
-                Assert (sip->ct_count <= MAX_SHIP_CONTRAILS);
+                ASSERT (sip->ct_count <= MAX_SHIP_CONTRAILS);
 
                 trail_info* ci = &sp->ab_info[sp->ab_count];
 
@@ -11193,7 +11185,7 @@ void change_ship_type (int n, int ship_type, int by_sexp) {
                     ("AB TRAIL", "AB trail point #%d made for '%s'\n",
                      sp->ab_count, sp->ship_name));
                 sp->ab_count++;
-                Assert (MAX_SHIP_CONTRAILS > sp->ab_count);
+                ASSERT (MAX_SHIP_CONTRAILS > sp->ab_count);
             }
         }
     } // end AB trails -Bobboau
@@ -11351,7 +11343,7 @@ int ship_fire_primary_debug (object* objp) {
     shipp->weapons.next_primary_fire_stamp[0] = timestamp (250);
     shipp->weapons.last_primary_fire_stamp[0] = timestamp ();
 
-    //	Debug code!  Make the single laser fire only one bolt and from the
+    // Debug code!  Make the single laser fire only one bolt and from the
     // object center!
     for (i = 0; i < MAX_WEAPON_TYPES; i++)
         if (!strcasecmp (Weapon_info[i].name, NOX ("Debug Laser"))) break;
@@ -11403,7 +11395,7 @@ int ship_launch_countermeasure (object* objp, int rand_val) {
     if (!timestamp_elapsed (shipp->cmeasure_fire_stamp)) { return 0; }
 
     shipp->cmeasure_fire_stamp =
-        timestamp (CMEASURE_WAIT); //	Can launch every half second.
+        timestamp (CMEASURE_WAIT); // Can launch every half second.
 #ifndef NDEBUG
     if (Weapon_energy_cheat) { shipp->cmeasure_count++; }
 #endif
@@ -11469,7 +11461,7 @@ int ship_launch_countermeasure (object* objp, int rand_val) {
         nprintf (("Network", "Cmeasure created by %s\n", shipp->ship_name));
 
         // Play sound effect for counter measure launch
-        Assert (shipp->current_cmeasure < Num_weapon_types);
+        ASSERT (shipp->current_cmeasure < Num_weapon_types);
         if (Weapon_info[shipp->current_cmeasure].launch_snd.isValid ()) {
             snd_play_3d (
                 gamesnd_get_game_sound (
@@ -11786,7 +11778,7 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
     gamesnd_id sound_played; // used to track what sound is played.  If the
                              // player is firing two banks of the same laser,
                              // we only want to play one sound
-    Assert (obj != NULL);
+    ASSERT (obj != NULL);
 
     if (obj == NULL) { return 0; }
 
@@ -11794,9 +11786,9 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
     // be bad - unless we do this.
     if (obj->type == OBJ_OBSERVER) { return 0; }
 
-    Assert (obj->type == OBJ_SHIP);
-    Assert (n >= 0);
-    Assert (Ships[n].objnum == OBJ_INDEX (obj));
+    ASSERT (obj->type == OBJ_SHIP);
+    ASSERT (n >= 0);
+    ASSERT (Ships[n].objnum == OBJ_INDEX (obj));
     if ((obj->type != OBJ_SHIP) || (n < 0) || (n >= MAX_SHIPS) ||
         (Ships[n].objnum != OBJ_INDEX (obj))) {
         return 0;
@@ -11836,7 +11828,7 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
         num_primary_banks = MIN (1, swp->num_primary_banks);
     }
 
-    Assert (num_primary_banks > 0);
+    ASSERT (num_primary_banks > 0);
     if (num_primary_banks < 1) { return 0; }
 
     // if we're firing stream weapons, but the trigger is not down, do nothing
@@ -11892,7 +11884,7 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
             (swp->current_primary_bank + i) % swp->num_primary_banks;
 
         weapon_idx = swp->primary_bank_weapons[bank_to_fire];
-        Assert (weapon_idx >= 0 && weapon_idx < MAX_WEAPON_TYPES);
+        ASSERT (weapon_idx >= 0 && weapon_idx < MAX_WEAPON_TYPES);
         if ((weapon_idx < 0) || (weapon_idx >= MAX_WEAPON_TYPES)) {
             Int3 (); // why would a ship try to fire a weapon that doesn't
                      // exist?
@@ -12022,11 +12014,11 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
                            Weapon::Info_Flags::No_linked_penalty]))
                     effective_primary_banks++;
             }
-            Assert (effective_primary_banks >= 1);
+            ASSERT (effective_primary_banks >= 1);
 
             next_fire_delay *=
                 1.0f + (effective_primary_banks - 1) *
-                           0.5f; //	50% time penalty if banks linked
+                           0.5f; // 50% time penalty if banks linked
         }
 
         if (winfo_p->fof_spread_rate > 0.0f) {
@@ -12041,9 +12033,9 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
             CLAMP (swp->primary_bank_fof_cooldown[bank_to_fire], 0.0f, 1.0f);
         }
 
-        //	MK, 2/4/98: Since you probably were allowed to fire earlier, but
-        // couldn't fire until your frame interval 	rolled around, subtract out
-        // up to half the previous frametime. 	Note, unless we track whether
+        // MK, 2/4/98: Since you probably were allowed to fire earlier, but
+        // couldn't fire until your frame interval      rolled around, subtract out
+        // up to half the previous frametime.   Note, unless we track whether
         // the fire button has been held down, and not tapped, it's hard to
         // know how much time to subtract off.  It could be this fire is "late"
         // because the user didn't want to fire.
@@ -12070,12 +12062,12 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
         }
 
         if (sip->flags[Ship::Info_Flags::Dyn_primary_linking]) {
-            Assert (pm->gun_banks[bank_to_fire].num_slots != 0);
+            ASSERT (pm->gun_banks[bank_to_fire].num_slots != 0);
             swp->next_primary_fire_stamp[bank_to_fire] = timestamp((int)(next_fire_delay * ( swp->primary_bank_slot_count[ bank_to_fire ] ) / pm->gun_banks[bank_to_fire].num_slots ) );
             swp->last_primary_fire_stamp[bank_to_fire] = timestamp ();
         }
         else if (winfo_p->wi_flags[Weapon::Info_Flags::Cycle]) {
-            Assert (pm->gun_banks[bank_to_fire].num_slots != 0);
+            ASSERT (pm->gun_banks[bank_to_fire].num_slots != 0);
             swp->next_primary_fire_stamp[bank_to_fire] = timestamp ((
                 int)(next_fire_delay / pm->gun_banks[bank_to_fire].num_slots));
             swp->last_primary_fire_stamp[bank_to_fire] = timestamp ();
@@ -12421,7 +12413,7 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
 
                             matrix firing_orient;
 
-                            /*	I AIM autoaim convergence
+                            /*  I AIM autoaim convergence
                                 II AIM autoaim
                                 III AIM auto convergence
                                 IV AIM std convergence
@@ -12772,7 +12764,7 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
                 int player_num;
 
                 player_num = multi_find_player_by_object (obj);
-                Assert (player_num != -1);
+                ASSERT (player_num != -1);
 
                 Net_players[player_num].m_player->stats.mp_shots_fired +=
                     num_fired;
@@ -12895,11 +12887,11 @@ void ship_process_targeting_lasers () {
  * Attempt to detonate weapon last fired by *src.
  * Only used for weapons that support remote detonation.
  *
- * @param swp	Ship weapon
- * @param src	Source of weapon
+ * @param swp   Ship weapon
+ * @param src   Source of weapon
  * @return true if detonated, else return false.
  *
- *	Calls ::weapon_hit(), indirectly via ::weapon_detonate(), to detonate
+ *      Calls ::weapon_hit(), indirectly via ::weapon_detonate(), to detonate
  *weapon. If it's a weapon that spawns particles, those will be released.
  */
 static int maybe_detonate_weapon (ship_weapon* swp, object* /*src*/) {
@@ -12918,7 +12910,7 @@ static int maybe_detonate_weapon (ship_weapon* swp, object* /*src*/) {
     // check to make sure that the weapon to detonate still exists
     if (swp->last_fired_weapon_signature != objp->signature) { return 0; }
 
-    Assert (Weapons[objp->instance].weapon_info_index != -1);
+    ASSERT (Weapons[objp->instance].weapon_info_index != -1);
     wip = &Weapon_info[Weapons[objp->instance].weapon_info_index];
 
     if (wip->wi_flags[Weapon::Info_Flags::Remote]) {
@@ -12946,7 +12938,7 @@ static int ship_fire_secondary_detonate (object* obj, ship_weapon* swp) {
         if (timestamp_elapsed (swp->detonate_weapon_time)) {
             object* first_objp = &Objects[swp->last_fired_weapon_index];
             if (maybe_detonate_weapon (swp, obj)) {
-                //	If dual fire was set, there could be another weapon to
+                // If dual fire was set, there could be another weapon to
                 // detonate.  Scan all weapons.
                 missile_obj* mo;
 
@@ -12955,7 +12947,7 @@ static int ship_fire_secondary_detonate (object* obj, ship_weapon* swp) {
                      mo != END_OF_LIST (&Missile_obj_list);
                      mo = GET_NEXT (mo)) {
                     object* mobjp;
-                    Assert (mo->objnum >= 0 && mo->objnum < MAX_OBJECTS);
+                    ASSERT (mo->objnum >= 0 && mo->objnum < MAX_OBJECTS);
                     mobjp = &Objects[mo->objnum];
                     if ((mobjp != first_objp) &&
                         (mobjp->parent_sig == obj->parent_sig)) {
@@ -12977,16 +12969,16 @@ static int ship_fire_secondary_detonate (object* obj, ship_weapon* swp) {
 extern void
 ai_maybe_announce_shockwave_weapon (object* firing_objp, int weapon_index);
 
-//	Object *obj fires its secondary weapon, if it can.
-//	If its most recently fired weapon is a remotely detonatable weapon,
-// detonate it. 	Returns number of weapons fired.  Note, for swarmers,
-// returns 1 if it is allowed 	to fire the missiles when allow_swarm is NOT
+// Object *obj fires its secondary weapon, if it can.
+// If its most recently fired weapon is a remotely detonatable weapon,
+// detonate it.         Returns number of weapons fired.  Note, for swarmers,
+// returns 1 if it is allowed   to fire the missiles when allow_swarm is NOT
 // set.  They don't actually get fired on a call here unless allow_swarm is
-// set. 	When you want to fire swarmers, you call this function with
-// allow_swarm NOT set and frame interval 	code comes aruond and fires it.
+// set.         When you want to fire swarmers, you call this function with
+// allow_swarm NOT set and frame interval       code comes aruond and fires it.
 // allow_swarm -> default value is 0... since swarm missiles are fired over
 // several frames,
-//                need to avoid firing when normally called
+// need to avoid firing when normally called
 int ship_fire_secondary (object* obj, int allow_swarm) {
     int n, weapon_idx, j, bank, bank_adjusted, starting_bank_count = -1,
                                                num_fired;
@@ -12999,7 +12991,7 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
     polymodel* pm;
     vec3d missile_point, pnt, firing_pos;
 
-    Assert (obj != NULL);
+    ASSERT (obj != NULL);
 
     // in the case where the server is an observer, he can fire (which would be
     // bad) - unless we do this.
@@ -13009,12 +13001,12 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
     // right before he died, for instance)
     if ((obj->type == OBJ_GHOST) || (obj->type == OBJ_NONE)) { return 0; }
 
-    Assert (obj->type == OBJ_SHIP);
+    ASSERT (obj->type == OBJ_SHIP);
     if (obj->type != OBJ_SHIP) { return 0; }
     n = obj->instance;
-    Assert (n >= 0 && n < MAX_SHIPS);
+    ASSERT (n >= 0 && n < MAX_SHIPS);
     if ((n < 0) || (n >= MAX_SHIPS)) { return 0; }
-    Assert (Ships[n].objnum == OBJ_INDEX (obj));
+    ASSERT (Ships[n].objnum == OBJ_INDEX (obj));
     if (Ships[n].objnum != OBJ_INDEX (obj)) { return 0; }
 
     shipp = &Ships[n];
@@ -13056,7 +13048,7 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
     }
 
     weapon_idx = swp->secondary_bank_weapons[bank];
-    Assert (
+    ASSERT (
         (swp->secondary_bank_weapons[bank] >= 0) &&
         (swp->secondary_bank_weapons[bank] < MAX_WEAPON_TYPES));
     if ((swp->secondary_bank_weapons[bank] < 0) ||
@@ -13080,9 +13072,9 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
                 shipp, 0, starting_bank_count, 1, allow_swarm);
         }
 
-        //	For all banks, if ok to fire a weapon, make it wait a bit.
-        //	Solves problem of fire button likely being down next frame and
-        //	firing weapon despite fire causing detonation of existing weapon.
+        // For all banks, if ok to fire a weapon, make it wait a bit.
+        // Solves problem of fire button likely being down next frame and
+        // firing weapon despite fire causing detonation of existing weapon.
         if (swp->current_secondary_bank >= 0) {
             if (timestamp_elapsed (swp->next_secondary_fire_stamp[bank])) {
                 swp->next_secondary_fire_stamp[bank] =
@@ -13173,7 +13165,7 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
     // if trying to fire a swarm missile, make sure being called from right
     // place
     if ((wip->wi_flags[Weapon::Info_Flags::Swarm]) && !allow_swarm) {
-        Assert (wip->swarm_count > 0);
+        ASSERT (wip->swarm_count > 0);
         if (wip->swarm_count <= 0) {
             shipp->num_swarm_missiles_to_fire =
                 SWARM_DEFAULT_NUM_MISSILES_FIRED;
@@ -13182,7 +13174,7 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
             shipp->num_swarm_missiles_to_fire = wip->swarm_count;
         }
         shipp->swarm_missile_bank = bank;
-        return 1; //	Note: Missiles didn't get fired, but the frame interval
+        return 1; // Note: Missiles didn't get fired, but the frame interval
                   // code will fire them.
     }
 
@@ -13194,7 +13186,7 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
         shipp->num_corkscrew_to_fire =
             (ubyte) (shipp->num_corkscrew_to_fire + (ubyte)wip->cs_num_fired);
         shipp->corkscrew_missile_bank = bank;
-        return 1; //	Note: Missiles didn't get fired, but the frame interval
+        return 1; // Note: Missiles didn't get fired, but the frame interval
                   // code will fire them.
     }
 
@@ -13263,7 +13255,7 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
         if (check_ammo && (swp->secondary_bank_ammo[bank] <= 0)) {
             if (shipp->objnum == OBJ_INDEX (Player_obj)) {
                 if (ship_maybe_play_secondary_fail_sound (wip)) {
-                    //					HUD_sourced_printf(HUD_SOURCE_HIDDEN,
+                    // HUD_sourced_printf(HUD_SOURCE_HIDDEN,
                     //"No %s missiles left in bank",
                     // Weapon_info[swp->secondary_bank_weapons[bank]].name);
                 }
@@ -13336,7 +13328,7 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
             vm_vec_add (&firing_pos, &missile_point, &obj->pos);
 
             if (Game_mode & GM_MULTIPLAYER) {
-                Assert (Weapon_info[weapon_idx].subtype == WP_MISSILE);
+                ASSERT (Weapon_info[weapon_idx].subtype == WP_MISSILE);
             }
 
             matrix firing_orient;
@@ -13395,7 +13387,7 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
                 num_fired++;
                 swp->last_fired_weapon_index = weapon_num;
                 swp->detonate_weapon_time =
-                    timestamp (500); //	Can detonate 1/2 second later.
+                    timestamp (500); // Can detonate 1/2 second later.
                 swp->last_fired_weapon_signature =
                     Objects[weapon_num].signature;
 
@@ -13440,7 +13432,7 @@ done_secondary:
         // packet along with the first network signatures for the newly created
         // weapons.  if nothing got fired, send a failed packet if
         if (MULTIPLAYER_MASTER) {
-            Assert (starting_sig != 0);
+            ASSERT (starting_sig != 0);
             send_secondary_fired_packet (
                 shipp, starting_sig, starting_bank_count, num_fired,
                 allow_swarm);
@@ -13457,7 +13449,7 @@ done_secondary:
                     int player_num;
 
                     player_num = multi_find_player_by_object (obj);
-                    Assert (player_num != -1);
+                    ASSERT (player_num != -1);
 
                     Net_players[player_num].m_player->stats.ms_shots_fired +=
                         num_fired;
@@ -13476,7 +13468,7 @@ done_secondary:
     // swarm/corkscrew missiles to a new bank
     if (swp->secondary_bank_ammo[bank] <= 0) {
         // NOTE: these are set to 1 since they will get reduced by 1 in the
-        //       swarm/corkscrew code once this function returns
+        // swarm/corkscrew code once this function returns
 
         if (shipp->num_swarm_missiles_to_fire > 1) {
             shipp->num_swarm_missiles_to_fire = 1;
@@ -13588,15 +13580,15 @@ int ship_select_next_primary (object* objp, int direction) {
     int original_bank;
     int i;
 
-    Assert (objp != NULL);
-    Assert (objp->type == OBJ_SHIP);
-    Assert (objp->instance >= 0 && objp->instance < MAX_SHIPS);
+    ASSERT (objp != NULL);
+    ASSERT (objp->type == OBJ_SHIP);
+    ASSERT (objp->instance >= 0 && objp->instance < MAX_SHIPS);
 
     shipp = &Ships[objp->instance];
     sip = &Ship_info[shipp->ship_info_index];
     swp = &shipp->weapons;
 
-    Assert (
+    ASSERT (
         direction == CYCLE_PRIMARY_NEXT || direction == CYCLE_PRIMARY_PREV);
 
     original_bank = swp->current_primary_bank;
@@ -13631,7 +13623,7 @@ int ship_select_next_primary (object* objp, int direction) {
         return 0;
     }
     else {
-        Assert (
+        ASSERT (
             (swp->current_primary_bank >= 0) &&
             (swp->current_primary_bank < swp->num_primary_banks));
 
@@ -13706,7 +13698,7 @@ int ship_select_next_primary (object* objp, int direction) {
         if (primary_out_of_ammo (swp, swp->current_primary_bank)) {
             // cycle around until we find ammunition...
             // we land on the original bank if all banks fail
-            Assert (swp->current_primary_bank < swp->num_primary_banks);
+            ASSERT (swp->current_primary_bank < swp->num_primary_banks);
             new_bank = swp->current_primary_bank;
 
             for (i = 1; i < swp->num_primary_banks; i++) {
@@ -13730,7 +13722,7 @@ int ship_select_next_primary (object* objp, int direction) {
         }
 
         // make sure we're okay
-        Assert (
+        ASSERT (
             (swp->current_primary_bank >= 0) &&
             (swp->current_primary_bank < swp->num_primary_banks));
     } // end of ballistics implementation
@@ -13749,7 +13741,7 @@ int ship_select_next_primary (object* objp, int direction) {
         }
 
         ship_primary_changed (shipp);
-        
+
         return 1;
     }
 
@@ -13761,18 +13753,18 @@ int ship_select_next_primary (object* objp, int direction) {
 // ------------------------------------------------------------------------------
 // ship_select_next_secondary() selects the next secondary bank with missles
 //
-//	returns:		1	=> The secondary bank was switched
-//					0	=> The secondary bank stayed the same
+// returns:                1       => The secondary bank was switched
+// 0       => The secondary bank stayed the same
 //
 // If a secondary bank has no missles left, it is skipped.
 //
 // NOTE: This can be called for an arbitrary ship.  HUD messages and sounds are
 // only used
-//			for the player ship.
+// for the player ship.
 int ship_select_next_secondary (object* objp) {
-    Assert (objp != NULL);
-    Assert (objp->type == OBJ_SHIP);
-    Assert (objp->instance >= 0 && objp->instance < MAX_SHIPS);
+    ASSERT (objp != NULL);
+    ASSERT (objp->type == OBJ_SHIP);
+    ASSERT (objp->instance >= 0 && objp->instance < MAX_SHIPS);
 
     int original_bank, new_bank, i;
     ship* shipp;
@@ -13810,7 +13802,7 @@ int ship_select_next_secondary (object* objp) {
         return 0;
     }
     else {
-        Assert (
+        ASSERT (
             (swp->current_secondary_bank >= 0) &&
             (swp->current_secondary_bank < swp->num_secondary_banks));
 
@@ -13843,16 +13835,16 @@ int ship_select_next_secondary (object* objp) {
 }
 
 // Goober5000 - copied from secondary routine
-//	Stuff list of weapon indices for object *objp in list *outlist.
-//	Return number of weapons in list.
+// Stuff list of weapon indices for object *objp in list *outlist.
+// Return number of weapons in list.
 int get_available_primary_weapons (
     object* objp, int* outlist, int* outbanklist) {
     int count = 0;
     int i;
     ship* shipp;
 
-    Assert (objp->type == OBJ_SHIP);
-    Assert ((objp->instance >= 0) && (objp->instance < MAX_SHIPS));
+    ASSERT (objp->type == OBJ_SHIP);
+    ASSERT ((objp->instance >= 0) && (objp->instance < MAX_SHIPS));
     shipp = &Ships[objp->instance];
 
     for (i = 0; i < shipp->weapons.num_primary_banks; i++) {
@@ -13875,8 +13867,8 @@ int get_available_secondary_weapons (
     int i;
     ship* shipp;
 
-    Assert (objp->type == OBJ_SHIP);
-    Assert ((objp->instance >= 0) && (objp->instance < MAX_SHIPS));
+    ASSERT (objp->type == OBJ_SHIP);
+    ASSERT ((objp->instance >= 0) && (objp->instance < MAX_SHIPS));
     shipp = &Ships[objp->instance];
 
     for (i = 0; i < shipp->weapons.num_secondary_banks; i++)
@@ -14046,7 +14038,7 @@ int ship_info_lookup (const char* token) {
         if (strlen (token) > NAME_LENGTH - 3) {
             // If the below sprintf would exceed NAME_LENGTH (taking \0
             // terminator into account), give a warning and return.
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Token [%s] is too long to be parenthesized by "
                 "ship_info_lookup()!\n",
@@ -14068,7 +14060,7 @@ int ship_info_lookup (const char* token) {
     }
     // oops
     else {
-        fs2::dialog::warning (LOCATION, "Unrecognized hash symbol.  Contact a programmer!");
+        WARNINGF (LOCATION, "Unrecognized hash symbol.  Contact a programmer!");
         return -1;
     }
 
@@ -14113,13 +14105,13 @@ int ship_type_name_lookup (const char* name) {
 
 // checks the (arrival & departure) state of a ship.  Return values:
 // -1: has yet to arrive in mission
-//  0: is currently in mission
-//  1: has been destroyed, departed, or never existed
+// 0: is currently in mission
+// 1: has been destroyed, departed, or never existed
 int ship_query_state (char* name) {
     int i;
 
     // bogus
-    Assert (name != NULL);
+    ASSERT (name != NULL);
     if (name == NULL) { return -1; }
 
     for (i = 0; i < MAX_SHIPS; i++) {
@@ -14145,7 +14137,7 @@ int get_subsystem_pos (vec3d* pos, object* objp, ship_subsys* subsysp) {
         *pos = objp->pos;
         return 0;
     }
-    Assertion (objp->type == OBJ_SHIP, "Only ships can have subsystems!");
+    ASSERTX (objp->type == OBJ_SHIP, "Only ships can have subsystems!");
 
     model_subsystem* mss = subsysp->system_info;
 
@@ -14209,7 +14201,7 @@ void ship_model_start (object* objp) {
         case SUBSYSTEM_ACTIVATION:
         case SUBSYSTEM_TURRET: break;
         default:
-            fs2::dialog::error (LOCATION, "Illegal subsystem type.\n");
+            ASSERTF (LOCATION, "Illegal subsystem type.\n");
             break;
         }
 
@@ -14232,9 +14224,9 @@ void ship_model_start (object* objp) {
  * Clears all the instance specific stuff out of the model info
  */
 void ship_model_stop (object* objp) {
-    Assert (objp != NULL);
-    Assert (objp->instance >= 0);
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp != NULL);
+    ASSERT (objp->instance >= 0);
+    ASSERT (objp->type == OBJ_SHIP);
 
     // Then, clear all the angles in the model to zero
     model_clear_instance (
@@ -14251,9 +14243,9 @@ void ship_model_update_instance (object* objp) {
     ship_subsys* pss;
     int model_instance_num;
 
-    Assert (objp != NULL);
-    Assert (objp->instance >= 0);
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp != NULL);
+    ASSERT (objp->instance >= 0);
+    ASSERT (objp->type == OBJ_SHIP);
 
     shipp = &Ships[objp->instance];
     model_instance_num = shipp->model_instance_num;
@@ -14278,7 +14270,7 @@ void ship_model_update_instance (object* objp) {
         case SUBSYSTEM_ACTIVATION:
         case SUBSYSTEM_TURRET: break;
         default:
-            fs2::dialog::error (LOCATION, "Illegal subsystem type.\n");
+            ASSERTF (LOCATION, "Illegal subsystem type.\n");
             break;
         }
 
@@ -14332,7 +14324,7 @@ int ship_find_num_crewpoints (object* objp) {
         case SUBSYSTEM_GAS_COLLECT:
         case SUBSYSTEM_ACTIVATION: break;
         default:
-            fs2::dialog::error (LOCATION, "Illegal subsystem type.\n");
+            ASSERTF (LOCATION, "Illegal subsystem type.\n");
             break;
         }
     }
@@ -14366,7 +14358,7 @@ int ship_find_num_turrets (object* objp) {
         case SUBSYSTEM_GAS_COLLECT:
         case SUBSYSTEM_ACTIVATION: break;
         default:
-            fs2::dialog::error (LOCATION, "Illegal subsystem type.\n");
+            ASSERTF (LOCATION, "Illegal subsystem type.\n");
             break;
         }
     }
@@ -14402,7 +14394,7 @@ static void ship_set_eye (object* obj, int eye_index) {
 void ship_get_eye (
     vec3d* eye_pos, matrix* eye_orient, object* obj, bool do_slew,
     bool from_origin) {
-    Assertion (obj->type == OBJ_SHIP, "Only ships can have eye positions!");
+    ASSERTX (obj->type == OBJ_SHIP, "Only ships can have eye positions!");
 
     ship* shipp = &Ships[obj->instance];
     polymodel* pm = model_get (Ship_info[shipp->ship_info_index].model_num);
@@ -14438,7 +14430,7 @@ void ship_get_eye (
         *eye_orient = obj->orient;
     }
 
-    //	Modify the orientation based on head orientation.
+    // Modify the orientation based on head orientation.
     if (Viewer_obj == obj && do_slew) {
         // Add the cockpit leaning translation offset
         vm_vec_add2 (eye_pos, &leaning_position);
@@ -14450,13 +14442,13 @@ void ship_get_eye (
 //
 // NOTE: This function takes into account how many ships are attacking a
 // subsystem, and will
-//			prefer an ignored subsystem over a subsystem that is in line of
-// sight, if the in-sight 			subsystem is attacked by more than
+// prefer an ignored subsystem over a subsystem that is in line of
+// sight, if the in-sight                       subsystem is attacked by more than
 // MAX_SUBSYS_ATTACKERS
 // input:
-//				sp					=>		ship pointer to parent of subsystem
-//				subsys_type		=>		what kind of subsystem this is
-//				attacker_pos	=>		the world coords of the attacker of
+// sp                                      =>              ship pointer to parent of subsystem
+// subsys_type             =>              what kind of subsystem this is
+// attacker_pos    =>              the world coords of the attacker of
 // this subsystem
 //
 // returns: pointer to subsystem if one found, NULL otherwise
@@ -14526,11 +14518,11 @@ ship_subsys* ship_get_best_subsys_to_attack (
 }
 
 // function to return a pointer to the 'nth' ship_subsys structure in a ship's
-// linked list of ship_subsys'. attacker_pos	=>	world pos of attacker
+// linked list of ship_subsys'. attacker_pos    =>      world pos of attacker
 // (default value NULL).  If value is non-NULL, try
-//							to select the best subsystem to attack of that type
+// to select the best subsystem to attack of that type
 //(using
-// line-of-sight) 							and based on the number of ships
+// line-of-sight)                                                       and based on the number of ships
 // already attacking the subsystem
 ship_subsys*
 ship_get_indexed_subsys (ship* sp, int index, vec3d* attacker_pos) {
@@ -14566,7 +14558,7 @@ ship_get_indexed_subsys (ship* sp, int index, vec3d* attacker_pos) {
 
         // maybe we shouldn't get here, but with possible floating point
         // rounding, I suppose we could
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Unable to get a nonspecific subsystem of index %d on ship %s!",
             index, sp->ship_name);
@@ -14582,7 +14574,7 @@ ship_get_indexed_subsys (ship* sp, int index, vec3d* attacker_pos) {
     }
 
     // get allender -- turret ref didn't fixup correctly!!!!
-    fs2::dialog::warning (
+    WARNINGF (
         LOCATION,
         "In ship_get_indexed_subsys, unable to get a subsystem of index %d on "
         "ship %s, due to a broken subsystem reference!  This is most likely "
@@ -14603,8 +14595,8 @@ int ship_get_index_from_subsys (
         ship* shipp;
         ship_subsys* ss;
 
-        Assert (objnum >= 0);
-        Assert (Objects[objnum].instance >= 0);
+        ASSERT (objnum >= 0);
+        ASSERT (Objects[objnum].instance >= 0);
 
         shipp = &Ships[Objects[objnum].instance];
 
@@ -14652,9 +14644,9 @@ float ship_get_subsystem_strength (ship* shipp, int type) {
     float strength;
     ship_subsys* ssp;
 
-    Assert ((type >= 0) && (type < SUBSYSTEM_MAX));
+    ASSERT ((type >= 0) && (type < SUBSYSTEM_MAX));
 
-    //	For a dying ship, all subsystem strengths are zero.
+    // For a dying ship, all subsystem strengths are zero.
     if (Objects[shipp->objnum].hull_strength <= 0.0f) return 0.0f;
 
     // short circuit 1
@@ -14665,7 +14657,7 @@ float ship_get_subsystem_strength (ship* shipp, int type) {
 
     strength = shipp->subsys_info[type].aggregate_current_hits /
                shipp->subsys_info[type].aggregate_max_hits;
-    Assert (strength != 0.0f);
+    ASSERT (strength != 0.0f);
 
     if ((type == SUBSYSTEM_ENGINE) && (strength < 1.0f)) {
         float percent;
@@ -14702,7 +14694,7 @@ void ship_set_subsystem_strength (ship* shipp, int type, float strength) {
     float total_current_hits, diff;
     ship_subsys* ssp;
 
-    Assert ((type >= 0) && (type < SUBSYSTEM_MAX));
+    ASSERT ((type >= 0) && (type < SUBSYSTEM_MAX));
     if (shipp->subsys_info[type].aggregate_max_hits <= 0.0f) return;
 
     total_current_hits = 0.0f;
@@ -14725,8 +14717,8 @@ void ship_set_subsystem_strength (ship* shipp, int type, float strength) {
     shipp->subsys_info[type].aggregate_current_hits = total_current_hits;
 }
 
-#define SHIELD_REPAIR_RATE 0.20f //	Percent of shield repaired per second.
-#define HULL_REPAIR_RATE 0.15f   //	Percent of hull repaired per second.
+#define SHIELD_REPAIR_RATE 0.20f // Percent of shield repaired per second.
+#define HULL_REPAIR_RATE 0.15f   // Percent of hull repaired per second.
 #define SUBSYS_REPAIR_RATE 0.10f // Percent of subsystems repaired per second.
 
 #define REARM_NUM_MISSILES_PER_BATCH \
@@ -14759,7 +14751,7 @@ float ship_calculate_rearm_duration (object* objp) {
 
     bool found_first_empty;
 
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp->type == OBJ_SHIP);
 
     sp = &Ships[objp->instance];
     swp = &sp->weapons;
@@ -14898,9 +14890,9 @@ int ship_do_rearm_frame (object* objp, float frametime) {
 
     // AL 10-31-97: Add missing primary weapons to the ship.  This is required
     // since designers
-    //              want to have ships that start with no primaries, but can
-    //              get them through
-    //					 rearm/repair
+    // want to have ships that start with no primaries, but can
+    // get them through
+    // rearm/repair
     if (swp->num_primary_banks < sip->num_primary_banks) {
         for (i = swp->num_primary_banks; i < sip->num_primary_banks; i++) {
             swp->primary_bank_weapons[i] = sip->primary_bank_weapons[i];
@@ -14940,8 +14932,8 @@ int ship_do_rearm_frame (object* objp, float frametime) {
     repair_allocated =
         shipp->ship_max_hull_strength * frametime * sip->sup_hull_repair_rate;
 
-    //	AL 11-24-97: remove increase to hull integrity
-    //	Comments removed by PhReAk; Note that this is toggled on/off with a
+    // AL 11-24-97: remove increase to hull integrity
+    // Comments removed by PhReAk; Note that this is toggled on/off with a
     // mission flag
 
     // Figure out how much of the ship's hull we can repair
@@ -14997,7 +14989,7 @@ int ship_do_rearm_frame (object* objp, float frametime) {
                 repair_delta = repair_allocated;
             }
             repair_allocated -= repair_delta;
-            Assert (repair_allocated >= 0.0f);
+            ASSERT (repair_allocated >= 0.0f);
 
             // add repair to current strength of single subsystem
             ssp->current_hits += repair_delta;
@@ -15247,10 +15239,10 @@ int ship_find_repair_ship (object* requester_obj, object** ship_we_found) {
     float min_time_till_available = -1.0f;
     object* soonest_available_support_ship = NULL;
 
-    Assertion (
+    ASSERTX (
         requester_obj->type == OBJ_SHIP,
         "requester_obj not a ship. Has type of %08x", requester_obj->type);
-    Assertion (
+    ASSERTX (
         (requester_obj->instance >= 0) &&
             (requester_obj->instance < MAX_SHIPS),
         "requester_obj does not have a valid pointer to a ship. Pointer is "
@@ -15266,7 +15258,7 @@ int ship_find_repair_ship (object* requester_obj, object** ship_we_found) {
             ship_info* sip;
             float dist;
 
-            Assertion (
+            ASSERTX (
                 (objp->instance >= 0) && (objp->instance < MAX_SHIPS),
                 "objp does not have a valid pointer to a ship. Pointer is %d, "
                 "which is smaller than 0 or bigger than %d",
@@ -15276,7 +15268,7 @@ int ship_find_repair_ship (object* requester_obj, object** ship_we_found) {
 
             if (shipp->team != requester_ship->team) { continue; }
 
-            Assertion (
+            ASSERTX (
                 (shipp->ship_info_index >= 0) &&
                     (shipp->ship_info_index <
                      static_cast< int > (Ship_info.size ())),
@@ -15297,7 +15289,7 @@ int ship_find_repair_ship (object* requester_obj, object** ship_we_found) {
 
             // Ship has been ordered to warpout but has not had a chance to
             // process the order.
-            Assertion (
+            ASSERTX (
                 (shipp->ai_index >= 0) && (shipp->ai_index < MAX_AI_INFO),
                 "Ship '%s' doesn't have a valid ai pointer. Pointer is %d, "
                 "which is smaller than 0 or larger than %d",
@@ -15438,7 +15430,7 @@ void ship_assign_sound (ship* sp) {
     vec3d engine_pos;
     ship_subsys* moveup;
 
-    Assert (sp->objnum >= 0);
+    ASSERT (sp->objnum >= 0);
     if (sp->objnum < 0) { return; }
 
     objp = &Objects[sp->objnum];
@@ -15749,7 +15741,7 @@ int ship_docking_valid (int /*docker*/, int /*dockee*/) {
 }
 
 // function to return a random ship in a starting player wing.  Returns -1 if a
-// suitable one cannot be found input:	max_dist	=>	OPTIONAL PARAMETER
+// suitable one cannot be found input:  max_dist        =>      OPTIONAL PARAMETER
 // (default value 0.0f) max range ship can be from player input:   persona  =>
 // OPTIONAL PARAMETER (default to -1) which persona to get
 int ship_get_random_player_wing_ship (
@@ -15801,7 +15793,7 @@ int ship_get_random_player_wing_ship (
             if (count >= MAX_SIZE) break;
 
             ship_index = Wings[wingnum].ship_index[j];
-            Assert (ship_index != -1);
+            ASSERT (ship_index != -1);
 
             if (Ships[ship_index].flags[Ship_Flags::Dying]) { continue; }
             // see if ship meets our criterea
@@ -15852,13 +15844,13 @@ int ship_get_random_player_wing_ship (
     which_one = (rand () % count);
     ship_index = slist[which_one];
 
-    Assert (Ships[ship_index].objnum != -1);
+    ASSERT (Ships[ship_index].objnum != -1);
 
     return ship_index;
 }
 
 // like above function, but returns a random ship in the given wing -- no
-// restrictions input:	max_dist	=>	OPTIONAL PARAMETER (default value 0.0f)
+// restrictions input:  max_dist        =>      OPTIONAL PARAMETER (default value 0.0f)
 // max range ship can be from player
 int ship_get_random_ship_in_wing (
     int wingnum, int flags, float max_dist, int get_first) {
@@ -15867,7 +15859,7 @@ int ship_get_random_ship_in_wing (
     count = 0;
     for (i = 0; i < Wings[wingnum].current_count; i++) {
         ship_index = Wings[wingnum].ship_index[i];
-        Assert (ship_index != -1);
+        ASSERT (ship_index != -1);
 
         if (Ships[ship_index].flags[Ship_Flags::Dying]) { continue; }
 
@@ -15903,7 +15895,7 @@ int ship_get_random_ship_in_wing (
     which_one = (rand () % count);
     ship_index = slist[which_one];
 
-    Assert (Ships[ship_index].objnum != -1);
+    ASSERT (Ships[ship_index].objnum != -1);
 
     return ship_index;
 }
@@ -15912,7 +15904,7 @@ int ship_get_random_ship_in_wing (
 // given team cargo containers are not counted as ships for the purposes of
 // this function.  Why??? because now it is only used for getting a random ship
 // for a message and cargo containers can't send mesages.  This function is an
-// example of kind of bad coding :-( input:	max_dist	=>	OPTIONAL PARAMETER
+// example of kind of bad coding :-( input:     max_dist        =>      OPTIONAL PARAMETER
 // (default value 0.0f) max range ship can be from player
 int ship_get_random_team_ship (int team_mask, int flags, float max_dist) {
     int num, which_one;
@@ -15961,7 +15953,7 @@ int ship_get_random_team_ship (int team_mask, int flags, float max_dist) {
     which_one = (rand () % num);
     objp = obj_list[which_one];
 
-    Assert (objp->instance != -1);
+    ASSERT (objp->instance != -1);
 
     return objp->instance;
 }
@@ -15971,17 +15963,17 @@ int ship_get_random_team_ship (int team_mask, int flags, float max_dist) {
 //
 // check if currently selected secondary bank has ammo
 //
-// input:	shipnum	=>	index into Ships[] array for ship to check
+// input:       shipnum =>      index into Ships[] array for ship to check
 //
 int ship_secondary_bank_has_ammo (int shipnum) {
     ship_weapon* swp;
 
-    Assert (shipnum >= 0 && shipnum < MAX_SHIPS);
+    ASSERT (shipnum >= 0 && shipnum < MAX_SHIPS);
     swp = &Ships[shipnum].weapons;
 
     if (swp->current_secondary_bank == -1) return 0;
 
-    Assert (
+    ASSERT (
         swp->current_secondary_bank >= 0 &&
         swp->current_secondary_bank < MAX_SHIP_SECONDARY_BANKS);
     if (swp->secondary_bank_ammo[swp->current_secondary_bank] <= 0) return 0;
@@ -15993,17 +15985,17 @@ int ship_secondary_bank_has_ammo (int shipnum) {
 //
 // check if currently selected primary bank has ammo
 //
-// input:	shipnum	=>	index into Ships[] array for ship to check
+// input:       shipnum =>      index into Ships[] array for ship to check
 //
 int ship_primary_bank_has_ammo (int shipnum) {
     ship_weapon* swp;
 
-    Assert (shipnum >= 0 && shipnum < MAX_SHIPS);
+    ASSERT (shipnum >= 0 && shipnum < MAX_SHIPS);
     swp = &Ships[shipnum].weapons;
 
     if (swp->current_primary_bank == -1) { return 0; }
 
-    Assert (
+    ASSERT (
         swp->current_primary_bank >= 0 &&
         swp->current_primary_bank < MAX_SHIP_PRIMARY_BANKS);
 
@@ -16059,13 +16051,13 @@ int ship_navigation_ok_to_warp (ship* sp) {
 }
 
 // Calculate the normal vector from a subsystem position and its first path
-// point input:	sp	=>	pointer to ship that is parent of subsystem
-//				ss =>	pointer to subsystem of interest
-//				norm	=> output parameter... vector from subsys to first path
+// point input: sp      =>      pointer to ship that is parent of subsystem
+// ss =>   pointer to subsystem of interest
+// norm    => output parameter... vector from subsys to first path
 // point
 //
-//	exit:		0	=>	a valid vector was placed in norm
-//				!0	=> an path normal could not be calculated
+// exit:           0       =>      a valid vector was placed in norm
+// !0      => an path normal could not be calculated
 //
 int ship_return_subsys_path_normal (
     ship* shipp, ship_subsys* ss, vec3d* gsubpos, vec3d* norm) {
@@ -16075,10 +16067,10 @@ int ship_return_subsys_path_normal (
         vec3d* path_point;
         vec3d gpath_point;
         pm = model_get (Ship_info[shipp->ship_info_index].model_num);
-        Assert (pm != NULL);
+        ASSERT (pm != NULL);
 
         // possibly a bad model?
-        Assertion (
+        ASSERTX (
             ss->system_info->path_num <= pm->n_paths,
             "Too many paths in '%s'!  Max is %i and the requested path was %i "
             "for subsystem '%s'!\n",
@@ -16101,26 +16093,26 @@ int ship_return_subsys_path_normal (
     return 1;
 }
 
-//	Determine if the subsystem can be viewed from eye_pos.  The method is to
+// Determine if the subsystem can be viewed from eye_pos.  The method is to
 // check where the
 // vector from eye_pos to the subsystem hits the ship.  If distance from the
 // hit position and the center of the subsystem is within a range (currently
 // the subsystem radius) it is considered in view (return true).  If not in
 // view, return false.
 //
-// input:	objp		=>		object that is the ship with the subsystem on
+// input:       objp            =>              object that is the ship with the subsystem on
 // it
-//				subsys	=>		pointer to the subsystem of interest
-//				eye_pos	=>		world coord for the eye looking at the
-// subsystem 				subsys_pos			=>	world coord for the center
-// of the subsystem of interest 				do_facing_check	=>	OPTIONAL
+// subsys  =>              pointer to the subsystem of interest
+// eye_pos =>              world coord for the eye looking at the
+// subsystem                            subsys_pos                      =>      world coord for the center
+// of the subsystem of interest                                 do_facing_check =>      OPTIONAL
 // PARAMETER (default value is 1), do a dot product check to see if subsystem
-// fvec is facing 											towards the eye
+// fvec is facing                                                                                       towards the eye
 // position
-//				dot_out	=>		OPTIONAL PARAMETER, output parameter, will
+// dot_out =>              OPTIONAL PARAMETER, output parameter, will
 // return dot
-// between subsys fvec and subsys_to_eye_vec 									(only filled
-// in if do_facing_check is true) 				vec_out	=>		OPTIONAL
+// between subsys fvec and subsys_to_eye_vec                                                                    (only filled
+// in if do_facing_check is true)                               vec_out =>              OPTIONAL
 // PARAMETER, vector from eye_pos to absolute subsys_pos.  (only filled in if
 // do_facing_check is true)
 int ship_subsystem_in_sight (
@@ -16188,7 +16180,7 @@ ship_subsys*
 ship_return_next_subsys (ship* shipp, int type, vec3d* attacker_pos) {
     ship_subsys* ssp;
 
-    Assert (type >= 0 && type < SUBSYSTEM_MAX);
+    ASSERT (type >= 0 && type < SUBSYSTEM_MAX);
 
     // If aggregate total is 0, that means no subsystem is alive of that type
     if (shipp->subsys_info[type].aggregate_max_hits <= 0.0f) return NULL;
@@ -16205,7 +16197,7 @@ ship_return_next_subsys (ship* shipp, int type, vec3d* attacker_pos) {
 // sight.
 ship_subsys* ship_get_closest_subsys_in_sight (
     ship* sp, int subsys_type, vec3d* attacker_pos) {
-    Assert (subsys_type >= 0 && subsys_type < SUBSYSTEM_MAX);
+    ASSERT (subsys_type >= 0 && subsys_type < SUBSYSTEM_MAX);
 
     // If aggregate total is 0, that means no subsystem is alive of that type
     if (sp->subsys_info[subsys_type].aggregate_max_hits <= 0.0f) return NULL;
@@ -16280,7 +16272,7 @@ float ship_quadrant_shield_strength (object* hit_objp, int quadrant_num) {
     max_quadrant = shield_get_max_quad (hit_objp);
     if (max_quadrant <= 0) { return 0.0f; }
 
-    Assertion (
+    ASSERTX (
         quadrant_num < hit_objp->n_quadrants,
         "ship_quadrant_shield_strength() called with a quadrant of %d on a "
         "ship with %d quadrants; get a coder!\n",
@@ -16296,13 +16288,13 @@ float ship_quadrant_shield_strength (object* hit_objp, int quadrant_num) {
 }
 
 // Determine if a ship is threatened by any dumbfire projectiles (laser or
-// missile) input:	sp	=>	pointer to ship that might be threatened exit:
-// 0 =>	no dumbfire threats
-//				1 =>	at least one dumbfire threat
+// missile) input:      sp      =>      pointer to ship that might be threatened exit:
+// 0 => no dumbfire threats
+// 1 =>    at least one dumbfire threat
 //
 // NOTE: Currently this function is only called periodically from the HUD code
 // for the
-//       player ship.
+// player ship.
 int ship_dumbfire_threat (ship* sp) {
     if ((Game_mode & GM_MULTIPLAYER) &&
         (Net_player->flags & NETINFO_FLAG_OBSERVER)) {
@@ -16321,18 +16313,18 @@ static int ship_has_homing_missile_locked (ship* shipp) {
     weapon_info* wip;
     missile_obj* mo;
 
-    Assert (shipp->objnum >= 0 && shipp->objnum < MAX_OBJECTS);
+    ASSERT (shipp->objnum >= 0 && shipp->objnum < MAX_OBJECTS);
     locked_objp = &Objects[shipp->objnum];
 
     // check for currently locked missiles (highest precedence)
     for (mo = GET_NEXT (&Missile_obj_list);
          mo != END_OF_LIST (&Missile_obj_list); mo = GET_NEXT (mo)) {
-        Assert (mo->objnum >= 0 && mo->objnum < MAX_OBJECTS);
+        ASSERT (mo->objnum >= 0 && mo->objnum < MAX_OBJECTS);
         A = &Objects[mo->objnum];
 
         if (A->type != OBJ_WEAPON) continue;
 
-        Assert ((A->instance >= 0) && (A->instance < MAX_WEAPONS));
+        ASSERT ((A->instance >= 0) && (A->instance < MAX_WEAPONS));
         wp = &Weapons[A->instance];
         wip = &Weapon_info[wp->weapon_info_index];
 
@@ -16376,14 +16368,14 @@ static int ship_is_getting_locked (ship* shipp) {
 }
 
 // Determine if a ship is threatened by attempted lock or actual lock
-// input:	sp	=>	pointer to ship that might be threatened
-// exit:		0 =>	no lock threats of any kind
-//				1 =>	at least one attempting lock (no actual locks)
-//				2 =>	at least one lock (possible other attempting locks)
+// input:       sp      =>      pointer to ship that might be threatened
+// exit:                0 =>    no lock threats of any kind
+// 1 =>    at least one attempting lock (no actual locks)
+// 2 =>    at least one lock (possible other attempting locks)
 //
 // NOTE: Currently this function is only called periodically from the HUD code
 // for the
-//       player ship.
+// player ship.
 int ship_lock_threat (ship* sp) {
     if (ship_has_homing_missile_locked (sp)) { return 2; }
 
@@ -16435,11 +16427,11 @@ ship_get_ai_target_display_name (int goal, const char* name) {
 
 // Get a text description of a ships orders.
 //
-//	input:	outbuf	=>		buffer to hold orders string
-//				sp			=>		ship pointer to extract orders from
+// input:  outbuf  =>              buffer to hold orders string
+// sp                      =>              ship pointer to extract orders from
 //
-// exit:		NULL		=>		printable orders are not applicable
-//				non-NULL	=>		pointer to string that was passed in
+// exit:                NULL            =>              printable orders are not applicable
+// non-NULL        =>              pointer to string that was passed in
 // originally
 //
 // This function is called from HUD code to get a text description
@@ -16450,7 +16442,7 @@ std::string ship_return_orders (ship* sp) {
     ai_info* aip;
     ai_goal* aigp;
 
-    Assert (sp->ai_index >= 0);
+    ASSERT (sp->ai_index >= 0);
     aip = &Ai_info[sp->ai_index];
 
     // The active goal is always in the first element of aip->goals[]
@@ -16535,11 +16527,11 @@ std::string ship_return_orders (ship* sp) {
 }
 
 // return the amount of time until ship reaches its goal (in MM:SS format)
-//	input:	outbuf	=>		buffer to hold orders string
-//				sp			=>		ship pointer to extract orders from
+// input:  outbuf  =>              buffer to hold orders string
+// sp                      =>              ship pointer to extract orders from
 //
-// exit:		NULL		=>		printable orders are not applicable
-//				non-NULL	=>		pointer to string that was passed in
+// exit:                NULL            =>              printable orders are not applicable
+// non-NULL        =>              pointer to string that was passed in
 // originally
 //
 // This function is called from HUD code to get a text description
@@ -16566,7 +16558,7 @@ char* ship_return_time_to_goal (char* outbuf, ship* sp) {
     if (aip->mode == AIM_WAYPOINTS) {
         min_speed = 0.9f * max_speed;
         if (aip->wp_list != NULL) {
-            Assert (aip->wp_index != INVALID_WAYPOINT_POSITION);
+            ASSERT (aip->wp_index != INVALID_WAYPOINT_POSITION);
             dist += vm_vec_dist_quick (
                 &objp->pos,
                 aip->wp_list->get_waypoints ()[aip->wp_index].get_pos ());
@@ -16637,16 +16629,16 @@ should be sufficient.
 //
 // NOTE: This function uses CARGO_REVEAL_DISTANCE from the HUD code... which is
 a multiple of
-//       the ship radius that is used to determine when cargo is detected.  AI
+// the ship radius that is used to determine when cargo is detected.  AI
 ships do not
-//       have to have the ship targeted to reveal cargo.  The player is ignored
-in this function. #define SHIP_CARGO_CHECK_INTERVAL	1000 void
+// have to have the ship targeted to reveal cargo.  The player is ignored
+in this function. #define SHIP_CARGO_CHECK_INTERVAL     1000 void
 ship_check_cargo_all()
 {
-    object	*cargo_objp;
-    ship_obj	*cargo_so, *ship_so;
-    ship		*cargo_sp, *ship_sp;
-    float		dist_squared, limit_squared;
+    object      *cargo_objp;
+    ship_obj    *cargo_so, *ship_so;
+    ship                *cargo_sp, *ship_sp;
+    float               dist_squared, limit_squared;
 
     // I don't want to do this check every frame, so I made a global timer to
 limit check to
@@ -16701,7 +16693,7 @@ vm_vec_dist_squared(&cargo_objp->pos, &Objects[ship_sp->objnum].pos);
 (cargo_objp->radius+CARGO_RADIUS_DELTA)*(cargo_objp->radius+CARGO_RADIUS_DELTA);
                     if ( dist_squared <= MAX(limit_squared,
 CARGO_REVEAL_MIN_DIST*CARGO_REVEAL_MIN_DIST) ) { ship_do_cargo_revealed(
-cargo_sp ); break;	// break out of for loop, move on to next hostile cargo
+cargo_sp ); break;      // break out of for loop, move on to next hostile cargo
                     }
                 }
             } // end for
@@ -16717,9 +16709,9 @@ next_cargo:
 // this function is called from HUD code which has already determined the
 // closest enemy attacker and the distance.
 //
-// input:	enemy_sp	=>	ship pointer to the TEAM_ENEMY ship attacking the
+// input:       enemy_sp        =>      ship pointer to the TEAM_ENEMY ship attacking the
 // player
-//				dist		=>	the distance of the enemy to the player
+// dist            =>      the distance of the enemy to the player
 //
 // NOTE: there are no filters on enemy_sp, so it could be any ship type
 //
@@ -17198,7 +17190,7 @@ void ship_maybe_tell_about_rearm (ship* sp) {
     // Silent ships should remain just that
     if (sp->flags[Ship_Flags::No_builtin_messages]) return;
 
-    // AL 1-4-98:	If ship integrity is low, tell player you want to get
+    // AL 1-4-98:       If ship integrity is low, tell player you want to get
     // repaired.  Otherwise, tell the player you want to get re-armed.
 
     int message_type = -1;
@@ -17259,7 +17251,7 @@ void ship_maybe_tell_about_rearm (ship* sp) {
 // The current primary weapon or link status for a ship has changed.. notify
 // clients if multiplayer
 //
-// input:	sp			=>	pointer to ship that modified primaries
+// input:       sp                      =>      pointer to ship that modified primaries
 void ship_primary_changed (ship* sp) {
     int i;
     ship_weapon* swp;
@@ -17312,23 +17304,23 @@ void ship_primary_changed (ship* sp) {
     }
 
 #if 0
-	// we only need to deal with multiplayer issues for now, so bail it not multiplayer
-	if ( !(Game_mode & GM_MULTIPLAYER) )
-		return;
+        // we only need to deal with multiplayer issues for now, so bail it not multiplayer
+        if ( !(Game_mode & GM_MULTIPLAYER) )
+                return;
 
-	Assert(sp);
+        Assert(sp);
 
-	if ( MULTIPLAYER_MASTER )
-		send_ship_weapon_change( sp, MULTI_PRIMARY_CHANGED, swp->current_primary_bank, (sp->flags[Ship::Ship_Flags::Primary_linked])?1:0 );
+        if ( MULTIPLAYER_MASTER )
+                send_ship_weapon_change( sp, MULTI_PRIMARY_CHANGED, swp->current_primary_bank, (sp->flags[Ship::Ship_Flags::Primary_linked])?1:0 );
 #endif
 }
 
 // The current secondary weapon or dual-fire status for a ship has changed..
 // notify clients if multiplayer
 //
-// input:	sp					=>	pointer to ship that modified secondaries
+// input:       sp                                      =>      pointer to ship that modified secondaries
 void ship_secondary_changed (ship* sp) {
-    Assert (sp != NULL);
+    ASSERT (sp != NULL);
 
     int i;
     ship_weapon* swp = &sp->weapons;
@@ -17363,15 +17355,15 @@ void ship_secondary_changed (ship* sp) {
     }
 
 #if 0
-	// we only need to deal with multiplayer issues for now, so bail it not multiplayer
-	if ( !(Game_mode & GM_MULTIPLAYER) ){
-		return;
-	}
+        // we only need to deal with multiplayer issues for now, so bail it not multiplayer
+        if ( !(Game_mode & GM_MULTIPLAYER) ){
+                return;
+        }
 
-	Assert(sp);
+        Assert(sp);
 
-	if ( MULTIPLAYER_MASTER )
-		send_ship_weapon_change( sp, MULTI_SECONDARY_CHANGED, swp->current_secondary_bank, (sp->flags[Ship::Ship_Flags::Secondary_dual_fire])?1:0 );
+        if ( MULTIPLAYER_MASTER )
+                send_ship_weapon_change( sp, MULTI_SECONDARY_CHANGED, swp->current_secondary_bank, (sp->flags[Ship::Ship_Flags::Secondary_dual_fire])?1:0 );
 #endif
 }
 
@@ -17400,11 +17392,11 @@ int ship_get_by_signature (int signature) {
 }
 
 ship_type_info* ship_get_type_info (object* objp) {
-    Assert (objp != NULL);
-    Assert (objp->type == OBJ_SHIP);
-    Assert (objp->instance > -1);
-    Assert (Ships[objp->instance].ship_info_index > -1);
-    Assert (Ship_info[Ships[objp->instance].ship_info_index].class_type > -1);
+    ASSERT (objp != NULL);
+    ASSERT (objp->type == OBJ_SHIP);
+    ASSERT (objp->instance > -1);
+    ASSERT (Ships[objp->instance].ship_info_index > -1);
+    ASSERT (Ship_info[Ships[objp->instance].ship_info_index].class_type > -1);
 
     return &Ship_types[Ship_info[Ships[objp->instance].ship_info_index]
                            .class_type];
@@ -17553,7 +17545,7 @@ int get_max_ammo_count_for_primary_bank (
 
     capacity = (float)Ship_info[ship_class].primary_bank_ammo_capacity[bank];
     size = (float)Weapon_info[ammo_type].cargo_size;
-    Assertion (
+    ASSERTX (
         size > 0.0f, "Weapon cargo size for %s must be greater than 0!",
         Weapon_info[ammo_type].name);
     return (int)std::lround (capacity / size);
@@ -17566,15 +17558,15 @@ int get_max_ammo_count_for_primary_bank (
 int get_max_ammo_count_for_bank (int ship_class, int bank, int ammo_type) {
     float capacity, size;
 
-    Assertion (
+    ASSERTX (
         ship_class < static_cast< int > (Ship_info.size ()),
         "Invalid ship_class of %d is >= Ship_info.size() (%d); get a coder!\n",
         ship_class, static_cast< int > (Ship_info.size ()));
-    Assertion (
+    ASSERTX (
         bank < MAX_SHIP_SECONDARY_BANKS,
         "Invalid secondary bank of %d (max is %d); get a coder!\n", bank,
         MAX_SHIP_SECONDARY_BANKS - 1);
-    Assertion (
+    ASSERTX (
         ammo_type < Num_weapon_types,
         "Invalid ammo_type of %d is >= Num_weapon_types (%d); get a coder!\n",
         ammo_type, Num_weapon_types);
@@ -17584,7 +17576,7 @@ int get_max_ammo_count_for_bank (int ship_class, int bank, int ammo_type) {
         capacity =
             (float)Ship_info[ship_class].secondary_bank_ammo_capacity[bank];
         size = (float)Weapon_info[ammo_type].cargo_size;
-        Assertion (
+        ASSERTX (
             size > 0.0f, "Weapon cargo size for %s must be greater than 0!",
             Weapon_info[ammo_type].name);
         return fl2ir (capacity / size);
@@ -17598,11 +17590,11 @@ int get_max_ammo_count_for_turret_bank (
     ship_weapon* swp, int bank, int ammo_type) {
     float capacity, size;
 
-    Assertion (
+    ASSERTX (
         bank < MAX_SHIP_SECONDARY_BANKS,
         "Invalid secondary bank of %d (max is %d); get a coder!\n", bank,
         MAX_SHIP_SECONDARY_BANKS - 1);
-    Assertion (
+    ASSERTX (
         ammo_type < Num_weapon_types,
         "Invalid ammo_type of %d is >= Num_weapon_types (%d); get a coder!\n",
         ammo_type, Num_weapon_types);
@@ -17628,7 +17620,7 @@ void ship_page_in () {
 
     ship_class_used = new int[Ship_info.size ()];
 
-    Verify (ship_class_used != NULL);
+    ASSERT (ship_class_used != NULL);
 
     // Mark all ship classes as not used
     memset (ship_class_used, 0, Ship_info.size () * sizeof (int));
@@ -17705,7 +17697,7 @@ void ship_page_in () {
         Ships[i].warpout_effect->pageIn ();
 
         // don't need this one anymore, it's already been accounted for
-        //	num_subsystems_needed +=
+        // num_subsystems_needed +=
         // Ship_info[Ships[i].ship_info_index].n_subsystems;
     }
 
@@ -17746,7 +17738,7 @@ void ship_page_in () {
     // pre-allocate the subsystems, this really only needs to happen for ships
     // which don't exist yet (ie, ships NOT in Ships[])
     if (!ship_allocate_subsystems (num_subsystems_needed, true)) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Attempt to page in new subsystems subsystems failed, which "
             "shouldn't be possible anymore. Currently allocated %d subsystems "
@@ -17808,7 +17800,7 @@ void ship_page_in () {
                 // model is correct
                 test_id = model_load (
                     sip->pof_file, sip->n_subsystems, &sip->subsystems[0]);
-                Assert (test_id == model_previously_loaded);
+                ASSERT (test_id == model_previously_loaded);
 
                 break;
             }
@@ -17836,7 +17828,7 @@ void ship_page_in () {
                             (sip->subsystems[j].model_num >= 0)
                                 ? model_get (sip->subsystems[j].model_num)
                                 : NULL;
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "After ship_copy_subsystem_fixup, ship '%s' does "
                             "not have subsystem '%s' linked into the model "
@@ -17853,8 +17845,8 @@ void ship_page_in () {
             }
             else {
                 // Just to be safe (I mean to check that my code works...)
-                Assert (sip->model_num >= 0);
-                Assert (sip->model_num == model_previously_loaded);
+                ASSERT (sip->model_num >= 0);
+                ASSERT (sip->model_num == model_previously_loaded);
 
 #ifndef NDEBUG
                 for (j = 0; j < sip->n_subsystems; j++) {
@@ -17866,7 +17858,7 @@ void ship_page_in () {
                             (sip->subsystems[j].model_num >= 0)
                                 ? model_get (sip->subsystems[j].model_num)
                                 : NULL;
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Without ship_copy_subsystem_fixup, ship '%s' "
                             "does not have subsystem '%s' linked into the "
@@ -17887,12 +17879,12 @@ void ship_page_in () {
             sip->model_num = model_load (
                 sip->pof_file, sip->n_subsystems, &sip->subsystems[0]);
 
-            Assert (sip->model_num >= 0);
+            ASSERT (sip->model_num >= 0);
 
 #ifndef NDEBUG
             // Verify that all the subsystem model numbers are updated
             for (j = 0; j < sip->n_subsystems; j++)
-                Assertion (
+                ASSERTX (
                     sip->subsystems[j].model_num == sip->model_num,
                     "Model reference for subsystem %s (model num: %d) on "
                     "model %s (model num: %d) is invalid.\n",
@@ -18131,8 +18123,8 @@ void ship_page_out_textures (int ship_index, bool release) {
 
 // function to return true if support ships are allowed in the mission for the
 // given object.
-//	In single player, must be friendly and not Shivan. (Goober5000 - Shivans
-// can now have support) 	In multiplayer -- to be coded by Mark Allender
+// In single player, must be friendly and not Shivan. (Goober5000 - Shivans
+// can now have support)        In multiplayer -- to be coded by Mark Allender
 // after 5/4/98 -- MK, 5/4/98
 int is_support_allowed (object* objp, bool do_simple_check) {
     int result = -1;
@@ -18160,7 +18152,7 @@ int is_support_allowed (object* objp, bool do_simple_check) {
                  The_mission.support_ships.max_support_ships)) {
                 // this shouldn't happen because we've reached one of the
                 // limits
-                Assert (result != 2);
+                ASSERT (result != 2);
 
                 // nothing arriving and no ships available in mission
                 if ((Arriving_support_ship == NULL) &&
@@ -18178,7 +18170,7 @@ int is_support_allowed (object* objp, bool do_simple_check) {
         if ((result == 0 || result == 2) &&
             (The_mission.support_ships.arrival_location ==
              ARRIVE_FROM_DOCK_BAY)) {
-            Assert (The_mission.support_ships.arrival_anchor != -1);
+            ASSERT (The_mission.support_ships.arrival_anchor != -1);
 
             // ensure it's in-mission
             int temp = ship_name_lookup (
@@ -18230,7 +18222,7 @@ int is_support_allowed (object* objp, bool do_simple_check) {
             0) {
             static bool warned_about_rearm_dockpoint = false;
             if (!warned_about_rearm_dockpoint) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Support not allowed for %s because its model lacks a "
                     "rearming dockpoint!",
@@ -18285,8 +18277,8 @@ void object_jettison_cargo (
     object* objp, object* cargo_objp, float jettison_speed,
     bool jettison_new) {
     // make sure we are docked
-    Assert ((objp != NULL) && (cargo_objp != NULL));
-    Assert (dock_check_find_direct_docked_object (objp, cargo_objp));
+    ASSERT ((objp != NULL) && (cargo_objp != NULL));
+    ASSERT (dock_check_find_direct_docked_object (objp, cargo_objp));
 
     vec3d impulse, pos;
     ship* shipp = &Ships[objp->instance];
@@ -18357,7 +18349,7 @@ void object_jettison_cargo (
 }
 
 float ship_get_exp_damage (object* objp) {
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp->type == OBJ_SHIP);
     float damage;
 
     ship* shipp = &Ships[objp->instance];
@@ -18378,7 +18370,7 @@ static int ship_get_exp_propagates (ship* sp) {
 
 float ship_get_exp_outer_rad (object* ship_objp) {
     float outer_rad;
-    Assert (ship_objp->type == OBJ_SHIP);
+    ASSERT (ship_objp->type == OBJ_SHIP);
 
     if (Ships[ship_objp->instance].special_exp_outer == -1) {
         outer_rad = Ship_info[Ships[ship_objp->instance].ship_info_index]
@@ -18427,7 +18419,7 @@ ship_subsys* ship_get_subsys (ship* shipp, const char* subsys_name) {
 }
 
 int ship_get_num_subsys (ship* shipp) {
-    Assert (shipp != NULL);
+    ASSERT (shipp != NULL);
 
     return Ship_info[shipp->ship_info_index].n_subsystems;
 }
@@ -18438,7 +18430,7 @@ int wing_has_conflicting_teams (int wing_index) {
     int first_team, idx;
 
     // sanity checks
-    Assert (
+    ASSERT (
         (wing_index >= 0) && (wing_index < Num_wings) &&
         (Wings[wing_index].wave_count > 0));
     if ((wing_index < 0) || (wing_index >= Num_wings) ||
@@ -18447,12 +18439,12 @@ int wing_has_conflicting_teams (int wing_index) {
     }
 
     // check teams
-    Assert (Wings[wing_index].ship_index[0] >= 0);
+    ASSERT (Wings[wing_index].ship_index[0] >= 0);
     if (Wings[wing_index].ship_index[0] < 0) { return -1; }
     first_team = Ships[Wings[wing_index].ship_index[0]].team;
     for (idx = 1; idx < Wings[wing_index].wave_count; idx++) {
         // more sanity checks
-        Assert (Wings[wing_index].ship_index[idx] >= 0);
+        ASSERT (Wings[wing_index].ship_index[idx] >= 0);
         if (Wings[wing_index].ship_index[idx] < 0) { return -1; }
 
         // if we've got a team conflict
@@ -18473,7 +18465,7 @@ int ship_get_reinforcement_team (int r_index) {
     p_object* p_objp;
 
     // sanity checks
-    Assert ((r_index >= 0) && (r_index < Num_reinforcements));
+    ASSERT ((r_index >= 0) && (r_index < Num_reinforcements));
     if ((r_index < 0) || (r_index >= Num_reinforcements)) return -1;
 
     // if the reinforcement is a ship
@@ -18561,14 +18553,14 @@ void ship_update_artillery_lock () {
         }
 
         // get weapon info for the targeting laser he's firing
-        Assert (
+        ASSERT (
             (shipp->weapons.current_primary_bank >= 0) &&
             (shipp->weapons.current_primary_bank < 2));
         if ((shipp->weapons.current_primary_bank < 0) ||
             (shipp->weapons.current_primary_bank >= 2)) {
             continue;
         }
-        Assert (
+        ASSERT (
             shipp->weapons
                 .primary_bank_weapons[shipp->weapons.current_primary_bank] >=
             0);
@@ -18577,7 +18569,7 @@ void ship_update_artillery_lock () {
             0) {
             continue;
         }
-        Assert (
+        ASSERT (
             (Weapon_info[shipp->weapons.primary_bank_weapons
                              [shipp->weapons.current_primary_bank]]
                  .wi_flags[Weapon::Info_Flags::Beam]) &&
@@ -18650,7 +18642,7 @@ void ship_update_artillery_lock () {
  */
 int check_world_pt_in_expanded_ship_bbox (
     vec3d* world_pt, object* objp, float delta_box) {
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp->type == OBJ_SHIP);
 
     vec3d temp, ship_pt;
     polymodel* pm;
@@ -18715,7 +18707,7 @@ float ship_get_max_speed (ship* shipp) {
  * Determine warpout speed of ship
  */
 float ship_get_warpout_speed (object* objp) {
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp->type == OBJ_SHIP);
 
     ship_info* sip = &Ship_info[Ships[objp->instance].ship_info_index];
     // WMC - Any speed is good for in place anims (aka BSG FTL effect)
@@ -18742,7 +18734,7 @@ float ship_get_warpout_speed (object* objp) {
  * Returns true if ship is beginning to speed up in warpout
  */
 int ship_is_beginning_warpout_speedup (object* objp) {
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp->type == OBJ_SHIP);
 
     ai_info* aip;
 
@@ -18762,15 +18754,15 @@ int ship_is_beginning_warpout_speedup (object* objp) {
  * Return the length of a ship
  */
 float ship_class_get_length (ship_info* sip) {
-    Assert (sip->model_num >= 0);
+    ASSERT (sip->model_num >= 0);
     polymodel* pm = model_get (sip->model_num);
     return (pm->maxs.xyz.z - pm->mins.xyz.z);
 }
 
 // Goober5000
 void ship_set_new_ai_class (int ship_num, int new_ai_class) {
-    Assert (ship_num >= 0 && ship_num < MAX_SHIPS);
-    Assert (new_ai_class >= 0);
+    ASSERT (ship_num >= 0 && ship_num < MAX_SHIPS);
+    ASSERT (new_ai_class >= 0);
 
     ai_info* aip = &Ai_info[Ships[ship_num].ai_index];
 
@@ -18788,9 +18780,9 @@ void ship_set_new_ai_class (int ship_num, int new_ai_class) {
 // Goober5000
 void ship_subsystem_set_new_ai_class (
     int ship_num, char* subsystem, int new_ai_class) {
-    Assert (ship_num >= 0 && ship_num < MAX_SHIPS);
-    Assert (subsystem);
-    Assert (new_ai_class >= 0);
+    ASSERT (ship_num >= 0 && ship_num < MAX_SHIPS);
+    ASSERT (subsystem);
+    ASSERT (new_ai_class >= 0);
 
     ship_subsys* ss;
 
@@ -18815,7 +18807,7 @@ void wing_load_squad_bitmap (wing* w) {
     if (w == NULL) { return; }
 
     // make sure one is not already set?!?
-    Assert (w->wing_insignia_texture == -1);
+    ASSERT (w->wing_insignia_texture == -1);
 
     // try and set the new one
     if (w->wing_squad_filename[0] != '\0') {
@@ -18834,19 +18826,19 @@ void wing_load_squad_bitmap (wing* w) {
 // Goober5000 - needed by new hangar depart code
 // check whether this ship has a docking bay
 bool ship_has_dock_bay (int shipnum) {
-    Assert (shipnum >= 0 && shipnum < MAX_SHIPS);
+    ASSERT (shipnum >= 0 && shipnum < MAX_SHIPS);
 
     polymodel* pm;
 
     pm = model_get (Ship_info[Ships[shipnum].ship_info_index].model_num);
-    Assert (pm);
+    ASSERT (pm);
 
     return (pm->ship_bay && (pm->ship_bay->num_paths > 0));
 }
 
 // Goober5000
 bool ship_useful_for_departure (int shipnum, int /*path_mask*/) {
-    Assert (shipnum >= 0 && shipnum < MAX_SHIPS);
+    ASSERT (shipnum >= 0 && shipnum < MAX_SHIPS);
 
     // not valid if dying or departing
     if (Ships[shipnum].is_dying_or_departing ()) return false;
@@ -18873,9 +18865,9 @@ bool ship_useful_for_departure (int shipnum, int /*path_mask*/) {
 int ship_get_ship_for_departure (int team) {
     for (ship_obj* so = GET_FIRST (&Ship_obj_list);
          so != END_OF_LIST (&Ship_obj_list); so = GET_NEXT (so)) {
-        Assert (so->objnum >= 0);
+        ASSERT (so->objnum >= 0);
         int shipnum = Objects[so->objnum].instance;
-        Assert (shipnum >= 0);
+        ASSERT (shipnum >= 0);
 
         if ((Ships[shipnum].team == team) &&
             ship_useful_for_departure (shipnum))
@@ -18888,7 +18880,7 @@ int ship_get_ship_for_departure (int team) {
 
 // Goober5000 - check if all fighterbays on a ship have been destroyed
 bool ship_fighterbays_all_destroyed (ship* shipp) {
-    Assert (shipp);
+    ASSERT (shipp);
     ship_subsys* subsys;
     int num_fighterbay_subsystems = 0;
 
@@ -18921,7 +18913,7 @@ bool ship_fighterbays_all_destroyed (ship* shipp) {
 
 // moved here by Goober5000
 static bool ship_subsys_is_fighterbay (ship_subsys* ss) {
-    Assert (ss);
+    ASSERT (ss);
 
     if (!strncasecmp (NOX ("fighter"), ss->system_info->name, 7)) { return true; }
 
@@ -18930,7 +18922,7 @@ static bool ship_subsys_is_fighterbay (ship_subsys* ss) {
 
 // Goober5000
 bool ship_subsys_takes_damage (ship_subsys* ss) {
-    Assert (ss);
+    ASSERT (ss);
 
     return (ss->max_hits > SUBSYS_MAX_HITS_THRESHOLD);
 }
@@ -18938,9 +18930,9 @@ bool ship_subsys_takes_damage (ship_subsys* ss) {
 // Goober5000
 void ship_do_submodel_rotation (
     ship* shipp, model_subsystem* psub, ship_subsys* pss) {
-    Assert (shipp);
-    Assert (psub);
-    Assert (pss);
+    ASSERT (shipp);
+    ASSERT (psub);
+    ASSERT (pss);
 
     // check if we actually can rotate
     if (!(pss->flags[Ship::Subsystem_Flags::Rotates])) { return; }
@@ -19076,7 +19068,7 @@ static int ship_class_get_priority (int ship_class) {
     else if (sip->flags[Info_Flags::Navbuoy])
         return 16;
 
-    fs2::dialog::warning (LOCATION, "Unknown priority for ship class '%s'!", sip->name);
+    WARNINGF (LOCATION, "Unknown priority for ship class '%s'!", sip->name);
     return 17 + ship_class;
 }
 
@@ -19122,7 +19114,7 @@ int damage_type_add (char* name) {
     strncpy (dts.name, name, NAME_LENGTH - 1);
 
     if (strlen (name) > NAME_LENGTH - 1) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Damage type name '%s' is too long and has been truncated to '%s'",
             name, dts.name);
@@ -19433,7 +19425,7 @@ float ArmorType::GetDamage (
             case AT_TYPE_SET: damage_applied = curr_arg; break;
             case AT_TYPE_STORE:
                 if (using_storage || using_constant) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Cannot use +Stored Value: or +Constant: with "
                         "+Store:, that would be bad. Skipping calculation.");
@@ -19443,7 +19435,7 @@ float ArmorType::GetDamage (
                     // Nuke: idiotproof this, no segfault 4 u
                     if ((storage_idx < 0) ||
                         (storage_idx >= AT_NUM_STORAGE_LOCATIONS)) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "+Value: for +Store: calculation out of range. "
                             "Should be between 0 and %i. Read: %i, Skipping "
@@ -19458,7 +19450,7 @@ float ArmorType::GetDamage (
                 break;
             case AT_TYPE_LOAD:
                 if (using_storage || using_constant) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Cannot use +Stored Value: or +Constant: with +Load:, "
                         "that would be bad. Skipping calculation.");
@@ -19468,7 +19460,7 @@ float ArmorType::GetDamage (
                     // Nuke: idiotproof this, no segfault 4 u
                     if ((storage_idx < 0) ||
                         (storage_idx >= AT_NUM_STORAGE_LOCATIONS)) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "+Value: for +Load: calculation out of range. "
                             "Should be between 0 and %i. Read: %i, Skipping "
@@ -19572,7 +19564,7 @@ float ArmorType::GetPiercingLimit (int damage_type_idx) {
 ArmorType::ArmorType (const char* in_name) {
     auto len = strlen (in_name);
     if (len >= NAME_LENGTH) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Armor name %s is %zu"
             " characters too long, and will be truncated",
@@ -19609,7 +19601,7 @@ void ArmorType::ParseData () {
 
             // Make sure we have a valid calculation type
             if (calc_type == -1) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Armor '%s': Armor calculation type '%s' is invalid, and "
                     "has been skipped",
@@ -19634,7 +19626,7 @@ void ArmorType::ParseData () {
                     // Nuke: idiot-proof
                     if ((temp_int < 0) ||
                         (temp_int >= AT_NUM_STORAGE_LOCATIONS)) {
-                        fs2::dialog::error (
+                        ASSERTF (
                             LOCATION,
                             "+Stored Value: is out of range. Should be "
                             "between 0 and %i. Read: %i, Using value 0.",
@@ -19654,7 +19646,7 @@ void ArmorType::ParseData () {
                     temp_int = armor_type_constants_get (buf);
                     // Nuke: idiot proof some more
                     if (temp_int == AT_CONSTANT_BAD_VAL) {
-                        fs2::dialog::error (
+                        ASSERTF (
                             LOCATION,
                             "Invalid +Constant: name, '%s'. Using value 0.",
                             buf);
@@ -19715,7 +19707,7 @@ void ArmorType::ParseData () {
             stuff_string (buf, F_NAME, NAME_LENGTH);
             temp_int = difficulty_scale_type_get (buf);
             if (temp_int == ADT_DIFF_SCALE_BAD_VAL) {
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION,
                     "Invalid +Difficulty Scale Type: name: '%s'. Reverting to "
                     "default behavior.",
@@ -19731,7 +19723,7 @@ void ArmorType::ParseData () {
         // If we have calculations in this damage type, add it
         if (!no_content) {
             if (adt.Calculations.size () != adt.Arguments.size ()) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Armor '%s', damage type %zu"
                     ": Armor has a different number of calculation types than "
@@ -19862,7 +19854,7 @@ void parse_ai_target_priorities () {
                 }
             }
             if (j == MAX_WEAPON_TYPES) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Unidentified weapon class '%s' set for target priority "
                     "group '%s'\n",
@@ -19884,7 +19876,7 @@ void parse_ai_target_priorities () {
                 }
             }
             if (j == num_ai_tgt_obj_flags) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Unidentified object flag '%s' set for target priority "
                     "group '%s'\n",
@@ -19906,7 +19898,7 @@ void parse_ai_target_priorities () {
                 }
             }
             if (j == num_ai_tgt_ship_flags) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Unidentified ship class flag '%s' set for target "
                     "priority group '%s'\n",
@@ -19929,7 +19921,7 @@ void parse_ai_target_priorities () {
                 }
             }
             if (j == num_ai_tgt_weapon_info_flags) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Unidentified weapon class flag '%s' set for target "
                     "priority group '%s'\n",
@@ -20045,15 +20037,15 @@ void init_path_metadata (path_metadata& metadata) {
 }
 
 gamesnd_id ship_get_sound (object* objp, GameSounds id) {
-    Assert (objp != NULL);
-    Assert (gamesnd_game_sound_valid (gamesnd_id (id)));
+    ASSERT (objp != NULL);
+    ASSERT (gamesnd_game_sound_valid (gamesnd_id (id)));
 
     // It's possible that this gets called when an object (in most cases the
     // player) is dead or an observer
     if (objp->type == OBJ_OBSERVER || objp->type == OBJ_GHOST)
         return gamesnd_id (id);
 
-    Assertion (
+    ASSERTX (
         objp->type == OBJ_SHIP, "Expected a ship, got '%s'.",
         Object_type_names[objp->type]);
 
@@ -20070,14 +20062,14 @@ gamesnd_id ship_get_sound (object* objp, GameSounds id) {
 }
 
 bool ship_has_sound (object* objp, GameSounds id) {
-    Assert (objp != NULL);
-    Assert (gamesnd_game_sound_valid (id));
+    ASSERT (objp != NULL);
+    ASSERT (gamesnd_game_sound_valid (id));
 
     // It's possible that this gets called when an object (in most cases the
     // player) is dead or an observer
     if (objp->type == OBJ_OBSERVER || objp->type == OBJ_GHOST) return false;
 
-    Assertion (
+    ASSERTX (
         objp->type == OBJ_SHIP, "Expected a ship, got '%s'.",
         Object_type_names[objp->type]);
 
@@ -20130,7 +20122,7 @@ void ship_set_thruster_info (
     mst->length.xyz.x = obj->phys_info.side_thrust;
     mst->length.xyz.y = obj->phys_info.vert_thrust;
 
-    //	Maybe add noise to thruster geometry.
+    // Maybe add noise to thruster geometry.
     if (!(sip->flags[Ship::Info_Flags::No_thruster_geo_noise])) {
         mst->length.xyz.z *= (1.0f + frand () / 5.0f - 0.1f);
         mst->length.xyz.y *= (1.0f + frand () / 5.0f - 0.1f);

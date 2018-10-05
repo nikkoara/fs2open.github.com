@@ -45,7 +45,7 @@ struct campaign_info;
 #define PLAYER_FLAGS_LINK_SECONDARY \
     (1 << 10) // secondary weapons were linked last mission
 #define PLAYER_FLAGS_NO_CHECK_ALL_ALONE_MSG \
-    (1 << 11) //	player can't receive 'you're all alone...' message from
+    (1 << 11) // player can't receive 'you're all alone...' message from
               // Terran Command
 #define PLAYER_FLAGS_KILLED_BY_EXPLOSION \
     (1 << 12) // player was killed by an instantaneous area-effect explosion
@@ -143,7 +143,7 @@ public:
                                 // screen or not
     float lock_time_to_target;  // time left (in milliseconds) before minimum
                                 // time to lock elapsed
-    float lock_dist_to_target;  //	distance from lock indicator to target (in
+    float lock_dist_to_target;  // distance from lock indicator to target (in
                                 // pixels)
 
     int last_ship_flown_si_index; // ship info index of ship most recently
@@ -155,12 +155,12 @@ public:
     scoring_struct stats; // scoring and stats info for the player (points to
                           // multi_stats or single_stats)
 
-    int friendly_hits;     //	Number of times hit a friendly ship this mission.
-    float friendly_damage; //	Total friendly damage done in mission.
+    int friendly_hits;     // Number of times hit a friendly ship this mission.
+    float friendly_damage; // Total friendly damage done in mission.
                            // Diminishes over time.
-    fix friendly_last_hit_time; //	Missiontime of last hit on friendly.  Used
+    fix friendly_last_hit_time; // Missiontime of last hit on friendly.  Used
                                 // to decay friendly damage.
-    fix last_warning_message_time; //	Time at which last message to player
+    fix last_warning_message_time; // Time at which last message to player
                                    // was sent regarding friendly damage.
 
     int control_mode; // Used to determine what mode player control is in.  For
@@ -169,7 +169,7 @@ public:
 
     int check_warn_timestamp; // Timestamp used to determine when to check for
                               // possible warning,
-                              //	done so we don't check each frame
+                              // done so we don't check each frame
 
     int distance_warning_count; // Number of distance warings
     int distance_warning_time;  // Time at which distance warning was given
@@ -257,7 +257,7 @@ public:
                           // correspond to squad filename NOTE : this bitmap is
                           // in TEXTURE format. do not try to use this bitmap
                           // to
-                          //			 render in screen format
+                          // render in screen format
     int tips;             // show tips or not
 
     int shield_penalty_stamp; // timestamp for when we can next apply a shield

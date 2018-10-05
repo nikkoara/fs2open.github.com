@@ -68,7 +68,7 @@ void parse_mod_table (const char* filename) {
                  gameversion::format_version (Targetted_version).c_str ()));
 
             if (!gameversion::check_at_least (Targetted_version)) {
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION,
                     "This modification needs at least version %s of FreeSpace "
                     "Open. However, the current is only %s!",

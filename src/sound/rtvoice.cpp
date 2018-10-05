@@ -37,7 +37,7 @@ typedef struct rtv_out_buffer {
 static rtv_out_buffer
     Rtv_output_buffers[MAX_RTV_OUT_BUFFERS]; // data for output buffers
 
-// static struct	t_CodeInfo Rtv_code_info;		// Parms will need to be
+// static struct        t_CodeInfo Rtv_code_info;               // Parms will need to be
 // transmitted with packets
 
 // recording timer data
@@ -82,8 +82,8 @@ Uint32 TimeProc (Uint32 interval, void* /*param*/) {
 
 // Try to pick the most appropriate recording format
 //
-// exit:	0	=>		success
-//			!0	=>		failure
+// exit:        0       =>              success
+// !0      =>              failure
 int rtvoice_pick_record_format () {
     int i;
 
@@ -102,47 +102,47 @@ int rtvoice_pick_record_format () {
     return 0;
 }
 
-// input:	qos => new quality of service (1..10)
+// input:       qos => new quality of service (1..10)
 void rtvoice_set_qos (int /*qos*/) {
     // TODO:  Speex stuff
 }
 
 // Init the recording portion of the real-time voice system
-// input:	qos	=> quality of service (1..10) 1 is highest compression, 10 is
+// input:       qos     => quality of service (1..10) 1 is highest compression, 10 is
 // highest quality
-//	exit:	0	=>	success
-//			!0	=>	failure, recording not possible
+// exit:   0       =>      success
+// !0      =>      failure, recording not possible
 int rtvoice_init_recording (int /*qos*/) {
 #if 0
-	if ( !Rtv_recording_inited ) {
-		if ( rtvoice_pick_record_format() ) {
-			return -1;
-		}
+        if ( !Rtv_recording_inited ) {
+                if ( rtvoice_pick_record_format() ) {
+                        return -1;
+                }
 
-		Rtv_capture_raw_buffer_size = Rtv_formats[Rtv_recording_format].frequency * (RTV_BUFFER_TIME) * fl2i(Rtv_formats[Rtv_recording_format].bits_per_sample/8.0f);
+                Rtv_capture_raw_buffer_size = Rtv_formats[Rtv_recording_format].frequency * (RTV_BUFFER_TIME) * fl2i(Rtv_formats[Rtv_recording_format].bits_per_sample/8.0f);
 
-		if ( dscap_create_buffer(Rtv_formats[Rtv_recording_format].frequency, Rtv_formats[Rtv_recording_format].bits_per_sample, 1, RTV_BUFFER_TIME) ) {
-			return -1;
-		}
+                if ( dscap_create_buffer(Rtv_formats[Rtv_recording_format].frequency, Rtv_formats[Rtv_recording_format].bits_per_sample, 1, RTV_BUFFER_TIME) ) {
+                        return -1;
+                }
 
-		// malloc out the voice data buffer for raw (uncompressed) recorded sound
-		if ( Rtv_capture_raw_buffer ) {
-			vm_free(Rtv_capture_raw_buffer);
-			Rtv_capture_raw_buffer=NULL;
-		}
-		Rtv_capture_raw_buffer = (unsigned char*)vm_malloc(Rtv_capture_raw_buffer_size);
+                // malloc out the voice data buffer for raw (uncompressed) recorded sound
+                if ( Rtv_capture_raw_buffer ) {
+                        vm_free(Rtv_capture_raw_buffer);
+                        Rtv_capture_raw_buffer=NULL;
+                }
+                Rtv_capture_raw_buffer = (unsigned char*)vm_malloc(Rtv_capture_raw_buffer_size);
 
-		// malloc out voice data buffer for compressed recorded sound
-		if ( Rtv_capture_compressed_buffer ) {
-			vm_free(Rtv_capture_compressed_buffer);
-			Rtv_capture_compressed_buffer=NULL;
-		}
-		Rtv_capture_compressed_buffer_size=Rtv_capture_raw_buffer_size;	// be safe and allocate same as uncompressed
-		Rtv_capture_compressed_buffer = (unsigned char*)vm_malloc(Rtv_capture_compressed_buffer_size);
+                // malloc out voice data buffer for compressed recorded sound
+                if ( Rtv_capture_compressed_buffer ) {
+                        vm_free(Rtv_capture_compressed_buffer);
+                        Rtv_capture_compressed_buffer=NULL;
+                }
+                Rtv_capture_compressed_buffer_size=Rtv_capture_raw_buffer_size; // be safe and allocate same as uncompressed
+                Rtv_capture_compressed_buffer = (unsigned char*)vm_malloc(Rtv_capture_compressed_buffer_size);
 
-		Rtv_recording_inited=1;
-	}
-	return 0;
+                Rtv_recording_inited=1;
+        }
+        return 0;
 #else
     return -1;
 #endif
@@ -182,12 +182,12 @@ void rtvoice_close_recording () {
 }
 
 // Open a stream for recording (recording begins immediately)
-// exit:	0	=>	success
-//			!0	=>	failure
+// exit:        0       =>      success
+// !0      =>      failure
 int rtvoice_start_recording (void (*user_callback) (), int callback_time) {
     if (!dscap_supported ()) { return -1; }
 
-    Assert (Rtv_recording_inited);
+    ASSERT (Rtv_recording_inited);
 
     if (Rtv_recording) { return -1; }
 
@@ -212,24 +212,24 @@ int rtvoice_start_recording (void (*user_callback) (), int callback_time) {
 }
 
 // Retrieve the recorded voice data
-// input:	outbuf					=>		output parameter, recorded voice
+// input:       outbuf                                  =>              output parameter, recorded voice
 // stored here
-//				compressed_size		=>		output parameter, size in bytes of
+// compressed_size         =>              output parameter, size in bytes of
 // recorded voice after compression
-//				uncompressed_size		=>		output parameter, size in bytes
+// uncompressed_size               =>              output parameter, size in bytes
 // of
-// recorded voice before compression 				gain => output parameter,
+// recorded voice before compression                            gain => output parameter,
 // gain value which must be passed to decoder outbuf_raw
-//=>		output optional parameter, pointer to the raw sound data making up
+//=>            output optional parameter, pointer to the raw sound data making up
 // the compressed chunk
-//				outbuf_size_raw		=>		output optional parameter, size of
+// outbuf_size_raw         =>              output optional parameter, size of
 // the outbuf_raw buffer
 //
 // NOTE: function converts voice data into compressed format
 void rtvoice_get_data (unsigned char** outbuf, int* size, double* /*gain*/) {
     int max_size, raw_size;
     FS2_UNUSED (max_size);
-    
+
     max_size = dscap_max_buffersize ();
 
     *outbuf = NULL;
@@ -239,7 +239,7 @@ void rtvoice_get_data (unsigned char** outbuf, int* size, double* /*gain*/) {
 
     // TODO: compress voice data
 
-    //	*gain = Rtv_code_info.Gain;
+    // *gain = Rtv_code_info.Gain;
     *size = raw_size;
     *outbuf = Rtv_capture_raw_buffer;
 }
@@ -276,8 +276,8 @@ void rtvoice_reset_out_buffers () {
 }
 
 // Init the playback portion of the real-time voice system
-//	exit:	0	=>	success
-//			!0	=>	failure, playback not possible
+// exit:   0       =>      success
+// !0      =>      failure, playback not possible
 int rtvoice_init_playback () {
     rtv_format* rtvf = NULL;
 
@@ -297,7 +297,7 @@ int rtvoice_init_playback () {
             (RTV_BUFFER_TIME)*fl2i (rtvf->bits_per_sample / 8.0f);
         Rtv_playback_uncompressed_buffer =
             (unsigned char*)vm_malloc (Rtv_playback_uncompressed_buffer_size);
-        Assert (Rtv_playback_uncompressed_buffer);
+        ASSERT (Rtv_playback_uncompressed_buffer);
 
         Rtv_playback_inited = 1;
     }
@@ -339,7 +339,7 @@ int rtvoice_create_playback_buffer () {
 }
 
 void rtvoice_stop_playback (int index) {
-    Assert (index >= 0 && index < MAX_RTV_OUT_BUFFERS);
+    ASSERT (index >= 0 && index < MAX_RTV_OUT_BUFFERS);
 
     if (Rtv_output_buffers[index].flags & RTV_OUT_FLAG_USED) {
         if (Rtv_output_buffers[index].ds_handle != -1) {
@@ -356,7 +356,7 @@ void rtvoice_stop_playback_all () {
 
 // Close a stream that was opened for real-time voice output
 void rtvoice_free_playback_buffer (int index) {
-    Assert (index >= 0 && index < MAX_RTV_OUT_BUFFERS);
+    ASSERT (index >= 0 && index < MAX_RTV_OUT_BUFFERS);
 
     if (Rtv_output_buffers[index].flags & RTV_OUT_FLAG_USED) {
         Rtv_output_buffers[index].flags = 0;
@@ -369,8 +369,8 @@ void rtvoice_free_playback_buffer (int index) {
 }
 
 // Play sound data
-// exit:	>=0	=>	handle to playing sound
-//			-1		=>	error, voice not played
+// exit:        >=0     =>      handle to playing sound
+// -1              =>      error, voice not played
 sound_handle rtvoice_play (int index, unsigned char* data, int size) {
     int ds_handle;
 

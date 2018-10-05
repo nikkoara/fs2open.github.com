@@ -724,7 +724,7 @@ void options_multi_notify_process () {
 void options_multi_load_protocol_controls () {
     int idx;
 
-    Assert (Om_window != NULL);
+    ASSERT (Om_window != NULL);
 
     // instantiate all the buttons
     for (idx = 0; idx < OM_PRO_NUM_BUTTONS; idx++) {
@@ -1143,7 +1143,7 @@ void options_multi_protocol_button_pressed (int n) {
             options_multi_enable_gen_controls ();
 
             // set the general screen mask
-            Assert (Om_mask_0 >= 0);
+            ASSERT (Om_mask_0 >= 0);
             Om_window->set_mask_bmap (
                 Om_mask_0, Om_background_0_mask_fname[gr_screen.res]);
         }
@@ -1166,7 +1166,7 @@ void options_multi_protocol_button_pressed (int n) {
             options_multi_enable_vox_controls ();
 
             // set the voice screen mask
-            Assert (Om_mask_1 >= 0);
+            ASSERT (Om_mask_1 >= 0);
             Om_window->set_mask_bmap (
                 Om_mask_1, Om_background_1_mask_fname[gr_screen.res]);
         }
@@ -1408,7 +1408,7 @@ void options_multi_protocol_add_current_ip () {
 void options_multi_load_gen_controls () {
     int idx;
 
-    Assert (Om_window != NULL);
+    ASSERT (Om_window != NULL);
 
     // instantiate all the buttons
     for (idx = 0; idx < OM_GEN_NUM_BUTTONS; idx++) {
@@ -1704,7 +1704,7 @@ void options_multi_gen_button_pressed (int n) {
 void options_multi_load_vox_controls () {
     int idx;
 
-    Assert (Om_window != NULL);
+    ASSERT (Om_window != NULL);
 
     // instantiate all the buttons
     for (idx = 0; idx < OM_VOX_NUM_BUTTONS; idx++) {
@@ -2395,7 +2395,7 @@ bool options_multi_accept () {
 // called only when the options menu is started
 void options_multi_select () {
     // set the windows mask bitmap
-    Assert (Om_mask_0 >= 0);
+    ASSERT (Om_mask_0 >= 0);
     Om_window->set_mask_bmap (
         Om_mask_0, Om_background_0_mask_fname[gr_screen.res]);
 

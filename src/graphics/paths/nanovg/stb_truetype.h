@@ -3,250 +3,250 @@
 // stb_truetype.h - v1.11 - public domain
 // authored from 2009-2015 by Sean Barrett / RAD Game Tools
 //
-//   This library processes TrueType files:
-//        parse files
-//        extract glyph metrics
-//        extract glyph shapes
-//        render glyphs to one-channel bitmaps with antialiasing (box filter)
+// This library processes TrueType files:
+// parse files
+// extract glyph metrics
+// extract glyph shapes
+// render glyphs to one-channel bitmaps with antialiasing (box filter)
 //
-//   Todo:
-//        non-MS cmaps
-//        crashproof on bad data
-//        hinting? (no longer patented)
-//        cleartype-style AA?
-//        optimize: use simple memory allocator for intermediates
-//        optimize: build edge-list directly from curves
-//        optimize: rasterize directly from curves?
+// Todo:
+// non-MS cmaps
+// crashproof on bad data
+// hinting? (no longer patented)
+// cleartype-style AA?
+// optimize: use simple memory allocator for intermediates
+// optimize: build edge-list directly from curves
+// optimize: rasterize directly from curves?
 //
 // ADDITIONAL CONTRIBUTORS
 //
-//   Mikko Mononen: compound shape support, more cmap formats
-//   Tor Andersson: kerning, subpixel rendering
+// Mikko Mononen: compound shape support, more cmap formats
+// Tor Andersson: kerning, subpixel rendering
 //
-//   Misc other:
-//       Ryan Gordon
-//       Simon Glass
+// Misc other:
+// Ryan Gordon
+// Simon Glass
 //
-//   Bug/warning reports/fixes:
-//       "Zer" on mollyrocket (with fix)
-//       Cass Everitt
-//       stoiko (Haemimont Games)
-//       Brian Hook
-//       Walter van Niftrik
-//       David Gow
-//       David Given
-//       Ivan-Assen Ivanov
-//       Anthony Pesch
-//       Johan Duparc
-//       Hou Qiming
-//       Fabian "ryg" Giesen
-//       Martins Mozeiko
-//       Cap Petschulat
-//       Omar Cornut
-//       github:aloucks
-//       Peter LaValle
-//       Sergey Popov
-//       Giumo X. Clanjor
-//       Higor Euripedes
-//       Thomas Fields
-//       Derek Vinyard
+// Bug/warning reports/fixes:
+// "Zer" on mollyrocket (with fix)
+// Cass Everitt
+// stoiko (Haemimont Games)
+// Brian Hook
+// Walter van Niftrik
+// David Gow
+// David Given
+// Ivan-Assen Ivanov
+// Anthony Pesch
+// Johan Duparc
+// Hou Qiming
+// Fabian "ryg" Giesen
+// Martins Mozeiko
+// Cap Petschulat
+// Omar Cornut
+// github:aloucks
+// Peter LaValle
+// Sergey Popov
+// Giumo X. Clanjor
+// Higor Euripedes
+// Thomas Fields
+// Derek Vinyard
 //
 // VERSION HISTORY
 //
-//   1.11 (2016-04-02) fix unused-variable warning
-//   1.10 (2016-04-02) user-defined fabs(); rare memory leak; remove duplicate
-//   typedef 1.09 (2016-01-16) warning fix; avoid crash on outofmem; use
-//   allocation userdata properly 1.08 (2015-09-13) document stbtt_Rasterize();
-//   fixes for vertical & horizontal edges 1.07 (2015-08-01) allow
-//   PackFontRanges to accept arrays of sparse codepoints;
-//                     variant PackFontRanges to pack and render in separate
-//                     phases; fix stbtt_GetFontOFfsetForIndex (never worked
-//                     for non-0 input?); fixed an assert() bug in the new
-//                     rasterizer replace assert() with STBTT_assert() in new
-//                     rasterizer
-//   1.06 (2015-07-14) performance improvements (~35% faster on x86 and x64 on
-//   test machine)
-//                     also more precise AA rasterizer, except if shapes
-//                     overlap remove need for STBTT_sort
-//   1.05 (2015-04-15) fix misplaced definitions for STBTT_STATIC
-//   1.04 (2015-04-15) typo in example
-//   1.03 (2015-04-12) STBTT_STATIC, fix memory leak in new packing, various
-//   fixes
+// 1.11 (2016-04-02) fix unused-variable warning
+// 1.10 (2016-04-02) user-defined fabs(); rare memory leak; remove duplicate
+// typedef 1.09 (2016-01-16) warning fix; avoid crash on outofmem; use
+// allocation userdata properly 1.08 (2015-09-13) document stbtt_Rasterize();
+// fixes for vertical & horizontal edges 1.07 (2015-08-01) allow
+// PackFontRanges to accept arrays of sparse codepoints;
+// variant PackFontRanges to pack and render in separate
+// phases; fix stbtt_GetFontOFfsetForIndex (never worked
+// for non-0 input?); fixed an assert() bug in the new
+// rasterizer replace assert() with STBTT_assert() in new
+// rasterizer
+// 1.06 (2015-07-14) performance improvements (~35% faster on x86 and x64 on
+// test machine)
+// also more precise AA rasterizer, except if shapes
+// overlap remove need for STBTT_sort
+// 1.05 (2015-04-15) fix misplaced definitions for STBTT_STATIC
+// 1.04 (2015-04-15) typo in example
+// 1.03 (2015-04-12) STBTT_STATIC, fix memory leak in new packing, various
+// fixes
 //
-//   Full history can be found at the end of this file.
+// Full history can be found at the end of this file.
 //
 // LICENSE
 //
-//   This software is dual-licensed to the public domain and under the
-//   following license: you are granted a perpetual, irrevocable license to
-//   copy, modify, publish, and distribute this file as you see fit.
+// This software is dual-licensed to the public domain and under the
+// following license: you are granted a perpetual, irrevocable license to
+// copy, modify, publish, and distribute this file as you see fit.
 //
 // USAGE
 //
-//   Include this file in whatever places neeed to refer to it. In ONE C/C++
-//   file, write:
-//      #define STB_TRUETYPE_IMPLEMENTATION
-//   before the #include of this file. This expands out the actual
-//   implementation into that C/C++ file.
+// Include this file in whatever places neeed to refer to it. In ONE C/C++
+// file, write:
+// #define STB_TRUETYPE_IMPLEMENTATION
+// before the #include of this file. This expands out the actual
+// implementation into that C/C++ file.
 //
-//   To make the implementation private to the file that generates the
-//   implementation,
-//      #define STBTT_STATIC
+// To make the implementation private to the file that generates the
+// implementation,
+// #define STBTT_STATIC
 //
-//   Simple 3D API (don't ship this, but it's fine for tools and quick start)
-//           stbtt_BakeFontBitmap()               -- bake a font to a bitmap
-//           for use as texture stbtt_GetBakedQuad()                 -- compute
-//           quad to draw for a given char
+// Simple 3D API (don't ship this, but it's fine for tools and quick start)
+// stbtt_BakeFontBitmap()               -- bake a font to a bitmap
+// for use as texture stbtt_GetBakedQuad()                 -- compute
+// quad to draw for a given char
 //
-//   Improved 3D API (more shippable):
-//           #include "stb_rect_pack.h"           -- optional, but you really
-//           want it stbtt_PackBegin() stbtt_PackSetOversample()            --
-//           for improved quality on small fonts stbtt_PackFontRanges() -- pack
-//           and renders stbtt_PackEnd() stbtt_GetPackedQuad()
+// Improved 3D API (more shippable):
+// #include "stb_rect_pack.h"           -- optional, but you really
+// want it stbtt_PackBegin() stbtt_PackSetOversample()            --
+// for improved quality on small fonts stbtt_PackFontRanges() -- pack
+// and renders stbtt_PackEnd() stbtt_GetPackedQuad()
 //
-//   "Load" a font file from a memory buffer (you have to keep the buffer
-//   loaded)
-//           stbtt_InitFont()
-//           stbtt_GetFontOffsetForIndex()        -- use for TTC font
-//           collections
+// "Load" a font file from a memory buffer (you have to keep the buffer
+// loaded)
+// stbtt_InitFont()
+// stbtt_GetFontOffsetForIndex()        -- use for TTC font
+// collections
 //
-//   Render a unicode codepoint to a bitmap
-//           stbtt_GetCodepointBitmap()           -- allocates and returns a
-//           bitmap stbtt_MakeCodepointBitmap()          -- renders into bitmap
-//           you provide stbtt_GetCodepointBitmapBox()        -- how big the
-//           bitmap must be
+// Render a unicode codepoint to a bitmap
+// stbtt_GetCodepointBitmap()           -- allocates and returns a
+// bitmap stbtt_MakeCodepointBitmap()          -- renders into bitmap
+// you provide stbtt_GetCodepointBitmapBox()        -- how big the
+// bitmap must be
 //
-//   Character advance/positioning
-//           stbtt_GetCodepointHMetrics()
-//           stbtt_GetFontVMetrics()
-//           stbtt_GetCodepointKernAdvance()
+// Character advance/positioning
+// stbtt_GetCodepointHMetrics()
+// stbtt_GetFontVMetrics()
+// stbtt_GetCodepointKernAdvance()
 //
-//   Starting with version 1.06, the rasterizer was replaced with a new,
-//   faster and generally-more-precise rasterizer. The new rasterizer more
-//   accurately measures pixel coverage for anti-aliasing, except in the case
-//   where multiple shapes overlap, in which case it overestimates the AA pixel
-//   coverage. Thus, anti-aliasing of intersecting shapes may look wrong. If
-//   this turns out to be a problem, you can re-enable the old rasterizer with
-//        #define STBTT_RASTERIZER_VERSION 1
-//   which will incur about a 15% speed hit.
+// Starting with version 1.06, the rasterizer was replaced with a new,
+// faster and generally-more-precise rasterizer. The new rasterizer more
+// accurately measures pixel coverage for anti-aliasing, except in the case
+// where multiple shapes overlap, in which case it overestimates the AA pixel
+// coverage. Thus, anti-aliasing of intersecting shapes may look wrong. If
+// this turns out to be a problem, you can re-enable the old rasterizer with
+// #define STBTT_RASTERIZER_VERSION 1
+// which will incur about a 15% speed hit.
 //
 // ADDITIONAL DOCUMENTATION
 //
-//   Immediately after this block comment are a series of sample programs.
+// Immediately after this block comment are a series of sample programs.
 //
-//   After the sample programs is the "header file" section. This section
-//   includes documentation for each API function.
+// After the sample programs is the "header file" section. This section
+// includes documentation for each API function.
 //
-//   Some important concepts to understand to use this library:
+// Some important concepts to understand to use this library:
 //
-//      Codepoint
-//         Characters are defined by unicode codepoints, e.g. 65 is
-//         uppercase A, 231 is lowercase c with a cedilla, 0x7e30 is
-//         the hiragana for "ma".
+// Codepoint
+// Characters are defined by unicode codepoints, e.g. 65 is
+// uppercase A, 231 is lowercase c with a cedilla, 0x7e30 is
+// the hiragana for "ma".
 //
-//      Glyph
-//         A visual character shape (every codepoint is rendered as
-//         some glyph)
+// Glyph
+// A visual character shape (every codepoint is rendered as
+// some glyph)
 //
-//      Glyph index
-//         A font-specific integer ID representing a glyph
+// Glyph index
+// A font-specific integer ID representing a glyph
 //
-//      Baseline
-//         Glyph shapes are defined relative to a baseline, which is the
-//         bottom of uppercase characters. Characters extend both above
-//         and below the baseline.
+// Baseline
+// Glyph shapes are defined relative to a baseline, which is the
+// bottom of uppercase characters. Characters extend both above
+// and below the baseline.
 //
-//      Current Point
-//         As you draw text to the screen, you keep track of a "current point"
-//         which is the origin of each character. The current point's vertical
-//         position is the baseline. Even "baked fonts" use this model.
+// Current Point
+// As you draw text to the screen, you keep track of a "current point"
+// which is the origin of each character. The current point's vertical
+// position is the baseline. Even "baked fonts" use this model.
 //
-//      Vertical Font Metrics
-//         The vertical qualities of the font, used to vertically position
-//         and space the characters. See docs for stbtt_GetFontVMetrics.
+// Vertical Font Metrics
+// The vertical qualities of the font, used to vertically position
+// and space the characters. See docs for stbtt_GetFontVMetrics.
 //
-//      Font Size in Pixels or Points
-//         The preferred interface for specifying font sizes in stb_truetype
-//         is to specify how tall the font's vertical extent should be in
-//         pixels. If that sounds good enough, skip the next paragraph.
+// Font Size in Pixels or Points
+// The preferred interface for specifying font sizes in stb_truetype
+// is to specify how tall the font's vertical extent should be in
+// pixels. If that sounds good enough, skip the next paragraph.
 //
-//         Most font APIs instead use "points", which are a common typographic
-//         measurement for describing font size, defined as 72 points per inch.
-//         stb_truetype provides a point API for compatibility. However, true
-//         "per inch" conventions don't make much sense on computer displays
-//         since they different monitors have different number of pixels per
-//         inch. For example, Windows traditionally uses a convention that
-//         there are 96 pixels per inch, thus making 'inch' measurements have
-//         nothing to do with inches, and thus effectively defining a point to
-//         be 1.333 pixels. Additionally, the TrueType font data provides
-//         an explicit scale factor to scale a given font's glyphs to points,
-//         but the author has observed that this scale factor is often wrong
-//         for non-commercial fonts, thus making fonts scaled in points
-//         according to the TrueType spec incoherently sized in practice.
+// Most font APIs instead use "points", which are a common typographic
+// measurement for describing font size, defined as 72 points per inch.
+// stb_truetype provides a point API for compatibility. However, true
+// "per inch" conventions don't make much sense on computer displays
+// since they different monitors have different number of pixels per
+// inch. For example, Windows traditionally uses a convention that
+// there are 96 pixels per inch, thus making 'inch' measurements have
+// nothing to do with inches, and thus effectively defining a point to
+// be 1.333 pixels. Additionally, the TrueType font data provides
+// an explicit scale factor to scale a given font's glyphs to points,
+// but the author has observed that this scale factor is often wrong
+// for non-commercial fonts, thus making fonts scaled in points
+// according to the TrueType spec incoherently sized in practice.
 //
 // ADVANCED USAGE
 //
-//   Quality:
+// Quality:
 //
-//    - Use the functions with Subpixel at the end to allow your characters
-//      to have subpixel positioning. Since the font is anti-aliased, not
-//      hinted, this is very import for quality. (This is not possible with
-//      baked fonts.)
+// - Use the functions with Subpixel at the end to allow your characters
+// to have subpixel positioning. Since the font is anti-aliased, not
+// hinted, this is very import for quality. (This is not possible with
+// baked fonts.)
 //
-//    - Kerning is now supported, and if you're supporting subpixel rendering
-//      then kerning is worth using to give your text a polished look.
+// - Kerning is now supported, and if you're supporting subpixel rendering
+// then kerning is worth using to give your text a polished look.
 //
-//   Performance:
+// Performance:
 //
-//    - Convert Unicode codepoints to glyph indexes and operate on the glyphs;
-//      if you don't do this, stb_truetype is forced to do the conversion on
-//      every call.
+// - Convert Unicode codepoints to glyph indexes and operate on the glyphs;
+// if you don't do this, stb_truetype is forced to do the conversion on
+// every call.
 //
-//    - There are a lot of memory allocations. We should modify it to take
-//      a temp buffer and allocate from the temp buffer (without freeing),
-//      should help performance a lot.
+// - There are a lot of memory allocations. We should modify it to take
+// a temp buffer and allocate from the temp buffer (without freeing),
+// should help performance a lot.
 //
 // NOTES
 //
-//   The system uses the raw data found in the .ttf file without changing it
-//   and without building auxiliary data structures. This is a bit inefficient
-//   on little-endian systems (the data is big-endian), but assuming you're
-//   caching the bitmaps or glyph shapes this shouldn't be a big deal.
+// The system uses the raw data found in the .ttf file without changing it
+// and without building auxiliary data structures. This is a bit inefficient
+// on little-endian systems (the data is big-endian), but assuming you're
+// caching the bitmaps or glyph shapes this shouldn't be a big deal.
 //
-//   It appears to be very hard to programmatically determine what font a
-//   given file is in a general way. I provide an API for this, but I don't
-//   recommend it.
+// It appears to be very hard to programmatically determine what font a
+// given file is in a general way. I provide an API for this, but I don't
+// recommend it.
 //
 //
 // SOURCE STATISTICS (based on v0.6c, 2050 LOC)
 //
-//   Documentation & header file        520 LOC  \___ 660 LOC documentation
-//   Sample code                        140 LOC  /
-//   Truetype parsing                   620 LOC  ---- 620 LOC TrueType
-//   Software rasterization             240 LOC  \                           .
-//   Curve tesselation                  120 LOC   \__ 550 LOC Bitmap creation
-//   Bitmap management                  100 LOC   /
-//   Baked bitmap interface              70 LOC  /
-//   Font name matching & access        150 LOC  ---- 150
-//   C runtime library abstraction       60 LOC  ----  60
+// Documentation & header file        520 LOC  \___ 660 LOC documentation
+// Sample code                        140 LOC  /
+// Truetype parsing                   620 LOC  ---- 620 LOC TrueType
+// Software rasterization             240 LOC  \                           .
+// Curve tesselation                  120 LOC   \__ 550 LOC Bitmap creation
+// Bitmap management                  100 LOC   /
+// Baked bitmap interface              70 LOC  /
+// Font name matching & access        150 LOC  ---- 150
+// C runtime library abstraction       60 LOC  ----  60
 //
 //
 // PERFORMANCE MEASUREMENTS FOR 1.06:
 //
-//                      32-bit     64-bit
-//   Previous release:  8.83 s     7.68 s
-//   Pool allocations:  7.72 s     6.34 s
-//   Inline sort     :  6.54 s     5.65 s
-//   New rasterizer  :  5.63 s     5.00 s
+// 32-bit     64-bit
+// Previous release:  8.83 s     7.68 s
+// Pool allocations:  7.72 s     6.34 s
+// Inline sort     :  6.54 s     5.65 s
+// New rasterizer  :  5.63 s     5.00 s
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 ////
-////  SAMPLE PROGRAMS
+//// SAMPLE PROGRAMS
 ////
 //
-//  Incomplete text-in-3d-api example, which draws quads properly aligned to be
-//  lossless
+// Incomplete text-in-3d-api example, which draws quads properly aligned to be
+// lossless
 //
 #if 0
 #define STB_TRUETYPE_IMPLEMENTATION // force following include to generate
@@ -327,16 +327,16 @@ int main(int argc, char **argv)
 //
 // Output:
 //
-//     .ii.
-//    @@@@@@.
-//   V@Mio@@o
-//   :i.  V@V
-//     :oM@@M
-//   :@@@MM@M
-//   @@o  o@M
-//  :@@.  M@M
-//   @@@o@@@@
-//   :M@@V:@@.
+// .ii.
+// @@@@@@.
+// V@Mio@@o
+// :i.  V@V
+// :oM@@M
+// :@@@MM@M
+// @@o  o@M
+// :@@.  M@M
+// @@@o@@@@
+// :M@@V:@@.
 //
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -389,10 +389,10 @@ int main(int arg, char **argv)
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 ////
-////   INTEGRATION WITH YOUR CODEBASE
+//// INTEGRATION WITH YOUR CODEBASE
 ////
-////   The following sections allow you to supply alternate definitions
-////   of C library functions used by stb_truetype.
+//// The following sections allow you to supply alternate definitions
+//// of C library functions used by stb_truetype.
 
 #ifdef STB_TRUETYPE_IMPLEMENTATION
 // #define your own (u)stbtt_int8/16/32 before including to override this
@@ -452,7 +452,7 @@ typedef char stbtt__check_size16[sizeof (stbtt_int16) == 2 ? 1 : -1];
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ////
-////   INTERFACE
+//// INTERFACE
 ////
 ////
 
@@ -567,9 +567,9 @@ STBTT_DEF int stbtt_PackFontRange (
 // as computed by stbtt_ScaleForPixelHeight. To use a point size as computed
 // by stbtt_ScaleForMappingEmToPixels, wrap the point size in
 // STBTT_POINT_SIZE() and pass that result as 'font_size':
-//       ...,                  20 , ... // font max minus min y is 20 pixels
-//       tall
-//       ..., STBTT_POINT_SIZE(20), ... // 'M' is 20 pixels tall
+// ...,                  20 , ... // font max minus min y is 20 pixels
+// tall
+// ..., STBTT_POINT_SIZE(20), ... // 'M' is 20 pixels tall
 
 typedef struct {
     float font_size;
@@ -710,7 +710,7 @@ stbtt_ScaleForPixelHeight (const stbtt_fontinfo* info, float pixels);
 // Height is measured as the distance from the highest ascender to the lowest
 // descender; in other words, it's equivalent to calling stbtt_GetFontVMetrics
 // and computing:
-//       scale = pixels / (ascent - descent)
+// scale = pixels / (ascent - descent)
 // so if you prefer to measure height by the ascent only, use a similar
 // calculation.
 
@@ -727,8 +727,8 @@ STBTT_DEF void stbtt_GetFontVMetrics (
 // negative) lineGap is the spacing between one row's descent and the next
 // row's ascent... so you should advance the vertical position by "*ascent -
 // *descent + *lineGap"
-//   these are expressed in unscaled coordinates, so you must multiply by
-//   the scale factor for a given size
+// these are expressed in unscaled coordinates, so you must multiply by
+// the scale factor for a given size
 
 STBTT_DEF void stbtt_GetFontBoundingBox (
     const stbtt_fontinfo* info, int* x0, int* y0, int* x1, int* y1);
@@ -740,7 +740,7 @@ STBTT_DEF void stbtt_GetCodepointHMetrics (
 // leftSideBearing is the offset from the current horizontal position to the
 // left edge of the character advanceWidth is the offset from the current
 // horizontal position to the next horizontal position
-//   these are expressed in unscaled coordinates
+// these are expressed in unscaled coordinates
 
 STBTT_DEF int
 stbtt_GetCodepointKernAdvance (const stbtt_fontinfo* info, int ch1, int ch2);
@@ -793,7 +793,7 @@ STBTT_DEF int stbtt_GetCodepointShape (
 STBTT_DEF int stbtt_GetGlyphShape (
     const stbtt_fontinfo* info, int glyph_index, stbtt_vertex** vertices);
 // returns # of vertices and fills *vertices with the pointer to them
-//   these are expressed in "unscaled" coordinates
+// these are expressed in "unscaled" coordinates
 //
 // The shape is a series of countours. Each one starts with
 // a STBTT_moveto, then consists of a series of mixed
@@ -916,20 +916,20 @@ STBTT_DEF void stbtt_Rasterize (
 // (actually underspecified in truetype, but also gigantic).
 //
 // But you can use the provided functions in two possible ways:
-//     stbtt_FindMatchingFont() will use *case-sensitive* comparisons on
-//             unicode-encoded names to try to find the font you want;
-//             you can run this before calling stbtt_InitFont()
+// stbtt_FindMatchingFont() will use *case-sensitive* comparisons on
+// unicode-encoded names to try to find the font you want;
+// you can run this before calling stbtt_InitFont()
 //
-//     stbtt_GetFontNameString() lets you get any of the various strings
-//             from the file yourself and do your own comparisons on them.
-//             You have to have called stbtt_InitFont() first.
+// stbtt_GetFontNameString() lets you get any of the various strings
+// from the file yourself and do your own comparisons on them.
+// You have to have called stbtt_InitFont() first.
 
 STBTT_DEF int stbtt_FindMatchingFont (
     const unsigned char* fontdata, const char* name, int flags);
 // returns the offset (not index) of the font that matches, or -1 if none
-//   if you use STBTT_MACSTYLE_DONTCARE, use a font name like "Arial Bold".
-//   if you use any other flag, use a font name like "Arial"; this checks
-//     the 'macStyle' header field; i don't know if fonts set this consistently
+// if you use STBTT_MACSTYLE_DONTCARE, use a font name like "Arial Bold".
+// if you use any other flag, use a font name like "Arial"; this checks
+// the 'macStyle' header field; i don't know if fonts set this consistently
 #define STBTT_MACSTYLE_DONTCARE 0
 #define STBTT_MACSTYLE_BOLD 1
 #define STBTT_MACSTYLE_ITALIC 2
@@ -950,8 +950,8 @@ STBTT_DEF const char* stbtt_GetFontNameString (
 // and puts the length in bytes in *length.
 //
 // some of the values for the IDs are below; for more see the truetype spec:
-//     http://developer.apple.com/textfonts/TTRefMan/RM06/Chap6name.html
-//     http://www.microsoft.com/typography/otspec/name.htm
+// http://developer.apple.com/textfonts/TTRefMan/RM06/Chap6name.html
+// http://www.microsoft.com/typography/otspec/name.htm
 
 enum { // platformID
     STBTT_PLATFORM_ID_UNICODE = 0,
@@ -1029,7 +1029,7 @@ enum { // languageID for STBTT_PLATFORM_ID_MAC
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ////
-////   IMPLEMENTATION
+//// IMPLEMENTATION
 ////
 ////
 
@@ -1828,7 +1828,7 @@ STBTT_DEF void stbtt_GetCodepointBitmapBox (
 
 //////////////////////////////////////////////////////////////////////////////
 //
-//  Rasterizer
+// Rasterizer
 
 typedef struct stbtt__hheap_chunk {
     struct stbtt__hheap_chunk* next;
@@ -2964,14 +2964,14 @@ STBTT_DEF void stbtt_GetBakedQuad (
 typedef int stbrp_coord;
 
 ////////////////////////////////////////////////////////////////////////////////////
-//                                                                                //
-//                                                                                //
+// //
+// //
 // COMPILER WARNING ?!?!? //
-//                                                                                //
-//                                                                                //
+// //
+// //
 // if you get a compile warning due to these symbols being defined more than //
 // once, move #include "stb_rect_pack.h" before #include "stb_truetype.h" //
-//                                                                                //
+// //
 ////////////////////////////////////////////////////////////////////////////////////
 
 typedef struct {
@@ -3631,54 +3631,54 @@ STBTT_DEF int stbtt_FindMatchingFont (
 
 // FULL VERSION HISTORY
 //
-//   1.11 (2016-04-02) fix unused-variable warning
-//   1.10 (2016-04-02) allow user-defined fabs() replacement
-//                     fix memory leak if fontsize=0.0
-//                     fix warning from duplicate typedef
-//   1.09 (2016-01-16) warning fix; avoid crash on outofmem; use alloc userdata
-//   for PackFontRanges 1.08 (2015-09-13) document stbtt_Rasterize(); fixes for
-//   vertical & horizontal edges 1.07 (2015-08-01) allow PackFontRanges to
-//   accept arrays of sparse codepoints;
-//                     allow PackFontRanges to pack and render in separate
-//                     phases; fix stbtt_GetFontOFfsetForIndex (never worked
-//                     for non-0 input?); fixed an assert() bug in the new
-//                     rasterizer replace assert() with STBTT_assert() in new
-//                     rasterizer
-//   1.06 (2015-07-14) performance improvements (~35% faster on x86 and x64 on
-//   test machine)
-//                     also more precise AA rasterizer, except if shapes
-//                     overlap remove need for STBTT_sort
-//   1.05 (2015-04-15) fix misplaced definitions for STBTT_STATIC
-//   1.04 (2015-04-15) typo in example
-//   1.03 (2015-04-12) STBTT_STATIC, fix memory leak in new packing, various
-//   fixes 1.02 (2014-12-10) fix various warnings & compile issues w/
-//   stb_rect_pack, C++ 1.01 (2014-12-08) fix subpixel position when
-//   oversampling to exactly match
-//                        non-oversampled; STBTT_POINT_SIZE for packed case
-//                        only
-//   1.00 (2014-12-06) add new PackBegin etc. API, w/ support for oversampling
-//   0.99 (2014-09-18) fix multiple bugs with subpixel rendering (ryg)
-//   0.9  (2014-08-07) support certain mac/iOS fonts without an MS platformID
-//   0.8b (2014-07-07) fix a warning
-//   0.8  (2014-05-25) fix a few more warnings
-//   0.7  (2013-09-25) bugfix: subpixel glyph bug fixed in 0.5 had come back
-//   0.6c (2012-07-24) improve documentation
-//   0.6b (2012-07-20) fix a few more warnings
-//   0.6  (2012-07-17) fix warnings; added stbtt_ScaleForMappingEmToPixels,
-//                        stbtt_GetFontBoundingBox, stbtt_IsGlyphEmpty
-//   0.5  (2011-12-09) bugfixes:
-//                        subpixel glyph renderer computed wrong bounding box
-//                        first vertex of shape can be off-curve (FreeSans)
-//   0.4b (2011-12-03) fixed an error in the font baking example
-//   0.4  (2011-12-01) kerning, subpixel rendering (tor)
-//                    bugfixes for:
-//                        codepoint-to-glyph conversion using table fmt=12
-//                        codepoint-to-glyph conversion using table fmt=4
-//                        stbtt_GetBakedQuad with non-square texture (Zer)
-//                    updated Hello World! sample to use kerning and subpixel
-//                    fixed some warnings
-//   0.3  (2009-06-24) cmap fmt=12, compound shapes (MM)
-//                    userdata, malloc-from-userdata, non-zero fill (stb)
-//   0.2  (2009-03-11) Fix unsigned/signed char warnings
-//   0.1  (2009-03-09) First public release
+// 1.11 (2016-04-02) fix unused-variable warning
+// 1.10 (2016-04-02) allow user-defined fabs() replacement
+// fix memory leak if fontsize=0.0
+// fix warning from duplicate typedef
+// 1.09 (2016-01-16) warning fix; avoid crash on outofmem; use alloc userdata
+// for PackFontRanges 1.08 (2015-09-13) document stbtt_Rasterize(); fixes for
+// vertical & horizontal edges 1.07 (2015-08-01) allow PackFontRanges to
+// accept arrays of sparse codepoints;
+// allow PackFontRanges to pack and render in separate
+// phases; fix stbtt_GetFontOFfsetForIndex (never worked
+// for non-0 input?); fixed an assert() bug in the new
+// rasterizer replace assert() with STBTT_assert() in new
+// rasterizer
+// 1.06 (2015-07-14) performance improvements (~35% faster on x86 and x64 on
+// test machine)
+// also more precise AA rasterizer, except if shapes
+// overlap remove need for STBTT_sort
+// 1.05 (2015-04-15) fix misplaced definitions for STBTT_STATIC
+// 1.04 (2015-04-15) typo in example
+// 1.03 (2015-04-12) STBTT_STATIC, fix memory leak in new packing, various
+// fixes 1.02 (2014-12-10) fix various warnings & compile issues w/
+// stb_rect_pack, C++ 1.01 (2014-12-08) fix subpixel position when
+// oversampling to exactly match
+// non-oversampled; STBTT_POINT_SIZE for packed case
+// only
+// 1.00 (2014-12-06) add new PackBegin etc. API, w/ support for oversampling
+// 0.99 (2014-09-18) fix multiple bugs with subpixel rendering (ryg)
+// 0.9  (2014-08-07) support certain mac/iOS fonts without an MS platformID
+// 0.8b (2014-07-07) fix a warning
+// 0.8  (2014-05-25) fix a few more warnings
+// 0.7  (2013-09-25) bugfix: subpixel glyph bug fixed in 0.5 had come back
+// 0.6c (2012-07-24) improve documentation
+// 0.6b (2012-07-20) fix a few more warnings
+// 0.6  (2012-07-17) fix warnings; added stbtt_ScaleForMappingEmToPixels,
+// stbtt_GetFontBoundingBox, stbtt_IsGlyphEmpty
+// 0.5  (2011-12-09) bugfixes:
+// subpixel glyph renderer computed wrong bounding box
+// first vertex of shape can be off-curve (FreeSans)
+// 0.4b (2011-12-03) fixed an error in the font baking example
+// 0.4  (2011-12-01) kerning, subpixel rendering (tor)
+// bugfixes for:
+// codepoint-to-glyph conversion using table fmt=12
+// codepoint-to-glyph conversion using table fmt=4
+// stbtt_GetBakedQuad with non-square texture (Zer)
+// updated Hello World! sample to use kerning and subpixel
+// fixed some warnings
+// 0.3  (2009-06-24) cmap fmt=12, compound shapes (MM)
+// userdata, malloc-from-userdata, non-zero fill (stb)
+// 0.2  (2009-03-11) Fix unsigned/signed char warnings
+// 0.1  (2009-03-09) First public release
 //

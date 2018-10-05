@@ -63,7 +63,7 @@ void UI_WINDOW::set_mask_bmap (const char* fname) {
     bmap = bm_load (fname);
 
     if (bmap < 0) {
-        fs2::dialog::error (LOCATION, "Could not load in %s!", fname);
+        ASSERTF (LOCATION, "Could not load in %s!", fname);
     }
     else {
         set_mask_bmap (bmap, fname);
@@ -74,7 +74,7 @@ void UI_WINDOW::set_mask_bmap (int bmap, const char* /*name*/) {
     // int i;
 
     // init_tooltips();
-    Assert (bmap >= 0);
+    ASSERT (bmap >= 0);
 
     if (bmap != mask_bmap_id) {
         if (mask_bmap_id >= 0) { bm_unlock (mask_bmap_id); }
@@ -113,7 +113,7 @@ void UI_WINDOW::set_foreground_bmap (const char* fname) {
     // load in the background bitmap
     foreground_bmap_id = bm_load (fname);
     if (foreground_bmap_id < 0) {
-        fs2::dialog::error (LOCATION, "Could not load in %s!", fname);
+        ASSERTF (LOCATION, "Could not load in %s!", fname);
     }
 }
 
@@ -285,7 +285,7 @@ void UI_WINDOW::draw_tooltip () {
     // ptr = &Tooltip_groups[tt_group];
     hotspot = get_current_hotspot ();
 
-    //	mprintf(("HOTSPOT: %d [%d]\n",hotspot, Framecount));
+    // mprintf(("HOTSPOT: %d [%d]\n",hotspot, Framecount));
 
     /*
     if (hotspot != last_tooltip_hotspot) {
@@ -347,7 +347,7 @@ void UI_WINDOW::render_tooltip (char* str) {
     int str_w, str_h;
 
     gr_get_string_size (&str_w, &str_h, str);
-    Assert (
+    ASSERT (
         str_w < gr_screen.max_w_unscaled - 4 &&
         str_h < gr_screen.max_h_unscaled - 4);
 
@@ -389,7 +389,7 @@ int UI_WINDOW::process (int key_in, int process_mouse) {
 
     // The following code was commented out by NeilK on 4/15/99 to fix a
     // problem we were having with
-    //	the UI_SLIDER2 class not receiving the process event when the mouse was
+    // the UI_SLIDER2 class not receiving the process event when the mouse was
     // dragging the scroller
     // but outside the mask region. I checked a handful of other screens and so
     // no adverse affects of this change at the time.
@@ -473,7 +473,7 @@ void UI_WINDOW::add_XSTR (
     ui_x->assoc = _assoc;
     ui_x->font_id = _font_id;
     ui_x->clr = _color_type;
-    Assert ((ui_x->clr >= 0) && (ui_x->clr < UI_NUM_XSTR_COLORS));
+    ASSERT ((ui_x->clr >= 0) && (ui_x->clr < UI_NUM_XSTR_COLORS));
     if ((ui_x->clr < 0) || (ui_x->clr >= UI_NUM_XSTR_COLORS)) {
         ui_x->clr = 0;
     }
@@ -517,7 +517,7 @@ void UI_WINDOW::add_XSTR (UI_XSTR* xstr) {
     ui_x->assoc = xstr->assoc;
     ui_x->font_id = xstr->font_id;
     ui_x->clr = xstr->clr;
-    Assert ((ui_x->clr >= 0) && (ui_x->clr < UI_NUM_XSTR_COLORS));
+    ASSERT ((ui_x->clr >= 0) && (ui_x->clr < UI_NUM_XSTR_COLORS));
     if ((ui_x->clr < 0) || (ui_x->clr >= UI_NUM_XSTR_COLORS)) {
         ui_x->clr = 0;
     }
@@ -536,7 +536,7 @@ void UI_WINDOW::draw_one_xstr (UI_XSTR* xs, int frame) {
     // maybe set the font
     if (xs->font_id >= 0) {
         // backup the current font
-        Assert (font::get_current_font () != NULL);
+        ASSERT (font::get_current_font () != NULL);
         f_backup = font::get_current_font ();
 
         // set the new font
@@ -619,57 +619,57 @@ void UI_WINDOW::draw_xstrs () {
 
 void UI_WINDOW::do_dump_check () {
 #if 0
-	if ( keypress == KEY_SHIFTED+KEY_CTRLED+KEY_ALTED+KEY_F12 ) {
-		FILE *fp;
+        if ( keypress == KEY_SHIFTED+KEY_CTRLED+KEY_ALTED+KEY_F12 ) {
+                FILE *fp;
 
-		last_keypress = keypress = 0;
+                last_keypress = keypress = 0;
 
-		mprintf(( "\n========== WINDOW GADGETS =========\n" ));
-		mprintf(( "(Also dumped to ui.out)\n" ));
+                mprintf(( "\n========== WINDOW GADGETS =========\n" ));
+                mprintf(( "(Also dumped to ui.out)\n" ));
 
-		fp = fopen( "ui.out", "wt" );
-		tmp = first_gadget;
-		do	{
-			if ( tmp->parent == NULL ) {	
-				switch ( tmp->kind ) {
-				case UI_KIND_BUTTON:
-					mprintf(( "UI: Button at %d,%d\n", tmp->x, tmp->y ));
-					fprintf( fp, "UI: Button at %d,%d\n", tmp->x, tmp->y );
-					break;
-				case UI_KIND_KEYTRAP:
-					mprintf(( "UI: Keytrap at %d,%d\n", tmp->x, tmp->y ));
-					fprintf( fp, "UI: Keytrap at %d,%d\n", tmp->x, tmp->y );
-					break;
-				case UI_KIND_CHECKBOX:
-					mprintf(( "UI: Checkbox at %d,%d\n", tmp->x, tmp->y ));
-					fprintf( fp, "UI: Checkbox at %d,%d\n", tmp->x, tmp->y );
-					break;
-				case UI_KIND_RADIO:
-					mprintf(( "UI: Radiobutton at %d,%d\n", tmp->x, tmp->y ));
-					fprintf( fp, "UI: Radiobutton at %d,%d\n", tmp->x, tmp->y );
-					break;
-				case UI_KIND_SCROLLBAR:
-					mprintf(( "UI: Scrollbar at %d,%d\n", tmp->x, tmp->y ));
-					fprintf( fp, "UI: Scrollbar at %d,%d\n", tmp->x, tmp->y );
-					break;
-				case UI_KIND_LISTBOX:
-					mprintf(( "UI: Listbox at %d,%d\n", tmp->x, tmp->y ));
-					fprintf( fp, "UI: Listbox at %d,%d\n", tmp->x, tmp->y );
-					break;
-				case UI_KIND_INPUTBOX:
-					mprintf(( "UI: Inputbox at %d,%d\n", tmp->x, tmp->y ));
-					fprintf( fp, "UI: Inputbox at %d,%d\n", tmp->x, tmp->y );
-					break;
-				default:
-					mprintf(( "UI: Unknown type %d at %d,%d\n", tmp->kind, tmp->x, tmp->y ));
-					fprintf( fp, "UI: Unknown type %d at %d,%d\n", tmp->kind, tmp->x, tmp->y );
-				}
-			}
-			tmp = tmp->next;
-		} while( tmp != first_gadget );
-		fclose(fp);
-		mprintf(( "===================================\n" ));
-	}
+                fp = fopen( "ui.out", "wt" );
+                tmp = first_gadget;
+                do      {
+                        if ( tmp->parent == NULL ) {
+                                switch ( tmp->kind ) {
+                                case UI_KIND_BUTTON:
+                                        mprintf(( "UI: Button at %d,%d\n", tmp->x, tmp->y ));
+                                        fprintf( fp, "UI: Button at %d,%d\n", tmp->x, tmp->y );
+                                        break;
+                                case UI_KIND_KEYTRAP:
+                                        mprintf(( "UI: Keytrap at %d,%d\n", tmp->x, tmp->y ));
+                                        fprintf( fp, "UI: Keytrap at %d,%d\n", tmp->x, tmp->y );
+                                        break;
+                                case UI_KIND_CHECKBOX:
+                                        mprintf(( "UI: Checkbox at %d,%d\n", tmp->x, tmp->y ));
+                                        fprintf( fp, "UI: Checkbox at %d,%d\n", tmp->x, tmp->y );
+                                        break;
+                                case UI_KIND_RADIO:
+                                        mprintf(( "UI: Radiobutton at %d,%d\n", tmp->x, tmp->y ));
+                                        fprintf( fp, "UI: Radiobutton at %d,%d\n", tmp->x, tmp->y );
+                                        break;
+                                case UI_KIND_SCROLLBAR:
+                                        mprintf(( "UI: Scrollbar at %d,%d\n", tmp->x, tmp->y ));
+                                        fprintf( fp, "UI: Scrollbar at %d,%d\n", tmp->x, tmp->y );
+                                        break;
+                                case UI_KIND_LISTBOX:
+                                        mprintf(( "UI: Listbox at %d,%d\n", tmp->x, tmp->y ));
+                                        fprintf( fp, "UI: Listbox at %d,%d\n", tmp->x, tmp->y );
+                                        break;
+                                case UI_KIND_INPUTBOX:
+                                        mprintf(( "UI: Inputbox at %d,%d\n", tmp->x, tmp->y ));
+                                        fprintf( fp, "UI: Inputbox at %d,%d\n", tmp->x, tmp->y );
+                                        break;
+                                default:
+                                        mprintf(( "UI: Unknown type %d at %d,%d\n", tmp->kind, tmp->x, tmp->y ));
+                                        fprintf( fp, "UI: Unknown type %d at %d,%d\n", tmp->kind, tmp->x, tmp->y );
+                                }
+                        }
+                        tmp = tmp->next;
+                } while( tmp != first_gadget );
+                fclose(fp);
+                mprintf(( "===================================\n" ));
+        }
 #endif
 }
 

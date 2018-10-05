@@ -521,56 +521,56 @@ static EnhancedSoundData Default_sound_priorities[NUM_RETAIL_GAMEPLAY_SOUNDS] =
                                             // 144,//!< LTerSlash beam loop
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH, 3), // SND_UNDEFINED_145              =
-                                            // 145,//!< TerSlash	beam loop
+                                            // 145,//!< TerSlash        beam loop
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH, 3), // SND_UNDEFINED_146              =
-                                            // 146,//!< SGreen 	beam loop
+                                            // 146,//!< SGreen  beam loop
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH,
-            3), // SND_UNDEFINED_147              = 147,//!< BGreen	beem loop
+            3), // SND_UNDEFINED_147              = 147,//!< BGreen     beem loop
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH, 3), // SND_UNDEFINED_148              =
-                                            // 148,//!< BFGreen	been loop
+                                            // 148,//!< BFGreen been loop
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH,
             3), // SND_UNDEFINED_149              = 149,//!< Antifighter beam
                 // loop
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH,
-            3), // SND_UNDEFINED_150              = 150,//!< 1 sec		warm up
+            3), // SND_UNDEFINED_150              = 150,//!< 1 sec              warm up
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH,
-            3), // SND_UNDEFINED_151              = 151,//!< 1.5 sec 	warm up
+            3), // SND_UNDEFINED_151              = 151,//!< 1.5 sec    warm up
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH,
-            3), // SND_UNDEFINED_152              = 152,//!< 2.5 sec 	warm up
+            3), // SND_UNDEFINED_152              = 152,//!< 2.5 sec    warm up
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH,
-            3), // SND_UNDEFINED_153              = 153,//!< 3 sec 	warm up
+            3), // SND_UNDEFINED_153              = 153,//!< 3 sec      warm up
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH,
-            3), // SND_UNDEFINED_154              = 154,//!< 3.5 sec 	warm up
+            3), // SND_UNDEFINED_154              = 154,//!< 3.5 sec    warm up
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH,
-            3), // SND_UNDEFINED_155              = 155,//!< 5 sec 	warm up
+            3), // SND_UNDEFINED_155              = 155,//!< 5 sec      warm up
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH, 3), // SND_UNDEFINED_156              =
-                                            // 156,//!< LTerSlash	warm down
+                                            // 156,//!< LTerSlash       warm down
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH, 3), // SND_UNDEFINED_157              =
-                                            // 157,//!< TerSlash	warm down
+                                            // 157,//!< TerSlash        warm down
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH,
-            3), // SND_UNDEFINED_158              = 158,//!< SGreen	warm down
+            3), // SND_UNDEFINED_158              = 158,//!< SGreen     warm down
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH,
-            3), // SND_UNDEFINED_159              = 159,//!< BGreen	warm down
+            3), // SND_UNDEFINED_159              = 159,//!< BGreen     warm down
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH, 3), // SND_UNDEFINED_160              =
-                                            // 160,//!< BFGreen	warm down
+                                            // 160,//!< BFGreen warm down
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH, 3), // SND_UNDEFINED_161              =
-                                            // 161,//!< T_AntiFtr	warm down
+                                            // 161,//!< T_AntiFtr       warm down
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH,
             1), // SND_COPILOT                    = 162,//!< copilot (SCP)
@@ -618,13 +618,13 @@ static EnhancedSoundData Default_sound_priorities[NUM_RETAIL_GAMEPLAY_SOUNDS] =
                                               // Shivan large engine
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH, 3), // SND_UNDEFINED_177              =
-                                            // 177,//!< SRed 		beam loop
+                                            // 177,//!< SRed            beam loop
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH, 3), // SND_UNDEFINED_178              =
-                                            // 178,//!< LRed		beam loop
+                                            // 178,//!< LRed            beam loop
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH, 3), // SND_UNDEFINED_179              =
-                                            // 179,//!< Antifighter	beam loop
+                                            // 179,//!< Antifighter     beam loop
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_HIGH,
             4), // SND_LIGHTNING_1                = 180,//!< Thunder 1 sound in
@@ -635,13 +635,13 @@ static EnhancedSoundData Default_sound_priorities[NUM_RETAIL_GAMEPLAY_SOUNDS] =
                 // neblua
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_MEDIUM_HIGH,
-            3), // SND_UNDEFINED_182              = 182,//!< 1 sec 	warm up
+            3), // SND_UNDEFINED_182              = 182,//!< 1 sec      warm up
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_MEDIUM_HIGH,
-            3), // SND_UNDEFINED_183              = 183,//!< 1.5 sec 	warm up
+            3), // SND_UNDEFINED_183              = 183,//!< 1.5 sec    warm up
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_MEDIUM_HIGH,
-            3), // SND_UNDEFINED_184              = 184,//!< 3 sec 	warm up
+            3), // SND_UNDEFINED_184              = 184,//!< 3 sec      warm up
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_MEDIUM_HIGH,
             2), // SND_UNDEFINED_185              = 185,//!< Shivan Commnode
@@ -650,15 +650,15 @@ static EnhancedSoundData Default_sound_priorities[NUM_RETAIL_GAMEPLAY_SOUNDS] =
                                             // 186,//!< Volition PirateShip
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_MEDIUM_HIGH,
-            3), // SND_UNDEFINED_187              = 187,//!< SRed 		warm
+            3), // SND_UNDEFINED_187              = 187,//!< SRed               warm
                 // down
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_MEDIUM_HIGH,
-            3), // SND_UNDEFINED_188              = 188,//!< LRed 		warm
+            3), // SND_UNDEFINED_188              = 188,//!< LRed               warm
                 // down
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_MEDIUM_HIGH,
-            3), // SND_UNDEFINED_189              = 189,//!< AntiFtr	warm
+            3), // SND_UNDEFINED_189              = 189,//!< AntiFtr    warm
                 // down
         EnhancedSoundData (
             SND_ENHANCED_PRIORITY_MEDIUM_HIGH,
@@ -726,7 +726,7 @@ int gamesnd_lookup_name (
     // if we get passed -1, don't bother trying to look it up.
     if (name == NULL || *name == 0 || !strcmp (name, "-1")) { return -1; }
 
-    Assert (sounds.size () <= INT_MAX);
+    ASSERT (sounds.size () <= INT_MAX);
 
     int i = 0;
 
@@ -741,7 +741,7 @@ int gamesnd_lookup_name (
 
 // WMC - now ignores file extension.
 gamesnd_id gamesnd_get_by_name (const char* name) {
-    Assert (Snds.size () <= INT_MAX);
+    ASSERT (Snds.size () <= INT_MAX);
 
     int index = gamesnd_lookup_name (name, Snds);
 
@@ -774,8 +774,8 @@ gamesnd_id gamesnd_get_by_name (const char* name) {
 }
 
 interface_snd_id gamesnd_get_by_iface_name (const char* name) {
-    Assert (Snds_iface.size () <= INT_MAX);
-    Assert (Snds_iface.size () == Snds_iface_handle.size ());
+    ASSERT (Snds_iface.size () <= INT_MAX);
+    ASSERT (Snds_iface.size () == Snds_iface_handle.size ());
 
     auto index = gamesnd_lookup_name (name, Snds_iface);
 
@@ -820,7 +820,7 @@ gamesnd_id gamesnd_get_by_tbl_index (int index) {
 }
 
 interface_snd_id gamesnd_get_by_iface_tbl_index (int index) {
-    Assert (Snds_iface.size () == Snds_iface_handle.size ());
+    ASSERT (Snds_iface.size () == Snds_iface_handle.size ());
 
     char temp[11];
     sprintf (temp, "%i", index);
@@ -872,7 +872,7 @@ void parse_game_sound (const char* tag, gamesnd_id* idx_dest) {
  *
  */
 void parse_iface_sound (const char* tag, interface_snd_id* idx_dest) {
-    Assert (Snds_iface.size () == Snds_iface_handle.size ());
+    ASSERT (Snds_iface.size () == Snds_iface_handle.size ());
 
     if (optional_string (tag)) {
         std::string buf;
@@ -951,7 +951,7 @@ void parse_iface_sound_list (
 void gamesnd_preload_common_sounds () {
     if (!Sound_enabled) return;
 
-    Assert (Snds.size () <= INT_MAX);
+    ASSERT (Snds.size () <= INT_MAX);
     for (std::vector< game_snd >::iterator gs = Snds.begin ();
          gs != Snds.end (); ++gs) {
         if (gs->preload) {
@@ -980,7 +980,7 @@ void gamesnd_preload_common_sounds () {
 void gamesnd_load_gameplay_sounds () {
     if (!Sound_enabled) return;
 
-    Assert (Snds.size () <= INT_MAX);
+    ASSERT (Snds.size () <= INT_MAX);
     for (std::vector< game_snd >::iterator gs = Snds.begin ();
          gs != Snds.end (); ++gs) {
         if (!gs->preload) { // don't try to load anything that's already
@@ -1006,7 +1006,7 @@ void gamesnd_load_gameplay_sounds () {
  * Unload the ingame sounds from memory
  */
 void gamesnd_unload_gameplay_sounds () {
-    Assert (Snds.size () <= INT_MAX);
+    ASSERT (Snds.size () <= INT_MAX);
     for (std::vector< game_snd >::iterator gs = Snds.begin ();
          gs != Snds.end (); ++gs) {
         for (auto& entry : gs->sound_entries) {
@@ -1024,7 +1024,7 @@ void gamesnd_unload_gameplay_sounds () {
 void gamesnd_load_interface_sounds () {
     if (!Sound_enabled) return;
 
-    Assert (Snds_iface.size () < INT_MAX);
+    ASSERT (Snds_iface.size () < INT_MAX);
     for (std::vector< game_snd >::iterator si = Snds_iface.begin ();
          si != Snds_iface.end (); ++si) {
         for (auto& entry : si->sound_entries) {
@@ -1040,7 +1040,7 @@ void gamesnd_load_interface_sounds () {
  * Unload the interface sounds from memory
  */
 void gamesnd_unload_interface_sounds () {
-    Assert (Snds_iface.size () < INT_MAX);
+    ASSERT (Snds_iface.size () < INT_MAX);
     for (std::vector< game_snd >::iterator si = Snds_iface.begin ();
          si != Snds_iface.end (); ++si) {
         for (auto& entry : si->sound_entries) {
@@ -1119,7 +1119,7 @@ void parse_gamesnd_old (game_snd* gs) {
     // check for extra values per Mantis #2408
     ignore_gray_space ();
     if (stuff_int_optional (&temp, true) == 2) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Unexpected extra value %d found for sound '%s' (filename '%s')!  "
             "Check the format of the sounds.tbl (or .tbm) entry.",
@@ -1130,7 +1130,7 @@ void parse_gamesnd_old (game_snd* gs) {
 }
 
 EnhancedSoundPriority convert_to_enhanced_priority (const char* priority_str) {
-    Assertion (
+    ASSERTX (
         priority_str != NULL,
         "convert_to_enhanced_priority given null priority_str!");
 
@@ -1364,7 +1364,7 @@ void gamesnd_parse_entry (
     if (!no_create) {
         if (lookupVector != NULL) {
             if (gamesnd_lookup_name (name.c_str (), *lookupVector) >= 0) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION, "Duplicate sound name \"%s\" found!",
                     name.c_str ());
             }
@@ -1376,7 +1376,7 @@ void gamesnd_parse_entry (
         int vectorIndex = gamesnd_lookup_name (name.c_str (), *lookupVector);
 
         if (vectorIndex < 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "No existing sound entry with name \"%s\" found!",
                 name.c_str ());
             no_create = false;
@@ -1410,7 +1410,7 @@ void gamesnd_parse_entry (
 bool gamesnd_parse_line (
     game_snd* gs, const char* tag,
     std::vector< game_snd >* lookupVector = NULL) {
-    Assertion (
+    ASSERTX (
         gs != NULL, "Invalid game_snd pointer passed to gamesnd_parse_line!");
 
     required_string (tag);
@@ -1658,7 +1658,7 @@ void gamesnd_parse_soundstbl () {
             errorString.append ("\n");
         }
 
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "The following species are missing flyby sounds in "
             "sounds.tbl:\n%s",
@@ -1693,15 +1693,15 @@ void gamesnd_play_error_beep () {
 }
 
 game_snd* gamesnd_get_game_sound (gamesnd_id handle) {
-    Assertion (handle.isValid (), "Invalid game sound handle detected!");
-    Assertion (
+    ASSERTX (handle.isValid (), "Invalid game sound handle detected!");
+    ASSERTX (
         handle.value () < (int)Snds.size (),
         "Invalid game sound handle %d detected!", handle.value ());
     return &Snds[handle.value ()];
 }
 game_snd* gamesnd_get_interface_sound (interface_snd_id handle) {
-    Assertion (handle.isValid (), "Invalid interface sound handle detected!");
-    Assertion (
+    ASSERTX (handle.isValid (), "Invalid interface sound handle detected!");
+    ASSERTX (
         handle.value () < (int)Snds_iface.size (),
         "Invalid interface sound handle %d detected!", handle.value ());
     return &Snds_iface[handle.value ()];
@@ -1729,7 +1729,7 @@ float gamesnd_get_max_duration (game_snd* gs) {
     return max_length / gs->pitch_range.max ();
 }
 game_snd_entry* gamesnd_choose_entry (game_snd* gs) {
-    Assertion (
+    ASSERTX (
         !gs->sound_entries.empty (),
         "No sound entries found in game sound! This may not happen!");
 

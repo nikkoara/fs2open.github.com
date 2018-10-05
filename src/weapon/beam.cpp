@@ -307,10 +307,7 @@ int beam_fire (beam_fire_info* fire_info) {
         (fire_info->beam_info_index >= Num_weapon_types) ||
         !(Weapon_info[fire_info->beam_info_index]
               .wi_flags[Weapon::Info_Flags::Beam])) {
-        UNREACHABLE (
-            "beam_info_index (%d) invalid (either <0, >= %d, or not actually "
-            "a beam)!\n",
-            fire_info->beam_info_index, Num_weapon_types);
+        ASSERT (0);
         return -1;
     }
 
@@ -320,7 +317,7 @@ int beam_fire (beam_fire_info* fire_info) {
         ((fire_info->shooter->type != OBJ_SHIP) ||
          (fire_info->shooter->instance < 0) ||
          (fire_info->shooter->instance >= MAX_SHIPS))) {
-        UNREACHABLE ("Fixed beam fired without a valid ship!\n");
+        ASSERT (0);
         return -1;
     }
     if (fire_info->shooter != NULL) {
@@ -329,7 +326,7 @@ int beam_fire (beam_fire_info* fire_info) {
 
     // get a free beam
     new_item = GET_FIRST (&Beam_free_list);
-    Assert (new_item != &Beam_free_list); // shouldn't have the dummy element
+    ASSERT (new_item != &Beam_free_list); // shouldn't have the dummy element
     if (new_item == &Beam_free_list) { return -1; }
 
     // make sure that our textures are loaded as well
@@ -442,7 +439,7 @@ int beam_fire (beam_fire_info* fire_info) {
     else {
         beam_get_binfo (
             new_item, fire_info->accuracy,
-            wip->b_info.beam_shots); // to fill in b_info	- the set of
+            wip->b_info.beam_shots); // to fill in b_info       - the set of
                                      // directional aim vectors
     }
 
@@ -485,8 +482,8 @@ int beam_fire (beam_fire_info* fire_info) {
         if (fire_info->bfi_flags & BFIF_IS_FIGHTER_BEAM) {
             // magic numbers suck, be we need to make sure that we are always
             // below UCHAR_MAX (255)
-            Assert (fire_info->point <= 25);
-            Assert (fire_info->bank <= 5);
+            ASSERT (fire_info->point <= 25);
+            ASSERT (fire_info->bank <= 5);
 
             bank_point = (fire_info->point * 10) + fire_info->bank;
         }
@@ -526,7 +523,7 @@ int beam_fire_targeting (fighter_beam_fire_info* fire_info) {
     if (Beam_count >= MAX_BEAMS) { return -1; }
 
     // make sure the beam_info_index is valid
-    Assert (
+    ASSERT (
         (fire_info->beam_info_index >= 0) &&
         (fire_info->beam_info_index < MAX_WEAPON_TYPES) &&
         (Weapon_info[fire_info->beam_info_index]
@@ -540,7 +537,7 @@ int beam_fire_targeting (fighter_beam_fire_info* fire_info) {
     wip = &Weapon_info[fire_info->beam_info_index];
 
     // make sure a ship is firing this
-    Assert (
+    ASSERT (
         (fire_info->shooter->type == OBJ_SHIP) &&
         (fire_info->shooter->instance >= 0) &&
         (fire_info->shooter->instance < MAX_SHIPS));
@@ -553,7 +550,7 @@ int beam_fire_targeting (fighter_beam_fire_info* fire_info) {
 
     // get a free beam
     new_item = GET_FIRST (&Beam_free_list);
-    Assert (new_item != &Beam_free_list); // shouldn't have the dummy element
+    ASSERT (new_item != &Beam_free_list); // shouldn't have the dummy element
 
     // remove from the free list
     list_remove (&Beam_free_list, new_item);
@@ -565,7 +562,7 @@ int beam_fire_targeting (fighter_beam_fire_info* fire_info) {
     Beam_count++;
 
     // maybe allocate some extra data based on the beam type
-    Assert (wip->b_info.beam_type == BEAM_TYPE_C);
+    ASSERT (wip->b_info.beam_type == BEAM_TYPE_C);
     if (wip->b_info.beam_type != BEAM_TYPE_C) { return -1; }
 
     // fill in some values
@@ -626,8 +623,8 @@ int beam_get_parent (object* bm) {
     beam* b;
 
     // get a handle to the beam
-    Assert (bm->type == OBJ_BEAM);
-    Assert (bm->instance >= 0);
+    ASSERT (bm->type == OBJ_BEAM);
+    ASSERT (bm->instance >= 0);
     if (bm->type != OBJ_BEAM) { return -1; }
     if (bm->instance < 0) { return -1; }
     b = &Beams[bm->instance];
@@ -643,13 +640,13 @@ int beam_get_parent (object* bm) {
 
 // return weapon_info_index of beam
 int beam_get_weapon_info_index (object* bm) {
-    Assert (bm->type == OBJ_BEAM);
+    ASSERT (bm->type == OBJ_BEAM);
     if (bm->type != OBJ_BEAM) { return -1; }
 
-    Assert (bm->instance >= 0 && bm->instance < MAX_BEAMS);
+    ASSERT (bm->instance >= 0 && bm->instance < MAX_BEAMS);
     if (bm->instance < 0) { return -1; }
     // make sure it's returning a valid info index
-    Assert (
+    ASSERT (
         (Beams[bm->instance].weapon_info_index > -1) &&
         (Beams[bm->instance].weapon_info_index < Num_weapon_types));
 
@@ -784,7 +781,7 @@ void beam_type_a_move (beam* b) {
     vm_vec_sub (&dir, &b->last_shot, &b->last_start);
     vm_vec_normalize_quick (&dir);
     vm_vec_scale_add (&b->last_shot, &b->last_start, &dir, b->range);
-    Assert (is_valid_vec (&b->last_shot));
+    ASSERT (is_valid_vec (&b->last_shot));
 }
 
 // move a type B beam weapon
@@ -812,7 +809,7 @@ void beam_type_b_move (beam* b) {
     // original direction
     dot_save = vm_vec_dot (&b->binfo.dir_a, &b->binfo.dir_b);
     if ((double)dot_save >= 0.999999999) { actual_dir = b->binfo.dir_a; }
-    // otherwise move towards the dir	we calculated when firing this beam
+    // otherwise move towards the dir   we calculated when firing this beam
     else {
         vm_vec_interp_constant (
             &actual_dir, &b->binfo.dir_a, &b->binfo.dir_b, BEAM_T (b));
@@ -821,7 +818,7 @@ void beam_type_b_move (beam* b) {
     // now recalculate shot_point to be shooting through our new point
     vm_vec_scale_add (&b->last_shot, &b->last_start, &actual_dir, b->range);
     int is_valid = is_valid_vec (&b->last_shot);
-    Assert (is_valid);
+    ASSERT (is_valid);
     if (!is_valid) {
         actual_dir = b->binfo.dir_a;
         vm_vec_scale_add (
@@ -897,7 +894,7 @@ void beam_type_d_move (beam* b) {
     vm_vec_sub (&dir, &b->last_shot, &b->last_start);
     vm_vec_normalize_quick (&dir);
     vm_vec_scale_add (&b->last_shot, &b->last_start, &dir, b->range);
-    Assert (is_valid_vec (&b->last_shot));
+    ASSERT (is_valid_vec (&b->last_shot));
 }
 void beam_type_d_get_status (beam* b, int* shot_index, int* fire_wait) {
     float shot_time = b->life_total / (float)b->binfo.shot_count;
@@ -940,7 +937,7 @@ void beam_type_e_move (beam* b) {
 
     // put the "last_shot" point arbitrarily far away
     vm_vec_scale_add (&b->last_shot, &b->last_start, &turret_norm, b->range);
-    Assert (is_valid_vec (&b->last_shot));
+    ASSERT (is_valid_vec (&b->last_shot));
 }
 
 // pre-move (before collision checking - but AFTER ALL OTHER OBJECTS HAVE BEEN
@@ -1580,7 +1577,7 @@ void beam_render_all () {
             }
 
             // render the beam itself
-            Assert (moveup->weapon_info_index >= 0);
+            ASSERT (moveup->weapon_info_index >= 0);
 
             if (moveup->weapon_info_index < 0) {
                 moveup = GET_NEXT (moveup);
@@ -1640,11 +1637,11 @@ void beam_add_light_small (beam* bm, object* objp, vec3d* pt_override = NULL) {
     if (Detail.lighting < 2) { return; }
 
     // sanity
-    Assert (bm != NULL);
+    ASSERT (bm != NULL);
     if (bm == NULL) { return; }
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
     if (objp == NULL) { return; }
-    Assert (bm->weapon_info_index >= 0);
+    ASSERT (bm->weapon_info_index >= 0);
     wip = &Weapon_info[bm->weapon_info_index];
     bwi = &wip->b_info;
 
@@ -1708,11 +1705,11 @@ void beam_add_light_large (beam* bm, object* objp, vec3d* pt0, vec3d* pt1) {
     if (Detail.lighting < 2) { return; }
 
     // sanity
-    Assert (bm != NULL);
+    ASSERT (bm != NULL);
     if (bm == NULL) { return; }
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
     if (objp == NULL) { return; }
-    Assert (bm->weapon_info_index >= 0);
+    ASSERT (bm->weapon_info_index >= 0);
     wip = &Weapon_info[bm->weapon_info_index];
     bwi = &wip->b_info;
 
@@ -1748,7 +1745,7 @@ void beam_add_light (beam* b, int objnum, int source, vec3d* c_point) {
     // only type 2 lights (from collisions) need a collision point
     if (c_point != NULL) { l->c_point = *c_point; }
     else {
-        Assert (source != 2);
+        ASSERT (source != 2);
         if (source == 2) { Beam_light_count--; }
     }
 }
@@ -1789,7 +1786,7 @@ void beam_apply_lighting () {
 
         // from the beam passing by
         case 1:
-            Assert (Objects[l->objnum].instance >= 0);
+            ASSERT (Objects[l->objnum].instance >= 0);
             // Valathil: Everyone gets tube lights now
             beam_add_light_large (
                 l->bm, &Objects[l->objnum], &l->bm->last_start,
@@ -1834,7 +1831,7 @@ void beam_delete (beam* b) {
 
     // subtract one
     Beam_count--;
-    Assert (Beam_count >= 0);
+    ASSERT (Beam_count >= 0);
     nprintf (("Beam", "Recycled beam (%d beams remaining)\n", Beam_count));
 }
 
@@ -1844,7 +1841,7 @@ int beam_get_model (object* objp) {
 
     if (objp == NULL) { return -1; }
 
-    Assert (objp->instance >= 0);
+    ASSERT (objp->instance >= 0);
     if (objp->instance < 0) { return -1; }
 
     switch (objp->type) {
@@ -1852,19 +1849,19 @@ int beam_get_model (object* objp) {
         return Ship_info[Ships[objp->instance].ship_info_index].model_num;
 
     case OBJ_WEAPON:
-        Assert (Weapons[objp->instance].weapon_info_index >= 0);
+        ASSERT (Weapons[objp->instance].weapon_info_index >= 0);
         if (Weapons[objp->instance].weapon_info_index < 0) { return -1; }
         return Weapon_info[Weapons[objp->instance].weapon_info_index]
             .model_num;
 
     case OBJ_DEBRIS:
-        Assert (Debris[objp->instance].is_hull);
+        ASSERT (Debris[objp->instance].is_hull);
         if (!Debris[objp->instance].is_hull) { return -1; }
         return Debris[objp->instance].model_num;
 
     case OBJ_ASTEROID:
         pof = Asteroids[objp->instance].asteroid_subtype;
-        Assert (Asteroids[objp->instance].asteroid_type >= 0);
+        ASSERT (Asteroids[objp->instance].asteroid_type >= 0);
         if (Asteroids[objp->instance].asteroid_type < 0) { return -1; }
         return Asteroid_info[Asteroids[objp->instance].asteroid_type]
             .model_num[pof];
@@ -1974,7 +1971,7 @@ void beam_recalc_sounds (beam* b) {
     beam_weapon_info* bwi;
     vec3d pos;
 
-    Assert (b->weapon_info_index >= 0);
+    ASSERT (b->weapon_info_index >= 0);
     if (b->weapon_info_index < 0) { return; }
     bwi = &Weapon_info[b->weapon_info_index].b_info;
 
@@ -2041,7 +2038,7 @@ void beam_get_binfo (beam* b, float accuracy, int num_shots) {
     if ((model_num < 0) && !(b->flags & BF_TARGETING_COORDS)) { return; }
 
     // get beam weapon info
-    Assert (b->weapon_info_index >= 0);
+    ASSERT (b->weapon_info_index >= 0);
     if (b->weapon_info_index < 0) { return; }
     bwi = &Weapon_info[b->weapon_info_index].b_info;
 
@@ -2056,8 +2053,8 @@ void beam_get_binfo (beam* b, float accuracy, int num_shots) {
     // pick an accuracy. beam will be properly aimed at actual fire time
     case BEAM_TYPE_A:
         // determine the miss factor
-        Assert (Game_skill_level >= 0 && Game_skill_level < NUM_SKILL_LEVELS);
-        Assert (b->team >= 0 && b->team < Num_iffs);
+        ASSERT (Game_skill_level >= 0 && Game_skill_level < NUM_SKILL_LEVELS);
+        ASSERT (b->team >= 0 && b->team < Num_iffs);
         miss_factor = bwi->beam_iff_miss_factor[b->team][Game_skill_level];
 
         // all we will do is decide whether or not we will hit - type A beam
@@ -2118,13 +2115,13 @@ void beam_get_binfo (beam* b, float accuracy, int num_shots) {
     // type D beams fire at small ship multiple times
     case BEAM_TYPE_D:
         // determine the miss factor
-        Assert (Game_skill_level >= 0 && Game_skill_level < NUM_SKILL_LEVELS);
-        Assert (b->team >= 0 && b->team < Num_iffs);
+        ASSERT (Game_skill_level >= 0 && Game_skill_level < NUM_SKILL_LEVELS);
+        ASSERT (b->team >= 0 && b->team < Num_iffs);
         miss_factor = bwi->beam_iff_miss_factor[b->team][Game_skill_level];
 
         // get a bunch of shot aims
         for (idx = 0; idx < b->binfo.shot_count; idx++) {
-            //	MK, 9/3/99: Added pow() function to make increasingly likely to
+            // MK, 9/3/99: Added pow() function to make increasingly likely to
             // miss with subsequent shots.  30% more likely with each shot.
             float r = ((float)pow (1.3f, idx)) * miss_factor * accuracy;
             b->binfo.shot_aim[idx] = frand_range (0.0f, 1.0f + r);
@@ -2151,7 +2148,7 @@ void beam_aim (beam* b) {
     if (!(b->flags & BF_TARGETING_COORDS)) {
         // type C beam weapons have no target
         if (b->target == NULL) {
-            Assert (b->type == BEAM_TYPE_C);
+            ASSERT (b->type == BEAM_TYPE_C);
             if (b->type != BEAM_TYPE_C) { return; }
         }
         // get a model # to work with
@@ -2284,7 +2281,7 @@ void beam_aim (beam* b) {
             vm_vec_scale_add (
                 &b->last_shot, &b->last_start, &b->binfo.dir_a, b->range);
         }
-        Assert (is_valid_vec (&b->last_shot));
+        ASSERT (is_valid_vec (&b->last_shot));
         break;
 
     case BEAM_TYPE_C:
@@ -2338,7 +2335,7 @@ void beam_aim (beam* b) {
         break;
 
     default:
-        UNREACHABLE ("Impossible beam type (%d); get a coder!\n", b->type);
+        ASSERT (0);
     }
 
     // recalculate object pairs
@@ -2358,14 +2355,14 @@ void beam_get_octant_points (
         return;
     }
 
-    Assert ((oct_index >= 0) && (oct_index < BEAM_NUM_GOOD_OCTANTS));
+    ASSERT ((oct_index >= 0) && (oct_index < BEAM_NUM_GOOD_OCTANTS));
 
     // randomly pick octants
     t1 = oct_array[oct_index][2] ? m->octants[oct_array[oct_index][0]].max
                                  : m->octants[oct_array[oct_index][0]].min;
     t2 = oct_array[oct_index][3] ? m->octants[oct_array[oct_index][1]].max
                                  : m->octants[oct_array[oct_index][1]].min;
-    Assert (!vm_vec_same (&t1, &t2));
+    ASSERT (!vm_vec_same (&t1, &t2));
 
     // get them in world coords
     vm_vec_unrotate (&temp, &t1, &objp->orient);
@@ -2376,7 +2373,7 @@ void beam_get_octant_points (
 
 // throw some jitter into the aim - based upon shot_aim
 void beam_jitter_aim (beam* b, float aim) {
-    Assert (b->target != NULL);
+    ASSERT (b->target != NULL);
     vec3d forward, circle;
     matrix m;
     float subsys_strength;
@@ -2431,9 +2428,9 @@ int beam_collide_ship (obj_pair* pair) {
     if (pair == NULL) { return 0; }
 
     // get the beam
-    Assert (pair->a->instance >= 0);
-    Assert (pair->a->type == OBJ_BEAM);
-    Assert (Beams[pair->a->instance].objnum == OBJ_INDEX (pair->a));
+    ASSERT (pair->a->instance >= 0);
+    ASSERT (pair->a->type == OBJ_BEAM);
+    ASSERT (Beams[pair->a->instance].objnum == OBJ_INDEX (pair->a));
     weapon_objp = pair->a;
     b = &Beams[pair->a->instance];
 
@@ -2463,9 +2460,9 @@ int beam_collide_ship (obj_pair* pair) {
 #endif
 
     // get the ship
-    Assert (pair->b->instance >= 0);
-    Assert (pair->b->type == OBJ_SHIP);
-    Assert (Ships[pair->b->instance].objnum == OBJ_INDEX (pair->b));
+    ASSERT (pair->b->instance >= 0);
+    ASSERT (pair->b->type == OBJ_SHIP);
+    ASSERT (Ships[pair->b->instance].objnum == OBJ_INDEX (pair->b));
     if ((pair->b->type != OBJ_SHIP) || (pair->b->instance < 0)) return 1;
     ship_objp = pair->b;
     shipp = &Ships[ship_objp->instance];
@@ -2601,7 +2598,7 @@ int beam_collide_ship (obj_pair* pair) {
     // see which impact we use
     if (shield_collision && valid_hit_occurred) {
         memcpy (&mc, &mc_shield, sizeof (mc_info));
-        Assert (quadrant_num >= 0);
+        ASSERT (quadrant_num >= 0);
     }
     else if (hull_enter_collision) {
         memcpy (&mc, &mc_hull_enter, sizeof (mc_info));
@@ -2636,9 +2633,9 @@ int beam_collide_asteroid (obj_pair* pair) {
     if (pair == NULL) { return 0; }
 
     // get the beam
-    Assert (pair->a->instance >= 0);
-    Assert (pair->a->type == OBJ_BEAM);
-    Assert (Beams[pair->a->instance].objnum == OBJ_INDEX (pair->a));
+    ASSERT (pair->a->instance >= 0);
+    ASSERT (pair->a->type == OBJ_BEAM);
+    ASSERT (Beams[pair->a->instance].objnum == OBJ_INDEX (pair->a));
     b = &Beams[pair->a->instance];
 
     // if the "warming up" timestamp has not expired
@@ -2699,9 +2696,9 @@ int beam_collide_missile (obj_pair* pair) {
     if (pair == NULL) { return 0; }
 
     // get the beam
-    Assert (pair->a->instance >= 0);
-    Assert (pair->a->type == OBJ_BEAM);
-    Assert (Beams[pair->a->instance].objnum == OBJ_INDEX (pair->a));
+    ASSERT (pair->a->instance >= 0);
+    ASSERT (pair->a->type == OBJ_BEAM);
+    ASSERT (Beams[pair->a->instance].objnum == OBJ_INDEX (pair->a));
     b = &Beams[pair->a->instance];
 
     // if the "warming up" timestamp has not expired
@@ -2757,9 +2754,9 @@ int beam_collide_debris (obj_pair* pair) {
     if (pair == NULL) { return 0; }
 
     // get the beam
-    Assert (pair->a->instance >= 0);
-    Assert (pair->a->type == OBJ_BEAM);
-    Assert (Beams[pair->a->instance].objnum == OBJ_INDEX (pair->a));
+    ASSERT (pair->a->instance >= 0);
+    ASSERT (pair->a->type == OBJ_BEAM);
+    ASSERT (Beams[pair->a->instance].objnum == OBJ_INDEX (pair->a));
     b = &Beams[pair->a->instance];
 
     // if the "warming up" timestamp has not expired
@@ -2813,14 +2810,14 @@ int beam_collide_early_out (object* a, object* b) {
     vec3d dot_test, dot_test2, dist_test;
 
     // get the beam
-    Assert (a->instance >= 0);
+    ASSERT (a->instance >= 0);
     if (a->instance < 0) { return 1; }
-    Assert (a->type == OBJ_BEAM);
+    ASSERT (a->type == OBJ_BEAM);
     if (a->type != OBJ_BEAM) { return 1; }
-    Assert (Beams[a->instance].objnum == OBJ_INDEX (a));
+    ASSERT (Beams[a->instance].objnum == OBJ_INDEX (a));
     if (Beams[a->instance].objnum != OBJ_INDEX (a)) { return 1; }
     bm = &Beams[a->instance];
-    Assert (bm->weapon_info_index >= 0);
+    ASSERT (bm->weapon_info_index >= 0);
     if (bm->weapon_info_index < 0) { return 1; }
     bwi = &Weapon_info[bm->weapon_info_index];
 
@@ -2838,13 +2835,13 @@ int beam_collide_early_out (object* a, object* b) {
     case OBJ_SHIP: break;
     case OBJ_ASTEROID:
         // targeting lasers only hit ships
-        /*		if(bwi->b_info.beam_type == BEAM_TYPE_C){
+        /*              if(bwi->b_info.beam_type == BEAM_TYPE_C){
                     return 1;
                 }*/
         break;
     case OBJ_DEBRIS:
         // targeting lasers only hit ships
-        /*		if(bwi->b_info.beam_type == BEAM_TYPE_C){
+        /*              if(bwi->b_info.beam_type == BEAM_TYPE_C){
                     return 1;
                 }*/
         // don't ever collide with non hull pieces
@@ -2852,7 +2849,7 @@ int beam_collide_early_out (object* a, object* b) {
         break;
     case OBJ_WEAPON:
         // targeting lasers only hit ships
-        /*		if(bwi->b_info.beam_type == BEAM_TYPE_C){
+        /*              if(bwi->b_info.beam_type == BEAM_TYPE_C){
                     return 1;
                 }*/
         if (The_mission.ai_profile
@@ -3294,7 +3291,7 @@ void beam_handle_collisions (beam* b) {
                 }
                 else {
                     // detonate the missile
-                    Assert (
+                    ASSERT (
                         Weapon_info[Weapons[Objects[target].instance]
                                         .weapon_info_index]
                             .subtype == WP_MISSILE);
@@ -3352,7 +3349,7 @@ void beam_handle_collisions (beam* b) {
             !beam_will_tool_target (b, &Objects[target])) {
             // set last_shot so we know where to properly draw the beam
             b->last_shot = b->f_collisions[idx].cinfo.hit_point_world;
-            Assert (is_valid_vec (&b->last_shot));
+            ASSERT (is_valid_vec (&b->last_shot));
 
             // done wif the beam
             break;
@@ -3535,7 +3532,7 @@ float beam_get_widest (beam* b) {
     float widest = -1.0f;
 
     // sanity
-    Assert (b->weapon_info_index >= 0);
+    ASSERT (b->weapon_info_index >= 0);
     if (b->weapon_info_index < 0) { return -1.0f; }
 
     if (b->beam_width > 0.0f) { widest = b->beam_width; }
@@ -3563,11 +3560,11 @@ void beam_apply_whack (beam* b, object* objp, vec3d* hit_point) {
     ship* shipp;
 
     // sanity
-    Assert ((b != NULL) && (objp != NULL) && (hit_point != NULL));
+    ASSERT ((b != NULL) && (objp != NULL) && (hit_point != NULL));
     if ((b == NULL) || (objp == NULL) || (hit_point == NULL)) { return; }
-    Assert (b->weapon_info_index >= 0);
+    ASSERT (b->weapon_info_index >= 0);
     wip = &Weapon_info[b->weapon_info_index];
-    Assert (
+    ASSERT (
         (objp != NULL) && (objp->type == OBJ_SHIP) && (objp->instance >= 0) &&
         (objp->instance < MAX_SHIPS));
     if ((objp == NULL) || (objp->type != OBJ_SHIP) || (objp->instance < 0) ||

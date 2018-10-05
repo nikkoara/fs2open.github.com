@@ -72,7 +72,7 @@ void observer_delete (object* obj) {
     int num;
 
     num = obj->instance;
-    Assert (Observers[num].objnum == OBJ_INDEX (obj));
+    ASSERT (Observers[num].objnum == OBJ_INDEX (obj));
 
     Observers[num].objnum = -1;
     Observers[num].target_objnum = -1;

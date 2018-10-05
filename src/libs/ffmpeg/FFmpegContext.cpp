@@ -53,7 +53,7 @@ namespace ffmpeg {
 
 FFmpegContext::FFmpegContext (CFILE* inFile)
     : m_ctx (nullptr), m_file (inFile) {
-    Assertion (inFile != nullptr, "Invalid file pointer passed!");
+    ASSERTX (inFile != nullptr, "Invalid file pointer passed!");
 }
 
 FFmpegContext::~FFmpegContext () {
@@ -76,7 +76,7 @@ FFmpegContext::~FFmpegContext () {
 
 std::unique_ptr< FFmpegContext >
 FFmpegContext::createContext (CFILE* mediaFile) {
-    Assertion (mediaFile != nullptr, "File pointer must be valid!");
+    ASSERTX (mediaFile != nullptr, "File pointer must be valid!");
 
     std::unique_ptr< FFmpegContext > instance (new FFmpegContext (mediaFile));
 

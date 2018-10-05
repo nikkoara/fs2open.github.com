@@ -36,8 +36,8 @@ int generic_anim_init_and_stream (
     char filename[NAME_LENGTH];
     char* p;
 
-    Assert (ga != NULL);
-    Assert (anim_filename != NULL);
+    ASSERT (ga != NULL);
+    ASSERT (anim_filename != NULL);
 
     // hi-res support
     if (attempt_hi_res && (gr_screen.res == GR_1024)) {
@@ -294,7 +294,7 @@ int generic_anim_stream (generic_anim* ga, const bool cache) {
     if (ga->type == BM_TYPE_PNG) { ga->total_time = ga->png.anim->anim_time; }
     else {
         if (anim_fps == 0) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION, "animation (%s) has invalid fps of zero, fix this!",
                 ga->filename);
         }
@@ -641,11 +641,11 @@ void generic_anim_render_fixed_frame_delay (
  */
 void generic_anim_render_variable_frame_delay (
     generic_anim* ga, float frametime, float alpha) {
-    Assertion (
+    ASSERTX (
         ga->type == BM_TYPE_PNG,
         "only valid for apngs (currently); get a coder!");
     if (ga->keyframe != 0) {
-        fs2::dialog::warning (LOCATION, "apngs don't support keyframes");
+        WARNINGF (LOCATION, "apngs don't support keyframes");
         return;
     }
 
@@ -719,7 +719,7 @@ void generic_anim_render_variable_frame_delay (
              ga->png.previous_frame_time, ga->previous_frame,
              ga->current_frame, ga->png.anim->current_frame));
 
-        Assertion (
+        ASSERTX (
             ga->streaming != 0, "non-streaming apngs not implemented yet");
         // note: generic anims are not currently ever non-streaming in FSO
         // I'm not even sure that the existing ani/eff code would allow
@@ -743,7 +743,7 @@ void generic_anim_render (
     generic_anim* ga, float frametime, int x, int y, bool menu,
     const generic_extras* ge) {
     if ((ge != nullptr) && (ga->use_hud_color == true)) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Monochrome generic anims can't use extra info (yet)");
         return;
     }

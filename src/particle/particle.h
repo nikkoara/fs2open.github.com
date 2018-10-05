@@ -80,7 +80,7 @@ struct particle  {
     float age;         // How long it's been alive
     float max_life;    // How much life we had
     float radius;      // radius
-    int type;          // type										// -1 = None
+    int type;          // type                                                                          // -1 = None
     int optional_data; // depends on type
     int nframes;       // If an ani, how many frames?
 

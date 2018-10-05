@@ -113,8 +113,8 @@ void snd_clear () {
 // Initialize the game sound system.  Depending on what sound library is being
 // used, call the appropriate low-level initiailizations
 //
-// returns:     1		=> init success
-//              0		=> init failed
+// returns:     1               => init success
+// 0               => init failed
 //
 int snd_init () {
     int rval;
@@ -149,7 +149,7 @@ int snd_init () {
     return 1;
 
 Failure:
-    //	Warning(LOCATION, "Sound system was unable to be initialized.  If you
+    // Warning(LOCATION, "Sound system was unable to be initialized.  If you
     // continue, sound will be disabled.\n");
     nprintf (
         ("Sound",
@@ -261,12 +261,12 @@ void snd_spew_debug_info () {
 // simultaneously.  Through the magic of DirectSound, only 1 copy of the sound
 // is used.
 //
-// parameters:		gs							=> file of sound to load
-//						allow_hardware_load	=> whether to try to allocate in
+// parameters:          gs                                                      => file of sound to load
+// allow_hardware_load     => whether to try to allocate in
 // hardware
 //
-// returns:			success => index of sound in Sounds[] array
-//						failure => -1
+// returns:                     success => index of sound in Sounds[] array
+// failure => -1
 //
 // int snd_load( char *filename, int hardware, int use_ds3d, int *sig)
 sound_load_id
@@ -288,8 +288,8 @@ snd_load (game_snd_entry* entry, int flags, int /*allow_hardware_load*/) {
             //
             // NOTE: this will allow a duplicate 3D entry if 2D stereo entry
             // exists,
-            //       but will not load a duplicate 2D entry to get stereo if 3D
-            //       version already loaded
+            // but will not load a duplicate 2D entry to get stereo if 3D
+            // version already loaded
             if ((Sounds[n].info.n_channels == 1) ||
                 !(flags & GAME_SND_USE_DS3D)) {
                 return sound_load_id (static_cast< int > (n));
@@ -354,7 +354,7 @@ snd_load (game_snd_entry* entry, int flags, int /*allow_hardware_load*/) {
                     // issues since a lot of mods use 3D sounds with more than
                     // one channel. This will silence the warnings for any mod
                     // that does not support 3.8.0.
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Sound '%s' has more than one channel but is used as "
                         "a 3D sound! 3D sounds may only have one channel.",
@@ -470,13 +470,13 @@ void snd_close (void) {
 }
 
 // ---------------------------------------------------------------------------------------
-//	snd_play_raw()
+// snd_play_raw()
 //
 // Allow a sound to be played directly from the index in Sounds[].  This
 // bypasses the normal game sound management system.
 //
-// returns:		-1		=>		sound could not be played
-//					n		=>		handle for instance of sound
+// returns:             -1              =>              sound could not be played
+// n               =>              handle for instance of sound
 //
 sound_handle snd_play_raw (
     sound_load_id soundnum, float pan, float vol_scale, int priority) {
@@ -490,7 +490,7 @@ sound_handle snd_play_raw (
     entry.id = soundnum;
     entry.id_sig = Sounds[soundnum.value ()].sig;
     entry.filename[0] = 0;
-    //	entry.flags = GAME_SND_VOICE | GAME_SND_USE_DS3D;
+    // entry.flags = GAME_SND_VOICE | GAME_SND_USE_DS3D;
     gs.flags = GAME_SND_VOICE;
 
     gs.volume_range = util::UniformFloatRange (1.0f);
@@ -503,22 +503,22 @@ MONITOR (NumSoundsStarted)
 MONITOR (NumSoundsLoaded)
 
 // ---------------------------------------------------------------------------------------
-//	snd_play()
+// snd_play()
 //
-//	NOTE: vol_scale parameter is the multiplicative scaling applied to the
+// NOTE: vol_scale parameter is the multiplicative scaling applied to the
 // default volume
-//       (vol_scale is a default parameter with a default value of 1.0f)
+// (vol_scale is a default parameter with a default value of 1.0f)
 //
-// input:	gs				=>	game-level sound description
-//				pan			=>	-1 (full left) to 1.0 (full right), this is a
-// default parm 				vol_scale	=>	factor to scale default volume
-// by (applied before global sound volume applied) 				priority
+// input:       gs                              =>      game-level sound description
+// pan                     =>      -1 (full left) to 1.0 (full right), this is a
+// default parm                                 vol_scale       =>      factor to scale default volume
+// by (applied before global sound volume applied)                              priority
 // =>
-// SND_PRIORITY_MUST_PLAY 									SND_PRIORITY_SINGLE_INSTANCE
+// SND_PRIORITY_MUST_PLAY                                                                       SND_PRIORITY_SINGLE_INSTANCE
 // (default value) SND_PRIORITY_DOUBLE_INSTANCE SND_PRIORITY_TRIPLE_INSTANCE
 //
-// returns:		-1		=>		sound could not be played
-//					n		=>		handle for instance of sound
+// returns:             -1              =>              sound could not be played
+// n               =>              handle for instance of sound
 //
 sound_handle snd_play (
     game_snd* gs, float pan, float vol_scale, int priority,
@@ -582,31 +582,31 @@ MONITOR (Num3DSoundsLoaded)
 // ---------------------------------------------------------------------------------------
 // snd_play_3d()
 //
-//	NOTE: vol_scale parameter is the multiplicative scaling applied to the
+// NOTE: vol_scale parameter is the multiplicative scaling applied to the
 // default volume
-//       (vol_scale is a default parameter with a default value of 1.0f)
+// (vol_scale is a default parameter with a default value of 1.0f)
 //
-// input:	gs				=>	game-level sound description
-//				source_pos	=>	global pos of where the sound is
-//				listen_pos	=>	global pos of where listener is
-//				radius		=>	optional parameter, this specifes distance at
-// which to apply min/max distances 				source_vel	=>	velocity of
+// input:       gs                              =>      game-level sound description
+// source_pos      =>      global pos of where the sound is
+// listen_pos      =>      global pos of where listener is
+// radius          =>      optional parameter, this specifes distance at
+// which to apply min/max distances                             source_vel      =>      velocity of
 // the
 // source playing the sound (used for DirectSound3D only)
-//				looping		=>	flag to indicate the sound should loop (default
-// value 0) 				vol_scale	=>	factor to scale the static volume
+// looping         =>      flag to indicate the sound should loop (default
+// value 0)                             vol_scale       =>      factor to scale the static volume
 // by
-// (applied before attenuation) 				priority		=>
-// SND_PRIORITY_MUST_PLAY 									SND_PRIORITY_SINGLE_INSTANCE
+// (applied before attenuation)                                 priority                =>
+// SND_PRIORITY_MUST_PLAY                                                                       SND_PRIORITY_SINGLE_INSTANCE
 // (default value) SND_PRIORITY_DOUBLE_INSTANCE SND_PRIORITY_TRIPLE_INSTANCE
 // sound_fvec
 //=> forward vector of where sound is emitting from (RSX use only)
 // range_factor
-//=>	factor N, which increases distance sound is heard by N times (default
+//=>    factor N, which increases distance sound is heard by N times (default
 // value 1)
 //
-// returns:		-1		=>		sound could not be played
-//					n		=>		handle for instance of sound
+// returns:             -1              =>              sound could not be played
+// n               =>              handle for instance of sound
 //
 sound_handle snd_play_3d (
     game_snd* gs, vec3d* source_pos, vec3d* listen_pos, float radius,
@@ -680,7 +680,7 @@ sound_handle snd_play_3d (
 
     // any stereo sounds will not play in proper 3D, but they should have
     // been converted to mono already!
-    Assertion (
+    ASSERTX (
         snd->info.n_channels == 1, "Sound should be mono! Sound file: %s",
         snd->filename);
 
@@ -731,7 +731,7 @@ void snd_update_3d_pos (
 
         if (!ds_initialized) return;
 
-        Assertion (
+        ASSERTX (
             gs != NULL, "*gs was NULL in snd_update_3d_pos(); get a coder!\n");
 
         channel = ds_get_channel (soundnum);
@@ -755,19 +755,19 @@ void snd_update_3d_pos (
 // Based on the 3D position the player and the object, calculate
 // the correct volume and pan.
 //
-// parameters:		gs			=> pointer to sound description
-//						pos		=> 3D position used to calc volume and pan
-//						vol		=> output parameter for the volume
-//						pan		=> output parameter for the pan
-//						radius	=>	optional parameter (default value 0) which
-// indicates sound attenuation 										should
+// parameters:          gs                      => pointer to sound description
+// pos             => 3D position used to calc volume and pan
+// vol             => output parameter for the volume
+// pan             => output parameter for the pan
+// radius  =>      optional parameter (default value 0) which
+// indicates sound attenuation                                                                          should
 // occur from this radius
 //
-// returns:			-1			=> could not determine vol or pan
-//						0			=> success
+// returns:                     -1                      => could not determine vol or pan
+// 0                       => success
 //
-//	NOTE: the volume is not scaled by the Master_sound_volume, since this
-// always occurs 			when snd_play() or snd_play_looping() is called
+// NOTE: the volume is not scaled by the Master_sound_volume, since this
+// always occurs                        when snd_play() or snd_play_looping() is called
 //
 int snd_get_3d_vol_and_pan (
     game_snd* gs, vec3d* pos, float* vol, float* pan, float radius,
@@ -780,7 +780,7 @@ int snd_get_3d_vol_and_pan (
 
     if (!ds_initialized) return -1;
 
-    Assertion (
+    ASSERTX (
         gs != NULL,
         "*gs was NULL in snd_get_3d_vol_and_pan(); get a coder!\n");
 
@@ -919,8 +919,8 @@ void snd_stop_all () {
 /**
  * Set the volume of a currently playing sound
  *
- * @param sig		handle to sound, what is returned from snd_play()
- * @param volume	volume of sound (range: 0.0 -> 1.0)
+ * @param sig           handle to sound, what is returned from snd_play()
+ * @param volume        volume of sound (range: 0.0 -> 1.0)
  */
 void snd_set_volume (sound_handle sig, float volume) {
     int channel;
@@ -963,8 +963,8 @@ void snd_set_volume (sound_handle sig, float volume) {
 //
 // Set the pan of a currently playing sound
 //
-// parameters:		sig	=> handle to sound, what is returned from snd_play()
-//						pan	=> pan of sound (range: -1.0 -> 1.0)
+// parameters:          sig     => handle to sound, what is returned from snd_play()
+// pan     => pan of sound (range: -1.0 -> 1.0)
 //
 void snd_set_pan (sound_handle sig, float pan) {
     int channel;
@@ -988,9 +988,9 @@ void snd_set_pan (sound_handle sig, float pan) {
 //
 // Return the pitch of a currently playing sound
 //
-// returns:			pitch of sound ( range: 100 to 100000)
+// returns:                     pitch of sound ( range: 100 to 100000)
 //
-// parameters:		sig	=> handle to sound, what is returned from snd_play()
+// parameters:          sig     => handle to sound, what is returned from snd_play()
 //
 float snd_get_pitch (sound_handle sig) {
     int channel;
@@ -1015,9 +1015,9 @@ float snd_get_pitch (sound_handle sig) {
 //
 // Set the pitch of a currently playing sound
 //
-// parameters:		sig		=> handle to sound, what is returned from
+// parameters:          sig             => handle to sound, what is returned from
 // snd_play()
-//						pan		=> pitch of sound (must be greater than zero)
+// pan             => pitch of sound (must be greater than zero)
 //
 void snd_set_pitch (sound_handle sig, float pitch) {
     int channel;
@@ -1041,10 +1041,10 @@ void snd_set_pitch (sound_handle sig, float pitch) {
 //
 // Determine if a sound is playing
 //
-// returns:			1				=> sound is currently playing
-//						0				=> sound is not playing
+// returns:                     1                               => sound is currently playing
+// 0                               => sound is not playing
 //
-// parameters:		sig	=> signature of sound, what is returned from snd_play()
+// parameters:          sig     => signature of sound, what is returned from snd_play()
 //
 int snd_is_playing (sound_handle sig) {
     int channel, is_playing;
@@ -1076,13 +1076,13 @@ int snd_is_inited () {
 int snd_get_duration (sound_load_id snd_id) {
     if (!snd_id.isValid ()) return 0;
 
-    Assertion (
+    ASSERTX (
         !Sounds.empty (),
         "Sounds vector is empty. Why are we trying to look up an index?\n");
 
     if (Sounds.empty ()) return 0;
 
-    Assertion (
+    ASSERTX (
         Sounds[snd_id.value ()].duration > 0,
         "Sound duration for sound %s is bogus (%d)\n",
         Sounds[snd_id.value ()].filename, Sounds[snd_id.value ()].duration);
@@ -1095,7 +1095,7 @@ int snd_get_duration (sound_load_id snd_id) {
 
 // return the time in ms for the duration of the sound
 const char* snd_get_filename (sound_load_id snd_id) {
-    Assertion (snd_id.isValid (), "Invalid sound id %d!", snd_id.value ());
+    ASSERTX (snd_id.isValid (), "Invalid sound id %d!", snd_id.value ());
 
     return Sounds[snd_id.value ()].filename;
 }
@@ -1177,7 +1177,7 @@ void snd_set_pos (sound_handle snd_handle, float val, int as_pct) {
 
     // set position as an absolute from 0 to 1
     if (as_pct) {
-        Assert ((val >= 0.0) && (val <= 1.0));
+        ASSERT ((val >= 0.0) && (val <= 1.0));
         ds_set_position (
             ds_get_channel (snd_handle), (uint32_t) ((float)snd->size * val));
     }
@@ -1185,7 +1185,7 @@ void snd_set_pos (sound_handle snd_handle, float val, int as_pct) {
     // sound
     else {
         float bps;
-        Assert (val <= (float)snd->duration / 1000.0f);
+        ASSERT (val <= (float)snd->duration / 1000.0f);
         bps = (float)snd->sample_rate * (float)snd->bits; // data rate
         ds_set_position (ds_get_channel (snd_handle), (uint32_t) (bps * val));
     }
@@ -1208,13 +1208,13 @@ void snd_stop_any_sound () {
 
 // Return the raw sound data for a loaded sound
 //
-// input:	handle	=>	index into Sounds[] array
-//				data		=>	allocated mem to hold sound
+// input:       handle  =>      index into Sounds[] array
+// data            =>      allocated mem to hold sound
 //
-// exit:		0	=>	success
-//				!0	=>	fail
+// exit:                0       =>      success
+// !0      =>      fail
 int snd_get_data (sound_load_id handle, char* data) {
-    Assert (handle.isValid ());
+    ASSERT (handle.isValid ());
 
     if (ds_get_data (Sounds[handle.value ()].sid, data)) { return -1; }
 
@@ -1223,7 +1223,7 @@ int snd_get_data (sound_load_id handle, char* data) {
 
 // return the size of the sound data associated with the sound handle
 int snd_size (sound_load_id handle, int* size) {
-    Assert (handle.isValid ());
+    ASSERT (handle.isValid ());
 
     if (ds_get_size (Sounds[handle.value ()].sid, size)) { return -1; }
 
@@ -1233,7 +1233,7 @@ int snd_size (sound_load_id handle, int* size) {
 // retrieve the bits per sample and frequency for a given sound
 void snd_get_format (
     sound_load_id handle, int* bits_per_sample, int* frequency) {
-    Assert ((handle.isValid ()) && ((size_t)handle.value () < Sounds.size ()));
+    ASSERT ((handle.isValid ()) && ((size_t)handle.value () < Sounds.size ()));
 
     if (bits_per_sample) *bits_per_sample = Sounds[handle.value ()].info.bits;
 
@@ -1273,7 +1273,7 @@ int snd_time_remaining (sound_handle handle) {
     // that is the compressed bps and the math is against the uncompressed bps.
     if (bits_per_sample == 4) { bits_per_sample = 16; }
 
-    Assert (bits_per_sample >= 8);
+    ASSERT (bits_per_sample >= 8);
 
     current_offset = ds_get_play_position (channel);
     max_offset = ds_get_channel_size (channel);
@@ -1285,7 +1285,7 @@ int snd_time_remaining (sound_handle handle) {
             (int)std::lround (1000.0f * samples_remaining / frequency);
     }
 
-    //	mprintf(("time_remaining: %d\n", time_remaining));
+    // mprintf(("time_remaining: %d\n", time_remaining));
     return time_remaining;
 }
 sound_load_id snd_get_sound_id (sound_handle snd_handle) {
@@ -1382,7 +1382,7 @@ void snd_do_frame () {
 }
 
 void snd_adjust_audio_volume (int type, float percent, int time) {
-    Assert (type >= 0 && type < 3);
+    ASSERT (type >= 0 && type < 3);
 
     if (type >= 0 && type < 3) {
         switch (type) {
@@ -1467,11 +1467,11 @@ EnhancedSoundData::EnhancedSoundData () {}
 EnhancedSoundData::EnhancedSoundData (
     const int new_priority, const unsigned int new_limit)
     : priority (new_priority), limit (new_limit) {
-    Assertion (
+    ASSERTX (
         priority >= SND_ENHANCED_PRIORITY_MUST_PLAY &&
             priority <= SND_ENHANCED_PRIORITY_LOW,
         "EnhancedSoundData ctor given invalid priority %d", priority);
-    Assertion (
+    ASSERTX (
         limit > 0, "EnhancedSoundData ctor given invalid limit %d", limit);
 }
 game_snd_entry::game_snd_entry () { filename[0] = 0; }

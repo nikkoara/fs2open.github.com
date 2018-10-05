@@ -44,7 +44,7 @@ const char* getPreferencesPath () {
 
 bool fAppActive = false;
 bool window_event_handler (const SDL_Event& e) {
-    Assertion (
+    ASSERTX (
         mainSDLWindow != nullptr,
         "This function may only be called with a valid SDL Window.");
     if (os::events::isWindowEvent (e, mainSDLWindow)) {
@@ -163,7 +163,7 @@ void os_init (const char* wclass, const char* title, const char* app_name) {
 
 // set the main window title
 void os_set_title (const char* title) {
-    Assertion (
+    ASSERTX (
         mainSDLWindow != nullptr,
         "This function may only be called with a valid SDL Window.");
     strcpy_s (szWinTitle, title);
@@ -334,8 +334,6 @@ void debug_int3 (const char* file, int line) {
 
     gr_activate (0);
 
-    mprintf (("%s\n", dump_stacktrace ().c_str ()));
-
 #ifndef NDEBUG
     SDL_TriggerBreakpoint ();
 #endif
@@ -387,7 +385,7 @@ std::vector< EventListenerData > eventListeners;
 
 ListenerIdentifier
 addEventListener (SDL_EventType type, int weight, const Listener& listener) {
-    Assertion (listener, "Invalid event handler passed!");
+    ASSERTX (listener, "Invalid event handler passed!");
 
     EventListenerData data;
     data.identifier = ++nextListenerIdentifier;

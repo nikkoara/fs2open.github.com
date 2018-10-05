@@ -7,7 +7,7 @@
 
 #include "windows_stub/config.h"
 #include "globalincs/scp_defines.h"
-#include "utils/strings.h"
+#include "util/strings.h"
 
 #include <cstdio> // For NULL, etc
 #include <cstdlib>
@@ -200,10 +200,6 @@ struct coord2d  {
     int x, y;
 };
 
-#include "osapi/dialogs.h"
-
-extern int Global_warning_count;
-extern int Global_error_count;
 
 #include "osapi/outwnd.h"
 
@@ -330,9 +326,9 @@ public:
 #include "globalincs/safe_strings.h"
 
 // check to see that a passed sting is valid, ie:
-//  - has >0 length
-//  - is not "none"
-//  - is not "<none>"
+// - has >0 length
+// - is not "none"
+// - is not "<none>"
 inline bool VALID_FNAME (const char* x) {
     return strlen ((x)) && strcasecmp ((x), "none") != 0 &&
            strcasecmp ((x), "<none>") != 0;
@@ -352,8 +348,5 @@ inline bool VALID_FNAME (const std::string& x) {
     if (!strcasecmp (x.c_str (), "<none>")) { return false; }
     return true;
 }
-
-// Function to generate a stacktrace
-std::string dump_stacktrace ();
 
 #endif // FREESPACE2_GLOBALINCS_PSTYPES_H

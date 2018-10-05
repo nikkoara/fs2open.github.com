@@ -289,8 +289,8 @@ void popupdead_play_default_change_sound () {
 }
 
 // do any key processing here
-// exit:	-1		=>	nothing was done
-//			>=0	=> a choice was selected
+// exit:        -1              =>      nothing was done
+// >=0     => a choice was selected
 int popupdead_process_keys (int k) {
     int masked_k;
 
@@ -346,8 +346,8 @@ int popupdead_process_keys (int k) {
 }
 
 // see if any popup buttons have been pressed
-// exit: -1						=> no buttons pressed
-//			>=0					=>	button index that was pressed
+// exit: -1                                             => no buttons pressed
+// >=0                                     =>      button index that was pressed
 int popupdead_check_buttons () {
     int i;
     UI_BUTTON* b;
@@ -455,7 +455,7 @@ int popupdead_do_frame (float /*frametime*/) {
         // do something different for single/multiplayer
         if (Game_mode & GM_NORMAL) { Popupdead_choice = choice; }
         else {
-            Assert (Popupdead_multi_type != -1);
+            ASSERT (Popupdead_multi_type != -1);
             switch (Popupdead_multi_type) {
             case POPUPDEAD_OBS_ONLY:
             case POPUPDEAD_OBS_QUIT:
@@ -483,7 +483,7 @@ int popupdead_do_frame (float /*frametime*/) {
         // do something different for single/multiplayer
         if (Game_mode & GM_NORMAL) { Popupdead_choice = choice; }
         else {
-            Assert (Popupdead_multi_type != -1);
+            ASSERT (Popupdead_multi_type != -1);
             switch (Popupdead_multi_type) {
             case POPUPDEAD_OBS_ONLY:
             case POPUPDEAD_OBS_QUIT:

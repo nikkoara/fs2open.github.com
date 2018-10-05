@@ -88,7 +88,7 @@ void load_filter_info (void) {
         auto z = strlen (inbuf) - 1;
         if (inbuf[z] == '\n') inbuf[z] = 0;
 
-        Assert (strlen (inbuf + 1) < NAME_LENGTH);
+        ASSERT (strlen (inbuf + 1) < NAME_LENGTH);
         strcpy_s (new_filter.name, inbuf + 1);
 
         if (!strcasecmp (new_filter.name, "error")) { new_filter.enabled = true; }
@@ -201,7 +201,7 @@ void outwnd_print (const char* id, const char* tmp) {
         // Only create new filters if there was a filter file
         if (Outwnd_no_filter_file) return;
 
-        Assert (strlen (id) + 1 < NAME_LENGTH);
+        ASSERT (strlen (id) + 1 < NAME_LENGTH);
         outwnd_filter_struct new_filter;
 
         strcpy_s (new_filter.name, id);

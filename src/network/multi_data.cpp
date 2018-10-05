@@ -353,7 +353,7 @@ void multi_data_send_my_junk () {
 int multi_data_is_data (char* filename) {
     size_t len, idx;
 
-    Assert (filename != NULL);
+    ASSERT (filename != NULL);
 
     // some kind of error
     if (filename == NULL) { return 0; }

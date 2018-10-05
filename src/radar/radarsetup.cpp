@@ -128,7 +128,7 @@ void radar_stuff_blip_info (
         break;
 
     default:
-        fs2::dialog::error (LOCATION, "Illegal blip type in radar.");
+        ASSERTF (LOCATION, "Illegal blip type in radar.");
         break;
     }
 }
@@ -450,7 +450,7 @@ void HudGaugeRadar::drawRange () {
         break;
 
     default:
-        fs2::dialog::error (LOCATION, "Unknown radar range: %d!\n", HUD_config.rp_dist);
+        ASSERTF (LOCATION, "Unknown radar range: %d!\n", HUD_config.rp_dist);
         break;
     }
 }
@@ -463,7 +463,7 @@ void HudGaugeRadar::drawRange () {
  * object
  */
 RadarVisibility radar_is_visible (object* objp) {
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
 
     if (objp->flags[Object::Object_Flags::Should_be_dead]) {
         return NOT_VISIBLE;

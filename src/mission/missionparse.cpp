@@ -606,8 +606,8 @@ void parse_mission_info (mission* pm, bool basic = false) {
     //
     // NOTE: this can be dangerous so be sure that any get_mission_info() call
     // (defaults to basic info) will
-    //       only reference data parsed before this point!! (like current FRED2
-    //       and game code does)
+    // only reference data parsed before this point!! (like current FRED2
+    // and game code does)
     if (basic) return;
 
     // set up support ships
@@ -668,12 +668,12 @@ void parse_mission_info (mission* pm, bool basic = false) {
         Mission_all_attack = 0;
     }
 
-    //	Maybe delay the player's entry.
+    // Maybe delay the player's entry.
     if (optional_string ("+Player Entry Delay:")) {
         float temp;
 
         stuff_float (&temp);
-        Assert (temp >= 0.0f);
+        ASSERT (temp >= 0.0f);
         Entry_delay_time = fl2f (temp);
     }
     else {
@@ -771,12 +771,12 @@ void parse_mission_info (mission* pm, bool basic = false) {
         if (index >= 0)
             The_mission.ai_profile = &Ai_profiles[index];
         else
-            fs2::dialog::warning_ex (
+            WARNINGF (
                 LOCATION, "Mission: %s\nUnknown AI profile %s!", pm->name,
                 temp);
     }
 
-    Assert (The_mission.ai_profile != NULL);
+    ASSERT (The_mission.ai_profile != NULL);
 
     // Kazan - player use AI at start?
     if (pm->flags[Mission::Mission_Flags::Player_start_ai]) Player_use_ai = 1;
@@ -811,7 +811,7 @@ void parse_mission_info (mission* pm, bool basic = false) {
 
 void parse_player_info (mission* pm) {
     char temp[NAME_LENGTH];
-    Assert (pm != NULL);
+    ASSERT (pm != NULL);
 
     // alternate type names begin here
     mission_parse_reset_alt ();
@@ -868,7 +868,7 @@ void parse_player_info2 (mission* pm) {
 
         // make sure we have a count which is divisible by four since four
         // values are added for each ship
-        Assert ((total % 4) == 0);
+        ASSERT ((total % 4) == 0);
 
         num_choices = 0;
 
@@ -913,7 +913,7 @@ void parse_player_info2 (mission* pm) {
             stuff_string (str, F_NAME, NAME_LENGTH);
             ptr->default_ship = ship_info_lookup (str);
             if (-1 == ptr->default_ship) {
-                fs2::dialog::warning_ex (
+                WARNINGF (
                     LOCATION,
                     "Mission: %s\nUnknown default ship %s!  Defaulting to %s.",
                     pm->name, str, Ship_info[ptr->ship_list[0]].name);
@@ -932,7 +932,7 @@ void parse_player_info2 (mission* pm) {
                             break;
                         }
                     }
-                    Assertion (
+                    ASSERTX (
                         i < static_cast< int > (Ship_info.size ()),
                         "Mission: %s: Could not find a valid default ship.\n",
                         pm->name);
@@ -950,7 +950,7 @@ void parse_player_info2 (mission* pm) {
 
         // make sure we have a count which is divisible by four since four
         // values are added for each ship
-        Assert ((total % 4) == 0);
+        ASSERT ((total % 4) == 0);
         num_choices = 0;
 
         for (i = 0; i < total; i += 4) {
@@ -995,7 +995,7 @@ void parse_player_info2 (mission* pm) {
                     num_choices++;
                 }
                 else {
-                    fs2::dialog::warning_ex (
+                    WARNINGF (
                         LOCATION,
                         "Weapon '%s' in weapon pool isn't allowed on player "
                         "loadout! Ignoring it ...\n",
@@ -1018,7 +1018,7 @@ void parse_player_info2 (mission* pm) {
     }
 
     if (nt != Num_teams)
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Not enough ship/weapon pools for mission.  There are %d teams "
             "and only %d pools.",
@@ -1350,7 +1350,7 @@ void parse_fiction (mission* /*pm*/) {
 void parse_cmd_brief (mission* /*pm*/) {
     int stage;
 
-    Assert (!Cur_cmd_brief->num_stages);
+    ASSERT (!Cur_cmd_brief->num_stages);
     stage = 0;
 
     required_string ("#Command Briefing");
@@ -1361,7 +1361,7 @@ void parse_cmd_brief (mission* /*pm*/) {
         Cur_cmd_brief->background[GR_640], Cur_cmd_brief->background[GR_1024]);
 
     while (optional_string ("$Stage Text:")) {
-        Assert (stage < CMD_BRIEF_STAGES_MAX);
+        ASSERT (stage < CMD_BRIEF_STAGES_MAX);
         stuff_string (Cur_cmd_brief->stage[stage].text, F_MULTITEXT, NULL);
 
         required_string ("$Ani Filename:");
@@ -1434,12 +1434,12 @@ void parse_briefing (mission* /*pm*/, int flags) {
 
         required_string ("$num_stages:");
         stuff_int (&bp->num_stages);
-        Assert (bp->num_stages <= MAX_BRIEF_STAGES);
+        ASSERT (bp->num_stages <= MAX_BRIEF_STAGES);
 
         stage_num = 0;
         while (required_string_either ("$end_briefing", "$start_stage")) {
             required_string ("$start_stage");
-            Assert (stage_num < MAX_BRIEF_STAGES);
+            ASSERT (stage_num < MAX_BRIEF_STAGES);
 
             if (stage_num >= bp->num_stages) {
                 error_display (
@@ -1465,12 +1465,12 @@ void parse_briefing (mission* /*pm*/, int flags) {
             if (optional_string ("$num_lines:")) {
                 stuff_int (&bs->num_lines);
 
-                if (Fred_running) { Assert (bs->lines != NULL); }
+                if (Fred_running) { ASSERT (bs->lines != NULL); }
                 else {
                     if (bs->num_lines > 0) {
                         bs->lines = (brief_line*)vm_malloc (
                             sizeof (brief_line) * bs->num_lines);
-                        Assert (bs->lines != NULL);
+                        ASSERT (bs->lines != NULL);
                     }
                 }
 
@@ -1488,12 +1488,12 @@ void parse_briefing (mission* /*pm*/, int flags) {
             required_string ("$num_icons:");
             stuff_int (&bs->num_icons);
 
-            if (Fred_running) { Assert (bs->icons != NULL); }
+            if (Fred_running) { ASSERT (bs->icons != NULL); }
             else {
                 if (bs->num_icons > 0) {
                     bs->icons = (brief_icon*)vm_malloc (
                         sizeof (brief_icon) * bs->num_icons);
-                    Assert (bs->icons != NULL);
+                    ASSERT (bs->icons != NULL);
                 }
             }
 
@@ -1507,7 +1507,7 @@ void parse_briefing (mission* /*pm*/, int flags) {
             else
                 bs->formula = Locked_sexp_true;
 
-            Assert (bs->num_icons <= MAX_STAGE_ICONS);
+            ASSERT (bs->num_icons <= MAX_STAGE_ICONS);
 
             // static alias stuff - stupid, but it seems to be necessary
             static const char* temp_team_names[MAX_IFFS];
@@ -1516,7 +1516,7 @@ void parse_briefing (mission* /*pm*/, int flags) {
 
             while (required_string_either ("$end_stage", "$start_icon")) {
                 required_string ("$start_icon");
-                Assert (icon_num < MAX_STAGE_ICONS);
+                ASSERT (icon_num < MAX_STAGE_ICONS);
                 // Make sure we don't cause a buffer overflow if $num_icons is
                 // wrong
                 if (icon_num >= bs->num_icons) {
@@ -1646,7 +1646,7 @@ void parse_briefing (mission* /*pm*/, int flags) {
     }
 
     if (nt != Num_teams)
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Not enough briefings in mission file.  There are %d teams and "
             "only %d briefings.",
@@ -1679,10 +1679,10 @@ void parse_debriefing_new (mission* /*pm*/) {
 
         required_string ("$Num stages:");
         stuff_int (&db->num_stages);
-        Assert (db->num_stages <= MAX_DEBRIEF_STAGES);
+        ASSERT (db->num_stages <= MAX_DEBRIEF_STAGES);
 
         while (required_string_either ("#", "$Formula")) {
-            Assert (stage_num < MAX_DEBRIEF_STAGES);
+            ASSERT (stage_num < MAX_DEBRIEF_STAGES);
             dbs = &db->stages[stage_num++];
             required_string ("$Formula:");
             dbs->formula = get_sexp_main ();
@@ -1694,11 +1694,11 @@ void parse_debriefing_new (mission* /*pm*/) {
             stuff_string (dbs->recommendation_text, F_MULTITEXT, NULL);
         } // end while
 
-        Assert (db->num_stages == stage_num);
+        ASSERT (db->num_stages == stage_num);
     }
 
     if (nt != Num_teams)
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Not enough debriefings for mission.  There are %d teams and only "
             "%d debriefings;\n",
@@ -1794,14 +1794,14 @@ void parse_dock_one_docked_object (p_object* pobjp, p_object* parent_pobjp) {
     // check valid
     if ((dockpoint < 0) || (parent_dockpoint < 0)) {
         if (dockpoint < 0)
-            fs2::dialog::release_warning (
+            RELEASE_WARNINGF (
                 LOCATION, "Dockpoint %s could not be found on model %s",
                 dockpoint_name,
                 model_get (
                     Ship_info[Ships[objp->instance].ship_info_index].model_num)
                     ->filename);
         if (parent_dockpoint < 0)
-            fs2::dialog::release_warning (
+            RELEASE_WARNINGF (
                 LOCATION, "Dockpoint %s could not be found on model %s",
                 parent_dockpoint_name,
                 model_get (
@@ -1858,7 +1858,7 @@ int parse_create_object (p_object* pobjp) {
 
         // we should only be calling this for dock leaders, because the dock
         // leader governs the creation of his entire group
-        Assert ((pobjp->flags[Mission::Parse_Object_Flags::SF_Dock_leader]));
+        ASSERT ((pobjp->flags[Mission::Parse_Object_Flags::SF_Dock_leader]));
 
         // if the leader will be destroyed before the mission starts, then
         // *only* create the leader; don't create the rest of the group (this
@@ -1927,7 +1927,7 @@ int parse_create_object_sub (p_object* p_objp) {
     // base level creation - need ship name in case of duplicate textures
     objnum = ship_create (
         &p_objp->orient, &p_objp->pos, p_objp->ship_class, p_objp->name);
-    Assert (objnum != -1);
+    ASSERT (objnum != -1);
     shipnum = Objects[objnum].instance;
 
     shipp = &Ships[shipnum];
@@ -2170,7 +2170,7 @@ int parse_create_object_sub (p_object* p_objp) {
                 &Ship_info[shipp->ship_info_index]);
             remaining_orders = p_objp->orders_accepted & ~default_orders;
             if (remaining_orders) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Ship %s has orders which it will accept that are\nnot "
                     "part of default orders accepted.\n\nPlease reedit this "
@@ -2228,7 +2228,7 @@ int parse_create_object_sub (p_object* p_objp) {
                                            // since they aren't needed anymore.
     }
 
-    Assert (sip->model_num != -1);
+    ASSERT (sip->model_num != -1);
 
     // initialize subsystem statii here.  The subsystems are given a percentage
     // damaged.  So a percent value of 20% means that the subsystem is 20%
@@ -2273,7 +2273,7 @@ int parse_create_object_sub (p_object* p_objp) {
                     wp->primary_bank_weapons[j] >= 0 &&
                     Weapon_info[wp->primary_bank_weapons[j]]
                         .wi_flags[Weapon::Info_Flags::Ballistic]) {
-                    Assertion (
+                    ASSERTX (
                         Weapon_info[wp->primary_bank_weapons[j]].cargo_size >
                             0.0f,
                         "Primary weapon cargo size <= 0. Ship (%s) Subsystem "
@@ -2295,7 +2295,7 @@ int parse_create_object_sub (p_object* p_objp) {
                     wp->secondary_bank_ammo[j] = sssp->secondary_ammo[j];
                 }
                 else if (wp->secondary_bank_weapons[j] >= 0) {
-                    Assertion (
+                    ASSERTX (
                         Weapon_info[wp->secondary_bank_weapons[j]].cargo_size >
                             0.0f,
                         "Secondary weapon cargo size <= 0. Ship (%s) "
@@ -2386,7 +2386,7 @@ int parse_create_object_sub (p_object* p_objp) {
                         ptr->weapons.primary_bank_weapons[j] >= 0 &&
                         Weapon_info[ptr->weapons.primary_bank_weapons[j]]
                             .wi_flags[Weapon::Info_Flags::Ballistic]) {
-                        Assertion (
+                        ASSERTX (
                             Weapon_info[ptr->weapons.primary_bank_weapons[j]]
                                     .cargo_size > 0.0f,
                             "Primary weapon cargo size <= 0. Ship (%s) "
@@ -2411,7 +2411,7 @@ int parse_create_object_sub (p_object* p_objp) {
                             sssp->secondary_ammo[j];
                     }
                     else if (ptr->weapons.secondary_bank_weapons[j] >= 0) {
-                        Assertion (
+                        ASSERTX (
                             Weapon_info[ptr->weapons.secondary_bank_weapons[j]]
                                     .cargo_size > 0.0f,
                             "Secondary weapon cargo size <= 0. Ship (%s) "
@@ -2582,10 +2582,10 @@ int parse_create_object_sub (p_object* p_objp) {
  * parse_wing_create_ships().
  */
 void parse_bring_in_docked_wing (p_object* p_objp, int wingnum, int shipnum) {
-    Assert (!Fred_running);
-    Assert (p_objp != NULL);
-    Assert (wingnum >= 0);
-    Assert (shipnum >= 0);
+    ASSERT (!Fred_running);
+    ASSERT (p_objp != NULL);
+    ASSERT (wingnum >= 0);
+    ASSERT (shipnum >= 0);
     int j, index;
     wing* wingp = &Wings[wingnum];
 
@@ -2603,7 +2603,7 @@ void parse_bring_in_docked_wing (p_object* p_objp, int wingnum, int shipnum) {
     }
     // how did we get more than one wave here?
     else if (wingp->current_wave > 1)
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Wing %s was created from docked ships but somehow has more than "
             "one wave!",
@@ -2613,7 +2613,7 @@ void parse_bring_in_docked_wing (p_object* p_objp, int wingnum, int shipnum) {
     wingp->total_arrived_count++;
     wingp->current_count++;
     // make sure we haven't created too many ships
-    Assert (wingp->current_count <= MAX_SHIPS_PER_WING);
+    ASSERT (wingp->current_count <= MAX_SHIPS_PER_WING);
 
     // at this point the wing has arrived, so handle the stuff for this
     // particular ship
@@ -2648,7 +2648,7 @@ void parse_bring_in_docked_wing (p_object* p_objp, int wingnum, int shipnum) {
 // Goober5000
 void resolve_parse_flags (
     object* objp, flagset< Mission::Parse_Object_Flags >& parse_flags) {
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
     ship* shipp = &Ships[objp->instance];
 
     if (parse_flags[Mission::Parse_Object_Flags::SF_Cargo_known])
@@ -2663,7 +2663,7 @@ void resolve_parse_flags (
     if (parse_flags[Mission::Parse_Object_Flags::SF_Reinforcement]) {
         // Individual ships in wings can't be reinforcements - FUBAR
         if (shipp->wingnum >= 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Ship %s is a reinforcement unit but is a member of a wing. "
                 "Ignoring reinforcement flag.",
@@ -2676,7 +2676,7 @@ void resolve_parse_flags (
 
     if ((parse_flags[Mission::Parse_Object_Flags::OF_No_shields]) &&
         (parse_flags[Mission::Parse_Object_Flags::OF_Force_shields_on])) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "The parser found a ship with both the \"force-shields-on\" and "
             "\"no-shields\" flags; this is inconsistent!");
@@ -2822,7 +2822,7 @@ void resolve_parse_flags (
 void fix_old_special_explosions (p_object* p_objp, int variable_index) {
     int i;
 
-    Assertion (
+    ASSERTX (
         !(p_objp->use_special_explosion),
         "Mission appears to be using both the new and old method of special "
         "explosions for %s. Old method values used",
@@ -2831,7 +2831,7 @@ void fix_old_special_explosions (p_object* p_objp, int variable_index) {
     // check all the variables are valid
     for (i = variable_index; i < (variable_index + BLOCK_EXP_SIZE); i++) {
         if (!(Block_variables[i].type & SEXP_VARIABLE_BLOCK)) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "%s is using the old special explosions method but does not "
                 "appear to have variables for all the values",
@@ -2860,7 +2860,7 @@ void fix_old_special_explosions (p_object* p_objp, int variable_index) {
 void fix_old_special_hits (p_object* p_objp, int variable_index) {
     int i;
 
-    Assertion (
+    ASSERTX (
         ((p_objp->special_hitpoints == 0) && (p_objp->special_shield == -1)),
         "Mission appears to be using both the new and old method of special "
         "hitpoints for %s",
@@ -2869,7 +2869,7 @@ void fix_old_special_hits (p_object* p_objp, int variable_index) {
     // check all the variables are valid
     for (i = variable_index; i < (variable_index + BLOCK_HIT_SIZE); i++) {
         if (!(Block_variables[i].type & SEXP_VARIABLE_BLOCK)) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "%s is using the old special hitpoints method but does not "
                 "appear to have variables for all the values",
@@ -2913,7 +2913,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
     int i, j, count, delay;
     char name[NAME_LENGTH];
 
-    Assert (pm != NULL);
+    ASSERT (pm != NULL);
 
     // Goober5000
     p_objp->created_object = NULL;
@@ -2934,7 +2934,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
         Ship_info.size (), "ship class");
     if (p_objp->ship_class < 0) {
         if (Fred_running) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Ship \"%s\" has an invalid ship type (ships.tbl probably "
                 "changed).  Making it type 0\n",
@@ -2982,7 +2982,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
 
         if (new_alt_class.ship_class < 0) {
             if (!Fred_running) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Ship \"%s\" has an invalid Alternate Ship Class type "
                     "(ships.tbl probably changed). Skipping this entry",
@@ -2992,7 +2992,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
             else {
                 // incorrect initial values for a variable can be fixed in FRED
                 if (new_alt_class.variable_index != -1) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Ship \"%s\" has an invalid Alternate Ship Class "
                         "type.",
@@ -3001,7 +3001,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
                 // but there is little we can do if someone spelled a ship
                 // class incorrectly
                 else {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Ship \"%s\" has an invalid Alternate Ship Class "
                         "type. Skipping this entry",
@@ -3035,7 +3035,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
         // try and find the alternate name
         p_objp->alt_type_index = mission_parse_lookup_alt (name);
         if (p_objp->alt_type_index < 0)
-            fs2::dialog::warning_ex (
+            WARNINGF (
                 LOCATION,
                 "Mission %s\nError looking up alternate ship type name %s!\n",
                 pm->name, name);
@@ -3052,7 +3052,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
         // try and find the callsign
         p_objp->callsign_index = mission_parse_lookup_callsign (name);
         if (p_objp->callsign_index < 0)
-            fs2::dialog::warning_ex (
+            WARNINGF (
                 LOCATION, "Mission %s\nError looking up callsign %s!\n",
                 pm->name, name);
         else
@@ -3104,7 +3104,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
             F_NAME, Ai_class_names, Num_ai_classes, "AI class");
 
         if (p_objp->ai_class < 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "AI Class for ship %s does not exist in ai.tbl. Setting to "
                 "first available class.\n",
@@ -3138,7 +3138,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
     count = 0;
     while (required_string_either (
         "$Arrival Location:", "$Status Description:")) {
-        Assert (count < MAX_OBJECT_STATUS);
+        ASSERT (count < MAX_OBJECT_STATUS);
 
         find_and_stuff (
             "$Status Description:", &p_objp->status_type[count], F_NAME,
@@ -3168,7 +3168,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
         if ((p_objp->arrival_distance <= 0) &&
             ((p_objp->arrival_location == ARRIVE_NEAR_SHIP) ||
              (p_objp->arrival_location == ARRIVE_IN_FRONT_OF_SHIP))) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Arrival distance for ship %s cannot be %d.  Setting to 1.\n",
                 p_objp->name, p_objp->arrival_distance);
@@ -3191,7 +3191,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
     if (optional_string ("+Arrival Delay:")) {
         stuff_int (&delay);
         if (delay < 0)
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION, "Cannot have arrival delay < 0 (ship %s)",
                 p_objp->name);
     }
@@ -3207,7 +3207,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
     if (!Fred_running && (p_objp->arrival_cue >= 0)) {
         // eval the arrival cue.  if the cue is true, set up the timestamp for
         // the arrival delay
-        Assert (p_objp->arrival_delay <= 0);
+        ASSERT (p_objp->arrival_delay <= 0);
 
         // don't eval arrival_cues when just looking for player information.
         // evaluate to determine if sexp is always false.
@@ -3237,7 +3237,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
     if (optional_string ("+Departure Delay:")) {
         stuff_int (&delay);
         if (delay < 0)
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION, "Cannot have departure delay < 0 (ship %s)",
                 p_objp->name);
     }
@@ -3266,7 +3266,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
             &unparsed);
         if (!unparsed.empty ()) {
             for (size_t k = 0; k < unparsed.size (); ++k) {
-                fs2::dialog::warning_ex (
+                WARNINGF (
                     LOCATION, "Unknown flag in parse object flags: %s",
                     unparsed[k].c_str ());
             }
@@ -3288,7 +3288,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
                         Mission::Parse_Object_Flags::OF_No_collide);
                 }
                 else {
-                    fs2::dialog::warning_ex (
+                    WARNINGF (
                         LOCATION, "Unknown flag in parse object flags: %s",
                         unparsed[k].c_str ());
                 }
@@ -3303,7 +3303,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
 
     p_objp->escort_priority = 0;
     if (optional_string ("+Escort Priority:")) {
-        Assert (p_objp->flags[Mission::Parse_Object_Flags::SF_Escort]);
+        ASSERT (p_objp->flags[Mission::Parse_Object_Flags::SF_Escort]);
         stuff_int (&p_objp->escort_priority);
     }
 
@@ -3426,7 +3426,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
             Ship_info[p_objp->ship_class].max_hull_strength;
     }
 
-    Assert (
+    ASSERT (
         p_objp->ship_max_hull_strength >
         0.0f); // Goober5000: div-0 check (not shield because we might not have
                // one)
@@ -3444,7 +3444,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
     p_objp->hotkey = -1;
     if (optional_string ("+Hotkey:")) {
         stuff_int (&p_objp->hotkey);
-        Assert ((p_objp->hotkey >= 0) && (p_objp->hotkey < 10));
+        ASSERT ((p_objp->hotkey >= 0) && (p_objp->hotkey < 10));
     }
 
     // Goober5000
@@ -3491,7 +3491,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
     p_objp->destroy_before_mission_time = -1;
     if (optional_string ("+Destroy At:")) {
         stuff_int (&p_objp->destroy_before_mission_time);
-        Assert (p_objp->destroy_before_mission_time >= 0);
+        ASSERT (p_objp->destroy_before_mission_time >= 0);
         p_objp->arrival_cue = Locked_sexp_true;
         p_objp->arrival_delay = timestamp (0);
     }
@@ -3653,7 +3653,7 @@ void mission_parse_handle_late_arrivals (p_object* p_objp) {
     // only for objects which show up after the start of a mission
     if (p_objp->created_object != NULL) return;
 
-    Assert (p_objp->ship_class >= 0);
+    ASSERT (p_objp->ship_class >= 0);
 
     sip = &Ship_info[p_objp->ship_class];
 
@@ -3678,7 +3678,7 @@ void mission_parse_maybe_create_parse_object (p_object* pobjp) {
     // Bail if it was already created.  This should only happen when we
     // previously created all the objects in a docked group simultaneously.
     if (pobjp->created_object != NULL) {
-        Assert (object_is_docked (pobjp));
+        ASSERT (object_is_docked (pobjp));
         return;
     }
 
@@ -3686,9 +3686,9 @@ void mission_parse_maybe_create_parse_object (p_object* pobjp) {
     // shunt this guy to the arrival list if he meets one of the following
     // conditions: 1) he's docked but not the dock leader 2) this is FS2 (i.e.
     // not FRED2) AND he meets one of the following conditions:
-    //    a) he's not cued to arrive yet
-    //    b) his arrival delay hasn't elapsed
-    //    c) he's reinforcement
+    // a) he's not cued to arrive yet
+    // b) his arrival delay hasn't elapsed
+    // c) he's reinforcement
     if ((object_is_docked (pobjp) &&
          !(pobjp->flags[Mission::Parse_Object_Flags::SF_Dock_leader])) ||
         (!Fred_running &&
@@ -3696,7 +3696,7 @@ void mission_parse_maybe_create_parse_object (p_object* pobjp) {
           !timestamp_elapsed (pobjp->arrival_delay) ||
           (pobjp->flags[Mission::Parse_Object_Flags::SF_Reinforcement])))) {
         // we can't add ships getting destroyed to the arrival list!!!
-        Assert (pobjp->destroy_before_mission_time < 0);
+        ASSERT (pobjp->destroy_before_mission_time < 0);
 
         // add to arrival list
         list_append (&Ship_arrival_list, pobjp);
@@ -3832,7 +3832,7 @@ void parse_common_object_data (p_object* objp) {
                     strcpy (Cargo_names[Num_cargo++], cargo_name);
                 }
                 else {
-                    fs2::dialog::warning_ex (
+                    WARNINGF (
                         LOCATION,
                         "Maximum number of cargo names (%d) exceeded, "
                         "defaulting to Nothing!",
@@ -3898,7 +3898,7 @@ void update_loadout_totals (team_data* current_team, int loadout_index) {
     // Fix the loadout variables to show that the class has less available if
     // there are still ships available
     if (current_team->ship_count[loadout_index] > 0) {
-        Assert (current_team->loadout_total > 0);
+        ASSERT (current_team->loadout_total > 0);
 
         current_team->ship_count[loadout_index]--;
         current_team->loadout_total--;
@@ -3922,7 +3922,7 @@ bool is_ship_assignable (p_object* p_objp) {
     // assignable class
     loadout_index = get_reassigned_index (data_for_team, p_objp->ship_class);
     if (loadout_index != -1) {
-        Assert (data_for_team->loadout_total > 0);
+        ASSERT (data_for_team->loadout_total > 0);
 
         update_loadout_totals (data_for_team, loadout_index);
 
@@ -3987,7 +3987,7 @@ void process_loadout_objects () {
         p_object* p_objp = &Parse_objects[reassignments[m]];
         team_data* current_team = &Team_data[p_objp->team];
         bool loadout_assigned = false;
-        Assert (p_objp->flags
+        ASSERT (p_objp->flags
                     [Mission::Parse_Object_Flags::SF_Set_class_dynamically]);
 
         // First thing to check is whether we actually have any ships left to
@@ -4006,7 +4006,7 @@ void process_loadout_objects () {
                     // We will need to assign a new class too (if a p_object
                     // the same class was available it should have been
                     // assigned by attempt_loadout_assignation_from_defaults()
-                    Assert (p_objp->ship_class != current_team->ship_list[j]);
+                    ASSERT (p_objp->ship_class != current_team->ship_list[j]);
                     swap_parse_object (p_objp, current_team->ship_list[j]);
 
                     loadout_assigned = true;
@@ -4016,13 +4016,13 @@ void process_loadout_objects () {
         }
 
         // We should never reach here with an unassigned loadout
-        Assert (loadout_assigned);
+        ASSERT (loadout_assigned);
     }
 }
 
 extern int Multi_ping_timestamp;
 void parse_objects (mission* pm, int flag) {
-    Assert (pm != NULL);
+    ASSERT (pm != NULL);
 
     required_string ("#Objects");
 
@@ -4043,7 +4043,7 @@ void parse_objects (mission* pm, int flag) {
         // send out a ping if we are multi so that psnet2 doesn't kill us off
         // for a long load NOTE that we can't use the timestamp*() functions
         // here since they won't increment
-        //      during this loading process
+        // during this loading process
         if (Game_mode & GM_MULTIPLAYER) {
             if ((Multi_ping_timestamp == -1) ||
                 (Multi_ping_timestamp <= timer_get_milliseconds ())) {
@@ -4082,8 +4082,8 @@ void swap_parse_object (p_object* p_obj, int new_ship_class) {
     // Hitpoints
     // We need to take into account that the ship might have been assigned
     // special hitpoints so we can't simply swap old for new.
-    Assert (p_obj->ship_max_hull_strength > 0);
-    Assert (old_ship_info->max_hull_strength > 0);
+    ASSERT (p_obj->ship_max_hull_strength > 0);
+    ASSERT (old_ship_info->max_hull_strength > 0);
 
     float hp_multiplier =
         p_obj->ship_max_hull_strength / old_ship_info->max_hull_strength;
@@ -4188,15 +4188,15 @@ int find_wing_name (char* name) {
 }
 
 /**
- * @brief						Tries to create a wing of ships
- * @param[inout]	wingp			Pointer to the wing structure of the wing
+ * @brief                                               Tries to create a wing of ships
+ * @param[inout]        wingp                   Pointer to the wing structure of the wing
  *to be created
- * @param[in] num_to_create		Number of ships to create
- * @param[in] force				If set to 1, the wing will be created
+ * @param[in] num_to_create             Number of ships to create
+ * @param[in] force                             If set to 1, the wing will be created
  *regardless of whether or not the arrival conditions have been met yet.
- * @param[in] specific_instance	Set this to create a specific ship from this
+ * @param[in] specific_instance Set this to create a specific ship from this
  *wing
- * @returns						Number of ships created
+ * @returns                                             Number of ships created
  */
 int parse_wing_create_ships (
     wing* wingp, int num_to_create, int force, int specific_instance) {
@@ -4229,7 +4229,7 @@ int parse_wing_create_ships (
         // should always give a number >= 0;
         if (wingp->arrival_delay <= 0) {
             wingp->arrival_delay = timestamp (-wingp->arrival_delay * 1000);
-            Assert (wingp->arrival_delay >= 0);
+            ASSERT (wingp->arrival_delay >= 0);
         }
 
         if (!timestamp_elapsed (wingp->arrival_delay)) return 0;
@@ -4240,7 +4240,7 @@ int parse_wing_create_ships (
             int shipnum;
             char* name;
 
-            Assert (wingp->arrival_anchor >= 0);
+            ASSERT (wingp->arrival_anchor >= 0);
             name = Parse_names[wingp->arrival_anchor];
 
             // see if ship is in mission.
@@ -4300,7 +4300,7 @@ int parse_wing_create_ships (
             // if at least one of these is valid, then reset the timestamp.  If
             // they are both zero, we will create the wave
             if ((wingp->wave_delay_min > 0) || (wingp->wave_delay_max > 0)) {
-                Assert (wingp->wave_delay_min <= wingp->wave_delay_max);
+                ASSERT (wingp->wave_delay_min <= wingp->wave_delay_max);
                 time_to_arrive =
                     wingp->wave_delay_min +
                     (int)(frand () * (wingp->wave_delay_max - wingp->wave_delay_min));
@@ -4368,7 +4368,7 @@ int parse_wing_create_ships (
         // this matters much.
         if (p_objp->wingnum != wingnum) continue;
 
-        Assert (
+        ASSERT (
             (p_objp->pos_in_wing >= 0) &&
             (p_objp->pos_in_wing < MAX_SHIPS_PER_WING));
 
@@ -4401,7 +4401,7 @@ int parse_wing_create_ships (
                 continue;
         }
 
-        Assert (!(p_objp->flags[Mission::Parse_Object_Flags::
+        ASSERT (!(p_objp->flags[Mission::Parse_Object_Flags::
                                     SF_Cannot_arrive])); // get allender
 
         // if we have the maximum number of ships in the wing, we must bail as
@@ -4445,8 +4445,8 @@ int parse_wing_create_ships (
         // update housekeeping variables
         // NOTE:  for the initial wing setup we use actual position to get
         // around
-        //        object order isses, but ships in all following waves just get
-        //        tacked onto the end of the list
+        // object order isses, but ships in all following waves just get
+        // tacked onto the end of the list
         if (wingp->current_wave == 1) {
             wingp->ship_index[p_objp->pos_in_wing] = Objects[objnum].instance;
         }
@@ -4507,7 +4507,7 @@ int parse_wing_create_ships (
     }
 
     // we should always have enough ships in the list!!!
-    Assert (num_to_create == 0);
+    ASSERT (num_to_create == 0);
 
     // wing current_count needs to match the end of the ship_index[] list, but
     // there is a very off chance it could have holes in it (especially if it's
@@ -4575,13 +4575,13 @@ int parse_wing_create_ships (
         // test code to check to be sure that all ships in the wing are
         // ignoring the same types of orders from the leader
         if (Fred_running) {
-            Assert (wingp->ship_index[wingp->special_ship] != -1);
+            ASSERT (wingp->ship_index[wingp->special_ship] != -1);
             int orders = Ships[wingp->ship_index[0]].orders_accepted;
             for (it = 0; it < wingp->current_count; it++) {
                 if (it == wingp->special_ship) continue;
 
                 if (orders != Ships[wingp->ship_index[it]].orders_accepted) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "ships in wing %s are ignoring different player "
                         "orders.  Please find Mark A\nto talk to him about "
@@ -4605,7 +4605,7 @@ void parse_wing (mission* pm) {
     char wing_flag_strings[PARSEABLE_WING_FLAGS][NAME_LENGTH];
     wing* wingp;
 
-    Assert (pm != NULL);
+    ASSERT (pm != NULL);
     wingp = &Wings[Num_wings];
 
     required_string ("$Name:");
@@ -4658,7 +4658,7 @@ void parse_wing (mission* pm) {
 
     required_string ("$Waves:");
     stuff_int (&wingp->num_waves);
-    Assert (wingp->num_waves >= 1); // there must be at least 1 wave
+    ASSERT (wingp->num_waves >= 1); // there must be at least 1 wave
 
     wingp->current_wave = 0;
 
@@ -4683,7 +4683,7 @@ void parse_wing (mission* pm) {
         if ((wingp->arrival_distance <= 0) &&
             ((wingp->arrival_location == ARRIVE_NEAR_SHIP) ||
              (wingp->arrival_location == ARRIVE_IN_FRONT_OF_SHIP))) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Arrival distance for wing %s cannot be %d.  Setting to 1.\n",
                 wingp->name, wingp->arrival_distance);
@@ -4705,7 +4705,7 @@ void parse_wing (mission* pm) {
     if (optional_string ("+Arrival delay:")) {
         stuff_int (&delay);
         if (delay < 0)
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION, "Cannot have arrival delay < 0 on wing %s",
                 wingp->name);
     }
@@ -4747,7 +4747,7 @@ void parse_wing (mission* pm) {
     if (optional_string ("+Departure delay:")) {
         stuff_int (&delay);
         if (delay < 0)
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION, "Cannot have departure delay < 0 on wing %s",
                 wingp->name);
     }
@@ -4775,7 +4775,7 @@ void parse_wing (mission* pm) {
     wingp->hotkey = -1;
     if (optional_string ("+Hotkey:")) {
         stuff_int (&wingp->hotkey);
-        Assert ((wingp->hotkey >= 0) && (wingp->hotkey < 10));
+        ASSERT ((wingp->hotkey >= 0) && (wingp->hotkey < 10));
     }
 
     if (optional_string ("+Flags:")) {
@@ -4802,7 +4802,7 @@ void parse_wing (mission* pm) {
             else if (!strcasecmp (wing_flag_strings[i], NOX ("nav-carry-status")))
                 wingp->flags.set (Ship::Wing_Flags::Nav_carry);
             else
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION, "unknown wing flag\n%s\n\nSkipping.",
                     wing_flag_strings[i]);
         }
@@ -4874,7 +4874,7 @@ void parse_wing (mission* pm) {
         next_signature =
             wingp->net_signature + (wingp->wave_count * wingp->num_waves);
         if (next_signature > SHIP_SIG_MAX)
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Too many total ships in mission (%d) for network signature "
                 "assignment",
@@ -4916,7 +4916,7 @@ void parse_wing (mission* pm) {
              p_objp != Parse_objects.end (); ++p_objp) {
             if (!strcmp (ship_name, p_objp->name)) {
                 // get Allender -- ship appears to be in multiple wings
-                Assert (p_objp->wingnum == -1);
+                ASSERT (p_objp->wingnum == -1);
 
                 // assign wingnum
                 p_objp->wingnum = wingnum;
@@ -4928,7 +4928,7 @@ void parse_wing (mission* pm) {
                 if ((p_objp->flags
                          [Mission::Parse_Object_Flags::OF_Player_start]) &&
                     (saved_arrival_delay != 0)) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Wing %s specifies an arrival delay of %ds, but it "
                         "also contains a player.  The arrival delay will be "
@@ -4950,14 +4950,14 @@ void parse_wing (mission* pm) {
 
         // error checking
         if (assigned == 0) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Cannot load mission -- for wing %s, ship %s is not present "
                 "in #Objects section.\n",
                 wingp->name, ship_name);
         }
         else if (assigned > 1) {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Cannot load mission -- for wing %s, ship %s is specified "
                 "multiple times in wing.\n",
@@ -4971,7 +4971,7 @@ void parse_wing (mission* pm) {
 void parse_wings (mission* pm) {
     required_string ("#Wings");
     while (required_string_either ("#Events", "$Name:")) {
-        Assert (Num_wings < MAX_WINGS);
+        ASSERT (Num_wings < MAX_WINGS);
         parse_wing (pm);
         Num_wings++;
     }
@@ -4996,7 +4996,7 @@ void resolve_path_masks (int anchor, int* path_mask) {
         p_object* parent_pobjp;
 
         // get anchor ship
-        Assert (!(anchor & SPECIAL_ARRIVAL_ANCHOR_FLAG));
+        ASSERT (!(anchor & SPECIAL_ARRIVAL_ANCHOR_FLAG));
         parent_pobjp = mission_parse_get_parse_object (Parse_names[anchor]);
 
         // Load the anchor ship model with subsystems and all; it'll need to be
@@ -5079,7 +5079,7 @@ void post_process_ships_wings () {
 
     // error checking for custom wings
     if (strcmp (Starting_wing_names[0], TVT_wing_names[0]) != 0) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "The first starting wing and the first team-versus-team wing must "
             "have the same wing name.\n");
@@ -5097,8 +5097,8 @@ void post_process_ships_wings () {
             if (p_objp->wingnum >= 0) {
                 int shipnum = ship_name_lookup (p_objp->name);
 
-                Assert (shipnum >= 0 && shipnum < MAX_SHIPS);
-                Assert (
+                ASSERT (shipnum >= 0 && shipnum < MAX_SHIPS);
+                ASSERT (
                     p_objp->pos_in_wing >= 0 &&
                     p_objp->pos_in_wing < MAX_SHIPS_PER_WING);
 
@@ -5190,7 +5190,7 @@ void parse_event (mission* /*pm*/) {
         // sanity check
         if (event->team < -1 || event->team >= MAX_TVT_TEAMS) {
             if (Fred_running && !Warned_about_team_out_of_range) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "+Team: value was out of range in the mission file!  This "
                     "was probably caused by a bug in an older version of "
@@ -5226,7 +5226,7 @@ void parse_event (mission* /*pm*/) {
     // _argv[-1] - negative repeat count is now legal; means repeat
     // indefinitely.
     if (event->repeat_count == 0) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Repeat count for mission event %s is 0.\nMust be >= 1 or "
             "negative!",
@@ -5238,7 +5238,7 @@ void parse_events (mission* pm) {
     required_string ("#Events");
 
     while (required_string_either ("#Goals", "$Formula:")) {
-        Assert (Num_mission_events < MAX_MISSION_EVENTS);
+        ASSERT (Num_mission_events < MAX_MISSION_EVENTS);
         parse_event (pm);
         Num_mission_events++;
     }
@@ -5251,8 +5251,8 @@ void parse_goal (mission* pm) {
 
     goalp = &Mission_goals[Num_goals++];
 
-    Assert (Num_goals < MAX_GOALS);
-    Assert (pm != NULL);
+    ASSERT (Num_goals < MAX_GOALS);
+    ASSERT (pm != NULL);
 
     find_and_stuff (
         "$Type:", &goalp->type, F_NAME, Goal_type_names, Num_goal_type_names,
@@ -5293,7 +5293,7 @@ void parse_goal (mission* pm) {
         // sanity check
         if (goalp->team < -1 || goalp->team >= Num_iffs) {
             if (Fred_running && !Warned_about_team_out_of_range) {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "+Team: value was out of range in the mission file!  This "
                     "was probably caused by a bug in an older version of "
@@ -5314,7 +5314,7 @@ void parse_goals (mission* pm) {
 }
 
 void parse_waypoint_list (mission* pm) {
-    Assert (pm != NULL);
+    ASSERT (pm != NULL);
 
     char name_buf[NAME_LENGTH];
     required_string ("$Name:");
@@ -5397,7 +5397,7 @@ void parse_messages (mission* pm, int flags) {
         if (idx >= 0)
             pm->command_persona = idx;
         else
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Supplied Command Persona is invalid!  Defaulting to %s.",
                 Personas[Default_command_persona].name);
@@ -5424,8 +5424,8 @@ void parse_reinforcement (mission* pm) {
     p_object* rforce_obj = NULL;
     int instance = -1;
 
-    Assert (Num_reinforcements < MAX_REINFORCEMENTS);
-    Assert (pm != NULL);
+    ASSERT (Num_reinforcements < MAX_REINFORCEMENTS);
+    ASSERT (pm != NULL);
     ptr = &Reinforcements[Num_reinforcements];
 
     required_string ("$Name:");
@@ -5459,7 +5459,7 @@ void parse_reinforcement (mission* pm) {
 
     if (rforce_obj == NULL) {
         if ((instance = wing_name_lookup (ptr->name, 1)) == -1) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Reinforcement %s not found as ship or wing",
                 ptr->name);
             return;
@@ -5468,7 +5468,7 @@ void parse_reinforcement (mission* pm) {
     else {
         // Individual ships in wings can't be reinforcements - FUBAR
         if (rforce_obj->wingnum >= 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Reinforcement %s is part of a wing - Ignoring reinforcement "
                 "declaration",
@@ -5629,7 +5629,7 @@ void parse_bitmaps (mission* pm) {
             }
 
             if (z == NUM_NEBULAS)
-                fs2::dialog::warning_ex (
+                WARNINGF (
                     LOCATION, "Mission %s\nUnknown nebula %s!", pm->name, str);
 
             if (optional_string ("+Color:")) {
@@ -5643,7 +5643,7 @@ void parse_bitmaps (mission* pm) {
             }
 
             if (z == NUM_NEBULA_COLORS)
-                fs2::dialog::warning_ex (
+                WARNINGF (
                     LOCATION, "Mission %s\nUnknown nebula color %s!", pm->name,
                     str);
 
@@ -5680,7 +5680,7 @@ void parse_bitmaps (mission* pm) {
         // don't allow overflow; just make sure the last background is the last
         // read
         if (Num_backgrounds >= MAX_BACKGROUNDS) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Too many backgrounds in mission!  Max is %d.",
                 MAX_BACKGROUNDS);
             Num_backgrounds = MAX_BACKGROUNDS - 1;
@@ -5704,7 +5704,7 @@ void parse_bitmaps (mission* pm) {
 void parse_asteroid_fields (mission* pm) {
     int i, count, subtype;
 
-    Assert (pm != NULL);
+    ASSERT (pm != NULL);
     for (i = 0; i < MAX_ASTEROID_FIELDS; i++)
         Asteroid_field.num_initial_asteroids = 0;
 
@@ -5717,7 +5717,7 @@ void parse_asteroid_fields (mission* pm) {
         float speed, density;
         int type;
 
-        Assert (i < 1);
+        ASSERT (i < 1);
         required_string ("$Density:");
         stuff_float (&density);
 
@@ -5920,9 +5920,6 @@ void parse_variables () {
 }
 
 int parse_mission (mission* pm, int flags) {
-    int saved_warning_count = Global_warning_count;
-    int saved_error_count = Global_error_count;
-
     int i;
     Warned_about_team_out_of_range = false;
 
@@ -6064,27 +6061,6 @@ int parse_mission (mission* pm, int flags) {
 
     post_process_mission ();
 
-    if ((saved_warning_count - Global_warning_count) > 10 ||
-        (saved_error_count - Global_error_count) > 0) {
-        char text[512];
-        sprintf (
-            text,
-            "Warning!\n\nThe current mission has generated %d warnings and/or "
-            "errors during load.  These are usually caused by corrupted ship "
-            "models or syntax errors in the mission file.  While FreeSpace "
-            "Open will attempt to compensate for these issues, it cannot "
-            "guarantee a trouble-free gameplay experience.  Source Code "
-            "Project staff cannot provide assistance or support for these "
-            "problems, as they are caused by the mission's data files, not "
-            "FreeSpace Open's source code.",
-            (saved_warning_count - Global_warning_count) +
-                (saved_error_count - Global_error_count));
-        popup (
-            PF_TITLE_BIG | PF_TITLE_RED | PF_USE_AFFIRMATIVE_ICON |
-                PF_NO_NETWORKING,
-            1, POPUP_OK, text);
-    }
-
     II ("general") << "Loaded mission: " << pm->name;
 
     // success
@@ -6102,10 +6078,10 @@ void post_process_mission () {
 
     // the player_start_shipname had better exist at this point!
     Player_start_shipnum = ship_name_lookup (Player_start_shipname);
-    Assert (Player_start_shipnum != -1);
+    ASSERT (Player_start_shipnum != -1);
     Player_start_pobject =
         mission_parse_get_parse_object (Player_start_shipname);
-    Assert (Player_start_pobject != NULL);
+    ASSERT (Player_start_pobject != NULL);
 
     // Assign objnum, shipnum, etc. to the player structure
     objnum = Ships[Player_start_shipnum].objnum;
@@ -6143,7 +6119,7 @@ void post_process_mission () {
 
     // when TVT, hack starting wings to be team wings
     if (MULTI_TEAM) {
-        Assert (MAX_TVT_WINGS <= MAX_STARTING_WINGS);
+        ASSERT (MAX_TVT_WINGS <= MAX_STARTING_WINGS);
         for (i = 0; i < MAX_STARTING_WINGS; i++) {
             if (i < MAX_TVT_WINGS)
                 Starting_wings[i] = TVT_wings[i];
@@ -6175,7 +6151,7 @@ void post_process_mission () {
         for (i = 0; i < Num_parse_names; i++) {
             indices[i] = ship_name_lookup (Parse_names[i], 1);
             if (indices[i] < 0)
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Ship name \"%s\" referenced, but this ship doesn't exist",
                     Parse_names[i]);
@@ -6210,7 +6186,7 @@ void post_process_mission () {
             int result, bad_node, op;
 
             op = get_operator_index (CTEXT (i));
-            Assert (op != -1); // need to make sure it is an operator before we
+            ASSERT (op != -1); // need to make sure it is an operator before we
                                // treat it like one..
             result = check_sexp_syntax (
                 i, query_operator_return_type (op), 1, &bad_node);
@@ -6232,11 +6208,11 @@ void post_process_mission () {
 
                 if (!Fred_running) {
                     nprintf (("Error", "%s", error_msg.c_str ()));
-                    fs2::dialog::error (LOCATION, "%s", error_msg.c_str ());
+                    ASSERTF (LOCATION, "%s", error_msg.c_str ());
                 }
                 else {
                     nprintf (("Warning", "%s", error_msg.c_str ()));
-                    fs2::dialog::warning (LOCATION, "%s", error_msg.c_str ());
+                    WARNINGF (LOCATION, "%s", error_msg.c_str ());
                 }
             }
         }
@@ -6303,9 +6279,9 @@ void post_process_mission () {
 
     // DB: modified 4/23/98 to take multiplayer into account. Under certain
     // circumstances, multiplayer netplayer ships
-    //     had their current_primary_bank and current_secondary_bank set to -1
-    //     (from ship_set()) and left there since Player_ship is not the only
-    //     one we need to need about.
+    // had their current_primary_bank and current_secondary_bank set to -1
+    // (from ship_set()) and left there since Player_ship is not the only
+    // one we need to need about.
     for (so = GET_FIRST (&Ship_obj_list); so != END_OF_LIST (&Ship_obj_list);
          so = GET_NEXT (so)) {
         ship* shipp = &Ships[Objects[so->objnum].instance];
@@ -6423,7 +6399,7 @@ int parse_main (const char* mission_name, int flags) {
     // fill in Ship_class_names array with the names from the ship_info struct;
     Num_parse_names = 0;
     Num_path_restrictions = 0;
-    Assert (Ship_info.size () <= MAX_SHIP_CLASSES);
+    ASSERT (Ship_info.size () <= MAX_SHIP_CLASSES);
 
     i = 0;
     for (auto it = Ship_info.begin (); it != Ship_info.end (); i++, ++it)
@@ -6438,7 +6414,7 @@ int parse_main (const char* mission_name, int flags) {
             // fail situation.
             if (!ftemp) {
                 if (!Fred_running)
-                    fs2::dialog::error (
+                    ASSERTF (
                         LOCATION, "Couldn't open mission '%s'\n",
                         mission_name);
 
@@ -6746,14 +6722,14 @@ void mission_parse_set_up_initial_docks () {
         // resolve the docker and dockee
         docker = mission_parse_get_parse_object (Initially_docked[i].docker);
         if (docker == NULL) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Could not resolve initially docked object '%s'!",
                 Initially_docked[i].docker);
             continue;
         }
         dockee = mission_parse_get_parse_object (Initially_docked[i].dockee);
         if (dockee == NULL) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Could not resolve docking target '%s' of initially docked "
                 "object '%s'!",
@@ -6772,7 +6748,7 @@ void mission_parse_set_up_initial_docks () {
 
         // docker point in use?
         if (dock_find_object_at_dockpoint (docker, docker_point) != NULL) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Trying to initially dock '%s' and '%s', but the former's "
                 "dockpoint is already in use!",
@@ -6782,7 +6758,7 @@ void mission_parse_set_up_initial_docks () {
 
         // dockee point in use?
         if (dock_find_object_at_dockpoint (dockee, dockee_point) != NULL) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Trying to initially dock '%s' and '%s', but the latter's "
                 "dockpoint is already in use!",
@@ -6813,14 +6789,14 @@ void mission_parse_set_up_initial_docks () {
 
         // display an error if necessary
         if (dfi.maintained_variables.int_value == 0) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "No dock leaders found in the docking group containing %s.  "
                 "The group will not appear in-mission!\n",
                 pobjp->name);
         }
         else if (dfi.maintained_variables.int_value > 1) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "There are multiple dock leaders in the docking group "
                 "containing the leader %s!  Setting %s as the sole "
@@ -6908,7 +6884,7 @@ int mission_parse_is_multi (const char* filename, char* mission_name) {
 int mission_parse_get_multi_mission_info (const char* filename) {
     if (get_mission_info (filename, &The_mission)) return -1;
 
-    Assert (
+    ASSERT (
         The_mission.game_type &
         MISSION_TYPE_MULTI); // assume multiplayer only for now?
 
@@ -6920,12 +6896,12 @@ int mission_parse_get_multi_mission_info (const char* filename) {
 }
 
 /**
- * @brief				Returns the parse object on the ship arrival list
+ * @brief                               Returns the parse object on the ship arrival list
  *associated with the given name.
- * @param[in] name		The name of the object
- * @returns				The parse object, or NULL if no object with the given
+ * @param[in] name              The name of the object
+ * @returns                             The parse object, or NULL if no object with the given
  *name is on the arrival list
- * @remarks				This function is used to determine whether a ship has
+ * @remarks                             This function is used to determine whether a ship has
  *arrived. Ships on the arrival list are considered to not be in the game; In
  *order to make respawns work in multiplayer, player ships (those marked with
  *the P_OF_PLAYER_START flag) are never removed from it.
@@ -6947,12 +6923,12 @@ p_object* mission_parse_get_arrival_ship (const char* name) {
 }
 
 /**
- * @brief					Returns the parse object on the ship arrival list
+ * @brief                                       Returns the parse object on the ship arrival list
  *associated with the given net signature.
- * @param[in] net_signature	The net signature of the object
- * @returns					The parse object, or NULL if no object with the
+ * @param[in] net_signature     The net signature of the object
+ * @returns                                     The parse object, or NULL if no object with the
  *given signature is on the arrival list
- * @remarks					This function is used to determine whether a ship
+ * @remarks                                     This function is used to determine whether a ship
  *has arrived. Ships on the arrival list are considered to not be in the game;
  *In order to make respawns work in multiplayer, player ships (those marked
  *with the P_OF_PLAYER_START flag) are never removed from it.
@@ -6985,7 +6961,7 @@ int mission_set_arrival_location (
 
     if (location == ARRIVE_AT_LOCATION) return -1;
 
-    Assert (anchor >= 0);
+    ASSERT (anchor >= 0);
 
     // this ship might possibly arrive at another location.  The location is
     // based on the proximity of some ship (and some other special tokens)
@@ -7011,7 +6987,7 @@ int mission_set_arrival_location (
     // if we didn't get an object from one of the above functions, then make
     // the object arrive at its placed location
     if (shipnum < 0) {
-        Assert (
+        ASSERT (
             location !=
             ARRIVE_FROM_DOCK_BAY); // bogus data somewhere!!!  get mwa
         nprintf (
@@ -7023,7 +6999,7 @@ int mission_set_arrival_location (
 
     // take the shipnum and get the position.  once we have positions, we can
     // determine where to make this ship appear
-    Assert (shipnum != -1);
+    ASSERT (shipnum != -1);
     anchor_objnum = Ships[shipnum].objnum;
     anchor_pos = Objects[anchor_objnum].pos;
 
@@ -7049,7 +7025,7 @@ int mission_set_arrival_location (
         // front of?
         if (dist <= 0) {
             // Goober5000 - default to 100
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Distance of %d is invalid in mission_set_arrival_location.  "
                 "Defaulting to 100.\n",
@@ -7160,7 +7136,7 @@ void mission_parse_mark_reinforcement_available (char* name) {
         }
     }
 
-    Assert (i < Num_reinforcements);
+    ASSERT (i < Num_reinforcements);
 }
 
 /**
@@ -7196,7 +7172,7 @@ int mission_did_ship_arrive (p_object* objp) {
             objp->arrival_delay = timestamp (-objp->arrival_delay * 1000);
 
             // make sure we have a valid timestamp
-            Assert (objp->arrival_delay > 0);
+            ASSERT (objp->arrival_delay > 0);
         }
 
         // if the timestamp hasn't elapsed, move onto the next ship.
@@ -7208,7 +7184,7 @@ int mission_did_ship_arrive (p_object* objp) {
             int shipnum;
             char* name;
 
-            Assert (objp->arrival_anchor >= 0);
+            ASSERT (objp->arrival_anchor >= 0);
             name = Parse_names[objp->arrival_anchor];
 
             // see if ship is in mission.
@@ -7219,7 +7195,7 @@ int mission_did_ship_arrive (p_object* objp) {
                 if (mission_parse_get_arrival_ship (name)) return -1;
 
                 mission_parse_mark_non_arrival (objp); // Goober5000
-                fs2::dialog::warning_ex (
+                WARNINGF (
                     LOCATION,
                     "Warning: Ship %s cannot arrive from docking bay of "
                     "destroyed or departed %s.\n",
@@ -7229,7 +7205,7 @@ int mission_did_ship_arrive (p_object* objp) {
 
             // Goober5000: aha - also don't create if fighterbay is destroyed
             if (ship_fighterbays_all_destroyed (&Ships[shipnum])) {
-                fs2::dialog::warning_ex (
+                WARNINGF (
                     LOCATION,
                     "Warning: Ship %s cannot arrive from destroyed docking "
                     "bay of %s.\n",
@@ -7239,7 +7215,7 @@ int mission_did_ship_arrive (p_object* objp) {
         }
 
         if (objp->flags[Mission::Parse_Object_Flags::SF_Cannot_arrive]) {
-            fs2::dialog::warning_ex (
+            WARNINGF (
                 LOCATION,
                 "Warning: Ship %s cannot arrive. Ship not created.\n",
                 objp->name);
@@ -7251,7 +7227,7 @@ int mission_did_ship_arrive (p_object* objp) {
 
         // since this ship is not in a wing, create a SHIP_ARRIVE entry
         // mission_log_add_entry( LOG_SHIP_ARRIVE, objp->name, NULL );
-        Assert (object_num >= 0 && object_num < MAX_OBJECTS);
+        ASSERT (object_num >= 0 && object_num < MAX_OBJECTS);
 
         // Play the music track for an arrival
         if (!(Ships[Objects[object_num].instance]
@@ -7564,7 +7540,7 @@ int ship_can_use_warp_drive (ship* shipp) {
  * Called to make object objp depart.  Rewritten and expanded by Goober5000.
  */
 int mission_do_departure (object* objp, bool goal_is_to_warp) {
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp->type == OBJ_SHIP);
     int location, anchor, path_mask;
     ship* shipp = &Ships[objp->instance];
     ai_info* aip = &Ai_info[shipp->ai_index];
@@ -7623,7 +7599,7 @@ int mission_do_departure (object* objp, bool goal_is_to_warp) {
         int anchor_shipnum;
         char* name;
 
-        Assert (anchor >= 0);
+        ASSERT (anchor >= 0);
         name = Parse_names[anchor];
 
         // see if ship is yet to arrive.  If so, then warp.
@@ -7714,7 +7690,7 @@ void mission_eval_departures () {
         if (objp->type == OBJ_SHIP) {
             ship* shipp;
 
-            Assert ((objp->instance >= 0) && (objp->instance < MAX_SHIPS));
+            ASSERT ((objp->instance >= 0) && (objp->instance < MAX_SHIPS));
 
             shipp = &Ships[objp->instance];
 
@@ -7784,7 +7760,7 @@ void mission_eval_departures () {
                     (shipp->flags[Ship::Ship_Flags::Dying]))
                     continue;
 
-                Assert (shipp->objnum != -1);
+                ASSERT (shipp->objnum != -1);
                 objp = &Objects[shipp->objnum];
 
                 mission_do_departure (objp);
@@ -7809,20 +7785,20 @@ int allocate_subsys_status () {
     // set primary weapon ammunition here, but does it actually matter? -
     // Goober5000
 
-    Assert (Subsys_index >= 0);
+    ASSERT (Subsys_index >= 0);
 
     // we allocate in blocks of MIN_SUBSYS_STATUS_SIZE so if we need more then
     // make more
     if ((Subsys_status == NULL) ||
         (Subsys_index >= (Subsys_status_size - 1))) {
-        Assert (MIN_SUBSYS_STATUS_SIZE > 0);
+        ASSERT (MIN_SUBSYS_STATUS_SIZE > 0);
 
         Subsys_status_size += MIN_SUBSYS_STATUS_SIZE;
         Subsys_status = (subsys_status*)vm_realloc (
             Subsys_status, sizeof (subsys_status) * Subsys_status_size);
     }
 
-    Verify (Subsys_status != NULL);
+    ASSERT (Subsys_status != NULL);
 
     // the memset is redundant to the below assignments
     // memset( &Subsys_status[Subsys_index], 0, sizeof(subsys_status) );
@@ -7923,8 +7899,8 @@ int get_parse_name_index (const char* name) {
     for (i = 0; i < Num_parse_names; i++)
         if (!strcasecmp (name, Parse_names[i])) return i;
 
-    Assert (i < MAX_SHIPS + MAX_WINGS);
-    Assert (strlen (name) < NAME_LENGTH);
+    ASSERT (i < MAX_SHIPS + MAX_WINGS);
+    ASSERT (strlen (name) < NAME_LENGTH);
     strcpy_s (Parse_names[i], name);
     return Num_parse_names++;
 }
@@ -7966,7 +7942,7 @@ int add_path_restriction () {
 
     // check limit
     if (Num_path_restrictions >= MAX_PATH_RESTRICTIONS) {
-        fs2::dialog::warning (LOCATION, "Maximum number of path restrictions reached");
+        WARNINGF (LOCATION, "Maximum number of path restrictions reached");
         return -1;
     }
 
@@ -8051,7 +8027,7 @@ void mission_add_to_arriving_support (object* requester_objp) {
     int i;
     ship* shipp;
 
-    Assert (Arriving_support_ship);
+    ASSERT (Arriving_support_ship);
 
     if (Num_arriving_repair_targets == MAX_AI_GOALS) {
         mprintf (("Reached MAX_AI_GOALS trying to add repair request!\n"));
@@ -8115,9 +8091,9 @@ void mission_bring_in_support_ship (object* requester_objp) {
     ship* requester_shipp;
     int i, j, requester_species;
 
-    Assert (requester_objp->type == OBJ_SHIP);
+    ASSERT (requester_objp->type == OBJ_SHIP);
     requester_shipp =
-        &Ships[requester_objp->instance]; //	MK, 10/23/97, used to be
+        &Ships[requester_objp->instance]; // MK, 10/23/97, used to be
                                           //->type, bogus, no?
 
     // if the support ship is already arriving, add the requester to the list
@@ -8140,10 +8116,10 @@ void mission_bring_in_support_ship (object* requester_objp) {
     obj_get_average_ship_pos (&center);
     vm_vec_sub (&warp_in_pos, &center, &(requester_objp->pos));
 
-    //	Choose position to warp in ship.
-    //	Temporary, but changed by MK because it used to be exactly behind the
-    // player. 	This could cause an Assert if the player immediately targeted
-    // it (before moving). 	Tend to put in front of the player to aid him in
+    // Choose position to warp in ship.
+    // Temporary, but changed by MK because it used to be exactly behind the
+    // player.  This could cause an Assert if the player immediately targeted
+    // it (before moving).      Tend to put in front of the player to aid him in
     // flying towards the ship.
 
     if (!get_warp_in_pos (&warp_in_pos, requester_objp, 1.0f, 0.1f, 1.0f))
@@ -8307,7 +8283,7 @@ int mission_is_repair_scheduled (object* objp) {
 
     if (!Arriving_support_ship) return 0;
 
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp->type == OBJ_SHIP);
     name = Ships[objp->instance].ship_name;
     for (i = 0; i < Num_arriving_repair_targets; i++) {
         if (!strcmp (name, Arriving_repair_targets[i])) return 1;
@@ -8328,7 +8304,7 @@ int mission_remove_scheduled_repair (object* objp) {
 
     // itereate through the target list looking for this ship name.  If not
     // found, we can simply return.
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp->type == OBJ_SHIP);
     name = Ships[objp->instance].ship_name;
     for (index = 0; index < Num_arriving_repair_targets; index++) {
         if (!strcmp (name, Arriving_repair_targets[index])) break;
@@ -8372,7 +8348,7 @@ void mission_parse_lookup_alt_index (int index, char* out) {
 
     if ((index < 0) || (index >= Mission_alt_type_count)) {
         if (mission_parse_lookup_alt_index_warn) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Ship with invalid alt_name.  Get a programmer");
             mission_parse_lookup_alt_index_warn = 0;
         }
@@ -8445,7 +8421,7 @@ void mission_parse_lookup_callsign_index (int index, char* out) {
 
     if ((index < 0) || (index >= Mission_callsign_count)) {
         if (mission_parse_lookup_callsign_index_warn) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Ship with invalid callsign.  Get a programmer");
             mission_parse_lookup_callsign_index_warn = 0;
         }

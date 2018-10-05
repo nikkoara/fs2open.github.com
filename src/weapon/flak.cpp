@@ -29,10 +29,10 @@ void flak_pick_range (
     vec3d temp;
 
     // make sure this flak object is valid
-    Assert (objp->type == OBJ_WEAPON);
-    Assert (objp->instance >= 0);
-    Assert (Weapons[objp->instance].weapon_info_index >= 0);
-    Assert (Weapon_info[Weapons[objp->instance].weapon_info_index]
+    ASSERT (objp->type == OBJ_WEAPON);
+    ASSERT (objp->instance >= 0);
+    ASSERT (Weapons[objp->instance].weapon_info_index >= 0);
+    ASSERT (Weapon_info[Weapons[objp->instance].weapon_info_index]
                 .wi_flags[Weapon::Info_Flags::Flak]);
 
     weapon_info* wip = &Weapon_info[Weapons[objp->instance].weapon_info_index];
@@ -116,14 +116,14 @@ void flak_jitter_aim (
 void flak_muzzle_flash (
     vec3d* pos, vec3d* dir, physics_info* pip, int turret_weapon_class) {
     // sanity
-    Assert (
+    ASSERT (
         (turret_weapon_class >= 0) &&
         (turret_weapon_class < Num_weapon_types));
     if ((turret_weapon_class < 0) ||
         (turret_weapon_class >= Num_weapon_types)) {
         return;
     }
-    Assert (
+    ASSERT (
         Weapon_info[turret_weapon_class].wi_flags[Weapon::Info_Flags::Flak]);
     if (!(Weapon_info[turret_weapon_class]
               .wi_flags[Weapon::Info_Flags::Flak])) {
@@ -140,8 +140,8 @@ void flak_muzzle_flash (
  * Given a just fired flak shell, pick a detonating distance for it
  */
 void flak_set_range (object* objp, float range) {
-    Assert (objp->type == OBJ_WEAPON);
-    Assert (objp->instance >= 0);
+    ASSERT (objp->type == OBJ_WEAPON);
+    ASSERT (objp->instance >= 0);
 
     // setup the flak info
     Weapons[objp->instance].det_range = range;
@@ -151,8 +151,8 @@ void flak_set_range (object* objp, float range) {
  * Get the current range for the flak object
  */
 float flak_get_range (object* objp) {
-    Assert (objp->type == OBJ_WEAPON);
-    Assert (objp->instance >= 0);
+    ASSERT (objp->type == OBJ_WEAPON);
+    ASSERT (objp->instance >= 0);
 
     return Weapons[objp->instance].det_range;
 }

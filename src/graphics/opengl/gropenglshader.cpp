@@ -439,7 +439,7 @@ operator= (opengl_shader_t&& other) noexcept {
 
 /**
  * Set the currently active shader
- * @param shader_obj	Pointer to an opengl_shader_t object. This function
+ * @param shader_obj    Pointer to an opengl_shader_t object. This function
  * calls glUseProgramARB with parameter 0 if shader_obj is NULL or if function
  * is called without parameters, causing OpenGL to revert to fixed-function
  * processing
@@ -460,8 +460,8 @@ void opengl_shader_set_current (opengl_shader_t* shader_obj) {
 }
 
 void opengl_shader_set_current (int handle) {
-    Assert (handle >= 0);
-    Assert (handle < (int)GL_shader.size ());
+    ASSERT (handle >= 0);
+    ASSERT (handle < (int)GL_shader.size ());
 
     opengl_shader_set_current (&GL_shader[handle]);
 }
@@ -484,8 +484,8 @@ size_t opengl_get_shader_idx (shader_type shader_t, unsigned int flags) {
  *
  * @param shader_t  shader_type variable, a reference to the shader program
  * needed
- * @param flags	Integer variable, holding a combination of SDR_* flags
- * @return 		Index into GL_shader, referencing a valid shader, or -1 if
+ * @param flags Integer variable, holding a combination of SDR_* flags
+ * @return              Index into GL_shader, referencing a valid shader, or -1 if
  * shader compilation failed
  */
 int gr_opengl_maybe_create_shader (shader_type shader_t, unsigned int flags) {
@@ -498,8 +498,8 @@ int gr_opengl_maybe_create_shader (shader_type shader_t, unsigned int flags) {
 }
 
 void opengl_delete_shader (int sdr_handle) {
-    Assert (sdr_handle >= 0);
-    Assert (sdr_handle < (int)GL_shader.size ());
+    ASSERT (sdr_handle >= 0);
+    ASSERT (sdr_handle < (int)GL_shader.size ());
 
     GL_shader[sdr_handle].program.reset ();
 
@@ -556,11 +556,11 @@ static std::string opengl_shader_get_header (
  * defines for the GLSL compiler based on the shader flags and the supported
  * GLSL version as reported by the GPU driver.
  *
- * @param shader	shader_type enum defined with which shader we're loading
- * @param filename	C-string holding the filename (with extension) of the
+ * @param shader        shader_type enum defined with which shader we're loading
+ * @param filename      C-string holding the filename (with extension) of the
  * shader file
- * @param flags		integer variable holding a combination of SDR_* flags
- * @return			C-string holding the complete shader source code
+ * @param flags         integer variable holding a combination of SDR_* flags
+ * @return                      C-string holding the complete shader source code
  */
 static std::string opengl_load_shader (const char* filename) {
     std::string content;
@@ -598,7 +598,7 @@ static void handle_includes_impl (
 
             if (first_quote == std::string::npos ||
                 second_quote == std::string::npos) {
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION,
                     "Shader %s:%d: Malformed include line. Could not find "
                     "both quote charaters.",
@@ -618,7 +618,7 @@ static void handle_includes_impl (
                     stack_string << "\t" << name << "\n";
                 }
 
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION,
                     "Shader %s:%d: Detected cyclic include! Previous includes "
                     "(top level file first):\n%s",
@@ -700,9 +700,9 @@ void opengl_compile_shader_actual (
     shader_type sdr, const uint& flags, opengl_shader_t& new_shader) {
     opengl_shader_type_t* sdr_info = &GL_shader_types[sdr];
 
-    Assert (sdr_info->type_id == sdr);
+    ASSERT (sdr_info->type_id == sdr);
     mprintf (("Compiling new shader:\n"));
-    mprintf (("	%s\n", sdr_info->description));
+    mprintf ((" %s\n", sdr_info->description));
 
     // figure out if the variant requested needs a geometry shader
     bool use_geo_sdr = false;
@@ -754,7 +754,7 @@ void opengl_compile_shader_actual (
         for (size_t i = 0; i < GL_vertex_attrib_info.size (); ++i) {
             // Check that the enum values match the position in the vector
             // to make accessing that information more efficient
-            Assertion (
+            ASSERTX (
                 GL_vertex_attrib_info[i].attribute_id == (int)i,
                 "Mistmatch between enum values and attribute vector "
                 "detected!");
@@ -778,7 +778,7 @@ void opengl_compile_shader_actual (
     catch (const std::exception&) {
         // Since all shaders are required a compilation failure is a fatal
         // error
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "A shader failed to compile! Check the debug log for more "
             "information.");
@@ -823,7 +823,7 @@ void opengl_compile_shader_actual (
                     attr_info.default_value);
             }
 
-            mprintf (("	%s\n", variant.description));
+            mprintf ((" %s\n", variant.description));
         }
     }
 
@@ -834,9 +834,9 @@ void opengl_compile_shader_actual (
  * Compiles a new shader, and creates an opengl_shader_t that will be put into
  *the GL_shader vector if compilation is successful.
  *
- * @param sdr		Identifier defined with the program we wish to compile
- * @param flags		Combination of SDR_* flags
- * @param replacement_idx	The index of the shader this replaces. If -1, the
+ * @param sdr           Identifier defined with the program we wish to compile
+ * @param flags         Combination of SDR_* flags
+ * @param replacement_idx       The index of the shader this replaces. If -1, the
  *newly compiled shader will be appended to the GL_shader vector or inserted at
  *the first available empty slot
  */
@@ -847,7 +847,7 @@ int opengl_compile_shader (shader_type sdr, uint flags) {
     int empty_idx;
     opengl_shader_t new_shader;
 
-    Assert (sdr < NUM_SHADER_TYPES);
+    ASSERT (sdr < NUM_SHADER_TYPES);
 
     opengl_compile_shader_actual (sdr, flags, new_shader);
 
@@ -915,7 +915,7 @@ static void opengl_purge_shader_cache_type (const char* ext) {
         cache_files, CF_TYPE_CACHE, filter.c_str (), CF_SORT_NONE, &file_info,
         CF_LOCATION_ROOT_USER | CF_LOCATION_ROOT_GAME | CF_LOCATION_TYPE_ROOT);
 
-    Assertion (
+    ASSERTX (
         cache_files.size () == file_info.size (),
         "cf_get_file_list returned different sizes for file names and file "
         "informations!");
@@ -1000,11 +1000,11 @@ void opengl_shader_init () {
  * Get the internal OpenGL location for a given attribute. Requires that the
  * Current_shader global variable is valid
  *
- * @param attribute_text	Name of the attribute
- * @return					Internal OpenGL location for the attribute
+ * @param attribute_text        Name of the attribute
+ * @return                                      Internal OpenGL location for the attribute
  */
 GLint opengl_shader_get_attribute (opengl_vert_attrib::attrib_id attribute) {
-    Assertion (Current_shader != nullptr, "Current shader may not be null!");
+    ASSERTX (Current_shader != nullptr, "Current shader may not be null!");
 
     return Current_shader->program->getAttributeLocation (attribute);
 }

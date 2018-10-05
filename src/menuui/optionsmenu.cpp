@@ -344,14 +344,14 @@ int Options_skills_text_coords[GR_NUM_RESOLUTIONS][4] = {
 #define NUM_DETAIL_SLIDERS 8
 
 /*
-#define DETAIL_DISTANCE_SLIDER	0
-#define NEBULA_DETAIL_SLIDER		1
-#define HARDWARE_TEXTURES_SLIDER	2
-#define NUM_PARTICLES_SLIDER		6
-#define SHARD_CULLING_SLIDER		3
-#define SHIELD_DETAIL_SLIDER		4
-#define NUM_STARS_SLIDER			5
-#define LIGHTING_SLIDER				7
+#define DETAIL_DISTANCE_SLIDER  0
+#define NEBULA_DETAIL_SLIDER            1
+#define HARDWARE_TEXTURES_SLIDER        2
+#define NUM_PARTICLES_SLIDER            6
+#define SHARD_CULLING_SLIDER            3
+#define SHIELD_DETAIL_SLIDER            4
+#define NUM_STARS_SLIDER                        5
+#define LIGHTING_SLIDER                         7
 */
 #define DETAIL_DISTANCE_SLIDER 0
 #define NEBULA_DETAIL_SLIDER 1
@@ -688,7 +688,7 @@ void options_tab_setup (int /*set_palette*/) {
     int flags[256];
 
     if (Tab != MULTIPLAYER_TAB) {
-        Assert (Backgrounds[gr_screen.res][Tab].mask >= 0);
+        ASSERT (Backgrounds[gr_screen.res][Tab].mask >= 0);
         Ui_window.set_mask_bmap (
             Backgrounds[gr_screen.res][Tab].mask,
             Backgrounds[gr_screen.res][Tab].mask_filename);
@@ -1071,7 +1071,7 @@ void options_accept () {
 
     // If music is zero volume, disable
     if (Master_event_music_volume <= 0.0f) {
-        //		event_music_disable();
+        // event_music_disable();
         event_music_level_close ();
     }
 
@@ -1084,7 +1084,7 @@ void options_accept () {
 }
 
 void options_load_background_and_mask (int tab) {
-    Assert (tab == OPTIONS_TAB || tab == DETAIL_LEVELS_TAB);
+    ASSERT (tab == OPTIONS_TAB || tab == DETAIL_LEVELS_TAB);
     Backgrounds[gr_screen.res][tab].bitmap =
         bm_load (Backgrounds[gr_screen.res][tab].filename);
     Backgrounds[gr_screen.res][tab].mask =
@@ -1098,7 +1098,7 @@ void options_menu_init () {
     int i, j;
     options_buttons* b;
 
-    Assert (!Options_menu_inited);
+    ASSERT (!Options_menu_inited);
 
     // pause all sounds, since we could get here through the game
     weapon_pause_sounds ();
@@ -1230,7 +1230,7 @@ void options_menu_init () {
 void options_menu_close () {
     int i;
 
-    Assert (Options_menu_inited);
+    ASSERT (Options_menu_inited);
 
     for (i = 0; i < NUM_TABS; i++) {
         if (Backgrounds[gr_screen.res][i].bitmap >= 0) {
@@ -1272,7 +1272,7 @@ void draw_gamma_box () {
     // dynamically. I just picked an arbitrary large number to data size
     // (although we should always be using less)
     // TODO: change MAX size to maximum size for a 1024x768 bitmap
-    //	ushort
+    // ushort
     // Gamma_data[Options_gamma_coords[gr_screen.res][OPTIONS_W_COORD]*Options_gamma_coords[gr_screen.res][OPTIONS_H_COORD]*2];
     ushort Gamma_data[MAX_GAMMA_BITMAP_SIZE];
 
@@ -1339,7 +1339,7 @@ void draw_gamma_box () {
 void options_menu_do_frame (float /*frametime*/) {
     int i, k, x, y;
 
-    Assert (Options_menu_inited);
+    ASSERT (Options_menu_inited);
     k = Ui_window.process () & ~KEY_DEBUGGED;
     switch (k) {
     case KEY_SHIFTED | KEY_TAB:

@@ -34,13 +34,13 @@
 #define DEBUGME(d1) nprintf(( "Warning", "DEBUGME: %s in " __FILE__ " at line %d, msg \"%s\", thread %d\n", __FUNCTION__, __LINE__, d1, getpid() ))
 
 // networking/socket stuff
-#define SOCKET			int
-#define SOCKADDR		struct sockaddr
-#define SOCKADDR_IN		struct sockaddr_in
-#define LPSOCKADDR		struct sockaddr*
-#define HOSTENT			struct hostent
-#define SERVENT			struct servent
-#define closesocket(x)	close(x)
+#define SOCKET                  int
+#define SOCKADDR                struct sockaddr
+#define SOCKADDR_IN             struct sockaddr_in
+#define LPSOCKADDR              struct sockaddr*
+#define HOSTENT                 struct hostent
+#define SERVENT                 struct servent
+#define closesocket(x)  close(x)
 #define WSAEALREADY     EALREADY
 #define WSAEINVAL       EINVAL
 #define WSAEWOULDBLOCK  EINPROGRESS
@@ -49,19 +49,19 @@
 #define WSAECONNRESET   ECONNRESET
 #define WSAECONNABORTED ECONNABORTED
 #define WSAESHUTDOWN    ESHUTDOWN
-#define WSAEADDRINUSE	EADDRINUSE
-#define SOCKET_ERROR	(-1)
-#define ioctlsocket(x, y, z)	ioctl(x, y, z)
+#define WSAEADDRINUSE   EADDRINUSE
+#define SOCKET_ERROR    (-1)
+#define ioctlsocket(x, y, z)    ioctl(x, y, z)
 
 #ifndef INVALID_SOCKET
 #define INVALID_SOCKET ((SOCKET) -1)
 #endif
 
 // file related items
-#define _MAX_FNAME					255
-#define _MAX_PATH					255
-#define MAX_PATH					255
-#define _unlink(s)					unlink(s)
+#define _MAX_FNAME                                      255
+#define _MAX_PATH                                       255
+#define MAX_PATH                                        255
+#define _unlink(s)                                      unlink(s)
 
 int filelength(int fd);
 int _chdir(const char *path);

@@ -87,8 +87,8 @@ ubyte lcl_get_font_index (int font_num);
 
 // NOTE : generally you should only care about the above functions. Below are
 // very low level functions
-//        which should already be well entrenched in FreeSpace. If you think
-//        you need to use one of the below functions - ask first :)
+// which should already be well entrenched in FreeSpace. If you think
+// you need to use one of the below functions - ask first :)
 // externalization of table/mission files (only parse routines ever need to
 // deal with these functions) -----------------------
 

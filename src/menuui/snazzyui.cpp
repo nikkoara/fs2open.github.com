@@ -33,7 +33,7 @@ void snazzy_menu_init () { game_flush (); }
 // different colors, the mask is checked instead, since the regions are always
 // a uniform color
 //
-//	The action parameter is used to return whether the region is clicked on or
+// The action parameter is used to return whether the region is clicked on or
 // simply
 // has the mouse over it.  The #defines SNAZZY_OVER and SNAZZY_CLICKED are
 // used.
@@ -52,9 +52,9 @@ int snazzy_menu_do (
     int choice = -1, mouse_on_choice = -1;
     ubyte pixel_value = 0;
 
-    Assert (data != NULL);
-    Assert (num_regions > 0);
-    Assert (regions != NULL);
+    ASSERT (data != NULL);
+    ASSERT (num_regions > 0);
+    ASSERT (regions != NULL);
 
     gr_reset_clip (); // don't remove
     mouse_get_pos_unscaled (&x, &y);
@@ -77,7 +77,7 @@ int snazzy_menu_do (
         if (key) *key = k; // pass keypress back to caller
     }
 
-    //	if (mouse_down_count(MOUSE_LEFT_BUTTON) )	{
+    // if (mouse_down_count(MOUSE_LEFT_BUTTON) )       {
     if (!mouse_down (MOUSE_LEFT_BUTTON) && Snazzy_mouse_left_was_down) {
         // nprintf(("Alan", "pixel val: %d\n", pixel_value));
         for (i = 0; i < num_regions; i++) {
@@ -189,7 +189,7 @@ void read_menu_tbl (
 
     fp = cfopen (NOX ("menu.tbl"), "rt");
     if (fp == NULL) {
-        fs2::dialog::error (LOCATION, "menu.tbl could not be opened\n");
+        ASSERTF (LOCATION, "menu.tbl could not be opened\n");
 
         return;
     }

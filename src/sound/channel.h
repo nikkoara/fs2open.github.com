@@ -25,7 +25,7 @@ struct channel  {
           is_ambient (false) {}
 };
 
-// #define	MAX_CHANNELS  16
+// #define      MAX_CHANNELS  16
 extern channel* Channels; //[MAX_CHANNELS];
 
 #endif /* FREESPACE2_SOUND_CHANNEL_H */

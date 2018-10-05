@@ -154,7 +154,7 @@ int joy_ff_init () {
     }
     else {
         if (ff_strength != 100) {
-            fs2::dialog::release_warning (
+            RELEASE_WARNINGF (
                 LOCATION,
                 "The configuration file is configured with a force feedback "
                 "strength value of %d%% "
@@ -486,7 +486,7 @@ static void
 joy_ff_start_effect (haptic_effect_t* eff, const char* /* name */) {
     if (!eff->loaded) { return; }
 
-    //	nprintf(("Joystick", "FF: Starting effect %s\n", name));
+    // nprintf(("Joystick", "FF: Starting effect %s\n", name));
 
     SDL_HapticRunEffect (haptic, eff->id, 1);
 }
@@ -515,7 +515,7 @@ void joy_ff_play_vector_effect (vec3d* v, float scaler) {
     vec3d vf;
     float x, y;
 
-    //	nprintf(("Joystick", "FF: vec = { %f, %f, %f } s = %f\n", v->xyz.x,
+    // nprintf(("Joystick", "FF: vec = { %f, %f, %f } s = %f\n", v->xyz.x,
     // v->xyz.y, v->xyz.z, scaler));
     vm_vec_copy_scale (&vf, v, scaler);
     x = vf.xyz.x;
@@ -666,7 +666,7 @@ void joy_ff_adjust_handling (int speed) {
     if (!pSpring.loaded) { return; }
 
     v = speed * joy_ff_handling_scaler * 2 / 3;
-    //	v += joy_ff_handling_scaler * joy_ff_handling_scaler * 6 / 7 + 250;
+    // v += joy_ff_handling_scaler * joy_ff_handling_scaler * 6 / 7 + 250;
     v += joy_ff_handling_scaler * 45 - 500;
 
     CLAMP (v, 0, 10000);
@@ -678,7 +678,7 @@ void joy_ff_adjust_handling (int speed) {
         pSpring.eff.condition.left_coeff[i] = coeff;
     }
 
-    //	nprintf(("Joystick", "FF: New handling force = 0x%04x\n", coeff));
+    // nprintf(("Joystick", "FF: New handling force = 0x%04x\n", coeff));
 
     SDL_HapticUpdateEffect (haptic, pSpring.id, &pSpring.eff);
 }
@@ -757,7 +757,7 @@ void joy_ff_afterburn_on () {
     joy_ff_start_effect (&pAfterburn1, "Afterburn1");
     joy_ff_start_effect (&pAfterburn2, "Afterburn2");
 
-    //	nprintf(("Joystick", "FF: Afterburn started\n"));
+    // nprintf(("Joystick", "FF: Afterburn started\n"));
 
     Joy_ff_afterburning = 1;
 }
@@ -773,7 +773,7 @@ void joy_ff_afterburn_off () {
 
     Joy_ff_afterburning = 0;
 
-    //	nprintf(("Joystick", "FF: Afterburn stopped\n"));
+    // nprintf(("Joystick", "FF: Afterburn stopped\n"));
 }
 
 void joy_ff_explode () {

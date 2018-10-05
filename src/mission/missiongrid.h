@@ -16,7 +16,7 @@ struct grid  {
     physics_info physics;
     float square_size;
     float
-        planeD; //	D component of plane equation (A, B, C are uvec in gmatrix)
+        planeD; // D component of plane equation (A, B, C are uvec in gmatrix)
     vec3d gpoints1[MAX_GRIDLINE_POINTS]; // 1 -4 are edge gridpoints for small
                                          // grid.
     vec3d gpoints2[MAX_GRIDLINE_POINTS];

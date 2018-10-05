@@ -16,15 +16,15 @@ void UI_SLIDER2::create (
 
     base_create (wnd, UI_KIND_SLIDER2, _x, _y, _w, _h);
 
-    Assert (_upCallback != NULL);
-    Assert (_downCallback != NULL);
+    ASSERT (_upCallback != NULL);
+    ASSERT (_downCallback != NULL);
 
     upCallback = _upCallback;
     downCallback = _downCallback;
 
     captureCallback = _captureCallback;
 
-    Assert (_bitmapSliderControl != NULL);
+    ASSERT (_bitmapSliderControl != NULL);
 
     last_scrolled = 0;
 
@@ -36,11 +36,11 @@ void UI_SLIDER2::create (
         bmap_ids[S2_NORMAL], &buttonWidth, &buttonHeight, NULL, NULL, NULL);
     slider_w = buttonWidth;
     slider_h = buttonHeight;
-    Assert (buttonHeight > 5);
+    ASSERT (buttonHeight > 5);
     slider_half_h = (int)(buttonHeight / 2);
     numberPositions = _h - buttonHeight;
 
-    Assert (numberPositions >= 0);
+    ASSERT (numberPositions >= 0);
     currentItem = 0;
     currentPosition = 0;
 
@@ -51,7 +51,7 @@ void UI_SLIDER2::create (
 }
 
 void UI_SLIDER2::draw () {
-    Assert ((currentPosition >= 0) && (currentPosition <= numberPositions));
+    ASSERT ((currentPosition >= 0) && (currentPosition <= numberPositions));
     if (uses_bmaps && !disabled_flag) {
         gr_reset_clip ();
         switch (slider_mode) {

@@ -172,7 +172,7 @@ uint batching_determine_vertex_layout (batch_info* info) {
 void batching_add_bitmap_internal (
     primitive_batch* batch, int texture, vertex* pnt, int orient, float rad,
     color* clr, float depth) {
-    Assert (batch->get_render_info ().prim_type == PRIM_TYPE_TRIS);
+    ASSERT (batch->get_render_info ().prim_type == PRIM_TYPE_TRIS);
 
     float radius = rad;
     rad *= 1.41421356f; // 1/0.707, becase these are the points of a square or
@@ -291,7 +291,7 @@ void batching_add_bitmap_internal (
 void batching_add_point_bitmap (
     primitive_batch* batch, int texture, vertex* position, int orient,
     float rad, float depth) {
-    Assert (batch->get_render_info ().prim_type == PRIM_TYPE_POINTS);
+    ASSERT (batch->get_render_info ().prim_type == PRIM_TYPE_POINTS);
 
     float radius = rad;
     radius *= 1.41421356f; // 1/0.707, becase these are the points of a square
@@ -348,7 +348,7 @@ void batching_add_point_bitmap (
 void batching_add_bitmap_rotated_internal (
     primitive_batch* batch, int texture, vertex* pnt, float angle, float rad,
     color* clr, float depth) {
-    Assert (batch->get_render_info ().prim_type == PRIM_TYPE_TRIS);
+    ASSERT (batch->get_render_info ().prim_type == PRIM_TYPE_TRIS);
 
     float radius = rad;
     rad *= 1.41421356f; // 1/0.707, becase these are the points of a square or
@@ -432,7 +432,7 @@ void batching_add_bitmap_rotated_internal (
 void batching_add_point_bitmap (
     primitive_batch* batch, int texture, vertex* position, float rad,
     float angle, float depth) {
-    Assert (batch->get_render_info ().prim_type == PRIM_TYPE_POINTS);
+    ASSERT (batch->get_render_info ().prim_type == PRIM_TYPE_POINTS);
 
     float radius = rad;
     radius *= 1.41421356f; // 1/0.707, becase these are the points of a square
@@ -466,13 +466,13 @@ void batching_add_point_bitmap (
 void batching_add_polygon_internal (
     primitive_batch* batch, int texture, vec3d* pos, matrix* orient,
     float width, float height, color* clr) {
-    Assert (batch->get_render_info ().prim_type == PRIM_TYPE_TRIS);
+    ASSERT (batch->get_render_info ().prim_type == PRIM_TYPE_TRIS);
 
     // idiot-proof
     if (width == 0 || height == 0) return;
 
-    Assert (pos != NULL);
-    Assert (orient != NULL);
+    ASSERT (pos != NULL);
+    ASSERT (orient != NULL);
 
     // Let's begin.
 
@@ -529,7 +529,7 @@ void batching_add_polygon_internal (
 
 void batching_add_quad_internal (
     primitive_batch* batch, int texture, vertex* verts) {
-    Assert (batch->get_render_info ().prim_type == PRIM_TYPE_TRIS);
+    ASSERT (batch->get_render_info ().prim_type == PRIM_TYPE_TRIS);
 
     const int NUM_VERTICES = 4;
     batch_vertex v[NUM_VERTICES];
@@ -554,7 +554,7 @@ void batching_add_quad_internal (
 
 void batching_add_tri_internal (
     primitive_batch* batch, int texture, vertex* verts) {
-    Assert (batch->get_render_info ().prim_type == PRIM_TYPE_TRIS);
+    ASSERT (batch->get_render_info ().prim_type == PRIM_TYPE_TRIS);
 
     const int NUM_VERTICES = 3;
     batch_vertex v[NUM_VERTICES];
@@ -579,7 +579,7 @@ void batching_add_tri_internal (
 void batching_add_beam_internal (
     primitive_batch* batch, int texture, vec3d* start, vec3d* end, float width,
     color* clr, float offset) {
-    Assert (batch->get_render_info ().prim_type == PRIM_TYPE_TRIS);
+    ASSERT (batch->get_render_info ().prim_type == PRIM_TYPE_TRIS);
 
     vec3d p[4];
     batch_vertex verts[6];
@@ -655,7 +655,7 @@ void batching_add_beam_internal (
 void batching_add_laser_internal (
     primitive_batch* batch, int texture, vec3d* p0, float width1, vec3d* p1,
     float width2, int r, int g, int b) {
-    Assert (batch->get_render_info ().prim_type == PRIM_TYPE_TRIS);
+    ASSERT (batch->get_render_info ().prim_type == PRIM_TYPE_TRIS);
 
     width1 *= 0.5f;
     width2 *= 0.5f;
@@ -963,7 +963,7 @@ void batching_render_batch_item (
 }
 
 void batching_allocate_and_load_buffer (primitive_batch_buffer* draw_queue) {
-    Assert (draw_queue != NULL);
+    ASSERT (draw_queue != NULL);
 
     if (draw_queue->buffer_size < draw_queue->desired_buffer_size) {
         if (draw_queue->buffer_ptr != NULL) {

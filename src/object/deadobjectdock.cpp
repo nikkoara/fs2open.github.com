@@ -17,7 +17,7 @@ dock_instance* dead_dock_find_instance (object* objp, object* other_objp);
 dock_instance* dead_dock_find_instance (object* objp, int dockpoint);
 
 object* dock_get_first_dead_docked_object (object* objp) {
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
 
     // are we docked?
     if (!object_is_dead_docked (objp)) return NULL;
@@ -27,8 +27,8 @@ object* dock_get_first_dead_docked_object (object* objp) {
 
 int dock_find_dead_dockpoint_used_by_object (
     object* objp, object* other_objp) {
-    Assert (objp != NULL);
-    Assert (other_objp != NULL);
+    ASSERT (objp != NULL);
+    ASSERT (other_objp != NULL);
 
     dock_instance* result = dead_dock_find_instance (objp, other_objp);
 
@@ -42,18 +42,18 @@ int dock_find_dead_dockpoint_used_by_object (
 // -------------------------------------------------------------------------------------
 void dock_dead_dock_objects (
     object* objp1, int dockpoint1, object* objp2, int dockpoint2) {
-    Assert (objp1 != NULL);
-    Assert (objp2 != NULL);
+    ASSERT (objp1 != NULL);
+    ASSERT (objp2 != NULL);
 
 #ifndef NDEBUG
     if ((dead_dock_find_instance (objp1, objp2) != NULL) ||
         (dead_dock_find_instance (objp2, objp1) != NULL)) {
-        fs2::dialog::error (LOCATION, "Trying to dock an object that's already docked!\n");
+        ASSERTF (LOCATION, "Trying to dock an object that's already docked!\n");
     }
 
     if ((dead_dock_find_instance (objp1, dockpoint1) != NULL) ||
         (dead_dock_find_instance (objp2, dockpoint2) != NULL)) {
-        fs2::dialog::error (LOCATION, "Trying to dock to a dockpoint that's in use!\n");
+        ASSERTF (LOCATION, "Trying to dock to a dockpoint that's in use!\n");
     }
 #endif
 
@@ -63,8 +63,8 @@ void dock_dead_dock_objects (
 }
 
 void dock_dead_undock_objects (object* objp1, object* objp2) {
-    Assert (objp1 != NULL);
-    Assert (objp2 != NULL);
+    ASSERT (objp1 != NULL);
+    ASSERT (objp2 != NULL);
 
     // remove objects from each others' dock lists
     dead_dock_remove_instance (objp1, objp2);
@@ -72,7 +72,7 @@ void dock_dead_undock_objects (object* objp1, object* objp2) {
 }
 
 void dock_dead_undock_all (object* objp) {
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
 
     while (object_is_dead_docked (objp)) {
         object* dockee = dock_get_first_dead_docked_object (objp);
@@ -128,13 +128,13 @@ void dead_dock_remove_instance (object* objp, object* other_objp) {
     }
     else {
         // Trigger assertion. We can recover from this, thankfully
-        UNREACHABLE ("Tried to undock an object that isn't dead docked!\n");
+        ASSERT (0);
     }
 }
 
 // just free the list without worrying about undocking anything
 void dock_free_dead_dock_list (object* objp) {
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
 
     while (objp->dead_dock_list != NULL) {
         dock_instance* ptr = objp->dead_dock_list;

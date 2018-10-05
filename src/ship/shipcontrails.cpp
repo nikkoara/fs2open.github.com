@@ -53,7 +53,7 @@ void ct_level_close () {}
 // call when a ship is created to initialize its contrail stuff
 void ct_ship_create (ship* shipp) {
     int idx;
-    Assert (shipp != NULL);
+    ASSERT (shipp != NULL);
 
     // null out the ct indices for this guy
     for (idx = 0; idx < MAX_SHIP_CONTRAILS; idx++) {
@@ -69,7 +69,7 @@ void ct_ship_create (ship* shipp) {
 void ct_ship_delete (ship* shipp) {
     int idx;
 
-    Assert (shipp != NULL);
+    ASSERT (shipp != NULL);
     // free up any contrails this guy may have had
     for (idx = 0; idx < MAX_SHIP_CONTRAILS; idx++) {
         if (shipp->trail_ptr[idx] != NULL) {
@@ -89,8 +89,8 @@ void ct_ship_process (ship* shipp) {
     if (shipp->ab_info[0].texture.bitmap_id != -1)
         ct_ship_process_ABtrails (shipp);
 
-    Assert (shipp != NULL);
-    Assert (shipp->objnum >= 0);
+    ASSERT (shipp != NULL);
+    ASSERT (shipp->objnum >= 0);
 
     // if trails aren't enabled, return
     if (!ct_display_contrails ()) { return; }
@@ -105,7 +105,7 @@ void ct_ship_process (ship* shipp) {
         return;
     }
 
-    Assert (objp->instance >= 0);
+    ASSERT (objp->instance >= 0);
     shipp = &Ships[objp->instance];
 
     // if the object is below the critical limit
@@ -163,9 +163,9 @@ void ct_update_contrails (ship* shipp) {
     object* objp;
 
     // get object and ship info
-    Assert (shipp != NULL);
-    Assert (shipp->objnum >= 0);
-    Assert (shipp->ship_info_index >= 0);
+    ASSERT (shipp != NULL);
+    ASSERT (shipp->objnum >= 0);
+    ASSERT (shipp->ship_info_index >= 0);
     objp = &Objects[shipp->objnum];
     sip = &Ship_info[shipp->ship_info_index];
 
@@ -204,9 +204,9 @@ void ct_create_contrails (ship* shipp) {
     object* objp;
 
     // get object and ship info
-    Assert (shipp != NULL);
-    Assert (shipp->objnum >= 0);
-    Assert (shipp->ship_info_index >= 0);
+    ASSERT (shipp != NULL);
+    ASSERT (shipp->objnum >= 0);
+    ASSERT (shipp->ship_info_index >= 0);
     objp = &Objects[shipp->objnum];
     sip = &Ship_info[shipp->ship_info_index];
 
@@ -233,8 +233,8 @@ void ct_ship_process_ABtrails (ship* shipp) {
     object* objp;
     ship_info* sip;
 
-    Assert (shipp != NULL);
-    Assert (shipp->objnum >= 0);
+    ASSERT (shipp != NULL);
+    ASSERT (shipp->objnum >= 0);
     objp = &Objects[shipp->objnum];
     sip = &Ship_info[shipp->ship_info_index];
 
@@ -246,7 +246,7 @@ void ct_ship_process_ABtrails (ship* shipp) {
     // if the ship has no afterburner trail bitmap, don't bother with anything
     if (sip->afterburner_trail.bitmap_id < 0) return;
 
-    Assert (objp->instance >= 0);
+    ASSERT (objp->instance >= 0);
     shipp = &Ships[objp->instance];
 
     if (!(objp->phys_info.flags &
@@ -269,7 +269,7 @@ void ct_ship_process_ABtrails (ship* shipp) {
         ct_create_ABtrails (shipp);
     }
 
-    /*	if(shipp->ab_info->stamp > timestamp( (int)(shipp->ab_info->max_life *
+    /*  if(shipp->ab_info->stamp > timestamp( (int)(shipp->ab_info->max_life *
        1000) )  ){ for(idx=0; idx<MAX_SHIP_CONTRAILS; idx++){
                 if(shipp->ABtrail_num[idx] >= 0){
                     trail_object_died(shipp->ABtrail_num[idx]);
@@ -288,9 +288,9 @@ void ct_create_ABtrails (ship* shipp) {
     object* objp;
 
     // get object and ship info
-    Assert (shipp != NULL);
-    Assert (shipp->objnum >= 0);
-    Assert (shipp->ship_info_index >= 0);
+    ASSERT (shipp != NULL);
+    ASSERT (shipp->objnum >= 0);
+    ASSERT (shipp->ship_info_index >= 0);
     objp = &Objects[shipp->objnum];
     sip = &Ship_info[shipp->ship_info_index];
 
@@ -315,7 +315,7 @@ void ct_create_ABtrails (ship* shipp) {
                 }
             }
         }
-        /*		if( objp == Player_obj){
+        /*              if( objp == Player_obj){
                     HUD_printf("trailnum %d", shipp->ABtrail_num[0]);
                 }
         */
@@ -331,9 +331,9 @@ void ct_update_ABtrails (ship* shipp) {
     object* objp;
 
     // get object and ship info
-    Assert (shipp != NULL);
-    Assert (shipp->objnum >= 0);
-    Assert (shipp->ship_info_index >= 0);
+    ASSERT (shipp != NULL);
+    ASSERT (shipp->objnum >= 0);
+    ASSERT (shipp->ship_info_index >= 0);
     objp = &Objects[shipp->objnum];
     sip = &Ship_info[shipp->ship_info_index];
 

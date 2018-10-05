@@ -216,7 +216,7 @@ static int Hash_table_inited;
 #define MISSION_ICON_VOLITION 0 // mini volition death's head :)
 
 // icon offsets (see LIST_ defines above
-//#define MISSION_ICON_VOLITION_X				(46)
+//#define MISSION_ICON_VOLITION_X                               (46)
 #define MISSION_ICON_VOLITION_Y_OFFSET (-1)
 
 // icon offsets
@@ -668,7 +668,7 @@ void sim_room_scroll_screen_up () {
         Scroll_offset--;
 
         if (Player->readyroom_listing_mode == MODE_MISSIONS) {
-            Assert (Selected_line > Scroll_offset);
+            ASSERT (Selected_line > Scroll_offset);
             while (!sim_room_line_query_visible (Selected_line)) {
                 Selected_line--;
             }
@@ -702,7 +702,7 @@ void sim_room_scroll_screen_down () {
         if (Player->readyroom_listing_mode == MODE_MISSIONS) {
             while (!sim_room_line_query_visible (Selected_line)) {
                 Selected_line++;
-                Assert (Selected_line < Num_lines);
+                ASSERT (Selected_line < Num_lines);
             }
         }
 
@@ -716,7 +716,7 @@ void sim_room_scroll_line_down () {
     if (Selected_line < Num_lines - 1) {
         Selected_line++;
 
-        Assert (Selected_line > Scroll_offset);
+        ASSERT (Selected_line > Scroll_offset);
         while (!sim_room_line_query_visible (Selected_line)) {
             Scroll_offset++;
             Sim_room_slider.forceDown ();
@@ -772,9 +772,9 @@ int sim_room_can_resume_savegame (char* /*savegame_filename*/) {
 }
 
 // Decide wether to resume a save game or not
-// exit:	1	=>	savegame has been restored
-//			0	=>	no restore, proceed to briefing
-//			-1	=>	don't start mission at all
+// exit:        1       =>      savegame has been restored
+// 0       =>      no restore, proceed to briefing
+// -1      =>      don't start mission at all
 int sim_room_maybe_resume_savegame () {
     // MWA -- 3/26/98 -- removed all savegame references in game
     return 0;
@@ -1435,7 +1435,7 @@ void sim_room_blit_icons (
     }
 }
 
-///  Campaign room stuff below
+/// Campaign room stuff below
 int Cr_list_coords[GR_NUM_RESOLUTIONS][4] = { { // GR_640
                                                 47, 21, 565, 233 },
                                               { // GR_1024
@@ -1559,7 +1559,7 @@ void set_new_campaign_line (int n) {
         Num_info_lines = split_str (
             str, Cr_info_coords[gr_screen.res][2], Info_text_line_size,
             Info_text_ptrs, MAX_INFO_LINES);
-        Assert (Num_info_lines >= 0);
+        ASSERT (Num_info_lines >= 0);
     }
 
     Desc_scroll_offset = 0;
@@ -1726,7 +1726,7 @@ void campaign_room_init () {
     Campaign_background_bitmap_mask =
         bm_load (Campaign_mask_filename[gr_screen.res]);
     if (Campaign_background_bitmap_mask < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Error loading campaign room mask %s",
             Campaign_mask_filename[gr_screen.res]);
     }
@@ -1768,7 +1768,7 @@ void campaign_room_init () {
 
     Background_bitmap = bm_load (Campaign_filename[gr_screen.res]);
     if (Background_bitmap < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Error loading campaign room background %s",
             Campaign_filename[gr_screen.res]);
     }
@@ -1985,7 +1985,7 @@ void campaign_room_do_frame (float /*frametime*/) {
     while (y + font_height <= Cr_info_coords[gr_screen.res][3]) {
         if (i >= Num_info_lines) break;
 
-        Assert (Info_text_line_size[i] < MAX_INFO_LINE_LEN);
+        ASSERT (Info_text_line_size[i] < MAX_INFO_LINE_LEN);
         strncpy (line_text, Info_text_ptrs[i], Info_text_line_size[i]);
         line_text[Info_text_line_size[i]] = 0;
         drop_white_space (line_text);

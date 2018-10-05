@@ -4,7 +4,7 @@
 #define FREESPACE2_PARTICLE_UTIL_PARTICLEPROPERTIES_H
 
 #include "particle/particle.h"
-#include "utils/RandomRange.h"
+#include "util/RandomRange.h"
 
 namespace particle {
 namespace util {

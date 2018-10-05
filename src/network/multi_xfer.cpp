@@ -395,7 +395,7 @@ void multi_xfer_unlock () { Multi_xfer_locked = 0; }
 // force all receives to go into the specified directory by cfile type
 void multi_xfer_force_dir (int cf_type) {
     Multi_xfer_force_dir = cf_type;
-    Assert (Multi_xfer_force_dir > CF_TYPE_ANY);
+    ASSERT (Multi_xfer_force_dir > CF_TYPE_ANY);
 }
 
 // forces the given xfer entry to the specified directory type (only valid when
@@ -406,7 +406,7 @@ void multi_xfer_handle_force_dir (int handle, int cf_type) {
 
     // force to go to the given directory
     Multi_xfer_entry[handle].force_dir = cf_type;
-    Assert (Multi_xfer_entry[handle].force_dir > CF_TYPE_ANY);
+    ASSERT (Multi_xfer_entry[handle].force_dir > CF_TYPE_ANY);
 }
 
 // or the flag on a given entry
@@ -724,25 +724,25 @@ int multi_xfer_process_packet (
     switch ((int)val) {
     // process an ack for this entry
     case MULTI_XFER_CODE_ACK:
-        Assert (xe != NULL);
+        ASSERT (xe != NULL);
         multi_xfer_process_ack (xe);
         break;
 
     // process a nak for this entry
     case MULTI_XFER_CODE_NAK:
-        Assert (xe != NULL);
+        ASSERT (xe != NULL);
         multi_xfer_process_nak (xe);
         break;
 
     // process a "final" packet
     case MULTI_XFER_CODE_FINAL:
-        Assert (xe != NULL);
+        ASSERT (xe != NULL);
         multi_xfer_process_final (xe);
         break;
 
     // process a data packet
     case MULTI_XFER_CODE_DATA:
-        Assert (xe != NULL);
+        ASSERT (xe != NULL);
         multi_xfer_process_data (xe, xfer_data, data_size);
         break;
 

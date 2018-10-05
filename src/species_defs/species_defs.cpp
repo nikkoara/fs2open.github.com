@@ -226,7 +226,7 @@ void parse_species_tbl (const char* filename) {
 
                 if (!iff_found) {
                     species->default_iff = 0;
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Species %s default IFF %s not found in iff_defs.tbl! "
                         " Defaulting to %s.\n",
@@ -239,7 +239,7 @@ void parse_species_tbl (const char* filename) {
                 species->default_iff = 0;
 
                 // let them know
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "$Default IFF not specified for species %s in "
                     "species_defs.tbl!  Defaulting to %s.\n",
@@ -283,7 +283,7 @@ void parse_species_tbl (const char* filename) {
                 }
 
                 // let them know
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "$FRED Color not specified for species %s in "
                     "species_defs.tbl!  Defaulting to (%d, %d, %d).\n",
@@ -338,7 +338,7 @@ void parse_species_tbl (const char* filename) {
                     species->awacs_multiplier = 1.0f;
 
                 // let them know
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "$AwacsMultiplier not specified for species %s in "
                     "species_defs.tbl!  Defaulting to %.2f.\n",

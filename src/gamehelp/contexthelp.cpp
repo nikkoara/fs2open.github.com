@@ -100,7 +100,7 @@ int help_overlay_get_index (const char* overlay_name) {
 
 // query whether a help overlay is active (ie being displayed)
 int help_overlay_active (int overlay_id) {
-    Assert (overlay_id < MAX_HELP_OVERLAYS);
+    ASSERT (overlay_id < MAX_HELP_OVERLAYS);
 
     if (overlay_id < 0) { return 0; }
 
@@ -109,7 +109,7 @@ int help_overlay_active (int overlay_id) {
 
 // stop displaying a help overlay
 void help_overlay_set_state (int overlay_id, int resolution_index, int state) {
-    Assert (overlay_id < MAX_HELP_OVERLAYS);
+    ASSERT (overlay_id < MAX_HELP_OVERLAYS);
 
     if ((overlay_id >= 0) && (overlay_id < num_help_overlays) &&
         (resolution_index >= 0) &&
@@ -128,7 +128,7 @@ void help_overlay_set_state (int overlay_id, int resolution_index, int state) {
 
 // maybe blit a bitmap of a help overlay to the screen
 void help_overlay_maybe_blit (int overlay_id, int resolution_index) {
-    Assert (overlay_id < MAX_HELP_OVERLAYS);
+    ASSERT (overlay_id < MAX_HELP_OVERLAYS);
 
     if ((overlay_id >= 0) && (Help_overlay_flags & (1 << overlay_id)) &&
         (resolution_index >= 0) &&
@@ -149,7 +149,7 @@ void create_grey_shader () {
     tmp = 0.4f/3.0f;
 
     // The c matrix brightens everything a bit.
-//	c = 0.125f;
+// c = 0.125f;
     c = 0.110f;*/
 
     gr_create_shader (&Grey_shader, 34, 34, 34, 168);
@@ -257,14 +257,14 @@ void help_overlay_init () {
     // load right_bracket bitmap
     help_right_bracket_bitmap = bm_load ("right_bracket");
     // we failed to load the bitmap - this is very bad
-    Assertion (
+    ASSERTX (
         help_right_bracket_bitmap >= 0,
         "Failed to load bitmap right_bracket for help overlay\n");
 
     // load left_bracket bitmap
     help_left_bracket_bitmap = bm_load ("left_bracket");
     // we failed to load the bitmap - this is very bad
-    Assertion (
+    ASSERTX (
         help_left_bracket_bitmap >= 0,
         "Failed to load bitmap left_bracket for help overlay\n");
 
@@ -308,14 +308,14 @@ void parse_helptbl (const char* filename) {
 
             if (overlay_id < 0) {
                 if (num_help_overlays >= MAX_HELP_OVERLAYS) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Could not load help overlay '%s' as maximum number "
                         "of help overlays was reached (Max is %d)",
                         name, MAX_HELP_OVERLAYS);
 
                     if (!skip_to_string ("$end")) {
-                        fs2::dialog::error (
+                        ASSERTF (
                             LOCATION,
                             "Couldn't find $end. Help.tbl or -hlp.tbm is "
                             "invalid.\n");
@@ -350,7 +350,7 @@ void parse_helptbl (const char* filename) {
             }
 
             if (help_overlaylist[overlay_id].num_resolutions < 1) {
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION,
                     "+resolutions in %s is %d. (Must be 1 or greater)",
                     filename, help_overlaylist[overlay_id].num_resolutions);
@@ -517,7 +517,9 @@ void parse_helptbl (const char* filename) {
                     // -noparseerrors is set
                     break;
                 case 4: // $end
-                default: UNREACHABLE ("This should never happen.\n"); break;
+                default:
+                    ASSERT (0);
+                    break;
                 }
             } // end while
             required_string ("$end");
@@ -539,7 +541,7 @@ void help_overlay_blit (int overlay_id, int resolution_index) {
     int rbracketcount = help_overlaylist[overlay_id].rbracketcount;
     int lbracketcount = help_overlaylist[overlay_id].lbracketcount;
 
-    Assert (overlay_id >= 0 && overlay_id < MAX_HELP_OVERLAYS);
+    ASSERT (overlay_id >= 0 && overlay_id < MAX_HELP_OVERLAYS);
 
     // this draws each line of help text with white on black text (use the
     // first resolution index for the string)

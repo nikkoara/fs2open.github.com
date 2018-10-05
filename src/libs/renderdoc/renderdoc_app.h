@@ -96,7 +96,7 @@ enum RENDERDOC_CaptureOption {
     // Default - disabled
     //
     // 1 - Enable built-in API debugging features and records the results into
-    //     the capture logfile, which is matched up with events on replay
+    // the capture logfile, which is matched up with events on replay
     // 0 - no API debugging is forcibly enabled
     eRENDERDOC_Option_APIValidation = 2,
     eRENDERDOC_Option_DebugDeviceMode = 2, // deprecated name of this enum
@@ -115,7 +115,7 @@ enum RENDERDOC_CaptureOption {
     // Default - disabled
     //
     // 1 - Only captures callstacks for drawcall type API events.
-    //     Ignored if CaptureCallstacks is disabled
+    // Ignored if CaptureCallstacks is disabled
     // 0 - Callstacks, if enabled, are captured for every event.
     eRENDERDOC_Option_CaptureCallstacksOnlyDraws = 4,
 
@@ -137,7 +137,7 @@ enum RENDERDOC_CaptureOption {
     //
     // 1 - Verify any writes to mapped buffers
     // 0 - No verification is performed, and overwriting bounds may cause
-    //     crashes or corruption in RenderDoc
+    // crashes or corruption in RenderDoc
     eRENDERDOC_Option_VerifyMapWrites = 6,
 
     // Hooks any system API calls that create child processes, and injects
@@ -156,7 +156,7 @@ enum RENDERDOC_CaptureOption {
     // Default - disabled
     //
     // 1 - all live resources at the time of capture are included in the log
-    //     and available for inspection
+    // and available for inspection
     // 0 - only the resources referenced by the captured frame are included
     eRENDERDOC_Option_RefAllResources = 8,
 
@@ -168,10 +168,10 @@ enum RENDERDOC_CaptureOption {
     //
     // 1 - initial contents at the start of each captured frame are saved, even
     // if
-    //     they are later overwritten or cleared before being used.
+    // they are later overwritten or cleared before being used.
     // 0 - unless a read is detected, initial contents will not be saved and
     // will
-    //     appear as black or empty data.
+    // appear as black or empty data.
     eRENDERDOC_Option_SaveAllInitials = 9,
 
     // In APIs that allow for the recording of command lists to be replayed
@@ -190,7 +190,7 @@ enum RENDERDOC_CaptureOption {
     //
     // 1 - All command lists are captured from the start of the application
     // 0 - Command lists are only captured if their recording begins during
-    //     the period when a frame capture is in progress.
+    // the period when a frame capture is in progress.
     eRENDERDOC_Option_CaptureAllCmdLists = 10,
 
     // Mute API debugging output when the API validation mode option is enabled
@@ -524,15 +524,15 @@ enum RENDERDOC_Version {
 // 1.0.0 - initial release
 // 1.0.1 - Bugfix: IsFrameCapturing() was returning false for captures that
 // were triggered
-//         by keypress or TriggerCapture, instead of Start/EndFrameCapture.
+// by keypress or TriggerCapture, instead of Start/EndFrameCapture.
 // 1.0.2 - Refactor: Renamed eRENDERDOC_Option_DebugDeviceMode to
 // eRENDERDOC_Option_APIValidation 1.1.0 - Add feature:
 // TriggerMultiFrameCapture(). Backwards compatible with 1.0.x since the new
-//         function pointer is added to the end of the struct, the original
-//         layout is identical
+// function pointer is added to the end of the struct, the original
+// layout is identical
 // 1.1.1 - Refactor: Renamed remote access to target control (to better
 // disambiguate from remote
-//         replay/remote server concept in replay UI)
+// replay/remote server concept in replay UI)
 
 // eRENDERDOC_API_Version_1_1_0
 struct RENDERDOC_API_1_1_0 {
@@ -637,15 +637,15 @@ struct RENDERDOC_API_1_1_1 {
 // functionality etc has to be done also before initialising any APIs.
 //
 // Parameters:
-//   version is a single value from the RENDERDOC_Version above.
+// version is a single value from the RENDERDOC_Version above.
 //
-//   outAPIPointers will be filled out with a pointer to the corresponding
-//   struct of function pointers.
+// outAPIPointers will be filled out with a pointer to the corresponding
+// struct of function pointers.
 //
 // Returns:
-//   1 - if the outAPIPointers has been filled with a pointer to the API struct
-//   requested 0 - if the requested version is not supported or the arguments
-//   are invalid.
+// 1 - if the outAPIPointers has been filled with a pointer to the API struct
+// requested 0 - if the requested version is not supported or the arguments
+// are invalid.
 //
 typedef int(RENDERDOC_CC* pRENDERDOC_GetAPI) (
     RENDERDOC_Version version, void** outAPIPointers);

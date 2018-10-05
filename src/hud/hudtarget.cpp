@@ -125,8 +125,8 @@ static int Target_newest_ship_timestamp;
 static int Target_next_turret_timestamp;
 
 // animation frames for the hud targeting gauges
-// frames:	0	=>		out of range lead
-//				1	=>		in range lead
+// frames:      0       =>              out of range lead
+// 1       =>              in range lead
 float Lead_indicator_half[NUM_HUD_RETICLE_STYLES][GR_NUM_RESOLUTIONS][2] = {
     { {
           // GR_640
@@ -155,7 +155,7 @@ char Lead_fname[NUM_HUD_RETICLE_STYLES][GR_NUM_RESOLUTIONS][MAX_FILENAME_LEN] =
     { { "lead1_fs1", "2_lead1_fs1" }, { "lead1", "2_lead1" } };
 
 // animation frames for the countermeasures gauge
-// frames:	0	=>		background
+// frames:      0       =>              background
 hud_frames Cmeasure_gauge;
 int Cmeasure_gauge_loaded = 0;
 int Cm_coords[GR_NUM_RESOLUTIONS][2] = { { // GR_640
@@ -384,7 +384,7 @@ weapon_flash Weapon_flash_info;
 // Data used for the proximity warning
 typedef struct homing_beep_info {
     sound_handle snd_handle; // sound handle for last played beep
-    fix last_time_played;    //	time beep was last played
+    fix last_time_played;    // time beep was last played
     int min_cycle_time;      // time (in ms) for fastest cycling of the sound
     int max_cycle_time;      // time (in ms) for slowest cycling of the sound
     float min_cycle_dist;    // distance at which fastest cycling occurs
@@ -433,14 +433,14 @@ ship_subsys* advance_subsys (ship_subsys* cur, int next_flag) {
 // select a sorted turret subsystem on a ship if no other subsys has been
 // selected
 void hud_maybe_set_sorted_turret_subsys (ship* shipp) {
-    Assert (
+    ASSERT (
         (Player_ai->target_objnum >= 0) &&
         (Player_ai->target_objnum < MAX_OBJECTS));
     if (!((Player_ai->target_objnum >= 0) &&
           (Player_ai->target_objnum < MAX_OBJECTS))) {
         return;
     }
-    Assert (Objects[Player_ai->target_objnum].type == OBJ_SHIP);
+    ASSERT (Objects[Player_ai->target_objnum].type == OBJ_SHIP);
     if (Objects[Player_ai->target_objnum].type != OBJ_SHIP) { return; }
 
     if (Ship_info[shipp->ship_info_index].is_big_or_huge ()) {
@@ -451,7 +451,7 @@ void hud_maybe_set_sorted_turret_subsys (ship* shipp) {
 }
 
 // -----------------------------------------------------------------------
-//	clear out the linked list of targets in the reticle
+// clear out the linked list of targets in the reticle
 void hud_reticle_clear_list (reticle_list* rlist) {
     reticle_list* cur;
     for (cur = GET_FIRST (rlist); cur != END_OF_LIST (rlist);
@@ -462,7 +462,7 @@ void hud_reticle_clear_list (reticle_list* rlist) {
 }
 
 // --------------------------------------------------------------------------------------
-//	hud_reticle_list_init()
+// hud_reticle_list_init()
 void hud_reticle_list_init () {
     int i;
 
@@ -474,7 +474,7 @@ void hud_reticle_list_init () {
 }
 
 // --------------------------------------------------------------------------------------
-//	hud_check_reticle_list()
+// hud_check_reticle_list()
 //
 //
 void hud_check_reticle_list () {
@@ -498,7 +498,7 @@ void hud_check_reticle_list () {
 }
 
 // --------------------------------------------------------------------------------------
-//	hud_reticle_list_find_free()
+// hud_reticle_list_find_free()
 //
 //
 int hud_reticle_list_find_free () {
@@ -510,7 +510,7 @@ int hud_reticle_list_find_free () {
     }
 
     if (i == MAX_RETICLE_TARGETS) {
-        //		nprintf(("Warning","Warning ==> Ran out of reticle target
+        // nprintf(("Warning","Warning ==> Ran out of reticle target
         // elements...\n"));
         return -1;
     }
@@ -519,7 +519,7 @@ int hud_reticle_list_find_free () {
 }
 
 // --------------------------------------------------------------------------------------
-//	hud_stuff_reticle_list()
+// hud_stuff_reticle_list()
 //
 //
 #define RETICLE_DEFAULT_DIST 100000.0f
@@ -539,13 +539,13 @@ void hud_stuff_reticle_list (
 }
 
 // --------------------------------------------------------------------------------------
-//	hud_reticle_list_update()
+// hud_reticle_list_update()
 //
-//	Update Reticle_cur_list with an object that lies in the reticle
+// Update Reticle_cur_list with an object that lies in the reticle
 //
-//	parmeters:	objp		=>		object pointer to target
-//					measure	=>		distance or dot product, depending on
-// dot_flag 					dot_flag	=>		if 0, measure is distance, if 1
+// parmeters:      objp            =>              object pointer to target
+// measure =>              distance or dot product, depending on
+// dot_flag                                     dot_flag        =>              if 0, measure is distance, if 1
 // measure is dot
 //
 void hud_reticle_list_update (object* objp, float measure, int dot_flag) {
@@ -605,9 +605,9 @@ void hud_reticle_list_update (object* objp, float measure, int dot_flag) {
 }
 
 // --------------------------------------------------------------------------------------
-//	hud_reticle_pick_target()
+// hud_reticle_pick_target()
 //
-//	Pick a target from Reticle_cur_list, based on what is in Reticle_save_list
+// Pick a target from Reticle_cur_list, based on what is in Reticle_save_list
 //
 //
 object* hud_reticle_pick_target () {
@@ -823,9 +823,9 @@ void hud_target_hotkey_select (int k) {
     // set the current target to be the "next" ship in the list.  Scan the list
     // to see if our current target is in the set.  If so, target the next ship
     // in the list, otherwise target the first
-    // set	first_target - first visible item in list
-    //			target - item in list that is the player's currently selected
-    // target 			next_target -	next visible item in list following
+    // set      first_target - first visible item in list
+    // target - item in list that is the player's currently selected
+    // target                   next_target -   next visible item in list following
     // target
     target_objnum = Player_ai->target_objnum;
     target = NULL;
@@ -852,7 +852,7 @@ void hud_target_hotkey_select (int k) {
     // if current target is not in list, then target and next_target will be
     // NULL so we use the first found target
     if (target == NULL) {
-        Assert (first_target != NULL);
+        ASSERT (first_target != NULL);
         if (first_target != NULL) {
             target = first_target;
             next_target = first_target;
@@ -884,7 +884,7 @@ void hud_target_hotkey_select (int k) {
         }
     }
 
-    Assert (target != END_OF_LIST (plist));
+    ASSERT (target != END_OF_LIST (plist));
 
     if (Player_obj != target->objp) {
         set_target_objnum (Player_ai, OBJ_INDEX (target->objp));
@@ -978,7 +978,7 @@ void hud_init_ballistic_index () {
 // in the object used list
 //
 void hud_init_targeting () {
-    Assert (Player_ai != NULL);
+    ASSERT (Player_ai != NULL);
 
     // make sure there is no current target
     set_target_objnum (Player_ai, -1);
@@ -1015,7 +1015,7 @@ void hud_init_targeting () {
     }
 }
 
-//	Target the next or previous subobject on the currently selected ship, based
+// Target the next or previous subobject on the currently selected ship, based
 // on next_flag.
 void hud_target_subobject_common (int next_flag) {
     if (Player_ai->target_objnum == -1) {
@@ -1076,7 +1076,7 @@ object* advance_fb (object* objp, int next_flag) {
         return GET_LAST (objp);
 }
 
-//	Target the previous subobject on the currently selected ship.
+// Target the previous subobject on the currently selected ship.
 //
 
 void hud_target_prev_subobject () { hud_target_subobject_common (0); }
@@ -1087,7 +1087,7 @@ void hud_target_next_subobject () { hud_target_subobject_common (1); }
 // next target in the object used list whose team matches the team parameter.
 // The player is NOT included in the target list.
 //
-//	parameters:		team_mask => team(s) of ship to target next
+// parameters:             team_mask => team(s) of ship to target next
 //
 
 void hud_target_common (int team_mask, int next_flag) {
@@ -1136,7 +1136,7 @@ void hud_target_common (int team_mask, int next_flag) {
                 if (jnp->GetSCPObject () == A) break;
             }
 
-            Assertion (
+            ASSERTX (
                 jnp != Jump_nodes.end (),
                 "Failed to find jump node with object index %d; trace out and "
                 "fix!\n",
@@ -1199,23 +1199,23 @@ ship_obj* advance_ship (ship_obj* so, int next_flag) {
 }
 
 /// \brief Iterates down to and selects the next target in a linked list
-///        fashion ordered from closest to farthest from the
-///        attacked_object_number, returning the next valid target.
+/// fashion ordered from closest to farthest from the
+/// attacked_object_number, returning the next valid target.
 ///
 ///
 /// \param targeting_from_closest_to_farthest[in]   targets the closest object
-///                                     if true. Targets the farthest
-///                                     away object if false.
+/// if true. Targets the farthest
+/// away object if false.
 /// \param valid_team_mask[in]          A bit mask that defines the desired
-///                                     victim team.
+/// victim team.
 /// \param attacked_object_number[in]   The objectid that is under attack.
-///                                     Defaults to -1.
+/// Defaults to -1.
 /// \param target_filters               Applies a bit filter to exclude certain
-///                                     classes of objects from being targeted.
-///                                     Defaults to (SIF_CARGO | SIF_NAVBUOY)
+/// classes of objects from being targeted.
+/// Defaults to (SIF_CARGO | SIF_NAVBUOY)
 ///
 /// \returns         The next object to target if targeting was successful.
-///                  Returns NULL if targeting was unsuccessful.
+/// Returns NULL if targeting was unsuccessful.
 static object* select_next_target_by_distance (
     const bool targeting_from_closest_to_farthest, const int valid_team_mask,
     const int attacked_object_number = -1,
@@ -1367,8 +1367,8 @@ ship_obj* get_ship_obj_ptr_from_index (int index);
 //
 // Target the closest locked missile that is locked on locked_obj
 //
-//	input:	source_obj	=>		pointer to object that fired weapon
-//				next_flag	=>		0 -> previous 1 -> next
+// input:  source_obj      =>              pointer to object that fired weapon
+// next_flag       =>              0 -> previous 1 -> next
 //
 // NOTE: this function is only allows targeting bombs
 void hud_target_missile (object* source_obj, int next_flag) {
@@ -1381,7 +1381,7 @@ void hud_target_missile (object* source_obj, int next_flag) {
 
     if (source_obj->type != OBJ_SHIP) return;
 
-    Assert (Ships[source_obj->instance].ai_index != -1);
+    ASSERT (Ships[source_obj->instance].ai_index != -1);
     aip = &Ai_info[Ships[source_obj->instance].ai_index];
 
     end = &Missile_obj_list;
@@ -1400,11 +1400,11 @@ void hud_target_missile (object* source_obj, int next_flag) {
     for (mo = start; mo != end; mo = advance_missile_obj (mo, next_flag)) {
         if (mo == &Missile_obj_list) { continue; }
 
-        Assert (mo->objnum >= 0 && mo->objnum < MAX_OBJECTS);
+        ASSERT (mo->objnum >= 0 && mo->objnum < MAX_OBJECTS);
         A = &Objects[mo->objnum];
 
-        Assert (A->type == OBJ_WEAPON);
-        Assert ((A->instance >= 0) && (A->instance < MAX_WEAPONS));
+        ASSERT (A->type == OBJ_WEAPON);
+        ASSERT ((A->instance >= 0) && (A->instance < MAX_WEAPONS));
         wp = &Weapons[A->instance];
         wip = &Weapon_info[wp->weapon_info_index];
 
@@ -1628,8 +1628,8 @@ int turret_compare_func (const void* e1, const void* e2) {
     eval_next_turret* p1 = (eval_next_turret*)e1;
     eval_next_turret* p2 = (eval_next_turret*)e2;
 
-    Assert (p1->type != TYPE_NONE);
-    Assert (p2->type != TYPE_NONE);
+    ASSERT (p1->type != TYPE_NONE);
+    ASSERT (p2->type != TYPE_NONE);
 
     if (p1->type != p2->type) { return (p1->type - p2->type); }
     else {
@@ -1831,7 +1831,7 @@ void hud_target_live_turret (
 
         // if (live_turret) {
         // debug info
-        //	mprintf(("name %s, index: %d, type: %d\n",
+        // mprintf(("name %s, index: %d, type: %d\n",
         // live_turret->system_info->subobj_name, next_index,
         // ent[next_index].type));
         //}
@@ -1854,8 +1854,8 @@ void hud_target_live_turret (
 //
 // Target the closest locked missile that is locked on locked_obj
 //
-//	input:	locked_obj	=>		pointer to object that you want to find
-//										closest missile to
+// input:  locked_obj      =>              pointer to object that you want to find
+// closest missile to
 //
 void hud_target_closest_locked_missile (object* locked_obj) {
     object *A, *nearest_obj = NULL;
@@ -1869,12 +1869,12 @@ void hud_target_closest_locked_missile (object* locked_obj) {
 
     for (mo = GET_NEXT (&Missile_obj_list);
          mo != END_OF_LIST (&Missile_obj_list); mo = GET_NEXT (mo)) {
-        Assert (mo->objnum >= 0 && mo->objnum < MAX_OBJECTS);
+        ASSERT (mo->objnum >= 0 && mo->objnum < MAX_OBJECTS);
         A = &Objects[mo->objnum];
 
         if (A->type != OBJ_WEAPON) { continue; }
 
-        Assert ((A->instance >= 0) && (A->instance < MAX_WEAPONS));
+        ASSERT ((A->instance >= 0) && (A->instance < MAX_WEAPONS));
         wp = &Weapons[A->instance];
         wip = &Weapon_info[wp->weapon_info_index];
 
@@ -1898,7 +1898,7 @@ void hud_target_closest_locked_missile (object* locked_obj) {
     } // end for
 
     if (nearest_dist < 10000.0f) {
-        Assert (nearest_obj);
+        ASSERT (nearest_obj);
         set_target_objnum (Player_ai, OBJ_INDEX (nearest_obj));
         hud_shield_hit_reset (nearest_obj);
         target_found = TRUE;
@@ -1913,7 +1913,7 @@ void hud_target_closest_locked_missile (object* locked_obj) {
 void hud_target_auto_target_next () {
     if (Framecount < 2) { return; }
 
-    //	No auto-targeting after dead.
+    // No auto-targeting after dead.
     if (Game_mode & (GM_DEAD | GM_DEAD_BLEW_UP)) return;
 
     // try target next ship in hotkey set, if any -- Backslash
@@ -1956,7 +1956,7 @@ float hud_find_target_distance (object* targetee, object* targeter) {
             Ship_info[Ships[targetee->instance].ship_info_index].model_num;
         break;
     case OBJ_DEBRIS:
-        //		model_num = Debris[targetee->instance].model_num;
+        // model_num = Debris[targetee->instance].model_num;
         break;
     case OBJ_WEAPON:
         // Don't find model_num since circles would work better
@@ -2000,14 +2000,14 @@ float hud_find_target_distance (object* targetee, object* targeter) {
 /// turrets are aimed at player)
 ///
 /// \param[in, out] *esct The Evaluate Ship as Closest Target (esct) that will
-///                       be used to determine if a target is a valid, harmful
-///                       target and, if so, sets the min_distance attribute
-///                       to the distance of either the attacker or the
-///                       closest attacker's turret. Otherwise, min_distance
-///                       is set to FLT_MAX
+/// be used to determine if a target is a valid, harmful
+/// target and, if so, sets the min_distance attribute
+/// to the distance of either the attacker or the
+/// closest attacker's turret. Otherwise, min_distance
+/// is set to FLT_MAX
 ///
 /// \return true if either the ship or one of it's turrets are attacking the
-///                       player. Otherwise, returns false.
+/// player. Otherwise, returns false.
 bool evaluate_ship_as_closest_target (esct* esct_p) {
     int targeting_player, turret_is_attacking;
     ship_subsys* ss;
@@ -2019,7 +2019,7 @@ bool evaluate_ship_as_closest_target (esct* esct_p) {
     turret_is_attacking = FALSE;
 
     object* objp = &Objects[esct_p->shipp->objnum];
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp->type == OBJ_SHIP);
     if (objp->type != OBJ_SHIP) { return false; }
 
     // player being targeted, so we will want closest distance from player
@@ -2131,7 +2131,7 @@ bool evaluate_ship_as_closest_target (esct* esct_p) {
 }
 
 /// \brief Sets the Players[Player_num].current_target to the closest ship to
-///        the player that matches the team passed as a paramater.
+/// the player that matches the team passed as a paramater.
 ///
 /// The current algorithm is to simply iterate through the objects and
 /// calculate the magnitude of the vector that connects the player to the
@@ -2140,24 +2140,24 @@ bool evaluate_ship_as_closest_target (esct* esct_p) {
 /// since we are only comparing magnitudes.
 ///
 /// \param[in] team_mask       team of closest ship that should be targeted.
-///                            Default value is -1, if team doesn't matter.
+/// Default value is -1, if team doesn't matter.
 ///
 /// \param[in] attacked_objnum object number of ship that is being attacked
 /// \param[in] play_fail_snd   boolean, whether to play SND_TARGET_FAIL
-///                            (needed, since function called repeatedly when
-///                            auto-targeting is enabled, and we don't want a
-///                            string of fail sounds playing). This is a
-///                            default parameter with a value of TRUE.
+/// (needed, since function called repeatedly when
+/// auto-targeting is enabled, and we don't want a
+/// string of fail sounds playing). This is a
+/// default parameter with a value of TRUE.
 /// \param[in] filter          OPTIONAL parameter (default value 0): when set
-///                            to TRUE, only fighters and bombers are
-///                            considered for new targets.
+/// to TRUE, only fighters and bombers are
+/// considered for new targets.
 /// \param[in] get_closest_turret_attacking_player Finds the closest turret
-///                            attacking the player if true. Otherwise, only
-///                            finds the closest attacking ship, targeting the
-///                            turret closest to the player.
+/// attacking the player if true. Otherwise, only
+/// finds the closest attacking ship, targeting the
+/// turret closest to the player.
 ///
 /// \return: true (non-zero) if a target was acquired. Returns false (zero) if
-///          no target was acquired.
+/// no target was acquired.
 int hud_target_closest (
     int team_mask, int attacked_objnum, int play_fail_snd, int filter,
     int get_closest_turret_attacking_player) {
@@ -2279,8 +2279,8 @@ void hud_update_closest_turret () {
 
     /*
         float nearest_distance, new_distance;
-        ship_subsys	*ss, *closest_subsys;
-        ship	*shipp;
+        ship_subsys     *ss, *closest_subsys;
+        ship    *shipp;
         object *objp;
 
         nearest_distance = FLT_MAX;
@@ -2419,11 +2419,11 @@ int object_targetable_in_reticle (object* target_objp) {
 //
 // Method: A ray is cast from the center of the reticle, and we keep track of
 // any eligible object
-//         the ray intersects.  We take the ship closest to us that intersects
-//         an object.
+// the ray intersects.  We take the ship closest to us that intersects
+// an object.
 //
-//         Since this method may work poorly with objects that are far away,
-//         hud_target_in_reticle_old() is called if no intersections are found.
+// Since this method may work poorly with objects that are far away,
+// hud_target_in_reticle_old() is called if no intersections are found.
 //
 //
 #define TARGET_IN_RETICLE_DISTANCE 10000.0f
@@ -2438,7 +2438,7 @@ void hud_target_in_reticle_new () {
     hud_reticle_clear_list (&Reticle_cur_list);
     Reticle_save_timestamp = timestamp (RESET_TARGET_IN_RETICLE);
 
-    //	Get 3d vector through center of reticle
+    // Get 3d vector through center of reticle
     vm_vec_scale_add (
         &terminus, &Eye_position, &Player_obj->orient.vec.fvec,
         TARGET_IN_RETICLE_DISTANCE);
@@ -2490,7 +2490,7 @@ void hud_target_in_reticle_new () {
 
             mc.model_num = jnp->GetModelNumber ();
             break;
-        default: Int3 (); //	Illegal object type.
+        default: Int3 (); // Illegal object type.
         }
 
         if (mc.model_num == -1) {
@@ -2511,7 +2511,7 @@ void hud_target_in_reticle_new () {
             mc.pos = &A->pos;          // The object's position
             mc.p0 = &Eye_position;     // Point 1 of ray to check
             mc.p1 = &terminus;         // Point 2 of ray to check
-            mc.flags = MC_CHECK_MODEL; // | MC_ONLY_BOUND_BOX;		// check
+            mc.flags = MC_CHECK_MODEL; // | MC_ONLY_BOUND_BOX;          // check
                                        // the model, but only its bounding box
 
             model_collide (&mc);
@@ -2535,11 +2535,11 @@ void hud_target_in_reticle_new () {
 //
 // Method:  take the dot product of the foward vector and the vector to target.
 // Take
-//          the one that is closest to 1 and at least MIN_DOT_FOR_TARGET
+// the one that is closest to 1 and at least MIN_DOT_FOR_TARGET
 //
-//	IMPORTANT:  The MIN_DOT_FOR_TARGET value was arrived at by trial and error
+// IMPORTANT:  The MIN_DOT_FOR_TARGET value was arrived at by trial and error
 // and
-//             is only valid for the HUD reticle in use at that time.
+// is only valid for the HUD reticle in use at that time.
 
 #define MIN_DOT_FOR_TARGET 0.9726 // fov for targeting in reticle
 
@@ -2599,11 +2599,11 @@ void hud_target_in_reticle_old () {
 //
 // Method:  take the dot product of the foward vector and the vector to target.
 // Take
-//          the one that is closest to 1 and at least MIN_DOT_FOR_TARGET
+// the one that is closest to 1 and at least MIN_DOT_FOR_TARGET
 //
-//	IMPORTANT:  The MIN_DOT_FOR_TARGET value was arrived at by trial and error
+// IMPORTANT:  The MIN_DOT_FOR_TARGET value was arrived at by trial and error
 // and
-//             is only valid for the HUD reticle in use at that time.
+// is only valid for the HUD reticle in use at that time.
 //
 
 void hud_target_subsystem_in_reticle () {
@@ -2675,8 +2675,8 @@ void hud_target_subsystem_in_reticle () {
 #define T_OFFSET_FROM_CIRCLE -13
 #define T_BASE_LENGTH 4
 
-//	On entry:
-//		color set
+// On entry:
+// color set
 void HudGaugeOrientationTee::renderOrientation (
     object* from_objp, object* to_objp, matrix* from_orientp) {
     float dot_product;
@@ -2924,9 +2924,9 @@ void HudGaugeReticleTriangle::renderTriangleMissileTail (
     gr_reset_screen_scale ();
 }
 
-//	Render a triangle on the outside of the targeting circle.
-//	Must be inside a g3_start_frame().
-//	If aspect_flag !0, then render filled, indicating aspect lock.
+// Render a triangle on the outside of the targeting circle.
+// Must be inside a g3_start_frame().
+// If aspect_flag !0, then render filled, indicating aspect lock.
 // If show_interior !0, then point inwards to positions inside reticle
 void HudGaugeReticleTriangle::renderTriangle (
     vec3d* hostile_pos, int aspect_flag, int show_interior, int split_tri) {
@@ -3033,8 +3033,8 @@ void HudGaugeReticleTriangle::renderTriangle (
     }
 }
 
-//	Show all homing missiles locked onto the player.
-//	Also, play the beep!
+// Show all homing missiles locked onto the player.
+// Also, play the beep!
 void hud_process_homing_missiles () {
     object* A;
     missile_obj* mo;
@@ -3047,7 +3047,7 @@ void hud_process_homing_missiles () {
     for (mo = GET_NEXT (&Missile_obj_list);
          mo != END_OF_LIST (&Missile_obj_list); mo = GET_NEXT (mo)) {
         A = &Objects[mo->objnum];
-        Assert ((A->instance >= 0) && (A->instance < MAX_WEAPONS));
+        ASSERT ((A->instance >= 0) && (A->instance < MAX_WEAPONS));
 
         wp = &Weapons[A->instance];
 
@@ -3066,7 +3066,7 @@ void hud_process_homing_missiles () {
         }
     }
 
-    //	See if need to play warning beep.
+    // See if need to play warning beep.
     if (nearest_dist < Homing_beep.max_cycle_dist) {
         float delta_time;
         float cycle_time;
@@ -3117,7 +3117,7 @@ void HudGaugeMissileTriangles::render (float /*frametime*/) {
     for (mo = GET_NEXT (&Missile_obj_list);
          mo != END_OF_LIST (&Missile_obj_list); mo = GET_NEXT (mo)) {
         A = &Objects[mo->objnum];
-        Assert ((A->instance >= 0) && (A->instance < MAX_WEAPONS));
+        ASSERT ((A->instance >= 0) && (A->instance < MAX_WEAPONS));
 
         wp = &Weapons[A->instance];
 
@@ -3174,7 +3174,7 @@ void hud_process_remote_detonate_missile () {
     // check for currently locked missiles (highest precedence)
     for (mo = GET_FIRST (&Missile_obj_list);
          mo != END_OF_LIST (&Missile_obj_list); mo = GET_NEXT (mo)) {
-        Assert (mo->objnum >= 0 && mo->objnum < MAX_OBJECTS);
+        ASSERT (mo->objnum >= 0 && mo->objnum < MAX_OBJECTS);
         mobjp = &Objects[mo->objnum];
 
         if ((Player_obj != NULL) &&
@@ -3221,7 +3221,7 @@ void hud_show_message_sender () {
     if (Message_shipnum == -1) return;
 
     targetp = &Objects[Ships[Message_shipnum].objnum];
-    Assert (targetp != NULL);
+    ASSERT (targetp != NULL);
 
     if (targetp->type != OBJ_SHIP) {
         // if it's not a ship (maybe it got ship-vanished in the middle of
@@ -3253,7 +3253,7 @@ void hud_show_message_sender () {
         return;
     }
 
-    Assert (targetp->instance >= 0 && targetp->instance < MAX_SHIPS);
+    ASSERT (targetp->instance >= 0 && targetp->instance < MAX_SHIPS);
 
     // check the object flags to see if this ship is gone.  If so, then don't
     // do this stuff anymore
@@ -3311,9 +3311,9 @@ void hud_prune_hotkeys () {
             remove_item = 0;
 
             objp = hitem->objp;
-            Assert (objp != NULL);
+            ASSERT (objp != NULL);
             if (objp->type == OBJ_SHIP) {
-                Assert (objp->instance >= 0 && objp->instance < MAX_SHIPS);
+                ASSERT (objp->instance >= 0 && objp->instance < MAX_SHIPS);
                 sp = &Ships[objp->instance];
             }
             else {
@@ -3369,7 +3369,7 @@ void hud_show_selection_set () {
     set = Players[Player_num].current_hotkey_set;
     if (set == -1) return;
 
-    Assert ((set >= 0) && (set < MAX_KEYED_TARGETS));
+    ASSERT ((set >= 0) && (set < MAX_KEYED_TARGETS));
     plist = &(Players[Player_num].keyed_targets[set]);
 
     count = 0;
@@ -3387,12 +3387,12 @@ void hud_show_selection_set () {
     for (hitem = GET_FIRST (plist); hitem != END_OF_LIST (plist);
          hitem = GET_NEXT (hitem)) {
         targetp = hitem->objp;
-        Assert (targetp != NULL);
+        ASSERT (targetp != NULL);
 
         ship* target_shipp = NULL;
 
-        Assert (targetp->type == OBJ_SHIP);
-        Assert (targetp->instance >= 0 && targetp->instance < MAX_SHIPS);
+        ASSERT (targetp->type == OBJ_SHIP);
+        ASSERT (targetp->instance >= 0 && targetp->instance < MAX_SHIPS);
         target_shipp = &Ships[targetp->instance];
 
         if ((Game_mode & GM_MULTIPLAYER) && (target_shipp == Player_ship)) {
@@ -3458,8 +3458,8 @@ void hud_show_selection_set () {
 // HUD.  Called once per frame.
 //
 // Must be inside a g3_start_frame()
-// input:	frametime	=>		time in seconds since last update
-//				in_cockpit	=>		flag (default value 1) indicating whether
+// input:       frametime       =>              time in seconds since last update
+// in_cockpit      =>              flag (default value 1) indicating whether
 // viewpoint is from cockpit or external
 void hud_show_targeting_gauges (float frametime) {
     vertex target_point; // temp vertex used to find screen position for 3-D
@@ -3535,9 +3535,9 @@ void hud_show_targeting_gauges (float frametime) {
     if (target_point.codes != 0) {
         // draw the offscreen indicator at the edge of the screen where the
         // target is closest to
-        Assert (Player_ai->target_objnum >= 0);
+        ASSERT (Player_ai->target_objnum >= 0);
 
-        // AL 11-11-97:	don't draw the indicator if the ship is messaging, the
+        // AL 11-11-97: don't draw the indicator if the ship is messaging, the
         // indicator is drawn in the message sending color in
         // hud_show_message_sender()
         if (Message_shipnum != Objects[Player_ai->target_objnum].instance) {
@@ -3662,7 +3662,7 @@ void HudGaugeHostileTriangle::render (float /*frametime*/) {
         bool in_frame = g3_in_frame () > 0;
         if (!in_frame) g3_start_frame (0);
 
-        // hud_set_iff_color( TEAM_HOSTILE, 1 );	//	Note: This should
+        // hud_set_iff_color( TEAM_HOSTILE, 1 );        //      Note: This should
         // really be TEAM_HOSTILE, not opposite of Player_ship->team.
         hud_set_iff_color (hostile_obj, 1);
         renderTriangle (&hostile_obj->pos, 0, 1, 0);
@@ -3715,7 +3715,7 @@ void hud_calculate_lead_pos (
 }
 
 // Return the bank number for the primary weapon that can fire the farthest,
-// from the number of active primary weapons input: range	=>	output
+// from the number of active primary weapons input: range       =>      output
 // parameter... it is the range of the selected bank
 int hud_get_best_primary_bank (float* range) {
     int i, best_bank, bank_to_fire, num_to_test;
@@ -3741,8 +3741,8 @@ int hud_get_best_primary_bank (float* range) {
 
         // calculate the range of the weapon, and only display the lead target
         // indicator if the weapon can actually hit the target
-        Assert (bank_to_fire >= 0 && bank_to_fire < swp->num_primary_banks);
-        Assert (swp->primary_bank_weapons[bank_to_fire] < MAX_WEAPON_TYPES);
+        ASSERT (bank_to_fire >= 0 && bank_to_fire < swp->num_primary_banks);
+        ASSERT (swp->primary_bank_weapons[bank_to_fire] < MAX_WEAPON_TYPES);
 
         if (swp->primary_bank_weapons[bank_to_fire] < 0) continue;
 
@@ -3767,7 +3767,7 @@ int hud_get_best_primary_bank (float* range) {
 }
 
 // -----------------------------------------------------------------------------
-//	polish_predicted_target_pos()
+// polish_predicted_target_pos()
 //
 // Called by the draw lead indicator code to predict where the enemy is going
 // to be
@@ -3821,7 +3821,7 @@ void HudGaugeLeadIndicator::initBitmaps (char* fname) {
     Lead_indicator_gauge.first_frame =
         bm_load_animation (fname, &Lead_indicator_gauge.num_frames);
     if (Lead_indicator_gauge.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 
@@ -3831,16 +3831,16 @@ void HudGaugeLeadIndicator::pageIn () {
 }
 
 // determine the correct frame to draw for the lead indicator
-// 0 -> center only	(in secondary range only)
-// 1 -> full			(in secondary and primary range)
-//	2 -> oustide only	(in primary range only)
+// 0 -> center only     (in secondary range only)
+// 1 -> full                    (in secondary and primary range)
+// 2 -> oustide only       (in primary range only)
 //
-// input:	prange	=>	range of current primary weapon
-//				srange	=>	range of current secondary weapon
-//				dist_to_target	=>	current dist to target
+// input:       prange  =>      range of current primary weapon
+// srange  =>      range of current secondary weapon
+// dist_to_target  =>      current dist to target
 //
-// exit:		0-2	=>	frame offset
-//				-1		=>	don't draw anything
+// exit:                0-2     =>      frame offset
+// -1              =>      don't draw anything
 int HudGaugeLeadIndicator::pickFrame (
     float prange, float srange, float dist_to_target) {
     int frame_offset = -1;
@@ -4011,10 +4011,10 @@ void HudGaugeLeadIndicator::renderLeadCurrentTarget () {
 
     // Determine "accurate" distance to target.
     // This is the distance from the player ship to:
-    //   (if targeting a subsystem) the distance to the subsystem centre
-    //     (playing it safe, will usually be in range at slightly further away
-    //     due to subsys radius)
-    //   (otherwise) the closest point on the bounding box of the target
+    // (if targeting a subsystem) the distance to the subsystem centre
+    // (playing it safe, will usually be in range at slightly further away
+    // due to subsys radius)
+    // (otherwise) the closest point on the bounding box of the target
     if (Player_ai->targeted_subsys != NULL) {
         dist_to_target = vm_vec_dist (&target_pos, &Player_obj->pos);
     }
@@ -4126,10 +4126,10 @@ void HudGaugeLeadIndicator::renderLeadQuick (
     else {
         rel_pos = NULL;
     }
-    //							vec3d firing_vec;
-    //							vm_vec_unrotate(&firing_vec,
+    // vec3d firing_vec;
+    // vm_vec_unrotate(&firing_vec,
     //&po->gun_banks[bank_to_fire].norm[pt], &obj->orient);
-    //							vm_vector_2_matrix(&firing_orient, &firing_vec,
+    // vm_vector_2_matrix(&firing_orient, &firing_vec,
     // NULL, NULL);
 
     // source_pos will contain the world coordinate of where to base the lead
@@ -4166,7 +4166,7 @@ void HudGaugeLeadSight::initBitmaps (char* fname) {
     Lead_sight.first_frame = bm_load_animation (fname, &Lead_sight.num_frames);
 
     if (Lead_sight.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
     else {
         int w, h;
@@ -4741,7 +4741,7 @@ void HudGaugeAutoTarget::initBitmaps (char* fname) {
     Toggle_frame.first_frame =
         bm_load_animation (fname, &Toggle_frame.num_frames);
     if (Toggle_frame.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 
@@ -4827,7 +4827,7 @@ void HudGaugeAutoSpeed::initBitmaps (char* fname) {
     Toggle_frame.first_frame =
         bm_load_animation (fname, &Toggle_frame.num_frames);
     if (Toggle_frame.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 
@@ -4892,9 +4892,9 @@ void HudGaugeAutoSpeed::pageIn () {
 }
 
 // Set the player target to the closest friendly repair ship
-// input:	goal_objnum	=>	Try to find repair ship where aip->goal_objnum
-// matches this output:	1	=>	A repair ship was targeted
-//				0	=>	No targeting change
+// input:       goal_objnum     =>      Try to find repair ship where aip->goal_objnum
+// matches this output: 1       =>      A repair ship was targeted
+// 0       =>      No targeting change
 int hud_target_closest_repair_ship (int goal_objnum) {
     object* A;
     object* nearest_obj = &obj_used_list;
@@ -5164,7 +5164,7 @@ void hud_target_last_transmit () {
 
     int play_fail_sound = 1;
     int transmit_index = Transmit_target_current_slot;
-    Assert (transmit_index >= 0);
+    ASSERT (transmit_index >= 0);
     for (i = 0; i < MAX_TRANSMIT_TARGETS; i++) {
         if (Transmit_target_list[transmit_index].objnum >= 0) {
             int transmit_objnum = Transmit_target_list[transmit_index].objnum;
@@ -5212,7 +5212,7 @@ void hud_target_last_transmit () {
     // hud_restore_subsystem_target(). -- MK, 9/15/99, 1:59 pm.
     int targeted_objnum;
     targeted_objnum = Transmit_target_list[transmit_index].objnum;
-    Assert ((targeted_objnum >= 0) && (targeted_objnum < MAX_OBJECTS));
+    ASSERT ((targeted_objnum >= 0) && (targeted_objnum < MAX_OBJECTS));
 
     if ((targeted_objnum >= 0) && (targeted_objnum < MAX_OBJECTS)) {
         set_target_objnum (
@@ -5231,9 +5231,9 @@ void hud_target_last_transmit_add (int ship_num) {
     int ship_objnum;
 
     ship_objnum = Ships[ship_num].objnum;
-    Assert (ship_objnum >= 0 && ship_objnum < MAX_OBJECTS);
+    ASSERT (ship_objnum >= 0 && ship_objnum < MAX_OBJECTS);
     ship_objp = &Objects[ship_objnum];
-    Assert (ship_objp->type == OBJ_SHIP);
+    ASSERT (ship_objp->type == OBJ_SHIP);
 
     // don't add ourselves to the list
     if (Player_obj == ship_objp) { return; }
@@ -5411,7 +5411,7 @@ void HudGaugeCmeasures::initBitmaps (char* fname) {
     Cmeasure_gauge.first_frame =
         bm_load_animation (fname, &Cmeasure_gauge.num_frames);
     if (Cmeasure_gauge.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 
@@ -5462,18 +5462,18 @@ void HudGaugeAfterburner::initBitmaps (char* fname) {
     Energy_bar.first_frame = bm_load_animation (fname, &Energy_bar.num_frames);
 
     if (Energy_bar.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 
-//	Render the HUD afterburner energy gauge
+// Render the HUD afterburner energy gauge
 void HudGaugeAfterburner::render (float /*frametime*/) {
     float percent_left;
     int clip_h, w, h;
 
     if (Energy_bar.first_frame == -1) { return; }
 
-    Assert (Player_ship);
+    ASSERT (Player_ship);
     if (!(Ship_info[Player_ship->ship_info_index]
               .flags[Ship::Info_Flags::Afterburner])) {
         // Goober5000 - instead of drawing an empty burner gauge, don't draw
@@ -5551,7 +5551,7 @@ void HudGaugeWeaponEnergy::initShowBallistics (bool show_ballistics) {
 void HudGaugeWeaponEnergy::initBitmaps (char* fname) {
     Energy_bar.first_frame = bm_load_animation (fname, &Energy_bar.num_frames);
     if (Energy_bar.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
     else {
         if (Energy_bar.num_frames != 4) {
@@ -5906,7 +5906,7 @@ void HudGaugeWeapons::initBitmapsPrimaryTop (
     primary_top[0].first_frame =
         bm_load_animation (fname, &primary_top[0].num_frames);
     if (primary_top[0].first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 
     primary_top[1].first_frame =
@@ -5923,7 +5923,7 @@ void HudGaugeWeapons::initBitmapsPrimaryMiddle (
     primary_middle[0].first_frame =
         bm_load_animation (fname, &primary_middle[0].num_frames);
     if (primary_middle[0].first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 
     primary_middle[1].first_frame =
@@ -5956,7 +5956,7 @@ void HudGaugeWeapons::initBitmapsSecondaryTop (
     secondary_top[0].first_frame =
         bm_load_animation (fname, &secondary_top[0].num_frames);
     if (secondary_top[0].first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 
     secondary_top[1].first_frame =
@@ -5973,7 +5973,7 @@ void HudGaugeWeapons::initBitmapsSecondaryMiddle (
     secondary_middle[0].first_frame =
         bm_load_animation (fname, &secondary_middle[0].num_frames);
     if (secondary_middle[0].first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 
     secondary_middle[1].first_frame =
@@ -5990,7 +5990,7 @@ void HudGaugeWeapons::initBitmapsSecondaryBottom (
     secondary_bottom[0].first_frame =
         bm_load_animation (fname, &secondary_bottom[0].num_frames);
     if (secondary_bottom[0].first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 
     secondary_bottom[1].first_frame =
@@ -6065,8 +6065,8 @@ void HudGaugeWeapons::render (float /*frametime*/) {
 
     if (Player_obj->type == OBJ_OBSERVER) return;
 
-    Assert (Player_obj->type == OBJ_SHIP);
-    Assert (Player_obj->instance >= 0 && Player_obj->instance < MAX_SHIPS);
+    ASSERT (Player_obj->type == OBJ_SHIP);
+    ASSERT (Player_obj->instance >= 0 && Player_obj->instance < MAX_SHIPS);
 
     sw = &Ships[Player_obj->instance].weapons;
     np = sw->num_primary_banks;
@@ -6502,7 +6502,7 @@ void HudGaugeOffscreen::calculatePosition (
     if (!(eye_vertex->flags & PF_PROJECTED)) g3_project_vertex (eye_vertex);
 
     if (eye_vertex->flags & PF_OVERFLOW) {
-        Int3 (); //	This is unlikely to happen, but can if a clip goes through
+        Int3 (); // This is unlikely to happen, but can if a clip goes through
                  // the player's eye.
         Player_ai->target_objnum = -1;
         return;
@@ -6571,17 +6571,17 @@ void HudGaugeOffscreen::calculatePosition (
     //
     //
     //
-    //              x3                x3
-    //            /  |                |  \.
-    //          /    |                |    \.
-    //        x1____x2                x2____x1
-    //               |                |
-    //        .......|................|............(xpos,ypos)
-    //               |                |
-    //        x4____x5                x5____x4
-    //         \     |                |     /
-    //           \   |                |   /
-    //              x6                x6
+    // x3                x3
+    // /  |                |  \.
+    // /    |                |    \.
+    // x1____x2                x2____x1
+    // |                |
+    // .......|................|............(xpos,ypos)
+    // |                |
+    // x4____x5                x5____x4
+    // \     |                |     /
+    // \   |                |   /
+    // x6                x6
     //
     //
 
@@ -6735,7 +6735,7 @@ void HudGaugeWarheadCount::initBitmap (char* fname) {
     Warhead.first_frame = bm_load_animation (fname, &Warhead.num_frames);
 
     if (Warhead.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 
@@ -6767,8 +6767,8 @@ void HudGaugeWarheadCount::pageIn () {
 void HudGaugeWarheadCount::render (float /*frametime*/) {
     if (Player_obj->type == OBJ_OBSERVER) { return; }
 
-    Assert (Player_obj->type == OBJ_SHIP);
-    Assert (Player_obj->instance >= 0 && Player_obj->instance < MAX_SHIPS);
+    ASSERT (Player_obj->type == OBJ_SHIP);
+    ASSERT (Player_obj->instance >= 0 && Player_obj->instance < MAX_SHIPS);
 
     ship_weapon* sw = &Ships[Player_obj->instance].weapons;
 
@@ -6873,19 +6873,19 @@ void HudGaugeWeaponList::initBitmaps (
     _background_first.first_frame =
         bm_load_animation (fname_first, &_background_first.num_frames);
     if (_background_first.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_first);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_first);
     }
 
     _background_entry.first_frame =
         bm_load_animation (fname_entry, &_background_entry.num_frames);
     if (_background_entry.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_entry);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_entry);
     }
 
     _background_last.first_frame =
         bm_load_animation (fname_last, &_background_last.num_frames);
     if (_background_last.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_last);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_last);
     }
 }
 
@@ -6976,8 +6976,8 @@ void HudGaugePrimaryWeapons::render (float /*frametime*/) {
 
     if (Player_obj->type == OBJ_OBSERVER) return;
 
-    Assert (Player_obj->type == OBJ_SHIP);
-    Assert (Player_obj->instance >= 0 && Player_obj->instance < MAX_SHIPS);
+    ASSERT (Player_obj->type == OBJ_SHIP);
+    ASSERT (Player_obj->instance >= 0 && Player_obj->instance < MAX_SHIPS);
 
     sw = &Ships[Player_obj->instance].weapons;
 
@@ -7102,8 +7102,8 @@ void HudGaugeSecondaryWeapons::render (float /*frametime*/) {
 
     int num_primaries, num_secondaries;
 
-    Assert (Player_obj->type == OBJ_SHIP);
-    Assert (Player_obj->instance >= 0 && Player_obj->instance < MAX_SHIPS);
+    ASSERT (Player_obj->type == OBJ_SHIP);
+    ASSERT (Player_obj->instance >= 0 && Player_obj->instance < MAX_SHIPS);
 
     sw = &Ships[Player_obj->instance].weapons;
 

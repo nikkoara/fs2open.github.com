@@ -89,10 +89,10 @@ void dc_draw (bool show_prompt);
 
 /**
  * Draws the cursor
- * @param [in] cmd_string	The formatted command string displayed by
+ * @param [in] cmd_string       The formatted command string displayed by
  * dc_draw_window
- * @param [in] x		The x screen position of the command string
- * @param [in] y		The y screen position of the command string
+ * @param [in] x                The x screen position of the command string
+ * @param [in] y                The y screen position of the command string
  */
 void dc_draw_cursor (std::string& cmd_string, int x, int y);
 
@@ -550,9 +550,9 @@ void debug_console (void (*_func) (void)) {
             // Clear the command line on the window, but don't print the prompt
             // until the command has processed Stuff a copy of the command line
             // onto the history Search for the command If not found:
-            //   abort,
-            //   dc_printf("Error: Invalid or Missing command %s",
-            //   cmd.c_str()), and dc_printf(dc_prompt) when ready for input
+            // abort,
+            // dc_printf("Error: Invalid or Missing command %s",
+            // cmd.c_str()), and dc_printf(dc_prompt) when ready for input
             // Call the function for that command, and strip the cmd token from
             // the command line string
             if (dc_command_buf.empty ()) {

@@ -141,7 +141,7 @@ void HudGaugeLock::render (float frametime) {
     if (!Players[Player_num].lock_indicator_visible) { return; }
 
     target_objnum = Player_ai->target_objnum;
-    Assert (target_objnum != -1);
+    ASSERT (target_objnum != -1);
     targetp = &Objects[target_objnum];
 
     // check to see if there are any missile to fire.. we don't want to show
@@ -166,7 +166,7 @@ void HudGaugeLock::render (float frametime) {
     }
 
     hud_set_iff_color (targetp);
-    //	nprintf(("Alan","lockx: %d, locky: %d TargetX: %d, TargetY: %d\n",
+    // nprintf(("Alan","lockx: %d, locky: %d TargetX: %d, TargetY: %d\n",
     // Players[Player_num].lock_indicator_x,
     // Players[Player_num].lock_indicator_y, Player->current_target_sx,
     // Player->current_target_sy));
@@ -233,8 +233,8 @@ void hud_lock_reset (float lock_time_scale) {
 
     if ((swp->current_secondary_bank >= 0) &&
         (swp->secondary_bank_weapons[swp->current_secondary_bank] >= 0)) {
-        Assert (swp->current_secondary_bank < MAX_SHIP_SECONDARY_BANKS);
-        Assert (
+        ASSERT (swp->current_secondary_bank < MAX_SHIP_SECONDARY_BANKS);
+        ASSERT (
             swp->secondary_bank_weapons[swp->current_secondary_bank] <
             MAX_WEAPON_TYPES);
         wip = &Weapon_info
@@ -327,7 +327,7 @@ int hud_lock_target_in_range () {
             vm_vec_add2 (&target_world_pos, &targetp->pos);
         }
         else {
-            Assert (Player->locking_on_center);
+            ASSERT (Player->locking_on_center);
             target_world_pos = targetp->pos;
         }
     }
@@ -370,7 +370,7 @@ int hud_lock_on_subsys_ok () {
     object* target_objp;
     int in_sight = 0;
 
-    Assert (Player_ai->target_objnum >= 0);
+    ASSERT (Player_ai->target_objnum >= 0);
     target_objp = &Objects[Player_ai->target_objnum];
 
     subsys = Player_ai->targeted_subsys;
@@ -455,7 +455,7 @@ void hud_do_lock_indicator (float frametime) {
         return;
     }
 
-    Assert (Player_ai->target_objnum >= 0);
+    ASSERT (Player_ai->target_objnum >= 0);
 
     // be sure to unset this flag, then possibly set later in this function so
     // that threat indicators work properly.
@@ -541,9 +541,9 @@ void hud_do_lock_indicator (float frametime) {
     if (!hud_lock_target_in_range ()) { Player->target_in_lock_cone = 0; }
 
     // If locking on a subsystem, and not in sight... can't lock
-    //	Changed by MK on 4/3/98.  It was confusing me that my hornets would not
-    // lock on my target. 	It will now be confusing that they lock, but don't
-    // home on your subsystem, but I think that's preferable. 	Often you
+    // Changed by MK on 4/3/98.  It was confusing me that my hornets would not
+    // lock on my target.       It will now be confusing that they lock, but don't
+    // home on your subsystem, but I think that's preferable.   Often you
     // really care about destroying the target, not just the subsystem.
     /*if ( Player_ai->targeted_subsys ) {
         if ( !hud_lock_on_subsys_ok() ) {
@@ -1014,7 +1014,7 @@ void hud_lock_update_lock_pos (object* target_objp) {
 
     if (Player->locking_on_center) { lock_world_pos = target_objp->pos; }
     else {
-        Assert (Player->locking_subsys);
+        ASSERT (Player->locking_subsys);
         get_subsystem_world_pos (
             target_objp, Player->locking_subsys, &lock_world_pos);
     }
@@ -1115,7 +1115,7 @@ void hud_lock_determine_lock_point (vec3d* lock_world_pos_out) {
     vec3d vec_to_lock_pos;
     vec3d lock_local_pos;
 
-    Assert (Player_ai->target_objnum >= 0);
+    ASSERT (Player_ai->target_objnum >= 0);
     target_objp = &Objects[Player_ai->target_objnum];
 
     Player->current_target_sx = -1;

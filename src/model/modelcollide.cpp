@@ -52,7 +52,7 @@ void model_collide_free_point_list () {
 // allocate the point list
 // NOTE: SHOULD ONLY EVER BE CALLED FROM model_allocate_interp_data()!!!
 void model_collide_allocate_point_list (int n_points) {
-    Assert (n_points > 0);
+    ASSERT (n_points > 0);
 
     if (Mc_point_list != NULL) {
         vm_free (Mc_point_list);
@@ -61,7 +61,7 @@ void model_collide_allocate_point_list (int n_points) {
 
     Mc_point_list = (vec3d**)vm_malloc (sizeof (vec3d*) * n_points);
 
-    Verify (Mc_point_list != NULL);
+    ASSERT (Mc_point_list != NULL);
 }
 
 // Returns non-zero if vector from p0 to pdir
@@ -163,7 +163,7 @@ static void mc_check_face (
 
         Mc->bsp_leaf = bsp_leaf;
 
-        //		mprintf(( "Bing!\n" ));
+        // mprintf(( "Bing!\n" ));
 
         Mc->num_hits++;
     }
@@ -172,12 +172,12 @@ static void mc_check_face (
 // ----------------------------------------------------------------------------------------------------------
 // check face with spheres
 //
-//	inputs:	nv				=>		number of vertices
-//				verts			=>		array of vertices
-//				plane_pnt	=>		center point in plane (about which radius
-// is measured) 				face_rad		=>		radius of face
+// inputs: nv                              =>              number of vertices
+// verts                   =>              array of vertices
+// plane_pnt       =>              center point in plane (about which radius
+// is measured)                                 face_rad                =>              radius of face
 // plane_norm
-//=>		normal of face
+//=>            normal of face
 static void mc_check_sphereline_face (
     int nv, vec3d** verts, vec3d* plane_pnt, vec3d* plane_norm,
     uv_pair* uvl_list, int ntmap, ubyte* poly, bsp_collision_leaf* bsp_leaf) {
@@ -277,7 +277,7 @@ static void mc_check_sphereline_face (
             Mc->radius\n", temp_dist, Mc->radius));
             }
             vm_vec_sub( &temp_dir, &hit_point, &temp_sphere );
-            // Assert( vm_vec_dot( &temp_dir, &Mc_direction ) > 0 );
+            // ASSERT (vm_vec_dot( &temp_dir, &Mc_direction ) > 0 );
             */
         }
     }
@@ -297,7 +297,7 @@ static void mc_check_sphereline_face (
         if (fvi_polyedge_sphereline (
                 &hit_point, &Mc_p0, &Mc_direction, Mc->radius, nv, verts,
                 &sphere_time)) {
-            Assert (sphere_time >= 0.0f);
+            ASSERT (sphere_time >= 0.0f);
             /*
             vm_vec_scale_add( &temp_sphere, &Mc_p0, &Mc_direction, sphere_time
 ); temp_dist = vm_vec_dist( &temp_sphere, &hit_point ); if ( (temp_dist -
@@ -307,7 +307,7 @@ DIST_TOL > Mc->radius) || (temp_dist + DIST_TOL < Mc->radius) ) {
 Mc->radius\n", temp_dist, Mc->radius));
             }
             vm_vec_sub( &temp_dir, &hit_point, &temp_sphere );
-//			Assert( vm_vec_dot( &temp_dir, &Mc_direction ) > 0 );
+// ASSERT (vm_vec_dot( &temp_dir, &Mc_direction ) > 0 );
             */
 
             if ((Mc->num_hits == 0) || (sphere_time < Mc->hit_dist)) {
@@ -334,14 +334,14 @@ Mc->radius\n", temp_dist, Mc->radius));
 
                 Mc->num_hits++;
 
-                //	nprintf(("Physics", "edge sphere time: %f, normal: (%f, %f,
+                // nprintf(("Physics", "edge sphere time: %f, normal: (%f, %f,
                 //%f) hit_point: (%f, %f, %f)\n", sphere_time,
-                //		Mc->hit_normal.xyz.x, Mc->hit_normal.xyz.y,
-                // Mc->hit_normal.xyz.z, 		hit_point.xyz.x,
+                // Mc->hit_normal.xyz.x, Mc->hit_normal.xyz.y,
+                // Mc->hit_normal.xyz.z,                hit_point.xyz.x,
                 // hit_point.xyz.y, hit_point.xyz.z));
             }
             else { // Not best so far
-                Assert (Mc->num_hits > 0);
+                ASSERT (Mc->num_hits > 0);
                 Mc->num_hits++;
             }
         }
@@ -365,7 +365,7 @@ void model_collide_defpoints (ubyte* p) {
     ubyte* normcount = p + 20;
     vec3d* src = vp (p + offset);
 
-    Assert (Mc_point_list != NULL);
+    ASSERT (Mc_point_list != NULL);
 
     for (n = 0; n < nverts; n++) {
         Mc_point_list[n] = src;
@@ -384,7 +384,7 @@ int model_collide_parse_bsp_defpoints (ubyte* p) {
 
     model_collide_allocate_point_list (nverts);
 
-    Assert (Mc_point_list != NULL);
+    ASSERT (Mc_point_list != NULL);
 
     for (n = 0; n < nverts; n++) {
         Mc_point_list[n] = src;
@@ -461,7 +461,7 @@ void model_collide_tmappoly (ubyte* p) {
     }
 
     int tmap_num = w (p + 40);
-    Assert (tmap_num >= 0 && tmap_num < MAX_MODEL_TEXTURES); // Goober5000
+    ASSERT (tmap_num >= 0 && tmap_num < MAX_MODEL_TEXTURES); // Goober5000
 
     if ((!(Mc->flags & MC_CHECK_INVISIBLE_FACES)) &&
         (Mc_pm->maps[tmap_num].textures[TM_BASE_TYPE].GetTexture () < 0)) {
@@ -541,7 +541,7 @@ int model_collide_sub (void* model_ptr) {
     chunk_size = w (p + 4);
 
     while (chunk_type != OP_EOF) {
-        //		mprintf(( "Processing chunk type %d, len=%d\n", chunk_type,
+        // mprintf(( "Processing chunk type %d, len=%d\n", chunk_type,
         // chunk_size ));
 
         switch (chunk_type) {
@@ -685,7 +685,7 @@ void model_collide_parse_bsp_tmappoly (
 
     int tmap_num = w (p + 40);
 
-    Assert (tmap_num >= 0 && tmap_num < MAX_MODEL_TEXTURES);
+    ASSERT (tmap_num >= 0 && tmap_num < MAX_MODEL_TEXTURES);
 
     verts = (model_tmap_vert*)(p + 44);
 
@@ -761,7 +761,7 @@ void model_collide_parse_bsp (
     int next_chunk_type;
     int next_chunk_size;
 
-    Assert (chunk_type == OP_DEFPOINTS);
+    ASSERT (chunk_type == OP_DEFPOINTS);
 
     int n_verts = model_collide_parse_bsp_defpoints (p);
 
@@ -843,7 +843,7 @@ void model_collide_parse_bsp (
             next_p = p + chunk_size;
             next_chunk_type = w (next_p);
 
-            Assert (next_chunk_type == OP_EOF);
+            ASSERT (next_chunk_type == OP_EOF);
 
             ++i;
             break;
@@ -900,7 +900,7 @@ void model_collide_parse_bsp (
                 leaf_buffer.back ().next = -1;
             }
 
-            Assert (next_chunk_type == OP_EOF);
+            ASSERT (next_chunk_type == OP_EOF);
 
             ++i;
             break;
@@ -908,7 +908,7 @@ void model_collide_parse_bsp (
     }
 
     // copy point list
-    Assert (n_verts != -1);
+    ASSERT (n_verts != -1);
 
     tree->point_list = (vec3d*)vm_malloc (sizeof (vec3d) * n_verts);
 
@@ -1096,8 +1096,8 @@ void mc_check_subobj (int mn) {
     bsp_info* sm;
     int i;
 
-    Assert (mn >= 0);
-    Assert (mn < Mc_pm->n_models);
+    ASSERT (mn >= 0);
+    ASSERT (mn < Mc_pm->n_models);
     if ((mn < 0) || (mn >= Mc_pm->n_models)) return;
 
     sm = &Mc_pm->submodel[mn];
@@ -1284,7 +1284,7 @@ int model_collide (mc_info* mc_info_obj) {
     Mc->edge_hit = 0;
 
     if ((Mc->flags & MC_CHECK_SHIELD) && (Mc->flags & MC_CHECK_MODEL)) {
-        fs2::dialog::error (LOCATION, "Checking both shield and model!\n");
+        ASSERTF (LOCATION, "Checking both shield and model!\n");
         return 0;
     }
 
@@ -1305,9 +1305,9 @@ int model_collide (mc_info* mc_info_obj) {
 
     // DA 11/19/98 - disable this check for rotating submodels
     // Don't do check if for very small movement
-    //	if (Mc_mag < 0.01f) {
-    //		return 0;
-    //	}
+    // if (Mc_mag < 0.01f) {
+    // return 0;
+    // }
 
     float model_radius; // How big is the model we're checking against
     int first_submodel; // Which submodel gets returned as hit if
@@ -1324,7 +1324,7 @@ int model_collide (mc_info* mc_info_obj) {
 
     if (Mc->flags & MC_CHECK_SPHERELINE) {
         if (Mc->radius <= 0.0f) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Attempting to collide with a sphere, but the sphere's radius "
                 "is <= 0.0f!\n\n(model file is %s; submodel is %d, mc_flags "

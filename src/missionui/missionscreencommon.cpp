@@ -50,9 +50,9 @@ int Drop_icon_mflag, Drop_on_wing_mflag, Brief_mouse_up_flag;
 int Mouse_down_last_frame = 0;
 
 // Timers used to flash buttons after timeouts
-#define MSC_FLASH_AFTER_TIME 60000 //	time before flashing a button
+#define MSC_FLASH_AFTER_TIME 60000 // time before flashing a button
 #define MSC_FLASH_INTERVAL 200     // time between flashes
-int Flash_timer;                   //	timestamp used to start flashing
+int Flash_timer;                   // timestamp used to start flashing
 int Flash_toggle;                  // timestamp used to toggle flashing
 int Flash_bright;                  // state of button to flash
 
@@ -70,10 +70,10 @@ loadout_data Player_loadout; // what the ship and weapon loadout is... used
                              // since we want to use the same loadout if the
                              // mission is played again
 
-// wss_unit	Wss_slots[MAX_WSS_SLOTS];				// slot data struct
-// int		Wl_pool[MAX_WEAPON_TYPES];				// weapon pool
-// int		Ss_pool[MAX_SHIP_CLASSES];				// ship pool
-// int		Wss_num_wings;								// number of player
+// wss_unit     Wss_slots[MAX_WSS_SLOTS];                               // slot data struct
+// int          Wl_pool[MAX_WEAPON_TYPES];                              // weapon pool
+// int          Ss_pool[MAX_SHIP_CLASSES];                              // ship pool
+// int          Wss_num_wings;                                                          // number of player
 // wings
 
 wss_unit Wss_slots_teams[MAX_TVT_TEAMS][MAX_WSS_SLOTS];
@@ -457,7 +457,7 @@ void common_set_interface_palette (const char* filename) {
 
     if (!filename) filename = NOX ("palette01");
 
-    Assert (strlen (filename) <= MAX_FILENAME_LEN);
+    ASSERT (strlen (filename) <= MAX_FILENAME_LEN);
     if ((InterfacePaletteBitmap != -1) && !strcasecmp (filename, buf))
         return; // already set to this palette
 
@@ -508,7 +508,7 @@ int common_flash_bright () {
 
 // set the necessary pointers
 void common_set_team_pointers (int team) {
-    Assert ((team >= 0) && (team < MAX_TVT_TEAMS));
+    ASSERT ((team >= 0) && (team < MAX_TVT_TEAMS));
 
     Wss_slots = Wss_slots_teams[team];
     Ss_pool = Ss_pool_teams[team];
@@ -776,7 +776,7 @@ void common_render (float frametime) {
 // -------------------------------------------------------------------------------------
 // common_render_selected_screen_button()
 //
-//	A very ugly piece of special purpose code.  This is used to draw the
+// A very ugly piece of special purpose code.  This is used to draw the
 // pressed button
 // frame for whatever stage of the briefing/ship select/weapons loadout we are
 // on.
@@ -1022,24 +1022,24 @@ void common_select_close () {
 }
 
 // ------------------------------------------------------------------------
-//	load_wing_icons() creates the bitmaps for wing icons
+// load_wing_icons() creates the bitmaps for wing icons
 //
 void load_wing_icons (const char* filename) {
     int first_frame, num_frames;
 
     first_frame = bm_load_animation (filename, &num_frames);
     if (first_frame == -1) {
-        fs2::dialog::error (LOCATION, "Could not load icons from %s\n", filename);
+        ASSERTF (LOCATION, "Could not load icons from %s\n", filename);
         return;
     }
 
     Wing_slot_disabled_bitmap = first_frame;
     Wing_slot_empty_bitmap = first_frame + 1;
-    //	Wing_slot_player_empty_bitmap = first_frame + 2;
+    // Wing_slot_player_empty_bitmap = first_frame + 2;
 }
 
 // ------------------------------------------------------------------------
-//	common_scroll_up_pressed()
+// common_scroll_up_pressed()
 //
 int common_scroll_up_pressed (int* start, int size, int max_show) {
     // check if we even need to scroll at all
@@ -1053,7 +1053,7 @@ int common_scroll_up_pressed (int* start, int size, int max_show) {
 }
 
 // ------------------------------------------------------------------------
-//	common_scroll_down_pressed()
+// common_scroll_down_pressed()
 //
 int common_scroll_down_pressed (int* start, int size, int max_show) {
     // check if we even need to scroll at all
@@ -1072,7 +1072,7 @@ int common_scroll_down_pressed (int* start, int size, int max_show) {
 void wss_save_loadout () {
     int i, j;
 
-    Assert ((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
+    ASSERT ((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
 
     // save the ship pool
     for (i = 0; i < MAX_SHIP_CLASSES; i++) {
@@ -1101,7 +1101,7 @@ void wss_maybe_restore_loadout () {
     int i, j;
     wss_unit* slot;
 
-    Assert ((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
+    ASSERT ((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
 
     // only restore if mission hasn't changed
     if (strcasecmp (Player_loadout.last_modified, The_mission.modified) != 0) {
@@ -1181,7 +1181,7 @@ void wss_maybe_restore_loadout () {
         if ((slot->ship_class >= 0) &&
             (slot->ship_class < static_cast< int > (Ship_info.size ()))) {
             --this_loadout_ships[slot->ship_class];
-            Assertion (
+            ASSERTX (
                 (this_loadout_ships[slot->ship_class] >= 0),
                 "Attempting to restore the previous missions loadout has "
                 "resulted in an invalid number of ships available");
@@ -1193,7 +1193,7 @@ void wss_maybe_restore_loadout () {
             if ((slot->ship_class >= 0) && (slot->wep[j] >= 0) &&
                 (slot->wep[j] < Num_weapon_types)) {
                 this_loadout_weapons[slot->wep[j]] -= slot->wep_count[j];
-                Assertion (
+                ASSERTX (
                     (this_loadout_weapons[slot->wep[j]] >= 0),
                     "Attempting to restore the previous missions loadout has "
                     "resulted in an invalid number of weapons available");
@@ -1249,7 +1249,7 @@ void wss_direct_restore_loadout () {
                 if (p_objp->wingnum == WING_INDEX (wp)) {
                     // niffiwan: don't overrun the array
                     if (j >= MAX_WING_SLOTS) {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "Starting Wing '%s' has more than "
                             "'MAX_WING_SLOTS' ships\n",
@@ -1313,7 +1313,7 @@ void wss_direct_restore_loadout () {
 int wss_slots_all_empty () {
     int i;
 
-    Assert (Wss_slots != NULL);
+    ASSERT (Wss_slots != NULL);
 
     for (i = 0; i < MAX_WSS_SLOTS; i++) {
         if (Wss_slots[i].ship_class >= 0) break;
@@ -1330,7 +1330,7 @@ int wss_get_mode (
     int from_slot, int from_list, int to_slot, int to_list, int wl_ship_slot) {
     int mode, to_slot_empty = 0;
 
-    Assert (Wss_slots != NULL);
+    ASSERT (Wss_slots != NULL);
 
     if (wl_ship_slot >= 0) {
         // weapons loadout
@@ -1374,8 +1374,8 @@ int store_wss_data (
 
     // this function assumes that the data is going to be used over the network
     // so make a non-network version of this function if needed
-    Assert (Game_mode & GM_MULTIPLAYER);
-    Assert ((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
+    ASSERT (Game_mode & GM_MULTIPLAYER);
+    ASSERT ((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
 
     if (!(Game_mode & GM_MULTIPLAYER)) return 0;
 
@@ -1383,7 +1383,7 @@ int store_wss_data (
     for (i = 0; i < static_cast< int > (Ship_info.size ()); i++) {
         if (Ss_pool[i] > 0) {
             block[offset++] = (ubyte)i;
-            Assert (Ss_pool[i] < UCHAR_MAX);
+            ASSERT (Ss_pool[i] < UCHAR_MAX);
 
             // take care of sign issues
             if (Ss_pool[i] == -1) { block[offset++] = 0xff; }
@@ -1410,20 +1410,20 @@ int store_wss_data (
     block[offset++] = 0xff; // signals start of unit data
 
     for (i = 0; i < MAX_WSS_SLOTS; i++) {
-        Assert (Wss_slots[i].ship_class < UCHAR_MAX);
+        ASSERT (Wss_slots[i].ship_class < UCHAR_MAX);
         if (Wss_slots[i].ship_class == -1) { block[offset++] = 0xff; }
         else {
             block[offset++] = (ubyte) (Wss_slots[i].ship_class);
         }
         for (j = 0; j < MAX_SHIP_WEAPONS; j++) {
             // take care of sign issues
-            Assert (Wss_slots[i].wep[j] < UCHAR_MAX);
+            ASSERT (Wss_slots[i].wep[j] < UCHAR_MAX);
             if (Wss_slots[i].wep[j] == -1) { block[offset++] = 0xff; }
             else {
                 block[offset++] = (ubyte) (Wss_slots[i].wep[j]);
             }
 
-            Assert (Wss_slots[i].wep_count[j] < SHRT_MAX);
+            ASSERT (Wss_slots[i].wep_count[j] < SHRT_MAX);
             ishort = (short)Wss_slots[i].wep_count[j];
 
             memcpy (&(block[offset]), &(ishort), sizeof (short));
@@ -1451,7 +1451,7 @@ int store_wss_data (
     memcpy (block + offset, &player_id, sizeof (player_id));
     offset += sizeof (player_id);
 
-    Assert (offset < max_size);
+    ASSERT (offset < max_size);
     return offset;
 }
 
@@ -1463,8 +1463,8 @@ int restore_wss_data (ubyte* block) {
 
     // this function assumes that the data is going to be used over the network
     // so make a non-network version of this function if needed
-    Assert (Game_mode & GM_MULTIPLAYER);
-    Assert ((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
+    ASSERT (Game_mode & GM_MULTIPLAYER);
+    ASSERT ((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
 
     if (!(Game_mode & GM_MULTIPLAYER)) return 0;
 

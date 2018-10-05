@@ -6,8 +6,15 @@
 #define BOOST_LOG_DYN_LINK 1
 
 #include "config.hpp"
-
+#include "assert/assert.hpp"
 #include "log/log.hpp"
+
+#ifdef NDEBUG
+#  define BOOST_DISABLE_ASSERTS
+#endif // NDEBUG
+
+#include <boost/assert.hpp>
+#define ASSERT BOOST_ASSERT
 
 #define FS_VERSION_MAJOR 3
 #define FS_VERSION_MINOR 8
@@ -26,60 +33,20 @@
 
 #define FS2_UNUSED(x) ((void)x)
 
-#ifdef NDEBUG
-#  define BOOST_DISABLE_ASSERTS
-#endif // NDEBUG
-
-#if defined(NDEBUG)
-//
-// Both Assert and Assertion are hard errors:
-//
-#  define Assert(expr)                                              \
-    do {                                                            \
-        if (!(expr)) {                                              \
-            fs2::dialog::assert_msg (#expr, __FILE__, __LINE__);    \
-        }                                                           \
-    } while (0)
-
-#  define Assertion(expr, msg, ...)                             \
-    do {                                                        \
-        if (!(expr)) {                                          \
-            fs2::dialog::assert_msg (                           \
-                #expr, __FILE__, __LINE__, msg, ##__VA_ARGS__); \
-        }                                                       \
-    } while (0)
-
-//
-// Unreachable is a hard error:
-//
-#  define UNREACHABLE(msg, ...)                                         \
-    do {                                                                \
-        fs2::dialog::error (__FILE__, __LINE__, msg, ##__VA_ARGS__);    \
-    } while (0)
+#if !defined (FS2_NO_VA_COPY)
+#  define FS2_VA_COPY(a,b) va_copy (a,b)
+#elif !defined (FS2_NO__VA_COPY)
+#  define FS2_VA_COPY(a,b) __va_copy (a,b)
 #else
-#  define Assert(expr) do { FS2_UNUSED((expr)); } while (0)
-#  define Assertion(expr, msg, ...) do { FS2_UNUSED((expr)); } while (0)
-#  define UNREACHABLE(msg, ...) __builtin_unreachable ()
-#endif
+#  define FS2_VA_COPY(a,b) (a) = (b)
+#endif // HAVE_*VA_COPY
+
+#if defined (FS2_NO_POSIX_VSNPRINTF)
+#  define FS2_VSNFMT_MAX  (1024U * 1024U)
+#else
+#  define FS2_VSNFMT_MAX  (size_t(-1) - 1)
+#endif // FS2_VSNPRINTF_OVERFLOW_NEGATIVE
 
 #define LOCATION __FILE__, __LINE__
-
-//
-// Both verifications are hard errors:
-//
-#define Verify(x)                                                       \
-    do {                                                                \
-        if (!(x)) {                                                     \
-            fs2::dialog::error (LOCATION, "Verify failure: %s\n", #x); } \
-    } while (0)
-
-#define VerifyEx(x, y, ...)                                                 \
-    do {                                                                    \
-        if (!(x)) {                                                         \
-            fs2::dialog::error (                                            \
-                LOCATION, "Verify failure: %s with help text " #y "\n", #x, \
-                ##__VA_ARGS__);                                             \
-        }                                                                   \
-    } while (0)
 
 #endif // FREESPACE2_DEFS_HPP

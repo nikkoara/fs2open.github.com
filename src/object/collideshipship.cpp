@@ -95,8 +95,8 @@ int ship_ship_check_collision (
     object* light_obj = ship_ship_hit_info->light;
     int player_involved; // flag to indicate that A or B is the Player_obj
 
-    Assert (heavy_obj->type == OBJ_SHIP);
-    Assert (light_obj->type == OBJ_SHIP);
+    ASSERT (heavy_obj->type == OBJ_SHIP);
+    ASSERT (light_obj->type == OBJ_SHIP);
 
     ship* heavy_shipp = &Ships[heavy_obj->instance];
     ship* light_shipp = &Ships[light_obj->instance];
@@ -106,7 +106,7 @@ int ship_ship_check_collision (
 
     // AL 12-4-97: we use the player_involved flag to ensure collisions are
     // always
-    //             done with the player, regardless of team.
+    // done with the player, regardless of team.
     if (heavy_obj == Player_obj || light_obj == Player_obj) {
         player_involved = 1;
     }
@@ -121,14 +121,14 @@ int ship_ship_check_collision (
     // collide while trying to dock
     if (ships_are_docking (heavy_obj, light_obj)) { return 0; }
 
-    //	If light_obj emerging from or departing to dock bay in heavy_obj, no
+    // If light_obj emerging from or departing to dock bay in heavy_obj, no
     // collision detection.
     if (bay_emerge_or_depart (heavy_obj, light_obj)) { return 0; }
 
-    //	Ships which are dying should not do collision detection.
-    //	Also, this is the only clean way I could figure to get ships to not do
-    // damage to each other for one frame 	when they are docked and departing.
-    // Due to sequencing, they would not show up as docked, yet they 	would
+    // Ships which are dying should not do collision detection.
+    // Also, this is the only clean way I could figure to get ships to not do
+    // damage to each other for one frame       when they are docked and departing.
+    // Due to sequencing, they would not show up as docked, yet they    would
     // still come through here, so they would harm each other, if on opposing
     // teams.
     //-- MK, 2/2/98
@@ -138,8 +138,8 @@ int ship_ship_check_collision (
     }
 
 #ifndef NDEBUG
-    //	Don't do collision detection on a pair of ships on the same team.
-    //	Change this someday, but for now, it's a problem.
+    // Don't do collision detection on a pair of ships on the same team.
+    // Change this someday, but for now, it's a problem.
     if (!Collide_friendly) { // Collide_friendly is a global value changed via
                              // debug console
         if ((!player_involved) && (heavy_shipp->team == light_shipp->team)) {
@@ -148,8 +148,8 @@ int ship_ship_check_collision (
     }
 #endif
 
-    //	Apparently we're doing same team collisions.
-    //	But, if both are offscreen, ignore the collision
+    // Apparently we're doing same team collisions.
+    // But, if both are offscreen, ignore the collision
     if (heavy_shipp->team == light_shipp->team) {
         if ((!(heavy_obj->flags[Object::Object_Flags::Was_rendered]) &&
              !(light_obj->flags[Object::Object_Flags::Was_rendered]))) {
@@ -194,7 +194,7 @@ int ship_ship_check_collision (
 #ifndef NDEBUG
         static bool Warned_about_fast_rotational_collisions = false;
         if (!Warned_about_fast_rotational_collisions) {
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Ship '%s' rotates too quickly!  Rotational collision "
                 "detection has been skipped.",
@@ -215,7 +215,7 @@ int ship_ship_check_collision (
     mc.radius = model_get_core_radius (light_sip->model_num);
     mc.flags = (MC_CHECK_MODEL | MC_CHECK_SPHERELINE); // flags
 
-    //	Only check invisible face polygons for ship:ship of different teams.
+    // Only check invisible face polygons for ship:ship of different teams.
     if (!(heavy_shipp->flags[Ship::Ship_Flags::Dont_collide_invis])) {
         if ((heavy_obj->flags[Object::Object_Flags::Player_ship]) ||
             (light_obj->flags[Object::Object_Flags::Player_ship]) ||
@@ -440,7 +440,7 @@ int ship_ship_check_collision (
 
         // Provide some separation for the case of same team
         if (heavy_shipp->team == light_shipp->team) {
-            //	If a couple of small ships, just move them apart.
+            // If a couple of small ships, just move them apart.
 
             if ((heavy_sip->is_small_ship ()) &&
                 (light_sip->is_small_ship ())) {
@@ -524,7 +524,7 @@ static int check_special_cruiser_asteroid_collision (
     int asteroid_type;
 
     if (heavy->type == OBJ_ASTEROID) {
-        Assert (lighter->type == OBJ_SHIP);
+        ASSERT (lighter->type == OBJ_SHIP);
         if (Ship_info[Ships[lighter->instance].ship_info_index]
                 .is_big_or_huge ()) {
             asteroid_type = Asteroids[heavy->instance].asteroid_type;
@@ -545,7 +545,7 @@ static int check_special_cruiser_asteroid_collision (
         }
     }
     else if (lighter->type == OBJ_ASTEROID) {
-        Assert (heavy->type == OBJ_SHIP);
+        ASSERT (heavy->type == OBJ_SHIP);
         if (Ship_info[Ships[heavy->instance].ship_info_index]
                 .is_big_or_huge ()) {
             asteroid_type = Asteroids[lighter->instance].asteroid_type;
@@ -587,21 +587,21 @@ static bool check_subsystem_landing_allowed (
 }
 
 // ------------------------------------------------------------------------------------------------
-//		input:		ship_ship_hit		=>		structure containing ship_ship
-// hit info 		(includes)	A, B					=>		objects
+// input:          ship_ship_hit           =>              structure containing ship_ship
+// hit info             (includes)      A, B                                    =>              objects
 // colliding
 // r_A, r_B
-//=>		position to collision from center of mass
+//=>            position to collision from center of mass
 // collision_normal
 //=> collision_normal (outward from B)
 //
-//		output:	velocity, angular velocity, impulse
+// output: velocity, angular velocity, impulse
 //
 // ------------------------------------------------------------------------------------------------
 //
 // calculates correct physics response to collision between two objects given
-//		masses, moments of inertia, velocities, angular velocities,
-//		relative collision positions, and the impulse direction
+// masses, moments of inertia, velocities, angular velocities,
+// relative collision positions, and the impulse direction
 //
 void calculate_ship_ship_collision_physics (
     collision_info_struct* ship_ship_hit_info) {
@@ -613,10 +613,10 @@ void calculate_ship_ship_collision_physics (
     object* lighter = ship_ship_hit_info->light;
 
     // gurgh... this includes asteroids and debris too
-    Assert (
+    ASSERT (
         heavy->type == OBJ_SHIP || heavy->type == OBJ_ASTEROID ||
         heavy->type == OBJ_DEBRIS);
-    Assert (
+    ASSERT (
         lighter->type == OBJ_SHIP || lighter->type == OBJ_ASTEROID ||
         lighter->type == OBJ_DEBRIS);
 
@@ -639,12 +639,12 @@ void calculate_ship_ship_collision_physics (
 
     if (special_cruiser_asteroid_collision) {
         if (cruiser_light) {
-            Assert (lighter->phys_info.mass < cruiser_mass);
+            ASSERT (lighter->phys_info.mass < cruiser_mass);
             copy_mass = lighter->phys_info.mass;
             lighter->phys_info.mass = cruiser_mass;
         }
         else {
-            Assert (heavy->phys_info.mass < cruiser_mass);
+            ASSERT (heavy->phys_info.mass < cruiser_mass);
             copy_mass = heavy->phys_info.mass;
             heavy->phys_info.mass = cruiser_mass;
         }
@@ -792,17 +792,17 @@ void calculate_ship_ship_collision_physics (
                                                 // - v_fast) dot (n_fast)
 
     if (v_rel_normal_m > 0) {
-        //	This can happen in 2 situations.
+        // This can happen in 2 situations.
         // (1) The rotational velocity is large enough to cause ships to miss.
         // In this case, there would most likely have been a collision, but at
         // a later time, so reset v_rel_normal_m
 
-        //	(2) We could also have just gotten a slightly incorrect hitpos,
-        // where r dot v_rel is nearly zero. 	In this case, we know there was
+        // (2) We could also have just gotten a slightly incorrect hitpos,
+        // where r dot v_rel is nearly zero.    In this case, we know there was
         // a collision, but slight collision and the normal is correct, so
-        // reset v_rel_normal_m 	need a normal direction.  We can just take
+        // reset v_rel_normal_m         need a normal direction.  We can just take
         // the
-        //-v_light normalized.		v_rel_normal_m = -v_rel_normal_m;
+        //-v_light normalized.          v_rel_normal_m = -v_rel_normal_m;
 
         nprintf (
             ("Physics", "Frame %i reset v_rel_normal_m %f Edge %i\n",
@@ -1033,7 +1033,7 @@ void calculate_ship_ship_collision_physics (
         &local_vel_from_submodel);
     vm_vec_normalize_safe (&direction_light);
 
-    Assert (!vm_is_vec_nan (&direction_light));
+    ASSERT (!vm_is_vec_nan (&direction_light));
     vm_vec_scale_add2 (
         &heavy->pos, &direction_light,
         0.2f * lighter->phys_info.mass /
@@ -1070,12 +1070,12 @@ void calculate_ship_ship_collision_physics (
 }
 
 // ------------------------------------------------------------------------------------------------
-//	get_I_inv()
+// get_I_inv()
 //
-//		input:	I_inv_body	=>		inverse moment of inertia matrix in body
-// coordinates 					orient		=>		orientation matrix
+// input:  I_inv_body      =>              inverse moment of inertia matrix in body
+// coordinates                                  orient          =>              orientation matrix
 //
-//		output:	I_inv			=>		inverse moment of inertia matrix in
+// output: I_inv                   =>              inverse moment of inertia matrix in
 // world coordinates
 // ------------------------------------------------------------------------------------------------
 //
@@ -1096,14 +1096,14 @@ static void get_I_inv (matrix* I_inv, matrix* I_inv_body, matrix* orient) {
 
 #define PLANET_DAMAGE_SCALE 4.0f
 #define PLANET_DAMAGE_RANGE \
-    3 //	If within this factor of radius, apply damage.
+    3 // If within this factor of radius, apply damage.
 
 fix Last_planet_damage_time = 0;
 extern void hud_start_text_flash (char* txt, int t, int interval);
 
 /**
  * Procss player_ship:planet damage.
- *	If within range of planet, apply damage to ship.
+ *      If within range of planet, apply damage to ship.
  */
 static void mcp_1 (object* player_objp, object* planet_objp) {
     float planet_radius;
@@ -1134,7 +1134,7 @@ static void mcp_1 (object* player_objp, object* planet_objp) {
 
 /**
  * Return true if *objp is a planet, else return false.
- *	Hack: Just checking first six letters of name.
+ *      Hack: Just checking first six letters of name.
  */
 static int is_planet (object* objp) {
     return (
@@ -1335,8 +1335,8 @@ int collide_ship_ship (obj_pair* pair) {
     if (A->type == OBJ_WAYPOINT) return 1;
     if (B->type == OBJ_WAYPOINT) return 1;
 
-    Assert (A->type == OBJ_SHIP);
-    Assert (B->type == OBJ_SHIP);
+    ASSERT (A->type == OBJ_SHIP);
+    ASSERT (B->type == OBJ_SHIP);
 
     if (reject_due_collision_groups (A, B)) return 0;
 
@@ -1354,7 +1354,7 @@ int collide_ship_ship (obj_pair* pair) {
 
     dist = vm_vec_dist (&A->pos, &B->pos);
 
-    //	If one of these is a planet, do special stuff.
+    // If one of these is a planet, do special stuff.
     if (maybe_collide_planet (A, B)) return 0;
 
     if (dist < A->radius + B->radius) {
@@ -1412,8 +1412,8 @@ int collide_ship_ship (obj_pair* pair) {
 
             damage = 0.005f *
                 ship_ship_hit_info
-                .impulse; //	Cut collision-based damage in half.
-            //	Decrease heavy damage by 2x.
+                .impulse; // Cut collision-based damage in half.
+            // Decrease heavy damage by 2x.
             if (damage > 5.0f) { damage = 5.0f + (damage - 5.0f) / 2.0f; }
 
             do_kamikaze_crash (A, B);
@@ -1494,7 +1494,7 @@ int collide_ship_ship (obj_pair* pair) {
 
             // Only do damage if not a landing
             if (!ship_ship_hit_info.is_landing) {
-                //	Scale damage based on skill level for player.
+                // Scale damage based on skill level for player.
                 if ((LightOne->flags[Object::Object_Flags::Player_ship]) ||
                     (HeavyOne->flags[Object::Object_Flags::Player_ship])) {
                     damage *=
@@ -1504,8 +1504,8 @@ int collide_ship_ship (obj_pair* pair) {
                 else if (
                     Ships[LightOne->instance].team ==
                     Ships[HeavyOne->instance].team) {
-                    //	Decrease damage if non-player ships and not large.
-                    //	Looks dumb when fighters are taking damage from
+                    // Decrease damage if non-player ships and not large.
+                    // Looks dumb when fighters are taking damage from
                     // bumping into each other.
                     if ((LightOne->radius < 50.0f) &&
                         (HeavyOne->radius < 50.0f)) {
@@ -1637,7 +1637,7 @@ void collect_ship_ship_physics_info (
         Ship_info[Ships[lighter_obj->instance].ship_info_index].model_num);
 
     // get info needed for ship_ship_collision_physics
-    Assert (mc_info_obj->hit_dist > 0);
+    ASSERT (mc_info_obj->hit_dist > 0);
 
     // get light_collide_cm_pos
     if (!ship_ship_hit_info->submodel_rot_hit) {

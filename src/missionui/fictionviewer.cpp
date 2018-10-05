@@ -20,7 +20,7 @@
 #include "mod_table/mod_table.h"
 #include "parse/parselo.h"
 #include "sound/audiostr.h"
-#include "utils/encoding.h"
+#include "util/encoding.h"
 
 // ---------------------------------------------------------------------------------------------------------------------------------------
 // MISSION FICTION VIEWER DEFINES/VARS
@@ -86,7 +86,7 @@ ui_button_info Fiction_viewer_buttons
                   "fvw_up_", 614, 14, 25, 31, FVW_BUTTON_SCROLL_UP),
               ui_button_info (
                   "fvw_down_", 614, 370, 25, 31, FVW_BUTTON_SCROLL_DOWN),
-              //                 Filename          x       y     width  height
+              // Filename          x       y     width  height
           },
           {
               // GR_1024
@@ -296,7 +296,7 @@ void fiction_viewer_init () {
 
     // no ui is valid?
     if (Fiction_viewer_ui < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "No fiction viewer graphics -- cannot display fiction viewer!");
         return;
@@ -523,14 +523,14 @@ void fiction_viewer_reset () {
 }
 
 void fiction_viewer_load (int stage) {
-    Assertion (
+    ASSERTX (
         stage >= 0 &&
             static_cast< size_t > (stage) < Fiction_viewer_stages.size (),
         "stage parameter must be in range of Fiction_viewer_stages!");
 
     // just to be sure
     if (Fiction_viewer_text != nullptr) {
-        Assertion (
+        ASSERTX (
             Fiction_viewer_text == nullptr,
             "Fiction viewer text should be a null pointer, but instead is "
             "'%s'. Trace out and fix!\n",
@@ -548,7 +548,7 @@ void fiction_viewer_load (int stage) {
         if (ui_index >= 0)
             Fiction_viewer_ui = ui_index;
         else
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Unrecognized fiction viewer UI: %s",
                 stagep->ui_name);
     }
@@ -564,7 +564,7 @@ void fiction_viewer_load (int stage) {
     CFILE* fp =
         cfopen (stagep->story_filename, "rb", CFILE_NORMAL, CF_TYPE_FICTION);
     if (fp == NULL) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Unable to load story file '%s'.",
             stagep->story_filename);
     }

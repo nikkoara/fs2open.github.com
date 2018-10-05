@@ -92,12 +92,12 @@ UI_XSTR Multi_pinfo_text[GR_NUM_RESOLUTIONS][MULTI_PINFO_NUM_TEXT] = {
 #define MPI_FLIGHT_TIME 2
 #define MPI_LAST_FLOWN 3
 #define MPI_FIGHTER_KILLS 4
-// #define MPI_OTHER_KILLS							5
+// #define MPI_OTHER_KILLS                                                      5
 #define MPI_PSHOTS_FIRED 5
-//#define MPI_PSHOTS_HIT							6
+//#define MPI_PSHOTS_HIT                                                        6
 #define MPI_PSHOTS_PCT 6
 #define MPI_SSHOTS_FIRED 7
-// #define MPI_SSHOTS_HIT							10
+// #define MPI_SSHOTS_HIT                                                       10
 #define MPI_SSHOTS_PCT 8
 
 char* Multi_pinfo_stats_labels[MULTI_PINFO_NUM_STATS_LABELS];
@@ -198,7 +198,7 @@ void multi_pinfo_popup (net_player* np) {
     if (Multi_pinfo_popup_running) { return; }
 
     // set the player for informational purposes
-    Assert (np != NULL);
+    ASSERT (np != NULL);
 
     // play the popup appear sound
     gamesnd_play_iface (InterfaceSounds::POPUP_APPEAR);
@@ -357,7 +357,7 @@ void multi_pinfo_popup_do () {
         game_do_state_common (gameseq_get_state ());
 
         // draw the background bitmap and the ui window over it
-        Assert (Multi_pinfo_screen_save != -1);
+        ASSERT (Multi_pinfo_screen_save != -1);
         gr_reset_clip ();
         gr_restore_screen (Multi_pinfo_screen_save);
 

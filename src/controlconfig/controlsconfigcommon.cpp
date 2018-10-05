@@ -228,7 +228,7 @@ config_item Control_config[CCFG_MAX + 1] = {
     { KEY_SHIFTED | KEY_SCROLLOCK, -1, COMPUTER_TAB, true,
       "Transfer Energy Shield->Laser", CC_TYPE_TRIGGER, -1, -1, 0, false,
       false },
-    //	{                           -1,                 -1, -1,           true,
+    // {                           -1,                 -1, -1,           true,
     //"Show Damage Popup Window" },
 
     { -1, -1, SHIP_TAB, false, "Glide When Pressed", CC_TYPE_CONTINUOUS, -1,
@@ -1162,7 +1162,7 @@ const char* Joy_button_text_polish[] = {
     "Hat Prawo"
 };
 
-//!	This is the text that is displayed on the screen for the keys a player
+//!     This is the text that is displayed on the screen for the keys a player
 //! selects
 const char* Scan_code_text_english[] = {
     "",
@@ -1462,7 +1462,7 @@ void set_modifier_status () {
         if (Control_config[i].key_id & KEY_SHIFTED) Shift_is_modifier = 1;
 
         if (Control_config[i].key_id & KEY_CTRLED) {
-            Assert (0); // get Alan
+            ASSERT (0); // get Alan
             Ctrl_is_modifier = 1;
         }
     }
@@ -1477,7 +1477,7 @@ int translate_key_to_index (const char* key, bool find_override) {
     max_scan_codes = sizeof (Scan_code_text_english) / sizeof (char*);
 
     // look for modifiers
-    Assert (key);
+    ASSERT (key);
     if (!strncasecmp (key, "Alt", 3)) {
         alt = 1;
         key += 3;

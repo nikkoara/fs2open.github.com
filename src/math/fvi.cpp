@@ -55,9 +55,9 @@ void fvi_two_lines_in_3space (
 /**
  * Tells distance from a plain to a point-Bobboau
  *
- * @param plane_pnt		Plane description, a point
- * @param plane_norm	Plane description, a normal
- * @param point			A point to test
+ * @param plane_pnt             Plane description, a point
+ * @param plane_norm    Plane description, a normal
+ * @param point                 A point to test
  */
 float fvi_point_dist_plane (
     const vec3d* plane_pnt, const vec3d* plane_norm, const vec3d* point) {
@@ -72,12 +72,12 @@ float fvi_point_dist_plane (
 /**
  * Finds the point on the specified plane where the infinite ray intersects.
  *
- * @param new_pnt		A point to test
- * @param plane_pnt		Plane description, a point
- * @param plane_norm	Plane description, a normal
- * @param ray_origin	Ray description, an origin
- * @param ray_direction	Ray description, a direction
- * @param rad			Radius
+ * @param new_pnt               A point to test
+ * @param plane_pnt             Plane description, a point
+ * @param plane_norm    Plane description, a normal
+ * @param ray_origin    Ray description, an origin
+ * @param ray_direction Ray description, a direction
+ * @param rad                   Radius
  *
  * Returns scaled-distance plane is from the ray_origin (t), so
  * P = O + t*D, where P is the point of intersection, O is the ray origin,
@@ -135,12 +135,12 @@ float fvi_ray_plane (
 /**
  * Find the point on the specified plane where the line intersects
  *
- * @param new_pnt		The found point on the plane
- * @param plane_pnt		Plane description, a point
- * @param plane_norm	Plane description, a normal
- * @param p0			The first end of the line
- * @param p1			The second end of the line
- * @param rad			Radius
+ * @param new_pnt               The found point on the plane
+ * @param plane_pnt             Plane description, a point
+ * @param plane_norm    Plane description, a normal
+ * @param p0                    The first end of the line
+ * @param p1                    The second end of the line
+ * @param rad                   Radius
  *
  * @return true if point found, false if line parallel to plane
  */
@@ -381,15 +381,15 @@ static int ij_table[3][2] = {
  *
  * From Graphics Gems I, "An efficient Ray-Polygon intersection", p390
  *
- * @param checkp	The point to check
- * @param nv		How many verts in the poly
- * @param verts		The vertives for the polygon
- * @param norm1		The polygon's normal
- * @param u_out		If not null and v_out not null and uvls not_null and point
+ * @param checkp        The point to check
+ * @param nv            How many verts in the poly
+ * @param verts         The vertives for the polygon
+ * @param norm1         The polygon's normal
+ * @param u_out         If not null and v_out not null and uvls not_null and point
  * is on face, the uv's of where it hit
- * @param vout		If not null and v_out not null and uvls not_null and point
+ * @param vout          If not null and v_out not null and uvls not_null and point
  * is on face, the uv's of where it hit
- * @param uvls		A list of uv pairs for each vertex
+ * @param uvls          A list of uv pairs for each vertex
  *
  * This replaces the old check_point_to_face & find_hitpoint_uv
  * WARNING!!   In Gems, they use the code "if (u1==0)" in this function.
@@ -463,7 +463,7 @@ int fvi_point_face (
         else {
             beta = (v0 * u1 - u0 * v1) / (v2 * u1 - u2 * v1);
             if ((beta >= 0.0f) && (beta <= 1.0f)) {
-                Assert (beta != UNINITIALIZED_VALUE);
+                ASSERT (beta != UNINITIALIZED_VALUE);
                 alpha = (u0 - beta * u2) / u1;
                 inter = ((alpha >= 0.0f) && (alpha + beta <= 1.0f));
             }
@@ -495,15 +495,15 @@ static int check_sphere_point (
  * If two collisions occur, returns earliest legal time
  * returns the intersection point on the plane
  *
- * @param intersect_point		position on plane where sphere makes first
+ * @param intersect_point               position on plane where sphere makes first
  * contact [if hit_time in range 0-1]
- * @param sphere_center_start	initial sphere center
- * @param sphere_velocity		initial sphere velocity
- * @param sphere_radius			radius of sphere
- * @param plane_normal			normal to the colliding plane
- * @param plane_point			point in the colliding plane
- * @param hit_time				time surface of sphere first hits plane
- * @param crossing_time			time for sphere to cross plane (first to last
+ * @param sphere_center_start   initial sphere center
+ * @param sphere_velocity               initial sphere velocity
+ * @param sphere_radius                 radius of sphere
+ * @param plane_normal                  normal to the colliding plane
+ * @param plane_point                   point in the colliding plane
+ * @param hit_time                              time surface of sphere first hits plane
+ * @param crossing_time                 time for sphere to cross plane (first to last
  * contact)
  *
  * @return 1 if sphere may be in contact with plane in time range [0-1], 0
@@ -559,14 +559,14 @@ int fvi_sphere_plane (
  * perpendicular to sphere_velocity If two collisions occur, returns the
  * earliest legal time returns the intersection point on the edge
  *
- * @param intersect_point		position on plane where sphere makes first
+ * @param intersect_point               position on plane where sphere makes first
  * contact [RESULT]
- * @param sphere_center_start	initial sphere center
- * @param sphere_velocity		initial sphere velocity
- * @param sphere_radius			radius of sphere
- * @param edge_point1			first edge point
- * @param edge_point2			second edge point
- * @param collide_time			actual time of the collision
+ * @param sphere_center_start   initial sphere center
+ * @param sphere_velocity               initial sphere velocity
+ * @param sphere_radius                 radius of sphere
+ * @param edge_point1                   first edge point
+ * @param edge_point2                   second edge point
+ * @param collide_time                  actual time of the collision
  */
 int fvi_sphere_perp_edge (
     vec3d* intersect_point, const vec3d* sphere_center_start,
@@ -597,13 +597,13 @@ int fvi_sphere_perp_edge (
     vec3d temp;
     // next two temp should be same as starting velocities
     vm_vec_projection_onto_plane (&temp, sphere_velocity, &z_hat);
-    Assert (!vm_vec_cmp (&temp, sphere_velocity));
+    ASSERT (!vm_vec_cmp (&temp, sphere_velocity));
     vm_vec_projection_onto_plane (&temp, &edge_velocity, &z_hat);
-    Assert (!vm_vec_cmp (&temp, &edge_velocity));
+    ASSERT (!vm_vec_cmp (&temp, &edge_velocity));
 
     // should return V0
     vm_project_point_onto_plane (&Xe_proj, &V0, &z_hat, &V0);
-    Assert (!vm_vec_cmp (&Xe_proj, &V0));
+    ASSERT (!vm_vec_cmp (&Xe_proj, &V0));
 
     vm_project_point_onto_plane (&Xs_proj, sphere_center_start, &z_hat, &V0);
 
@@ -636,11 +636,11 @@ int fvi_sphere_perp_edge (
 /**
  * Determines whether and where a moving sphere hits a point
  *
- * @param point			point sphere collides with
- * @param sphere_start	initial sphere center
- * @param sphere_vel	velocity of sphere
- * @param radius		radius of sphere
- * @param collide_time	time of first collision with t >= 0
+ * @param point                 point sphere collides with
+ * @param sphere_start  initial sphere center
+ * @param sphere_vel    velocity of sphere
+ * @param radius                radius of sphere
+ * @param collide_time  time of first collision with t >= 0
  */
 static int check_sphere_point (
     const vec3d* point, const vec3d* sphere_start, const vec3d* sphere_vel,
@@ -685,13 +685,13 @@ static int check_sphere_point (
  * Given a polygon vertex list and a moving sphere, find the first contact the
  * sphere makes with the edge, if any
  *
- * @param hit_point		point on edge
- * @param xs0			starting point for sphere
- * @param vs			sphere velocity
- * @param Rs			sphere radius
- * @param nv			number of vertices
- * @param verts			vertices making up polygon edges
- * @param hit_time		time the sphere hits an edge
+ * @param hit_point             point on edge
+ * @param xs0                   starting point for sphere
+ * @param vs                    sphere velocity
+ * @param Rs                    sphere radius
+ * @param nv                    number of vertices
+ * @param verts                 vertices making up polygon edges
+ * @param hit_time              time the sphere hits an edge
  *
  * @return 1 if sphere hits polyedge, 0 if sphere misses
  */
@@ -897,12 +897,12 @@ int fvi_polyedge_sphereline (
 
         // set hitpoint to closest vetex hit, if any
         if (v0_hit) {
-            Assert (sphere_v0 != UNINITIALIZED_VALUE);
+            ASSERT (sphere_v0 != UNINITIALIZED_VALUE);
             t_sphere_hit = sphere_v0;
             temp_edge_hit = v0;
 
             if (v1_hit) {
-                Assert (sphere_v1 != UNINITIALIZED_VALUE);
+                ASSERT (sphere_v1 != UNINITIALIZED_VALUE);
                 if (sphere_v1 < sphere_v0) {
                     t_sphere_hit = sphere_v1;
                     temp_edge_hit = v1;
@@ -910,7 +910,7 @@ int fvi_polyedge_sphereline (
             }
         }
         else if (v1_hit) {
-            Assert (sphere_v1 != UNINITIALIZED_VALUE);
+            ASSERT (sphere_v1 != UNINITIALIZED_VALUE);
             t_sphere_hit = sphere_v1;
             temp_edge_hit = v1;
         }
@@ -940,10 +940,10 @@ int fvi_polyedge_sphereline (
 /**
  * Finds the closest point on a line to a given fixed point
  *
- * @param closest_point		the closest point on the line
- * @param fixed_point		the fixed point
- * @param line_point1		first point on the line
- * @param line_point2		second point on the line
+ * @param closest_point         the closest point on the line
+ * @param fixed_point           the fixed point
+ * @param line_point1           first point on the line
+ * @param line_point2           second point on the line
  */
 void fvi_closest_point_on_line_segment (
     vec3d* closest_point, const vec3d* fixed_point, const vec3d* line_point1,
@@ -969,14 +969,14 @@ void fvi_closest_point_on_line_segment (
  * checks whether two spheres hit given initial and starting positions and
  * radii does not check whether sphere are already touching.
  *
- * @param x_p0		polymodel sphere, start point
- * @param x_p1		polymodel sphere, end point
- * @param x_s0		other sphere, start point
- * @param x_s1		other sphere, end point
- * @param radius_p	radius of polymodel sphere
- * @param radius_s	radius of other sphere
- * @param t1		time pointer 1
- * @param t2		time pointer 2
+ * @param x_p0          polymodel sphere, start point
+ * @param x_p1          polymodel sphere, end point
+ * @param x_s0          other sphere, start point
+ * @param x_s1          other sphere, end point
+ * @param radius_p      radius of polymodel sphere
+ * @param radius_s      radius of other sphere
+ * @param t1            time pointer 1
+ * @param t2            time pointer 2
  *
  * @return 1 if spheres overlap, 0 otherwise
  */
@@ -989,7 +989,7 @@ int fvi_check_sphere_sphere (
     float time1, time2;
 
     // Check that there are either 0 or 2 pointers to time
-    Assert ((!(t1) && !(t2)) || (t1 && t2));
+    ASSERT ((!(t1) && !(t2)) || (t1 && t2));
 
     vm_vec_sub (&delta_x, x_s0, x_p0);
     delta_x_sqr = vm_vec_mag_squared (&delta_x);
@@ -1046,11 +1046,11 @@ int fvi_check_sphere_sphere (
  * whether it is *impossible* for a moving sphere to intersect a fixed polygon
  * face.
  *
- * @param poly_center	center of polygon face to test
- * @param poly_r		radius of polygon face in question
- * @param sphere_start	start point of moving sphere
- * @param sphere_end	end point of moving sphere
- * @param sphere_r		radius of moving sphere
+ * @param poly_center   center of polygon face to test
+ * @param poly_r                radius of polygon face in question
+ * @param sphere_start  start point of moving sphere
+ * @param sphere_end    end point of moving sphere
+ * @param sphere_r              radius of moving sphere
  *
  * @return 0 if no collision is possible, 1 if collision may be possible
  */
@@ -1099,10 +1099,10 @@ void fvi_closest_line_line (
  * NOTE: if a coordinate of start is *inside* the bbox, it is *not* moved to
  * surface of bbox
  *
- * @param mins		minimum extents of bbox
- * @param maxs		maximum extents of bbox
- * @param start		point in bbox reference frame
- * @param box_pt	point in bbox reference frame.
+ * @param mins          minimum extents of bbox
+ * @param maxs          maximum extents of bbox
+ * @param start         point in bbox reference frame
+ * @param box_pt        point in bbox reference frame.
  *
  * @return 1 if inside, 0 otherwise.
  */

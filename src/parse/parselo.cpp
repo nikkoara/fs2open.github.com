@@ -19,8 +19,8 @@
 #include "weapon/weapon.h"
 #include "mod_table/mod_table.h"
 
-#include "utils/encoding.h"
-#include "utils/unicode.h"
+#include "util/encoding.h"
+#include "util/unicode.h"
 
 #define ERROR_LENGTH 64
 #define RS_MAX_TRIES 5
@@ -50,7 +50,7 @@ static int Parsing_paused = 0;
 void allocate_parse_text (size_t size);
 static size_t Parse_text_size = 0;
 
-//	Return true if this character is white space, else false.
+// Return true if this character is white space, else false.
 int is_white_space (char ch) {
     return ((ch == ' ') || (ch == '\t') || (ch == EOLN));
 }
@@ -69,8 +69,8 @@ bool is_gray_space (unicode::codepoint_t cp) {
 
 int is_parenthesis (char ch) { return ((ch == '(') || (ch == ')')); }
 
-//	Advance global Mp (mission pointer) past all current white space.
-//	Leaves Mp pointing at first non white space character.
+// Advance global Mp (mission pointer) past all current white space.
+// Leaves Mp pointing at first non white space character.
 void ignore_white_space () {
     while ((*Mp != '\0') && is_white_space (*Mp)) Mp++;
 }
@@ -79,10 +79,10 @@ void ignore_gray_space () {
     while ((*Mp != '\0') && is_gray_space (*Mp)) Mp++;
 }
 
-//	Truncate *str, eliminating all trailing white space.
-//	Eg: "abc   "   becomes "abc"
-//		 "abc abc " becomes "abc abc"
-//		 "abc \t"   becomes "abc"
+// Truncate *str, eliminating all trailing white space.
+// Eg: "abc   "   becomes "abc"
+// "abc abc " becomes "abc abc"
+// "abc \t"   becomes "abc"
 void drop_trailing_white_space (char* str) {
     auto len = strlen (str);
     if (len == 0) {
@@ -94,7 +94,7 @@ void drop_trailing_white_space (char* str) {
     str[i + 1] = '\0';
 }
 
-//	Ditto for std::string
+// Ditto for std::string
 void drop_trailing_white_space (std::string& str) {
     if (str.empty ()) {
         // Nothing to do here
@@ -105,7 +105,7 @@ void drop_trailing_white_space (std::string& str) {
     str.resize (i + 1);
 }
 
-//	Eliminate any leading whitespace in str
+// Eliminate any leading whitespace in str
 void drop_leading_white_space (char* str) {
     auto len = strlen (str);
     size_t first = 0;
@@ -120,7 +120,7 @@ void drop_leading_white_space (char* str) {
     str[len - first] = 0;
 }
 
-//	Ditto for std::string
+// Ditto for std::string
 void drop_leading_white_space (std::string& str) {
     auto len = str.length ();
     size_t first = 0;
@@ -150,15 +150,15 @@ void drop_white_space (std::string& str) {
     drop_leading_white_space (str);
 }
 
-//	Advances Mp past current token.
+// Advances Mp past current token.
 void skip_token () {
     ignore_white_space ();
 
     while ((*Mp != '\0') && !is_white_space (*Mp)) Mp++;
 }
 
-//	Display a diagnostic message if Verbose is set.
-//	(Verbose is set if -v command line switch is present.)
+// Display a diagnostic message if Verbose is set.
+// (Verbose is set if -v command line switch is present.)
 void diag_printf (const char* format, ...) {
 #ifndef NDEBUG
     std::string buffer;
@@ -172,7 +172,7 @@ void diag_printf (const char* format, ...) {
 #endif
 }
 
-//	Grab and return (a pointer to) a bunch of tokens, terminating at
+// Grab and return (a pointer to) a bunch of tokens, terminating at
 // ERROR_LENGTH chars, or end of line.
 char* next_tokens () {
     int count = 0;
@@ -187,9 +187,9 @@ char* next_tokens () {
     return Error_str;
 }
 
-//	Return the line number given by the current mission pointer, ie Mp.
-//	A very slow function (scans all processed text), but who cares how long
-//	an error reporting function takes?
+// Return the line number given by the current mission pointer, ie Mp.
+// A very slow function (scans all processed text), but who cares how long
+// an error reporting function takes?
 int get_line_num () {
     int count = 1;
     int incomment = 0;
@@ -201,7 +201,7 @@ int get_line_num () {
     stoploc = Mp;
 
     while (p < stoploc) {
-        if (*p == '\0') Assert (0);
+        if (*p == '\0') ASSERT (0);
 
         if (!incomment && (*p == COMMENT_CHAR)) incomment = 1;
 
@@ -226,10 +226,10 @@ int get_line_num () {
     return count;
 }
 
-//	Call this function to display an error message.
-//	error_level == 0 means this is just a warning.
-//	!0 means it's an error message.
-//	Prints line number and other useful information.
+// Call this function to display an error message.
+// error_level == 0 means this is just a warning.
+// !0 means it's an error message.
+// Prints line number and other useful information.
 extern int Cmdline_noparseerrors;
 void error_display (int error_level, const char* format, ...) {
     char type[8];
@@ -254,20 +254,20 @@ void error_display (int error_level, const char* format, ...) {
          type, error_text.c_str ()));
 
     if (error_level == 0 || Cmdline_noparseerrors)
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "%s(line %i):\n%s: %s", Current_filename,
             get_line_num (), type, error_text.c_str ());
     else
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION, "%s(line %i):\n%s: %s", Current_filename,
             get_line_num (), type, error_text.c_str ());
 }
 
-//	Advance Mp to the next eoln character.
+// Advance Mp to the next eoln character.
 void advance_to_eoln (const char* more_terminators) {
     char terminators[128];
 
-    Assert ((more_terminators == NULL) || (strlen (more_terminators) < 125));
+    ASSERT ((more_terminators == NULL) || (strlen (more_terminators) < 125));
 
     terminators[0] = EOLN;
     terminators[1] = 0;
@@ -377,8 +377,8 @@ int skip_to_start_of_string_either (
 // If not found, display an error message, but try up to RS_MAX_TRIES times
 // to find the string.  (This is the groundwork for ignoring non-understood
 // lines.
-//	If unable to find the required string after RS_MAX_TRIES tries, then
-//	abort using longjmp to parse_abort.
+// If unable to find the required string after RS_MAX_TRIES tries, then
+// abort using longjmp to parse_abort.
 int required_string (const char* pstr) {
     int count = 0;
 
@@ -396,7 +396,7 @@ int required_string (const char* pstr) {
     if (count == RS_MAX_TRIES) {
         nprintf (
             ("Error", "Error: Unable to find required token [%s]\n", pstr));
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Error: Unable to find required token [%s]\n", pstr);
         throw parse::ParseException ("Required string not found");
     }
@@ -448,8 +448,8 @@ int check_for_string_raw (const char* pstr) {
 }
 
 // Find an optional string.
-//	If found, return 1, else return 0.
-//	If found, point past string, else don't update pointer.
+// If found, return 1, else return 0.
+// If found, point past string, else don't update pointer.
 int optional_string (const char* pstr) {
     ignore_white_space ();
 
@@ -478,7 +478,7 @@ int optional_string_either (const char* str1, const char* str2) {
 
 // generic parallel to required_string_one_of
 int optional_string_one_of (int arg_count, ...) {
-    Assertion (
+    ASSERTX (
         arg_count > 0,
         "optional_string_one_of() called with arg_count of %d; get a coder!\n",
         arg_count);
@@ -607,7 +607,7 @@ int required_string_either (const char* str1, const char* str2) {
     nprintf (
         ("Error", "Error: Unable to find either required token [%s] or [%s]\n",
          str1, str2));
-    fs2::dialog::warning (
+    WARNINGF (
         LOCATION, "Error: Unable to find either required token [%s] or [%s]\n",
         str1, str2);
     throw parse::ParseException ("Required string not found");
@@ -622,7 +622,7 @@ int required_string_either (const char* str1, const char* str2) {
  * @details By ngld, with some tweaks by MageKing17.
  */
 int required_string_one_of (int arg_count, ...) {
-    Assertion (
+    ASSERTX (
         arg_count > 0,
         "required_string_one_of() called with arg_count of %d; get a coder!\n",
         arg_count);
@@ -701,15 +701,15 @@ int required_string_either_fred (const char* str1, const char* str2) {
     return -1;
 }
 
-//	Copy characters from instr to outstr until eoln is found, or until max
-//	characters have been copied (including terminator).
+// Copy characters from instr to outstr until eoln is found, or until max
+// characters have been copied (including terminator).
 void copy_to_eoln (
     char* outstr, const char* more_terminators, const char* instr, int max) {
     int count = 0;
     char ch;
     char terminators[128];
 
-    Assert ((more_terminators == NULL) || (strlen (more_terminators) < 125));
+    ASSERT ((more_terminators == NULL) || (strlen (more_terminators) < 125));
 
     terminators[0] = EOLN;
     terminators[1] = 0;
@@ -732,13 +732,13 @@ void copy_to_eoln (
     *outstr = 0;
 }
 
-//	Ditto for std::string.
+// Ditto for std::string.
 void copy_to_eoln (
     std::string& outstr, const char* more_terminators, const char* instr) {
     char ch;
     char terminators[128];
 
-    Assert ((more_terminators == NULL) || (strlen (more_terminators) < 125));
+    ASSERT ((more_terminators == NULL) || (strlen (more_terminators) < 125));
 
     terminators[0] = EOLN;
     terminators[1] = 0;
@@ -753,8 +753,8 @@ void copy_to_eoln (
     }
 }
 
-//	Copy characters from instr to outstr until next white space is found, or
-// until max 	characters have been copied (including terminator).
+// Copy characters from instr to outstr until next white space is found, or
+// until max    characters have been copied (including terminator).
 void copy_to_next_white (char* outstr, char* instr, int max) {
     int count = 0;
     int in_quotes = 0;
@@ -789,7 +789,7 @@ void copy_to_next_white (char* outstr, char* instr, int max) {
     *outstr = 0;
 }
 
-//	Ditto for std::string.
+// Ditto for std::string.
 void copy_to_next_white (std::string& outstr, char* instr) {
     int in_quotes = 0;
     char ch;
@@ -818,11 +818,11 @@ void copy_to_next_white (std::string& outstr, char* instr) {
 // Returns a null-terminated character string allocated with vm_malloc() with
 // the data
 char* alloc_text_until (char* instr, char* endstr) {
-    Assert (instr && endstr);
+    ASSERT (instr && endstr);
     char* foundstr = stristr (instr, endstr);
 
     if (foundstr == NULL) {
-        fs2::dialog::error (LOCATION, "Missing [%s] in file", endstr);
+        ASSERTF (LOCATION, "Missing [%s] in file", endstr);
         throw parse::ParseException ("End string not found");
     }
     else {
@@ -839,7 +839,7 @@ char* alloc_text_until (char* instr, char* endstr) {
             rstr[foundstr - instr] = '\0';
         }
         else {
-            fs2::dialog::error (
+            ASSERTF (
                 LOCATION,
                 "Could not allocate enough memory in alloc_text_until");
         }
@@ -848,13 +848,13 @@ char* alloc_text_until (char* instr, char* endstr) {
     }
 }
 
-//	Copy text until a certain string is matched.
-//	For example, this is used to copy mission notes, scanning until $END NOTES:
+// Copy text until a certain string is matched.
+// For example, this is used to copy mission notes, scanning until $END NOTES:
 // is found.
 void copy_text_until (
     char* outstr, char* instr, const char* endstr, int max_chars) {
     char* foundstr;
-    Assert (outstr && instr && endstr);
+    ASSERT (outstr && instr && endstr);
 
     foundstr = stristr (instr, endstr);
 
@@ -882,10 +882,10 @@ void copy_text_until (
     diag_printf ("Here's the partial wad of text:\n%.30s\n", outstr);
 }
 
-//	Ditto for std::string.
+// Ditto for std::string.
 void copy_text_until (std::string& outstr, char* instr, const char* endstr) {
     char* foundstr;
-    Assert (instr && endstr);
+    ASSERT (instr && endstr);
 
     foundstr = stristr (instr, endstr);
 
@@ -943,8 +943,8 @@ void stuff_string_until (std::string& outstr, const char* endstr) {
 // Does depth checks for the start and end strings
 // extra_chars indicates extra malloc space that should be allocated.
 char* alloc_block (const char* startstr, const char* endstr, int extra_chars) {
-    Assert (startstr != NULL && endstr != NULL);
-    Assert (strcasecmp (startstr, endstr));
+    ASSERT (startstr != NULL && endstr != NULL);
+    ASSERT (strcasecmp (startstr, endstr));
 
     char* rval = NULL;
     auto elen = strlen (endstr);
@@ -973,7 +973,7 @@ char* alloc_block (const char* startstr, const char* endstr, int extra_chars) {
 
     // Check that we left the file
     if (level > 0) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION, "Unclosed pair of \"%s\" and \"%s\" on line %d in file",
             startstr, endstr, get_line_num ());
         throw parse::ParseException ("End string not found");
@@ -1017,10 +1017,10 @@ int get_string_or_variable (char* str) {
         int sexp_variable_index = get_index_sexp_variable_name (str);
 
         // We only want String variables
-        Assertion (
+        ASSERTX (
             sexp_variable_index != -1, "Didn't find variable name \"%s\"",
             str);
-        Assert (
+        ASSERT (
             Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING);
 
         result = PARSING_FOUND_VARIABLE;
@@ -1032,7 +1032,7 @@ int get_string_or_variable (char* str) {
     }
     else {
         get_string (str);
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Invalid entry \"%s\"  found in get_string_or_variable. Must be a "
             "quoted string or a string variable name.",
@@ -1055,10 +1055,10 @@ int get_string_or_variable (std::string& str) {
         int sexp_variable_index = get_index_sexp_variable_name (str);
 
         // We only want String variables
-        Assertion (
+        ASSERTX (
             sexp_variable_index != -1, "Didn't find variable name \"%s\"",
             str.c_str ());
-        Assert (
+        ASSERT (
             Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING);
 
         result = PARSING_FOUND_VARIABLE;
@@ -1070,7 +1070,7 @@ int get_string_or_variable (std::string& str) {
     }
     else {
         get_string (str);
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Invalid entry \"%s\"  found in get_string_or_variable. Must be a "
             "quoted string or a string variable name.",
@@ -1110,8 +1110,8 @@ void get_string (std::string& str) {
     Mp += len + 2;
 }
 
-//	Stuff a string into a string buffer.
-//	Supports various FreeSpace primitive types.  If 'len' is supplied, it will
+// Stuff a string into a string buffer.
+// Supports various FreeSpace primitive types.  If 'len' is supplied, it will
 // override
 // the default string length if using the F_NAME case.
 void stuff_string (char* outstr, int type, int len, const char* terminators) {
@@ -1121,7 +1121,7 @@ void stuff_string (char* outstr, int type, int len, const char* terminators) {
     int tag_id;
 
     // make sure we have enough room
-    Assert (final_len > 0);
+    ASSERT (final_len > 0);
 
     // make sure it's zero'd out
     memset (outstr, 0, len);
@@ -1166,7 +1166,7 @@ void stuff_string (char* outstr, int type, int len, const char* terminators) {
         break;
 
     default:
-        fs2::dialog::error (LOCATION, "Unhandled string type %d in stuff_string!", type);
+        ASSERTF (LOCATION, "Unhandled string type %d in stuff_string!", type);
     }
 
     if (type == F_FILESPEC) {
@@ -1204,8 +1204,8 @@ void stuff_string (char* outstr, int type, int len, const char* terminators) {
     diag_printf ("Stuffed string = [%.30s]\n", outstr);
 }
 
-//	Stuff a string into a string buffer.
-//	Supports various FreeSpace primitive types.
+// Stuff a string into a string buffer.
+// Supports various FreeSpace primitive types.
 void stuff_string (std::string& outstr, int type, const char* terminators) {
     std::string read_str;
     int tag_id;
@@ -1253,7 +1253,7 @@ void stuff_string (std::string& outstr, int type, const char* terminators) {
         break;
 
     default:
-        fs2::dialog::error (LOCATION, "Unhandled string type %d in stuff_string!", type);
+        ASSERTF (LOCATION, "Unhandled string type %d in stuff_string!", type);
     }
 
     if (type == F_FILESPEC) {
@@ -1290,7 +1290,7 @@ void stuff_string_line (char* outstr, int len) {
     int final_len = len - 1;
     int tag_id;
 
-    Assert (final_len > 0);
+    ASSERT (final_len > 0);
 
     // read in a line
     copy_to_eoln (read_str, "\n", Mp, read_len);
@@ -1332,7 +1332,7 @@ void stuff_string_line (std::string& outstr) {
 }
 
 // Exactly the same as stuff string only Malloc's the buffer.
-//	Supports various FreeSpace primitive types.  If 'len' is supplied, it will
+// Supports various FreeSpace primitive types.  If 'len' is supplied, it will
 // override
 // the default string length if using the F_NAME case.
 char* stuff_and_malloc_string (int type, char* terminators) {
@@ -1347,7 +1347,7 @@ char* stuff_and_malloc_string (int type, char* terminators) {
 }
 
 void stuff_malloc_string (char** dest, int type, char* terminators) {
-    Assert (dest != NULL); // wtf?
+    ASSERT (dest != NULL); // wtf?
 
     char* new_val = stuff_and_malloc_string (type, terminators);
 
@@ -1686,7 +1686,7 @@ bool matches_version_specific_tag (
 
     const char* ch = line_start + 6;
     while ((*ch) != ';') {
-        Assertion (
+        ASSERTX (
             (*ch) != '\0',
             "String that was already guaranteed to end with semicolons did "
             "not end with semicolons; it's possible we have fallen into an "
@@ -1695,7 +1695,7 @@ bool matches_version_specific_tag (
         ch++;
     }
     ch++;
-    Assertion (
+    ASSERTX (
         (*ch) == ';',
         "String that was guaranteed to have double semicolons did not; it's "
         "possible we have fallen into an alternate universe. Failing string: "
@@ -1831,9 +1831,9 @@ int parse_get_line (
     return num_chars_read;
 }
 
-//	Read mission text, stripping comments.
-//	When a comment is found, it is removed.  If an entire line
-//	consisted of a comment, a blank line is left in the input file.
+// Read mission text, stripping comments.
+// When a comment is found, it is removed.  If an entire line
+// consisted of a comment, a blank line is left in the input file.
 // Goober5000 - added ability to read somewhere other than Mission_text
 void read_file_text (
     const char* filename, int mode, char* processed_text, char* raw_text) {
@@ -1844,7 +1844,7 @@ void read_file_text (
 
     // if we are paused then processed_text and raw_text must not be NULL!!
     if (Parsing_paused && ((processed_text == NULL) || (raw_text == NULL))) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "ERROR: Neither processed_text nor raw_text may be NULL when "
             "parsing is paused!!\n");
@@ -1862,7 +1862,7 @@ void read_file_text (
 }
 
 void stop_parse () {
-    Assert (!Parsing_paused);
+    ASSERT (!Parsing_paused);
 
     if (Parse_text != nullptr) {
         vm_free (Parse_text);
@@ -1878,7 +1878,7 @@ void stop_parse () {
 }
 
 void allocate_parse_text (size_t size) {
-    Assert (size > 0);
+    ASSERT (size > 0);
 
     // Make sure that there is space for the terminating null character
     size += 1;
@@ -1913,7 +1913,7 @@ void allocate_parse_text (size_t size) {
         (char*)vm_malloc (sizeof (char) * size, memory::quiet_alloc);
 
     if ((Parse_text == nullptr) || (Parse_text_raw == nullptr)) {
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Unable to allocate enough memory for Mission_text!  "
             "Aborting...\n");
@@ -1930,7 +1930,7 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
     CFILE* mf;
     int file_is_encrypted;
 
-    Assert (filename);
+    ASSERT (filename);
 
     mf = cfopen (filename, "rb", CFILE_NORMAL, mode);
     if (mf == NULL) {
@@ -1970,7 +1970,7 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
         int unscrambled_len;
         char* scrambled_text;
         scrambled_text = (char*)vm_malloc (file_len + 1);
-        Assert (scrambled_text);
+        ASSERT (scrambled_text);
         cfread (scrambled_text, file_len, 1, mf);
         // unscramble text
         unencrypt (scrambled_text, file_len, raw_text, &unscrambled_len);
@@ -2000,7 +2000,7 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
                 // Latin1 is the encoding of retail data and for legacy reasons
                 // we convert that to UTF-8. We still output a warning
                 // though...
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Found Latin-1 encoded file %s. This file will be "
                     "automatically converted to UTF-8 but "
@@ -2037,7 +2037,7 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
                         allocate_parse_text (Parse_text_size + 300);
                     }
                     else {
-                        fs2::dialog::warning (
+                        WARNINGF (
                             LOCATION,
                             "File reencoding failed (error code %zu"
                             ")!\n"
@@ -2052,7 +2052,7 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
                 } while (true);
             }
             else {
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Found invalid UTF-8 encoding in file %s at "
                     "position %zd"
@@ -2080,8 +2080,8 @@ void process_raw_file_text (char* processed_text, char* raw_text) {
 
     if (raw_text == NULL) raw_text = Parse_text_raw;
 
-    Assert (processed_text != NULL);
-    Assert (raw_text != NULL);
+    ASSERT (processed_text != NULL);
+    ASSERT (raw_text != NULL);
 
     mp = processed_text;
     mp_raw = raw_text;
@@ -2156,9 +2156,9 @@ void process_raw_file_text (char* processed_text, char* raw_text) {
                 error_display(0, "Input string too long.  Max is %i
        characters.\n%.256s\n", PARSE_BUF_SIZE, outbuf);
 
-            //	If you hit this assert, it is probably telling you the obvious.
+            // If you hit this assert, it is probably telling you the obvious.
        The file
-            //	you are trying to read is truly too large.  Look at *filename
+            // you are trying to read is truly too large.  Look at *filename
        to see the file name. Assert(mp_raw - file_text_raw + strlen(outbuf) <
        PARSE_TEXT_SIZE); strcpy_s(mp_raw, outbuf); mp_raw += strlen(outbuf);
 
@@ -2221,8 +2221,8 @@ bool atol2 (long* out) {
     return true;
 }
 
-//	Stuff a floating point value pointed at by Mp.
-//	Advances past float characters.
+// Stuff a floating point value pointed at by Mp.
+// Advances past float characters.
 void stuff_float (float* f) {
     bool success = atof2 (f);
 
@@ -2258,8 +2258,8 @@ int stuff_float_optional (float* f, bool raw) {
     return 2;
 }
 
-//	Stuff an integer value pointed at by Mp.
-//	Advances past integer characters.
+// Stuff an integer value pointed at by Mp.
+// Advances past integer characters.
 void stuff_int (int* i) {
     bool success = atoi2 (i);
 
@@ -2316,7 +2316,7 @@ int stuff_int_or_variable (int& i, bool positive_value) {
                 value = atoi (Sexp_variables[index].text);
             }
             else {
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION,
                     "Invalid variable type \"%s\" found in mission. Variable "
                     "must be a number variable!",
@@ -2324,7 +2324,7 @@ int stuff_int_or_variable (int& i, bool positive_value) {
             }
         }
         else {
-            fs2::dialog::error (LOCATION, "Invalid variable name \"%s\" found.", str);
+            ASSERTF (LOCATION, "Invalid variable name \"%s\" found.", str);
         }
 
         // zero negative values if requested
@@ -2356,7 +2356,7 @@ int stuff_int_or_variable (int* ilp, int count, bool positive_value) {
                 value = atoi (Sexp_variables[index].text);
             }
             else {
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION,
                     "Invalid variable type \"%s\" found in mission. Variable "
                     "must be a number variable!",
@@ -2364,7 +2364,7 @@ int stuff_int_or_variable (int* ilp, int count, bool positive_value) {
             }
         }
         else {
-            fs2::dialog::error (LOCATION, "Invalid variable name \"%s\" found.", str);
+            ASSERTF (LOCATION, "Invalid variable name \"%s\" found.", str);
         }
 
         // zero negative values if requested
@@ -2444,7 +2444,7 @@ void stuff_boolean (bool* b, bool a_to_eol) {
         }
         else {
             *b = false;
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION, "Boolean '%s' type unknown; assuming 'no/false'",
                 token);
         }
@@ -2503,8 +2503,8 @@ int stuff_bool_list (bool* blp, int max_bools) {
     return count;
 }
 
-//	Stuff an integer value pointed at by Mp.
-//	Advances past integer characters.
+// Stuff an integer value pointed at by Mp.
+// Advances past integer characters.
 void stuff_ubyte (ubyte* i) {
     int temp;
     bool success = atoi2 (&temp);
@@ -2522,7 +2522,7 @@ void stuff_ubyte (ubyte* i) {
 }
 
 int parse_string_flag_list (int* dest, flag_def_list defs[], int defs_size) {
-    Assert (dest != NULL); // wtf?
+    ASSERT (dest != NULL); // wtf?
 
     char(*slp)[NAME_LENGTH] = (char(*)[32]) new char[defs_size * NAME_LENGTH];
     int num_strings = stuff_string_list (slp, defs_size);
@@ -2562,7 +2562,7 @@ int stuff_string_list (std::vector< std::string >& slp) {
         if (*Mp != '\"') {
             error_display (0, "Missing quotation marks in string list.");
         }
-        // Assert ( *Mp == '\"' );					// should always be
+        // ASSERT ( *Mp == '\"' );                                      // should always be
         // enclosed in quotes
 
         buf = "";
@@ -2592,11 +2592,11 @@ int stuff_string_list (char slp[][NAME_LENGTH], int max_strings) {
     ignore_white_space ();
 
     while (*Mp != ')') {
-        Assert (count < max_strings);
+        ASSERT (count < max_strings);
         if (*Mp != '\"') {
             error_display (0, "Missing quotation marks in string list.");
         }
-        // Assert ( *Mp == '\"' );					// should always be
+        // ASSERT ( *Mp == '\"' );                                      // should always be
         // enclosed in quotes
 
         if (count < max_strings) { get_string (slp[count++]); }
@@ -2624,12 +2624,12 @@ const char* get_lookup_type_name (int lookup_type) {
     return "Unknown lookup type, tell a coder!";
 }
 
-//	Stuffs an integer list.
-//	This is of the form ( i* )
-//	  where i is an integer.
+// Stuffs an integer list.
+// This is of the form ( i* )
+// where i is an integer.
 // For example, (1) () (1 2 3) ( 1 ) are legal integer lists.
 int stuff_int_list (int* ilp, int max_ints, int lookup_type) {
-    Assertion (
+    ASSERTX (
         max_ints > 0,
         "Requested to parse an integer list with a maximum of 0 entries!");
 
@@ -2678,7 +2678,7 @@ int stuff_int_list (int* ilp, int max_ints, int lookup_type) {
             case RAW_INTEGER_TYPE: num = atoi (str); break;
 
             default:
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION, "Unknown lookup_type %d in stuff_int_list",
                     lookup_type);
                 break;
@@ -2768,7 +2768,7 @@ int stuff_loadout_list (int* ilp, int max_ints, int lookup_type) {
 
     while (*Mp != ')') {
         if (count >= max_ints) {
-            fs2::dialog::error (LOCATION, "Loadout contains too many entries.\n");
+            ASSERTF (LOCATION, "Loadout contains too many entries.\n");
         }
 
         index = -1;
@@ -2779,11 +2779,11 @@ int stuff_loadout_list (int* ilp, int max_ints, int lookup_type) {
         // into str so that regardless of whether we found a variable or not it
         // now holds the name of the ship or weapon we're interested in.
         if (variable_found) {
-            Assert (lookup_type != CAMPAIGN_LOADOUT_SHIP_LIST);
+            ASSERT (lookup_type != CAMPAIGN_LOADOUT_SHIP_LIST);
             sexp_variable_index = get_index_sexp_variable_name (str);
 
             if (sexp_variable_index < 0) {
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION,
                     "Invalid SEXP variable name \"%s\" found in "
                     "stuff_loadout_list.",
@@ -2812,7 +2812,7 @@ int stuff_loadout_list (int* ilp, int max_ints, int lookup_type) {
         if (index < 0 && (lookup_type == MISSION_LOADOUT_SHIP_LIST ||
                           lookup_type == MISSION_LOADOUT_WEAPON_LIST)) {
             // print a warning in debug mode
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Invalid type \"%s\" found in loadout of mission "
                 "file...skipping",
@@ -2829,7 +2829,7 @@ int stuff_loadout_list (int* ilp, int max_ints, int lookup_type) {
         if ((lookup_type == MISSION_LOADOUT_SHIP_LIST) &&
             (!(Ship_info[index].flags[Ship::Info_Flags::Player_ship]))) {
             clean_loadout_list_entry ();
-            fs2::dialog::warning (
+            WARNINGF (
                 LOCATION,
                 "Ship type \"%s\" found in loadout of mission file. This "
                 "class is not marked as a player ship...skipping",
@@ -2848,7 +2848,7 @@ int stuff_loadout_list (int* ilp, int max_ints, int lookup_type) {
                  "weapon...skipping\n",
                  str));
             if (!Is_standalone)
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Weapon type \"%s\" found in loadout of mission file. "
                     "This class is not marked as a player allowed "
@@ -2896,7 +2896,7 @@ size_t stuff_float_list (float* flp, size_t max_floats) {
     Mp++;
     ignore_white_space ();
     while (*Mp != ')') {
-        Assert (count < max_floats);
+        ASSERT (count < max_floats);
         if (count < max_floats) { stuff_float (&flp[count++]); }
         else {
             float dummy;
@@ -2910,11 +2910,11 @@ size_t stuff_float_list (float* flp, size_t max_floats) {
     return count;
 }
 
-//	Marks an integer list.
-//	This is of the form ( i* )
-//	  where i is an integer.
-//	If a specified string is found in the lookup and its value is 7, then the
-// 7th value 	in the array is set.
+// Marks an integer list.
+// This is of the form ( i* )
+// where i is an integer.
+// If a specified string is found in the lookup and its value is 7, then the
+// 7th value    in the array is set.
 void mark_int_list (int* ilp, int max_ints, int lookup_type) {
     ignore_white_space ();
 
@@ -2947,24 +2947,24 @@ void mark_int_list (int* ilp, int max_ints, int lookup_type) {
             case WEAPON_LIST_TYPE: num = weapon_info_lookup (str); break;
 
             default:
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION, "Unknown lookup_type %d in mark_int_list",
                     lookup_type);
                 break;
             }
 
             if ((num < 0) || (num >= max_ints))
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION,
                     "Unable to find string \"%s\" in mark_int_list.\n", str);
 
-            //			ilp[num] = 1;
+            // ilp[num] = 1;
         }
         else {
             int tval;
 
             stuff_int (&tval);
-            Assert ((tval >= 0) && (tval < max_ints));
+            ASSERT ((tval >= 0) && (tval < max_ints));
             if (tval >= 0 && tval < max_ints) { ilp[tval] = 1; }
         }
 
@@ -2974,7 +2974,7 @@ void mark_int_list (int* ilp, int max_ints, int lookup_type) {
     Mp++;
 }
 
-//	Stuff a vec3d struct, which is 3 floats.
+// Stuff a vec3d struct, which is 3 floats.
 void stuff_vec3d (vec3d* vp) {
     stuff_float (&vp->xyz.x);
     stuff_float (&vp->xyz.y);
@@ -3005,11 +3005,11 @@ void stuff_parenthesized_vec3d (vec3d* vp) {
     }
 }
 
-//	Stuffs vec3d list.  *vlp is an array of vec3ds.
-//	This is of the form ( (vec3d)* )
-//	  (where * is a kleene star, not a pointer indirection)
+// Stuffs vec3d list.  *vlp is an array of vec3ds.
+// This is of the form ( (vec3d)* )
+// (where * is a kleene star, not a pointer indirection)
 // For example, ( (1 2 3) (2 3 4) (2 3 5) )
-//		 is a list of three vec3ds.
+// is a list of three vec3ds.
 int stuff_vec3d_list (vec3d* vlp, int max_vecs) {
     int count = 0;
 
@@ -3026,7 +3026,7 @@ int stuff_vec3d_list (vec3d* vlp, int max_vecs) {
     ignore_white_space ();
 
     while (*Mp != ')') {
-        Assert (count < max_vecs);
+        ASSERT (count < max_vecs);
         if (count < max_vecs) { stuff_parenthesized_vec3d (&vlp[count++]); }
         else {
             vec3d temp;
@@ -3068,7 +3068,7 @@ int stuff_vec3d_list (std::vector< vec3d >& vec_list) {
     return (int)vec_list.size ();
 }
 
-//	Stuff a matrix, which is 3 vec3ds.
+// Stuff a matrix, which is 3 vec3ds.
 void stuff_matrix (matrix* mp) {
     stuff_vec3d (&mp->vec.rvec);
     stuff_vec3d (&mp->vec.uvec);
@@ -3089,7 +3089,7 @@ int string_lookup (
     const char* str1, const char* const* strlist, size_t max,
     const char* description, bool say_errors) {
     for (size_t i = 0; i < max; i++) {
-        Assert (strlen (strlist[i]) != 0); //-V805
+        ASSERT (strlen (strlist[i]) != 0); //-V805
 
         if (!strcasecmp (str1, strlist[i])) return (int)i;
     }
@@ -3101,7 +3101,7 @@ int string_lookup (
     return -1;
 }
 
-//	Find a required string (*id), then stuff the text of type f_type that
+// Find a required string (*id), then stuff the text of type f_type that
 // follows it at *addr.  *strlist[] contains the strings it should try to
 // match.
 void find_and_stuff (
@@ -3140,8 +3140,8 @@ void find_and_stuff_optional (
     }
 }
 
-//	Mp points at a string.
-//	Find the string in the list of strings *strlist[].
+// Mp points at a string.
+// Find the string in the list of strings *strlist[].
 // Returns the index of the match, -1 if none.
 int match_and_stuff (
     int f_type, const char* const* strlist, int max, const char* description) {
@@ -3163,7 +3163,7 @@ void find_and_stuff_or_add (
 
     if (*addr == -1) // not in list, so lets try and add it.
     {
-        Assert (*total < max);
+        ASSERT (*total < max);
         strcpy (strlist[*total], token);
         *addr = (*total)++;
     }
@@ -3172,7 +3172,7 @@ void find_and_stuff_or_add (
 // pause current parsing so that some else can be parsed without interfering
 // with the currently parsing file
 void pause_parse () {
-    Assert (!Parsing_paused);
+    ASSERT (!Parsing_paused);
     if (Parsing_paused) return;
 
     Mp_save = Mp;
@@ -3187,7 +3187,7 @@ void pause_parse () {
 
 // unpause parsing to continue with previously parsing file
 void unpause_parse () {
-    Assert (Parsing_paused);
+    ASSERT (Parsing_paused);
     if (!Parsing_paused) return;
 
     Mp = Mp_save;
@@ -3227,8 +3227,8 @@ char* split_str_once (char* src, int max_pixel_w) {
     char* brk = NULL;
     int i, w, len, last_was_white = 0;
 
-    Assert (src);
-    Assert (max_pixel_w > 0);
+    ASSERT (src);
+    ASSERT (max_pixel_w > 0);
 
     gr_get_string_size (&w, NULL, src);
     if ((w <= max_pixel_w) && !strstr (src, "\n")) {
@@ -3283,21 +3283,21 @@ char* split_str_once (char* src, int max_pixel_w) {
 //
 // Supports \n's in the strings!
 //
-// parameters:		src			=>		source string to be broken up
-//						max_pixel_w	=>		max width of line in pixels
-//						n_chars		=>		output array that will hold number
-// of characters in each line 						p_str			=>		output array of pointers
+// parameters:          src                     =>              source string to be broken up
+// max_pixel_w     =>              max width of line in pixels
+// n_chars         =>              output array that will hold number
+// of characters in each line                                           p_str                   =>              output array of pointers
 // to start of
-// lines within src 						max_lines	=>		limit of number
+// lines within src                                             max_lines       =>              limit of number
 // of
-// lines to break src up into 						ignore_char	=>		OPTIONAL
+// lines to break src up into                                           ignore_char     =>              OPTIONAL
 // parameter (default val -1).  Ignore words starting with this character
 // This is useful when you want to ignore embedded control information that
 // starts with a specific character, like $ or
 //#
 //
-//	returns:			number of lines src is broken into
-//						-1 is returned when an error occurs
+// returns:                        number of lines src is broken into
+// -1 is returned when an error occurs
 //
 int split_str (
     const char* src, int max_pixel_w, int* n_chars, const char** p_str,
@@ -3309,11 +3309,11 @@ int split_str (
     int ignore_until_whitespace, buf_index;
 
     // check our assumptions..
-    Assert (src != NULL);
-    Assert (n_chars != NULL);
-    Assert (p_str != NULL);
-    Assert (max_lines > 0);
-    Assert (max_pixel_w > 0);
+    ASSERT (src != NULL);
+    ASSERT (n_chars != NULL);
+    ASSERT (p_str != NULL);
+    ASSERT (max_lines > 0);
+    ASSERT (max_pixel_w > 0);
 
     memset (buffer, 0, sizeof (buffer));
     buf_index = 0;
@@ -3384,7 +3384,7 @@ int split_str (
         }
 
         auto encoded_width = unicode::encoded_size (cp);
-        Assertion (
+        ASSERTX (
             buf_index + encoded_width < SPLIT_STR_BUFFER_SIZE,
             "buffer overflow in split_str: screen width causes this text to "
             "be longer than %d characters!",
@@ -3411,7 +3411,7 @@ int split_str (
 
             n_chars[line_num] =
                 (int)(end - p_str[line_num]); // track length of line
-            Assert (n_chars[line_num]);
+            ASSERT (n_chars[line_num]);
             line_num++;
             if (line_num < max_lines) { p_str[line_num] = NULL; }
             new_line = 1;
@@ -3425,7 +3425,7 @@ int split_str (
     if (!new_line && p_str[line_num]) {
         n_chars[line_num] =
             (int)(iter.pos () - p_str[line_num]); // track length of line
-        Assert (n_chars[line_num]);
+        ASSERT (n_chars[line_num]);
         line_num++;
     }
 
@@ -3442,8 +3442,8 @@ int split_str (
     int ignore_until_whitespace = 0, buf_index = 0;
 
     // check our assumptions..
-    Assert (src != NULL);
-    Assert (max_pixel_w > 0);
+    ASSERT (src != NULL);
+    ASSERT (max_pixel_w > 0);
 
     memset (buffer, 0, sizeof (buffer));
 
@@ -3512,7 +3512,7 @@ int split_str (
         }
 
         auto encoded_width = unicode::encoded_size (cp);
-        Assertion (
+        ASSERTX (
             buf_index + encoded_width < SPLIT_STR_BUFFER_SIZE,
             "buffer overflow in split_str: screen width causes this text to "
             "be longer than %d characters!",
@@ -3539,7 +3539,7 @@ int split_str (
 
             n_chars.push_back (
                 (int)(end - p_str[line_num])); // track length of line
-            Assert (n_chars[line_num]);
+            ASSERT (n_chars[line_num]);
             line_num++;
             new_line = 1;
 
@@ -3552,7 +3552,7 @@ int split_str (
     if (!new_line && p_str[line_num]) {
         n_chars.push_back (
             (int)(iter.pos () - p_str[line_num])); // track length of line
-        Assert (n_chars[line_num]);
+        ASSERT (n_chars[line_num]);
         line_num++;
     }
 
@@ -3562,7 +3562,7 @@ int split_str (
 // Goober5000
 // accounts for the dumb communications != communication, etc.
 int subsystem_strcasecmp (const char* str1, const char* str2) {
-    Assert (str1 && str2);
+    ASSERT (str1 && str2);
 
     // ensure len-1 will be valid
     if (!*str1 || !*str2) return strcasecmp (str1, str2);
@@ -3591,8 +3591,8 @@ int subsystem_strcasecmp (const char* str1, const char* str2) {
 // http://www.codeproject.com/string/stringsearch.asp
 const char* stristr (const char* str, const char* substr) {
     // check for null and insanity
-    Assert (str);
-    Assert (substr);
+    ASSERT (str);
+    ASSERT (substr);
     if (str == NULL || substr == NULL || *substr == '\0') return NULL;
 
     // save both a lowercase and an uppercase version of the first character of
@@ -3635,8 +3635,8 @@ const char* stristr (const char* str, const char* substr) {
 // non-const version
 char* stristr (char* str, const char* substr) {
     // check for null and insanity
-    Assert (str);
-    Assert (substr);
+    ASSERT (str);
+    ASSERT (substr);
     if (str == NULL || substr == NULL || *substr == '\0') return NULL;
 
     // save both a lowercase and an uppercase version of the first character of
@@ -3720,7 +3720,7 @@ void sprintf (std::string& dest, const char* format, ...) {
 // Goober5000
 bool end_string_at_first_hash_symbol (char* src) {
     char* p;
-    Assert (src);
+    ASSERT (src);
 
     p = get_pointer_to_first_hash_symbol (src);
     if (p) {
@@ -3748,13 +3748,13 @@ bool end_string_at_first_hash_symbol (std::string& src) {
 
 // Goober5000
 char* get_pointer_to_first_hash_symbol (char* src) {
-    Assert (src);
+    ASSERT (src);
     return strchr (src, '#');
 }
 
 // Goober5000
 const char* get_pointer_to_first_hash_symbol (const char* src) {
-    Assert (src);
+    ASSERT (src);
     return strchr (src, '#');
 }
 
@@ -3768,7 +3768,7 @@ int get_index_of_first_hash_symbol (std::string& src) {
 ptrdiff_t replace_one (
     char* str, const char* oldstr, const char* newstr, size_t max_len,
     ptrdiff_t range) {
-    Assert (str && oldstr && newstr);
+    ASSERT (str && oldstr && newstr);
 
     // search
     char* ch = stristr (str, oldstr);
@@ -3880,7 +3880,7 @@ replace_all (std::string& context, const char* from, const char* to) {
 // Returns 0 if equal, nonzero if not
 int strextcmp (const char* s1, const char* s2) {
     // sanity check
-    Assert ((s1 != NULL) && (s2 != NULL));
+    ASSERT ((s1 != NULL) && (s2 != NULL));
 
     // find last '.' in both strings
     char* s1_end = (char*)strrchr (s1, '.');
@@ -3929,7 +3929,7 @@ bool drop_extension (std::string& str) {
 
 // WMC
 void backspace (char* src) {
-    Assert (src != NULL); // this would be bad
+    ASSERT (src != NULL); // this would be bad
 
     char* dest = src;
     src++;
@@ -4006,7 +4006,7 @@ int scan_fso_version_string (
 // Goober5000 - used for long Warnings, Errors, and FRED error messages with
 // SEXPs
 void truncate_message_lines (std::string& text, int num_allowed_lines) {
-    Assert (num_allowed_lines > 0);
+    ASSERT (num_allowed_lines > 0);
     size_t find_from = 0;
 
     while (find_from < text.size ()) {
@@ -4053,9 +4053,7 @@ int parse_modular_table (
 
     if ((name_check == NULL) || (parse_callback == NULL) ||
         ((*name_check) != '*')) {
-        UNREACHABLE (
-            "parse_modular_table() called with invalid arguments; get a "
-            "coder!\n");
+        ASSERT (0);
         return 0;
     }
 

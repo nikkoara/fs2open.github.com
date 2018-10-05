@@ -210,7 +210,7 @@ int free_object_slots (int num_used) {
             case OBJ_FIREBALL:
             case OBJ_WEAPON:
             case OBJ_DEBRIS:
-                //				case OBJ_CMEASURE:
+                // case OBJ_CMEASURE:
                 obj_list[olind++] = OBJ_INDEX (objp);
                 break;
 
@@ -226,7 +226,7 @@ int free_object_slots (int num_used) {
             case OBJ_JUMP_NODE:
             case OBJ_BEAM: break;
             default:
-                Int3 (); //	Hey, what kind of object is this?  Unknown!
+                Int3 (); // Hey, what kind of object is this?  Unknown!
                 break;
             }
     }
@@ -287,12 +287,12 @@ int free_object_slots (int num_used) {
 
 // Goober5000
 float get_hull_pct (object* objp) {
-    Assert (objp);
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp);
+    ASSERT (objp->type == OBJ_SHIP);
 
     float total_strength = Ships[objp->instance].ship_max_hull_strength;
 
-    Assert (total_strength > 0.0f); // unlike shield, no ship can have 0 hull
+    ASSERT (total_strength > 0.0f); // unlike shield, no ship can have 0 hull
 
     if (total_strength == 0.0f) return 0.0f;
 
@@ -304,12 +304,12 @@ float get_hull_pct (object* objp) {
 }
 
 float get_sim_hull_pct (object* objp) {
-    Assert (objp);
-    Assert (objp->type == OBJ_SHIP);
+    ASSERT (objp);
+    ASSERT (objp->type == OBJ_SHIP);
 
     float total_strength = Ships[objp->instance].ship_max_hull_strength;
 
-    Assert (total_strength > 0.0f); // unlike shield, no ship can have 0 hull
+    ASSERT (total_strength > 0.0f); // unlike shield, no ship can have 0 hull
 
     if (total_strength == 0.0f) return 0.0f;
 
@@ -322,7 +322,7 @@ float get_sim_hull_pct (object* objp) {
 
 // Goober5000
 float get_shield_pct (object* objp) {
-    Assert (objp);
+    ASSERT (objp);
 
     // bah - we might have asteroids
     if (objp->type != OBJ_SHIP) return 0.0f;
@@ -406,7 +406,7 @@ int obj_allocate (void) {
 
     // Find next available object
     objp = GET_FIRST (&obj_free_list);
-    Assert (objp != &obj_free_list); // shouldn't have the dummy element
+    ASSERT (objp != &obj_free_list); // shouldn't have the dummy element
 
     // remove objp from the free list
     list_remove (&obj_free_list, objp);
@@ -446,7 +446,7 @@ void obj_free (int objnum) {
         obj_init ();
     }
 
-    Assert (objnum >= 0); // Trying to free bogus object!!!
+    ASSERT (objnum >= 0); // Trying to free bogus object!!!
 
     // get object pointer
     objp = &Objects[objnum];
@@ -462,7 +462,7 @@ void obj_free (int objnum) {
 
     Objects[objnum].type = OBJ_NONE;
 
-    Assert (Num_objects >= 0);
+    ASSERT (Num_objects >= 0);
 
     if (objnum == Highest_object_index) {
         while (Highest_object_index >= 0 &&
@@ -492,12 +492,12 @@ int obj_create (
         return -1;
 
     obj = &Objects[objnum];
-    Assert (obj->type == OBJ_NONE); // make sure unused
+    ASSERT (obj->type == OBJ_NONE); // make sure unused
 
     // clear object in preparation for setting of custom values
     obj->clear ();
 
-    Assert (Object_next_signature > 0); // 0 is bogus!
+    ASSERT (Object_next_signature > 0); // 0 is bogus!
     obj->signature = Object_next_signature++;
 
     obj->type = type;
@@ -552,7 +552,7 @@ void obj_delete_all () {
 void obj_delete (int objnum) {
     object* objp;
 
-    Assert (objnum >= 0 && objnum < MAX_OBJECTS);
+    ASSERT (objnum >= 0 && objnum < MAX_OBJECTS);
     objp = &Objects[objnum];
     if (objp->type == OBJ_NONE) {
         mprintf (
@@ -603,7 +603,7 @@ void obj_delete (int objnum) {
     case OBJ_ASTEROID:
         asteroid_delete (objp);
         break;
-        /*	case OBJ_CMEASURE:
+        /*      case OBJ_CMEASURE:
                 cmeasure_delete( objp );
                 break;*/
     case OBJ_GHOST:
@@ -622,7 +622,7 @@ void obj_delete (int objnum) {
     case OBJ_BEAM: break;
     case OBJ_NONE: Int3 (); break;
     default:
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION,
             "Unhandled object type %d in obj_delete_all_that_should_be_dead",
             objp->type);
@@ -641,7 +641,7 @@ void obj_delete (int objnum) {
     obj_free (objnum);
 }
 
-//	------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------
 void obj_delete_all_that_should_be_dead () {
     object *objp, *temp;
 
@@ -672,7 +672,7 @@ void obj_delete_all_that_should_be_dead () {
 void obj_merge_created_list (void) {
     // The old way just merged the two.   This code takes one out of the create
     // list, creates object pairs for it, and then adds it to the used list.
-    //	OLD WAY: list_merge( &obj_used_list, &obj_create_list );
+    // OLD WAY: list_merge( &obj_used_list, &obj_create_list );
     object* objp = GET_FIRST (&obj_create_list);
     while (objp != END_OF_LIST (&obj_create_list)) {
         list_remove (obj_create_list, objp);
@@ -731,7 +731,7 @@ void obj_move_one_docked_object (object* objp, object* parent_objp) {
 void obj_player_fire_stuff (object* objp, control_info ci) {
     ship* shipp;
 
-    Assert (objp->flags[Object::Object_Flags::Player_ship]);
+    ASSERT (objp->flags[Object::Object_Flags::Player_ship]);
 
     // try and get the ship pointer
     shipp = NULL;
@@ -796,7 +796,7 @@ void obj_move_call_physics (object* objp, float frametime) {
 
     int has_fired = -1; // stop fireing stuff-Bobboau
 
-    //	Do physics for objects with OF_PHYSICS flag set and with some engine
+    // Do physics for objects with OF_PHYSICS flag set and with some engine
     // strength remaining.
     if (objp->flags[Object::Object_Flags::Physics]) {
         // only set phys info if ship is not dead
@@ -812,7 +812,7 @@ void obj_move_call_physics (object* objp, float frametime) {
             }
 
             if (engine_strength ==
-                0.0f) { //	All this is necessary to make ship gradually come
+                0.0f) { // All this is necessary to make ship gradually come
                         // to a stop after engines are blown.
                 vm_vec_zero (&objp->phys_info.desired_vel);
                 vm_vec_zero (&objp->phys_info.desired_rotvel);
@@ -824,10 +824,10 @@ void obj_move_call_physics (object* objp, float frametime) {
             if (shipp->weapons.num_secondary_banks > 0) {
                 polymodel* pm =
                     model_get (Ship_info[shipp->ship_info_index].model_num);
-                Assertion (
+                ASSERTX (
                     pm != NULL, "No polymodel found for ship %s",
                     Ship_info[shipp->ship_info_index].name);
-                Assertion (
+                ASSERTX (
                     pm->missile_banks != NULL,
                     "Ship %s has %d secondary banks, but no missile banks "
                     "could be found.\n",
@@ -897,18 +897,18 @@ void obj_move_call_physics (object* objp, float frametime) {
             }
         }
         else {
-            //	Hack for dock mode.
-            //	If docking with a ship, we don't obey the normal ship physics,
+            // Hack for dock mode.
+            // If docking with a ship, we don't obey the normal ship physics,
             // we can slew about.
             if (objp->type == OBJ_SHIP) {
                 ai_info* aip = &Ai_info[Ships[objp->instance].ai_index];
 
-                //	Note: This conditional for using PF_USE_VEL (instantaneous
-                // acceleration) is probably too loose. 	A ships awaiting
+                // Note: This conditional for using PF_USE_VEL (instantaneous
+                // acceleration) is probably too loose.         A ships awaiting
                 // support will fly towards the support ship with instantaneous
-                // acceleration. 	But we want to have ships in the process of
+                // acceleration.        But we want to have ships in the process of
                 // docking have quick acceleration, or they overshoot their
-                // goals. 	Probably can not key off
+                // goals.       Probably can not key off
                 // objnum_I_am_docked_or_docking_with, but then need to add
                 // some other condition.  Live with it for now. -- MK, 2/19/98
 
@@ -928,7 +928,7 @@ void obj_move_call_physics (object* objp, float frametime) {
                     }
                     else {
                         objp->phys_info.flags &=
-                            ~PF_USE_VEL; //	If engine blown, don't PF_USE_VEL,
+                            ~PF_USE_VEL; // If engine blown, don't PF_USE_VEL,
                                          // or ships stop immediately
                     }
                 }
@@ -1195,7 +1195,7 @@ void obj_move_all_pre (object* objp, float frametime) {
     case OBJ_ASTEROID:
         if (!physics_paused) { asteroid_process_pre (objp); }
         break;
-        /*	case OBJ_CMEASURE:
+        /*      case OBJ_CMEASURE:
                 if (!physics_paused){
                     cmeasure_process_pre(objp, frametime);
                 }
@@ -1207,7 +1207,7 @@ void obj_move_all_pre (object* objp, float frametime) {
     case OBJ_BEAM: break;
     case OBJ_NONE: Int3 (); break;
     default:
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION, "Unhandled object type %d in obj_move_all_pre\n",
             objp->type);
     }
@@ -1447,7 +1447,7 @@ void obj_move_all_post (object* objp, float frametime) {
     case OBJ_NONE: Int3 (); break;
 
     default:
-        fs2::dialog::error (
+        ASSERTF (
             LOCATION, "Unhandled object type %d in obj_move_all_post\n",
             objp->type);
     }
@@ -1471,7 +1471,7 @@ void obj_move_all (float frametime) {
     std::vector< object* > cmeasure_list;
     const bool global_cmeasure_timer = (Cmeasures_homing_check > 0);
 
-    Assertion (
+    ASSERTX (
         Cmeasures_homing_check >= 0,
         "Cmeasures_homing_check is %d in obj_move_all(); it should never be "
         "negative. Get a coder!\n",
@@ -1567,7 +1567,7 @@ void obj_move_all (float frametime) {
     // rotations must happen along with regular ship rotations.)
     model_do_intrinsic_rotations ();
 
-    //	After all objects have been moved, move all docked objects.
+    // After all objects have been moved, move all docked objects.
     objp = GET_FIRST (&obj_used_list);
     while (objp != END_OF_LIST (&obj_used_list)) {
         dock_move_docked_objects (objp);
@@ -1617,7 +1617,7 @@ void obj_move_all (float frametime) {
 
     if (!cmeasure_list.empty ())
         find_homing_object_cmeasures (
-            cmeasure_list); //	If any cmeasures are active, maybe steer away
+            cmeasure_list); // If any cmeasures are active, maybe steer away
                             // homing missiles
 
     // do pre-collision stuff for beam weapons
@@ -1639,7 +1639,7 @@ void obj_move_all (float frametime) {
     // update artillery locking info now
     ship_update_artillery_lock ();
 
-    //	mprintf(("moved all objects\n"));
+    // mprintf(("moved all objects\n"));
 }
 
 MONITOR (NumObjectsRend)
@@ -1700,15 +1700,15 @@ void obj_queue_render (object* obj, model_draw_list* scene) {
         }
         break;
     case OBJ_WAYPOINT:
-        // 		if (Show_waypoints)	{
-        // 			gr_set_color( 128, 128, 128 );
-        // 			g3_draw_sphere_ez( &obj->pos, 5.0f );
-        // 		}
+        // if (Show_waypoints)     {
+        // gr_set_color( 128, 128, 128 );
+        // g3_draw_sphere_ez( &obj->pos, 5.0f );
+        // }
         break;
     case OBJ_GHOST: break;
     case OBJ_BEAM: break;
     default:
-        fs2::dialog::error (LOCATION, "Unhandled obj type %d in obj_render", obj->type);
+        ASSERTF (LOCATION, "Unhandled obj type %d in obj_render", obj->type);
     }
 }
 
@@ -1771,7 +1771,7 @@ void obj_client_pre_interpolate () {
 void obj_client_post_interpolate () {
     object* objp;
 
-    //	After all objects have been moved, move all docked objects.
+    // After all objects have been moved, move all docked objects.
     objp = GET_FIRST (&obj_used_list);
     while (objp != END_OF_LIST (&obj_used_list)) {
         if (objp != Player_obj) { dock_move_docked_objects (objp); }
@@ -1841,27 +1841,27 @@ void obj_get_average_ship_pos (vec3d* pos) {
  * @return -1 on failure (for objects that don't have teams)
  */
 int obj_team (object* objp) {
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
     int team = -1;
 
     switch (objp->type) {
     case OBJ_SHIP:
-        Assert (objp->instance >= 0 && objp->instance < MAX_SHIPS);
+        ASSERT (objp->instance >= 0 && objp->instance < MAX_SHIPS);
         team = Ships[objp->instance].team;
         break;
 
     case OBJ_DEBRIS:
         team = debris_get_team (objp);
-        Assertion (
+        ASSERTX (
             team != -1, "Obj_team called for a debris object with no team.");
         break;
 
-        /*		case OBJ_CMEASURE:
-                    Assert( objp->instance >= 0 && objp->instance <
+        /*              case OBJ_CMEASURE:
+                    ASSERT (objp->instance >= 0 && objp->instance <
            MAX_CMEASURES); team = Cmeasures[objp->instance].team; break;
         */
     case OBJ_WEAPON:
-        Assert (objp->instance >= 0 && objp->instance < MAX_WEAPONS);
+        ASSERT (objp->instance >= 0 && objp->instance < MAX_WEAPONS);
         team = Weapons[objp->instance].team;
         break;
 
@@ -1882,7 +1882,7 @@ int obj_team (object* objp) {
         break;
     } // end switch
 
-    Assertion (
+    ASSERTX (
         team != -1, "Obj_team called for a object of type %s with no team.",
         Object_type_names[objp->type]);
     return team;
@@ -1896,7 +1896,7 @@ int obj_team (object* objp) {
 void obj_add_pairs (int objnum) {
     object* objp;
 
-    Assert (objnum != -1);
+    ASSERT (objnum != -1);
     objp = &Objects[objnum];
 
     // don't do anything if its already in the object pair list
@@ -1951,9 +1951,9 @@ void obj_remove_pairs (object* a) {
             // one of these and then use the value stored in 'a' later one...
             // will the optimizer find that?  Hmmm...
             tmp->a->num_pairs--;
-            Assert (tmp->a->num_pairs > -1);
+            ASSERT (tmp->a->num_pairs > -1);
             tmp->b->num_pairs--;
-            Assert (tmp->b->num_pairs > -1);
+            ASSERT (tmp->b->num_pairs > -1);
             parent->next = tmp->next;
             tmp->a = tmp->b = NULL;
             tmp->next = pair_free_list.next;
@@ -2017,7 +2017,7 @@ int object_is_dead_docked (object* objp) {
  * regardless of orientation -WMC
  */
 void object_set_gliding (object* objp, bool enable, bool force) {
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
 
     if (enable) {
         if (!force) { objp->phys_info.flags |= PF_GLIDING; }
@@ -2040,7 +2040,7 @@ void object_set_gliding (object* objp, bool enable, bool force) {
  * @return whether an object is gliding -WMC
  */
 bool object_get_gliding (object* objp) {
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
 
     return (
         ((objp->phys_info.flags & PF_GLIDING) != 0) ||
@@ -2055,7 +2055,7 @@ bool object_glide_forced (object* objp) {
  * Quickly finds an object by its signature
  */
 int obj_get_by_signature (int sig) {
-    Assert (sig > 0);
+    ASSERT (sig > 0);
 
     object* objp = GET_FIRST (&obj_used_list);
     while (objp != END_OF_LIST (&obj_used_list)) {

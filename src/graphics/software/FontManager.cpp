@@ -72,7 +72,7 @@ bool FontManager::isFontNumberValid (int id) {
 }
 
 void FontManager::setCurrentFont (FSFont* font) {
-    Assertion (font != NULL, "New font pointer may not be NULL!");
+    ASSERTX (font != NULL, "New font pointer may not be NULL!");
     currentFont = font;
 }
 
@@ -80,7 +80,7 @@ font* FontManager::loadFontOld (const std::string& typeface) {
     if (vfntFontData.find (typeface) != vfntFontData.end ()) {
         font* data = vfntFontData[typeface].get ();
 
-        Assert (data != NULL);
+        ASSERT (data != NULL);
 
         return data;
     }
@@ -114,7 +114,7 @@ font* FontManager::loadFontOld (const std::string& typeface) {
 
     if (fnt->kern_data_size) {
         fnt->kern_data = (font_kernpair*)vm_malloc (fnt->kern_data_size);
-        Assert (fnt->kern_data != NULL);
+        ASSERT (fnt->kern_data != NULL);
         cfread (fnt->kern_data, fnt->kern_data_size, 1, fp);
     }
     else {
@@ -122,7 +122,7 @@ font* FontManager::loadFontOld (const std::string& typeface) {
     }
     if (fnt->char_data_size) {
         fnt->char_data = (font_char*)vm_malloc (fnt->char_data_size);
-        Assert (fnt->char_data != NULL);
+        ASSERT (fnt->char_data != NULL);
         cfread (fnt->char_data, fnt->char_data_size, 1, fp);
     }
     else {
@@ -130,7 +130,7 @@ font* FontManager::loadFontOld (const std::string& typeface) {
     }
     if (fnt->pixel_data_size) {
         fnt->pixel_data = (ubyte*)vm_malloc (fnt->pixel_data_size);
-        Assert (fnt->pixel_data != NULL);
+        ASSERT (fnt->pixel_data != NULL);
         cfread (fnt->pixel_data, fnt->pixel_data_size, 1, fp);
     }
     else {
@@ -174,7 +174,7 @@ font* FontManager::loadFontOld (const std::string& typeface) {
             x = 0;
             y += fnt->h + 2;
             if (y + fnt->h > fnt->bm_h) {
-                fs2::dialog::error (LOCATION, "Font too big!\n");
+                ASSERTF (LOCATION, "Font too big!\n");
             }
         }
         fnt->bm_u[i] = x;

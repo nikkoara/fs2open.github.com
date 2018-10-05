@@ -24,8 +24,8 @@ void UI_SCROLLBAR::link_hotspot (int up_button_num, int down_button_num) {
 // We also need to get the dimensions of the bitmap button so we can update
 // the dimensions of the scrollbar.
 //
-// returns:		-1 ==> error
-//					 0 ==> success
+// returns:             -1 ==> error
+// 0 ==> success
 //
 int UI_SCROLLBAR::set_bmaps (
     char* up_button_fname, char* down_button_fname, char* line_fname) {
@@ -81,7 +81,7 @@ void UI_SCROLLBAR::create (
     bar_length = h;
     bar_position = 0;
 
-    Assert (stop >= 0);
+    ASSERT (stop >= 0);
 
     if (stop != start)
         bar_size = (window_size * h) / (stop - start + window_size + 1);

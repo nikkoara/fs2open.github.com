@@ -407,7 +407,7 @@ int joy_get_scaled_reading (int raw) {
 
     if (d > rng) d = rng;
 
-    Assert (Joy_sensitivity >= 0 && Joy_sensitivity <= 9);
+    ASSERT (Joy_sensitivity >= 0 && Joy_sensitivity <= 9);
 
     // compute percentages as a range between 0 and 1
     sensitivity_percent = (float)Joy_sensitivity / 9.0f;
@@ -581,16 +581,16 @@ config_item_undo* get_undo_block (int size) {
     config_item_undo* ptr;
 
     ptr = (config_item_undo*)vm_malloc (sizeof (config_item_undo));
-    Assert (ptr);
+    ASSERT (ptr);
     ptr->next = Config_item_undo;
     Config_item_undo = ptr;
 
     ptr->size = size;
     if (size) {
         ptr->index = (int*)vm_malloc (sizeof (int) * size);
-        Assert (ptr->index);
+        ASSERT (ptr->index);
         ptr->list = (config_item*)vm_malloc (sizeof (config_item) * size);
-        Assert (ptr->list);
+        ASSERT (ptr->list);
     }
     else {
         ptr->index = NULL;
@@ -881,7 +881,7 @@ int control_config_clear_all () {
         }
     }
 
-    Assert (j == total);
+    ASSERT (j == total);
     for (i = 0; i < CCFG_MAX; i++) {
         Control_config[i].key_id = Control_config[i].joy_id = -1;
     }
@@ -893,7 +893,7 @@ int control_config_clear_all () {
 }
 
 int control_config_axis_default (int axis) {
-    Assert (axis >= 0);
+    ASSERT (axis >= 0);
 
     if (axis > 1) {
         if (Axis_map_to_defaults[axis] < 0) { return -1; }
@@ -976,7 +976,7 @@ int control_config_do_reset () {
         }
     }
 
-    Assert (j == total);
+    ASSERT (j == total);
 
     if (cycling_presets)
         control_config_reset_defaults (Defaults_cycle_pos);
@@ -1023,7 +1023,7 @@ void control_config_reset_defaults (int presetnum) {
 void control_config_scroll_screen_up () {
     if (Scroll_offset) {
         Scroll_offset--;
-        Assert (Selected_line > Scroll_offset);
+        ASSERT (Selected_line > Scroll_offset);
         while (!cc_line_query_visible (Selected_line)) { Selected_line--; }
 
         Selected_item = -1;
@@ -1054,7 +1054,7 @@ void control_config_scroll_screen_down () {
         Scroll_offset++;
         while (!cc_line_query_visible (Selected_line)) {
             Selected_line++;
-            Assert (Selected_line < Num_cc_lines);
+            ASSERT (Selected_line < Num_cc_lines);
         }
 
         Selected_item = -1;
@@ -1068,7 +1068,7 @@ void control_config_scroll_screen_down () {
 void control_config_scroll_line_down () {
     if (Selected_line < Num_cc_lines - 1) {
         Selected_line++;
-        Assert (Selected_line > Scroll_offset);
+        ASSERT (Selected_line > Scroll_offset);
         while (!cc_line_query_visible (Selected_line)) { Scroll_offset++; }
 
         Selected_item = -1;
@@ -1083,7 +1083,7 @@ void control_config_toggle_modifier (int bit) {
     int k, z;
 
     z = Cc_lines[Selected_line].cc_index;
-    Assert (!(z & JOY_AXIS));
+    ASSERT (!(z & JOY_AXIS));
     k = Control_config[z].key_id;
     if (k < 0) {
         gamesnd_play_iface (InterfaceSounds::GENERAL_FAIL);
@@ -1099,7 +1099,7 @@ void control_config_toggle_invert () {
     int z;
 
     z = Cc_lines[Selected_line].cc_index;
-    Assert (z & JOY_AXIS);
+    ASSERT (z & JOY_AXIS);
     z &= ~JOY_AXIS;
     control_config_save_axis_undo (z);
     Invert_axis[z] = !Invert_axis[z];
@@ -1109,7 +1109,7 @@ void control_config_do_bind () {
     int i;
 
     game_flush ();
-    //	if ((Selected_line < 0) || (Cc_lines[Selected_line].cc_index &
+    // if ((Selected_line < 0) || (Cc_lines[Selected_line].cc_index &
     // JOY_AXIS)) {
     if (Selected_line < 0) {
         gamesnd_play_iface (InterfaceSounds::GENERAL_FAIL);
@@ -1574,7 +1574,7 @@ void control_config_do_frame (float frametime) {
                 k &= (KEY_MASK | KEY_SHIFTED | KEY_ALTED);
                 if (k > 0) {
                     z = Cc_lines[Selected_line].cc_index;
-                    Assert (!(z & JOY_AXIS));
+                    ASSERT (!(z & JOY_AXIS));
                     control_config_bind_key (z, k);
 
                     strcpy_s (bound_string, textify_scancode (k));
@@ -1590,7 +1590,7 @@ void control_config_do_frame (float frametime) {
                 for (i = 0; i < JOY_TOTAL_BUTTONS; i++) {
                     if (joy_down_count (i, 1)) {
                         z = Cc_lines[Selected_line].cc_index;
-                        Assert (!(z & JOY_AXIS));
+                        ASSERT (!(z & JOY_AXIS));
                         control_config_bind_joy (z, i);
 
                         strcpy_s (bound_string, Joy_button_text[i]);
@@ -1619,7 +1619,7 @@ void control_config_do_frame (float frametime) {
                         for (i = 0; i < MOUSE_NUM_BUTTONS; i++) {
                             if (mouse_down (1 << i)) {
                                 z = Cc_lines[Selected_line].cc_index;
-                                Assert (!(z & JOY_AXIS));
+                                ASSERT (!(z & JOY_AXIS));
                                 control_config_bind_joy (z, i);
 
                                 strcpy_s (bound_string, Joy_button_text[i]);
@@ -1734,7 +1734,7 @@ void control_config_do_frame (float frametime) {
                 }
                 while (!cc_line_query_visible (Selected_line)) {
                     Scroll_offset++;
-                    Assert (Scroll_offset < Num_cc_lines);
+                    ASSERT (Scroll_offset < Num_cc_lines);
                 }
             }
         }
@@ -2228,7 +2228,7 @@ float check_control_timef (int id) {
 
     // if type isn't continuous, we shouldn't be using this function, cause it
     // won't work.
-    Assert (Control_config[id].type == CC_TYPE_CONTINUOUS);
+    ASSERT (Control_config[id].type == CC_TYPE_CONTINUOUS);
 
     // first, see if control actually used (makes sure modifiers match as well)
     if (!check_control (id)) {
@@ -2374,7 +2374,7 @@ void control_get_axes_readings (int* h, int* p, int* b, int* ta, int* tr) {
 
     joystick_read_raw_axis (JOY_NUM_AXES, axes_values);
 
-    //	joy_get_scaled_reading will return a value represents the joystick pos
+    // joy_get_scaled_reading will return a value represents the joystick pos
     // from -1 to +1 (fixed point)
     *h = 0;
     if (Axis_map_to[0] >= 0) {

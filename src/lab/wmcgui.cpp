@@ -51,7 +51,7 @@ bool ObjectClassInfoEntry::Parse () {
         char buf[NAME_LENGTH];
         char buf2[NAME_LENGTH + 3]; // for the end tag and name buffer
 
-        Assert (sizeof (buf2) >= (sizeof (buf) + 3));
+        ASSERT (sizeof (buf2) >= (sizeof (buf) + 3));
 
         // Find the name of the thing we're parsing
         parse_advance (1);
@@ -140,7 +140,7 @@ bool ScreenClassInfoEntry::Parse () {
 
 void GUISystem::ParseClassInfo (const char* filename) {
     if (ClassInfoParsed) {
-        fs2::dialog::warning (LOCATION, "Class info is being parsed twice");
+        WARNINGF (LOCATION, "Class info is being parsed twice");
         DestroyClassInfo ();
     }
 
@@ -282,7 +282,7 @@ void ClassInfoEntry::Parse (const char* tag, int in_type) {
             if (IMG_HANDLE_IS_VALID (Handles[i].Image)) {
                 IMG_INFO (Handles[i].Image, &cw, &ch);
                 if (cw != w || ch != h) {
-                    fs2::dialog::warning (
+                    WARNINGF (
                         LOCATION,
                         "Grouped image size unequal; Handle number %d under "
                         "$%s: has a different size than base image type",
@@ -433,7 +433,7 @@ ObjectClassInfoEntry* GUIScreen::GetObjectClassInfo (GUIObject* cgp) {
 GUIObject* GUIScreen::Add (GUIObject* new_gauge) {
     if (new_gauge == NULL) { return NULL; }
 
-    Assert (this != NULL);
+    ASSERT (this != NULL);
 
     // First - do we have anything with the same name.
     for (GUIObject* tgp = (GUIObject*)GET_FIRST (&Guiobjects);
@@ -451,7 +451,7 @@ GUIObject* GUIScreen::Add (GUIObject* new_gauge) {
             else {
                 // This is icky; we might cast a pointer after this.
                 // So return NULL with a warning
-                fs2::dialog::warning (
+                WARNINGF (
                     LOCATION,
                     "Attempt to create another object with name '%s'; new "
                     "object type was %d, existing object type was %d. This "
@@ -582,7 +582,7 @@ GUISystem::~GUISystem () {
 }
 
 GUIScreen* GUISystem::PushScreen (GUIScreen* csp) {
-    Assert (csp != NULL);
+    ASSERT (csp != NULL);
     list_append (&Screens, csp);
     csp->OwnerSystem = this;
     csp->ScreenClassInfo = GetScreenClassInfo (csp->Name);
@@ -2182,8 +2182,8 @@ void Text::AddLine (const std::string& in_line) {
 
 void Text::SetSaveLoc (
     int* int_ptr, int save_method, int max_value, int min_value) {
-    Assert (int_ptr != NULL);       // Naughty.
-    Assert (min_value < max_value); // Mmm-hmm.
+    ASSERT (int_ptr != NULL);       // Naughty.
+    ASSERT (min_value < max_value); // Mmm-hmm.
 
     SaveType = T_ST_INT;
     if (save_method == T_ST_CLOSE) { SaveType |= T_ST_CLOSE; }
@@ -2202,8 +2202,8 @@ void Text::SetSaveLoc (
 void Text::SetSaveLoc (
     short int* sint_ptr, int save_method, short int max_value,
     short int min_value) {
-    Assert (sint_ptr != NULL);      // Naughty.
-    Assert (min_value < max_value); // Mmm-hmm.
+    ASSERT (sint_ptr != NULL);      // Naughty.
+    ASSERT (min_value < max_value); // Mmm-hmm.
 
     SaveType = T_ST_SINT;
     if (save_method == T_ST_CLOSE) { SaveType |= T_ST_CLOSE; }
@@ -2221,8 +2221,8 @@ void Text::SetSaveLoc (
 
 void Text::SetSaveLoc (
     float* ptr, int save_method, float max_value, float min_value) {
-    Assert (ptr != NULL);           // Naughty.
-    Assert (min_value < max_value); // Causes problems with floats
+    ASSERT (ptr != NULL);           // Naughty.
+    ASSERT (min_value < max_value); // Causes problems with floats
 
     SaveType = T_ST_FLOAT;
     if (save_method == T_ST_CLOSE) { SaveType |= T_ST_CLOSE; }
@@ -2240,7 +2240,7 @@ void Text::SetSaveLoc (
 
 void Text::SetSaveLoc (
     char* ptr, int save_method, uint max_length, uint min_length) {
-    Assert (ptr != NULL); // Naughty.
+    ASSERT (ptr != NULL); // Naughty.
 
     SaveType = T_ST_CHAR;
     if (save_method == T_ST_CLOSE) { SaveType |= T_ST_CLOSE; }
@@ -2259,7 +2259,7 @@ void Text::SetSaveLoc (
 void Text::SetSaveStringAlloc (
     char** ptr, int save_method, int mem_flags, uint max_length,
     uint min_length) {
-    Assert (ptr != NULL); // Naughty.
+    ASSERT (ptr != NULL); // Naughty.
 
     if (mem_flags == T_ST_NEW) { SaveType = T_ST_NEW; }
     else if (mem_flags == T_ST_MALLOC) {
@@ -2285,8 +2285,8 @@ void Text::SetSaveStringAlloc (
 
 void Text::SetSaveLoc (
     ubyte* ptr, int save_method, int max_value, int min_value) {
-    Assert (ptr != NULL);           // Naughty.
-    Assert (min_value < max_value); // Mmm-hmm.
+    ASSERT (ptr != NULL);           // Naughty.
+    ASSERT (min_value < max_value); // Mmm-hmm.
 
     SaveType = T_ST_UBYTE;
     if (save_method == T_ST_CLOSE) { SaveType |= T_ST_CLOSE; }
@@ -2375,7 +2375,7 @@ void Text::Load () {
         SetText (*ubSavePointer);
     }
     else {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Unknown type (or no type) given in Text::Load() - nothing "
             "happened.");

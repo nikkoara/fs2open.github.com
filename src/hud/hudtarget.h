@@ -75,8 +75,8 @@ extern const char* Strafe_submode_text[];
 extern void hud_init_targeting_colors ();
 
 /// \brief An abbreviation for "Evaluate Ship as Closest Target", defines a
-///        data structure used to hold the required arguments for evaluating
-///        a prospective closest target to an attacked object.
+/// data structure used to hold the required arguments for evaluating
+/// a prospective closest target to an attacked object.
 struct esct  {
     int team_mask;
     int filter;

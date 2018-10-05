@@ -42,7 +42,7 @@ struct ThreadedEventProcessor {
           w_ (&ThreadedEventProcessor< Processor >::workerThread, this),
           p_ (std::forward< Params > (params)...)
         { }
-    
+
     ~ThreadedEventProcessor () {
         q_.close ();
         w_.join ();
@@ -50,7 +50,7 @@ struct ThreadedEventProcessor {
 
     void processEvent (const trace_event* event) {
         using namespace boost::concurrent;
-        
+
         try {
             q_.wait_push_back (*event);
         }
@@ -60,12 +60,12 @@ struct ThreadedEventProcessor {
                  "possible..."));
         }
     }
-    
-private:    
+
+private:
     void workerThread () {
         using namespace boost;
         using boost::concurrent::sync_queue_is_closed;
-        
+
         while (!q_.closed ()) {
             try {
                 trace_event evt;

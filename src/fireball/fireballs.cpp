@@ -58,7 +58,7 @@ void fireball_play_warphole_open_sound (int ship_class, fireball* fb) {
     float range_multiplier = 1.0f;
     object* fireball_objp;
 
-    Assert ((fb != NULL) && (fb->objnum >= 0));
+    ASSERT ((fb != NULL) && (fb->objnum >= 0));
     if ((fb == NULL) || (fb->objnum < 0)) { return; }
     fireball_objp = &Objects[fb->objnum];
 
@@ -118,7 +118,7 @@ void fireball_play_warphole_close_sound (fireball* fb) {
  * Set default colors for each explosion type (original values from object.cpp)
  */
 static void fireball_set_default_color (int idx) {
-    Assert ((idx >= 0) && (idx < MAX_FIREBALL_TYPES));
+    ASSERT ((idx >= 0) && (idx < MAX_FIREBALL_TYPES));
 
     switch (idx) {
     case FIREBALL_EXPLOSION_LARGE1:
@@ -331,7 +331,7 @@ void fireball_load_data () {
                 fd->lod[idx].filename, &fd->lod[idx].num_frames,
                 &fd->lod[idx].fps, nullptr, nullptr, true);
             if (fd->lod[idx].bitmap_id < 0) {
-                fs2::dialog::error (
+                ASSERTF (
                     LOCATION, "Could not load %s anim file\n",
                     fd->lod[idx].filename);
             }
@@ -389,11 +389,11 @@ void fireball_delete (object* obj) {
     num = obj->instance;
     fb = &Fireballs[num];
 
-    Assert (fb->objnum == OBJ_INDEX (obj));
+    ASSERT (fb->objnum == OBJ_INDEX (obj));
 
     Fireballs[num].objnum = -1;
     Num_fireballs--;
-    Assert (Num_fireballs >= 0);
+    ASSERT (Num_fireballs >= 0);
 }
 
 /**
@@ -450,13 +450,13 @@ void fireball_set_framenum (int num) {
 }
 
 int fireball_is_perishable (object* obj) {
-    //	return 1;
+    // return 1;
     int num, objnum;
     fireball* fb;
 
     num = obj->instance;
     objnum = OBJ_INDEX (obj);
-    Assert (Fireballs[num].objnum == objnum);
+    ASSERT (Fireballs[num].objnum == objnum);
 
     fb = &Fireballs[num];
 
@@ -508,7 +508,7 @@ int fireball_is_warp (object* obj) {
 
     num = obj->instance;
     objnum = OBJ_INDEX (obj);
-    Assert (Fireballs[num].objnum == objnum);
+    ASSERT (Fireballs[num].objnum == objnum);
 
     fb = &Fireballs[num];
 
@@ -545,7 +545,7 @@ void fireball_process_post (object* obj, float frame_time) {
 
     num = obj->instance;
     objnum = OBJ_INDEX (obj);
-    Assert (Fireballs[num].objnum == objnum);
+    ASSERT (Fireballs[num].objnum == objnum);
 
     fb = &Fireballs[num];
 
@@ -568,7 +568,7 @@ float fireball_lifeleft (object* obj) {
 
     num = obj->instance;
     objnum = OBJ_INDEX (obj);
-    Assert (Fireballs[num].objnum == objnum);
+    ASSERT (Fireballs[num].objnum == objnum);
 
     fb = &Fireballs[num];
 
@@ -584,7 +584,7 @@ float fireball_lifeleft_percent (object* obj) {
 
     num = obj->instance;
     objnum = OBJ_INDEX (obj);
-    Assert (Fireballs[num].objnum == objnum);
+    ASSERT (Fireballs[num].objnum == objnum);
 
     fb = &Fireballs[num];
 
@@ -685,8 +685,8 @@ int fireball_create (
     fireball_info* fd;
     fireball_lod* fl;
 
-    Assert (fireball_type > -1);
-    Assert (fireball_type < Num_fireball_types);
+    ASSERT (fireball_type > -1);
+    ASSERT (fireball_type < Num_fireball_types);
 
     fd = &Fireball_info[fireball_type];
 
@@ -709,7 +709,7 @@ int fireball_create (
         for (n = 0; n < MAX_FIREBALLS; n++) {
             if (Fireballs[n].objnum < 0) { break; }
         }
-        Assert (n != MAX_FIREBALLS);
+        ASSERT (n != MAX_FIREBALLS);
     }
 
     fb = &Fireballs[n];
@@ -791,7 +791,7 @@ int fireball_create (
     }
 
     if (fb->fireball_render_type == FIREBALL_WARP_EFFECT) {
-        Assert (
+        ASSERT (
             warp_lifetime >=
             4.0f); // Warp lifetime must be at least 4 seconds!
         if (warp_lifetime < 4.0f) warp_lifetime = 4.0f;
@@ -857,7 +857,7 @@ void fireballs_page_in () {
 }
 
 void fireball_get_color (int idx, float* red, float* green, float* blue) {
-    Assert (red && blue && green);
+    ASSERT (red && blue && green);
 
     if ((idx < 0) || (idx >= Num_fireball_types)) {
         Int3 ();
@@ -877,7 +877,7 @@ void fireball_get_color (int idx, float* red, float* green, float* blue) {
 }
 
 int fireball_ship_explosion_type (ship_info* sip) {
-    Assert (sip != NULL);
+    ASSERT (sip != NULL);
 
     int index = -1;
     int ship_fireballs = (int)sip->explosion_bitmap_anims.size ();
@@ -900,7 +900,7 @@ int fireball_ship_explosion_type (ship_info* sip) {
 }
 
 int fireball_asteroid_explosion_type (asteroid_info* aip) {
-    Assert (aip != NULL);
+    ASSERT (aip != NULL);
 
     if (aip->explosion_bitmap_anims.empty ()) return -1;
 
@@ -920,7 +920,7 @@ float fireball_wormhole_intensity (object* obj) {
 
     num = obj->instance;
     objnum = OBJ_INDEX (obj);
-    Assertion (
+    ASSERTX (
         Fireballs[num].objnum == objnum,
         "Basic sanity check. Fireballs[num].objnum (%d) should == objnum (%d)",
         Fireballs[num].objnum, objnum);

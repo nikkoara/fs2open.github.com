@@ -55,7 +55,7 @@ void pilotfile::csg_read_info () {
 
     //
     // NOTE: lists may contain missing/invalid entries for current data
-    //       this is not necessarily fatal
+    // this is not necessarily fatal
     //
 
     // ship list (NOTE: may contain more than MAX_SHIP_CLASSES)
@@ -110,7 +110,7 @@ void pilotfile::csg_read_info () {
     idx = cfread_int (cfp);
 
     // check the idx is within bounds
-    Assertion (
+    ASSERTX (
         (idx < (int)ship_list.size ()),
         "Campaign file contains an incorrect value for the last flown ship "
         "class. No data in ship_list for ship number %d.",
@@ -264,7 +264,7 @@ void pilotfile::csg_read_missions () {
         if (missionp->num_goals > 0) {
             missionp->goals =
                 (mgoal*)vm_malloc (missionp->num_goals * sizeof (mgoal));
-            Verify (missionp->goals != NULL);
+            ASSERT (missionp->goals != NULL);
 
             memset (missionp->goals, 0, missionp->num_goals * sizeof (mgoal));
 
@@ -280,7 +280,7 @@ void pilotfile::csg_read_missions () {
         if (missionp->num_events > 0) {
             missionp->events =
                 (mevent*)vm_malloc (missionp->num_events * sizeof (mevent));
-            Verify (missionp->events != NULL);
+            ASSERT (missionp->events != NULL);
 
             memset (
                 missionp->events, 0, missionp->num_events * sizeof (mevent));
@@ -297,7 +297,7 @@ void pilotfile::csg_read_missions () {
         if (missionp->num_variables > 0) {
             missionp->variables = (sexp_variable*)vm_malloc (
                 missionp->num_variables * sizeof (sexp_variable));
-            Verify (missionp->variables != NULL);
+            ASSERT (missionp->variables != NULL);
 
             memset (
                 missionp->variables, 0,
@@ -1226,7 +1226,7 @@ void pilotfile::csg_write_cutscenes () {
     }
 
     // Check for possible overflow because we can only write 32 bit integers
-    Assertion (
+    ASSERTX (
         viewableScenes <= std::numeric_limits< uint >::max (),
         "Too many viewable cutscenes! Maximum is %ud!",
         std::numeric_limits< uint >::max ());
@@ -1248,7 +1248,7 @@ void pilotfile::csg_read_lastmissions () {
 
     // restore list of most recently played missions
     Num_recent_missions = cfread_int (cfp);
-    Assert (Num_recent_missions <= MAX_RECENT_MISSIONS);
+    ASSERT (Num_recent_missions <= MAX_RECENT_MISSIONS);
     for (i = 0; i < Num_recent_missions; i++) {
         char* cp;
 
@@ -1362,7 +1362,7 @@ bool pilotfile::load_savefile (const char* campaign) {
     if ((campaign == NULL) || !strlen (campaign)) { return false; }
 
     // set player ptr first thing
-    Assert ((Player_num >= 0) && (Player_num < MAX_PLAYERS));
+    ASSERT ((Player_num >= 0) && (Player_num < MAX_PLAYERS));
     p = &Players[Player_num];
 
     // build up filename for the savefile...
@@ -1549,7 +1549,7 @@ bool pilotfile::save_savefile () {
     if (Game_mode & GM_MULTIPLAYER) { return false; }
 
     // set player ptr first thing
-    Assert ((Player_num >= 0) && (Player_num < MAX_PLAYERS));
+    ASSERT ((Player_num >= 0) && (Player_num < MAX_PLAYERS));
     p = &Players[Player_num];
 
     if (!strlen (Campaign.filename)) { return false; }
@@ -1574,7 +1574,7 @@ bool pilotfile::save_savefile () {
     // halfway through writing assertion should also prevent loss of major
     // campaign progress i.e. lose one mission, not several missions worth (in
     // theory)
-    Assertion (
+    ASSERTX (
         Red_alert_wingman_status.size () <= MAX_SHIPS,
         "Invalid number of Red_alert_wingman_status entries: %zu\n",
         Red_alert_wingman_status.size ());

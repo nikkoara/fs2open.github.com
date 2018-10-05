@@ -10,19 +10,19 @@
 //
 
 // Here are the version defines.
-//	Gets displayed as MAJOR.MINOR, or 1.21 if MAJOR = 1, MINOR = 21.
-//	Prior to release, MAJOR should be zero.  After release, it should be 1.
-// Probably never increase to 2 as that could 	cause confusion with a sequel.
-//	MINOR should increase by 1 for each minor upgrade and by 10 for major
-// upgrades. 	With each rev we send, we should increase MINOR.
+// Gets displayed as MAJOR.MINOR, or 1.21 if MAJOR = 1, MINOR = 21.
+// Prior to release, MAJOR should be zero.  After release, it should be 1.
+// Probably never increase to 2 as that could   cause confusion with a sequel.
+// MINOR should increase by 1 for each minor upgrade and by 10 for major
+// upgrades.    With each rev we send, we should increase MINOR.
 // Version history (full version):
-//		1.0	Initial US/UK release
-//		1.01	Patch for Win95 volume label bug
-//		1.20	German release version
+// 1.0     Initial US/UK release
+// 1.01    Patch for Win95 volume label bug
+// 1.20    German release version
 
 // fs2_open version numbers:
-//   the first version is 3.0 :-)
-//   Major.Minor.Bugfix
+// the first version is 3.0 :-)
+// Major.Minor.Bugfix
 
 #include "defs.hpp"
 

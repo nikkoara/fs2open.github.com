@@ -10,11 +10,11 @@
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
 // 1. The origin of this software must not be misrepresented; you must not
-//    claim that you wrote the original software. If you use this software
-//    in a product, an acknowledgment in the product documentation would be
-//    appreciated but is not required.
+// claim that you wrote the original software. If you use this software
+// in a product, an acknowledgment in the product documentation would be
+// appreciated but is not required.
 // 2. Altered source versions must be plainly marked as such, and must not be
-//    misrepresented as being the original software.
+// misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 //
 
@@ -1347,8 +1347,8 @@ static void fons__blur (
     fons__blurCols (dst, w, h, dstStride, alpha);
     fons__blurRows (dst, w, h, dstStride, alpha);
     fons__blurCols (dst, w, h, dstStride, alpha);
-    //	fons__blurrows(dst, w, h, dstStride, alpha);
-    //	fons__blurcols(dst, w, h, dstStride, alpha);
+    // fons__blurrows(dst, w, h, dstStride, alpha);
+    // fons__blurcols(dst, w, h, dstStride, alpha);
 }
 
 static FONSglyph* fons__getGlyph (
@@ -1436,7 +1436,7 @@ static FONSglyph* fons__getGlyph (
     }
 
     // Debug code to color the glyph background
-    /*	unsigned char* fdst = &stash->texData[glyph->x0 + glyph->y0 *
+    /*  unsigned char* fdst = &stash->texData[glyph->x0 + glyph->y0 *
        stash->params.width]; for (y = 0; y < gh; y++) { for (x = 0; x < gw;
        x++) { int a = (int)fdst[x+y*stash->params.width] + 20; if (a > 255) a =
        255; fdst[x+y*stash->params.width] = a;

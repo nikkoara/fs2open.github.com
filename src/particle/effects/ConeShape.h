@@ -4,7 +4,7 @@
 #define CONE_GENERATOR_EFFECT_H
 
 #include "globalincs/pstypes.h"
-#include "utils/RandomRange.h"
+#include "util/RandomRange.h"
 
 namespace particle {
 namespace effects {

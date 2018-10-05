@@ -1360,7 +1360,7 @@ void cmdline_debug_print_cmdline () {
 }
 #endif
 
-//	Return true if this character is an extra char (white space and quotes)
+// Return true if this character is an extra char (white space and quotes)
 int is_extra_space (char ch) {
     return (
         (ch == ' ') || (ch == '\t') || (ch == 0x0a) || (ch == '\'') ||
@@ -1406,7 +1406,7 @@ char* drop_extra_chars (char* str) {
  * @return @c true when an extra parameter was found, @c false otherwise
  */
 bool parm_stuff_args (cmdline_parm* parm, int argc, char* argv[], int index) {
-    Assert (index < argc);
+    ASSERT (index < argc);
 
     if (index + 1 < argc) {
         char* value = argv[index + 1];
@@ -1557,11 +1557,8 @@ void os_validate_parms (int argc, char* argv[]) {
                     exit (0);
                 }
                 else {
-                    std::string s = "unrecognized command line argument: ";
-                    s += token;
-                    
-                    using namespace fs2::dialog;
-                    message (dialog_type::info, s.c_str ());
+                    II ("general")
+                        << "unrecognized command line argument: " << token;
                 }
             }
         }
@@ -1682,7 +1679,7 @@ void os_init_cmdline (int argc, char* argv[]) {
             // line.  Read these first so anything actually on the command line
             // will take precedence
             fp = fopen ("data" DIR_SEPARATOR_STR "cmdline_fso.cfg", "rt");
-            
+
             // if the file exists, get a single line, and deal with it
             if (fp) {
                 char *buf, *p;
@@ -1751,7 +1748,7 @@ cmdline_parm::cmdline_parm (
     name_found = 0;
 
     if (Parm_list_inited == 0) {
-        Assertion (
+        ASSERTX (
             &Parm_list == this,
             "Coding error! 1st initialised cmdline_parm must be static "
             "Parm_list\n");
@@ -1759,9 +1756,9 @@ cmdline_parm::cmdline_parm (
         Parm_list_inited = 1;
     }
     else {
-        Assertion (
+        ASSERTX (
             name, "Coding error! cmdline_parm's must have a non-NULL name\n");
-        Assertion (
+        ASSERTX (
             name[0] == '-',
             "Coding error! cmdline_parm's must start with a '-'\n");
         // not in the static Parm_list init, so lookup the NULL help args
@@ -1784,7 +1781,7 @@ cmdline_parm::~cmdline_parm () {
 // returns true if it is, shows an error box and returns false if not valid.
 bool cmdline_parm::check_if_args_is_valid () {
     if (args == NULL) {
-        fs2::dialog::error (
+        ASSERTF (
             __FILE__, __LINE__,
             "Command line flag passed that requires an argument, but the "
             "argument is missing!\r\n"
@@ -1805,7 +1802,7 @@ int cmdline_parm::found () { return name_found; }
 
 // returns - the interger representation for the parameter argument
 int cmdline_parm::get_int () {
-    Assertion (
+    ASSERTX (
         arg_type == AT_INT,
         "Coding error! Cmdline arg (%s) called cmdline_parm::get_int() with "
         "invalid arg_type (%s)",
@@ -1832,7 +1829,7 @@ int cmdline_parm::get_int () {
 
 // returns - the float representation for the parameter argument
 float cmdline_parm::get_float () {
-    Assertion (
+    ASSERTX (
         arg_type == AT_FLOAT,
         "Coding error! Cmdline arg (%s) called cmdline_parm::get_float() with "
         "invalid arg_type (%s)",
@@ -1859,7 +1856,7 @@ float cmdline_parm::get_float () {
 
 // returns - the string value for the parameter argument
 char* cmdline_parm::str () {
-    Assertion (
+    ASSERTX (
         arg_type == AT_STRING,
         "Coding error! Cmdline arg (%s) called cmdline_parm::str() with "
         "invalid arg_type (%s)",
@@ -1878,7 +1875,7 @@ unix_get_single_dir_names (const std::string& parent, const std::string& dir) {
 
     DIR* dp;
     if ((dp = opendir (parent.c_str ())) == NULL) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION,
             "Can't open directory '%s' when searching mod paths. Ignoring. "
             "errno=%d",
@@ -1944,7 +1941,7 @@ static void handle_unix_modlist (char** modlist, size_t* len) {
             unix_get_dir_names (".", cur_mod);
         // Ignore non-existing mods for unit tests
         if (!running_unittests && this_mod_paths.empty ()) {
-            fs2::dialog::release_warning (
+            RELEASE_WARNINGF (
                 LOCATION, "Can't find mod '%s'. Ignoring.", cur_mod);
         }
         mod_paths.insert (
@@ -2379,7 +2376,7 @@ bool SetCmdlineParams () {
 }
 
 int parse_cmdline (int argc, char* argv[]) {
-    //	mprintf(("I got to parse_cmdline()!!\n"));
+    // mprintf(("I got to parse_cmdline()!!\n"));
 
     os_init_cmdline (argc, argv);
 

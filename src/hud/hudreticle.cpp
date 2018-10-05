@@ -25,7 +25,7 @@
 #define RETICLE_ONE_SECONDARY 7
 #define RETICLE_TWO_SECONDARY 8
 #define RETICLE_THREE_SECONDARY 9
-//#define RETICLE_LAUNCH_LABEL		5
+//#define RETICLE_LAUNCH_LABEL          5
 #define RETICLE_CENTER 10
 
 int Hud_throttle_frame_w[GR_NUM_RESOLUTIONS] = { 49, 78 };
@@ -58,7 +58,7 @@ char Reticle_frame_names[NUM_HUD_RETICLE_STYLES][GR_NUM_RESOLUTIONS]
                                   "rightarc4_fs1",
                                   "rightarc5_fs1",
                                   "rightarc6_fs1",
-                                  //			"toparc4_fs1",
+                                  // "toparc4_fs1",
                                   "reticle1_fs1",
                               },
                               {
@@ -73,7 +73,7 @@ char Reticle_frame_names[NUM_HUD_RETICLE_STYLES][GR_NUM_RESOLUTIONS]
                                   "2_rightarc4_fs1",
                                   "2_rightarc5_fs1",
                                   "2_rightarc6_fs1",
-                                  //			"2_toparc4_fs1",
+                                  // "2_toparc4_fs1",
                                   "2_reticle1_fs1",
                               } },
                             { {
@@ -88,7 +88,7 @@ char Reticle_frame_names[NUM_HUD_RETICLE_STYLES][GR_NUM_RESOLUTIONS]
                                   "<none>",
                                   "<none>",
                                   "<none>",
-                                  //			"<none>",
+                                  // "<none>",
                                   "reticle1",
                               },
                               {
@@ -103,7 +103,7 @@ char Reticle_frame_names[NUM_HUD_RETICLE_STYLES][GR_NUM_RESOLUTIONS]
                                   "<none>",
                                   "<none>",
                                   "<none>",
-                                  //			"<none>",
+                                  // "<none>",
                                   "2_reticle1",
                               } }
                             // XSTR:ON
@@ -123,7 +123,7 @@ int Reticle_frame_coords[NUM_HUD_RETICLE_STYLES][GR_NUM_RESOLUTIONS]
                                                         { 391, 276 },
                                                         { 391, 276 },
                                                         { 391, 276 },
-                                                        //			{297, 162},
+                                                        // {297, 162},
                                                         { 308, 235 } },
                                                       { // GR_1024
                                                         { 386, 219 },
@@ -136,7 +136,7 @@ int Reticle_frame_coords[NUM_HUD_RETICLE_STYLES][GR_NUM_RESOLUTIONS]
                                                         { 626, 442 },
                                                         { 626, 442 },
                                                         { 626, 442 },
-                                                        //			{475, 259},
+                                                        // {475, 259},
                                                         { 493, 376 } },
                                                   },
                                                   { { // GR_640
@@ -150,7 +150,7 @@ int Reticle_frame_coords[NUM_HUD_RETICLE_STYLES][GR_NUM_RESOLUTIONS]
                                                       { 391, 276 },
                                                       { 391, 276 },
                                                       { 391, 276 },
-                                                      //			{297, 161},
+                                                      // {297, 161},
                                                       { 308, 235 } },
                                                     { // GR_1024
                                                       { 386, 219 },
@@ -163,7 +163,7 @@ int Reticle_frame_coords[NUM_HUD_RETICLE_STYLES][GR_NUM_RESOLUTIONS]
                                                       { 625, 438 },
                                                       { 625, 438 },
                                                       { 625, 438 },
-                                                      //			{475, 258},
+                                                      // {475, 258},
                                                       { 493, 370 } } } };
 
 // "launch" gauge coords
@@ -287,7 +287,7 @@ void HudGaugeReticle::getFirepointStatus () {
     ship* shipp;
     polymodel* pm;
 
-    Assert (Objects[Player->objnum].type == OBJ_SHIP);
+    ASSERT (Objects[Player->objnum].type == OBJ_SHIP);
 
     if (Objects[Player->objnum].type == OBJ_SHIP) {
         shipp = &Ships[Objects[Player->objnum].instance];
@@ -788,7 +788,7 @@ void HudGaugeThreatIndicator::renderLaserThreat () {
     // Check how many frames the ani actually has
     num_frames = laser_warn.num_frames;
     // We need at least two frames here
-    Assert (num_frames >= 2);
+    ASSERT (num_frames >= 2);
 
     if (Player->threat_flags & THREAT_DUMBFIRE) {
         if (timestamp_elapsed (laser_warn_timer)) {
@@ -819,7 +819,7 @@ void HudGaugeThreatIndicator::renderLockThreat () {
     // Let's find out how many frames our ani has, and adjust accordingly
     num_frames = lock_warn.num_frames;
     // We need at least two frames here
-    Assert (num_frames >= 2);
+    ASSERT (num_frames >= 2);
 
     if (Player->threat_flags & (THREAT_LOCK | THREAT_ATTEMPT_LOCK)) {
         if (timestamp_elapsed (lock_warn_timer)) {
@@ -887,28 +887,28 @@ void HudGaugeWeaponLinking::initBitmaps (
     char* fname_secondary_link_3) {
     arc.first_frame = bm_load_animation (fname_arc, &arc.num_frames);
     if (arc.first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_arc);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_arc);
     }
 
     weapon_linking_modes[LINK_ONE_PRIMARY].first_frame = bm_load_animation (
         fname_primary_link_1,
         &weapon_linking_modes[LINK_ONE_PRIMARY].num_frames);
     if (weapon_linking_modes[LINK_ONE_PRIMARY].first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_primary_link_1);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_primary_link_1);
     }
 
     weapon_linking_modes[LINK_TWO_PRIMARY].first_frame = bm_load_animation (
         fname_primary_link_2,
         &weapon_linking_modes[LINK_TWO_PRIMARY].num_frames);
     if (weapon_linking_modes[LINK_TWO_PRIMARY].first_frame < 0) {
-        fs2::dialog::warning (LOCATION, "Cannot load hud ani: %s\n", fname_primary_link_2);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_primary_link_2);
     }
 
     weapon_linking_modes[LINK_ONE_SECONDARY].first_frame = bm_load_animation (
         fname_secondary_link_1,
         &weapon_linking_modes[LINK_ONE_SECONDARY].num_frames);
     if (weapon_linking_modes[LINK_ONE_SECONDARY].first_frame < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Cannot load hud ani: %s\n", fname_secondary_link_1);
     }
 
@@ -916,7 +916,7 @@ void HudGaugeWeaponLinking::initBitmaps (
         fname_secondary_link_2,
         &weapon_linking_modes[LINK_TWO_SECONDARY].num_frames);
     if (weapon_linking_modes[LINK_TWO_SECONDARY].first_frame < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Cannot load hud ani: %s\n", fname_secondary_link_2);
     }
 
@@ -925,7 +925,7 @@ void HudGaugeWeaponLinking::initBitmaps (
             fname_secondary_link_3,
             &weapon_linking_modes[LINK_THREE_SECONDARY].num_frames);
     if (weapon_linking_modes[LINK_THREE_SECONDARY].first_frame < 0) {
-        fs2::dialog::warning (
+        WARNINGF (
             LOCATION, "Cannot load hud ani: %s\n", fname_secondary_link_3);
     }
 }

@@ -4,7 +4,7 @@
 #define FREESPACE2_GAMESND_GAMESND_H
 
 #include "sound/sound.h"
-#include "utils/id.h"
+#include "util/id.h"
 
 /**
  * symbolic names for misc. game sounds.
@@ -175,23 +175,23 @@ enum class GameSounds {
     DEBRIS_ARC_05 = 143, //!< 1.00 second spark sound effect
                          // Beam Sounds
     UNDEFINED_144 = 144, //!< LTerSlash beam loop
-    UNDEFINED_145 = 145, //!< TerSlash	beam loop
-    UNDEFINED_146 = 146, //!< SGreen 	beam loop
-    UNDEFINED_147 = 147, //!< BGreen	beem loop
-    UNDEFINED_148 = 148, //!< BFGreen	been loop
-    UNDEFINED_149 = 149, //!< Antifighter 	beam loop
-    UNDEFINED_150 = 150, //!< 1 sec		warm up
-    UNDEFINED_151 = 151, //!< 1.5 sec 	warm up
-    UNDEFINED_152 = 152, //!< 2.5 sec 	warm up
-    UNDEFINED_153 = 153, //!< 3 sec 	warm up
-    UNDEFINED_154 = 154, //!< 3.5 sec 	warm up
-    UNDEFINED_155 = 155, //!< 5 sec 	warm up
-    UNDEFINED_156 = 156, //!< LTerSlash	warm down
-    UNDEFINED_157 = 157, //!< TerSlash	warm down
-    UNDEFINED_158 = 158, //!< SGreen	warm down
-    UNDEFINED_159 = 159, //!< BGreen	warm down
-    UNDEFINED_160 = 160, //!< BFGreen	warm down
-    UNDEFINED_161 = 161, //!< T_AntiFtr	warm down
+    UNDEFINED_145 = 145, //!< TerSlash  beam loop
+    UNDEFINED_146 = 146, //!< SGreen    beam loop
+    UNDEFINED_147 = 147, //!< BGreen    beem loop
+    UNDEFINED_148 = 148, //!< BFGreen   been loop
+    UNDEFINED_149 = 149, //!< Antifighter       beam loop
+    UNDEFINED_150 = 150, //!< 1 sec             warm up
+    UNDEFINED_151 = 151, //!< 1.5 sec   warm up
+    UNDEFINED_152 = 152, //!< 2.5 sec   warm up
+    UNDEFINED_153 = 153, //!< 3 sec     warm up
+    UNDEFINED_154 = 154, //!< 3.5 sec   warm up
+    UNDEFINED_155 = 155, //!< 5 sec     warm up
+    UNDEFINED_156 = 156, //!< LTerSlash warm down
+    UNDEFINED_157 = 157, //!< TerSlash  warm down
+    UNDEFINED_158 = 158, //!< SGreen    warm down
+    UNDEFINED_159 = 159, //!< BGreen    warm down
+    UNDEFINED_160 = 160, //!< BFGreen   warm down
+    UNDEFINED_161 = 161, //!< T_AntiFtr warm down
 
     COPILOT = 162,       //!< copilot (SCP)
     UNDEFINED_163 = 163, //!< (Empty in Retail)
@@ -208,19 +208,19 @@ enum class GameSounds {
     SUPERNOVA_2 = 174,   //!< SuperNova (shockwave)
     UNDEFINED_175 = 175, //!< Shivan large engine
     UNDEFINED_176 = 176, //!< Shivan large engine
-    UNDEFINED_177 = 177, //!< SRed 		beam loop
-    UNDEFINED_178 = 178, //!< LRed		beam loop
-    UNDEFINED_179 = 179, //!< Antifighter	beam loop
+    UNDEFINED_177 = 177, //!< SRed              beam loop
+    UNDEFINED_178 = 178, //!< LRed              beam loop
+    UNDEFINED_179 = 179, //!< Antifighter       beam loop
     LIGHTNING_1 = 180,   //!< Thunder 1 sound in neblua
     LIGHTNING_2 = 181,   //!< Thunder 2 sound in neblua
-    UNDEFINED_182 = 182, //!< 1 sec 	warm up
-    UNDEFINED_183 = 183, //!< 1.5 sec 	warm up
-    UNDEFINED_184 = 184, //!< 3 sec 	warm up
+    UNDEFINED_182 = 182, //!< 1 sec     warm up
+    UNDEFINED_183 = 183, //!< 1.5 sec   warm up
+    UNDEFINED_184 = 184, //!< 3 sec     warm up
     UNDEFINED_185 = 185, //!< Shivan Commnode
     UNDEFINED_186 = 186, //!< Volition PirateShip
-    UNDEFINED_187 = 187, //!< SRed 		warm down
-    UNDEFINED_188 = 188, //!< LRed 		warm down
-    UNDEFINED_189 = 189, //!< AntiFtr	warm down
+    UNDEFINED_187 = 187, //!< SRed              warm down
+    UNDEFINED_188 = 188, //!< LRed              warm down
+    UNDEFINED_189 = 189, //!< AntiFtr   warm down
     UNDEFINED_190 = 190, //!< Instellation 1
     UNDEFINED_191 = 191, //!< Instellation 2
     UNDEFINED_192 = 192, //!< (Undefined in Retail)

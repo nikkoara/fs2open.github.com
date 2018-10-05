@@ -35,11 +35,11 @@ extern std::uint64_t timer_get_microseconds ();
 extern std::uint64_t timer_get_nanoseconds ();
 extern int timer_get_seconds (); // seconds since program started... not
                                  // accurate, but good for long
-                                 //     runtimes with second-based timeouts
+                                 // runtimes with second-based timeouts
 
 //=================================================================
 //=================================================================
-//               T I M E S T A M P   F U N C T I O N S
+// T I M E S T A M P   F U N C T I O N S
 //=================================================================
 //=================================================================
 
@@ -95,13 +95,13 @@ inline int timestamp_rand (int a, int b) {
 // ship->next_fire = timestamp(500);
 // ...
 // if (fire && timestamp_elapsed(ship->next_fire))
-//   fire_laser();
+// fire_laser();
 
 bool timestamp_elapsed (int stamp);
 
 inline bool timestamp_valid (int stamp) { return stamp != 0; }
 
-//	Returns millliseconds until timestamp will elapse.
+// Returns millliseconds until timestamp will elapse.
 int timestamp_until (int stamp);
 
 // checks if a specified time (in milliseconds) has elapsed past the given

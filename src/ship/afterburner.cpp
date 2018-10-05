@@ -63,15 +63,15 @@ void afterburners_start (object* objp) {
     ship* shipp;
     float percent_left;
 
-    Assert (objp != NULL);
+    ASSERT (objp != NULL);
 
     if (objp->type == OBJ_OBSERVER) return;
 
-    Assert (objp->type == OBJ_SHIP);
-    Assert (objp->instance >= 0 && objp->instance < MAX_SHIPS);
+    ASSERT (objp->type == OBJ_SHIP);
+    ASSERT (objp->instance >= 0 && objp->instance < MAX_SHIPS);
 
     shipp = &Ships[objp->instance];
-    Assert (
+    ASSERT (
         shipp->ship_info_index >= 0 &&
         shipp->ship_info_index < static_cast< int > (Ship_info.size ()));
     sip = &Ship_info[shipp->ship_info_index];
@@ -157,13 +157,13 @@ void afterburners_start (object* objp) {
  * For the player ship, key_up_time() is called for the afterburner key to
  * detect when afterburners disengage.
  *
- * @param *objp			pointer to the object starting afterburners
- * @param fl_frametime	time in seconds of the last frame
+ * @param *objp                 pointer to the object starting afterburners
+ * @param fl_frametime  time in seconds of the last frame
  */
 void afterburners_update (object* objp, float fl_frametime) {
-    Assert (objp != NULL);
-    Assert (objp->type == OBJ_SHIP);
-    Assert (objp->instance >= 0 && objp->instance < MAX_SHIPS);
+    ASSERT (objp != NULL);
+    ASSERT (objp->type == OBJ_SHIP);
+    ASSERT (objp->instance >= 0 && objp->instance < MAX_SHIPS);
 
     ship_info* sip;
     ship* shipp;
@@ -171,7 +171,7 @@ void afterburners_update (object* objp, float fl_frametime) {
 
     shipp = &Ships[objp->instance];
 
-    Assert (
+    ASSERT (
         shipp->ship_info_index >= 0 &&
         shipp->ship_info_index < static_cast< int > (Ship_info.size ()));
     sip = &Ship_info[shipp->ship_info_index];
@@ -282,20 +282,20 @@ void afterburners_update (object* objp, float fl_frametime) {
 /**
  * Called when a ship disengages the afterburners.
  *
- * @param *objp			pointer to the object starting afterburners
- * @param key_released	OPTIONAL parameter (default value 0) This is only used
+ * @param *objp                 pointer to the object starting afterburners
+ * @param key_released  OPTIONAL parameter (default value 0) This is only used
  * for the player object, to manage starting/stopping
  */
 void afterburners_stop (object* objp, int key_released) {
-    Assert (objp != NULL);
-    Assert (objp->instance >= 0 && objp->instance < MAX_SHIPS);
+    ASSERT (objp != NULL);
+    ASSERT (objp->instance >= 0 && objp->instance < MAX_SHIPS);
 
     ship_info* sip;
     ship* shipp;
 
     shipp = &Ships[objp->instance];
 
-    Assert (
+    ASSERT (
         shipp->ship_info_index >= 0 &&
         shipp->ship_info_index < static_cast< int > (Ship_info.size ()));
     sip = &Ship_info[shipp->ship_info_index];
