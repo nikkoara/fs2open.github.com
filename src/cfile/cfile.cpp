@@ -230,7 +230,7 @@ void cfile_refresh () { cf_build_secondary_filelist (Cfile_cdrom_dir); }
  * @retval 1 Failed to change to new directory's drive (Windows only)
  * @retval 2 Failed to change to new directory
  */
-static int _cfile_chdir (const char* new_dir, const char* cur_dir) {
+static int _cfile_chdir (const char* new_dir, const char* /* cur_dir */) {
     int status;
     const char* path = NULL;
     const char no_dir[] = "\\.";

@@ -24,9 +24,16 @@
 #define FS2_DO_PASTE(a, b) a##b
 #define FS2_PASTE(a, b) FS2_DO_PASTE (a, b)
 
-#define FS2_UNUSED(x) ((void*)x)
+#define FS2_UNUSED(x) ((void)x)
+
+#ifdef NDEBUG
+#  define BOOST_DISABLE_ASSERTS
+#endif // NDEBUG
 
 #if defined(NDEBUG)
+//
+// Both Assert and Assertion are hard errors:
+//
 #  define Assert(expr)                                              \
     do {                                                            \
         if (!(expr)) {                                              \
@@ -42,18 +49,24 @@
         }                                                       \
     } while (0)
 
+//
+// Unreachable is a hard error:
+//
 #  define UNREACHABLE(msg, ...)                                         \
     do {                                                                \
         fs2::dialog::error (__FILE__, __LINE__, msg, ##__VA_ARGS__);    \
     } while (0)
 #else
-#  define Assert(expr) do { } while (0)
-#  define Assertion(expr, msg, ...) do { } while (0)
+#  define Assert(expr) do { FS2_UNUSED((expr)); } while (0)
+#  define Assertion(expr, msg, ...) do { FS2_UNUSED((expr)); } while (0)
 #  define UNREACHABLE(msg, ...) __builtin_unreachable ()
 #endif
 
 #define LOCATION __FILE__, __LINE__
 
+//
+// Both verifications are hard errors:
+//
 #define Verify(x)                                                       \
     do {                                                                \
         if (!(x)) {                                                     \

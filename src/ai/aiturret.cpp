@@ -1520,7 +1520,6 @@ void turret_ai_update_aim (ai_info* aip, object* En_Objp, ship_subsys* ss) {
 int aifft_rotate_turret (
     ship* shipp, int parent_objnum, ship_subsys* ss, object* objp, object* lep,
     vec3d* predicted_enemy_pos, vec3d* gvec) {
-    int ret_val = 0; // to be used in future, see comment @ end of function
 
     if (ss->turret_enemy_objnum != -1) {
         model_subsystem* tp = ss->system_info;
@@ -1625,7 +1624,7 @@ int aifft_rotate_turret (
         }
 
         if (in_fov) {
-            ret_val = model_rotate_gun (
+            model_rotate_gun (
                 Ship_info[shipp->ship_info_index].model_num, tp,
                 &Objects[parent_objnum].orient, &ss->submodel_info_1.angs,
                 &ss->submodel_info_2.angs, &Objects[parent_objnum].pos,
@@ -1634,7 +1633,7 @@ int aifft_rotate_turret (
         else if (
             (tp->flags[Model::Subsystem_Flags::Turret_reset_idle]) &&
             (timestamp_elapsed (ss->rotation_timestamp))) {
-            ret_val = model_rotate_gun (
+            model_rotate_gun (
                 Ship_info[shipp->ship_info_index].model_num, tp,
                 &Objects[parent_objnum].orient, &ss->submodel_info_1.angs,
                 &ss->submodel_info_2.angs, &Objects[parent_objnum].pos,
@@ -1644,7 +1643,7 @@ int aifft_rotate_turret (
     else if (
         (ss->system_info->flags[Model::Subsystem_Flags::Turret_reset_idle]) &&
         (timestamp_elapsed (ss->rotation_timestamp))) {
-        ret_val = model_rotate_gun (
+        model_rotate_gun (
             Ship_info[shipp->ship_info_index].model_num, ss->system_info,
             &Objects[parent_objnum].orient, &ss->submodel_info_1.angs,
             &ss->submodel_info_2.angs, &Objects[parent_objnum].pos,

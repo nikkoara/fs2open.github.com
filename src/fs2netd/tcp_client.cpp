@@ -200,7 +200,10 @@ int FS2NetD_GetPlayerData (
         uint rc_total = 0;
         ubyte reply_type = 0;
         int si_index = 0;
+
         ushort bogus;
+        FS2_UNUSED (bogus);
+        
         ushort num_type_kills = 0, num_medals = 0;
         char ship_name[NAME_LENGTH];
         int idx;
@@ -458,7 +461,9 @@ int FS2NetD_Login (const char* username, const char* password, bool do_send) {
         uint rc_total = 0;
         ubyte login_status = 0;
         int sid;
+
         short pilots;
+        FS2_UNUSED (pilots);
 
         do {
             rc = FS2NetD_GetData (

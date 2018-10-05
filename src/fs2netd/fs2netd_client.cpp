@@ -811,8 +811,10 @@ static void fs2netd_handle_messages () {
 
         case PCKT_SLIST_REPLY: {
             int numServers = 0;
-            int svr_flags; // gcc [-Wunused-but-set-variable] doesn't
-                                    // like MACROs
+
+            int svr_flags;
+            FS2_UNUSED (svr_flags);
+                          
             ushort svr_port;
             char svr_ip[16];
             active_game ag;
