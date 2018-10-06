@@ -303,9 +303,9 @@ void neb2_init () {
         ASSERT (Neb2_poof_count == 6);
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             "nebula.tbl", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n",
+            "nebula.tbl", e.what ());
         return;
     }
 }
@@ -874,7 +874,7 @@ void neb2_regen () {
     vec3d eye_pos;
     matrix eye_orient;
 
-    mprintf (("Regenerating local nebula!\n"));
+    WARNINGF (LOCATION, "Regenerating local nebula!\n");
 
     // get eye position and orientation
     neb2_get_eye_pos (&eye_pos);

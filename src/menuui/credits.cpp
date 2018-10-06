@@ -232,7 +232,7 @@ void credits_start_music () {
         }
     }
     else {
-        nprintf (("Warning", "Cannot play credits music\n"));
+        WARNINGF (LOCATION, "Cannot play credits music");
     }
 }
 
@@ -380,9 +380,9 @@ void credits_parse_table (const char* filename) {
         Credits_parsed = true;
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n", filename,
-             e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n", filename,
+            e.what ());
         return;
     }
 }

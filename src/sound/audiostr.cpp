@@ -254,8 +254,6 @@ bool AudioStream::Create (char* pszFilename) {
                 m_cbBufSize =
                     (m_cbBufSize > BIGBUF_SIZE) ? BIGBUF_SIZE : m_cbBufSize;
 
-                // nprintf(("SOUND", "SOUND => Stream buffer
-                // created using %d bytes\n", m_cbBufSize));
 
                 OpenAL_ErrorCheck (alGenSources (1, &m_source_id), {
                     fRtn = false;
@@ -295,17 +293,17 @@ bool AudioStream::Create (char* pszFilename) {
             }
             else {
                 // Error opening file
-                nprintf (
-                    ("SOUND", "SOUND => Failed to open wave file: %s\n\r",
-                     pszFilename));
+                WARNINGF (
+                    LOCATION, "SOUND => Failed to open wave file: %s\n\r",
+                    pszFilename);
                 fRtn = false;
             }
         }
         else {
             // Error, unable to create WaveFile object
-            nprintf (
-                ("Sound", "SOUND => Failed to create WaveFile object %s\n\r",
-                 pszFilename));
+            WARNINGF (
+                LOCATION, "SOUND => Failed to create WaveFile object %s\n\r",
+                pszFilename);
             fRtn = false;
         }
     }
@@ -316,9 +314,10 @@ bool AudioStream::Create (char* pszFilename) {
 
 ErrorExit:
     if ((fRtn == false) && (m_pwavefile)) {
-        mprintf (
-            ("AUDIOSTR => ErrorExit for ::Create() on wave file: %s\n",
-             pszFilename));
+        ERRORF (
+            LOCATION,
+            "AUDIOSTR => ErrorExit for ::Create() on wave file: %s\n",
+            pszFilename);
 
         if (m_source_id) OpenAL_ErrorPrint (alDeleteSources (1, &m_source_id));
 
@@ -468,7 +467,6 @@ uint AudioStream::GetMaxWriteSize (void) {
     if (!n && (q >= MAX_STREAM_BUFFERS)) // all buffers queued
         dwMaxSize = 0;
 
-    // nprintf(("Alan","Max write size: %d\n", dwMaxSize));
     return (dwMaxSize);
 }
 
@@ -492,17 +490,12 @@ bool AudioStream::ServiceBuffer (void) {
     if (m_bFade == true) {
         if (m_lCutoffVolume == 0.0f) {
             vol = Get_Volume ();
-            // nprintf(("Alan","Volume is: %d\n",vol));
             m_lCutoffVolume = vol * VOLUME_ATTENUATION_BEFORE_CUTOFF;
         }
 
         vol = Get_Volume () * VOLUME_ATTENUATION;
-        // nprintf(("Alan","Volume is now: %d\n",vol));
         Set_Volume (vol);
 
-        // nprintf(("Sound","SOUND => Volume for stream sound is
-        //%d\n",vol));          nprintf(("Alan","Cuttoff Volume is:
-        //%d\n",m_lCutoffVolume));
         if (vol < m_lCutoffVolume) {
             m_bFade = false;
             m_lCutoffVolume = 0.0f;
@@ -535,8 +528,6 @@ bool AudioStream::ServiceBuffer (void) {
         uint num_bytes_written;
 
         if (WriteWaveData (dwFreeSpace, &num_bytes_written) == true) {
-            // nprintf(("Alan","Num bytes written: %d\n",
-            // num_bytes_written));
 
             if (m_total_uncompressed_bytes_read >=
                 m_max_uncompressed_bytes_to_read) {
@@ -885,7 +876,7 @@ int audiostream_open (const char* filename, int type) {
     }
 
     if (i == MAX_AUDIO_STREAMS) {
-        nprintf (("Sound", "SOUND => No more audio streams available!\n"));
+        WARNINGF (LOCATION, "SOUND => No more audio streams available!");
         return -1;
     }
 

@@ -90,13 +90,14 @@ font* FontManager::loadFontOld (const std::string& typeface) {
     CFILE* fp =
         cfopen (typeface.c_str (), "rb", CFILE_NORMAL, CF_TYPE_ANY, localize);
     if (fp == NULL) {
-        mprintf (("Unable to find font file \"%s\".", typeface.c_str ()));
+        WARNINGF (
+            LOCATION, "Unable to find font file \"%s\".", typeface.c_str ());
         return NULL;
     }
 
     std::unique_ptr< font > fnt (new font ());
     if (!fnt) {
-        mprintf (("Unable to allocate memory for \"%s\"", typeface.c_str ()));
+        WARNINGF (LOCATION, "Unable to allocate memory for \"%s\"", typeface.c_str ());
         return NULL;
     }
 
@@ -231,7 +232,7 @@ FontManager::loadNVGFont (const std::string& fileName, float fontSize) {
             CF_TYPE_ANY);
 
         if (fontFile == NULL) {
-            mprintf (("Couldn't open font file \"%s\"", fileName.c_str ()));
+            WARNINGF (LOCATION, "Couldn't open font file \"%s\"", fileName.c_str ());
             return NULL;
         }
 
@@ -240,18 +241,16 @@ FontManager::loadNVGFont (const std::string& fileName, float fontSize) {
         std::unique_ptr< ubyte[] > fontData (new ubyte[size]);
 
         if (!fontData) {
-            mprintf (
-                ("Couldn't allocate %zu"
-                 " bytes for reading font file \"%s\"!",
-                 size, fileName.c_str ()));
+            WARNINGF (
+                LOCATION,
+                "Couldn't allocate %zu bytes for reading font file \"%s\"!",
+                size, fileName.c_str ());
             cfclose (fontFile);
             return NULL;
         }
 
         if (!cfread (fontData.get (), (int)size, 1, fontFile)) {
-            mprintf (
-                ("Error while reading font data from \"%s\"",
-                 fileName.c_str ()));
+            ERRORF (LOCATION, "Error while reading font data from \"%s\"", fileName.c_str ());
             cfclose (fontFile);
             return NULL;
         }
@@ -274,9 +273,7 @@ FontManager::loadNVGFont (const std::string& fileName, float fontSize) {
         fileName.c_str (), data->data.get (), (int)data->size, 0);
 
     if (handle < 0) {
-        mprintf (
-            ("Couldn't couldn't create font for file \"%s\"",
-             fileName.c_str ()));
+        WARNINGF (LOCATION, "Couldn't couldn't create font for file \"%s\"", fileName.c_str ());
         return NULL;
     }
 

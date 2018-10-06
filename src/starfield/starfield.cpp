@@ -94,7 +94,7 @@ typedef struct starfield_bitmap {
 typedef struct starfield_bitmap_instance {
     float scale_x, scale_y; // x and y scale
     int div_x, div_y;       // # of x and y divisions
-    angles_t ang;             // angles from FRED
+    angles_t ang;           // angles from FRED
     int star_bitmap_index;  // index into starfield_bitmap array
     int n_verts;
     vertex* verts;
@@ -629,9 +629,9 @@ void parse_startbl (const char* filename) {
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n", filename,
-             e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n", filename,
+            e.what ());
         return;
     }
 }
@@ -660,9 +660,9 @@ void stars_load_all_bitmaps () {
                     true);
 
                 if (sb->bitmap_id < 0) {
-                    mprintf (
-                        ("Unable to load starfield bitmap: '%s'!\n",
-                         sb->filename));
+                    WARNINGF (
+                        LOCATION, "Unable to load starfield bitmap: '%s'!\n",
+                        sb->filename);
                     mprintf_count++;
                 }
             }
@@ -930,10 +930,12 @@ void stars_post_level_init () {
     // if we have no sun instances, create one
     if (!Suns.size ()) {
         if (!strlen (Sun_bitmaps[0].filename)) {
-            mprintf (("Trying to add default sun but no default exists!!\n"));
+            WARNINGF (
+                LOCATION,
+                "Trying to add default sun but no default exists!!\n");
         }
         else {
-            mprintf (("Adding default sun.\n"));
+            WARNINGF (LOCATION, "Adding default sun.\n");
 
             starfield_bitmap_instance def_sun;
 
@@ -1895,7 +1897,7 @@ void stars_draw (
 
 #ifdef TIME_STAR_CODE
     xt2 = timer_get_fixed_seconds ();
-    mprintf (("Stars: %d\n", xt2 - xt1));
+    WARNINGF (LOCATION, "Stars: %d\n", xt2 - xt1);
 #endif
 
     if (!Rendering_to_env && (Game_detail_flags & DETAIL_FLAG_MOTION) &&
@@ -1955,13 +1957,13 @@ void stars_page_in () {
 
         pm = model_get (Subspace_model_inner);
 
-        nprintf (("Paging", "Paging in textures for subspace effect.\n"));
+        WARNINGF (LOCATION, "Paging in textures for subspace effect.");
 
         for (idx = 0; idx < pm->n_textures; idx++) { pm->maps[idx].PageIn (); }
 
         pm = model_get (Subspace_model_outer);
 
-        nprintf (("Paging", "Paging in textures for subspace effect.\n"));
+        WARNINGF (LOCATION, "Paging in textures for subspace effect.");
 
         for (idx = 0; idx < pm->n_textures; idx++) { pm->maps[idx].PageIn (); }
 
@@ -2280,7 +2282,9 @@ int stars_find_bitmap (char* name) {
 
     // lookup
     for (idx = 0; idx < (int)Starfield_bitmaps.size (); idx++) {
-        if (!strcasecmp (name, Starfield_bitmaps[idx].filename)) { return idx; }
+        if (!strcasecmp (name, Starfield_bitmaps[idx].filename)) {
+            return idx;
+        }
     }
 
     // not found
@@ -2729,10 +2733,11 @@ int stars_get_first_valid_background () {
 
         for (j = 0; j < background->suns.size (); j++) {
             if (stars_find_sun (background->suns[j].filename) < 0) {
-                mprintf (
-                    ("Failed to load sun %s for background %d, falling back "
-                     "to background %d\n",
-                     background->suns[j].filename, i + 1, i + 2));
+                WARNINGF (
+                    LOCATION,
+                    "Failed to load sun %s for background %d, falling back to "
+                    "background %d\n",
+                    background->suns[j].filename, i + 1, i + 2);
                 valid = false;
                 break;
             }
@@ -2741,10 +2746,11 @@ int stars_get_first_valid_background () {
         if (valid) {
             for (j = 0; j < background->bitmaps.size (); j++) {
                 if (stars_find_bitmap (background->bitmaps[j].filename) < 0) {
-                    mprintf (
-                        ("Failed to load bitmap %s for background %d, falling "
-                         "back to background %d\n",
-                         background->suns[j].filename, i + 1, i + 2));
+                    WARNINGF (
+                        LOCATION,
+                        "Failed to load bitmap %s for background %d, falling "
+                        "back to background %d\n",
+                        background->suns[j].filename, i + 1, i + 2);
                     valid = false;
                     break;
                 }
@@ -2772,9 +2778,9 @@ void stars_load_background (int background_idx) {
         for (j = 0; j < background->suns.size (); j++) {
             if ((stars_add_sun_entry (&background->suns[j]) < 0) &&
                 !Fred_running) {
-                nprintf (
-                    ("General", "Failed to add sun '%s' to the mission!",
-                     background->suns[j].filename));
+                WARNINGF (
+                    LOCATION, "Failed to add sun '%s' to the mission!",
+                    background->suns[j].filename);
                 failed_suns++;
             }
         }
@@ -2787,10 +2793,10 @@ void stars_load_background (int background_idx) {
         for (j = 0; j < background->bitmaps.size (); j++) {
             if ((stars_add_bitmap_entry (&background->bitmaps[j]) < 0) &&
                 !Fred_running) {
-                nprintf (
-                    ("General",
-                     "Failed to add starfield bitmap '%s' to the mission!",
-                     background->bitmaps[j].filename));
+                WARNINGF (
+                    LOCATION,
+                    "Failed to add starfield bitmap '%s' to the mission!",
+                    background->bitmaps[j].filename);
                 failed_stars++;
             }
         }

@@ -62,9 +62,9 @@ void cmeasure_select_next (ship* shipp) {
         }
     }
 
-    mprintf (
-        ("Countermeasure type set to %i in frame %i\n",
-         shipp->current_cmeasure, Framecount));
+    WARNINGF (
+        LOCATION, "Countermeasure type set to %i in frame %i\n",
+        shipp->current_cmeasure, Framecount);
 }
 
 /**

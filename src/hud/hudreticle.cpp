@@ -198,7 +198,7 @@ HudGaugeReticle::HudGaugeReticle ()
 void HudGaugeReticle::initBitmaps (char* fname) {
     crosshair.first_frame = bm_load_animation (fname, &crosshair.num_frames);
     if (crosshair.first_frame < 0) {
-        mprintf (("Cannot load hud ani: %s\n", fname));
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 
@@ -297,10 +297,11 @@ void HudGaugeReticle::getFirepointStatus () {
         pm = model_get (sip->model_num);
 
         if (pm->n_view_positions == 0) {
-            mprintf (
-                ("Model %s does not have a defined eyepoint. Firepoint "
-                 "display could not be generated\n",
-                 pm->filename));
+            WARNINGF (
+                LOCATION,
+                "Model %s does not have a defined eyepoint. Firepoint display "
+                "could not be generated\n",
+                pm->filename);
         }
         else {
             if (pm->n_guns > 0) {
@@ -472,7 +473,7 @@ void HudGaugeThrottle::initBitmaps (char* fname) {
         bm_load_animation (fname, &throttle_frames.num_frames);
 
     if (throttle_frames.first_frame < 0) {
-        mprintf (("Cannot load hud ani: %s\n", fname));
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
     }
 }
 
@@ -742,19 +743,19 @@ void HudGaugeThreatIndicator::initBitmaps (
     threat_arc.first_frame =
         bm_load_animation (fname_arc, &threat_arc.num_frames);
     if (threat_arc.first_frame < 0) {
-        mprintf (("Cannot load hud ani: %s\n", fname_arc));
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_arc);
     }
 
     laser_warn.first_frame =
         bm_load_animation (fname_laser, &laser_warn.num_frames);
     if (laser_warn.first_frame < 0) {
-        mprintf (("Cannot load hud ani: %s\n", fname_laser));
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_laser);
     }
 
     lock_warn.first_frame =
         bm_load_animation (fname_lock, &lock_warn.num_frames);
     if (lock_warn.first_frame < 0) {
-        mprintf (("Cannot load hud ani: %s\n", fname_lock));
+        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_lock);
     }
 }
 

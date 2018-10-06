@@ -108,9 +108,9 @@ void lcl_init (int lang_init) {
         parse_stringstbl_quick ("strings.tbl");
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             "strings.tbl", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n",
+            "strings.tbl", e.what ());
     }
 
     parse_modular_table (NOX ("*-lcl.tbm"), parse_stringstbl_quick);
@@ -134,8 +134,7 @@ void lcl_init (int lang_init) {
             NULL, "Language",
             Lcl_languages[FS2_OPEN_DEFAULT_LANGUAGE].lang_name);
 
-        if (ret == NULL)
-            ASSERTF (LOCATION, "Default language not found.");
+        if (ret == NULL) ASSERTF (LOCATION, "Default language not found.");
 
         strcpy_s (lang_string, ret);
 
@@ -224,9 +223,9 @@ void parse_stringstbl_quick (const char* filename) {
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("WMCGUI: Unable to parse '%s'!  Error message = %s.\n", filename,
-             e.what ()));
+        ERRORF (
+            LOCATION, "WMCGUI: Unable to parse '%s'!  Error message = %s.\n",
+            filename, e.what ());
         return;
     }
 }
@@ -256,7 +255,8 @@ void parse_stringstbl_common (const char* filename, const bool external) {
         }
 
         if (skip_to_string (language_tag) != 1) {
-            mprintf (("Current language not found in %s\n", filename));
+            WARNINGF (
+                LOCATION, "Current language not found in %s\n", filename);
             return;
         }
 
@@ -412,10 +412,10 @@ void parse_stringstbl_common (const char* filename, const bool external) {
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse 'controlconfigdefaults.tbl'!  Error "
-             "message = %s.\n",
-             e.what ()));
+        ERRORF (
+            LOCATION,
+            "parse failed 'controlconfigdefaults.tbl'!  Error message = %s.\n",
+            e.what ());
         return;
     }
 }
@@ -443,9 +443,9 @@ void lcl_xstr_init () {
         parse_stringstbl ("strings.tbl");
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             "strings.tbl", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n",
+            "strings.tbl", e.what ());
     }
 
     parse_modular_table (NOX ("*-lcl.tbm"), parse_stringstbl);
@@ -454,9 +454,9 @@ void lcl_xstr_init () {
         parse_tstringstbl ("tstrings.tbl");
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             "tstrings.tbl", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n",
+            "tstrings.tbl", e.what ());
     }
 
     parse_modular_table (NOX ("*-tlc.tbm"), parse_tstringstbl);
@@ -485,8 +485,8 @@ void lcl_xstr_close () {
 void lcl_set_language (int lang) {
     Lcl_current_lang = lang;
 
-    nprintf ((
-        "General", "Setting language to %s\n", Lcl_languages[lang].lang_name));
+    WARNINGF (
+        LOCATION, "Setting language to %s\n", Lcl_languages[lang].lang_name);
 
     ASSERTX (
         (Lcl_current_lang >= 0) &&

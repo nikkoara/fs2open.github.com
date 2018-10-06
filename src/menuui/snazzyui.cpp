@@ -79,7 +79,6 @@ int snazzy_menu_do (
 
     // if (mouse_down_count(MOUSE_LEFT_BUTTON) )       {
     if (!mouse_down (MOUSE_LEFT_BUTTON) && Snazzy_mouse_left_was_down) {
-        // nprintf(("Alan", "pixel val: %d\n", pixel_value));
         for (i = 0; i < num_regions; i++) {
             if (pixel_value == regions[i].mask) {
                 choice = regions[i].mask;
@@ -223,7 +222,7 @@ void read_menu_tbl (
             if (p1) {
                 p2 = strchr (tmp_line + 1, '\"');
                 if (!p2) {
-                    nprintf (("Warning", "Error parsing menu file\n"));
+                    WARNINGF (LOCATION, "Error parsing menu file");
 
                     return;
                 }

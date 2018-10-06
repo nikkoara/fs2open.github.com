@@ -27,7 +27,7 @@
 //
 
 // respawn notice codes
-#define RESPAWN_BROADCAST \
+#define RESPAWN_BROADCAST                                                     \
     0x1 // server to clients - create this ship, and if you're the respawner,
         // set it to be your object
 #define RESPAWN_REQUEST \
@@ -637,9 +637,8 @@ void multi_respawn_process_packet (ubyte* data, header* hinfo) {
     // determine who send the packet
     player_index = find_player_id (hinfo->id);
     if (player_index == -1) {
-        nprintf (
-            ("Network",
-             "Couldn't find player for processing respawn packet!\n"));
+        WARNINGF (
+            LOCATION, "Couldn't find player for processing respawn packet!");
     }
 
     // get the opcode
@@ -668,7 +667,7 @@ void multi_respawn_process_packet (ubyte* data, header* hinfo) {
         GET_STRING (parse_name);
         player_index = find_player_id (player_id);
         if (player_index == -1) {
-            nprintf (("Network", "Couldn't find player to respawn!\n"));
+            // WARNINGF (LOCATION, "Couldn't find player to respawn!");
             break;
         }
 
@@ -689,28 +688,28 @@ void multi_respawn_process_packet (ubyte* data, header* hinfo) {
         GET_DATA (code);
 
         if (player_index == -1) {
-            nprintf ((
-                "Network", "Received respawn request from unknown player!\n"));
+            WARNINGF (
+                LOCATION, "Received respawn request from unknown player!");
             break;
         }
-        nprintf (
-            ("Network", "Received respawn request for player %s\n",
-             Net_players[player_index].m_player->callsign));
+        WARNINGF (
+            LOCATION, "Received respawn request for player %s\n",
+            Net_players[player_index].m_player->callsign);
 
         // make sure he's not making an invalid request
         if ((code == 0) &&
             !(Net_players[player_index].flags & NETINFO_FLAG_RESPAWNING)) {
-            nprintf (("Network", "This player shouldn't be respawning!\n"));
+            // WARNINGF (LOCATION, "This player shouldn't be respawning!");
             Int3 ();
             break;
         }
         else if (
             (code == 1) &&
             !(Net_players[player_index].flags & NETINFO_FLAG_LIMBO)) {
-            nprintf (
-                ("Network",
-                 "This is a respawn observer request from a player who "
-                 "shouldn't be respawning as an observer!\n"));
+            WARNINGF (
+                LOCATION,
+                "This is a respawn observer request from a player who "
+                "shouldn't be respawning as an observer!");
             Int3 ();
             break;
         }

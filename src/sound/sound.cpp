@@ -122,7 +122,7 @@ int snd_init () {
     if (Cmdline_freespace_no_sound) return 0;
 
     if (ds_initialized) {
-        nprintf (("Sound", "SOUND => Audio is already initialized!\n"));
+        WARNINGF (LOCATION, "SOUND => Audio is already initialized!");
         return 1;
     }
 
@@ -131,10 +131,10 @@ int snd_init () {
     rval = ds_init ();
 
     if (rval != 0) {
-        nprintf (
-            ("Sound",
-             "SOUND ==> Fatal error initializing audio device, turn sound "
-             "off.\n"));
+        WARNINGF (
+            LOCATION,
+            "SOUND ==> Fatal error initializing audio device, turn sound "
+            "off.");
         Cmdline_freespace_no_sound = Cmdline_freespace_no_music = 1;
         goto Failure;
     }
@@ -151,9 +151,9 @@ int snd_init () {
 Failure:
     // Warning(LOCATION, "Sound system was unable to be initialized.  If you
     // continue, sound will be disabled.\n");
-    nprintf (
-        ("Sound",
-         "SOUND => Audio init unsuccessful, continuing without sound.\n"));
+    WARNINGF (
+        LOCATION,
+        "SOUND => Audio init unsuccessful, continuing without sound.");
     return 0;
 }
 
@@ -313,7 +313,7 @@ snd_load (game_snd_entry* entry, int flags, int /*allow_hardware_load*/) {
 
     std::unique_ptr< ffmpeg::WaveFile > audio_file (new ffmpeg::WaveFile ());
 
-    nprintf (("Sound", "SOUND ==> Loading '%s'\n", entry->filename));
+    WARNINGF (LOCATION, "SOUND ==> Loading '%s'", entry->filename);
 
     if (!audio_file->Open (entry->filename, false)) {
         return sound_load_id::invalid ();
@@ -361,11 +361,11 @@ snd_load (game_snd_entry* entry, int flags, int /*allow_hardware_load*/) {
                         entry->filename);
                 }
                 else {
-                    mprintf (
-                        ("Warning: Sound '%s' has more than one channel but "
-                         "is used as a 3D sound! 3D sounds may only have one "
-                         "channel.\n",
-                         entry->filename));
+                    WARNINGF (
+                        LOCATION,
+                        "Sound '%s' has more than one channel but is used as "
+                        "a 3D sound! 3D sounds may only have one channel.\n",
+                        entry->filename);
                 }
             }
 #endif
@@ -391,8 +391,8 @@ snd_load (game_snd_entry* entry, int flags, int /*allow_hardware_load*/) {
 
     auto rc = ds_load_buffer (&snd->sid, type, audio_file.get ());
     if (rc == -1) {
-        nprintf (
-            ("Sound", "SOUND ==> Failed to load '%s'\n", entry->filename));
+        WARNINGF (
+            LOCATION, "SOUND ==> Failed to load '%s'\n", entry->filename);
         return sound_load_id::invalid ();
     }
 
@@ -407,7 +407,7 @@ snd_load (game_snd_entry* entry, int flags, int /*allow_hardware_load*/) {
     entry->id_sig = snd->sig;
     entry->id = sound_load_id (static_cast< int > (n));
 
-    nprintf (("Sound", "SOUND ==> Finished loading '%s'\n", entry->filename));
+    WARNINGF (LOCATION, "SOUND ==> Finished loading '%s'", entry->filename);
 
     return sound_load_id (static_cast< int > (n));
 }
@@ -736,9 +736,9 @@ void snd_update_3d_pos (
 
         channel = ds_get_channel (soundnum);
         if (channel == -1) {
-            nprintf ((
-                "Sound",
-                "WARNING: Trying to set position for a non-playing sound.\n"));
+            WARNINGF (
+                LOCATION,
+                "WARNING: Trying to set position for a non-playing sound.");
             return;
         }
 
@@ -932,9 +932,9 @@ void snd_set_volume (sound_handle sig, float volume) {
 
     channel = ds_get_channel (sig);
     if (channel == -1) {
-        nprintf (
-            ("Sound",
-             "WARNING: Trying to set volume for a non-playing sound.\n"));
+        WARNINGF (
+            LOCATION,
+            "WARNING: Trying to set volume for a non-playing sound.");
         return;
     }
 
@@ -975,8 +975,8 @@ void snd_set_pan (sound_handle sig, float pan) {
 
     channel = ds_get_channel (sig);
     if (channel == -1) {
-        nprintf ((
-            "Sound", "WARNING: Trying to set pan for a non-playing sound.\n"));
+        WARNINGF (
+            LOCATION, "WARNING: Trying to set pan for a non-playing sound.");
         return;
     }
 
@@ -1001,9 +1001,8 @@ float snd_get_pitch (sound_handle sig) {
 
     channel = ds_get_channel (sig);
     if (channel == -1) {
-        nprintf (
-            ("Sound",
-             "WARNING: Trying to get pitch for a non-playing sound.\n"));
+        WARNINGF (
+            LOCATION, "WARNING: Trying to get pitch for a non-playing sound.");
         return -1;
     }
 
@@ -1027,9 +1026,8 @@ void snd_set_pitch (sound_handle sig, float pitch) {
 
     channel = ds_get_channel (sig);
     if (channel == -1) {
-        nprintf (
-            ("Sound",
-             "WARNING: Trying to set pitch for a non-playing sound.\n"));
+        WARNINGF (
+            LOCATION, "WARNING: Trying to set pitch for a non-playing sound.");
         return;
     }
 

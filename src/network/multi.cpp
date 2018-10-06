@@ -383,10 +383,10 @@ void multi_check_listen () {
 
         // if we didn't find a player, close the socket
         if (i == MAX_PLAYERS) {
-            nprintf (
-                ("Network",
-                 "Got accept on my listen socket, but unknown player.  "
-                 "Closing socket.\n"));
+            WARNINGF (
+                LOCATION,
+                "Got accept on my listen socket, but unknown player.  Closing "
+                "socket.");
             psnet_rel_close_socket (&sock);
         }
     }
@@ -835,8 +835,7 @@ void process_packet_normal (ubyte* data, header* header_info) {
     case SEXP: process_sexp_packet (data, header_info); break;
 
     default:
-        nprintf (
-            ("Network", "Received packet with unknown type %d\n", data[0]));
+        WARNINGF (LOCATION, "Received packet with unknown type %d\n", data[0]);
         header_info->bytes_processed = 10000;
         break;
 
@@ -891,9 +890,9 @@ void multi_process_bigdata (
         }
 
         if ((type < 0) || (type > MAX_TYPE_ID)) {
-            nprintf (
-                ("Network", "multi_process_bigdata: Invalid packet type %d!\n",
-                 type));
+            WARNINGF (
+                LOCATION, "multi_process_bigdata: Invalid packet type %d!\n",
+                type);
             return;
         }
 
@@ -971,7 +970,7 @@ void multi_process_reliable_details () {
         if (Serverconn != 0xffffffff) {
             int status = psnet_rel_get_status (Serverconn);
             if (status == RNF_BROKEN) {
-                mprintf (("CLIENT SOCKET DISCONNECTED\n"));
+                WARNINGF (LOCATION, "CLIENT SOCKET DISCONNECTED\n");
 
                 // quit the game
                 if (!multi_endgame_ending ()) {
@@ -1004,9 +1003,8 @@ void multi_process_incoming () {
         // ship and are in the mission
         if ((Net_player->flags & NETINFO_FLAG_INGAME_JOIN) &&
             (Net_player->state != NETPLAYER_STATE_INGAME_SHIP_SELECT)) {
-            nprintf (
-                ("Network",
-                 "Tossing UDP like a good little ingame joiner...\n"));
+            WARNINGF (
+                LOCATION, "Tossing UDP like a good little ingame joiner...");
         }
         // otherwise process incoming data normally
         else {
@@ -1481,16 +1479,16 @@ void standalone_main_init () {
     Net_player->p_info.options.obj_update_level = Multi_options_g.std_datarate;
     switch (Net_player->p_info.options.obj_update_level) {
     case OBJ_UPDATE_LOW:
-        nprintf (("Network", "STANDALONE USING LOW UPDATES\n"));
+        // WARNINGF (LOCATION, "STANDALONE USING LOW UPDATES");
         break;
     case OBJ_UPDATE_MEDIUM:
-        nprintf (("Network", "STANDALONE USING MEDIUM UPDATES\n"));
+        // WARNINGF (LOCATION, "STANDALONE USING MEDIUM UPDATES");
         break;
     case OBJ_UPDATE_HIGH:
-        nprintf (("Network", "STANDALONE USING HIGH UPDATE\n"));
+        // WARNINGF (LOCATION, "STANDALONE USING HIGH UPDATE");
         break;
     case OBJ_UPDATE_LAN:
-        nprintf (("Network", "STANDALONE USING LAN UPDATE\n"));
+        // WARNINGF (LOCATION, "STANDALONE USING LAN UPDATE");
         break;
     }
 

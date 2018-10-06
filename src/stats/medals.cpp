@@ -426,9 +426,9 @@ void parse_medal_tbl () {
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             "medals.tbl", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n",
+            "medals.tbl", e.what ());
         return;
     }
 }
@@ -819,9 +819,7 @@ void init_medal_bitmaps () {
             }
 
             // hi-res support
-            if (gr_screen.res == GR_1024) {
-                sprintf (filename, "2_%s", base);
-            }
+            if (gr_screen.res == GR_1024) { sprintf (filename, "2_%s", base); }
 
             // base now contains the actual medal bitmap filename needed to
             // load we don't need to pass extension to bm_load anymore, so just

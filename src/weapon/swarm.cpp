@@ -24,7 +24,7 @@
 
 #define SWARM_FRAME_STOP_SWARMING \
     4 // Estimated number of zigzag frames BEFORE impact to stop zig-zagging
-      // and instead home in straight to the target
+        // and instead home in straight to the target
 
 #define TURRET_SWARM_VALIDITY_CHECKTIME \
     5000 // number of ms between checks on turret_swam_info checks
@@ -136,7 +136,7 @@ int swarm_create () {
     }
 
     if (i >= MAX_SWARM_MISSILES) {
-        nprintf (("Warning", "No more swarm missiles are available\n"));
+        WARNINGF (LOCATION, "No more swarm missiles are available");
         return -1;
     }
 
@@ -396,8 +396,7 @@ int turret_swarm_create () {
     }
 
     if (i >= MAX_TURRET_SWARM_INFO) {
-        nprintf (
-            ("Warning", "No more turret swarm info slots are available\n"));
+        WARNINGF (LOCATION, "No more turret swarm info slots are available");
         return -1;
     }
 
@@ -488,7 +487,7 @@ void turret_swarm_set_up_info (
     tsi = &Turret_swarm_info[tsi_index];
 
     if (turret->turret_swarm_num == MAX_TFP) {
-        mprintf (("Overlapping turret swarm firing intervals\n"));
+        WARNINGF (LOCATION, "Overlapping turret swarm firing intervals\n");
         turret_swarm_delete (turret->turret_swarm_info_index[0]);
         int old_s;
         for (old_s = 0; old_s < (MAX_TFP - 1); old_s++) {

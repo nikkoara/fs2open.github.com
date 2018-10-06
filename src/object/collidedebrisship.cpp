@@ -54,8 +54,8 @@ int collide_debris_ship (obj_pair* pair) {
             debris_hit_info.light = pdebris;
         }
 
-        hit = debris_check_collision (
-            pdebris, pship, &hitpos, &debris_hit_info);
+        hit =
+            debris_check_collision (pdebris, pship, &hitpos, &debris_hit_info);
 
         if (hit) {
             float ship_damage;
@@ -69,8 +69,7 @@ int collide_debris_ship (obj_pair* pair) {
             // calculate ship damage
             ship_damage =
                 0.005f *
-                debris_hit_info
-                .impulse; // Cut collision-based damage in half.
+                debris_hit_info.impulse; // Cut collision-based damage in half.
 
             // Decrease heavy damage by 2x.
             if (ship_damage > 5.0f)
@@ -85,20 +84,20 @@ int collide_debris_ship (obj_pair* pair) {
                 debris_hit_info.impulse /
                 pdebris->phys_info.mass; // ie, delta velocity of debris
 
-            debris_damage = (debris_damage > ship_damage) ? debris_damage
-                : ship_damage;
+            debris_damage =
+                (debris_damage > ship_damage) ? debris_damage : ship_damage;
 
             // modify ship damage by debris damage multiplier
             ship_damage *= Debris[pdebris->instance].damage_mult;
 
             // supercaps cap damage at 10-20% max hull ship damage
             if (Ship_info[Ships[pship->instance].ship_info_index]
-                .flags[Ship::Info_Flags::Supercap]) {
+                    .flags[Ship::Info_Flags::Supercap]) {
                 float cap_percent_damage = frand_range (0.1f, 0.2f);
                 ship_damage = MIN (
                     ship_damage,
                     cap_percent_damage *
-                    Ships[pship->instance].ship_max_hull_strength);
+                        Ships[pship->instance].ship_max_hull_strength);
             }
 
             // apply damage to debris
@@ -110,16 +109,15 @@ int collide_debris_ship (obj_pair* pair) {
             apply_ship_damage = !(pship->signature == pdebris->parent_sig);
 
             if (debris_hit_info.heavy == pship) {
-                quadrant_num =
-                    get_ship_quadrant_from_global (&hitpos, pship);
+                quadrant_num = get_ship_quadrant_from_global (&hitpos, pship);
                 if ((pship->flags[Object::Object_Flags::No_shields]) ||
                     !ship_is_shield_up (pship, quadrant_num)) {
                     quadrant_num = -1;
                 }
                 if (apply_ship_damage) {
                     ship_apply_local_damage (
-                        debris_hit_info.heavy, debris_hit_info.light,
-                        &hitpos, ship_damage, quadrant_num, CREATE_SPARKS,
+                        debris_hit_info.heavy, debris_hit_info.light, &hitpos,
+                        ship_damage, quadrant_num, CREATE_SPARKS,
                         debris_hit_info.submodel_num);
                 }
             }
@@ -127,8 +125,8 @@ int collide_debris_ship (obj_pair* pair) {
                 // don't draw sparks using sphere hit position
                 if (apply_ship_damage) {
                     ship_apply_local_damage (
-                        debris_hit_info.light, debris_hit_info.heavy,
-                        &hitpos, ship_damage, MISS_SHIELDS, NO_SPARKS);
+                        debris_hit_info.light, debris_hit_info.heavy, &hitpos,
+                        ship_damage, MISS_SHIELDS, NO_SPARKS);
                 }
             }
 
@@ -245,7 +243,7 @@ int collide_asteroid_ship (obj_pair* pair) {
                 ship_damage =
                     0.001f *
                     asteroid_hit_info
-                    .impulse; // Cut collision-based damage in half.
+                        .impulse; // Cut collision-based damage in half.
             }
 
             // Decrease heavy damage by 2x.
@@ -257,19 +255,18 @@ int collide_asteroid_ship (obj_pair* pair) {
                  Ships[pship->instance].ship_max_hull_strength / 8.0f)) {
                 ship_damage =
                     Ships[pship->instance].ship_max_hull_strength / 8.0f;
-                nprintf (
-                    ("AI",
-                     "Pinning damage to %s from asteroid at %7.3f (%7.3f "
-                     "percent)\n",
-                     Ships[pship->instance].ship_name, ship_damage,
-                     100.0f * ship_damage /
-                     Ships[pship->instance].ship_max_hull_strength));
+                WARNINGF (
+                    LOCATION,
+                    "Pinning damage to %s from asteroid at %7.3f (%7.3f "
+                    "percent)\n",
+                    Ships[pship->instance].ship_name, ship_damage,
+                    100.0f * ship_damage /
+                        Ships[pship->instance].ship_max_hull_strength);
             }
 
             // Decrease damage during warp out because it's annoying when
             // your escoree dies during warp out.
-            if (Ai_info[Ships[pship->instance].ai_index].mode ==
-                AIM_WARP_OUT)
+            if (Ai_info[Ships[pship->instance].ai_index].mode == AIM_WARP_OUT)
                 ship_damage /= 3.0f;
 
             // calculate asteroid damage and set asteroid damage to greater
@@ -277,12 +274,11 @@ int collide_asteroid_ship (obj_pair* pair) {
             // really whack some small asteroid with afterburner and not do
             // significant damage to ship but the asteroid goes off faster
             // than afterburner speed.
-            asteroid_damage = asteroid_hit_info.impulse /
-                pasteroid->phys_info
-                .mass; // ie, delta velocity of asteroid
-            asteroid_damage = (asteroid_damage > ship_damage)
-                ? asteroid_damage
-                : ship_damage;
+            asteroid_damage =
+                asteroid_hit_info.impulse /
+                pasteroid->phys_info.mass; // ie, delta velocity of asteroid
+            asteroid_damage = (asteroid_damage > ship_damage) ? asteroid_damage
+                                                              : ship_damage;
 
             // apply damage to asteroid
             asteroid_hit (
@@ -293,22 +289,21 @@ int collide_asteroid_ship (obj_pair* pair) {
 
             int quadrant_num;
             if (asteroid_hit_info.heavy == pship) {
-                quadrant_num =
-                    get_ship_quadrant_from_global (&hitpos, pship);
+                quadrant_num = get_ship_quadrant_from_global (&hitpos, pship);
                 if ((pship->flags[Object::Object_Flags::No_shields]) ||
                     !ship_is_shield_up (pship, quadrant_num)) {
                     quadrant_num = -1;
                 }
                 ship_apply_local_damage (
-                    asteroid_hit_info.heavy, asteroid_hit_info.light,
-                    &hitpos, ship_damage, quadrant_num, CREATE_SPARKS,
+                    asteroid_hit_info.heavy, asteroid_hit_info.light, &hitpos,
+                    ship_damage, quadrant_num, CREATE_SPARKS,
                     asteroid_hit_info.submodel_num);
             }
             else {
                 // don't draw sparks (using sphere hitpos)
                 ship_apply_local_damage (
-                    asteroid_hit_info.light, asteroid_hit_info.heavy,
-                    &hitpos, ship_damage, MISS_SHIELDS, NO_SPARKS);
+                    asteroid_hit_info.light, asteroid_hit_info.heavy, &hitpos,
+                    ship_damage, MISS_SHIELDS, NO_SPARKS);
             }
 
             // maybe print Collision on HUD

@@ -28,11 +28,6 @@
 #include <cmath>
 #include <cstdint>
 
-
-// don't verbose stub funtions unless we're debugging
-#define STUB_FUNCTION nprintf(( "Warning", "STUB: %s in " __FILE__ " at line %d, thread %d\n", __FUNCTION__, __LINE__, getpid() ))
-#define DEBUGME(d1) nprintf(( "Warning", "DEBUGME: %s in " __FILE__ " at line %d, msg \"%s\", thread %d\n", __FUNCTION__, __LINE__, d1, getpid() ))
-
 // networking/socket stuff
 #define SOCKET                  int
 #define SOCKADDR                struct sockaddr

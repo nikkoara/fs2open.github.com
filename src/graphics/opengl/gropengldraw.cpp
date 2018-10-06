@@ -655,9 +655,9 @@ void gr_opengl_render_shield_impact (
                 material_info->get_texture_map (TM_BASE_TYPE),
                 material_info->get_texture_type (), &u_scale, &v_scale,
                 &array_index)) {
-            mprintf (
-                ("WARNING: Error setting bitmap texture (%i)!\n",
-                 material_info->get_texture_map (TM_BASE_TYPE)));
+            ERRORF (
+                LOCATION, "Error setting bitmap texture (%i)!\n",
+                material_info->get_texture_map (TM_BASE_TYPE));
         }
     }
 

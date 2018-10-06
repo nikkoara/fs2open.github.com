@@ -1042,9 +1042,9 @@ void debrief_traitor_init () {
             inited = 1;
         }
         catch (const parse::ParseException& e) {
-            mprintf (
-                ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-                 "traitor.tbl", e.what ()));
+            ERRORF (
+                LOCATION, "parse failed '%s'!  Error message = %s.\n",
+                "traitor.tbl", e.what ());
             return;
         }
     }
@@ -1261,7 +1261,7 @@ void debrief_assemble_optional_mission_popup_text (
     if (mission_loop_desc == NULL) {
         strcpy (
             buffer, XSTR ("<No Mission Loop Description Available>", 1490));
-        mprintf (("No mission loop description available\n"));
+        WARNINGF (LOCATION, "No mission loop description available\n");
     }
     else {
         strcpy (buffer, mission_loop_desc);
@@ -1805,9 +1805,7 @@ void debrief_text_init () {
 
     // If no wav files are being used use speech simulation
     for (i = 0; i < MAX_DEBRIEF_STAGES; i++) {
-        if (Debrief_voices[i] != -1) {
-            break;
-        }
+        if (Debrief_voices[i] != -1) { break; }
     }
 
     // Make sure that the text wrapping and the rendering code use the same

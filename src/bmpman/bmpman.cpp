@@ -124,8 +124,7 @@ static bool bm_is_anim (bitmap_entry* entry) {
 }
 
 bitmap_slot* bm_get_slot (int handle, bool separate_ani_frames) {
-    ASSERTX (
-        handle >= 0, "Invalid handle %d passed to bm_get_slot!", handle);
+    ASSERTX (handle >= 0, "Invalid handle %d passed to bm_get_slot!", handle);
 
     // The lower 16-bit contain the index in the bitmap block
     auto index = handle & 0xFFFF;
@@ -469,7 +468,7 @@ DCF (bm_used, "Shows BmpMan Slot Usage") {
 
     // TODO consider converting 1's to monospace to make debug console output
     // prettier
-    mprintf (("%s", text.str ().c_str ())); // log for ease for copying data
+    WARNINGF (LOCATION, "%s", text.str ().c_str ());
     dc_printf ("%s", text.str ().c_str ()); // instant gratification
 }
 
@@ -509,8 +508,7 @@ DCF (bmpman, "Shows/changes bitmap caching parameters and usage") {
 
     if (dc_optional_string ("flush")) {
         dc_printf (
-            "Total RAM usage before flush: %zu bytes\n",
-            bm_texture_ram);
+            "Total RAM usage before flush: %zu bytes\n", bm_texture_ram);
         for (auto& block : bm_blocks) {
             for (size_t i = 0; i < BM_BLOCK_SIZE; ++i) {
                 if (block[i].entry.type != BM_TYPE_NONE) {
@@ -518,8 +516,7 @@ DCF (bmpman, "Shows/changes bitmap caching parameters and usage") {
                 }
             }
         }
-        dc_printf (
-            "Total RAM after flush: %zu bytes\n", bm_texture_ram);
+        dc_printf ("Total RAM after flush: %zu bytes\n", bm_texture_ram);
     }
     else if (dc_optional_string ("ram")) {
         dc_stuff_int (&Bm_max_ram);
@@ -1083,9 +1080,9 @@ static int bm_load_info (
             filename, img_cfp, w, h, bpp, &dds_ct, mm_lvl, size);
 
         if (dds_error != DDS_ERROR_NONE) {
-            mprintf (
-                ("DDS ERROR: Couldn't open '%s' -- %s\n", filename,
-                 dds_error_string (dds_error)));
+            ERRORF (
+                LOCATION, "DDS ERROR: Couldn't open '%s' -- %s\n", filename,
+                dds_error_string (dds_error));
             return -1;
         }
 
@@ -1117,7 +1114,7 @@ static int bm_load_info (
     else if (type == BM_TYPE_TGA) {
         int tga_error = targa_read_header (filename, img_cfp, w, h, bpp, NULL);
         if (tga_error != TARGA_ERROR_NONE) {
-            mprintf (("tga: Couldn't open '%s'\n", filename));
+            WARNINGF (LOCATION, "tga: Couldn't open '%s'\n", filename);
             return -1;
         }
     }
@@ -1125,7 +1122,7 @@ static int bm_load_info (
     else if (type == BM_TYPE_PNG) {
         int png_error = png_read_header (filename, img_cfp, w, h, bpp, NULL);
         if (png_error != PNG_ERROR_NONE) {
-            mprintf (("png: Couldn't open '%s'\n", filename));
+            WARNINGF (LOCATION, "png: Couldn't open '%s'\n", filename);
             return -1;
         }
     }
@@ -1133,7 +1130,7 @@ static int bm_load_info (
     else if (type == BM_TYPE_JPG) {
         int jpg_error = jpeg_read_header (filename, img_cfp, w, h, bpp, NULL);
         if (jpg_error != JPEG_ERROR_NONE) {
-            mprintf (("jpg: Couldn't open '%s'\n", filename));
+            WARNINGF (LOCATION, "jpg: Couldn't open '%s'\n", filename);
             return -1;
         }
     }
@@ -1141,7 +1138,7 @@ static int bm_load_info (
     else if (type == BM_TYPE_PCX) {
         int pcx_error = pcx_read_header (filename, img_cfp, w, h, bpp, NULL);
         if (pcx_error != PCX_ERROR_NONE) {
-            mprintf (("pcx: Couldn't open '%s'\n", filename));
+            WARNINGF (LOCATION, "pcx: Couldn't open '%s'\n", filename);
             return -1;
         }
     }
@@ -1178,9 +1175,9 @@ int bm_load (const char* real_filename) {
     strncpy (filename, real_filename, MAX_FILENAME_LEN - 1);
     char* p = strrchr (filename, '.');
     if (p) {
-        mprintf (
-            ("Someone passed an extension to bm_load for file '%s'\n",
-             real_filename));
+        WARNINGF (
+            LOCATION, "Someone passed an extension to bm_load for file '%s'\n",
+            real_filename);
         *p = 0;
     }
 
@@ -1314,9 +1311,9 @@ bool bm_load_and_parse_eff (
         if (optional_string ("$Keyframe:")) stuff_int (&keyframe);
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("BMPMAN: Unable to parse '%s'!  Error message = %s.\n", filename,
-             e.what ()));
+        ERRORF (
+            LOCATION, "BMPMAN: Unable to parse '%s'!  Error message = %s.\n",
+            filename, e.what ());
         unpause_parse ();
         return false;
     }
@@ -1338,13 +1335,13 @@ bool bm_load_and_parse_eff (
         c_type = BM_TYPE_PCX;
     }
     else {
-        mprintf (("BMPMAN: Unknown file type in EFF parse!\n"));
+        WARNINGF (LOCATION, "BMPMAN: Unknown file type in EFF parse!\n");
         return false;
     }
 
     // did we do anything?
     if (c_type == BM_TYPE_NONE || frames == 0) {
-        mprintf (("BMPMAN: EFF parse ERROR!\n"));
+        ERRORF (LOCATION, "BMPMAN: EFF parse ERROR!\n");
         return false;
     }
 
@@ -1382,16 +1379,16 @@ bm_load_image_data (int handle, int bpp, ubyte flags, bool nodebug) {
 
         if (be->type != BM_TYPE_USER && !nodebug) {
             if (bmp->data == 0)
-                nprintf (
-                    ("BmpMan", "Loading %s for the first time.\n",
-                     be->filename));
+                WARNINGF (
+                    LOCATION, "Loading %s for the first time.\n",
+                    be->filename);
         }
 
         if (!Bm_paging) {
             if (be->type != BM_TYPE_USER && !nodebug)
-                nprintf (
-                    ("Paging", "Loading %s (%dx%dx%d)\n", be->filename, bmp->w,
-                     bmp->h, true_bpp));
+                WARNINGF (
+                    LOCATION, "Loading %s (%dx%dx%d)\n", be->filename, bmp->w,
+                    bmp->h, true_bpp);
         }
 
         // select proper format
@@ -1499,9 +1496,10 @@ int bm_load_animation (
     strncpy (filename, real_filename, MAX_FILENAME_LEN - 1);
     char* p = strchr (filename, '.');
     if (p) {
-        mprintf ((
+        WARNINGF (
+            LOCATION,
             "Someone passed an extension to bm_load_animation for file '%s'\n",
-            real_filename));
+            real_filename);
         *p = 0;
     }
 
@@ -1584,14 +1582,14 @@ int bm_load_animation (
         if (!bm_load_and_parse_eff (
                 filename, dir_type, &anim_frames, &anim_fps, &key,
                 &eff_type)) {
-            mprintf (("BMPMAN: Error reading EFF\n"));
+            ERRORF (LOCATION, "BMPMAN: Error reading EFF\n");
             if (img_cfp != nullptr) cfclose (img_cfp);
             return -1;
         }
         else {
-            mprintf (
-                ("BMPMAN: Found EFF (%s) with %d frames at %d fps.\n",
-                 filename, anim_frames, anim_fps));
+            WARNINGF (
+                LOCATION, "BMPMAN: Found EFF (%s) with %d frames at %d fps.\n",
+                filename, anim_frames, anim_fps);
         }
         if (anim_fps == 0) {
             ASSERTF (
@@ -1648,7 +1646,7 @@ int bm_load_animation (
         }
     }
     else if (type == BM_TYPE_PNG) {
-        nprintf (("apng", "Loading apng: %s\n", filename));
+        WARNINGF (LOCATION, "Loading apng: %s", filename);
         try {
             apng::apng_ani the_apng = apng::apng_ani (filename);
             anim_frames = the_apng.nframes;
@@ -1663,7 +1661,7 @@ int bm_load_animation (
             img_size = the_apng.imgsize ();
         }
         catch (const apng::ApngException& e) {
-            mprintf (("Failed to load apng: %s\n", e.what ()));
+            WARNINGF (LOCATION, "Failed to load apng: %s\n", e.what ());
             if (img_cfp != nullptr) cfclose (img_cfp);
             return -1;
         }
@@ -1704,8 +1702,7 @@ int bm_load_animation (
 
         if (type == BM_TYPE_EFF) {
             entry->info.ani.eff.type = eff_type;
-            sprintf (
-                entry->info.ani.eff.filename, "%s_%.4d", clean_name, i);
+            sprintf (entry->info.ani.eff.filename, "%s_%.4d", clean_name, i);
 
             // bm_load_info() returns non-0 on failure
             if (bm_load_info (
@@ -2078,12 +2075,12 @@ void bm_lock_ani (
 
     if ((the_anim = anim_load (
              first_entry->filename, first_entry->dir_type)) == nullptr) {
-        nprintf (("BMPMAN", "Error opening %s in bm_lock\n", be->filename));
+        WARNINGF (LOCATION, "Error opening %s in bm_lock", be->filename);
         return;
     }
 
     if ((the_anim_instance = init_anim_instance (the_anim, bpp)) == nullptr) {
-        nprintf (("BMPMAN", "Error opening %s in bm_lock\n", be->filename));
+        WARNINGF (LOCATION, "Error opening %s in bm_lock", be->filename);
         anim_free (the_anim);
         return;
     }
@@ -2225,7 +2222,8 @@ void bm_lock_apng (
             the_apng->next_frame ();
         }
         catch (const apng::ApngException& e) {
-            WARNINGF (LOCATION, "Failed to get next apng frame: %s", e.what ());
+            WARNINGF (
+                LOCATION, "Failed to get next apng frame: %s", e.what ());
             bm_release (first_frame);
             return;
         }
@@ -2238,10 +2236,10 @@ void bm_lock_apng (
         cumulative_frame_delay += the_apng->frame.delay;
         be->info.ani.apng.frame_delay = cumulative_frame_delay;
 
-        nprintf (
-            ("apng", "locking apng frame: %s (%i|%i|%i) (%f) %zu\n",
-             be->filename, bpp, bmp->bpp, bm->true_bpp,
-             be->info.ani.apng.frame_delay, be->mem_taken));
+        WARNINGF (
+            LOCATION, "locking apng frame: %s (%i|%i|%i) (%f) %zu\n",
+            be->filename, bpp, bmp->bpp, bm->true_bpp,
+            be->info.ani.apng.frame_delay, be->mem_taken);
     }
 }
 
@@ -2394,7 +2392,7 @@ void bm_lock_pcx (
         (flags & BMP_MASK_BITMAP) != 0, be->dir_type);
 
     if (pcx_error != PCX_ERROR_NONE) {
-        mprintf (("Couldn't load PCX!!! (%s)\n", filename));
+        WARNINGF (LOCATION, "Couldn't load PCX!!! (%s)\n", filename);
         return;
     }
 
@@ -2682,7 +2680,7 @@ void bm_page_in_stop () {
     char busy_text[60];
 #endif
 
-    nprintf (("BmpInfo", "BMPMAN: Loading all used bitmaps.\n"));
+    WARNINGF (LOCATION, "BMPMAN: Loading all used bitmaps.");
 
     // Load all the ones that are supposed to be loaded for this level.
     int n = 0;
@@ -2701,7 +2699,8 @@ void bm_page_in_stop () {
                     if (bm_preloading) {
                         if (!gr_preload (
                                 entry.handle, (entry.preloaded == 2))) {
-                            mprintf (("Out of VRAM.  Done preloading.\n"));
+                            WARNINGF (
+                                LOCATION, "Out of VRAM.  Done preloading.\n");
                             bm_preloading = 0;
                         }
                     }
@@ -2739,10 +2738,10 @@ void bm_page_in_stop () {
         }
     }
 
-    nprintf (
-        ("BmpInfo",
-         "BMPMAN: Loaded %d bitmaps that are marked as used for this level.\n",
-         n));
+    WARNINGF (
+        LOCATION,
+        "BMPMAN: Loaded %d bitmaps that are marked as used for this level.\n",
+        n);
 
 #ifndef NDEBUG
     int total_bitmaps = 0;
@@ -2754,13 +2753,14 @@ void bm_page_in_stop () {
 
             if (entry.type != BM_TYPE_NONE) { total_bitmaps++; }
             if (entry.type == BM_TYPE_USER) {
-                mprintf (("User bitmap '%s'\n", entry.filename));
+                WARNINGF (LOCATION, "User bitmap '%s'\n", entry.filename);
             }
         }
     }
 
-    mprintf (
-        ("Bmpman: %d/%d bitmap slots in use.\n", total_bitmaps, total_slots));
+    WARNINGF (
+        LOCATION, "Bmpman: %d/%d bitmap slots in use.\n", total_bitmaps,
+        total_slots);
 #endif
 
     Bm_paging = 0;
@@ -2852,9 +2852,9 @@ bool bm_page_out (int handle) {
     // it's possible to hit < 0 here when model_page_out_textures() is
     // called from anywhere other than in a mission
     if (entry->preload_count > 0) {
-        nprintf (
-            ("BmpMan", "PAGE-OUT: %s - preload_count remaining: %d\n",
-             entry->filename, entry->preload_count));
+        WARNINGF (
+            LOCATION, "PAGE-OUT: %s - preload_count remaining: %d\n",
+            entry->filename, entry->preload_count);
 
         // lets decrease it for next time around
         entry->preload_count--;
@@ -2873,27 +2873,26 @@ void bm_print_bitmaps () {
 
             if (entry.type != BM_TYPE_NONE) {
                 if (entry.data_size) {
-                    nprintf (
-                        ("BMP DEBUG",
-                         "BMPMAN = num: %d, name: %s, handle: %d - (%s) size: "
-                         "%.3fM\n",
-                         entry.handle, entry.filename, entry.handle,
-                         entry.data_size ? NOX ("*LOCKED*") : NOX (""),
-                         ((float)entry.data_size / 1024.0f) / 1024.0f));
+                    WARNINGF (
+                        LOCATION,
+                        "BMPMAN = num: %d, name: %s, handle: %d - (%s) size: "
+                        "%.3fM\n",
+                        entry.handle, entry.filename, entry.handle,
+                        entry.data_size ? "*LOCKED*" : "",
+                        ((float)entry.data_size / 1024.0f) / 1024.0f);
                 }
                 else {
-                    nprintf (
-                        ("BMP DEBUG",
-                         "BMPMAN = num: %d, name: %s, handle: %d\n",
-                         entry.handle, entry.filename, entry.handle));
+                    WARNINGF (
+                        LOCATION, "BMPMAN = num: %d, name: %s, handle: %d\n",
+                        entry.handle, entry.filename, entry.handle);
                 }
             }
         }
     }
 
-    nprintf (
-        ("BMP DEBUG", "BMPMAN = LOCKED memory usage: %.3fM\n",
-         ((float)bm_texture_ram / 1024.0f) / 1024.0f));
+    WARNINGF (
+        LOCATION, "BMPMAN = LOCKED memory usage: %.3fM\n",
+        ((float)bm_texture_ram / 1024.0f) / 1024.0f);
 #endif
 }
 
@@ -2917,17 +2916,17 @@ int bm_release (int handle, int clear_render_targets) {
     if (!clear_render_targets &&
         ((be->type == BM_TYPE_RENDER_TARGET_STATIC) ||
          (be->type == BM_TYPE_RENDER_TARGET_DYNAMIC))) {
-        nprintf (("BmpMan", "Tried to release a render target!\n"));
+        WARNINGF (LOCATION, "Tried to release a render target!");
         return 0;
     }
 
     // If it is locked, cannot free it.
     if (be->ref_count != 0) {
-        nprintf (
-            ("BmpMan",
-             "Tried to release %s that has a lock count of %d.. not "
-             "releasing\n",
-             be->filename, be->ref_count));
+        WARNINGF (
+            LOCATION,
+            "Tried to release %s that has a lock count of %d.. not "
+            "releasing\n",
+            be->filename, be->ref_count);
         return 0;
     }
 
@@ -2938,18 +2937,18 @@ int bm_release (int handle, int clear_render_targets) {
     if (be->load_count > 0) be->load_count--;
 
     if (be->load_count != 0) {
-        nprintf (
-            ("BmpMan",
-             "Tried to release %s that has a load count of %d.. not "
-             "releasing\n",
-             be->filename, be->load_count + 1));
+        WARNINGF (
+            LOCATION,
+            "Tried to release %s that has a load count of %d.. not "
+            "releasing\n",
+            be->filename, be->load_count + 1);
         return 0;
     }
 
     if (be->type != BM_TYPE_USER) {
-        nprintf (
-            ("BmpMan", "Releasing bitmap %s with handle %i\n", be->filename,
-             handle));
+        WARNINGF (
+            LOCATION, "Releasing bitmap %s with handle %i\n", be->filename,
+            handle);
     }
 
     // be sure that all frames of an ani are unloaded - taylor
@@ -3038,11 +3037,11 @@ int bm_reload (int bitmap_handle, const char* filename) {
     if (entry->type == BM_TYPE_NONE) return -1;
 
     if (entry->ref_count) {
-        nprintf (
-            ("BmpMan",
-             "Trying to reload a bitmap that is still locked. Filename: %s, "
-             "ref_count: %d",
-             entry->filename, entry->ref_count));
+        WARNINGF (
+            LOCATION,
+            "Trying to reload a bitmap that is still locked. Filename: %s, "
+            "ref_count: %d",
+            entry->filename, entry->ref_count);
         return -1;
     }
 
@@ -3163,10 +3162,11 @@ bool bm_set_render_target (int handle, int face) {
             (entry->type != BM_TYPE_RENDER_TARGET_DYNAMIC)) {
             // odds are that someone passed a normal texture created with
             // bm_load()
-            mprintf (
-                ("Trying to set invalid bitmap (handle: %i) as render "
-                 "target!\n",
-                 handle));
+            WARNINGF (
+                LOCATION,
+                "Trying to set invalid bitmap (handle: %i) as render "
+                "target!\n",
+                handle);
             return false;
         }
     }
@@ -3264,10 +3264,10 @@ int bm_unload (int handle, int clear_render_targets, bool nodebug) {
 
     // If it is locked, cannot free it.
     if (be->ref_count != 0 && !nodebug) {
-        nprintf ((
-            "BmpMan",
+        WARNINGF (
+            LOCATION,
             "Tried to unload %s that has a lock count of %d.. not unloading\n",
-            be->filename, be->ref_count));
+            be->filename, be->ref_count);
         return 0;
     }
 
@@ -3279,11 +3279,11 @@ int bm_unload (int handle, int clear_render_targets, bool nodebug) {
         if (be->load_count > 0) be->load_count--;
 
         if (be->load_count != 0 && !nodebug) {
-            nprintf (
-                ("BmpMan",
-                 "Tried to unload %s that has a load count of %d.. not "
-                 "unloading\n",
-                 be->filename, be->load_count + 1));
+            WARNINGF (
+                LOCATION,
+                "Tried to unload %s that has a load count of %d.. not "
+                "unloading\n",
+                be->filename, be->load_count + 1);
             return 0;
         }
     }
@@ -3303,19 +3303,21 @@ int bm_unload (int handle, int clear_render_targets, bool nodebug) {
 
         for (i = 0; i < first_entry->info.ani.num_frames; i++) {
             if (!nodebug)
-                nprintf (
-                    ("BmpMan", "Unloading %s frame %d.  %dx%dx%d\n",
-                     be->filename, i, bmp->w, bmp->h, bmp->bpp));
+                INFO ("general")
+                    << "unloading " << be->filename << ", frame: " << i
+                    << " (" << bmp->w << "x" << bmp->h << "/" bmp->bpp << ")";
+
             bm_free_data (
                 bm_get_slot (first + i)); // clears flags, bbp, data, etc
         }
     }
     else {
         if (!nodebug)
-            nprintf (
-                ("BmpMan", "Unloading %s.  %dx%dx%d\n", be->filename, bmp->w,
-                 bmp->h, bmp->bpp));
-        bm_free_data (bm_get_slot (handle)); // clears flags, bbp, data, etc
+            INFO ("general")
+                << "unloading " << be->filename
+                << "(" << bmp->w << "x" << bmp->h << "/" bmp->bpp << ")";
+
+        bm_free_data (bm_get_slot (handle)); // clears flags, bbp, data, etc.
     }
 
     return 1;
@@ -3357,11 +3359,11 @@ int bm_unload_fast (int handle, int clear_render_targets) {
 
     // If it is locked, cannot free it.
     if (be->ref_count != 0) {
-        nprintf (
-            ("BmpMan",
-             "Tried to unload_fast %s that has a lock count of %d.. not "
-             "unloading\n",
-             be->filename, be->ref_count));
+        WARNINGF (
+            LOCATION,
+            "Tried to unload_fast %s that has a lock count of %d.. not "
+            "unloading\n",
+            be->filename, be->ref_count);
         return 0;
     }
 
@@ -3369,9 +3371,9 @@ int bm_unload_fast (int handle, int clear_render_targets) {
 
     // unlike bm_unload(), we handle each frame of an animation separately, for
     // safer use in the graphics API
-    nprintf (
-        ("BmpMan", "Fast-unloading %s.  %dx%dx%d\n", be->filename, bmp->w,
-         bmp->h, bmp->bpp));
+    WARNINGF (
+        LOCATION, "Fast-unloading %s.  %dx%dx%d\n", be->filename, bmp->w,
+        bmp->h, bmp->bpp);
     bm_free_data_fast (handle); // clears flags, bbp, data, etc
 
     return 1;

@@ -4286,8 +4286,8 @@ int arg_item::is_empty () { return (this->next == NULL); }
 void sexp_nodes_init () {
     if (Num_sexp_nodes == 0 || Sexp_nodes == NULL) return;
 
-    nprintf (("SEXP", "Reinitializing sexp nodes...\n"));
-    nprintf (("SEXP", "Entered function with %d nodes.\n", Num_sexp_nodes));
+    WARNINGF (LOCATION, "Reinitializing sexp nodes...");
+    WARNINGF (LOCATION, "Entered function with %d nodes.", Num_sexp_nodes);
 
     // usually, the persistent nodes are grouped at the beginning of the array;
     // so we ought to be able to free all the subsequent nodes
@@ -4300,8 +4300,8 @@ void sexp_nodes_init () {
             Sexp_nodes[i].type = SEXP_NOT_USED; // it's not needed
     }
 
-    nprintf (
-        ("SEXP", "Last persistent node index is %d.\n", last_persistent_node));
+    WARNINGF (
+        LOCATION, "Last persistent node index is %d.\n", last_persistent_node);
 
     // if all the persistent nodes are gone, free all the nodes
     if (last_persistent_node == -1) {
@@ -4323,7 +4323,7 @@ void sexp_nodes_init () {
         ASSERT (Sexp_nodes != NULL);
     }
 
-    nprintf (("SEXP", "Exited function with %d nodes.\n", Num_sexp_nodes));
+    WARNINGF (LOCATION, "Exited function with %d nodes.", Num_sexp_nodes);
 }
 
 static void sexp_nodes_close () {
@@ -4359,9 +4359,7 @@ void init_sexp () {
     Sexp_nodes[Locked_sexp_true].value = SEXP_KNOWN_TRUE;
 }
 
-void sexp_shutdown () {
-    sexp_nodes_close ();
-}
+void sexp_shutdown () { sexp_nodes_close (); }
 
 /**
  * Allocate an sexp node.
@@ -4393,9 +4391,9 @@ int alloc_sexp (const char* text, int type, int subtype, int first, int rest) {
             Sexp_nodes, sizeof (sexp_node) * Num_sexp_nodes);
 
         ASSERT (Sexp_nodes != NULL);
-        nprintf (
-            ("SEXP", "Bumping dynamic sexp node limit from %d to %d...\n",
-             old_size, Num_sexp_nodes));
+        WARNINGF (
+            LOCATION, "Bumping dynamic sexp node limit from %d to %d...\n",
+            old_size, Num_sexp_nodes);
 
         // clear all the new sexp nodes we just allocated
         memset (
@@ -4436,9 +4434,9 @@ int count_free_sexp_nodes () {
     }
 
     if (Num_sexp_nodes - f > Sexp_hwm) {
-        nprintf (
-            ("Sexp", "Sexp nodes: Free=%d, Used=%d, Persistent=%d\n", f,
-             Num_sexp_nodes - f, p));
+        WARNINGF (
+            LOCATION, "Sexp nodes: Free=%d, Used=%d, Persistent=%d\n", f,
+            Num_sexp_nodes - f, p);
         Sexp_hwm = Num_sexp_nodes - f;
     }
 
@@ -5070,7 +5068,8 @@ int check_sexp_syntax (
         case OPF_SHIP_OR_NONE:
             if (type2 != SEXP_ATOM_STRING) { return SEXP_CHECK_TYPE_MISMATCH; }
 
-            if (strcasecmp (CTEXT (node), SEXP_NONE_STRING) != 0) // none is okay
+            if (strcasecmp (CTEXT (node), SEXP_NONE_STRING) !=
+                0) // none is okay
             {
                 if (ship_name_lookup (CTEXT (node), 1) < 0) {
                     if (Fred_running ||
@@ -5444,7 +5443,8 @@ int check_sexp_syntax (
         case OPF_SUPPORT_SHIP_CLASS:
             if (type2 != SEXP_ATOM_STRING) { return SEXP_CHECK_TYPE_MISMATCH; }
 
-            if (!strcasecmp (CTEXT (node), "<species support ship class>")) break;
+            if (!strcasecmp (CTEXT (node), "<species support ship class>"))
+                break;
 
             if (!strcasecmp (CTEXT (node), "<any support ship class>")) break;
 
@@ -5596,8 +5596,8 @@ int check_sexp_syntax (
                 char* name;
 
                 name = CTEXT (node);
-                if (!strcasecmp (name, "low") || !strcasecmp (name, "normal") ||
-                    !strcasecmp (name, "high"))
+                if (!strcasecmp (name, "low") ||
+                    !strcasecmp (name, "normal") || !strcasecmp (name, "high"))
                     break;
 
                 return SEXP_CHECK_INVALID_PRIORITY;
@@ -5658,7 +5658,8 @@ int check_sexp_syntax (
                                         // mission name
                 ASSERT (z >= 0);
                 for (i = 0; i < Campaign.num_missions; i++)
-                    if (!strcasecmp (CTEXT (z), Campaign.missions[i].name)) break;
+                    if (!strcasecmp (CTEXT (z), Campaign.missions[i].name))
+                        break;
 
                 // read the goal/event list from the mission file if both
                 // num_goals and num_events are < 0
@@ -5685,7 +5686,8 @@ int check_sexp_syntax (
                     break;
 
                 for (i = 0; i < Num_goals; i++)
-                    if (!strcasecmp (CTEXT (node), Mission_goals[i].name)) break;
+                    if (!strcasecmp (CTEXT (node), Mission_goals[i].name))
+                        break;
 
                 if (i == Num_goals) return SEXP_CHECK_INVALID_GOAL_NAME;
             }
@@ -5705,7 +5707,8 @@ int check_sexp_syntax (
                                         // mission name
                 ASSERT (z >= 0);
                 for (i = 0; i < Campaign.num_missions; i++)
-                    if (!strcasecmp (CTEXT (z), Campaign.missions[i].name)) break;
+                    if (!strcasecmp (CTEXT (z), Campaign.missions[i].name))
+                        break;
 
                 // read the goal/event list from the mission file if both
                 // num_goals and num_events are < 0
@@ -5732,7 +5735,8 @@ int check_sexp_syntax (
                     break;
 
                 for (i = 0; i < Num_mission_events; i++) {
-                    if (!strcasecmp (CTEXT (node), Mission_events[i].name)) break;
+                    if (!strcasecmp (CTEXT (node), Mission_events[i].name))
+                        break;
                 }
                 if (i == Num_mission_events)
                     return SEXP_CHECK_INVALID_EVENT_NAME;
@@ -5878,7 +5882,8 @@ int check_sexp_syntax (
         case OPF_SHIP_FLAG: {
             bool found = false;
             for (i = 0; i < MAX_OBJECT_FLAG_NAMES; i++) {
-                if (!strcasecmp (Object_flag_names[i].flag_name, CTEXT (node))) {
+                if (!strcasecmp (
+                        Object_flag_names[i].flag_name, CTEXT (node))) {
                     found = true;
                     break;
                 }
@@ -5896,7 +5901,8 @@ int check_sexp_syntax (
 
             if (!found) {
                 for (i = 0; i < MAX_AI_FLAG_NAMES; i++) {
-                    if (!strcasecmp (Ai_flag_names[i].flag_name, CTEXT (node))) {
+                    if (!strcasecmp (
+                            Ai_flag_names[i].flag_name, CTEXT (node))) {
                         found = true;
                         break;
                     }
@@ -5980,7 +5986,8 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
             for (i = 0; i < NUM_SKILL_LEVELS; i++) {
-                if (!strcasecmp (CTEXT (node), Skill_level_names (i, 0))) break;
+                if (!strcasecmp (CTEXT (node), Skill_level_names (i, 0)))
+                    break;
             }
             if (i == NUM_SKILL_LEVELS) return SEXP_CHECK_INVALID_SKILL_LEVEL;
             break;
@@ -6227,8 +6234,7 @@ int check_sexp_syntax (
             }
             break;
 
-        default:
-            ASSERTF (LOCATION, "Unhandled argument format");
+        default: ASSERTF (LOCATION, "Unhandled argument format");
         }
 
         node = Sexp_nodes[node].rest;
@@ -7348,19 +7354,19 @@ int pow_sexp (int node) {
     double pow_result = pow (static_cast< double > (num_1), num_2);
 
     if (pow_result > static_cast< double > (INT_MAX)) {
-        nprintf (
-            ("SEXP",
-             "Power function pow(%d, %d) is greater than INT_MAX!  Returning "
-             "INT_MAX.",
-             num_1, num_2));
+        WARNINGF (
+            LOCATION,
+            "Power function pow(%d, %d) is greater than INT_MAX!  Returning "
+            "INT_MAX.",
+            num_1, num_2);
         return INT_MAX;
     }
     else if (pow_result < static_cast< double > (INT_MIN)) {
-        nprintf (
-            ("SEXP",
-             "Power function pow(%d, %d) is less than INT_MIN!  Returning "
-             "INT_MIN.",
-             num_1, num_2));
+        WARNINGF (
+            LOCATION,
+            "Power function pow(%d, %d) is less than INT_MIN!  Returning "
+            "INT_MIN.",
+            num_1, num_2);
         return INT_MIN;
     }
 
@@ -8119,11 +8125,12 @@ int sexp_is_destroyed (int n, fix* latest_time) {
 #ifndef NDEBUG
                 static bool wing_zero_warning_shown = false;
                 if (!wing_zero_warning_shown) {
-                    mprintf (
-                        ("SEXP: is-destroyed-delay was used multiple times in "
-                         "a directive event! This might have "
-                         "unintended effects and should be replaced by a "
-                         "single use of is-destroyed-delay.\n"));
+                    WARNINGF (
+                        LOCATION,
+                        "SEXP: is-destroyed-delay was used multiple times in "
+                        "a directive event! This might have unintended "
+                        "effects and should be replaced by a single use of "
+                        "is-destroyed-delay.\n");
                     wing_zero_warning_shown = true;
                 }
 #endif
@@ -9331,7 +9338,8 @@ int sexp_hits_left_subsystem_generic (int node) {
     // find subsystem type
     subsys_type = -1;
     for (i = 0; i < SUBSYSTEM_MAX; i++) {
-        if (!strcasecmp (subsys_type_name, Subsystem_types[i])) subsys_type = i;
+        if (!strcasecmp (subsys_type_name, Subsystem_types[i]))
+            subsys_type = i;
     }
 
     // error checking
@@ -9593,9 +9601,7 @@ bool sexp_get_subsystem_world_pos (
     ASSERT (subsys_name);
     ASSERT (subsys_world_pos);
 
-    if (shipnum < 0) {
-        ASSERTF (LOCATION, "Error - nonexistent ship.\n");
-    }
+    if (shipnum < 0) { ASSERTF (LOCATION, "Error - nonexistent ship.\n"); }
 
     // find the ship subsystem
     ship_subsys* ss = ship_get_subsys (&Ships[shipnum], subsys_name);
@@ -9834,8 +9840,7 @@ void multi_sexp_set_object_speed () {
 }
 
 int sexp_get_object_speed (object* objp, int axis, bool subjective) {
-    ASSERTX (
-        ((axis >= 0) && (axis <= 2)), "Axis is out of range (%d)", axis);
+    ASSERTX (((axis >= 0) && (axis <= 2)), "Axis is out of range (%d)", axis);
     int speed;
 
     if (subjective) {
@@ -13275,10 +13280,10 @@ void sexp_start_music (int loop) {
                 (Master_event_music_volume * aav_music_volume), loop);
     }
     else {
-        nprintf (
-            ("Warning",
-             "Can not play music. sexp_start_music called when no music file "
-             "is set for Sexp_music_handle!\n"));
+        WARNINGF (
+            LOCATION,
+            "Can not play music. sexp_start_music called when no music file "
+            "is set for Sexp_music_handle!");
     }
 }
 
@@ -14344,11 +14349,11 @@ void sexp_sabotage_subsystem (int n) {
                 shipp, subsystem,
                 1); // Bypass any error since we supply one here
             if (index == -1) {
-                nprintf (
-                    ("Warning",
-                     "Couldn't find subsystem %s on ship %s for sabotage "
-                     "subsystem\n",
-                     subsystem, shipp->ship_name));
+                WARNINGF (
+                    LOCATION,
+                    "Couldn't find subsystem %s on ship %s for sabotage "
+                    "subsystem\n",
+                    subsystem, shipp->ship_name);
                 return;
             }
             // get the pointer to the subsystem.  Check it's current hits
@@ -14356,11 +14361,11 @@ void sexp_sabotage_subsystem (int n) {
             // percentage if current strength is > given percentage
             ss = ship_get_indexed_subsys (shipp, index);
             if (ss == NULL) {
-                nprintf (
-                    ("Warning",
-                     "Nonexistent subsystem for index %d on ship %s for "
-                     "sabotage subsystem\n",
-                     index, shipp->ship_name));
+                WARNINGF (
+                    LOCATION,
+                    "Nonexistent subsystem for index %d on ship %s for "
+                    "sabotage subsystem\n",
+                    index, shipp->ship_name);
                 return;
             }
         }
@@ -14463,11 +14468,11 @@ void sexp_repair_subsystem (int n) {
                 shipp, subsystem,
                 1); // Bypass any error since we supply one here
             if (index == -1) {
-                nprintf (
-                    ("Warning",
-                     "Couldn't find subsystem %s on ship %s for repair "
-                     "subsystem\n",
-                     subsystem, shipp->ship_name));
+                WARNINGF (
+                    LOCATION,
+                    "Couldn't find subsystem %s on ship %s for repair "
+                    "subsystem\n",
+                    subsystem, shipp->ship_name);
                 return;
             }
             // get the pointer to the subsystem.  Check it's current hits
@@ -14475,11 +14480,11 @@ void sexp_repair_subsystem (int n) {
             // percentage if current strength is < given percentage
             ss = ship_get_indexed_subsys (shipp, index);
             if (ss == NULL) {
-                nprintf (
-                    ("Warning",
-                     "Nonexistent subsystem for index %d on ship %s for "
-                     "repair subsystem\n",
-                     index, shipp->ship_name));
+                WARNINGF (
+                    LOCATION,
+                    "Nonexistent subsystem for index %d on ship %s for repair "
+                    "subsystem\n",
+                    index, shipp->ship_name);
                 return;
             }
         }
@@ -14521,17 +14526,19 @@ void sexp_set_subsystem_strength (int n) {
     shipp = &Ships[shipnum];
 
     if (percentage > 100) {
-        mprintf (
-            ("Percentage for set_subsystem_strength > 100 on ship %s for "
-             "subsystem '%s'-- setting to 100\n",
-             shipname, subsystem));
+        WARNINGF (
+            LOCATION,
+            "Percentage for set_subsystem_strength > 100 on ship %s for "
+            "subsystem '%s'-- setting to 100\n",
+            shipname, subsystem);
         percentage = 100;
     }
     else if (percentage < 0) {
-        mprintf (
-            ("Percantage for set_subsystem_strength < 0 on ship %s for "
-             "subsystem '%s' -- setting to 0\n",
-             shipname, subsystem));
+        WARNINGF (
+            LOCATION,
+            "Percantage for set_subsystem_strength < 0 on ship %s for "
+            "subsystem '%s' -- setting to 0\n",
+            shipname, subsystem);
         percentage = 0;
     }
 
@@ -14596,11 +14603,11 @@ void sexp_set_subsystem_strength (int n) {
                 shipp, subsystem,
                 1); // Bypass any error since we supply one here
             if (index == -1) {
-                nprintf (
-                    ("Warning",
-                     "Couldn't find subsystem %s on ship %s for set subsystem "
-                     "strength\n",
-                     subsystem, shipp->ship_name));
+                WARNINGF (
+                    LOCATION,
+                    "Couldn't find subsystem %s on ship %s for set subsystem "
+                    "strength\n",
+                    subsystem, shipp->ship_name);
                 return;
             }
 
@@ -14609,11 +14616,11 @@ void sexp_set_subsystem_strength (int n) {
             // percentage
             ss = ship_get_indexed_subsys (shipp, index);
             if (ss == NULL) {
-                nprintf (
-                    ("Warning",
-                     "Nonexistent subsystem for index %d on ship %s for set "
-                     "subsystem strength\n",
-                     index, shipp->ship_name));
+                WARNINGF (
+                    LOCATION,
+                    "Nonexistent subsystem for index %d on ship %s for set "
+                    "subsystem strength\n",
+                    index, shipp->ship_name);
                 return;
             }
         }
@@ -14680,20 +14687,20 @@ void sexp_destroy_subsys_instantly (int n) {
             ss = ship_get_subsys (shipp, subsystem);
             index = ship_get_subsys_index (shipp, subsystem, 1);
             if (index == -1) {
-                nprintf (
-                    ("Warning",
-                     "Couldn't find subsystem %s on ship %s for "
-                     "destroy-subsys-instantly\n",
-                     subsystem, shipp->ship_name));
+                WARNINGF (
+                    LOCATION,
+                    "Couldn't find subsystem %s on ship %s for "
+                    "destroy-subsys-instantly\n",
+                    subsystem, shipp->ship_name);
                 n = CDR (n);
                 continue;
             }
             if (ss == NULL) {
-                nprintf (
-                    ("Warning",
-                     "Nonexistent subsystem for index %d on ship %s for "
-                     "destroy-subsys-instantly\n",
-                     index, shipp->ship_name));
+                WARNINGF (
+                    LOCATION,
+                    "Nonexistent subsystem for index %d on ship %s for "
+                    "destroy-subsys-instantly\n",
+                    index, shipp->ship_name);
                 n = CDR (n);
                 continue;
             }
@@ -16446,9 +16453,9 @@ void sexp_good_secondary_time (int n) {
 
     weapon_index = weapon_info_lookup (weapon_name);
     if (weapon_index == -1) {
-        nprintf (
-            ("Warning", "couldn't find weapon %s for good-secondary-time\n",
-             weapon_name));
+        WARNINGF (
+            LOCATION, "couldn't find weapon %s for good-secondary-time\n",
+            weapon_name);
         return;
     }
 
@@ -16734,11 +16741,11 @@ int sexp_previous_goal_status (int n, int status) {
         if (i == -1) {
             // if mission not found, assume that goal was false (so
             // previous-goal-false returns true)
-            nprintf (
-                ("General",
-                 "Couldn't find mission name \"%s\" in current campaign's "
-                 "list of missions.\nReturning %s for goal-status function.",
-                 mission_name, (status == GOAL_COMPLETE) ? "false" : "true"));
+            WARNINGF (
+                LOCATION,
+                "Couldn't find mission name \"%s\" in current campaign's list "
+                "of missions.\nReturning %s for goal-status function.",
+                mission_name, (status == GOAL_COMPLETE) ? "false" : "true");
             if (status == GOAL_COMPLETE)
                 rval = SEXP_KNOWN_FALSE;
             else
@@ -16828,11 +16835,11 @@ int sexp_previous_event_status (int n, int status) {
         // if the mission name wasn't found -- make this return FALSE for the
         // event status.
         if (i == -1) {
-            nprintf ((
-                "General",
+            WARNINGF (
+                LOCATION,
                 "Couldn't find mission name \"%s\" in current campaign's list "
                 "of missions.\nReturning %s for event-status function.",
-                mission_name, (status == EVENT_SATISFIED) ? "false" : "true"));
+                mission_name, (status == EVENT_SATISFIED) ? "false" : "true");
             if (status == EVENT_SATISFIED) { rval = SEXP_KNOWN_FALSE; }
             else {
                 rval = SEXP_KNOWN_TRUE;
@@ -19357,11 +19364,11 @@ void ship_copy_damage (ship* target_shipp, ship* source_shipp) {
     ship_subsys* target_ss;
 
     if (target_shipp->ship_info_index != source_shipp->ship_info_index) {
-        nprintf (
-            ("SEXP",
-             "Copying damage of ship %s to ship %s which has a different ship "
-             "class.  Strange results might occur.\n",
-             source_shipp->ship_name, target_shipp->ship_name));
+        WARNINGF (
+            LOCATION,
+            "Copying damage of ship %s to ship %s which has a different ship "
+            "class.  Strange results might occur.\n",
+            source_shipp->ship_name, target_shipp->ship_name);
     }
 
     // copy hull...
@@ -19406,11 +19413,11 @@ void parse_copy_damage (p_object* target_pobjp, ship* source_shipp) {
     subsys_status* target_sssp;
 
     if (target_pobjp->ship_class != source_shipp->ship_info_index) {
-        nprintf (
-            ("SEXP",
-             "Copying damage of ship %s to ship %s which has a different ship "
-             "class.  Strange results might occur.\n",
-             source_shipp->ship_name, target_pobjp->name));
+        WARNINGF (
+            LOCATION,
+            "Copying damage of ship %s to ship %s which has a different ship "
+            "class.  Strange results might occur.\n",
+            source_shipp->ship_name, target_pobjp->name);
     }
 
     // copy hull...
@@ -21858,7 +21865,8 @@ void set_nav_needslink (int node) {
         name = CTEXT (n);
 
         for (i = 0; i < MAX_SHIPS; i++) {
-            if (Ships[i].objnum != -1 && !strcasecmp (Ships[i].ship_name, name)) {
+            if (Ships[i].objnum != -1 &&
+                !strcasecmp (Ships[i].ship_name, name)) {
                 Ships[i].flags.remove (Ship::Ship_Flags::Navpoint_carry);
                 Ships[i].flags.set (Ship::Ship_Flags::Navpoint_needslink);
                 break;
@@ -21879,7 +21887,8 @@ void unset_nav_needslink (int node) {
         name = CTEXT (n);
 
         for (i = 0; i < MAX_SHIPS; i++) {
-            if (Ships[i].objnum != -1 && !strcasecmp (Ships[i].ship_name, name)) {
+            if (Ships[i].objnum != -1 &&
+                !strcasecmp (Ships[i].ship_name, name)) {
                 Ships[i].flags.remove (Ship::Ship_Flags::Navpoint_needslink);
                 break;
             }
@@ -22308,11 +22317,12 @@ void sexp_remove_weapons (int node) {
         weapon_info_index = weapon_info_lookup (CTEXT (node));
         if (weapon_info_index == -1) {
             char* buf = CTEXT (node);
-            mprintf (
-                ("Remove-weapons attempted to remove %s. Weapon not found. "
-                 "Remove-weapons will remove all weapons currently in the "
-                 "mission\n",
-                 buf));
+            WARNINGF (
+                LOCATION,
+                "Remove-weapons attempted to remove %s. Weapon not found. "
+                "Remove-weapons will remove all weapons currently in the "
+                "mission\n",
+                buf);
         }
     }
 
@@ -22569,11 +22579,11 @@ void sexp_subsys_set_random (int node) {
             // get non excluded subsystem
             subsys = ship_get_indexed_subsys (shipp, idx, NULL);
             if (subsys == NULL) {
-                nprintf (
-                    ("Warning",
-                     "Nonexistent subsystem for index %d on ship %s for "
-                     "sabotage subsystem\n",
-                     idx, shipp->ship_name));
+                WARNINGF (
+                    LOCATION,
+                    "Nonexistent subsystem for index %d on ship %s for "
+                    "sabotage subsystem\n",
+                    idx, shipp->ship_name);
                 continue;
             }
 
@@ -22693,7 +22703,7 @@ int process_special_sexps (int index) {
         return SEXP_FALSE;
 
     case 2: // Ship "Freighter 1", subsystem "Weapons" is aspect locked by
-            // player.
+        // player.
         if (Player_ai->target_objnum != -1) {
             if (!(strcasecmp (
                     Ships[Objects[Player_ai->target_objnum].instance]
@@ -22718,11 +22728,11 @@ int process_special_sexps (int index) {
             return SEXP_TRUE;
         }
         else {
-            nprintf (
-                ("Warning",
-                 "Shield-related Special-check SEXPs do not work on ship %s "
-                 "because it uses model point shields.\n",
-                 Player_ship->ship_name));
+            WARNINGF (
+                LOCATION,
+                "Shield-related Special-check SEXPs do not work on ship %s "
+                "because it uses model point shields.\n",
+                Player_ship->ship_name);
             return SEXP_FALSE;
         }
         break;
@@ -22730,7 +22740,7 @@ int process_special_sexps (int index) {
     case 4: // Player ship suffering much damage.
         if (!(Ship_info[Player_ship->ship_info_index]
                   .flags[Ship::Info_Flags::Model_point_shields])) {
-            nprintf (("AI", "Frame %i\n", Framecount));
+            WARNINGF (LOCATION, "Frame %i", Framecount);
             shield_apply_damage (Player_obj, FRONT_QUAD, 10.0f);
             hud_shield_quadrant_hit (Player_obj, FRONT_QUAD);
             if (Player_obj->shield_quadrant[FRONT_QUAD] < 2.0f)
@@ -22739,11 +22749,11 @@ int process_special_sexps (int index) {
                 return SEXP_FALSE;
         }
         else {
-            nprintf (
-                ("Warning",
-                 "Shield-related Special-check SEXPs do not work on ship %s "
-                 "because it uses model point shields.\n",
-                 Player_ship->ship_name));
+            WARNINGF (
+                LOCATION,
+                "Shield-related Special-check SEXPs do not work on ship %s "
+                "because it uses model point shields.\n",
+                Player_ship->ship_name);
             return SEXP_FALSE;
         }
         break;
@@ -22751,9 +22761,9 @@ int process_special_sexps (int index) {
     case 5: // Player's shield is quick repaired
         if (!(Ship_info[Player_ship->ship_info_index]
                   .flags[Ship::Info_Flags::Model_point_shields])) {
-            nprintf (
-                ("AI", "Frame %i, recharged to %7.3f\n", Framecount,
-                 Player_obj->shield_quadrant[FRONT_QUAD]));
+            WARNINGF (
+                LOCATION, "Frame %i, recharged to %7.3f\n", Framecount,
+                Player_obj->shield_quadrant[FRONT_QUAD]);
 
             shield_apply_damage (
                 Player_obj, FRONT_QUAD, -flFrametime * 200.0f);
@@ -22772,11 +22782,11 @@ int process_special_sexps (int index) {
                 return SEXP_FALSE;
         }
         else {
-            nprintf (
-                ("Warning",
-                 "Shield-related Special-check SEXPs do not work on ship %s "
-                 "because it uses model point shields.\n",
-                 Player_ship->ship_name));
+            WARNINGF (
+                LOCATION,
+                "Shield-related Special-check SEXPs do not work on ship %s "
+                "because it uses model point shields.\n",
+                Player_ship->ship_name);
             return SEXP_FALSE;
         }
         break;
@@ -22790,11 +22800,11 @@ int process_special_sexps (int index) {
             hud_shield_quadrant_hit (Player_obj, FRONT_QUAD);
         }
         else {
-            nprintf (
-                ("Warning",
-                 "Shield-related Special-check SEXPs do not work on ship %s "
-                 "because it uses model point shields.\n",
-                 Player_ship->ship_name));
+            WARNINGF (
+                LOCATION,
+                "Shield-related Special-check SEXPs do not work on ship %s "
+                "because it uses model point shields.\n",
+                Player_ship->ship_name);
             return SEXP_FALSE;
         }
         return SEXP_TRUE;
@@ -22808,11 +22818,11 @@ int process_special_sexps (int index) {
                 return SEXP_FALSE;
         }
         else {
-            nprintf (
-                ("Warning",
-                 "Shield-related Special-check SEXPs do not work on ship %s "
-                 "because it uses model point shields.\n",
-                 Player_ship->ship_name));
+            WARNINGF (
+                LOCATION,
+                "Shield-related Special-check SEXPs do not work on ship %s "
+                "because it uses model point shields.\n",
+                Player_ship->ship_name);
             return SEXP_FALSE;
         }
         break;
@@ -22826,17 +22836,17 @@ int process_special_sexps (int index) {
                 return SEXP_FALSE;
         }
         else {
-            nprintf (
-                ("Warning",
-                 "Shield-related Special-check SEXPs do not work on ship %s "
-                 "because it uses model point shields.\n",
-                 Player_ship->ship_name));
+            WARNINGF (
+                LOCATION,
+                "Shield-related Special-check SEXPs do not work on ship %s "
+                "because it uses model point shields.\n",
+                Player_ship->ship_name);
             return SEXP_FALSE;
         }
         break;
 
     case 9: // Zero left and right quadrants in preparation for maximizing
-            // rear quadrant.
+        // rear quadrant.
         if (!(Ship_info[Player_ship->ship_info_index]
                   .flags[Ship::Info_Flags::Model_point_shields])) {
             Player_obj->shield_quadrant[LEFT_QUAD] = 0.0f;
@@ -22845,11 +22855,11 @@ int process_special_sexps (int index) {
             return SEXP_TRUE;
         }
         else {
-            nprintf (
-                ("Warning",
-                 "Shield-related Special-check SEXPs do not work on ship %s "
-                 "because it uses model point shields.\n",
-                 Player_ship->ship_name));
+            WARNINGF (
+                LOCATION,
+                "Shield-related Special-check SEXPs do not work on ship %s "
+                "because it uses model point shields.\n",
+                Player_ship->ship_name);
             return SEXP_FALSE;
         }
         break;
@@ -22890,11 +22900,11 @@ int process_special_sexps (int index) {
             return SEXP_TRUE;
         }
         else {
-            nprintf (
-                ("Warning",
-                 "Shield-related Special-check SEXPs do not work on ship %s "
-                 "because it uses model point shields.\n",
-                 Player_ship->ship_name));
+            WARNINGF (
+                LOCATION,
+                "Shield-related Special-check SEXPs do not work on ship %s "
+                "because it uses model point shields.\n",
+                Player_ship->ship_name);
             return SEXP_FALSE;
         }
         break;
@@ -22963,7 +22973,8 @@ void sexp_int_to_string (int n) {
 
     // check variable type
     if (!(Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING)) {
-        WARNINGF (LOCATION, "Cannot assign a string to a non-string variable!");
+        WARNINGF (
+            LOCATION, "Cannot assign a string to a non-string variable!");
         return;
     }
 
@@ -22996,7 +23007,8 @@ void sexp_string_concatenate (int n) {
 
     // check variable type
     if (!(Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING)) {
-        WARNINGF (LOCATION, "Cannot assign a string to a non-string variable!");
+        WARNINGF (
+            LOCATION, "Cannot assign a string to a non-string variable!");
         return;
     }
 
@@ -23037,7 +23049,8 @@ void sexp_string_concatenate_block (int n) {
 
     // check variable type
     if (!(Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING)) {
-        WARNINGF (LOCATION, "Cannot assign a string to a non-string variable!");
+        WARNINGF (
+            LOCATION, "Cannot assign a string to a non-string variable!");
         return;
     }
 
@@ -23093,7 +23106,8 @@ void sexp_string_get_substring (int node) {
 
     // check variable type
     if (!(Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING)) {
-        WARNINGF (LOCATION, "Cannot assign a string to a non-string variable!");
+        WARNINGF (
+            LOCATION, "Cannot assign a string to a non-string variable!");
         return;
     }
 
@@ -23157,7 +23171,8 @@ void sexp_string_set_substring (int node) {
 
     // check variable type
     if (!(Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING)) {
-        WARNINGF (LOCATION, "Cannot assign a string to a non-string variable!");
+        WARNINGF (
+            LOCATION, "Cannot assign a string to a non-string variable!");
         return;
     }
 
@@ -24887,7 +24902,7 @@ void sexp_ship_effect (int n) {
                 sp->shader_effect_start_time = timer_get_milliseconds ();
             }
             else
-                mprintf (("Invalid Shipname in SEXP ship-effect\n"));
+                WARNINGF (LOCATION, "Invalid Shipname in SEXP ship-effect\n");
         }
 
         // move to next ship/wing in list
@@ -25039,8 +25054,7 @@ int generate_event_log_flags_mask (int result) {
     case SEXP_FALSE: matches |= MLF_SEXP_FALSE; break;
 
     default:
-        ASSERTF (
-            LOCATION, "SEXP has a value which isn't true or false.");
+        ASSERTF (LOCATION, "SEXP has a value which isn't true or false.");
         break;
     }
 
@@ -25195,11 +25209,11 @@ void add_to_event_log_buffer (int op_num, int result) {
         "Attempting to write to a non-existent log buffer");
 
     if (op_num == -1) {
-        nprintf (
-            ("SEXP",
-             "ERROR: op_num function returned %i, this should not happen. "
-             "Contact a coder.\n",
-             op_num));
+        WARNINGF (
+            LOCATION,
+            "ERROR: op_num function returned %i, this should not happen. "
+            "Contact a coder.\n",
+            op_num);
         return; // How does this happen?
     }
 
@@ -25255,10 +25269,8 @@ int eval_sexp (int cur_node, int referenced_node) {
     if (cur_node == -1) // empty list, i.e. sexp: ( )
         return SEXP_FALSE;
 
-    ASSERT (
-        cur_node >=
-        0); // we have special sexp nodes <= -1!!!  MWA
-            // which should be intercepted before we get here.  HOFFOSS
+    ASSERT (cur_node >= 0); // we have special sexp nodes <= -1!!!  MWA
+        // which should be intercepted before we get here.  HOFFOSS
     type = SEXP_NODE_TYPE (cur_node);
     ASSERT ((type == SEXP_LIST) || (type == SEXP_ATOM));
 
@@ -27367,8 +27379,7 @@ int eval_sexp (int cur_node, int referenced_node) {
             sexp_val = sexp_is_in_turret_fov (node);
             break;
 
-        default:
-            break;
+        default: break;
         }
 
         if (Log_event) {
@@ -28373,8 +28384,7 @@ int query_operator_return_type (int op) {
     case OP_IN_SEQUENCE:
     case OP_FOR_COUNTER: return OPR_FLEXIBLE_ARGUMENT;
 
-    default:
-        break;
+    default: break;
     }
 
     return 0;
@@ -29622,9 +29632,7 @@ int query_operator_argument_type (int op, int argnum) {
         case 2: return OPF_SHIP;
         case 3: return OPF_SUBSYSTEM;
         case 4: return OPF_BOOL;
-        default:
-            ASSERT (0);
-            return OPF_NULL;
+        default: ASSERT (0); return OPF_NULL;
         }
 
     case OP_BEAM_FIRE_COORDS:
@@ -30422,8 +30430,7 @@ int query_operator_argument_type (int op, int argnum) {
 
     case OP_SET_MOTION_DEBRIS: return OPF_BOOL;
 
-    default:
-        break;
+    default: break;
     }
 
     return 0;
@@ -30438,7 +30445,8 @@ void update_sexp_references (const char* old_name, const char* new_name) {
     for (i = 0; i < Num_sexp_nodes; i++) {
         if ((SEXP_NODE_TYPE (i) == SEXP_ATOM) &&
             (Sexp_nodes[i].subtype == SEXP_ATOM_STRING))
-            if (!strcasecmp (CTEXT (i), old_name)) strcpy (CTEXT (i), new_name);
+            if (!strcasecmp (CTEXT (i), old_name))
+                strcpy (CTEXT (i), new_name);
     }
 }
 
@@ -31062,10 +31070,11 @@ void multi_sexp_modify_variable () {
     if ((variable_index >= 0) && (variable_index < MAX_SEXP_VARIABLES)) {
         // maybe create it first
         if (!(Sexp_variables[variable_index].type & SEXP_VARIABLE_SET)) {
-            mprintf (
-                ("Warning; received multi packet for variable index which is "
-                 "not set!  Assuming this should be an array block "
-                 "variable...\n"));
+            WARNINGF (
+                LOCATION,
+                "Warning; received multi packet for variable index which is "
+                "not set!  Assuming this should be an array block "
+                "variable...\n");
             sexp_add_array_block_variable (
                 variable_index, can_construe_as_integer (value));
         }
@@ -31199,21 +31208,24 @@ int sexp_get_variable_by_index (int node) {
     }
 
     if (Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_NOT_USED) {
-        mprintf (
-            ("warning: retrieving a value from a sexp variable which is not "
-             "in use!\n"));
+        WARNINGF (
+            LOCATION,
+            "warning: retrieving a value from a sexp variable which is not in "
+            "use!\n");
     }
     else if (!(Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_SET)) {
-        mprintf (
-            ("warning: retrieving a value from a sexp variable which is not "
-             "set!\n"));
+        WARNINGF (
+            LOCATION,
+            "warning: retrieving a value from a sexp variable which is not "
+            "set!\n");
     }
 
     if (Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING) {
-        mprintf (
-            ("warning: variable %d is a string but it is not possible to "
-             "return a string value through a sexp!\n",
-             sexp_variable_index));
+        WARNINGF (
+            LOCATION,
+            "warning: variable %d is a string but it is not possible to "
+            "return a string value through a sexp!\n",
+            sexp_variable_index);
         return SEXP_NAN_FOREVER;
     }
 
@@ -31245,14 +31257,16 @@ void sexp_copy_variable_from_index (int node) {
     }
 
     if (Sexp_variables[from_index].type & SEXP_VARIABLE_NOT_USED) {
-        mprintf (
-            ("warning: retrieving a value from a sexp variable which is not "
-             "in use!\n"));
+        WARNINGF (
+            LOCATION,
+            "warning: retrieving a value from a sexp variable which is not in "
+            "use!\n");
     }
     else if (!(Sexp_variables[from_index].type & SEXP_VARIABLE_SET)) {
-        mprintf (
-            ("warning: retrieving a value from a sexp variable which is not "
-             "set!\n"));
+        WARNINGF (
+            LOCATION,
+            "warning: retrieving a value from a sexp variable which is not "
+            "set!\n");
     }
 
     // now get the variable we are modifying
@@ -31314,14 +31328,16 @@ void sexp_copy_variable_between_indexes (int node) {
     }
 
     if (Sexp_variables[from_index].type & SEXP_VARIABLE_NOT_USED) {
-        mprintf (
-            ("warning: retrieving a value from a sexp variable which is not "
-             "in use!\n"));
+        WARNINGF (
+            LOCATION,
+            "warning: retrieving a value from a sexp variable which is not in "
+            "use!\n");
     }
     else if (!(Sexp_variables[from_index].type & SEXP_VARIABLE_SET)) {
-        mprintf (
-            ("warning: retrieving a value from a sexp variable which is not "
-             "set!\n"));
+        WARNINGF (
+            LOCATION,
+            "warning: retrieving a value from a sexp variable which is not "
+            "set!\n");
     }
 
     if (!(Sexp_variables[to_index].type & SEXP_VARIABLE_SET)) {
@@ -32086,9 +32102,7 @@ int get_subcategory (int sexp_id) {
     case OP_STRING_TO_INT:
     case OP_STRING_GET_LENGTH: return STATUS_SUBCATEGORY_VARIABLES;
 
-    default:
-        BOOST_ASSERT (0);
-        break;
+    default: BOOST_ASSERT (0); break;
     }
 }
 

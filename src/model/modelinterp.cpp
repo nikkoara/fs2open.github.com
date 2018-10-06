@@ -1249,9 +1249,9 @@ static int submodel_get_points_internal (int model_num, int submodel_num) {
         case OP_SORTNORM: break;
         case OP_BOUNDBOX: break;
         default:
-            mprintf (
-                ("Bad chunk type %d, len=%d in submodel_get_points\n",
-                 chunk_type, chunk_size));
+            WARNINGF (
+                LOCATION, "Bad chunk type %d, len=%d in submodel_get_points\n",
+                chunk_type, chunk_size);
             Int3 (); // Bad chunk type!
             return 0;
         }
@@ -1324,12 +1324,12 @@ void submodel_get_two_random_points_better (
 
         // the Shivan Comm Node does not have a collision tree, for one
         if (pm->submodel[submodel_num].collision_tree_index < 0) {
-            nprintf (
-                ("Model",
-                 "In submodel_get_two_random_points_better(), model %s does "
-                 "not have a collision tree!  Falling back to "
-                 "submodel_get_two_random_points().\n",
-                 pm->filename));
+            WARNINGF (
+                LOCATION,
+                "In submodel_get_two_random_points_better(), model %s does "
+                "not have a collision tree!  Falling back to "
+                "submodel_get_two_random_points().\n",
+                pm->filename);
 
             submodel_get_two_random_points (model_num, submodel_num, v1, v2);
             return;
@@ -1421,9 +1421,10 @@ int submodel_get_num_verts (int model_num, int submodel_num) {
         case OP_SORTNORM: break;
         case OP_BOUNDBOX: break;
         default:
-            mprintf (
-                ("Bad chunk type %d, len=%d in submodel_get_num_verts\n",
-                 chunk_type, chunk_size));
+            WARNINGF (
+                LOCATION,
+                "Bad chunk type %d, len=%d in submodel_get_num_verts\n",
+                chunk_type, chunk_size);
             Int3 (); // Bad chunk type!
             return 0;
         }
@@ -1461,9 +1462,10 @@ int submodel_get_num_polys_sub (ubyte* p) {
         } break;
         case OP_BOUNDBOX: break;
         default:
-            mprintf (
-                ("Bad chunk type %d, len=%d in submodel_get_num_polys\n",
-                 chunk_type, chunk_size));
+            WARNINGF (
+                LOCATION,
+                "Bad chunk type %d, len=%d in submodel_get_num_polys\n",
+                chunk_type, chunk_size);
             Int3 (); // Bad chunk type!
             return 0;
         }
@@ -2249,7 +2251,7 @@ void interp_configure_vertex_buffers (polymodel* pm, int mn) {
 
     int time_elapsed = timer_get_milliseconds () - milliseconds;
 
-    nprintf (("Model", "BSP Parse took %d milliseconds.\n", time_elapsed));
+    WARNINGF (LOCATION, "BSP Parse took %d milliseconds.", time_elapsed);
 
     if (total_verts < 1) { return; }
 
@@ -2795,16 +2797,17 @@ int texture_info::LoadTexture (const char* filename, const char* dbg_name) {
     if (strlen (filename) + 4 >=
         NAME_LENGTH) // Filenames are passed in without extension
     {
-        mprintf ((
-            "Generated texture name %s is too long. Skipping...\n", filename));
+        WARNINGF (
+            LOCATION, "Generated texture name %s is too long. Skipping...\n",
+            filename);
         return -1;
     }
     this->original_texture =
         bm_load_either (filename, NULL, NULL, NULL, true, CF_TYPE_MAPS);
     if (this->original_texture < 0)
-        nprintf (
-            ("Maps", "For \"%s\" I couldn't find %s.ani\n", dbg_name,
-             filename));
+        WARNINGF (
+            LOCATION, "For \"%s\" I couldn't find %s.ani\n", dbg_name,
+            filename);
     this->ResetTexture ();
 
     return texture;

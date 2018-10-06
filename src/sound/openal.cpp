@@ -262,46 +262,35 @@ bool openal_init_device (std::string* playback, std::string* capture) {
 
 #ifndef NDEBUG
     if (!PlaybackDevices.empty ()) {
-        nprintf (("OpenAL", "  Available Playback Devices:\n"));
+        WARNINGF (LOCATION, "  Available Playback Devices:");
 
         for (size_t idx = 0; idx < PlaybackDevices.size (); idx++) {
-            nprintf (
-                ("OpenAL", "    %s",
-                 PlaybackDevices[idx].device_name.c_str ()));
+            WARNINGF (
+                LOCATION, "    %s", PlaybackDevices[idx].device_name.c_str ());
 
             if (PlaybackDevices[idx].type == OAL_DEVICE_USER) {
-                nprintf (("OpenAL", "  *preferred*\n"));
+                WARNINGF (LOCATION, "  *preferred*");
             }
             else if (PlaybackDevices[idx].type == OAL_DEVICE_DEFAULT) {
-                nprintf (("OpenAL", "  *default*\n"));
-            }
-            else {
-                nprintf (("OpenAL", "\n"));
+                WARNINGF (LOCATION, "  *default*");
             }
         }
     }
 
     if (!CaptureDevices.empty ()) {
-        if (!PlaybackDevices.empty ()) { nprintf (("OpenAL", "\n")); }
-
-        nprintf (("OpenAL", "  Available Capture Devices:\n"));
+        WARNINGF (LOCATION, "  Available Capture Devices:");
 
         for (size_t idx = 0; idx < CaptureDevices.size (); idx++) {
-            nprintf ((
-                "OpenAL", "    %s", CaptureDevices[idx].device_name.c_str ()));
+            WARNINGF (
+                LOCATION, "    %s", CaptureDevices[idx].device_name.c_str ());
 
             if (CaptureDevices[idx].type == OAL_DEVICE_USER) {
-                nprintf (("OpenAL", "  *preferred*\n"));
+                WARNINGF (LOCATION, "  *preferred*");
             }
             else if (CaptureDevices[idx].type == OAL_DEVICE_DEFAULT) {
-                nprintf (("OpenAL", "  *default*\n"));
-            }
-            else {
-                nprintf (("OpenAL", "\n"));
+                WARNINGF (LOCATION, "  *default*");
             }
         }
-
-        nprintf (("OpenAL", "\n"));
     }
 #endif
 

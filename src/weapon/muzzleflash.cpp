@@ -127,9 +127,9 @@ void parse_mflash_tbl (const char* filename) {
         required_string ("#end");
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n", filename,
-             e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n", filename,
+            e.what ());
         return;
     }
 }

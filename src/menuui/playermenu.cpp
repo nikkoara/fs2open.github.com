@@ -385,10 +385,6 @@ void player_select_init () {
     }
 }
 
-// no need to reset this to false because we only ever see player_select once
-// per game run
-static bool Startup_warning_dialog_displayed = false;
-
 void player_select_do () {
     int k;
 
@@ -497,10 +493,9 @@ void player_select_close () {
 
     // actually set up the Player struct here
     if ((Player_select_pilot == -1) || (Player_select_num_pilots == 0)) {
-        nprintf (
-            ("General",
-             "WARNING! No pilot selected! We should be exiting the game "
-             "now!\n"));
+        WARNINGF (
+            LOCATION,
+            "WARNING! No pilot selected! We should be exiting the game now!");
         return;
     }
 
@@ -1410,9 +1405,9 @@ void player_tips_init () {
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             "tips.tbl", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n", "tips.tbl",
+            e.what ());
         return;
     }
 }

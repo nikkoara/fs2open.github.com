@@ -103,7 +103,7 @@ void convert_pilot_files () {
     // also bail if MAX_PILOTS (or more!) already exist
     if (i == count || max_convert <= 0) { return; }
 
-    mprintf (("PILOT: Beginning pilot file conversion...\n"));
+    WARNINGF (LOCATION, "PILOT: Beginning pilot file conversion...\n");
 
     // now proceed to convert all of the old files
     count = old_files.size ();
@@ -140,5 +140,5 @@ void convert_pilot_files () {
         if (num_converted >= max_convert) { break; }
     }
 
-    mprintf (("PILOT: Pilot file conversion complete!\n"));
+    WARNINGF (LOCATION, "PILOT: Pilot file conversion complete!\n");
 }

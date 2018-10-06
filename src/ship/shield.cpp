@@ -25,8 +25,8 @@ int Show_shield_mesh = 0;
 #define SHIELD_HIT_SCALE 0.15f // Note, larger constant means smaller effect
 #define MAX_TRIS_PER_HIT 40    // Number of triangles per shield hit, maximum.
 #define MAX_SHIELD_HITS 200    // Maximum number of active shield hits.
-#define MAX_SHIELD_TRI_BUFFER \
-    (MAX_SHIELD_HITS *        \
+#define MAX_SHIELD_TRI_BUFFER                                         \
+    (MAX_SHIELD_HITS *                                                \
      MAX_TRIS_PER_HIT) //(MAX_SHIELD_HITS*20) // Persistent buffer of
                        // triangle comprising all active shield hits.
 #define SHIELD_HIT_DURATION \
@@ -696,7 +696,7 @@ void copy_shield_to_globals (
             Shield_hits[shnum].tri_list[count++] = gi;
 
             if (count >= MAX_TRIS_PER_HIT) {
-                mprintf (("Warning: Too many triangles in shield hit.\n"));
+                WARNINGF (LOCATION, "Too many triangles in shield hit.\n");
                 break;
             }
         }

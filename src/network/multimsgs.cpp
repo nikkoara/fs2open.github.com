@@ -492,33 +492,6 @@ void multi_io_send_buffered_packets () {
     }
 }
 
-//*********************************************************************************************************
-// Game Chat Packet
-//*********************************************************************************************************
-/*
-struct fs2_game_chat_packet
-{
-    char packet_signature; //0xC3
-    short from_player_id;
-    int server_msg;
-    char mode;
-
-    // variable record
-    if (mode)
-        short to_player_id;
-    else
-    {
-        int i;
-        char expr[i];
-    }
-    int j;
-    char message[j];
-
-}
-*/
-
-//+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 // send a general game chat packet (if msg_mode == MULTI_MSG_TARGET, need to
 // pass in "to", if == MULTI_MSG_EXPR, need to pass in expr)
 void send_game_chat_packet (
@@ -679,9 +652,9 @@ void process_game_chat_packet (ubyte* data, header* hinfo) {
 
     // if we couldn't find the player - bail
     if (player_index == -1) {
-        nprintf (
-            ("Network",
-             "Could not find player for processing game chat packet!\n"));
+        WARNINGF (
+            LOCATION,
+            "Could not find player for processing game chat packet!");
         return;
     }
 
@@ -764,19 +737,6 @@ void process_game_chat_packet (ubyte* data, header* hinfo) {
     }
 }
 
-//*********************************************************************************************************
-// Hud Message packet
-//*********************************************************************************************************
-/*
-struct fs2_game_chat_packet
-{
-    char packet_signature; //0xC1 HUD_MSG
-    int msg_size;
-    char msg[msg_size];
-}
-*/
-//+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 // broadcast a hud message to all players
 void send_hud_msg_to_all (char* msg) {
     ubyte data[MAX_PACKET_SIZE];
@@ -807,17 +767,6 @@ void process_hud_message (ubyte* data, header* hinfo) {
     if (Game_mode & GM_IN_MISSION) { HUD_printf ("%s", msg_buffer); }
 }
 
-//*********************************************************************************************************
-// Join Packet
-//*********************************************************************************************************
-/*
-struct fs2_game_chat_packet
-{
-    char packet_signature; //0xC1 HUD_MSG
-    int msg_size;
-    char msg[msg_size];
-}
-*/
 //+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 // send a join packet request to the specified address (should be a server)
@@ -947,34 +896,6 @@ void process_join_packet (ubyte* data, header* hinfo) {
     // process the rest of the request
     multi_process_valid_join_request (&jr, &addr);
 }
-
-//*********************************************************************************************************
-// New Player Packet
-//*********************************************************************************************************
-/*
-struct fs2_new_player_packet
-{
-    char packet_signature; // 0xB4 NOTIFY_NEW_PLAYER
-    int new_player_num;
-    net_addr player_addr;
-    short player_id;
-    int flags;
-
-    int i;
-    char callsign[i];
-
-    int j;
-    char plyr_image_filename[j];
-
-    int k;
-    char plyr_squad_filename[k];
-
-    int l;
-    char plyr_pxo_squad_name[l];
-}
-*/
-
-//+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 // send a notification that a new player has joined the game (if target !=
 // NULL, broadcast the packet)
@@ -1121,41 +1042,6 @@ void process_new_player_packet (ubyte* data, header* hinfo) {
         break;
     }
 }
-
-//*********************************************************************************************************
-// Accept Player Data Packet
-//*********************************************************************************************************
-/*
-struct fs2_accept_player_data
-{
-    char packet_signature; //ACCEPT_PLAYER_DATA
-    ubyte stop;
-    int player_num;
-    net_addr plyr_addr;
-    int player_id;
-
-    int i;
-    char callsign[i];
-
-    int j;
-    char plr_image_filename[j];
-
-    int k;
-    char plr_squad_filename[k]
-
-    int l
-    char plr_pxo_squadname[l];
-
-    int flags;
-
-    if (is_ingame)
-      int net_signature;
-
-
-};
-*/
-
-//+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 #define PLAYER_DATA_SLOP 100
 
@@ -1390,32 +1276,6 @@ void process_accept_player_data (ubyte* data, header* hinfo) {
     }
 }
 
-//*********************************************************************************************************
-// Accept Player Packet
-//*********************************************************************************************************
-/*
-struct fs2_accept_packet
-{
-    char packet_signature;
-    int code;
-
-    if (code & ACCEPT_INGAME)
-    {
-        int gm_mis_fname_len;
-        char mission_filename[gm_mis_fname_len];
-        unsigned char ingame_joining_team;
-        if (ingame_joining_team == 1)
-            unsigned char ingame_join_team;
-
-    }
-
-    int skill_level;
-    int player_num;
-    short player_id;
-    int netgame_type_flags;
-
-}
-*/
 // send an accept packet to a client in response to a request to join the game
 void send_accept_packet (int new_player_num, int code, int ingame_join_team) {
     int packet_size, i;
@@ -1551,7 +1411,9 @@ void process_accept_packet (ubyte* data, header* hinfo) {
     if (code & ACCEPT_INGAME) {
         // the game filename
         GET_STRING (Game_current_mission_filename);
-        mprintf (("Got mission filename %s\n", Game_current_mission_filename));
+        WARNINGF (
+            LOCATION, "Got mission filename %s\n",
+            Game_current_mission_filename);
         Select_default_ship = 0;
 
         // determine if I'm being placed on a team
@@ -1648,20 +1510,6 @@ void process_accept_packet (ubyte* data, header* hinfo) {
     }
 }
 
-//*********************************************************************************************************
-// Player Leave Packet
-//*********************************************************************************************************
-/*
-struct fs2_leave_game_packet
-{
-    char packet_signature;
-    char kicked_reason;
-    short player_id;
-
-}
-*/
-// send a notice that the player at net_addr is leaving (if target is NULL, the
-// broadcast the packet)
 void send_leave_game_packet (
     short player_id, int kicked_reason, net_player* target) {
     ubyte data[MAX_PACKET_SIZE];
@@ -1689,9 +1537,8 @@ void send_leave_game_packet (
     // respawned player has quit or become an observer) so he has to tell
     // everyone that this guy left
     else {
-        nprintf (
-            ("Network",
-             "Sending a leave game packet to all players (server)\n"));
+        WARNINGF (
+            LOCATION, "Sending a leave game packet to all players (server)");
 
         // a couple of important checks
         ASSERT (player_id != Net_player->player_id);
@@ -1730,15 +1577,15 @@ void process_leave_game_packet (ubyte* data, header* hinfo) {
     // determine who is dropping and printf out a notification
     player_num = find_player_id (deader_id);
     if (player_num == -1) {
-        nprintf (
-            ("Network",
-             "Received leave game packet for unknown player, ignoring\n"));
+        WARNINGF (
+            LOCATION,
+            "Received leave game packet for unknown player, ignoring");
         return;
     }
     else {
-        nprintf (
-            ("Network", "Received a leave game notice for %s\n",
-             Net_players[player_num].m_player->callsign));
+        WARNINGF (
+            LOCATION, "Received a leave game notice for %s\n",
+            Net_players[player_num].m_player->callsign);
     }
 
     // a hook to display that a player was kicked
@@ -1766,9 +1613,9 @@ void process_leave_game_packet (ubyte* data, header* hinfo) {
             // otherwise indicate someone was kicked
         }
         else {
-            nprintf (
-                ("Network", "%s was kicked\n",
-                 Net_players[player_num].m_player->callsign));
+            WARNINGF (
+                LOCATION, "%s was kicked\n",
+                Net_players[player_num].m_player->callsign);
 
             // display the result
             memset (str, 0, 512);
@@ -1794,32 +1641,13 @@ void process_leave_game_packet (ubyte* data, header* hinfo) {
         multi_io_send_to_all_reliable (data, offset);
     }
 
-    // leave the game if the host and/or master has dropped
-    /*
-    if (((Net_players[player_num].flags & NETINFO_FLAG_AM_MASTER) ||
-    (Net_players[player_num].flags & NETINFO_FLAG_GAME_HOST)) ) {
-        nprintf(("Network","Host and/or server has left the game -
-    aborting...\n"));
-
-        // NETLOG
-        ml_string(NOX("Host and/or server has left the game"));
-
-        // if the host leaves in the debriefing state, we should still wait
-    until the player selects accept before we quit if (gameseq_get_state() !=
-    GS_STATE_DEBRIEF) { multi_quit_game(PROMPT_NONE,
-    MULTI_END_NOTIFY_SERVER_LEFT);
-        }
-
-        delete_player(player_num);
-    } else {
-        */
     delete_player (player_num);
 
     // OSAPI GUI stuff (if standalone)
     if (Game_mode & GM_STANDALONE_SERVER) {
         // returns true if we should reset the standalone
         if (std_remove_player (&Net_players[player_num])) {
-            nprintf (("Network", "Should reset!!\n"));
+            // WARNINGF (LOCATION, "Should reset!!");
             return;
         }
 
@@ -1829,25 +1657,6 @@ void process_leave_game_packet (ubyte* data, header* hinfo) {
     }
 }
 
-//*********************************************************************************************************
-// Game active packet
-//*********************************************************************************************************
-/*
-struct fs2_game_active_packet
-{
-    char packet_signature;
-    ubyte server_version;
-    ubyte compat_version;
-    int len1;
-    char netgame_name[len1];
-    int len2;
-    char netgame_mission_name[len2];
-    int len3;
-    char netgame_title[len3];
-    ubyte num_players;
-    unsigned short flags;
-}
-*/
 // send information about this currently active game to the specified address
 void send_game_active_packet (net_addr* addr) {
     int packet_size;
@@ -1955,40 +1764,6 @@ void process_game_active_packet (ubyte* data, header* hinfo) {
         multi_update_active_games (&ag);
     }
 }
-
-//*********************************************************************************************************
-// Game Update Packet
-//*********************************************************************************************************
-/*
-struct fs2_game_update
-{
-    char packet_signature;
-    int len1;
-    char netgame_name[len1];
-    int len2;
-    char netgame_mission_name[len2];
-    int len3;
-    char netgame_title[len3];
-    int len4;
-    char netgame_campaign_name[len4];
-    int campaign_mode;
-    int max_players;
-    int security;
-    unsigned int respawn;
-    int flags;
-    int type_flags;
-    int version_info;
-    ubyte debug_flags;
-
-    // !!!!!! this isn't relying on information earlier in the packet!
-    // receiving seems to always assume it's there!
-    if(Net_player->flags & NETINFO_FLAG_AM_MASTER){
-         int game_state;
-    }
-
-  }
-
-*/
 
 // send_game_update_packet sends an updated Netgame structure to all players
 // currently connected.  The update is used to change the current mission,
@@ -2154,14 +1929,6 @@ void process_netgame_update_packet (ubyte* data, header* hinfo) {
     Netgame.game_state = ng_state;
 }
 
-//*********************************************************************************************************
-// Game Update Packet
-//*********************************************************************************************************
-/*
-
-*/
-// send a request or a reply for mission description, if code == 0, request, if
-// code == 1, reply
 void send_netgame_descript_packet (net_addr* addr, int code) {
     ubyte data[MAX_PACKET_SIZE], val;
     int desc_len;
@@ -2518,9 +2285,9 @@ void send_ship_kill_packet (
 
         temp = 0;
         ADD_USHORT (temp);
-        nprintf (
-            ("Network",
-             "Don't know other_obj for ship kill packet, sending NULL\n"));
+        WARNINGF (
+            LOCATION,
+            "Don't know other_obj for ship kill packet, sending NULL");
     }
     else {
         ADD_USHORT (other_objp->net_signature);
@@ -2609,9 +2376,9 @@ void process_ship_kill_packet (ubyte* data, header* hinfo) {
     // if I am unable to find the ship object which was killed, I have to bail
     // and rely on getting another message from the server that this happened!
     if (sobjp == NULL) {
-        nprintf (
-            ("Network", "Couldn't find net signature %d for kill packet\n",
-             ship_sig));
+        WARNINGF (
+            LOCATION, "Couldn't find net signature %d for kill packet\n",
+            ship_sig);
         return;
     }
 
@@ -2655,7 +2422,9 @@ void process_ship_kill_packet (ubyte* data, header* hinfo) {
     // we die
     if (sobjp == Player_obj) { Game_mode |= GM_DEAD_DIED; }
 
-    mprintf (("Network Killing off %s\n", Ships[sobjp->instance].ship_name));
+    WARNINGF (
+        LOCATION, "Network Killing off %s\n",
+        Ships[sobjp->instance].ship_name);
 
     // do the normal thing when not ingame joining.  When ingame joining,
     // simply kill off the ship.
@@ -2705,11 +2474,11 @@ void process_ship_create_packet (ubyte* data, header* hinfo) {
         objp = mission_parse_get_arrival_ship (signature);
         if (objp != NULL) { objnum = parse_create_object (objp); }
         else {
-            nprintf (
-                ("Network",
-                 "Ship with sig %d not found on ship arrival list -- not "
-                 "creating!!\n",
-                 signature));
+            WARNINGF (
+                LOCATION,
+                "Ship with sig %d not found on ship arrival list -- not "
+                "creating!!\n",
+                signature);
         }
     }
     else {
@@ -2771,14 +2540,14 @@ void process_wing_create_packet (ubyte* data, header* hinfo) {
     // a valid wing
     if ((index < 0) || (index >= Num_wings) ||
         (Wings[index].num_waves == -1)) {
-        nprintf (
-            ("Network", "Invalid index %d for wing create packet\n", index));
+        WARNINGF (
+            LOCATION, "Invalid index %d for wing create packet\n", index);
         return;
     }
     if ((num_to_create <= 0) || (num_to_create > Wings[index].wave_count)) {
-        nprintf (
-            ("Network", "Invalid number of ships to create (%d) for wing %s\n",
-             num_to_create, Wings[index].name));
+        WARNINGF (
+            LOCATION, "Invalid number of ships to create (%d) for wing %s\n",
+            num_to_create, Wings[index].name);
         return;
     }
 
@@ -2826,10 +2595,9 @@ void process_ship_depart_packet (ubyte* data, header* hinfo) {
     // find the object which is departing
     objp = multi_get_network_object (signature);
     if (objp == NULL) {
-        nprintf (
-            ("network",
-             "Couldn't find object with net signature %d to depart\n",
-             signature));
+        WARNINGF (
+            LOCATION, "Couldn't find object with net signature %d to depart\n",
+            signature);
         return;
     }
 
@@ -2840,11 +2608,11 @@ void process_ship_depart_packet (ubyte* data, header* hinfo) {
             ship_actually_depart (objp->instance, s_method);
         }
         else {
-            nprintf (
-                ("network",
-                 "Can not process ship depart packed. Object with net "
-                 "signature %d is not a ship!\n",
-                 signature));
+            WARNINGF (
+                LOCATION,
+                "Can not process ship depart packed. Object with net "
+                "signature %d is not a ship!\n",
+                signature);
             return;
         }
         break;
@@ -2888,10 +2656,10 @@ void process_cargo_revealed_packet (ubyte* data, header* hinfo) {
     // get a ship pointer and call the ship function to reveal the cargo
     objp = multi_get_network_object (signature);
     if (objp == NULL) {
-        nprintf ((
-            "Network",
+        WARNINGF (
+            LOCATION,
             "Could not find object with net signature %d for cargo revealed\n",
-            signature));
+            signature);
         return;
     }
 
@@ -2942,10 +2710,10 @@ void process_cargo_hidden_packet (ubyte* data, header* hinfo) {
     // get a ship pointer and call the ship function to hide the cargo
     objp = multi_get_network_object (signature);
     if (objp == NULL) {
-        nprintf (
-            ("Network",
-             "Could not find object with net signature %d for cargo hidden\n",
-             signature));
+        WARNINGF (
+            LOCATION,
+            "Could not find object with net signature %d for cargo hidden\n",
+            signature);
         return;
     }
 
@@ -3109,8 +2877,8 @@ void process_secondary_fired_packet (
         // fired
         objp = multi_get_network_object (net_signature);
         if (objp == NULL) {
-            nprintf (
-                ("Network", "Could not find ship for fire secondary packet!"));
+            WARNINGF (
+                LOCATION, "Could not find ship for fire secondary packet!");
             return;
         }
 
@@ -3230,10 +2998,9 @@ void process_countermeasure_fired_packet (ubyte* data, header* hinfo) {
 
     objp = multi_get_network_object (signature);
     if (objp == NULL) {
-        nprintf (
-            ("network",
-             "Could find object whose countermeasures are being "
-             "launched!!!\n"));
+        WARNINGF (
+            LOCATION,
+            "Could find object whose countermeasures are being launched!!!");
         return;
     }
     if (objp->type != OBJ_SHIP) { return; }
@@ -3242,7 +3009,7 @@ void process_countermeasure_fired_packet (ubyte* data, header* hinfo) {
     // make it so ship can fire right away!
     Ships[objp->instance].cmeasure_fire_stamp = timestamp (0);
     if (objp == Player_obj) {
-        nprintf (("network", "firing countermeasure from my ship\n"));
+        WARNINGF (LOCATION, "firing countermeasure from my ship");
     }
 
     ship_launch_countermeasure (objp, rand_val);
@@ -3333,11 +3100,11 @@ void process_turret_fired_packet (ubyte* data, header* hinfo) {
     // find the object
     objp = multi_get_network_object (pnet_signature);
     if (objp == NULL) {
-        nprintf (
-            ("network",
-             "could find parent object with net signature %d for turret "
-             "firing\n",
-             pnet_signature));
+        WARNINGF (
+            LOCATION,
+            "could find parent object with net signature %d for turret "
+            "firing\n",
+            pnet_signature);
         return;
     }
 
@@ -3498,10 +3265,11 @@ void process_mission_message_packet (ubyte* data, header* hinfo) {
     if ((builtin_type >= 0) && (Netgame.type_flags & NG_TYPE_TEAM) &&
         (Net_player != NULL) &&
         (Net_player->p_info.team != multi_team_filter)) {
-        mprintf (
-            ("Builtin message of type %d filtered out in "
-             "process_mission_message_packet()\n",
-             id));
+        WARNINGF (
+            LOCATION,
+            "Builtin message of type %d filtered out in "
+            "process_mission_message_packet()\n",
+            id);
         return;
     }
 
@@ -3684,9 +3452,8 @@ void process_mission_request_packet (ubyte* /*data*/, header* hinfo) {
     // fill in the address information of where this came from
     player_num = find_player_id (hinfo->id);
     if (player_num == -1) {
-        nprintf (
-            ("Network",
-             "Could not find player to send mission list items to!\n"));
+        WARNINGF (
+            LOCATION, "Could not find player to send mission list items to!");
         return;
     }
 
@@ -3850,8 +3617,7 @@ void process_ingame_nak (ubyte* data, header* hinfo) {
     switch (state) {
     case ACK_FILE_ACCEPTED:
         ASSERT (Net_player->flags & NETINFO_FLAG_INGAME_JOIN);
-        nprintf (
-            ("Network", "Mission file rejected by server, aborting...\n"));
+        WARNINGF (LOCATION, "Mission file rejected by server, aborting...");
         multi_quit_game (PROMPT_NONE, MULTI_END_NOTIFY_FILE_REJECTED);
         break;
     }
@@ -4107,9 +3873,9 @@ void process_netplayer_slot_packet (ubyte* data, header* hinfo) {
         GET_INT (ship_index);
         player_num = find_player_id (player_id);
         if (player_num < 0) {
-            nprintf (
-                ("Network",
-                 "Error looking up player for object/slot assignment!!\n"));
+            WARNINGF (
+                LOCATION,
+                "Error looking up player for object/slot assignment!!");
         }
         else {
             // call the function in multiutil.cpp to set up the player object
@@ -4178,11 +3944,11 @@ void process_ship_weapon_change (ubyte* data, header* hinfo) {
 
     objp = multi_get_network_object (signature);
     if (objp == NULL) {
-        nprintf (
-            ("network",
-             "Unable to locate ship with signature %d for weapon state "
-             "change\n",
-             signature));
+        WARNINGF (
+            LOCATION,
+            "Unable to locate ship with signature %d for weapon state "
+            "change\n",
+            signature);
         return;
     }
     // ASSERT (objp->type == OBJ_SHIP );
@@ -4380,17 +4146,16 @@ void process_player_order_packet (ubyte* data, header* hinfo) {
 
     player_num = find_player_id (hinfo->id);
     if (player_num == -1) {
-        nprintf (
-            ("Network", "Received player order packet from unknown player\n"));
+        WARNINGF (
+            LOCATION, "Received player order packet from unknown player");
         return;
     }
 
     objp = &Objects[Net_players[player_num].m_player->objnum];
     if (objp->type != OBJ_SHIP) {
-        nprintf (
-            ("Network",
-             "not doing player order because object requestting is not a "
-             "ship\n"));
+        WARNINGF (
+            LOCATION,
+            "not doing player order because object requestting is not a ship");
         return;
     }
 
@@ -4411,10 +4176,10 @@ void process_player_order_packet (ubyte* data, header* hinfo) {
 
     // if this player is not allowed to do messaging, quit here
     if (!multi_can_message (&Net_players[player_num])) {
-        nprintf (
-            ("Network",
-             "Received player order packet from player not allowed to give "
-             "orders!!\n"));
+        WARNINGF (
+            LOCATION,
+            "Received player order packet from player not allowed to give "
+            "orders!!");
         return;
     }
 
@@ -4598,11 +4363,11 @@ void process_subsystem_destroyed_packet (ubyte* data, header* hinfo) {
         // call to get the pointer to the subsystem we should be working on
         subsysp = ship_get_indexed_subsys (shipp, (int)uindex);
         if (subsysp == NULL) {
-            nprintf (
-                ("Network",
-                 "Could not find subsys %d for ship %s to process as being "
-                 "destroyed\n",
-                 (int)uindex, shipp->ship_name));
+            WARNINGF (
+                LOCATION,
+                "Could not find subsys %d for ship %s to process as being "
+                "destroyed\n",
+                (int)uindex, shipp->ship_name);
             PACKET_SET_SIZE ();
             return;
         }
@@ -4659,10 +4424,10 @@ void process_subsystem_cargo_revealed_packet (ubyte* data, header* hinfo) {
     // get a ship pointer and call the ship function to reveal the cargo
     objp = multi_get_network_object (signature);
     if (objp == NULL) {
-        nprintf ((
-            "Network",
+        WARNINGF (
+            LOCATION,
             "Could not find object with net signature %d for cargo revealed\n",
-            signature));
+            signature);
         return;
     }
 
@@ -4677,10 +4442,9 @@ void process_subsystem_cargo_revealed_packet (ubyte* data, header* hinfo) {
     // call to get the pointer to the subsystem we should be working on
     subsysp = ship_get_indexed_subsys (shipp, (int)uindex);
     if (subsysp == NULL) {
-        nprintf (
-            ("Network",
-             "Could not find subsys for ship %s for cargo revealed\n",
-             Ships[objp->instance].ship_name));
+        WARNINGF (
+            LOCATION, "Could not find subsys for ship %s for cargo revealed\n",
+            Ships[objp->instance].ship_name);
         return;
     }
 
@@ -4734,10 +4498,10 @@ void process_subsystem_cargo_hidden_packet (ubyte* data, header* hinfo) {
     // get a ship pointer and call the ship function to reveal the cargo
     objp = multi_get_network_object (signature);
     if (objp == NULL) {
-        nprintf (
-            ("Network",
-             "Could not find object with net signature %d for cargo hidden\n",
-             signature));
+        WARNINGF (
+            LOCATION,
+            "Could not find object with net signature %d for cargo hidden\n",
+            signature);
         return;
     }
 
@@ -4752,9 +4516,9 @@ void process_subsystem_cargo_hidden_packet (ubyte* data, header* hinfo) {
     // call to get the pointer to the subsystem we should be working on
     subsysp = ship_get_indexed_subsys (shipp, (int)uindex);
     if (subsysp == NULL) {
-        nprintf (
-            ("Network", "Could not find subsys for ship %s for cargo hidden\n",
-             Ships[objp->instance].ship_name));
+        WARNINGF (
+            LOCATION, "Could not find subsys for ship %s for cargo hidden\n",
+            Ships[objp->instance].ship_name);
         return;
     }
 
@@ -4793,7 +4557,7 @@ void process_netplayer_load_packet (ubyte* data, header* hinfo) {
     if (!Multi_mission_loaded) {
         // MWA 2/3/98 -- ingame join changes!!!
         // everyone can go through the same mission loading path here!!!!
-        nprintf (("Network", "Loading mission..."));
+        // WARNINGF (LOCATION, "Loading mission...");
 
         // notify everyone that I'm loading the mission
         Net_player->state = NETPLAYER_STATE_MISSION_LOADING;
@@ -4813,7 +4577,7 @@ void process_netplayer_load_packet (ubyte* data, header* hinfo) {
         send_netplayer_update_packet ();
 
         Multi_mission_loaded = 1;
-        nprintf (("Network", "Finished loading mission\n"));
+        // WARNINGF (LOCATION, "Finished loading mission");
     }
 }
 
@@ -4941,11 +4705,11 @@ void send_repair_info_packet (
 
     multi_io_send_to_all_reliable (data, packet_size);
 
-    nprintf (
-        ("Network", "Repair: %s sent to all players (%s/%s)\n",
-         repair_text[cd], Ships[repaired_objp->instance].ship_name,
-         (repair_objp == NULL) ? "<none>"
-                               : Ships[repair_objp->instance].ship_name));
+    WARNINGF (
+        LOCATION, "Repair: %s sent to all players (%s/%s)\n", repair_text[cd],
+        Ships[repaired_objp->instance].ship_name,
+        (repair_objp == NULL) ? "<none>"
+                              : Ships[repair_objp->instance].ship_name);
 }
 
 void process_repair_info_packet (ubyte* data, header* hinfo) {
@@ -4962,12 +4726,12 @@ void process_repair_info_packet (ubyte* data, header* hinfo) {
     repaired_objp = multi_get_network_object (repaired_signature);
     repair_objp = multi_get_network_object (repair_signature);
 
-    nprintf (
-        ("Network", "Repair: %s received (%s/%s)\n", repair_text[code],
-         (repaired_objp == NULL) ? "<None>"
-                                 : Ships[repaired_objp->instance].ship_name,
-         (repair_objp == NULL) ? "<None>"
-                               : Ships[repair_objp->instance].ship_name));
+    WARNINGF (
+        LOCATION, "Repair: %s received (%s/%s)\n", repair_text[code],
+        (repaired_objp == NULL) ? "<None>"
+                                : Ships[repaired_objp->instance].ship_name,
+        (repair_objp == NULL) ? "<None>"
+                              : Ships[repair_objp->instance].ship_name);
 
     if (Net_player->flags & NETINFO_FLAG_WARPING_OUT) { return; }
 
@@ -4988,21 +4752,6 @@ void process_repair_info_packet (ubyte* data, header* hinfo) {
             // Karajorma removed this in revision 4808 to fix bug 1088. Problem
             // is, if this was originally intended to prevent docking problems,
             // will they return?
-            /*
-                        // find indexes from goal
-                        ai_info *aip =
-               &Ai_info[Ships[repair_objp->instance].ai_index];
-                        Assert(aip->active_goal >= 0);
-                        ai_goal *aigp = &aip->goals[aip->active_goal];
-                        Assert(aigp->flags[AI::Goal_Flags::Dockee_index_valid]
-               && aigp->flags[AI::Goal_Flags::Docker_index_valid]);
-
-                        int docker_index = aigp->docker.index;
-                        int dockee_index = aigp->dockee.index;
-
-                        ai_do_objects_docked_stuff( repair_objp, docker_index,
-               repaired_objp, dockee_index );
-            */
             Ai_info[Ships[repair_objp->instance].ai_index].mode = AIM_DOCK;
         }
 
@@ -5155,7 +4904,7 @@ void process_ai_info_update_packet (ubyte* data, header* hinfo) {
         net_signature); // signature of the object that we are dealing with.
     GET_DATA (code);    // code of what we are doing.
     objp = multi_get_network_object (net_signature);
-    if (!objp) nprintf (("Network", "Couldn't find object for ai update\n"));
+    if (!objp) // WARNINGF (LOCATION, "Couldn't find object for ai update");
 
     switch (code) {
     case AI_UPDATE_DOCK:
@@ -5164,9 +4913,8 @@ void process_ai_info_update_packet (ubyte* data, header* hinfo) {
         GET_DATA (dockee_index);
         other_objp = multi_get_network_object (other_net_signature);
         if (!other_objp)
-            nprintf (
-                ("Network",
-                 "Couldn't find other object for ai update on dock\n"));
+            WARNINGF (
+                LOCATION, "Couldn't find other object for ai update on dock");
 
         // if we don't have an object to work with, break out of loop
         if (!objp || !other_objp || (objp->type != OBJ_SHIP) ||
@@ -5241,7 +4989,7 @@ void process_ai_info_update_packet (ubyte* data, header* hinfo) {
 
     default:
         Int3 (); // this Int3() should be temporary
-        nprintf (("Network", "Invalid code for ai update: %d\n", code));
+        // WARNINGF (LOCATION, "Invalid code for ai update: %d", code);
         break;
     }
     PACKET_SET_SIZE ();
@@ -5382,9 +5130,9 @@ void process_store_stats_packet (ubyte* data, header* hinfo) {
     // mission stats with my alltime stats
     if (Game_mode & GM_STANDALONE_SERVER) {
         // rebroadcast the packet to all others in the game
-        nprintf (
-            ("Network",
-             "Standalone received store stats packet - rebroadcasting..\n"));
+        WARNINGF (
+            LOCATION,
+            "Standalone received store stats packet - rebroadcasting..");
         multi_io_send_to_all_reliable (data, offset);
     }
     else {
@@ -5658,9 +5406,9 @@ void process_firing_info_packet (ubyte* data, header* hinfo) {
 
     player_num = find_player_id (hinfo->id);
     if (player_num < 0) {
-        nprintf (
-            ("Network",
-             "Received firing info packet from unknown player, ignoring\n"));
+        WARNINGF (
+            LOCATION,
+            "Received firing info packet from unknown player, ignoring");
         return;
     }
 
@@ -6180,10 +5928,10 @@ void process_post_sync_data_packet (ubyte* data, header* hinfo) {
         }
         else {
             Multi_ts_num_deleted--;
-            nprintf (
-                ("Network",
-                 "Couldn't find object by net signature for ship delete in "
-                 "post sync data packet\n"));
+            WARNINGF (
+                LOCATION,
+                "Couldn't find object by net signature for ship delete in "
+                "post sync data packet");
         }
     }
 
@@ -6722,14 +6470,12 @@ void process_player_stats_block_packet (ubyte* data, header* hinfo) {
     ushort u_tmp, num_medals;
     int i_tmp;
 
-    // nprintf(("Network","----------++++++++++********RECEIVED
-    // STATS***********+++++++++----------\n"));
 
     // get the player who these stats are for
     GET_SHORT (player_id);
     player_num = find_player_id (player_id);
     if (player_num == -1) {
-        nprintf (("Network", "Couldn't find player for stats update!\n"));
+        // WARNINGF (LOCATION, "Couldn't find player for stats update!");
         ml_string ("Couldn't find player for stats update!\n");
 
         sc = &bogus;
@@ -6948,9 +6694,9 @@ void process_asteroid_info (ubyte* data, header* hinfo) {
         parent_objp = multi_get_network_object (psignature);
         if (parent_objp) { asteroid_sub_create (parent_objp, atype, &relvec); }
         else {
-            nprintf (
-                ("Network",
-                 "Couldn't create asteroid because parent wasn't found!!!\n"));
+            WARNINGF (
+                LOCATION,
+                "Couldn't create asteroid because parent wasn't found!!!");
         }
 
         break;
@@ -6967,9 +6713,8 @@ void process_asteroid_info (ubyte* data, header* hinfo) {
         GET_VECTOR (vel);
         objp = multi_get_network_object (signature);
         if (!objp) {
-            nprintf (
-                ("Network",
-                 "Couldn't throw asteroid because couldn't find it\n"));
+            WARNINGF (
+                LOCATION, "Couldn't throw asteroid because couldn't find it");
             break;
         }
         objp->pos = pos;
@@ -6995,9 +6740,8 @@ void process_asteroid_info (ubyte* data, header* hinfo) {
             other_objp = multi_get_network_object (osignature);
         }
         if (!objp) {
-            nprintf (
-                ("Network",
-                 "Cannot hit asteroid because signature isn't found\n"));
+            WARNINGF (
+                LOCATION, "Cannot hit asteroid because signature isn't found");
             break;
         }
 
@@ -7141,9 +6885,9 @@ void send_countermeasure_success_packet (int objnum) {
 
     pnum = multi_find_player_by_object (&Objects[objnum]);
     if (pnum == -1) {
-        nprintf (
-            ("Network",
-             "Coulnd't find player for countermeasure success packet\n"));
+        WARNINGF (
+            LOCATION,
+            "Coulnd't find player for countermeasure success packet");
         return;
     }
 
@@ -7591,10 +7335,10 @@ void process_homing_weapon_info (ubyte* data, header* hinfo) {
     // deal with changing this weapons homing information
     weapon_objp = multi_get_network_object (weapon_signature);
     if (weapon_objp == NULL) {
-        nprintf (
-            ("Network",
-             "Couldn't find weapon object for homing update -- skipping "
-             "update\n"));
+        WARNINGF (
+            LOCATION,
+            "Couldn't find weapon object for homing update -- skipping "
+            "update");
         return;
     }
     ASSERT (weapon_objp->type == OBJ_WEAPON);
@@ -7603,8 +7347,7 @@ void process_homing_weapon_info (ubyte* data, header* hinfo) {
     // be sure that we can find these weapons and
     homing_object = multi_get_network_object (homing_signature);
     if (homing_object == NULL) {
-        nprintf (
-            ("Network", "Couldn't find homing object for homing update\n"));
+        WARNINGF (LOCATION, "Couldn't find homing object for homing update");
         return;
     }
 
@@ -7618,8 +7361,7 @@ void process_homing_weapon_info (ubyte* data, header* hinfo) {
         if (!((flags
                    [Weapon::Info_Flags::Bomb,
                     Weapon::Info_Flags::Cmeasure]))) {
-            nprintf (
-                ("Network", "Homing object is invalid for homing update\n"));
+            WARNINGF (LOCATION, "Homing object is invalid for homing update");
             return;
         }
     }
@@ -7635,10 +7377,10 @@ void process_homing_weapon_info (ubyte* data, header* hinfo) {
     }
 
     if (homing_object->type == OBJ_SHIP) {
-        nprintf (
-            ("Network",
-             "Updating homing information for weapon -- homing on %s\n",
-             Ships[homing_object->instance].ship_name));
+        WARNINGF (
+            LOCATION,
+            "Updating homing information for weapon -- homing on %s\n",
+            Ships[homing_object->instance].ship_name);
     }
 }
 
@@ -7784,8 +7526,8 @@ void process_NEW_primary_fired_packet (ubyte* data, header* hinfo) {
     // find the object this fired packet is operating on
     objp = multi_get_network_object (shooter_sig);
     if (objp == NULL) {
-        nprintf (
-            ("Network", "Could not find ship for fire primary packet NEW!"));
+        WARNINGF (
+            LOCATION, "Could not find ship for fire primary packet NEW!");
         return;
     }
     // if this object is not actually a valid ship, don't do anything
@@ -7851,7 +7593,7 @@ void send_NEW_countermeasure_fired_packet (
     ADD_USHORT (objp->net_signature);
     ADD_INT (rand_val);
 
-    nprintf (("Network", "Sending NEW countermeasure packet!\n"));
+    // WARNINGF (LOCATION, "Sending NEW countermeasure packet!");
 
     // determine if its a player
     if (MULTIPLAYER_MASTER) {
@@ -7884,10 +7626,9 @@ void process_NEW_countermeasure_fired_packet (ubyte* data, header* hinfo) {
 
     objp = multi_get_network_object (signature);
     if (objp == NULL) {
-        nprintf (
-            ("network",
-             "Could find object whose countermeasures are being "
-             "launched!!!\n"));
+        WARNINGF (
+            LOCATION,
+            "Could find object whose countermeasures are being launched!!!");
         return;
     }
     if (objp->type != OBJ_SHIP) { return; }
@@ -7903,7 +7644,7 @@ void process_NEW_countermeasure_fired_packet (ubyte* data, header* hinfo) {
     // make it so ship can fire right away!
     Ships[objp->instance].cmeasure_fire_stamp = timestamp (0);
     if (objp == Player_obj) {
-        nprintf (("network", "firing countermeasure from my ship\n"));
+        WARNINGF (LOCATION, "firing countermeasure from my ship");
     }
     ship_launch_countermeasure (objp, rand_val);
 }
@@ -7924,9 +7665,7 @@ void send_beam_fired_packet (
     ASSERT (shooter != NULL);
     ASSERT (turret != NULL);
     ASSERT (pbi != NULL);
-    if ((shooter == NULL) || (turret == NULL) || (pbi == NULL)) {
-        return;
-    }
+    if ((shooter == NULL) || (turret == NULL) || (pbi == NULL)) { return; }
 
     if (!(bfi_flags & BFIF_IS_FIGHTER_BEAM)) {
         ASSERT (target != NULL);
@@ -8006,7 +7745,7 @@ void process_beam_fired_packet (ubyte* data, header* hinfo) {
     if ((fire_info.shooter == NULL) || (fire_info.shooter->type != OBJ_SHIP) ||
         (fire_info.shooter->instance < 0) ||
         (fire_info.shooter->instance >= MAX_SHIPS)) {
-        nprintf (("Network", "Couldn't get shooter info for BEAM weapon!\n"));
+        // WARNINGF (LOCATION, "Couldn't get shooter info for BEAM weapon!");
         return;
     }
 
@@ -8027,7 +7766,7 @@ void process_beam_fired_packet (ubyte* data, header* hinfo) {
 
     if (!(fire_info.bfi_flags & BFIF_IS_FIGHTER_BEAM) &&
         (fire_info.target == NULL)) {
-        nprintf (("Network", "Couldn't get target info for BEAM weapon!\n"));
+        // WARNINGF (LOCATION, "Couldn't get target info for BEAM weapon!");
         return;
     }
 
@@ -8067,7 +7806,7 @@ void process_beam_fired_packet (ubyte* data, header* hinfo) {
         fire_info.turret = ship_get_indexed_subsys (shipp, (int)subsys_index);
 
         if (fire_info.turret == NULL) {
-            nprintf (("Network", "Couldn't get turret for BEAM weapon!\n"));
+            // WARNINGF (LOCATION, "Couldn't get turret for BEAM weapon!");
             return;
         }
     }
@@ -8302,10 +8041,10 @@ void process_flak_fired_packet (ubyte* data, header* hinfo) {
     // find the object
     objp = multi_get_network_object (pnet_signature);
     if (objp == NULL) {
-        nprintf ((
-            "network",
+        WARNINGF (
+            LOCATION,
             "could find parent object with net signature %d for flak firing\n",
-            pnet_signature));
+            pnet_signature);
         return;
     }
 

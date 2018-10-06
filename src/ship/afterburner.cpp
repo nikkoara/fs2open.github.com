@@ -305,9 +305,9 @@ void afterburners_stop (object* objp, int key_released) {
     }
 
     if (!(sip->flags[Ship::Info_Flags::Afterburner])) {
-        nprintf (
-            ("Warning", "Ship type %s does not have afterburner capability\n",
-             sip->name));
+        WARNINGF (
+            LOCATION, "Ship type %s does not have afterburner capability\n",
+            sip->name);
         return;
     }
 

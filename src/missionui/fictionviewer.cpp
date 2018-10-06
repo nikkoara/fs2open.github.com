@@ -43,29 +43,31 @@ const char* Fiction_viewer_screen_filename[NUM_FVW_SETTINGS]
                                               }
                                           };
 
-const char* Fiction_viewer_screen_mask[NUM_FVW_SETTINGS][GR_NUM_RESOLUTIONS] =
-    { {
-          "FictionViewer-m",  // GR_640
-          "2_FictionViewer-m" // GR_1024
-      },
-      {
-          "FictionViewer-mb",  // GR_640
-          "2_FictionViewer-mb" // GR_1024
-      } };
+const char* Fiction_viewer_screen_mask[NUM_FVW_SETTINGS]
+                                      [GR_NUM_RESOLUTIONS] = {
+                                          {
+                                              "FictionViewer-m",  // GR_640
+                                              "2_FictionViewer-m" // GR_1024
+                                          },
+                                          {
+                                              "FictionViewer-mb",  // GR_640
+                                              "2_FictionViewer-mb" // GR_1024
+                                          }
+                                      };
 
-int Fiction_viewer_text_coordinates[NUM_FVW_SETTINGS][GR_NUM_RESOLUTIONS][4] =
-    {
-        // standard FS2-style interface
-        { { // GR_640
-            17, 37, 588, 344 },
-          { // GR_1024
-            25, 48, 944, 576 } },
-        // WCS-style interface
-        { { // GR_640
-            44, 50, 522, 348 },
-          { // GR_1024
-            71, 80, 835, 556 } }
-    };
+int Fiction_viewer_text_coordinates[NUM_FVW_SETTINGS][GR_NUM_RESOLUTIONS]
+                                   [4] = {
+                                       // standard FS2-style interface
+                                       { { // GR_640
+                                           17, 37, 588, 344 },
+                                         { // GR_1024
+                                           25, 48, 944, 576 } },
+                                       // WCS-style interface
+                                       { { // GR_640
+                                           44, 50, 522, 348 },
+                                         { // GR_1024
+                                           71, 80, 835, 556 } }
+                                   };
 
 #define NUM_FVW_BUTTONS 3
 #define FVW_BUTTON_ACCEPT 0
@@ -264,10 +266,10 @@ void fiction_viewer_init () {
             bm_load (Fiction_viewer_stages[Fiction_viewer_active_stage]
                          .background[gr_screen.res]);
         if (Fiction_viewer_bitmap < 0)
-            mprintf (
-                ("Failed to load custom background bitmap %s!\n",
-                 Fiction_viewer_stages[Fiction_viewer_active_stage]
-                     .background[gr_screen.res]));
+            WARNINGF (
+                LOCATION, "Failed to load custom background bitmap %s!\n",
+                Fiction_viewer_stages[Fiction_viewer_active_stage]
+                    .background[gr_screen.res]);
         else if (Fiction_viewer_ui < 0)
             Fiction_viewer_ui = 0;
     }

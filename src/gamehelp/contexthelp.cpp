@@ -221,10 +221,10 @@ void launch_context_help () {
     case GS_STATE_CMD_BRIEF: overlay_id = Cmd_brief_overlay_id; break;
 
     default:
-        nprintf (
-            ("Warning",
-             "WARNING ==> There is no context help available for state %s\n",
-             GS_state_text[Source_game_state - 1]));
+        WARNINGF (
+            LOCATION,
+            "WARNING ==> There is no context help available for state %s\n",
+            GS_state_text[Source_game_state - 1]);
         break;
 
     } // end switch
@@ -517,18 +517,16 @@ void parse_helptbl (const char* filename) {
                     // -noparseerrors is set
                     break;
                 case 4: // $end
-                default:
-                    ASSERT (0);
-                    break;
+                default: ASSERT (0); break;
                 }
             } // end while
             required_string ("$end");
         } // end while
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n", filename,
-             e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n", filename,
+            e.what ());
         return;
     }
 }

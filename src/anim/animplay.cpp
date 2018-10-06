@@ -465,10 +465,11 @@ int anim_show_next_frame (anim_instance* instance, float frametime) {
 
             // see if we had an error during decode (corrupted anim stream)
             if ((temp == NULL) && (temp_file_offset < 0)) {
-                mprintf (
-                    ("ANI: Fatal ERROR at frame %i!!  Aborting playback of "
-                     "\"%s\"...\n",
-                     instance->frame_num, instance->parent->name));
+                ERRORF (
+                    LOCATION,
+                    "ANI: Fatal ERROR at frame %i!!  Aborting playback of "
+                    "\"%s\"...\n",
+                    instance->frame_num, instance->parent->name);
 
                 // return -1 to end all playing of this anim instanc
                 return -1;
@@ -695,9 +696,9 @@ void anim_read_header (anim* ptr, CFILE* fp) {
 
     if (diff != 0) {
         if (ptr->height > 16) {
-            mprintf (
-                ("ANI %s with size %dx%d (%.1f%% wasted)\n", ptr->name,
-                 ptr->width, ptr->height, waste));
+            WARNINGF (
+                LOCATION, "ANI %s with size %dx%d (%.1f%% wasted)\n",
+                ptr->name, ptr->width, ptr->height, waste);
         }
     }
 #endif

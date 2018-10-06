@@ -132,20 +132,6 @@ void awacs_update_all_levels () {
             }
         }
     }
-
-    // Goober5000 - Awacs_level isn't used anywhere that I can see
-    // awacs level
-    // Awacs_level = Awacs_team[TEAM_FRIENDLY] - Awacs_team[TEAM_HOSTILE];
-
-    // spew all the info
-#ifndef NDEBUG
-    /*
-    for (idx=0; idx<MAX_TVT_TEAMS; idx++){
-        nprintf(("General", "Team %d AWACS == %f\n", idx, Awacs_team[idx]));
-    }
-    nprintf(("General", "AWACS level == %f\n", Awacs_level));
-    */
-#endif
 }
 
 // get the total AWACS level for target to viewer

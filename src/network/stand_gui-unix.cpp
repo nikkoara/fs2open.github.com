@@ -814,7 +814,7 @@ webserverCallback (enum mg_event event, struct mg_connection* conn) {
     switch (event) {
     case MG_EVENT_LOG: {
         const char* msg = (const char*)ri->ev_data;
-        mprintf (("Webapi error: %s\n", msg));
+        ERRORF (LOCATION, "Webapi error: %s\n", msg);
         break;
     }
     case MG_NEW_REQUEST: {
@@ -830,7 +830,7 @@ struct mg_context* webserverContext = NULL;
 
 void webapi_shutdown () {
     if (webserverContext) {
-        mprintf (("Webapi shutting down\n"));
+        WARNINGF (LOCATION, "Webapi shutting down\n");
         mg_stop (webserverContext);
     }
 }
@@ -851,9 +851,9 @@ void std_configLoaded (multi_global_options* options) {
                                 "4",
                                 0 };
 
-    mprintf (
-        ("Webapi starting on port: %d with document root at: %s\n",
-         options->webapiPort, options->webuiRootDirectory.c_str ()));
+    WARNINGF (
+        LOCATION, "Webapi starting on port: %d with document root at: %s\n",
+        options->webapiPort, options->webuiRootDirectory.c_str ());
 
     webserverContext = mg_start (&webserverCallback, NULL, mgOptions);
 }

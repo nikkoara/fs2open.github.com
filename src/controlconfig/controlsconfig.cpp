@@ -424,8 +424,6 @@ int joy_get_scaled_reading (int raw) {
 
     x = (int)((float)F1_0 * percent);
 
-    // nprintf(("AI", "d=%6i, sens=%3i, percent=%6.3f, val=%6i, ratio=%6.3f\n",
-    // d, Joy_sensitivity, percent, (raw<0) ? -x : x, (float) d/x));
 
     if (raw < 0) return -x;
 

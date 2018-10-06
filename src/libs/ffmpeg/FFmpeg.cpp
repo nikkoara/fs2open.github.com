@@ -17,16 +17,17 @@ void log_callback_report (void* ptr, int level, const char* fmt, va_list vl) {
     av_log_format_line (
         ptr, level, fmt, vl, buffer, sizeof (buffer), &print_prefix);
 
-    mprintf (("FFMPEG Log: %s", buffer)); // no \n, ffmpeg handles that
+    WARNINGF (LOCATION, "FFMPEG Log: %s", buffer);
 }
 
 void check_version (const char* libname, uint32_t current, uint32_t compiled) {
-    mprintf (
-        ("FFmpeg: Using %s with version %d.%d.%d. Compiled with version "
-         "%d.%d.%d\n",
-         libname, AV_VERSION_MAJOR (current), AV_VERSION_MINOR (current),
-         AV_VERSION_MICRO (current), AV_VERSION_MAJOR (compiled),
-         AV_VERSION_MINOR (compiled), AV_VERSION_MICRO (compiled)));
+    WARNINGF (
+        LOCATION,
+        "FFmpeg: Using %s with version %d.%d.%d. Compiled with version "
+        "%d.%d.%d\n",
+        libname, AV_VERSION_MAJOR (current), AV_VERSION_MINOR (current),
+        AV_VERSION_MICRO (current), AV_VERSION_MAJOR (compiled),
+        AV_VERSION_MINOR (compiled), AV_VERSION_MICRO (compiled));
 
     auto current_major = AV_VERSION_MAJOR (current);
     auto current_minor = AV_VERSION_MINOR (current);
@@ -87,8 +88,8 @@ void initialize () {
     av_log_set_level (AV_LOG_QUIET);
 #endif
 
-    mprintf (("FFmpeg library initialized!\n"));
-    mprintf (("FFmpeg: License: %s\n", avformat_license ()));
+    WARNINGF (LOCATION, "FFmpeg library initialized!\n");
+    WARNINGF (LOCATION, "FFmpeg: License: %s\n", avformat_license ());
 
     initialized = true;
 }

@@ -455,16 +455,18 @@ void parse_custom_bitmap (
 
     // error testing
     if (Fred_running && (found640) && !(found1024)) {
-        mprintf (
-            ("Mission: found an entry for %s but not a corresponding entry "
-             "for %s!",
-             expected_string_640, expected_string_1024));
+        WARNINGF (
+            LOCATION,
+            "Mission: found an entry for %s but not a corresponding entry for "
+            "%s!",
+            expected_string_640, expected_string_1024);
     }
     if (Fred_running && !(found640) && (found1024)) {
-        mprintf (
-            ("Mission: found an entry for %s but not a corresponding entry "
-             "for %s!",
-             expected_string_1024, expected_string_640));
+        WARNINGF (
+            LOCATION,
+            "Mission: found an entry for %s but not a corresponding entry for "
+            "%s!",
+            expected_string_1024, expected_string_640);
     }
 }
 
@@ -479,9 +481,9 @@ void parse_mission_info (mission* pm, bool basic = false) {
     required_string ("$Version:");
     stuff_float (&pm->version);
     if (pm->version != MISSION_VERSION)
-        mprintf (
-            ("Older mission, should update it (%.2f<-->%.2f)\n", pm->version,
-             MISSION_VERSION));
+        WARNINGF (
+            LOCATION, "Older mission, should update it (%.2f<-->%.2f)\n",
+            pm->version, MISSION_VERSION);
 
     required_string ("$Name:");
     stuff_string (pm->name, F_NAME, NAME_LENGTH);
@@ -704,7 +706,9 @@ void parse_mission_info (mission* pm, bool basic = false) {
     else {
         if (!Fred_running && (Player != NULL) && (pm->squad_name[0] != '\0') &&
             (Game_mode & GM_CAMPAIGN_MODE)) {
-            mprintf (("Reassigning player to squadron %s\n", pm->squad_name));
+            WARNINGF (
+                LOCATION, "Reassigning player to squadron %s\n",
+                pm->squad_name);
             player_set_squad (Player, pm->squad_name);
             player_set_squad_bitmap (Player, pm->squad_filename, false);
         }
@@ -1186,7 +1190,8 @@ void parse_music (mission* pm, int flags) {
     }
 
     // Goober5000 - if briefing not specified in import, default to BRIEF1
-    if (!strcasecmp (pm->briefing_music_name, "none") && (flags & MPF_IMPORT_FSM))
+    if (!strcasecmp (pm->briefing_music_name, "none") &&
+        (flags & MPF_IMPORT_FSM))
         strcpy_s (pm->briefing_music_name, "BRIEF1");
 
     // Goober5000 - old way of grabbing substitute music, but here for reverse
@@ -1813,10 +1818,10 @@ void parse_dock_one_docked_object (p_object* pobjp, p_object* parent_pobjp) {
     }
 
     // dock them
-    nprintf (
-        ("AI", "Initially docked: %s to parent %s\n",
-         Ships[objp->instance].ship_name,
-         Ships[parent_objp->instance].ship_name));
+    WARNINGF (
+        LOCATION, "Initially docked: %s to parent %s\n",
+        Ships[objp->instance].ship_name,
+        Ships[parent_objp->instance].ship_name);
     ai_dock_with_object (
         objp, dockpoint, parent_objp, parent_dockpoint, AIDO_DOCK_NOW);
 }
@@ -2010,7 +2015,8 @@ int parse_create_object_sub (p_object* p_objp) {
     // it team traitor
     if (MULTI_DOGFIGHT && (p_objp->wingnum >= 0)) {
         for (i = 0; i < MAX_STARTING_WINGS; i++) {
-            if (!strcasecmp (Starting_wing_names[i], Wings[p_objp->wingnum].name))
+            if (!strcasecmp (
+                    Starting_wing_names[i], Wings[p_objp->wingnum].name))
                 shipp->team = Iff_traitor;
         }
     }
@@ -2532,7 +2538,6 @@ int parse_create_object_sub (p_object* p_objp) {
             }
         }
 
-
         // possibly add this ship to a hotkey set
         // Ships can now have both a ship-hotkey and a wing-hotkey -- FSF
         if (shipp->hotkey != -1)
@@ -2941,10 +2946,11 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
                 p_objp->name);
         }
         else {
-            mprintf (
-                ("MISSIONS: Ship \"%s\" has an invalid ship type (ships.tbl "
-                 "probably changed).  Making it type 0\n",
-                 p_objp->name));
+            WARNINGF (
+                LOCATION,
+                "MISSIONS: Ship \"%s\" has an invalid ship type (ships.tbl "
+                "probably changed).  Making it type 0\n",
+                p_objp->name);
         }
 
         p_objp->ship_class = 0;
@@ -3040,7 +3046,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
                 "Mission %s\nError looking up alternate ship type name %s!\n",
                 pm->name, name);
         else
-            mprintf (("Using alternate ship type name: %s\n", name));
+            WARNINGF (LOCATION, "Using alternate ship type name: %s\n", name);
     }
 
     // optional callsign
@@ -3056,7 +3062,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
                 LOCATION, "Mission %s\nError looking up callsign %s!\n",
                 pm->name, name);
         else
-            mprintf (("Using callsign: %s\n", name));
+            WARNINGF (LOCATION, "Using callsign: %s\n", name);
     }
 
     // static alias stuff - stupid, but it seems to be necessary
@@ -3074,10 +3080,11 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
 
         if (Team_Colors.find (p_objp->team_color_setting) ==
             Team_Colors.end ()) {
-            mprintf (
-                ("Invalid team color specified in mission file for ship %s, "
-                 "resetting to default\n",
-                 p_objp->name));
+            WARNINGF (
+                LOCATION,
+                "Invalid team color specified in mission file for ship %s, "
+                "resetting to default\n",
+                p_objp->name);
             p_objp->team_color_setting =
                 Ship_info[p_objp->ship_class].default_team_name;
         }
@@ -3381,10 +3388,10 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
         }
 
         if (period_detected) {
-            nprintf (
-                ("Warning",
-                 "Special explosion attributes have been returned to integer "
-                 "format"));
+            WARNINGF (
+                LOCATION,
+                "Special explosion attributes have been returned to integer "
+                "format");
         }
     }
 
@@ -3465,7 +3472,9 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
 
         // make sure we don't overflow the limit
         if (Total_initially_docked >= MAX_SHIPS) {
-            mprintf (("Too many initially docked instances; skipping...\n"));
+            WARNINGF (
+                LOCATION,
+                "Too many initially docked instances; skipping...\n");
             continue;
         }
 
@@ -3563,16 +3572,18 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
             // get rid of extensions
             p = strchr (tr.old_texture, '.');
             if (p) {
-                mprintf (
-                    ("Extraneous extension found on replacement texture %s!\n",
-                     tr.old_texture));
+                WARNINGF (
+                    LOCATION,
+                    "Extraneous extension found on replacement texture %s!\n",
+                    tr.old_texture);
                 *p = 0;
             }
             p = strchr (tr.new_texture, '.');
             if (p) {
-                mprintf (
-                    ("Extraneous extension found on replacement texture %s!\n",
-                     tr.new_texture));
+                WARNINGF (
+                    LOCATION,
+                    "Extraneous extension found on replacement texture %s!\n",
+                    tr.new_texture);
                 *p = 0;
             }
 
@@ -3580,9 +3591,10 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
             if (p_objp->replacement_textures.size () < MAX_MODEL_TEXTURES)
                 p_objp->replacement_textures.push_back (tr);
             else
-                mprintf ((
+                WARNINGF (
+                    LOCATION,
                     "Too many replacement textures specified for ship '%s'!\n",
-                    p_objp->name));
+                    p_objp->name);
         }
     }
 
@@ -3603,9 +3615,10 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
 
         // not found?
         if (tr->new_texture_id < 0) {
-            mprintf (
-                ("Could not load replacement texture %s for ship %s\n",
-                 tr->new_texture, p_objp->name));
+            WARNINGF (
+                LOCATION,
+                "Could not load replacement texture %s for ship %s\n",
+                tr->new_texture, p_objp->name);
         }
 
         // account for FRED
@@ -4216,9 +4229,7 @@ int parse_wing_create_ships (
         // can't create any ships if the arrival cue is false or the timestamp
         // has not elapsed.
 
-        if (!eval_sexp (
-                wingp
-                    ->arrival_cue)) /* ||
+        if (!eval_sexp (wingp->arrival_cue)) /* ||
                                        !timestamp_elapsed(wingp->arrival_delay)
                                        ) */
             return 0;
@@ -4787,19 +4798,22 @@ void parse_wing (mission* pm) {
                 wingp->flags.set (Ship::Wing_Flags::Ignore_count);
             else if (!strcasecmp (wing_flag_strings[i], NOX ("reinforcement")))
                 wingp->flags.set (Ship::Wing_Flags::Reinforcement);
-            else if (!strcasecmp (wing_flag_strings[i], NOX ("no-arrival-music")))
+            else if (!strcasecmp (
+                         wing_flag_strings[i], NOX ("no-arrival-music")))
                 wingp->flags.set (Ship::Wing_Flags::No_arrival_music);
             else if (!strcasecmp (
                          wing_flag_strings[i], NOX ("no-arrival-message")))
                 wingp->flags.set (Ship::Wing_Flags::No_arrival_message);
-            else if (!strcasecmp (wing_flag_strings[i], NOX ("no-arrival-warp")))
+            else if (!strcasecmp (
+                         wing_flag_strings[i], NOX ("no-arrival-warp")))
                 wingp->flags.set (Ship::Wing_Flags::No_arrival_warp);
             else if (!strcasecmp (
                          wing_flag_strings[i], NOX ("no-departure-warp")))
                 wingp->flags.set (Ship::Wing_Flags::No_departure_warp);
             else if (!strcasecmp (wing_flag_strings[i], NOX ("no-dynamic")))
                 wingp->flags.set (Ship::Wing_Flags::No_dynamic);
-            else if (!strcasecmp (wing_flag_strings[i], NOX ("nav-carry-status")))
+            else if (!strcasecmp (
+                         wing_flag_strings[i], NOX ("nav-carry-status")))
                 wingp->flags.set (Ship::Wing_Flags::Nav_carry);
             else
                 WARNINGF (
@@ -5404,8 +5418,9 @@ void parse_messages (mission* pm, int flags) {
     }
     // end of command stuff ----------------------------------------------
 
-    mprintf (
-        ("Starting mission message count : %d\n", (int)Message_waves.size ()));
+    WARNINGF (
+        LOCATION, "Starting mission message count : %d\n",
+        (int)Message_waves.size ());
 
     // the message_parse function can be found in MissionMessage.h.  The format
     // in the mission file takes the same format as the messages in
@@ -5415,8 +5430,9 @@ void parse_messages (mission* pm, int flags) {
             (flags & MPF_IMPORT_FSM) != 0); // call the message parsing system
     }
 
-    mprintf (
-        ("Ending mission message count : %d\n", (int)Message_waves.size ()));
+    WARNINGF (
+        LOCATION, "Ending mission message count : %d\n",
+        (int)Message_waves.size ());
 }
 
 void parse_reinforcement (mission* pm) {
@@ -5982,9 +5998,9 @@ int parse_mission (mission* pm, int flags) {
     if ((Num_unknown_ship_classes > 0) || (Num_unknown_loadout_classes > 0)) {
         // if running on standalone server, just print to the log
         if (Game_mode & GM_STANDALONE_SERVER) {
-            mprintf (
-                ("Warning!  Could not load %d ship classes!",
-                 Num_unknown_ship_classes));
+            WARNINGF (
+                LOCATION, "Warning!  Could not load %d ship classes!",
+                Num_unknown_ship_classes);
             return -2;
         }
         // don't do this in FRED; we will display a separate popup
@@ -6207,11 +6223,9 @@ void post_process_mission () {
                     Sexp_nodes[bad_node].text);
 
                 if (!Fred_running) {
-                    nprintf (("Error", "%s", error_msg.c_str ()));
                     ASSERTF (LOCATION, "%s", error_msg.c_str ());
                 }
                 else {
-                    nprintf (("Warning", "%s", error_msg.c_str ()));
                     WARNINGF (LOCATION, "%s", error_msg.c_str ());
                 }
             }
@@ -6358,9 +6372,9 @@ int get_mission_info (const char* filename, mission* mission_p, bool basic) {
         parse_mission_info (mission_p, basic);
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("MISSIONS: Unable to parse '%s'!  Error message = %s.\n",
-             real_fname, e.what ()));
+        ERRORF (
+            LOCATION, "MISSIONS: Unable to parse '%s'!  Error message = %s.\n",
+            real_fname, e.what ());
         return -1;
     }
 
@@ -6444,9 +6458,10 @@ int parse_main (const char* mission_name, int flags) {
             display_parse_diagnostics ();
         }
         catch (const parse::ParseException& e) {
-            mprintf (
-                ("MISSIONS: Unable to parse '%s'!  Error message = %s.\n",
-                 mission_name, e.what ()));
+            ERRORF (
+                LOCATION,
+                "MISSIONS: Unable to parse '%s'!  Error message = %s.\n",
+                mission_name, e.what ());
             rval = 1;
             break;
         }
@@ -6602,19 +6617,21 @@ void set_cue_to_false (int* cue) {
 // function to set the arrival cue of a ship to false
 void reset_arrival_to_false (p_object* pobjp, bool reset_wing) {
     // falsify the ship cue
-    mprintf (
-        ("Setting arrival cue of ship %s to false for initial docking "
-         "purposes.\n",
-         pobjp->name));
+    WARNINGF (
+        LOCATION,
+        "Setting arrival cue of ship %s to false for initial docking "
+        "purposes.\n",
+        pobjp->name);
     set_cue_to_false (&pobjp->arrival_cue);
 
     // falsify the wing cue and all ships in that wing
     if (reset_wing && pobjp->wingnum >= 0) {
         wing* wingp = &Wings[pobjp->wingnum];
-        mprintf (
-            ("Setting arrival cue of wing %s to false for initial docking "
-             "purposes.\n",
-             wingp->name));
+        WARNINGF (
+            LOCATION,
+            "Setting arrival cue of wing %s to false for initial docking "
+            "purposes.\n",
+            wingp->name);
         set_cue_to_false (&wingp->arrival_cue);
 
         for (std::vector< p_object >::iterator ii = Parse_objects.begin ();
@@ -6844,28 +6861,29 @@ int mission_parse_is_multi (const char* filename, char* mission_name) {
             reset_parse ();
 
             if (skip_to_string ("$Name:") != 1) {
-                nprintf (
-                    ("Network",
-                     "Unable to process %s because we couldn't find $Name:",
-                     filename));
+                WARNINGF (
+                    LOCATION,
+                    "Unable to process %s because we couldn't find $Name:",
+                    filename);
                 break;
             }
             stuff_string (mission_name, F_NAME, NAME_LENGTH);
 
             if (skip_to_string ("+Game Type Flags:") != 1) {
-                nprintf (
-                    ("Network",
-                     "Unable to process %s because we couldn't find +Game "
-                     "Type Flags:\n",
-                     filename));
+                WARNINGF (
+                    LOCATION,
+                    "Unable to process %s because we couldn't find +Game Type "
+                    "Flags:\n",
+                    filename);
                 break;
             }
             stuff_int (&game_type);
         }
         catch (const parse::ParseException& e) {
-            mprintf (
-                ("MISSIONS: Unable to parse '%s'!  Error message = %s.\n",
-                 filename, e.what ()));
+            ERRORF (
+                LOCATION,
+                "MISSIONS: Unable to parse '%s'!  Error message = %s.\n",
+                filename, e.what ());
             break;
         }
     } while (0);
@@ -6990,10 +7008,10 @@ int mission_set_arrival_location (
         ASSERT (
             location !=
             ARRIVE_FROM_DOCK_BAY); // bogus data somewhere!!!  get mwa
-        nprintf (
-            ("allender",
-             "couldn't find ship for arrival anchor -- using location ship "
-             "created at"));
+        WARNINGF (
+            LOCATION,
+            "couldn't find ship for arrival anchor -- using location ship "
+            "created at");
         return -1;
     }
 
@@ -7545,7 +7563,8 @@ int mission_do_departure (object* objp, bool goal_is_to_warp) {
     ship* shipp = &Ships[objp->instance];
     ai_info* aip = &Ai_info[shipp->ai_index];
 
-    mprintf (("Entered mission_do_departure() for %s\n", shipp->ship_name));
+    WARNINGF (
+        LOCATION, "Entered mission_do_departure() for %s\n", shipp->ship_name);
 
     // abort rearm, because if we entered this function we're either going to
     // depart via hyperspace, depart via bay, or revert to our default behavior
@@ -7563,14 +7582,16 @@ int mission_do_departure (object* objp, bool goal_is_to_warp) {
             ((shipp->wingnum >= 0) &&
              (Wings[shipp->wingnum]
                   .flags[Ship::Wing_Flags::Departure_ordered]))) {
-            mprintf (
-                ("Looks like we were ordered to depart; initiating the "
-                 "standard departure logic\n"));
+            WARNINGF (
+                LOCATION,
+                "Looks like we were ordered to depart; initiating the "
+                "standard departure logic\n");
         }
         // since our goal is to warp, then if we can warp, jump directly to the
         // warping part
         else if (ship_can_use_warp_drive (shipp)) {
-            mprintf (("Our current goal is to warp!  Trying to warp...\n"));
+            WARNINGF (
+                LOCATION, "Our current goal is to warp!  Trying to warp...\n");
             goto try_to_warp;
         }
         // otherwise, since we can't warp, we'll do the standard bay departure
@@ -7604,9 +7625,10 @@ int mission_do_departure (object* objp, bool goal_is_to_warp) {
 
         // see if ship is yet to arrive.  If so, then warp.
         if (mission_parse_get_arrival_ship (name)) {
-            mprintf (
-                ("Anchor ship %s hasn't arrived yet!  Trying to warp...\n",
-                 name));
+            WARNINGF (
+                LOCATION,
+                "Anchor ship %s hasn't arrived yet!  Trying to warp...\n",
+                name);
             goto try_to_warp;
         }
 
@@ -7615,17 +7637,20 @@ int mission_do_departure (object* objp, bool goal_is_to_warp) {
         // by above if statement).
         anchor_shipnum = ship_name_lookup (name);
         if (anchor_shipnum < 0) {
-            mprintf (("Anchor ship %s not found!  Trying to warp...\n", name));
+            WARNINGF (
+                LOCATION, "Anchor ship %s not found!  Trying to warp...\n",
+                name);
             goto try_to_warp;
         }
 
         // see if we can actually depart to the ship
         if (!ship_useful_for_departure (
                 anchor_shipnum, shipp->departure_path_mask)) {
-            mprintf (
-                ("Anchor ship %s not suitable for departure (dying, "
-                 "departing, bays destroyed, etc.).  Trying to warp...\n",
-                 name));
+            WARNINGF (
+                LOCATION,
+                "Anchor ship %s not suitable for departure (dying, departing, "
+                "bays destroyed, etc.).  Trying to warp...\n",
+                name);
             goto try_to_warp;
         }
 
@@ -7634,7 +7659,7 @@ int mission_do_departure (object* objp, bool goal_is_to_warp) {
                 objp, Ships[anchor_shipnum].objnum, path_mask) >= 0) {
             MONITOR_INC (NumShipDepartures, 1);
 
-            mprintf (("Acquired departure path\n"));
+            WARNINGF (LOCATION, "Acquired departure path\n");
             return 1;
         }
     }
@@ -7643,7 +7668,7 @@ try_to_warp:
 
     // make sure we can actually warp
     if (ship_can_use_warp_drive (shipp)) {
-        mprintf (("Setting mode to warpout\n"));
+        WARNINGF (LOCATION, "Setting mode to warpout\n");
 
         ai_set_mode_warp_out (objp, aip);
         MONITOR_INC (NumShipDepartures, 1);
@@ -7663,7 +7688,7 @@ try_to_warp:
         // with an IFF that doesn't allow support ships has its
         // warp_out_timestamp elapse (but this seems to not be a possibility
         // anymore) 4) An instructor in a training mission has been fired upon
-        mprintf (("Can't warp!  Doing something else instead.\n"));
+        WARNINGF (LOCATION, "Can't warp!  Doing something else instead.\n");
 
         shipp->flags.remove (Ship::Ship_Flags::Depart_dockbay);
         shipp->flags.remove (Ship::Ship_Flags::Depart_warp);
@@ -8030,14 +8055,17 @@ void mission_add_to_arriving_support (object* requester_objp) {
     ASSERT (Arriving_support_ship);
 
     if (Num_arriving_repair_targets == MAX_AI_GOALS) {
-        mprintf (("Reached MAX_AI_GOALS trying to add repair request!\n"));
+        WARNINGF (
+            LOCATION, "Reached MAX_AI_GOALS trying to add repair request!\n");
         return;
     }
 
     shipp = &Ships[requester_objp->instance];
     // check for duplicates before adding
     for (i = 0; i < Num_arriving_repair_targets; i++) {
-        if (!strcasecmp (Arriving_repair_targets[i], shipp->ship_name)) { break; }
+        if (!strcasecmp (Arriving_repair_targets[i], shipp->ship_name)) {
+            break;
+        }
     }
     if (i != Num_arriving_repair_targets) { // found the ship before reaching
                                             // the end -- ignore it!

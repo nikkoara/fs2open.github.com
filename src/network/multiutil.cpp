@@ -691,10 +691,10 @@ int multi_create_player (
     Net_players[net_player_num].flags = (NETINFO_FLAG_DO_NETWORKING);
 
     if (ship_class == -1) {
-        nprintf (
-            ("Network",
-             "Network ==> ship class is -1, creating a default ship for "
-             "multiplayer\n"));
+        WARNINGF (
+            LOCATION,
+            "Network ==> ship class is -1, creating a default ship for "
+            "multiplayer");
 
         // find the ship that matches the string stored in default_player_ship
 
@@ -729,11 +729,11 @@ int multi_create_player (
     }
 
     if (player_ship_class >= static_cast< int > (Ship_info.size ())) {
-        nprintf (
-            ("Network",
-             "Network ==> Ship class was %d Creating a default ship for "
-             "multiplayer\n",
-             player_ship_class));
+        WARNINGF (
+            LOCATION,
+            "Network ==> Ship class was %d Creating a default ship for "
+            "multiplayer\n",
+            player_ship_class);
         player_ship_class = multi_ship_class_lookup (default_player_ship);
     }
 
@@ -1037,8 +1037,6 @@ void multi_cull_zombies () {
 
                 if ( (current_time - Net_players[i].last_heard_time) > inactive_limit) {
                         HUD_printf(XSTR("Dumping %s after prolonged inactivity",902),Net_players[i].m_player->callsign);
-                        nprintf(("Network", "Assuming %s is a zombie, removing from game\n", Net_players[i].m_player->callsign));
-
                         multi_kick_player(i,0);
                 }
         }
@@ -1098,9 +1096,9 @@ void multi_pack_orient_matrix (ubyte* data, matrix* m) {
     x2 = m->vec.uvec.xyz.x;
     y2 = m->vec.uvec.xyz.y;
 
-    memcpy (&data[ 0], &x1, 4); // a
-    memcpy (&data[ 4], &y1, 4); // b
-    memcpy (&data[ 8], &x2, 4); // c
+    memcpy (&data[0], &x1, 4);  // a
+    memcpy (&data[4], &y1, 4);  // b
+    memcpy (&data[8], &x2, 4);  // c
     memcpy (&data[12], &y2, 4); // d
 }
 
@@ -1109,9 +1107,9 @@ void multi_pack_orient_matrix (ubyte* data, matrix* m) {
 void multi_unpack_orient_matrix (ubyte* data, matrix* m) {
     float x1, y1, x2, y2;
 
-    memcpy (&x1, &data[ 0], 4);
-    memcpy (&y1, &data[ 4], 4);
-    memcpy (&x2, &data[ 8], 4);
+    memcpy (&x1, &data[0], 4);
+    memcpy (&y1, &data[4], 4);
+    memcpy (&x2, &data[8], 4);
     memcpy (&y2, &data[12], 4);
 
     m->vec.rvec.xyz.x = x1;
@@ -1529,9 +1527,9 @@ int multi_netplayer_flag_check (int flags, int ignore_standalone) {
 // the error indicates that the client is no longer there.
 void multi_eval_socket_error (PSNET_SOCKET sock, int error) {
     if (error == WSAENOTSOCK) {
-        nprintf (
-            ("Network",
-             "Socket connection terminated and/or nonexistent, bailing..\n"));
+        WARNINGF (
+            LOCATION,
+            "Socket connection terminated and/or nonexistent, bailing..");
 
         // mwa -- don't go back to main menu.  You don't want host to do this.
         // Maybe we can ignore it because of a leaving player.
@@ -1540,15 +1538,14 @@ void multi_eval_socket_error (PSNET_SOCKET sock, int error) {
 
     if ((error != WSAECONNRESET) && (error != WSAECONNABORTED) &&
         (error != WSAESHUTDOWN)) {
-        nprintf (
-            ("Network", "Error %d received on reliable socket -- ignoring\n",
-             error));
+        WARNINGF (
+            LOCATION, "Error %d received on reliable socket -- ignoring\n",
+            error);
         return;
     }
 
     if (error == WSAESHUTDOWN) {
-        nprintf (
-            ("Network", "Received WSAESHUTDOWN on client socket. Cool.\n"));
+        WARNINGF (LOCATION, "Received WSAESHUTDOWN on client socket. Cool.");
     }
 
     // mwa -- always return for now because debugging with the stuff below is a
@@ -1558,8 +1555,7 @@ void multi_eval_socket_error (PSNET_SOCKET sock, int error) {
     if (Net_player->flags & NETINFO_FLAG_AM_MASTER) {
         int idx;
 
-        nprintf (
-            ("Network", "pitching player because drop on reliable socket\n"));
+        WARNINGF (LOCATION, "pitching player because drop on reliable socket");
         // find the netplayer whose socket we have an error on.  Dump the
         // player when we find him. NOTE : make sure not to ban him
         for (idx = 0; idx < MAX_PLAYERS; idx++) {
@@ -1570,8 +1566,7 @@ void multi_eval_socket_error (PSNET_SOCKET sock, int error) {
         }
     }
     else {
-        nprintf (
-            ("Network", "Communications to server lost -- quitting game\n"));
+        WARNINGF (LOCATION, "Communications to server lost -- quitting game");
         multi_quit_game (
             PROMPT_NONE, MULTI_END_NOTIFY_NONE, MULTI_END_ERROR_CONTACT_LOST);
     }
@@ -1662,9 +1657,8 @@ active_game* multi_new_active_game (void) {
 
     new_game = (active_game*)vm_malloc (sizeof (active_game));
     if (new_game == NULL) {
-        nprintf (
-            ("Network",
-             "Cannot allocate space for new active game structure\n"));
+        WARNINGF (
+            LOCATION, "Cannot allocate space for new active game structure");
         return NULL;
     }
 
@@ -1701,7 +1695,9 @@ active_game* multi_update_active_games (active_game* ag) {
 
         on_list = 0;
         do {
-            if ( psnet_same(&gp->server_addr, &ag->server_addr) /*&& (gp->game.security == game->security)*/ ) {
+            if (psnet_same (
+                    &gp->server_addr,
+                    &ag->server_addr) /*&& (gp->game.security == game->security)*/) {
                 on_list = 1;
                 break;
             }
@@ -1800,9 +1796,8 @@ server_item* multi_new_server_item (void) {
 
     new_game = (server_item*)vm_malloc (sizeof (server_item));
     if (new_game == NULL) {
-        nprintf (
-            ("Network",
-             "Cannot allocate space for new server_item structure\n"));
+        WARNINGF (
+            LOCATION, "Cannot allocate space for new server_item structure");
         return NULL;
     }
 
@@ -2817,8 +2812,8 @@ void multi_server_update_player_weapons (net_player* pl, ship* shipp) {
 
     // secondary bank status
     if (shipp->weapons.current_secondary_bank < 0) {
-        nprintf ((
-            "Network", "bashing %s's current sbank to 0\n", shipp->ship_name));
+        WARNINGF (
+            LOCATION, "bashing %s's current sbank to 0\n", shipp->ship_name);
         shipp->weapons.current_secondary_bank = 0;
     }
     pl->s_info.cur_secondary_bank =
@@ -2844,7 +2839,7 @@ void multi_server_update_player_weapons (net_player* pl, ship* shipp) {
 
 // flush the multidata cache directory
 void multi_flush_multidata_cache () {
-    nprintf (("Network", "FLUSHING MULTIDATA CACHE\n"));
+    // WARNINGF (LOCATION, "FLUSHING MULTIDATA CACHE");
 
     // call the cfile function to flush the directory
     cfile_flush_dir (CF_TYPE_MULTI_CACHE);
@@ -3017,9 +3012,9 @@ void multi_get_mission_checksum (const char* filename) {
             multi_quit_game (PROMPT_ALL, MULTI_END_NOTIFY_KICKED_CANT_XFER);
         }
     }
-    nprintf (
-        ("Network", "NET FILE CHECKSUM : %d %d\n", Multi_current_file_checksum,
-         Multi_current_file_length));
+    WARNINGF (
+        LOCATION, "NET FILE CHECKSUM : %d %d\n", Multi_current_file_checksum,
+        Multi_current_file_length);
 }
 
 char multi_unit_to_char (float unit) {

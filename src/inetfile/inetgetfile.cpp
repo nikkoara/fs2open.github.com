@@ -48,7 +48,8 @@ InetGetFile::InetGetFile (char* /*URL*/, char* /*localfile*/) {
         *end = '\0';
 
         if (_mkdir (dir_name) == 0) {
-            mprintf (("CFILE: Created new directory '%s'\n", dir_name));
+            WARNINGF (
+                LOCATION, "CFILE: Created new directory '%s'\n", dir_name);
         }
     }
     printf ("URL: %s\n", URL);

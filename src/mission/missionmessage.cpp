@@ -604,7 +604,8 @@ void parse_msgtbl () {
         // we have messages for
         for (i = 0; i < Num_builtin_messages; i++) {
             for (j = 0; j < MAX_BUILTIN_MESSAGE_TYPES; j++) {
-                if (!(strcasecmp (Messages[i].name, Builtin_messages[j].name))) {
+                if (!(strcasecmp (
+                        Messages[i].name, Builtin_messages[j].name))) {
                     Valid_builtin_message_types[j] = 1;
                     break;
                 }
@@ -638,7 +639,8 @@ void parse_msgtbl () {
                 }
 
                 // test extension
-                if (strcasecmp (ptr, ".ogg") != 0 && strcasecmp (ptr, ".wav") != 0) {
+                if (strcasecmp (ptr, ".ogg") != 0 &&
+                    strcasecmp (ptr, ".wav") != 0) {
                     WARNINGF (
                         LOCATION,
                         "Simulated speech override file '%s' was provided "
@@ -658,10 +660,11 @@ void parse_msgtbl () {
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("MISSIONCAMPAIGN: Unable to parse 'messages.tbl'!  Error message "
-             "= %s.\n",
-             e.what ()));
+        ERRORF (
+            LOCATION,
+            "MISSIONCAMPAIGN: Unable to parse 'messages.tbl'!  Error message "
+            "= %s.\n",
+            e.what ());
         return;
     }
 }
@@ -679,9 +682,9 @@ void messages_init () {
             table_read = 1;
         }
         catch (const parse::ParseException& e) {
-            mprintf (
-                ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-                 "messages.tbl", e.what ()));
+            ERRORF (
+                LOCATION, "parse failed '%s'!  Error message = %s.\n",
+                "messages.tbl", e.what ());
             return;
         }
     }
@@ -761,7 +764,7 @@ void message_mission_free_avi (int m_index) {
 void message_mission_shutdown () {
     int i;
 
-    mprintf (("Unloading in mission messages\n"));
+    WARNINGF (LOCATION, "Unloading in mission messages\n");
 
     training_mission_shutdown ();
 
@@ -991,9 +994,9 @@ void message_load_wave (int index, const char* filename) {
     Message_waves[index].num = snd_load (&tmp_gs, 0, 0);
 
     if (!Message_waves[index].num.isValid ())
-        nprintf (
-            ("messaging", "Cannot load message wave: %s.  Will not play\n",
-             Message_waves[index].name));
+        WARNINGF (
+            LOCATION, "Cannot load message wave: %s.  Will not play\n",
+            Message_waves[index].name);
 }
 
 // Goober5000
@@ -1050,10 +1053,11 @@ bool message_play_wave (message_q* q) {
             // message.  If found, then convert to TC_*
             p = strchr (filename, '_');
             if (p == NULL) {
-                mprintf (
-                    ("Cannot convert %s to terran command wave -- find "
-                     "Sandeep or Allender\n",
-                     Message_waves[index].name));
+                WARNINGF (
+                    LOCATION,
+                    "Cannot convert %s to terran command wave -- find Sandeep "
+                    "or Allender\n",
+                    Message_waves[index].name);
                 return false;
             }
 
@@ -1203,10 +1207,11 @@ void message_play_anim (message_q* q) {
                 // play
                 if (!strncasecmp (ani_name, "Head-TP", 7) ||
                     !strncasecmp (ani_name, "Head-VP", 7)) {
-                    mprintf (
-                        ("message '%s' incorrectly assigns a "
-                         "command/largeship persona to a wingman animation!\n",
-                         m->name));
+                    WARNINGF (
+                        LOCATION,
+                        "message '%s' incorrectly assigns a command/largeship "
+                        "persona to a wingman animation!\n",
+                        m->name);
                     rand_index = ((int)Missiontime % MAX_WINGMAN_HEADS);
                 }
                 else {
@@ -1218,9 +1223,10 @@ void message_play_anim (message_q* q) {
                 subhead_selected = TRUE;
             }
             else {
-                mprintf (
-                    ("message '%s' uses an unrecognized persona type\n",
-                     m->name));
+                WARNINGF (
+                    LOCATION,
+                    "message '%s' uses an unrecognized persona type\n",
+                    m->name);
             }
         }
 
@@ -1229,13 +1235,13 @@ void message_play_anim (message_q* q) {
             rand_index = ((int)Missiontime % MAX_WINGMAN_HEADS);
             strcpy_s (temp, ani_name);
             sprintf (ani_name, "%s%c", temp, 'a' + rand_index);
-            mprintf (
-                ("message '%s' with invalid head.  Fix by assigning persona "
-                 "to the message.\n",
-                 m->name));
+            WARNINGF (
+                LOCATION,
+                "message '%s' with invalid head.  Fix by assigning persona to "
+                "the message.\n",
+                m->name);
         }
-        nprintf (
-            ("Messaging", "playing head %s for %s\n", ani_name, q->who_from));
+        WARNINGF (LOCATION, "playing head %s for %s\n", ani_name, q->who_from);
     }
 
     // check to see if the avi has been loaded.  If not, then load the AVI.  On
@@ -1245,10 +1251,10 @@ void message_play_anim (message_q* q) {
     // if there is something already here that's not this same file then go
     // ahead a let go of it - taylor
     if (!strstr (anim_info->anim_data.filename, ani_name)) {
-        nprintf (
-            ("Messaging",
-             "clearing headani data due to name mismatch: (%s) (%s)\n",
-             anim_info->anim_data.filename, ani_name));
+        WARNINGF (
+            LOCATION,
+            "clearing headani data due to name mismatch: (%s) (%s)\n",
+            anim_info->anim_data.filename, ani_name);
         message_mission_free_avi (m->avi_info.index);
     }
 
@@ -1256,9 +1262,9 @@ void message_play_anim (message_q* q) {
     if (!Full_color_head_anis) anim_info->anim_data.use_hud_color = true;
 
     if (generic_anim_stream (&anim_info->anim_data, false) < 0) {
-        nprintf (
-            ("messaging", "Cannot load message avi %s.  Will not play.\n",
-             ani_name));
+        WARNINGF (
+            LOCATION, "Cannot load message avi %s.  Will not play.\n",
+            ani_name);
         m->avi_info.index = -1; // if cannot load the avi -- set this index to
                                 // -1 to avoid trying to load multiple times
     }
@@ -1269,9 +1275,8 @@ void message_play_anim (message_q* q) {
         // head anims that are currently playing.  We will only play a head
         // anim of the newest messages being played
         if (Num_messages_playing > 0) {
-            nprintf (
-                ("messaging",
-                 "killing off any currently playing head animations\n"));
+            WARNINGF (
+                LOCATION, "killing off any currently playing head animations");
             message_kill_all (0);
         }
 
@@ -1378,14 +1383,14 @@ void message_queue_process () {
                 (timestamp_elapsed (Message_expire) ||
                  (Playing_messages[i].wave.isValid ()) ||
                  (Playing_messages[i].shipnum == -1))) {
-                nprintf (("messaging", "Message %d is done playing\n", i));
+                WARNINGF (LOCATION, "Message %d is done playing", i);
                 Message_shipnum = -1;
                 Num_messages_playing--;
                 if (Num_messages_playing == 0) break;
 
                 // there is still another message playing.  Collapse the
                 // playing_message array
-                nprintf (("messaging", "Collapsing playing message stack\n"));
+                WARNINGF (LOCATION, "Collapsing playing message stack");
                 for (j = i + 1; j < Num_messages_playing + 1; j++) {
                     Playing_messages[j - 1] = Playing_messages[j];
                 }
@@ -1405,11 +1410,11 @@ void message_queue_process () {
         if (timestamp_valid (q->window_timestamp) &&
             timestamp_elapsed (q->window_timestamp) && !q->group) {
             // remove message from queue and see if more to remove
-            nprintf (
-                ("messaging",
-                 "Message %s didn't play because it didn't fit into time "
-                 "window.\n",
-                 Messages[q->message_num].name));
+            WARNINGF (
+                LOCATION,
+                "Message %s didn't play because it didn't fit into time "
+                "window.\n",
+                Messages[q->message_num].name);
             if (q->message_num <
                 Num_builtin_messages) { // we should only ever remove builtin
                                         // messages this way
@@ -1490,10 +1495,10 @@ void message_queue_process () {
             // unique messages higher than low priority will interrupt other
             // messages.
             message_kill_all (1);
-            nprintf (
-                ("messaging",
-                 "Killing all currently playing messages to play unique "
-                 "message\n"));
+            WARNINGF (
+                LOCATION,
+                "Killing all currently playing messages to play unique "
+                "message");
         }
         else if (
             message_playing_builtin () &&
@@ -1507,10 +1512,10 @@ void message_queue_process () {
                 if (message_get_priority (MESSAGE_GET_HIGHEST) < q->priority) {
                     // lower priority message playing -- kill it.
                     message_kill_all (1);
-                    nprintf (
-                        ("messaging",
-                         "Killing all currently playing messages to play high "
-                         "priority builtin\n"));
+                    WARNINGF (
+                        LOCATION,
+                        "Killing all currently playing messages to play high "
+                        "priority builtin");
                 }
                 else if (
                     message_get_priority (MESSAGE_GET_LOWEST) > q->priority) {
@@ -1521,10 +1526,10 @@ void message_queue_process () {
                     // if we get here, then queued messages is a builtin
                     // message with the same priority as the currently playing
                     // messages.  This state will cause messages to overlap.
-                    nprintf (
-                        ("messaging",
-                         "playing builtin message (overlap) because "
-                         "priorities match\n"));
+                    WARNINGF (
+                        LOCATION,
+                        "playing builtin message (overlap) because priorities "
+                        "match");
                 }
             }
         }
@@ -1537,10 +1542,10 @@ void message_queue_process () {
                 if (message_get_priority (MESSAGE_GET_HIGHEST) ==
                     MESSAGE_PRIORITY_LOW) {
                     message_kill_all (1);
-                    nprintf (
-                        ("messaging",
-                         "Killing low priority unique messages to play code "
-                         "message\n"));
+                    WARNINGF (
+                        LOCATION,
+                        "Killing low priority unique messages to play code "
+                        "message");
                 }
                 else {
                     return; // do nothing.
@@ -1699,7 +1704,9 @@ void message_queue_message (
     // check to be sure that we haven't reached our max limit on these messages
     // yet.
     if (MessageQ_num == MAX_MESSAGE_Q) {
-        mprintf (("Message queue already full. Message will not be added!\n"));
+        WARNINGF (
+            LOCATION,
+            "Message queue already full. Message will not be added!\n");
         return;
     }
 
@@ -1744,7 +1751,8 @@ void message_queue_message (
     // wingman persona attached to this message, then set a bit to tell the
     // wave/anim playing code to play the command version of the wave and head
     MessageQ[i].flags = 0;
-    if (!strcasecmp (who_from, The_mission.command_sender) && (m_persona != -1) &&
+    if (!strcasecmp (who_from, The_mission.command_sender) &&
+        (m_persona != -1) &&
         (Personas[m_persona].flags & PERSONA_FLAG_WINGMAN)) {
         MessageQ[i].flags |= MQF_CONVERT_TO_COMMAND;
         MessageQ[i].source = HUD_SOURCE_TERRAN_CMD;
@@ -1867,7 +1875,7 @@ int message_filter_multi (int id) {
 
     // bogus
     if ((id < 0) || (id >= Num_messages)) {
-        mprintf (("Filtering bogus mission message!\n"));
+        WARNINGF (LOCATION, "Filtering bogus mission message!\n");
         return 1;
     }
 
@@ -1884,7 +1892,7 @@ int message_filter_multi (int id) {
         // is this for my team?
         if ((Net_player != NULL) &&
             (Net_player->p_info.team != Messages[id].multi_team)) {
-            mprintf (("Filtering team-based mission message!\n"));
+            WARNINGF (LOCATION, "Filtering team-based mission message!\n");
             return 1;
         }
     }
@@ -1925,9 +1933,9 @@ void message_send_unique_to_player (
                 // command
                 m_persona = Messages[i].persona_index;
                 if (m_persona == -1) {
-                    mprintf (
-                        ("Warning:  Message %s has no persona assigned.\n",
-                         Messages[i].name));
+                    WARNINGF (
+                        LOCATION, " Message %s has no persona assigned.\n",
+                        Messages[i].name);
                 }
 
                 // get a ship. we allow silenced ships since this is a unique
@@ -1981,8 +1989,8 @@ void message_send_unique_to_player (
             return; // all done with displaying
         }
     }
-    nprintf (
-        ("messaging", "Couldn't find message id %s to send to player!\n", id));
+    WARNINGF (
+        LOCATION, "Couldn't find message id %s to send to player!\n", id);
 }
 
 #define BUILTIN_MATCHES_TYPE 0
@@ -2051,9 +2059,8 @@ void message_send_builtin_to_player (
         persona_index = shipp->persona_index;
 
         if (persona_index == -1)
-            nprintf (
-                ("messaging", "Couldn't find persona for %s\n",
-                 shipp->ship_name));
+            WARNINGF (
+                LOCATION, "Couldn't find persona for %s\n", shipp->ship_name);
 
         // be sure that this ship can actually send a message!!! (i.e.
         // not-not-flyable -- get it!)
@@ -2143,50 +2150,48 @@ void message_send_builtin_to_player (
 
     switch (best_match) {
     case BUILTIN_MATCHES_PERSONA_EXCLUDED:
-        nprintf (
-            ("MESSAGING",
-             "Couldn't find builtin message %s for persona %d with a none "
-             "excluded mood\n",
-             Builtin_messages[type].name, persona_index));
+        WARNINGF (
+            LOCATION,
+            "Couldn't find builtin message %s for persona %d with a none "
+            "excluded mood\n",
+            Builtin_messages[type].name, persona_index);
         if (!Personas[persona_index].substitute_missing_messages) {
-            nprintf (
-                ("MESSAGING",
-                 "Persona does not allow substitution, skipping message."));
+            WARNINGF (
+                LOCATION,
+                "Persona does not allow substitution, skipping message.");
             return;
         }
         else
-            nprintf (
-                ("MESSAGING", "using an excluded message for this persona\n"));
+            WARNINGF (LOCATION, "using an excluded message for this persona");
         break;
     case BUILTIN_MATCHES_SPECIES:
-        nprintf (
-            ("MESSAGING", "Couldn't find builtin message %s for persona %d\n",
-             Builtin_messages[type].name, persona_index));
+        WARNINGF (
+            LOCATION, "Couldn't find builtin message %s for persona %d\n",
+            Builtin_messages[type].name, persona_index);
         if (!Personas[persona_index].substitute_missing_messages) {
-            nprintf (
-                ("MESSAGING",
-                 "Persona does not allow substitution, skipping message."));
+            WARNINGF (
+                LOCATION,
+                "Persona does not allow substitution, skipping message.");
             return;
         }
         else
-            nprintf (
-                ("MESSAGING",
-                 "using a message for any persona of that species\n"));
+            WARNINGF (
+                LOCATION, "using a message for any persona of that species");
         break;
     case BUILTIN_MATCHES_TYPE:
-        nprintf (
-            ("MESSAGING", "Couldn't find builtin message %s for persona %d\n",
-             Builtin_messages[type].name, persona_index));
+        WARNINGF (
+            LOCATION, "Couldn't find builtin message %s for persona %d\n",
+            Builtin_messages[type].name, persona_index);
         if (!Personas[persona_index].substitute_missing_messages) {
-            nprintf (
-                ("MESSAGING",
-                 "Persona does not allow substitution, skipping message."));
+            WARNINGF (
+                LOCATION,
+                "Persona does not allow substitution, skipping message.");
             return;
         }
         else
-            nprintf (
-                ("MESSAGING",
-                 "looking for message for any persona of any species\n"));
+            WARNINGF (
+                LOCATION,
+                "looking for message for any persona of any species");
         break;
     case -1:
         ASSERTF (
@@ -2459,7 +2464,7 @@ int message_anim_is_playing () {
 void message_pagein_mission_messages () {
     int i;
 
-    mprintf (("Paging in mission messages\n"));
+    WARNINGF (LOCATION, "Paging in mission messages\n");
 
     if (Num_messages <= Num_builtin_messages) { return; }
 

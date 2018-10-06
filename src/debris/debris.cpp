@@ -125,9 +125,9 @@ void debris_page_in () {
     for (i = 0; i < Species_info.size (); i++) {
         species_info* species = &Species_info[i];
 
-        nprintf (
-            ("Paging", "Paging in debris texture '%s'\n",
-             species->debris_texture.filename));
+        WARNINGF (
+            LOCATION, "Paging in debris texture '%s'\n",
+            species->debris_texture.filename);
 
         species->debris_texture.bitmap_id =
             bm_load (species->debris_texture.filename);
@@ -477,10 +477,10 @@ object* debris_create (
         if (n >= 0)
             debris_start_death_roll (&Objects[Debris[n].objnum], &Debris[n]);
 
-        nprintf (
-            ("Warning",
-             "Frame %i: Could not create debris, no more slots left\n",
-             Framecount));
+        WARNINGF (
+            LOCATION,
+            "Frame %i: Could not create debris, no more slots left\n",
+            Framecount);
         return NULL;
     }
 
@@ -594,7 +594,9 @@ object* debris_create (
         OBJ_DEBRIS, parent_objnum, n, &source_obj->orient, pos, radius,
         default_flags);
     if (objnum == -1) {
-        mprintf (("Couldn't create debris object -- out of object slots\n"));
+        WARNINGF (
+            LOCATION,
+            "Couldn't create debris object -- out of object slots\n");
         return NULL;
     }
 
@@ -679,11 +681,11 @@ object* debris_create (
             list_append (&Hull_debris_list, db);
         }
         else {
-            nprintf (
-                ("Alan",
-                 "A forever chunk of debris was created from ship with radius "
-                 "%f\n",
-                 Objects[db->source_objnum].radius));
+            WARNINGF (
+                LOCATION,
+                "A forever chunk of debris was created from ship with radius "
+                "%f\n",
+                Objects[db->source_objnum].radius);
         }
     }
     else {

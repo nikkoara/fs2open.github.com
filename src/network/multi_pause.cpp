@@ -274,7 +274,7 @@ int multi_pause_eat_keys () {
 
     // if less than 1 second has passed, continue eating keys
     if ((f2fl (timer_get_fixed_seconds ()) - Multi_pause_eat) < 1.0f) {
-        nprintf (("Network", "PAUSE EATING KEYS\n"));
+        // WARNINGF (LOCATION, "PAUSE EATING KEYS");
 
         control_config_clear_used_status ();
         key_flush ();

@@ -68,7 +68,7 @@ Uint32 TimeProc (Uint32 interval, void* /*param*/) {
         return 0;
     }
 
-    mprintf (("In callback\n"));
+    WARNINGF (LOCATION, "In callback\n");
     Rtv_callback ();
 
     if (Rtv_callback_time) { return interval; }

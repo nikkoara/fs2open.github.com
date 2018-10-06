@@ -92,13 +92,13 @@ GLuint compile_shader_object (
     // we failed, bail out now...
     if (status == 0) {
         // basic error check
-        mprintf (
-            ("%s shader failed to compile:\n%s\n",
-             (shader_type == GL_VERTEX_SHADER)
-                 ? "Vertex"
-                 : ((shader_type == GL_GEOMETRY_SHADER) ? "Geometry"
-                                                        : "Fragment"),
-             info_log.c_str ()));
+        WARNINGF (
+            LOCATION, "%s shader failed to compile:\n%s\n",
+            (shader_type == GL_VERTEX_SHADER)
+                ? "Vertex"
+                : ((shader_type == GL_GEOMETRY_SHADER) ? "Geometry"
+                                                       : "Fragment"),
+            info_log.c_str ());
 
         // this really shouldn't exist, but just in case
         if (shader_object) { glDeleteProgram (shader_object); }
@@ -108,13 +108,13 @@ GLuint compile_shader_object (
 
     // we succeeded, maybe output warnings too
     if (info_log.size () > 5) {
-        nprintf (
-            ("SHADER-DEBUG", "%s shader compiled with warnings:\n%s\n",
-             (shader_type == GL_VERTEX_SHADER)
-                 ? "Vertex"
-                 : ((shader_type == GL_GEOMETRY_SHADER) ? "Geometry"
-                                                        : "Fragment"),
-             info_log.c_str ()));
+        WARNINGF (
+            LOCATION, "%s shader compiled with warnings:\n%s\n",
+            (shader_type == GL_VERTEX_SHADER)
+                ? "Vertex"
+                : ((shader_type == GL_GEOMETRY_SHADER) ? "Geometry"
+                                                       : "Fragment"),
+            info_log.c_str ());
     }
 
     return shader_object;
@@ -131,16 +131,15 @@ void link_program (GLuint program) {
 
     // we failed, bail out now...
     if (status == GL_FALSE) {
-        mprintf (("Shader failed to link:\n%s\n", log.c_str ()));
+        WARNINGF (LOCATION, "Shader failed to link:\n%s\n", log.c_str ());
 
         throw std::runtime_error ("Failed to compile shader!");
     }
 
     // we succeeded, maybe output warnings too
     if (log.size () > 5) {
-        nprintf (
-            ("SHADER-DEBUG", "Shader linked with warnings:\n%s\n",
-             log.c_str ()));
+        WARNINGF (
+            LOCATION, "Shader linked with warnings:\n%s\n", log.c_str ());
     }
 }
 
@@ -149,9 +148,7 @@ GLenum get_gl_shader_stage (opengl::ShaderStage stage) {
     case opengl::STAGE_VERTEX: return GL_VERTEX_SHADER;
     case opengl::STAGE_GEOMETRY: return GL_GEOMETRY_SHADER;
     case opengl::STAGE_FRAGMENT: return GL_FRAGMENT_SHADER;
-    default:
-        ASSERT (0);
-        return GL_NONE;
+    default: ASSERT (0); return GL_NONE;
     }
 }
 } // namespace
@@ -864,8 +861,8 @@ GLint opengl::ShaderUniforms::findUniformLocation (const std::string& name) {
         if (location == -1) {
             // This can happen if the uniform has been optimized out by the
             // driver
-            mprintf (
-                ("WARNING: Failed to find uniform '%s'.\n", name.c_str ()));
+            WARNINGF (
+                LOCATION, "Failed to find uniform '%s'.\n", name.c_str ());
         }
 
         _uniform_locations.insert (std::make_pair (name, location));

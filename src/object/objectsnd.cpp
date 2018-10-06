@@ -433,15 +433,6 @@ void maybe_play_flyby_snd (
                 // play da sound
                 snd_play_3d (snd, &closest_objp->pos, &View_position);
 
-                // float dist = vm_vec_dist(&closest_objp->pos,
-                // &View_position); nprintf(("AI", "Frame %i: Playing flyby
-                // sound, species = %i, size = %i, dist = %7.3f\n", Framecount,
-                // species, ship_size, dist));
-                // nprintf(("AI", "Frame %i: Playing flyby sound,
-                // species = %i, size = %i, dist = %7.3f\n", Framecount,
-                // Debug_1, Debug_2, dist)); Debug_1 = (Debug_1+1)%3; Debug_2 =
-                // (Debug_2+1)%2;
-
                 joy_ff_fly_by (
                     100 - (int)(100.0f * closest_dist / FLYBY_MIN_DISTANCE));
 
@@ -757,7 +748,7 @@ int obj_snd_assign (
 
     objp->objsnd_num[sound_index] = obj_snd_get_slot ();
     if (objp->objsnd_num[sound_index] == -1) {
-        nprintf (("Sound", "SOUND ==> No free object-linked sounds left\n"));
+        WARNINGF (LOCATION, "SOUND ==> No free object-linked sounds left");
         return -1;
     }
     snd = &Objsnds[objp->objsnd_num[sound_index]];

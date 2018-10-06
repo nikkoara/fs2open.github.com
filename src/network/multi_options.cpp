@@ -73,9 +73,9 @@ void multi_options_read_config () {
 
     // if we failed to open the config file, user default settings
     if (in == NULL) {
-        nprintf (
-            ("Network",
-             "Failed to open network config file, using default settings\n"));
+        WARNINGF (
+            LOCATION,
+            "Failed to open network config file, using default settings");
     }
     else {
         while (!cfeof (in)) {
@@ -216,24 +216,27 @@ void multi_options_read_config () {
                     if (tok != NULL) {
                         long int result = strtol (tok, NULL, 10);
                         if (result <= 0 || result > USHRT_MAX) {
-                            mprintf (
-                                ("ERROR: Invalid or out of range "
-                                 "webapi_server_port '%s' specified in "
-                                 "multi.cfg, must be integer between 1024 and "
-                                 "%i.\n",
-                                 tok, USHRT_MAX));
+                            ERRORF (
+                                LOCATION,
+                                "ERROR: Invalid or out of range "
+                                "webapi_server_port '%s' specified in "
+                                "multi.cfg, must be integer between 1024 and "
+                                "%i.\n",
+                                tok, USHRT_MAX);
                         }
                         else if (result < 1024) {
-                            mprintf ((
+                            ERRORF (
+                                LOCATION,
                                 "ERROR: webapi_server_port '%ld' in multi.cfg "
                                 "is too low, must be between 1024 and %d.\n",
-                                result, USHRT_MAX));
+                                result, USHRT_MAX);
                         }
                         else {
-                            mprintf (
-                                ("Using webapi_server_port '%ld' from "
-                                 "multi.cfg.\n",
-                                 result));
+                            WARNINGF (
+                                LOCATION,
+                                "Using webapi_server_port '%ld' from "
+                                "multi.cfg.\n",
+                                result);
                             Multi_options_g.webapiPort = (ushort)result;
                         }
                     }
@@ -569,7 +572,7 @@ void multi_options_process_packet (unsigned char* data, header* hinfo) {
     player_index = find_player_id (hinfo->id);
 
     if (player_index < 0) {
-        nprintf (("Network", "Received packet from unknown player!\n"));
+        // WARNINGF (LOCATION, "Received packet from unknown player!");
         return;
     }
 
@@ -620,7 +623,7 @@ void multi_options_process_packet (unsigned char* data, header* hinfo) {
         // if squad war was switched on
         if ((ng.type_flags & NG_TYPE_SW) &&
             !(Netgame.type_flags & NG_TYPE_SW)) {
-            mprintf (("STANDALONE TURNED ON SQUAD WAR!!\n"));
+            WARNINGF (LOCATION, "STANDALONE TURNED ON SQUAD WAR!!\n");
         }
         Netgame.type_flags = ng.type_flags;
 

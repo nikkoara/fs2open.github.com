@@ -472,7 +472,7 @@ int ds_load_buffer (int* sid, int /*flags*/, ffmpeg::WaveFile* file) {
     // All sounds are required to have a software buffer
     *sid = ds_get_sid ();
     if (*sid == -1) {
-        nprintf (("Sound", "SOUND ==> No more sound buffers available\n"));
+        WARNINGF (LOCATION, "SOUND ==> No more sound buffers available");
         return -1;
     }
 
@@ -538,8 +538,7 @@ void ds_init_channels () {
     }
     catch (const std::bad_alloc&) {
         ASSERTF (
-            LOCATION,
-            "Unable to allocate %zu bytes for %d audio channels.",
+            LOCATION, "Unable to allocate %zu bytes for %d audio channels.",
             sizeof (channel) * MAX_CHANNELS, MAX_CHANNELS);
     }
 }
@@ -562,7 +561,7 @@ void ds_init_buffers () {
 bool ds_check_for_openal_soft () {
     const ALchar* renderer = alGetString (AL_RENDERER);
     if (renderer == NULL) {
-        mprintf (("ds_check_for_openal_soft: renderer is null!"));
+        WARNINGF (LOCATION, "ds_check_for_openal_soft: renderer is null!");
         return false;
     }
     else if (!strcasecmp ((const char*)renderer, "OpenAL Soft")) {
@@ -582,7 +581,7 @@ int ds_init () {
     ALCint attrList[] = { ALC_FREQUENCY, 22050, 0 };
     unsigned int sample_rate = 22050;
 
-    mprintf (("Initializing OpenAL...\n"));
+    WARNINGF (LOCATION, "Initializing OpenAL...\n");
 
     Ds_sound_quality = os_config_read_uint ("Sound", "Quality", DS_SQ_MEDIUM);
     CLAMP (Ds_sound_quality, DS_SQ_LOW, DS_SQ_HIGH);
@@ -601,27 +600,31 @@ int ds_init () {
     std::string capture_device;
 
     if (openal_init_device (&playback_device, &capture_device) == false) {
-        mprintf (("\n  ERROR: Unable to find suitable playback device!\n\n"));
+        ERRORF (
+            LOCATION,
+            "\n  ERROR: Unable to find suitable playback device!\n\n");
         goto AL_InitError;
     }
 
     ds_sound_device = alcOpenDevice ((const ALCchar*)playback_device.c_str ());
 
     if (ds_sound_device == NULL) {
-        mprintf (
-            ("  Failed to open playback_device (%s) returning error (%s)\n",
-             playback_device.c_str (), openal_error_string (1)));
+        ERRORF (
+            LOCATION,
+            "  Failed to open playback_device (%s) returning error (%s)\n",
+            playback_device.c_str (), openal_error_string (1));
         goto AL_InitError;
     }
 
     ds_sound_context = alcCreateContext (ds_sound_device, attrList);
 
     if (ds_sound_context == NULL) {
-        mprintf (
-            ("  Failed to create context for playback_device (%s) with "
-             "attrList = { 0x%x, %d, %d } returning error (%s)\n",
-             playback_device.c_str (), attrList[0], attrList[1], attrList[2],
-             openal_error_string (1)));
+        ERRORF (
+            LOCATION,
+            "  Failed to create context for playback_device (%s) with "
+            "attrList = { 0x%x, %d, %d } returning error (%s)\n",
+            playback_device.c_str (), attrList[0], attrList[1], attrList[2],
+            openal_error_string (1));
         goto AL_InitError;
     }
 
@@ -629,10 +632,12 @@ int ds_init () {
 
     alcGetError (ds_sound_device);
 
-    mprintf (("  OpenAL Vendor     : %s\n", alGetString (AL_VENDOR)));
-    mprintf (("  OpenAL Renderer   : %s\n", alGetString (AL_RENDERER)));
-    mprintf (("  OpenAL Version    : %s\n", alGetString (AL_VERSION)));
-    mprintf (("\n"));
+    WARNINGF (LOCATION, "  OpenAL Vendor     : %s\n", alGetString (AL_VENDOR));
+    WARNINGF (
+        LOCATION, "  OpenAL Renderer   : %s\n", alGetString (AL_RENDERER));
+    WARNINGF (
+        LOCATION, "  OpenAL Version    : %s\n", alGetString (AL_VERSION));
+    WARNINGF (LOCATION, "\n");
 
     // we need to clear out all errors before moving on
     alcGetError (NULL);
@@ -645,12 +650,12 @@ int ds_init () {
     // it)
     if (alIsExtensionPresent ((const ALchar*)"AL_LOKI_play_position") ==
         AL_TRUE) {
-        mprintf (("  Found extension \"AL_LOKI_play_position\".\n"));
+        WARNINGF (LOCATION, "  Found extension \"AL_LOKI_play_position\".\n");
         AL_play_position = 1;
     }
 
     if (alIsExtensionPresent ((const ALchar*)"AL_EXT_float32") == AL_TRUE) {
-        mprintf (("  Found extension \"AL_EXT_float32\".\n"));
+        WARNINGF (LOCATION, "  Found extension \"AL_EXT_float32\".\n");
         Ds_float_supported = 1;
     }
 
@@ -658,7 +663,7 @@ int ds_init () {
 
     if (alcIsExtensionPresent (
             ds_sound_device, (const ALchar*)"ALC_EXT_EFX") == AL_TRUE) {
-        mprintf (("  Found extension \"ALC_EXT_EFX\".\n"));
+        WARNINGF (LOCATION, "  Found extension \"ALC_EXT_EFX\".\n");
         Ds_use_eax = os_config_read_uint ("Sound", "EnableEFX", Fred_running);
     }
 
@@ -677,16 +682,17 @@ int ds_init () {
 
     if (!Cmdline_no_enhanced_sound) {
         if (!ds_check_for_openal_soft ()) {
-            mprintf ((
-                "You are not using OpenAL Soft. Disabling enhanced sound.\n"));
+            WARNINGF (
+                LOCATION,
+                "You are not using OpenAL Soft. Disabling enhanced sound.\n");
             Cmdline_no_enhanced_sound = 1;
         }
         else {
-            mprintf (("Enhanced sound is enabled.\n"));
+            WARNINGF (LOCATION, "Enhanced sound is enabled.\n");
         }
     }
     else {
-        mprintf (("Enhanced sound is manually disabled.\n"));
+        WARNINGF (LOCATION, "Enhanced sound is manually disabled.\n");
     }
 
     // setup default listener position/orientation
@@ -700,14 +706,14 @@ int ds_init () {
     ds_init_channels ();
     ds_init_buffers ();
 
-    mprintf (("\n"));
+    WARNINGF (LOCATION, "\n");
 
     {
         ALCint freq = 0;
         OpenAL_ErrorPrint (alcGetIntegerv (
             ds_sound_device, ALC_FREQUENCY, sizeof (ALCint), &freq));
 
-        mprintf (("  Sample rate: %d (%d)\n", freq, sample_rate));
+        WARNINGF (LOCATION, "  Sample rate: %d (%d)\n", freq, sample_rate);
     }
 
     if (Ds_use_eax) {
@@ -718,20 +724,20 @@ int ds_init () {
         alcGetIntegerv (
             ds_sound_device, ALC_MAX_AUXILIARY_SENDS, 1, &max_sends);
 
-        mprintf (("  EFX version: %d.%d\n", (int)major, (int)minor));
-        mprintf (("  Max auxiliary sends: %d\n", max_sends));
+        WARNINGF (LOCATION, "  EFX version: %d.%d\n", (int)major, (int)minor);
+        WARNINGF (LOCATION, "  Max auxiliary sends: %d\n", max_sends);
     }
     else {
-        mprintf (("  EFX enabled: NO\n"));
+        WARNINGF (LOCATION, "  EFX enabled: NO\n");
     }
 
-    mprintf (("  Playback device: %s\n", playback_device.c_str ()));
-    mprintf (
-        ("  Capture device: %s\n", (capture_device.empty ())
-                                       ? "<not available>"
-                                       : capture_device.c_str ()));
+    WARNINGF (LOCATION, "  Playback device: %s\n", playback_device.c_str ());
+    WARNINGF (
+        LOCATION, "  Capture device: %s\n",
+        (capture_device.empty ()) ? "<not available>"
+                                  : capture_device.c_str ());
 
-    mprintf (("... OpenAL successfully initialized!\n"));
+    INFO ("general") << "OpenAL initialized";
 
     // we need to clear out any errors before moving on
     alcGetError (NULL);
@@ -752,7 +758,7 @@ AL_InitError:
         ds_sound_device = NULL;
     }
 
-    mprintf (("... OpenAL failed to initialize!\n"));
+    ERRORF (LOCATION, "OpenAL initialization failed");
 
     return -1;
 }
@@ -1210,7 +1216,7 @@ int ds_create_buffer (
 
     sid = ds_get_sid ();
     if (sid == -1) {
-        nprintf (("Sound", "SOUND ==> No more OpenAL buffers available\n"));
+        WARNINGF (LOCATION, "SOUND ==> No more OpenAL buffers available");
         return -1;
     }
 
@@ -1894,7 +1900,9 @@ int ds_eax_get_preset_id (const char* name) {
     size_t count = EFX_presets.size ();
 
     for (size_t i = 0; i < count; i++) {
-        if (!strcasecmp (name, EFX_presets[i].name.c_str ())) { return (int)i; }
+        if (!strcasecmp (name, EFX_presets[i].name.c_str ())) {
+            return (int)i;
+        }
     }
 
     return -1;
@@ -2060,7 +2068,9 @@ int ds_eax_init () {
             "alAuxiliaryEffectSlotfv");
     }
     catch (const std::exception& err) {
-        mprintf (("\n  EFX:  Unable to load function: %s()\n", err.what ()));
+        WARNINGF (
+            LOCATION, "\n  EFX:  Unable to load function: %s()\n",
+            err.what ());
 
         Ds_eax_inited = 0;
         return -1;
@@ -2069,21 +2079,21 @@ int ds_eax_init () {
     v_alGenAuxiliaryEffectSlots (1, &AL_EFX_aux_id);
 
     if (alGetError () != AL_NO_ERROR) {
-        mprintf (("\n  EFX:  Unable to create Aux effect!\n"));
+        WARNINGF (LOCATION, "\n  EFX:  Unable to create Aux effect!\n");
         return -1;
     }
 
     v_alGenEffecs (1, &AL_EFX_effect_id);
 
     if (alGetError () != AL_NO_ERROR) {
-        mprintf (("\n  EFX:  Unable to create effect!\n"));
+        WARNINGF (LOCATION, "\n  EFX:  Unable to create effect!\n");
         return -1;
     }
 
     v_alEffecti (AL_EFX_effect_id, AL_EFFECT_TYPE, AL_EFFECT_EAXREVERB);
 
     if (alGetError () != AL_NO_ERROR) {
-        mprintf (("\n  EFX:  EAXReverb not supported!\n"));
+        WARNINGF (LOCATION, "\n  EFX:  EAXReverb not supported!\n");
         return -1;
     }
 
@@ -2091,7 +2101,7 @@ int ds_eax_init () {
         AL_EFX_aux_id, AL_EFFECTSLOT_EFFECT, AL_EFX_effect_id);
 
     if (alGetError () != AL_NO_ERROR) {
-        mprintf (("\n  EFX:  Couldn't load effect!\n"));
+        WARNINGF (LOCATION, "\n  EFX:  Couldn't load effect!\n");
         return -1;
     }
 

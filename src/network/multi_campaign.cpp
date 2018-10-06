@@ -85,11 +85,11 @@ void multi_campaign_start (char* filename) {
 
         // maybe override the Netgame.respawn setting
         Netgame.respawn = The_mission.num_respawns;
-        nprintf (
-            ("Network",
-             "MULTI CAMPAIGN : overriding respawn setting with mission max "
-             "%d\n",
-             The_mission.num_respawns));
+        WARNINGF (
+            LOCATION,
+            "MULTI CAMPAIGN : overriding respawn setting with mission max "
+            "%d\n",
+            The_mission.num_respawns);
 
         // send a "start campaign" packet
         multi_campaign_send_start ();

@@ -115,9 +115,9 @@ void parse_rank_tbl () {
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             "rank.tbl", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n", "rank.tbl",
+            e.what ());
         return;
     }
 }
@@ -445,7 +445,7 @@ void scoring_level_close (int accepted) {
         scoring_struct* sc;
 
         if (Game_mode & GM_MULTIPLAYER) {
-            nprintf (("Network", "Storing stats for all players now\n"));
+            // WARNINGF (LOCATION, "Storing stats for all players now");
             for (idx = 0; idx < MAX_PLAYERS; idx++) {
                 if (MULTI_CONNECTED (Net_players[idx]) &&
                     !MULTI_STANDALONE (Net_players[idx])) {
@@ -460,7 +460,7 @@ void scoring_level_close (int accepted) {
             }
         }
         else {
-            nprintf (("General", "Storing stats now\n"));
+            WARNINGF (LOCATION, "Storing stats now");
             scoring_do_accept (&Player->stats);
         }
 
@@ -626,10 +626,10 @@ int scoring_eval_kill (object* ship_objp) {
         net_player_num = multi_find_player_by_object (ship_objp);
         if (net_player_num != -1) {
             Net_players[net_player_num].m_player->stats.m_player_deaths++;
-            nprintf (
-                ("Network", "Setting player %s deaths to %d\n",
-                 Net_players[net_player_num].m_player->callsign,
-                 Net_players[net_player_num].m_player->stats.m_player_deaths));
+            WARNINGF (
+                LOCATION, "Setting player %s deaths to %d\n",
+                Net_players[net_player_num].m_player->callsign,
+                Net_players[net_player_num].m_player->stats.m_player_deaths);
             dead_plr = &Net_players[net_player_num];
             is_enemy_player = true;
         }
@@ -784,7 +784,7 @@ int scoring_eval_kill (object* ship_objp) {
                             Net_player, kill_score_text, MULTI_MSG_ALL);
                     }
                     HUD_printf (kill_score_text);
-                    mprintf ((kill_score_text));
+                    WARNINGF (LOCATION, kill_score_text);
 #endif
 
                     // multiplayer
@@ -820,7 +820,7 @@ int scoring_eval_kill (object* ship_objp) {
                                     send_game_chat_packet (
                                         Net_player, score_text, MULTI_MSG_ALL);
                                     HUD_printf (score_text);
-                                    mprintf ((score_text));
+                                    WARNINGF (LOCATION, score_text);
 #endif
                                 }
                             }
@@ -907,7 +907,7 @@ int scoring_eval_kill (object* ship_objp) {
                 strcat_s (Scoring_debug_text, buf);
             }
         }
-        mprintf ((Scoring_debug_text));
+        WARNINGF (LOCATION, Scoring_debug_text);
     }
 #endif
 
@@ -1022,7 +1022,7 @@ int scoring_eval_kill_on_weapon (object* weapon_obj, object* other_obj) {
                             Net_player, kill_score_text, MULTI_MSG_ALL);
                     }
                     HUD_printf (kill_score_text);
-                    mprintf ((kill_score_text));
+                    WARNINGF (LOCATION, kill_score_text);
 #endif
 
                     // multiplayer
@@ -1050,7 +1050,7 @@ int scoring_eval_kill_on_weapon (object* weapon_obj, object* other_obj) {
 
             strcat_s (Scoring_debug_text, buf);
         }
-        mprintf ((Scoring_debug_text));
+        WARNINGF (LOCATION, Scoring_debug_text);
     }
 #endif
 
@@ -1108,11 +1108,11 @@ void scoring_eval_assists (ship* sp, int killer_sig, bool is_enemy_player) {
                 if ((sp->damage_ship[idx] / sp->total_damage_received) >=
                     Assist_percentage) {
                     plr->stats.m_assists++;
-                    nprintf (
-                        ("Network",
-                         "-==============GAVE PLAYER %s AN "
-                         "ASSIST=====================-\n",
-                         plr->callsign));
+                    WARNINGF (
+                        LOCATION,
+                        "-==============GAVE PLAYER %s AN "
+                        "ASSIST=====================-\n",
+                        plr->callsign);
                 }
 
                 // Don't scale in TvT and dogfight
@@ -1155,7 +1155,7 @@ void scoring_eval_assists (ship* sp, int killer_sig, bool is_enemy_player) {
                         Net_player, score_text, MULTI_MSG_ALL);
                 }
                 HUD_printf (score_text);
-                mprintf ((score_text));
+                WARNINGF (LOCATION, score_text);
 #endif
             }
         }
@@ -1361,8 +1361,7 @@ float scoring_get_scale_factor () {
 void scoring_bash_rank (player* pl, int rank) {
     // if this is an invalid rank, do nothing
     if ((rank < RANK_ENSIGN) || (rank > RANK_ADMIRAL)) {
-        nprintf (
-            ("General", "Could not bash player rank - invalid value!!!\n"));
+        WARNINGF (LOCATION, "Could not bash player rank - invalid value!!!");
         return;
     }
 

@@ -105,9 +105,9 @@ int mission_campaign_get_info (
             required_string ("$Name:");
             stuff_string (name, F_NAME, NAME_LENGTH);
             if (name == NULL) {
-                nprintf (
-                    ("Warning", "No name found for campaign file %s\n",
-                     filename));
+                WARNINGF (
+                    LOCATION, "No name found for campaign file %s\n",
+                    filename);
                 break;
             }
 
@@ -115,7 +115,9 @@ int mission_campaign_get_info (
             stuff_string (campaign_type, F_NAME, NAME_LENGTH);
 
             for (i = 0; i < MAX_CAMPAIGN_TYPES; i++) {
-                if (!strcasecmp (campaign_type, campaign_types[i])) { *type = i; }
+                if (!strcasecmp (campaign_type, campaign_types[i])) {
+                    *type = i;
+                }
             }
 
             if (name == NULL) {
@@ -143,10 +145,11 @@ int mission_campaign_get_info (
             if ((*type) >= 0) { success = 1; }
         }
         catch (const parse::ParseException& e) {
-            mprintf (
-                ("MISSIONCAMPAIGN: Unable to parse '%s'!  Error message = "
-                 "%s.\n",
-                 fname, e.what ()));
+            ERRORF (
+                LOCATION,
+                "MISSIONCAMPAIGN: Unable to parse '%s'!  Error message = "
+                "%s.\n",
+                fname, e.what ());
             break;
         }
     } while (0);
@@ -184,9 +187,10 @@ int mission_campaign_get_mission_list (
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("MISSIONCAMPAIGN: Unable to parse '%s'!  Error message = %s.\n",
-             filename, e.what ()));
+        ERRORF (
+            LOCATION,
+            "MISSIONCAMPAIGN: Unable to parse '%s'!  Error message = %s.\n",
+            filename, e.what ());
 
         // since we can't return count of allocated elements, free them instead
         for (i = 0; i < num; i++) vm_free (list[i]);
@@ -513,7 +517,9 @@ int mission_campaign_load (
                 main_hall_defines* mhd = main_hall_get_pointer (temp);
                 if (mhd != NULL) { cm->main_hall = temp; }
                 else {
-                    mprintf (("Substitute main hall '%s' not found\n", temp));
+                    WARNINGF (
+                        LOCATION, "Substitute main hall '%s' not found\n",
+                        temp);
                 }
             }
 
@@ -627,9 +633,9 @@ int mission_campaign_load (
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("Error parsing '%s'\r\nError message = %s.\r\n", filename,
-             e.what ()));
+        ERRORF (
+            LOCATION, "Error parsing '%s'\r\nError message = %s.\r\n",
+            filename, e.what ());
 
         Campaign.filename[0] = 0;
         Campaign.num_missions = 0;
@@ -994,13 +1000,13 @@ void mission_campaign_eval_next_mission () {
     }
 
     if (Campaign.next_mission == -1) {
-        nprintf (("allender", "No next mission to proceed to.\n"));
+        WARNINGF (LOCATION, "No next mission to proceed to.");
     }
     else {
-        nprintf (
-            ("allender", "Next mission is number %d [%s]\n",
-             Campaign.next_mission,
-             Campaign.missions[Campaign.next_mission].name));
+        WARNINGF (
+            LOCATION, "Next mission is number %d [%s]\n",
+            Campaign.next_mission,
+            Campaign.missions[Campaign.next_mission].name);
     }
 }
 
@@ -1071,11 +1077,11 @@ void mission_campaign_store_goals_and_events () {
             char event_name[NAME_LENGTH];
 
             sprintf (event_name, NOX ("Event #%d"), i);
-            nprintf (
-                ("Warning",
-                 "Mission goal in mission %s must have a +Name field! using "
-                 "%s for campaign save file\n",
-                 mission_obj->name, name));
+            WARNINGF (
+                LOCATION,
+                "Mission goal in mission %s must have a +Name field! using %s "
+                "for campaign save file\n",
+                mission_obj->name, name);
             strcpy_s (mission_obj->events[i].name, event_name);
         }
         else
@@ -1405,9 +1411,10 @@ int mission_campaign_get_filenames (
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("MISSIONCAMPAIGN: Unable to parse '%s'!  Error message = %s.\n",
-             filename, e.what ()));
+        ERRORF (
+            LOCATION,
+            "MISSIONCAMPAIGN: Unable to parse '%s'!  Error message = %s.\n",
+            filename, e.what ());
         return 1;
     }
 
@@ -1532,9 +1539,10 @@ void read_mission_goal_list (int num) {
         // Goober5000 - variables do not need to be read here
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("MISSIONCAMPAIGN: Unable to parse '%s'!  Error message = %s.\n",
-             filename, e.what ()));
+        ERRORF (
+            LOCATION,
+            "MISSIONCAMPAIGN: Unable to parse '%s'!  Error message = %s.\n",
+            filename, e.what ());
         return;
     }
 }
@@ -1626,9 +1634,10 @@ int mission_campaign_parse_is_multi (char* filename, char* name) {
         return -1;
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("MISSIONCAMPAIGN: Unable to parse '%s'!  Error message = %s.\n",
-             filename, e.what ()));
+        ERRORF (
+            LOCATION,
+            "MISSIONCAMPAIGN: Unable to parse '%s'!  Error message = %s.\n",
+            filename, e.what ());
         return -1;
     }
 }

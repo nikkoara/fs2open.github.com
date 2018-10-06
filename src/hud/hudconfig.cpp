@@ -1714,9 +1714,10 @@ void hud_config_color_load (const char* name) {
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("HUDCONFIG: Unable to parse '%s'!  Error message = %s.\n", fname,
-             e.what ()));
+        ERRORF (
+            LOCATION,
+            "HUDCONFIG: Unable to parse '%s'!  Error message = %s.\n", fname,
+            e.what ());
         return;
     }
 }

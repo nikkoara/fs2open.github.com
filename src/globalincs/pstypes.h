@@ -200,19 +200,6 @@ struct coord2d  {
     int x, y;
 };
 
-
-#include "osapi/outwnd.h"
-
-// To debug printf do this:
-// mprintf(( "Error opening %s\n", filename ));
-#ifndef NDEBUG
-#define mprintf(args) outwnd_printf2 args
-#define nprintf(args) outwnd_printf args
-#else
-#define mprintf(args)
-#define nprintf(args)
-#endif
-
 #if defined(NDEBUG)
 #define Int3() do { } while (0)
 #else

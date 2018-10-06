@@ -314,9 +314,9 @@ void brief_parse_icon_tbl () {
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             "icons.tbl", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n", "icons.tbl",
+            e.what ());
     }
 }
 
@@ -528,18 +528,20 @@ briefing_icon_info* brief_get_icon_info (brief_icon* bi) {
                 if (sip->bii_index_wing_with_cargo >= 0)
                     return &Briefing_icon_info[sip->bii_index_wing_with_cargo];
                 else
-                    mprintf (
-                        ("Ship '%s' is missing the wing-with-cargo briefing "
-                         "icon!",
-                         sip->name));
+                    WARNINGF (
+                        LOCATION,
+                        "Ship '%s' is missing the wing-with-cargo briefing "
+                        "icon!",
+                        sip->name);
             }
             else {
                 if (sip->bii_index_wing >= 0)
                     return &Briefing_icon_info[sip->bii_index_wing];
                 else
-                    mprintf (
-                        ("Ship '%s' is missing the wing briefing icon!",
-                         sip->name));
+                    WARNINGF (
+                        LOCATION,
+                        "Ship '%s' is missing the wing briefing icon!",
+                        sip->name);
             }
         }
         else {
@@ -547,10 +549,11 @@ briefing_icon_info* brief_get_icon_info (brief_icon* bi) {
                 if (sip->bii_index_ship_with_cargo >= 0)
                     return &Briefing_icon_info[sip->bii_index_ship_with_cargo];
                 else
-                    mprintf (
-                        ("Ship '%s' is missing the ship-with-cargo briefing "
-                         "icon!",
-                         sip->name));
+                    WARNINGF (
+                        LOCATION,
+                        "Ship '%s' is missing the ship-with-cargo briefing "
+                        "icon!",
+                        sip->name);
             }
         }
 
@@ -2265,7 +2268,8 @@ void brief_voice_play (int stage_num) {
  * Stop playback of the voice for a particular briefing stage
  */
 void brief_voice_stop (int stage_num) {
-    audiostream_stop (Brief_voices[stage_num], 1, 0); // stream is automatically rewound
+    audiostream_stop (
+        Brief_voices[stage_num], 1, 0); // stream is automatically rewound
 }
 
 /**

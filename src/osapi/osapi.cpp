@@ -29,9 +29,9 @@ const char* getPreferencesPath () {
         preferencesPath =
             SDL_GetPrefPath (ORGANIZATION_NAME, APPLICATION_NAME);
         if (!preferencesPath) {
-            mprintf (
-                ("Failed to get preferences path from SDL: %s\n",
-                 SDL_GetError ()));
+            ERRORF (
+                LOCATION, "Failed to get preferences path from SDL: %s\n",
+                SDL_GetError ());
         }
     }
 
@@ -132,14 +132,14 @@ void os_init (const char* wclass, const char* title, const char* app_name) {
     SDL_VERSION (&compiled);
     SDL_GetVersion (&linked);
 
-    mprintf (
-        ("  Initializing SDL %d.%d.%d (compiled with %d.%d.%d)...\n",
-         linked.major, linked.minor, linked.patch, compiled.major,
-         compiled.minor, compiled.patch));
+    WARNINGF (
+        LOCATION, "  Initializing SDL %d.%d.%d (compiled with %d.%d.%d)...\n",
+        linked.major, linked.minor, linked.patch, compiled.major,
+        compiled.minor, compiled.patch);
 
     if (SDL_Init (SDL_INIT_EVENTS) < 0) {
         fprintf (stderr, "Couldn't init SDL: %s", SDL_GetError ());
-        mprintf (("Couldn't init SDL: %s", SDL_GetError ()));
+        ERRORF (LOCATION, "Couldn't init SDL: %s", SDL_GetError ());
 
         exit (1);
         return;
@@ -173,10 +173,6 @@ void os_set_title (const char* title) {
 
 // call at program end
 void os_cleanup () {
-#ifndef NDEBUG
-    outwnd_close ();
-#endif
-
     os_deinit ();
 }
 
@@ -190,9 +186,7 @@ int os_foreground () { return fAppActive; }
 // -----------------------------------------------------------------
 
 // Sleeps for n milliseconds or until app becomes active.
-void os_sleep (uint ms) {
-    SDL_Delay (ms);
-}
+void os_sleep (uint ms) { SDL_Delay (ms); }
 
 static bool file_exists (const std::string& path) {
     std::ofstream str (path, std::ios::in);
@@ -330,7 +324,7 @@ void os_deinit () {
 }
 
 void debug_int3 (const char* file, int line) {
-    mprintf (("Int3(): From %s at line %d\n", file, line));
+    WARNINGF (LOCATION, "Int3(): From %s at line %d\n", file, line);
 
     gr_activate (0);
 

@@ -491,9 +491,9 @@ void iff_init () {
         fs2netd_add_table_validation ("iff_defs.tbl");
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             "iff_defs.tbl", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n",
+            "iff_defs.tbl", e.what ());
         return;
     }
 }

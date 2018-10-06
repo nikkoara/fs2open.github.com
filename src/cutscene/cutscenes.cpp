@@ -88,9 +88,9 @@ void cutscene_init () {
         required_string ("#End");
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             "cutscenes.tbl", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n",
+            "cutscenes.tbl", e.what ());
         return;
     }
 }

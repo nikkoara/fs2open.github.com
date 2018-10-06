@@ -373,10 +373,10 @@ void event_music_force_switch () {
     Patterns[Current_pattern].next_pattern =
         Patterns[Current_pattern].default_next_pattern;
     Patterns[Current_pattern].force_pattern = FALSE;
-    nprintf (
-        ("EVENTMUSIC", "EVENTMUSIC => switching to %s from %s\n",
-         Pattern_info[new_pattern].pattern_name,
-         Pattern_info[Current_pattern].pattern_name));
+    WARNINGF (
+        LOCATION, "EVENTMUSIC => switching to %s from %s\n",
+        Pattern_info[new_pattern].pattern_name,
+        Pattern_info[Current_pattern].pattern_name);
 
     // actually switch the pattern
     Current_pattern = new_pattern;
@@ -563,16 +563,6 @@ void event_music_level_init (int force_soundtrack) {
 
     if (Current_soundtrack_num < 0) {
         return;
-        /*
-                // okay, assign a random soundtrack if one exists
-                if ( Num_soundtracks > 0 ) {
-                    Current_soundtrack_num = rand()%Num_soundtracks;
-                    nprintf(("EVENTMUSIC", "EVENTMUSIC ==> Picking random event
-           music soundtrack: %s\n", Soundtracks[Current_soundtrack_num].name));
-                } else {
-                    return;
-                }
-        */
     }
 
     ASSERT (
@@ -1260,7 +1250,8 @@ void parse_soundtrack () {
     for (i = 0; i < Soundtracks[strack_idx].num_patterns; i++) {
         // check for "none"
         if (!strlen (Soundtracks[strack_idx].pattern_fnames[i]) ||
-            !strncasecmp (Soundtracks[strack_idx].pattern_fnames[i], "none", 4))
+            !strncasecmp (
+                Soundtracks[strack_idx].pattern_fnames[i], "none", 4))
             continue;
 
         // check for file
@@ -1353,9 +1344,9 @@ void event_music_parse_musictbl (const char* filename) {
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n", filename,
-             e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n", filename,
+            e.what ());
     }
 }
 
@@ -1366,16 +1357,15 @@ void event_music_parse_musictbl (const char* filename) {
 //
 void event_music_change_pattern (int new_pattern) {
     if (Event_music_enabled == FALSE) {
-        nprintf (
-            ("EVENTMUSIC",
-             "EVENTMUSIC ==> Requested a song switch when event music is not "
-             "enabled\n"));
+        WARNINGF (
+            LOCATION,
+            "EVENTMUSIC ==> Requested a song switch when event music is not "
+            "enabled");
         return;
     }
 
     if (Event_music_level_inited == FALSE) {
-        nprintf (
-            ("EVENTMUSIC", "EVENTMUSIC ==> Event music is not enabled\n"));
+        WARNINGF (LOCATION, "EVENTMUSIC ==> Event music is not enabled");
         return;
     }
 
@@ -1480,16 +1470,15 @@ void event_music_start_default () {
 //
 void event_music_pause () {
     if (Event_music_enabled == FALSE) {
-        nprintf (
-            ("EVENTMUSIC",
-             "EVENTMUSIC ==> Requested a song switch when event music is not "
-             "enabled\n"));
+        WARNINGF (
+            LOCATION,
+            "EVENTMUSIC ==> Requested a song switch when event music is not "
+            "enabled");
         return;
     }
 
     if (Event_music_level_inited == FALSE) {
-        nprintf (
-            ("EVENTMUSIC", "EVENTMUSIC ==> Event music is not enabled\n"));
+        WARNINGF (LOCATION, "EVENTMUSIC ==> Event music is not enabled");
         return;
     }
 
@@ -1510,16 +1499,15 @@ void event_music_pause () {
 //
 void event_music_unpause () {
     if (Event_music_enabled == FALSE) {
-        nprintf (
-            ("EVENTMUSIC",
-             "EVENTMUSIC ==> Requested a song switch when event music is not "
-             "enabled\n"));
+        WARNINGF (
+            LOCATION,
+            "EVENTMUSIC ==> Requested a song switch when event music is not "
+            "enabled");
         return;
     }
 
     if (Event_music_level_inited == FALSE) {
-        nprintf (
-            ("EVENTMUSIC", "EVENTMUSIC ==> Event music is not enabled\n"));
+        WARNINGF (LOCATION, "EVENTMUSIC ==> Event music is not enabled");
         return;
     }
 
@@ -1693,8 +1681,9 @@ void event_music_set_soundtrack (char* name) {
     Current_soundtrack_num = event_music_get_soundtrack_index (name);
 
     if (Current_soundtrack_num == -1) {
-        mprintf (
-            ("Current soundtrack set to -1 in event_music_set_soundtrack\n"));
+        WARNINGF (
+            LOCATION,
+            "Current soundtrack set to -1 in event_music_set_soundtrack\n");
     }
 }
 
@@ -1731,7 +1720,9 @@ void event_music_set_score (int score_index, const char* name) {
 // reset what sort of music is to be used for this mission
 void event_music_reset_choices () {
     Current_soundtrack_num = -1;
-    mprintf (("Current soundtrack set to -1 in event_music_reset_choices\n"));
+    WARNINGF (
+        LOCATION,
+        "Current soundtrack set to -1 in event_music_reset_choices\n");
     Mission_music[SCORE_BRIEFING] = -1;
     Mission_music[SCORE_FICTION_VIEWER] = -1;
     event_music_set_score (SCORE_DEBRIEF_SUCCESS, "Success");

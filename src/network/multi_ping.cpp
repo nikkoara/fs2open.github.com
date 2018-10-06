@@ -45,9 +45,8 @@ void multi_ping_eval_pong (ping_struct* ps, fix pong_time) {
 
     // if the ping technically hasn't started,
     if (ps->ping_start < 0L) {
-        nprintf (
-            ("Network",
-             "Processing pong for ping which hasn't started yet!\n"));
+        WARNINGF (
+            LOCATION, "Processing pong for ping which hasn't started yet!");
         return;
     }
 

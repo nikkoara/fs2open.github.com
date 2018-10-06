@@ -40,8 +40,7 @@ struct ThreadedEventProcessor {
     explicit ThreadedEventProcessor (Params&&... params)
         : q_ (N),
           w_ (&ThreadedEventProcessor< Processor >::workerThread, this),
-          p_ (std::forward< Params > (params)...)
-        { }
+          p_ (std::forward< Params > (params)...) {}
 
     ~ThreadedEventProcessor () {
         q_.close ();
@@ -55,9 +54,10 @@ struct ThreadedEventProcessor {
             q_.wait_push_back (*event);
         }
         catch (const sync_queue_is_closed&) {
-            mprintf (
-                ("Stream queue was closed in processEvent! This should not be "
-                 "possible..."));
+            WARNINGF (
+                LOCATION,
+                "Stream queue was closed in processEvent! This should not be "
+                "possible...");
         }
     }
 

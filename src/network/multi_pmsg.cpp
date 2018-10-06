@@ -725,9 +725,8 @@ void multi_msg_process_squadmsg_packet (unsigned char* data, header* hinfo) {
     // determine who the order is from
     source_index = find_player_id (source_id);
     if (source_index == -1) {
-        nprintf (
-            ("Network",
-             "Received squadmsg order packet from unknown player!!\n"));
+        WARNINGF (
+            LOCATION, "Received squadmsg order packet from unknown player!!");
         return;
     }
 

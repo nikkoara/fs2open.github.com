@@ -40,9 +40,7 @@ void multi_log_init () {
 }
 
 // close down the multi logfile
-void multi_log_close () {
-    II ("multiplayer") << "logging closed";
-}
+void multi_log_close () { II ("multiplayer") << "logging closed"; }
 
 // give some processing time to the logfile system so it can check up on stuff
 void multi_log_process () {
@@ -56,8 +54,7 @@ void multi_log_process () {
 
 // printf function itself called by the ml_printf macro
 void ml_printf (const char* fmt, ...) {
-    if (0 == fmt || 0 == fmt [0])
-        return;
+    if (0 == fmt || 0 == fmt[0]) return;
 
     std::string temp;
     va_list args;
@@ -102,7 +99,6 @@ void ml_string (const char* string, int add_time) {
     if (Is_standalone) { std_debug_multilog_add_line (tmp); }
 
 #if defined(MULTI_LOGFILE_ECHO_TO_DEBUG)
-    // nprintf(("Network","%s\n",tmp));
-    mprintf (("ML %s", tmp));
+    WARNINGF (LOCATION, "ML %s", tmp);
 #endif
 }

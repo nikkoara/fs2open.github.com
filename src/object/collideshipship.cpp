@@ -391,11 +391,11 @@ int ship_ship_check_collision (
             if (aip->mode == AIM_CHASE)
                 submode_string = Submode_text[aip->submode];
 
-            nprintf (
-                ("AI",
-                 "Player collided with ship %s, AI mode = %s, submode = %s\n",
-                 Ships[collide_obj->instance].ship_name, Mode_text[aip->mode],
-                 submode_string));
+            WARNINGF (
+                LOCATION,
+                "Player collided with ship %s, AI mode = %s, submode = %s\n",
+                Ships[collide_obj->instance].ship_name, Mode_text[aip->mode],
+                submode_string);
         }
 #endif
 
@@ -804,9 +804,9 @@ void calculate_ship_ship_collision_physics (
         // the
         //-v_light normalized.          v_rel_normal_m = -v_rel_normal_m;
 
-        nprintf (
-            ("Physics", "Frame %i reset v_rel_normal_m %f Edge %i\n",
-             Framecount, v_rel_normal_m, ship_ship_hit_info->edge_hit));
+        WARNINGF (
+            LOCATION, "Frame %i reset v_rel_normal_m %f Edge %i\n", Framecount,
+            v_rel_normal_m, ship_ship_hit_info->edge_hit);
         v_rel_normal_m = -v_rel_normal_m;
     }
 
@@ -952,9 +952,9 @@ void calculate_ship_ship_collision_physics (
                   (heavy_denom + light_denom);
     ship_ship_hit_info->impulse = impulse_mag;
     if (impulse_mag < 0) {
-        nprintf (
-            ("Physics",
-             "negative impulse mag -- Get Dave A if not Descent Physics\n"));
+        WARNINGF (
+            LOCATION,
+            "negative impulse mag -- Get Dave A if not Descent Physics");
         impulse_mag = -impulse_mag;
     }
 
@@ -1095,8 +1095,7 @@ static void get_I_inv (matrix* I_inv, matrix* I_inv_body, matrix* orient) {
 }
 
 #define PLANET_DAMAGE_SCALE 4.0f
-#define PLANET_DAMAGE_RANGE \
-    3 // If within this factor of radius, apply damage.
+#define PLANET_DAMAGE_RANGE 3 // If within this factor of radius, apply damage.
 
 fix Last_planet_damage_time = 0;
 extern void hud_start_text_flash (char* txt, int t, int interval);
@@ -1182,9 +1181,9 @@ int get_ship_quadrant_from_global (vec3d* global_pos, object* objp) {
     return get_quadrant (&rotpos, objp);
 }
 
-#define MIN_REL_SPEED_FOR_LOUD_COLLISION \
+#define MIN_REL_SPEED_FOR_LOUD_COLLISION                                      \
     50 // relative speed of two colliding objects at which we play the "loud"
-       // collide sound
+        // collide sound
 
 void collide_ship_ship_sounds_init () {
     Player_collide_sound = sound_handle::invalid ();
@@ -1410,9 +1409,9 @@ int collide_ship_ship (obj_pair* pair) {
                 HUD_printf ("%s", XSTR ("Warpout sequence aborted.", 466));
             }
 
-            damage = 0.005f *
-                ship_ship_hit_info
-                .impulse; // Cut collision-based damage in half.
+            damage =
+                0.005f * ship_ship_hit_info
+                             .impulse; // Cut collision-based damage in half.
             // Decrease heavy damage by 2x.
             if (damage > 5.0f) { damage = 5.0f + (damage - 5.0f) / 2.0f; }
 
@@ -1434,7 +1433,7 @@ int collide_ship_ship (obj_pair* pair) {
                             Player_collide_sound = snd_play_3d (
                                 gamesnd_get_game_sound (
                                     light_sip->collision_physics
-                                    .landing_sound_idx),
+                                        .landing_sound_idx),
                                 &world_hit_pos, &View_position);
                         }
                     }
@@ -1443,7 +1442,7 @@ int collide_ship_ship (obj_pair* pair) {
                             AI_collide_sound = snd_play_3d (
                                 gamesnd_get_game_sound (
                                     light_sip->collision_physics
-                                    .landing_sound_idx),
+                                        .landing_sound_idx),
                                 &world_hit_pos, &View_position);
                         }
                     }
@@ -1460,7 +1459,7 @@ int collide_ship_ship (obj_pair* pair) {
                 vec3d v;
 
                 scaler = -ship_ship_hit_info.impulse /
-                    Player_obj->phys_info.mass * 300;
+                         Player_obj->phys_info.mass * 300;
                 vm_vec_copy_normalize (&v, &world_hit_pos);
                 joy_ff_play_vector_effect (&v, scaler);
             }
@@ -1470,8 +1469,7 @@ int collide_ship_ship (obj_pair* pair) {
                 if (Ships[A->instance].team == Ships[B->instance].team) {
                     vec3d collision_vec, right_angle_vec;
                     vm_vec_normalized_dir (
-                        &collision_vec, &ship_ship_hit_info.hit_pos,
-                        &A->pos);
+                        &collision_vec, &ship_ship_hit_info.hit_pos, &A->pos);
                     if (vm_vec_dot (&collision_vec, &A->orient.vec.fvec) >
                         0.999f) {
                         right_angle_vec = A->orient.vec.rvec;
@@ -1518,7 +1516,7 @@ int collide_ship_ship (obj_pair* pair) {
                 int quadrant_num = get_ship_quadrant_from_global (
                     &world_hit_pos, ship_ship_hit_info.heavy);
                 if ((ship_ship_hit_info.heavy
-                     ->flags[Object::Object_Flags::No_shields]) ||
+                         ->flags[Object::Object_Flags::No_shields]) ||
                     !ship_is_shield_up (
                         ship_ship_hit_info.heavy, quadrant_num)) {
                     quadrant_num = -1;
@@ -1526,8 +1524,7 @@ int collide_ship_ship (obj_pair* pair) {
 
                 ship_apply_local_damage (
                     ship_ship_hit_info.heavy, ship_ship_hit_info.light,
-                    &world_hit_pos,
-                    100.0f * damage / HeavyOne->phys_info.mass,
+                    &world_hit_pos, 100.0f * damage / HeavyOne->phys_info.mass,
                     quadrant_num, CREATE_SPARKS,
                     ship_ship_hit_info.submodel_num,
                     &ship_ship_hit_info.collision_normal);
@@ -1654,9 +1651,9 @@ void collect_ship_ship_physics_info (
 
     float mag = float(fabs (vm_vec_mag (r_light) - core_rad));
     if (mag > 0.1) {
-        nprintf (
-            ("Physics", "Framecount: %i |r_light - core_rad| > 0.1)\n",
-             Framecount));
+        WARNINGF (
+            LOCATION, "Framecount: %i |r_light - core_rad| > 0.1)\n",
+            Framecount);
     }
 
     if (ship_ship_hit_info->edge_hit) {
@@ -1669,9 +1666,8 @@ void collect_ship_ship_physics_info (
     // r dot n may not be negative if hit by moving model parts.
     float dot = vm_vec_dot (r_light, &ship_ship_hit_info->collision_normal);
     if (dot > 0) {
-        nprintf (
-            ("Physics", "Framecount: %i r dot normal %f > 0\n", Framecount,
-             dot));
+        WARNINGF (
+            LOCATION, "Framecount: %i r dot normal %f > 0\n", Framecount, dot);
     }
 
     vm_vec_zero (heavy_collide_cm_pos);
@@ -1679,33 +1675,33 @@ void collect_ship_ship_physics_info (
     float q = vm_vec_dist (heavy_collide_cm_pos, light_collide_cm_pos) /
               (heavier_obj->radius + core_rad);
     if (q > 1.0f) {
-        nprintf (("Physics", "Warning: q = %f.  Supposed to be <= 1.0.\n", q));
+        WARNINGF (LOCATION, "Warning: q = %f.  Supposed to be <= 1.0.", q);
     }
 
     *r_heavy = ship_ship_hit_info->hit_pos;
 
 // sphere_sphere_case_handled separately
 #ifdef COLLIDE_DEBUG
-    nprintf (
-        ("Physics",
-         "Frame: %i %s info: last_pos: [%4.1f, %4.1f, %4.1f], collide_pos: "
-         "[%4.1f, %4.1f %4.1f] vel: [%4.1f, %4.1f %4.1f]\n",
-         Framecount, Ships[heavier_obj->instance].ship_name,
-         heavier_obj->last_pos.x, heavier_obj->last_pos.y,
-         heavier_obj->last_pos.z, heavy_collide_cm_pos.x,
-         heavy_collide_cm_pos.y, heavy_collide_cm_pos.z,
-         heavier_obj->phys_info.vel.x, heavier_obj->phys_info.vel.y,
-         heavier_obj->phys_info.vel.z));
+    WARNINGF (
+        LOCATION,
+        "Frame: %i %s info: last_pos: [%4.1f, %4.1f, %4.1f], collide_pos: "
+        "[%4.1f, %4.1f %4.1f] vel: [%4.1f, %4.1f %4.1f]\n",
+        Framecount, Ships[heavier_obj->instance].ship_name,
+        heavier_obj->last_pos.x, heavier_obj->last_pos.y,
+        heavier_obj->last_pos.z, heavy_collide_cm_pos.x,
+        heavy_collide_cm_pos.y, heavy_collide_cm_pos.z,
+        heavier_obj->phys_info.vel.x, heavier_obj->phys_info.vel.y,
+        heavier_obj->phys_info.vel.z);
 
-    nprintf (
-        ("Physics",
-         "Frame: %i %s info: last_pos: [%4.1f, %4.1f, %4.1f], collide_pos: "
-         "[%4.1f, %4.1f, %4.1f] vel: [%4.1f, %4.1f, %4.1f]\n",
-         Framecount, Ships[lighter_obj->instance].ship_name,
-         lighter_obj->last_pos.x, lighter_obj->last_pos.y,
-         lighter_obj->last_pos.z, light_collide_cm_pos.x,
-         light_collide_cm_pos.y, light_collide_cm_pos.z,
-         lighter_obj->phys_info.vel.x, lighter_obj->phys_info.vel.y,
-         lighter_obj->phys_info.vel.z));
+    WARNINGF (
+        LOCATION,
+        "Frame: %i %s info: last_pos: [%4.1f, %4.1f, %4.1f], collide_pos: "
+        "[%4.1f, %4.1f, %4.1f] vel: [%4.1f, %4.1f, %4.1f]\n",
+        Framecount, Ships[lighter_obj->instance].ship_name,
+        lighter_obj->last_pos.x, lighter_obj->last_pos.y,
+        lighter_obj->last_pos.z, light_collide_cm_pos.x,
+        light_collide_cm_pos.y, light_collide_cm_pos.z,
+        lighter_obj->phys_info.vel.x, lighter_obj->phys_info.vel.y,
+        lighter_obj->phys_info.vel.z);
 #endif
 }

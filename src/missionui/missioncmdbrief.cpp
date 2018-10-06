@@ -171,9 +171,9 @@ void cmd_brief_init_voice () {
             Cur_cmd_brief->stage[i].wave = audiostream_open (
                 Cur_cmd_brief->stage[i].wave_filename, ASF_VOICE);
             if (Cur_cmd_brief->stage[i].wave < 0) {
-                nprintf (
-                    ("General", "Failed to load \"%s\"\n",
-                     Cur_cmd_brief->stage[i].wave_filename));
+                WARNINGF (
+                    LOCATION, "Failed to load \"%s\"\n",
+                    Cur_cmd_brief->stage[i].wave_filename);
             }
         }
     }
@@ -283,9 +283,7 @@ void cmd_brief_stop_anim () {
             Cmd_brief_last_voice, 1, 0); // stream is automatically rewound
         Cmd_brief_last_voice = -1;
     }
-    if (Cmd_brief_last_stage >= 0) {
-        Cmd_brief_last_stage = -1;
-    }
+    if (Cmd_brief_last_stage >= 0) { Cmd_brief_last_stage = -1; }
 }
 
 void cmd_brief_new_stage (int stage) {

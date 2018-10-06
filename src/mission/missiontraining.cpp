@@ -37,7 +37,7 @@
 #define TRAINING_OBJ_STATUS_UNKNOWN (1 << 28) // directive status is unknown
 #define TRAINING_OBJ_STATUS_KNOWN \
     (1 << 29) // directive status is known (satisfied or failed)
-#define TRAINING_OBJ_LINES_KEY \
+#define TRAINING_OBJ_LINES_KEY                                          \
     (1 << 30) // flag indicating line describes the key associated with
               // objective
 #define TRAINING_OBJ_LINES_EVENT_STATUS_MASK \
@@ -802,9 +802,9 @@ int message_play_training_voice (int index) {
                     Training_voice_soundstream = audiostream_open (
                         Message_waves[index].name, ASF_VOICE);
                     if (Training_voice_soundstream < 0) {
-                        nprintf (
-                            ("Warning", "Unable to load voice file %s\n",
-                             Message_waves[index].name));
+                        WARNINGF (
+                            LOCATION, "Unable to load voice file %s\n",
+                            Message_waves[index].name);
                     }
                 }
             } // Training_voice should be valid and loaded now
@@ -823,10 +823,9 @@ int message_play_training_voice (int index) {
             strcpy_s (tmp_gs.filename, Message_waves[index].name);
             Message_waves[index].num = snd_load (&tmp_gs, 0, 0);
             if (!Message_waves[index].num.isValid ()) {
-                nprintf (
-                    ("Warning",
-                     "Cannot load message wave: %s.  Will not play\n",
-                     Message_waves[index].name));
+                WARNINGF (
+                    LOCATION, "Cannot load message wave: %s.  Will not play\n",
+                    Message_waves[index].name);
                 return -1;
             }
         }

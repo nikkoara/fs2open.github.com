@@ -162,9 +162,9 @@ void GUISystem::ParseClassInfo (const char* filename) {
         ClassInfoParsed = true;
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("WMCGUI: Unable to parse '%s'!  Error message = %s.\n", filename,
-             e.what ()));
+        ERRORF (
+            LOCATION, "WMCGUI: Unable to parse '%s'!  Error message = %s.\n",
+            filename, e.what ());
         return;
     }
 }

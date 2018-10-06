@@ -126,7 +126,7 @@ void emp_apply (
                 // memset(&target->phys_info, 0, sizeof(physics_info));
                 Weapons[target->instance].weapon_flags.set (
                     Weapon::Weapon_Flags::Dead_in_water);
-                mprintf (("EMP killing weapon\n"));
+                WARNINGF (LOCATION, "EMP killing weapon\n");
             }
         }
     }
@@ -199,11 +199,12 @@ void emp_apply (
                     ship_subsys_set_disrupted (
                         moveup, (int)(capship_emp_time * scale_factor));
 
-                    mprintf (
-                        ("EMP disrupting subsys %s on ship %s (%f, %f)\n",
-                         moveup->system_info->subobj_name,
-                         Ships[Objects[so->objnum].instance].ship_name,
-                         scale_factor, capship_emp_time * scale_factor));
+                    WARNINGF (
+                        LOCATION,
+                        "EMP disrupting subsys %s on ship %s (%f, %f)\n",
+                        moveup->system_info->subobj_name,
+                        Ships[Objects[so->objnum].instance].ship_name,
+                        scale_factor, capship_emp_time * scale_factor);
                 }
 
                 // next item
@@ -233,9 +234,9 @@ void emp_apply (
             // calculate actual EMP effect values
             actual_intensity = emp_intensity * scale_factor;
             actual_time = emp_time * scale_factor;
-            mprintf (
-                ("EMP effect s : %f, i : %f, t : %f\n", scale_factor,
-                 actual_intensity, actual_time));
+            WARNINGF (
+                LOCATION, "EMP effect s : %f, i : %f, t : %f\n", scale_factor,
+                actual_intensity, actual_time);
 
             // if this effect happened to be on me, start it now
             if ((target == Player_obj) &&

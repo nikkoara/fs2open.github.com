@@ -114,9 +114,9 @@ void parseCallback (const char* fileName) {
         required_string ("#End");
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n", fileName,
-             e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n", fileName,
+            e.what ());
         return;
     }
 }
@@ -137,8 +137,7 @@ void ParticleManager::init () {
 }
 
 void ParticleManager::shutdown () {
-    ASSERTX (
-        m_manager != nullptr, "ParticleManager was not properly inited!");
+    ASSERTX (m_manager != nullptr, "ParticleManager was not properly inited!");
 
     m_manager = nullptr;
 }

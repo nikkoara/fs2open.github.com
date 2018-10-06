@@ -77,8 +77,7 @@ void showVideoInfo (const PlayerState& state) {
 
     y = print_string (x, y, "Audio Queue size: %zu", audio_queue_size);
     y = print_string (
-        x, y, "Video Queue size: %zu",
-        state.decoder->getVideoQueueSize ());
+        x, y, "Video Queue size: %zu", state.decoder->getVideoQueueSize ());
     y += font::get_current_font ()->getHeight ();
     // Estimate the size of the video buffer
     // We use YUV420p frames so one pixel uses 1.5 bytes of storage
@@ -268,7 +267,7 @@ bool play (const char* name) {
     }
     else {
         // uh-oh, movie is invalid... Abory, Retry, Fail?
-        mprintf (("MOVIE ERROR: Found invalid movie! (%s)\n", name));
+        ERRORF (LOCATION, "MOVIE ERROR: Found invalid movie! (%s)\n", name);
     }
 
     // show the mouse cursor again

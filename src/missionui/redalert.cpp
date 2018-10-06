@@ -156,7 +156,8 @@ void red_alert_voice_play () {
 // stop playback of the red alert voice
 void red_alert_voice_stop () {
     if (!Red_alert_voice_started) return;
-    audiostream_stop (Red_alert_voice, 1, 0); // stream is automatically rewound
+    audiostream_stop (
+        Red_alert_voice, 1, 0); // stream is automatically rewound
 }
 
 // pausing and unpausing of red alert voice
@@ -501,7 +502,8 @@ void red_alert_bash_weapons (red_alert_ship_status* ras, p_object* pobjp) {
 
     // parse objects use the "pilot" subsystem
     for (i = 0; i < pobjp->subsys_count; i++) {
-        if (!strcasecmp (Subsys_status[pobjp->subsys_index + i].name, "pilot")) {
+        if (!strcasecmp (
+                Subsys_status[pobjp->subsys_index + i].name, "pilot")) {
             sssp = &Subsys_status[pobjp->subsys_index + i];
             break;
         }
@@ -836,10 +838,11 @@ void red_alert_bash_wingman_status () {
                             change_ship_type (
                                 SHIP_INDEX (shipp), ras->ship_class);
                         else
-                            mprintf (
-                                ("Invalid ship class specified in red alert "
-                                 "data for ship %s. Using mission defaults.\n",
-                                 shipp->ship_name));
+                            WARNINGF (
+                                LOCATION,
+                                "Invalid ship class specified in red alert "
+                                "data for ship %s. Using mission defaults.\n",
+                                shipp->ship_name);
                     }
 
                     // restore hull (but not shields)
@@ -847,10 +850,11 @@ void red_alert_bash_wingman_status () {
                         ras->hull <= ship_objp->hull_strength)
                         ship_objp->hull_strength = ras->hull;
                     else
-                        mprintf (
-                            ("Invalid health in red alert data for ship %s. "
-                             "Using mission defaults.\n",
-                             shipp->ship_name));
+                        WARNINGF (
+                            LOCATION,
+                            "Invalid health in red alert data for ship %s. "
+                            "Using mission defaults.\n",
+                            shipp->ship_name);
 
                     // restore weapons and subsys
                     red_alert_bash_weapons (ras, &shipp->weapons);
@@ -935,10 +939,11 @@ void red_alert_bash_wingman_status () {
                                 static_cast< int > (Ship_info.size ()))
                             swap_parse_object (pobjp, ras->ship_class);
                         else {
-                            mprintf (
-                                ("Invalid ship class specified in red alert "
-                                 "data for ship %s. Using mission defaults.\n",
-                                 pobjp->name));
+                            WARNINGF (
+                                LOCATION,
+                                "Invalid ship class specified in red alert "
+                                "data for ship %s. Using mission defaults.\n",
+                                pobjp->name);
 
                             // We will break anyway to this should work
                             break;
@@ -952,10 +957,11 @@ void red_alert_bash_wingman_status () {
                         pobjp->initial_hull =
                             (int)(ras->hull * 100.0f / pobjp->ship_max_hull_strength);
                     else
-                        mprintf (
-                            ("Invalid health in red alert data for ship %s. "
-                             "Using mission defaults.\n",
-                             pobjp->name));
+                        WARNINGF (
+                            LOCATION,
+                            "Invalid health in red alert data for ship %s. "
+                            "Using mission defaults.\n",
+                            pobjp->name);
 
                     // restore weapons and subsys
                     red_alert_bash_weapons (ras, pobjp);

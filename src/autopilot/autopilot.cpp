@@ -1348,9 +1348,9 @@ void parse_autopilot_table (const char* filename) {
         required_string ("#END");
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             (filename) ? filename : "<default autopilot.tbl>", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n",
+            (filename) ? filename : "<default autopilot.tbl>", e.what ());
         return;
     }
 }

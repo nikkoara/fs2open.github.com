@@ -451,10 +451,10 @@ void HUD_fixed_printf (float duration, color col, const char* format, ...) {
     // make sure we only print these messages if we're in the correct state
     if ((Game_mode & GM_MULTIPLAYER) &&
         (Netgame.game_state != NETGAME_STATE_IN_MISSION)) {
-        nprintf (
-            ("Network",
-             "HUD_fixed_printf bailing because not in multiplayer game play "
-             "state\n"));
+        WARNINGF (
+            LOCATION,
+            "HUD_fixed_printf bailing because not in multiplayer game play "
+            "state");
         return;
     }
 
@@ -466,18 +466,18 @@ void HUD_fixed_printf (float duration, color col, const char* format, ...) {
     msg_length = strlen (tmp);
 
     if (!msg_length) {
-        nprintf (
-            ("Warning",
-             "HUD_fixed_printf ==> attempt to print a 0 length string in msg "
-             "window\n"));
+        WARNINGF (
+            LOCATION,
+            "HUD_fixed_printf ==> attempt to print a 0 length string in msg "
+            "window");
         return;
     }
     else if (msg_length > MAX_HUD_LINE_LEN - 1) {
-        nprintf (
-            ("Warning",
-             "HUD_fixed_printf ==> Following string truncated to %d chars: "
-             "%s\n",
-             MAX_HUD_LINE_LEN - 1, tmp));
+        WARNINGF (
+            LOCATION,
+            "HUD_fixed_printf ==> Following string truncated to %d chars: "
+            "%s\n",
+            MAX_HUD_LINE_LEN - 1, tmp);
         tmp[MAX_HUD_LINE_LEN - 1] = '\0';
     }
 
@@ -508,10 +508,9 @@ void HUD_printf (const char* format, ...) {
     // make sure we only print these messages if we're in the correct state
     if ((Game_mode & GM_MULTIPLAYER) &&
         (Net_player->state != NETPLAYER_STATE_IN_MISSION)) {
-        nprintf (
-            ("Network",
-             "HUD_printf bailing because not in multiplayer game play "
-             "state\n"));
+        WARNINGF (
+            LOCATION,
+            "HUD_printf bailing because not in multiplayer game play state");
         return;
     }
 
@@ -558,10 +557,10 @@ void HUD_sourced_printf (int source, const char* format, ...) {
     // make sure we only print these messages if we're in the correct state
     if ((Game_mode & GM_MULTIPLAYER) &&
         (Net_player->state != NETPLAYER_STATE_IN_MISSION)) {
-        nprintf (
-            ("Network",
-             "HUD_sourced_printf bailing because not in multiplayer game play "
-             "state\n"));
+        WARNINGF (
+            LOCATION,
+            "HUD_sourced_printf bailing because not in multiplayer game play "
+            "state");
         return;
     }
 
@@ -575,9 +574,9 @@ void HUD_sourced_printf (int source, const char* format, ...) {
 
 void hud_sourced_print (int source, const char* msg) {
     if (!strlen (msg)) {
-        nprintf (
-            ("Warning",
-             "HUD ==> attempt to print a 0 length string in msg window\n"));
+        WARNINGF (
+            LOCATION,
+            "HUD ==> attempt to print a 0 length string in msg window");
         return;
     }
 
@@ -617,9 +616,9 @@ int hud_query_scrollback_size () {
 // add text directly to the hud scrollback log, without displaying on the hud
 void HUD_add_to_scrollback (const char* text, int source) {
     if (!strlen (text)) {
-        nprintf (
-            ("Warning",
-             "HUD ==> attempt to print a 0 length string in msg window\n"));
+        WARNINGF (
+            LOCATION,
+            "HUD ==> attempt to print a 0 length string in msg window");
         return;
     }
 

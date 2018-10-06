@@ -362,10 +362,10 @@ void parse_species_tbl (const char* filename) {
         fs2netd_add_table_validation (filename);
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             (filename) ? filename : NOX ("<default species_defs.tbl>"),
-             e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n",
+            (filename) ? filename : NOX ("<default species_defs.tbl>"),
+            e.what ());
         return;
     }
 }

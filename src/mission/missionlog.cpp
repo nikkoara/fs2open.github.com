@@ -76,9 +76,9 @@ int mission_log_query_scrollback_size () { return last_entry; }
 void mission_log_cull_obsolete_entries () {
     int i, index;
 
-    nprintf (
-        ("missionlog", "culling obsolete entries.  starting last entry %d.\n",
-         last_entry));
+    WARNINGF (
+        LOCATION, "culling obsolete entries.  starting last entry %d.\n",
+        last_entry);
     // find the first obsolete entry
     for (i = 0; i < last_entry; i++)
         if (log_entries[i].flags & MLF_OBSOLETE) break;
@@ -105,7 +105,7 @@ void mission_log_cull_obsolete_entries () {
     } while (i < last_entry);
 
 #ifndef NDEBUG
-    nprintf (("missionlog", "Ending entry: %d.\n", last_entry));
+    WARNINGF (LOCATION, "Ending entry: %d.", last_entry);
 #endif
 }
 
@@ -146,10 +146,10 @@ void mission_log_obsolete_entries (LogType type, const char* pname) {
         // entries from the log.  These entries are entries which has not been
         // asked for by mission_log_get_time
         if (last_entry > LOG_CULL_MARK) {
-            nprintf ((
-                "missionlog",
+            WARNINGF (
+                LOCATION,
                 "marking the first %d non-essential log entries as obsolete\n",
-                LOG_LAST_DITCH_CULL_NUM));
+                LOG_LAST_DITCH_CULL_NUM);
             for (i = 0; i < LOG_LAST_DITCH_CULL_NUM; i++) {
                 entry = &log_entries[i];
                 if (!(entry->flags & MLF_ESSENTIAL)) {
@@ -165,10 +165,10 @@ void mission_log_obsolete_entries (LogType type, const char* pname) {
             // obsolete and compress.  Don't do this unless we are *really* in
             // trouble
             if (last_entry > LOG_CULL_DOORDIE_MARK) {
-                nprintf (
-                    ("missionlog",
-                     "removing the first %d entries in the mission log!!!!\n",
-                     LOG_LAST_DITCH_CULL_NUM));
+                WARNINGF (
+                    LOCATION,
+                    "removing the first %d entries in the mission log!!!!\n",
+                    LOG_LAST_DITCH_CULL_NUM);
                 for (i = 0; i < LOG_LAST_DITCH_CULL_NUM; i++) {
                     entry->flags |= MLF_OBSOLETE;
                 }
@@ -309,9 +309,9 @@ void mission_log_add_entry (
                 }
             }
             else {
-                nprintf (
-                    ("missionlog",
-                     "No secondary name for ship destroyed log entry!\n"));
+                WARNINGF (
+                    LOCATION,
+                    "No secondary name for ship destroyed log entry!");
             }
         }
         else if (
@@ -400,10 +400,10 @@ void mission_log_add_entry (
     if (!(last_entry % 10)) {
         if ((last_entry > LOG_HALFWAY_REPORT_NUM) &&
             (last_entry > last_entry_save)) {
-            nprintf (
-                ("missionlog",
-                 "new highwater point reached for mission log (%d entries).\n",
-                 last_entry));
+            WARNINGF (
+                LOCATION,
+                "new highwater point reached for mission log (%d entries).\n",
+                last_entry);
         }
     }
 #endif
@@ -606,8 +606,9 @@ void message_log_add_seg (
 void message_log_add_segs (
     const char* source_string, int msg_color, int flags = 0) {
     if (!source_string) {
-        mprintf (
-            ("Why are you passing a NULL pointer to message_log_add_segs?\n"));
+        WARNINGF (
+            LOCATION,
+            "Why are you passing a NULL pointer to message_log_add_segs?\n");
         return;
     }
     if (!*source_string) { return; }
@@ -873,9 +874,7 @@ void message_log_init_scrollback (int pw) {
                                                    : LOG_FLAG_GOAL_FAILED));
             break;
         } // matches case statement!
-        default:
-            ASSERT (0);
-            break;
+        default: ASSERT (0); break;
         }
 
         if (kill) { message_log_remove_segs (Num_log_lines); }

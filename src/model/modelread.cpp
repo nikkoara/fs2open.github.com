@@ -150,7 +150,8 @@ void model_unload (int modelnum, int force) {
 
     if (!force && (--pm->used_this_mission > 0)) return;
 
-    mprintf (("Unloading model '%s' from slot '%i'\n", pm->filename, num));
+    WARNINGF (
+        LOCATION, "Unloading model '%s' from slot '%i'\n", pm->filename, num);
 
     // so that the textures can be released
     pm->used_this_mission = 0;
@@ -314,7 +315,7 @@ void model_free_all () {
         return;
     }
 
-    mprintf (("Freeing all existing models...\n"));
+    WARNINGF (LOCATION, "Freeing all existing models...\n");
     model_instance_free_all ();
 
     for (i = 0; i < MAX_POLYGON_MODELS; i++) {
@@ -348,7 +349,7 @@ void model_page_in_start () {
         return;
     }
 
-    mprintf (("Starting model page in...\n"));
+    WARNINGF (LOCATION, "Starting model page in...\n");
 
     for (i = 0; i < MAX_POLYGON_MODELS; i++) {
         if (Polygon_models[i] != NULL)
@@ -361,7 +362,7 @@ void model_page_in_stop () {
 
     ASSERT (model_initted);
 
-    mprintf (("Stopping model page in...\n"));
+    WARNINGF (LOCATION, "Stopping model page in...\n");
 
     for (i = 0; i < MAX_POLYGON_MODELS; i++) {
         if (Polygon_models[i] == NULL) continue;
@@ -471,7 +472,8 @@ void model_copy_subsystems (
         source = &s_sp[i];
         for (j = 0; j < n_subsystems; j++) {
             dest = &d_sp[j];
-            if (!subsystem_strcasecmp (source->subobj_name, dest->subobj_name)) {
+            if (!subsystem_strcasecmp (
+                    source->subobj_name, dest->subobj_name)) {
                 for (auto const& flag : carry_flags) {
                     if (source->flags[flag]) dest->flags.set (flag);
                 }
@@ -572,10 +574,11 @@ static void set_subsystem_info (
     else { // If unrecognized type, set to unknown so artist can continue
            // working...
         subsystemp->type = SUBSYSTEM_UNKNOWN;
-        mprintf (
-            ("Subsystem '%s' on ship %s is not recognized as a common "
-             "subsystem type\n",
-             dname, model_get (model_num)->filename));
+        WARNINGF (
+            LOCATION,
+            "Subsystem '%s' on ship %s is not recognized as a common "
+            "subsystem type\n",
+            dname, model_get (model_num)->filename);
     }
 
     if ((strstr (props, "$triggered")) != NULL) {
@@ -721,9 +724,9 @@ void do_new_subsystem (
     if (slist == NULL) {
 #ifndef NDEBUG
         if (!ss_warning_shown) {
-            mprintf (
-                ("No subsystems found for model \"%s\".\n",
-                 model_get (model_num)->filename));
+            WARNINGF (
+                LOCATION, "No subsystems found for model \"%s\".\n",
+                model_get (model_num)->filename);
             ss_warning_shown = 1;
         }
 #endif
@@ -741,13 +744,13 @@ void do_new_subsystem (
         // Goober5000 - notify if there's a mismatch
         if (strcasecmp (subobj_name, subsystemp->subobj_name) != 0 &&
             !subsystem_strcasecmp (subobj_name, subsystemp->subobj_name)) {
-            nprintf (
-                ("Model",
-                 "NOTE: Subsystem \"%s\" in model \"%s\" is represented as "
-                 "\"%s\" in ships.tbl.  This works fine in FSO v3.6 and up, "
-                 "but is not compatible with FS2 retail.\n",
-                 subobj_name, model_get (model_num)->filename,
-                 subsystemp->subobj_name));
+            WARNINGF (
+                LOCATION,
+                "NOTE: Subsystem \"%s\" in model \"%s\" is represented as "
+                "\"%s\" in ships.tbl.  This works fine in FSO v3.6 and up, "
+                "but is not compatible with FS2 retail.\n",
+                subobj_name, model_get (model_num)->filename,
+                subsystemp->subobj_name);
         }
 #endif
 
@@ -779,26 +782,27 @@ void do_new_subsystem (
             "ships.tbl.\nThis can cause game to crash.\n\nList of subsystems "
             "not found from table is in log file.\n",
             model_get (model_num)->filename);
-        mprintf (
-            ("Subsystem %s in model %s was not found in ships.tbl!\n",
-             subobj_name, model_get (model_num)->filename));
+        WARNINGF (
+            LOCATION, "Subsystem %s in model %s was not found in ships.tbl!\n",
+            subobj_name, model_get (model_num)->filename);
         ss_warning_shown = 1;
     }
     else
 #endif
-        mprintf (
-            ("Subsystem %s in model %s was not found in ships.tbl!\n",
-             subobj_name, model_get (model_num)->filename));
+        WARNINGF (
+            LOCATION, "Subsystem %s in model %s was not found in ships.tbl!\n",
+            subobj_name, model_get (model_num)->filename);
 
 #ifndef NDEBUG
     if (ss_fp) {
         _splitpath (model_filename, NULL, NULL, bname, NULL);
-        mprintf (
-            ("A subsystem was found in model %s that does not have a record "
-             "in ships.tbl.\nA list of subsystems for this ship will be "
-             "dumped to:\n\ndata%stables%s%s.subsystems for inclusion\ninto "
-             "ships.tbl.\n",
-             model_filename, DIR_SEPARATOR_STR, DIR_SEPARATOR_STR, bname));
+        WARNINGF (
+            LOCATION,
+            "A subsystem was found in model %s that does not have a record in "
+            "ships.tbl.\nA list of subsystems for this ship will be dumped "
+            "to:\n\ndata%stables%s%s.subsystems for inclusion\ninto "
+            "ships.tbl.\n",
+            model_filename, DIR_SEPARATOR_STR, DIR_SEPARATOR_STR, bname);
         char tmp_buffer[128];
         sprintf (tmp_buffer, "$Subsystem:\t\t\t%s,1,0.0\n", subobj_name);
         cfputs (tmp_buffer, ss_fp);
@@ -814,19 +818,19 @@ void print_family_tree (
     if (obj == NULL) return;
 
     if (ident[0] == '\0') {
-        mprintf ((" %s", obj->submodel[modelnum].name));
+        WARNINGF (LOCATION, " %s", obj->submodel[modelnum].name);
         sprintf (temp, " ");
     }
     else if (islast) {
-        mprintf (("%s:%s", ident, obj->submodel[modelnum].name));
+        WARNINGF (LOCATION, "%s:%s", ident, obj->submodel[modelnum].name);
         sprintf (temp, "%s  ", ident);
     }
     else {
-        mprintf (("%s:%s", ident, obj->submodel[modelnum].name));
+        WARNINGF (LOCATION, "%s:%s", ident, obj->submodel[modelnum].name);
         sprintf (temp, "%s ", ident);
     }
 
-    mprintf (("\n"));
+    WARNINGF (LOCATION, "\n");
 
     int child = obj->submodel[modelnum].first_child;
     while (child > -1) {
@@ -1256,10 +1260,11 @@ int read_model_file (
                 if (IS_VEC_NULL (&pm->moment_of_inertia.vec.rvec) &&
                     IS_VEC_NULL (&pm->moment_of_inertia.vec.uvec) &&
                     IS_VEC_NULL (&pm->moment_of_inertia.vec.fvec)) {
-                    mprintf (
-                        ("Model %s has a null moment of inertia!  (This is "
-                         "only a problem if the model is a ship.)\n",
-                         filename));
+                    WARNINGF (
+                        LOCATION,
+                        "Model %s has a null moment of inertia!  (This is "
+                        "only a problem if the model is a ship.)\n",
+                        filename);
                 }
             }
             else {
@@ -1476,8 +1481,9 @@ int read_model_file (
                 char type[64];
 
                 get_user_prop_value (p + 9, type);
-                if (!strcasecmp (type, "subsystem")) { // if we have a subsystem,
-                                                    // put it into the list!
+                if (!strcasecmp (
+                        type, "subsystem")) { // if we have a subsystem,
+                                              // put it into the list!
                     do_new_subsystem (
                         n_subsystems, subsystems, n, pm->submodel[n].rad,
                         &pm->submodel[n].offset, props, pm->submodel[n].name,
@@ -1809,10 +1815,10 @@ int read_model_file (
             }
 
             if (!rotating_submodel_has_subsystem) {
-                nprintf (
-                    ("Model",
-                     "Model %s: Rotating Submodel without subsystem: %s\n",
-                     pm->filename, pm->submodel[n].name));
+                WARNINGF (
+                    LOCATION,
+                    "Model %s: Rotating Submodel without subsystem: %s\n",
+                    pm->filename, pm->submodel[n].name);
 
                 // mark those submodels which should not rotate - ie, those
                 // with no subsystem
@@ -2011,27 +2017,27 @@ int read_model_file (
                         auto length = strlen (bay->name);
                         if ((length > 0) &&
                             is_white_space (bay->name[length - 1])) {
-                            nprintf (
-                                ("Model",
-                                 "model '%s' has trailing whitespace on bay "
-                                 "name '%s'; this will be trimmed\n",
-                                 pm->filename, bay->name));
+                            WARNINGF (
+                                LOCATION,
+                                "model '%s' has trailing whitespace on bay "
+                                "name '%s'; this will be trimmed\n",
+                                pm->filename, bay->name);
                             drop_trailing_white_space (bay->name);
                         }
                         if (strlen (bay->name) == 0) {
-                            nprintf (
-                                ("Model",
-                                 "model '%s' has an empty name specified for "
-                                 "docking point %d\n",
-                                 pm->filename, i));
+                            WARNINGF (
+                                LOCATION,
+                                "model '%s' has an empty name specified for "
+                                "docking point %d\n",
+                                pm->filename, i);
                         }
                     }
                     else {
-                        nprintf (
-                            ("Model",
-                             "model '%s' has no name specified for docking "
-                             "point %d\n",
-                             pm->filename, i));
+                        WARNINGF (
+                            LOCATION,
+                            "model '%s' has no name specified for docking "
+                            "point %d\n",
+                            pm->filename, i);
                         sprintf (bay->name, "<unnamed bay %c>", 'A' + i);
                     }
 
@@ -2177,10 +2183,10 @@ int read_model_file (
                             glow_texture_name, pm->filename);
                     }
                     else {
-                        nprintf (
-                            ("Model",
-                             "Glow point bank %i texture num is %d for '%s'\n",
-                             gpb, bank->glow_bitmap, pm->filename));
+                        WARNINGF (
+                            LOCATION,
+                            "Glow point bank %i texture num is %d for '%s'\n",
+                            gpb, bank->glow_bitmap, pm->filename);
                     }
 
                     strcat (glow_texture_name, "-neb");
@@ -2188,21 +2194,21 @@ int read_model_file (
 
                     if (bank->glow_neb_bitmap < 0) {
                         bank->glow_neb_bitmap = bank->glow_bitmap;
-                        nprintf (
-                            ("Model",
-                             "Glow point bank nebula texture not found for "
-                             "'%s', using normal glowpoint texture instead\n",
-                             pm->filename));
+                        WARNINGF (
+                            LOCATION,
+                            "Glow point bank nebula texture not found for "
+                            "'%s', using normal glowpoint texture instead\n",
+                            pm->filename);
                         // Error( LOCATION, "Couldn't open texture
                         //'%s'\nreferenced by model '%s'\n", glow_texture_name,
                         // pm->filename );
                     }
                     else {
-                        nprintf (
-                            ("Model",
-                             "Glow point bank %i nebula texture num is %d for "
-                             "'%s'\n",
-                             gpb, bank->glow_neb_bitmap, pm->filename));
+                        WARNINGF (
+                            LOCATION,
+                            "Glow point bank %i nebula texture num is %d for "
+                            "'%s'\n",
+                            gpb, bank->glow_neb_bitmap, pm->filename);
                     }
                 }
                 else {
@@ -2272,11 +2278,11 @@ int read_model_file (
                                 engine_subsys_name++;
                             }
 
-                            nprintf (
-                                ("wash",
-                                 "Ship %s with engine wash associated with "
-                                 "subsys %s\n",
-                                 filename, engine_subsys_name));
+                            WARNINGF (
+                                LOCATION,
+                                "Ship %s with engine wash associated with "
+                                "subsys %s\n",
+                                filename, engine_subsys_name);
 
                             // set wash_info_index to invalid
                             int table_error = 1;
@@ -2412,11 +2418,11 @@ int read_model_file (
                 if ((n_subsystems == 0) || (snum == n_subsystems)) {
                     vec3d bogus;
 
-                    nprintf (
-                        ("Warning",
-                         "Turret submodel %i not found for turret %i in model "
-                         "%s\n",
-                         parent, i, pm->filename));
+                    WARNINGF (
+                        LOCATION,
+                        "Turret submodel %i not found for turret %i in model "
+                        "%s\n",
+                        parent, i, pm->filename);
                     cfread_vector (&bogus, fp);
                     n_slots = cfread_int (fp);
                     for (j = 0; j < n_slots; j++) cfread_vector (&bogus, fp);
@@ -2480,11 +2486,11 @@ int read_model_file (
                         pm->id); // skip the first '$' character of the name
                 }
                 else {
-                    nprintf (
-                        ("Warning",
-                         "Unknown special object type %s while reading model "
-                         "%s\n",
-                         name, pm->filename));
+                    WARNINGF (
+                        LOCATION,
+                        "Unknown special object type %s while reading model "
+                        "%s\n",
+                        name, pm->filename);
                 }
             }
             break;
@@ -2696,9 +2702,9 @@ int read_model_file (
             break;
 
         default:
-            mprintf (
-                ("Unknown chunk <%c%c%c%c>, len = %d\n", id, id >> 8, id >> 16,
-                 id >> 24, len));
+            WARNINGF (
+                LOCATION, "Unknown chunk <%c%c%c%c>, len = %d\n", id, id >> 8,
+                id >> 16, id >> 24, len);
             cfseek (fp, len, SEEK_CUR);
             break;
         }
@@ -2972,7 +2978,7 @@ int model_load (
 
     TRACE_SCOPE (tracing::LoadModelFile);
 
-    mprintf (("Loading model '%s' into slot '%i'\n", filename, num));
+    WARNINGF (LOCATION, "Loading model '%s' into slot '%i'\n", filename, num);
 
     pm = new polymodel;
     Polygon_models[num] = pm;
@@ -3018,9 +3024,8 @@ int model_load (
 
 #ifdef _DEBUG
     if (Fred_running && Parse_normal_problem_count > 0) {
-        EE ("general")
-            << "loading model " << filename << " failed ("
-            << Parse_normal_problem_count << " errors)";
+        EE ("general") << "loading model " << filename << " failed ("
+                       << Parse_normal_problem_count << " errors)";
     }
 #endif
 
@@ -3060,9 +3065,9 @@ int model_load (
         for (j = 0; j < pm->n_models; j++) {
             // check if current model name is substring of destroyed
             if (strstr (pm->submodel[j].name, live_debris_name)) {
-                mprintf (
-                    ("Found live debris model for '%s'\n",
-                     pm->submodel[i].name));
+                WARNINGF (
+                    LOCATION, "Found live debris model for '%s'\n",
+                    pm->submodel[i].name);
                 ASSERT (pm->submodel[i].num_live_debris < MAX_LIVE_DEBRIS);
                 pm->submodel[i]
                     .live_debris[pm->submodel[i].num_live_debris++] = j;
@@ -3164,9 +3169,9 @@ int model_load (
                     dl2--; // Start from 1 up...
                     if (dl2 >= sm1->num_details) sm1->num_details = dl2 + 1;
                     sm1->details[dl2] = j;
-                    mprintf (
-                        ("Submodel '%s' is detail level %d of '%s'\n",
-                         sm2->name, dl2 + 1, sm1->name));
+                    WARNINGF (
+                        LOCATION, "Submodel '%s' is detail level %d of '%s'\n",
+                        sm2->name, dl2 + 1, sm1->name);
                 }
             }
         }
@@ -4004,11 +4009,11 @@ void submodel_look_at (polymodel* pm, int mn) {
         for (int i = 0; i < pm->n_models; i++) {
             if (!strcmp (sm->look_at, pm->submodel[i].name)) {
                 sm->look_at_num = i; // Found it
-                nprintf (
-                    ("Model",
-                     "NOTE: Matched $look_at: target <%s> with subobject id "
-                     "%d\n",
-                     sm->look_at, i));
+                WARNINGF (
+                    LOCATION,
+                    "NOTE: Matched $look_at: target <%s> with subobject id "
+                    "%d\n",
+                    sm->look_at, i);
                 break;
             }
         }
@@ -5750,9 +5755,10 @@ void parse_glowpoint_table (const char* filename) {
             if (optional_string ("+nocreate")) {
                 if (Parsing_modular_table) { replace = true; }
                 else {
-                    mprintf (
-                        ("+nocreate specified in non-modular glowpoint "
-                         "table.\n"));
+                    WARNINGF (
+                        LOCATION,
+                        "+nocreate specified in non-modular glowpoint "
+                        "table.\n");
                 }
             }
 
@@ -5790,9 +5796,10 @@ void parse_glowpoint_table (const char* filename) {
                             glow_texture_name, gpo.name);
                     }
                     else {
-                        nprintf ((
-                            "Model", "Glowpoint preset %s texture num is %d\n",
-                            gpo.name, gpo.glow_bitmap));
+                        WARNINGF (
+                            LOCATION,
+                            "Glowpoint preset %s texture num is %d\n",
+                            gpo.name, gpo.glow_bitmap);
                     }
 
                     char glow_texture_neb_name[256];
@@ -5802,17 +5809,17 @@ void parse_glowpoint_table (const char* filename) {
 
                     if (gpo.glow_neb_bitmap < 0) {
                         gpo.glow_neb_bitmap = gpo.glow_bitmap;
-                        nprintf (
-                            ("Model",
-                             "Glowpoint preset nebula texture not found for "
-                             "'%s', using normal glowpoint texture instead\n",
-                             gpo.name));
+                        WARNINGF (
+                            LOCATION,
+                            "Glowpoint preset nebula texture not found for "
+                            "'%s', using normal glowpoint texture instead\n",
+                            gpo.name);
                     }
                     else {
-                        nprintf (
-                            ("Model",
-                             "Glowpoint preset %s nebula texture num is %d\n",
-                             gpo.name, gpo.glow_neb_bitmap));
+                        WARNINGF (
+                            LOCATION,
+                            "Glowpoint preset %s nebula texture num is %d\n",
+                            gpo.name, gpo.glow_neb_bitmap);
                     }
                 }
                 else {
@@ -5957,9 +5964,9 @@ void parse_glowpoint_table (const char* filename) {
         required_string ("#End");
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("Unable to parse '%s'!  Error message = %s.\n", filename,
-             e.what ()));
+        ERRORF (
+            LOCATION, "Unable to parse '%s'!  Error message = %s.\n", filename,
+            e.what ());
         return;
     }
 }

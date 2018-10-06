@@ -639,12 +639,12 @@ void ship_select_init () {
                                      // which can release common button
                                      // bitmaps.
         common_reset_buttons ();
-        nprintf (
-            ("Alan", "ship_select_init() returning without doing anything\n"));
+        WARNINGF (
+            LOCATION, "ship_select_init() returning without doing anything");
         return;
     }
 
-    nprintf (("Alan", "entering ship_select_init()\n"));
+    WARNINGF (LOCATION, "entering ship_select_init()");
     common_select_init ();
 
     ShipSelectMaskBitmap =
@@ -1495,11 +1495,12 @@ void ship_select_do (float frametime) {
             if (Ss_icons[Carried_ss_icon.ship_class].model_index == -1) {
                 Ss_icons[Carried_ss_icon.ship_class].model_index = model_load (
                     sip->pof_file, sip->n_subsystems, &sip->subsystems[0]);
-                mprintf (
-                    ("SL WARNING: Had to attempt to page in model for %s "
-                     "paged in manually! Result: %d\n",
-                     sip->name,
-                     Ss_icons[Carried_ss_icon.ship_class].model_index));
+                WARNINGF (
+                    LOCATION,
+                    "SL WARNING: Had to attempt to page in model for %s paged "
+                    "in manually! Result: %d\n",
+                    sip->name,
+                    Ss_icons[Carried_ss_icon.ship_class].model_index);
             }
             gr_set_color_fast (&Icon_colors[ICON_FRAME_SELECTED]);
 
@@ -1560,12 +1561,12 @@ void ship_select_close () {
     ship_select_common_close ();
 
     if (!Ship_select_open) {
-        nprintf ((
-            "Alan", "ship_select_close() returning without doing anything\n"));
+        WARNINGF (
+            LOCATION, "ship_select_close() returning without doing anything");
         return;
     }
 
-    nprintf (("Alan", "Entering ship_select_close()\n"));
+    WARNINGF (LOCATION, "Entering ship_select_close()");
 
     // done with the bitmaps, so unlock it
     bm_unlock (ShipSelectMaskBitmap);
@@ -1690,10 +1691,11 @@ void draw_ship_icon_with_number (int screen_offset, int ship_class) {
         if (ss_icon->model_index == -1) {
             ss_icon->model_index = model_load (
                 sip->pof_file, sip->n_subsystems, &sip->subsystems[0]);
-            mprintf (
-                ("SL WARNING: Had to attempt to page in model for %s paged in "
-                 "manually! Result: %d\n",
-                 sip->name, ss_icon->model_index));
+            WARNINGF (
+                LOCATION,
+                "SL WARNING: Had to attempt to page in model for %s paged in "
+                "manually! Result: %d\n",
+                sip->name, ss_icon->model_index);
         }
         gr_set_color_fast (color_to_draw);
 
@@ -1739,7 +1741,8 @@ void start_ship_animation (int ship_class, int /*play_sound*/) {
     char animation_filename[CF_MAX_FILENAME_LENGTH + 4];
 
     if (ship_class < 0) {
-        mprintf (("No ship class passed in to start_ship_animation\n"));
+        WARNINGF (
+            LOCATION, "No ship class passed in to start_ship_animation\n");
         ShipSelectModelNum = -1;
         return;
     }
@@ -1764,9 +1767,10 @@ void start_ship_animation (int ship_class, int /*play_sound*/) {
         model_page_in_textures (ShipSelectModelNum, ship_class);
 
         if (sip->model_num < 0) {
-            mprintf (
-                ("Couldn't load model file %s in missionshipchoice.cpp\n",
-                 sip->pof_file));
+            WARNINGF (
+                LOCATION,
+                "Couldn't load model file %s in missionshipchoice.cpp\n",
+                sip->pof_file);
         }
     }
     else {
@@ -2314,10 +2318,11 @@ void ss_blit_ship_icon (int x, int y, int ship_class, int bmap_num) {
             if (icon->model_index == -1) {
                 icon->model_index = model_load (
                     sip->pof_file, sip->n_subsystems, &sip->subsystems[0]);
-                mprintf (
-                    ("SL WARNING: Had to attempt to page in model for %s "
-                     "paged in manually! Result: %d\n",
-                     sip->name, icon->model_index));
+                WARNINGF (
+                    LOCATION,
+                    "SL WARNING: Had to attempt to page in model for %s paged "
+                    "in manually! Result: %d\n",
+                    sip->name, icon->model_index);
             }
             if (icon->model_index != -1) {
                 gr_set_color_fast (&Icon_colors[bmap_num]);

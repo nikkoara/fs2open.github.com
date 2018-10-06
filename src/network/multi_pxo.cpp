@@ -794,18 +794,19 @@ const char* Multi_pxo_pinfo_mask_fname[GR_NUM_RESOLUTIONS] = {
 #define MULTI_PXO_PINFO_MEDALS 0
 #define MULTI_PXO_PINFO_OK 1
 
-ui_button_info
-    Multi_pxo_pinfo_buttons[GR_NUM_RESOLUTIONS][MULTI_PXO_PINFO_NUM_BUTTONS] =
-        { {
-              // GR_640
-              ui_button_info ("PI2_00", 328, 446, 319, 433, 0),
-              ui_button_info ("PI2_01", 376, 446, 382, 433, 1),
-          },
-          {
-              // GR_1024
-              ui_button_info ("2_PI2_00", 525, 714, 510, 695, 0),
-              ui_button_info ("2_PI2_01", 601, 714, 611, 695, 1),
-          } };
+ui_button_info Multi_pxo_pinfo_buttons
+    [GR_NUM_RESOLUTIONS][MULTI_PXO_PINFO_NUM_BUTTONS] = {
+        {
+            // GR_640
+            ui_button_info ("PI2_00", 328, 446, 319, 433, 0),
+            ui_button_info ("PI2_01", 376, 446, 382, 433, 1),
+        },
+        {
+            // GR_1024
+            ui_button_info ("2_PI2_00", 525, 714, 510, 695, 0),
+            ui_button_info ("2_PI2_01", 601, 714, 611, 695, 1),
+        }
+    };
 
 // text
 #define MULTI_PXO_PINFO_NUM_TEXT 2
@@ -1884,12 +1885,12 @@ int multi_pxo_autojoin_do () {
             // join the channel
             multi_pxo_join_channel (&last_channel);
 
-            nprintf (("Network", "PXO : using last channel\n"));
+            // WARNINGF (LOCATION, "PXO : using last channel");
         }
         else {
             multi_pxo_autojoin ();
 
-            nprintf (("Network", "PXO : using autojoin channel\n"));
+            // WARNINGF (LOCATION, "PXO : using autojoin channel");
         }
 
         multi_pxo_get_channels ();
@@ -2162,9 +2163,9 @@ void multi_pxo_channel_count_update (char* name, int count) {
     if (lookup != NULL) {
         lookup->num_servers = (ushort)count;
 
-        nprintf (
-            ("Network", "PXO : updated channel %s server count to %d\n", name,
-             count));
+        WARNINGF (
+            LOCATION, "PXO : updated channel %s server count to %d\n", name,
+            count);
         ml_printf ("PXO : updated channel %s server count to %d", name, count);
     }
     else {
@@ -2261,7 +2262,7 @@ void multi_pxo_make_channels (char* chan_str) {
     pxo_channel* lookup;
     int num_users;
 
-    nprintf (("Network", "Making some channels!\n"));
+    // WARNINGF (LOCATION, "Making some channels!");
 
     // set the last get time
     Multi_pxo_channel_last_refresh = f2fl (timer_get_fixed_seconds ());
@@ -2336,9 +2337,8 @@ pxo_channel* multi_pxo_add_channel (char* name, pxo_channel** list) {
     // try and allocate a new pxo_channel struct
     new_channel = (pxo_channel*)vm_malloc (sizeof (pxo_channel));
     if (new_channel == NULL) {
-        nprintf (
-            ("Network",
-             "Cannot allocate space for new pxo_channel structure\n"));
+        WARNINGF (
+            LOCATION, "Cannot allocate space for new pxo_channel structure");
         return NULL;
     }
     memset (new_channel, 0, sizeof (pxo_channel));
@@ -2440,7 +2440,7 @@ void multi_pxo_process_channels () {
         // refresh
         Multi_pxo_channel_last_refresh = -1.0f;
 
-        nprintf (("Network", "Refreshing channels\n"));
+        // WARNINGF (LOCATION, "Refreshing channels");
     }
 
     // if we haven't updated our server channel counts in a while, do so again
@@ -2772,9 +2772,8 @@ player_list* multi_pxo_add_player (char* name) {
     // try and allocate a new player_list struct
     new_player = (player_list*)vm_malloc (sizeof (player_list));
     if (new_player == NULL) {
-        nprintf (
-            ("Network",
-             "Cannot allocate space for new player_list structure\n"));
+        WARNINGF (
+            LOCATION, "Cannot allocate space for new player_list structure");
         return NULL;
     }
     // try and allocate a string for the channel name
@@ -3667,7 +3666,7 @@ void multi_pxo_motd_add_text (const char* text) {
     if ((cur_len + new_len + 1) < MAX_PXO_MOTD_LEN) {
         strcat_s (Pxo_motd, text + motd_prefix_len + 1);
         strcat_s (Pxo_motd, "\n");
-        mprintf (("MOTD ADD : %s\n", Pxo_motd));
+        WARNINGF (LOCATION, "MOTD ADD : %s\n", Pxo_motd);
     }
 }
 
@@ -3678,7 +3677,7 @@ void multi_pxo_set_end_of_motd () {
     int blink = 1;
 
     Pxo_motd_end = 1;
-    mprintf (("MOTD ALL : %s\n", Pxo_motd));
+    WARNINGF (LOCATION, "MOTD ALL : %s\n", Pxo_motd);
 
     Pxo_motd_read = 0;
 

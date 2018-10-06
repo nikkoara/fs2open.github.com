@@ -166,10 +166,6 @@ void HudGaugeLock::render (float frametime) {
     }
 
     hud_set_iff_color (targetp);
-    // nprintf(("Alan","lockx: %d, locky: %d TargetX: %d, TargetY: %d\n",
-    // Players[Player_num].lock_indicator_x,
-    // Players[Player_num].lock_indicator_y, Player->current_target_sx,
-    // Player->current_target_sy));
 
     // We have the coordinates of the lock indicator relative to the target in
     // our "virtual frame" so, we calculate where it should be drawn based on
@@ -737,18 +733,12 @@ void hud_calculate_lock_position (float frametime) {
             last_dist_to_target = Players[Player_num].lock_dist_to_target;
         }
 
-        // nprintf(("Alan","dist to target:
-        // %.2f\n",Players[Player_num].lock_dist_to_target));
-        // nprintf(("Alan","last to target: %.2f\n\n",last_dist_to_target));
 
         if (catching_up) {
-            // nprintf(("Alan","IN CATCH UP MODE  catch_up_dist is
-            // %.2f\n",catch_up_distance));
             if (Players[Player_num].lock_dist_to_target < catch_up_distance)
                 catching_up = 0;
         }
         else {
-            // nprintf(("Alan","IN NORMAL MODE\n"));
             if ((Players[Player_num].lock_dist_to_target -
                  last_dist_to_target) > 2.0f) {
                 catching_up = 1;

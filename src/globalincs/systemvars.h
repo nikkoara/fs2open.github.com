@@ -8,14 +8,12 @@
 
 #include <cstdint>
 
-#define GM_MULTIPLAYER (1 << 0)
-#define GM_NORMAL (1 << 1)
-#define GM_DEAD_DIED (1 << 2)    // Died, waiting to blow up.
-#define GM_DEAD_BLEW_UP (1 << 3) // Blew up.
-#define GM_DEAD_ABORTED \
-    (1 << 4) // Player pressed a key, aborting death sequence.
-#define GM_IN_MISSION \
-    (1 << 5) // Player is actually in the mission -- not at a pre-mission menu
+#define GM_MULTIPLAYER   (1 << 0)
+#define GM_NORMAL        (1 << 1)
+#define GM_DEAD_DIED     (1 << 2) // Died, waiting to blow up.
+#define GM_DEAD_BLEW_UP  (1 << 3) // Blew up.
+#define GM_DEAD_ABORTED  (1 << 4) // Abort dead sequence.
+#define GM_IN_MISSION    (1 << 5) // Player is in mission
 
 #define GM_DEAD (GM_DEAD_DIED | GM_DEAD_BLEW_UP | GM_DEAD_ABORTED)
 

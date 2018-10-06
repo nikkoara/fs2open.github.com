@@ -235,10 +235,9 @@ int free_object_slots (int num_used) {
     original_num_to_free = num_to_free;
 
     if (num_to_free > olind) {
-        nprintf (
-            ("allender",
-             "Warning: Asked to free %i objects, but can only free %i.\n",
-             num_to_free, olind));
+        WARNINGF (
+            LOCATION, "Asked to free %i objects, but can only free %i.\n",
+            num_to_free, olind);
         num_to_free = olind;
     }
 
@@ -246,8 +245,7 @@ int free_object_slots (int num_used) {
         if ((Objects[obj_list[i]].type == OBJ_DEBRIS) &&
             (Debris[Objects[obj_list[i]].instance].flags & DEBRIS_EXPIRE)) {
             num_to_free--;
-            nprintf (
-                ("allender", "Freeing   DEBRIS object %3i\n", obj_list[i]));
+            WARNINGF (LOCATION, "Freeing   DEBRIS object %3i\n", obj_list[i]);
             Objects[obj_list[i]].flags.set (
                 Object::Object_Flags::Should_be_dead);
         }
@@ -259,8 +257,7 @@ int free_object_slots (int num_used) {
         if ((tmp_obj->type == OBJ_FIREBALL) &&
             (fireball_is_perishable (tmp_obj))) {
             num_to_free--;
-            nprintf (
-                ("allender", "Freeing FIREBALL object %3i\n", obj_list[i]));
+            WARNINGF (LOCATION, "Freeing FIREBALL object %3i\n", obj_list[i]);
             tmp_obj->flags.set (Object::Object_Flags::Should_be_dead);
         }
     }
@@ -386,7 +383,7 @@ int obj_allocate (void) {
     object* objp;
 
     if (!Object_inited) {
-        mprintf (("Why hasn't obj_init() been called yet?\n"));
+        WARNINGF (LOCATION, "Why hasn't obj_init() been called yet?\n");
         obj_init ();
     }
 
@@ -394,12 +391,12 @@ int obj_allocate (void) {
         int num_freed;
 
         num_freed = free_object_slots (MAX_OBJECTS - 10);
-        nprintf (("warning", " *** Freed %i objects\n", num_freed));
+        WARNINGF (LOCATION, " *** Freed %i objects", num_freed);
     }
 
     if (Num_objects >= MAX_OBJECTS) {
 #ifndef NDEBUG
-        mprintf (("Object creation failed - too many objects!\n"));
+        WARNINGF (LOCATION, "Object creation failed - too many objects!\n");
 #endif
         return -1;
     }
@@ -442,7 +439,7 @@ void obj_free (int objnum) {
     object* objp;
 
     if (!Object_inited) {
-        mprintf (("Why hasn't obj_init() been called yet?\n"));
+        WARNINGF (LOCATION, "Why hasn't obj_init() been called yet?\n");
         obj_init ();
     }
 
@@ -540,7 +537,7 @@ void obj_delete_all () {
         obj_delete (i);
     }
 
-    mprintf (("Cleanup: Deleted %i objects\n", counter));
+    WARNINGF (LOCATION, "Cleanup: Deleted %i objects\n", counter);
 }
 
 /**
@@ -555,8 +552,9 @@ void obj_delete (int objnum) {
     ASSERT (objnum >= 0 && objnum < MAX_OBJECTS);
     objp = &Objects[objnum];
     if (objp->type == OBJ_NONE) {
-        mprintf (
-            ("obj_delete() called for already deleted object %d.\n", objnum));
+        WARNINGF (
+            LOCATION, "obj_delete() called for already deleted object %d.\n",
+            objnum);
         return;
     };
 
@@ -608,14 +606,9 @@ void obj_delete (int objnum) {
                 break;*/
     case OBJ_GHOST:
         if (!(Game_mode & GM_MULTIPLAYER)) {
-            mprintf (("Warning: Tried to delete a ghost!\n"));
+            WARNINGF (LOCATION, "Tried to delete a ghost!\n");
             objp->flags.remove (Object::Object_Flags::Should_be_dead);
             return;
-        }
-        else {
-            // we need to be able to delete GHOST objects in multiplayer to
-            // allow for player respawns.
-            nprintf (("Network", "Deleting GHOST object\n"));
         }
         break;
     case OBJ_OBSERVER: observer_delete (objp); break;
@@ -646,7 +639,7 @@ void obj_delete_all_that_should_be_dead () {
     object *objp, *temp;
 
     if (!Object_inited) {
-        mprintf (("Why hasn't obj_init() been called yet?\n"));
+        WARNINGF (LOCATION, "Why hasn't obj_init() been called yet?\n");
         obj_init ();
     }
 
@@ -1035,27 +1028,27 @@ void obj_check_object (object* obj) {
             CheckObjects[objnum].type = OBJ_SHIP;
         }
         else {
-            mprintf (
-                ("Object type changed! Old: %i, Current: %i\n",
-                 CheckObjects[objnum].type, obj->type));
+            WARNINGF (
+                LOCATION, "Object type changed! Old: %i, Current: %i\n",
+                CheckObjects[objnum].type, obj->type);
             Int3 ();
         }
     }
     if (CheckObjects[objnum].signature != obj->signature) {
-        mprintf (("Object signature changed!\n"));
+        WARNINGF (LOCATION, "Object signature changed!\n");
         Int3 ();
     }
     if ((CheckObjects[objnum].flags[Object::Object_Flags::Collides]) !=
         (obj->flags[Object::Object_Flags::Collides])) {
-        mprintf (("Object flags changed!\n"));
+        WARNINGF (LOCATION, "Object flags changed!\n");
         Int3 ();
     }
     if (CheckObjects[objnum].parent_sig != obj->parent_sig) {
-        mprintf (("Object parent sig changed!\n"));
+        WARNINGF (LOCATION, "Object parent sig changed!\n");
         Int3 ();
     }
     if (CheckObjects[objnum].parent_type != obj->parent_type) {
-        mprintf (("Object's parent type changed!\n"));
+        WARNINGF (LOCATION, "Object's parent type changed!\n");
         Int3 ();
     }
 }
@@ -1098,7 +1091,8 @@ void obj_set_flags (
         // observers can't collide or be hit, and they therefore have no hit or
         // collide functions So, don't allow this bit to be set
         if (obj->type == OBJ_OBSERVER) {
-            mprintf (("Illegal to set collision bit for OBJ_OBSERVER!!\n"));
+            WARNINGF (
+                LOCATION, "Illegal to set collision bit for OBJ_OBSERVER!!\n");
             Int3 ();
         }
 
@@ -1158,8 +1152,9 @@ void obj_set_flags (
     // Check for unhandled flag changing
     if ((new_flags[Object::Object_Flags::Collides]) !=
         (obj->flags[Object::Object_Flags::Collides])) {
-        mprintf (("Unhandled flag changing in obj_set_flags!!\n"));
-        mprintf (("Add code to support it, see John for questions!!\n"));
+        WARNINGF (LOCATION, "Unhandled flag changing in obj_set_flags!!\n");
+        WARNINGF (
+            LOCATION, "Add code to support it, see John for questions!!\n");
         Int3 ();
     }
     else {
@@ -1676,9 +1671,11 @@ void obj_queue_render (object* obj, model_draw_list* scene) {
     switch (obj->type) {
     case OBJ_NONE:
 #ifndef NDEBUG
-        mprintf (
-            ("ERROR!!!! Bogus obj %zd" " is rendering!\n",
-             obj - Objects));
+        ERRORF (
+            LOCATION,
+            "ERROR!!!! Bogus obj %zd"
+            " is rendering!\n",
+            obj - Objects);
         Int3 ();
 #endif
         break;

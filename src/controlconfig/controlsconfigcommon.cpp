@@ -1981,10 +1981,10 @@ void control_config_common_load_overrides () {
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse 'controlconfigdefaults.tbl'!  Error "
-             "message = %s.\n",
-             e.what ()));
+        ERRORF (
+            LOCATION,
+            "parse failed 'controlconfigdefaults.tbl'!  Error message = %s.\n",
+            e.what ());
         return;
     }
 

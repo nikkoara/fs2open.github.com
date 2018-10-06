@@ -338,9 +338,9 @@ void parse_font_tbl (const char* fileName) {
         required_string ("#End");
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n", fileName,
-             e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n", fileName,
+            e.what ());
     }
 }
 

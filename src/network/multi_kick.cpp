@@ -14,7 +14,7 @@
 // KICK DEFINES/VARS
 //
 
-#define MULTI_KICK_RESPONSE_TIME \
+#define MULTI_KICK_RESPONSE_TIME                                           \
     4000 // if someone who has been kicked has not responded in this time,
          // disconnect him hard
 
@@ -75,7 +75,7 @@ void multi_kick_player (int player_index, int ban, int reason) {
     if (!(Game_mode & GM_STANDALONE_SERVER) &&
         ((Net_players[player_index].flags & NETINFO_FLAG_GAME_HOST) ||
          (Net_players[player_index].flags & NETINFO_FLAG_AM_MASTER))) {
-        nprintf (("Network", "Cannot kick the host or server of a game!\n"));
+        // WARNINGF (LOCATION, "Cannot kick the host or server of a game!");
     }
     else {
         // if we're the master, then delete the guy
@@ -252,15 +252,14 @@ void process_player_kick_packet (ubyte* data, header* hinfo) {
     // check to see if this guy is allowed to make such a request
     if ((from_player == -1) ||
         !multi_kick_can_kick (&Net_players[from_player])) {
-        nprintf (
-            ("Network", "Received a kick request from an invalid player!!\n"));
+        WARNINGF (
+            LOCATION, "Received a kick request from an invalid player!!");
     }
     // otherwise, process the request fully
     else {
         // make sure we have a valid player to kick
         if (player_num == -1) {
-            nprintf (
-                ("Network", "Received request to kick an unknown player!\n"));
+            WARNINGF (LOCATION, "Received request to kick an unknown player!");
         }
         else {
             // will handle all the rest of the details

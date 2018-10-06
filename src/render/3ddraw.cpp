@@ -277,7 +277,7 @@ void g3_draw_horizon_line () {
     }
 
     if (cpnt != 2) {
-        mprintf (("HORZ: Wrong number of points (%d)\n", cpnt));
+        WARNINGF (LOCATION, "HORZ: Wrong number of points (%d)\n", cpnt);
         return;
     }
 

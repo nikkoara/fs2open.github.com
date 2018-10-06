@@ -827,12 +827,13 @@ bool pilotfile_convert::plr_convert (const char* fname, bool inferno) {
     filename.append (fname);
     filename.append (".pl2");
 
-    mprintf (("  PL2 => Converting '%s'...\n", filename.c_str ()));
+    WARNINGF (LOCATION, "  PL2 => Converting '%s'...\n", filename.c_str ());
 
     cfp = cfopen (filename.c_str (), "rb", CFILE_NORMAL);
 
     if (!cfp) {
-        mprintf (("  PL2 => Unable to open '%s' for import!\n", fname));
+        WARNINGF (
+            LOCATION, "  PL2 => Unable to open '%s' for import!\n", fname);
         return false;
     }
 
@@ -840,7 +841,7 @@ bool pilotfile_convert::plr_convert (const char* fname, bool inferno) {
         plr_import ();
     }
     catch (const char* err) {
-        mprintf (("  PL2 => Import ERROR: %s\n", err));
+        ERRORF (LOCATION, "  PL2 => Import ERROR: %s\n", err);
         rval = false;
     }
 
@@ -857,7 +858,8 @@ bool pilotfile_convert::plr_convert (const char* fname, bool inferno) {
         CF_LOCATION_ROOT_USER | CF_LOCATION_ROOT_GAME | CF_LOCATION_TYPE_ROOT);
 
     if (!cfp) {
-        mprintf (("  PLR => Unable to open '%s' for export!\n", fname));
+        WARNINGF (
+            LOCATION, "  PLR => Unable to open '%s' for export!\n", fname);
         return false;
     }
 
@@ -865,14 +867,14 @@ bool pilotfile_convert::plr_convert (const char* fname, bool inferno) {
         plr_export ();
     }
     catch (const char* err) {
-        mprintf (("  PLR => Export ERROR: %s\n", err));
+        ERRORF (LOCATION, "  PLR => Export ERROR: %s\n", err);
         rval = false;
     }
 
     cfclose (cfp);
     cfp = NULL;
 
-    if (rval) { mprintf (("  PLR => Conversion complete!\n")); }
+    if (rval) { WARNINGF (LOCATION, "  PLR => Conversion complete!\n"); }
 
     return rval;
 }

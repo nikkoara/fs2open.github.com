@@ -170,7 +170,9 @@ void gr_opengl_flip () {
 #ifndef NDEBUG
     int ic = opengl_check_for_errors ();
 
-    if (ic) { mprintf (("!!DEBUG!! OpenGL Errors this frame: %i\n", ic)); }
+    if (ic) {
+        WARNINGF (LOCATION, "!!DEBUG!! OpenGL Errors this frame: %i\n", ic);
+    }
 #endif
 }
 
@@ -636,7 +638,7 @@ int gr_opengl_save_screen () {
         gr_screen.max_w * gr_screen.max_h * 4, memory::quiet_alloc);
 
     if (!GL_saved_screen) {
-        mprintf (("Couldn't get memory for saved screen!\n"));
+        WARNINGF (LOCATION, "Couldn't get memory for saved screen!\n");
         return -1;
     }
 
@@ -698,7 +700,8 @@ int gr_opengl_save_screen () {
                 GL_saved_screen = NULL;
             }
 
-            mprintf (("Couldn't get memory for temporary saved screen!\n"));
+            WARNINGF (
+                LOCATION, "Couldn't get memory for temporary saved screen!\n");
             GL_state.DepthTest (save_state);
             return -1;
         }
@@ -812,10 +815,10 @@ int opengl_check_for_errors (const char* err_at) {
 
     if (err != GL_NO_ERROR) {
         if (err_at != NULL) {
-            nprintf (("OpenGL", "OpenGL Error from %s: %#x\n", err_at, err));
+            WARNINGF (LOCATION, "OpenGL Error from %s: %#x", err_at, err);
         }
         else {
-            nprintf (("OpenGL", "OpenGL Error:  %#x\n", err));
+            WARNINGF (LOCATION, "OpenGL Error:  %#x", err);
         }
 
         num_errors++;
@@ -963,9 +966,9 @@ int opengl_init_display_device () {
             3 * 256 * sizeof (ushort), memory::quiet_alloc);
 
         if (GL_original_gamma_ramp == NULL) {
-            mprintf (
-                ("  Unable to allocate memory for gamma ramp!  "
-                 "Disabling...\n"));
+            WARNINGF (
+                LOCATION,
+                "  Unable to allocate memory for gamma ramp!  Disabling...\n");
             Cmdline_no_set_gamma = 1;
         }
         else {
@@ -1234,18 +1237,19 @@ static void APIENTRY debug_callback (
     }
 
     if (print_to_general_log) {
-        mprintf (
-            ("OpenGL Debug: "
-             "Source:%s\tType:%s\tID:%d\tSeverity:%s\tMessage:%s\n",
-             sourceStr, typeStr, id, severityStr, message));
+        WARNINGF (
+            LOCATION,
+            "OpenGL Debug: "
+            "Source:%s\tType:%s\tID:%d\tSeverity:%s\tMessage:%s\n",
+            sourceStr, typeStr, id, severityStr, message);
     }
     else {
         // We still print these messages but only to the special debug stream
-        nprintf (
-            ("OpenGL Debug",
-             "OpenGL Debug: "
-             "Source:%s\tType:%s\tID:%d\tSeverity:%s\tMessage:%s\n",
-             sourceStr, typeStr, id, severityStr, message));
+        WARNINGF (
+            LOCATION,
+            "OpenGL Debug: "
+            "Source:%s\tType:%s\tID:%d\tSeverity:%s\tMessage:%s\n",
+            sourceStr, typeStr, id, severityStr, message);
     }
     printf (
         "OpenGL Debug: Source:%s\tType:%s\tID:%d\tSeverity:%s\tMessage:%s\n",
@@ -1324,17 +1328,19 @@ static void init_extensions () {
     // we need enough texture slots for this stuff to work
 
     if (max_texture_units < 6) {
-        mprintf (
-            ("Not enough texture units for height map support. We need at "
-             "least 6, we found %d.\n",
-             max_texture_units));
+        WARNINGF (
+            LOCATION,
+            "Not enough texture units for height map support. We need at "
+            "least 6, we found %d.\n",
+            max_texture_units);
         Cmdline_height = 0;
     }
     else if (max_texture_units < 5) {
-        mprintf (
-            ("Not enough texture units for height and normal map support. We "
-             "need at least 5, we found %d.\n",
-             max_texture_units));
+        WARNINGF (
+            LOCATION,
+            "Not enough texture units for height and normal map support. We "
+            "need at least 5, we found %d.\n",
+            max_texture_units);
         Cmdline_normal = 0;
         Cmdline_height = 0;
     }
@@ -1353,9 +1359,10 @@ bool gr_opengl_init (std::unique_ptr< os::GraphicsOperations >&& graphicsOps) {
         GL_initted = false;
     }
 
-    mprintf (
-        ("Initializing OpenGL graphics device at %ix%i with %i-bit color...\n",
-         gr_screen.max_w, gr_screen.max_h, gr_screen.bits_per_pixel));
+    WARNINGF (
+        LOCATION,
+        "Initializing OpenGL graphics device at %ix%i with %i-bit color...\n",
+        gr_screen.max_w, gr_screen.max_h, gr_screen.bits_per_pixel);
 
     // Load the RenderDoc API if available before doing anything with OpenGL
     renderdoc::loadApi ();
@@ -1394,7 +1401,7 @@ bool gr_opengl_init (std::unique_ptr< os::GraphicsOperations >&& graphicsOps) {
 #ifndef NDEBUG
     // Set up the debug extension if present
     if (GLAD_GL_ARB_debug_output) {
-        nprintf (("OpenGL Debug", "Using OpenGL debug extension\n"));
+        WARNINGF (LOCATION, "Using OpenGL debug extension");
         glEnable (GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
         GLuint unusedIds = 0;
         glDebugMessageControlARB (
@@ -1411,10 +1418,11 @@ bool gr_opengl_init (std::unique_ptr< os::GraphicsOperations >&& graphicsOps) {
     // opengl_* function calls!!
     opengl_setup_function_pointers ();
 
-    mprintf (("  OpenGL Vendor    : %s\n", glGetString (GL_VENDOR)));
-    mprintf (("  OpenGL Renderer  : %s\n", glGetString (GL_RENDERER)));
-    mprintf (("  OpenGL Version   : %s\n", glGetString (GL_VERSION)));
-    mprintf (("\n"));
+    WARNINGF (LOCATION, "  OpenGL Vendor    : %s\n", glGetString (GL_VENDOR));
+    WARNINGF (
+        LOCATION, "  OpenGL Renderer  : %s\n", glGetString (GL_RENDERER));
+    WARNINGF (LOCATION, "  OpenGL Version   : %s\n", glGetString (GL_VERSION));
+    WARNINGF (LOCATION, "\n");
 
     // Build a string identifier for this OpenGL implementation
     GL_implementation_id.clear ();
@@ -1509,53 +1517,55 @@ bool gr_opengl_init (std::unique_ptr< os::GraphicsOperations >&& graphicsOps) {
     glGetIntegerv (GL_MAX_ELEMENTS_VERTICES, &GL_max_elements_vertices);
     glGetIntegerv (GL_MAX_ELEMENTS_INDICES, &GL_max_elements_indices);
 
-    mprintf (
-        ("  Max texture units: %i (%i)\n", GL_supported_texture_units,
-         max_texture_units));
-    mprintf (
-        ("  Max client texture states: %i (%i)\n", GL_supported_texture_units,
-         max_texture_coords));
-    mprintf (("  Max elements vertices: %i\n", GL_max_elements_vertices));
-    mprintf (("  Max elements indices: %i\n", GL_max_elements_indices));
-    mprintf (
-        ("  Max texture size: %ix%i\n", GL_max_texture_width,
-         GL_max_texture_height));
+    WARNINGF (
+        LOCATION, "  Max texture units: %i (%i)\n", GL_supported_texture_units,
+        max_texture_units);
+    WARNINGF (
+        LOCATION, "  Max client texture states: %i (%i)\n",
+        GL_supported_texture_units, max_texture_coords);
+    WARNINGF (
+        LOCATION, "  Max elements vertices: %i\n", GL_max_elements_vertices);
+    WARNINGF (
+        LOCATION, "  Max elements indices: %i\n", GL_max_elements_indices);
+    WARNINGF (
+        LOCATION, "  Max texture size: %ix%i\n", GL_max_texture_width,
+        GL_max_texture_height);
 
-    mprintf (
-        ("  Max render buffer size: %ix%i\n", GL_max_renderbuffer_size,
-         GL_max_renderbuffer_size));
+    WARNINGF (
+        LOCATION, "  Max render buffer size: %ix%i\n",
+        GL_max_renderbuffer_size, GL_max_renderbuffer_size);
 
-    mprintf (
-        ("  Can use compressed textures: %s\n",
-         Use_compressed_textures ? NOX ("YES") : NOX ("NO")));
-    mprintf (
-        ("  Texture compression available: %s\n",
-         Texture_compression_available ? NOX ("YES") : NOX ("NO")));
-    mprintf (
-        ("  Post-processing enabled: %s\n",
-         (Cmdline_postprocess) ? "YES" : "NO"));
-    mprintf (
-        ("  Using %s texture filter.\n",
-         (GL_mipmap_filter) ? NOX ("trilinear") : NOX ("bilinear")));
+    WARNINGF (
+        LOCATION, "  Can use compressed textures: %s\n",
+        Use_compressed_textures ? NOX ("YES") : NOX ("NO"));
+    WARNINGF (
+        LOCATION, "  Texture compression available: %s\n",
+        Texture_compression_available ? NOX ("YES") : NOX ("NO"));
+    WARNINGF (
+        LOCATION, "  Post-processing enabled: %s\n",
+        (Cmdline_postprocess) ? "YES" : "NO");
+    WARNINGF (
+        LOCATION, "  Using %s texture filter.\n",
+        (GL_mipmap_filter) ? NOX ("trilinear") : NOX ("bilinear"));
 
-    mprintf (
-        ("  OpenGL Shader Version: %s\n",
-         glGetString (GL_SHADING_LANGUAGE_VERSION)));
+    WARNINGF (
+        LOCATION, "  OpenGL Shader Version: %s\n",
+        glGetString (GL_SHADING_LANGUAGE_VERSION));
 
-    mprintf (
-        ("  Max uniform block size: %d\n",
-         GL_state.Constants.GetMaxUniformBlockSize ()));
-    mprintf (
-        ("  Max uniform buffer bindings: %d\n",
-         GL_state.Constants.GetMaxUniformBlockBindings ()));
-    mprintf (
-        ("  Uniform buffer byte offset alignment: %d\n",
-         GL_state.Constants.GetUniformBufferOffsetAlignment ()));
+    WARNINGF (
+        LOCATION, "  Max uniform block size: %d\n",
+        GL_state.Constants.GetMaxUniformBlockSize ());
+    WARNINGF (
+        LOCATION, "  Max uniform buffer bindings: %d\n",
+        GL_state.Constants.GetMaxUniformBlockBindings ());
+    WARNINGF (
+        LOCATION, "  Uniform buffer byte offset alignment: %d\n",
+        GL_state.Constants.GetUniformBufferOffsetAlignment ());
 
     // This stops fred crashing if no textures are set
     gr_screen.current_bitmap = -1;
 
-    mprintf (("... OpenGL init is complete!\n"));
+    WARNINGF (LOCATION, "... OpenGL init is complete!\n");
 
     if (Cmdline_ati_color_swap) GL_read_format = GL_RGBA;
 

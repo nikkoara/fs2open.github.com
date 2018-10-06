@@ -141,7 +141,7 @@ Cursor* CursorManager::loadCursor (const char* fileName, bool animated) {
     }
 
     if (handle < 0) {
-        mprintf (("Failed to load cursor bitmap %s!", fileName));
+        WARNINGF (LOCATION, "Failed to load cursor bitmap %s!", fileName);
         return nullptr;
     }
 

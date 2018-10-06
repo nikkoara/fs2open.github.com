@@ -179,32 +179,35 @@ void parse_decals_table (const char* filename) {
         required_string ("#End");
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n", filename,
-             e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n", filename,
+            e.what ());
         return;
     }
 
     if (!gr_is_capable (CAPABILITY_DEFERRED_LIGHTING)) {
         // we need deferred lighting
         decal_system_active = false;
-        mprintf (
-            ("Note: Decal system has been disabled due to lack of deferred "
-             "lighting.\n"));
+        WARNINGF (
+            LOCATION,
+            "Note: Decal system has been disabled due to lack of deferred "
+            "lighting.\n");
     }
     if (!gr_is_capable (CAPABILITY_NORMAL_MAP)) {
         // We need normal mapping for the full feature range
         decal_system_active = false;
-        mprintf (
-            ("Note: Decal system has been disabled due to lack of normal "
-             "mapping.\n"));
+        WARNINGF (
+            LOCATION,
+            "Note: Decal system has been disabled due to lack of normal "
+            "mapping.\n");
     }
     if (!gr_is_capable (CAPABILITY_SEPARATE_BLEND_FUNCTIONS)) {
         // WWe need separate blending functions for different color buffers
         decal_system_active = false;
-        mprintf (
-            ("Note: Decal system has been disabled due to lack of separate "
-             "color buffer blend functions.\n"));
+        WARNINGF (
+            LOCATION,
+            "Note: Decal system has been disabled due to lack of separate "
+            "color buffer blend functions.\n");
     }
 }
 

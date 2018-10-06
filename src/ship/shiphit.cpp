@@ -547,12 +547,13 @@ float do_subobj_hit_stuff (
 #ifndef NDEBUG
     float hitpos_dist = vm_vec_dist (hitpos, &ship_objp->pos);
     if (hitpos_dist > ship_objp->radius * 2.0f) {
-        mprintf (
-            ("BOGUS HITPOS PASSED TO DO_SUBOBJ_HIT_STUFF (%.1f > "
-             "%.1f)!\nInvestigate ship %s (%s), a hit was registered on this "
-             "ship outside this ship's radius.\n",
-             hitpos_dist, ship_objp->radius * 2.0f, ship_p->ship_name,
-             Ship_info[ship_p->ship_info_index].name));
+        WARNINGF (
+            LOCATION,
+            "BOGUS HITPOS PASSED TO DO_SUBOBJ_HIT_STUFF (%.1f > "
+            "%.1f)!\nInvestigate ship %s (%s), a hit was registered on this "
+            "ship outside this ship's radius.\n",
+            hitpos_dist, ship_objp->radius * 2.0f, ship_p->ship_name,
+            Ship_info[ship_p->ship_info_index].name);
         // Get John ASAP!!!!  Someone passed a local coordinate instead of
         // world for hitpos probably.
     }
@@ -928,10 +929,10 @@ static void shiphit_record_player_killer (object* killer_objp, player* p) {
                     Net_players[pnum].m_player->callsign);
             }
             else {
-                nprintf ((
-                    "Network",
+                WARNINGF (
+                    LOCATION,
                     "Couldn't find player object of weapon for killer of %s\n",
-                    p->callsign));
+                    p->callsign);
             }
         }
         else {
@@ -967,11 +968,11 @@ static void shiphit_record_player_killer (object* killer_objp, player* p) {
                     Net_players[pnum].m_player->callsign);
             }
             else {
-                nprintf (
-                    ("Network",
-                     "Couldn't find player object of shockwave for killer of "
-                     "%s\n",
-                     p->callsign));
+                WARNINGF (
+                    LOCATION,
+                    "Couldn't find player object of shockwave for killer of "
+                    "%s\n",
+                    p->callsign);
             }
         }
         else {
@@ -1009,10 +1010,9 @@ static void shiphit_record_player_killer (object* killer_objp, player* p) {
                     Net_players[pnum].m_player->callsign);
             }
             else {
-                nprintf (
-                    ("Network",
-                     "Couldn't find player object for killer of %s\n",
-                     p->callsign));
+                WARNINGF (
+                    LOCATION, "Couldn't find player object for killer of %s\n",
+                    p->callsign);
             }
         }
         else {
@@ -1423,7 +1423,7 @@ ship_hit_create_sparks (object* ship_objp, vec3d* hitpos, int submodel_num) {
 
 // Called from ship_hit_kill() when we detect the player has been killed.
 static void player_died_start (object* killer_objp) {
-    nprintf (("Network", "starting my player death\n"));
+    // WARNINGF (LOCATION, "starting my player death");
     gameseq_post_event (GS_EVENT_DEATH_DIED);
 
     /*  vm_vec_scale_add(&Dead_camera_pos, &Player_obj->pos,
@@ -1527,7 +1527,7 @@ static void player_died_start (object* killer_objp) {
     70 // deathroll rotvel is scaled according to ship velocity
 #define DEATHROLL_ROTVEL_SCALE \
     4 // constant determines how quickly deathroll rotvel is ramped up (smaller
-      // is faster)
+        // is faster)
 
 static void saturate_fabs (float* f, float max) {
     if (fl_abs (*f) > max) {
@@ -1581,9 +1581,6 @@ void ship_generic_kill_stuff (object* objp, float percent_killed) {
             delta_time = MIN_PLAYER_DEATHROLL_TIME;
     }
 
-    // nprintf(("AI", "ShipHit.cpp: Frame %i, Gametime = %7.3f, Ship %s will
-    // die in %7.3f seconds.\n", Framecount, f2fl(Missiontime),
-    // Ships[objp->instance].ship_name, (float) delta_time/1000.0f));
 
     // Make big ships have longer deathrolls.
     // This is debug code by MK to increase the deathroll time so ships have
@@ -1627,8 +1624,6 @@ void ship_generic_kill_stuff (object* objp, float percent_killed) {
         sp->final_death_time = timestamp (100);
     }
 
-    // nprintf(("AI", "Time = %7.3f: final_death_time set to %7.3f\n", (float)
-    // timestamp_ticker/1000.0f, (float) sp->final_death_time/1000.0f));
 
     sp->pre_death_explosion_happened =
         0; // The little fireballs haven't came in yet.
@@ -1693,9 +1688,6 @@ void ship_generic_kill_stuff (object* objp, float percent_killed) {
         }
         saturate_fabs (
             &sp->deathroll_rotvel.xyz.z, 0.75f * DEATHROLL_ROTVEL_CAP);
-        // nprintf(("Physics", "Frame: %i rotvel_mag: %5.2f, rotvel: (%4.2f,
-        // %4.2f, %4.2f)\n", Framecount, rotvel_mag, sp->deathroll_rotvel.x,
-        // sp->deathroll_rotvel.y, sp->deathroll_rotvel.z));
     }
 
     // blow out his reverse thrusters. Or drag, same thing.
@@ -1941,7 +1933,7 @@ extern int Homing_hits, Homing_misses;
 // Goober5000 - note... hit_pos is in *local* coordinates
 void ship_apply_whack (vec3d* force, vec3d* hit_pos, object* objp) {
     if (objp == Player_obj) {
-        nprintf (("Sandeep", "Playing stupid joystick effect\n"));
+        WARNINGF (LOCATION, "Playing stupid joystick effect");
         vec3d test;
         vm_vec_unrotate (&test, force, &objp->orient);
 
@@ -2013,15 +2005,9 @@ static void shiphit_hit_after_death (object* ship_objp, float damage) {
     delta_time = (int)(4 * sip->death_roll_base_time * percent_killed);
     time_remaining = timestamp_until (shipp->final_death_time);
 
-    // nprintf(("AI", "Gametime = %7.3f, Time until %s dies = %7.3f, delta =
-    // %7.3f\n", f2fl(Missiontime), Ships[ship_objp->instance].ship_name,
-    // (float)time_remaining/1000.0f, delta_time));
     if (ship_objp->flags[Object::Object_Flags::Player_ship])
         if (time_remaining < MIN_PLAYER_DEATHROLL_TIME) return;
 
-    // nprintf(("AI", "Subtracting off %7.3f seconds from deathroll, reducing
-    // to %7.3f\n", (float) delta_time/1000.0f, (float) (time_remaining -
-    // delta_time)/1000.0f));
 
     delta_time = time_remaining - delta_time;
     if (ship_objp->flags[Object::Object_Flags::Player_ship])
@@ -2747,8 +2733,6 @@ void ship_apply_local_damage (
             &Weapon_info[Weapons[other_obj->instance].weapon_info_index];
         if (wip->is_homing ()) {
             Homing_hits++;
-            // nprintf(("AI", " Hit!  Hits = %i/%i\n", Homing_hits,
-            // (Homing_hits + Homing_misses)));
         }
     }
 #endif

@@ -26,13 +26,13 @@
 
 #define SW_ROT_FACTOR 5 // increase in rotational time constant in shockwave
 #define SW_BLAST_DURATION 2000 // maximum duration of shockwave
-#define REDUCED_DAMP_FACTOR \
-    10 // increase in side_slip and acceleration time constants (scaled
-       // according to reduced damp time)
+#define REDUCED_DAMP_FACTOR                                              \
+    10  // increase in side_slip and acceleration time constants (scaled
+        // according to reduced damp time)
 #define REDUCED_DAMP_VEL \
     30 // change in velocity at which reduced_damp_time is 2000 ms
 #define REDUCED_DAMP_TIME 2000 // ms (2.0 sec)
-#define WEAPON_SHAKE_TIME \
+#define WEAPON_SHAKE_TIME                                                     \
     500 // ms (0.5 sec)    viewer shake time after hit by weapon (implemented
         // via afterburner shake)
 #define SPECIAL_WARP_T_CONST \
@@ -958,9 +958,9 @@ void physics_apply_whack (
     if (!(pi->flags & PF_USE_VEL) &&
         (vm_vec_mag_squared (&pi->vel) > MAX_SHIP_SPEED * MAX_SHIP_SPEED)) {
         // Get DaveA
-        nprintf (
-            ("Physics", "speed reset in physics_apply_whack [speed: %f]\n",
-             vm_vec_mag (&pi->vel)));
+        WARNINGF (
+            LOCATION, "speed reset in physics_apply_whack [speed: %f]\n",
+            vm_vec_mag (&pi->vel));
         vm_vec_normalize (&pi->vel);
         vm_vec_scale (&pi->vel, (float)RESET_SHIP_SPEED);
     }
@@ -1161,8 +1161,6 @@ void physics_apply_shock (
         vm_vec_scale (
             &delta_rotvel,
             (float)(MAX_ROTVEL * (pressure / STD_PRESSURE) * scale));
-        // nprintf(("Physics", "rotvel scale %f\n",
-        // (MAX_ROTVEL*(pressure/STD_PRESSURE)*scale)));
         vm_vec_add2 (&pi->rotvel, &delta_rotvel);
     }
 
@@ -1179,9 +1177,9 @@ void physics_apply_shock (
     if (!(pi->flags & PF_USE_VEL) &&
         (vm_vec_mag_squared (&pi->vel) > MAX_SHIP_SPEED * MAX_SHIP_SPEED)) {
         // Get DaveA
-        nprintf (
-            ("Physics", "speed reset in physics_apply_shock [speed: %f]\n",
-             vm_vec_mag (&pi->vel)));
+        WARNINGF (
+            LOCATION, "speed reset in physics_apply_shock [speed: %f]\n",
+            vm_vec_mag (&pi->vel));
         vm_vec_normalize (&pi->vel);
         vm_vec_scale (&pi->vel, (float)RESET_SHIP_SPEED);
     }
@@ -1237,9 +1235,9 @@ void physics_collide_whack (
     if (!(pi->flags & PF_USE_VEL) &&
         (vm_vec_mag_squared (&pi->vel) > MAX_SHIP_SPEED * MAX_SHIP_SPEED)) {
         // Get DaveA
-        nprintf (
-            ("Physics", "speed reset in physics_collide_whack [speed: %f]\n",
-             vm_vec_mag (&pi->vel)));
+        WARNINGF (
+            LOCATION, "speed reset in physics_collide_whack [speed: %f]\n",
+            vm_vec_mag (&pi->vel));
         vm_vec_normalize (&pi->vel);
         vm_vec_scale (&pi->vel, (float)RESET_SHIP_SPEED);
     }

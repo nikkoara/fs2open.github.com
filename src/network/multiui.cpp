@@ -407,7 +407,7 @@ void multi_common_load_palette () {
 
     Multi_common_interface_palette = bm_load (MULTI_COMMON_PALETTE_FNAME);
     if (Multi_common_interface_palette == -1) {
-        nprintf (("Network", "Error loading multiplayer common palette!\n"));
+        // WARNINGF (LOCATION, "Error loading multiplayer common palette!");
     }
 }
 
@@ -491,35 +491,38 @@ UI_BUTTON Multi_join_select_button; // for selecting list items
 UI_SLIDER2 Multi_join_slider;       // handy dandy slider
 int Multi_join_bitmap;              // the background bitmap
 
-ui_button_info Multi_join_buttons[GR_NUM_RESOLUTIONS][MULTI_JOIN_NUM_BUTTONS] =
-    { {
-          // GR_640
-          ui_button_info ("MJ_00", 1, 57, -1, -1, 0),       // scroll up
-          ui_button_info ("MJ_02", 1, 297, -1, -1, 2),      // scroll down
-          ui_button_info ("MJ_03", 10, 338, 65, 364, 3),    // refresh
-          ui_button_info ("MJ_04", 1, 405, -1, -1, 4),      // scroll info up
-          ui_button_info ("MJ_05", 1, 446, -1, -1, 5),      // scroll info down
-          ui_button_info ("MJ_06", 489, 339, -1, -1, 6),    // join as observer
-          ui_button_info ("MJ_07", 538, 339, -1, -1, 7),    // create game
-          ui_button_info ("MJ_08", 583, 339, 588, 376, 8),  // cancel
-          ui_button_info ("MJ_09", 534, 426, -1, -1, 9),    // help
-          ui_button_info ("MJ_10", 534, 454, -1, -1, 10),   // options
-          ui_button_info ("MJ_11", 571, 426, 589, 416, 11), // join
-      },
-      {
-          // GR_1024
-          ui_button_info ("2_MJ_00", 2, 92, -1, -1, 0),     // scroll up
-          ui_button_info ("2_MJ_02", 2, 475, -1, -1, 2),    // scroll down
-          ui_button_info ("2_MJ_03", 16, 541, 104, 582, 3), // refresh
-          ui_button_info ("2_MJ_04", 2, 648, -1, -1, 4),    // scroll info up
-          ui_button_info ("2_MJ_05", 2, 713, -1, -1, 5),    // scroll info down
-          ui_button_info ("2_MJ_06", 783, 542, -1, -1, 6),  // join as observer
-          ui_button_info ("2_MJ_07", 861, 542, -1, -1, 7),  // create game
-          ui_button_info ("2_MJ_08", 933, 542, 588, 376, 8),  // cancel
-          ui_button_info ("2_MJ_09", 854, 681, -1, -1, 9),    // help
-          ui_button_info ("2_MJ_10", 854, 727, -1, -1, 10),   // options
-          ui_button_info ("2_MJ_11", 914, 681, 937, 668, 11), // join
-      } };
+ui_button_info
+    Multi_join_buttons[GR_NUM_RESOLUTIONS][MULTI_JOIN_NUM_BUTTONS] = {
+        {
+            // GR_640
+            ui_button_info ("MJ_00", 1, 57, -1, -1, 0),    // scroll up
+            ui_button_info ("MJ_02", 1, 297, -1, -1, 2),   // scroll down
+            ui_button_info ("MJ_03", 10, 338, 65, 364, 3), // refresh
+            ui_button_info ("MJ_04", 1, 405, -1, -1, 4),   // scroll info up
+            ui_button_info ("MJ_05", 1, 446, -1, -1, 5),   // scroll info down
+            ui_button_info ("MJ_06", 489, 339, -1, -1, 6), // join as observer
+            ui_button_info ("MJ_07", 538, 339, -1, -1, 7), // create game
+            ui_button_info ("MJ_08", 583, 339, 588, 376, 8),  // cancel
+            ui_button_info ("MJ_09", 534, 426, -1, -1, 9),    // help
+            ui_button_info ("MJ_10", 534, 454, -1, -1, 10),   // options
+            ui_button_info ("MJ_11", 571, 426, 589, 416, 11), // join
+        },
+        {
+            // GR_1024
+            ui_button_info ("2_MJ_00", 2, 92, -1, -1, 0),     // scroll up
+            ui_button_info ("2_MJ_02", 2, 475, -1, -1, 2),    // scroll down
+            ui_button_info ("2_MJ_03", 16, 541, 104, 582, 3), // refresh
+            ui_button_info ("2_MJ_04", 2, 648, -1, -1, 4),    // scroll info up
+            ui_button_info ("2_MJ_05", 2, 713, -1, -1, 5), // scroll info down
+            ui_button_info (
+                "2_MJ_06", 783, 542, -1, -1, 6), // join as observer
+            ui_button_info ("2_MJ_07", 861, 542, -1, -1, 7),    // create game
+            ui_button_info ("2_MJ_08", 933, 542, 588, 376, 8),  // cancel
+            ui_button_info ("2_MJ_09", 854, 681, -1, -1, 9),    // help
+            ui_button_info ("2_MJ_10", 854, 727, -1, -1, 10),   // options
+            ui_button_info ("2_MJ_11", 914, 681, 937, 668, 11), // join
+        }
+    };
 
 #define MULTI_JOIN_NUM_TEXT 13
 
@@ -1124,9 +1127,9 @@ void multi_join_game_do_frame () {
 void multi_join_game_close () {
     // unload any bitmaps
     if (!bm_unload (Multi_join_bitmap)) {
-        nprintf (
-            ("General", "WARNING : could not unload background bitmap %s\n",
-             Multi_join_bitmap_fname[gr_screen.res]));
+        WARNINGF (
+            LOCATION, "WARNING : could not unload background bitmap %s\n",
+            Multi_join_bitmap_fname[gr_screen.res]);
     }
 
     // free up the active game list
@@ -1467,7 +1470,7 @@ void multi_join_load_tcp_addrs () {
     // attempt to open the ip list file
     file = cfopen (IP_CONFIG_FNAME, "rt", CFILE_NORMAL, CF_TYPE_DATA);
     if (file == NULL) {
-        nprintf (("Network", "Error loading tcp.cfg file!\n"));
+        // WARNINGF (LOCATION, "Error loading tcp.cfg file!");
         return;
     }
 
@@ -1488,7 +1491,7 @@ void multi_join_load_tcp_addrs () {
         if ((line[0] == '\0') || (line[0] == '\n')) { continue; }
 
         if (!psnet_is_valid_ip_string (line)) {
-            nprintf (("Network", "Invalid ip string (%s)\n", line));
+            // WARNINGF (LOCATION, "Invalid ip string (%s)", line);
         }
         else {
             // copy the server ip address
@@ -1664,8 +1667,8 @@ active_game* multi_join_get_game (int n) {
                 count++;
             }
             if (moveup == Active_game_head) {
-                nprintf (
-                    ("Network", "Warning, couldn't find game item %d!\n", n));
+                WARNINGF (
+                    LOCATION, "Warning, couldn't find game item %d!\n", n);
                 return NULL;
             }
             else {
@@ -1911,7 +1914,7 @@ void multi_join_send_join_request (int as_observer) {
     if (Multi_join_selected_item->flags & AG_FLAG_PASSWD) {
         if (!multi_passwd_popup (Multi_join_request.passwd)) { return; }
 
-        nprintf (("Network", "Password : %s\n", Multi_join_request.passwd));
+        // WARNINGF (LOCATION, "Password : %s", Multi_join_request.passwd);
     }
 
     // fill out the join request struct
@@ -2211,12 +2214,12 @@ ui_button_info Multi_sg_buttons[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_BUTTONS] = {
         ui_button_info (
             "MSG_00", 1, 184, 34, 191,
             2), // open
-                //******ui_button_info("MSG_01",        1,              159,    34,     166,
-                // 1),
-                //// closed
-                //******ui_button_info("MSG_02",        1,              184,    34,     191,
-                // 2),
-                //// restricted
+        //******ui_button_info("MSG_01",        1,              159,    34,     166,
+        // 1),
+        //// closed
+        //******ui_button_info("MSG_02",        1,              184,    34,     191,
+        // 2),
+        //// restricted
         ui_button_info ("MSG_03", 1, 209, 34, 218, 3),     // password
         ui_button_info ("MSG_04", 1, 257, 34, 266, 4),     // rank set
         ui_button_info ("MSG_05", 1, 282, -1, -1, 5),      // rank scroll up
@@ -2232,12 +2235,12 @@ ui_button_info Multi_sg_buttons[GR_NUM_RESOLUTIONS][MULTI_SG_NUM_BUTTONS] = {
         ui_button_info (
             "2_MSG_00", 2, 295, 51, 307,
             2), // open
-                //******ui_button_info("2_MSG_01",      2,              254,    51,     267,
-                // 1),
-                //// closed
-                //******ui_button_info("2_MSG_02",      2,              295,    51,     307,
-                // 2),
-                //// restricted
+        //******ui_button_info("2_MSG_01",      2,              254,    51,     267,
+        // 1),
+        //// closed
+        //******ui_button_info("2_MSG_02",      2,              295,    51,     307,
+        // 2),
+        //// restricted
         ui_button_info ("2_MSG_03", 2, 335, 51, 350, 3),    // password
         ui_button_info ("2_MSG_04", 2, 412, 51, 426, 4),    // rank set
         ui_button_info ("2_MSG_05", 2, 452, -1, -1, 5),     // rank scroll up
@@ -2576,9 +2579,9 @@ void multi_start_game_close () {
 
     // unload any bitmaps
     if (!bm_unload (Multi_sg_bitmap)) {
-        nprintf (
-            ("General", "WARNING : could not unload background bitmap %s\n",
-             Multi_sg_bitmap_fname[gr_screen.res]));
+        WARNINGF (
+            LOCATION, "WARNING : could not unload background bitmap %s\n",
+            Multi_sg_bitmap_fname[gr_screen.res]);
     }
 
     // destroy the UI_WINDOW
@@ -3520,7 +3523,9 @@ bool multi_create_sort_func (
 
     int test = 0;
 
-    if (Multi_create_sort_mode) { test = strcasecmp (m1.filename, m2.filename); }
+    if (Multi_create_sort_mode) {
+        test = strcasecmp (m1.filename, m2.filename);
+    }
     else {
         test = strcasecmp (m1.name, m2.name);
     }
@@ -3868,8 +3873,8 @@ void multi_create_game_do () {
 
             Multi_sync_mode =
                 MULTI_SYNC_PRE_BRIEFING; // DTP must be set before a call to
-                                         // gameseq_post_event(GS_EVENT_MULTI_MISSION_SYNC)
-                                         // is done as it is below.
+                // gameseq_post_event(GS_EVENT_MULTI_MISSION_SYNC)
+                // is done as it is below.
             gameseq_post_event (GS_EVENT_MULTI_MISSION_SYNC); // DTP STart game
 
             Cmdline_almission =
@@ -4134,9 +4139,9 @@ void multi_create_game_do () {
 void multi_create_game_close () {
     // unload any bitmaps
     if (!bm_unload (Multi_create_bitmap)) {
-        nprintf (
-            ("General", "WARNING : could not unload background bitmap %s\n",
-             Multi_create_bitmap_fname[gr_screen.res]));
+        WARNINGF (
+            LOCATION, "WARNING : could not unload background bitmap %s\n",
+            Multi_create_bitmap_fname[gr_screen.res]);
     }
 
     // destroy the chatbox
@@ -5082,17 +5087,17 @@ void multi_create_list_select_item (int n) {
             if (mcip) {
                 if (Netgame.options.respawn <= mcip->respawn) {
                     ng->respawn = Netgame.options.respawn;
-                    nprintf (
-                        ("Network",
-                         "Using netgame options for respawn count (%d %d)\n",
-                         Netgame.options.respawn, mcip->respawn));
+                    WARNINGF (
+                        LOCATION,
+                        "Using netgame options for respawn count (%d %d)\n",
+                        Netgame.options.respawn, mcip->respawn);
                 }
                 else {
                     ng->respawn = mcip->respawn;
-                    nprintf (
-                        ("Network",
-                         "Using mission settings for respawn count (%d %d)\n",
-                         Netgame.options.respawn, mcip->respawn));
+                    WARNINGF (
+                        LOCATION,
+                        "Using mission settings for respawn count (%d %d)\n",
+                        Netgame.options.respawn, mcip->respawn);
                 }
             }
             break;
@@ -5114,8 +5119,7 @@ void multi_create_list_select_item (int n) {
                     ng->max_players = max_players;
                 }
 
-                nprintf (
-                    ("Network", "MC MAX PLAYERS : %d\n", ng->max_players));
+                WARNINGF (LOCATION, "MC MAX PLAYERS : %d\n", ng->max_players);
 
                 // set the information area text
                 // multi_common_set_text(ng->title);
@@ -6046,8 +6050,8 @@ UI_XSTR Multi_ho_text[GR_NUM_RESOLUTIONS][MULTI_HO_NUM_BUTTONS] = {
 #define MULTI_HO_MSG_GROUP 0   // group dealing with squadmate messaging
 #define MULTI_HO_END_GROUP 1   // group dealing with ending the mission
 #define MULTI_HO_VOICE_GROUP 2 // group dealing with voice stuff
-int Multi_ho_radio_groups[MULTI_HO_NUM_RADIO_GROUPS] =
-    { // currently selected button in the radio button group
+int Multi_ho_radio_groups
+    [MULTI_HO_NUM_RADIO_GROUPS] = { // currently selected button in the radio button group
         0, 0, 0
     };
 int Multi_ho_radio_info[MULTI_HO_NUM_RADIO_BUTTONS][3] = {
@@ -6480,9 +6484,9 @@ void multi_host_options_do () {
 void multi_host_options_close () {
     // unload any bitmaps
     if (!bm_unload (Multi_ho_bitmap)) {
-        nprintf (
-            ("General", "WARNING : could not unload background bitmap %s\n",
-             Multi_ho_bitmap_fname[gr_screen.res]));
+        WARNINGF (
+            LOCATION, "WARNING : could not unload background bitmap %s\n",
+            Multi_ho_bitmap_fname[gr_screen.res]);
     }
 
     // destroy the UI_WINDOW
@@ -7373,9 +7377,9 @@ void multi_game_client_setup_do_frame () {
 void multi_game_client_setup_close () {
     // unload any bitmaps
     if (!bm_unload (Multi_jw_bitmap)) {
-        nprintf (
-            ("General", "WARNING : could not unload background bitmap %s\n",
-             Multi_jw_bitmap_fname[gr_screen.res]));
+        WARNINGF (
+            LOCATION, "WARNING : could not unload background bitmap %s\n",
+            Multi_jw_bitmap_fname[gr_screen.res]);
     }
 
     // destroy the chatbox
@@ -7830,23 +7834,25 @@ int Multi_sync_bitmap;       // the background bitmap
 #define MS_CANCEL 2
 #define MS_KICK 3
 #define MS_LAUNCH 4
-ui_button_info Multi_sync_buttons[GR_NUM_RESOLUTIONS][MULTI_SYNC_NUM_BUTTONS] =
-    { {
-          // GR_640
-          ui_button_info ("MS_00", 1, 404, -1, -1, 0),
-          ui_button_info ("MS_01", 1, 446, -1, -1, 1),
-          ui_button_info ("MS_03", 518, 426, 519, 416, 3),
-          ui_button_info ("MS_02", 469, 426, 479, 416, 2),
-          ui_button_info ("MS_04", 571, 420, 577, 416, 4),
-      },
-      {
-          // GR_1024
-          ui_button_info ("2_MS_00", 2, 647, -1, -1, 0),
-          ui_button_info ("2_MS_01", 2, 713, -1, -1, 1),
-          ui_button_info ("2_MS_03", 829, 682, 831, 667, 3),
-          ui_button_info ("2_MS_02", 751, 682, 766, 667, 2),
-          ui_button_info ("2_MS_04", 914, 672, 924, 667, 4),
-      } };
+ui_button_info
+    Multi_sync_buttons[GR_NUM_RESOLUTIONS][MULTI_SYNC_NUM_BUTTONS] = {
+        {
+            // GR_640
+            ui_button_info ("MS_00", 1, 404, -1, -1, 0),
+            ui_button_info ("MS_01", 1, 446, -1, -1, 1),
+            ui_button_info ("MS_03", 518, 426, 519, 416, 3),
+            ui_button_info ("MS_02", 469, 426, 479, 416, 2),
+            ui_button_info ("MS_04", 571, 420, 577, 416, 4),
+        },
+        {
+            // GR_1024
+            ui_button_info ("2_MS_00", 2, 647, -1, -1, 0),
+            ui_button_info ("2_MS_01", 2, 713, -1, -1, 1),
+            ui_button_info ("2_MS_03", 829, 682, 831, 667, 3),
+            ui_button_info ("2_MS_02", 751, 682, 766, 667, 2),
+            ui_button_info ("2_MS_04", 914, 672, 924, 667, 4),
+        }
+    };
 
 // text
 #define MULTI_SYNC_NUM_TEXT 5
@@ -7944,7 +7950,7 @@ int Mission_sync_flags = 0;
 #define MS_FLAG_PSETTINGS (1 << 5) // send the player settings packet
 #define MS_FLAG_MT_STATS_START \
     (1 << 6) // server has started getting player stats from the tracker
-#define MS_FLAG_MT_STATS_DONE \
+#define MS_FLAG_MT_STATS_DONE                                             \
     (1 << 7) // server has finished getting player stats from the tracker
              // (success or fail)
 #define MS_FLAG_TS_SLOTS (1 << 8)   // team/ship slots have been sent
@@ -8180,9 +8186,9 @@ void multi_sync_common_do () {
 void multi_sync_common_close () {
     // unload any bitmaps
     if (!bm_unload (Multi_sync_bitmap)) {
-        nprintf (
-            ("General", "WARNING : could not unload background bitmap %s\n",
-             Multi_sync_bitmap_fname[gr_screen.res]));
+        WARNINGF (
+            LOCATION, "WARNING : could not unload background bitmap %s\n",
+            Multi_sync_bitmap_fname[gr_screen.res]);
     }
 
     // destroy the UI_WINDOW
@@ -8372,9 +8378,9 @@ void multi_sync_blit_screen_all () {
                 multi_sync_display_status (txt, count);
                 break;
             default:
-                nprintf (
-                    ("Network", "Unhandled player state : %d !\n",
-                     Net_players[idx].state));
+                WARNINGF (
+                    LOCATION, "Unhandled player state : %d !\n",
+                    Net_players[idx].state);
                 break;
             }
             count++;
@@ -8619,7 +8625,7 @@ void multi_sync_pre_do () {
 
             // load the mission myself, as soon as possible
             if (!Multi_mission_loaded) {
-                nprintf (("Network", "Server loading mission..."));
+                // WARNINGF (LOCATION, "Server loading mission...");
 
                 // update everyone about my status
                 Net_player->state = NETPLAYER_STATE_MISSION_LOADING;
@@ -8627,7 +8633,7 @@ void multi_sync_pre_do () {
 
                 game_start_mission ();
                 psnet_flush ();
-                nprintf (("Network", "Done\n"));
+                // WARNINGF (LOCATION, "Done");
                 Multi_mission_loaded = 1;
 
                 // update everyone about my status
@@ -8730,10 +8736,9 @@ void multi_sync_pre_do () {
 void multi_sync_pre_close () {
     // at this point, we should shut down any file xfers...
     if (Net_player->s_info.xfer_handle != -1) {
-        nprintf (
-            ("Network",
-             "WARNING - killing file xfer while leaving mission sync "
-             "state!!!\n"));
+        WARNINGF (
+            LOCATION,
+            "WARNING - killing file xfer while leaving mission sync state!!!");
 
         multi_xfer_abort (Net_player->s_info.xfer_handle);
         Net_player->s_info.xfer_handle = -1;
@@ -8776,10 +8781,9 @@ void multi_sync_post_init () {
             bm_get_type (Multi_sync_bitmap);
         generic_anim_stream (&Multi_sync_countdown_anim);
         if (Multi_sync_countdown_anim.num_frames < 1) {
-            nprintf (
-                ("General",
-                 "WARNING!, Could not load countdown animation %s!\n",
-                 Multi_sync_countdown_fname[gr_screen.res]));
+            WARNINGF (
+                LOCATION, "WARNING!, Could not load countdown animation %s!\n",
+                Multi_sync_countdown_fname[gr_screen.res]);
         }
     }
 
@@ -9186,9 +9190,9 @@ void multi_sync_launch () {
 
     // set the # of players at the start of the mission
     Multi_num_players_at_start = multi_num_players ();
-    nprintf (
-        ("Network", "# of players at start of mission : %d\n",
-         Multi_num_players_at_start));
+    WARNINGF (
+        LOCATION, "# of players at start of mission : %d\n",
+        Multi_num_players_at_start);
 
     // initialize datarate limiting for all clients
     multi_oo_rate_init_all ();

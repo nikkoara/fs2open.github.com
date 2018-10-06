@@ -623,34 +623,6 @@ void multi_ingame_select_init () {
     Multi_ingame_join_sig = 0;
     Net_player->m_player->objnum = -1;
 
-    // create a ship, then find a ship to copy crucial information from.  Save
-    // and restore the wing number to be safe.
-    /*
-    wingnum_save = Player_start_pobject->wingnum;
-    net_signature = Player_start_pobject->net_signature;
-    goals_save = Player_start_pobject->ai_goals;
-    Player_start_pobject->wingnum = -1;
-    Player_start_pobject->net_signature = 0;
-    Player_start_pobject->ai_goals = -1;
-    objnum = parse_create_object( Player_start_pobject );
-    Player_start_pobject->wingnum = wingnum_save;
-    Player_start_pobject->net_signature = net_signature;
-    Player_start_pobject->ai_goals = goals_save;
-
-    if ( objnum == -1 ) {
-        nprintf(("Network", "Bailing ingame join because unable to create parse
-    object player ship\n")); multi_quit_game(PROMPT_NONE,
-    MULTI_END_NOTIFY_NONE, MULTI_END_ERROR_INGAME_SHIP); return;
-    }
-
-    // make it invalid
-    Player_obj = &Objects[objnum];
-    Player_obj->net_signature = 0;
-    Player_ship = &Ships[Player_obj->instance];
-    strcpy_s(Player_ship->ship_name, NOX("JIP Ship"));
-    Player_ai = &Ai_info[Player_ship->ai_index];
-    */
-
     // load the temp ship icons
     multi_ingame_load_icons ();
 
@@ -846,9 +818,9 @@ void multi_ingame_select_do () {
 void multi_ingame_select_close () {
     // unload any bitmaps
     if (!bm_unload (Multi_ingame_bitmap)) {
-        nprintf (
-            ("General", "WARNING : could not unload background bitmap %s\n",
-             Multi_ingame_join_bitmap_fname[gr_screen.res]));
+        WARNINGF (
+            LOCATION, "WARNING : could not unload background bitmap %s\n",
+            Multi_ingame_join_bitmap_fname[gr_screen.res]);
     }
 
     // unload all the ship class icons
@@ -1100,10 +1072,10 @@ void process_ingame_ships_packet (ubyte* data, header* hinfo) {
         }
         if (p_objp == NULL) {
             Int3 ();
-            nprintf (
-                ("Network",
-                 "Couldn't find ship %s in either arrival list or in mission",
-                 ship_name));
+            WARNINGF (
+                LOCATION,
+                "Couldn't find ship %s in either arrival list or in mission",
+                ship_name);
             multi_quit_game (
                 PROMPT_NONE, MULTI_END_NOTIFY_NONE,
                 MULTI_END_ERROR_INGAME_BOGUS);
@@ -1248,258 +1220,6 @@ void send_ingame_ships_packet (net_player* player) {
 void process_ingame_wings_packet (ubyte* /*data*/, header* /*hinfo*/) {
     Int3 ();
 }
-/*
-// code to process the wing data from a server.
-void process_ingame_wings_packet( ubyte *data, header *hinfo )
-{
-    int offset, wingnum;
-    ubyte p_type, what;
-
-    offset = HEADER_LENGTH;
-
-    GET_DATA( p_type );
-
-    // p_type tells us whether to stop or not
-    while ( p_type == INGAME_WING_NEXT ) {
-        wing *wingp;
-
-        // get the wingnum and a pointer to it.  The game stores data for all
-wings always, so this
-        // is perfectly valid
-        GET_DATA( wingnum );
-        wingp = &Wings[wingnum];
-
-        GET_DATA( what );
-        if ( what == INGAME_WING_NOT_ARRIVED ) {
-            ASSERT (wingp->total_arrived_count == 0 );                  // this had
-better be true!!! } else if ( what == INGAME_WING_DEPARTED ) {
-            // mark the wing as gone.  if it isn't, it soon will be.  Maybe we
-should send more information
-            // about these wings later (like total_arrived_count, etc), but we
-will see. wingp->flags |= WF_WING_GONE; } else { int total_arrived_count,
-current_count, current_wave, i, j; ushort signature; int shipnum;
-
-            // the wing is present in the mission on the server.  Get the
-crucial information about the
-            // wing.  Then get the ships for this wing in order on the client
-machine GET_DATA( total_arrived_count ); GET_DATA( current_count ); GET_DATA(
-current_wave );
-
-            ASSERT (current_wave > 0 );
-            ASSERT (total_arrived_count > 0 );
-
-            // for this wing, strip it down to nothing.  Let the parse object
-ocde recreate the
-            // wing from the parse objects, then bash any weapons, etc for
-player wings.  We need
-            // to do this because we might actually wind up with >
-MAX_SHIPS_PER_WING if we
-            // don't delete them all first, and have a > 0 threshold, and are
-on something other
-            // than the first wave.  Only do this for non-player wings.
-
-            nprintf(("Network", "Clearing %s -- %d ships\n", wingp->name,
-wingp->current_count)); for ( i = 0; i < wingp->current_count; i++ ) { int
-index, objnum;
-
-                index = wingp->ship_index[i];
-                ASSERT (index != -1 );
-                objnum = Ships[index].objnum;
-                ASSERT (objnum != -1 );
-
-                // delete the object since we are filling the wing again
-anyway. obj_delete( objnum );
-                Objects[objnum].net_signature = 0;                              // makes this
-object "invalid" until dead. if ( Objects[objnum].type == OBJ_GHOST ) {
-                    nprintf(("Network", "Marking ghost objnum %d as dead\n",
-objnum)); Objects[objnum].flags |= OF_SHOULD_BE_DEAD;
-                }
-                Ingame_ships_to_delete[index] = 0;              // be sure that this
-guy doesn't get deleted, since we already deleted it wingp->ship_index[i] = -1;
-            }
-            wingp->current_count = 0;
-            wingp->total_arrived_count = 0;
-
-            // now, recreate all the ships needed
-            for (i = 0; i < current_count; i++ ) {
-                int which_one, team, slot_index, specific_instance;
-                ship *shipp;
-                object *objp;
-
-                GET_DATA( signature );
-
-                // assign which_one to be the given signature - wing's base
-signature.  This let's us
-                // know which ship to create (i.e. the total_arrivel_count);
-                which_one = signature - wingp->net_signature;
-                ASSERT ((which_one >= 0) && (which_one < (wingp->net_signature
-+ (wingp->wave_count*wingp->num_waves))) ); wingp->total_arrived_count =
-(ushort)which_one;
-
-                // determine which ship in the ahip arrival list this guy is.
-It is a 0 based index specific_instance = which_one % wingp->wave_count;
-
-                // call parse_wing_create_ships making sure that we only ever
-create 1 ship at a time.  We don't
-                // want parse_wing_create_ships() to assign network signature
-either.  We will directly
-                // assign it here.
-
-                wingp->current_wave = 0;                                                // make it the
-first wave.  Ensures that ships don't get removed off the list
-                parse_wing_create_ships( wingp, 1, 1, specific_instance );
-                shipnum = wingp->ship_index[wingp->current_count-1];
-                Ingame_ships_to_delete[shipnum] = 0;                    // "unmark"
-this ship so it doesn't get deleted.
-
-                // kind of stupid, but bash the name since it won't get
-recreated properly from
-                // the parse_wing_create_ships call.
-                shipp = &Ships[shipnum];
-                wing_bash_ship_name(shipp->ship_name, wingp->name, which_one +
-1); nprintf(("Network", "Created %s\n", shipp->ship_name));
-
-                objp = &Objects[shipp->objnum];
-                objp->net_signature = (ushort)(wingp->net_signature +
-which_one);
-
-                // get the team and slot.  Team will be -1 when it isn't a part
-of player wing.  So, if
-                // not -1, then be sure we have a valid slot, then change the
-ship type, etc. multi_ts_get_team_and_slot(shipp->ship_name, &team,
-&slot_index); if ( team != -1 ) { ASSERT (slot_index != -1 );
-
-                    // change the ship type and the weapons
-                    change_ship_type(objp->instance,
-Wss_slots_teams[team][slot_index].ship_class);
-                    wl_bash_ship_weapons(&shipp->weapons,&Wss_slots_teams[team][slot_index]);
-
-                    // Be sure to mark this ship as as a could_be_player
-                    obj_set_flags( objp, objp->flags | OF_COULD_BE_PLAYER );
-                    objp->flags .remove(Object::Object_flags::Player_ship);
-                }
-
-                // if this is a player ship, make sure we find out who's it is
-and set their objnum accordingly for( j = 0; j < MAX_PLAYERS; j++){
-                    if(MULTI_CONNECTED(Net_players[j]) &&
-(Net_players[j].player->objnum == signature)) { ASSERT (team != -1 );           //
-to help trap errors!!! nprintf(("Network", "Making %s ship for %s\n",
-Ships[shipnum].ship_name, Net_players[j].player->callsign));
-                        multi_assign_player_ship( j, objp,
-Ships[shipnum].ship_info_index ); objp->flags
-.set(Object::Object_Flags::Player_ship); objp->flags &= ~OF_COULD_BE_PLAYER;
-                        break;
-                    }
-                }
-            }
-
-
-            // we will have no ships in any wings at this point (we didn't
-create any when we loaded the
-            // mission).  Set the current wave of this wing to be 1 less than
-was passed in since this value
-            // will get incremented in parse_wing_create_ships;
-            wingp->current_wave = current_wave;
-            wingp->total_arrived_count = total_arrived_count;
-        }
-
-        GET_DATA( p_type );
-    }
-
-   PACKET_SET_SIZE();
-
-    // if we have reached the end of the list change our network state
-    if ( p_type == INGAME_WING_LIST_EOL ) {
-        Net_player->state = NETPLAYER_STATE_INGAME_WINGS;
-        send_netplayer_update_packet();
-
-        // add some mission sync text
-        multi_common_add_text(XSTR("Wings packet (ingame)\n",684));
-    }
-
-}
-
-// function to send information about wings.  We need to send enough
-information to let the client
-// construct or reconstruct any wings in the mission.  We will rely on the fact
-that the host wing array
-// will exactly match the client wing array (in terms of number, and wing
-names) void send_ingame_wings_packet( net_player *player )
-{
-    ubyte data[MAX_PACKET_SIZE];
-    ubyte p_type;
-    int packet_size, i;
-    ubyte what;
-
-    BUILD_HEADER( WINGS_INGAME_PACKET );
-
-    // iterate through the wings list
-    for ( i = 0; i < Num_wings; i++ ) {
-        wing *wingp;
-
-        wingp = &Wings[i];
-
-        p_type = INGAME_WING_NEXT;
-        ADD_DATA( p_type );
-
-        ADD_DATA( i );
-
-        // add wing data that the client needs.  There are several conditions
-to send to clients:
-        //
-        // 1. wing hasn't arrived -- total_arrived_count will be 0
-        // 2. wing is done (or currently departing)
-        // 3. wing is present (any wave, any number of ships).
-        //
-        // 1 and 2 are easy to handle.  (3) is the hardest.
-        if ( wingp->total_arrived_count == 0 ) {
-            what = INGAME_WING_NOT_ARRIVED;
-            ADD_DATA( what );
-        } else if ( wingp->flags & (WF_WING_GONE | WF_WING_DEPARTING) ) {
-            what = INGAME_WING_DEPARTED;
-            ADD_DATA( what );
-        } else {
-            int j;
-
-            // include to code to possibly send more wing data here in this
-part of the if/else
-            // chain.  We can do this because MAX_WINGS * 8 (8 being the number
-of byte for a minimum
-            // description of a wing) is always less than MAX_PACKET_SIZE.
-Checking here ensures that
-            // we have enough space for *this* wing in the packet, and not the
-largest wing.  The
-            // formula below looks at number of ships in the wing, the name
-length, length of the signature,
-            // and the size of the bytes added before the ship names.  32
-accounts for a little slop if ( packet_size > (MAX_PACKET_SIZE -
-(wingp->current_count * (NAME_LENGTH+2) + 32)) ) { p_type =
-INGAME_WING_LIST_EOP; ADD_DATA( p_type ); multi_io_send_reliable(player, data,
-packet_size); BUILD_HEADER( WINGS_INGAME_PACKET );
-            }
-            what = INGAME_WING_PRESENT;
-            ADD_DATA( what );
-            ADD_DATA( wingp->total_arrived_count );
-            ADD_DATA( wingp->current_count );
-            ADD_DATA( wingp->current_wave );
-
-            // add the ship name and net signature of all ships currently in
-the wing. for ( j = 0; j < wingp->current_count; j++ ) { ship *shipp;
-
-                shipp = &Ships[wingp->ship_index[j]];
-                //ADD_STRING( shipp->ship_name );
-                ADD_DATA( Objects[shipp->objnum].net_signature );
-            }
-        }
-
-    }
-
-    p_type = INGAME_WING_LIST_EOL;
-    ADD_DATA( p_type );
-
-    multi_io_send_reliable(player, data, packet_size);
-}
-*/
 
 // send a request or a reply regarding ingame join ship choice
 void send_ingame_ship_request_packet (int code, int rdata, net_player* pl) {
@@ -1689,10 +1409,9 @@ void process_ingame_ship_request_packet (ubyte* data, header* hinfo) {
 
         player_num = find_player_id (hinfo->id);
         if (player_num == -1) {
-            nprintf (
-                ("Network",
-                 "Received ingame ship request packet from unknown "
-                 "player!!\n"));
+            WARNINGF (
+                LOCATION,
+                "Received ingame ship request packet from unknown player!!");
             break;
         }
 
@@ -1898,9 +1617,9 @@ void process_ingame_ship_request_packet (ubyte* data, header* hinfo) {
         if (objp == NULL) {
             // bogus!!!  couldn't find the object -- we cannot connect his --
             // this is really bad!!!
-            nprintf (
-                ("Network", "Couldn't find ship for ingame joiner %s\n",
-                 Net_players[player_num].m_player->callsign));
+            WARNINGF (
+                LOCATION, "Couldn't find ship for ingame joiner %s\n",
+                Net_players[player_num].m_player->callsign);
             break;
         }
         objp->flags.set (Object::Object_Flags::Player_ship);
@@ -1988,7 +1707,7 @@ void process_ingame_ship_update_packet (ubyte* data, header* hinfo) {
     lookup = multi_get_network_object (net_sig);
     if (lookup == NULL) {
         // read in garbage values if we can't find the ship
-        nprintf (("Network", "Got ingame ship update for unknown object\n"));
+        // WARNINGF (LOCATION, "Got ingame ship update for unknown object");
         GET_FLOAT (garbage);
         for (idx = 0; idx < n_quadrants; idx++) { GET_FLOAT (garbage); }
 

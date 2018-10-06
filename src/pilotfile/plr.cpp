@@ -775,7 +775,8 @@ bool pilotfile::load_player (const char* callsign, player* _p) {
     filename += ".plr";
 
     if (filename.size () == 4) {
-        mprintf (("PLR => Invalid filename '%s'!\n", filename.c_str ()));
+        WARNINGF (
+            LOCATION, "PLR => Invalid filename '%s'!\n", filename.c_str ());
         return false;
     }
 
@@ -783,15 +784,18 @@ bool pilotfile::load_player (const char* callsign, player* _p) {
         cfopen ((char*)filename.c_str (), "rb", CFILE_NORMAL, CF_TYPE_PLAYERS);
 
     if (!cfp) {
-        mprintf (
-            ("PLR => Unable to open '%s' for reading!\n", filename.c_str ()));
+        WARNINGF (
+            LOCATION, "PLR => Unable to open '%s' for reading!\n",
+            filename.c_str ());
         return false;
     }
 
     unsigned int plr_id = cfread_uint (cfp);
 
     if (plr_id != PLR_FILE_ID) {
-        mprintf (("PLR => Invalid header id for '%s'!\n", filename.c_str ()));
+        WARNINGF (
+            LOCATION, "PLR => Invalid header id for '%s'!\n",
+            filename.c_str ());
         plr_close ();
         return false;
     }
@@ -799,9 +803,9 @@ bool pilotfile::load_player (const char* callsign, player* _p) {
     // version, now used
     version = cfread_ubyte (cfp);
 
-    mprintf (
-        ("PLR => Loading '%s' with version %d...\n", filename.c_str (),
-         version));
+    WARNINGF (
+        LOCATION, "PLR => Loading '%s' with version %d...\n",
+        filename.c_str (), version);
 
     plr_reset_data ();
 
@@ -818,65 +822,67 @@ bool pilotfile::load_player (const char* callsign, player* _p) {
         try {
             switch (section_id) {
             case Section::Flags:
-                mprintf (("PLR => Parsing:  Flags...\n"));
+                WARNINGF (LOCATION, "PLR => Parsing:  Flags...\n");
                 m_have_flags = true;
                 plr_read_flags ();
                 break;
 
             case Section::Info:
-                mprintf (("PLR => Parsing:  Info...\n"));
+                WARNINGF (LOCATION, "PLR => Parsing:  Info...\n");
                 m_have_info = true;
                 plr_read_info ();
                 break;
 
             case Section::Variables:
-                mprintf (("PLR => Parsing:  Variables...\n"));
+                WARNINGF (LOCATION, "PLR => Parsing:  Variables...\n");
                 plr_read_variables ();
                 break;
 
             case Section::HUD:
-                mprintf (("PLR => Parsing:  HUD...\n"));
+                WARNINGF (LOCATION, "PLR => Parsing:  HUD...\n");
                 plr_read_hud ();
                 break;
 
             case Section::Scoring:
-                mprintf (("PLR => Parsing:  Scoring...\n"));
+                WARNINGF (LOCATION, "PLR => Parsing:  Scoring...\n");
                 plr_read_stats ();
                 break;
 
             case Section::ScoringMulti:
-                mprintf (("PLR => Parsing:  ScoringMulti...\n"));
+                WARNINGF (LOCATION, "PLR => Parsing:  ScoringMulti...\n");
                 plr_read_stats_multi ();
                 break;
 
             case Section::Multiplayer:
-                mprintf (("PLR => Parsing:  Multiplayer...\n"));
+                WARNINGF (LOCATION, "PLR => Parsing:  Multiplayer...\n");
                 plr_read_multiplayer ();
                 break;
 
             case Section::Controls:
-                mprintf (("PLR => Parsing:  Controls...\n"));
+                WARNINGF (LOCATION, "PLR => Parsing:  Controls...\n");
                 plr_read_controls ();
                 break;
 
             case Section::Settings:
-                mprintf (("PLR => Parsing:  Settings...\n"));
+                WARNINGF (LOCATION, "PLR => Parsing:  Settings...\n");
                 plr_read_settings ();
                 break;
 
             default:
-                mprintf (
-                    ("PLR => Skipping unknown section 0x%04x!\n", section_id));
+                WARNINGF (
+                    LOCATION, "PLR => Skipping unknown section 0x%04x!\n",
+                    section_id);
                 break;
             }
         }
         catch (cfile::max_read_length& msg) {
             // read to max section size, move to next section, discarding
             // extra/unknown data
-            mprintf (("PLR => (0x%04x) %s\n", section_id, msg.what ()));
+            WARNINGF (
+                LOCATION, "PLR => (0x%04x) %s\n", section_id, msg.what ());
         }
         catch (const char* err) {
-            mprintf (("PLR => ERROR: %s\n", err));
+            ERRORF (LOCATION, "PLR => ERROR: %s\n", err);
             plr_close ();
             return false;
         }
@@ -889,10 +895,11 @@ bool pilotfile::load_player (const char* callsign, player* _p) {
 
         if (offset_pos) {
             cfseek (cfp, offset_pos, CF_SEEK_CUR);
-            mprintf (
-                ("PLR => WARNING: Advancing to the next section. %zu"
-                 " bytes were skipped!\n",
-                 offset_pos));
+            WARNINGF (
+                LOCATION,
+                "PLR => WARNING: Advancing to the next section. %zu bytes "
+                "were skipped!\n",
+                offset_pos);
         }
     }
 
@@ -909,7 +916,7 @@ bool pilotfile::load_player (const char* callsign, player* _p) {
     // set last pilot
     os_config_write_string (NULL, "LastPlayer", (char*)callsign);
 
-    mprintf (("PLR => Loading complete!\n"));
+    WARNINGF (LOCATION, "PLR => Loading complete!\n");
 
     // cleanup and return
     plr_close ();
@@ -937,7 +944,8 @@ bool pilotfile::save_player (player* _p) {
     filename += ".plr";
 
     if (filename.size () == 4) {
-        mprintf (("PLR => Invalid filename '%s'!\n", filename.c_str ()));
+        WARNINGF (
+            LOCATION, "PLR => Invalid filename '%s'!\n", filename.c_str ());
         return false;
     }
 
@@ -946,8 +954,9 @@ bool pilotfile::save_player (player* _p) {
         cfopen ((char*)filename.c_str (), "wb", CFILE_NORMAL, CF_TYPE_PLAYERS);
 
     if (!cfp) {
-        mprintf (
-            ("PLR => Unable to open '%s' for saving!\n", filename.c_str ()));
+        WARNINGF (
+            LOCATION, "PLR => Unable to open '%s' for saving!\n",
+            filename.c_str ());
         return false;
     }
 
@@ -955,34 +964,34 @@ bool pilotfile::save_player (player* _p) {
     cfwrite_int (PLR_FILE_ID, cfp);
     cfwrite_ubyte (PLR_VERSION, cfp);
 
-    mprintf (
-        ("PLR => Saving '%s' with version %d...\n", filename.c_str (),
-         (int)PLR_VERSION));
+    WARNINGF (
+        LOCATION, "PLR => Saving '%s' with version %d...\n", filename.c_str (),
+        (int)PLR_VERSION);
 
     // flags and info sections go first
-    mprintf (("PLR => Saving:  Flags...\n"));
+    WARNINGF (LOCATION, "PLR => Saving:  Flags...\n");
     plr_write_flags ();
-    mprintf (("PLR => Saving:  Info...\n"));
+    WARNINGF (LOCATION, "PLR => Saving:  Info...\n");
     plr_write_info ();
 
     // everything else is next, not order specific
-    mprintf (("PLR => Saving:  Scoring...\n"));
+    WARNINGF (LOCATION, "PLR => Saving:  Scoring...\n");
     plr_write_stats ();
-    mprintf (("PLR => Saving:  ScoringMulti...\n"));
+    WARNINGF (LOCATION, "PLR => Saving:  ScoringMulti...\n");
     plr_write_stats_multi ();
-    mprintf (("PLR => Saving:  HUD...\n"));
+    WARNINGF (LOCATION, "PLR => Saving:  HUD...\n");
     plr_write_hud ();
-    mprintf (("PLR => Saving:  Variables...\n"));
+    WARNINGF (LOCATION, "PLR => Saving:  Variables...\n");
     plr_write_variables ();
-    mprintf (("PLR => Saving:  Multiplayer...\n"));
+    WARNINGF (LOCATION, "PLR => Saving:  Multiplayer...\n");
     plr_write_multiplayer ();
-    mprintf (("PLR => Saving:  Controls...\n"));
+    WARNINGF (LOCATION, "PLR => Saving:  Controls...\n");
     plr_write_controls ();
-    mprintf (("PLR => Saving:  Settings...\n"));
+    WARNINGF (LOCATION, "PLR => Saving:  Settings...\n");
     plr_write_settings ();
 
     // Done!
-    mprintf (("PLR => Saving complete!\n"));
+    WARNINGF (LOCATION, "PLR => Saving complete!\n");
 
     plr_close ();
 
@@ -998,7 +1007,8 @@ bool pilotfile::verify (const char* fname, int* rank, char* valid_language) {
     filename = fname;
 
     if (filename.size () == 4) {
-        mprintf (("PLR => Invalid filename '%s'!\n", filename.c_str ()));
+        WARNINGF (
+            LOCATION, "PLR => Invalid filename '%s'!\n", filename.c_str ());
         return false;
     }
 
@@ -1006,14 +1016,17 @@ bool pilotfile::verify (const char* fname, int* rank, char* valid_language) {
         cfopen ((char*)filename.c_str (), "rb", CFILE_NORMAL, CF_TYPE_PLAYERS);
 
     if (!cfp) {
-        mprintf (("PLR => Unable to open '%s'!\n", filename.c_str ()));
+        WARNINGF (
+            LOCATION, "PLR => Unable to open '%s'!\n", filename.c_str ());
         return false;
     }
 
     unsigned int plr_id = cfread_uint (cfp);
 
     if (plr_id != PLR_FILE_ID) {
-        mprintf (("PLR => Invalid header id for '%s'!\n", filename.c_str ()));
+        WARNINGF (
+            LOCATION, "PLR => Invalid header id for '%s'!\n",
+            filename.c_str ());
         plr_close ();
         return false;
     }
@@ -1021,9 +1034,9 @@ bool pilotfile::verify (const char* fname, int* rank, char* valid_language) {
     // version, now used
     version = cfread_ubyte (cfp);
 
-    mprintf (
-        ("PLR => Verifying '%s' with version %d...\n", filename.c_str (),
-         (int)version));
+    WARNINGF (
+        LOCATION, "PLR => Verifying '%s' with version %d...\n",
+        filename.c_str (), (int)version);
 
     // the point of all this: read in the PLR contents
     while (!(m_have_flags && m_have_info) && !cfeof (cfp)) {
@@ -1038,7 +1051,7 @@ bool pilotfile::verify (const char* fname, int* rank, char* valid_language) {
         try {
             switch (section_id) {
             case Section::Flags:
-                mprintf (("PLR => Parsing:  Flags...\n"));
+                WARNINGF (LOCATION, "PLR => Parsing:  Flags...\n");
                 m_have_flags = true;
                 plr_read_flags ();
                 break;
@@ -1046,7 +1059,7 @@ bool pilotfile::verify (const char* fname, int* rank, char* valid_language) {
             // now reading the Info section to get the campaign
             // and be able to lookup the campaign rank
             case Section::Info:
-                mprintf (("PLR => Parsing:  Info...\n"));
+                WARNINGF (LOCATION, "PLR => Parsing:  Info...\n");
                 m_have_info = true;
                 plr_read_info ();
                 break;
@@ -1057,10 +1070,11 @@ bool pilotfile::verify (const char* fname, int* rank, char* valid_language) {
         catch (cfile::max_read_length& msg) {
             // read to max section size, move to next section, discarding
             // extra/unknown data
-            mprintf (("PLR => (0x%04x) %s\n", section_id, msg.what ()));
+            WARNINGF (
+                LOCATION, "PLR => (0x%04x) %s\n", section_id, msg.what ());
         }
         catch (const char* err) {
-            mprintf (("PLR => ERROR: %s\n", err));
+            ERRORF (LOCATION, "PLR => ERROR: %s\n", err);
             plr_close ();
             return false;
         }
@@ -1072,10 +1086,11 @@ bool pilotfile::verify (const char* fname, int* rank, char* valid_language) {
         size_t offset_pos = (start_pos + section_size) - cftell (cfp);
 
         if (offset_pos) {
-            mprintf (
-                ("PLR => Warning: (0x%04x) Short read, information may have "
-                 "been lost!\n",
-                 section_id));
+            WARNINGF (
+                LOCATION,
+                "PLR => Warning: (0x%04x) Short read, information may have "
+                "been lost!\n",
+                section_id);
             cfseek (cfp, offset_pos, CF_SEEK_CUR);
         }
     }
@@ -1111,7 +1126,7 @@ bool pilotfile::verify (const char* fname, int* rank, char* valid_language) {
         }
     }
 
-    mprintf (("PLR => Verifying complete!\n"));
+    WARNINGF (LOCATION, "PLR => Verifying complete!\n");
 
     return true;
 }

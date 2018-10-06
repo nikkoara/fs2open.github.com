@@ -46,9 +46,10 @@
 #define MULTI_XFER_FLAG_SUCCESS (1 << 7) // finished xfer
 #define MULTI_XFER_FLAG_FAIL (1 << 8)    // xfer failed
 #define MULTI_XFER_FLAG_TIMEOUT (1 << 9) // xfer has timed-out
-#define MULTI_XFER_FLAG_QUEUE_CURRENT \
-    (1 << 10) // for a set of XFER_FLAG_QUEUE'd files, this is the current one
-              // sending
+#define MULTI_XFER_FLAG_QUEUE_CURRENT                                        \
+    (1                                                                       \
+     << 10) // for a set of XFER_FLAG_QUEUE'd files, this is the current one
+            // sending
 
 // packet size for file xfer
 #define MULTI_XFER_MAX_DATA_SIZE \
@@ -225,9 +226,9 @@ int multi_xfer_send_file (
     temp_entry.file = cfopen (filename, "rb", CFILE_NORMAL, cfile_flags);
     if (temp_entry.file == NULL) {
 #ifdef MULTI_XFER_VERBOSE
-        nprintf (
-            ("Network", "MULTI XFER : Could not open file %s on xfer send!\n",
-             filename));
+        WARNINGF (
+            LOCATION, "MULTI XFER : Could not open file %s on xfer send!\n",
+            filename);
 #endif
 
         return -1;
@@ -238,11 +239,11 @@ int multi_xfer_send_file (
     temp_entry.file_size = cfilelength (temp_entry.file);
     if (temp_entry.file_size == -1) {
 #ifdef MULTI_XFER_VERBOSE
-        nprintf (
-            ("Network",
-             "MULTI XFER : Could not get file length for file %s on xfer "
-             "send\n",
-             filename));
+        WARNINGF (
+            LOCATION,
+            "MULTI XFER : Could not get file length for file %s on xfer "
+            "send\n",
+            filename);
 #endif
         return -1;
     }
@@ -251,18 +252,18 @@ int multi_xfer_send_file (
     // get the file checksum
     if (!cf_chksum_short (temp_entry.file, &temp_entry.file_chksum)) {
 #ifdef MULTI_XFER_VERBOSE
-        nprintf (
-            ("Network",
-             "MULTI XFER : Could not get file checksum for file %s on xfer "
-             "send\n",
-             filename));
+        WARNINGF (
+            LOCATION,
+            "MULTI XFER : Could not get file checksum for file %s on xfer "
+            "send\n",
+            filename);
 #endif
         return -1;
     }
 #ifdef MULTI_XFER_VERBOSE
-    nprintf (
-        ("Network", "MULTI XFER : Got file %s checksum of %d\n",
-         temp_entry.filename, (int)temp_entry.file_chksum));
+    WARNINGF (
+        LOCATION, "MULTI XFER : Got file %s checksum of %d\n",
+        temp_entry.filename, (int)temp_entry.file_chksum);
 #endif
     // rewind the file pointer to the beginning of the file
     cfseek (temp_entry.file, 0, CF_SEEK_SET);
@@ -518,10 +519,10 @@ void multi_xfer_eval_entry (xfer_entry* xe) {
                 xe->flags |= MULTI_XFER_FLAG_PENDING;
 
 #ifdef MULTI_XFER_VERBOSE
-                nprintf (
-                    ("Network",
-                     "MULTI_XFER : Starting xfer send for queued entry %s\n",
-                     xe->filename));
+                WARNINGF (
+                    LOCATION,
+                    "MULTI_XFER : Starting xfer send for queued entry %s\n",
+                    xe->filename);
 #endif
             }
             // otherwise, do nothing for him - he has to still wait
@@ -692,10 +693,9 @@ int multi_xfer_process_packet (
         xe = multi_xfer_find_entry (who, sig, sender_side);
         if (xe == NULL) {
 #ifdef MULTI_XFER_VERBOSE
-            nprintf (
-                ("Network",
-                 "MULTI XFER : Could not find xfer entry for incoming "
-                 "data!\n"));
+            WARNINGF (
+                LOCATION,
+                "MULTI XFER : Could not find xfer entry for incoming data!");
 
             // this is a rare case - I'm not overly concerned about it. But it
             // _does_ happen. So blech
@@ -767,9 +767,9 @@ void multi_xfer_process_ack (xfer_entry* xe) {
             xe->flags |= MULTI_XFER_FLAG_SUCCESS;
 
 #ifdef MULTI_XFER_VERBOSE
-            nprintf (
-                ("Network", "MULTI XFER : Successfully sent file %s\n",
-                 xe->filename));
+            WARNINGF (
+                LOCATION, "MULTI XFER : Successfully sent file %s\n",
+                xe->filename);
 #endif
 
             // if we should be auto-destroying this entry, do so
@@ -796,9 +796,6 @@ void multi_xfer_process_nak (xfer_entry* xe) {
 void multi_xfer_process_final (xfer_entry* xe) {
     ushort chksum;
 
-    // make sure we skip a line
-    nprintf (("Network", "\n"));
-
     // close the file
     if (xe->file != NULL) {
         cflush (xe->file);
@@ -814,9 +811,9 @@ void multi_xfer_process_final (xfer_entry* xe) {
         xe->flags |= MULTI_XFER_FLAG_FAIL;
 
 #ifdef MULTI_XFER_VERBOSE
-        nprintf (
-            ("Network", "MULTI XFER : file %s failed checksum %d %d!\n",
-             xe->ex_filename, (int)xe->file_chksum, (int)chksum));
+        WARNINGF (
+            LOCATION, "MULTI XFER : file %s failed checksum %d %d!\n",
+            xe->ex_filename, (int)xe->file_chksum, (int)chksum);
 #endif
 
         // abort the xfer
@@ -826,11 +823,11 @@ void multi_xfer_process_final (xfer_entry* xe) {
     // checksums check out, so rename the file and be done with it
     else {
 #ifdef MULTI_XFER_VERBOSE
-        nprintf ((
-            "Network",
+        WARNINGF (
+            LOCATION,
             "MULTI XFER : renaming xferred file from %s to %s (chksum %d "
             "%d)\n",
-            xe->ex_filename, xe->filename, (int)xe->file_chksum, (int)chksum));
+            xe->ex_filename, xe->filename, (int)xe->file_chksum, (int)chksum);
 #endif
         // rename the file properly
         if (cf_rename (xe->ex_filename, xe->filename, xe->force_dir) ==
@@ -838,10 +835,10 @@ void multi_xfer_process_final (xfer_entry* xe) {
             // mark the xfer as being successful
             xe->flags |= MULTI_XFER_FLAG_SUCCESS;
 
-            nprintf (
-                ("Network",
-                 "MULTI XFER : SUCCESSFULLY TRANSFERRED FILE %s (%d bytes)\n",
-                 xe->filename, xe->file_size));
+            WARNINGF (
+                LOCATION,
+                "MULTI XFER : SUCCESSFULLY TRANSFERRED FILE %s (%d bytes)\n",
+                xe->filename, xe->file_size);
 
             // send an ack to the sender
             multi_xfer_send_ack (xe->file_socket, xe->sig);
@@ -849,10 +846,10 @@ void multi_xfer_process_final (xfer_entry* xe) {
         else {
             // mark it as failing
             xe->flags |= MULTI_XFER_FLAG_FAIL;
-            nprintf (
-                ("Network",
-                 "FAILED TO TRANSFER FILE (could not rename temp file %s)\n",
-                 xe->ex_filename));
+            WARNINGF (
+                LOCATION,
+                "FAILED TO TRANSFER FILE (could not rename temp file %s)\n",
+                xe->ex_filename);
 
             // delete the tempfile
             cf_delete (xe->ex_filename, xe->force_dir);
@@ -871,9 +868,6 @@ void multi_xfer_process_final (xfer_entry* xe) {
 
 // process a data packet
 void multi_xfer_process_data (xfer_entry* xe, ubyte* data, int data_size) {
-    // print out a crude progress indicator
-    nprintf (("Network", "."));
-
     // attempt to write the rest of the data string to the file
     if ((xe->file == NULL) || !cfwrite (data, data_size, 1, xe->file)) {
         // inform the sender we had a problem
@@ -942,9 +936,9 @@ void multi_xfer_process_header (
     strcpy_s (xe->filename, filename);
     multi_xfer_conv_prefix (xe->filename, xe->ex_filename);
 #ifdef MULTI_XFER_VERBOSE
-    nprintf (
-        ("Network", "MULTI XFER : converted filename %s to %s\n", xe->filename,
-         xe->ex_filename));
+    WARNINGF (
+        LOCATION, "MULTI XFER : converted filename %s to %s\n", xe->filename,
+        xe->ex_filename);
 #endif
 
     // determine what directory to place the file in
@@ -987,7 +981,7 @@ void multi_xfer_process_header (
     multi_xfer_send_ack (who, sig);
 
 #ifdef MULTI_XFER_VERBOSE
-    nprintf (("Network", "MULTI XFER : AFTER HEADER %s\n", xe->filename));
+    // WARNINGF (LOCATION, "MULTI XFER : AFTER HEADER %s", xe->filename);
 #endif
 }
 
@@ -996,9 +990,6 @@ void multi_xfer_send_next (xfer_entry* xe) {
     ubyte data[MAX_PACKET_SIZE], code;
     ushort data_size;
     int packet_size = 0;
-
-    // print out a crude progress indicator
-    nprintf (("Network", "+"));
 
     // if we've sent all the data, then we should send a "final" packet
     if (xe->file_ptr >= xe->file_size) {

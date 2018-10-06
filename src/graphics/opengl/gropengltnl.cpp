@@ -102,9 +102,7 @@ static GLenum convertBufferType (BufferType type) {
     case BufferType::Vertex: return GL_ARRAY_BUFFER;
     case BufferType::Index: return GL_ELEMENT_ARRAY_BUFFER;
     case BufferType::Uniform: return GL_UNIFORM_BUFFER;
-    default:
-        ASSERT (0);
-        return GL_INVALID_ENUM;
+    default: ASSERT (0); return GL_INVALID_ENUM;
     }
 }
 
@@ -113,9 +111,7 @@ static GLenum convertUsageHint (BufferUsageHint usage) {
     case BufferUsageHint::Static: return GL_STATIC_DRAW;
     case BufferUsageHint::Dynamic: return GL_DYNAMIC_DRAW;
     case BufferUsageHint::Streaming: return GL_STREAM_DRAW;
-    default:
-        ASSERT (0);
-        return GL_INVALID_ENUM;
+    default: ASSERT (0); return GL_INVALID_ENUM;
     }
 }
 
@@ -129,9 +125,7 @@ static GLenum convertStencilOp (const StencilOperation stencil_op) {
     case StencilOperation::Decrement: return GL_DECR;
     case StencilOperation::DecrementWrap: return GL_DECR_WRAP;
     case StencilOperation::Invert: return GL_INVERT;
-    default:
-        ASSERT (0);
-        return GL_NONE;
+    default: ASSERT (0); return GL_NONE;
     }
 }
 
@@ -743,8 +737,8 @@ void opengl_tnl_set_material (
         if (!gr_opengl_tcache_set (
                 base_map, material_info->get_texture_type (), &u_scale,
                 &v_scale, &array_index)) {
-            mprintf (
-                ("WARNING: Error setting bitmap texture (%i)!\n", base_map));
+            ERRORF (
+                LOCATION, "Error setting bitmap texture (%i)!\n", base_map);
         }
     }
 
@@ -1035,23 +1029,23 @@ void opengl_tnl_set_material_movie (movie_material* material_info) {
     if (!gr_opengl_tcache_set (
             material_info->getYtex (), material_info->get_texture_type (),
             &u_scale, &v_scale, &index, 0)) {
-        mprintf (
-            ("WARNING: Error setting bitmap texture (%i)!\n",
-             material_info->getYtex ()));
+        ERRORF (
+            LOCATION, "Error setting bitmap texture (%i)!\n",
+            material_info->getYtex ());
     }
     if (!gr_opengl_tcache_set (
             material_info->getUtex (), material_info->get_texture_type (),
             &u_scale, &v_scale, &index, 1)) {
-        mprintf (
-            ("WARNING: Error setting bitmap texture (%i)!\n",
-             material_info->getUtex ()));
+        ERRORF (
+            LOCATION, "Error setting bitmap texture (%i)!\n",
+            material_info->getUtex ());
     }
     if (!gr_opengl_tcache_set (
             material_info->getVtex (), material_info->get_texture_type (),
             &u_scale, &v_scale, &index, 2)) {
-        mprintf (
-            ("WARNING: Error setting bitmap texture (%i)!\n",
-             material_info->getVtex ()));
+        ERRORF (
+            LOCATION, "Error setting bitmap texture (%i)!\n",
+            material_info->getVtex ());
     }
 }
 void opengl_tnl_set_material_nanovg (nanovg_material* material_info) {

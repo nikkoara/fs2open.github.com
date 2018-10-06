@@ -1117,8 +1117,6 @@ void ai_big_chase () {
     }
 
     if (aip->ai_flags[AI::AI_Flags::Kamikaze]) {
-        // nprintf(("AI", "Kamikaze: %7.3f %7.3f\n", dot_to_enemy,
-        // dist_to_enemy));
         accelerate_ship (aip, 1.0f);
         if ((dist_to_enemy < 400.0f) &&
             ai_maybe_fire_afterburner (Pl_objp, aip)) {
@@ -1399,8 +1397,6 @@ void ai_big_chase () {
     //
     // Maybe fire primary weapon and update time_enemy_in_range
     //
-    // nprintf(("AI", "time_enemy_in_range = %7.3f, dot = %7.3f\n",
-    // aip->time_enemy_in_range, dot_to_enemy));
 
     // AL: add condition that Pl_objp must not be following a path to fire.
     // This may be too extreme, but
@@ -1852,8 +1848,6 @@ void ai_big_strafe_retreat1 () {
     if (dist < 70) {
         aip->submode = AIS_STRAFE_POSITION;
         aip->submode_start_time = Missiontime;
-        // nprintf(("Alan","Ship %s entering AIS_STRAFE_POSITION\n",
-        // Ships[aip->shipnum].ship_name));
         return;
     }
 
@@ -1904,8 +1898,6 @@ void ai_big_strafe_retreat2 () {
 
     if (Pl_objp->phys_info.flags & PF_AFTERBURNER_ON) {
         if (Missiontime > aip->afterburner_stop_time) {
-            // nprintf(("AI", "Frame %i, turning off afterburner.\n",
-            // AI_FrameCount));
             afterburners_stop (Pl_objp);
         }
     }
@@ -1914,8 +1906,6 @@ void ai_big_strafe_retreat2 () {
     if (dist < 70) {
         aip->submode = AIS_STRAFE_POSITION;
         aip->submode_start_time = Missiontime;
-        // nprintf(("Alan","Ship %s entering AIS_STRAFE_POSITION\n",
-        // Ships[aip->shipnum].ship_name));
         return;
     }
 
@@ -2088,8 +2078,6 @@ int ai_big_maybe_enter_strafe_mode (const object* pl_objp, int weapon_objnum) {
                                       // (i.e. MODE start time)
     aip->submode = AIS_STRAFE_AVOID;
     aip->submode_start_time = Missiontime;
-    // nprintf(("Alan","%s Accepted strafe mode\n",
-    // Ships[pl_objp->instance].ship_name));
 
     return 1;
 }

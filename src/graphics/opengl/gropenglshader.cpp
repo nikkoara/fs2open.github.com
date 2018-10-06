@@ -701,8 +701,8 @@ void opengl_compile_shader_actual (
     opengl_shader_type_t* sdr_info = &GL_shader_types[sdr];
 
     ASSERT (sdr_info->type_id == sdr);
-    mprintf (("Compiling new shader:\n"));
-    mprintf ((" %s\n", sdr_info->description));
+    WARNINGF (LOCATION, "Compiling new shader:\n");
+    WARNINGF (LOCATION, " %s\n", sdr_info->description);
 
     // figure out if the variant requested needs a geometry shader
     bool use_geo_sdr = false;
@@ -809,7 +809,7 @@ void opengl_compile_shader_actual (
         }
     }
 
-    mprintf (("Shader Variant Features:\n"));
+    WARNINGF (LOCATION, "Shader Variant Features:\n");
 
     // initialize all uniforms and attributes that are specific to this variant
     for (int i = 0; i < GL_num_shader_variants; ++i) {
@@ -823,7 +823,7 @@ void opengl_compile_shader_actual (
                     attr_info.default_value);
             }
 
-            mprintf ((" %s\n", variant.description));
+            WARNINGF (LOCATION, " %s\n", variant.description);
         }
     }
 
@@ -990,10 +990,10 @@ void opengl_shader_init () {
     gr_opengl_maybe_create_shader (SDR_TYPE_DEFERRED_CLEAR, 0);
 
     // compile passthrough shader
-    mprintf (("Compiling passthrough shader...\n"));
+    WARNINGF (LOCATION, "Compiling passthrough shader...\n");
     gr_opengl_maybe_create_shader (SDR_TYPE_PASSTHROUGH_RENDER, 0);
 
-    mprintf (("\n"));
+    WARNINGF (LOCATION, "\n");
 }
 
 /**

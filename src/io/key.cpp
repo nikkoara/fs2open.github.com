@@ -438,11 +438,11 @@ uint key_get_shift_status () {
     if (keyd_pressed[KEY_DEBUG_KEY]) shift_status |= KEY_DEBUGGED;
 #else
     if (keyd_pressed[KEY_DEBUG_KEY]) {
-        mprintf (
-            ("Cheats_enabled = %i, Key_normal_game = %i\n", Cheats_enabled,
-             Key_normal_game));
+        WARNINGF (
+            LOCATION, "Cheats_enabled = %i, Key_normal_game = %i\n",
+            Cheats_enabled, Key_normal_game);
         if ((Cheats_enabled) && Key_normal_game) {
-            mprintf (("Debug key\n"));
+            WARNINGF (LOCATION, "Debug key\n");
             shift_status |= KEY_DEBUGGED1;
         }
     }
@@ -639,9 +639,9 @@ void key_mark (uint code, int state, uint latency) {
             if (keyd_pressed[KEY_DEBUG_KEY]) { keycode |= KEY_DEBUGGED; }
 #else
             if (keyd_pressed[KEY_DEBUG_KEY]) {
-                mprintf (
-                    ("Cheats_enabled = %i, Key_normal_game = %i\n",
-                     Cheats_enabled, Key_normal_game));
+                WARNINGF (
+                    LOCATION, "Cheats_enabled = %i, Key_normal_game = %i\n",
+                    Cheats_enabled, Key_normal_game);
                 if (Cheats_enabled && Key_normal_game) {
                     keycode |= KEY_DEBUGGED1;
                 }

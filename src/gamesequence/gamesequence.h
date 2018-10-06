@@ -170,8 +170,7 @@ enum GS_STATE {
 // GS_state_text[]
 // which is done in GameSequence.cpp
 //
-extern const char*
-    GS_state_text[]; // text description for the GS_STATE_* #defines above
+extern const char* GS_state_text []; // text description GS_XXX states above
 extern int Num_gs_event_text;
 extern int Num_gs_state_text; // WMC - for scripting
 

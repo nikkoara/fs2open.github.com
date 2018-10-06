@@ -911,7 +911,7 @@ void process_debug_keys (int k) {
         else {
             Debug_octant++;
         }
-        nprintf (("General", "Debug_octant == %d\n", Debug_octant));
+        WARNINGF (LOCATION, "Debug_octant == %d", Debug_octant);
         break;
 
     case KEY_DEBUGGED + KEY_P: supernova_start (20); break;
@@ -1326,7 +1326,7 @@ void ppsk_hotkeys (int k) {
     case KEY_F11 + KEY_SHIFTED:
     case KEY_F12 + KEY_SHIFTED:
         hotkey_set = mission_hotkey_get_set_num (k & (~KEY_SHIFTED));
-        mprintf (("Adding to set %d\n", hotkey_set + 1));
+        WARNINGF (LOCATION, "Adding to set %d\n", hotkey_set + 1);
         if (Player_ai->target_objnum == -1)
             HUD_sourced_printf (
                 HUD_SOURCE_HIDDEN,
@@ -2809,7 +2809,7 @@ int button_function (int n) {
     /**
      * All keys should have been handled above, if not panic
      */
-    mprintf (("Unknown key %d at %s:%u\n", n, __FILE__, __LINE__));
+    WARNINGF (LOCATION, "Unknown key %d at %s:%u\n", n, __FILE__, __LINE__);
     Int3 ();
 
     return 1;

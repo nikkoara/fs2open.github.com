@@ -63,9 +63,9 @@ void parse_mod_table (const char* filename) {
             optional_string ("$Target Version:")) {
             Targetted_version = gameversion::parse_version ();
 
-            mprintf (
-                ("Game Settings Table: Parsed target version of %s\n",
-                 gameversion::format_version (Targetted_version).c_str ()));
+            WARNINGF (
+                LOCATION, "Game Settings Table: Parsed target version of %s\n",
+                gameversion::format_version (Targetted_version).c_str ());
 
             if (!gameversion::check_at_least (Targetted_version)) {
                 ASSERTF (
@@ -90,9 +90,9 @@ void parse_mod_table (const char* filename) {
         if (optional_string ("$Unicode mode:")) {
             stuff_boolean (&Unicode_text_mode);
 
-            mprintf (
-                ("Game settings table: Unicode mode: %s\n",
-                 Unicode_text_mode ? "yes" : "no"));
+            WARNINGF (
+                LOCATION, "Game settings table: Unicode mode: %s\n",
+                Unicode_text_mode ? "yes" : "no");
         }
 
         optional_string ("#CAMPAIGN SETTINGS");
@@ -103,10 +103,11 @@ void parse_mod_table (const char* filename) {
 
             // remove extension?
             if (drop_extension (temp)) {
-                mprintf (
-                    ("Game Settings Table: Removed extension on default "
-                     "campaign file name %s\n",
-                     temp));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Removed extension on default "
+                    "campaign file name %s\n",
+                    temp);
             }
 
             // check length
@@ -132,10 +133,11 @@ void parse_mod_table (const char* filename) {
 
                 // remove extension?
                 if (drop_extension (campaign_name)) {
-                    mprintf (
-                        ("Game Settings Table: Removed extension on ignored "
-                         "campaign file name %s\n",
-                         campaign_name.c_str ()));
+                    WARNINGF (
+                        LOCATION,
+                        "Game Settings Table: Removed extension on ignored "
+                        "campaign file name %s\n",
+                        campaign_name.c_str ());
                 }
 
                 // we want case-insensitive matching, so make this lowercase
@@ -157,10 +159,11 @@ void parse_mod_table (const char* filename) {
 
                 // remove extension?
                 if (drop_extension (mission_name)) {
-                    mprintf (
-                        ("Game Settings Table: Removed extension on ignored "
-                         "mission file name %s\n",
-                         mission_name.c_str ()));
+                    WARNINGF (
+                        LOCATION,
+                        "Game Settings Table: Removed extension on ignored "
+                        "mission file name %s\n",
+                        mission_name.c_str ());
                 }
 
                 // we want case-insensitive matching, so make this lowercase
@@ -175,15 +178,17 @@ void parse_mod_table (const char* filename) {
         if (optional_string ("$Red-alert applies to delayed ships:")) {
             stuff_boolean (&Red_alert_applies_to_delayed_ships);
             if (Red_alert_applies_to_delayed_ships) {
-                mprintf (
-                    ("Game Settings Table: Red-alert stats will be loaded for "
-                     "ships that arrive later in missions\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Red-alert stats will be loaded for "
+                    "ships that arrive later in missions\n");
             }
             else {
-                mprintf (
-                    ("Game Settings Table: Red-alert stats will NOT be loaded "
-                     "for ships that arrive later in missions (this is retail "
-                     "behavior)\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Red-alert stats will NOT be loaded "
+                    "for ships that arrive later in missions (this is retail "
+                    "behavior)\n");
             }
         }
 
@@ -199,9 +204,10 @@ void parse_mod_table (const char* filename) {
         }
         // compatibility
         if (optional_string ("$Cutscene camera disables HUD:")) {
-            mprintf ((
+            WARNINGF (
+                LOCATION,
                 "Game Settings Table: \"$$Cutscene camera disables HUD\" is "
-                "deprecated in favor of \"$Cutscene camera displays HUD\"\n"));
+                "deprecated in favor of \"$Cutscene camera displays HUD\"\n");
             bool temp;
             stuff_boolean (&temp);
             Cutscene_camera_displays_hud = !temp;
@@ -212,10 +218,11 @@ void parse_mod_table (const char* filename) {
         }
         // compatibility
         if (optional_string ("$Color head animations with hud colors:")) {
-            mprintf (
-                ("Game Settings Table: \"$Color head animations with hud "
-                 "colors\" is deprecated in favor of \"$Full color head "
-                 "animations\"\n"));
+            WARNINGF (
+                LOCATION,
+                "Game Settings Table: \"$Color head animations with hud "
+                "colors\" is deprecated in favor of \"$Full color head "
+                "animations\"\n");
             bool temp;
             stuff_boolean (&temp);
             Full_color_head_anis = !temp;
@@ -226,28 +233,32 @@ void parse_mod_table (const char* filename) {
         if (optional_string ("$Loop SEXPs Then Arguments:")) {
             stuff_boolean (&True_loop_argument_sexps);
             if (True_loop_argument_sexps) {
-                mprintf (
-                    ("Game Settings Table: Using Reversed Loops For SEXP "
-                     "Arguments\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Using Reversed Loops For SEXP "
+                    "Arguments\n");
             }
             else {
-                mprintf (
-                    ("Game Settings Table: Using Standard Loops For SEXP "
-                     "Arguments\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Using Standard Loops For SEXP "
+                    "Arguments\n");
             }
         }
 
         if (optional_string ("$Use Alternate Chaining Behavior:")) {
             stuff_boolean (&Alternate_chaining_behavior);
             if (Alternate_chaining_behavior) {
-                mprintf (
-                    ("Game Settings Table: Using alternate event chaining "
-                     "behavior\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Using alternate event chaining "
+                    "behavior\n");
             }
             else {
-                mprintf (
-                    ("Game Settings Table: Using standard event chaining "
-                     "behavior\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Using standard event chaining "
+                    "behavior\n");
             }
         }
 
@@ -256,11 +267,13 @@ void parse_mod_table (const char* filename) {
         if (optional_string ("$Enable External Shaders:")) {
             stuff_boolean (&Enable_external_shaders);
             if (Enable_external_shaders)
-                mprintf (
-                    ("Game Settings Table: External shaders are enabled\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: External shaders are enabled\n");
             else
-                mprintf (
-                    ("Game Settings Table: External shaders are DISABLED\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: External shaders are DISABLED\n");
         }
 
         if (optional_string ("$Default Detail Level:")) {
@@ -268,10 +281,11 @@ void parse_mod_table (const char* filename) {
 
             stuff_int (&detail_level);
 
-            mprintf (
-                ("Game Settings Table: Setting default detail level to %i of "
-                 "%i-%i\n",
-                 detail_level, 0, NUM_DEFAULT_DETAIL_LEVELS - 1));
+            WARNINGF (
+                LOCATION,
+                "Game Settings Table: Setting default detail level to %i of "
+                "%i-%i\n",
+                detail_level, 0, NUM_DEFAULT_DETAIL_LEVELS - 1);
 
             if (detail_level < 0 ||
                 detail_level > NUM_DEFAULT_DETAIL_LEVELS - 1) {
@@ -289,10 +303,11 @@ void parse_mod_table (const char* filename) {
 
             stuff_float (&fov);
 
-            mprintf (
-                ("Game Settings Table: Setting briefing window FOV from %f to "
-                 "%f\n",
-                 Briefing_window_FOV, fov));
+            WARNINGF (
+                LOCATION,
+                "Game Settings Table: Setting briefing window FOV from %f to "
+                "%f\n",
+                Briefing_window_FOV, fov);
 
             Briefing_window_FOV = fov;
         }
@@ -300,28 +315,31 @@ void parse_mod_table (const char* filename) {
         if (optional_string ("$Generic Pain Flash Factor:")) {
             stuff_float (&Generic_pain_flash_factor);
             if (Generic_pain_flash_factor != 1.0f)
-                mprintf (
-                    ("Game Settings Table: Setting generic pain flash factor "
-                     "to %.2f\n",
-                     Generic_pain_flash_factor));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Setting generic pain flash factor "
+                    "to %.2f\n",
+                    Generic_pain_flash_factor);
         }
 
         if (optional_string ("$Shield Pain Flash Factor:")) {
             stuff_float (&Shield_pain_flash_factor);
             if (Shield_pain_flash_factor != 0.0f)
-                mprintf (
-                    ("Game Settings Table: Setting shield pain flash factor "
-                     "to %.2f\n",
-                     Shield_pain_flash_factor));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Setting shield pain flash factor to "
+                    "%.2f\n",
+                    Shield_pain_flash_factor);
         }
 
         if (optional_string ("$BMPMAN Slot Limit:")) {
             int tmp;
             stuff_int (&tmp);
 
-            mprintf (
-                ("Game Settings Table: $BMPMAN Slot Limit is deprecated and "
-                 "should be removed. It is not needed anymore.\n"));
+            WARNINGF (
+                LOCATION,
+                "Game Settings Table: $BMPMAN Slot Limit is deprecated and "
+                "should be removed. It is not needed anymore.\n");
         }
 
         optional_string ("#NETWORK SETTINGS");
@@ -329,9 +347,10 @@ void parse_mod_table (const char* filename) {
         if (optional_string ("$FS2NetD port:")) {
             stuff_int (&FS2NetD_port);
             if (FS2NetD_port)
-                mprintf (
-                    ("Game Settings Table: FS2NetD connecting to port %i\n",
-                     FS2NetD_port));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: FS2NetD connecting to port %i\n",
+                    FS2NetD_port);
         }
 
         optional_string ("#SOUND SETTINGS");
@@ -353,28 +372,32 @@ void parse_mod_table (const char* filename) {
         if (optional_string ("$Disable Hard Coded Message Head Ani Files:")) {
             stuff_boolean (&Disable_hc_message_ani);
             if (Disable_hc_message_ani) {
-                mprintf (
-                    ("Game Settings Table: FRED - Disabling Hard Coded "
-                     "Message Ani Files\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: FRED - Disabling Hard Coded Message "
+                    "Ani Files\n");
             }
             else {
-                mprintf (
-                    ("Game Settings Table: FRED - Using Hard Coded Message "
-                     "Ani Files\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: FRED - Using Hard Coded Message Ani "
+                    "Files\n");
             }
         }
 
         if (optional_string ("$Enable scripting in FRED:")) {
             stuff_boolean (&Enable_scripts_in_fred);
             if (Enable_scripts_in_fred) {
-                mprintf (
-                    ("Game Settings Table: FRED - Scripts will be executed "
-                     "when running FRED.\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: FRED - Scripts will be executed "
+                    "when running FRED.\n");
             }
             else {
-                mprintf (
-                    ("Game Settings Table: FRED - Scripts will not be "
-                     "executed when running FRED.\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: FRED - Scripts will not be executed "
+                    "when running FRED.\n");
             }
         }
 
@@ -413,30 +436,34 @@ void parse_mod_table (const char* filename) {
         if (optional_string ("$Weapons inherit parent collision group:")) {
             stuff_boolean (&Weapons_inherit_parent_collision_group);
             if (Weapons_inherit_parent_collision_group)
-                mprintf (
-                    ("Game Settings Table: Weapons inherit parent collision "
-                     "group\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Weapons inherit parent collision "
+                    "group\n");
         }
 
         if (optional_string (
                 "$Flight controls follow eyepoint orientation:")) {
             stuff_boolean (&Flight_controls_follow_eyepoint_orientation);
             if (Flight_controls_follow_eyepoint_orientation)
-                mprintf (
-                    ("Game Settings Table: Flight controls follow eyepoint "
-                     "orientation\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Flight controls follow eyepoint "
+                    "orientation\n");
         }
 
         if (optional_string ("$Beams Use Damage Factors:")) {
             stuff_boolean (&Beams_use_damage_factors);
             if (Beams_use_damage_factors) {
-                mprintf (
-                    ("Game Settings Table: Beams will use Damage Factors\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Beams will use Damage Factors\n");
             }
             else {
-                mprintf (
-                    ("Game Settings Table: Beams will ignore Damage Factors "
-                     "(retail behavior)\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Beams will ignore Damage Factors "
+                    "(retail behavior)\n");
             }
         }
 
@@ -474,23 +501,25 @@ void parse_mod_table (const char* filename) {
             stuff_boolean (&Enable_external_default_scripts);
 
             if (Enable_external_default_scripts) {
-                mprintf (
-                    ("Game Settings Table: Enabled external default "
-                     "scripts.\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Enabled external default "
+                    "scripts.\n");
             }
             else {
-                mprintf (
-                    ("Game Settings Table: Disabled external default "
-                     "scripts.\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Game Settings Table: Disabled external default "
+                    "scripts.\n");
             }
         }
 
         required_string ("#END");
     }
     catch (const parse::ParseException& e) {
-        mprintf ((
-            "TABLES: Unable to parse '%s'!  Error message = %s.\n",
-            (filename) ? filename : "<default game_settings.tbl>", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n",
+            (filename) ? filename : "<default game_settings.tbl>", e.what ());
         return;
     }
 }

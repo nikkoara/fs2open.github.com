@@ -202,9 +202,10 @@ bool is_object_radius_in_turret_fov (
             return true;
         }
         else {
-            mprintf (
-                ("Warning: Function 'is_object_radius_in_turret_fov' was "
-                 "called\nwithout need to fix turret alignments\n"));
+            WARNINGF (
+                LOCATION,
+                "Function 'is_object_radius_in_turret_fov' was "
+                "called\nwithout need to fix turret alignments\n");
             return false;
         }
     }
@@ -753,9 +754,6 @@ void evaluate_obj_as_target (object* objp, eval_enemy_obj_struct* eeo) {
             if ((turret_has_no_target) ||
                 object_in_turret_fov (
                     objp, ss, eeo->tvec, eeo->tpos, dist + objp->radius)) {
-                // nprintf(("AI", "Nearest enemy = %s, dist = %7.3f, dot =
-                // %6.3f, fov = %6.3f\n", Ships[objp->instance].ship_name,
-                // dist, vm_vec_dot(&v2e, tvec), tp->turret_fov));
                 eeo->nearest_attacker_dist = dist_comp;
                 eeo->nearest_attacker_objnum = OBJ_INDEX (objp);
             }
@@ -1222,8 +1220,6 @@ int find_turret_enemy (
                 if (!(Objects[target_objnum].flags
                           [Object::Object_Flags::Protected])) { // check this
                                                                 // flag as well
-                    // nprintf(("AI", "Frame %i: Object %i resuming goal of
-                    // object %i\n", AI_FrameCount, objnum, target_objnum));
                     return target_objnum;
                 }
             }
@@ -1520,7 +1516,6 @@ void turret_ai_update_aim (ai_info* aip, object* En_Objp, ship_subsys* ss) {
 int aifft_rotate_turret (
     ship* shipp, int parent_objnum, ship_subsys* ss, object* objp, object* lep,
     vec3d* predicted_enemy_pos, vec3d* gvec) {
-
     if (ss->turret_enemy_objnum != -1) {
         model_subsystem* tp = ss->system_info;
         vec3d gun_pos, gun_vec, target_moving_direction;
@@ -2249,8 +2244,6 @@ bool turret_fire_weapon (
                     weapon_objnum, parent_objnum, turret->turret_enemy_objnum,
                     1, turret->targeted_subsys);
 
-                // nprintf(("AI", "Turret_time_enemy_in_range = %7.3f\n",
-                // ss->turret_time_enemy_in_range));
                 if (weapon_objnum != -1) {
                     objp = &Objects[weapon_objnum];
                     wp = &Weapons[objp->instance];
@@ -2345,9 +2338,8 @@ bool turret_fire_weapon (
         turret->turret_next_fire_stamp = timestamp ((int)wait);
     }
 
-    turret->flags.set (
-        Ship::Subsystem_Flags::Has_fired); // set has fired flag
-                                           // for scriptng - nuke
+    turret->flags.set (Ship::Subsystem_Flags::Has_fired); // set has fired flag
+        // for scriptng - nuke
 
     // Fire animation stuff
     model_anim_start_type (
@@ -2859,7 +2851,7 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
     }
 
     if (lep == NULL) {
-        mprintf (("last enemy is null\n"));
+        WARNINGF (LOCATION, "last enemy is null\n");
         return;
     }
 
@@ -3068,7 +3060,7 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
         }
 
         if (!something_was_ok_to_fire) {
-            mprintf (("nothing ok to fire\n"));
+            WARNINGF (LOCATION, "nothing ok to fire\n");
 
             if (ss->turret_best_weapon >= 0) {
                 // Impose a penalty on turret accuracy for losing site of its

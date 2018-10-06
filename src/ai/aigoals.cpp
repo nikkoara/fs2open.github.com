@@ -1045,9 +1045,10 @@ void ai_add_goal_sub_sexp (
     }
 
     if (aigp->priority > MAX_GOAL_PRIORITY) {
-        nprintf (
-            ("AI", "bashing sexpression priority of goal %s from %d to %d.\n",
-             text, aigp->priority, MAX_GOAL_PRIORITY));
+        WARNINGF (
+            LOCATION,
+            "bashing sexpression priority of goal %s from %d to %d.\n", text,
+            aigp->priority, MAX_GOAL_PRIORITY);
         aigp->priority = MAX_GOAL_PRIORITY;
     }
 
@@ -1442,10 +1443,11 @@ void ai_copy_mission_wing_goal (ai_goal* aigp, ai_info* aip) {
     }
 
     if (j >= MAX_AI_GOALS) {
-        mprintf (
-            ("Unable to assign wing goal to ship %s; the ship goals are "
-             "already filled to capacity",
-             Ships[aip->shipnum].ship_name));
+        WARNINGF (
+            LOCATION,
+            "Unable to assign wing goal to ship %s; the ship goals are "
+            "already filled to capacity",
+            Ships[aip->shipnum].ship_name);
     }
 }
 
@@ -1591,9 +1593,9 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
         else {
             // not supposed to ever happen, but could if there is a mismatch
             // between the table and model subsystems
-            nprintf (
-                ("AI", "Couldn't find subsystem %d for ship %s\n",
-                 aigp->ai_submode, Ships[sindex].ship_name));
+            WARNINGF (
+                LOCATION, "Couldn't find subsystem %d for ship %s\n",
+                aigp->ai_submode, Ships[sindex].ship_name);
             status = 0;
         }
         break;
@@ -1728,11 +1730,12 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
             status = SHIP_STATUS_GONE;
         }
         else {
-            mprintf ((
+            WARNINGF (
+                LOCATION,
                 "Potentially incorrect behaviour in AI goal for ship %s: Ship "
                 "%s could not be found among currently active, departed, or "
                 "yet-to-arrive ships.\nPlease check the mission file.\n",
-                Ships[objp->instance].ship_name, aigp->target_name));
+                Ships[objp->instance].ship_name, aigp->target_name);
             status = SHIP_STATUS_UNKNOWN;
         }
     }
@@ -2150,21 +2153,8 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
     int wingnum, shipnum;
     int original_signature;
 
-    /*  if (!strcasecmp(Ships[objp->instance].ship_name, "gtt comet")) {
-            for (int i=0; i<MAX_AI_GOALS; i++) {
-                if (aip->goals[i].signature != -1) {
-                    nprintf(("AI", "%6.1f: mode=%s, type=%s, ship=%s\n",
-       f2fl(Missiontime), Mode_text[aip->goals[i].ai_mode],
-       Goal_text[aip->goals[i].type], aip->goals[i].ship_name));
-                }
-            }
-            nprintf(("AI", "\n"));
-        }
-    */
-
     // AL 12-12-97: If a ship is entering/leaving a docking bay, wait until
-    // path
-    // following is finished before pursuing goals.
+    // path following is finished before pursuing goals.
     if (aip->mode == AIM_BAY_EMERGE || aip->mode == AIM_BAY_DEPART) { return; }
 
     // Goal #0 is always the active goal, as we maintain a sorted list.
@@ -2195,8 +2185,6 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
     // pursued.         It will always be #0 since the list is prioritized.
     aip->active_goal = 0;
 
-    // nprintf(("AI", "New goal for %s = %i\n",
-    // Ships[objp->instance].ship_name, aip->goals[0].ai_mode));
 
     current_goal = &aip->goals[0];
 
@@ -2253,9 +2241,9 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
             aip->submode_start_time = Missiontime;
         }
         else {
-            mprintf (
-                ("Warning: Ship %s told to guard itself.  Goal ignored.\n",
-                 Ships[objp->instance].ship_name));
+            WARNINGF (
+                LOCATION, "Ship %s told to guard itself.  Goal ignored.\n",
+                Ships[objp->instance].ship_name);
         }
         // -- What is this doing here?? -- MK, 7/30/97 --
         // ai_do_default_behavior( objp );

@@ -242,8 +242,9 @@ void gr_opengl_post_process_begin () {
 }
 
 void recompile_fxaa_shader () {
-    mprintf (
-        ("Recompiling FXAA shader with preset %d\n", Cmdline_fxaa_preset));
+    WARNINGF (
+        LOCATION, "Recompiling FXAA shader with preset %d\n",
+        Cmdline_fxaa_preset);
 
     // start recompile by grabbing deleting the current shader we have,
     // assuming it's already created
@@ -679,9 +680,10 @@ static bool opengl_post_init_table () {
                     Post_effects.push_back (eff);
                 }
                 else if (!warned) {
-                    mprintf (
-                        ("WARNING: post_processing.tbl can only have a max of "
-                         "32 effects! Ignoring extra...\n"));
+                    WARNINGF (
+                        LOCATION,
+                        "post_processing.tbl can only have a max of 32 "
+                        "effects! Ignoring extra...\n");
                     warned = true;
                 }
             }
@@ -743,9 +745,10 @@ static bool opengl_post_init_table () {
         return true;
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("Unable to parse 'post_processing.tbl'!  Error message = %s.\n",
-             e.what ()));
+        ERRORF (
+            LOCATION,
+            "Unable to parse 'post_processing.tbl'!  Error message = %s.\n",
+            e.what ());
         return false;
     }
 }
@@ -874,9 +877,9 @@ bool opengl_post_init_shaders () {
             0) {
         Cmdline_fxaa = false;
         fxaa_unavailable = true;
-        mprintf (
-            ("Error while compiling FXAA shaders. FXAA will be "
-             "unavailable.\n"));
+        ERRORF (
+            LOCATION,
+            "Error while compiling FXAA shaders. FXAA will be unavailable.\n");
     }
 
     return true;
@@ -919,9 +922,9 @@ void opengl_setup_bloom_textures () {
 }
 
 static bool opengl_init_shadow_framebuffer (int size, GLenum color_format) {
-    mprintf (
-        ("Trying to create %dx%d %d-bit shadow framebuffer\n", size, size,
-         color_format == GL_RGBA32F ? 32 : 16));
+    WARNINGF (
+        LOCATION, "Trying to create %dx%d %d-bit shadow framebuffer\n", size,
+        size, color_format == GL_RGBA32F ? 32 : 16);
 
     glGenFramebuffers (1, &Post_shadow_framebuffer_id);
     GL_state.BindFrameBuffer (Post_shadow_framebuffer_id);
@@ -963,7 +966,7 @@ static bool opengl_init_shadow_framebuffer (int size, GLenum color_format) {
     auto status = glCheckFramebufferStatus (GL_FRAMEBUFFER);
     if (status == GL_FRAMEBUFFER_COMPLETE) {
         // Everything is fine
-        mprintf (("Shadow framebuffer created successfully.\n"));
+        WARNINGF (LOCATION, "Shadow framebuffer created successfully.\n");
         return true;
     }
 
@@ -990,7 +993,7 @@ static bool opengl_init_shadow_framebuffer (int size, GLenum color_format) {
     default: error = "Unknown framebuffer status"; break;
     }
 
-    mprintf (("Failed to create framebuffer: %s\n", error));
+    ERRORF (LOCATION, "Failed to create framebuffer: %s\n", error);
     return false;
 }
 
@@ -1017,9 +1020,10 @@ static bool opengl_post_init_framebuffer () {
 
         if (!opengl_init_shadow_framebuffer (size, GL_RGBA32F)) {
             if (!opengl_init_shadow_framebuffer (size, GL_RGBA16F)) {
-                mprintf (
-                    ("Failed to create either 32 or 16-bit color shadow "
-                     "framebuffer. Disabling shadow support.\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Failed to create either 32 or 16-bit color shadow "
+                    "framebuffer. Disabling shadow support.\n");
                 Cmdline_shadow_quality = 0;
             }
         }
@@ -1057,9 +1061,10 @@ void opengl_post_process_init () {
     // We need to read the tbl first. This is mostly for FRED's benefit, as
     // otherwise the list of post effects for the sexp doesn't get updated.
     if (!opengl_post_init_table ()) {
-        mprintf (
-            ("  Unable to read post-processing table! Disabling "
-             "post-processing...\n\n"));
+        WARNINGF (
+            LOCATION,
+            "  Unable to read post-processing table! Disabling "
+            "post-processing...\n\n");
         Cmdline_postprocess = 0;
         return;
     }
@@ -1074,17 +1079,19 @@ void opengl_post_process_init () {
     }
 
     if (!opengl_post_init_shaders ()) {
-        mprintf (
-            ("  Unable to initialize post-processing shaders! Disabling "
-             "post-processing...\n\n"));
+        WARNINGF (
+            LOCATION,
+            "  Unable to initialize post-processing shaders! Disabling "
+            "post-processing...\n\n");
         Cmdline_postprocess = 0;
         return;
     }
 
     if (!opengl_post_init_framebuffer ()) {
-        mprintf (
-            ("  Unable to initialize post-processing framebuffer! Disabling "
-             "post-processing...\n\n"));
+        WARNINGF (
+            LOCATION,
+            "  Unable to initialize post-processing framebuffer! Disabling "
+            "post-processing...\n\n");
         Cmdline_postprocess = 0;
         return;
     }

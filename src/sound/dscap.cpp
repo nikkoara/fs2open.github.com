@@ -116,7 +116,6 @@ int dscap_start_record () {
 
     dscap_recording = 1;
 
-    // nprintf(("Alan","RTVOICE => start record\n"));
 
     return 0;
 }
@@ -131,7 +130,6 @@ int dscap_stop_record () {
 
     dscap_recording = 0;
 
-    // nprintf(("Alan","RTVOICE => stop record\n"));
 
     return 0;
 }

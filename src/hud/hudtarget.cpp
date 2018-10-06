@@ -151,8 +151,9 @@ float Lead_indicator_half[NUM_HUD_RETICLE_STYLES][GR_NUM_RESOLUTIONS][2] = {
 };
 hud_frames Lead_indicator_gauge;
 int Lead_indicator_gauge_loaded = 0;
-char Lead_fname[NUM_HUD_RETICLE_STYLES][GR_NUM_RESOLUTIONS][MAX_FILENAME_LEN] =
-    { { "lead1_fs1", "2_lead1_fs1" }, { "lead1", "2_lead1" } };
+char Lead_fname[NUM_HUD_RETICLE_STYLES][GR_NUM_RESOLUTIONS]
+               [MAX_FILENAME_LEN] = { { "lead1_fs1", "2_lead1_fs1" },
+                                      { "lead1", "2_lead1" } };
 
 // animation frames for the countermeasures gauge
 // frames:      0       =>              background
@@ -218,53 +219,55 @@ int Weapon_gauge_primary_coords[NUM_HUD_SETTINGS][GR_NUM_RESOLUTIONS][3][2] = {
           { 868, 557 }  // for the second primary
       } }
 };
-int Weapon_gauge_secondary_coords[NUM_HUD_SETTINGS][GR_NUM_RESOLUTIONS][5][2] =
-    { { // normal HUD
-        {
-            // GR_640
-            // based on the # of secondaries
-            { 497, 318 }, // bottom of gauge, 0 secondaries
-            { 497, 318 }, // bottom of gauge, 1 secondaries
-            { 497, 317 }, // middle of gauge, 2 secondaries AND middle of
-                          // gauge, 3 secondaries
-            { 497, 326 }, // bottom of gauge, 2 secondaries AND middle of
-                          // gauge, 3 secondaries
-            { 497, 335 }  // bottom of gauge, 3 secondaries
-        },
-        {
-            // GR_1024
-            // based on the # of secondaries
-            { 880, 570 }, // bottom of gauge, 0 secondaries
-            { 880, 570 }, // bottom of gauge, 1 secondaries
-            { 880, 569 }, // middle of gauge, 2 secondaries AND middle of
-                          // gauge, 3 secondaries
-            { 880, 578 }, // bottom of gauge, 2 secondaries AND middle of
-                          // gauge, 3 secondaries
-            { 880, 587 }  // bottom of gauge, 3 secondaries
-        } },
-      { // ballistic HUD - slightly different alignment
-        {
-            // GR_640
-            // based on the # of secondaries
-            { 485, 318 }, // bottom of gauge, 0 secondaries
-            { 485, 318 }, // bottom of gauge, 1 secondaries
-            { 485, 317 }, // middle of gauge, 2 secondaries AND middle of
-                          // gauge, 3 secondaries
-            { 485, 326 }, // bottom of gauge, 2 secondaries AND middle of
-                          // gauge, 3 secondaries
-            { 485, 335 }  // bottom of gauge, 3 secondaries
-        },
-        {
-            // GR_1024
-            // based on the # of secondaries
-            { 868, 570 }, // bottom of gauge, 0 secondaries
-            { 868, 570 }, // bottom of gauge, 1 secondaries
-            { 868, 569 }, // middle of gauge, 2 secondaries AND middle of
-                          // gauge, 3 secondaries
-            { 868, 578 }, // bottom of gauge, 2 secondaries AND middle of
-                          // gauge, 3 secondaries
-            { 868, 587 }  // bottom of gauge, 3 secondaries
-        } } };
+int Weapon_gauge_secondary_coords
+    [NUM_HUD_SETTINGS][GR_NUM_RESOLUTIONS][5][2] = {
+        { // normal HUD
+          {
+              // GR_640
+              // based on the # of secondaries
+              { 497, 318 }, // bottom of gauge, 0 secondaries
+              { 497, 318 }, // bottom of gauge, 1 secondaries
+              { 497, 317 }, // middle of gauge, 2 secondaries AND middle of
+                            // gauge, 3 secondaries
+              { 497, 326 }, // bottom of gauge, 2 secondaries AND middle of
+                            // gauge, 3 secondaries
+              { 497, 335 }  // bottom of gauge, 3 secondaries
+          },
+          {
+              // GR_1024
+              // based on the # of secondaries
+              { 880, 570 }, // bottom of gauge, 0 secondaries
+              { 880, 570 }, // bottom of gauge, 1 secondaries
+              { 880, 569 }, // middle of gauge, 2 secondaries AND middle of
+                            // gauge, 3 secondaries
+              { 880, 578 }, // bottom of gauge, 2 secondaries AND middle of
+                            // gauge, 3 secondaries
+              { 880, 587 }  // bottom of gauge, 3 secondaries
+          } },
+        { // ballistic HUD - slightly different alignment
+          {
+              // GR_640
+              // based on the # of secondaries
+              { 485, 318 }, // bottom of gauge, 0 secondaries
+              { 485, 318 }, // bottom of gauge, 1 secondaries
+              { 485, 317 }, // middle of gauge, 2 secondaries AND middle of
+                            // gauge, 3 secondaries
+              { 485, 326 }, // bottom of gauge, 2 secondaries AND middle of
+                            // gauge, 3 secondaries
+              { 485, 335 }  // bottom of gauge, 3 secondaries
+          },
+          {
+              // GR_1024
+              // based on the # of secondaries
+              { 868, 570 }, // bottom of gauge, 0 secondaries
+              { 868, 570 }, // bottom of gauge, 1 secondaries
+              { 868, 569 }, // middle of gauge, 2 secondaries AND middle of
+                            // gauge, 3 secondaries
+              { 868, 578 }, // bottom of gauge, 2 secondaries AND middle of
+                            // gauge, 3 secondaries
+              { 868, 587 }  // bottom of gauge, 3 secondaries
+          } }
+    };
 int Weapon_title_coords[NUM_HUD_SETTINGS][GR_NUM_RESOLUTIONS][2] = {
     {   // normal HUD
       { // GR_640
@@ -510,8 +513,6 @@ int hud_reticle_list_find_free () {
     }
 
     if (i == MAX_RETICLE_TARGETS) {
-        // nprintf(("Warning","Warning ==> Ran out of reticle target
-        // elements...\n"));
         return -1;
     }
 
@@ -718,9 +719,9 @@ void hud_target_hotkey_add_remove (int k, object* ctarget, int how_to_add) {
     if (MULTIPLAYER_STANDALONE) return;
 
     if ((k < 0) || (k >= MAX_KEYED_TARGETS)) {
-        nprintf (
-            ("Warning",
-             "Bogus hotkey %d sent to hud_target_hotkey_add_remove\n", k));
+        WARNINGF (
+            LOCATION, "Bogus hotkey %d sent to hud_target_hotkey_add_remove\n",
+            k);
         return;
     }
 
@@ -758,9 +759,9 @@ void hud_target_hotkey_add_remove (int k, object* ctarget, int how_to_add) {
             return;
         }
 
-        nprintf (
-            ("network", "Hotkey: Adding %s\n",
-             Ships[ctarget->instance].ship_name));
+        WARNINGF (
+            LOCATION, "Hotkey: Adding %s\n",
+            Ships[ctarget->instance].ship_name);
         hitem = GET_FIRST (&htarget_free_list);
         list_remove (&htarget_free_list, hitem);
         list_append (plist, hitem);
@@ -768,9 +769,9 @@ void hud_target_hotkey_add_remove (int k, object* ctarget, int how_to_add) {
         hitem->how_added = how_to_add;
     }
     else {
-        nprintf (
-            ("network", "Hotkey: Removing %s\n",
-             Ships[ctarget->instance].ship_name));
+        WARNINGF (
+            LOCATION, "Hotkey: Removing %s\n",
+            Ships[ctarget->instance].ship_name);
         list_remove (plist, hitem);
         list_append (&htarget_free_list, hitem);
         hitem->objp = NULL; // for safety
@@ -2507,12 +2508,13 @@ void hud_target_in_reticle_new () {
         }
         else {
             model_clear_instance (mc.model_num);
-            mc.orient = &A->orient;    // The object's orient
-            mc.pos = &A->pos;          // The object's position
-            mc.p0 = &Eye_position;     // Point 1 of ray to check
-            mc.p1 = &terminus;         // Point 2 of ray to check
-            mc.flags = MC_CHECK_MODEL; // | MC_ONLY_BOUND_BOX;          // check
-                                       // the model, but only its bounding box
+            mc.orient = &A->orient; // The object's orient
+            mc.pos = &A->pos;       // The object's position
+            mc.p0 = &Eye_position;  // Point 1 of ray to check
+            mc.p1 = &terminus;      // Point 2 of ray to check
+            mc.flags =
+                MC_CHECK_MODEL; // | MC_ONLY_BOUND_BOX;          // check
+                                // the model, but only its bounding box
 
             model_collide (&mc);
             if (mc.num_hits) {
@@ -3330,8 +3332,7 @@ void hud_prune_hotkeys () {
                 (objp->flags[Object::Object_Flags::Should_be_dead]) ||
                 (sp->is_dying_or_departing ())) {
                 if (sp != NULL) {
-                    nprintf (
-                        ("Network", "Hotkey: Pruning %s\n", sp->ship_name));
+                    WARNINGF (LOCATION, "Hotkey: Pruning %s\n", sp->ship_name);
                 }
 
                 htarget_list* temp;

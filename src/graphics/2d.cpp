@@ -1125,7 +1125,7 @@ bool gr_init (
 
     io::mouse::CursorManager::init ();
 
-    mprintf (("Initializing path renderer...\n"));
+    WARNINGF (LOCATION, "Initializing path renderer...\n");
     graphics::paths::PathRenderer::init ();
 
     // Initialize uniform buffer managers
@@ -1167,7 +1167,7 @@ bool gr_init (
             "be fixed by installing or reinstalling FreeSpace 2.\n");
     }
 
-    mprintf (("GRAPHICS: Initializing default colors...\n"));
+    WARNINGF (LOCATION, "GRAPHICS: Initializing default colors...\n");
 
     gr_set_color (0, 0, 0);
     gr_set_clear_color (0, 0, 0);
@@ -1754,7 +1754,7 @@ int poly_list::find_first_vertex_fast (int idx) {
     if (first_idx == sorted_indices + n_verts) {
         // if this happens then idx was never in the index list to begin with
         // which is not good
-        mprintf (("Sorted index list missing index %d!", idx));
+        WARNINGF (LOCATION, "Sorted index list missing index %d!", idx);
         Int3 ();
         return idx;
     }
@@ -2255,8 +2255,7 @@ void vertex_layout::add_vertex_component (
     size_t offset) {
     // A stride value of 0 is not handled consistently by the graphics API so
     // we must enforce that that does not happen
-    ASSERTX (
-        stride != 0, "The stride of a vertex component may not be zero!");
+    ASSERTX (stride != 0, "The stride of a vertex component may not be zero!");
 
     if (resident_vertex_format (format_type)) {
         // we already have a vertex component of this format type

@@ -331,7 +331,8 @@ void techroom_select_new_entry () {
                 // don't unload any spot within 5 of current
                 if ((i < Cur_entry + 5) && (i > Cur_entry - 5)) continue;
 
-                mprintf (("TECH ROOM: Dumping excess ship textures...\n"));
+                WARNINGF (
+                    LOCATION, "TECH ROOM: Dumping excess ship textures...\n");
 
                 model_page_out_textures (Current_list[i].model_num);
 
@@ -1033,9 +1034,7 @@ int techroom_button_pressed (int num) {
     switch (num) {
     case SHIPS_DATA_TAB:
     case WEAPONS_DATA_TAB:
-    case INTEL_DATA_TAB:
-        techroom_change_tab (num);
-        break;
+    case INTEL_DATA_TAB: techroom_change_tab (num); break;
 
     case SIMULATOR_TAB:
         gamesnd_play_iface (InterfaceSounds::SWITCH_SCREENS);
@@ -1123,7 +1122,7 @@ void techroom_intel_init () {
         while (optional_string ("$Entry:")) {
             ASSERT (Intel_info_size < MAX_INTEL_ENTRIES);
             if (Intel_info_size >= MAX_INTEL_ENTRIES) {
-                mprintf (("TECHMENU: Too many intel entries!\n"));
+                WARNINGF (LOCATION, "TECHMENU: Too many intel entries!\n");
                 break;
             }
 
@@ -1158,9 +1157,9 @@ void techroom_intel_init () {
         intel_info_init_done = true;
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             "species.tbl", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n",
+            "species.tbl", e.what ());
         return;
     }
 }
@@ -1311,7 +1310,8 @@ void techroom_init () {
         Intel_list[idx].bitmap = -1;
     }
 
-    mprintf (("Techroom successfully initialized, now changing tab...\n"));
+    WARNINGF (
+        LOCATION, "Techroom successfully initialized, now changing tab...\n");
     techroom_change_tab (Tab);
 }
 

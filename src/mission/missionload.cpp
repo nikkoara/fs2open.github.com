@@ -90,18 +90,19 @@ int mission_load (char* filename_ext) {
         strncpy (
             Game_current_mission_filename, filename_ext, MAX_FILENAME_LEN - 1);
 
-    mprintf (("MISSION LOAD: '%s'\n", filename_ext));
+    WARNINGF (LOCATION, "MISSION LOAD: '%s'\n", filename_ext);
 
     strcpy_s (filename, filename_ext);
     ext = strrchr (filename, '.');
     if (ext) {
-        mprintf (("Hmmm... Extension passed to mission_load...\n"));
+        WARNINGF (LOCATION, "Hmmm... Extension passed to mission_load...\n");
         *ext = 0; // remove any extension!
     }
 
     if (mission_is_ignored (filename)) {
-        mprintf (
-            ("MISSION LOAD: Tried to load an ignored mission!  Aborting..."));
+        WARNINGF (
+            LOCATION,
+            "MISSION LOAD: Tried to load an ignored mission!  Aborting...");
         return -1;
     }
 
@@ -342,7 +343,7 @@ void mission_load_menu_do () {
 
         // go
         strcpy_s (Game_current_mission_filename, mission_name_final);
-        mprintf (("Selected '%s'\n", Game_current_mission_filename));
+        WARNINGF (LOCATION, "Selected '%s'\n", Game_current_mission_filename);
         gameseq_post_event (GS_EVENT_START_GAME);
     }
 

@@ -243,9 +243,9 @@ void nebl_init () {
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             "lightning.tbl", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n",
+            "lightning.tbl", e.what ());
         return;
     }
 }
@@ -352,9 +352,9 @@ void nebl_render_all () {
 
                         Num_lbolts--;
 
-                        nprintf (
-                            ("lightning", "Released bolt. %d used nodes!\n",
-                             Num_lnodes));
+                        WARNINGF (
+                            LOCATION, "Released bolt. %d used nodes!\n",
+                            Num_lnodes);
                     }
 
                     b->used = 0;
@@ -631,7 +631,7 @@ l_node* nebl_new () {
 
     // if we're out of nodes
     if (Num_lnodes >= MAX_LIGHTNING_NODES) {
-        nprintf (("lightning", "Out of lightning nodes!\n"));
+        WARNINGF (LOCATION, "Out of lightning nodes!");
         return NULL;
     }
 

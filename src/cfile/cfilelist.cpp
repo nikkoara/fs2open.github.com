@@ -26,8 +26,8 @@ void cf_sort_filenames (
             for (i = incr; i < n; i++) {
                 j = i - incr;
                 while (j >= 0) {
-                    if (strcasecmp (list[j].c_str (), list[j + incr].c_str ()) >
-                        0) {
+                    if (strcasecmp (
+                            list[j].c_str (), list[j + incr].c_str ()) > 0) {
                         t = list[j];
                         list[j] = list[j + incr];
                         list[j + incr] = t;
@@ -85,9 +85,9 @@ void cf_sort_filenames (
         return;
     }
 
-    nprintf (
-        ("Error", "Unknown sorting method %d passed to cf_sort_filenames()\n",
-         sort));
+    WARNINGF (
+        LOCATION, "Unknown sorting method %d passed to cf_sort_filenames()\n",
+        sort);
 }
 
 // Sorts a list of filenames using the specified sorting method (CF_SORT_*).
@@ -184,9 +184,9 @@ void cf_sort_filenames (int n, char** list, int sort, file_list_info* info) {
         return;
     }
 
-    nprintf (
-        ("Error", "Unknown sorting method %d passed to cf_sort_filenames()\n",
-         sort));
+    WARNINGF (
+        LOCATION, "Unknown sorting method %d passed to cf_sort_filenames()\n",
+        sort);
 }
 
 #if (0) // these aren't used anywhere now

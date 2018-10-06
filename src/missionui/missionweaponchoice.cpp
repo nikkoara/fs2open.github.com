@@ -789,9 +789,10 @@ void wl_render_overhead_view (float frametime) {
         }
 
         if (wl_ship->model_num < 0) {
-            mprintf (
-                ("Couldn't load model file '%s' in missionweaponchoice.cpp\n",
-                 sip->pof_file));
+            WARNINGF (
+                LOCATION,
+                "Couldn't load model file '%s' in missionweaponchoice.cpp\n",
+                sip->pof_file);
         }
         else {
             matrix object_orient = IDENTITY_MATRIX;
@@ -1991,9 +1992,8 @@ void weapon_select_init () {
                                 // returning from the hotkey screen, which can
                                 // release common button bitmaps.
         common_reset_buttons ();
-        nprintf (
-            ("Alan",
-             "weapon_select_init() returning without doing anything\n"));
+        WARNINGF (
+            LOCATION, "weapon_select_init() returning without doing anything");
 
         // if we're in multiplayer always select the player's ship
         wl_reset_selected_slot ();
@@ -2001,7 +2001,7 @@ void weapon_select_init () {
         return;
     }
 
-    nprintf (("Alan", "entering weapon_select_init()\n"));
+    WARNINGF (LOCATION, "entering weapon_select_init()");
     common_select_init ();
 
     // Goober5000
@@ -2558,7 +2558,7 @@ void weapon_select_do (float frametime) {
 
     if (wl_choice >= 0) {
         if (snazzy_action == SNAZZY_CLICKED) {
-            nprintf (("Alan", "got one\n"));
+            WARNINGF (LOCATION, "got one");
         }
     }
 
@@ -2884,13 +2884,13 @@ void weapon_select_do (float frametime) {
  */
 void weapon_select_close () {
     if (!Weapon_select_open) {
-        nprintf (
-            ("Alan",
-             "weapon_select_close() returning without doing anything\n"));
+        WARNINGF (
+            LOCATION,
+            "weapon_select_close() returning without doing anything");
         return;
     }
 
-    nprintf (("Alan", "Entering weapon_select_close()\n"));
+    WARNINGF (LOCATION, "Entering weapon_select_close()");
 
     // done with the bitmaps, so unlock it
     bm_unlock (WeaponSelectMaskBitmap);

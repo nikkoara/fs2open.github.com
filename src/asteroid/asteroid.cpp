@@ -230,8 +230,7 @@ object* asteroid_create (
     }
 
     if (n >= MAX_ASTEROIDS) {
-        nprintf (
-            ("Warning", "Could not create asteroid, no more slots left\n"));
+        WARNINGF (LOCATION, "Could not create asteroid, no more slots left");
         return NULL;
     }
 
@@ -311,7 +310,8 @@ object* asteroid_create (
         OBJ_ASTEROID, -1, n, &orient, &pos, radius, asteroid_default_flagset);
 
     if ((objnum == -1) || (objnum >= MAX_OBJECTS)) {
-        mprintf (("Couldn't create asteroid -- out of object slots\n"));
+        WARNINGF (
+            LOCATION, "Couldn't create asteroid -- out of object slots\n");
         return NULL;
     }
 
@@ -484,10 +484,10 @@ static void asteroid_load (int asteroid_info_index, int asteroid_subtype) {
                     asip->name, pm->n_detail_levels);
             }
             else {
-                nprintf (
-                    ("Warning",
-                     "For asteroid '%s', detail level mismatch (POF needs %d)",
-                     asip->name, pm->n_detail_levels));
+                WARNINGF (
+                    LOCATION,
+                    "For asteroid '%s', detail level mismatch (POF needs %d)",
+                    asip->name, pm->n_detail_levels);
             }
         }
         // Stuff detail level distances.
@@ -539,10 +539,8 @@ void asteroid_create_all () {
 
     if (Asteroid_field.num_initial_asteroids <= 0) { return; }
 
-    int max_asteroids =
-        Asteroid_field
-            .num_initial_asteroids; // * (1.0f -
-                                    // 0.1f*(MAX_DETAIL_LEVEL-Detail.asteroid_density)));
+    int max_asteroids = Asteroid_field.num_initial_asteroids; // * (1.0f -
+        // 0.1f*(MAX_DETAIL_LEVEL-Detail.asteroid_density)));
 
     int num_debris_types = 0;
 
@@ -778,7 +776,7 @@ static void maybe_throw_asteroid (int count) {
 
     if (Asteroid_throw_objnum == -1) { return; }
 
-    nprintf (("AI", "Incoming asteroids: %i\n", count));
+    WARNINGF (LOCATION, "Incoming asteroids: %i", count);
 
     if (count >
         The_mission.ai_profile->max_incoming_asteroids[Game_skill_level])
@@ -1595,16 +1593,14 @@ static void asteroid_maybe_break_up (object* pasteroid_obj) {
 
                     if (num_roids > 0)
                         for (int i = 0; i < num_roids; i++)
-                            roids_to_create.push_back (
-                                split->asteroid_type);
+                            roids_to_create.push_back (split->asteroid_type);
                 }
 
                 std::random_device rng;
                 std::mt19937 urng (rng ());
 
                 std::shuffle (
-                    roids_to_create.begin (), roids_to_create.end (),
-                    urng);
+                    roids_to_create.begin (), roids_to_create.end (), urng);
 
                 size_t total_roids = roids_to_create.size ();
                 for (size_t i = 0; i < total_roids; i++) {
@@ -2046,8 +2042,8 @@ static void asteroid_parse_tbl () {
             for (std::vector< std::string >::iterator iter =
                      parsed_asteroids.begin ();
                  iter != parsed_asteroids.end (); ++iter) {
-                mprintf (("Asteroid.tbl as parsed:\n"));
-                mprintf (("%s", iter->c_str ()));
+                WARNINGF (LOCATION, "Asteroid.tbl as parsed:\n");
+                WARNINGF (LOCATION, "%s", iter->c_str ());
             }
 #endif
             ASSERTF (
@@ -2103,9 +2099,9 @@ static void asteroid_parse_tbl () {
         }
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             "asteroid.tbl", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n",
+            "asteroid.tbl", e.what ());
         return;
     }
 }
@@ -2266,7 +2262,7 @@ void asteroid_page_in () {
     if (Asteroid_field.num_initial_asteroids > 0) {
         int i, j, k;
 
-        nprintf (("Paging", "Paging in asteroids\n"));
+        WARNINGF (LOCATION, "Paging in asteroids");
 
         // max of MAX_ACTIVE_DEBRIS_TYPES possible debris field models
         for (i = 0; i < MAX_ACTIVE_DEBRIS_TYPES; i++) {

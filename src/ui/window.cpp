@@ -62,9 +62,7 @@ void UI_WINDOW::set_mask_bmap (const char* fname) {
 
     bmap = bm_load (fname);
 
-    if (bmap < 0) {
-        ASSERTF (LOCATION, "Could not load in %s!", fname);
-    }
+    if (bmap < 0) { ASSERTF (LOCATION, "Could not load in %s!", fname); }
     else {
         set_mask_bmap (bmap, fname);
     }
@@ -97,9 +95,7 @@ void UI_WINDOW::set_mask_bmap (int bmap, const char* /*name*/) {
         */
     }
     else {
-        nprintf (
-            ("UI",
-             "Warning: tried to switch bitmap mask to the same bitmap\n"));
+        WARNINGF (LOCATION, "tried to switch bitmap mask to the same bitmap");
     }
 }
 
@@ -764,6 +760,6 @@ void init_tooltips()
 }
 */
 
-void ok_clicked () { mprintf (("OK Clicked!\n")); }
+void ok_clicked () { WARNINGF (LOCATION, "OK Clicked!\n"); }
 
-void do_help () { mprintf (("Help!\n")); }
+void do_help () { WARNINGF (LOCATION, "Help!\n"); }

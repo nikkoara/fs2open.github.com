@@ -168,7 +168,7 @@ void diag_printf (const char* format, ...) {
     vsprintf (buffer, format, args);
     va_end (args);
 
-    nprintf (("Parse", "%s", buffer.c_str ()));
+    WARNINGF (LOCATION, "%s", buffer.c_str ());
 #endif
 }
 
@@ -249,9 +249,10 @@ void error_display (int error_level, const char* format, ...) {
     vsprintf (error_text, format, args);
     va_end (args);
 
-    nprintf (
-        (type, "%s(line %i): %s: %s\n", Current_filename, get_line_num (),
-         type, error_text.c_str ()));
+    WARNINGF (
+        LOCATION,
+        "%s(line %i): %s: %s\n", Current_filename, get_line_num (), type,
+        error_text.c_str ());
 
     if (error_level == 0 || Cmdline_noparseerrors)
         WARNINGF (
@@ -384,7 +385,8 @@ int required_string (const char* pstr) {
 
     ignore_white_space ();
 
-    while (strncasecmp (pstr, Mp, strlen (pstr)) != 0 && (count < RS_MAX_TRIES)) {
+    while (strncasecmp (pstr, Mp, strlen (pstr)) != 0 &&
+           (count < RS_MAX_TRIES)) {
         error_display (
             1, "Missing required token: [%s]. Found [%.32s] instead.\n", pstr,
             next_tokens ());
@@ -394,8 +396,8 @@ int required_string (const char* pstr) {
     }
 
     if (count == RS_MAX_TRIES) {
-        nprintf (
-            ("Error", "Error: Unable to find required token [%s]\n", pstr));
+        WARNINGF (
+            LOCATION, "Error: Unable to find required token [%s]\n", pstr);
         WARNINGF (
             LOCATION, "Error: Unable to find required token [%s]\n", pstr);
         throw parse::ParseException ("Required string not found");
@@ -604,9 +606,9 @@ int required_string_either (const char* str1, const char* str2) {
         ignore_white_space ();
     }
 
-    nprintf (
-        ("Error", "Error: Unable to find either required token [%s] or [%s]\n",
-         str1, str2));
+    WARNINGF (
+        LOCATION, "Error: Unable to find either required token [%s] or [%s]\n",
+        str1, str2);
     WARNINGF (
         LOCATION, "Error: Unable to find either required token [%s] or [%s]\n",
         str1, str2);
@@ -859,9 +861,9 @@ void copy_text_until (
     foundstr = stristr (instr, endstr);
 
     if (foundstr == NULL) {
-        nprintf (
-            ("Error", "Error.  Looking for [%s], but never found it.\n",
-             endstr));
+        WARNINGF (
+            LOCATION, "Error.  Looking for [%s], but never found it.\n",
+            endstr);
         throw parse::ParseException ("End string not found");
     }
 
@@ -870,11 +872,10 @@ void copy_text_until (
         outstr[foundstr - instr] = 0;
     }
     else {
-        nprintf (
-            ("Error",
-             "Error.  Too much text (%zu"
-             " chars, %i allowed) before %s\n",
-             foundstr - instr - strlen (endstr), max_chars, endstr));
+        WARNINGF (
+            LOCATION,
+            "Error.  Too much text (%zu chars, %i allowed) before %s\n",
+            foundstr - instr - strlen (endstr), max_chars, endstr);
 
         throw parse::ParseException ("Too much text found");
     }
@@ -890,9 +891,9 @@ void copy_text_until (std::string& outstr, char* instr, const char* endstr) {
     foundstr = stristr (instr, endstr);
 
     if (foundstr == NULL) {
-        nprintf (
-            ("Error", "Error.  Looking for [%s], but never found it.\n",
-             endstr));
+        WARNINGF (
+            LOCATION, "Error.  Looking for [%s], but never found it.\n",
+            endstr);
         throw parse::ParseException ("End string not found");
     }
 
@@ -1090,8 +1091,7 @@ int get_string (char* str, int max) {
 
     if (max >= 0 && len >= (size_t)max)
         error_display (
-            0, "String too long.  Length = %zu.  Max is %i.\n", len,
-            max);
+            0, "String too long.  Length = %zu.  Max is %i.\n", len, max);
 
     strncpy (str, Mp + 1, len);
     str[len] = 0;
@@ -1934,7 +1934,7 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
 
     mf = cfopen (filename, "rb", CFILE_NORMAL, mode);
     if (mf == NULL) {
-        nprintf (("Error", "Wokka!  Error opening file (%s)!\n", filename));
+        WARNINGF (LOCATION, "Wokka!  Error opening file (%s)!", filename);
         throw parse::ParseException ("Failed to open file");
     }
 
@@ -1942,7 +1942,7 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
     int file_len = cfilelength (mf);
 
     if (!file_len) {
-        nprintf (("Error", "Oh noes!!  File is empty! (%s)!\n", filename));
+        WARNINGF (LOCATION, "Oh noes!!  File is empty! (%s)!", filename);
         throw parse::ParseException ("Failed to open file");
     }
 
@@ -2841,12 +2841,11 @@ int stuff_loadout_list (int* ilp, int max_ints, int lookup_type) {
             (!(Weapon_info[index]
                    .wi_flags[Weapon::Info_Flags::Player_allowed]))) {
             clean_loadout_list_entry ();
-            nprintf (
-                ("Warning",
-                 "Warning: Weapon type %s found in loadout of mission file. "
-                 "This class is not marked as a player allowed "
-                 "weapon...skipping\n",
-                 str));
+            WARNINGF (
+                LOCATION,
+                "Weapon type %s found in loadout of mission file. This class "
+                "is not marked as a player allowed weapon...skipping\n",
+                str);
             if (!Is_standalone)
                 WARNINGF (
                     LOCATION,
@@ -3214,9 +3213,9 @@ void reset_parse (char* text) {
 
 // Display number of warnings and errors at the end of a parse.
 void display_parse_diagnostics () {
-    nprintf (("Parse", "\nParse complete.\n"));
-    nprintf (
-        ("Parse", "%i errors.  %i warnings.\n", Error_count, Warning_count));
+    WARNINGF (LOCATION, "\nParse complete.");
+    WARNINGF (
+        LOCATION, "%i errors.  %i warnings.\n", Error_count, Warning_count);
 }
 
 // Splits a string into 2 lines if the string is wider than max_pixel_w pixels.
@@ -4064,9 +4063,9 @@ int parse_modular_table (
 
     for (i = 0; i < num_files; i++) {
         tbl_file_names[i] += ".tbm";
-        mprintf (
-            ("TBM  =>  Starting parse of '%s' ...\n",
-             tbl_file_names[i].c_str ()));
+        WARNINGF (
+            LOCATION, "TBM  =>  Starting parse of '%s' ...\n",
+            tbl_file_names[i].c_str ());
         (*parse_callback) (tbl_file_names[i].c_str ());
     }
 

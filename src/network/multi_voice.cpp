@@ -49,9 +49,9 @@ int Multi_voice_send_mode =
 #define MV_CODE_PLAYER_PREFS \
     5 // received server side - player bitflags for who he'll receive from
 #define MV_CODE_DATA 6 // sound data
-#define MV_CODE_DATA_DUMMY \
-    7 // in place of a packet which has been deemed too large, so that
-      // receivers don't time out early
+#define MV_CODE_DATA_DUMMY                                               \
+    7   // in place of a packet which has been deemed too large, so that
+        // receivers don't time out early
 
 // default quality of sound
 #define MV_DEFAULT_QOS 10 // default quality of sound
@@ -109,14 +109,14 @@ char Multi_voice_unpack_buffer[MULTI_VOICE_MAX_BUFFER_SIZE];
 // voice algorithm stuff
 // it would probably be good to base the timeout time on some multiple of our
 // average ping to the server
-#define MV_ALG_TIMEOUT \
+#define MV_ALG_TIMEOUT                                                         \
     500 // if start get new data for a window then a pause this long, play the
         // window
 int Multi_voice_stamps[MULTI_VOICE_MAX_STREAMS];
 
 // NOTE : this should be > then MULTI_VOICE_MAX_TIME + the time for the data to
 // come over a network connection!!
-#define MULTI_VOICE_TOKEN_TIMEOUT \
+#define MULTI_VOICE_TOKEN_TIMEOUT                                              \
     7000 // timeout - server will take the token back if he does not hear from
          // the guy in this amount of time
 
@@ -314,10 +314,10 @@ void multi_voice_init () {
     else {
         // initialize the realtime voice module
         if (rtvoice_init_recording (Multi_voice_qos)) {
-            nprintf (
-                ("Network",
-                 "MULTI VOICE : Error initializing rtvoice - recording will "
-                 "not be possible\n"));
+            WARNINGF (
+                LOCATION,
+                "MULTI VOICE : Error initializing rtvoice - recording will "
+                "not be possible");
             Multi_voice_can_record = 0;
         }
         else {
@@ -325,10 +325,10 @@ void multi_voice_init () {
         }
 
         if (rtvoice_init_playback ()) {
-            nprintf (
-                ("Network",
-                 "MULTI VOICE : Error initializing rtvoice - playback will "
-                 "not be possible\n"));
+            WARNINGF (
+                LOCATION,
+                "MULTI VOICE : Error initializing rtvoice - playback will not "
+                "be possible");
             Multi_voice_can_play = 0;
         }
         else {
@@ -364,10 +364,10 @@ void multi_voice_init () {
         Multi_voice_playback_buffer =
             (char*)vm_malloc (MULTI_VOICE_MAX_BUFFER_SIZE);
         if (Multi_voice_playback_buffer == NULL) {
-            nprintf (
-                ("Network",
-                 "MULTI VOICE : Error allocating playback buffer - playback "
-                 "will not be possible\n"));
+            WARNINGF (
+                LOCATION,
+                "MULTI VOICE : Error allocating playback buffer - playback "
+                "will not be possible");
             Multi_voice_can_play = 0;
         }
 
@@ -405,10 +405,10 @@ void multi_voice_init () {
             Multi_voice_stream[idx].stream_rtvoice_handle =
                 rtvoice_create_playback_buffer ();
             if (Multi_voice_stream[idx].stream_rtvoice_handle == -1) {
-                nprintf (
-                    ("Network",
-                     "MULTI VOICE : Error getting rtvoice buffer handle - "
-                     "playback will not be possible!\n"));
+                WARNINGF (
+                    LOCATION,
+                    "MULTI VOICE : Error getting rtvoice buffer handle - "
+                    "playback will not be possible!");
                 multi_voice_free_all ();
 
                 Multi_voice_can_play = 0;
@@ -420,10 +420,10 @@ void multi_voice_init () {
                 Multi_voice_stream[idx].accum_buffer[s_idx] =
                     (ubyte*)vm_malloc (MULTI_VOICE_ACCUM_BUFFER_SIZE);
                 if (Multi_voice_stream[idx].accum_buffer[s_idx] == NULL) {
-                    nprintf (
-                        ("Network",
-                         "MULTI VOICE : Error allocating accum buffer - "
-                         "playback will not be possible\n"));
+                    WARNINGF (
+                        LOCATION,
+                        "MULTI VOICE : Error allocating accum buffer - "
+                        "playback will not be possible");
                     multi_voice_free_all ();
 
                     Multi_voice_can_play = 0;
@@ -477,7 +477,7 @@ void multi_voice_reset () {
     int idx;
 
 #ifdef MULTI_VOICE_VERBOSE
-    nprintf (("Network", "MULTI VOICE : Resetting\n"));
+    // WARNINGF (LOCATION, "MULTI VOICE : Resetting");
 #endif
 
     ASSERT (Multi_voice_inited);
@@ -634,9 +634,9 @@ void multi_voice_server_process () {
                     MULTI_VOICE_TOKEN_INDEX_FREE;
 
 #ifdef MULTI_VOICE_VERBOSE
-                nprintf (
-                    ("Network",
-                     "MULTI VOICE : freeing released token (no packets)\n"));
+                WARNINGF (
+                    LOCATION,
+                    "MULTI VOICE : freeing released token (no packets)");
 #endif
             }
             // if a sufficiently long amount of time has elapsed since he
@@ -650,10 +650,9 @@ void multi_voice_server_process () {
                         MULTI_VOICE_TOKEN_INDEX_FREE;
 
 #ifdef MULTI_VOICE_VERBOSE
-                    nprintf (
-                        ("Network",
-                         "MULTI VOICE : freeing released token (time "
-                         "elapsed)\n"));
+                    WARNINGF (
+                        LOCATION,
+                        "MULTI VOICE : freeing released token (time elapsed)");
 #endif
                 }
             }
@@ -700,7 +699,7 @@ void multi_voice_player_process () {
         multi_voice_request_token ();
 
 #ifdef MULTI_VOICE_VERBOSE
-        nprintf (("Network", "MULTI VOICE : Request\n"));
+        // WARNINGF (LOCATION, "MULTI VOICE : Request");
 #endif
     }
 
@@ -712,9 +711,9 @@ void multi_voice_player_process () {
             // if we're not already recording, start recording
             if (!Multi_voice_recording) {
 #ifdef MULTI_VOICE_VERBOSE
-                nprintf (
-                    ("Network", "MULTI VOICE : RECORD %d\n",
-                     (int)Multi_voice_stream_id));
+                WARNINGF (
+                    LOCATION, "MULTI VOICE : RECORD %d\n",
+                    (int)Multi_voice_stream_id);
 #endif
                 // flush the old stream
                 multi_voice_flush_old_stream (0);
@@ -723,9 +722,9 @@ void multi_voice_player_process () {
                 // function
                 if (rtvoice_start_recording (
                         multi_voice_process_next_chunk, 175)) {
-                    nprintf (
-                        ("Network",
-                         "MULTI VOICE : Error initializing recording!\n"));
+                    WARNINGF (
+                        LOCATION,
+                        "MULTI VOICE : Error initializing recording!");
                     return;
                 }
 
@@ -759,7 +758,7 @@ void multi_voice_player_process () {
             if ((Multi_voice_recording_stamp != -1) &&
                 timestamp_elapsed (Multi_voice_recording_stamp)) {
 #ifdef MULTI_VOICE_VERBOSE
-                nprintf (("Network", "MULTI VOICE : timestamp popped"));
+                // WARNINGF (LOCATION, "MULTI VOICE : timestamp popped");
 #endif
                 // mark me as no longer recording
                 Multi_voice_recording = 0;
@@ -786,7 +785,7 @@ void multi_voice_player_process () {
         Multi_voice_keydown && !multi_voice_keydown () &&
         Multi_voice_can_record) {
 #ifdef MULTI_VOICE_VERBOSE
-        nprintf (("Network", "MULTI VOICE : Release\n"));
+        // WARNINGF (LOCATION, "MULTI VOICE : Release");
 #endif
 
         // mark the kay as not being down
@@ -890,9 +889,9 @@ void multi_voice_give_token (int stream_index, int player_index) {
     Multi_voice_stream[stream_index].stream_last_heard = -1;
 
 #ifdef MULTI_VOICE_VERBOSE
-    nprintf (
-        ("Network", "MULTI VOICE : GIVE TOKEN %d\n",
-         (int)Multi_voice_next_stream_id));
+    WARNINGF (
+        LOCATION, "MULTI VOICE : GIVE TOKEN %d\n",
+        (int)Multi_voice_next_stream_id);
 #endif
 
     // if we're giving to ourself, don't send any data
@@ -1085,7 +1084,7 @@ void multi_voice_set_vars (int qos, int duration) {
     // make sure its in the right range
     if ((qos > 0) && (qos <= 10)) {
 #ifdef MULTI_VOICE_VERBOSE
-        nprintf (("Network", "MULTI VOICE : SETTING QOS %d\n", qos));
+        // WARNINGF (LOCATION, "MULTI VOICE : SETTING QOS %d", qos);
 #endif
 
         // set the default value
@@ -1104,9 +1103,8 @@ void multi_voice_set_vars (int qos, int duration) {
     // set the maximum duration
     if ((duration > 0) && (duration <= MULTI_VOICE_MAX_TIME)) {
 #ifdef MULTI_VOICE_VERBOSE
-        nprintf (
-            ("Network", "MULTI VOICE : SETTING MAX RECORD TIME %d\n",
-             duration));
+        WARNINGF (
+            LOCATION, "MULTI VOICE : SETTING MAX RECORD TIME %d\n", duration);
 #endif
         // set the default value
         Multi_voice_max_time = duration;
@@ -1134,14 +1132,14 @@ void multi_voice_process_token_request (int player_index) {
     // if the player's token timestamp is not -1, can't give him the token
     if (Net_players[player_index].s_info.voice_token_timestamp != -1) {
 #ifdef MULTI_VOICE_VERBOSE
-        nprintf (
-            ("Network",
-             "MULTI VOICE : Not giving token because player %s's timestamp "
-             "hasn't elapsed yet!\n",
-             Net_players[player_index].m_player->callsign));
-        nprintf (
-            ("Network", "MULTI VOICE : token status %d\n",
-             Multi_voice_stream[0].token_status));
+        WARNINGF (
+            LOCATION,
+            "MULTI VOICE : Not giving token because player %s's timestamp "
+            "hasn't elapsed yet!\n",
+            Net_players[player_index].m_player->callsign);
+        WARNINGF (
+            LOCATION, "MULTI VOICE : token status %d\n",
+            Multi_voice_stream[0].token_status);
 #endif
         // deny the guy
         multi_voice_deny_token (player_index);
@@ -1312,10 +1310,10 @@ int multi_voice_process_data (
     // if this index is too high, flush the stream
     if (chunk_index >= MULTI_VOICE_ACCUM_BUFFER_COUNT) {
 #ifdef MULTI_VOICE_VERBOSE
-        nprintf (
-            ("Network",
-             "MULTI VOICE : flushing stream because packet index is too "
-             "high!!\n"));
+        WARNINGF (
+            LOCATION,
+            "MULTI VOICE : flushing stream because packet index is too "
+            "high!!");
 #endif
 
         // flush the stream
@@ -1388,7 +1386,7 @@ void multi_voice_inc_stream_id () {
 // new stream
 void multi_voice_flush_old_stream (int stream_index) {
 #ifdef MULTI_VOICE_VERBOSE
-    nprintf (("Network", "MULTI VOICE : old stream flush\n"));
+    // WARNINGF (LOCATION, "MULTI VOICE : old stream flush");
 #endif
 
     // call the smart algorithm for flushing streams
@@ -1502,10 +1500,10 @@ int multi_voice_get_stream (int stream_id) {
     }
 
 #ifdef MULTI_VOICE_VERBOSE
-    nprintf (
-        ("Network",
-         "MULTI VOICE : going to blast old voice stream while looking for a "
-         "free one - beware!!\n"));
+    WARNINGF (
+        LOCATION,
+        "MULTI VOICE : going to blast old voice stream while looking for a "
+        "free one - beware!!");
 #endif
 
     // if we got to this point, we should free up the oldest stream we have
@@ -1639,9 +1637,9 @@ void multi_voice_process_next_chunk () {
     // if we've reached the max # of packets for this stream, bail
     if (Multi_voice_current_stream_index >=
         (MULTI_VOICE_ACCUM_BUFFER_COUNT - 1)) {
-        nprintf (
-            ("Network",
-             "MULTI VOICE : Forcing stream to stop on the record size!!!\n"));
+        WARNINGF (
+            LOCATION,
+            "MULTI VOICE : Forcing stream to stop on the record size!!!");
 
         // mark me as no longer recording
         Multi_voice_recording = 0;
@@ -1778,10 +1776,10 @@ int multi_voice_process_player_prefs (ubyte* data, int player_index) {
         mute_index = find_player_id (mute_id);
         if (mute_index != -1) {
 #ifdef MULTI_VOICE_VERBOSE
-            nprintf (
-                ("Network", "Player %s muting player %s\n",
-                 Net_players[player_index].m_player->callsign,
-                 Net_players[mute_index].m_player->callsign));
+            WARNINGF (
+                LOCATION, "Player %s muting player %s\n",
+                Net_players[player_index].m_player->callsign,
+                Net_players[mute_index].m_player->callsign);
 #endif
             // mute the guy
             Multi_voice_player_prefs[player_index] &= ~(1 << mute_index);
@@ -1876,7 +1874,7 @@ void multi_voice_process_packet (ubyte* data, header* hinfo) {
     // a data packet
     case MV_CODE_DATA:
 #ifdef MULTI_VOICE_VERBOSE
-        nprintf (("Network", "VOICE : PROC DATA\n"));
+        // WARNINGF (LOCATION, "VOICE : PROC DATA");
 #endif
         // get routing information
         target_index = -1;
@@ -1903,7 +1901,7 @@ void multi_voice_process_packet (ubyte* data, header* hinfo) {
     // a data dummy packet
     case MV_CODE_DATA_DUMMY:
 #ifdef MULTI_VOICE_VERBOSE
-        nprintf (("Network", "VOICE : PROC DATA DUMMY\n"));
+        // WARNINGF (LOCATION, "VOICE : PROC DATA DUMMY");
 #endif
         // get routing information
         target_index = -1;
@@ -1957,9 +1955,8 @@ void multi_voice_client_send_pending () {
         max_chunk_size = multi_voice_max_chunk_size (Multi_voice_send_mode);
         if (str->accum_buffer_csize[sent] > max_chunk_size) {
 #ifdef MULTI_VOICE_VERBOSE
-            nprintf (
-                ("Network",
-                 "MULTI VOICE : streamed packet size too large!!\n"));
+            WARNINGF (
+                LOCATION, "MULTI VOICE : streamed packet size too large!!");
 #endif
 
             Multi_voice_current_stream_sent++;
@@ -1971,10 +1968,10 @@ void multi_voice_client_send_pending () {
         }
 
 #ifdef MULTI_VOICE_VERBOSE
-        nprintf (
-            ("Network", "MULTI VOICE : PACKET %d %d\n",
-             (int)str->accum_buffer_csize[sent],
-             (int)str->accum_buffer_usize[sent]));
+        WARNINGF (
+            LOCATION, "MULTI VOICE : PACKET %d %d\n",
+            (int)str->accum_buffer_csize[sent],
+            (int)str->accum_buffer_usize[sent]);
 #endif
 
         // get the specific target if we're in MSG_TARGET mode
@@ -2056,7 +2053,7 @@ void multi_voice_alg_play_window (int stream_index) {
     voice_stream* st;
 
 #ifdef MULTI_VOICE_VERBOSE
-    nprintf (("Network", "MULTI VOICE : PLAYING STREAM %d\n", stream_index));
+    // WARNINGF (LOCATION, "MULTI VOICE : PLAYING STREAM %d", stream_index);
 #endif
 
     // get a pointer to the stream
@@ -2067,9 +2064,9 @@ void multi_voice_alg_play_window (int stream_index) {
         // first, pack all the accum buffers into the playback buffer
 #ifdef MULTI_VOICE_PRE_DECOMPRESS
         buffer_offset = Multi_voice_pre_sound_size;
-        nprintf (
-            ("Network", "VOICE : pre sound size %d\n",
-             Multi_voice_pre_sound_size));
+        WARNINGF (
+            LOCATION, "VOICE : pre sound size %d\n",
+            Multi_voice_pre_sound_size);
         for (idx = 0; idx < MULTI_VOICE_ACCUM_BUFFER_COUNT; idx++) {
             // if the flag is set, uncompress the data into the playback buffer
             if (st->accum_buffer_flags[idx]) {
@@ -2158,7 +2155,7 @@ int multi_voice_alg_should_play (int stream_index) {
     if ((Multi_voice_stamps[stream_index] != -1) &&
         timestamp_elapsed (Multi_voice_stamps[stream_index])) {
 #ifdef MULTI_VOICE_VERBOSE
-        nprintf (("Network", "MULTI VOICE : DECIDE, TIMEOUT\n"));
+        // WARNINGF (LOCATION, "MULTI VOICE : DECIDE, TIMEOUT");
 #endif
         return 1;
     }
@@ -2199,9 +2196,9 @@ void multi_voice_alg_process_streams () {
                 // server)
                 multi_voice_flush_old_stream (idx);
 
-                nprintf (
-                    ("Network",
-                     "Server not playing sound because of set options!\n"));
+                WARNINGF (
+                    LOCATION,
+                    "Server not playing sound because of set options!");
             }
             // play the current sound
             else {
@@ -2249,7 +2246,7 @@ void multi_voice_test_process_next_chunk () {
 
     // if the recording timestamp has elapsed, stop the whole thing
     if (timestamp_elapsed (Multi_voice_test_record_stamp)) {
-        nprintf (("Network", "Stopping voice test recording\n"));
+        // WARNINGF (LOCATION, "Stopping voice test recording");
 
         rtvoice_stop_recording ();
 

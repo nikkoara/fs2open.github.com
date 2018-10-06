@@ -370,7 +370,7 @@ void dds_save_image (
     CFILE* image = cfopen (real_filename, "wb", CFILE_NORMAL, CF_TYPE_CACHE);
 
     if (image == NULL) {
-        mprintf (("Unable to open DDS image for saving!!\n"));
+        WARNINGF (LOCATION, "Unable to open DDS image for saving!!\n");
         return;
     }
 

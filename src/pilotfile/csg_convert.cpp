@@ -310,18 +310,18 @@ void pilotfile_convert::csg_import_missions (bool inferno) {
                 miss.stats.ship_kills[j].val = t_inf_score.kills[j];
             }
 
-            miss.stats.score           = t_inf_score.score;
-            miss.stats.rank            = t_inf_score.rank;
-            miss.stats.assists         = t_inf_score.assists;
-            miss.stats.kill_count      = t_inf_score.kill_count;
-            miss.stats.kill_count_ok   = t_inf_score.kill_count_ok;
-            miss.stats.p_shots_fired   = t_inf_score.p_shots_fired;
-            miss.stats.s_shots_fired   = t_inf_score.s_shots_fired;
-            miss.stats.p_shots_hit     = t_inf_score.p_shots_hit;
-            miss.stats.s_shots_hit     = t_inf_score.s_shots_hit;
+            miss.stats.score = t_inf_score.score;
+            miss.stats.rank = t_inf_score.rank;
+            miss.stats.assists = t_inf_score.assists;
+            miss.stats.kill_count = t_inf_score.kill_count;
+            miss.stats.kill_count_ok = t_inf_score.kill_count_ok;
+            miss.stats.p_shots_fired = t_inf_score.p_shots_fired;
+            miss.stats.s_shots_fired = t_inf_score.s_shots_fired;
+            miss.stats.p_shots_hit = t_inf_score.p_shots_hit;
+            miss.stats.s_shots_hit = t_inf_score.s_shots_hit;
             miss.stats.p_bonehead_hits = t_inf_score.p_bonehead_hits;
             miss.stats.s_bonehead_hits = t_inf_score.s_bonehead_hits;
-            miss.stats.bonehead_kills  = t_inf_score.bonehead_kills;
+            miss.stats.bonehead_kills = t_inf_score.bonehead_kills;
 
             for (j = 0; j < 18; j++) {
                 miss.stats.medals_earned[j].val = t_inf_score.medals[j];
@@ -1166,12 +1166,13 @@ bool pilotfile_convert::csg_convert (const char* fname, bool inferno) {
     filename.append (fname);
     filename.append (".cs2");
 
-    mprintf (("    CS2 => Converting '%s'...\n", filename.c_str ()));
+    WARNINGF (LOCATION, "    CS2 => Converting '%s'...\n", filename.c_str ());
 
     cfp = cfopen (filename.c_str (), "rb", CFILE_NORMAL);
 
     if (!cfp) {
-        mprintf (("    CS2 => Unable to open '%s' for import!\n", fname));
+        WARNINGF (
+            LOCATION, "    CS2 => Unable to open '%s' for import!\n", fname);
         delete csg;
         csg = NULL;
 
@@ -1182,7 +1183,7 @@ bool pilotfile_convert::csg_convert (const char* fname, bool inferno) {
         csg_import (inferno);
     }
     catch (const std::exception& err) {
-        mprintf (("    CS2 => Import ERROR: %s\n", err.what ()));
+        ERRORF (LOCATION, "    CS2 => Import ERROR: %s\n", err.what ());
         rval = false;
     }
 
@@ -1204,7 +1205,8 @@ bool pilotfile_convert::csg_convert (const char* fname, bool inferno) {
         CF_LOCATION_ROOT_USER | CF_LOCATION_ROOT_GAME | CF_LOCATION_TYPE_ROOT);
 
     if (!cfp) {
-        mprintf (("    CSG => Unable to open '%s' for export!\n", fname));
+        WARNINGF (
+            LOCATION, "    CSG => Unable to open '%s' for export!\n", fname);
         return false;
     }
 
@@ -1212,7 +1214,7 @@ bool pilotfile_convert::csg_convert (const char* fname, bool inferno) {
         csg_export ();
     }
     catch (const char* err) {
-        mprintf (("    CSG => Export ERROR: %s\n", err));
+        ERRORF (LOCATION, "    CSG => Export ERROR: %s\n", err);
         rval = false;
     }
 
@@ -1222,7 +1224,7 @@ bool pilotfile_convert::csg_convert (const char* fname, bool inferno) {
     delete csg;
     csg = NULL;
 
-    if (rval) { mprintf (("    CSG => Conversion complete!\n")); }
+    if (rval) { WARNINGF (LOCATION, "    CSG => Conversion complete!\n"); }
 
     return rval;
 }

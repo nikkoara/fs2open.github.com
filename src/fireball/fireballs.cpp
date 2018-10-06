@@ -24,7 +24,7 @@ static std::vector< color > LOD_color;
 int Warp_model;
 int Knossos_warp_ani_used;
 
-#define WARPHOLE_GROW_TIME \
+#define WARPHOLE_GROW_TIME                                                 \
     (2.35f) // time for warphole to reach max size (also time to shrink to
             // nothing once it begins to shrink)
 
@@ -240,9 +240,9 @@ void parse_fireball_tbl (const char* filename) {
         required_string ("#End");
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n", filename,
-             e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n", filename,
+            e.what ());
         return;
     }
 }
@@ -365,7 +365,7 @@ void fireball_init () {
     // Goober5000 - reset Knossos warp flag
     Knossos_warp_ani_used = 0;
 
-    mprintf (("Loading warp model\n"));
+    WARNINGF (LOCATION, "Loading warp model\n");
     Warp_model = -1;
 
     // Goober5000 - check for existence of file before trying to load it
@@ -373,7 +373,7 @@ void fireball_init () {
         Warp_model = model_load ("warp.pof", 0, NULL, 0);
     }
 
-    mprintf ((" %d\n", Warp_model));
+    WARNINGF (LOCATION, " %d\n", Warp_model);
 }
 
 MONITOR (NumFireballsRend)

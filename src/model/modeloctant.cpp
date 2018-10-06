@@ -251,9 +251,10 @@ int model_octant_find_faces_sub (
         } break;
         case OP_BOUNDBOX: break;
         default:
-            mprintf (
-                ("Bad chunk type %d, len=%d in model_octant_find_faces_sub\n",
-                 chunk_type, chunk_size));
+            WARNINGF (
+                LOCATION,
+                "Bad chunk type %d, len=%d in model_octant_find_faces_sub\n",
+                chunk_type, chunk_size);
             Int3 (); // Bad chunk type!
             return 0;
         }

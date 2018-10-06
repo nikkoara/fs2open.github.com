@@ -453,7 +453,7 @@ int beam_fire (beam_fire_info* fire_info) {
         default_flags);
     if (objnum < 0) {
         beam_delete (new_item);
-        nprintf (("General", "obj_create() failed for beam weapon! bah!\n"));
+        WARNINGF (LOCATION, "obj_create() failed for beam weapon! bah!");
         Int3 ();
         return -1;
     }
@@ -470,8 +470,9 @@ int beam_fire (beam_fire_info* fire_info) {
     // check to see if its legal to fire at this guy
     if (beam_ok_to_fire (new_item) != 1) {
         beam_delete (new_item);
-        mprintf ((
-            "Killing beam at initial fire because of illegal targeting!!!\n"));
+        WARNINGF (
+            LOCATION,
+            "Killing beam at initial fire because of illegal targeting!!!\n");
         return -1;
     }
 
@@ -601,7 +602,7 @@ int beam_fire_targeting (fighter_beam_fire_info* fire_info) {
 
     if (objnum < 0) {
         beam_delete (new_item);
-        nprintf (("General", "obj_create() failed for beam weapon! bah!\n"));
+        WARNINGF (LOCATION, "obj_create() failed for beam weapon! bah!");
         Int3 ();
         return -1;
     }
@@ -904,7 +905,7 @@ void beam_type_d_get_status (beam* b, int* shot_index, int* fire_wait) {
     *shot_index = (int)(beam_time / shot_time);
 
     if (*shot_index >= b->binfo.shot_count) {
-        nprintf (("Beam", "Shot of type D beam had bad shot_index value\n"));
+        WARNINGF (LOCATION, "Shot of type D beam had bad shot_index value");
         *shot_index = b->binfo.shot_count - 1;
     }
 
@@ -1832,7 +1833,7 @@ void beam_delete (beam* b) {
     // subtract one
     Beam_count--;
     ASSERT (Beam_count >= 0);
-    nprintf (("Beam", "Recycled beam (%d beams remaining)\n", Beam_count));
+    WARNINGF (LOCATION, "Recycled beam (%d beams remaining)", Beam_count);
 }
 
 // given an object, return its model num
@@ -1868,9 +1869,9 @@ int beam_get_model (object* objp) {
 
     default:
         // this shouldn't happen too often
-        mprintf (
-            ("Beam couldn't find a good object model/type!! (%d)\n",
-             objp->type));
+        WARNINGF (
+            LOCATION, "Beam couldn't find a good object model/type!! (%d)\n",
+            objp->type);
         return -1;
     }
 }
@@ -2326,7 +2327,7 @@ void beam_aim (beam* b) {
             // ...then jitter based on shot_aim (requires target)
             beam_jitter_aim (b, b->binfo.shot_aim[b->shot_index]);
         }
-        nprintf (("AI", "Frame %i: FIRING\n", Framecount));
+        WARNINGF (LOCATION, "Frame %i: FIRING", Framecount);
         break;
 
     case BEAM_TYPE_E:
@@ -2334,8 +2335,7 @@ void beam_aim (beam* b) {
         vm_vec_scale_add (&b->last_shot, &b->last_start, &temp, b->range);
         break;
 
-    default:
-        ASSERT (0);
+    default: ASSERT (0);
     }
 
     // recalculate object pairs
@@ -3433,16 +3433,18 @@ int beam_ok_to_fire (beam* b) {
     }
     // if my own object is invalid, stop firing
     if (b->objp->signature != b->sig) {
-        mprintf (
-            ("BEAM : killing beam because of invalid parent object "
-             "SIGNATURE!\n"));
+        WARNINGF (
+            LOCATION,
+            "BEAM : killing beam because of invalid parent object "
+            "SIGNATURE!\n");
         return -1;
     }
 
     // if my own object is a ghost
     if (b->objp->type != OBJ_SHIP) {
-        mprintf (
-            ("BEAM : killing beam because of invalid parent object TYPE!\n"));
+        WARNINGF (
+            LOCATION,
+            "BEAM : killing beam because of invalid parent object TYPE!\n");
         return -1;
     }
 
@@ -3472,8 +3474,9 @@ int beam_ok_to_fire (beam* b) {
     if (!(b->flags & BF_FORCE_FIRING)) {
         // if the shooting turret is destroyed
         if (b->subsys->current_hits <= 0.0f) {
-            mprintf (
-                ("BEAM : killing beam because turret has been destroyed!\n"));
+            WARNINGF (
+                LOCATION,
+                "BEAM : killing beam because turret has been destroyed!\n");
             return -1;
         }
 
@@ -3501,9 +3504,9 @@ int beam_ok_to_fire (beam* b) {
             }
 
             if (!(turret_fov_test (b->subsys, &turret_normal, &aim_dir))) {
-                nprintf (
-                    ("BEAM",
-                     "BEAM : powering beam down because of FOV condition!\n"));
+                WARNINGF (
+                    LOCATION,
+                    "BEAM : powering beam down because of FOV condition!");
                 return 0;
             }
         }
@@ -3514,9 +3517,9 @@ int beam_ok_to_fire (beam* b) {
                 (b->flags & BF_IS_FIGHTER_BEAM) > 0);
             if (vm_vec_dot (&aim_dir, &turret_dir) <
                 b->subsys->system_info->turret_fov) {
-                nprintf (
-                    ("BEAM",
-                     "BEAM : powering beam down because of FOV condition!\n"));
+                WARNINGF (
+                    LOCATION,
+                    "BEAM : powering beam down because of FOV condition!");
                 return 0;
             }
         }

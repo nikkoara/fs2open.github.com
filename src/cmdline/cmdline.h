@@ -144,6 +144,5 @@ extern bool Cmdline_benchmark_mode;
 extern bool Cmdline_noninteractive;
 extern bool Cmdline_frame_profile;
 extern bool Cmdline_show_video_info;
-extern bool Cmdline_debug_window;
 
 #endif

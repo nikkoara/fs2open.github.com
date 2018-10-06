@@ -640,20 +640,21 @@ void parse_ai_profiles_tbl (const char* filename) {
                 // compatibility
                 if (optional_string (
                         "$perform less checks for death screams:")) {
-                    mprintf (
-                        ("Warning: \"$perform less checks for death screams\" "
-                         "flag is deprecated in favor of \"$perform fewer "
-                         "checks for death screams\"\n"));
+                    WARNINGF (
+                        LOCATION,
+                        "\"$perform less checks for death screams\" flag is "
+                        "deprecated in favor of \"$perform fewer checks for "
+                        "death screams\"\n");
                     bool temp;
                     stuff_boolean (&temp);
                     profile->flags.set (
                         AI::Profile_Flags::Perform_fewer_scream_checks, temp);
                 }
                 if (optional_string ("$allow primary link delay:")) {
-                    mprintf (
-                        ("Warning: \"$allow primary link delay\" flag is "
-                         "deprecated in favor of \"$allow primary link at "
-                         "mission start\"\n"));
+                    WARNINGF (
+                        LOCATION,
+                        "\"$allow primary link delay\" flag is deprecated in "
+                        "favor of \"$allow primary link at mission start\"\n");
                     bool temp;
                     stuff_boolean (&temp);
                     profile->flags.set (
@@ -666,9 +667,9 @@ void parse_ai_profiles_tbl (const char* filename) {
                     char tmp[60];
                     memset (tmp, 0, 60);
                     strncpy (tmp, Mp, 59);
-                    mprintf ((
-                        "WARNING: Unrecognized parameter in ai_profiles: %s\n",
-                        tmp));
+                    WARNINGF (
+                        LOCATION,
+                        "Unrecognized parameter in ai_profiles: %s\n", tmp);
 
                     Mp++;
                 }
@@ -682,9 +683,9 @@ void parse_ai_profiles_tbl (const char* filename) {
         required_string ("#End");
     }
     catch (const parse::ParseException& e) {
-        mprintf (
-            ("TABLES: Unable to parse '%s'!  Error message = %s.\n",
-             (filename) ? filename : "<default ai_profiles.tbl>", e.what ()));
+        ERRORF (
+            LOCATION, "parse failed '%s'!  Error message = %s.\n",
+            (filename) ? filename : "<default ai_profiles.tbl>", e.what ());
         return;
     }
 

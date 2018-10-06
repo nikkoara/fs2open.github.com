@@ -19,12 +19,13 @@ void setOGLProperties (const os::ViewPortProperties& props) {
     SDL_GL_SetAttribute (SDL_GL_MULTISAMPLEBUFFERS, 0);
     SDL_GL_SetAttribute (SDL_GL_MULTISAMPLESAMPLES, 0);
 
-    mprintf ((
+    WARNINGF (
+        LOCATION,
         "  Requested SDL Pixel values = R: %d, G: %d, B: %d, depth: %d, "
         "stencil: %d, double-buffer: %d, FSAA: %d\n",
         props.pixel_format.red_size, props.pixel_format.green_size,
         props.pixel_format.blue_size, props.pixel_format.depth_size,
-        props.pixel_format.stencil_size, 1, props.pixel_format.multi_samples));
+        props.pixel_format.stencil_size, 1, props.pixel_format.multi_samples);
 
     SDL_GL_SetAttribute (SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetAttribute (
@@ -38,9 +39,7 @@ void setOGLProperties (const os::ViewPortProperties& props) {
     case os::OpenGLProfile::Compatibility:
         profile = SDL_GL_CONTEXT_PROFILE_COMPATIBILITY;
         break;
-    default:
-        ASSERT (0);
-        return;
+    default: ASSERT (0); return;
     }
     SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, profile);
 
@@ -112,9 +111,7 @@ public:
         case os::ViewportState::Fullscreen:
             SDL_SetWindowFullscreen (_window, SDL_WINDOW_FULLSCREEN);
             break;
-        default:
-            ASSERT (0);
-            break;
+        default: ASSERT (0); break;
         }
     }
     void minimize () override {
@@ -130,7 +127,7 @@ public:
 };
 
 SDLGraphicsOperations::SDLGraphicsOperations () {
-    mprintf (("  Initializing SDL video...\n"));
+    WARNINGF (LOCATION, "  Initializing SDL video...\n");
 
     // Slight hack to make Mesa advertise S3TC support without libtxc_dxtn
     setenv ("force_s3tc_enable", "true", 1);
@@ -162,7 +159,8 @@ SDLGraphicsOperations::createViewport (const os::ViewPortProperties& props) {
 
     SDL_Rect bounds;
     if (SDL_GetDisplayBounds (props.display, &bounds) != 0) {
-        mprintf (("Failed to get display bounds: %s\n", SDL_GetError ()));
+        ERRORF (
+            LOCATION, "Failed to get display bounds: %s\n", SDL_GetError ());
         return nullptr;
     }
 
@@ -172,10 +170,11 @@ SDLGraphicsOperations::createViewport (const os::ViewPortProperties& props) {
     if (bounds.w == (int)props.width && bounds.h == (int)props.height) {
         // If we have the same size as the desktop we explicitly specify 0,0 to
         // make sure that the window borders aren't hidden
-        mprintf (
-            ("SDL: Creating window at %d,%d because window has same size as "
-             "desktop.\n",
-             bounds.x, bounds.y));
+        WARNINGF (
+            LOCATION,
+            "SDL: Creating window at %d, %d because window has same size as "
+            "desktop.\n",
+            bounds.x, bounds.y);
         x = bounds.x;
         y = bounds.y;
     }
@@ -187,7 +186,8 @@ SDLGraphicsOperations::createViewport (const os::ViewPortProperties& props) {
     SDL_Window* window = SDL_CreateWindow (
         props.title.c_str (), x, y, props.width, props.height, windowflags);
     if (window == nullptr) {
-        mprintf (("Failed to create SDL Window: %s\n", SDL_GetError ()));
+        ERRORF (
+            LOCATION, "Failed to create SDL Window: %s\n", SDL_GetError ());
         return nullptr;
     }
 
@@ -223,7 +223,9 @@ SDLGraphicsOperations::createOpenGLContext (
     auto ctx = SDL_GL_CreateContext (viewport->toSDLWindow ());
 
     if (ctx == nullptr) {
-        mprintf (("Could not create OpenGL Context: %s\n", SDL_GetError ()));
+        ERRORF (
+            LOCATION, "Could not create OpenGL Context: %s\n",
+            SDL_GetError ());
         return nullptr;
     }
 
@@ -236,10 +238,11 @@ SDLGraphicsOperations::createOpenGLContext (
     SDL_GL_GetAttribute (SDL_GL_STENCIL_SIZE, &stencil);
     SDL_GL_GetAttribute (SDL_GL_MULTISAMPLESAMPLES, &fsaa_samples);
 
-    mprintf (
-        ("  Actual SDL Video values    = R: %d, G: %d, B: %d, depth: %d, "
-         "stencil: %d, double-buffer: %d, FSAA: %d\n",
-         r, g, b, depth, stencil, db, fsaa_samples));
+    WARNINGF (
+        LOCATION,
+        "  Actual SDL Video values    = R: %d, G: %d, B: %d, depth: %d, "
+        "stencil: %d, double-buffer: %d, FSAA: %d\n",
+        r, g, b, depth, stencil, db, fsaa_samples);
 
     return std::unique_ptr< os::OpenGLContext > (new SDLOpenGLContext (ctx));
 }

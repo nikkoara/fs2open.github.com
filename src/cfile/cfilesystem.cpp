@@ -188,7 +188,9 @@ int cf_get_packfile_count (cf_root* root) {
 // packfile sort function
 bool cf_packfile_sort_func (const cf_root_sort& r1, const cf_root_sort& r2) {
     // if the 2 directory types are the same, do a string compare
-    if (r1.cf_type == r2.cf_type) { return (strcasecmp (r1.path, r2.path) < 0); }
+    if (r1.cf_type == r2.cf_type) {
+        return (strcasecmp (r1.path, r2.path) < 0);
+    }
 
     // otherwise return them in order of CF_TYPE_* precedence
     return (r1.cf_type < r2.cf_type);
@@ -275,9 +277,9 @@ void cf_build_pack_list (cf_root* root) {
 #ifndef NDEBUG
         uint chksum = 0;
         cf_chksum_pack (temp_roots_sort[i].path, &chksum);
-        mprintf (
-            ("Found root pack '%s' with a checksum of 0x%08x\n",
-             temp_roots_sort[i].path, chksum));
+        WARNINGF (
+            LOCATION, "Found root pack '%s' with a checksum of 0x%08x\n",
+            temp_roots_sort[i].path, chksum);
 #endif
 
         // mwa -- 4/2/98 put in the next 2 lines because the path name needs to
@@ -484,7 +486,7 @@ void cf_search_root_path (int root_index) {
 
     cf_root* root = cf_get_root (root_index);
 
-    mprintf (("Searching root '%s' ... ", root->path));
+    WARNINGF (LOCATION, "Searching root '%s' ... ", root->path);
 
     char search_path[CF_MAX_PATHNAME_LENGTH];
 
@@ -616,7 +618,7 @@ void cf_search_root_path (int root_index) {
         }
     }
 
-    mprintf (("%i files\n", num_files));
+    WARNINGF (LOCATION, "%i files\n", num_files);
 }
 
 typedef struct VP_FILE_HEADER {
@@ -646,7 +648,9 @@ void cf_search_root_pack (int root_index) {
 
     if (filelength (fileno (fp)) <
         (int)(sizeof (VP_FILE_HEADER) + (sizeof (int) * 3))) {
-        mprintf (("Skipping VP file ('%s') of invalid size...\n", root->path));
+        WARNINGF (
+            LOCATION, "Skipping VP file ('%s') of invalid size...\n",
+            root->path);
         fclose (fp);
         return;
     }
@@ -655,15 +659,16 @@ void cf_search_root_pack (int root_index) {
 
     ASSERT (sizeof (VP_header) == 16);
     if (fread (&VP_header, sizeof (VP_header), 1, fp) != 1) {
-        mprintf (
-            ("Skipping VP file ('%s') because the header could not be "
-             "read...\n",
-             root->path));
+        WARNINGF (
+            LOCATION,
+            "Skipping VP file ('%s') because the header could not be "
+            "read...\n",
+            root->path);
         fclose (fp);
         return;
     }
 
-    mprintf (("Searching root pack '%s' ... ", root->path));
+    WARNINGF (LOCATION, "Searching root pack '%s' ... ", root->path);
 
     // Read index info
     fseek (fp, VP_header.index_offset, SEEK_SET);
@@ -678,9 +683,10 @@ void cf_search_root_pack (int root_index) {
         VP_FILE find;
 
         if (fread (&find, sizeof (VP_FILE), 1, fp) != 1) {
-            mprintf (
-                ("Failed to read file entry (currently in directory %s)!\n",
-                 search_path));
+            WARNINGF (
+                LOCATION,
+                "Failed to read file entry (currently in directory %s)!\n",
+                search_path);
             break;
         }
 
@@ -735,7 +741,7 @@ void cf_search_root_pack (int root_index) {
 
     fclose (fp);
 
-    mprintf (("%i files\n", num_files));
+    WARNINGF (LOCATION, "%i files\n", num_files);
 }
 
 void cf_search_memory_root (int) {}
@@ -771,7 +777,7 @@ void cf_build_secondary_filelist (const char* cdrom_dir) {
     // Init the file blocks
     for (i = 0; i < CF_MAX_FILE_BLOCKS; i++) { File_blocks[i] = NULL; }
 
-    mprintf (("Building file index...\n"));
+    WARNINGF (LOCATION, "Building file index...\n");
 
     // build the list of searchable roots
     cf_build_root_list (cdrom_dir);
@@ -779,7 +785,8 @@ void cf_build_secondary_filelist (const char* cdrom_dir) {
     // build the list of files themselves
     cf_build_file_list ();
 
-    mprintf (("Found %d roots and %d files.\n", Num_roots, Num_files));
+    WARNINGF (
+        LOCATION, "Found %d roots and %d files.\n", Num_roots, Num_files);
 }
 
 void cf_free_secondary_filelist () {

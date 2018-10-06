@@ -159,11 +159,11 @@ waypoint* find_matching_waypoint (const char* name) {
             // skip over the : to inspect a new string holding only the index
             const char* index_str = name + len + 1;
             if (*index_str == '\0') {
-                nprintf (
-                    ("waypoints",
-                     "possible error with waypoint name '%s': no waypoint "
-                     "number after the colon\n",
-                     name));
+                WARNINGF (
+                    LOCATION,
+                    "possible error with waypoint name '%s': no waypoint "
+                    "number after the colon\n",
+                    name);
                 continue;
             }
 
@@ -176,22 +176,22 @@ waypoint* find_matching_waypoint (const char* name) {
                 }
             }
             if (!valid) {
-                nprintf (
-                    ("waypoints",
-                     "possible error with waypoint name '%s': string after "
-                     "the colon is not a number\n",
-                     name));
+                WARNINGF (
+                    LOCATION,
+                    "possible error with waypoint name '%s': string after the "
+                    "colon is not a number\n",
+                    name);
                 continue;
             }
 
             // get the number and make sure it's in range
             uint index = atoi (index_str);
             if (index < 1 || index > ii->get_waypoints ().size ()) {
-                nprintf (
-                    ("waypoints",
-                     "possible error with waypoint name '%s': waypoint number "
-                     "is out of range\n",
-                     name));
+                WARNINGF (
+                    LOCATION,
+                    "possible error with waypoint name '%s': waypoint number "
+                    "is out of range\n",
+                    name);
                 continue;
             }
 

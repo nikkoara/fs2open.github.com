@@ -247,7 +247,6 @@ fs2_SOURCES =                                   \
     osapi/DebugWindow.cpp                       \
     osapi/osapi.cpp                             \
     osapi/osregistry.cpp                        \
-    osapi/outwnd.cpp                            \
     parse/encrypt.cpp                           \
     parse/parselo.cpp                           \
     parse/sexp.cpp                              \

@@ -485,13 +485,9 @@ void brief_button_do (int i) {
         Player->auto_advance ^= 1;
         break;
 
-    case BRIEF_BUTTON_SKIP_TRAINING:
-        brief_skip_training_pressed ();
-        break;
+    case BRIEF_BUTTON_SKIP_TRAINING: brief_skip_training_pressed (); break;
 
-    case BRIEF_BUTTON_EXIT_LOOP:
-        brief_exit_loop_pressed ();
-        break;
+    case BRIEF_BUTTON_EXIT_LOOP: brief_exit_loop_pressed (); break;
 
     case BRIEF_BUTTON_MULTI_LOCK:
         ASSERT (Game_mode & GM_MULTIPLAYER);
@@ -851,7 +847,7 @@ void brief_init () {
                                // returning from the hotkey screen, which can
                                // release common button bitmaps.
         common_reset_buttons ();
-        nprintf (("Alan", "brief_init() returning without doing anything\n"));
+        WARNINGF (LOCATION, "brief_init() returning without doing anything");
         return;
     }
 
@@ -873,7 +869,7 @@ void brief_init () {
         Brief_static_name[gr_screen.res]);
     hud_anim_load (&Fade_anim);
 
-    nprintf (("Alan", "Entering brief_init()\n"));
+    WARNINGF (LOCATION, "Entering brief_init()");
     common_select_init ();
 
     // Set up the mask regions
@@ -1528,10 +1524,6 @@ void brief_do_frame (float frametime) {
     // Check common keypresses
     common_check_keys (k);
 
-#ifndef NDEBUG
-    int cam_change = 0;
-#endif
-
     if (Briefing->num_stages > 0) {
         // check for special keys
         switch (k) {
@@ -1544,11 +1536,12 @@ void brief_do_frame (float frametime) {
                 if (sip->model_num < 0)
                     sip->model_num = model_load (sip->pof_file, 0, NULL);
 
-                mprintf (
-                    ("Shiptype = %d (%s)\n", Closeup_icon->ship_class,
-                     sip->name));
-                mprintf (
-                    ("Modelnum = %d (%s)\n", sip->model_num, sip->pof_file));
+                WARNINGF (
+                    LOCATION, "Shiptype = %d (%s)\n", Closeup_icon->ship_class,
+                    sip->name);
+                WARNINGF (
+                    LOCATION, "Modelnum = %d (%s)\n", sip->model_num,
+                    sip->pof_file);
                 brief_setup_closeup (Closeup_icon);
             }
 
@@ -1564,11 +1557,12 @@ void brief_do_frame (float frametime) {
                 if (sip->model_num < 0)
                     sip->model_num = model_load (sip->pof_file, 0, NULL);
 
-                mprintf (
-                    ("Shiptype = %d (%s)\n", Closeup_icon->ship_class,
-                     sip->name));
-                mprintf (
-                    ("Modelnum = %d (%s)\n", sip->model_num, sip->pof_file));
+                WARNINGF (
+                    LOCATION, "Shiptype = %d (%s)\n", Closeup_icon->ship_class,
+                    sip->name);
+                WARNINGF (
+                    LOCATION, "Modelnum = %d (%s)\n", sip->model_num,
+                    sip->pof_file);
                 brief_setup_closeup (Closeup_icon);
             }
 
@@ -1577,64 +1571,52 @@ void brief_do_frame (float frametime) {
 
         case KEY_A:
             Closeup_cam_pos.xyz.z += 1;
-            cam_change = 1;
             break;
 
         case KEY_A + KEY_SHIFTED:
             Closeup_cam_pos.xyz.z += 10;
-            cam_change = 1;
             break;
 
         case KEY_Z:
             Closeup_cam_pos.xyz.z -= 1;
-            cam_change = 1;
             break;
 
         case KEY_Z + KEY_SHIFTED:
             Closeup_cam_pos.xyz.z -= 10;
-            cam_change = 1;
             break;
 
         case KEY_Y:
             Closeup_cam_pos.xyz.y += 1;
-            cam_change = 1;
             break;
 
         case KEY_Y + KEY_SHIFTED:
             Closeup_cam_pos.xyz.y += 10;
-            cam_change = 1;
             break;
 
         case KEY_H:
             Closeup_cam_pos.xyz.y -= 1;
-            cam_change = 1;
             break;
 
         case KEY_H + KEY_SHIFTED:
             Closeup_cam_pos.xyz.y -= 10;
-            cam_change = 1;
             break;
 
         case KEY_COMMA:
             Closeup_zoom -= 0.1f;
             if (Closeup_zoom < 0.1) Closeup_zoom = 0.1f;
-            cam_change = 1;
             break;
 
         case KEY_COMMA + KEY_SHIFTED:
             Closeup_zoom -= 0.5f;
             if (Closeup_zoom < 0.1) Closeup_zoom = 0.1f;
-            cam_change = 1;
             break;
 
         case KEY_PERIOD:
             Closeup_zoom += 0.1f;
-            cam_change = 1;
             break;
 
         case KEY_PERIOD + KEY_SHIFTED:
             Closeup_zoom += 0.5f;
-            cam_change = 1;
             break;
 #endif
         case 1000: // need this to avoid warning about no case
@@ -1643,16 +1625,6 @@ void brief_do_frame (float frametime) {
         default: break;
         } // end switch
     }
-
-#ifndef NDEBUG
-    if (cam_change) {
-        nprintf (
-            ("General", "Camera pos: %.2f, %.2f %.2f // ",
-             Closeup_cam_pos.xyz.x, Closeup_cam_pos.xyz.y,
-             Closeup_cam_pos.xyz.z));
-        nprintf (("General", "Camera zoom: %.2f\n", Closeup_zoom));
-    }
-#endif
 
     if (brief_choice > -1 && snazzy_action == SNAZZY_OVER) {
         Brief_mouse_up_flag = 0;
@@ -1856,12 +1828,11 @@ void brief_unload_bitmaps () {
 //
 void brief_close () {
     if (Brief_inited == FALSE) {
-        nprintf (
-            ("Warning", "brief_close() returning without doing anything\n"));
+        WARNINGF (LOCATION, "brief_close() returning without doing anything");
         return;
     }
 
-    nprintf (("Alan", "Entering brief_close()\n"));
+    WARNINGF (LOCATION, "Entering brief_close()");
 
     ML_objectives_close ();
 
@@ -1904,9 +1875,8 @@ void briefing_start_music () {
                 Briefing_music_handle, Master_event_music_volume, 1);
     }
     else {
-        nprintf (
-            ("Warning",
-             "No music file exists to play music at this briefing!\n"));
+        WARNINGF (
+            LOCATION, "No music file exists to play music at this briefing!");
     }
 }
 

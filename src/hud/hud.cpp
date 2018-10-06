@@ -2552,9 +2552,10 @@ int hud_get_dock_time (object* docker_objp) {
     if (aip->goal_objnum == -1) {
         // This can happen when you target a support ship as it warps in
         // just give a debug warning instead of a fault - taylor
-        mprintf (
-            ("'aip->goal_objnum == -1' in hud_get_dock_time(), line %i\n",
-             __LINE__));
+        WARNINGF (
+            LOCATION,
+            "'aip->goal_objnum == -1' in hud_get_dock_time(), line %i\n",
+            __LINE__);
         return 0;
     }
 

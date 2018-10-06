@@ -37,8 +37,10 @@ BOOST_LOG_GLOBAL_LOGGER(fs2_logger, fs2_logger_type)
 #define FS2_INFO  INFO
 
 #ifndef NDEBUG
+#  define ERRORF   EE ("general") << fs2_fmt
 #  define WARNINGF WW ("general") << fs2_fmt
 #else
+#  define ERRORF(...)   ((void)0)
 #  define WARNINGF(...) ((void)0)
 #endif // NDEBUG
 

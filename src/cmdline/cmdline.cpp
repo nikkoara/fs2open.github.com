@@ -1210,8 +1210,6 @@ cmdline_parm show_video_info (
     "-show_video_info", NULL, AT_NONE); // Cmdline_show_video_info
 cmdline_parm frame_profile_arg (
     "-profile_frame_time", NULL, AT_NONE); // Cmdline_frame_profile
-cmdline_parm
-    debug_window_arg ("-debug_window", NULL, AT_NONE); // Cmdline_debug_window
 
 char* Cmdline_start_mission = NULL;
 int Cmdline_old_collision_sys = 0;
@@ -1239,7 +1237,6 @@ bool Cmdline_benchmark_mode = false;
 bool Cmdline_noninteractive = false;
 bool Cmdline_frame_profile = false;
 bool Cmdline_show_video_info = false;
-bool Cmdline_debug_window = false;
 
 // Other
 cmdline_parm output_sexp_arg (
@@ -1278,84 +1275,94 @@ bool Cmdline_deprecated_cache_bitmaps = false;
 void cmdline_debug_print_cmdline () {
     cmdline_parm* parmp;
     int found = 0;
-    mprintf (("Passed cmdline options:"));
+    WARNINGF (LOCATION, "Passed cmdline options:");
 
     for (parmp = GET_FIRST (&Parm_list); parmp != END_OF_LIST (&Parm_list);
          parmp = GET_NEXT (parmp)) {
         if (parmp->name_found) {
             if (parmp->args != NULL) {
-                mprintf (("\n  %s %s", parmp->name, parmp->args));
+                WARNINGF (LOCATION, "\n  %s %s", parmp->name, parmp->args);
             }
             else {
-                mprintf (("\n  %s", parmp->name));
+                WARNINGF (LOCATION, "\n  %s", parmp->name);
             }
             found++;
         }
     }
 
-    if (!found) mprintf (("\n  <none>"));
+    if (!found) WARNINGF (LOCATION, "\n  <none>");
 
-    mprintf (("\n"));
+    WARNINGF (LOCATION, "\n");
 
     // Print log messages about any deprecated flags we found - CommanderDJ
     if (Cmdline_deprecated_spec == 1) {
-        mprintf (
-            ("Deprecated flag '-spec' found. Please remove from your "
-             "cmdline.\n"));
+        WARNINGF (
+            LOCATION,
+            "Deprecated flag '-spec' found. Please remove from your "
+            "cmdline.\n");
     }
 
     if (Cmdline_deprecated_glow == 1) {
-        mprintf (
-            ("Deprecated flag '-glow' found. Please remove from your "
-             "cmdline.\n"));
+        WARNINGF (
+            LOCATION,
+            "Deprecated flag '-glow' found. Please remove from your "
+            "cmdline.\n");
     }
 
     if (Cmdline_deprecated_normal == 1) {
-        mprintf (
-            ("Deprecated flag '-normal' found. Please remove from your "
-             "cmdline.\n"));
+        WARNINGF (
+            LOCATION,
+            "Deprecated flag '-normal' found. Please remove from your "
+            "cmdline.\n");
     }
 
     if (Cmdline_deprecated_env == 1) {
-        mprintf (
-            ("Deprecated flag '-env' found. Please remove from your "
-             "cmdline.\n"));
+        WARNINGF (
+            LOCATION,
+            "Deprecated flag '-env' found. Please remove from your "
+            "cmdline.\n");
     }
 
     if (Cmdline_deprecated_tbp == 1) {
-        mprintf (
-            ("Deprecated flag '-tbp' found. Please remove from your "
-             "cmdline.\n"));
+        WARNINGF (
+            LOCATION,
+            "Deprecated flag '-tbp' found. Please remove from your "
+            "cmdline.\n");
     }
 
     if (Cmdline_deprecated_jpgtga == 1) {
-        mprintf (
-            ("Deprecated flag '-jpgtga' found. Please remove from your "
-             "cmdline.\n"));
+        WARNINGF (
+            LOCATION,
+            "Deprecated flag '-jpgtga' found. Please remove from your "
+            "cmdline.\n");
     }
 
     if (Cmdline_deprecated_nohtl == 1) {
-        mprintf (
-            ("Deprecated flag '-nohtl' found. Please remove from your "
-             "cmdline.\n"));
+        WARNINGF (
+            LOCATION,
+            "Deprecated flag '-nohtl' found. Please remove from your "
+            "cmdline.\n");
     }
 
     if (Cmdline_deprecated_brief_lighting == 1) {
-        mprintf (
-            ("Deprecated flag '-brief_lighting' found. Please remove from "
-             "your cmdline.\n"));
+        WARNINGF (
+            LOCATION,
+            "Deprecated flag '-brief_lighting' found. Please remove from your "
+            "cmdline.\n");
     }
 
     if (Cmdline_deprecated_missile_lighting) {
-        mprintf (
-            ("Deprecated flag '-missile_lighting' found. Please remove from "
-             "your cmdline.\n"));
+        WARNINGF (
+            LOCATION,
+            "Deprecated flag '-missile_lighting' found. Please remove from "
+            "your cmdline.\n");
     }
 
     if (Cmdline_deprecated_cache_bitmaps) {
-        mprintf (
-            ("Deprecated flag '-cache_bitmaps' found. Please remove from your "
-             "cmdline.\n"));
+        WARNINGF (
+            LOCATION,
+            "Deprecated flag '-cache_bitmaps' found. Please remove from your "
+            "cmdline.\n");
     }
 }
 #endif
@@ -1511,7 +1518,8 @@ void os_validate_parms (int argc, char* argv[]) {
             if (parm_found == 0) {
                 // if we got a -help, --help, -h, or -? then show the help
                 // text, otherwise show unknown option
-                if (!strcasecmp (token, "-help") || !strcasecmp (token, "--help") ||
+                if (!strcasecmp (token, "-help") ||
+                    !strcasecmp (token, "--help") ||
                     !strcasecmp (token, "-h") || !strcasecmp (token, "-?")) {
                     printf ("FreeSpace 2 Open, version %s\n", FS_VERSION_FULL);
                     printf ("Website: http://scp.indiegames.us\n");
@@ -2340,8 +2348,6 @@ bool SetCmdlineParams () {
     if (noninteractive_arg.found ()) { Cmdline_noninteractive = true; }
 
     if (frame_profile_arg.found ()) { Cmdline_frame_profile = true; }
-
-    if (debug_window_arg.found ()) { Cmdline_debug_window = true; }
 
     if (show_video_info.found ()) { Cmdline_show_video_info = true; }
 

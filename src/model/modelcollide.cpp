@@ -334,11 +334,6 @@ Mc->radius\n", temp_dist, Mc->radius));
 
                 Mc->num_hits++;
 
-                // nprintf(("Physics", "edge sphere time: %f, normal: (%f, %f,
-                //%f) hit_point: (%f, %f, %f)\n", sphere_time,
-                // Mc->hit_normal.xyz.x, Mc->hit_normal.xyz.y,
-                // Mc->hit_normal.xyz.z,                hit_point.xyz.x,
-                // hit_point.xyz.y, hit_point.xyz.z));
             }
             else { // Not best so far
                 ASSERT (Mc->num_hits > 0);
@@ -563,9 +558,9 @@ int model_collide_sub (void* model_ptr) {
             }
             break;
         default:
-            mprintf (
-                ("Bad chunk type %d, len=%d in model_collide_sub\n",
-                 chunk_type, chunk_size));
+            WARNINGF (
+                LOCATION, "Bad chunk type %d, len=%d in model_collide_sub\n",
+                chunk_type, chunk_size);
             Int3 (); // Bad chunk type!
             return 0;
         }
