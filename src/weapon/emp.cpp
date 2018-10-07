@@ -10,8 +10,6 @@
 #include "hud/hudtarget.h"
 #include "iff_defs/iff_defs.h"
 #include "io/timer.h"
-#include "network/multi.h"
-#include "network/multimsgs.h"
 #include "object/object.h"
 #include "parse/parselo.h"
 #include "ship/ship.h"
@@ -131,9 +129,6 @@ void emp_apply (
         }
     }
 
-    // if I'm only a client in a multiplayer game, do nothing
-    if (MULTIPLAYER_CLIENT) { return; }
-
     // See if there are any friendly ships present, if so return without
     // preventing msg
     for (so = GET_FIRST (&Ship_obj_list); so != END_OF_LIST (&Ship_obj_list);
@@ -244,14 +239,6 @@ void emp_apply (
                 emp_start_local (actual_intensity, actual_time);
             }
 
-            // if this is a multiplayer game, notify other players of the
-            // effect
-            if (Game_mode & GM_MULTIPLAYER) {
-                ASSERT (MULTIPLAYER_MASTER);
-                send_emp_effect (
-                    target->net_signature, actual_intensity, actual_time);
-            }
-
             // now be sure to start the emp effect for the ship itself
             emp_start_ship (target, actual_intensity, actual_time);
         }
@@ -289,9 +276,6 @@ void emp_start_ship (object* ship_objp, float intensity, float time) {
     shipp->emp_intensity = intensity;
     shipp->emp_decr = intensity / time;
 
-    // multiplayer clients should bail now
-    if (MULTIPLAYER_CLIENT) { return; }
-
     // do any initial AI effects
     ASSERT (shipp->ai_index >= 0);
     aip = &Ai_info[shipp->ai_index];
@@ -322,9 +306,6 @@ void emp_process_ship (ship* shipp) {
 
     // reduce the emp effect
     shipp->emp_intensity -= shipp->emp_decr * flFrametime;
-
-    // multiplayer clients should bail here
-    if (MULTIPLAYER_CLIENT) { return; }
 
     // if this is a player ship, don't do anything wacky
     if (objp->flags[Object::Object_Flags::Player_ship]) { return; }

@@ -12,7 +12,6 @@
 #include "hud/hudparse.h"
 #include "model/model.h"
 #include "model/modelanim.h"
-#include "network/multi_obj.h"
 #include "radar/radarsetup.h"
 #include "render/3d.h"
 #include "species_defs/species_defs.h"
@@ -728,9 +727,6 @@ public:
     fix time_first_tagged;
     float level2_tag_total; // total tag time
     float level2_tag_left;  // total tag remaining
-
-    // old-style object update stuff
-    np_update np_updates[MAX_PLAYERS]; // for both server and client
 
     // lightning timestamp
     int lightning_stamp;
@@ -1729,8 +1725,6 @@ extern void shield_hit_init ();
 extern void create_shield_explosion_all (object* objp);
 extern void shield_frame_init ();
 extern void add_shield_point (int objnum, int tri_num, vec3d* hit_pos);
-extern void add_shield_point_multi (int objnum, int tri_num, vec3d* hit_pos);
-extern void shield_point_multi_setup ();
 extern void shield_hit_close ();
 
 void ship_draw_shield (object* objp);

@@ -10,7 +10,6 @@
 #include "io/timer.h"
 #include "model/model.h"
 #include "model/modelanim.h"
-#include "network/multi.h"
 #include "ship/ship.h"
 
 extern float flFrametime;
@@ -1034,64 +1033,7 @@ void model_anim_set_initial_states (ship* shipp) {
     }
 }
 
-/**
- * Handles multiplayer-safe, client-side, animations
- */
-void model_anim_handle_multiplayer (ship* shipp) {
-    ASSERT (shipp != NULL);
-
-    ship_subsys* pss;
-    model_subsystem* psub;
-
-    if (!(Game_mode & GM_MULTIPLAYER)) {
-        Int3 ();
-        return;
-    }
-
-    if (Net_player->flags & NETINFO_FLAG_AM_MASTER) return;
-
-    for (pss = GET_FIRST (&shipp->subsys_list);
-         pss != END_OF_LIST (&shipp->subsys_list); pss = GET_NEXT (pss)) {
-        psub = pss->system_info;
-
-        // Don't process destroyed objects  (but allow subobjects with
-        // hitpoints disabled -nuke)
-        if (pss->max_hits > 0 && pss->current_hits <= 0.0f) continue;
-
-        // not a triggered animation, skip it
-        if (!(psub->flags[Model::Subsystem_Flags::Triggered])) continue;
-
-        if (pss->triggered_rotation_index < 0) {
-            WARNINGF (
-                LOCATION,
-                "Invalid rotation index for triggered rotation in subsystem "
-                "%s in model %s!",
-                pss->system_info->name,
-                model_get (Ship_info[shipp->ship_info_index].model_num)
-                    ->filename);
-            continue;
-        }
-
-        for (int i = 0; i < psub->n_triggers; i++) {
-            switch (psub->triggers[i].type) {
-            case TRIGGER_TYPE_PRIMARY_BANK:
-            case TRIGGER_TYPE_SECONDARY_BANK:
-            case TRIGGER_TYPE_AFTERBURNER: {
-                Triggered_rotations[pss->triggered_rotation_index]
-                    .process_queue ();
-                model_anim_submodel_trigger_rotate (psub, pss);
-
-                break;
-            }
-
-            default: break;
-            }
-        }
-    }
-}
-
 // Goober5000 - stack based animation for reversing a sequence of animations
-
 std::map< int, animation_stack > Animation_map;
 
 bool model_anim_push_and_start_type (

@@ -5,7 +5,6 @@
 #include "hud/hud.h"
 #include "math/staticrand.h"
 #include "mission/missionparse.h"
-#include "network/multimsgs.h"
 #include "object/object.h"
 #include "ship/ship.h"
 #include "weapon/weapon.h"
@@ -88,8 +87,5 @@ void cmeasure_maybe_alert_success (object* objp) {
         hud_start_text_flash (XSTR ("Evaded", 1430), 800);
         snd_play (gamesnd_get_game_sound (
             ship_get_sound (Player_obj, GameSounds::MISSILE_EVADED_POPUP)));
-    }
-    else if (Objects[objp->parent].flags[Object::Object_Flags::Player_ship]) {
-        send_countermeasure_success_packet (objp->parent);
     }
 }

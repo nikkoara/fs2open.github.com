@@ -18,7 +18,6 @@
 #include "mission/missionlog.h"
 #include "mission/missionmessage.h" // for MAX_MISSION_MESSAGES
 #include "missionui/missionscreencommon.h"
-#include "network/multi.h"
 #include "parse/parselo.h"
 #include "playerman/player.h"
 #include "ship/ship.h"
@@ -448,16 +447,6 @@ void HUD_fixed_printf (float duration, color col, const char* format, ...) {
     char tmp[HUD_MSG_LENGTH_MAX];
     size_t msg_length;
 
-    // make sure we only print these messages if we're in the correct state
-    if ((Game_mode & GM_MULTIPLAYER) &&
-        (Netgame.game_state != NETGAME_STATE_IN_MISSION)) {
-        WARNINGF (
-            LOCATION,
-            "HUD_fixed_printf bailing because not in multiplayer game play "
-            "state");
-        return;
-    }
-
     va_start (args, format);
     vsnprintf (tmp, sizeof (tmp) - 1, format, args);
     va_end (args);
@@ -505,15 +494,6 @@ void HUD_printf (const char* format, ...) {
     va_list args;
     char tmp[HUD_MSG_LENGTH_MAX];
 
-    // make sure we only print these messages if we're in the correct state
-    if ((Game_mode & GM_MULTIPLAYER) &&
-        (Net_player->state != NETPLAYER_STATE_IN_MISSION)) {
-        WARNINGF (
-            LOCATION,
-            "HUD_printf bailing because not in multiplayer game play state");
-        return;
-    }
-
     va_start (args, format);
     vsnprintf (tmp, sizeof (tmp) - 1, format, args);
     va_end (args);
@@ -553,16 +533,6 @@ void HUD_ship_sent_printf (int sh, const char* format, ...) {
 void HUD_sourced_printf (int source, const char* format, ...) {
     va_list args;
     char tmp[HUD_MSG_LENGTH_MAX];
-
-    // make sure we only print these messages if we're in the correct state
-    if ((Game_mode & GM_MULTIPLAYER) &&
-        (Net_player->state != NETPLAYER_STATE_IN_MISSION)) {
-        WARNINGF (
-            LOCATION,
-            "HUD_sourced_printf bailing because not in multiplayer game play "
-            "state");
-        return;
-    }
 
     va_start (args, format);
     vsnprintf (tmp, sizeof (tmp) - 1, format, args);

@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "freespace2/freespace.h"
-#include "network/multi.h"
 #include "object/objcollide.h"
 #include "object/object.h"
 #include "ship/ship.h"
@@ -160,25 +159,23 @@ int collide_weapon_weapon (obj_pair* pair) {
             }
         }
 
-        // single player and multiplayer masters evaluate the scoring and
-        // kill stuff
-        if (!MULTIPLAYER_CLIENT) {
-            // If bomb was destroyed, do scoring
-            if (wipA->wi_flags[Weapon::Info_Flags::Bomb]) {
-                // Update stats. -Halleck
-                scoring_eval_hit (A, B, 0);
-                if (wpA->weapon_flags
-                    [Weapon::Weapon_Flags::Destroyed_by_weapon]) {
-                    scoring_eval_kill_on_weapon (A, B);
-                }
+        // If bomb was destroyed, do scoring
+        if (wipA->wi_flags[Weapon::Info_Flags::Bomb]) {
+            // Update stats. -Halleck
+            scoring_eval_hit (A, B, 0);
+                
+            if (wpA->weapon_flags
+                [Weapon::Weapon_Flags::Destroyed_by_weapon]) {
+                scoring_eval_kill_on_weapon (A, B);
             }
-            if (wipB->wi_flags[Weapon::Info_Flags::Bomb]) {
-                // Update stats. -Halleck
-                scoring_eval_hit (B, A, 0);
-                if (wpB->weapon_flags
-                    [Weapon::Weapon_Flags::Destroyed_by_weapon]) {
-                    scoring_eval_kill_on_weapon (B, A);
-                }
+        }
+        if (wipB->wi_flags[Weapon::Info_Flags::Bomb]) {
+            // Update stats. -Halleck
+            scoring_eval_hit (B, A, 0);
+                
+            if (wpB->weapon_flags
+                [Weapon::Weapon_Flags::Destroyed_by_weapon]) {
+                scoring_eval_kill_on_weapon (B, A);
             }
         }
 

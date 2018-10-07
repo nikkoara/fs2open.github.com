@@ -8,12 +8,6 @@
 #include "iff_defs/iff_defs.h"
 #include "localization/localize.h"
 #include "mission/missionparse.h"
-#include "network/multi.h"
-#include "network/multi_dogfight.h"
-#include "network/multi_pmsg.h"
-#include "network/multi_team.h"
-#include "network/multimsgs.h"
-#include "network/multiutil.h"
 #include "object/object.h"
 #include "parse/parselo.h"
 #include "pilotfile/pilotfile.h"
@@ -440,34 +434,13 @@ void scoring_level_close (int accepted) {
     }
 
     if (accepted) {
-        // apply mission stats for all players in the game
-        int idx;
-        scoring_struct* sc;
-
-        if (Game_mode & GM_MULTIPLAYER) {
-            // WARNINGF (LOCATION, "Storing stats for all players now");
-            for (idx = 0; idx < MAX_PLAYERS; idx++) {
-                if (MULTI_CONNECTED (Net_players[idx]) &&
-                    !MULTI_STANDALONE (Net_players[idx])) {
-                    // get the scoring struct
-                    sc = &Net_players[idx].m_player->stats;
-                    scoring_do_accept (sc);
-
-                    if (Net_player == &Net_players[idx]) {
-                        Pilot.update_stats (sc);
-                    }
-                }
-            }
-        }
-        else {
-            WARNINGF (LOCATION, "Storing stats now");
-            scoring_do_accept (&Player->stats);
-        }
+        WARNINGF (LOCATION, "Storing stats now");
+        scoring_do_accept (&Player->stats);
 
         // If this mission doesn't allow promotion or badges
         // then be sure that these don't get done.  Don't allow promotions or
         // badges when playing normally and not in a campaign.
-        if ((The_mission.flags[Mission::Mission_Flags::No_promotion]) ||
+        if (The_mission.flags[Mission::Mission_Flags::No_promotion] ||
             ((Game_mode & GM_NORMAL) && !(Game_mode & GM_CAMPAIGN_MODE))) {
             if (Player->stats.m_promotion_earned != -1) {
                 Player->stats.rank--;
@@ -485,9 +458,7 @@ void scoring_level_close (int accepted) {
             }
         }
 
-        if (!(Game_mode & GM_MULTIPLAYER)) {
-            Pilot.update_stats (&Player->stats);
-        }
+        Pilot.update_stats (&Player->stats);
     }
 }
 
@@ -497,9 +468,6 @@ void scoring_add_damage (object* ship_objp, object* other_obj, float damage) {
     int lowest_index, idx;
     object* use_obj;
     ship* sp;
-
-    // multiplayer clients bail here
-    if (MULTIPLAYER_CLIENT) { return; }
 
     // if we have no other object, bail
     if (other_obj == NULL) { return; }
@@ -596,24 +564,19 @@ int scoring_eval_kill (object* ship_objp) {
                           // array corresponding the greatest amount of damage
     int killer_sig; // signature of the guy getting credit for the kill (or -1
                     // if none)
-    int idx, net_player_num;
-    player*
-        plr; // pointer to a player struct if it was a player who got the kill
-    net_player* net_plr = NULL;
-    ship* dead_ship; // the ship which was killed
-    net_player* dead_plr = NULL;
-    float scoring_scale_by_damage =
-        1; // percentage to scale the killer's score by if we score based on
-           // the amount of damage caused
-    int kill_score, assist_score;
-    bool is_enemy_player =
-        false; // true if the player just killed an enemy player ship
+    int idx;
+    player* plr = 0; // pointer to a player struct if it was a player who got the kill
+    ship* dead_ship = 0; // the ship which was killed
 
-    // multiplayer clients bail here
-    if (MULTIPLAYER_CLIENT) { return -1; }
+     // percentage to scale the killer's score by if we score based on the
+     // amount of damage caused 
+    float scoring_scale_by_damage = 1;
+    
+    int kill_score;
 
     // we don't evaluate kills on anything except ships
     if (ship_objp->type != OBJ_SHIP) { return -1; }
+    
     if ((ship_objp->instance < 0) || (ship_objp->instance >= MAX_SHIPS)) {
         return -1;
     }
@@ -621,24 +584,7 @@ int scoring_eval_kill (object* ship_objp) {
     // assign the dead ship
     dead_ship = &Ships[ship_objp->instance];
 
-    // evaluate player deaths
-    if (Game_mode & GM_MULTIPLAYER) {
-        net_player_num = multi_find_player_by_object (ship_objp);
-        if (net_player_num != -1) {
-            Net_players[net_player_num].m_player->stats.m_player_deaths++;
-            WARNINGF (
-                LOCATION, "Setting player %s deaths to %d\n",
-                Net_players[net_player_num].m_player->callsign,
-                Net_players[net_player_num].m_player->stats.m_player_deaths);
-            dead_plr = &Net_players[net_player_num];
-            is_enemy_player = true;
-        }
-    }
-    else {
-        if (ship_objp == Player_obj) { Player->stats.m_player_deaths++; }
-    }
-
-    net_player_num = -1;
+    if (ship_objp == Player_obj) { Player->stats.m_player_deaths++; }
 
     // clear out invalid damager ships
     for (idx = 0; idx < MAX_DAMAGE_SLOTS; idx++) {
@@ -677,8 +623,8 @@ int scoring_eval_kill (object* ship_objp) {
 
     // only evaluate if the max damage % is high enough to record a kill and it
     // was done by a valid object
-    if ((max_damage_pct >= Kill_percentage) &&
-        (dead_ship->damage_ship_id[max_damage_index] >= 0)) {
+    if (max_damage_pct >= Kill_percentage &&
+        dead_ship->damage_ship_id[max_damage_index] >= 0) {
         // set killer_sig for this ship to the signature of the guy who gets
         // credit for the kill
         killer_sig = dead_ship->damage_ship_id[max_damage_index];
@@ -691,26 +637,13 @@ int scoring_eval_kill (object* ship_objp) {
 
         // null this out for now
         plr = NULL;
-        net_plr = NULL;
 
-        // get the player (whether single or multiplayer)
-        net_player_num = -1;
-
-        if (Game_mode & GM_MULTIPLAYER) {
-            net_player_num = multi_find_player_by_signature (killer_sig);
-            if (net_player_num != -1) {
-                plr = Net_players[net_player_num].m_player;
-                net_plr = &Net_players[net_player_num];
-            }
-        }
-        else {
-            if (Objects[Player->objnum].signature == killer_sig) {
-                plr = Player;
-            }
+        if (Objects[Player->objnum].signature == killer_sig) {
+            plr = Player;
         }
 
         // if we found a valid player, evaluate some kill details
-        if (plr != NULL) {
+        if (plr) {
             int si_index;
 
             // bogus
@@ -721,6 +654,7 @@ int scoring_eval_kill (object* ship_objp) {
             // get the ship info index of the ship type of this kill.  we need
             // to take ship copies into account here.
             si_index = dead_ship->ship_info_index;
+
             if (Ship_info[si_index].flags[Ship::Info_Flags::Ship_copy]) {
                 char temp[NAME_LENGTH];
                 strcpy_s (temp, Ship_info[si_index].name);
@@ -732,142 +666,32 @@ int scoring_eval_kill (object* ship_objp) {
             }
 
             // if he killed a guy on his own team increment his bonehead kills
-            if ((Ships[Objects[plr->objnum].instance].team ==
-                 dead_ship->team) &&
-                !MULTI_DOGFIGHT) {
+            if (Ships[Objects[plr->objnum].instance].team == dead_ship->team) {
                 if (!(The_mission.flags[Mission::Mission_Flags::No_traitor])) {
                     plr->stats.m_bonehead_kills++;
-                    kill_score =
-                        -(int)(dead_ship->score * scoring_get_scale_factor ());
-                    plr->stats.m_score += kill_score;
 
-                    if (net_plr != NULL) {
-                        multi_team_maybe_add_score (
-                            -(dead_ship->score), net_plr->p_info.team);
-                    }
+                    kill_score = -(int)(
+                        dead_ship->score * scoring_get_scale_factor ());
+                    
+                    plr->stats.m_score += kill_score;
                 }
             }
             // otherwise increment his valid kill count and score
             else {
-                // dogfight mode
-                if (MULTI_DOGFIGHT &&
-                    (multi_find_player_by_object (ship_objp) < 0)) {
-                    // don't add a kill for dogfight kills on non-players
-                }
-                else {
-                    plr->stats.m_okKills[si_index]++;
-                    plr->stats.m_kill_count_ok++;
+                plr->stats.m_okKills[si_index]++;
+                plr->stats.m_kill_count_ok++;
 
-                    // only computer controlled enemies should scale with
-                    // difficulty
-                    if (is_enemy_player) {
-                        kill_score =
-                            (int)(dead_ship->score * scoring_scale_by_damage);
-                    }
-                    else {
-                        kill_score =
-                            (int)(dead_ship->score * scoring_get_scale_factor () * scoring_scale_by_damage);
-                    }
+                kill_score = (int)(
+                    dead_ship->score * scoring_get_scale_factor () *
+                    scoring_scale_by_damage);
 
-                    plr->stats.m_score += kill_score;
-                    hud_gauge_popup_start (HUD_KILLS_GAUGE);
-
-#ifdef SCORING_DEBUG
-                    char kill_score_text[1024] = "";
-                    sprintf (
-                        kill_score_text,
-                        "SCORING : %s killed a ship worth %d points and gets "
-                        "%d pts for the kill\n",
-                        plr->callsign, dead_ship->score, kill_score);
-                    if (MULTIPLAYER_MASTER) {
-                        send_game_chat_packet (
-                            Net_player, kill_score_text, MULTI_MSG_ALL);
-                    }
-                    HUD_printf (kill_score_text);
-                    WARNINGF (LOCATION, kill_score_text);
-#endif
-
-                    // multiplayer
-                    if (net_plr != NULL) {
-                        multi_team_maybe_add_score (
-                            dead_ship->score, net_plr->p_info.team);
-
-                        // award teammates % of score value for big ship kills
-                        // not in dogfight tho
-                        // and not if there is no assist threshold (as
-                        // otherwise assists could get higher scores than
-                        // kills)
-                        if (!(Netgame.type_flags & NG_TYPE_DOGFIGHT) &&
-                            (Ship_info[dead_ship->ship_info_index]
-                                 .is_big_or_huge ())) {
-                            for (idx = 0; idx < MAX_PLAYERS; idx++) {
-                                if (MULTI_CONNECTED (Net_players[idx]) &&
-                                    (Net_players[idx].p_info.team ==
-                                     net_plr->p_info.team) &&
-                                    (&Net_players[idx] != net_plr)) {
-                                    assist_score = (int)(dead_ship->score * The_mission.ai_profile->assist_award_percentage_scale[Game_skill_level]);
-                                    Net_players[idx].m_player->stats.m_score +=
-                                        assist_score;
-
-#ifdef SCORING_DEBUG
-                                    // DEBUG CODE TO TEST NEW SCORING
-                                    char score_text[1024] = "";
-                                    sprintf (
-                                        score_text,
-                                        "SCORING : All team mates get %d pts "
-                                        "for helping kill the capship\n",
-                                        assist_score);
-                                    send_game_chat_packet (
-                                        Net_player, score_text, MULTI_MSG_ALL);
-                                    HUD_printf (score_text);
-                                    WARNINGF (LOCATION, score_text);
-#endif
-                                }
-                            }
-                        }
-
-                        // death message
-                        if ((Net_player != NULL) &&
-                            (Net_player->flags & NETINFO_FLAG_AM_MASTER) &&
-                            (net_plr != NULL) && (dead_plr != NULL) &&
-                            (net_plr->m_player != NULL) &&
-                            (dead_plr->m_player != NULL)) {
-                            char dead_text[1024] = "";
-
-                            sprintf (
-                                dead_text, "%s gets the kill for %s",
-                                net_plr->m_player->callsign,
-                                dead_plr->m_player->callsign);
-                            send_game_chat_packet (
-                                Net_player, dead_text, MULTI_MSG_ALL, NULL,
-                                NULL, 2);
-                            HUD_printf ("%s", dead_text);
-                        }
-                    }
-                }
+                plr->stats.m_score += kill_score;
+                hud_gauge_popup_start (HUD_KILLS_GAUGE);
             }
 
             // increment his all-encompassing kills
             plr->stats.m_kills[si_index]++;
             plr->stats.m_kill_count++;
-
-            // update everyone on this guy's kills if this is multiplayer
-            if (MULTIPLAYER_MASTER && (net_player_num != -1)) {
-                // send appropriate stats
-                if (Netgame.type_flags & NG_TYPE_DOGFIGHT) {
-                    // evaluate dogfight kills
-                    multi_df_eval_kill (
-                        &Net_players[net_player_num], ship_objp);
-
-                    // update stats
-                    send_player_stats_block_packet (
-                        &Net_players[net_player_num], STATS_DOGFIGHT_KILLS);
-                }
-                else {
-                    send_player_stats_block_packet (
-                        &Net_players[net_player_num], STATS_MISSION_KILLS);
-                }
-            }
         }
     }
     else {
@@ -878,38 +702,7 @@ int scoring_eval_kill (object* ship_objp) {
 
     // pass in the guy who got the credit for the kill (if any), so that he
     // doesn't also get credit for an assist
-    scoring_eval_assists (dead_ship, killer_sig, is_enemy_player);
-
-#ifdef SCORING_DEBUG
-
-    if (Game_mode & GM_MULTIPLAYER) {
-        char buf[256];
-        sprintf (
-            Scoring_debug_text, "SCORING : %s killed.\nDamage by ship:\n\n",
-            Ship_info[dead_ship->ship_info_index].name);
-
-        // show damage done by player
-        for (int i = 0; i < MAX_DAMAGE_SLOTS; i++) {
-            int net_player_num =
-                multi_find_player_by_signature (dead_ship->damage_ship_id[i]);
-            if (net_player_num != -1) {
-                plr = Net_players[net_player_num].m_player;
-                sprintf (
-                    buf, "%s: %f", plr->callsign, dead_ship->damage_ship[i]);
-
-                if (dead_ship->damage_ship_id[i] == killer_sig) {
-                    strcat_s (buf, "  KILLER\n");
-                }
-                else {
-                    strcat_s (buf, "\n");
-                }
-
-                strcat_s (Scoring_debug_text, buf);
-            }
-        }
-        WARNINGF (LOCATION, Scoring_debug_text);
-    }
-#endif
+    scoring_eval_assists (dead_ship, killer_sig);
 
     return max_damage_index;
 }
@@ -919,14 +712,11 @@ int scoring_eval_kill (object* ship_objp) {
 int scoring_eval_kill_on_weapon (object* weapon_obj, object* other_obj) {
     int killer_sig; // signature of the guy getting credit for the kill (or -1
                     // if none)
-    int net_player_num;
-    player*
-        plr; // pointer to a player struct if it was a player who got the kill
-    net_player* net_plr = NULL;
-    int kill_score;
 
-    // multiplayer clients bail here
-    if (MULTIPLAYER_CLIENT) { return -1; }
+    // pointer to a player struct if it was a player who got the kill
+    player* plr = 0;
+
+    int kill_score;
 
     // we don't evaluate kills on anything except weapons
     // also make sure there was a killer, and that it was a ship
@@ -940,6 +730,7 @@ int scoring_eval_kill_on_weapon (object* weapon_obj, object* other_obj) {
 
     weapon* dead_wp =
         &Weapons[weapon_obj->instance]; // the weapon that was killed
+    
     weapon_info* dead_wip =
         &Weapon_info[dead_wp->weapon_info_index]; // info on the weapon that
                                                   // was killed
@@ -955,22 +746,9 @@ int scoring_eval_kill_on_weapon (object* weapon_obj, object* other_obj) {
     if (killer_sig >= 0) {
         // null this out for now
         plr = NULL;
-        net_plr = NULL;
 
-        // get the player (whether single or multiplayer)
-        net_player_num = -1;
-
-        if (Game_mode & GM_MULTIPLAYER) {
-            net_player_num = multi_find_player_by_signature (killer_sig);
-            if (net_player_num != -1) {
-                plr = Net_players[net_player_num].m_player;
-                net_plr = &Net_players[net_player_num];
-            }
-        }
-        else {
-            if (Objects[Player->objnum].signature == killer_sig) {
-                plr = Player;
-            }
+        if (Objects[Player->objnum].signature == killer_sig) {
+            plr = Player;
         }
 
         // if we found a valid player, evaluate some kill details
@@ -981,78 +759,27 @@ int scoring_eval_kill_on_weapon (object* weapon_obj, object* other_obj) {
             }
 
             // if he killed a bomb on his own team increment his bonehead kills
-            if ((Ships[Objects[plr->objnum].instance].team == dead_wp->team) &&
-                !MULTI_DOGFIGHT) {
+            if (Ships[Objects[plr->objnum].instance].team == dead_wp->team) {
                 if (!(The_mission.flags[Mission::Mission_Flags::No_traitor])) {
                     plr->stats.m_bonehead_kills++;
-                    kill_score =
-                        -(int)(dead_wip->score * scoring_get_scale_factor ());
-                    plr->stats.m_score += kill_score;
 
-                    if (net_plr != NULL) {
-                        multi_team_maybe_add_score (
-                            -(dead_wip->score), net_plr->p_info.team);
-                    }
+                    kill_score = -(int)(
+                        dead_wip->score * scoring_get_scale_factor ());
+                    
+                    plr->stats.m_score += kill_score;
                 }
             }
             // otherwise increment his valid kill count and score
             else {
-                // dogfight mode
-                if (MULTI_DOGFIGHT &&
-                    (multi_find_player_by_object (weapon_obj) < 0)) {
-                    // don't add a kill for dogfight kills on non-players
-                }
-                else {
-                    // bombs don't scale with difficulty at the moment. If we
-                    // change this we want to *scoring_get_scale_factor()
-                    kill_score = dead_wip->score;
+                // bombs don't scale with difficulty at the moment. If we
+                // change this we want to *scoring_get_scale_factor()
+                kill_score = dead_wip->score;
 
-                    plr->stats.m_score += kill_score;
-                    hud_gauge_popup_start (HUD_KILLS_GAUGE);
-
-#ifdef SCORING_DEBUG
-                    char kill_score_text[1024] = "";
-                    sprintf (
-                        kill_score_text,
-                        "SCORING : %s killed a bomb worth %i points and gets "
-                        "%i pts for the kill",
-                        plr->callsign, dead_wip->score, kill_score);
-                    if (MULTIPLAYER_MASTER) {
-                        send_game_chat_packet (
-                            Net_player, kill_score_text, MULTI_MSG_ALL);
-                    }
-                    HUD_printf (kill_score_text);
-                    WARNINGF (LOCATION, kill_score_text);
-#endif
-
-                    // multiplayer
-                    if (net_plr != NULL) {
-                        multi_team_maybe_add_score (
-                            dead_wip->score, net_plr->p_info.team);
-                    }
-                }
+                plr->stats.m_score += kill_score;
+                hud_gauge_popup_start (HUD_KILLS_GAUGE);
             }
         }
     }
-
-#ifdef SCORING_DEBUG
-
-    if (Game_mode & GM_MULTIPLAYER) {
-        sprintf (
-            Scoring_debug_text, "SCORING : %s killed.\nKilled by player:\n",
-            dead_wip->name);
-
-        int net_player_num = multi_find_player_by_signature (killer_sig);
-        if (net_player_num != -1) {
-            plr = Net_players[net_player_num].m_player;
-            char buf[256];
-            sprintf (buf, "    %s\n", plr->callsign);
-
-            strcat_s (Scoring_debug_text, buf);
-        }
-        WARNINGF (LOCATION, Scoring_debug_text);
-    }
-#endif
 
     return killer_sig;
 }
@@ -1060,18 +787,16 @@ int scoring_eval_kill_on_weapon (object* weapon_obj, object* other_obj) {
 // kill_id is the object signature of the guy who got the credit for the kill
 // (may be -1, if no one got it) this is to ensure that you don't also get an
 // assist if you get the kill.
-void scoring_eval_assists (ship* sp, int killer_sig, bool is_enemy_player) {
+void scoring_eval_assists (ship* sp, int killer_sig) {
     int idx;
     player* plr;
-    float scoring_scale_by_damage =
-        1; // percentage to scale the score by if we score based on the amount
-           // of damage caused
-    int assist_score;
-    int net_player_num;
-    float scoring_scale_factor;
 
-    // multiplayer clients bail here
-    if (MULTIPLAYER_CLIENT) { return; }
+    // percentage to scale the score by if we score based on the amount
+    // of damage caused
+    float scoring_scale_by_damage = 1;
+    
+    int assist_score;
+    float scoring_scale_factor;
 
     // evaluate each damage slot to see if it did enough to give the assis
     for (idx = 0; idx < MAX_DAMAGE_SLOTS; idx++) {
@@ -1083,20 +808,9 @@ void scoring_eval_assists (ship* sp, int killer_sig, bool is_enemy_player) {
             // get the player which did this damage (if any)
             plr = NULL;
 
-            // multiplayer
-            if (Game_mode & GM_MULTIPLAYER) {
-                net_player_num =
-                    multi_find_player_by_signature (sp->damage_ship_id[idx]);
-                if (net_player_num != -1) {
-                    plr = Net_players[net_player_num].m_player;
-                }
-            }
-            // single player
-            else {
-                if (Objects[Player->objnum].signature ==
-                    sp->damage_ship_id[idx]) {
-                    plr = Player;
-                }
+            if (Objects[Player->objnum].signature ==
+                sp->damage_ship_id[idx]) {
+                plr = Player;
             }
 
             // if we found a player, give him the assist if he attacks it
@@ -1115,14 +829,7 @@ void scoring_eval_assists (ship* sp, int killer_sig, bool is_enemy_player) {
                         plr->callsign);
                 }
 
-                // Don't scale in TvT and dogfight
-                if (is_enemy_player) {
-                    ASSERT (Game_mode & GM_MULTIPLAYER);
-                    scoring_scale_factor = 1.0f;
-                }
-                else {
-                    scoring_scale_factor = scoring_get_scale_factor ();
-                }
+                scoring_scale_factor = scoring_get_scale_factor ();
 
                 // maybe award assist points based on damage
                 if (The_mission.ai_profile
@@ -1130,8 +837,10 @@ void scoring_eval_assists (ship* sp, int killer_sig, bool is_enemy_player) {
                                     Assist_scoring_scales_with_damage]) {
                     scoring_scale_by_damage =
                         (sp->damage_ship[idx] / sp->total_damage_received);
+
                     assist_score =
                         (int)(sp->score * scoring_scale_factor * scoring_scale_by_damage);
+                    
                     plr->stats.m_score += assist_score;
                 }
                 // otherwise give the points based on the percentage in the
@@ -1141,22 +850,6 @@ void scoring_eval_assists (ship* sp, int killer_sig, bool is_enemy_player) {
                         (int)(sp->score * sp->assist_score_pct * scoring_scale_factor);
                     plr->stats.m_score += assist_score;
                 }
-
-#ifdef SCORING_DEBUG
-
-                // DEBUG CODE TO TEST NEW SCORING
-                char score_text[1024] = "";
-                sprintf (
-                    score_text,
-                    "SCORING : %s gets %d pts for getting an assist\n",
-                    plr->callsign, assist_score);
-                if (MULTIPLAYER_MASTER) {
-                    send_game_chat_packet (
-                        Net_player, score_text, MULTI_MSG_ALL);
-                }
-                HUD_printf (score_text);
-                WARNINGF (LOCATION, score_text);
-#endif
             }
         }
     }
@@ -1164,9 +857,6 @@ void scoring_eval_assists (ship* sp, int killer_sig, bool is_enemy_player) {
 
 // eval a hit on an object (for primary and secondary hit purposes)
 void scoring_eval_hit (object* hit_obj, object* other_obj, int from_blast) {
-    // multiplayer clients bail here
-    if (MULTIPLAYER_CLIENT) { return; }
-
     // only evaluate hits on ships, asteroids, and weapons! -Halleck
     if ((hit_obj->type != OBJ_SHIP) && (hit_obj->type != OBJ_ASTEROID) &&
         (hit_obj->type != OBJ_WEAPON)) {
@@ -1242,97 +932,36 @@ void scoring_eval_hit (object* hit_obj, object* other_obj, int from_blast) {
         // this weapon Weapons[other_obj->instance].weapon_flags |=
         // WF_ALREADY_APPLIED_STATS;
 
-        // in multiplayer -- only the server records the stats
-        if (Game_mode & GM_MULTIPLAYER) {
-            if (Net_player->flags & NETINFO_FLAG_AM_MASTER) {
-                int player_num;
-
-                // get the player num of the parent object.  A player_num of -1
-                // means that the parent of this object was not a player
-                player_num =
-                    multi_find_player_by_object (&Objects[other_obj->parent]);
-                if (player_num != -1) {
-                    switch (sub_type) {
-                    case WP_LASER:
-                        if (is_bonehead) {
-                            Net_players[player_num]
-                                .m_player->stats.mp_bonehead_hits++;
-                        }
-                        else {
-                            Net_players[player_num]
-                                .m_player->stats.mp_shots_hit++;
-                        }
-
-                        // Assert(
-                        // Net_players[player_num].player->stats.mp_shots_hit
-                        // <=
-                        // Net_players[player_num].player->stats.mp_shots_fired
-                        // );
-                        break;
-                    case WP_MISSILE:
-                        // friendly hit, once it hits a friendly, its done
-                        if (is_bonehead) {
-                            if (!from_blast) {
-                                Net_players[player_num]
-                                    .m_player->stats.ms_bonehead_hits++;
-                            }
-                        }
-                        // hostile hit
-                        else {
-                            // if its a bomb, count every bit of damage it does
-                            if (Weapon_info[Weapons[other_obj->instance]
-                                                .weapon_info_index]
-                                    .wi_flags[Weapon::Info_Flags::Bomb]) {
-                                // once we get impact damage, stop keeping
-                                // track of it
-                                Net_players[player_num]
-                                    .m_player->stats.ms_shots_hit++;
-                            }
-                            // if its not a bomb, only count impact damage
-                            else {
-                                if (!from_blast) {
-                                    Net_players[player_num]
-                                        .m_player->stats.ms_shots_hit++;
-                                }
-                            }
-                        }
-                    default: break;
+        if (Player_obj == &(Objects[other_obj->parent])) {
+            switch (sub_type) {
+            case WP_LASER:
+                if (is_bonehead) { Player->stats.mp_bonehead_hits++; }
+                else {
+                    Player->stats.mp_shots_hit++;
+                }
+                break;
+            case WP_MISSILE:
+                // friendly hit, once it hits a friendly, its done
+                if (is_bonehead) {
+                    if (!from_blast) { Player->stats.ms_bonehead_hits++; }
+                }
+                // hostile hit
+                else {
+                    // if its a bomb, count every bit of damage it does
+                    if (Weapon_info[Weapons[other_obj->instance]
+                                    .weapon_info_index]
+                        .wi_flags[Weapon::Info_Flags::Bomb]) {
+                        // once we get impact damage, stop keeping track of
+                        // it
+                        Player->stats.ms_shots_hit++;
+                    }
+                    // if its not a bomb, only count impact damage
+                    else {
+                        if (!from_blast) { Player->stats.ms_shots_hit++; }
                     }
                 }
-            }
-        }
-        else {
-            if (Player_obj == &(Objects[other_obj->parent])) {
-                switch (sub_type) {
-                case WP_LASER:
-                    if (is_bonehead) { Player->stats.mp_bonehead_hits++; }
-                    else {
-                        Player->stats.mp_shots_hit++;
-                    }
-                    break;
-                case WP_MISSILE:
-                    // friendly hit, once it hits a friendly, its done
-                    if (is_bonehead) {
-                        if (!from_blast) { Player->stats.ms_bonehead_hits++; }
-                    }
-                    // hostile hit
-                    else {
-                        // if its a bomb, count every bit of damage it does
-                        if (Weapon_info[Weapons[other_obj->instance]
-                                            .weapon_info_index]
-                                .wi_flags[Weapon::Info_Flags::Bomb]) {
-                            // once we get impact damage, stop keeping track of
-                            // it
-                            Player->stats.ms_shots_hit++;
-                        }
-                        // if its not a bomb, only count impact damage
-                        else {
-                            if (!from_blast) { Player->stats.ms_shots_hit++; }
-                        }
-                    }
-                    break;
-                default: break;
-                }
+                break;
+            default: break;
             }
         }
     }
@@ -1340,11 +969,9 @@ void scoring_eval_hit (object* hit_obj, object* other_obj, int from_blast) {
 
 // get a scaling factor for adding/subtracting from mission score
 float scoring_get_scale_factor () {
-    // multiplayer dogfight. don't scale anything
-    if (MULTI_DOGFIGHT) { return 1.0f; }
-
     // check for bogus Skill_level values
     ASSERT ((Game_skill_level >= 0) && (Game_skill_level < NUM_SKILL_LEVELS));
+    
     if ((Game_skill_level < 0) || (Game_skill_level > NUM_SKILL_LEVELS - 1)) {
         return Scoring_scale_factors[0];
     }

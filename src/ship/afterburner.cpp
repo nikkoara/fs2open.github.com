@@ -5,7 +5,6 @@
 #include "hud/hudets.h"
 #include "io/joy_ff.h"
 #include "io/timer.h"
-#include "network/multi.h"
 #include "object/object.h"
 #include "render/3d.h" // needed for View_position, which is used when playing a 3D sound
 #include "ship/afterburner.h"
@@ -103,8 +102,7 @@ void afterburners_start (object* objp) {
     if (!(sip->flags[Ship::Info_Flags::Afterburner])) { return; }
 
     // Check if there is enough afterburner fuel
-    if ((shipp->afterburner_fuel < MIN_AFTERBURNER_FUEL_TO_ENGAGE) &&
-        !MULTIPLAYER_CLIENT) {
+    if (shipp->afterburner_fuel < MIN_AFTERBURNER_FUEL_TO_ENGAGE) {
         if (objp == Player_obj) {
             snd_play (gamesnd_get_game_sound (
                 ship_get_sound (objp, GameSounds::ABURN_FAIL)));
@@ -210,42 +208,39 @@ void afterburners_update (object* objp, float fl_frametime) {
     }
 
     // single player, multiplayer servers, and clients for their own ships
-    if (!(Game_mode & GM_MULTIPLAYER) || MULTIPLAYER_MASTER ||
-        (objp == Player_obj)) {
-        if (!(objp->phys_info.flags & PF_AFTERBURNER_ON)) {
-            // Recover afterburner fuel
+    if (!(objp->phys_info.flags & PF_AFTERBURNER_ON)) {
+        // Recover afterburner fuel
 
-            if (shipp->afterburner_fuel < sip->afterburner_fuel_capacity) {
-                float recharge_scale;
-                recharge_scale =
-                    Energy_levels[shipp->engine_recharge_index] * 2.0f *
-                    The_mission.ai_profile
-                        ->afterburner_recharge_scale[Game_skill_level];
-                shipp->afterburner_fuel +=
-                    (sip->afterburner_recover_rate * fl_frametime *
-                     recharge_scale);
+        if (shipp->afterburner_fuel < sip->afterburner_fuel_capacity) {
+            float recharge_scale;
+            recharge_scale =
+                Energy_levels[shipp->engine_recharge_index] * 2.0f *
+                The_mission.ai_profile
+                ->afterburner_recharge_scale[Game_skill_level];
+            shipp->afterburner_fuel +=
+                (sip->afterburner_recover_rate * fl_frametime *
+                 recharge_scale);
 
-                if (shipp->afterburner_fuel > sip->afterburner_fuel_capacity) {
-                    shipp->afterburner_fuel = sip->afterburner_fuel_capacity;
-                }
+            if (shipp->afterburner_fuel > sip->afterburner_fuel_capacity) {
+                shipp->afterburner_fuel = sip->afterburner_fuel_capacity;
             }
+        }
+        return;
+    }
+    else {
+        // Check if there is enough afterburner fuel
+        if (shipp->afterburner_fuel <= 0) {
+            shipp->afterburner_fuel = 0.0f;
+            afterburners_stop (objp);
             return;
         }
-        else {
-            // Check if there is enough afterburner fuel
-            if (shipp->afterburner_fuel <= 0) {
-                shipp->afterburner_fuel = 0.0f;
-                afterburners_stop (objp);
-                return;
-            }
-        }
-
-        // afterburners are firing at this point
-
-        // Reduce the afterburner fuel
-        shipp->afterburner_fuel -= (sip->afterburner_burn_rate * fl_frametime);
-        if (shipp->afterburner_fuel < 0.0f) { shipp->afterburner_fuel = 0.0f; }
     }
+
+    // afterburners are firing at this point
+
+    // Reduce the afterburner fuel
+    shipp->afterburner_fuel -= (sip->afterburner_burn_rate * fl_frametime);
+    if (shipp->afterburner_fuel < 0.0f) { shipp->afterburner_fuel = 0.0f; }
 
     if (objp == Player_obj) {
         if (timestamp_elapsed (Player_afterburner_loop_delay)) {

@@ -2,7 +2,6 @@
 
 #include "globalincs/systemvars.h"
 #include "hud/hud.h"
-#include "network/multi.h"
 #include "playerman/player.h"
 #include "stats/stats.h"
 
@@ -13,10 +12,7 @@
 player* Active_player;
 
 void show_stats_init () {
-    if (Game_mode & GM_MULTIPLAYER) { set_player_stats (MY_NET_PLAYER_NUM); }
-    else {
-        Active_player = Player;
-    }
+    Active_player = Player;
 }
 
 // write out the label for each stat
@@ -52,13 +48,6 @@ void show_stats_label (int stage, int sx, int sy, int dy) {
         gr_printf_menu (sx, sy, "%s", XSTR ("Assists", 126));
         sy += 2 * dy;
 
-        if (Game_mode & GM_MULTIPLAYER) {
-            gr_printf_menu (sx, sy, "%s", XSTR ("Player Deaths", 127));
-            sy += 2 * dy;
-
-            gr_printf_menu (sx, sy, "%s", XSTR ("Mission score", 1526));
-        }
-
         break;
 
     case ALL_TIME_STATS:
@@ -91,9 +80,6 @@ void show_stats_label (int stage, int sx, int sy, int dy) {
         gr_printf_menu (sx, sy, "%s", XSTR ("Assists", 126));
         sy += 2 * dy;
 
-        if (Game_mode & GM_MULTIPLAYER) {
-            gr_printf_menu (sx, sy, "%s", XSTR ("Score", 1527));
-        }
         break;
     } // end switch
 }
@@ -181,15 +167,6 @@ void show_stats_numbers (int stage, int sx, int sy, int dy, int add_mission) {
         sprintf (text, "%d", (int)Active_player->stats.m_assists);
         gr_printf_menu (sx, sy, "%s", text);
         sy += 2 * dy;
-
-        if (Game_mode & GM_MULTIPLAYER) {
-            sprintf (text, "%d", (int)Active_player->stats.m_player_deaths);
-            gr_printf_menu (sx, sy, "%s", text);
-            sy += 2 * dy;
-
-            // mission score
-            gr_printf_menu (sx, sy, "%d", (int)Active_player->stats.m_score);
-        }
 
         break;
 
@@ -297,39 +274,6 @@ void show_stats_numbers (int stage, int sx, int sy, int dy, int add_mission) {
         gr_printf_menu (sx, sy, "%s", text);
         sy += 2 * dy;
 
-        if (Game_mode & GM_MULTIPLAYER) {
-            gr_printf_menu (sx, sy, "%d", (int)Active_player->stats.score);
-        }
         break;
     } // end switch
 }
-
-int find_netplayer_n (int n) {
-    int idx;
-    int target;
-    target = n;
-    n = 0;
-    for (idx = 0; idx < MAX_PLAYERS; idx++) {
-        if (MULTI_CONNECTED (Net_players[idx])) {
-            n++;
-            if (n == target) return idx;
-        }
-    }
-    return -1;
-}
-
-void show_stats_close () {}
-
-// initialize the statistics portion of the player structure for multiplayer.
-// Only the host of a netgame needs to be doing this (and if fact, only he
-// *should* be doing this)
-void init_multiplayer_stats () {
-    scoring_struct* ptr;
-
-    for (int idx = 0; idx < MAX_PLAYERS; idx++) {
-        ptr = &Players[idx].stats;
-        scoring_level_init (ptr);
-    }
-}
-
-void set_player_stats (int pid) { Active_player = Net_players[pid].m_player; }

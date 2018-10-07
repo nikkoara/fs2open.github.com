@@ -531,28 +531,6 @@ public:
     void pageIn () override;
 };
 
-class HudGaugeMultiMsg : public HudGauge {
-protected:
-public:
-    HudGaugeMultiMsg ();
-    bool canRender () override;
-    void render (float frametime) override;
-};
-
-class HudGaugeVoiceStatus : public HudGauge {
-protected:
-public:
-    HudGaugeVoiceStatus ();
-    void render (float frametime) override;
-};
-
-class HudGaugePing : public HudGauge {
-protected:
-public:
-    HudGaugePing ();
-    void render (float frametime) override;
-};
-
 class HudGaugeSupernova : public HudGauge {
 public:
     HudGaugeSupernova ();

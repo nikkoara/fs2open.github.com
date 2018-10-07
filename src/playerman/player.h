@@ -7,7 +7,6 @@
 #include "hud/hudtarget.h" // for targeting hotkey lists
 #include "io/keycontrol.h" // for button_info
 #include "localization/localize.h"
-#include "network/multi_options.h"
 #include "parse/sexp.h"
 #include "physics/physics.h"
 #include "sound/sound.h"
@@ -246,12 +245,6 @@ public:
     int update_lock_time;     // when to update lock threat indicators
     int threat_flags;         // threat flags
     int auto_advance;         // auto-advance through briefing?
-
-    multi_local_options
-        m_local_options; // options for local player in multiplayer mode
-                         // (ignore for single player pilots)
-    multi_server_options m_server_options; // options for netgame host/server
-                                           // in multiplayer mode
 
     int insignia_texture; // player's insignia bitmap (or -1 if none). should
                           // correspond to squad filename NOTE : this bitmap is

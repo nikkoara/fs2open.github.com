@@ -1679,8 +1679,6 @@ extern std::vector< op_menu_struct > op_submenu;
 // Outputs sexp.html file
 bool output_sexps (const char* filepath);
 
-void multi_sexp_eval ();
-
 // Goober5000/Taylor
 extern int Num_sound_environment_options;
 extern const char* Sound_environment_option[];

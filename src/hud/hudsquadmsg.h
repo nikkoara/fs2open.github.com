@@ -4,7 +4,6 @@
 #define FREESPACE2_HUD_HUDSQUADMSG_H
 
 #include "hud/hud.h"
-#include "network/multi.h"
 
 #define SM_MODE_TYPE_SELECT 1        // am I going to message a ship or a wing
 #define SM_MODE_SHIP_SELECT 2        // choosing actual ship
@@ -160,26 +159,34 @@ extern int
 hud_squadmsg_read_key (int k); // called from high level keyboard code
 
 extern void hud_squadmsg_repair_rearm (int toggle_state, object* obj = NULL);
+
 extern void
 hud_squadmsg_repair_rearm_abort (int toggle_state, object* obj = NULL);
+
 extern void hud_squadmsg_rearm_shortcut ();
 
 #define SQUADMSG_HISTORY_NO_UPDATE 0
 #define SQUADMSG_HISTORY_UPDATE 1
 #define SQUADMSG_HISTORY_ADD_ENTRY 2
 
-extern int hud_squadmsg_send_ship_command (
+extern int
+hud_squadmsg_send_ship_command (
     int shipnum, int command, int send_message,
-    int update_history = SQUADMSG_HISTORY_ADD_ENTRY, int player_num = -1);
-extern int hud_squadmsg_send_wing_command (
-    int wingnum, int command, int send_message,
-    int update_history = SQUADMSG_HISTORY_ADD_ENTRY, int player_num = -1);
-extern void
-hud_squadmsg_send_to_all_fighters (int command, int player_num = -1);
-extern void
-hud_squadmsg_call_reinforcement (int reinforcement_num, int player_num = -1);
+    int update_history = SQUADMSG_HISTORY_ADD_ENTRY);
 
-extern int hud_squadmsg_reinforcements_available (int team);
+extern int
+hud_squadmsg_send_wing_command (
+    int wingnum, int command, int send_message,
+    int update_history = SQUADMSG_HISTORY_ADD_ENTRY);
+
+extern void
+hud_squadmsg_send_to_all_fighters (int command);
+
+extern void
+hud_squadmsg_call_reinforcement (int reinforcement_num);
+
+extern int
+hud_squadmsg_reinforcements_available (int team);
 
 void hud_enemymsg_toggle (); // debug function to allow messaging of enemies
 

@@ -833,9 +833,7 @@ int popup_do (popup_info* pi, int flags) {
         // otherwise just run the common functions (for networking,etc)
         else {
             game_set_frametime (-1);
-            game_do_state_common (
-                gameseq_get_state (),
-                flags & PF_NO_NETWORKING); // do stuff common to all states
+            game_do_state_common (gameseq_get_state ());
         }
 
         k = Popup_window.process (); // poll for input, handle mouse
@@ -890,8 +888,7 @@ int popup_do_with_condition (popup_info* pi, int flags, int (*condition) ()) {
         os_poll ();
 
         game_set_frametime (-1);
-        game_do_state_common (
-            gameseq_get_state ()); // do stuff common to all states
+        game_do_state_common (gameseq_get_state ());
         gr_restore_screen (screen_id);
 
         // draw one frame first

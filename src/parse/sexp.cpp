@@ -58,12 +58,6 @@
 #include "mod_table/mod_table.h"
 #include "nebula/neb.h"
 #include "nebula/neblightning.h"
-#include "network/multi.h"
-#include "network/multi_obj.h"
-#include "network/multi_sexp.h"
-#include "network/multi_team.h"
-#include "network/multimsgs.h"
-#include "network/multiutil.h"
 #include "object/objcollide.h"
 #include "object/objectdock.h"
 #include "object/objectshield.h"
@@ -4177,7 +4171,6 @@ int get_handler_for_x_of_operator (int node);
 // Karajorma
 int get_generic_subsys (char* subsy_name);
 bool ship_class_unchanged (int ship_index);
-void multi_sexp_modify_variable ();
 
 int get_effect_from_name (char* name);
 
@@ -4185,7 +4178,7 @@ int get_effect_from_name (char* name);
 #define NOT_A_SEXP_OPERATOR -1
 
 // Karajorma - some useful helper methods
-player* get_player_from_ship_node (int node, bool test_respawns = false);
+player* get_player_from_ship_node (int node);
 ship* sexp_get_ship_from_node (int node);
 
 // hud-display-gauge magic values
@@ -4340,7 +4333,6 @@ void init_sexp () {
     Sexp_replacement_arguments.clear ();
     Sexp_applicable_argument_list.expunge ();
     Sexp_current_argument_nesting_level = 0;
-    Current_sexp_network_packet.initialize ();
 
     sexp_nodes_init ();
     init_sexp_vars ();
@@ -7081,47 +7073,18 @@ void convert_sexp_to_string (std::string& dest, int cur_node, int mode) {
  * Takes a SEXP node which contains the name of a ship and returns the player
  * for that ship or NULL if it is an AI ship
  */
-player* get_player_from_ship_node (int node, bool test_respawns) {
-    int sindex, np_index = -1;
-    p_object* p_objp;
-
+player* get_player_from_ship_node (int node) {
     ASSERT (node != -1);
 
-    sindex = ship_name_lookup (CTEXT (node));
+    int sindex = ship_name_lookup (CTEXT (node));
 
-    // singleplayer
-    if (!(Game_mode & GM_MULTIPLAYER)) {
-        if (sindex >= 0) {
-            if (Player_obj == &Objects[Ships[sindex].objnum]) {
-                return Player;
-            }
+    if (sindex >= 0) {
+        if (Player_obj == &Objects[Ships[sindex].objnum]) {
+            return Player;
         }
-        return NULL;
     }
-    // multiplayer
-    else {
-        if (sindex >= 0) {
-            if (Ships[sindex].objnum >= 0) {
-                // try and find the player
-                np_index = multi_find_player_by_object (
-                    &Objects[Ships[sindex].objnum]);
-            }
-        }
-        if (test_respawns && np_index < 0) {
-            // Respawning ships don't have an objnum so we need to take a
-            // different approach
-            p_objp = mission_parse_get_arrival_ship (CTEXT (node));
-            if (p_objp != NULL) {
-                np_index = multi_find_player_by_parse_object (p_objp);
-            }
-        }
 
-        if ((np_index >= 0) && (np_index < MAX_PLAYERS)) {
-            return Net_players[np_index].m_player;
-        }
-
-        return NULL;
-    }
+    return NULL;
 }
 
 /**
@@ -7833,12 +7796,6 @@ void object_ship_wing_point_team::clear () {
     team = -1;
 }
 
-void sexp_object_ship_wing_point_team_set_ship (
-    object_ship_wing_point_team* oswpt, ship* shipp,
-    bool set_parse_flag_too = false);
-void sexp_object_ship_wing_point_team_set_ship (
-    object_ship_wing_point_team* oswpt, ship_obj* so,
-    bool set_parse_flag_too = false);
 void sexp_get_object_ship_wing_point_team (
     object_ship_wing_point_team* oswpt, char* object_name,
     bool set_parse_flag_too = false);
@@ -8892,13 +8849,6 @@ void sexp_set_energy_pct (int node, int op_num) {
     // deal with ridiculous percentages
     CLAMP (new_pct, 0.0f, 1.0f);
 
-    // only need to send a packet for afterburners because shields and weapon
-    // energy are sent from server to clients
-    if (MULTIPLAYER_MASTER && (op_num == OP_SET_AFTERBURNER_ENERGY)) {
-        Current_sexp_network_packet.start_callback ();
-        Current_sexp_network_packet.send_float (new_pct);
-    }
-
     node = CDR (node);
 
     while (node > -1) {
@@ -8940,44 +8890,7 @@ void sexp_set_energy_pct (int node, int op_num) {
             break;
         }
 
-        if (MULTIPLAYER_MASTER && (op_num == OP_SET_AFTERBURNER_ENERGY)) {
-            Current_sexp_network_packet.send_ship (shipp);
-        }
-
         node = CDR (node);
-    }
-
-    if (MULTIPLAYER_MASTER && (op_num == OP_SET_AFTERBURNER_ENERGY)) {
-        Current_sexp_network_packet.end_callback ();
-    }
-}
-
-void multi_sexp_set_energy_pct () {
-    ship* shipp;
-    float new_pct;
-    ship_info* sip;
-
-    int op_num = Current_sexp_network_packet.get_operator ();
-
-    Current_sexp_network_packet.get_float (new_pct);
-    while (Current_sexp_network_packet.get_ship (shipp)) {
-        sip = &Ship_info[shipp->ship_info_index];
-
-        switch (op_num) {
-        case OP_SET_AFTERBURNER_ENERGY:
-            shipp->afterburner_fuel = sip->afterburner_fuel_capacity * new_pct;
-            break;
-
-        case OP_SET_WEAPON_ENERGY:
-            shipp->weapon_energy = sip->max_weapon_reserve * new_pct;
-            break;
-
-        case OP_SET_SHIELD_ENERGY:
-            shield_set_strength (
-                &Objects[shipp->objnum],
-                (shield_get_max_strength (&Objects[shipp->objnum]) * new_pct));
-            break;
-        }
     }
 }
 
@@ -9124,9 +9037,6 @@ int sexp_is_ship_visible (int n) {
     int shipnum;
     int ship_is_visible = 0;
 
-    // if multiplayer, bail
-    if (Game_mode & GM_MULTIPLAYER) { return SEXP_NAN_FOREVER; }
-
     shipname = CTEXT (n);
 
     // if ship is gone or departed, cannot ever evaluate properly.  Return
@@ -9217,32 +9127,6 @@ int sexp_is_friendly_stealth_visible (int n) {
         return SEXP_FALSE;
     else
         return SEXP_TRUE;
-}
-
-// get multi team v team score
-// if not multi team v team return 0
-// if invalid team return 0
-int sexp_team_score (int node) {
-    // if multi t vs t
-    if (Game_mode & GM_MULTIPLAYER) {
-        if (Netgame.type_flags & NG_TYPE_TEAM) {
-            int team = eval_num (node);
-
-            // Teams can only be 1 or 2 at the moment but we should use
-            // Num_teams in case more become possible in the future
-            if (team <= 0 || team > Num_teams) {
-                // invalid team index
-                WARNINGF (
-                    LOCATION, "sexp-team-score: team %d is not a valid team #",
-                    team);
-                return 0;
-            }
-
-            return Multi_team_score[team - 1];
-        }
-    }
-
-    return 0;
 }
 
 /**
@@ -9811,32 +9695,9 @@ void sexp_set_object_speed (int n, int axis) {
     case OSWPT_TYPE_SHIP:
     case OSWPT_TYPE_WING: {
         sexp_set_object_speed (oswpt.objp, speed, axis, subjective);
-
-        // CommanderDJ - we put the multiplayer callback stuff in here to
-        // prevent doing unnecessary checks clientside
-        Current_sexp_network_packet.start_callback ();
-        Current_sexp_network_packet.send_object (oswpt.objp);
-        Current_sexp_network_packet.send_int (speed);
-        Current_sexp_network_packet.send_int (axis);
-        Current_sexp_network_packet.send_int (subjective);
-        Current_sexp_network_packet.end_callback ();
-
         break;
     }
     }
-}
-
-// CommanderDJ
-void multi_sexp_set_object_speed () {
-    object* objp;
-    int speed = 0, axis = 0, subjective = 0;
-
-    Current_sexp_network_packet.get_object (objp);
-    Current_sexp_network_packet.get_int (speed);
-    Current_sexp_network_packet.get_int (axis);
-    Current_sexp_network_packet.get_int (subjective);
-
-    sexp_set_object_speed (objp, speed, axis, subjective != 0);
 }
 
 int sexp_get_object_speed (object* objp, int axis, bool subjective) {
@@ -10005,16 +9866,6 @@ int sexp_get_object_angle (int n, int axis) {
     }
 }
 
-void set_object_for_clients (object* objp) {
-    if (!(Game_mode & GM_MULTIPLAYER)) { return; }
-
-    // Tell the player (if this is a client) that they've moved.
-    if ((objp->flags[Object::Object_Flags::Player_ship]) &&
-        (objp != Player_obj)) {
-        multi_oo_send_changed_object (objp);
-    }
-}
-
 void sexp_set_object_position (int n) {
     vec3d target_vec, orig_leader_vec;
     object_ship_wing_point_team oswpt;
@@ -10052,19 +9903,12 @@ void sexp_set_object_position (int n) {
     switch (oswpt.type) {
     case OSWPT_TYPE_SHIP: {
         oswpt.objp->pos = target_vec;
-        set_object_for_clients (oswpt.objp);
         return;
     }
 
     case OSWPT_TYPE_WAYPOINT: {
         oswpt.objp->pos = target_vec;
         oswpt.waypointp->set_pos (&target_vec);
-        Current_sexp_network_packet.start_callback ();
-        Current_sexp_network_packet.send_ushort (oswpt.objp->net_signature);
-        Current_sexp_network_packet.send_float (target_vec.xyz.x);
-        Current_sexp_network_packet.send_float (target_vec.xyz.y);
-        Current_sexp_network_packet.send_float (target_vec.xyz.z);
-        Current_sexp_network_packet.end_callback ();
         return;
     }
 
@@ -10072,7 +9916,6 @@ void sexp_set_object_position (int n) {
         // move the wing leader first
         orig_leader_vec = oswpt.objp->pos;
         oswpt.objp->pos = target_vec;
-        set_object_for_clients (oswpt.objp);
 
         // move everything in the wing
         for (int i = 0; i < oswpt.wingp->current_count; i++) {
@@ -10081,29 +9924,11 @@ void sexp_set_object_position (int n) {
             if (objp != oswpt.objp) {
                 vm_vec_sub2 (&objp->pos, &orig_leader_vec);
                 vm_vec_add2 (&objp->pos, &target_vec);
-                set_object_for_clients (objp);
             }
         }
 
         return;
     }
-    }
-}
-
-// only for waypoints cause they don't get transferred the normal way
-void multi_sexp_set_object_position () {
-    object* objp;
-    vec3d wp_vec;
-    ushort obj_sig;
-    Current_sexp_network_packet.get_ushort (obj_sig);
-    Current_sexp_network_packet.get_float (wp_vec.xyz.x);
-    Current_sexp_network_packet.get_float (wp_vec.xyz.y);
-    Current_sexp_network_packet.get_float (wp_vec.xyz.z);
-    objp = multi_get_network_object (obj_sig);
-    if (objp->type == OBJ_WAYPOINT) {
-        objp->pos = wp_vec;
-        waypoint* wpt = find_waypoint_with_objnum (OBJ_INDEX (objp));
-        wpt->set_pos (&wp_vec);
     }
 }
 
@@ -10138,7 +9963,6 @@ void sexp_set_object_orientation (int n) {
     switch (oswpt.type) {
     case OSWPT_TYPE_SHIP: {
         oswpt.objp->orient = target_orient;
-        set_object_for_clients (oswpt.objp);
         return;
     }
 
@@ -10147,7 +9971,6 @@ void sexp_set_object_orientation (int n) {
         for (int i = 0; i < oswpt.wingp->current_count; i++) {
             object* objp = &Objects[Ships[oswpt.wingp->ship_index[i]].objnum];
             objp->orient = target_orient;
-            set_object_for_clients (objp);
         }
 
         return;
@@ -10195,8 +10018,6 @@ void sexp_set_object_orient_sub (
 
     // set orientation -----------------------------
     objp->orient = m_orient;
-    // Tell the player (assuming it's a client) that they've moved.
-    set_object_for_clients (objp);
 }
 
 // Goober5000
@@ -12362,31 +12183,10 @@ void sexp_change_iff (int n) {
     new_team = iff_lookup (CTEXT (n));
     n = CDR (n);
 
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (new_team);
-
     for (; n != -1; n = CDR (n)) {
         name = CTEXT (n);
         object_ship_wing_point_team oswpt;
         sexp_get_object_ship_wing_point_team (&oswpt, name);
-
-        Current_sexp_network_packet.send_string (name);
-
-        sexp_change_iff_helper (oswpt, new_team);
-    }
-
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_change_iff () {
-    int new_team;
-    char* name = nullptr;
-
-    Current_sexp_network_packet.get_int (new_team);
-    while (Current_sexp_network_packet.get_string (name)) {
-        object_ship_wing_point_team oswpt;
-        sexp_get_object_ship_wing_point_team (&oswpt, name);
-
         sexp_change_iff_helper (oswpt, new_team);
     }
 }
@@ -12503,36 +12303,10 @@ void sexp_change_iff_color (int n) {
     }
     alternate_iff_color = iff_init_color (rgb[0], rgb[1], rgb[2]);
 
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (observer_team);
-    Current_sexp_network_packet.send_int (observed_team);
-    Current_sexp_network_packet.send_int (alternate_iff_color);
-
     // Rest of the nodes
     n = CDR (n);
     for (; n != -1; n = CDR (n)) {
         name = CTEXT (n);
-        object_ship_wing_point_team oswpt;
-        sexp_get_object_ship_wing_point_team (&oswpt, name);
-
-        Current_sexp_network_packet.send_string (name);
-
-        sexp_change_iff_color_helper (
-            oswpt, observer_team, observed_team, alternate_iff_color);
-    }
-
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_change_iff_color () {
-    int observer_team, observed_team, alternate_iff_color;
-    char* name = nullptr;
-
-    Current_sexp_network_packet.get_int (observer_team);
-    Current_sexp_network_packet.get_int (observed_team);
-    Current_sexp_network_packet.get_int (alternate_iff_color);
-
-    while (Current_sexp_network_packet.get_string (name)) {
         object_ship_wing_point_team oswpt;
         sexp_get_object_ship_wing_point_team (&oswpt, name);
         sexp_change_iff_color_helper (
@@ -12683,10 +12457,6 @@ void sexp_change_ai_class (int n) {
     // we can't do anything with ships that aren't present
     if (ship_num < 0) return;
 
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_ship (ship_num);
-    Current_sexp_network_packet.send_int (new_ai_class);
-
     // subsys?
     if (n != -1) {
         // loopity-loop
@@ -12694,35 +12464,9 @@ void sexp_change_ai_class (int n) {
             subsystem = CTEXT (n);
             ship_subsystem_set_new_ai_class (
                 ship_num, subsystem, new_ai_class);
-
-            Current_sexp_network_packet.send_string (subsystem);
         }
     }
     // just the one ship
-    else {
-        ship_set_new_ai_class (ship_num, new_ai_class);
-    }
-
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_change_ai_class () {
-    int ship_num, new_ai_class;
-    char* subsystem = NULL;
-
-    Current_sexp_network_packet.get_ship (ship_num);
-    Current_sexp_network_packet.get_int (new_ai_class);
-
-    // subsystem?
-    if (Current_sexp_network_packet.get_string (subsystem)) {
-        ship_subsystem_set_new_ai_class (ship_num, subsystem, new_ai_class);
-
-        // deal with any other subsystems
-        while (Current_sexp_network_packet.get_string (subsystem)) {
-            ship_subsystem_set_new_ai_class (
-                ship_num, subsystem, new_ai_class);
-        }
-    }
     else {
         ship_set_new_ai_class (ship_num, new_ai_class);
     }
@@ -12864,36 +12608,12 @@ void sexp_clear_goals (int n) {
 void sexp_hud_disable (int n) {
     int disable_hud = eval_num (n);
     hud_set_draw (!disable_hud);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (disable_hud);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_hud_disable () {
-    int disable_hud;
-
-    if (Current_sexp_network_packet.get_int (disable_hud)) {
-        hud_set_draw (!disable_hud);
-    }
 }
 
 // Goober5000
 void sexp_hud_disable_except_messages (int n) {
     int disable_hud = eval_num (n);
     hud_disable_except_messages (disable_hud);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (disable_hud);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_hud_disable_except_messages () {
-    int disable_hud;
-
-    if (Current_sexp_network_packet.get_int (disable_hud)) {
-        hud_disable_except_messages (disable_hud);
-    }
 }
 
 void sexp_hud_set_text_num (int n) {
@@ -13035,14 +12755,6 @@ void sexp_hud_set_max_targeting_range (int n) {
     Hud_max_targeting_range = eval_num (n);
 
     if (Hud_max_targeting_range < 0) { Hud_max_targeting_range = 0; }
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (Hud_max_targeting_range);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_hud_set_max_targeting_range () {
-    Current_sexp_network_packet.get_int (Hud_max_targeting_range);
 }
 
 /* Make sure that the Sexp_hud_display_* get added to the game_state
@@ -13151,15 +12863,6 @@ void sexp_hud_set_retail_gauge_active (int node) {
     }
 }
 
-void multi_sexp_hud_display_gauge () {
-    int show_for;
-
-    if (Current_sexp_network_packet.get_int (show_for)) {
-        Sexp_hud_display_warpout =
-            (show_for > 1) ? timestamp (show_for) : (show_for);
-    }
-}
-
 // Goober5000
 /**
  * Trigger whether player uses the game AI for stuff
@@ -13217,20 +12920,6 @@ void sexp_set_player_orders (int n) {
 // Goober5000
 void sexp_change_soundtrack (int n) {
     event_sexp_change_soundtrack (CTEXT (n));
-
-    if (MULTIPLAYER_MASTER) {
-        Current_sexp_network_packet.start_callback ();
-        Current_sexp_network_packet.send_string (CTEXT (n));
-        Current_sexp_network_packet.end_callback ();
-    }
-}
-
-void multi_sexp_change_soundtrack () {
-    char new_track[NAME_LENGTH];
-
-    if (Current_sexp_network_packet.get_string (new_track)) {
-        event_sexp_change_soundtrack (new_track);
-    }
 }
 
 // Goober5000
@@ -13340,60 +13029,12 @@ void sexp_play_sound_from_table (int n) {
                 SND_PRIORITY_MUST_PLAY);
         }
     }
-
-    if (MULTIPLAYER_MASTER) {
-        Current_sexp_network_packet.start_callback ();
-        Current_sexp_network_packet.send_float (origin.xyz.x);
-        Current_sexp_network_packet.send_float (origin.xyz.y);
-        Current_sexp_network_packet.send_float (origin.xyz.z);
-        Current_sexp_network_packet.send_int (sound_index.value ());
-        Current_sexp_network_packet.end_callback ();
-    }
-}
-
-void multi_sexp_play_sound_from_table () {
-    vec3d origin;
-    int sound_index = -1;
-
-    Current_sexp_network_packet.get_float (origin.xyz.x);
-    Current_sexp_network_packet.get_float (origin.xyz.y);
-    Current_sexp_network_packet.get_float (origin.xyz.z);
-    Current_sexp_network_packet.get_int (sound_index);
-
-    auto sound = gamesnd_id (sound_index);
-
-    // play sound effect ---------------------------
-    if (sound.isValid ()) {
-        game_snd* snd = gamesnd_get_game_sound (sound);
-        if (snd->min == 0 && snd->max == 0) {
-            // if sound doesn't specify 3d range, don't play in 3d
-            snd_play (snd, 0.0f, 1.0f, SND_PRIORITY_MUST_PLAY);
-        }
-        else {
-            snd_play_3d (
-                snd, &origin, &View_position, 0.0f, NULL, 0, 1.0f,
-                SND_PRIORITY_MUST_PLAY);
-        }
-    }
 }
 
 // Goober5000
 void sexp_close_sound_from_file (int n) {
     bool fade = is_sexp_true (n);
     sexp_stop_music (fade);
-
-    if (MULTIPLAYER_MASTER) {
-        Current_sexp_network_packet.start_callback ();
-        Current_sexp_network_packet.send_bool (fade ? true : false);
-        Current_sexp_network_packet.end_callback ();
-    }
-}
-
-void multi_sexp_close_sound_from_file () {
-    bool fade;
-    if (Current_sexp_network_packet.get_bool (fade)) {
-        sexp_stop_music (fade);
-    }
 }
 
 // Goober5000
@@ -13414,50 +13055,17 @@ void sexp_play_sound_from_file (int n) {
     // load sound file -----------------------------
     sexp_load_music (CTEXT (n), type);
 
-    if (MULTIPLAYER_MASTER) {
-        Current_sexp_network_packet.start_callback ();
-        Current_sexp_network_packet.send_string (CTEXT (n));
-    }
-
     n = CDR (n);
     if (n >= 0) { loop = eval_sexp (n); }
 
     // play sound file -----------------------------
-    sexp_start_music (loop);
-
-    if (MULTIPLAYER_MASTER) {
-        Current_sexp_network_packet.send_bool (loop ? true : false);
-        Current_sexp_network_packet.end_callback ();
-    }
-}
-
-void multi_sexp_play_sound_from_file () {
-    char filename[NAME_LENGTH];
-    bool loop;
-    if (!Current_sexp_network_packet.get_string (filename)) { return; }
-    sexp_load_music (filename);
-
-    Current_sexp_network_packet.get_bool (loop);
     sexp_start_music (loop);
 }
 
 // Goober5000
 void sexp_pause_sound_from_file (int node) {
     bool pause = is_sexp_true (node);
-
-    if (MULTIPLAYER_MASTER) {
-        Current_sexp_network_packet.send_bool (pause);
-        Current_sexp_network_packet.end_callback ();
-    }
-
     sexp_pause_unpause_music (pause);
-}
-
-void multi_sexp_pause_sound_from_file () {
-    bool pause;
-    if (Current_sexp_network_packet.get_bool (pause)) {
-        sexp_pause_unpause_music (pause);
-    }
 }
 
 int sexp_sound_environment_option_lookup (char* text) {
@@ -14651,9 +14259,6 @@ void sexp_destroy_subsys_instantly (int n) {
     ship* shipp;
     ship_subsys* ss = NULL;
 
-    // if MULTIPLAYER bail
-    if (Game_mode & GM_MULTIPLAYER) { return; }
-
     shipnum = ship_name_lookup (CTEXT (n));
     // if no ship, then return immediately.
     if (shipnum == -1) { return; }
@@ -15151,13 +14756,8 @@ void sexp_force_jump () {
     Player_obj->phys_info.flags &= ~PF_GLIDING;
     Player_obj->phys_info.flags &= ~PF_FORCE_GLIDE;
 
-    if (Game_mode & GM_MULTIPLAYER) { multi_handle_end_mission_request (); }
-    else {
-        // forced warp, taken from training failure code
-        gameseq_post_event (
-            GS_EVENT_PLAYER_WARPOUT_START_FORCED); // Force player to warp
-                                                   // out.
-    }
+    // forced warp, taken from training failure code
+    gameseq_post_event (GS_EVENT_PLAYER_WARPOUT_START_FORCED);
 }
 
 void sexp_mission_set_nebula (int n) { stars_set_nebula (eval_num (n) > 0); }
@@ -15454,17 +15054,8 @@ void sexp_end_mission (int n) {
 
     // if we go straight to the main hall we have to clean up the mission
     // without entering the debriefing
-    if (boot_to_main_hall && !(Game_mode & GM_MULTIPLAYER)) {
+    if (boot_to_main_hall) {
         gameseq_post_event (GS_EVENT_END_GAME);
-    }
-    else {
-        send_debrief_event ();
-    }
-
-    // Karajorma - callback all the clients here.
-    if (MULTIPLAYER_MASTER) {
-        multi_handle_sudden_mission_end ();
-        send_force_end_mission_packet ();
     }
 }
 
@@ -15495,9 +15086,6 @@ void sexp_good_time_to_rearm (int n) {
  * Grants promotion to the player
  */
 void sexp_grant_promotion () {
-    // short circuit multiplayer for now until we figure out what to do.
-    if (Game_mode & GM_MULTIPLAYER) return;
-
     // set a bit to tell player should get promoted at the end of the mission.
     // I suppose the other thing that we could do would be to set the players
     // score to at least the amount of points for the next level, but this way
@@ -15534,79 +15122,33 @@ void sexp_grant_medal (int n) {
 
     if (i < Num_medals) {
         Player->stats.m_medal_earned = i;
-
-        if (Game_mode & GM_MULTIPLAYER) {
-            for (int j = 0; j < MAX_PLAYERS; j++) {
-                if (MULTI_CONNECTED (Net_players[j])) {
-                    Net_players[j].m_player->stats.m_medal_earned = i;
-                }
-            }
-        }
     }
 }
 
 void sexp_change_player_score (int node) {
     int sindex;
     int score;
-    int plr_index;
 
     score = eval_num (node);
     node = CDR (node);
 
-    if (!(Game_mode & GM_MULTIPLAYER)) {
-        if ((sindex = ship_name_lookup (CTEXT (node))) == -1) {
-            WARNINGF (
-                LOCATION,
-                "Invalid shipname '%s' passed to sexp_change_player_score!",
-                CTEXT (node));
-            return;
-        }
-
-        if (Player_ship != &Ships[sindex]) {
-            WARNINGF (
-                LOCATION,
-                "Can not award points to '%s'. Ship is not a player!",
-                CTEXT (node));
-            return;
-        }
-        Player->stats.m_score += score;
-        if (Player->stats.m_score < 0) { Player->stats.m_score = 0; }
-    }
-    else {
-        while (node >= 0) {
-            plr_index = multi_find_player_by_ship_name (CTEXT (node), true);
-            if (plr_index >= 0) {
-                Net_player[plr_index].m_player->stats.m_score += score;
-
-                if (Net_player[plr_index].m_player->stats.m_score < 0) {
-                    Net_player[plr_index].m_player->stats.m_score = 0;
-                }
-            }
-
-            node = CDR (node);
-        }
-    }
-}
-
-void sexp_change_team_score (int node) {
-    int i, score, team;
-
-    // since we only have a team score in TvT
-    if (!(MULTI_TEAM)) { return; }
-
-    score = eval_num (node);
-    team = eval_num (CDR (node));
-
-    if (team == 0) {
-        for (i = 0; i < MAX_TVT_TEAMS; i++) { Multi_team_score[i] += score; }
-    }
-    else if (team > 0 && team <= MAX_TVT_TEAMS) {
-        Multi_team_score[team - 1] += score;
-    }
-    else {
+    if ((sindex = ship_name_lookup (CTEXT (node))) == -1) {
         WARNINGF (
-            LOCATION, "Invalid team number. Team %d does not exist", team);
+            LOCATION,
+            "Invalid shipname '%s' passed to sexp_change_player_score!",
+            CTEXT (node));
+        return;
     }
+
+    if (Player_ship != &Ships[sindex]) {
+        WARNINGF (
+            LOCATION,
+            "Can not award points to '%s'. Ship is not a player!",
+            CTEXT (node));
+        return;
+    }
+    Player->stats.m_score += score;
+    if (Player->stats.m_score < 0) { Player->stats.m_score = 0; }
 }
 
 void sexp_tech_add_ship (int node) {
@@ -15758,19 +15300,11 @@ void sexp_allow_weapon (int n) {
 void sexp_deal_with_ship_flag (
     int node, bool process_subsequent_nodes, Object::Object_Flags object_flag,
     Ship::Ship_Flags ship_flag, Mission::Parse_Object_Flags p_object_flag,
-    bool set_it, bool send_multiplayer = false,
+    bool set_it, bool /* send_multiplayer */ = false,
     bool include_players_in_ship_lookup = false) {
     char* ship_name;
     int ship_index;
     int n = node;
-
-    if (send_multiplayer && MULTIPLAYER_MASTER) {
-        Current_sexp_network_packet.start_callback ();
-        Current_sexp_network_packet.send_int ((int)object_flag);
-        Current_sexp_network_packet.send_int ((int)ship_flag);
-        Current_sexp_network_packet.send_int ((int)p_object_flag);
-        Current_sexp_network_packet.send_bool (set_it);
-    }
 
     // loop for all ships in the sexp
     // NB: if the flag is set, we will continue acting on nodes until we run
@@ -15831,11 +15365,6 @@ void sexp_deal_with_ship_flag (
                     afterburners_stop (&Objects[Ships[ship_index].objnum], 1);
                 }
             }
-
-            if (send_multiplayer && MULTIPLAYER_MASTER) {
-                Current_sexp_network_packet.send_bool (true);
-                Current_sexp_network_packet.send_ship (ship_index);
-            }
         }
         // if it's not in-mission
         else {
@@ -15849,100 +15378,6 @@ void sexp_deal_with_ship_flag (
             if (p_object_flag != Mission::Parse_Object_Flags::NUM_VALUES) {
                 // set or clear?
                 p_objp->flags.set (
-                    (Mission::Parse_Object_Flags)p_object_flag, set_it);
-            }
-
-            if (send_multiplayer && MULTIPLAYER_MASTER) {
-                Current_sexp_network_packet.send_bool (false);
-                Current_sexp_network_packet.send_parse_object (p_objp);
-            }
-        }
-    }
-
-    if (send_multiplayer && MULTIPLAYER_MASTER) {
-        Current_sexp_network_packet.end_callback ();
-    }
-}
-
-void multi_sexp_deal_with_ship_flag () {
-    int object_flag = (int)Object::Object_Flags::NUM_VALUES;
-    int ship_flag = (int)Ship::Ship_Flags::NUM_VALUES;
-    int p_object_flag = (int)Mission::Parse_Object_Flags::NUM_VALUES;
-    bool set_it = false;
-    bool ship_arrived = true;
-    ship* shipp = NULL;
-    p_object* pobjp = NULL;
-
-    Current_sexp_network_packet.get_int (object_flag);
-    Current_sexp_network_packet.get_int (ship_flag);
-    Current_sexp_network_packet.get_int (p_object_flag);
-    Current_sexp_network_packet.get_bool (set_it);
-
-    // if any of the above failed so will this loop
-    while (Current_sexp_network_packet.get_bool (ship_arrived)) {
-        if (ship_arrived) {
-            Current_sexp_network_packet.get_ship (shipp);
-            if (shipp == NULL) {
-                WARNINGF (
-                    LOCATION,
-                    "Null ship pointer in multi_sexp_deal_with_ship_flag(), "
-                    "tell a coder.\n");
-                return;
-            }
-
-            // save flags for state change comparisons
-            auto object_flag_orig = Objects[shipp->objnum].flags;
-
-            Objects[shipp->objnum].flags.set (
-                (Object::Object_Flags)object_flag, set_it);
-            shipp->flags.set ((Ship::Ship_Flags)ship_flag, set_it);
-
-            // deal with side effects of these flags
-            if (object_flag == (int)Object::Object_Flags::No_shields) {
-                if (set_it) {
-                    zero_one_ets (
-                        &shipp->shield_recharge_index,
-                        &shipp->weapon_recharge_index,
-                        &shipp->engine_recharge_index);
-                }
-                else if (object_flag_orig[Object::Object_Flags::No_shields]) {
-                    set_default_recharge_rates (&Objects[shipp->objnum]);
-                }
-            }
-
-            if (ship_flag == (int)Ship::Ship_Flags::Afterburner_locked) {
-                if (set_it) { afterburners_stop (&Objects[shipp->objnum], 1); }
-            }
-
-            if ((ship_flag == (int)Ship::Ship_Flags::Stealth) && !set_it) {
-                if (shipp->flags[Ship::Ship_Flags::Escort]) {
-                    hud_add_ship_to_escort (shipp->objnum, 1);
-                }
-            }
-            if ((ship_flag == (int)Ship::Ship_Flags::Friendly_stealth_invis) &&
-                !set_it && (shipp->flags[Ship::Ship_Flags::Stealth]) &&
-                (shipp->team == Player_ship->team)) {
-                if (shipp->flags[Ship::Ship_Flags::Escort]) {
-                    hud_add_ship_to_escort (shipp->objnum, 1);
-                }
-            }
-            if (ship_flag == (int)Ship::Ship_Flags::Hidden_from_sensors) {
-                if (set_it) {
-                    if (Player_ai->target_objnum == shipp->objnum) {
-                        hud_cease_targeting ();
-                    }
-                }
-                else {
-                    if (shipp->flags[Ship::Ship_Flags::Escort]) {
-                        hud_add_ship_to_escort (shipp->objnum, 1);
-                    }
-                }
-            }
-        }
-        else {
-            Current_sexp_network_packet.get_parse_object (pobjp);
-            if (pobjp != NULL) {
-                pobjp->flags.set (
                     (Mission::Parse_Object_Flags)p_object_flag, set_it);
             }
         }
@@ -16232,32 +15667,17 @@ void sexp_alter_ship_flag (int node) {
     node = CDR (node);
     if (is_sexp_true (node)) { future_ships = true; }
 
-    // start the multiplayer packet
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_flag (object_flag);
-    Current_sexp_network_packet.send_flag (ship_flags);
-    Current_sexp_network_packet.send_flag (parse_obj_flag);
-    Current_sexp_network_packet.send_flag (ai_flag);
-    Current_sexp_network_packet.send_bool (set_flag);
-    Current_sexp_network_packet.send_bool (future_ships);
-
     node = CDR (node);
 
     // no 4th argument means do this to every ship in the mission (and if the
     // flag is set, every ship that will be too).
     if (node == -1) {
-        // send a message to the clients saying there were no more arguments
-        Current_sexp_network_packet.send_bool (false);
-
         alter_flag_for_all_ships (
             future_ships, object_flag, ship_flags, parse_obj_flag, ai_flag,
             set_flag);
     }
 
     else {
-        // send a message to the clients saying there are more arguments
-        Current_sexp_network_packet.send_bool (true);
-
         while (node != -1) {
             sexp_get_object_ship_wing_point_team (
                 &oswpt, CTEXT (node), future_ships);
@@ -16272,134 +15692,8 @@ void sexp_alter_ship_flag (int node) {
             sexp_alter_ship_flag_helper (
                 oswpt, future_ships, object_flag, ship_flags, parse_obj_flag,
                 ai_flag, set_flag);
+
             node = CDR (node);
-
-            Current_sexp_network_packet.send_int (oswpt.type);
-
-            switch (oswpt.type) {
-            case OSWPT_TYPE_SHIP:
-                Current_sexp_network_packet.send_ship (oswpt.shipp);
-                break;
-
-            case OSWPT_TYPE_PARSE_OBJECT:
-                Current_sexp_network_packet.send_parse_object (oswpt.p_objp);
-                break;
-
-            case OSWPT_TYPE_WING_NOT_PRESENT:
-            case OSWPT_TYPE_WING:
-                Current_sexp_network_packet.send_ushort (
-                    oswpt.wingp->net_signature);
-                break;
-
-            case OSWPT_TYPE_WHOLE_TEAM:
-                Current_sexp_network_packet.send_int (oswpt.team);
-                break;
-            }
-        }
-    }
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_alter_ship_flag () {
-    int i;
-    Object::Object_Flags object_flag = Object::Object_Flags::NUM_VALUES;
-    Ship::Ship_Flags ship_flag = Ship::Ship_Flags::NUM_VALUES;
-    Mission::Parse_Object_Flags parse_obj_flag =
-        Mission::Parse_Object_Flags::NUM_VALUES;
-    AI::AI_Flags ai_flag = AI::AI_Flags::NUM_VALUES;
-    bool set_flag = false;
-    bool future_ships = true;
-    bool process_data = false;
-    int type = -1;
-    object_ship_wing_point_team oswpt;
-    ushort wing_sig;
-
-    Current_sexp_network_packet.get_flag (object_flag);
-    Current_sexp_network_packet.get_flag (ship_flag);
-    Current_sexp_network_packet.get_flag (parse_obj_flag);
-    Current_sexp_network_packet.get_flag (ai_flag);
-    Current_sexp_network_packet.get_bool (set_flag);
-    Current_sexp_network_packet.get_bool (future_ships);
-
-    // if any of the above failed so will this loop
-    if (!Current_sexp_network_packet.get_bool (process_data)) { return; }
-
-    // no more data means do this to every ship in the mission
-    if (!process_data) {
-        alter_flag_for_all_ships (
-            future_ships, object_flag, ship_flag, parse_obj_flag, ai_flag,
-            set_flag);
-    }
-    else {
-        while (Current_sexp_network_packet.get_int (type)) {
-            oswpt.clear ();
-            oswpt.type = type;
-
-            switch (oswpt.type) {
-            case OSWPT_TYPE_SHIP:
-                if (Current_sexp_network_packet.get_ship (oswpt.shipp)) {
-                    oswpt.objp = &Objects[oswpt.shipp->objnum];
-                }
-                else {
-                    WARNINGF (
-                        LOCATION,
-                        "OSWPT had an invalid ship in "
-                        "multi_sexp_alter_ship_flag(), skipping");
-                    continue;
-                }
-                break;
-
-            case OSWPT_TYPE_PARSE_OBJECT:
-                Current_sexp_network_packet.get_parse_object (oswpt.p_objp);
-                break;
-
-            case OSWPT_TYPE_WING_NOT_PRESENT:
-            case OSWPT_TYPE_WING:
-                Current_sexp_network_packet.get_ushort (wing_sig);
-                for (i = 0; i < Num_wings; i++) {
-                    if (Wings[i].net_signature == wing_sig) {
-                        oswpt.wingp = &Wings[i];
-
-                        // wing leader handling taken from
-                        // sexp_get_object_ship_wing_point_team
-                        if ((oswpt.wingp->special_ship >= 0) &&
-                            (oswpt.wingp
-                                 ->ship_index[oswpt.wingp->special_ship] >=
-                             0)) {
-                            oswpt.shipp =
-                                &Ships[oswpt.wingp->ship_index
-                                           [oswpt.wingp->special_ship]];
-                            oswpt.objp = &Objects[oswpt.shipp->objnum];
-                        }
-                        else {
-                            oswpt.shipp = &Ships[oswpt.wingp->ship_index[0]];
-                            oswpt.objp = &Objects[oswpt.shipp->objnum];
-                            WARNINGF (
-                                LOCATION,
-                                "Substituting ship '%s' at index 0 for "
-                                "nonexistent wing leader at index %d!",
-                                oswpt.shipp->ship_name,
-                                oswpt.wingp->special_ship);
-                        }
-                        break;
-                    }
-                }
-
-                if (oswpt.wingp == NULL) {
-                    WARNINGF (
-                        LOCATION,
-                        "Unable to get wing to apply flags to in "
-                        "multi_sexp_alter_ship_flag()");
-                }
-                break;
-
-            case OSWPT_TYPE_WHOLE_TEAM:
-                Current_sexp_network_packet.get_int (oswpt.team);
-                break;
-            }
-            sexp_alter_ship_flag_helper (
-                oswpt, future_ships, object_flag, ship_flag, parse_obj_flag,
-                ai_flag, set_flag);
         }
     }
 }
@@ -16549,38 +15843,14 @@ void sexp_set_persona (int node) {
     node = CDR (node);
     ASSERT (node >= 0);
 
-    if (MULTIPLAYER_MASTER) {
-        Current_sexp_network_packet.start_callback ();
-        Current_sexp_network_packet.send_int (persona_index);
-    }
-
     // now loop through the list of ships
     for (; node >= 0; node = CDR (node)) {
         sindex = ship_name_lookup (CTEXT (node));
 
         if (sindex < 0) { continue; }
-
         if (Ships[sindex].objnum < 0) { continue; }
 
         Ships[sindex].persona_index = persona_index;
-
-        if (MULTIPLAYER_MASTER) {
-            Current_sexp_network_packet.send_ship (sindex);
-        }
-    }
-
-    if (MULTIPLAYER_MASTER) { Current_sexp_network_packet.end_callback (); }
-}
-
-void multi_sexp_set_persona () {
-    ship* shipp = NULL;
-    int persona_index = -1;
-
-    if (!Current_sexp_network_packet.get_int (persona_index)) { return; }
-
-    while (Current_sexp_network_packet.get_ship (shipp)) {
-        ASSERT (persona_index != -1);
-        if (shipp != NULL) { shipp->persona_index = persona_index; }
     }
 }
 
@@ -17246,7 +16516,7 @@ void sexp_friendly_stealth_invisible (int n, bool invisible) {
 // generic function to deal with subsystem flag sexps.
 // setit only passed for backward compatibility with older sexps.
 void sexp_ship_deal_with_subsystem_flag (
-    int node, Ship::Subsystem_Flags ss_flag, bool sendit = false,
+    int node, Ship::Subsystem_Flags ss_flag, bool /* sendit */ = false,
     bool setit = false) {
     ship* shipp = NULL;
     ship_subsys* ss = NULL;
@@ -17264,13 +16534,6 @@ void sexp_ship_deal_with_subsystem_flag (
           (ss_flag == Ship::Subsystem_Flags::No_SS_targeting))) {
         node = CDR (node);
         setit = is_sexp_true (node);
-    }
-
-    // multiplayer packet start
-    if (sendit) {
-        Current_sexp_network_packet.start_callback ();
-        Current_sexp_network_packet.send_ship (shipp);
-        Current_sexp_network_packet.send_bool (setit);
     }
 
     // Process subsystems
@@ -17297,45 +16560,11 @@ void sexp_ship_deal_with_subsystem_flag (
             ss->flags.set (ss_flag, setit);
         }
 
-        // multiplayer send subsystem name
-        if (sendit) Current_sexp_network_packet.send_string (CTEXT (node));
-
         // next
         node = CDR (node);
     }
-
-    // mulitplayer end of packet
-    if (sendit) Current_sexp_network_packet.end_callback ();
 }
-void multi_sexp_deal_with_subsys_flag (Ship::Subsystem_Flags ss_flag) {
-    bool setit = false;
-    ship_subsys* ss = NULL;
-    ship* shipp = NULL;
-    char ss_name[MAX_NAME_LEN];
 
-    Current_sexp_network_packet.get_ship (shipp);
-    Current_sexp_network_packet.get_bool (setit);
-
-    while (Current_sexp_network_packet.get_string (ss_name)) {
-        // deal with generic subsystem names
-        int generic_type = get_generic_subsys (ss_name);
-        if (generic_type) {
-            for (ss = GET_FIRST (&shipp->subsys_list);
-                 ss != END_OF_LIST (&shipp->subsys_list); ss = GET_NEXT (ss)) {
-                if (generic_type == ss->system_info->type) {
-                    ss->flags.set (ss_flag, setit);
-                }
-            }
-        }
-        else {
-            ss = ship_get_subsys (shipp, ss_name);
-            if (ss != NULL) {
-                // set the flag
-                ss->flags.set (ss_flag, setit);
-            }
-        }
-    }
-}
 // Goober5000
 void sexp_ship_tag (int n, int tag) {
     int ship_num, tag_level, tag_time, ssm_index (0);
@@ -17706,9 +16935,6 @@ void sexp_ship_vanish (int n) {
     char* ship_name;
     int num;
 
-    // if MULTIPLAYER bail
-    if (Game_mode & GM_MULTIPLAYER) { return; }
-
     for (; n != -1; n = CDR (n)) {
         ship_name = CTEXT (n);
 
@@ -17730,9 +16956,6 @@ void sexp_destroy_instantly (int n) {
     char* ship_name;
     int ship_num;
     object* ship_obj_p;
-
-    // if MULTIPLAYER bail
-    if (Game_mode & GM_MULTIPLAYER) { return; }
 
     for (; n != -1; n = CDR (n)) {
         ship_name = CTEXT (n);
@@ -17961,39 +17184,13 @@ void sexp_ship_change_callsign (int node) {
         if (cindex < 0) cindex = mission_parse_add_callsign (new_callsign);
     }
 
-    // packets for multi
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_string (new_callsign);
-
     while (node >= 0) {
         sindex = ship_name_lookup (CTEXT (node));
         if (sindex >= 0) {
             shipp = &Ships[sindex];
             shipp->callsign_index = cindex;
-            Current_sexp_network_packet.send_ship (shipp);
         }
         node = CDR (node);
-    }
-
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_ship_change_callsign () {
-    char new_callsign[TOKEN_LENGTH];
-    int cindex;
-    ship* shipp = NULL;
-
-    Current_sexp_network_packet.get_string (new_callsign);
-    if (!new_callsign[0] || !strcasecmp (new_callsign, SEXP_ANY_STRING)) {
-        cindex = -1;
-    }
-    else {
-        cindex = mission_parse_lookup_callsign (new_callsign);
-        if (cindex < 0) { cindex = mission_parse_add_callsign (new_callsign); }
-    }
-
-    while (Current_sexp_network_packet.get_ship (shipp)) {
-        if (shipp != NULL) { shipp->callsign_index = cindex; }
     }
 }
 
@@ -18048,9 +17245,6 @@ void sexp_ignore_key (int node) {
 
     ignore_count = eval_num (node);
 
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (ignore_count);
-
     node = CDR (node);
     while (node > -1) {
         // get the key
@@ -18058,21 +17252,7 @@ void sexp_ignore_key (int node) {
 
         if (ignored_key > -1) { Ignored_keys[ignored_key] = ignore_count; }
 
-        Current_sexp_network_packet.send_int (ignored_key);
-
         node = CDR (node);
-    }
-
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_ignore_key () {
-    int ignored_key, ignore_count;
-
-    Current_sexp_network_packet.get_int (ignore_count);
-
-    while (Current_sexp_network_packet.get_int (ignored_key)) {
-        Ignored_keys[ignored_key] = ignore_count;
     }
 }
 
@@ -18454,29 +17634,11 @@ void sexp_send_training_message (int node) {
         if (t >= 0) { t = eval_num (t); }
     }
 
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (t);
-    Current_sexp_network_packet.send_int (delay);
-
     if ((Mission_events[Event_index].repeat_count > 1) || (CDR (node) < 0)) {
         message_training_queue (CTEXT (node), timestamp (delay), t);
-        Current_sexp_network_packet.send_string (CTEXT (node));
     }
     else {
         message_training_queue (CTEXT (CDR (node)), timestamp (delay), t);
-        Current_sexp_network_packet.send_string (CTEXT (CDR (node)));
-    }
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_send_training_message () {
-    int t, delay;
-    char message[TOKEN_LENGTH];
-
-    Current_sexp_network_packet.get_int (t);
-    Current_sexp_network_packet.get_int (delay);
-    if (Current_sexp_network_packet.get_string (message)) {
-        message_training_queue (message, timestamp (delay), t);
     }
 }
 
@@ -18561,8 +17723,6 @@ void sexp_set_ets_values (int node) {
     // sanity check inputs
     sanity_check_ets_inputs (ets_idx);
 
-    Current_sexp_network_packet.start_callback ();
-
     // apply ETS settings to specified ships
     for (; node != -1; node = CDR (node)) {
         sindex = ship_name_lookup (CTEXT (node));
@@ -18571,28 +17731,7 @@ void sexp_set_ets_values (int node) {
             Ships[sindex].engine_recharge_index = ets_idx[ENGINES];
             Ships[sindex].shield_recharge_index = ets_idx[SHIELDS];
             Ships[sindex].weapon_recharge_index = ets_idx[WEAPONS];
-
-            Current_sexp_network_packet.send_ship (sindex);
-            Current_sexp_network_packet.send_int (ets_idx[ENGINES]);
-            Current_sexp_network_packet.send_int (ets_idx[SHIELDS]);
-            Current_sexp_network_packet.send_int (ets_idx[WEAPONS]);
         }
-    }
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_ets_values () {
-    int sindex;
-    int ets_idx[num_retail_ets_gauges];
-
-    while (Current_sexp_network_packet.get_ship (sindex)) {
-        Current_sexp_network_packet.get_int (ets_idx[ENGINES]);
-        Current_sexp_network_packet.get_int (ets_idx[SHIELDS]);
-        Current_sexp_network_packet.get_int (ets_idx[WEAPONS]);
-
-        Ships[sindex].engine_recharge_index = ets_idx[ENGINES];
-        Ships[sindex].shield_recharge_index = ets_idx[SHIELDS];
-        Ships[sindex].weapon_recharge_index = ets_idx[WEAPONS];
     }
 }
 
@@ -18811,28 +17950,6 @@ void sexp_set_primary_ammo (int node) {
         set_primary_ammo (
             sindex, requested_bank, requested_weapons, rearm_limit);
     }
-
-    // do the multiplayer callback here
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_ship (sindex);
-    Current_sexp_network_packet.send_int (requested_bank);
-    Current_sexp_network_packet.send_int (requested_weapons);
-    Current_sexp_network_packet.send_int (rearm_limit);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_primary_ammo () {
-    int sindex;
-    int requested_bank;
-    int requested_weapons;
-    int rearm_limit;
-
-    Current_sexp_network_packet.get_ship (sindex);
-    Current_sexp_network_packet.get_int (requested_bank);
-    Current_sexp_network_packet.get_int (requested_weapons);
-    Current_sexp_network_packet.get_int (rearm_limit);
-
-    set_primary_ammo (sindex, requested_bank, requested_weapons, rearm_limit);
 }
 
 // Karajorma - Helper function for the set-primary-ammo and weapon functions
@@ -18952,29 +18069,6 @@ void sexp_set_secondary_ammo (int node) {
 
     set_secondary_ammo (
         sindex, requested_bank, requested_weapons, rearm_limit);
-
-    // do the multiplayer callback here
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_ship (sindex);
-    Current_sexp_network_packet.send_int (requested_bank);
-    Current_sexp_network_packet.send_int (requested_weapons);
-    Current_sexp_network_packet.send_int (rearm_limit);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_secondary_ammo () {
-    int sindex;
-    int requested_bank;
-    int requested_weapons;
-    int rearm_limit;
-
-    Current_sexp_network_packet.get_ship (sindex);
-    Current_sexp_network_packet.get_int (requested_bank);
-    Current_sexp_network_packet.get_int (requested_weapons);
-    Current_sexp_network_packet.get_int (rearm_limit);
-
-    set_secondary_ammo (
-        sindex, requested_bank, requested_weapons, rearm_limit);
 }
 
 // Karajorma - Helper function for the set-secondary-ammo and weapon functions
@@ -19054,12 +18148,6 @@ void sexp_set_weapon (int node, bool primary) {
         shipp->weapons.secondary_bank_weapons[requested_bank] = windex;
     }
 
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_ship (sindex);
-    Current_sexp_network_packet.send_bool (primary);
-    Current_sexp_network_packet.send_int (requested_bank);
-    Current_sexp_network_packet.send_int (windex);
-
     // Check to see if the optional ammo and rearm_limit settings were supplied
     node = CDR (node);
     if (node >= 0) {
@@ -19096,44 +18184,6 @@ void sexp_set_weapon (int node, bool primary) {
                 shipp->weapons.secondary_bank_start_ammo[requested_bank];
         }
     }
-
-    // Now pass this info on to clients.
-    Current_sexp_network_packet.send_int (requested_ammo);
-    Current_sexp_network_packet.send_int (rearm_limit);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_weapon () {
-    ship* shipp;
-    int sindex;
-    int requested_bank;
-    int windex;
-    int requested_ammo;
-    int rearm_limit;
-    bool primary;
-
-    Current_sexp_network_packet.get_ship (sindex);
-    Current_sexp_network_packet.get_bool (primary);
-    Current_sexp_network_packet.get_int (requested_bank);
-    Current_sexp_network_packet.get_int (windex);
-    Current_sexp_network_packet.get_int (requested_ammo);
-    Current_sexp_network_packet.get_int (rearm_limit);
-
-    shipp = &Ships[sindex];
-
-    if (primary) {
-        // Change the weapon
-        shipp->weapons.primary_bank_weapons[requested_bank] = windex;
-        // Set the ammo
-        set_primary_ammo (sindex, requested_bank, requested_ammo, rearm_limit);
-    }
-    else {
-        // Change the weapon
-        shipp->weapons.secondary_bank_weapons[requested_bank] = windex;
-        // Set the ammo
-        set_secondary_ammo (
-            sindex, requested_bank, requested_ammo, rearm_limit);
-    }
 }
 
 int sexp_get_countermeasures (int node) {
@@ -19162,22 +18212,6 @@ void sexp_set_countermeasures (int node) {
     }
 
     shipp->cmeasure_count = num_cmeasures;
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_ship (shipp);
-    Current_sexp_network_packet.send_int (num_cmeasures);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_countermeasures () {
-    int num_cmeasures = 0;
-    ship* shipp;
-
-    Current_sexp_network_packet.get_ship (shipp);
-    if (shipp == NULL) { return; }
-    if (Current_sexp_network_packet.get_int (num_cmeasures)) {
-        shipp->cmeasure_count = num_cmeasures;
-    }
 }
 
 // KeldorKatarn - Locks or unlocks the afterburner on the requested ship
@@ -19208,7 +18242,6 @@ void sexp_deal_with_secondary_lock (int node, bool lock) {
 
 // Karajorma - Changes the subsystem name displayed on the HUD.
 void sexp_change_subsystem_name (int node) {
-    ship* shipp;
     int ship_index;
     char* new_name;
     ship_subsys* subsystem_to_rename;
@@ -19219,19 +18252,12 @@ void sexp_change_subsystem_name (int node) {
     ship_index = ship_name_lookup (CTEXT (node));
     if (ship_index < 0) { return; }
 
-    shipp = &Ships[ship_index];
     node = CDR (node);
 
     if (node < 0) { return; }
 
     new_name = CTEXT (node);
     node = CDR (node);
-
-    if (MULTIPLAYER_MASTER) {
-        Current_sexp_network_packet.start_callback ();
-        Current_sexp_network_packet.send_ship (shipp);
-        Current_sexp_network_packet.send_string (new_name);
-    }
 
     // loop through all the subsystems the SEXP has provided
     while (node >= 0) {
@@ -19240,31 +18266,9 @@ void sexp_change_subsystem_name (int node) {
             ship_get_subsys (&Ships[ship_index], CTEXT (node));
         if (subsystem_to_rename != NULL) {
             ship_subsys_set_name (subsystem_to_rename, new_name);
-
-            if (MULTIPLAYER_MASTER) {
-                Current_sexp_network_packet.send_string (CTEXT (node));
-            }
         }
 
         node = CDR (node);
-    }
-
-    if (MULTIPLAYER_MASTER) { Current_sexp_network_packet.end_callback (); }
-}
-
-void multi_sexp_change_subsystem_name () {
-    ship* shipp = NULL;
-    char new_name[TOKEN_LENGTH];
-    char subsys_name[MAX_NAME_LEN];
-    ship_subsys* subsystem_to_rename;
-
-    Current_sexp_network_packet.get_ship (shipp);
-    Current_sexp_network_packet.get_string (new_name);
-    while (Current_sexp_network_packet.get_string (subsys_name)) {
-        subsystem_to_rename = ship_get_subsys (shipp, subsys_name);
-        if (subsystem_to_rename != NULL) {
-            ship_subsys_set_name (subsystem_to_rename, new_name);
-        }
     }
 }
 
@@ -19274,11 +18278,6 @@ void sexp_change_ship_class (int n) {
     ASSERT (class_num != -1);
 
     n = CDR (n);
-
-    if (MULTIPLAYER_MASTER) {
-        Current_sexp_network_packet.start_callback ();
-        Current_sexp_network_packet.send_int (class_num);
-    }
 
     // all ships in the sexp
     for (; n != -1; n = CDR (n)) {
@@ -19305,11 +18304,6 @@ void sexp_change_ship_class (int n) {
 
             if (match_found) {
                 swap_parse_object (pobj, class_num);
-
-                if (MULTIPLAYER_MASTER) {
-                    Current_sexp_network_packet.send_bool (false);
-                    Current_sexp_network_packet.send_parse_object (pobj);
-                }
             }
         }
         // If the ship is already in the mission
@@ -19319,37 +18313,6 @@ void sexp_change_ship_class (int n) {
                   Ships[ship_num].is_dying_or_departing ())) {
                 change_ship_type (ship_num, class_num, 1);
                 if (&Ships[ship_num] == Player_ship) { set_current_hud (); }
-
-                if (MULTIPLAYER_MASTER) {
-                    Current_sexp_network_packet.send_bool (true);
-                    Current_sexp_network_packet.send_ship (ship_num);
-                }
-            }
-        }
-    }
-
-    if (MULTIPLAYER_MASTER) { Current_sexp_network_packet.end_callback (); }
-}
-
-void multi_sexp_change_ship_class () {
-    int class_num = -1;
-    int ship_num = -1;
-    bool ship_arrived;
-    p_object* pobjp = NULL;
-
-    Current_sexp_network_packet.get_int (class_num);
-    while (Current_sexp_network_packet.get_bool (ship_arrived)) {
-        if (ship_arrived) {
-            Current_sexp_network_packet.get_ship (ship_num);
-            if ((class_num >= 0) && (ship_num >= 0)) {
-                change_ship_type (ship_num, class_num, 1);
-                if (&Ships[ship_num] == Player_ship) { set_current_hud (); }
-            }
-        }
-        else {
-            Current_sexp_network_packet.get_parse_object (pobjp);
-            if ((class_num >= 0) && (pobjp != NULL)) {
-                swap_parse_object (pobjp, class_num);
             }
         }
     }
@@ -19571,22 +18534,6 @@ void sexp_set_ambient_light (int node) {
 
     // call the graphics function to actually set the level
     gr_set_ambient_light (red, green, blue);
-
-    // do the multiplayer callback
-    if (MULTIPLAYER_MASTER) {
-        Current_sexp_network_packet.start_callback ();
-        Current_sexp_network_packet.send_int (level);
-        Current_sexp_network_packet.end_callback ();
-    }
-}
-
-void multi_sexp_set_ambient_light () {
-    int level = 0;
-    if (Current_sexp_network_packet.get_int (level)) {
-        The_mission.ambient_light_level = level;
-        gr_set_ambient_light (
-            (level & 0xff), ((level >> 8) & 0xff), ((level >> 16) & 0xff));
-    }
 }
 
 void sexp_set_post_effect (int node) {
@@ -20819,27 +19766,6 @@ void sexp_set_turret_primary_ammo (int node) {
     if (requested_weapons < 0) { return; }
 
     set_turret_primary_ammo (turret, requested_bank, requested_weapons);
-
-    // Multiplayer call back
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (sindex);
-    Current_sexp_network_packet.send_string (subsys);
-    Current_sexp_network_packet.send_int (requested_bank);
-    Current_sexp_network_packet.send_int (requested_weapons);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_turret_primary_ammo () {
-    int sindex, requested_bank, requested_weapons;
-    char subsys[TOKEN_LENGTH];
-    Current_sexp_network_packet.get_int (sindex);
-    Current_sexp_network_packet.get_string (subsys);
-    Current_sexp_network_packet.get_int (requested_bank);
-    Current_sexp_network_packet.get_int (requested_weapons);
-
-    ship_subsys* turret = ship_get_subsys (&Ships[sindex], subsys);
-
-    set_turret_primary_ammo (turret, requested_bank, requested_weapons);
 }
 
 // DahBlount - Helper function for setting turret primary ammo
@@ -20942,27 +19868,6 @@ void sexp_set_turret_secondary_ammo (int node) {
 
     requested_weapons = eval_num (node);
     if (requested_weapons < 0) { return; }
-
-    set_turret_secondary_ammo (turret, requested_bank, requested_weapons);
-
-    // Multiplayer call back
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (sindex);
-    Current_sexp_network_packet.send_string (subsys);
-    Current_sexp_network_packet.send_int (requested_bank);
-    Current_sexp_network_packet.send_int (requested_weapons);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_turret_secondary_ammo () {
-    int sindex, requested_bank, requested_weapons;
-    char subsys[TOKEN_LENGTH];
-    Current_sexp_network_packet.get_int (sindex);
-    Current_sexp_network_packet.get_string (subsys);
-    Current_sexp_network_packet.get_int (requested_bank);
-    Current_sexp_network_packet.get_int (requested_weapons);
-
-    ship_subsys* turret = ship_get_subsys (&Ships[sindex], subsys);
 
     set_turret_secondary_ammo (turret, requested_bank, requested_weapons);
 }
@@ -21284,28 +20189,6 @@ void sexp_add_remove_escort (int node) {
 
     // determine whether to add or remove it
     flag = eval_num (CDR (node));
-
-    // add/remove
-    if (flag) {
-        Ships[sindex].escort_priority = flag;
-        hud_add_ship_to_escort (Ships[sindex].objnum, 1);
-    }
-    else {
-        hud_remove_ship_from_escort (Ships[sindex].objnum);
-    }
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (sindex);
-    Current_sexp_network_packet.send_int (flag);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_add_remove_escort () {
-    int sindex;
-    int flag;
-
-    Current_sexp_network_packet.get_int (sindex);
-    if (!(Current_sexp_network_packet.get_int (flag))) { return; }
 
     // add/remove
     if (flag) {
@@ -21951,39 +20834,6 @@ void add_nav_waypoint (int node) {
     }
 
     add_nav_waypoint (nav_name, way_name, vert, oswpt_name);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_string (nav_name);
-    Current_sexp_network_packet.send_string (way_name);
-    Current_sexp_network_packet.send_int (vert);
-
-    if (oswpt_name != NULL) {
-        Current_sexp_network_packet.send_string (oswpt_name);
-    }
-
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_add_nav_waypoint () {
-    char nav_name[TOKEN_LENGTH];
-    char way_name[TOKEN_LENGTH];
-    char oswpt_name[TOKEN_LENGTH];
-    int vert;
-
-    if (!Current_sexp_network_packet.get_string (nav_name)) { return; }
-
-    if (!Current_sexp_network_packet.get_string (way_name)) { return; }
-
-    if (!Current_sexp_network_packet.get_int (vert)) { return; }
-
-    if (!Current_sexp_network_packet.get_string (oswpt_name)) {
-        add_nav_waypoint (nav_name, way_name, vert, NULL);
-    }
-    else {
-        add_nav_waypoint (nav_name, way_name, vert, oswpt_name);
-    }
-
-    AddNav_Waypoint (nav_name, way_name, vert, 0);
 }
 
 // text: add-nav-ship
@@ -21992,40 +20842,12 @@ void add_nav_ship (int node) {
     char* nav_name = CTEXT (node);
     char* ship_name = CTEXT (CDR (node));
     AddNav_Ship (nav_name, ship_name, 0);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_string (nav_name);
-    Current_sexp_network_packet.send_string (ship_name);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_add_nav_ship () {
-    char nav_name[TOKEN_LENGTH];
-    char ship_name[TOKEN_LENGTH];
-
-    if (!Current_sexp_network_packet.get_string (nav_name)) { return; }
-
-    if (!Current_sexp_network_packet.get_string (ship_name)) { return; }
-
-    AddNav_Ship (nav_name, ship_name, 0);
 }
 
 // text: del-nav
 // args: 1, Nav Name
 void del_nav (int node) {
     char* nav_name = CTEXT (node);
-    DelNavPoint (nav_name);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_string (nav_name);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_del_nav () {
-    char nav_name[TOKEN_LENGTH];
-
-    if (!Current_sexp_network_packet.get_string (nav_name)) { return; }
-
     DelNavPoint (nav_name);
 }
 
@@ -22188,107 +21010,24 @@ int sexp_missile_locked (int node) {
 }
 
 int sexp_is_player (int node) {
-    int sindex, np_index;
-    p_object* p_objp;
-
     bool standard_check = is_sexp_true (node);
 
-    if (!(Game_mode & GM_MULTIPLAYER)) {
-        sindex = ship_name_lookup (CTEXT (CDR (node)));
+    int sindex = ship_name_lookup (CTEXT (CDR (node)));
 
-        // There can only be one player ship in singleplayer so if more than
-        // one ship is specifed the sexp is false
-        if (CDDR (node) < 0) { return SEXP_FALSE; }
+    // There can only be one player ship in singleplayer so if more than
+    // one ship is specifed the sexp is false
+    if (CDDR (node) < 0) { return SEXP_FALSE; }
 
-        if (sindex >= 0) {
-            if (Player_obj == &Objects[Ships[sindex].objnum]) {
-                if (standard_check) {
-                    if (Player_use_ai) { return SEXP_FALSE; }
-                }
-                return SEXP_TRUE;
+    if (sindex >= 0) {
+        if (Player_obj == &Objects[Ships[sindex].objnum]) {
+            if (standard_check) {
+                if (Player_use_ai) { return SEXP_FALSE; }
             }
+            return SEXP_TRUE;
         }
-        return SEXP_FALSE;
     }
 
-    // For multiplayer we need to decide what to do about respawning players
-    else {
-        node = CDR (node);
-        while (node >= 0) {
-            // reset the netplayer index
-            np_index = -1;
-
-            sindex = ship_name_lookup (CTEXT (node));
-            if (sindex >= 0) {
-                if (Ships[sindex].objnum >= 0) {
-                    // try and find the player
-                    np_index = multi_find_player_by_object (
-                        &Objects[Ships[sindex].objnum]);
-                }
-            }
-
-            if (standard_check && np_index < 0) {
-                // Respawning ships don't have an objnum so we need to take a
-                // different approach
-                p_objp = mission_parse_get_arrival_ship (CTEXT (node));
-                if (p_objp != NULL) {
-                    np_index = multi_find_player_by_parse_object (p_objp);
-                }
-            }
-
-            // if we couldn't find a valid netplayer index then the ship isn't
-            // a player
-            if ((np_index < 0) || (np_index >= MAX_PLAYERS)) {
-                return SEXP_FALSE;
-            }
-
-            node = CDR (node);
-        }
-
-        // if we reached this far they all checked out
-        return SEXP_TRUE;
-    }
-}
-
-void sexp_set_respawns (int node) {
-    int num_respawns;
-    p_object* p_objp;
-
-    // we're wasting our time if you can't respawn
-    if (!(Game_mode & GM_MULTIPLAYER)) { return; }
-
-    num_respawns = eval_num (node);
-
-    node = CDR (node);
-
-    // send the information to clients
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (num_respawns);
-
-    while (node != -1) {
-        // get the parse object for the ship
-        p_objp = mission_parse_get_arrival_ship (CTEXT (node));
-        if (p_objp != NULL) { p_objp->respawn_count = num_respawns; }
-
-        Current_sexp_network_packet.send_string (CTEXT (node));
-
-        node = CDR (node);
-    }
-
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_respawns () {
-    p_object* p_objp;
-    int num_respawns;
-    char parse_name[NAME_LENGTH];
-
-    Current_sexp_network_packet.get_int (num_respawns);
-    while (Current_sexp_network_packet.get_string (parse_name)) {
-        // get the parse object for the ship
-        p_objp = mission_parse_get_arrival_ship (parse_name);
-        if (p_objp != NULL) { p_objp->respawn_count = num_respawns; }
-    }
+    return SEXP_FALSE;
 }
 
 // helper function for the remove-weapons SEXP
@@ -22327,80 +21066,29 @@ void sexp_remove_weapons (int node) {
     }
 
     actually_remove_weapons (weapon_info_index);
-
-    // send the information to clients
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (weapon_info_index);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_remove_weapons () {
-    int weapon_info_index = -1;
-
-    Current_sexp_network_packet.get_int (weapon_info_index);
-
-    actually_remove_weapons (weapon_info_index);
 }
 
 int sexp_return_player_data (int node, int type) {
-    int sindex, np_index = -1;
+    int sindex;
     player* p = NULL;
-    p_object* p_objp;
 
     sindex = ship_name_lookup (CTEXT (node));
 
-    if (Game_mode & GM_MULTIPLAYER) {
-        if (sindex >= 0) {
-            if (Ships[sindex].objnum >= 0) {
-                // try and find the player
-                np_index = multi_find_player_by_object (
-                    &Objects[Ships[sindex].objnum]);
-            }
-        }
+    if (sindex < 0) { return 0; }
+    if (Ships[sindex].objnum < 0) { return 0; }
 
-        if (np_index < 0) {
-            // Respawning ships don't have an objnum so we need to take a
-            // different approach
-            p_objp = mission_parse_get_arrival_ship (CTEXT (node));
-            np_index = multi_find_player_by_parse_object (p_objp);
-        }
-
-        if ((np_index >= 0) && (np_index < MAX_PLAYERS)) {
-            p = Net_players[np_index].m_player;
-        }
-    }
-    // if we're in single player, we're only concerned with ourself
-    else {
-        if (sindex < 0) { return 0; }
-        if (Ships[sindex].objnum < 0) { return 0; }
-
-        if (Player_obj == &Objects[Ships[sindex].objnum]) { p = Player; }
-    }
+    if (Player_obj == &Objects[Ships[sindex].objnum]) { p = Player; }
 
     // now, if we have a valid player, return his kills
     if (p != NULL) {
         switch (type) {
         case OP_NUM_KILLS: return p->stats.m_kill_count_ok;
-
         case OP_NUM_ASSISTS: return p->stats.m_assists;
-
         case OP_SHIP_SCORE: return p->stats.m_score;
-
         case OP_SHIP_DEATHS: return p->stats.m_player_deaths;
 
         case OP_RESPAWNS_LEFT:
-            // Dogfight missions have no respawn limit
-            if (MULTI_NOT_DOGFIGHT) {
-                if (Net_players[np_index].flags & NETINFO_FLAG_RESPAWNING) {
-                    // since the player hasn't actually respawned yet he hasn't
-                    // used up a number or spawns equal to his deaths so add an
-                    // extra life back.
-                    return Netgame.respawn - p->stats.m_player_deaths + 1;
-                }
-                else {
-                    return Netgame.respawn - p->stats.m_player_deaths;
-                }
-            }
+            ASSERT (0);
             break;
 
         default:
@@ -22409,33 +21097,6 @@ int sexp_return_player_data (int node, int type) {
                 "return-player-data was called with invalid type %d on node "
                 "%d!",
                 type, node);
-        }
-    }
-    // AI ships also have a respawn count so we can return valid data for that
-    // at least
-    else if (
-        (Game_mode & GM_MULTIPLAYER) &&
-        (type == OP_SHIP_DEATHS || type == OP_RESPAWNS_LEFT)) {
-        p_objp = mission_parse_get_arrival_ship (CTEXT (node));
-        if (p_objp == NULL) { return 0; }
-
-        if (p_objp->flags[Mission::Parse_Object_Flags::OF_Player_start]) {
-            switch (type) {
-            case OP_SHIP_DEATHS:
-                // when an AI ship is finally killed its respawn count won't be
-                // updated so get the number of deaths from the log instead
-                return mission_log_get_count (
-                           LOG_SHIP_DESTROYED, CTEXT (node), NULL) +
-                       mission_log_get_count (
-                           LOG_SELF_DESTRUCTED, CTEXT (node), NULL);
-
-            case OP_RESPAWNS_LEFT:
-                return Netgame.respawn - p_objp->respawn_count;
-
-            default:
-                // We should never reach this.
-                ASSERT (false);
-            }
         }
     }
 
@@ -22453,22 +21114,7 @@ int sexp_num_type_kills (int node) {
     if (sindex < 0) { return 0; }
     if (Ships[sindex].objnum < 0) { return 0; }
 
-    int np_index;
-
-    // in multiplayer, search through all players
-    if (Game_mode & GM_MULTIPLAYER) {
-        // try and find the player
-        np_index =
-            multi_find_player_by_object (&Objects[Ships[sindex].objnum]);
-        if ((np_index >= 0) && (np_index < MAX_PLAYERS)) {
-            p = Net_players[np_index].m_player;
-        }
-    }
-    // if we're in single player, we're only concerned with ourself
-    else {
-        // me
-        if (Player_obj == &Objects[Ships[sindex].objnum]) { p = Player; }
-    }
+    if (Player_obj == &Objects[Ships[sindex].objnum]) { p = Player; }
 
     // bad
     if (p == NULL) { return 0; }
@@ -22499,22 +21145,7 @@ int sexp_num_class_kills (int node) {
     if (sindex < 0) { return 0; }
     if (Ships[sindex].objnum < 0) { return 0; }
 
-    int np_index;
-
-    // in multiplayer, search through all players
-    if (Game_mode & GM_MULTIPLAYER) {
-        // try and find the player
-        np_index =
-            multi_find_player_by_object (&Objects[Ships[sindex].objnum]);
-        if ((np_index >= 0) && (np_index < MAX_PLAYERS)) {
-            p = Net_players[np_index].m_player;
-        }
-    }
-    // if we're in single player, we're only concerned with ourself
-    else {
-        // me
-        if (Player_obj == &Objects[Ships[sindex].objnum]) { p = Player; }
-    }
+    if (Player_obj == &Objects[Ships[sindex].objnum]) { p = Player; }
 
     // bad
     if (p == NULL) { return 0; }
@@ -22958,9 +21589,6 @@ void sexp_int_to_string (int n) {
     int i, sexp_variable_index;
     char new_text[TOKEN_LENGTH];
 
-    // Only do single player or multi host
-    if (MULTIPLAYER_CLIENT) return;
-
     i = eval_num (n);
     n = CDR (n);
 
@@ -22989,9 +21617,6 @@ void sexp_int_to_string (int n) {
 void sexp_string_concatenate (int n) {
     int sexp_variable_index;
     char new_text[TOKEN_LENGTH * 2];
-
-    // Only do single player or multi host
-    if (MULTIPLAYER_CLIENT) return;
 
     char* str1 = CTEXT (n);
     n = CDR (n);
@@ -23035,9 +21660,6 @@ void sexp_string_concatenate (int n) {
 void sexp_string_concatenate_block (int n) {
     int sexp_variable_index;
     std::string new_text;
-
-    // Only do single player or multi host
-    if (MULTIPLAYER_CLIENT) return;
 
     // get sexp_variable index
     ASSERT (Sexp_nodes[n].first == -1);
@@ -23086,9 +21708,6 @@ void sexp_string_get_substring (int node) {
     int n = node;
     int sexp_variable_index;
     char new_text[TOKEN_LENGTH];
-
-    // Only do single player or multi host
-    if (MULTIPLAYER_CLIENT) return;
 
     char* parent = CTEXT (n);
     n = CDR (n);
@@ -23149,9 +21768,6 @@ void sexp_string_get_substring (int node) {
 void sexp_string_set_substring (int node) {
     int n = node;
     int sexp_variable_index;
-
-    // Only do single player or multi host
-    if (MULTIPLAYER_CLIENT) return;
 
     char* parent = CTEXT (n);
     n = CDR (n);
@@ -23247,9 +21863,6 @@ void sexp_string_set_substring (int node) {
 void sexp_modify_variable_xstr (int n) {
     ASSERT (n >= 0);
 
-    // Only do single player or multi host
-    if (MULTIPLAYER_CLIENT) return;
-
     // get sexp_variable index
     ASSERT (Sexp_nodes[n].first == -1);
     auto sexp_variable_index = atoi (Sexp_nodes[n].text);
@@ -23332,20 +21945,9 @@ void sexp_flash_hud_gauge (int node) {
     for (i = 0; i < NUM_HUD_GAUGES; i++) {
         if (!strcasecmp (HUD_gauge_text[i], name)) {
             hud_gauge_start_flash (i); // call HUD function to flash gauge
-
-            Current_sexp_network_packet.start_callback ();
-            Current_sexp_network_packet.send_int (i);
-            Current_sexp_network_packet.end_callback ();
-
             break;
         }
     }
-}
-
-void multi_sexp_flash_hud_gauge () {
-    int i;
-
-    if (Current_sexp_network_packet.get_int (i)) { hud_gauge_start_flash (i); }
 }
 
 void sexp_set_training_context_fly_path (int node) {
@@ -23404,18 +22006,6 @@ void sexp_toggle_cutscene_bars (int node, int set) {
     if (node != -1) delta_speed = eval_num (node) / 1000.0f;
 
     toggle_cutscene_bars (delta_speed, set);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_float (delta_speed);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_toggle_cutscene_bars (int set) {
-    float delta_speed;
-
-    if (Current_sexp_network_packet.get_float (delta_speed)) {
-        toggle_cutscene_bars (delta_speed, set);
-    }
 }
 
 void sexp_fade (bool fade_in, int duration, ubyte R, ubyte G, ubyte B) {
@@ -23498,27 +22088,6 @@ void sexp_fade (int n, bool fade_in) {
     }
 
     sexp_fade (fade_in, duration, (ubyte)R, (ubyte)G, (ubyte)B);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (duration);
-    Current_sexp_network_packet.send_int (R);
-    Current_sexp_network_packet.send_int (G);
-    Current_sexp_network_packet.send_int (B);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_fade (bool fade_in) {
-    int duration = 0;
-    int R = 0;
-    int G = 0;
-    int B = 0;
-
-    if (Current_sexp_network_packet.get_int (duration))
-        if (Current_sexp_network_packet.get_int (R))
-            if (Current_sexp_network_packet.get_int (G))
-                Current_sexp_network_packet.get_int (B);
-
-    sexp_fade (fade_in, duration, (ubyte)R, (ubyte)G, (ubyte)B);
 }
 
 camera* sexp_get_set_camera (bool reset = false) {
@@ -23577,37 +22146,6 @@ void sexp_set_camera_position (int n) {
 
     cam->set_position (
         &camera_vec, camera_time, camera_acc_time, camera_dec_time);
-
-    // multiplayer callback
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_float (camera_vec.xyz.x);
-    Current_sexp_network_packet.send_float (camera_vec.xyz.y);
-    Current_sexp_network_packet.send_float (camera_vec.xyz.z);
-    Current_sexp_network_packet.send_float (camera_time);
-    Current_sexp_network_packet.send_float (camera_acc_time);
-    Current_sexp_network_packet.send_float (camera_dec_time);
-    Current_sexp_network_packet.end_callback ();
-}
-
-// CommanderDJ
-void multi_sexp_set_camera_position () {
-    camera* cam = sexp_get_set_camera ();
-    ASSERT (cam != nullptr);
-
-    vec3d camera_vec;
-    float camera_time = 0.0f;
-    float camera_acc_time = 0.0f;
-    float camera_dec_time = 0.0f;
-
-    Current_sexp_network_packet.get_float (camera_vec.xyz.x);
-    Current_sexp_network_packet.get_float (camera_vec.xyz.y);
-    Current_sexp_network_packet.get_float (camera_vec.xyz.z);
-    Current_sexp_network_packet.get_float (camera_time);
-    Current_sexp_network_packet.get_float (camera_acc_time);
-    Current_sexp_network_packet.get_float (camera_dec_time);
-
-    cam->set_position (
-        &camera_vec, camera_time, camera_acc_time, camera_dec_time);
 }
 
 void sexp_set_camera_rotation (int n) {
@@ -23637,34 +22175,6 @@ void sexp_set_camera_rotation (int n) {
     }
 
     cam->set_rotation (&rot_angles, rot_time, rot_acc_time, rot_dec_time);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_float (rot_angles.b);
-    Current_sexp_network_packet.send_float (rot_angles.h);
-    Current_sexp_network_packet.send_float (rot_angles.p);
-    Current_sexp_network_packet.send_float (rot_time);
-    Current_sexp_network_packet.send_float (rot_acc_time);
-    Current_sexp_network_packet.send_float (rot_dec_time);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_camera_rotation () {
-    camera* cam = sexp_get_set_camera ();
-    if (cam == NULL) return;
-
-    angles_t rot_angles;
-    float rot_time = 0.0f;
-    float rot_acc_time = 0.0f;
-    float rot_dec_time = 0.0f;
-
-    Current_sexp_network_packet.get_float (rot_angles.b);
-    Current_sexp_network_packet.get_float (rot_angles.h);
-    Current_sexp_network_packet.get_float (rot_angles.p);
-    Current_sexp_network_packet.get_float (rot_time);
-    Current_sexp_network_packet.get_float (rot_acc_time);
-    Current_sexp_network_packet.get_float (rot_dec_time);
-
-    cam->set_rotation (&rot_angles, rot_time, rot_acc_time, rot_dec_time);
 }
 
 void sexp_set_camera_facing (int n) {
@@ -23691,35 +22201,6 @@ void sexp_set_camera_facing (int n) {
             if (n != -1) { rot_dec_time = eval_num (n) / 1000.0f; }
         }
     }
-
-    cam->set_rotation_facing (&location, rot_time, rot_acc_time, rot_dec_time);
-
-    // multiplayer callback
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_float (location.xyz.x);
-    Current_sexp_network_packet.send_float (location.xyz.y);
-    Current_sexp_network_packet.send_float (location.xyz.z);
-    Current_sexp_network_packet.send_float (rot_time);
-    Current_sexp_network_packet.send_float (rot_acc_time);
-    Current_sexp_network_packet.send_float (rot_dec_time);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_camera_facing () {
-    camera* cam = sexp_get_set_camera ();
-    if (cam == NULL) return;
-
-    vec3d location;
-    float rot_time = 0.0f;
-    float rot_acc_time = 0.0f;
-    float rot_dec_time = 0.0f;
-
-    Current_sexp_network_packet.get_float (location.xyz.x);
-    Current_sexp_network_packet.get_float (location.xyz.y);
-    Current_sexp_network_packet.get_float (location.xyz.z);
-    Current_sexp_network_packet.get_float (rot_time);
-    Current_sexp_network_packet.get_float (rot_acc_time);
-    Current_sexp_network_packet.get_float (rot_dec_time);
 
     cam->set_rotation_facing (&location, rot_time, rot_acc_time, rot_dec_time);
 }
@@ -23771,29 +22252,6 @@ void sexp_set_camera_facing_object (int n) {
             if (n != -1) { rot_dec_time = eval_num (n) / 1000.0f; }
         }
     }
-    actually_set_camera_facing_object (
-        object_name, rot_time, rot_acc_time, rot_dec_time);
-
-    // multiplayer callback
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_string (object_name);
-    Current_sexp_network_packet.send_float (rot_time);
-    Current_sexp_network_packet.send_float (rot_acc_time);
-    Current_sexp_network_packet.send_float (rot_dec_time);
-    Current_sexp_network_packet.end_callback ();
-}
-
-// CommanderDJ
-void multi_sexp_set_camera_facing_object () {
-    char object_name[TOKEN_LENGTH];
-    float rot_time = 0.0f;
-    float rot_acc_time = 0.0f;
-    float rot_dec_time = 0.0f;
-
-    Current_sexp_network_packet.get_string (object_name);
-    Current_sexp_network_packet.get_float (rot_time);
-    Current_sexp_network_packet.get_float (rot_acc_time);
-    Current_sexp_network_packet.get_float (rot_dec_time);
 
     actually_set_camera_facing_object (
         object_name, rot_time, rot_acc_time, rot_dec_time);
@@ -23823,33 +22281,9 @@ void sexp_set_camera_fov (int n) {
     }
 
     cam->set_fov (camera_fov, camera_time, camera_acc_time, camera_dec_time);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_float (camera_fov);
-    Current_sexp_network_packet.send_float (camera_time);
-    Current_sexp_network_packet.send_float (camera_acc_time);
-    Current_sexp_network_packet.send_float (camera_dec_time);
-    Current_sexp_network_packet.end_callback ();
 }
 
 // CommanderDJ
-void multi_sexp_set_camera_fov () {
-    camera* cam = sexp_get_set_camera ();
-
-    if (cam == NULL) return;
-
-    float camera_fov = VIEWER_ZOOM_DEFAULT;
-    float camera_time = 0.0f;
-    float camera_acc_time = 0.0f;
-    float camera_dec_time = 0.0f;
-
-    Current_sexp_network_packet.get_float (camera_fov);
-    Current_sexp_network_packet.get_float (camera_time);
-    Current_sexp_network_packet.get_float (camera_acc_time);
-    Current_sexp_network_packet.get_float (camera_dec_time);
-
-    cam->set_fov (camera_fov, camera_time, camera_acc_time, camera_dec_time);
-}
 
 // Internal helper function for set-target and set-host
 object* sexp_camera_get_objsub (int node, int* o_submodel) {
@@ -23916,27 +22350,6 @@ void sexp_set_camera_target (int node) {
     int submodel = -1;
     object* objp = sexp_camera_get_objsub (node, &submodel);
 
-    //*****Set
-    cam->set_object_target (objp, submodel);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_object (objp);
-    Current_sexp_network_packet.send_int (submodel);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_camera_target () {
-    int submodel;
-    object* objp;
-
-    // Try to get current camera
-    camera* cam = sexp_get_set_camera ();
-
-    if (cam == NULL) return;
-
-    Current_sexp_network_packet.get_object (objp);
-    Current_sexp_network_packet.get_int (submodel);
-
     cam->set_object_target (objp, submodel);
 }
 
@@ -23949,23 +22362,6 @@ void sexp_set_fov (int n) {
 
     // Cap FOV to something reasonable.
     float new_fov = (float)(eval_num (n) % 360);
-    Sexp_fov = fl_radians (new_fov);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_float (new_fov);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_fov () {
-    float new_fov;
-
-    camera* cam = Main_camera.getCamera ();
-    if (cam == NULL) {
-        game_render_frame_setup ();
-        cam = Main_camera.getCamera ();
-    }
-
-    Current_sexp_network_packet.get_float (new_fov);
     Sexp_fov = fl_radians (new_fov);
 }
 
@@ -23985,42 +22381,20 @@ int sexp_get_fov () {
  */
 void sexp_reset_fov () {
     camera* cam = Main_camera.getCamera ();
-    if (cam == NULL) return;
 
-    Sexp_fov = 0.0;
-    // cam->set_fov(VIEWER_ZOOM_DEFAULT);
-
-    Current_sexp_network_packet.do_callback ();
-}
-
-void multi_sexp_reset_fov () {
-    camera* cam = Main_camera.getCamera ();
-    if (cam == NULL) return;
+    if (!cam)
+        return;
 
     Sexp_fov = 0.0;
 }
 
 void sexp_reset_camera (int node) {
-    bool cam_reset = false;
     camera* cam = cam_get_current ().getCamera ();
-    if (cam != NULL) {
-        if (is_sexp_true (node)) {
-            cam->reset ();
-            cam_reset = true;
-        }
+
+    if (!cam && is_sexp_true (node)) {
+        cam->reset ();
     }
-    cam_reset_camera ();
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_bool (cam_reset);
-    Current_sexp_network_packet.end_callback ();
-}
 
-void multi_sexp_reset_camera () {
-    camera* cam = cam_get_current ().getCamera ();
-    bool cam_reset = false;
-
-    Current_sexp_network_packet.get_bool (cam_reset);
-    if ((cam != NULL) && cam_reset) { cam->reset (); }
     cam_reset_camera ();
 }
 
@@ -24111,14 +22485,10 @@ void sexp_show_subtitle (int node) {
 
 void sexp_clear_subtitles () {
     Subtitles.clear ();
-
-    Current_sexp_network_packet.do_callback ();
 }
 
-void multi_sexp_clear_subtitles () { Subtitles.clear (); }
-
 void sexp_show_subtitle_text (int node) {
-    int i, n = node, message_index = -1;
+    int i, n = node;
     char text[MESSAGE_LENGTH];
 
     // we'll suppose it's the string for now
@@ -24128,7 +22498,6 @@ void sexp_show_subtitle_text (int node) {
     for (i = 0; i < Num_messages; i++) {
         if (!strcasecmp (Messages[i].name, ctext)) {
             ctext = Messages[i].message;
-            message_index = i;
             break;
         }
     }
@@ -24222,69 +22591,6 @@ void sexp_show_subtitle_text (int node) {
         x_pos, y_pos, text, NULL, display_time, fade_time, &new_color, fontnum,
         center_x, center_y, width, 0, post_shaded);
     Subtitles.push_back (new_subtitle);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (x_pct);
-    Current_sexp_network_packet.send_int (y_pct);
-    Current_sexp_network_packet.send_int (message_index);
-    // only send the text if it is not a message. If it is a message, we've
-    // already sent the index anyway.
-    if (message_index == -1) {
-        Current_sexp_network_packet.send_string (text);
-    }
-    Current_sexp_network_packet.send_float (display_time);
-    Current_sexp_network_packet.send_float (fade_time);
-    Current_sexp_network_packet.send_int (red);
-    Current_sexp_network_packet.send_int (green);
-    Current_sexp_network_packet.send_int (blue);
-    Current_sexp_network_packet.send_int (fontnum);
-    Current_sexp_network_packet.send_bool (center_x);
-    Current_sexp_network_packet.send_bool (center_y);
-    Current_sexp_network_packet.send_int (width_pct);
-    Current_sexp_network_packet.send_bool (post_shaded);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_show_subtitle_text () {
-    int x_pct, y_pct, width_pct, fontnum, message_index = -1;
-    char text[MESSAGE_LENGTH];
-    float display_time, fade_time = 0.0f;
-    int red = 255, green = 255, blue = 255;
-    bool center_x = false, center_y = false;
-    bool post_shaded = false;
-    color new_color;
-
-    Current_sexp_network_packet.get_int (x_pct);
-    Current_sexp_network_packet.get_int (y_pct);
-    Current_sexp_network_packet.get_int (message_index);
-    if (message_index == -1) { Current_sexp_network_packet.get_string (text); }
-    else {
-        char* ctext = Messages[message_index].message;
-        message_translate_tokens (text, ctext);
-    }
-    Current_sexp_network_packet.get_float (display_time);
-    Current_sexp_network_packet.get_float (fade_time);
-    Current_sexp_network_packet.get_int (red);
-    Current_sexp_network_packet.get_int (green);
-    Current_sexp_network_packet.get_int (blue);
-    Current_sexp_network_packet.get_int (fontnum);
-    Current_sexp_network_packet.get_bool (center_x);
-    Current_sexp_network_packet.get_bool (center_y);
-    Current_sexp_network_packet.get_int (width_pct);
-    Current_sexp_network_packet.get_bool (post_shaded);
-
-    gr_init_alphacolor (&new_color, red, green, blue, 255);
-
-    // calculate pixel positions
-    int x_pos = (int)(gr_screen.center_w * (x_pct / 100.0f));
-    int y_pos = (int)(gr_screen.center_h * (y_pct / 100.0f));
-    int width = (int)(gr_screen.center_w * (width_pct / 100.0f));
-
-    // add the subtitle
-    subtitle new_subtitle (
-        x_pos, y_pos, text, NULL, display_time, fade_time, &new_color, fontnum,
-        center_x, center_y, width, 0, post_shaded);
-    Subtitles.push_back (new_subtitle);
 }
 
 void sexp_show_subtitle_image (int node) {
@@ -24347,44 +22653,6 @@ void sexp_show_subtitle_image (int node) {
         x_pos, y_pos, NULL, image, display_time, fade_time, NULL, -1, center_x,
         center_y, width, height, post_shaded);
     Subtitles.push_back (new_subtitle);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (x_pos);
-    Current_sexp_network_packet.send_int (y_pos);
-    Current_sexp_network_packet.send_string (image);
-    Current_sexp_network_packet.send_float (display_time);
-    Current_sexp_network_packet.send_float (fade_time);
-    Current_sexp_network_packet.send_bool (center_x);
-    Current_sexp_network_packet.send_bool (center_y);
-    Current_sexp_network_packet.send_int (width);
-    Current_sexp_network_packet.send_int (height);
-    Current_sexp_network_packet.send_bool (post_shaded);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_show_subtitle_image () {
-    int x_pos, y_pos, width = 0, height = 0;
-    char image[TOKEN_LENGTH];
-    float display_time, fade_time = 0.0f;
-    bool center_x = false, center_y = false;
-    bool post_shaded = false;
-
-    Current_sexp_network_packet.get_int (x_pos);
-    Current_sexp_network_packet.get_int (y_pos);
-    Current_sexp_network_packet.get_string (image);
-    Current_sexp_network_packet.get_float (display_time);
-    Current_sexp_network_packet.get_float (fade_time);
-    Current_sexp_network_packet.get_bool (center_x);
-    Current_sexp_network_packet.get_bool (center_y);
-    Current_sexp_network_packet.get_int (width);
-    Current_sexp_network_packet.get_int (height);
-    Current_sexp_network_packet.get_bool (post_shaded);
-
-    // add the subtitle
-    subtitle new_subtitle (
-        x_pos, y_pos, NULL, image, display_time, fade_time, NULL, -1, center_x,
-        center_y, width, height, post_shaded);
-    Subtitles.push_back (new_subtitle);
 }
 
 void sexp_set_time_compression (int n) {
@@ -24392,40 +22660,18 @@ void sexp_set_time_compression (int n) {
     float new_change_time = 0.0f;
     float current_multiplier = 0.0f;
 
-    Current_sexp_network_packet.start_callback ();
-
     new_multiplier = eval_num (n) / 100.0f; // percent->decimal
-    Current_sexp_network_packet.send_float (new_multiplier);
 
     // Time to change
     n = CDR (n);
     if (n != -1) {
         new_change_time = eval_num (n) / 1000.0f; // ms->seconds
-        Current_sexp_network_packet.send_float (new_change_time);
     }
 
     // Override current time compression with this value
     n = CDR (n);
     if (n != -1) {
         current_multiplier = eval_num (n) / 100.0f;
-        set_time_compression (current_multiplier);
-        Current_sexp_network_packet.send_float (current_multiplier);
-    }
-
-    Current_sexp_network_packet.end_callback ();
-
-    set_time_compression (new_multiplier, new_change_time);
-    lock_time_compression (true);
-}
-
-void multi_sexp_set_time_compression () {
-    float new_change_time = 0.0f;
-    float new_multiplier = 0.0f;
-    float current_multiplier = 0.0f;
-
-    Current_sexp_network_packet.get_float (new_multiplier);
-    Current_sexp_network_packet.get_float (new_change_time);
-    if (Current_sexp_network_packet.get_float (current_multiplier)) {
         set_time_compression (current_multiplier);
     }
 
@@ -24434,14 +22680,6 @@ void multi_sexp_set_time_compression () {
 }
 
 void sexp_reset_time_compression () {
-    set_time_compression (1);
-    lock_time_compression (false);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_reset_time_compression () {
     set_time_compression (1);
     lock_time_compression (false);
 }
@@ -24468,21 +22706,6 @@ void sexp_set_camera_shudder (int n) {
     float intensity = (float)eval_num (CDR (n)) * 0.01f;
 
     game_shudder_apply (time, intensity);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_int (time);
-    Current_sexp_network_packet.send_float (intensity);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_camera_shudder () {
-    int time;
-    float intensity;
-
-    Current_sexp_network_packet.get_int (time);
-    if (Current_sexp_network_packet.get_float (intensity)) {
-        game_shudder_apply (time, intensity);
-    }
 }
 
 void sexp_set_jumpnode_name (int n) // CommanderDJ
@@ -24496,35 +22719,12 @@ void sexp_set_jumpnode_name (int n) // CommanderDJ
     n = CDR (n);
     char* new_name = CTEXT (n); // for multi
     jnp->SetName (new_name);
-
-    // multiplayer callback
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_string (old_name);
-    Current_sexp_network_packet.send_string (new_name);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_jumpnode_name () // CommanderDJ
-{
-    char old_name[TOKEN_LENGTH];
-    char new_name[TOKEN_LENGTH];
-
-    Current_sexp_network_packet.get_string (old_name);
-    Current_sexp_network_packet.get_string (new_name);
-
-    CJumpNode* jnp = jumpnode_get_by_name (old_name);
-
-    if (jnp == NULL) return;
-
-    jnp->SetName (new_name);
 }
 
 void sexp_set_jumpnode_color (int n) {
     CJumpNode* jnp = jumpnode_get_by_name (CTEXT (n));
 
     if (jnp == NULL) return;
-
-    char* jumpnode_name = CTEXT (n); // for multi
 
     n = CDR (n);
 
@@ -24534,36 +22734,9 @@ void sexp_set_jumpnode_color (int n) {
     int alpha = eval_num (CDR (CDR (CDR (n))));
 
     jnp->SetAlphaColor (red, green, blue, alpha);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_string (jumpnode_name);
-    Current_sexp_network_packet.send_int (red);
-    Current_sexp_network_packet.send_int (green);
-    Current_sexp_network_packet.send_int (blue);
-    Current_sexp_network_packet.send_int (alpha);
-    Current_sexp_network_packet.end_callback ();
 }
 
 // CommanderDJ
-void multi_sexp_set_jumpnode_color () {
-    char jumpnode_name[TOKEN_LENGTH];
-    int red, blue, green, alpha;
-
-    Current_sexp_network_packet.get_string (jumpnode_name);
-    CJumpNode* jnp = jumpnode_get_by_name (jumpnode_name);
-
-    if (jnp == NULL) {
-        Current_sexp_network_packet.discard_remaining_callback_data ();
-        return;
-    }
-
-    Current_sexp_network_packet.get_int (red);
-    Current_sexp_network_packet.get_int (green);
-    Current_sexp_network_packet.get_int (blue);
-    Current_sexp_network_packet.get_int (alpha);
-
-    jnp->SetAlphaColor (red, green, blue, alpha);
-}
 
 void sexp_set_jumpnode_model (int n) {
     char* jumpnode_name = CTEXT (n);
@@ -24577,54 +22750,14 @@ void sexp_set_jumpnode_model (int n) {
     bool show_polys = is_sexp_true (n);
 
     jnp->SetModel (model_name, show_polys);
-
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_string (jumpnode_name);
-    Current_sexp_network_packet.send_string (model_name);
-    Current_sexp_network_packet.send_bool (show_polys);
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_set_jumpnode_model () {
-    char jumpnode_name[TOKEN_LENGTH];
-    char model_name[TOKEN_LENGTH];
-    bool show_polys;
-
-    Current_sexp_network_packet.get_string (jumpnode_name);
-    Current_sexp_network_packet.get_string (model_name);
-
-    CJumpNode* jnp = jumpnode_get_by_name (jumpnode_name);
-
-    if (jnp == NULL) {
-        Current_sexp_network_packet.discard_remaining_callback_data ();
-        return;
-    }
-
-    show_polys = Current_sexp_network_packet.get_bool (show_polys);
-
-    jnp->SetModel (model_name, show_polys);
 }
 
 void sexp_show_hide_jumpnode (int node, bool show) {
-    Current_sexp_network_packet.start_callback ();
-
     for (int n = node; n >= 0; n = CDR (n)) {
         CJumpNode* jnp = jumpnode_get_by_name (CTEXT (n));
         if (jnp != NULL) {
             jnp->SetVisibility (show);
-            Current_sexp_network_packet.send_string (CTEXT (n));
         }
-    }
-
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_show_hide_jumpnode (bool show) {
-    char jumpnode_name[TOKEN_LENGTH];
-
-    while (Current_sexp_network_packet.get_string (jumpnode_name)) {
-        CJumpNode* jnp = jumpnode_get_by_name (jumpnode_name);
-        if (jnp != NULL) jnp->SetVisibility (show);
     }
 }
 
@@ -24926,43 +23059,14 @@ void sexp_change_team_color (int n) {
         n = CDR (n);
     }
 
-    Current_sexp_network_packet.start_callback ();
-    Current_sexp_network_packet.send_string (new_color);
-    Current_sexp_network_packet.send_int (fade_time);
-    Current_sexp_network_packet.send_int ((int)shippointers.size ());
-
     for (std::vector< ship* >::iterator shipp = shippointers.begin ();
          shipp != shippointers.end (); ++shipp) {
         ship* shp = *shipp;
-        Current_sexp_network_packet.send_ship (shp);
         if (fade_time == 0) { shp->team_name = new_color; }
         else {
             shp->secondary_team_name = new_color;
             shp->team_change_time = fade_time;
             shp->team_change_timestamp = Missiontime;
-        }
-    }
-
-    Current_sexp_network_packet.end_callback ();
-}
-
-void multi_sexp_change_team_color () {
-    std::string new_color = "<none>";
-    int fade_time = 0;
-    int n_ships = 0;
-
-    Current_sexp_network_packet.get_string (new_color);
-    Current_sexp_network_packet.get_int (fade_time);
-    Current_sexp_network_packet.get_int (n_ships);
-
-    for (int i = 0; i < n_ships; ++i) {
-        ship* shipp;
-        Current_sexp_network_packet.get_ship (shipp);
-        if (fade_time == 0) { shipp->team_name = new_color; }
-        else {
-            shipp->secondary_team_name = new_color;
-            shipp->team_change_time = fade_time;
-            shipp->team_change_timestamp = Missiontime;
         }
     }
 }
@@ -25640,7 +23744,7 @@ int eval_sexp (int cur_node, int referenced_node) {
             sexp_val = sexp_is_friendly_stealth_visible (node);
             break;
 
-        case OP_TEAM_SCORE: sexp_val = sexp_team_score (node); break;
+        case OP_TEAM_SCORE: ASSERT (0); break;
 
         case OP_LAST_ORDER_TIME: sexp_val = sexp_last_order_time (node); break;
 
@@ -26422,7 +24526,7 @@ int eval_sexp (int cur_node, int referenced_node) {
             break;
 
         case OP_CHANGE_TEAM_SCORE:
-            sexp_change_team_score (node);
+            ASSERT (0);
             sexp_val = SEXP_TRUE;
             break;
 
@@ -26644,8 +24748,7 @@ int eval_sexp (int cur_node, int referenced_node) {
             break;
 
         case OP_SET_RESPAWNS:
-            sexp_set_respawns (node);
-            sexp_val = SEXP_TRUE;
+            ASSERT (0);
             break;
 
         case OP_REMOVE_WEAPONS:
@@ -27458,270 +25561,6 @@ int eval_sexp (int cur_node, int referenced_node) {
         }
 
         return sexp_val;
-    }
-}
-
-/**
- * Only runs on the client machines not the server. Evaluates the contents of a
- * SEXP packet and calls the relevent multi_sexp_x function(s).
- */
-void multi_sexp_eval () {
-    int op_num;
-
-    ASSERT (MULTIPLAYER_CLIENT);
-
-    while (Current_sexp_network_packet.sexp_bytes_left > 0) {
-        op_num = Current_sexp_network_packet.get_next_operator ();
-
-        ASSERT (Current_sexp_network_packet.sexp_bytes_left);
-
-        if (op_num < 0) {
-            WARNINGF (
-                LOCATION,
-                "Received invalid operator number from host in "
-                "multi_sexp_eval(). Entire packet may be corrupt. Discarding "
-                "packet");
-            return;
-        }
-
-        switch (op_num) {
-        case OP_CHANGE_SOUNDTRACK: multi_sexp_change_soundtrack (); break;
-
-        case OP_SET_PERSONA: multi_sexp_set_persona (); break;
-
-        case OP_CHANGE_SUBSYSTEM_NAME:
-            multi_sexp_change_subsystem_name ();
-            break;
-
-        case OP_SHIP_SUBSYS_NO_REPLACE:
-            multi_sexp_deal_with_subsys_flag (
-                Ship::Subsystem_Flags::No_replace);
-            break;
-        case OP_SHIP_SUBSYS_NO_LIVE_DEBRIS:
-            multi_sexp_deal_with_subsys_flag (
-                Ship::Subsystem_Flags::No_live_debris);
-            break;
-        case OP_SHIP_SUBSYS_VANISHED:
-            multi_sexp_deal_with_subsys_flag (Ship::Subsystem_Flags::Vanished);
-            break;
-        case OP_SHIP_SUBSYS_IGNORE_IF_DEAD:
-            multi_sexp_deal_with_subsys_flag (
-                Ship::Subsystem_Flags::Missiles_ignore_if_dead);
-            break;
-        case OP_SHIP_SUBSYS_TARGETABLE:
-        case OP_SHIP_SUBSYS_UNTARGETABLE:
-            multi_sexp_deal_with_subsys_flag (
-                Ship::Subsystem_Flags::Untargetable);
-            break;
-
-        case OP_SHIP_CHANGE_CALLSIGN:
-            multi_sexp_ship_change_callsign ();
-            break;
-
-        case OP_SET_RESPAWNS: multi_sexp_set_respawns (); break;
-
-        case OP_REMOVE_WEAPONS: multi_sexp_remove_weapons (); break;
-
-        case OP_CHANGE_SHIP_CLASS: multi_sexp_change_ship_class (); break;
-
-        case OP_PLAY_SOUND_FROM_TABLE:
-            multi_sexp_play_sound_from_table ();
-            break;
-
-        case OP_PLAY_SOUND_FROM_FILE:
-            multi_sexp_play_sound_from_file ();
-            break;
-
-        case OP_CLOSE_SOUND_FROM_FILE:
-            multi_sexp_close_sound_from_file ();
-            break;
-
-        case OP_PAUSE_SOUND_FROM_FILE:
-            multi_sexp_pause_sound_from_file ();
-            break;
-
-        case OP_SHIP_BOMB_TARGETABLE:
-        case OP_SHIP_BOMB_UNTARGETABLE:
-        case OP_SHIP_INVISIBLE:
-        case OP_SHIP_VISIBLE:
-        case OP_SHIP_STEALTHY:
-        case OP_SHIP_UNSTEALTHY:
-        case OP_FRIENDLY_STEALTH_INVISIBLE:
-        case OP_FRIENDLY_STEALTH_VISIBLE:
-        case OP_LOCK_AFTERBURNER:
-        case OP_UNLOCK_AFTERBURNER:
-        case OP_LOCK_PRIMARY_WEAPON:
-        case OP_UNLOCK_PRIMARY_WEAPON:
-        case OP_LOCK_SECONDARY_WEAPON:
-        case OP_UNLOCK_SECONDARY_WEAPON:
-        case OP_SHIELDS_ON:
-        case OP_SHIELDS_OFF: multi_sexp_deal_with_ship_flag (); break;
-
-        case OP_ALTER_SHIP_FLAG: multi_sexp_alter_ship_flag (); break;
-
-        case OP_SET_AFTERBURNER_ENERGY: multi_sexp_set_energy_pct (); break;
-
-        case OP_SET_AMBIENT_LIGHT: multi_sexp_set_ambient_light (); break;
-
-        case OP_MODIFY_VARIABLE: multi_sexp_modify_variable (); break;
-
-        case OP_NAV_ADD_WAYPOINT: multi_sexp_add_nav_waypoint (); break;
-
-        case OP_CUTSCENES_FADE_IN:
-        case OP_CUTSCENES_FADE_OUT:
-            multi_sexp_fade (op_num == OP_CUTSCENES_FADE_IN);
-            break;
-
-        case OP_NAV_ADD_SHIP: multi_add_nav_ship (); break;
-
-        case OP_NAV_DEL: multi_del_nav (); break;
-
-        case OP_ADD_REMOVE_ESCORT: multi_sexp_add_remove_escort (); break;
-
-        case OP_CUTSCENES_SHOW_SUBTITLE_TEXT:
-            multi_sexp_show_subtitle_text ();
-            break;
-
-        case OP_CUTSCENES_SHOW_SUBTITLE_IMAGE:
-            multi_sexp_show_subtitle_image ();
-            break;
-
-        case OP_TRAINING_MSG: multi_sexp_send_training_message (); break;
-
-        case OP_HUD_DISABLE: multi_sexp_hud_disable (); break;
-
-        case OP_HUD_DISABLE_EXCEPT_MESSAGES:
-            multi_sexp_hud_disable_except_messages ();
-            break;
-
-        case OP_FLASH_HUD_GAUGE: multi_sexp_flash_hud_gauge (); break;
-
-        case OP_HUD_DISPLAY_GAUGE: multi_sexp_hud_display_gauge (); break;
-
-        case OP_CUTSCENES_SET_CUTSCENE_BARS:
-        case OP_CUTSCENES_UNSET_CUTSCENE_BARS:
-            multi_sexp_toggle_cutscene_bars (
-                op_num == OP_CUTSCENES_SET_CUTSCENE_BARS);
-            break;
-
-        case OP_CUTSCENES_SET_CAMERA_FACING:
-            multi_sexp_set_camera_facing ();
-            break;
-
-        case OP_CUTSCENES_SET_CAMERA_FACING_OBJECT:
-            multi_sexp_set_camera_facing_object ();
-            break;
-
-        case OP_CUTSCENES_SET_CAMERA_TARGET:
-            multi_sexp_set_camera_target ();
-            break;
-
-        case OP_CUTSCENES_SET_CAMERA_ROTATION:
-            multi_sexp_set_camera_rotation ();
-            break;
-
-        case OP_CUTSCENES_SET_CAMERA_FOV: multi_sexp_set_camera_fov (); break;
-
-        case OP_CUTSCENES_SET_CAMERA_POSITION:
-            multi_sexp_set_camera_position ();
-            break;
-
-        case OP_SET_CAMERA_SHUDDER: multi_sexp_set_camera_shudder (); break;
-
-        case OP_CUTSCENES_RESET_CAMERA: multi_sexp_reset_camera (); break;
-
-        case OP_CUTSCENES_SET_FOV: multi_sexp_set_fov (); break;
-
-        case OP_CUTSCENES_RESET_FOV: multi_sexp_reset_fov (); break;
-
-        case OP_JUMP_NODE_SET_JUMPNODE_NAME:
-            multi_sexp_set_jumpnode_name ();
-            break;
-
-        case OP_IGNORE_KEY: multi_sexp_ignore_key (); break;
-
-        case OP_JUMP_NODE_SET_JUMPNODE_COLOR:
-            multi_sexp_set_jumpnode_color ();
-            break;
-
-        case OP_JUMP_NODE_SET_JUMPNODE_MODEL:
-            multi_sexp_set_jumpnode_model ();
-            break;
-
-        case OP_JUMP_NODE_SHOW_JUMPNODE:
-        case OP_JUMP_NODE_HIDE_JUMPNODE:
-            multi_sexp_show_hide_jumpnode (
-                op_num == OP_JUMP_NODE_SHOW_JUMPNODE);
-            break;
-
-        case OP_CLEAR_SUBTITLES: multi_sexp_clear_subtitles (); break;
-
-        case OP_SET_OBJECT_SPEED_X:
-        case OP_SET_OBJECT_SPEED_Y:
-        case OP_SET_OBJECT_SPEED_Z: multi_sexp_set_object_speed (); break;
-        case OP_SET_OBJECT_POSITION: multi_sexp_set_object_position (); break;
-
-        case OP_CHANGE_TEAM_COLOR: multi_sexp_change_team_color (); break;
-
-        case OP_HUD_SET_MAX_TARGETING_RANGE:
-            multi_sexp_hud_set_max_targeting_range ();
-            break;
-
-        case OP_CUTSCENES_SET_TIME_COMPRESSION:
-            multi_sexp_set_time_compression ();
-            break;
-
-        case OP_CUTSCENES_RESET_TIME_COMPRESSION:
-            sexp_reset_time_compression ();
-            break;
-
-        case OP_SET_ETS_VALUES: multi_sexp_set_ets_values (); break;
-
-        case OP_SET_PRIMARY_AMMO: multi_sexp_set_primary_ammo (); break;
-
-        case OP_SET_SECONDARY_AMMO: multi_sexp_set_secondary_ammo (); break;
-
-        case OP_SET_PRIMARY_WEAPON:
-        case OP_SET_SECONDARY_WEAPON: multi_sexp_set_weapon (); break;
-
-        case OP_TURRET_SET_PRIMARY_AMMO:
-            multi_sexp_set_turret_primary_ammo ();
-            break;
-
-        case OP_TURRET_SET_SECONDARY_AMMO:
-            multi_sexp_set_turret_secondary_ammo ();
-            break;
-
-        case OP_CHANGE_AI_CLASS: multi_sexp_change_ai_class (); break;
-
-        case OP_CHANGE_IFF: multi_sexp_change_iff (); break;
-
-        case OP_CHANGE_IFF_COLOR: multi_sexp_change_iff_color (); break;
-
-        // bad sexp in the packet
-        default:
-            // probably just a version error where the host supports a SEXP but
-            // a client does not
-            if (Current_sexp_network_packet.sexp_discard_operator ()) {
-                WARNINGF (
-                    LOCATION,
-                    "Received invalid SEXP operator number from host. "
-                    "Operator number %d is not supported by this version.",
-                    op_num);
-            }
-            // a more major problem
-            else {
-                WARNINGF (
-                    LOCATION,
-                    "Received invalid SEXP packet from host. Function "
-                    "involving operator %d lacks termination. Entire packet "
-                    "may be corrupt. Discarding remaining packet",
-                    op_num);
-                return;
-            }
-        }
-
-        Current_sexp_network_packet.finished_callback ();
     }
 }
 
@@ -31019,10 +28858,11 @@ void sexp_add_array_block_variable (int index, bool is_numeric) {
  *
  * This should be called in mission when an sexp_variable is to be modified
  */
-void sexp_modify_variable (const char* text, int index, bool sexp_callback) {
+void sexp_modify_variable (
+    const char* text, int index, bool /* sexp_callback */) {
+    
     ASSERT (index >= 0 && index < MAX_SEXP_VARIABLES);
     ASSERT (Sexp_variables[index].type & SEXP_VARIABLE_SET);
-    ASSERT (!MULTIPLAYER_CLIENT);
 
     if (strchr (text, '$') != NULL) {
         // we want to use the same variable substitution that's in messages
@@ -31038,49 +28878,8 @@ void sexp_modify_variable (const char* text, int index, bool sexp_callback) {
         // no variables, so no substitution
         strcpy_s (Sexp_variables[index].text, text);
     }
+
     Sexp_variables[index].type |= SEXP_VARIABLE_MODIFIED;
-
-    // do multi_callback_here
-    // if we're called from the sexp code send a SEXP packet (more efficient)
-    if (MULTIPLAYER_MASTER &&
-        (Sexp_variables[index].type & SEXP_VARIABLE_NETWORK) &&
-        sexp_callback) {
-        Current_sexp_network_packet.start_callback ();
-        Current_sexp_network_packet.send_int (index);
-        Current_sexp_network_packet.send_string (Sexp_variables[index].text);
-        Current_sexp_network_packet.end_callback ();
-    }
-    // otherwise send a SEXP variable packet
-    else if (
-        (Game_mode & GM_MULTIPLAYER) &&
-        (Sexp_variables[index].type & SEXP_VARIABLE_NETWORK)) {
-        send_variable_update_packet (index, Sexp_variables[index].text);
-    }
-}
-
-void multi_sexp_modify_variable () {
-    char value[TOKEN_LENGTH];
-    int variable_index = -1;
-
-    // get the data
-    Current_sexp_network_packet.get_int (variable_index);
-    if (!Current_sexp_network_packet.get_string (value)) { return; }
-
-    // set the sexp_variable
-    if ((variable_index >= 0) && (variable_index < MAX_SEXP_VARIABLES)) {
-        // maybe create it first
-        if (!(Sexp_variables[variable_index].type & SEXP_VARIABLE_SET)) {
-            WARNINGF (
-                LOCATION,
-                "Warning; received multi packet for variable index which is "
-                "not set!  Assuming this should be an array block "
-                "variable...\n");
-            sexp_add_array_block_variable (
-                variable_index, can_construe_as_integer (value));
-        }
-
-        strcpy_s (Sexp_variables[variable_index].text, value);
-    }
 }
 
 void sexp_modify_variable (int n) {
@@ -31090,9 +28889,6 @@ void sexp_modify_variable (int n) {
     char number_as_str[TOKEN_LENGTH];
 
     ASSERT (n >= 0);
-
-    // Only do single player or multi host
-    if (MULTIPLAYER_CLIENT) return;
 
     // get sexp_variable index
     ASSERT (Sexp_nodes[n].first == -1);
@@ -31144,9 +28940,6 @@ void sexp_set_variable_by_index (int node) {
     char number_as_str[TOKEN_LENGTH];
 
     ASSERT (node >= 0);
-
-    // Only do single player or multi host
-    if (MULTIPLAYER_CLIENT) return;
 
     // get sexp_variable index
     sexp_variable_index = eval_num (node);
@@ -31240,9 +29033,6 @@ void sexp_copy_variable_from_index (int node) {
 
     ASSERT (node >= 0);
 
-    // Only do single player or multi host
-    if (MULTIPLAYER_CLIENT) return;
-
     // get sexp_variable index
     from_index = eval_num (node);
 
@@ -31301,9 +29091,6 @@ void sexp_copy_variable_between_indexes (int node) {
     int to_index;
 
     ASSERT (node >= 0);
-
-    // Only do single player or multi host
-    if (MULTIPLAYER_CLIENT) return;
 
     // get sexp_variable indexes
     from_index = eval_num (node);
@@ -34169,7 +31956,6 @@ std::vector<sexp_help_struct> Sexp_help = {
                 "\tRest: Name of the ship's subsystem(s)"
                 "\tNote: If subsystem is already dead it will vanish or reappear out of thin air" },
 
-
         // FUBAR
         { OP_SHIP_SUBSYS_NO_LIVE_DEBRIS, "ship-subsys-no-live-debris\r\n"
                 "\tCauses the specified ship subsystem(s) to not render live debris when it's destroyed.\r\n"
@@ -34791,7 +32577,6 @@ std::vector<sexp_help_struct> Sexp_help = {
                 "\t1: Ship name\r\n"
                 "\t2: Bank to check (from 0 to N-1, where N is the number of primary banks in the ship; N or higher will return the cumulative total for all banks)" },
 
-
         { OP_SECONDARY_AMMO_PCT, "secondary-ammo-pct\r\n"
                 "\tReturns the percentage of ammo remaining in the specified bank (0 to 100)\r\n"
                 "\t1: Ship name\r\n"
@@ -35106,8 +32891,6 @@ std::vector<sexp_help_struct> Sexp_help = {
                 "\t4: Number to set ammo of this bank to (If this is larger than the maximum, bank will be set to maximum)\r\n"
                 "\t5: Rearm Limit. Support ships will only supply this number of weapons (If this is larger than the maximum, bank will be set to maximum)"
         },
-
-
 
         // Karajorma
         { OP_SET_NUM_COUNTERMEASURES, "set-num-countermeasures\r\n"

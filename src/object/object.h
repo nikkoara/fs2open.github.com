@@ -142,7 +142,7 @@ public:
     float sim_hull_strength; // Simulated hull strength - used with training
                              // weapons.
     std::vector< int > objsnd_num; // Index of persistant sound struct.
-    ushort net_signature;
+
     int num_pairs; // How many object pairs this is associated with.  When 0
                    // then there are no more.
 
@@ -337,15 +337,6 @@ void obj_move_call_physics (object* objp, float frametime);
 
 // multiplayer object update stuff begins
 // -------------------------------------------
-
-// do client-side pre-interpolation object movement
-void obj_client_pre_interpolate ();
-
-// do client-side post-interpolation object movement
-void obj_client_post_interpolate ();
-
-// move an observer object in multiplayer
-void obj_observer_move (float frame_time);
 
 /**
  * @brief Checks if the given object is docked with anyone.

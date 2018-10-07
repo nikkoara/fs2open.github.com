@@ -14,9 +14,6 @@
 #include "lighting/lighting.h"
 #include "math/fvi.h"
 #include "model/model.h"
-#include "network/multi.h"
-#include "network/multimsgs.h"
-#include "network/multiutil.h"
 #include "object/object.h"
 #include "object/objectdock.h"
 #include "object/objectsnd.h"
@@ -354,31 +351,21 @@ void shipfx_blow_off_subsystem (
 }
 
 static void shipfx_blow_up_hull (object* obj, int model, vec3d* exp_center) {
-    int i;
-    polymodel* pm;
-    ushort sig_save;
+    polymodel* pm = model_get (model);
 
-    pm = model_get (model);
-    if (!pm) return;
-
-    // in multiplayer, send a debris_hull_create packet.  Save/restore the
-    // debris signature when in misison only (since we can create debris pieces
-    // before mission starts)
-    sig_save = 0;
-
-    if ((Game_mode & GM_MULTIPLAYER) && (Game_mode & GM_IN_MISSION)) {
-        sig_save = multi_get_next_network_signature (MULTI_SIG_DEBRIS);
-        multi_set_network_signature (
-            Ships[obj->instance].debris_net_sig, MULTI_SIG_DEBRIS);
-    }
+    if (!pm)
+        return;
 
     bool try_live_debris = true;
-    for (i = 0; i < pm->num_debris_objects; i++) {
+
+    for (int i = 0; i < pm->num_debris_objects; i++) {
         if (!pm->submodel[pm->debris_objects[i]].is_live_debris) {
             vec3d tmp = ZERO_VECTOR;
+
             model_find_world_point (
                 &tmp, &pm->submodel[pm->debris_objects[i]].offset, model, 0,
                 &obj->orient, &obj->pos);
+
             debris_create (
                 obj, model, pm->debris_objects[i], &tmp, exp_center, 1, 3.0f);
         }
@@ -391,16 +378,6 @@ static void shipfx_blow_up_hull (object* obj, int model, vec3d* exp_center) {
                 shipfx_maybe_create_live_debris_at_ship_death (obj);
             }
         }
-        // in multiplayer we need to increment the network signature for each
-        // piece of debris we create
-        if ((Game_mode & GM_MULTIPLAYER) && (Game_mode & GM_IN_MISSION)) {
-            multi_assign_network_signature (MULTI_SIG_DEBRIS);
-        }
-    }
-
-    // restore the debris signature to it's original value.
-    if ((Game_mode & GM_MULTIPLAYER) && (Game_mode & GM_IN_MISSION)) {
-        multi_set_network_signature (sig_save, MULTI_SIG_DEBRIS);
     }
 }
 
@@ -411,13 +388,6 @@ static void shipfx_blow_up_hull (object* obj, int model, vec3d* exp_center) {
 void shipfx_blow_up_model (
     object* obj, int model, int submodel, int ndebris, vec3d* exp_center) {
     int i;
-
-    // if in a multiplayer game -- seed the random number generator with a
-    // value that will be the same on all clients in the game -- the
-    // net_signature of the object works nicely -- since doing so should ensure
-    // that all pieces of debris will get scattered in same direction on all
-    // machines
-    if (Game_mode & GM_MULTIPLAYER) srand (obj->net_signature);
 
     // made a change to allow anyone but multiplayer client to blow up hull.
     // Clients will do it when they get the create packet
@@ -654,12 +624,6 @@ static int compute_special_warpout_stuff (
     vec3d facing_normal, vec_to_knossos, center_pos;
     float dist_to_plane;
 
-    // knossos warpout only valid in single player
-    if (Game_mode & GM_MULTIPLAYER) {
-        WARNINGF (LOCATION, "special warpout only for single player\n");
-        return -1;
-    }
-
     // find special warp ship reference
     valid_reference_ship = FALSE;
     ref_objnum = Ships[objp->instance].special_warpout_objnum;
@@ -837,12 +801,6 @@ void shipfx_warpout_start (object* objp) {
     // if we're HUGE, keep alive - set guardian
     if (Ship_info[shipp->ship_info_index].is_huge_ship ()) {
         shipp->ship_guardian_threshold = SHIP_GUARDIAN_THRESHOLD_DEFAULT;
-    }
-
-    // don't send ship depart packets for player ships
-    if ((MULTIPLAYER_MASTER) &&
-        !(objp->flags[Object::Object_Flags::Player_ship])) {
-        send_ship_depart_packet (objp);
     }
 
     // don't do departure wormhole if ship flag is set which indicates no

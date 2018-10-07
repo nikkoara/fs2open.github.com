@@ -15,8 +15,6 @@
 #include "io/timer.h"
 #include "lighting/lighting.h"
 #include "mod_table/mod_table.h"
-#include "network/multi.h"
-#include "network/multimsgs.h"
 #include "object/objcollide.h"
 #include "object/object.h"
 #include "object/objectshield.h"
@@ -474,25 +472,6 @@ int beam_fire (beam_fire_info* fire_info) {
             LOCATION,
             "Killing beam at initial fire because of illegal targeting!!!\n");
         return -1;
-    }
-
-    // if we're a multiplayer master - send a packet
-    if (MULTIPLAYER_MASTER) {
-        int bank_point = -1;
-
-        if (fire_info->bfi_flags & BFIF_IS_FIGHTER_BEAM) {
-            // magic numbers suck, be we need to make sure that we are always
-            // below UCHAR_MAX (255)
-            ASSERT (fire_info->point <= 25);
-            ASSERT (fire_info->bank <= 5);
-
-            bank_point = (fire_info->point * 10) + fire_info->bank;
-        }
-
-        send_beam_fired_packet (
-            fire_info->shooter, fire_info->turret, fire_info->target,
-            fire_info->beam_info_index, &new_item->binfo, fire_info->bfi_flags,
-            bank_point);
     }
 
     // start the warmup phase
@@ -3241,52 +3220,46 @@ void beam_handle_collisions (beam* b) {
             switch (Objects[target].type) {
             case OBJ_DEBRIS:
                 // hit the debris - the debris hit code takes care of checking
-                // for MULTIPLAYER_CLIENT, etc
+                // for MULTIPLAYER_CLIENT, etc.
                 debris_hit (
                     &Objects[target], &Objects[b->objnum],
                     &b->f_collisions[idx].cinfo.hit_point_world, wi->damage);
                 break;
 
             case OBJ_WEAPON:
-                if (The_mission.ai_profile
-                        ->flags[AI::Profile_Flags::Beams_damage_weapons]) {
-                    if (!(Game_mode & GM_MULTIPLAYER) || MULTIPLAYER_MASTER) {
-                        object* trgt = &Objects[target];
+                if (The_mission.ai_profile->flags[AI::Profile_Flags::Beams_damage_weapons]) {
+                    object* trgt = &Objects[target];
 
-                        if (trgt->hull_strength > 0) {
-                            float attenuation = 1.0f;
-                            if ((b->damage_threshold >= 0.0f) &&
-                                (b->damage_threshold < 1.0f)) {
-                                float dist = vm_vec_dist (
-                                    &b->last_shot, &b->last_start);
-                                float range = b->range;
-                                float atten_dist = range * b->damage_threshold;
-                                if ((range > dist) && (atten_dist < dist)) {
-                                    attenuation = (dist - atten_dist) /
-                                                  (range - atten_dist);
-                                }
-                            }
-
-                            float damage = real_damage * attenuation;
-
-                            trgt->hull_strength -= damage;
-
-                            if (trgt->hull_strength < 0) {
-                                Weapons[trgt->instance].weapon_flags.set (
-                                    Weapon::Weapon_Flags::Destroyed_by_weapon);
-                                weapon_hit (trgt, NULL, &trgt->pos);
+                    if (trgt->hull_strength > 0) {
+                        float attenuation = 1.0f;
+                        if ((b->damage_threshold >= 0.0f) &&
+                            (b->damage_threshold < 1.0f)) {
+                            float dist = vm_vec_dist (
+                                &b->last_shot, &b->last_start);
+                            float range = b->range;
+                            float atten_dist = range * b->damage_threshold;
+                            if ((range > dist) && (atten_dist < dist)) {
+                                attenuation = (dist - atten_dist) /
+                                    (range - atten_dist);
                             }
                         }
-                        else {
-                            if (!(Game_mode & GM_MULTIPLAYER) ||
-                                MULTIPLAYER_MASTER) {
-                                Weapons[trgt->instance].weapon_flags.set (
-                                    Weapon::Weapon_Flags::Destroyed_by_weapon);
-                                weapon_hit (
-                                    &Objects[target], NULL,
-                                    &Objects[target].pos);
-                            }
+
+                        float damage = real_damage * attenuation;
+
+                        trgt->hull_strength -= damage;
+
+                        if (trgt->hull_strength < 0) {
+                            Weapons[trgt->instance].weapon_flags.set (
+                                Weapon::Weapon_Flags::Destroyed_by_weapon);
+                            weapon_hit (trgt, NULL, &trgt->pos);
                         }
+                    }
+                    else {
+                        Weapons[trgt->instance].weapon_flags.set (
+                            Weapon::Weapon_Flags::Destroyed_by_weapon);
+                        weapon_hit (
+                            &Objects[target], NULL,
+                            &Objects[target].pos);
                     }
                 }
                 else {
@@ -3296,24 +3269,21 @@ void beam_handle_collisions (beam* b) {
                                         .weapon_info_index]
                             .subtype == WP_MISSILE);
 
-                    if (!(Game_mode & GM_MULTIPLAYER) || MULTIPLAYER_MASTER) {
-                        Weapons[Objects[target].instance].weapon_flags.set (
-                            Weapon::Weapon_Flags::Destroyed_by_weapon);
-                        weapon_hit (
-                            &Objects[target], NULL, &Objects[target].pos);
-                    }
+                    Weapons[Objects[target].instance].weapon_flags.set (
+                        Weapon::Weapon_Flags::Destroyed_by_weapon);
+                    weapon_hit (
+                        &Objects[target], NULL, &Objects[target].pos);
                 }
                 break;
 
             case OBJ_ASTEROID:
                 // hit the asteroid
-                if (!(Game_mode & GM_MULTIPLAYER) || MULTIPLAYER_MASTER) {
-                    asteroid_hit (
-                        &Objects[target], &Objects[b->objnum],
-                        &b->f_collisions[idx].cinfo.hit_point_world,
-                        wi->damage);
-                }
+                asteroid_hit (
+                    &Objects[target], &Objects[b->objnum],
+                    &b->f_collisions[idx].cinfo.hit_point_world,
+                    wi->damage);
                 break;
+                
             case OBJ_SHIP:
                 // hit the ship - again, the innards of this code handle
                 // multiplayer cases maybe vaporize ship.

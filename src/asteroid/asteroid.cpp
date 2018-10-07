@@ -17,9 +17,6 @@
 #include "math/staticrand.h"
 #include "math/vecmat.h"
 #include "model/model.h"
-#include "network/multi.h"
-#include "network/multimsgs.h"
-#include "network/multiutil.h"
 #include "object/objcollide.h"
 #include "object/object.h"
 #include "parse/parselo.h"
@@ -219,8 +216,6 @@ object* asteroid_create (
     vec3d pos, delta_bound;
     angles_t angs;
     float radius;
-    ushort signature;
-    int rand_base;
 
     // bogus
     if (asfieldp == NULL) { return NULL; }
@@ -269,36 +264,14 @@ object* asteroid_create (
 
     vm_vec_sub (&delta_bound, &asfieldp->max_bound, &asfieldp->min_bound);
 
-    // for multiplayer, we want to do a static_rand so that everything behaves
-    // the same on all machines
-    signature = 0;
-    rand_base = 0;
-    if (Game_mode & GM_NORMAL) {
-        pos.xyz.x = asfieldp->min_bound.xyz.x + delta_bound.xyz.x * frand ();
-        pos.xyz.y = asfieldp->min_bound.xyz.y + delta_bound.xyz.y * frand ();
-        pos.xyz.z = asfieldp->min_bound.xyz.z + delta_bound.xyz.z * frand ();
+    pos.xyz.x = asfieldp->min_bound.xyz.x + delta_bound.xyz.x * frand ();
+    pos.xyz.y = asfieldp->min_bound.xyz.y + delta_bound.xyz.y * frand ();
+    pos.xyz.z = asfieldp->min_bound.xyz.z + delta_bound.xyz.z * frand ();
 
-        inner_bound_pos_fixup (asfieldp, &pos);
-        angs.p = frand () * PI2;
-        angs.b = frand () * PI2;
-        angs.h = frand () * PI2;
-    }
-    else {
-        signature = multi_assign_network_signature (MULTI_SIG_ASTEROID);
-        rand_base = signature;
-
-        pos.xyz.x = asfieldp->min_bound.xyz.x +
-                    delta_bound.xyz.x * static_randf (rand_base++);
-        pos.xyz.y = asfieldp->min_bound.xyz.y +
-                    delta_bound.xyz.y * static_randf (rand_base++);
-        pos.xyz.z = asfieldp->min_bound.xyz.z +
-                    delta_bound.xyz.z * static_randf (rand_base++);
-
-        inner_bound_pos_fixup (asfieldp, &pos);
-        angs.p = static_randf (rand_base++) * PI2;
-        angs.b = static_randf (rand_base++) * PI2;
-        angs.h = static_randf (rand_base++) * PI2;
-    }
+    inner_bound_pos_fixup (asfieldp, &pos);
+    angs.p = frand () * PI2;
+    angs.b = frand () * PI2;
+    angs.h = frand () * PI2;
 
     vm_angles_2_matrix (&orient, &angs);
     flagset< Object::Object_Flags > asteroid_default_flagset;
@@ -329,45 +302,25 @@ object* asteroid_create (
 
     objp = &Objects[objnum];
 
-    if (Game_mode & GM_MULTIPLAYER) { objp->net_signature = signature; }
-
     Num_asteroids++;
 
     if (radius < 1.0) { radius = 1.0f; }
 
     vec3d rotvel;
-    if (Game_mode & GM_NORMAL) {
-        vm_vec_rand_vec_quick (&rotvel);
-        vm_vec_scale (&rotvel, frand () / 4.0f + 0.1f);
-        objp->phys_info.rotvel = rotvel;
-        vm_vec_rand_vec_quick (&objp->phys_info.vel);
-    }
-    else {
-        static_randvec (rand_base++, &rotvel);
-        vm_vec_scale (&rotvel, static_randf (rand_base++) / 4.0f + 0.1f);
-        objp->phys_info.rotvel = rotvel;
-        static_randvec (rand_base++, &objp->phys_info.vel);
-    }
+
+    vm_vec_rand_vec_quick (&rotvel);
+    vm_vec_scale (&rotvel, frand () / 4.0f + 0.1f);
+    objp->phys_info.rotvel = rotvel;
+    vm_vec_rand_vec_quick (&objp->phys_info.vel);
 
     float speed;
 
-    if (Game_mode & GM_NORMAL) {
-        speed = asteroid_cap_speed (
-            asteroid_type,
-            asfieldp->speed *
-                frand_range (
-                    0.5f + (float)Game_skill_level / NUM_SKILL_LEVELS,
-                    2.0f + (float)(2 * Game_skill_level) / NUM_SKILL_LEVELS));
-    }
-    else {
-        speed = asteroid_cap_speed (
-            asteroid_type,
-            asfieldp->speed *
-                static_randf_range (
-                    rand_base++,
-                    0.5f + (float)Game_skill_level / NUM_SKILL_LEVELS,
-                    2.0f + (float)(2 * Game_skill_level) / NUM_SKILL_LEVELS));
-    }
+    speed = asteroid_cap_speed (
+        asteroid_type,
+        asfieldp->speed *
+        frand_range (
+            0.5f + (float)Game_skill_level / NUM_SKILL_LEVELS,
+            2.0f + (float)(2 * Game_skill_level) / NUM_SKILL_LEVELS));
 
     vm_vec_scale (&objp->phys_info.vel, speed);
     objp->phys_info.desired_vel = objp->phys_info.vel;
@@ -415,15 +368,12 @@ void asteroid_sub_create (
     int subtype = Asteroids[parent_objp->instance].asteroid_subtype;
     new_objp = asteroid_create (&Asteroid_field, asteroid_type, subtype);
 
-    if (new_objp == NULL) return;
-
-    if (MULTIPLAYER_MASTER) {
-        send_asteroid_create (new_objp, parent_objp, asteroid_type, relvec);
-    }
+    if (!new_objp) return;
 
     // Now, bash some values.
     vm_vec_scale_add (
         &new_objp->pos, &parent_objp->pos, relvec, 0.5f * parent_objp->radius);
+    
     float parent_speed = vm_vec_mag_quick (&parent_objp->phys_info.vel);
 
     if (parent_speed < 0.1f) {
@@ -431,19 +381,16 @@ void asteroid_sub_create (
     }
 
     new_objp->phys_info.vel = parent_objp->phys_info.vel;
-    if (Game_mode & GM_NORMAL)
-        speed = asteroid_cap_speed (
-            asteroid_type, (frand () + 2.0f) * parent_speed);
-    else
-        speed = asteroid_cap_speed (
-            asteroid_type,
-            (static_randf (new_objp->net_signature) + 2.0f) * parent_speed);
+    speed = asteroid_cap_speed (
+        asteroid_type, (frand () + 2.0f) * parent_speed);
 
     vm_vec_scale_add2 (&new_objp->phys_info.vel, relvec, speed);
+    
     if (vm_vec_mag_quick (&new_objp->phys_info.vel) > 80.0f)
         vm_vec_scale (&new_objp->phys_info.vel, 0.5f);
 
     new_objp->phys_info.desired_vel = new_objp->phys_info.vel;
+    
     vm_vec_scale_add (
         &new_objp->last_pos, &new_objp->pos, &new_objp->phys_info.vel,
         -flFrametime);
@@ -476,25 +423,16 @@ static void asteroid_load (int asteroid_info_index, int asteroid_subtype) {
             model_get (asip->model_num[asteroid_subtype]);
 
         if (asip->num_detail_levels != pm->n_detail_levels) {
-            if (!Is_standalone) {
-                // just log to file for standalone servers
-                WARNINGF (
-                    LOCATION,
-                    "For asteroid '%s', detail level\nmismatch (POF needs %d)",
-                    asip->name, pm->n_detail_levels);
-            }
-            else {
-                WARNINGF (
-                    LOCATION,
-                    "For asteroid '%s', detail level mismatch (POF needs %d)",
-                    asip->name, pm->n_detail_levels);
-            }
+            WW ("general")
+                << "asteroid " << asip->name
+                << ", detail level mismatch (needs " << pm->n_detail_levels
+                << ")";
         }
+        
         // Stuff detail level distances.
         for (i = 0; i < pm->n_detail_levels; i++)
-            pm->detail_depth[i] = (i < asip->num_detail_levels)
-                                      ? i2fl (asip->detail_distance[i])
-                                      : 0.0f;
+            pm->detail_depth[i] = i < asip->num_detail_levels
+                ? i2fl (asip->detail_distance[i]) : 0.0f;
     }
 }
 
@@ -507,12 +445,9 @@ static void asteroid_load (int asteroid_info_index, int asteroid_subtype) {
 static int get_debris_weight (int ship_debris_index) {
     int size = ship_debris_index % NUM_DEBRIS_SIZES;
     switch (size) {
-    case ASTEROID_TYPE_SMALL: return SMALL_DEBRIS_WEIGHT;
-
+    case ASTEROID_TYPE_SMALL:  return SMALL_DEBRIS_WEIGHT;
     case ASTEROID_TYPE_MEDIUM: return MEDIUM_DEBRIS_WEIGHT;
-
-    case ASTEROID_TYPE_LARGE: return LARGE_DEBRIS_WEIGHT;
-
+    case ASTEROID_TYPE_LARGE:  return LARGE_DEBRIS_WEIGHT;
     default: Int3 (); return 1;
     }
 }
@@ -643,19 +578,13 @@ void asteroid_level_init () {
  * @return !0 if asteroid should be wrapped, 0 otherwise.
  */
 static int asteroid_should_wrap (object* objp, asteroid_field* asfieldp) {
-    if (MULTIPLAYER_CLIENT) return 0;
-
-    if (objp->pos.xyz.x < asfieldp->min_bound.xyz.x) { return 1; }
-
-    if (objp->pos.xyz.y < asfieldp->min_bound.xyz.y) { return 1; }
-
-    if (objp->pos.xyz.z < asfieldp->min_bound.xyz.z) { return 1; }
-
-    if (objp->pos.xyz.x > asfieldp->max_bound.xyz.x) { return 1; }
-
-    if (objp->pos.xyz.y > asfieldp->max_bound.xyz.y) { return 1; }
-
-    if (objp->pos.xyz.z > asfieldp->max_bound.xyz.z) { return 1; }
+    if (objp->pos.xyz.x < asfieldp->min_bound.xyz.x ||
+        objp->pos.xyz.y < asfieldp->min_bound.xyz.y || 
+        objp->pos.xyz.z < asfieldp->min_bound.xyz.z || 
+        objp->pos.xyz.x > asfieldp->max_bound.xyz.x || 
+        objp->pos.xyz.y > asfieldp->max_bound.xyz.y || 
+        objp->pos.xyz.z > asfieldp->max_bound.xyz.z)
+        return 1;
 
     // check against inner bound
     if (asfieldp->has_inner_bound) {
@@ -807,8 +736,6 @@ static void maybe_throw_asteroid (int count) {
                 }
                 else {
                     Asteroids[objp->instance].target_objnum = so->objnum;
-
-                    if (MULTIPLAYER_MASTER) { send_asteroid_throw (objp); }
                 }
             }
 
@@ -894,8 +821,6 @@ asteroid_maybe_reposition (object* objp, asteroid_field* asfieldp) {
                         -flFrametime);
 
                     asteroid_update_collide (objp);
-
-                    if (MULTIPLAYER_MASTER) send_asteroid_throw (objp);
                 }
             }
         }
@@ -1436,10 +1361,6 @@ void asteroid_hit (
 
     if (pasteroid_obj->flags[Object::Object_Flags::Should_be_dead]) { return; }
 
-    if (MULTIPLAYER_MASTER) {
-        send_asteroid_hit (pasteroid_obj, other_obj, hitpos, damage);
-    }
-
     pasteroid_obj->hull_strength -= damage;
 
     if (pasteroid_obj->hull_strength < 0.0f) {
@@ -1535,8 +1456,7 @@ static void asteroid_maybe_break_up (object* pasteroid_obj) {
         // asteroid_sub_create will send a create packet to the client in
         // the above named function if the second condition isn't true it's
         // just debris, and debris doesn't break up
-        if (!MULTIPLAYER_CLIENT &&
-            (asp->asteroid_type <= ASTEROID_TYPE_LARGE)) {
+        if (asp->asteroid_type <= ASTEROID_TYPE_LARGE) {
             if (asip->split_info.empty ()) {
                 switch (asp->asteroid_type) {
                 case ASTEROID_TYPE_SMALL: break;
@@ -1751,9 +1671,6 @@ static void asteroid_update_collide_flag (object* asteroid_objp) {
     asp = &Asteroids[asteroid_objp->instance];
     asp->collide_objnum = -1;
     asp->collide_objsig = -1;
-
-    // multiplayer dogfight
-    if (MULTI_DOGFIGHT) { return; }
 
     num_escorts = hud_escort_num_ships_on_list ();
 

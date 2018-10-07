@@ -11,6 +11,22 @@
 #include "physics/physics.h"
 #include "ship/ship_flags.h"
 
+////////////////////////////////////////////////////////////////////////
+
+#define REPAIR_INFO_BEGIN 0x1       // set your REPAIRING flags
+#define REPAIR_INFO_END 0x2         // unset your REPAIRING flags
+#define REPAIR_INFO_UPDATE 0x3      // repair info update (unused)
+#define REPAIR_INFO_QUEUE 0x4       // client is queued for repair
+#define REPAIR_INFO_ABORT 0x5       // client aborted repair
+#define REPAIR_INFO_BROKEN 0x6      // client is breaking repair
+#define REPAIR_INFO_WARP_ADD 0x7    // add to repair queue
+#define REPAIR_INFO_WARP_REMOVE 0x8 // remove from queue
+#define REPAIR_INFO_ONWAY 0x9       // repair ship on way
+#define REPAIR_INFO_KILLED 0xa      // repair ship was killed on the way
+#define REPAIR_INFO_COMPLETE 0xb    // repair complete
+
+////////////////////////////////////////////////////////////////////////
+
 class ship_weapon;
 class ship_subsys;
 class object;

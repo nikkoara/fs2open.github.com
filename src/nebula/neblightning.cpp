@@ -8,8 +8,6 @@
 #include "mission/missionparse.h"
 #include "nebula/neb.h"
 #include "nebula/neblightning.h"
-#include "network/multi.h"
-#include "network/multimsgs.h"
 #include "graphics/material.h"
 #include "parse/parselo.h"
 #include "render/3d.h"
@@ -443,12 +441,6 @@ void nebl_process () {
     // non-nebula mission
     if (!(The_mission.flags[Mission::Mission_Flags::Fullneb])) { return; }
 
-    // non servers in multiplayer don't do this
-    if ((Game_mode & GM_MULTIPLAYER) && !MULTIPLAYER_MASTER) { return; }
-
-    // standalones shouldn't be doing this either
-    if (Is_standalone) { return; }
-
     // if there's no chosen storm
     if (Storm == NULL) { return; }
 
@@ -612,11 +604,6 @@ void nebl_bolt (size_t type, vec3d* start, vec3d* strike) {
     // setup the rest of the data
     bolt->used = 1;
     bolt->width = bi->b_poly_pct * bolt_len;
-
-    // if i'm a multiplayer master, send a bolt packet
-    if (MULTIPLAYER_MASTER) {
-        send_lightning_packet ((int)type, start, strike);
-    }
 }
 
 // get the current # of active lightning bolts

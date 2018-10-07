@@ -16,9 +16,6 @@
 #include "io/timer.h"
 #include "math/staticrand.h"
 #include "missionui/missionweaponchoice.h"
-#include "network/multi.h"
-#include "network/multimsgs.h"
-#include "network/multiutil.h"
 #include "object/objcollide.h"
 #include "particle/particle.h"
 #include "playerman/player.h"
@@ -233,8 +230,6 @@ int Weapon_impact_timer;      // timer, initialized at start of each mission
 #define LOCKED_HOMING_EXTENDED_LIFE_FACTOR 1.2f
 
 extern int compute_num_homing_objects (object* target_objp);
-
-extern void fs2netd_add_table_validation (const char* tblname);
 
 weapon_explosions::weapon_explosions () { ExplosionInfo.clear (); }
 
@@ -839,7 +834,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
 
     required_string ("$Name:");
     stuff_string (fname, F_NAME, NAME_LENGTH);
-    diag_printf ("Weapon name -- %s\n", fname);
+    diag_printf ("Weapon name -- %s", fname);
 
     if (optional_string ("+nocreate")) {
         if (!replace) {
@@ -1024,7 +1019,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
 
         if (VALID_FNAME (wip->pofbitmap_name)) wip->render_type = WRT_POF;
 
-        diag_printf ("Model pof file -- %s\n", wip->pofbitmap_name);
+        diag_printf ("Model pof file -- %s", wip->pofbitmap_name);
     }
 
     // a special LOD level to use when rendering the weapon in the hud
@@ -1144,25 +1139,25 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
             wip->mass = 100.0f;
         }
 
-        diag_printf ("Weapon mass -- %7.3f\n", wip->mass);
+        diag_printf ("Weapon mass -- %7.3f", wip->mass);
     }
 
     if (optional_string ("$Velocity:")) {
         stuff_float (&(wip->max_speed));
-        diag_printf ("Weapon mass -- %7.3f\n", wip->max_speed);
+        diag_printf ("Weapon mass -- %7.3f", wip->max_speed);
     }
 
     if (optional_string ("$Fire Wait:")) {
         stuff_float (&(wip->fire_wait));
-        diag_printf ("Weapon fire wait -- %7.3f\n", wip->fire_wait);
+        diag_printf ("Weapon fire wait -- %7.3f", wip->fire_wait);
         // Min and max delay stuff for weapon fire wait randomization
         if (optional_string ("+Max Delay:")) {
             stuff_float (&(wip->max_delay));
-            diag_printf ("Weapon fire max delay -- %7.3f\n", wip->max_delay);
+            diag_printf ("Weapon fire max delay -- %7.3f", wip->max_delay);
         }
         if (optional_string ("+Min Delay:")) {
             stuff_float (&(wip->min_delay));
-            diag_printf ("Weapon fire min delay -- %7.3f\n", wip->min_delay);
+            diag_printf ("Weapon fire min delay -- %7.3f", wip->min_delay);
         }
     }
 
@@ -3196,9 +3191,6 @@ void parse_weaponstbl (const char* filename) {
             Num_player_weapon_precedence = stuff_int_list (
                 Player_weapon_precedence, MAX_WEAPON_TYPES, WEAPON_LIST_TYPE);
         }
-
-        // add tbl/tbm to multiplayer validation list
-        fs2netd_add_table_validation (filename);
     }
     catch (const parse::ParseException& e) {
         ERRORF (
@@ -4124,9 +4116,7 @@ void detonate_nearby_missiles (object* killer_objp, object* missile_objp) {
  * Find an object for weapon #num (object *weapon_objp) to home on due to heat.
  */
 void find_homing_object (object* weapon_objp, int num) {
-    object *objp, *old_homing_objp;
-    weapon_info* wip;
-    weapon* wp;
+    object *objp;
     ship* sp;
     ship_info* sip;
     float best_dist;
@@ -4136,15 +4126,10 @@ void find_homing_object (object* weapon_objp, int num) {
     vec3d vec_to_object;
     ship_subsys* target_engines = NULL;
 
-    wp = &Weapons[num];
-
-    wip = &Weapon_info[Weapons[num].weapon_info_index];
+    weapon* wp = &Weapons[num];
+    weapon_info* wip = &Weapon_info[Weapons[num].weapon_info_index];
 
     best_dist = 99999.9f;
-
-    // save the old homing object so that multiplayer servers can give the
-    // right information to clients if the object changes
-    old_homing_objp = wp->homing_object;
 
     wp->homing_object = &obj_used_list;
 
@@ -4257,12 +4242,6 @@ void find_homing_object (object* weapon_objp, int num) {
     }
 
     if (wp->homing_object == Player_obj) weapon_maybe_play_warning (wp);
-
-    // if the old homing object is different that the new one, send a packet to
-    // clients
-    if (MULTIPLAYER_MASTER && (old_homing_objp != wp->homing_object)) {
-        send_homing_weapon_info (num);
-    }
 }
 
 /**
@@ -4379,17 +4358,10 @@ void find_homing_object_cmeasures (
  * Find object with signature "sig" and make weapon home on it.
  */
 void find_homing_object_by_sig (object* weapon_objp, int sig) {
-    ship_obj* sop;
-    weapon* wp;
-    object* old_homing_objp;
+    weapon* wp = &Weapons[weapon_objp->instance];
 
-    wp = &Weapons[weapon_objp->instance];
-
-    // save the old object so that multiplayer masters know whether to send a
-    // homing update packet
-    old_homing_objp = wp->homing_object;
-
-    sop = GET_FIRST (&Ship_obj_list);
+    ship_obj* sop = GET_FIRST (&Ship_obj_list);
+    
     while (sop != END_OF_LIST (&Ship_obj_list)) {
         object* objp;
 
@@ -4401,12 +4373,6 @@ void find_homing_object_by_sig (object* weapon_objp, int sig) {
         }
 
         sop = sop->next;
-    }
-
-    // if the old homing object is different that the new one, send a packet to
-    // clients
-    if (MULTIPLAYER_MASTER && (old_homing_objp != wp->homing_object)) {
-        send_homing_weapon_info (weapon_objp->instance);
     }
 }
 
@@ -4487,13 +4453,6 @@ void weapon_home (object* obj, int num, float frame_time) {
                 }
                 return;
             }
-        }
-        else if (
-            MULTIPLAYER_MASTER && (wip->is_locked_homing ()) &&
-            (wp->weapon_flags[Weapon::Weapon_Flags::Homing_update_needed])) {
-            wp->weapon_flags.remove (
-                Weapon::Weapon_Flags::Homing_update_needed);
-            send_homing_weapon_info (num);
         }
 
         if (wip->acceleration_time > 0.0f) {
@@ -4752,16 +4711,6 @@ void weapon_home (object* obj, int num, float frame_time) {
 
                             // determine the player
                             pp = Player;
-
-                            if (Game_mode & GM_MULTIPLAYER) {
-                                int pnum;
-
-                                pnum = multi_find_player_by_object (
-                                    &Objects[obj->parent]);
-                                if (pnum != -1) {
-                                    pp = Net_players[pnum].m_player;
-                                }
-                            }
 
                             // If player has apect lock, we don't want to find
                             // a homing point on the closest octant... setting
@@ -5152,21 +5101,8 @@ void weapon_process_post (object* obj, float frame_time) {
     // weapons!!!!
     if (wp->lifeleft < 0.0f) {
         if (wip->subtype & WP_MISSILE) {
-            if (Game_mode & GM_MULTIPLAYER) {
-                if (!MULTIPLAYER_CLIENT ||
-                    (MULTIPLAYER_CLIENT && (wp->lifeleft < -2.0f)) ||
-                    (MULTIPLAYER_CLIENT &&
-                     (wip->wi_flags[Weapon::Info_Flags::
-                                        Child]))) { // don't call this function
-                                                    // multiplayer client --
-                                                    // host will send this
-                                                    // packet to us
-                    weapon_detonate (obj);
-                }
-            }
-            else {
-                weapon_detonate (obj);
-            }
+            weapon_detonate (obj);
+
             if (wip->is_homing ()) { Homing_misses++; }
         }
         else {
@@ -5542,9 +5478,7 @@ void weapon_set_tracking_info (
             targeting_same = 0;
         }
 
-        if ((target_objnum != -1) &&
-            (!targeting_same ||
-             (MULTI_DOGFIGHT && (target_team == Iff_traitor)))) {
+        if (target_objnum != -1 && !targeting_same) {
             wp->target_num = target_objnum;
             wp->target_sig = Objects[target_objnum].signature;
             wp->nearest_dist = 99999.0f;
@@ -5617,10 +5551,6 @@ void weapon_set_tracking_info (
         if (target_is_locked && (wp->target_num != -1) &&
             (wip->is_locked_homing ())) {
             wp->lifeleft *= LOCKED_HOMING_EXTENDED_LIFE_FACTOR;
-            if (MULTIPLAYER_MASTER) {
-                wp->weapon_flags.set (
-                    Weapon::Weapon_Flags::Homing_update_needed);
-            }
         }
 
         ai_update_danger_weapon (target_objnum, weapon_objnum);
@@ -5901,44 +5831,12 @@ int weapon_create (
         }
     }
 
-    // assign the network signature.  The starting sig is sent to all clients,
-    // so this call should result in the same net signature numbers getting
-    // assigned to every player in the game
-    if (Game_mode & GM_MULTIPLAYER) {
-        if (wip->subtype == WP_MISSILE) {
-            Objects[objnum].net_signature =
-                multi_assign_network_signature (MULTI_SIG_NON_PERMANENT);
-
-            // for weapons that respawn, add the number of respawnable weapons
-            // to the net signature pool to reserve N signatures for the
-            // spawned weapons
-            if (wip->wi_flags[Weapon::Info_Flags::Spawn]) {
-                multi_set_network_signature (
-                    (ushort) (
-                        Objects[objnum].net_signature +
-                        wip->total_children_spawned),
-                    MULTI_SIG_NON_PERMANENT);
-            }
-        }
-        else {
-            Objects[objnum].net_signature =
-                multi_assign_network_signature (MULTI_SIG_NON_PERMANENT);
-        }
-        // for multiplayer clients, when creating lasers, add some more life to
-        // the lasers.  This helps to overcome some problems associated with
-        // lasers dying on client machine before they get message from server
-        // saying it hit something.
-    }
-
     // Check if we want to gen a random number
     // This is used for lifetime min/max
-    float rand_val;
-    if (Game_mode & GM_NORMAL) { rand_val = frand (); }
-    else {
-        rand_val = static_randf (Objects[objnum].net_signature);
-    }
+    float rand_val = frand ();
 
     wp->weapon_info_index = weapon_type;
+    
     if (wip->life_min < 0.0f && wip->life_max < 0.0f) {
         wp->lifeleft = wip->lifetime;
     }
@@ -6195,7 +6093,6 @@ void spawn_child_weapons (object* objp) {
     int i, j;
     int child_id;
     int parent_num;
-    ushort starting_sig;
     weapon* wp = NULL;
     beam* bp = NULL;
     weapon_info *wip, *child_wip;
@@ -6256,19 +6153,6 @@ void spawn_child_weapons (object* objp) {
         }
     }
 
-    starting_sig = 0;
-
-    if (Game_mode & GM_MULTIPLAYER) {
-        // get the next network signature and save it.  Set the next usable
-        // network signature to be the passed in objects signature + 1.  We
-        // "reserved" N of these slots when we created objp for it's spawned
-        // children.
-        starting_sig =
-            multi_get_next_network_signature (MULTI_SIG_NON_PERMANENT);
-        multi_set_network_signature (
-            objp->net_signature, MULTI_SIG_NON_PERMANENT);
-    }
-
     opos = &objp->pos;
     fvec = &objp->orient.vec.fvec;
 
@@ -6281,18 +6165,9 @@ void spawn_child_weapons (object* objp) {
             child_id = wip->spawn_info[i].spawn_type;
             child_wip = &Weapon_info[child_id];
 
-            // for multiplayer, use the static randvec functions based on the
-            // network signatures to provide the randomness so that it is the
-            // same on all machines.
-            if (Game_mode & GM_MULTIPLAYER) {
-                static_rand_cone (
-                    objp->net_signature + j, &tvec, fvec,
-                    wip->spawn_info[i].spawn_angle);
-            }
-            else {
-                vm_vec_random_cone (
-                    &tvec, fvec, wip->spawn_info[i].spawn_angle);
-            }
+            vm_vec_random_cone (
+                &tvec, fvec, wip->spawn_info[i].spawn_angle);
+
             vm_vec_scale_add (&pos, opos, &tvec, objp->radius);
 
             // Let's allow beam-spawn! -MageKing17
@@ -6347,24 +6222,13 @@ void spawn_child_weapons (object* objp) {
                 // Assign a little randomness to lifeleft so they don't all
                 // disappear at the same time.
                 if (weapon_objnum != -1) {
-                    float rand_val;
-
-                    if (Game_mode & GM_NORMAL) { rand_val = frand (); }
-                    else {
-                        rand_val = static_randf (objp->net_signature + j);
-                    }
+                    float rand_val = frand ();
 
                     Weapons[Objects[weapon_objnum].instance].lifeleft *=
                         rand_val * 0.4f + 0.8f;
                 }
             }
         }
-    }
-
-    // in multiplayer, reset the next network signature to the one that was
-    // saved.
-    if (Game_mode & GM_MULTIPLAYER) {
-        multi_set_network_signature (starting_sig, MULTI_SIG_NON_PERMANENT);
     }
 }
 
@@ -6877,12 +6741,7 @@ void weapon_hit (
     // This is an expensive check
     bool armed_weapon = weapon_armed (&Weapons[num], hit_target);
 
-    // if this is the player ship, and is a laser hit, skip it. wait for player
-    // "pain" to take care of it
-    if ((other_obj != Player_obj) || (wip->subtype != WP_LASER) ||
-        !MULTIPLAYER_CLIENT) {
-        weapon_hit_do_sound (other_obj, wip, hitpos, armed_weapon, quadrant);
-    }
+    weapon_hit_do_sound (other_obj, wip, hitpos, armed_weapon, quadrant);
 
     if (wip->impact_weapon_expl_effect.isValid () && armed_weapon) {
         auto particleSource = particle::ParticleManager::get ()->createSource (
@@ -7070,9 +6929,6 @@ void weapon_detonate (object* objp) {
     if (objp == NULL) { return; }
     ASSERT ((objp->type == OBJ_WEAPON) && (objp->instance >= 0));
     if ((objp->type != OBJ_WEAPON) || (objp->instance < 0)) { return; }
-
-    // send a detonate packet in multiplayer
-    if (MULTIPLAYER_MASTER) { send_weapon_detonate_packet (objp); }
 
     // call weapon hit
     // Wanderer - use last frame pos for the corkscrew missiles

@@ -4,8 +4,6 @@
 #include "globalincs/linklist.h"
 #include "mission/missionlog.h"
 #include "mission/missionparse.h"
-#include "network/multi.h"
-#include "network/multimsgs.h"
 #include "object/object.h"
 #include "object/objectdock.h"
 #include "object/waypoint.h"
@@ -2185,12 +2183,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
     // pursued.         It will always be #0 since the list is prioritized.
     aip->active_goal = 0;
 
-
     current_goal = &aip->goals[0];
-
-    if (MULTIPLAYER_MASTER) {
-        send_ai_info_update_packet (objp, AI_UPDATE_ORDERS);
-    }
 
     // if this object was flying in formation off of another object, remove the
     // flag that tells him to do this.  The form-on-my-wing command is removed

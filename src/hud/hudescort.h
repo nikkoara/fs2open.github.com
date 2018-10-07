@@ -25,8 +25,6 @@ void hud_add_ship_to_escort (int objnum, int supress_feedback);
 void hud_remove_ship_from_escort (int objnum);
 int hud_escort_num_ships_on_list ();
 int hud_escort_return_objnum (int index);
-void hud_escort_add_player (short id);
-void hud_escort_remove_player (short id);
 
 class HudGaugeEscort : public HudGauge {
 protected:
@@ -62,7 +60,6 @@ public:
     void render (float frametime) override;
     void pageIn () override;
     void renderIcon (int x, int y, int index);
-    void renderIconDogfight (int x, int y, int index);
 };
 
 #endif /* FREESPACE2_HUD_HUDESCORT_H */

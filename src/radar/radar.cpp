@@ -10,7 +10,6 @@
 #include "io/timer.h"
 #include "jumpnode/jumpnode.h"
 #include "localization/localize.h"
-#include "network/multi.h"
 #include "object/object.h"
 #include "playerman/player.h"
 #include "radar/radar.h"

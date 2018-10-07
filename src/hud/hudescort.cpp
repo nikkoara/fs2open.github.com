@@ -11,8 +11,6 @@
 #include "hud/hudtargetbox.h"
 #include "iff_defs/iff_defs.h"
 #include "io/timer.h"
-#include "network/multi.h"
-#include "network/multiutil.h"
 #include "object/object.h"
 #include "parse/parselo.h"
 #include "playerman/player.h"
@@ -218,12 +216,6 @@ int HudGaugeEscort::setGaugeColorEscort (int index, int team) {
     int is_bright = 0;
     int seen_from_team = (Player_ship != NULL) ? Player_ship->team : -1;
 
-    // multiplayer dogfight
-    if (MULTI_DOGFIGHT) {
-        setGaugeColor ();
-        return 0;
-    }
-
     // set flashing color
     if (!timestamp_elapsed (Escort_ships[index].escort_hit_timer)) {
         is_flashing = 1;
@@ -306,11 +298,6 @@ void HudGaugeEscort::render (float /*frametime*/) {
 
 // draw the shield icon and integrity for the escort ship
 void HudGaugeEscort::renderIcon (int x, int y, int index) {
-    if (MULTI_DOGFIGHT && index <= 2) {
-        renderIconDogfight (x, y, index);
-        return;
-    }
-
     float shields, integrity;
     int screen_integrity, offset;
     char buf[255];
@@ -370,68 +357,6 @@ void HudGaugeEscort::renderIcon (int x, int y, int index) {
 
     // Let's be nice.
     setGaugeColor ();
-}
-
-// multiplayer dogfight
-void HudGaugeEscort::renderIconDogfight (int x, int y, int index) {
-    int hull_integrity = 100;
-    char buf[255];
-    int np_index;
-    object* objp;
-
-    int stat_shift = 40;
-
-    // always use the standard color to avoid confusion
-    setGaugeColor ();
-
-    // netplayer index
-    np_index = find_player_id (Escort_ships[index].np_id);
-    if ((np_index < 0) || (np_index >= MAX_PLAYERS) ||
-        (Net_players[np_index].m_player == NULL)) {
-        return;
-    }
-
-    // print out player name
-    strcpy_s (buf, Net_players[np_index].m_player->callsign);
-    font::force_fit_string (buf, 255, 100 - stat_shift);
-    renderString (
-        x + ship_name_offsets[0], y + ship_name_offsets[1], EG_ESCORT1 + index,
-        buf);
-
-    // can we get the player object?
-    objp = NULL;
-    if ((Net_players[np_index].m_player->objnum >= 0) &&
-        (Net_players[np_index].m_player->objnum < MAX_OBJECTS) &&
-        (Objects[Net_players[np_index].m_player->objnum].type == OBJ_SHIP)) {
-        objp = &Objects[Net_players[np_index].m_player->objnum];
-        if ((objp->instance >= 0) && (objp->instance < MAX_SHIPS) &&
-            (Ships[objp->instance].ship_info_index >= 0) &&
-            (Ships[objp->instance].ship_info_index < MAX_SHIPS)) {
-            //
-        }
-        else {
-            return;
-        }
-
-        hull_integrity =
-            (int)(((float)objp->hull_strength / (float)Ships[objp->instance].ship_max_hull_strength) * 100.0f);
-        if (hull_integrity < 0) { hull_integrity = 0; }
-    }
-
-    // show ship integrity
-    if (objp == NULL) {
-        renderPrintf (
-            x + ship_integrity_offsets[0] - stat_shift,
-            y + ship_integrity_offsets[1], EG_NULL, "%d",
-            Net_players[np_index].m_player->stats.m_kill_count_ok);
-    }
-    else {
-        renderPrintf (
-            x + ship_integrity_offsets[0] - stat_shift,
-            y + ship_integrity_offsets[1], EG_NULL, "(%d%%) %d",
-            hull_integrity,
-            Net_players[np_index].m_player->stats.m_kill_count_ok);
-    }
 }
 
 void hud_escort_update_list () {
@@ -494,38 +419,15 @@ int escort_compare_func (const void* e1, const void* e2) {
     escort1 = (escort_info*)e1;
     escort2 = (escort_info*)e2;
 
-    // multiplayer dogfight
-    if (MULTI_DOGFIGHT) {
-        int n1, n2;
+    diff = escort2->priority - escort1->priority;
 
-        n1 = find_player_id (escort1->np_id);
-        n2 = find_player_id (escort2->np_id);
-        if ((n1 < 0) || (n2 < 0) || (Net_players[n1].m_player == NULL) ||
-            (Net_players[n2].m_player == NULL)) {
-            ret = 0;
-        }
-        else {
-            // player 1 is higher than player 2
-            if (Net_players[n1].m_player->stats.m_kill_count_ok >=
-                Net_players[n2].m_player->stats.m_kill_count_ok) {
-                ret = -1;
-            }
-            else {
-                ret = 1;
-            }
-        }
-    }
+    if (diff != 0) { ret = diff; }
     else {
-        diff = escort2->priority - escort1->priority;
+        char *name1, *name2;
+        name1 = Ships[Objects[escort1->objnum].instance].ship_name;
+        name2 = Ships[Objects[escort2->objnum].instance].ship_name;
 
-        if (diff != 0) { ret = diff; }
-        else {
-            char *name1, *name2;
-            name1 = Ships[Objects[escort1->objnum].instance].ship_name;
-            name2 = Ships[Objects[escort2->objnum].instance].ship_name;
-
-            ret = strcasecmp (name1, name2);
-        }
+        ret = strcasecmp (name1, name2);
     }
 
     return ret;
@@ -542,92 +444,62 @@ void hud_create_complete_escort_list (escort_info* escorts, int* num_escorts) {
     // start with none on list
     *num_escorts = 0;
 
-    int idx;
+    for (so = GET_FIRST (&Ship_obj_list);
+         so != END_OF_LIST (&Ship_obj_list); so = GET_NEXT (so)) {
+        ASSERT (so->objnum >= 0 && so->objnum < MAX_OBJECTS);
+        if ((so->objnum < 0) || (so->objnum >= MAX_OBJECTS)) { continue; }
+        objp = &Objects[so->objnum];
+        ASSERT (objp->type == OBJ_SHIP);
+        if (objp->type != OBJ_SHIP) { continue; }
 
-    // multiplayer dogfight
-    if (MULTI_DOGFIGHT) {
-        for (idx = 0; idx < MAX_PLAYERS; idx++) {
-            // break out of the loop when we have reached our max
-            if (*num_escorts == MAX_COMPLETE_ESCORT_LIST) {
-                WARNINGF (LOCATION, "exceeded max ships in big escort list\n");
-                break;
-            }
-
-            // is this a valid player
-            if (MULTI_CONNECTED (Net_players[idx]) &&
-                !MULTI_OBSERVER (Net_players[idx]) &&
-                !MULTI_STANDALONE (Net_players[idx])) {
-                // add the ship
-                escorts[*num_escorts].objnum = -1;
-                escorts[*num_escorts].obj_signature = -1;
-                escorts[*num_escorts].priority = -1;
-                escorts[*num_escorts].np_id = Net_players[idx].player_id;
-                escorts[*num_escorts].escort_hit_timer = 0;
-                escorts[*num_escorts].escort_hit_next_flash = 0;
-                escorts[*num_escorts].escort_show_bright = false;
-                (*num_escorts)++;
-            }
+        // break out of the loop when we have reached our max
+        if (*num_escorts == MAX_COMPLETE_ESCORT_LIST) {
+            WARNINGF (LOCATION, "exceeded max ships in big escort list\n");
+            break;
         }
-    }
-    // all others
-    else {
-        for (so = GET_FIRST (&Ship_obj_list);
-             so != END_OF_LIST (&Ship_obj_list); so = GET_NEXT (so)) {
-            ASSERT (so->objnum >= 0 && so->objnum < MAX_OBJECTS);
-            if ((so->objnum < 0) || (so->objnum >= MAX_OBJECTS)) { continue; }
-            objp = &Objects[so->objnum];
-            ASSERT (objp->type == OBJ_SHIP);
-            if (objp->type != OBJ_SHIP) { continue; }
 
-            // break out of the loop when we have reached our max
-            if (*num_escorts == MAX_COMPLETE_ESCORT_LIST) {
-                WARNINGF (LOCATION, "exceeded max ships in big escort list\n");
-                break;
-            }
+        // only process ships that might be on the list
+        if (!(Ships[objp->instance].flags[Ship::Ship_Flags::Escort])) {
+            continue;
+        }
 
-            // only process ships that might be on the list
-            if (!(Ships[objp->instance].flags[Ship::Ship_Flags::Escort])) {
-                continue;
-            }
+        // only process ships that can be seen by sensors
+        if ((Ships[objp->instance]
+             .flags[Ship::Ship_Flags::Hidden_from_sensors])) {
+            continue;
+        }
 
-            // only process ships that can be seen by sensors
-            if ((Ships[objp->instance]
-                     .flags[Ship::Ship_Flags::Hidden_from_sensors])) {
-                continue;
-            }
-
-            // don't process most stealth ships
-            if ((Ships[objp->instance].flags[Ship::Ship_Flags::Stealth])) {
-                if (Ships[objp->instance].team == Player_ship->team) {
-                    // friendly stealths are only not seen when explicitly
-                    // specified
-                    if (Ships[objp->instance]
-                            .flags[Ship::Ship_Flags::Friendly_stealth_invis]) {
-                        continue;
-                    }
-                }
-                // non-friendly stealths are never seen
-                else {
+        // don't process most stealth ships
+        if ((Ships[objp->instance].flags[Ship::Ship_Flags::Stealth])) {
+            if (Ships[objp->instance].team == Player_ship->team) {
+                // friendly stealths are only not seen when explicitly
+                // specified
+                if (Ships[objp->instance]
+                    .flags[Ship::Ship_Flags::Friendly_stealth_invis]) {
                     continue;
                 }
             }
-
-            // don't process objects that should be dead
-            if (objp->flags[Object::Object_Flags::Should_be_dead]) {
+            // non-friendly stealths are never seen
+            else {
                 continue;
             }
-
-            // add the ship
-            escorts[*num_escorts].objnum = so->objnum;
-            escorts[*num_escorts].obj_signature = objp->signature;
-            escorts[*num_escorts].priority =
-                Ships[objp->instance].escort_priority;
-            escorts[*num_escorts].np_id = -1;
-            escorts[*num_escorts].escort_hit_timer = 0;
-            escorts[*num_escorts].escort_hit_next_flash = 0;
-            escorts[*num_escorts].escort_show_bright = false;
-            (*num_escorts)++;
         }
+
+        // don't process objects that should be dead
+        if (objp->flags[Object::Object_Flags::Should_be_dead]) {
+            continue;
+        }
+
+        // add the ship
+        escorts[*num_escorts].objnum = so->objnum;
+        escorts[*num_escorts].obj_signature = objp->signature;
+        escorts[*num_escorts].priority =
+            Ships[objp->instance].escort_priority;
+        escorts[*num_escorts].np_id = -1;
+        escorts[*num_escorts].escort_hit_timer = 0;
+        escorts[*num_escorts].escort_hit_next_flash = 0;
+        escorts[*num_escorts].escort_show_bright = false;
+        (*num_escorts)++;
     }
 }
 
@@ -675,9 +547,8 @@ void hud_setup_escort_list (int level) {
 
 // combine complete escort list with Escort_ships, keeping valid hit info
 void merge_escort_lists (
-    escort_info* complete_escorts, int num_complete_escorts) {
-    int i, j, top_complete_escorts;
-    int valid_hit_info[MAX_COMPLETE_ESCORT_LIST];
+    escort_info* /* complete_escorts */, int num_complete_escorts) {
+    int top_complete_escorts;
 
     // may be > 1 ship change to list (ie, 2 or 3 culled during same frame)
     // set Num_escort_ships and cap
@@ -689,43 +560,11 @@ void merge_escort_lists (
     // nothing to do
     if (Num_escort_ships == 0) { return; }
 
-    // check used as a flag whether top slots in complete_escorts were copied
-    // this is important re. hit info
-    for (i = 0; i < Max_escort_ships; i++) { valid_hit_info[i] = 0; }
-
     // get the top slots in complete escort list that will be copied onto
     // Escort_ships
     top_complete_escorts = num_complete_escorts;
     if (top_complete_escorts > Max_escort_ships) {
         top_complete_escorts = Max_escort_ships;
-    }
-
-    // copy for Escort_ships to complete_escorts to retain hit_info
-    if (!MULTI_DOGFIGHT) {
-        for (i = 0; i < top_complete_escorts; i++) {
-            for (j = 0; j < Num_escort_ships; j++) {
-                if (Escort_ships[j].obj_signature ==
-                    complete_escorts[i].obj_signature) {
-                    complete_escorts[i] = Escort_ships[j];
-                    valid_hit_info[i] = 1;
-                    break;
-                }
-            }
-        }
-
-        // copy top slots to Escort_ships
-        for (i = 0; i < top_complete_escorts; i++) {
-            Escort_ships[i] = complete_escorts[i];
-            // check all ships are valid
-            int objnum = Escort_ships[i].objnum;
-            ASSERT (objnum >= 0 && objnum < MAX_OBJECTS);
-            if ((objnum < 0) || (objnum >= MAX_OBJECTS)) { continue; }
-            if (!valid_hit_info[i]) {
-                Escort_ships[i].escort_hit_timer = 0;
-                Escort_ships[i].escort_hit_next_flash = 0;
-                Escort_ships[i].escort_show_bright = false;
-            }
-        }
     }
 
     // reset Num_escort_ships
@@ -774,45 +613,26 @@ void hud_remove_ship_from_escort_index (int dead_index, int objnum) {
 
 // called once per frame to refresh the escort list if important flags changed
 void hud_escort_cull_list () {
-    int i;
+    for (int i = 0; i < Num_escort_ships; i++) {
+        int objnum = Escort_ships[i].objnum;
+        ASSERT (objnum >= 0 && objnum < MAX_OBJECTS);
 
-    int np_index;
-
-    // multiplayer dogfight
-    if (MULTI_DOGFIGHT) {
-        for (i = 0; i < Num_escort_ships; i++) {
-            np_index = find_player_id (Escort_ships[i].np_id);
-
-            // maybe remove him if he left
-            if (np_index < 0) {
-                hud_setup_escort_list (0);
-                break;
-            }
+        if (Objects[objnum].flags[Object::Object_Flags::Should_be_dead]) {
+            hud_setup_escort_list (0);
+            break;
         }
-    }
-    // everything else
-    else {
-        for (i = 0; i < Num_escort_ships; i++) {
-            int objnum = Escort_ships[i].objnum;
-            ASSERT (objnum >= 0 && objnum < MAX_OBJECTS);
+        else if (Objects[objnum].type == OBJ_SHIP) {
+            int shipnum = Objects[objnum].instance;
+            ASSERT (shipnum >= 0 && shipnum < MAX_SHIPS);
 
-            if (Objects[objnum].flags[Object::Object_Flags::Should_be_dead]) {
+            if ((Ships[shipnum]
+                 .flags[Ship::Ship_Flags::Hidden_from_sensors]) ||
+                ((Ships[shipnum].flags[Ship::Ship_Flags::Stealth]) &&
+                 ((Ships[shipnum].team != Player_ship->team) ||
+                  (Ships[shipnum].flags
+                   [Ship::Ship_Flags::Friendly_stealth_invis])))) {
                 hud_setup_escort_list (0);
                 break;
-            }
-            else if (Objects[objnum].type == OBJ_SHIP) {
-                int shipnum = Objects[objnum].instance;
-                ASSERT (shipnum >= 0 && shipnum < MAX_SHIPS);
-
-                if ((Ships[shipnum]
-                         .flags[Ship::Ship_Flags::Hidden_from_sensors]) ||
-                    ((Ships[shipnum].flags[Ship::Ship_Flags::Stealth]) &&
-                     ((Ships[shipnum].team != Player_ship->team) ||
-                      (Ships[shipnum].flags
-                           [Ship::Ship_Flags::Friendly_stealth_invis])))) {
-                    hud_setup_escort_list (0);
-                    break;
-                }
             }
         }
     }
@@ -907,9 +727,6 @@ void hud_add_ship_to_escort (int objnum, int supress_feedback) {
 void hud_add_remove_ship_escort (int objnum, int supress_feedback) {
     int in_escort, i;
 
-    // no ships on the escort list in multiplayer dogfight
-    if (MULTI_DOGFIGHT) { return; }
-
     if (objnum < 0) {
         Int3 ();
         return;
@@ -941,9 +758,6 @@ void hud_add_remove_ship_escort (int objnum, int supress_feedback) {
 void hud_remove_ship_from_escort (int objnum) {
     int in_escort, i;
 
-    // no ships on the escort list in multiplayer dogfight
-    if (MULTI_DOGFIGHT) { return; }
-
     if (objnum < 0) {
         Int3 ();
         return;
@@ -973,9 +787,6 @@ void hud_remove_ship_from_escort (int objnum) {
  * -1 if no shield
  */
 void hud_escort_ship_hit (object* objp, int /*quadrant*/) {
-    // no ships on the escort list in multiplayer dogfight
-    if (MULTI_DOGFIGHT) { return; }
-
     for (int i = 0; i < Num_escort_ships; i++) {
         if (Escort_ships[i].objnum == OBJ_INDEX (objp)) {
             hud_gauge_popup_start (HUD_ESCORT_VIEW);
@@ -1022,34 +833,4 @@ int hud_escort_return_objnum (int index) {
     if (Objects[escort_objnum].signature != escort_sig) { return -1; }
 
     return Escort_ships[index].objnum;
-}
-
-void hud_escort_add_player (short id) {
-    ASSERT (Game_mode & GM_MULTIPLAYER);
-    if (!(Game_mode & GM_MULTIPLAYER)) { return; }
-
-    int idx;
-
-    // just go through and add as long as its not a duplicate
-    for (idx = 0; idx < Num_escort_ships; idx++) {
-        if (Escort_ships[idx].np_id == id) { return; }
-    }
-
-    // re-setup the escort list
-    hud_setup_escort_list (0);
-}
-
-void hud_escort_remove_player (short id) {
-    ASSERT (Game_mode & GM_MULTIPLAYER);
-    if (!(Game_mode & GM_MULTIPLAYER)) { return; }
-
-    int idx;
-
-    // find the instance and remove it if possible
-    for (idx = 0; idx < Num_escort_ships; idx++) {
-        if (Escort_ships[idx].np_id == id) {
-            hud_remove_ship_from_escort_index (idx, -1);
-            return;
-        }
-    }
 }

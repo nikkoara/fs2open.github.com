@@ -9,7 +9,6 @@
 #include "hud/hudmessage.h"
 #include "io/timer.h"
 #include "math/vecmat.h"
-#include "network/multi.h"
 #include "object/object.h"
 #include "parse/parselo.h"
 #include "sound/sound.h"
@@ -304,6 +303,7 @@ void ssm_create (
         }
 
         ssm_info* si = &Ssm_info[ssm_index];
+
         weapon_info* wip = &Weapon_info[si->weapon_info_index];
         if (wip->wi_flags[Weapon::Info_Flags::Beam]) {
             ssm.sinfo.duration =
@@ -315,11 +315,6 @@ void ssm_create (
         }
         else {
             ssm.sinfo.duration = 0.5f;
-        }
-
-        // if we're the server, send a packet
-        if (MULTIPLAYER_MASTER) {
-            //
         }
     }
 

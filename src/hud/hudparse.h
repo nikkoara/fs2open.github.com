@@ -181,15 +181,6 @@ void load_gauge_lock (gauge_settings* settings);
 #define HUD_OBJECT_WEAPON_LINKING 37
 void load_gauge_weapon_linking (gauge_settings* settings);
 
-#define HUD_OBJECT_MULTI_MSG 38
-void load_gauge_multi_msg (gauge_settings* settings);
-
-#define HUD_OBJECT_VOICE_STATUS 39
-void load_gauge_voice_status (gauge_settings* settings);
-
-#define HUD_OBJECT_PING 40
-void load_gauge_ping (gauge_settings* settings);
-
 #define HUD_OBJECT_SUPERNOVA 41
 void load_gauge_supernova (gauge_settings* settings);
 

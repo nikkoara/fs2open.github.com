@@ -15,8 +15,6 @@
 #include "io/timer.h"
 #include "mission/missionparse.h"
 #include "mission/missioncampaign.h"
-#include "network/multi.h"
-#include "network/multiutil.h"
 #include "playerman/player.h"
 #include "popup/popup.h"
 #include "popup/popupdead.h"
@@ -138,95 +136,36 @@ void popupdead_start () {
 
     if ((The_mission.max_respawn_delay >= 0) && (Game_mode & GM_MULTIPLAYER)) {
         Popupdead_timer = timestamp (The_mission.max_respawn_delay * 1000);
-        if (Game_mode & GM_MULTIPLAYER) {
-            if (!(Net_player->flags & NETINFO_FLAG_LIMBO)) {
-                if (The_mission.max_respawn_delay) {
-                    HUD_printf (
-                        "Player will automatically respawn in %d seconds",
-                        The_mission.max_respawn_delay);
-                }
-                else {
-                    HUD_printf ("Player will automatically respawn now");
-                }
-            }
-        }
     }
 
-    if (Game_mode & GM_NORMAL) {
-        // also do a campaign check here?
-        if (0) { //((Player->show_skip_popup) &&
-                 //(!Popupdead_skip_already_shown) && (Game_mode &
-                 // GM_CAMPAIGN_MODE) && (Game_mode & GM_NORMAL) &&
-                 //(Player->failures_this_session >=
-                 // PLAYER_MISSION_FAILURE_LIMIT)) {
-            // init the special preliminary death popup that gives the skip
-            // option
-            Popupdead_button_text[0] = XSTR ("Do Not Skip This Mission", 1473);
-            Popupdead_button_text[1] =
-                XSTR ("Advance To The Next Mission", 1474);
-            Popupdead_button_text[2] = XSTR ("Don't Show Me This Again", 1475);
-            Popupdead_num_choices = POPUPDEAD_NUM_CHOICES_SKIP;
-            Popupdead_skip_active = 1;
-        }
-        else if (The_mission.flags[Mission::Mission_Flags::Red_alert]) {
-            // We can't staticly declare these because they are externalized
-            Popupdead_button_text[0] = XSTR ("Quick Start Mission", 105);
-            Popupdead_button_text[1] = XSTR ("Return To Flight Deck", 106);
-            Popupdead_button_text[2] = XSTR ("Return To Briefing", 107);
-            Popupdead_button_text[3] = XSTR ("Replay previous mission", 1432);
-            Popupdead_num_choices = POPUPDEAD_NUM_CHOICES_RA;
-        }
-        else {
-            Popupdead_button_text[0] = XSTR ("Quick Start Mission", 105);
-            Popupdead_button_text[1] = XSTR ("Return To Flight Deck", 106);
-            Popupdead_button_text[2] = XSTR ("Return To Briefing", 107);
-            Popupdead_num_choices = POPUPDEAD_NUM_CHOICES;
-        }
+    // also do a campaign check here?
+    if (0) { //((Player->show_skip_popup) &&
+        //(!Popupdead_skip_already_shown) && (Game_mode &
+        // GM_CAMPAIGN_MODE) && (Game_mode & GM_NORMAL) &&
+        //(Player->failures_this_session >=
+        // PLAYER_MISSION_FAILURE_LIMIT)) {
+        // init the special preliminary death popup that gives the skip
+        // option
+        Popupdead_button_text[0] = XSTR ("Do Not Skip This Mission", 1473);
+        Popupdead_button_text[1] =
+            XSTR ("Advance To The Next Mission", 1474);
+        Popupdead_button_text[2] = XSTR ("Don't Show Me This Again", 1475);
+        Popupdead_num_choices = POPUPDEAD_NUM_CHOICES_SKIP;
+        Popupdead_skip_active = 1;
+    }
+    else if (The_mission.flags[Mission::Mission_Flags::Red_alert]) {
+        // We can't staticly declare these because they are externalized
+        Popupdead_button_text[0] = XSTR ("Quick Start Mission", 105);
+        Popupdead_button_text[1] = XSTR ("Return To Flight Deck", 106);
+        Popupdead_button_text[2] = XSTR ("Return To Briefing", 107);
+        Popupdead_button_text[3] = XSTR ("Replay previous mission", 1432);
+        Popupdead_num_choices = POPUPDEAD_NUM_CHOICES_RA;
     }
     else {
-        // in multiplayer, we have different choices depending on respawn mode,
-        // etc.
-
-        // if the player has run out of respawns and must either quit and
-        // become an observer
-        if (Net_player->flags & NETINFO_FLAG_LIMBO) {
-            // the master should not be able to quit the game
-            if (((Net_player->flags & NETINFO_FLAG_AM_MASTER) &&
-                 (multi_num_players () > 1)) ||
-                (Net_player->flags & NETINFO_FLAG_TEAM_CAPTAIN)) {
-                Popupdead_button_text[0] = XSTR ("Observer Mode", 108);
-                Popupdead_num_choices = 1;
-                Popupdead_multi_type = POPUPDEAD_OBS_ONLY;
-            }
-            else {
-                Popupdead_button_text[0] = XSTR ("Observer Mode", 108);
-                Popupdead_button_text[1] = XSTR ("Return To Flight Deck", 106);
-                Popupdead_num_choices = 2;
-                Popupdead_multi_type = POPUPDEAD_OBS_QUIT;
-            }
-        }
-        else {
-            // the master of the game should not be allowed to quit
-            if (((Net_player->flags & NETINFO_FLAG_AM_MASTER) &&
-                 (multi_num_players () > 1)) ||
-                (Net_player->flags & NETINFO_FLAG_TEAM_CAPTAIN)) {
-                Popupdead_button_text[0] = XSTR ("Respawn", 109);
-                Popupdead_num_choices = 1;
-                Popupdead_multi_type = POPUPDEAD_RESPAWN_ONLY;
-            }
-            else {
-                Popupdead_button_text[0] = XSTR ("Respawn", 109);
-                if (!Cmdline_mpnoreturn) {
-                    Popupdead_button_text[1] =
-                        XSTR ("Return To Flight Deck", 106);
-                    Popupdead_num_choices = 2;
-                }
-                else {
-                    Popupdead_num_choices = 1;
-                }
-                Popupdead_multi_type = POPUPDEAD_RESPAWN_QUIT;
-            }
-        }
+        Popupdead_button_text[0] = XSTR ("Quick Start Mission", 105);
+        Popupdead_button_text[1] = XSTR ("Return To Flight Deck", 106);
+        Popupdead_button_text[2] = XSTR ("Return To Briefing", 107);
+        Popupdead_num_choices = POPUPDEAD_NUM_CHOICES;
     }
 
     // create buttons
@@ -509,15 +448,6 @@ int popupdead_do_frame (float /*frametime*/) {
     Popupdead_window.draw ();
     popupdead_force_draw_buttons ();
     popupdead_draw_button_text ();
-
-    // maybe force the player to respawn if they've taken too long to choose
-    if ((Game_mode & GM_MULTIPLAYER) && (The_mission.max_respawn_delay >= 0) &&
-        (timestamp_elapsed (Popupdead_timer)) && (choice < 0)) {
-        if ((Popupdead_multi_type == POPUPDEAD_RESPAWN_ONLY) ||
-            (Popupdead_multi_type == POPUPDEAD_RESPAWN_QUIT)) {
-            Popupdead_choice = POPUPDEAD_DO_RESPAWN;
-        }
-    }
 
     return Popupdead_choice;
 }

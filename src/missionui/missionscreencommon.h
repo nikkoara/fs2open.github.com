@@ -205,9 +205,6 @@ void wss_direct_restore_loadout ();
 
 int wss_get_mode (
     int from_slot, int from_list, int to_slot, int to_list, int wl_ship_slot);
-int store_wss_data (
-    ubyte* block, int max_size, interface_snd_id sound, int player_index);
-int restore_wss_data (ubyte* block);
 
 class ship_info;
 void draw_model_icon (

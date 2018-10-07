@@ -383,20 +383,6 @@ int UI_WINDOW::process (int key_in, int process_mouse) {
     do_dump_check ();
     if (mouse_captured_gadget && B1_RELEASED) { mouse_captured_gadget = NULL; }
 
-    // The following code was commented out by NeilK on 4/15/99 to fix a
-    // problem we were having with
-    // the UI_SLIDER2 class not receiving the process event when the mouse was
-    // dragging the scroller
-    // but outside the mask region. I checked a handful of other screens and so
-    // no adverse affects of this change at the time.
-
-    /*
-        if (mouse_captured_gadget) {
-            mouse_captured_gadget->process();  // if a control has captured the
-       mouse, only it gets processed use_hack_to_get_around_stupid_problem_flag
-       = 0; return last_keypress;
-        }
-    */
     if (!first_gadget) {
         use_hack_to_get_around_stupid_problem_flag = 0;
         return last_keypress;

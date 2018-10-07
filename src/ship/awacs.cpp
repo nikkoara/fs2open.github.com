@@ -5,7 +5,6 @@
 #include "io/timer.h"
 #include "mission/missionparse.h"
 #include "nebula/neb.h"
-#include "network/multi.h"
 #include "ship/awacs.h"
 #include "ship/ship.h"
 #include "species_defs/species_defs.h"
@@ -168,12 +167,6 @@ float awacs_get_level (object* target, ship* viewer, int use_awacs) {
                 ? MARGINALLY_TARGETABLE                 \
                 : UNTARGETABLE)                         \
          : ALWAYS_TARGETABLE)
-
-    // if the viewer is me, and I'm a multiplayer observer, its always viewable
-    if ((viewer == Player_ship) && (Game_mode & GM_MULTIPLAYER) &&
-        (Net_player != NULL) &&
-        MULTI_OBSERVER (Net_players[MY_NET_PLAYER_NUM]))
-        return ALWAYS_TARGETABLE;
 
     // check the targeting threshold
     if ((Hud_max_targeting_range > 0) &&

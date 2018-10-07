@@ -32,7 +32,6 @@ extern int Cmdline_multi_stream_chat_to_file;
 extern int Cmdline_network_port;
 extern int Cmdline_restricted_game;
 extern int Cmdline_spew_pof_info;
-extern int Cmdline_start_netgame;
 extern int Cmdline_timeout;
 extern int Cmdline_use_last_pilot;
 extern int Cmdline_window;
@@ -101,8 +100,6 @@ extern char* Cmdline_mod; // DTP for mod support
 extern char* Cmdline_almission; // DTP for autoload mission (for multi only)
 extern int Cmdline_ingamejoin;
 extern int Cmdline_mpnoreturn;
-extern char* Cmdline_spew_mission_crcs;
-extern char* Cmdline_spew_table_crcs;
 extern int Cmdline_objupd;
 
 // Launcher related options

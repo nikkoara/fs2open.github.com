@@ -32,9 +32,6 @@
 #include "mission/missiontraining.h"
 #include "missionui/redalert.h"
 #include "model/model.h"
-#include "network/multi_pmsg.h"
-#include "network/multi_voice.h"
-#include "network/multiutil.h"
 #include "tracing/tracing.h"
 #include "object/object.h"
 #include "object/objectdock.h"
@@ -1736,16 +1733,6 @@ void hud_stop_looped_engine_sounds () {
 void update_throttle_sound () {
     float percent_throttle;
 
-    if ((Game_mode & GM_MULTIPLAYER) &&
-        (Net_player->flags & NETINFO_FLAG_OBSERVER)) {
-        if (Player_engine_snd_loop.isValid ()) {
-            snd_stop (Player_engine_snd_loop);
-            Player_engine_snd_loop = sound_handle::invalid ();
-        }
-
-        return;
-    }
-
     if (timestamp_elapsed (throttle_sound_check_id)) {
         throttle_sound_check_id = timestamp (THROTTLE_SOUND_CHECK_INTERVAL);
 
@@ -2446,39 +2433,6 @@ bool HudGaugeLag::maybeFlashLag (bool flash_fast) {
 }
 
 void HudGaugeLag::render (float /*frametime*/) {
-    int lag_status;
-
-    if (!(Game_mode & GM_MULTIPLAYER)) { return; }
-
-    if (Netlag_icon.first_frame == -1) {
-        Int3 ();
-        return;
-    }
-
-    lag_status = multi_query_lag_status ();
-
-    switch (lag_status) {
-    case 0:
-        // Draw the net lag icon flashing
-        startFlashLag ();
-        if (maybeFlashLag ()) { setGaugeColor (HUD_C_BRIGHT); }
-        else {
-            setGaugeColor ();
-        }
-        renderBitmap (Netlag_icon.first_frame, position[0], position[1]);
-        break;
-    case 1:
-        // Draw the disconnected icon flashing fast
-        if (maybeFlashLag (true)) { setGaugeColor (HUD_C_BRIGHT); }
-        else {
-            setGaugeColor ();
-        }
-        renderBitmap (Netlag_icon.first_frame + 1, position[0], position[1]);
-        break;
-    default:
-        // Nothing to draw
-        return;
-    }
 }
 
 /**
@@ -2664,12 +2618,6 @@ int hud_support_find_closest (int objnum) {
 void hud_support_view_update () {
     if (!Hud_support_view_active) { return; }
 
-    if ((Game_mode & GM_MULTIPLAYER) &&
-        ((Net_player->flags & NETINFO_FLAG_OBSERVER) ||
-         (Player_obj->type == OBJ_OBSERVER))) {
-        return;
-    }
-
     // If we haven't determined yet who the rearm ship is, try to!
     if (Hud_support_objnum == -1) {
         Hud_support_objnum = hud_support_find_closest (OBJ_INDEX (Player_obj));
@@ -2733,13 +2681,6 @@ void HudGaugeSupport::render (float /*frametime*/) {
     char outstr[64];
 
     if (!Hud_support_view_active) { return; }
-
-    // Don't render this gauge for multiplayer observers
-    if ((Game_mode & GM_MULTIPLAYER) &&
-        ((Net_player->flags & NETINFO_FLAG_OBSERVER) ||
-         (Player_obj->type == OBJ_OBSERVER))) {
-        return;
-    }
 
     if (Hud_support_objnum >= 0) {
         // Check to see if support ship is still alive
@@ -3219,19 +3160,9 @@ void hud_add_objective_messsage (int type, int status) {
     Objective_display.goal_type = type;
     Objective_display.goal_status = status;
 
-    // if this is a multiplayer tvt game
-    if (MULTI_TEAM && (Net_player != NULL)) {
-        mission_goal_fetch_num_resolved (
-            type, &Objective_display.goal_nresolved,
-            &Objective_display.goal_ntotal, Net_player->p_info.team);
-    }
-    else {
-        mission_goal_fetch_num_resolved (
-            type, &Objective_display.goal_nresolved,
-            &Objective_display.goal_ntotal);
-    }
-
-    // TODO: play a sound?
+    mission_goal_fetch_num_resolved (
+        type, &Objective_display.goal_nresolved,
+        &Objective_display.goal_ntotal);
 }
 
 HudGaugeObjectiveNotify::HudGaugeObjectiveNotify ()
@@ -3718,101 +3649,6 @@ HudGauge* hud_get_gauge (const char* name) {
     }
 
     return NULL;
-}
-
-HudGaugeMultiMsg::HudGaugeMultiMsg ()
-    : HudGauge (
-          HUD_OBJECT_MULTI_MSG, HUD_MESSAGE_LINES, false, true, 0, 255, 255,
-          255) {}
-
-bool HudGaugeMultiMsg::canRender () { return true; }
-
-/**
- * @brief Render multiplayer text message currently being entered, if any
- */
-void HudGaugeMultiMsg::render (float /*frametime*/) {
-    char txt[MULTI_MSG_MAX_TEXT_LEN + 20];
-
-    // clear the text
-    memset (txt, 0, MULTI_MSG_MAX_TEXT_LEN + 20);
-
-    // if there is valid multiplayer message text to be displayed
-    if (multi_msg_message_text (txt)) {
-        gr_set_color_fast (&Color_normal);
-        renderString (position[0], position[1], txt);
-    }
-}
-
-HudGaugeVoiceStatus::HudGaugeVoiceStatus ()
-    : HudGauge (
-          HUD_OBJECT_VOICE_STATUS, HUD_MESSAGE_LINES, false, true,
-          VM_EXTERNAL | VM_DEAD_VIEW | VM_WARP_CHASE | VM_PADLOCK_ANY, 255,
-          255, 255) {}
-
-void HudGaugeVoiceStatus::render (float /*frametime*/) {
-    if (!(Game_mode & GM_MULTIPLAYER)) { return; }
-
-    // if we are currently playing a rtvoice sound stream from another player
-    // back
-    switch (multi_voice_status ()) {
-    // the player has been denied the voice token
-    case MULTI_VOICE_STATUS_DENIED:
-        // show a red indicator or something
-        renderString (position[0], position[1], XSTR ("[voice denied]", 243));
-        break;
-
-    // the player is currently recording
-    case MULTI_VOICE_STATUS_RECORDING:
-        renderString (
-            position[0], position[1], XSTR ("[recording voice]", 244));
-        break;
-
-    // the player is current playing back voice from someone
-    case MULTI_VOICE_STATUS_PLAYING:
-        renderString (position[0], position[1], XSTR ("[playing voice]", 245));
-        break;
-
-    // nothing voice related is happening on my machine
-    case MULTI_VOICE_STATUS_IDLE:
-        // probably shouldn't be displaying anything
-        break;
-    }
-}
-
-HudGaugePing::HudGaugePing ()
-    : HudGauge (
-          HUD_OBJECT_PING, HUD_LAG_GAUGE, false, false, 0, 255, 255, 255) {}
-
-/**
- * @brief Render multiplayer ping time to the server, if appropriate
- */
-void HudGaugePing::render (float /*frametime*/) {
-    // If we shouldn't be displaying a ping time, return here
-    if (!multi_show_ingame_ping ()) { return; }
-
-    // If we're in multiplayer mode, display our ping time to the server
-    if (MULTIPLAYER_CLIENT && (Net_player != NULL)) {
-        char ping_str[50];
-        memset (ping_str, 0, 50);
-
-        // If our ping is positive, display it
-        if ((Netgame.server != NULL) &&
-            (Netgame.server->s_info.ping.ping_avg > 0)) {
-            // Get the string
-            if (Netgame.server->s_info.ping.ping_avg >= 1000) {
-                strcpy_s (ping_str, XSTR ("> 1 sec", 628));
-            }
-            else {
-                sprintf (
-                    ping_str, XSTR ("%d ms", 629),
-                    Netgame.server->s_info.ping.ping_avg);
-            }
-
-            // Blit the string out
-            hud_set_default_color ();
-            renderString (position[0], position[1], ping_str);
-        }
-    }
 }
 
 HudGaugeSupernova::HudGaugeSupernova ()

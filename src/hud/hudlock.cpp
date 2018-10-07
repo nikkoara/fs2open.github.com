@@ -8,7 +8,6 @@
 #include "iff_defs/iff_defs.h"
 #include "io/timer.h"
 #include "mission/missionparse.h"
-#include "network/multi.h"
 #include "object/object.h"
 #include "playerman/player.h"
 #include "render/3d.h"
@@ -352,8 +351,7 @@ int hud_abort_lock () {
     // lock!
     if ((Player_ship->team == target_team) &&
         (!iff_x_attacks_y (Player_ship->team, target_team))) {
-        // if we're in multiplayer dogfight, ignore this
-        if (!MULTI_DOGFIGHT) { return 1; }
+        return 1;
     }
 
     return 0;
@@ -444,13 +442,6 @@ void hud_do_lock_indicator (float frametime) {
     ship_weapon* swp;
     weapon_info* wip;
 
-    // if i'm a multiplayer observer, bail here
-    if ((Game_mode & GM_MULTIPLAYER) &&
-        ((Net_player->flags & NETINFO_FLAG_OBSERVER) ||
-         (Player_obj->type == OBJ_OBSERVER))) {
-        return;
-    }
-
     ASSERT (Player_ai->target_objnum >= 0);
 
     // be sure to unset this flag, then possibly set later in this function so
@@ -469,8 +460,9 @@ void hud_do_lock_indicator (float frametime) {
     }
 
     swp = &Player_ship->weapons;
-    wip =
-        &Weapon_info[swp->secondary_bank_weapons[swp->current_secondary_bank]];
+
+    wip = &Weapon_info[swp->secondary_bank_weapons [
+            swp->current_secondary_bank]];
 
     Lock_start_dist = wip->min_lock_time * wip->lock_pixels_per_sec;
 

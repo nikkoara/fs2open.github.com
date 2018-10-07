@@ -32,7 +32,6 @@ enum GS_EVENT {
     GS_EVENT_START_BRIEFING,    // go to the briefing for the current mission
     GS_EVENT_DEBUG_PAUSE_GAME,
     GS_EVENT_HUD_CONFIG,      // start the HUD configuration screen
-    GS_EVENT_MULTI_JOIN_GAME, // start multiplayer join game screen
     GS_EVENT_CONTROL_CONFIG,  // get user to choose what type of controller to
                               // config
     GS_EVENT_EVENT_DEBUG, // an event debug trace scroll list display screen
@@ -47,14 +46,8 @@ enum GS_EVENT {
     GS_EVENT_SHOW_GOALS,                 // Show the goal status screen
     GS_EVENT_HOTKEY_SCREEN,              // Show the hotkey assignment screen
     GS_EVENT_VIEW_MEDALS,                // Go to the View Medals screen
-    GS_EVENT_MULTI_HOST_SETUP,           // host setup for multiplayer
-    GS_EVENT_MULTI_CLIENT_SETUP,         // client setup for multiplayer
     GS_EVENT_DEBRIEF,                    // go to debriefing
     GS_EVENT_GOTO_VIEW_CUTSCENES_SCREEN, // go to the management screen
-    GS_EVENT_MULTI_STD_WAIT,             // standalone wait state
-    GS_EVENT_STANDALONE_MAIN, // the main do-nothing state of the standalone
-    GS_EVENT_MULTI_PAUSE,     // pause your multiplayer game
-    GS_EVENT_TEAM_SELECT,     // team selection for multiplayer
     GS_EVENT_TRAINING_PAUSE,  // pause game while training message is displayed
     GS_EVENT_INGAME_PRE_JOIN, // go to ship selection screen for ingame join
     GS_EVENT_PLAYER_WARPOUT_START,        // player hit 'j' to warp out
@@ -66,18 +59,9 @@ enum GS_EVENT {
     GS_EVENT_PLAYER_WARPOUT_DONE_STAGE2, // player ship got through the warp
                                          // effect
     GS_EVENT_PLAYER_WARPOUT_DONE,        // warp effect went away
-    GS_EVENT_STANDALONE_POSTGAME,        // debriefing, etc
     GS_EVENT_INITIAL_PLAYER_SELECT, // initial screen where player selects from
                                     // multi/single player pilots
     GS_EVENT_GAME_INIT,
-    GS_EVENT_MULTI_MISSION_SYNC, // sychronize/transfer/load any mission
-                                 // specific data in multiplayer
-    GS_EVENT_MULTI_START_GAME, // immediately before the create game screen for
-                               // the host to set the game variables
-    GS_EVENT_MULTI_HOST_OPTIONS,     // options the host can set while in the
-                                     // create game scree
-    GS_EVENT_MULTI_DOGFIGHT_DEBRIEF, // multiplayer furball debriefing screen
-                                     // (replaces normal debriefing)
     GS_EVENT_CAMPAIGN_ROOM,
     GS_EVENT_CMD_BRIEF,    // switch to command briefing screen
     GS_EVENT_TOGGLE_GLIDE, // GS_EVENT_TOGGLE_GLIDE
@@ -86,9 +70,7 @@ enum GS_EVENT {
     GS_EVENT_END_CAMPAIGN,   // end of the whole thang.
     GS_EVENT_LOOP_BRIEF,     // campaign loop brief
     GS_EVENT_CAMPAIGN_CHEAT, // skip to a mission in a campaign
-    GS_EVENT_PXO,
     GS_EVENT_LAB, // WMC - I-FRED concept
-    GS_EVENT_PXO_HELP,
     GS_EVENT_FICTION_VIEWER,
 
     GS_NUM_EVENTS // Last one++
@@ -98,7 +80,7 @@ enum GS_EVENT {
 // which is done in gamesequence.cpp
 //
 extern const char*
-    GS_event_text[]; // text description for the GS_EVENT_* #defines above
+GS_event_text []; // text description for the GS_EVENT_* #defines above
 
 /**
  *  @brief Enum's for game sequencing states
@@ -122,7 +104,6 @@ enum GS_STATE {
     GS_STATE_SHIP_SELECT,
     GS_STATE_DEBUG_PAUSED,
     GS_STATE_HUD_CONFIG,
-    GS_STATE_MULTI_JOIN_GAME,
     GS_STATE_CONTROL_CONFIG,
     GS_STATE_WEAPON_SELECT,
     GS_STATE_MISSION_LOG_SCROLLBACK,
@@ -133,24 +114,14 @@ enum GS_STATE {
     GS_STATE_SHOW_GOALS,
     GS_STATE_HOTKEY_SCREEN,
     GS_STATE_VIEW_MEDALS,        // Go to the View Medals screen
-    GS_STATE_MULTI_HOST_SETUP,   // state where host sets up multiplayer game
-    GS_STATE_MULTI_CLIENT_SETUP, // client setup for multiplayer game
     GS_STATE_DEBRIEF,
     GS_STATE_VIEW_CUTSCENES,
-    GS_STATE_MULTI_STD_WAIT,
-    GS_STATE_STANDALONE_MAIN,
-    GS_STATE_MULTI_PAUSED,
     GS_STATE_TEAM_SELECT,
     GS_STATE_TRAINING_PAUSED, // game is paused while training msg is being
                               // read.
     GS_STATE_INGAME_PRE_JOIN, // go to ship selection screen for ingame join
     GS_STATE_EVENT_DEBUG, // an event debug trace scroll list display screen
-    GS_STATE_STANDALONE_POSTGAME, // debriefing, etc.
     GS_STATE_INITIAL_PLAYER_SELECT,
-    GS_STATE_MULTI_MISSION_SYNC,
-    GS_STATE_MULTI_START_GAME,
-    GS_STATE_MULTI_HOST_OPTIONS,
-    GS_STATE_MULTI_DOGFIGHT_DEBRIEF,
     GS_STATE_CAMPAIGN_ROOM,
     GS_STATE_CMD_BRIEF,       // command briefing screen
     GS_STATE_RED_ALERT,       // red alert screen
@@ -158,9 +129,7 @@ enum GS_STATE {
                               // single player
     GS_STATE_GAMEPLAY_HELP,
     GS_STATE_LOOP_BRIEF,
-    GS_STATE_PXO,
     GS_STATE_LAB,
-    GS_STATE_PXO_HELP,
     GS_STATE_START_GAME,
     GS_STATE_FICTION_VIEWER,
 

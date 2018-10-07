@@ -7,9 +7,6 @@
 #include "gamesnd/gamesnd.h"
 #include "globalincs/linklist.h"
 #include "io/timer.h"
-#include "network/multi.h"
-#include "network/multimsgs.h"
-#include "network/multiutil.h"
 #include "object/objcollide.h"
 #include "object/objectsnd.h"
 #include "particle/particle.h"
@@ -56,10 +53,6 @@ int Debris_num_submodels = 0;
  */
 static void debris_start_death_roll (object* debris_obj, debris* debris_p) {
     if (debris_p->is_hull) {
-        // tell everyone else to blow up the piece of debris
-        if (MULTIPLAYER_MASTER)
-            send_debris_update_packet (debris_obj, DEBRIS_UPDATE_NUKE);
-
         int fireball_type = fireball_ship_explosion_type (
             &Ship_info[debris_p->ship_info_index]);
         if (fireball_type < 0) {
@@ -605,15 +598,6 @@ object* debris_create (
     obj = &Objects[objnum];
     pi = &obj->phys_info;
 
-    // assign the network signature.  The signature will be 0 for non-hull
-    // pieces, but since that is our invalid signature, it should be okay.
-    obj->net_signature = 0;
-
-    if ((Game_mode & GM_MULTIPLAYER) && hull_flag) {
-        obj->net_signature =
-            multi_get_next_network_signature (MULTI_SIG_DEBRIS);
-    }
-
     if (source_obj->type == OBJ_SHIP) {
         obj->hull_strength =
             Ships[source_obj->instance].ship_max_hull_strength / 8.0f;
@@ -787,21 +771,12 @@ void debris_hit (
         particle::emit (&pe, particle::PARTICLE_FIRE, 0);
     }
 
-    // multiplayer clients bail here
-    if (MULTIPLAYER_CLIENT) { return; }
-
     if (damage < 0.0f) { damage = 0.0f; }
 
     debris_obj->hull_strength -= damage;
 
     if (debris_obj->hull_strength < 0.0f) {
         debris_start_death_roll (debris_obj, debris_p);
-    }
-    else {
-        // otherwise, give all the other players an update on the debris
-        if (MULTIPLAYER_MASTER) {
-            send_debris_update_packet (debris_obj, DEBRIS_UPDATE_UPDATE);
-        }
     }
 }
 

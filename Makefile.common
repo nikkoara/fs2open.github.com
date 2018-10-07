@@ -36,11 +36,5 @@ FFMPEG_LIBS =                                   \
     $(LIBSWRESAMPLE_LIBS)                       \
     $(LIBSWSCALE_LIBS)
 
-EXTERNAL_CPPFLAGS =                             \
-    -I$(top_srcdir)/src/external/lua            \
-    -I$(top_srcdir)/src/external
-
-EXTERNAL_LIBS =                                         \
-    $(top_srcdir)/src/external/lua/liblua51.a           \
-    $(top_srcdir)/src/external/glad/libglad.a           \
-    $(top_srcdir)/src/external/mongoose/libmongoose.a
+EXTERNAL_CPPFLAGS = -I$(top_srcdir)/src/external
+EXTERNAL_LIBS = $(top_srcdir)/src/external/glad/libglad.a

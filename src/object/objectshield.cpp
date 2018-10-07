@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "math/staticrand.h"
-#include "network/multi.h"
 #include "object/object.h"
 #include "object/objectshield.h"
 #include "ship/ship.h"
@@ -137,11 +136,6 @@ float shield_apply_damage (object* objp, int quadrant_num, float damage) {
     float remaining_damage;
 
     ASSERT (objp);
-
-    // multiplayer clients bail here if nodamage
-    // if(MULTIPLAYER_CLIENT && (Netgame.debug_flags &
-    // NETD_FLAG_CLIENT_NODAMAGE)){
-    if (MULTIPLAYER_CLIENT) return damage;
 
     // check array bounds
     ASSERT (quadrant_num >= 0 && quadrant_num < objp->n_quadrants);

@@ -5,7 +5,6 @@
 #include "hud/hudtargetbox.h"
 #include "io/timer.h"
 #include "localization/localize.h"
-#include "network/multi.h"
 #include "playerman/player.h"
 #include "ship/ship.h"
 #include "weapon/emp.h"
@@ -1047,10 +1046,6 @@ void hud_init_reticle () {
 void hud_update_reticle (player* pp) {
     int rval;
     ship* shipp;
-
-    // multiplayer clients won't call this routine
-    if (MULTIPLAYER_CLIENT || MULTI_OBSERVER (Net_players[MY_NET_PLAYER_NUM]))
-        return;
 
     shipp = &Ships[Objects[pp->objnum].instance];
 

@@ -163,7 +163,6 @@ private:
     void plr_read_settings ();
     void plr_read_stats ();
     void plr_read_stats_multi ();
-    void plr_read_multiplayer ();
     void plr_read_variables ();
     void plr_read_hud ();
     void plr_read_controls ();
@@ -173,7 +172,6 @@ private:
     void plr_write_settings ();
     void plr_write_stats ();
     void plr_write_stats_multi ();
-    void plr_write_multiplayer ();
     void plr_write_variables ();
     void plr_write_hud ();
     void plr_write_controls ();
@@ -217,7 +215,5 @@ private:
 };
 
 extern pilotfile Pilot;
-
-extern void convert_pilot_files ();
 
 #endif // FREESPACE2_PILOTFILE_PILOTFILE_H

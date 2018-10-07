@@ -8,7 +8,6 @@
 #include "io/mouse.h"
 #include "localization/localize.h"
 #include "menuui/techmenu.h"
-#include "network/multi.h"
 #include "osapi/osregistry.h"
 #include "pilotfile/pilotfile.h"
 #include "playerman/managepilot.h"
@@ -227,58 +226,6 @@ void pilotfile::plr_write_variables () {
         cfwrite_string_len (p->variables[idx].text, cfp);
         cfwrite_string_len (p->variables[idx].variable_name, cfp);
     }
-
-    endSection ();
-}
-
-void pilotfile::plr_read_multiplayer () {
-    // netgame options
-    p->m_server_options.squad_set = cfread_ubyte (cfp);
-    p->m_server_options.endgame_set = cfread_ubyte (cfp);
-    p->m_server_options.flags = cfread_int (cfp);
-    p->m_server_options.respawn = cfread_uint (cfp);
-    p->m_server_options.max_observers = cfread_ubyte (cfp);
-    p->m_server_options.skill_level = cfread_ubyte (cfp);
-    p->m_server_options.voice_qos = cfread_ubyte (cfp);
-    p->m_server_options.voice_token_wait = cfread_int (cfp);
-    p->m_server_options.voice_record_time = cfread_int (cfp);
-    p->m_server_options.mission_time_limit = (fix)cfread_int (cfp);
-    p->m_server_options.kill_limit = cfread_int (cfp);
-
-    // local options
-    p->m_local_options.flags = cfread_int (cfp);
-    p->m_local_options.obj_update_level = cfread_int (cfp);
-
-    // netgame protocol
-    Multi_options_g.protocol = cfread_int (cfp);
-
-    if (Multi_options_g.protocol != NET_TCP) {
-        Multi_options_g.protocol = NET_TCP;
-    }
-}
-
-void pilotfile::plr_write_multiplayer () {
-    startSection (Section::Multiplayer);
-
-    // netgame options
-    cfwrite_ubyte (p->m_server_options.squad_set, cfp);
-    cfwrite_ubyte (p->m_server_options.endgame_set, cfp);
-    cfwrite_int (p->m_server_options.flags, cfp);
-    cfwrite_uint (p->m_server_options.respawn, cfp);
-    cfwrite_ubyte (p->m_server_options.max_observers, cfp);
-    cfwrite_ubyte (p->m_server_options.skill_level, cfp);
-    cfwrite_ubyte (p->m_server_options.voice_qos, cfp);
-    cfwrite_int (p->m_server_options.voice_token_wait, cfp);
-    cfwrite_int (p->m_server_options.voice_record_time, cfp);
-    cfwrite_int ((int)p->m_server_options.mission_time_limit, cfp);
-    cfwrite_int (p->m_server_options.kill_limit, cfp);
-
-    // local options
-    cfwrite_int (p->m_local_options.flags, cfp);
-    cfwrite_int (p->m_local_options.obj_update_level, cfp);
-
-    // netgame protocol
-    cfwrite_int (Multi_options_g.protocol, cfp);
 
     endSection ();
 }
@@ -853,11 +800,6 @@ bool pilotfile::load_player (const char* callsign, player* _p) {
                 plr_read_stats_multi ();
                 break;
 
-            case Section::Multiplayer:
-                WARNINGF (LOCATION, "PLR => Parsing:  Multiplayer...\n");
-                plr_read_multiplayer ();
-                break;
-
             case Section::Controls:
                 WARNINGF (LOCATION, "PLR => Parsing:  Controls...\n");
                 plr_read_controls ();
@@ -950,8 +892,7 @@ bool pilotfile::save_player (player* _p) {
     }
 
     // open it, hopefully...
-    cfp =
-        cfopen ((char*)filename.c_str (), "wb", CFILE_NORMAL, CF_TYPE_PLAYERS);
+    cfp = cfopen ((char*)filename.c_str (), "wb", CFILE_NORMAL, CF_TYPE_PLAYERS);
 
     if (!cfp) {
         WARNINGF (
@@ -969,29 +910,16 @@ bool pilotfile::save_player (player* _p) {
         (int)PLR_VERSION);
 
     // flags and info sections go first
-    WARNINGF (LOCATION, "PLR => Saving:  Flags...\n");
     plr_write_flags ();
-    WARNINGF (LOCATION, "PLR => Saving:  Info...\n");
     plr_write_info ();
 
     // everything else is next, not order specific
-    WARNINGF (LOCATION, "PLR => Saving:  Scoring...\n");
     plr_write_stats ();
-    WARNINGF (LOCATION, "PLR => Saving:  ScoringMulti...\n");
     plr_write_stats_multi ();
-    WARNINGF (LOCATION, "PLR => Saving:  HUD...\n");
     plr_write_hud ();
-    WARNINGF (LOCATION, "PLR => Saving:  Variables...\n");
     plr_write_variables ();
-    WARNINGF (LOCATION, "PLR => Saving:  Multiplayer...\n");
-    plr_write_multiplayer ();
-    WARNINGF (LOCATION, "PLR => Saving:  Controls...\n");
     plr_write_controls ();
-    WARNINGF (LOCATION, "PLR => Saving:  Settings...\n");
     plr_write_settings ();
-
-    // Done!
-    WARNINGF (LOCATION, "PLR => Saving complete!\n");
 
     plr_close ();
 

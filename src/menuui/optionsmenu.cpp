@@ -13,11 +13,9 @@
 #include "io/timer.h"
 #include "menuui/mainhallmenu.h"
 #include "menuui/optionsmenu.h"
-#include "menuui/optionsmenumulti.h"
 #include "mission/missionbriefcommon.h"
 #include "missionui/missionscreencommon.h"
 #include "nebula/neb.h"
-#include "network/multi.h"
 #include "osapi/osregistry.h"
 #include "pilotfile/pilotfile.h"
 #include "popup/popup.h"
@@ -275,7 +273,6 @@ static struct {
 
 static int Tab = 0;
 static int Options_menu_inited = 0;
-static int Options_multi_inited = 0;
 static int Options_detail_inited = 0;
 static int Button_bms[NUM_COMMONS][MAX_BMAPS_PER_GADGET];
 
@@ -734,9 +731,13 @@ void options_tab_setup (int /*set_palette*/) {
 
     // do other special processing
     switch (Tab) {
-    case MULTIPLAYER_TAB: options_multi_select (); break;
+    case MULTIPLAYER_TAB:
+        ASSERT (0);
+        break;
 
-    case DETAIL_LEVELS_TAB: options_detail_unhide_stuff (); break;
+    case DETAIL_LEVELS_TAB:
+        options_detail_unhide_stuff ();
+        break;
     }
 }
 
@@ -744,9 +745,13 @@ void options_tab_setup (int /*set_palette*/) {
 // that's being left
 void options_tab_close () {
     switch (Tab) {
-    case MULTIPLAYER_TAB: options_multi_unselect (); break;
+    case MULTIPLAYER_TAB:
+        ASSERT (0);
+        break;
 
-    case DETAIL_LEVELS_TAB: options_detail_hide_stuff (); break;
+    case DETAIL_LEVELS_TAB:
+        options_detail_hide_stuff ();
+        break;
     }
 }
 
@@ -758,13 +763,6 @@ void options_change_tab (int n) {
         if (Networking_disabled) {
             game_feature_disabled_popup ();
             return;
-        }
-
-        if (!Options_multi_inited) {
-            // init multiplayer
-            options_multi_init (&Ui_window);
-            options_multi_unselect ();
-            Options_multi_inited = 1;
         }
 
         break;
@@ -890,14 +888,6 @@ void options_button_pressed (int n) {
 
     case HUD_CONFIG_BUTTON:
         // can't go to the hud config screen when a multiplayer observer
-        if ((Game_mode & GM_MULTIPLAYER) &&
-            (Net_player->flags & NETINFO_FLAG_OBSERVER)) {
-            gamesnd_play_iface (InterfaceSounds::GENERAL_FAIL);
-            options_add_notify (
-                XSTR ("Cannot use HUD config when an observer!", 375));
-            break;
-        }
-
         gamesnd_play_iface (InterfaceSounds::SWITCH_SCREENS);
         gameseq_post_event (GS_EVENT_HUD_CONFIG);
         break;
@@ -1056,19 +1046,6 @@ void options_sliders_update () {
 }
 
 void options_accept () {
-    // apply the selected multiplayer options
-    if (Options_multi_inited) {
-        // if we've failed to provide a PXO password or username but have
-        // turned on PXO, we don't want to quit
-        if (!options_multi_accept ()) {
-            gamesnd_play_iface (InterfaceSounds::COMMIT_PRESSED);
-            popup (
-                PF_USE_AFFIRMATIVE_ICON, 1, POPUP_OK,
-                "PXO is selected but password or username is missing");
-            return;
-        }
-    }
-
     // If music is zero volume, disable
     if (Master_event_music_volume <= 0.0f) {
         // event_music_disable();
@@ -1248,8 +1225,6 @@ void options_menu_close () {
         Voice_vol_handle = sound_handle::invalid ();
     }
 
-    options_multi_close ();
-
     Ui_window.destroy ();
     common_free_interface_palette (); // restore game palette
     Pilot.save_player ();
@@ -1261,7 +1236,6 @@ void options_menu_close () {
     // audiostream_unpause_all();
 
     Options_menu_inited = 0;
-    Options_multi_inited = 0;
     Options_detail_inited = 0;
 }
 
@@ -1354,10 +1328,6 @@ void options_menu_do_frame (float /*frametime*/) {
     case KEY_RIGHT: // activate next tab
         // check to see if the multiplayer options screen wants to eat the tab
         // kay
-        if ((k == KEY_TAB) && (Tab == MULTIPLAYER_TAB)) {
-            if (options_multi_eat_tab ()) { break; }
-        }
-
         i = Tab + 1;
         if (i >= NUM_TABS) i = 0;
 
@@ -1398,12 +1368,10 @@ void options_menu_do_frame (float /*frametime*/) {
 
     // if we're in the multiplayer options tab, get the background bitmap from
     // the options multi module
-    if (Tab == MULTIPLAYER_TAB) { i = options_multi_background_bitmap (); }
-    else {
-        i = Backgrounds[gr_screen.res][Tab].bitmap;
-    }
+    i = Backgrounds[gr_screen.res][Tab].bitmap;
 
     GR_MAYBE_CLEAR_RES (i);
+    
     if (i >= 0) {
         gr_set_bitmap (i);
         gr_bitmap (0, 0, GR_RESIZE_MENU);
@@ -1415,7 +1383,9 @@ void options_menu_do_frame (float /*frametime*/) {
     // not overwritten by the UI_WINDOW::draw() call do specific processing for
     // the multiplayer tab
     switch (Tab) {
-    case MULTIPLAYER_TAB: options_multi_do (k); break;
+    case MULTIPLAYER_TAB:
+        ASSERT (0);
+        break;
 
     case DETAIL_LEVELS_TAB: options_detail_do_frame (); break;
 
@@ -1477,10 +1447,6 @@ void options_menu_do_frame (float /*frametime*/) {
 
         gr_printf_menu (x, y, NOX ("%.2f"), FreeSpace_gamma);
     }
-    //==============================================================================
-
-    // maybe blit a waveform
-    if (Tab == MULTIPLAYER_TAB) { options_multi_vox_process_waveform (); }
 
     gr_flip ();
 }

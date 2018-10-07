@@ -2,9 +2,7 @@
 
 ACLOCAL_AMFLAGS = -I etc/m4
 
-SUBDIRS =                                       \
-    external/glad                               \
-    external/mongoose
+SUBDIRS = external/glad
 
 include $(top_srcdir)/Makefile.common
 
@@ -63,9 +61,6 @@ fs2_SOURCES =                                   \
     freespace2/SDLGraphicsOperations.cpp        \
     freespace2/freespace.cpp                    \
     freespace2/levelpaging.cpp                  \
-    fs2netd/fs2netd_client.cpp                  \
-    fs2netd/tcp_client.cpp                      \
-    fs2netd/tcp_socket.cpp                      \
     gamehelp/contexthelp.cpp                    \
     gamehelp/gameplayhelp.cpp                   \
     gamesequence/gamesequence.cpp               \
@@ -163,7 +158,6 @@ fs2_SOURCES =                                   \
     menuui/mainhallmenu.cpp                     \
     menuui/mainhalltemp.cpp                     \
     menuui/optionsmenu.cpp                      \
-    menuui/optionsmenumulti.cpp                 \
     menuui/playermenu.cpp                       \
     menuui/readyroom.cpp                        \
     menuui/snazzyui.cpp                         \
@@ -179,7 +173,6 @@ fs2_SOURCES =                                   \
     mission/missionmessage.cpp                  \
     mission/missionparse.cpp                    \
     mission/missiontraining.cpp                 \
-    missionui/chatbox.cpp                       \
     missionui/fictionviewer.cpp                 \
     missionui/missionbrief.cpp                  \
     missionui/missioncmdbrief.cpp               \
@@ -199,36 +192,6 @@ fs2_SOURCES =                                   \
     model/modelrender.cpp                       \
     nebula/neb.cpp                              \
     nebula/neblightning.cpp                     \
-    network/chat_api.cpp                        \
-    network/multi.cpp                           \
-    network/multi_campaign.cpp                  \
-    network/multi_data.cpp                      \
-    network/multi_dogfight.cpp                  \
-    network/multi_endgame.cpp                   \
-    network/multi_ingame.cpp                    \
-    network/multi_kick.cpp                      \
-    network/multi_log.cpp                       \
-    network/multi_obj.cpp                       \
-    network/multi_observer.cpp                  \
-    network/multi_options.cpp                   \
-    network/multi_pause.cpp                     \
-    network/multi_pinfo.cpp                     \
-    network/multi_ping.cpp                      \
-    network/multi_pmsg.cpp                      \
-    network/multi_pxo.cpp                       \
-    network/multi_rate.cpp                      \
-    network/multi_respawn.cpp                   \
-    network/multi_sexp.cpp                      \
-    network/multi_team.cpp                      \
-    network/multi_update.cpp                    \
-    network/multi_voice.cpp                     \
-    network/multi_xfer.cpp                      \
-    network/multimsgs.cpp                       \
-    network/multiteamselect.cpp                 \
-    network/multiui.cpp                         \
-    network/multiutil.cpp                       \
-    network/psnet2.cpp                          \
-    network/stand_gui-unix.cpp                  \
     object/collidedebrisship.cpp                \
     object/collidedebrisweapon.cpp              \
     object/collideshipship.cpp                  \
@@ -263,11 +226,8 @@ fs2_SOURCES =                                   \
     pcxutils/pcxutils.cpp                       \
     physics/physics.cpp                         \
     pilotfile/csg.cpp                           \
-    pilotfile/csg_convert.cpp                   \
     pilotfile/pilotfile.cpp                     \
-    pilotfile/pilotfile_convert.cpp             \
     pilotfile/plr.cpp                           \
-    pilotfile/plr_convert.cpp                   \
     playerman/managepilot.cpp                   \
     playerman/playercontrol.cpp                 \
     pngutils/pngutils.cpp                       \
@@ -344,7 +304,7 @@ fs2_SOURCES =                                   \
     windows_stub/stubs.cpp
 
 fs2_CPPFLAGS =                                  \
-    -DLUA_CPPFLAGS -DSCP_UNIX                   \
+    -DSCP_UNIX                                  \
     -I.                                         \
     $(EXTERNAL_CPPFLAGS)                        \
     $(BOOST_CPPFLAGS)                           \

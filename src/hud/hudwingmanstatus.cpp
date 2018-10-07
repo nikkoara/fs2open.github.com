@@ -9,7 +9,6 @@
 #include "iff_defs/iff_defs.h"
 #include "io/timer.h"
 #include "mission/missionparse.h"
-#include "network/multi.h"
 #include "object/object.h"
 #include "ship/ship.h"
 #include "weapon/emp.h"
@@ -108,29 +107,6 @@ void hud_wingman_status_init_late_wings () {
     */
 }
 
-// function which marks the other team wing as not used for the wingman status
-// gauge
-void hud_wingman_kill_multi_teams () {
-    int wing_index;
-
-    // do nothing in single player or non team v. team games
-    if (Game_mode & GM_NORMAL) return;
-
-    if (!IS_MISSION_MULTI_TEAMS) return;
-
-    ASSERT (MAX_TVT_WINGS == 2); // Goober5000
-
-    wing_index = -1;
-    if (Net_player->p_info.team == 0)
-        wing_index = 1;
-    else if (Net_player->p_info.team == 1)
-        wing_index = 0;
-
-    if (wing_index == -1) return;
-
-    HUD_wingman_status[wing_index].ignore = 1;
-}
-
 // called once per level to init the wingman status gauge.  Loads in the frames
 // the first time
 void hud_init_wingman_status_gauge () {
@@ -149,7 +125,6 @@ void hud_init_wingman_status_gauge () {
     }
 
     hud_wingman_status_init_late_wings ();
-    hud_wingman_kill_multi_teams ();
     hud_wingman_status_update ();
 }
 
