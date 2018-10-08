@@ -14,9 +14,6 @@
 #include "mission/missionmessage.h"
 #include "mission/missiontraining.h"
 #include "mod_table/mod_table.h"
-#include "network/multi.h"
-#include "network/multimsgs.h"
-#include "network/multiutil.h"
 #include "parse/parselo.h"
 #include "parse/sexp.h"
 #include "ship/ship.h"
@@ -355,9 +352,6 @@ void message_parse (bool importing_from_fsm) {
 
         // keep it real
         if ((mt < 0) || (mt >= MAX_TVT_TEAMS)) { mt = -1; }
-
-        // only bother with filters in-game if multiplayer and TvT
-        if (Fred_running || (MULTI_TEAM)) { msg.multi_team = mt; }
     }
 
     // backwards compatibility for old fred missions - all new ones should use
@@ -1336,9 +1330,8 @@ void message_queue_process () {
             // related
             if ((Playing_messages[i].builtin_type != MESSAGE_OOPS) &&
                 (Playing_messages[i].builtin_type != MESSAGE_HAMMER_SWINE)) {
-                if ((Player_ship->team == Iff_traitor) &&
-                    (!(Game_mode & GM_MULTIPLAYER) ||
-                     !(Netgame.type_flags & NG_TYPE_DOGFIGHT))) {
+                
+                if (Player_ship->team == Iff_traitor) {
                     message_kill_playing (i);
                     Message_shipnum = -1;
                     i++;
@@ -1713,9 +1706,7 @@ void message_queue_message (
     // if player is a traitor, no messages for him!!!
     // unless those messages are traitor related
     // Goober5000 - allow messages during multiplayer dogfight (Mantis #1436)
-    if ((Player_ship->team == Iff_traitor) &&
-        (!(Game_mode & GM_MULTIPLAYER) ||
-         !(Netgame.type_flags & NG_TYPE_DOGFIGHT))) {
+    if (Player_ship->team == Iff_traitor) {
         if ((builtin_type != MESSAGE_OOPS) &&
             (builtin_type != MESSAGE_HAMMER_SWINE)) {
             return;
@@ -1868,38 +1859,6 @@ I_Done:
     return i;
 }
 
-// given a message id#, should it be filtered for me?
-int message_filter_multi (int id) {
-    // not multiplayer
-    if (!(Game_mode & GM_MULTIPLAYER)) { return 0; }
-
-    // bogus
-    if ((id < 0) || (id >= Num_messages)) {
-        WARNINGF (LOCATION, "Filtering bogus mission message!\n");
-        return 1;
-    }
-
-    // builtin messages
-    if (id < Num_builtin_messages) {}
-    // mission-specific messages
-    else {
-        // not team filtered
-        if (Messages[id].multi_team < 0) { return 0; }
-
-        // not TvT
-        if (!(Netgame.type_flags & NG_TYPE_TEAM)) { return 0; }
-
-        // is this for my team?
-        if ((Net_player != NULL) &&
-            (Net_player->p_info.team != Messages[id].multi_team)) {
-            WARNINGF (LOCATION, "Filtering team-based mission message!\n");
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
 // send_unique_to_player sends a mission unique (specific) message to the
 // player (possibly a multiplayer person).  These messages are *not* the
 // builtin messages
@@ -1967,24 +1926,9 @@ void message_send_unique_to_player (
                 who_from = "<none>";
             }
 
-            // not multiplayer or this message is for me, then queue it
-            // if ( !(Game_mode & GM_MULTIPLAYER) || ((multi_target == -1) ||
-            // (multi_target == MY_NET_PLAYER_NUM)) ){
-
-            // maybe filter it out altogether
-            if (!message_filter_multi (i)) {
-                message_queue_message (
-                    i, priority, MESSAGE_TIME_ANYTIME, who_from, source, group,
-                    delay);
-            }
-
-            // send a message packet to a player if destined for everyone or
-            // only a specific person
-            if (MULTIPLAYER_MASTER) {
-                send_mission_message_packet (
-                    i, who_from, priority, MESSAGE_TIME_SOON, source, -1, -1,
-                    -1, delay);
-            }
+            message_queue_message (
+                i, priority, MESSAGE_TIME_ANYTIME, who_from, source, group,
+                delay);
 
             return; // all done with displaying
         }
@@ -2011,9 +1955,14 @@ typedef struct matching_builtin {
 // we should wait before playing this message
 void message_send_builtin_to_player (
     int type, ship* shipp, int priority, int timing, int group, int delay,
-    int multi_target, int multi_team_filter) {
-    int i, persona_index = -1, persona_species = -1, message_index = -1,
-           random_selection = -1;
+    int /* multi_target */, int multi_team_filter) {
+    
+    int i,
+        persona_index = -1,
+        persona_species = -1,
+        message_index = -1,
+        random_selection = -1;
+    
     int source;
     int num_matching_builtins = 0;
     const char* who_from;
@@ -2250,35 +2199,10 @@ void message_send_builtin_to_player (
     // played on my machine if I am a server
 
     // not multiplayer or this message is for me, then queue it
-    if (!(Game_mode & GM_MULTIPLAYER) ||
-        ((multi_target == -1) || (multi_target == MY_NET_PLAYER_NUM))) {
-        // if this filter matches mine
-        if ((multi_team_filter < 0) || !(Netgame.type_flags & NG_TYPE_TEAM) ||
-            ((Net_player != NULL) &&
-             (Net_player->p_info.team == multi_team_filter))) {
-            message_queue_message (
-                message_index, priority, timing, who_from, source, group,
-                delay, type);
-        }
-    }
-
-    // send a message packet to a player if destined for everyone or only a
-    // specific person
-    if (MULTIPLAYER_MASTER) {
-        // only send a message if it is of a particular type
-        if (multi_target == -1) {
-            if (multi_message_should_broadcast (type)) {
-                send_mission_message_packet (
-                    message_index, who_from, priority, timing, source, type,
-                    -1, multi_team_filter);
-            }
-        }
-        else {
-            send_mission_message_packet (
-                message_index, who_from, priority, timing, source, type,
-                multi_target, multi_team_filter);
-        }
-    }
+    if (0 > multi_team_filter)
+        message_queue_message (
+            message_index, priority, timing, who_from, source, group,
+            delay, type);
 }
 
 // message_is_playing()

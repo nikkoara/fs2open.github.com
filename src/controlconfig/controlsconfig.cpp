@@ -11,10 +11,9 @@
 #include "hud/hudsquadmsg.h"
 #include "io/joy.h"
 #include "io/key.h"
+#include "io/keycontrol.h"
 #include "io/timer.h"
 #include "missionui/missionscreencommon.h"
-#include "network/multi_pmsg.h"
-#include "network/multiutil.h"
 #include "pilotfile/pilotfile.h"
 #include "popup/popup.h"
 #include "ui/ui.h"
@@ -2276,10 +2275,6 @@ int check_control_used (int id, int key) {
     if (key < 0) { key = last_key; }
 
     last_key = key;
-
-    // if we're in multiplayer text enter (for chat) mode, check to see if we
-    // should ignore controls
-    if ((Game_mode & GM_MULTIPLAYER) && multi_ignore_controls ()) { return 0; }
 
     if (Control_config[id].disabled) return 0;
 

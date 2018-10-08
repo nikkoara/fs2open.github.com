@@ -12,7 +12,6 @@
 #include "model/model.h"
 #include "freespace2/freespace.h"
 #include "mission/missionparse.h"
-#include "network/multi.h"
 #include "object/objectshield.h"
 #include "ship/ship.h"
 #include "species_defs/species_defs.h"
@@ -864,40 +863,6 @@ void add_shield_point (int objnum, int tri_num, vec3d* hit_pos) {
     Ships[Objects[objnum].instance].shield_hits++;
 }
 
-// ugh!  I wrote a special routine to store shield points for clients in
-// multiplayer games.  Problem is initilization and flow control of normal
-// gameplay make this problem more than trivial to solve.  Turns out that I
-// think I can just keep track of the shield_points for multiplayer in a
-// separate count -- then assign the multi count to the normal count at the
-// correct time.
-void add_shield_point_multi (int objnum, int tri_num, vec3d* hit_pos) {
-    if (Num_multi_shield_points >= MAX_SHIELD_POINTS) return;
-
-    Shield_points[Num_shield_points].objnum = objnum;
-    Shield_points[Num_shield_points].shield_tri = tri_num;
-    Shield_points[Num_shield_points].hit_point = *hit_pos;
-
-    Num_multi_shield_points++;
-}
-
-/**
- * Sets up the shield point hit information for multiplayer clients
- */
-void shield_point_multi_setup () {
-    int i;
-
-    ASSERT (MULTIPLAYER_CLIENT);
-
-    if (Num_multi_shield_points == 0) return;
-
-    Num_shield_points = Num_multi_shield_points;
-    for (i = 0; i < Num_shield_points; i++) {
-        Ships[Objects[Shield_points[i].objnum].instance].shield_hits++;
-    }
-
-    Num_multi_shield_points = 0;
-}
-
 /**
  * Create all the shield explosions that occurred on object *objp this frame.
  */
@@ -927,12 +892,8 @@ void create_shield_explosion_all (object* objp) {
         }
     }
 
-    // some some reason, clients seem to have a bogus count valud on occation.
-    // I"ll chalk it up to missed packets :-)  MWA 2/6/98
-    if (!MULTIPLAYER_CLIENT) {
-        ASSERT (
-            count == 0); // Couldn't find all the alleged shield hits.  Bogus!
-    }
+     // Couldn't find all the alleged shield hits. Bogus!
+    ASSERT (count == 0);
 }
 
 int Break_value = -1;

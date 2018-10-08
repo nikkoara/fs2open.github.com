@@ -148,12 +148,6 @@ void mht_do () {
     case KEY_L: gameseq_post_event (GS_EVENT_LOAD_MISSION_MENU); break;
 
     case KEY_F2: gameseq_post_event (GS_EVENT_OPTIONS_MENU); break;
-
-    case KEY_M:
-        if (Player->flags & PLAYER_FLAGS_IS_MULTI) {
-            main_hall_do_multi_ready ();
-        }
-        break;
     }
 
     // process button presses
@@ -199,14 +193,8 @@ void mht_check_buttons () {
 void mht_button_pressed (int n) {
     switch (n) {
     case MHT_READY_ROOM:
-        if (Player->flags & PLAYER_FLAGS_IS_MULTI) {
-            main_hall_do_multi_ready ();
-        }
-        else {
-            gameseq_post_event (GS_EVENT_NEW_CAMPAIGN);
-
-            gamesnd_play_iface (InterfaceSounds::USER_SELECT);
-        }
+        gameseq_post_event (GS_EVENT_NEW_CAMPAIGN);
+        gamesnd_play_iface (InterfaceSounds::USER_SELECT);
         break;
 
     case MHT_CAMPAIGN_ROOM:

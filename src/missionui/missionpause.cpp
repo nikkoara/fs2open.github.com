@@ -9,7 +9,6 @@
 #include "hud/hudmessage.h"
 #include "io/key.h"
 #include "missionui/missionpause.h"
-#include "network/multi_pause.h"
 #include "object/object.h"
 #include "popup/popup.h"
 #include "sound/audiostr.h"

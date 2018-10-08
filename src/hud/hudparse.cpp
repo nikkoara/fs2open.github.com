@@ -51,49 +51,48 @@ int Hud_font = -1;
 
 // WARNING: If you add gauges to this array, make sure to bump
 // num_default_gauges!
-int num_default_gauges = 42;
-static int retail_gauges[] = { HUD_OBJECT_MESSAGES,
-                               HUD_OBJECT_TRAINING_MESSAGES,
-                               HUD_OBJECT_SUPPORT,
-                               HUD_OBJECT_DAMAGE,
-                               HUD_OBJECT_WINGMAN_STATUS,
-                               HUD_OBJECT_AUTO_SPEED,
-                               HUD_OBJECT_AUTO_TARGET,
-                               HUD_OBJECT_CMEASURES,
-                               HUD_OBJECT_TALKING_HEAD,
-                               HUD_OBJECT_DIRECTIVES,
-                               HUD_OBJECT_WEAPONS,
-                               HUD_OBJECT_OBJ_NOTIFY,
-                               HUD_OBJECT_SQUAD_MSG,
-                               HUD_OBJECT_LAG,
-                               HUD_OBJECT_MINI_SHIELD,
-                               HUD_OBJECT_PLAYER_SHIELD,
-                               HUD_OBJECT_TARGET_SHIELD,
-                               HUD_OBJECT_ESCORT,
-                               HUD_OBJECT_MISSION_TIME,
-                               HUD_OBJECT_TARGET_MONITOR,
-                               HUD_OBJECT_EXTRA_TARGET_DATA,
-                               HUD_OBJECT_AFTERBURNER,
-                               HUD_OBJECT_WEAPON_ENERGY,
-                               HUD_OBJECT_TEXT_WARNINGS,
-                               HUD_OBJECT_CENTER_RETICLE,
-                               HUD_OBJECT_THROTTLE,
-                               HUD_OBJECT_THREAT,
-                               HUD_OBJECT_LEAD,
-                               HUD_OBJECT_LOCK,
-                               HUD_OBJECT_MULTI_MSG,
-                               HUD_OBJECT_VOICE_STATUS,
-                               HUD_OBJECT_PING,
-                               HUD_OBJECT_SUPERNOVA,
-                               HUD_OBJECT_OFFSCREEN,
-                               HUD_OBJECT_BRACKETS,
-                               HUD_OBJECT_ORIENTATION_TEE,
-                               HUD_OBJECT_HOSTILE_TRI,
-                               HUD_OBJECT_TARGET_TRI,
-                               HUD_OBJECT_MISSILE_TRI,
-                               HUD_OBJECT_KILLS,
-                               HUD_OBJECT_FIXED_MESSAGES,
-                               HUD_OBJECT_ETS_RETAIL };
+static int retail_gauges[] = {
+    HUD_OBJECT_MESSAGES,
+    HUD_OBJECT_TRAINING_MESSAGES,
+    HUD_OBJECT_SUPPORT,
+    HUD_OBJECT_DAMAGE,
+    HUD_OBJECT_WINGMAN_STATUS,
+    HUD_OBJECT_AUTO_SPEED,
+    HUD_OBJECT_AUTO_TARGET,
+    HUD_OBJECT_CMEASURES,
+    HUD_OBJECT_TALKING_HEAD,
+    HUD_OBJECT_DIRECTIVES,
+    HUD_OBJECT_WEAPONS,
+    HUD_OBJECT_OBJ_NOTIFY,
+    HUD_OBJECT_SQUAD_MSG,
+    HUD_OBJECT_MINI_SHIELD,
+    HUD_OBJECT_PLAYER_SHIELD,
+    HUD_OBJECT_TARGET_SHIELD,
+    HUD_OBJECT_ESCORT,
+    HUD_OBJECT_MISSION_TIME,
+    HUD_OBJECT_TARGET_MONITOR,
+    HUD_OBJECT_EXTRA_TARGET_DATA,
+    HUD_OBJECT_AFTERBURNER,
+    HUD_OBJECT_WEAPON_ENERGY,
+    HUD_OBJECT_TEXT_WARNINGS,
+    HUD_OBJECT_CENTER_RETICLE,
+    HUD_OBJECT_THROTTLE,
+    HUD_OBJECT_THREAT,
+    HUD_OBJECT_LEAD,
+    HUD_OBJECT_LOCK,
+    HUD_OBJECT_SUPERNOVA,
+    HUD_OBJECT_OFFSCREEN,
+    HUD_OBJECT_BRACKETS,
+    HUD_OBJECT_ORIENTATION_TEE,
+    HUD_OBJECT_HOSTILE_TRI,
+    HUD_OBJECT_TARGET_TRI,
+    HUD_OBJECT_MISSILE_TRI,
+    HUD_OBJECT_KILLS,
+    HUD_OBJECT_FIXED_MESSAGES,
+    HUD_OBJECT_ETS_RETAIL
+};
+
+int num_default_gauges = int (sizeof retail_gauges / sizeof *retail_gauges);
 
 flag_def_list Hud_gauge_types[] = {
     { "Messages", HUD_OBJECT_MESSAGES, 0 },
@@ -133,9 +132,6 @@ flag_def_list Hud_gauge_types[] = {
     { "Lead sight", HUD_OBJECT_LEAD_SIGHT, 0 },
     { "Lock indicator", HUD_OBJECT_LOCK, 0 },
     { "Weapon linking", HUD_OBJECT_WEAPON_LINKING, 0 },
-    { "Multiplayer messages", HUD_OBJECT_MULTI_MSG, 0 },
-    { "Voice status", HUD_OBJECT_VOICE_STATUS, 0 },
-    { "Ping", HUD_OBJECT_PING, 0 },
     { "Supernova", HUD_OBJECT_SUPERNOVA, 0 },
     { "Offscreen indicator", HUD_OBJECT_OFFSCREEN, 0 },
     { "Targeting brackets", HUD_OBJECT_BRACKETS, 0 },
@@ -148,7 +144,8 @@ flag_def_list Hud_gauge_types[] = {
     { "Ets retail", HUD_OBJECT_ETS_RETAIL, 0 }
 };
 
-int Num_hud_gauge_types = sizeof (Hud_gauge_types) / sizeof (flag_def_list);
+int Num_hud_gauge_types = int (
+    sizeof Hud_gauge_types / sizeof *Hud_gauge_types);
 
 int parse_ship_start () {
     char shipname[NAME_LENGTH];
@@ -821,8 +818,6 @@ int parse_gauge_type () {
 
     if (optional_string ("+Squad Message:")) return HUD_OBJECT_SQUAD_MSG;
 
-    if (optional_string ("+Lag:")) return HUD_OBJECT_LAG;
-
     if (optional_string ("+Mini Target Shields:"))
         return HUD_OBJECT_MINI_SHIELD;
 
@@ -879,13 +874,6 @@ int parse_gauge_type () {
 
     if (optional_string ("+Weapon Linking:")) return HUD_OBJECT_WEAPON_LINKING;
 
-    if (optional_string ("+Multiplayer Messages:"))
-        return HUD_OBJECT_MULTI_MSG;
-
-    if (optional_string ("+Voice Status:")) return HUD_OBJECT_VOICE_STATUS;
-
-    if (optional_string ("+Ping:")) return HUD_OBJECT_PING;
-
     if (optional_string ("+Supernova:")) return HUD_OBJECT_SUPERNOVA;
 
     if (optional_string ("+Orientation Tee:"))
@@ -922,9 +910,12 @@ int parse_gauge_type () {
 }
 
 void load_gauge (int gauge, gauge_settings* settings) {
-    std::vector< int > ship_index;
-    ship_index.push_back (-1);
-    if (settings->ship_idx == NULL) { settings->ship_idx = &ship_index; }
+    std::vector< int > ship_index{ -1 };
+
+    if (settings->ship_idx == NULL) {
+        settings->ship_idx = &ship_index;
+    }
+
     switch (gauge) {
     case HUD_OBJECT_CUSTOM: load_gauge_custom (settings); break;
     case HUD_OBJECT_MESSAGES: load_gauge_messages (settings); break;
@@ -944,7 +935,6 @@ void load_gauge (int gauge, gauge_settings* settings) {
     case HUD_OBJECT_WEAPONS: load_gauge_weapons (settings); break;
     case HUD_OBJECT_OBJ_NOTIFY: load_gauge_objective_notify (settings); break;
     case HUD_OBJECT_SQUAD_MSG: load_gauge_squad_message (settings); break;
-    case HUD_OBJECT_LAG: load_gauge_lag (settings); break;
     case HUD_OBJECT_MINI_SHIELD: load_gauge_mini_shields (settings); break;
     case HUD_OBJECT_PLAYER_SHIELD: load_gauge_player_shields (settings); break;
     case HUD_OBJECT_TARGET_SHIELD: load_gauge_target_shields (settings); break;
@@ -977,9 +967,6 @@ void load_gauge (int gauge, gauge_settings* settings) {
     case HUD_OBJECT_WEAPON_LINKING:
         load_gauge_weapon_linking (settings);
         break;
-    case HUD_OBJECT_MULTI_MSG: load_gauge_multi_msg (settings); break;
-    case HUD_OBJECT_VOICE_STATUS: load_gauge_voice_status (settings); break;
-    case HUD_OBJECT_PING: load_gauge_ping (settings); break;
     case HUD_OBJECT_SUPERNOVA: load_gauge_supernova (settings); break;
     case HUD_OBJECT_OFFSCREEN: load_gauge_offscreen (settings); break;
     case HUD_OBJECT_BRACKETS: load_gauge_brackets (settings); break;
@@ -1002,13 +989,12 @@ void load_gauge (int gauge, gauge_settings* settings) {
     case HUD_OBJECT_SECONDARY_WEAPONS:
         load_gauge_secondary_weapons (settings);
         break;
+
     default:
-        // It's either -1, indicating we're ignoring a parse error, or it's a
-        // coding error.
-        ASSERTX (
-            gauge == -1,
-            "Invalid value '%d' passed to load_gauge(); get a coder!\n",
-            gauge);
+        // A value of -1 indicates we're ignoring a parse error, otherwise it's
+        // a coding error:
+        EE ("general") << "invalid gauge value : " << gauge;
+        ASSERT (0);
         break;
     }
 }
@@ -4311,60 +4297,6 @@ void load_gauge_weapon_linking (gauge_settings* settings) {
         fname_arc, fname_primary_link_1, fname_primary_link_2,
         fname_secondary_link_1, fname_secondary_link_2,
         fname_secondary_link_3);
-
-    gauge_assign_common (settings, std::move (hud_gauge));
-}
-
-void load_gauge_multi_msg (gauge_settings* settings) {
-    settings->origin[0] = 0.0f;
-    settings->origin[1] = 0.5f;
-
-    if (gr_screen.res == GR_640) {
-        settings->offset[0] = 5;
-        settings->offset[1] = -90;
-    }
-    else {
-        settings->offset[0] = 8;
-        settings->offset[1] = -144;
-    }
-
-    auto hud_gauge = gauge_load_common< HudGaugeMultiMsg > (settings);
-
-    gauge_assign_common (settings, std::move (hud_gauge));
-}
-
-void load_gauge_voice_status (gauge_settings* settings) {
-    settings->origin[0] = 0.0f;
-    settings->origin[1] = 0.5f;
-
-    if (gr_screen.res == GR_640) {
-        settings->offset[0] = 5;
-        settings->offset[1] = -75;
-    }
-    else {
-        settings->offset[0] = 8;
-        settings->offset[1] = -129;
-    }
-
-    auto hud_gauge = gauge_load_common< HudGaugeVoiceStatus > (settings);
-
-    gauge_assign_common (settings, std::move (hud_gauge));
-}
-
-void load_gauge_ping (gauge_settings* settings) {
-    settings->origin[0] = 1.0f;
-    settings->origin[1] = 0.0f;
-
-    if (gr_screen.res == GR_640) {
-        settings->offset[0] = -80;
-        settings->offset[1] = 3;
-    }
-    else {
-        settings->offset[0] = -128;
-        settings->offset[1] = 5;
-    }
-
-    auto hud_gauge = gauge_load_common< HudGaugePing > (settings);
 
     gauge_assign_common (settings, std::move (hud_gauge));
 }

@@ -18,7 +18,6 @@
 #include "missionui/missionshipchoice.h"
 #include "missionui/redalert.h"
 #include "mod_table/mod_table.h"
-#include "network/multi.h"
 #include "osapi/osregistry.h"
 #include "pilotfile/pilotfile.h"
 #include "playerman/managepilot.h"
@@ -136,12 +135,6 @@ void init_new_pilot (player* p, int reset) {
 
     // set pilot language to the current language
     lcl_get_language_name (p->language);
-
-    Multi_options_g.protocol = NET_TCP;
-
-    // initialize default multiplayer options
-    multi_options_set_netgame_defaults (&p->m_server_options);
-    multi_options_set_local_defaults (&p->m_local_options);
 
     Player_loadout.filename[0] = 0;
 
@@ -496,9 +489,6 @@ void player::reset () {
     threat_flags = 0;
     auto_advance = 1;
 
-    multi_options_set_local_defaults (&m_local_options);
-    multi_options_set_netgame_defaults (&m_server_options);
-
     insignia_texture = -1;
 
     tips = 1;
@@ -641,13 +631,6 @@ void player::assign (const player* other) {
     update_lock_time = other->update_lock_time;
     threat_flags = other->threat_flags;
     auto_advance = other->auto_advance;
-
-    memcpy (
-        &m_local_options, &other->m_local_options,
-        sizeof (multi_local_options));
-    memcpy (
-        &m_server_options, &other->m_server_options,
-        sizeof (multi_server_options));
 
     insignia_texture = other->insignia_texture;
 

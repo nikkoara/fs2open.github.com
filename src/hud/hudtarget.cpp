@@ -24,8 +24,6 @@
 #include "mission/missionhotkey.h"
 #include "mission/missionmessage.h"
 #include "model/model.h"
-#include "network/multi.h"
-#include "network/multiutil.h"
 #include "object/object.h"
 #include "libs/renderdoc/renderdoc.h"
 #include "parse/parselo.h"
@@ -714,9 +712,6 @@ object* hud_reticle_pick_target () {
 // target in and out of the selection set.
 void hud_target_hotkey_add_remove (int k, object* ctarget, int how_to_add) {
     htarget_list *hitem, *plist;
-
-    // don't do anything if a standalone multiplayer server
-    if (MULTIPLAYER_STANDALONE) return;
 
     if ((k < 0) || (k >= MAX_KEYED_TARGETS)) {
         WARNINGF (
@@ -4613,9 +4608,7 @@ int hud_sensors_ok (ship* sp, int show_msg) {
     // If playing on lowest skill level, sensors don't affect targeting
     // If dead, still allow player to target, despite any subsystem damage
     // If i'm a multiplayer observer, allow me to target
-    if ((Game_skill_level == 0) || (Game_mode & GM_DEAD) ||
-        ((Game_mode & GM_MULTIPLAYER) &&
-         (Net_player->flags & NETINFO_FLAG_OBSERVER))) {
+    if (0 == Game_skill_level || (Game_mode & GM_DEAD)) {
         return 1;
     }
 
@@ -5319,30 +5312,12 @@ void hud_stuff_ship_name (char* ship_name_text, ship* shipp) {
 }
 
 extern char Fred_callsigns[MAX_SHIPS][NAME_LENGTH + 1];
+
 void hud_stuff_ship_callsign (char* ship_callsign_text, ship* shipp) {
-    // handle multiplayer callsign
-    if (Game_mode & GM_MULTIPLAYER) {
-        // get a player num from the object, then get a callsign from the
-        // player structure.
-        int pn = multi_find_player_by_object (&Objects[shipp->objnum]);
-
-        if (pn >= 0) {
-            strcpy (
-                ship_callsign_text, Net_players[pn].m_player->short_callsign);
-            return;
-        }
-    }
-
-    // try to get callsign
-    if (Fred_running) {
-        strcpy (ship_callsign_text, Fred_callsigns[shipp - Ships]);
-    }
-    else {
-        *ship_callsign_text = 0;
-        if (shipp->callsign_index >= 0) {
-            mission_parse_lookup_callsign_index (
-                shipp->callsign_index, ship_callsign_text);
-        }
+    *ship_callsign_text = 0;
+    if (shipp->callsign_index >= 0) {
+        mission_parse_lookup_callsign_index (
+            shipp->callsign_index, ship_callsign_text);
     }
 
     // handle hash symbol
@@ -5359,16 +5334,10 @@ void hud_stuff_ship_callsign (char* ship_callsign_text, ship* shipp) {
 
 extern char Fred_alt_names[MAX_SHIPS][NAME_LENGTH + 1];
 void hud_stuff_ship_class (char* ship_class_text, ship* shipp) {
-    // try to get alt name
-    if (Fred_running) {
-        strcpy (ship_class_text, Fred_alt_names[shipp - Ships]);
-    }
-    else {
-        *ship_class_text = 0;
-        if (shipp->alt_type_index >= 0) {
-            mission_parse_lookup_alt_index (
-                shipp->alt_type_index, ship_class_text);
-        }
+    *ship_class_text = 0;
+    if (shipp->alt_type_index >= 0) {
+        mission_parse_lookup_alt_index (
+            shipp->alt_type_index, ship_class_text);
     }
 
     // maybe get ship class

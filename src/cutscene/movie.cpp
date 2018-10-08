@@ -16,7 +16,6 @@
 #include "mod_table/mod_table.h"
 
 extern int Game_mode;
-extern int Is_standalone;
 
 namespace {
 
@@ -238,7 +237,7 @@ bool play (const char* name) {
     // to the player even if it's not going to play right now
     if (Game_mode & GM_CAMPAIGN_MODE) { cutscene_mark_viewable (name); }
 
-    if (Cmdline_nomovies || Is_standalone) { return false; }
+    if (Cmdline_nomovies) { return false; }
 
     // clear the screen and hide the mouse cursor
     io::mouse::CursorManager::get ()->pushStatus ();

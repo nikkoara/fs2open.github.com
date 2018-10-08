@@ -212,9 +212,10 @@ void message_queue_message (
 // functions which send messages to player -- called externally
 void message_send_unique_to_player (
     char* id, void* data, int source, int priority, int group, int delay);
+
 void message_send_builtin_to_player (
     int type, ship* shipp, int priority, int timing, int group, int delay,
-    int multi_target, int multi_team_filter);
+    int = -1, int = -1);
 
 // functions to deal with personas
 int message_persona_name_lookup (char* name);
@@ -222,9 +223,6 @@ int message_persona_name_lookup (char* name);
 // preload mission messages (this is called by the level paging code when
 // running with low memory)
 void message_pagein_mission_messages ();
-
-// given a message id#, should it be filtered for me?
-int message_filter_multi (int id);
 
 // Goober5000
 bool message_filename_is_generic (char* filename);

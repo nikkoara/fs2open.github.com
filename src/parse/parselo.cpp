@@ -404,7 +404,7 @@ int required_string (const char* pstr) {
     }
 
     Mp += strlen (pstr);
-    diag_printf ("Found required string [%s]\n", token_found = pstr);
+    diag_printf ("Found required string [%s]", token_found = pstr);
     return 1;
 }
 
@@ -523,14 +523,14 @@ int required_string_fred (const char* pstr, const char* end) {
     }
 
     if (!Mp || *Mp == '\0') {
-        diag_printf ("Required string [%s] not found\n", pstr);
+        diag_printf ("Required string [%s] not found", pstr);
         Mp = backup;
         Token_found_flag = 0;
         return 0;
     }
 
     Mp += strlen (pstr);
-    diag_printf ("Found required string [%s]\n", pstr);
+    diag_printf ("Found required string [%s]", pstr);
     Token_found_flag = 1;
     return 1;
 }
@@ -561,14 +561,14 @@ int optional_string_fred (
     }
 
     if (!Mp || *Mp == '\0') {
-        diag_printf ("Optional string [%s] not found\n", pstr);
+        diag_printf ("Optional string [%s] not found", pstr);
         Mp = mp_save;
         Token_found_flag = 0;
         return 0;
     }
 
     Mp += strlen (pstr);
-    diag_printf ("Found optional string [%s]\n", pstr);
+    diag_printf ("Found optional string [%s]", pstr);
     Token_found_flag = 1;
     return 1;
 }
@@ -589,12 +589,12 @@ int required_string_either (const char* str1, const char* str2) {
     for (int count = 0; count < RS_MAX_TRIES; ++count) {
         if (strncasecmp (str1, Mp, strlen (str1)) == 0) {
             // Mp += strlen(str1);
-            diag_printf ("Found required string [%s]\n", token_found = str1);
+            diag_printf ("Found required string [%s]", token_found = str1);
             return 0;
         }
         else if (strncasecmp (str2, Mp, strlen (str2)) == 0) {
             // Mp += strlen(str2);
-            diag_printf ("Found required string [%s]\n", token_found = str2);
+            diag_printf ("Found required string [%s]", token_found = str2);
             return 1;
         }
 
@@ -683,12 +683,12 @@ int required_string_either_fred (const char* str1, const char* str2) {
     while (*Mp != '\0') {
         if (!strncasecmp (str1, Mp, strlen (str1))) {
             // Mp += strlen(str1);
-            diag_printf ("Found required string [%s]\n", token_found = str1);
+            diag_printf ("Found required string [%s]", token_found = str1);
             return fred_parse_flag = 0;
         }
         else if (!strncasecmp (str2, Mp, strlen (str2))) {
             // Mp += strlen(str2);
-            diag_printf ("Found required string [%s]\n", token_found = str2);
+            diag_printf ("Found required string [%s]", token_found = str2);
             return fred_parse_flag = 1;
         }
 
@@ -879,8 +879,6 @@ void copy_text_until (
 
         throw parse::ParseException ("Too much text found");
     }
-
-    diag_printf ("Here's the partial wad of text:\n%.30s\n", outstr);
 }
 
 // Ditto for std::string.
@@ -898,8 +896,6 @@ void copy_text_until (std::string& outstr, char* instr, const char* endstr) {
     }
 
     outstr.assign (instr, foundstr - instr);
-
-    diag_printf ("Here's the partial wad of text:\n%.30s\n", outstr.c_str ());
 }
 
 // stuffs a string into a buffer.  Can get a string between " marks and stops
@@ -1201,7 +1197,7 @@ void stuff_string (char* outstr, int type, int len, const char* terminators) {
         strncpy (outstr, read_str, final_len);
     }
 
-    diag_printf ("Stuffed string = [%.30s]\n", outstr);
+    diag_printf ("Stuffed string = [%.30s]", outstr);
 }
 
 // Stuff a string into a string buffer.
@@ -1279,7 +1275,7 @@ void stuff_string (std::string& outstr, int type, const char* terminators) {
         outstr = read_str;
     }
 
-    diag_printf ("Stuffed string = [%.30s]\n", outstr.c_str ());
+    diag_printf ("Stuffed string = [%.30s]", outstr.c_str ());
 }
 
 // stuff a string, but only until the end of a line. don't ignore leading
@@ -1305,7 +1301,7 @@ void stuff_string_line (char* outstr, int len) {
     // external string - hash it
     if (fhash_active () && (tag_id > -2)) { fhash_add_str (outstr, tag_id); }
 
-    diag_printf ("Stuffed string = [%.30s]\n", outstr);
+    diag_printf ("Stuffed string = [%.30s]", outstr);
 }
 
 // ditto for std::string
@@ -1328,7 +1324,7 @@ void stuff_string_line (std::string& outstr) {
         fhash_add_str (outstr.c_str (), tag_id);
     }
 
-    diag_printf ("Stuffed string = [%.30s]\n", outstr.c_str ());
+    diag_printf ("Stuffed string = [%.30s]", outstr.c_str ());
 }
 
 // Exactly the same as stuff string only Malloc's the buffer.
@@ -2233,7 +2229,7 @@ void stuff_float (float* f) {
 
     if (*Mp == ',') Mp++;
 
-    diag_printf ("Stuffed float: %f\n", *f);
+    diag_printf ("Stuffed float: %f", *f);
 }
 
 int stuff_float_optional (float* f, bool raw) {
@@ -2270,7 +2266,7 @@ void stuff_int (int* i) {
 
     if (*Mp == ',') Mp++;
 
-    diag_printf ("Stuffed int: %i\n", *i);
+    diag_printf ("Stuffed int: %i", *i);
 }
 
 int stuff_int_optional (int* i, bool raw) {
@@ -2450,7 +2446,7 @@ void stuff_boolean (bool* b, bool a_to_eol) {
         }
     }
 
-    diag_printf ("Stuffed bool: %s\n", (b) ? NOX ("true") : NOX ("false"));
+    diag_printf ("Stuffed bool: %s", (b) ? NOX ("true") : NOX ("false"));
 }
 
 int stuff_bool_list (bool* blp, int max_bools) {
@@ -2518,7 +2514,7 @@ void stuff_ubyte (ubyte* i) {
 
     if (*Mp == ',') Mp++;
 
-    diag_printf ("Stuffed byte: %i\n", *i);
+    diag_printf ("Stuffed byte: %i", *i);
 }
 
 int parse_string_flag_list (int* dest, flag_def_list defs[], int defs_size) {

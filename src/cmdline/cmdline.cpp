@@ -7,7 +7,6 @@
 #include "globalincs/systemvars.h"
 #include "globalincs/version.h"
 #include "hud/hudconfig.h"
-#include "network/multi.h"
 #include "parse/sexp.h"
 #include "globalincs/version.h"
 #include "globalincs/pstypes.h"
@@ -399,46 +398,6 @@ Flag exe_params[] = {
         "Multiplayer",
         "http://www.hard-light.net/wiki/index.php/"
         "Command-Line_Reference#-standalone",
-    },
-    {
-        "-startgame",
-        "Skip mainhall and start hosting",
-        false,
-        0,
-        EASY_DEFAULT,
-        "Multiplayer",
-        "http://www.hard-light.net/wiki/index.php/"
-        "Command-Line_Reference#-startgame",
-    },
-    {
-        "-closed",
-        "Start hosted server as closed",
-        false,
-        0,
-        EASY_DEFAULT,
-        "Multiplayer",
-        "http://www.hard-light.net/wiki/index.php/"
-        "Command-Line_Reference#-closed",
-    },
-    {
-        "-restricted",
-        "Host confirms join requests",
-        false,
-        0,
-        EASY_DEFAULT,
-        "Multiplayer",
-        "http://www.hard-light.net/wiki/index.php/"
-        "Command-Line_Reference#-restricted",
-    },
-    {
-        "-multilog",
-        "",
-        false,
-        0,
-        EASY_DEFAULT,
-        "Multiplayer",
-        "http://www.hard-light.net/wiki/index.php/"
-        "Command-Line_Reference#-multilog",
     },
     {
         "-clientdamage",
@@ -876,34 +835,19 @@ const char* get_param_desc (const char* flag_name);
 // here are the command line parameters that we will be using for FreeSpace
 
 // RETAIL options ----------------------------------------------
-cmdline_parm connect_arg (
-    "-connect", "Automatically connect to multiplayer IP:PORT",
-    AT_STRING); // Cmdline_connect_addr
-cmdline_parm gamename_arg (
-    "-gamename", "Set multiplayer game name", AT_STRING); // Cmdline_game_name
-cmdline_parm gamepassword_arg (
-    "-password", "Set multiplayer game password",
-    AT_STRING); // Cmdline_game_password
 cmdline_parm allowabove_arg (
     "-allowabove", "Ranks above this can join multi",
     AT_STRING); // Cmdline_rank_above
 cmdline_parm allowbelow_arg (
     "-allowbelow", "Ranks below this can join multi",
     AT_STRING); // Cmdline_rank_below
-cmdline_parm standalone_arg ("-standalone", NULL, AT_NONE);
 cmdline_parm
     nosound_arg ("-nosound", NULL, AT_NONE); // Cmdline_freespace_no_sound
 cmdline_parm
     nomusic_arg ("-nomusic", NULL, AT_NONE); // Cmdline_freespace_no_music
 cmdline_parm noenhancedsound_arg (
     "-no_enhanced_sound", NULL, AT_NONE); // Cmdline_no_enhanced_sound
-cmdline_parm
-    startgame_arg ("-startgame", NULL, AT_NONE); // Cmdline_start_netgame
-cmdline_parm gameclosed_arg ("-closed", NULL, AT_NONE); // Cmdline_closed_game
-cmdline_parm gamerestricted_arg (
-    "-restricted", NULL, AT_NONE); // Cmdline_restricted_game
-cmdline_parm port_arg ("-port", "Multiplayer network port", AT_INT);
-cmdline_parm multilog_arg ("-multilog", NULL, AT_NONE); // Cmdline_multi_log
+
 cmdline_parm client_dodamage (
     "-clientdamage", NULL, AT_NONE);               // Cmdline_client_dodamage
 cmdline_parm pof_spew ("-pofspew", NULL, AT_NONE); // Cmdline_spew_pof_info
@@ -915,24 +859,16 @@ cmdline_parm bit32_arg (
     "-32bit", "Deprecated", AT_NONE); // (only here for retail compatibility
                                       // reasons, doesn't actually do anything)
 
-char* Cmdline_connect_addr = NULL;
-char* Cmdline_game_name = NULL;
-char* Cmdline_game_password = NULL;
 char* Cmdline_rank_above = NULL;
 char* Cmdline_rank_below = NULL;
 int Cmdline_cd_check = 1;
 int Cmdline_client_dodamage = 0;
-int Cmdline_closed_game = 0;
 int Cmdline_freespace_no_music = 0;
 int Cmdline_freespace_no_sound = 0;
 int Cmdline_gimme_all_medals = 0;
 int Cmdline_mouse_coords = 0;
-int Cmdline_multi_log = 0;
 int Cmdline_multi_stream_chat_to_file = 0;
-int Cmdline_network_port = -1;
-int Cmdline_restricted_game = 0;
 int Cmdline_spew_pof_info = 0;
-int Cmdline_start_netgame = 0;
 int Cmdline_timeout = -1;
 int Cmdline_use_last_pilot = 0;
 
@@ -1099,18 +1035,12 @@ cmdline_parm
 cmdline_parm mpnoreturn_arg (
     "-mpnoreturn", NULL, AT_NONE); // Cmdline_mpnoreturn  -- Removes 'Return to
                                    // Flight Deck' in respawn dialog -C
-cmdline_parm missioncrcspew_arg (
-    "-missioncrcs", NULL, AT_STRING); // Cmdline_spew_mission_crcs
-cmdline_parm tablecrcspew_arg (
-    "-tablecrcs", NULL, AT_STRING); // Cmdline_spew_table_crcs
 cmdline_parm objupd_arg (
     "-cap_object_update", "Multiplayer object update cap (0-3)", AT_INT);
 
 char* Cmdline_almission = NULL; // DTP for autoload multi mission.
 int Cmdline_ingamejoin = 0;
 int Cmdline_mpnoreturn = 0;
-char* Cmdline_spew_mission_crcs = NULL;
-char* Cmdline_spew_table_crcs = NULL;
 int Cmdline_objupd = 3; // client object updates on LAN by default
 
 // Launcher related options
@@ -1997,33 +1927,6 @@ bool SetCmdlineParams () {
 
     if (extra_warn_arg.found ()) { Cmdline_extra_warn = 1; }
 
-    if (missioncrcspew_arg.found ()) {
-        Cmdline_spew_mission_crcs = missioncrcspew_arg.str ();
-
-        // strip off blank space at end if it's there
-        if (Cmdline_spew_mission_crcs
-                [strlen (Cmdline_spew_mission_crcs) - 1] == ' ') {
-            Cmdline_spew_mission_crcs[strlen (Cmdline_spew_mission_crcs) - 1] =
-                '\0';
-        }
-    }
-
-    if (tablecrcspew_arg.found ()) {
-        Cmdline_spew_table_crcs = tablecrcspew_arg.str ();
-
-        // strip off blank space at end if it's there
-        if (Cmdline_spew_table_crcs[strlen (Cmdline_spew_table_crcs) - 1] ==
-            ' ') {
-            Cmdline_spew_table_crcs[strlen (Cmdline_spew_table_crcs) - 1] =
-                '\0';
-        }
-    }
-
-    if (!Fred_running) { // There is no standalone FRED
-        // is this a standalone server??
-        if (standalone_arg.found ()) { Is_standalone = 1; }
-    }
-
     // object update control
     if (objupd_arg.found ()) {
         Cmdline_objupd = objupd_arg.get_int ();
@@ -2046,38 +1949,6 @@ bool SetCmdlineParams () {
     // Disable enhanced sound
     if (noenhancedsound_arg.found ()) { Cmdline_no_enhanced_sound = 1; }
 
-    // should we start a network game
-    if (startgame_arg.found ()) {
-        Cmdline_use_last_pilot = 1;
-        Cmdline_start_netgame = 1;
-    }
-
-    // closed network game
-    if (gameclosed_arg.found ()) { Cmdline_closed_game = 1; }
-
-    // restircted network game
-    if (gamerestricted_arg.found ()) { Cmdline_restricted_game = 1; }
-
-    // get the name of the network game
-    if (gamename_arg.found ()) {
-        Cmdline_game_name = gamename_arg.str ();
-
-        // be sure that this string fits in our limits
-        if (strlen (Cmdline_game_name) > MAX_GAMENAME_LEN) {
-            Cmdline_game_name[MAX_GAMENAME_LEN - 1] = '\0';
-        }
-    }
-
-    // get the password for a pssword game
-    if (gamepassword_arg.found ()) {
-        Cmdline_game_password = gamepassword_arg.str ();
-
-        // be sure that this string fits in our limits
-        if (strlen (Cmdline_game_name) > MAX_PASSWD_LEN) {
-            Cmdline_game_name[MAX_PASSWD_LEN - 1] = '\0';
-        }
-    }
-
     // set the rank above/below arguments
     if (allowabove_arg.found ()) {
         Cmdline_rank_above = allowabove_arg.str ();
@@ -2085,18 +1956,6 @@ bool SetCmdlineParams () {
     if (allowbelow_arg.found ()) {
         Cmdline_rank_below = allowbelow_arg.str ();
     }
-
-    // get the port number for games
-    if (port_arg.found ()) { Cmdline_network_port = port_arg.get_int (); }
-
-    // the connect argument specifies to join a game at this particular address
-    if (connect_arg.found ()) {
-        Cmdline_use_last_pilot = 1;
-        Cmdline_connect_addr = connect_arg.str ();
-    }
-
-    // see if the multilog flag was set
-    if (multilog_arg.found ()) { Cmdline_multi_log = 1; }
 
     // maybe use old-school client damage
     if (client_dodamage.found ()) { Cmdline_client_dodamage = 1; }
@@ -2122,11 +1981,10 @@ bool SetCmdlineParams () {
     if (center_res_arg.found ()) {
         Cmdline_center_res = center_res_arg.str ();
     }
-    if (almission_arg
-            .found ()) { // DTP for autoload mission // developer oritentated
+    if (almission_arg.found ()) {
+        // DTP for autoload mission
         Cmdline_almission = almission_arg.str ();
         Cmdline_use_last_pilot = 1;
-        Cmdline_start_netgame = 1;
     }
 
     if (dualscanlines_arg.found ()) { Cmdline_dualscanlines = 1; }

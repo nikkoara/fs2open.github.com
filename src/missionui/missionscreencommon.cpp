@@ -20,16 +20,10 @@
 #include "io/mouse.h"
 #include "io/timer.h"
 #include "lighting/lighting.h"
-#include "missionui/chatbox.h"
 #include "missionui/missionbrief.h"
 #include "missionui/missionscreencommon.h"
 #include "missionui/missionshipchoice.h"
 #include "missionui/missionweaponchoice.h"
-#include "network/multi.h"
-#include "network/multi_endgame.h"
-#include "network/multimsgs.h"
-#include "network/multiteamselect.h"
-#include "network/multiutil.h"
 #include "parse/sexp.h"
 #include "popup/popup.h"
 #include "render/3d.h"
@@ -561,16 +555,8 @@ void common_select_init () {
 
     Common_select_inited = 1;
 
-    // this handles the case where the player played a multiplayer game but now
-    // is in single player (in one instance of FreeSpace)
-    if (!(Game_mode & GM_MULTIPLAYER)) { chatbox_close (); }
-
-    // get the value of the team
-    Common_team =
-        0; // assume the first team -- we'll change this value if we need to
-
-    if ((Game_mode & GM_MULTIPLAYER) && IS_MISSION_MULTI_TEAMS)
-        Common_team = Net_player->p_info.team;
+    // assume the first team -- we'll change this value if we need to
+    Common_team = 0;
 
     common_set_team_pointers (Common_team);
 
@@ -578,17 +564,13 @@ void common_select_init () {
     weapon_select_common_init ();
     common_flash_button_init ();
 
-    if (Game_mode & GM_MULTIPLAYER) { multi_ts_common_init (); }
-
     // restore loadout from Player_loadout if this is the same mission as the
     // one previously played
-    if (!(Game_mode & GM_MULTIPLAYER)) {
-        if (!strcasecmp (
-                Player_loadout.filename, Game_current_mission_filename)) {
-            wss_maybe_restore_loadout ();
-            ss_synch_interface ();
-            wl_synch_interface ();
-        }
+    if (!strcasecmp (
+            Player_loadout.filename, Game_current_mission_filename)) {
+        wss_maybe_restore_loadout ();
+        ss_synch_interface ();
+        wl_synch_interface ();
     }
 
     ss_reset_selected_ship ();
@@ -644,8 +626,6 @@ void common_reset_buttons () {
 // used for drawing and changing the common animations and blitting common
 // bitmaps.
 int common_select_do (float /*frametime*/) {
-    int k, new_k;
-
     if (help_overlay_active (Briefing_overlay_id) ||
         help_overlay_active (Ship_select_overlay_id) ||
         help_overlay_active (Weapon_select_overlay_id)) {
@@ -661,14 +641,10 @@ int common_select_do (float /*frametime*/) {
         Active_ui_window->set_ignore_gadgets (0);
     }
 
-    k = chatbox_process ();
+    int k = 0;
+    int new_k = Active_ui_window->process (k);
 
-    if (Game_mode & GM_NORMAL) { new_k = Active_ui_window->process (k); }
-    else {
-        new_k = Active_ui_window->process (k, 0);
-    }
-
-    if ((k > 0) || (new_k > 0) || B1_JUST_RELEASED) {
+    if (k > 0 || new_k > 0 || B1_JUST_RELEASED) {
         if (help_overlay_active (Briefing_overlay_id) ||
             help_overlay_active (Ship_select_overlay_id) ||
             help_overlay_active (Weapon_select_overlay_id)) {
@@ -734,14 +710,7 @@ int common_select_do (float /*frametime*/) {
             break;
 
         case ON_SHIP_SELECT:
-            // go to the specialized multiplayer team/ship select screen
-            if (Game_mode & GM_MULTIPLAYER) {
-                gameseq_post_event (GS_EVENT_TEAM_SELECT);
-            }
-            // go to the normal ship select screen
-            else {
-                gameseq_post_event (GS_EVENT_SHIP_SELECTION);
-            }
+            gameseq_post_event (GS_EVENT_SHIP_SELECTION);
             break;
 
         case ON_WEAPON_SELECT:
@@ -848,23 +817,8 @@ void common_check_keys (int k) {
             }
         }
 
-        // prompt the host of a multiplayer game
-        if (Game_mode & GM_MULTIPLAYER) { multi_quit_game (PROMPT_ALL); }
-        else {
-            // go through the single player quit process
-            // return to the main menu
-            /*
-                            int return_to_menu, pf_flags;
-                            pf_flags =
-               PF_USE_AFFIRMATIVE_ICON|PF_USE_NEGATIVE_ICON; return_to_menu =
-               popup(pf_flags, 2, POPUP_NO, POPUP_YES, XSTR( "Do you want to
-               return to the Main Hall?\n(Your campaign position will be
-               saved)", -1)); if ( return_to_menu == 1 ) {
-                                gameseq_post_event(GS_EVENT_MAIN_MENU);
-                            }
-            */
-            gameseq_post_event (GS_EVENT_MAIN_MENU);
-        }
+        // go through the single player quit process
+        gameseq_post_event (GS_EVENT_MAIN_MENU);        
         break;
     }
 
@@ -991,8 +945,6 @@ void common_select_close () {
     weapon_select_close_team ();
 
     weapon_select_close ();
-
-    if (Game_mode & GM_MULTIPLAYER) { multi_ts_close (); }
 
     ship_select_close ();
     brief_close ();
@@ -1362,192 +1314,6 @@ int wss_get_mode (
     }
 
     return mode;
-}
-
-// store all the unit data and pool data
-int store_wss_data (
-    ubyte* block, int max_size, interface_snd_id sound, int player_index) {
-    int j, i, offset = 0;
-    short player_id;
-    short ishort;
-
-    // this function assumes that the data is going to be used over the network
-    // so make a non-network version of this function if needed
-    ASSERT (Game_mode & GM_MULTIPLAYER);
-    ASSERT ((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
-
-    if (!(Game_mode & GM_MULTIPLAYER)) return 0;
-
-    // write the ship pool
-    for (i = 0; i < static_cast< int > (Ship_info.size ()); i++) {
-        if (Ss_pool[i] > 0) {
-            block[offset++] = (ubyte)i;
-            ASSERT (Ss_pool[i] < UCHAR_MAX);
-
-            // take care of sign issues
-            if (Ss_pool[i] == -1) { block[offset++] = 0xff; }
-            else {
-                block[offset++] = (ubyte)Ss_pool[i];
-            }
-        }
-    }
-
-    block[offset++] = 0xff; // signals start of weapons pool
-
-    // write the weapon pool
-    for (i = 0; i < Num_weapon_types; i++) {
-        if (Wl_pool[i] > 0) {
-            block[offset++] = (ubyte)i;
-            ishort = (short)Wl_pool[i];
-            memcpy (block + offset, &ishort, sizeof (short));
-            offset += sizeof (short);
-        }
-    }
-
-    // write the unit data
-
-    block[offset++] = 0xff; // signals start of unit data
-
-    for (i = 0; i < MAX_WSS_SLOTS; i++) {
-        ASSERT (Wss_slots[i].ship_class < UCHAR_MAX);
-        if (Wss_slots[i].ship_class == -1) { block[offset++] = 0xff; }
-        else {
-            block[offset++] = (ubyte) (Wss_slots[i].ship_class);
-        }
-        for (j = 0; j < MAX_SHIP_WEAPONS; j++) {
-            // take care of sign issues
-            ASSERT (Wss_slots[i].wep[j] < UCHAR_MAX);
-            if (Wss_slots[i].wep[j] == -1) { block[offset++] = 0xff; }
-            else {
-                block[offset++] = (ubyte) (Wss_slots[i].wep[j]);
-            }
-
-            ASSERT (Wss_slots[i].wep_count[j] < SHRT_MAX);
-            ishort = (short)Wss_slots[i].wep_count[j];
-
-            memcpy (&(block[offset]), &(ishort), sizeof (short));
-            offset += sizeof (short);
-        }
-
-        // mwa -- old way below -- too much space
-        // memcpy(block+offset, &Wss_slots[i], sizeof(wss_unit));
-        // offset += sizeof(wss_unit);
-    }
-
-    // any sound index
-    if (!sound.isValid ()) { block[offset++] = 0xff; }
-    else {
-        block[offset++] = (ubyte)sound.value ();
-    }
-
-    // add a netplayer address to identify who should play the sound
-    player_id = -1;
-
-    if (player_index != -1) {
-        player_id = Net_players[player_index].player_id;
-    }
-
-    memcpy (block + offset, &player_id, sizeof (player_id));
-    offset += sizeof (player_id);
-
-    ASSERT (offset < max_size);
-    return offset;
-}
-
-int restore_wss_data (ubyte* block) {
-    int i, j, sanity, offset = 0;
-    ubyte b1, b2, sound;
-    short ishort;
-    short player_id;
-
-    // this function assumes that the data is going to be used over the network
-    // so make a non-network version of this function if needed
-    ASSERT (Game_mode & GM_MULTIPLAYER);
-    ASSERT ((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
-
-    if (!(Game_mode & GM_MULTIPLAYER)) return 0;
-
-    // restore ship pool
-    sanity = 0;
-    memset (Ss_pool, 0, MAX_SHIP_CLASSES * sizeof (int));
-    for (;;) {
-        if (sanity++ > MAX_SHIP_CLASSES) {
-            Int3 ();
-            break;
-        }
-
-        b1 = block[offset++];
-        if (b1 == 0xff) { break; }
-
-        // take care of sign issues
-        b2 = block[offset++];
-        if (b2 == 0xff) { Ss_pool[b1] = -1; }
-        else {
-            Ss_pool[b1] = b2;
-        }
-    }
-
-    // restore weapons pool
-    sanity = 0;
-    memset (Wl_pool, 0, MAX_WEAPON_TYPES * sizeof (int));
-    for (;;) {
-        if (sanity++ > MAX_WEAPON_TYPES) {
-            Int3 ();
-            break;
-        }
-
-        b1 = block[offset++];
-        if (b1 == 0xff) { break; }
-
-        memcpy (&ishort, block + offset, sizeof (short));
-        offset += sizeof (short);
-        Wl_pool[b1] = ishort;
-    }
-
-    for (i = 0; i < MAX_WSS_SLOTS; i++) {
-        if (block[offset] == 0xff) { Wss_slots[i].ship_class = -1; }
-        else {
-            Wss_slots[i].ship_class = block[offset];
-        }
-        offset++;
-        for (j = 0; j < MAX_SHIP_WEAPONS; j++) {
-            // take care of sign issues
-            if (block[offset] == 0xff) {
-                Wss_slots[i].wep[j] = -1;
-                offset++;
-            }
-            else {
-                Wss_slots[i].wep[j] = (int)(block[offset++]);
-            }
-
-            memcpy (&ishort, &(block[offset]), sizeof (short));
-            Wss_slots[i].wep_count[j] = (int)ishort;
-            offset += sizeof (short);
-        }
-
-        // mwa -- old way below
-        // memcpy(&Wss_slots[i], block+offset, sizeof(wss_unit));
-        // offset += sizeof(wss_unit);
-    }
-
-    // read in the sound data
-    sound = block[offset++]; // the sound index
-
-    // read in the player address
-    memcpy (&player_id, block + offset, sizeof (player_id));
-    offset += sizeof (short);
-
-    // determine if I'm the guy who should be playing the sound
-    if ((Net_player != NULL) && (Net_player->player_id == player_id)) {
-        // play the sound
-        if (sound != 0xff) {
-            gamesnd_play_iface (static_cast< InterfaceSounds > (sound));
-        }
-    }
-
-    if (!(Game_mode & GM_MULTIPLAYER)) { ss_synch_interface (); }
-
-    return offset;
 }
 
 void draw_model_icon (

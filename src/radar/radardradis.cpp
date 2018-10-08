@@ -21,7 +21,6 @@
 #include "jumpnode/jumpnode.h"
 #include "localization/localize.h"
 #include "math/staticrand.h"
-#include "network/multi.h"
 #include "object/object.h"
 #include "playerman/player.h"
 #include "radar/radardradis.h"

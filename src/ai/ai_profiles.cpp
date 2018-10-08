@@ -688,10 +688,6 @@ void parse_ai_profiles_tbl (const char* filename) {
             (filename) ? filename : "<default ai_profiles.tbl>", e.what ());
         return;
     }
-
-    // add tbl/tbm to multiplayer validation list
-    extern void fs2netd_add_table_validation (const char* tblname);
-    fs2netd_add_table_validation (filename);
 }
 
 void ai_profiles_init () {

@@ -26,11 +26,6 @@
 #include "missionui/missionscreencommon.h"
 #include "missionui/missionshipchoice.h"
 #include "missionui/missionweaponchoice.h"
-#include "network/multi.h"
-#include "network/multimsgs.h"
-#include "network/multiteamselect.h"
-#include "network/multiui.h"
-#include "network/multiutil.h"
 #include "parse/parselo.h"
 #include "pilotfile/pilotfile.h"
 #include "playerman/player.h"
@@ -612,14 +607,6 @@ void ship_select_init () {
 
     common_set_interface_palette ("ShipPalette");
     common_flash_button_init ();
-
-    // if in multiplayer -- set my state to be ship select
-    if (Game_mode & GM_MULTIPLAYER) {
-        // also set the ship which is mine as the default
-        maybe_change_selected_wing_ship (
-            Net_player->p_info.ship_index / MAX_WING_SLOTS,
-            Net_player->p_info.ship_index % MAX_WING_SLOTS);
-    }
 
     set_active_ui (&Ship_select_ui_window);
     Current_screen = ON_SHIP_SELECT;
@@ -1537,11 +1524,6 @@ void ship_select_do (float frametime) {
     // Done Rendering and Drawing 3D //
     ///////////////////////////////////
 
-    if (Game_mode & GM_MULTIPLAYER) {
-        if (Selected_ss_class >= 0)
-            Net_player->p_info.ship_class = Selected_ss_class;
-    }
-
     // If the commit button was pressed, do the commit button actions.  Done at
     // the end of the loop so there isn't a skip in the animation (since
     // ship_create() can take a long time if the ship model is not in memory
@@ -1945,31 +1927,8 @@ void commit_pressed () {
     // with a mouse
     mouse_set_pos (gr_screen.max_w / 2, gr_screen.max_h / 2);
 
-    // move to the next stage
-    // in multiplayer this is the final mission sync
-    if (Game_mode & GM_MULTIPLAYER) {
-        if (MULTIPLAYER_MASTER) {
-            // process the initial orders now (moved from
-            // post_process_mission()in missionparse)
-            mission_parse_fixup_players ();
-            ai_post_process_mission ();
-        }
-
-        Multi_sync_mode = MULTI_SYNC_POST_BRIEFING;
-        gameseq_post_event (GS_EVENT_MULTI_MISSION_SYNC);
-
-        // otherwise tell the standalone to move everyone into this state and
-        // continue
-        if ((Net_player->flags & NETINFO_FLAG_GAME_HOST) &&
-            !(Net_player->flags & NETINFO_FLAG_AM_MASTER)) {
-            send_mission_sync_packet (MULTI_SYNC_POST_BRIEFING);
-        }
-    }
-    // in single player we jump directly into the mission
-    else {
-        Pilot.save_savefile ();
-        gameseq_post_event (GS_EVENT_ENTER_GAME);
-    }
+    Pilot.save_savefile ();
+    gameseq_post_event (GS_EVENT_ENTER_GAME);
 }
 
 // ------------------------------------------------------------------------
@@ -2152,18 +2111,6 @@ void draw_wing_block (
                     bitmap_to_draw = icon->icon_bmaps[ICON_FRAME_DISABLED];
                 else
                     color_to_draw = &Icon_colors[ICON_FRAME_DISABLED];
-
-                // in multiplayer, determine if this it the special case where
-                // the slot is disabled, and it is also _my_ slot (ie, team
-                // capatains/host have not locked players yet)
-                if ((Game_mode & GM_MULTIPLAYER) &&
-                    multi_ts_disabled_high_slot (slot_index)) {
-                    if (icon->model_index == -1)
-                        bitmap_to_draw =
-                            icon->icon_bmaps[ICON_FRAME_DISABLED_HIGH];
-                    else
-                        color_to_draw = &Icon_colors[ICON_FRAME_DISABLED_HIGH];
-                }
                 break;
             }
 
@@ -2708,22 +2655,7 @@ void ss_return_name (int wing_block, int wing_slot, char* name) {
     else {
         ship* sp;
         sp = &Ships[wp->ship_index[wing_slot]];
-
-        // in multiplayer, return the callsigns of the players who are in the
-        // ships
-        if (Game_mode & GM_MULTIPLAYER) {
-            int player_index =
-                multi_find_player_by_object (&Objects[sp->objnum]);
-            if (player_index != -1) {
-                strcpy (name, Net_players[player_index].m_player->callsign);
-            }
-            else {
-                strcpy (name, sp->ship_name);
-            }
-        }
-        else {
-            strcpy (name, sp->ship_name);
-        }
+        strcpy (name, sp->ship_name);
     }
 }
 
@@ -2925,21 +2857,15 @@ int ss_disabled_slot (int slot_num, bool ship_selection) {
 
     if (Wss_num_wings <= 0) { return 0; }
 
-    ASSERT (Ss_wings != NULL);
-
-    // HACK HACK HACK - call the team select function in multiplayer
-    if (Game_mode & GM_MULTIPLAYER) {
-        return multi_ts_disabled_slot (slot_num);
-    }
+    ASSERT (Ss_wings);
 
     status = Ss_wings[slot_num / MAX_WING_SLOTS]
                  .ss_slots[slot_num % MAX_WING_SLOTS]
                  .status;
 
-    if (ship_selection) { return (status & WING_SLOT_IGNORE_SHIPS); }
-    else {
-        return (status & WING_SLOT_IGNORE_WEAPONS);
-    }
+    return status & (ship_selection
+        ? WING_SLOT_IGNORE_SHIPS
+        : WING_SLOT_IGNORE_WEAPONS);
 }
 
 // Goober5000 - determine if the slot is valid
@@ -3170,9 +3096,6 @@ void ss_init_units () {
 
         } // end for
     }     // end for
-
-    // lock/unlock any necessary slots for multiplayer
-    if (Game_mode & GM_MULTIPLAYER) { ss_recalc_multiplayer_slots (); }
 }
 
 // set the necessary pointers
@@ -3209,15 +3132,9 @@ void ship_select_init_team_data (int team_num) {
     // determine how many wings we should be checking for
     Wss_num_wings = 0;
 
-    if (MULTI_TEAM) {
-        // now setup wings for easy reference
-        ss_init_wing_info (0, team_num);
-    }
-    else {
-        // now setup wings for easy reference
-        for (idx = 0; idx < MAX_STARTING_WINGS; idx++) {
-            ss_init_wing_info (Wss_num_wings, idx);
-        }
+    // now setup wings for easy reference
+    for (idx = 0; idx < MAX_STARTING_WINGS; idx++) {
+        ss_init_wing_info (Wss_num_wings, idx);
     }
 
     // if there are no wings, don't call the init_units() function
@@ -3232,20 +3149,7 @@ void ship_select_init_team_data (int team_num) {
 // called when the briefing is entered
 void ship_select_common_init () {
     // initialize team critical data for all teams
-    int idx;
-
-    if (MULTI_TEAM) {
-        // initialize for all teams in the game
-        for (idx = 0; idx < MULTI_TS_MAX_TVT_TEAMS; idx++) {
-            ship_select_init_team_data (idx);
-        }
-
-        // finally, intialize team data for myself
-        ship_select_init_team_data (Common_team);
-    }
-    else {
-        ship_select_init_team_data (Common_team);
-    }
+    ship_select_init_team_data (Common_team);
 
     init_active_list ();
 
@@ -3466,16 +3370,6 @@ void ss_apply (
     }
 
     if (update) {
-        // NO LONGER USED - THERE IS A MULTIPLAYER VERSION OF THIS SCREEN NOW
-        /*
-        if ( MULTIPLAYER_HOST ) {
-            int size;
-            ubyte wss_data[MAX_PACKET_SIZE-20];
-            size = store_wss_data(wss_data, MAX_PACKET_SIZE-20, sound);
-            send_wss_update_packet(wss_data, size, player_index);
-        }
-        */
-
         ss_synch_interface ();
     }
 }
@@ -3486,48 +3380,8 @@ void ss_drop (
     common_flash_button_init ();
 
     mode = wss_get_mode (from_slot, from_list, to_slot, to_list, -1);
+    
     if (mode >= 0) {
         ss_apply (mode, from_slot, from_list, to_slot, to_list, player_index);
-    }
-}
-
-// lock/unlock any necessary slots for multiplayer
-void ss_recalc_multiplayer_slots () {
-    int i, j;
-    ss_slot_info* ss_slot;
-    ss_wing_info* ss_wing;
-
-    // no wings
-    if (Wss_num_wings <= 0) {
-        ASSERT (Wss_slots != NULL);
-        Wss_slots[0].ship_class = Team_data[Common_team].default_ship;
-        return;
-    }
-
-    ASSERT (Ss_wings != NULL);
-
-    for (i = 0; i < Wss_num_wings; i++) {
-        ss_wing = &Ss_wings[i];
-        if (ss_wing->wingnum < 0) {
-            Int3 ();
-            continue;
-        }
-
-        // NOTE : the method below will eventually have to change to account
-        // for all possible netgame options
-        for (j = 0; j < ss_wing->num_slots; j++) {
-            // get the slot pointer
-            ss_slot = &ss_wing->ss_slots[j];
-
-            if (ss_slot->sa_index == -1) {
-                // lock all slots by default
-                ss_slot->status |= WING_SLOT_LOCKED;
-
-                // if this is my slot, then unlock it
-                if (!multi_ts_disabled_slot ((i * MAX_WING_SLOTS) + j)) {
-                    ss_slot->status &= ~WING_SLOT_LOCKED;
-                }
-            }
-        }
     }
 }

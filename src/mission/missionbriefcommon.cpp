@@ -489,13 +489,7 @@ void brief_reset () {
 //
 void debrief_reset () {
     mission_debrief_common_reset ();
-
     Debriefing = NULL;
-
-    // MWA 4/27/98 -- must initialize this variable here since we cannot do it
-    // as debrief init time because race conditions between all players in the
-    // game make that type of initialization unsafe.
-    Debrief_multi_stages_loaded = 0;
 }
 
 /**

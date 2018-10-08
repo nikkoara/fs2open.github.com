@@ -80,9 +80,6 @@ int ss_disabled_slot (int slot_num, bool ship_selection = true);
 int ss_valid_slot (int slot_num);
 int ss_wing_slot_is_console_player (int index);
 
-// lock/unlock any necessary slots for multiplayer
-void ss_recalc_multiplayer_slots ();
-
 int create_default_player_ship (int use_last_flown = 1);
 void update_player_ship (int si_index);
 

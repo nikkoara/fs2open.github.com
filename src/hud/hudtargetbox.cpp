@@ -14,7 +14,6 @@
 #include "localization/localize.h"
 #include "mission/missionparse.h"
 #include "model/model.h"
-#include "network/multi.h"
 #include "object/object.h"
 #include "object/objectdock.h"
 #include "parse/parselo.h"
@@ -2327,11 +2326,6 @@ void hud_update_target_static () {
 
     // on lowest skill level, don't show static on target monitor
     if (Game_skill_level == 0) return;
-
-    // if multiplayer observer, don't show static
-    if ((Game_mode & GM_MULTIPLAYER) &&
-        (Net_player->flags & NETINFO_FLAG_OBSERVER))
-        return;
 
     sensors_str = ship_get_subsystem_strength (Player_ship, SUBSYSTEM_SENSORS);
 

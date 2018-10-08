@@ -10,7 +10,6 @@
 #include "io/timer.h"
 #include "jumpnode/jumpnode.h"
 #include "localization/localize.h"
-#include "network/multi.h"
 #include "object/object.h"
 #include "playerman/player.h"
 #include "radar/radar.h"
@@ -142,11 +141,6 @@ void radar_plot_object (object* objp) {
     // don't process anything here.  Somehow, a jumpnode object caused this
     // function to get entered on server side.
     if (Game_mode & GM_STANDALONE_SERVER) { return; }
-
-    // multiplayer clients ingame joining should skip this function
-    if (MULTIPLAYER_CLIENT && (Net_player->flags & NETINFO_FLAG_INGAME_JOIN)) {
-        return;
-    }
 
     // get team-wide awacs level for the object if not ship
     int ship_is_visible = 0;

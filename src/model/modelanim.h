@@ -163,9 +163,6 @@ int model_anim_get_time_type (
 int model_anim_get_time_type (
     ship* shipp, int animation_type, int subtype); // for all valid subsystems
 
-// this is for handling multiplayer-safe, client-side, animations
-void model_anim_handle_multiplayer (ship* shipp);
-
 // for pushing and popping animations
 struct stack_item  {
     ship* shipp;

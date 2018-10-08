@@ -68,9 +68,6 @@ extern void mission_log_init ();
 // entry number to modify.
 extern void mission_log_add_entry (
     LogType type, const char* pname, const char* sname, int index = -1);
-extern void mission_log_add_entry_multi (
-    LogType type, const char* pname, const char* sname, int index,
-    fix timestamp, int flags);
 
 // function to determine if event happened and what time it happened
 extern int mission_log_get_time (

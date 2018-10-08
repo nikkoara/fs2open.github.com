@@ -21,15 +21,10 @@
 #include "mission/missioncampaign.h"
 #include "mission/missiongoals.h"
 #include "mission/missionmessage.h"
-#include "missionui/chatbox.h"
 #include "missionui/missionbrief.h"
 #include "missionui/missionscreencommon.h"
 #include "missionui/missionshipchoice.h"
 #include "model/model.h"
-#include "network/multi.h"
-#include "network/multimsgs.h"
-#include "network/multiteamselect.h"
-#include "network/multiui.h"
 #include "parse/parselo.h"
 #include "parse/sexp.h"
 #include "playerman/player.h"
@@ -281,8 +276,8 @@ static int Title_coords_multi[GR_NUM_RESOLUTIONS][3] = {
 };
 
 // briefing line widths
-int Brief_max_line_width[GR_NUM_RESOLUTIONS] = { MAX_BRIEF_LINE_W_640,
-                                                 MAX_BRIEF_LINE_W_1024 };
+int Brief_max_line_width[GR_NUM_RESOLUTIONS] = {
+    MAX_BRIEF_LINE_W_640, MAX_BRIEF_LINE_W_1024 };
 
 // --------------------------------------------------------------------------------------
 // Forward declarations
@@ -490,15 +485,7 @@ void brief_button_do (int i) {
     case BRIEF_BUTTON_EXIT_LOOP: brief_exit_loop_pressed (); break;
 
     case BRIEF_BUTTON_MULTI_LOCK:
-        ASSERT (Game_mode & GM_MULTIPLAYER);
-        // the "lock" button has been pressed
-        multi_ts_lock_pressed ();
-
-        // disable the button if it is now locked
-        if (multi_ts_is_locked ()) {
-            Brief_buttons[gr_screen.res][BRIEF_BUTTON_MULTI_LOCK]
-                .button.disable ();
-        }
+        ASSERT (0);
         break;
     } // end switch
 }
@@ -600,27 +587,9 @@ void brief_buttons_init () {
     }
 
     // maybe disable the multi-lock button
-    if (!(Game_mode & GM_MULTIPLAYER)) {
-        Brief_buttons[gr_screen.res][BRIEF_BUTTON_MULTI_LOCK].button.hide ();
-        Brief_buttons[gr_screen.res][BRIEF_BUTTON_MULTI_LOCK]
-            .button.disable ();
-    }
-    else {
-        // if we're not the host of the game (or a tema captain in team vs.
-        // team mode), disable the lock button
-        if (Netgame.type_flags & NG_TYPE_TEAM) {
-            if (!(Net_player->flags & NETINFO_FLAG_TEAM_CAPTAIN)) {
-                Brief_buttons[gr_screen.res][BRIEF_BUTTON_MULTI_LOCK]
-                    .button.disable ();
-            }
-        }
-        else {
-            if (!(Net_player->flags & NETINFO_FLAG_GAME_HOST)) {
-                Brief_buttons[gr_screen.res][BRIEF_BUTTON_MULTI_LOCK]
-                    .button.disable ();
-            }
-        }
-    }
+    Brief_buttons[gr_screen.res][BRIEF_BUTTON_MULTI_LOCK].button.hide ();
+    Brief_buttons[gr_screen.res][BRIEF_BUTTON_MULTI_LOCK]
+        .button.disable ();
 
     // create close button for closeup popup
     Closeup_close_button.create (
@@ -801,12 +770,6 @@ int red_alert_mission (void);
 void brief_init () {
     int i;
 
-    // for multiplayer, change the state in my netplayer structure
-    // and initialize the briefing chat area thingy
-    if (Game_mode & GM_MULTIPLAYER) {
-        Net_player->state = NETPLAYER_STATE_BRIEFING;
-    }
-
     // Non standard briefing in red alert mission
     if (red_alert_mission ()) {
         Int3 (); // since we shouldn't be here
@@ -814,11 +777,7 @@ void brief_init () {
         return;
     }
 
-    // get a pointer to the appropriate briefing structure
-    if (MULTI_TEAM) { Briefing = &Briefings[Net_player->p_info.team]; }
-    else {
-        Briefing = &Briefings[0];
-    }
+    Briefing = &Briefings[0];
 
     // Goober5000 - replace any variables (probably persistent variables) with
     // their values
@@ -934,15 +893,6 @@ void brief_init () {
     Brief_ui_window.tooltip_handler = brief_tooltip_handler;
     common_buttons_init (&Brief_ui_window);
     brief_buttons_init ();
-
-    // if multiplayer, initialize a few other systems
-    if (Game_mode & GM_MULTIPLAYER) {
-        // again, should not be necessary, but we'll leave it for now
-        chatbox_create ();
-
-        // force the chatbox to be small
-        chatbox_force_small ();
-    }
 
     // set up the screen regions
     brief_init_screen (Brief_multiplayer);
@@ -1743,36 +1693,6 @@ void brief_do_frame (float frametime) {
         if (Closeup_icon) {
             brief_render_closeup (Closeup_icon->ship_class, frametime);
         }
-
-        // render some extra stuff in multiplayer
-        if (Game_mode & GM_MULTIPLAYER) {
-            // should render this last so that it overlaps all controls
-            chatbox_render ();
-
-            // render the status indicator for the voice system
-            multi_common_voice_display_status ();
-
-            // maybe blit the multiplayer "locked" button
-            // if its locked, everyone blits it as such
-            if (multi_ts_is_locked ()) {
-                Brief_buttons[gr_screen.res][BRIEF_BUTTON_MULTI_LOCK]
-                    .button.draw_forced (2);
-            }
-            // anyone who can't hit the button sees it off, otherwise
-            else {
-                if (((Netgame.type_flags & NG_TYPE_TEAM) &&
-                     !(Net_player->flags & NETINFO_FLAG_TEAM_CAPTAIN)) ||
-                    ((Netgame.type_flags & NG_TYPE_TEAM) &&
-                     !(Net_player->flags & NETINFO_FLAG_GAME_HOST))) {
-                    Brief_buttons[gr_screen.res][BRIEF_BUTTON_MULTI_LOCK]
-                        .button.draw_forced (0);
-                }
-                else {
-                    Brief_buttons[gr_screen.res][BRIEF_BUTTON_MULTI_LOCK]
-                        .button.draw ();
-                }
-            }
-        }
     }
 
     // maybe flash a button if player hasn't done anything for a while
@@ -1787,11 +1707,7 @@ void brief_do_frame (float frametime) {
     // the end of the loop so there isn't a skip in the animation (since
     // ship_create() can take a long time if the ship model is not in memory
     if (Commit_pressed) {
-        if (Game_mode & GM_MULTIPLAYER) { multi_ts_commit_pressed (); }
-        else {
-            commit_pressed ();
-        }
-
+        commit_pressed ();
         Commit_pressed = 0;
     }
 }

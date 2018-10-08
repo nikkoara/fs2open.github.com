@@ -36,9 +36,6 @@
 #include "mission/missionparse.h"
 #include "mission/missiontraining.h"
 #include "model/model.h"
-#include "network/multi.h"
-#include "network/multimsgs.h"
-#include "network/multiutil.h"
 #include "object/deadobjectdock.h"
 #include "object/objcollide.h"
 #include "object/object.h"
@@ -2357,6 +2354,7 @@ void ai_set_goal_maybe_abort_dock (object* objp, ai_info* aip) {
         else {
             repair_obj = &Objects[aip->support_ship_objnum];
         }
+        
         ai_do_objects_repairing_stuff (objp, repair_obj, REPAIR_INFO_ABORT);
     }
     aip->next_rearm_request_timestamp = timestamp (
@@ -3192,9 +3190,9 @@ void ai_stay_still (object* still_objp, vec3d* view_pos) {
 // might never get called).  docker has docked with dockee (i.e. docker would
 // be a freighter and dockee would be a cargo).
 void ai_do_objects_docked_stuff (
-    object* docker, int docker_point, object* dockee, int dockee_point,
-    bool update_clients) {
-    ASSERT ((docker != NULL) && (dockee != NULL));
+    object* docker, int docker_point, object* dockee, int dockee_point, bool) {
+    ASSERT (docker);
+    ASSERT (dockee);
 
     // make sure they're not already docked!
     if (dock_check_find_direct_docked_object (docker, dockee)) {
@@ -3233,10 +3231,6 @@ void ai_do_objects_docked_stuff (
             dockee_aip->support_ship_signature = docker->signature;
         }
     }
-
-    // add multiplayer hook here to deal with docked objects.
-    if (MULTIPLAYER_MASTER && update_clients)
-        send_ai_info_update_packet (docker, AI_UPDATE_DOCK, dockee);
 }
 
 // code which is called when objects become undocked. Equivalent of above
@@ -3252,12 +3246,6 @@ void ai_do_objects_undocked_stuff (object* docker, object* dockee) {
             "undocked!  Trace out and fix!\n");
         return;
     }
-
-    // add multiplayer hook here to deal with undocked objects.  Do it before
-    // we do anything else.  We don't need to send info for both objects, since
-    // multi only supports one docked object
-    if (MULTIPLAYER_MASTER)
-        send_ai_info_update_packet (docker, AI_UPDATE_UNDOCK, dockee);
 
     if (docker->type == OBJ_SHIP && dockee->type == OBJ_SHIP) {
         ai_info* docker_aip = &Ai_info[Ships[docker->instance].ai_index];
@@ -7044,12 +7032,9 @@ void set_predicted_enemy_pos (
     range_time = 2.0f;
 
     // Make it take longer for enemies to get player's allies in range based
-    // on skill level.
-    // but don't bias team v. team missions
-    if (!(MULTI_TEAM)) {
-        if (iff_x_attacks_y (shipp->team, Player_ship->team))
-            range_time += aip->ai_in_range_time;
-    }
+    // on skill level, but don't bias team v. team missions
+    if (iff_x_attacks_y (shipp->team, Player_ship->team))
+        range_time += aip->ai_in_range_time;
 
     if (aip->time_enemy_in_range < range_time) {
         float dist;
@@ -11436,6 +11421,11 @@ void ai_guard () {
 // up.
 void ai_do_objects_repairing_stuff (
     object* repaired_objp, object* repair_objp, int how) {
+    // repaired_objp should not be null, but repair_objp will be null when a
+    // support ship is just warping in
+    ASSERT (repaired_objp);
+    ASSERT (repaired_objp->type == OBJ_SHIP);
+
     ai_info *aip, *repair_aip;
     int stamp = -1;
 
@@ -11445,20 +11435,9 @@ void ai_do_objects_repairing_stuff (
     p_index = -1;
     p_team = -1;
 
-    // repaired_objp should not be null, but repair_objp will be null when a
-    // support ship is just warping in
-    ASSERT (repaired_objp != NULL);
-
-    ASSERT (repaired_objp->type == OBJ_SHIP);
     aip = &Ai_info[Ships[repaired_objp->instance].ai_index];
 
-    if (Game_mode & GM_MULTIPLAYER) {
-        p_index = multi_find_player_by_object (repaired_objp);
-        if (p_index >= 0) { p_team = Net_players[p_index].p_info.team; }
-    }
-    else {
-        if (repaired_objp == Player_obj) { p_index = Player_num; }
-    }
+    if (repaired_objp == Player_obj) { p_index = Player_num; }
 
     switch (how) {
     case REPAIR_INFO_BEGIN:
@@ -11469,12 +11448,9 @@ void ai_do_objects_repairing_stuff (
         // if this is a player ship, then subtract the repair penalty from this
         // player's score
         if (repaired_objp->flags[Object::Object_Flags::Player_ship]) {
-            if (!(Game_mode & GM_MULTIPLAYER)) {
-                Player->stats.m_score -=
-                    The_mission.ai_profile
-                        ->repair_penalty[Game_skill_level]; // subtract the
-                                                            // penalty
-            }
+             // subtract the penalty
+            Player->stats.m_score -=
+                The_mission.ai_profile->repair_penalty[Game_skill_level];
         }
         break;
 
@@ -11517,7 +11493,7 @@ void ai_do_objects_repairing_stuff (
         aip->ai_flags.remove (AI::AI_Flags::Being_repaired);
         aip->ai_flags.remove (AI::AI_Flags::Awaiting_repair);
 
-        if (repair_objp != NULL) {
+        if (repair_objp) {
             repair_aip = &Ai_info[Ships[repair_objp->instance].ai_index];
             repair_aip->ai_flags.remove (AI::AI_Flags::Being_repaired);
             repair_aip->ai_flags.remove (AI::AI_Flags::Awaiting_repair);
@@ -11527,20 +11503,18 @@ void ai_do_objects_repairing_stuff (
             hud_support_view_abort ();
 
             // send appropriate messages here
-            if (Game_mode & GM_NORMAL || MULTIPLAYER_MASTER) {
-                if (how == REPAIR_INFO_KILLED) {
+            if (how == REPAIR_INFO_KILLED) {
+                message_send_builtin_to_player (
+                    MESSAGE_SUPPORT_KILLED, NULL, MESSAGE_PRIORITY_HIGH,
+                    MESSAGE_TIME_SOON, 0, 0, p_index, p_team);
+            }
+            else {
+                if (repair_objp) {
                     message_send_builtin_to_player (
-                        MESSAGE_SUPPORT_KILLED, NULL, MESSAGE_PRIORITY_HIGH,
-                        MESSAGE_TIME_SOON, 0, 0, p_index, p_team);
-                }
-                else {
-                    if (repair_objp) {
-                        message_send_builtin_to_player (
-                            MESSAGE_REPAIR_ABORTED,
-                            &Ships[repair_objp->instance],
-                            MESSAGE_PRIORITY_NORMAL, MESSAGE_TIME_SOON, 0, 0,
-                            p_index, p_team);
-                    }
+                        MESSAGE_REPAIR_ABORTED,
+                        &Ships[repair_objp->instance],
+                        MESSAGE_PRIORITY_NORMAL, MESSAGE_TIME_SOON, 0, 0,
+                        p_index, p_team);
                 }
             }
         }
@@ -11562,12 +11536,10 @@ void ai_do_objects_repairing_stuff (
 
             hud_support_view_stop ();
 
-            if (Game_mode & GM_NORMAL || MULTIPLAYER_MASTER) {
-                message_send_builtin_to_player (
-                    MESSAGE_REPAIR_DONE, &Ships[repair_objp->instance],
-                    MESSAGE_PRIORITY_LOW, MESSAGE_TIME_SOON, 0, 0, p_index,
-                    p_team);
-            }
+            message_send_builtin_to_player (
+                MESSAGE_REPAIR_DONE, &Ships[repair_objp->instance],
+                MESSAGE_PRIORITY_LOW, MESSAGE_TIME_SOON, 0, 0, p_index,
+                p_team);
         }
         stamp = timestamp ((int)((30 + 10 * frand ()) * 1000));
         break;
@@ -11618,8 +11590,6 @@ void ai_do_objects_repairing_stuff (
         default: Int3 (); // bogus type of repair info
         }
     }
-
-    multi_maybe_send_repair_info (repaired_objp, repair_objp, how);
 }
 
 // Goober5000 - helper function that is also called from ai_dock()
@@ -13527,24 +13497,19 @@ void ai_do_repair_frame (object* objp, ai_info* aip, float frametime) {
                     repair_aip->submode_start_time = Missiontime;
 
                     // if repairing player object -- tell him done with repair
-                    if (!MULTIPLAYER_CLIENT) {
-                        ai_do_objects_repairing_stuff (
-                            objp, &Objects[support_objnum],
-                            REPAIR_INFO_COMPLETE);
-                    }
+                    ai_do_objects_repairing_stuff (
+                        objp, &Objects[support_objnum], REPAIR_INFO_COMPLETE);
                 }
             }
         }
         else if (aip->ai_flags[AI::AI_Flags::Awaiting_repair]) {
             // If this ship has been awaiting repair for 90+ seconds, abort.
-            if (!MULTIPLAYER_CLIENT) {
-                if ((Game_mode & GM_MULTIPLAYER) || (objp != Player_obj)) {
-                    if ((repair_aip->goal_objnum == OBJ_INDEX (objp)) &&
-                        (timestamp_elapsed (aip->abort_rearm_timestamp))) {
-                        ai_abort_rearm_request (objp);
-                        aip->next_rearm_request_timestamp =
-                            timestamp (NEXT_REARM_TIMESTAMP);
-                    }
+            if (objp != Player_obj) {
+                if ((repair_aip->goal_objnum == OBJ_INDEX (objp)) &&
+                    (timestamp_elapsed (aip->abort_rearm_timestamp))) {
+                    ai_abort_rearm_request (objp);
+                    aip->next_rearm_request_timestamp =
+                        timestamp (NEXT_REARM_TIMESTAMP);
                 }
             }
         }

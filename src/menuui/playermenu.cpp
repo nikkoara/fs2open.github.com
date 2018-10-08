@@ -16,7 +16,6 @@
 #include "menuui/playermenu.h"
 #include "mission/missioncampaign.h"
 #include "mod_table/mod_table.h"
-#include "network/multi.h"
 #include "osapi/osregistry.h"
 #include "parse/parselo.h"
 #include "pilotfile/pilotfile.h"
@@ -784,9 +783,6 @@ int player_select_create_new_pilot () {
 
     // move all the pilots in the list up
     while (idx--) { strcpy (Pilots[idx + 1], Pilots[idx]); }
-
-    // by default, set the default netgame protocol to be VMT
-    Multi_options_g.protocol = NET_TCP;
 
     // select the beginning of the list
     Player_select_pilot = 0;

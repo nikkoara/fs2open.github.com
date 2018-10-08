@@ -12,8 +12,6 @@
 #include "jumpnode/jumpnode.h"
 #include "lighting/lighting.h"
 #include "mission/missionparse.h" //For 2D Mode
-#include "network/multi.h"
-#include "network/multiutil.h"
 #include "object/deadobjectdock.h"
 #include "object/objcollide.h"
 #include "object/object.h"
@@ -137,7 +135,7 @@ checkobject::checkobject ()
 object::object ()
     : next (NULL), prev (NULL), type (OBJ_NONE), parent (-1), instance (-1),
       n_quadrants (0), hull_strength (0.0), sim_hull_strength (0.0),
-      net_signature (0), num_pairs (0), dock_list (NULL),
+      num_pairs (0), dock_list (NULL),
       dead_dock_list (NULL), collision_group_id (0) {
     memset (&(this->phys_info), 0, sizeof (physics_info));
 }
@@ -162,7 +160,6 @@ void object::clear () {
     physics_init (&phys_info);
     shield_quadrant.clear ();
     objsnd_num.clear ();
-    net_signature = 0;
 
     pre_move_event.clear ();
     post_move_event.clear ();
@@ -763,14 +760,11 @@ void obj_player_fire_stuff (object* objp, control_info ci) {
         }
     }
 
-    // single player and multiplayer masters do all of the following
-    if (!MULTIPLAYER_CLIENT) {
-        if (ci.fire_secondary_count) {
-            ship_fire_secondary (objp);
+    if (ci.fire_secondary_count) {
+        ship_fire_secondary (objp);
 
-            // kill the secondary count
-            ci.fire_secondary_count = 0;
-        }
+        // kill the secondary count
+        ci.fire_secondary_count = 0;
     }
 
     // everyone does the following for their own ships.
@@ -930,15 +924,6 @@ void obj_move_call_physics (object* objp, float frametime) {
                 }
             }
 
-            // in multiplayer, if this object was just updatd (i.e. clients
-            // send their own positions), then reset the flag and don't move
-            // the object.
-            if (MULTIPLAYER_MASTER &&
-                (objp->flags[Object::Object_Flags::Just_updated])) {
-                objp->flags.remove (Object::Object_Flags::Just_updated);
-                goto obj_maybe_fire;
-            }
-
             physics_sim (
                 &objp->pos, &objp->orient, &objp->phys_info,
                 frametime); // simulate the physics
@@ -947,7 +932,6 @@ void obj_move_call_physics (object* objp, float frametime) {
             // done after the ship is moved (like firing weapons, etc).  This
             // routine will get called either single or multiplayer.  We must
             // find the player object to get to the control info field
-        obj_maybe_fire:
             if ((objp->flags[Object::Object_Flags::Player_ship]) &&
                 (objp->type != OBJ_OBSERVER) && (objp == Player_obj)) {
                 player* pp;
@@ -1113,48 +1097,10 @@ void obj_set_flags (
         return;
     }
 
-    // for a multiplayer host -- use this debug code to help trap when
-    // non-player ships are getting marked as OF_COULD_BE_PLAYER this code is
-    // pretty much debug code and shouldn't be relied on to always do the right
-    // thing for flags other than
-    if (MULTIPLAYER_MASTER &&
-        !(obj->flags[Object::Object_Flags::Could_be_player]) &&
-        (new_flags[Object::Object_Flags::Could_be_player])) {
-        ship* shipp;
-        int team, slot;
-
-        // this flag sometimes gets set for observers.
-        if (obj->type == OBJ_OBSERVER) { return; }
-
-        // sanity checks
-        if ((obj->type != OBJ_SHIP) || (obj->instance < 0)) {
-            return; // return because we really don't want to set the flag
-        }
-
-        // see if this ship is really a player ship (or should be)
-        shipp = &Ships[obj->instance];
-        extern void multi_ts_get_team_and_slot (char*, int*, int*, bool);
-        multi_ts_get_team_and_slot (shipp->ship_name, &team, &slot, false);
-        if ((shipp->wingnum == -1) || (team == -1) || (slot == -1)) {
-            Int3 ();
-            return;
-        }
-
-        // set the flag
-        obj->flags = new_flags;
-#ifdef OBJECT_CHECK
-        CheckObjects[objnum].flags = new_flags;
-#endif
-
-        return;
-    }
-
     // Check for unhandled flag changing
     if ((new_flags[Object::Object_Flags::Collides]) !=
         (obj->flags[Object::Object_Flags::Collides])) {
-        WARNINGF (LOCATION, "Unhandled flag changing in obj_set_flags!!\n");
-        WARNINGF (
-            LOCATION, "Add code to support it, see John for questions!!\n");
+        WARNINGF (LOCATION, "Unhandled flag changing in obj_set_flags!");
         Int3 ();
     }
     else {
@@ -1431,8 +1377,6 @@ void obj_move_all_post (object* objp, float frametime) {
     case OBJ_GHOST: break;
 
     case OBJ_OBSERVER:
-        void observer_process_post (object * objp);
-        observer_process_post (objp);
         break;
 
     case OBJ_JUMP_NODE: radar_plot_object (objp); break;
@@ -1483,9 +1427,7 @@ void obj_move_all (float frametime) {
 
     // Clear the table that tells which groups of weapons have cast light so
     // far.
-    if (!(Game_mode & GM_MULTIPLAYER) || (MULTIPLAYER_MASTER)) {
-        obj_clear_weapon_group_id_list ();
-    }
+    obj_clear_weapon_group_id_list ();
 
     MONITOR_INC (NumObjects, Num_objects);
 
@@ -1541,13 +1483,8 @@ void obj_move_all (float frametime) {
         // destroyed
         if (!(objp->flags[Object::Object_Flags::Immobile] &&
               objp->hull_strength > 0.0f)) {
-            // if this is an object which should be interpolated in
-            // multiplayer, do so
-            if (multi_oo_is_interp_object (objp)) { multi_oo_interp (objp); }
-            else {
-                // physics
-                obj_move_call_physics (objp, frametime);
-            }
+            // physics
+            obj_move_call_physics (objp, frametime);
         }
 
         // move post
@@ -1716,96 +1653,6 @@ void obj_init_all_ships_physics () {
          objp != END_OF_LIST (&obj_used_list); objp = GET_NEXT (objp)) {
         if (objp->type == OBJ_SHIP) physics_ship_init (objp);
     }
-}
-
-/**
- * Do client-side pre-interpolation object movement
- */
-void obj_client_pre_interpolate () {
-    object* objp;
-
-    // duh
-    obj_delete_all_that_should_be_dead ();
-
-    // client side processing of warping in effect stages
-    multi_do_client_warp (flFrametime);
-
-    // client side movement of an observer
-    if ((Net_player->flags & NETINFO_FLAG_OBSERVER) ||
-        (Player_obj->type == OBJ_OBSERVER)) {
-        obj_observer_move (flFrametime);
-    }
-
-    // run everything except ships through physics (and ourselves of course)
-    obj_merge_created_list (); // must merge any objects created by the host!
-
-    objp = GET_FIRST (&obj_used_list);
-    for (objp = GET_FIRST (&obj_used_list);
-         objp != END_OF_LIST (&obj_used_list); objp = GET_NEXT (objp)) {
-        if ((objp != Player_obj) && (objp->type == OBJ_SHIP)) { continue; }
-
-        // for all non-dead object which are _not_ ships
-        if (!(objp->flags[Object::Object_Flags::Should_be_dead])) {
-            // pre-move step
-            obj_move_all_pre (objp, flFrametime);
-
-            // store position and orientation
-            objp->last_pos = objp->pos;
-            objp->last_orient = objp->orient;
-
-            // call physics
-            obj_move_call_physics (objp, flFrametime);
-
-            // post-move step
-            obj_move_all_post (objp, flFrametime);
-        }
-    }
-}
-
-/**
- * Do client-side post-interpolation object movement
- */
-void obj_client_post_interpolate () {
-    object* objp;
-
-    // After all objects have been moved, move all docked objects.
-    objp = GET_FIRST (&obj_used_list);
-    while (objp != END_OF_LIST (&obj_used_list)) {
-        if (objp != Player_obj) { dock_move_docked_objects (objp); }
-        objp = GET_NEXT (objp);
-    }
-
-    // check collisions
-    if (Cmdline_old_collision_sys) { obj_check_all_collisions (); }
-    else {
-        obj_sort_and_collide ();
-    }
-
-    // do post-collision stuff for beam weapons
-    beam_move_all_post ();
-}
-
-void obj_observer_move (float frame_time) {
-    object* objp;
-    float ft;
-
-    // if i'm not in multiplayer, or not an observer, bail
-    if (!(Game_mode & GM_MULTIPLAYER) || (Net_player == NULL) ||
-        !(Net_player->flags & NETINFO_FLAG_OBSERVER) ||
-        (Player_obj->type != OBJ_OBSERVER)) {
-        return;
-    }
-
-    objp = Player_obj;
-
-    objp->last_pos = objp->pos;
-    objp->last_orient =
-        objp->orient; // save the orientation -- useful in multiplayer.
-
-    ft = flFrametime;
-    obj_move_call_physics (objp, ft);
-    obj_move_all_post (objp, frame_time);
-    objp->flags.remove (Object::Object_Flags::Just_updated);
 }
 
 /**

@@ -17,7 +17,6 @@
 #include "io/key.h"
 #include "io/timer.h"
 #include "jpgutils/jpgutils.h"
-#include "network/multiutil.h"
 #include "parse/parselo.h"
 #include "pcxutils/pcxutils.h"
 #include "pngutils/pngutils.h"
@@ -411,19 +410,17 @@ DCF (bm_used, "Shows BmpMan Slot Usage") {
                 case BM_TYPE_JPG: eff_jpg++; break;
                 case BM_TYPE_PCX: eff_pcx++; break;
                 default:
-                    WARNINGF (
-                        LOCATION,
-                        "Unhandled EFF image type (%i), get a coder!",
-                        block[i].entry.info.ani.eff.type);
+                    EE ("general")
+                        << "unhandled EFF image type "
+                        << block[i].entry.info.ani.eff.type;
                     break;
                 }
                 break;
             case BM_TYPE_RENDER_TARGET_STATIC: render_target_static++; break;
             case BM_TYPE_RENDER_TARGET_DYNAMIC: render_target_dynamic++; break;
             default:
-                WARNINGF (
-                    LOCATION, "Unhandled image type (%i), get a coder!",
-                    block[i].entry.type);
+                EE ("general")
+                    << "unhandled image type " << block[i].entry.type;
                 break;
             }
         }
@@ -468,8 +465,7 @@ DCF (bm_used, "Shows BmpMan Slot Usage") {
 
     // TODO consider converting 1's to monospace to make debug console output
     // prettier
-    WARNINGF (LOCATION, "%s", text.str ().c_str ());
-    dc_printf ("%s", text.str ().c_str ()); // instant gratification
+    II ("general") << text.str ();
 }
 
 DCF (bmpman, "Shows/changes bitmap caching parameters and usage") {
@@ -630,16 +626,10 @@ void bm_convert_format (bitmap* bmp, ubyte flags) {
     // no transparency for 24 bpp images
     if (!(flags & BMP_AABITMAP) && (bmp->bpp == 24)) return;
 
-    if (Is_standalone) {
+    if (flags & BMP_AABITMAP)
         ASSERT (bmp->bpp == 8);
-        return;
-    }
-    else {
-        if (flags & BMP_AABITMAP)
-            ASSERT (bmp->bpp == 8);
-        else
-            ASSERT ((bmp->bpp == 16) || (bmp->bpp == 32));
-    }
+    else
+        ASSERT ((bmp->bpp == 16) || (bmp->bpp == 32));
 
     // maybe swizzle to be an xparent texture
     if (!(bmp->flags & BMP_TEX_XPARENT) && (flags & BMP_TEX_XPARENT)) {
@@ -1114,7 +1104,7 @@ static int bm_load_info (
     else if (type == BM_TYPE_TGA) {
         int tga_error = targa_read_header (filename, img_cfp, w, h, bpp, NULL);
         if (tga_error != TARGA_ERROR_NONE) {
-            WARNINGF (LOCATION, "tga: Couldn't open '%s'\n", filename);
+            EE ("general") << "load failed : " << filename;
             return -1;
         }
     }
@@ -1122,7 +1112,7 @@ static int bm_load_info (
     else if (type == BM_TYPE_PNG) {
         int png_error = png_read_header (filename, img_cfp, w, h, bpp, NULL);
         if (png_error != PNG_ERROR_NONE) {
-            WARNINGF (LOCATION, "png: Couldn't open '%s'\n", filename);
+            EE ("general") << "load failed : " << filename;
             return -1;
         }
     }
@@ -1130,7 +1120,7 @@ static int bm_load_info (
     else if (type == BM_TYPE_JPG) {
         int jpg_error = jpeg_read_header (filename, img_cfp, w, h, bpp, NULL);
         if (jpg_error != JPEG_ERROR_NONE) {
-            WARNINGF (LOCATION, "jpg: Couldn't open '%s'\n", filename);
+            EE ("general") << "load failed : " << filename;
             return -1;
         }
     }
@@ -1138,13 +1128,12 @@ static int bm_load_info (
     else if (type == BM_TYPE_PCX) {
         int pcx_error = pcx_read_header (filename, img_cfp, w, h, bpp, NULL);
         if (pcx_error != PCX_ERROR_NONE) {
-            WARNINGF (LOCATION, "pcx: Couldn't open '%s'\n", filename);
+            EE ("general") << "load failed : " << filename;
             return -1;
         }
     }
     else {
         ASSERT (0);
-
         return -1;
     }
 
@@ -1175,29 +1164,14 @@ int bm_load (const char* real_filename) {
     strncpy (filename, real_filename, MAX_FILENAME_LEN - 1);
     char* p = strrchr (filename, '.');
     if (p) {
-        WARNINGF (
-            LOCATION, "Someone passed an extension to bm_load for file '%s'\n",
-            real_filename);
+        WW ("general") << "unneeded extension to filename : " << real_filename;
         *p = 0;
-    }
-
-    // If we are standalone server keep replacing the 'right_bracket' (right
-    // side help bracket) as the filename should keep the game happy while
-    // loading only single pcx file which the needs to be present in any case
-    if (Is_standalone) {
-        char standalone_filename[MAX_FILENAME_LEN] = "right_bracket";
-        strcpy_s (filename, standalone_filename);
     }
 
     // safety catch for strcat...
     // MAX_FILENAME_LEN-5 == '.' plus 3 letter ext plus NULL terminator
     if (strlen (filename) > MAX_FILENAME_LEN - 5) {
-        WARNINGF (
-            LOCATION,
-            "Passed filename, '%s', is too long to support an "
-            "extension!!\n\nMaximum length, minus the extension, is %i "
-            "characters.\n",
-            filename, MAX_FILENAME_LEN - 5);
+        WW ("general") << "filename too long : " << filename;
         return -1;
     }
 
@@ -1335,7 +1309,7 @@ bool bm_load_and_parse_eff (
         c_type = BM_TYPE_PCX;
     }
     else {
-        WARNINGF (LOCATION, "BMPMAN: Unknown file type in EFF parse!\n");
+        EE ("general") << "unknown file type " << ext << " in EFF parse";
         return false;
     }
 
@@ -1346,11 +1320,8 @@ bool bm_load_and_parse_eff (
     }
 
     if (type) *type = c_type;
-
     if (nframes) *nframes = frames;
-
     if (nfps) *nfps = fps;
-
     if (key) *key = keyframe;
 
     return true;
@@ -1379,16 +1350,15 @@ bm_load_image_data (int handle, int bpp, ubyte flags, bool nodebug) {
 
         if (be->type != BM_TYPE_USER && !nodebug) {
             if (bmp->data == 0)
-                WARNINGF (
-                    LOCATION, "Loading %s for the first time.\n",
-                    be->filename);
+                II ("general")
+                    << "loading " << be->filename << " for the first time";
         }
 
         if (!Bm_paging) {
             if (be->type != BM_TYPE_USER && !nodebug)
-                WARNINGF (
-                    LOCATION, "Loading %s (%dx%dx%d)\n", be->filename, bmp->w,
-                    bmp->h, true_bpp);
+                II ("general")
+                    << "loading " << be->filename << " (" << bmp->w
+                    << "x" << bmp->h << "/" << true_bpp << ")";
         }
 
         // select proper format
@@ -1501,14 +1471,6 @@ int bm_load_animation (
             "Someone passed an extension to bm_load_animation for file '%s'\n",
             real_filename);
         *p = 0;
-    }
-
-    // If we are standalone server keep replacing the 'cursorweb' (mouse
-    // cursor) as the filename should keep the game happy while loading only
-    // single ani file which the needs to be present in any case
-    if (Is_standalone) {
-        char standalone_filename[MAX_FILENAME_LEN] = "cursorweb";
-        strcpy_s (filename, standalone_filename);
     }
 
     // safety catch for strcat...
@@ -1952,35 +1914,27 @@ bitmap* bm_lock (int handle, int bpp, ubyte flags, bool nodebug) {
     // to fix a couple of OGL bpp passes, force 8bit on AABITMAP - taylor
     if (flags & BMP_AABITMAP) bpp = 8;
 
-    // if we're on a standalone server, aways for it to lock to 8 bits
-    if (Is_standalone) {
-        bpp = 8;
-        flags = 0;
+    if (flags & BMP_AABITMAP) { ASSERT (bpp == 8); }
+    else if ((flags & BMP_TEX_NONCOMP) && (!(flags & BMP_TEX_COMP))) {
+        ASSERT (bpp >= 16); // cheating but bpp passed isn't what we
+        // normally end up with
     }
-    // otherwise do it as normal
+    else if (
+        (flags & BMP_TEX_DXT1) || (flags & BMP_TEX_DXT3) ||
+        (flags & BMP_TEX_DXT5)) {
+        ASSERT (bpp >= 16); // cheating but bpp passed isn't what we
+        // normally end up with
+    }
+    else if (flags & BMP_TEX_CUBEMAP) {
+        ASSERT (
+            (be->type == BM_TYPE_CUBEMAP_DDS) ||
+            (be->type == BM_TYPE_CUBEMAP_DXT1) ||
+            (be->type == BM_TYPE_CUBEMAP_DXT3) ||
+            (be->type == BM_TYPE_CUBEMAP_DXT5));
+        ASSERT (bpp >= 16);
+    }
     else {
-        if (flags & BMP_AABITMAP) { ASSERT (bpp == 8); }
-        else if ((flags & BMP_TEX_NONCOMP) && (!(flags & BMP_TEX_COMP))) {
-            ASSERT (bpp >= 16); // cheating but bpp passed isn't what we
-                                // normally end up with
-        }
-        else if (
-            (flags & BMP_TEX_DXT1) || (flags & BMP_TEX_DXT3) ||
-            (flags & BMP_TEX_DXT5)) {
-            ASSERT (bpp >= 16); // cheating but bpp passed isn't what we
-                                // normally end up with
-        }
-        else if (flags & BMP_TEX_CUBEMAP) {
-            ASSERT (
-                (be->type == BM_TYPE_CUBEMAP_DDS) ||
-                (be->type == BM_TYPE_CUBEMAP_DXT1) ||
-                (be->type == BM_TYPE_CUBEMAP_DXT3) ||
-                (be->type == BM_TYPE_CUBEMAP_DXT5));
-            ASSERT (bpp >= 16);
-        }
-        else {
-            ASSERT (0); //?
-        }
+        ASSERT (0); //?
     }
 
     bmp = &be->bm;
@@ -2104,12 +2058,8 @@ void bm_lock_ani (
 
         // Unload any existing data
         bm_free_data (slot);
-
         bm->flags = 0;
-
-        // briefing editor in Fred2 uses aabitmaps (ani's) - force to 8 bit
-        bm->bpp = Is_standalone ? (ubyte)8 : bpp;
-
+        bm->bpp = bpp;
         bm->data = (ptr_u)bm_malloc (first_frame + i, size);
 
         frame_data = anim_get_next_raw_buffer (
@@ -2464,11 +2414,7 @@ void bm_lock_tga (
     bm_free_data (bs);
 
     bpp = be->bm.true_bpp;
-
-    if (Is_standalone) { ASSERT (bpp == 8); }
-    else {
-        ASSERT ((bpp == 16) || (bpp == 24) || (bpp == 32));
-    }
+    ASSERT ((bpp == 16) || (bpp == 24) || (bpp == 32));
 
     // allocate bitmap data
     byte_size = (bpp >> 3);
@@ -2676,11 +2622,7 @@ void bm_page_in_start () {
 void bm_page_in_stop () {
     TRACE_SCOPE (tracing::PageInStop);
 
-#ifndef NDEBUG
-    char busy_text[60];
-#endif
-
-    WARNINGF (LOCATION, "BMPMAN: Loading all used bitmaps.");
+    II ("general") << "loading all used bitmaps";
 
     // Load all the ones that are supposed to be loaded for this level.
     int n = 0;
@@ -2712,23 +2654,11 @@ void bm_page_in_stop () {
                         if (entry.ref_count >= 1) { bm_unlock (entry.handle); }
                     }
 
-                    n++;
-
-                    multi_send_anti_timeout_ping ();
+                    ++n;
 
                     if ((entry.info.ani.first_frame == 0) ||
                         (entry.info.ani.first_frame == entry.handle)) {
-#ifndef NDEBUG
-                        memset (busy_text, 0, sizeof (busy_text));
-
-                        strcat_s (busy_text, "** BmpMan: ");
-                        strcat_s (busy_text, entry.filename);
-                        strcat_s (busy_text, " **");
-
-                        game_busy (busy_text);
-#else
                         game_busy ();
-#endif
                     }
                 }
                 else {
@@ -2738,30 +2668,7 @@ void bm_page_in_stop () {
         }
     }
 
-    WARNINGF (
-        LOCATION,
-        "BMPMAN: Loaded %d bitmaps that are marked as used for this level.\n",
-        n);
-
-#ifndef NDEBUG
-    int total_bitmaps = 0;
-    int total_slots = 0;
-    for (auto& block : bm_blocks) {
-        total_slots += BM_BLOCK_SIZE;
-        for (auto& slot : block) {
-            auto& entry = slot.entry;
-
-            if (entry.type != BM_TYPE_NONE) { total_bitmaps++; }
-            if (entry.type == BM_TYPE_USER) {
-                WARNINGF (LOCATION, "User bitmap '%s'\n", entry.filename);
-            }
-        }
-    }
-
-    WARNINGF (
-        LOCATION, "Bmpman: %d/%d bitmap slots in use.\n", total_bitmaps,
-        total_slots);
-#endif
+    II ("general") << "Loaded " << n << " bitmaps used in this level";
 
     Bm_paging = 0;
 }
@@ -2784,28 +2691,23 @@ void bm_page_in_texture (int bitmapnum, int nframes) {
         auto frame_entry = bm_get_entry (bitmapnum + i);
 
         frame_entry->preloaded = 1;
-
         frame_entry->preload_count++;
-
         frame_entry->used_flags = BMP_TEX_OTHER;
 
         // check if its compressed
         switch (frame_entry->comp_type) {
-        case BM_TYPE_NONE: continue;
-
-        case BM_TYPE_DXT1: frame_entry->used_flags = BMP_TEX_DXT1; continue;
-
-        case BM_TYPE_DXT3: frame_entry->used_flags = BMP_TEX_DXT3; continue;
-
-        case BM_TYPE_DXT5: frame_entry->used_flags = BMP_TEX_DXT5; continue;
+        case BM_TYPE_NONE: break;
+        case BM_TYPE_DXT1: frame_entry->used_flags = BMP_TEX_DXT1; break;
+        case BM_TYPE_DXT3: frame_entry->used_flags = BMP_TEX_DXT3; break;
+        case BM_TYPE_DXT5: frame_entry->used_flags = BMP_TEX_DXT5; break;
 
         case BM_TYPE_CUBEMAP_DXT1:
         case BM_TYPE_CUBEMAP_DXT3:
         case BM_TYPE_CUBEMAP_DXT5:
             frame_entry->used_flags = BMP_TEX_CUBEMAP;
-            continue;
+            break;
 
-        default: continue;
+        default: break;
         }
     }
 }
@@ -3266,7 +3168,7 @@ int bm_unload (int handle, int clear_render_targets, bool nodebug) {
     if (be->ref_count != 0 && !nodebug) {
         WARNINGF (
             LOCATION,
-            "Tried to unload %s that has a lock count of %d.. not unloading\n",
+            "Tried to unload %s that has a lock count of %d.. not unloading",
             be->filename, be->ref_count);
         return 0;
     }
@@ -3282,7 +3184,7 @@ int bm_unload (int handle, int clear_render_targets, bool nodebug) {
             WARNINGF (
                 LOCATION,
                 "Tried to unload %s that has a load count of %d.. not "
-                "unloading\n",
+                "unloading",
                 be->filename, be->load_count + 1);
             return 0;
         }
@@ -3305,7 +3207,8 @@ int bm_unload (int handle, int clear_render_targets, bool nodebug) {
             if (!nodebug)
                 INFO ("general")
                     << "unloading " << be->filename << ", frame: " << i
-                    << " (" << bmp->w << "x" << bmp->h << "/" bmp->bpp << ")";
+                    << " (" << bmp->w << "x" << bmp->h << "/" << bmp->bpp
+                    << ")";
 
             bm_free_data (
                 bm_get_slot (first + i)); // clears flags, bbp, data, etc
@@ -3315,7 +3218,8 @@ int bm_unload (int handle, int clear_render_targets, bool nodebug) {
         if (!nodebug)
             INFO ("general")
                 << "unloading " << be->filename
-                << "(" << bmp->w << "x" << bmp->h << "/" bmp->bpp << ")";
+                << "(" << bmp->w << "x" << bmp->h << "/" << bmp->bpp
+                << ")";
 
         bm_free_data (bm_get_slot (handle)); // clears flags, bbp, data, etc.
     }

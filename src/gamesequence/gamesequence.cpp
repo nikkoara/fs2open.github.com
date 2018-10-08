@@ -31,134 +31,107 @@ static int state_processing_event_post =
 static int state_in_event_processer = 0;
 
 // Text of state, corresponding to enum values for GS_STATE_*
-// XSTR:OFF
-const char* GS_event_text[] = { "GS_EVENT_MAIN_MENU", // 0
-                                "GS_EVENT_START_GAME",
-                                "GS_EVENT_ENTER_GAME",
-                                "GS_EVENT_START_GAME_QUICK",
-                                "GS_EVENT_END_GAME",
-                                "GS_EVENT_QUIT_GAME", // 5
-                                "GS_EVENT_PAUSE_GAME",
-                                "GS_EVENT_PREVIOUS_STATE",
-                                "GS_EVENT_OPTIONS_MENU",
-                                "GS_EVENT_BARRACKS_MENU",
-                                "GS_EVENT_TRAINING_MENU", // 10
-                                "GS_EVENT_TECH_MENU",
-                                "GS_EVENT_LOAD_MISSION_MENU",
-                                "GS_EVENT_SHIP_SELECTION",
-                                "GS_EVENT_TOGGLE_FULLSCREEN",
-                                "GS_EVENT_START_BRIEFING", // 15
-                                "GS_EVENT_DEBUG_PAUSE_GAME",
-                                "GS_EVENT_HUD_CONFIG",
-                                "GS_EVENT_MULTI_JOIN_GAME",
-                                "GS_EVENT_CONTROL_CONFIG",
-                                "GS_EVENT_EVENT_DEBUG", // 20
-                                "GS_EVENT_WEAPON_SELECTION",
-                                "GS_EVENT_MISSION_LOG_SCROLLBACK",
-                                "GS_EVENT_GAMEPLAY_HELP",
-                                "GS_EVENT_DEATH_DIED",
-                                "GS_EVENT_DEATH_BLEW_UP", // 25
-                                "GS_EVENT_NEW_CAMPAIGN",
-                                "GS_EVENT_CREDITS",
-                                "GS_EVENT_SHOW_GOALS",
-                                "GS_EVENT_HOTKEY_SCREEN",
-                                "GS_EVENT_VIEW_MEDALS", // 30
-                                "GS_EVENT_MULTI_HOST_SETUP",
-                                "GS_EVENT_MULTI_CLIENT_SETUP",
-                                "GS_EVENT_DEBRIEF",
-                                "GS_EVENT_GOTO_VIEW_CUTSCENES_SCREEN",
-                                "GS_EVENT_MULTI_STD_WAIT", // 35
-                                "GS_EVENT_STANDALONE_MAIN",
-                                "GS_EVENT_MULTI_PAUSE",
-                                "GS_EVENT_TEAM_SELECT",
-                                "GS_EVENT_TRAINING_PAUSE",
-                                "GS_EVENT_INGAME_PRE_JOIN", // 40
-                                "GS_EVENT_PLAYER_WARPOUT_START",
-                                "GS_EVENT_PLAYER_WARPOUT_START_FORCED",
-                                "GS_EVENT_PLAYER_WARPOUT_STOP",
-                                "GS_EVENT_PLAYER_WARPOUT_DONE_STAGE1",
-                                "GS_EVENT_PLAYER_WARPOUT_DONE_STAGE2", // 45
-                                "GS_EVENT_PLAYER_WARPOUT_DONE",
-                                "GS_EVENT_STANDALONE_POSTGAME",
-                                "GS_EVENT_INITIAL_PLAYER_SELECT",
-                                "GS_EVENT_GAME_INIT",
-                                "GS_EVENT_MULTI_MISSION_SYNC", // 50
-                                "GS_EVENT_MULTI_START_GAME",
-                                "GS_EVENT_MULTI_HOST_OPTIONS",
-                                "GS_EVENT_MULTI_DOGFIGHT_DEBRIEF",
-                                "GS_EVENT_CAMPAIGN_ROOM",
-                                "GS_EVENT_CMD_BRIEF", // 55
-                                "GS_EVENT_TOGGLE_GLIDE",
-                                "GS_EVENT_RED_ALERT",
-                                "GS_EVENT_SIMULATOR_ROOM",
-                                "GS_EVENT_END_CAMPAIGN",
-                                "GS_EVENT_LOOP_BRIEF", // 60
-                                "GS_EVENT_CAMPAIGN_CHEAT",
-                                "GS_EVENT_PXO",
-                                "GS_EVENT_LAB",
-                                "GS_EVENT_PXO_HELP",
-                                "GS_EVENT_FICTION_VIEWER", // 65
-                                "GS_EVENT_SCRIPTING" };
-// XSTR:ON
+const char* GS_event_text[] = {
+    "GS_EVENT_MAIN_MENU",
+    "GS_EVENT_START_GAME",
+    "GS_EVENT_ENTER_GAME",
+    "GS_EVENT_START_GAME_QUICK",
+    "GS_EVENT_END_GAME",
+    "GS_EVENT_QUIT_GAME",
+    "GS_EVENT_PAUSE_GAME",
+    "GS_EVENT_PREVIOUS_STATE",
+    "GS_EVENT_OPTIONS_MENU",
+    "GS_EVENT_BARRACKS_MENU",
+    "GS_EVENT_TRAINING_MENU",
+    "GS_EVENT_TECH_MENU",
+    "GS_EVENT_LOAD_MISSION_MENU",
+    "GS_EVENT_SHIP_SELECTION",
+    "GS_EVENT_TOGGLE_FULLSCREEN",
+    "GS_EVENT_START_BRIEFING",
+    "GS_EVENT_DEBUG_PAUSE_GAME",
+    "GS_EVENT_HUD_CONFIG",
+    "GS_EVENT_CONTROL_CONFIG",
+    "GS_EVENT_EVENT_DEBUG",
+    "GS_EVENT_WEAPON_SELECTION",
+    "GS_EVENT_MISSION_LOG_SCROLLBACK",
+    "GS_EVENT_GAMEPLAY_HELP",
+    "GS_EVENT_DEATH_DIED",
+    "GS_EVENT_DEATH_BLEW_UP",
+    "GS_EVENT_NEW_CAMPAIGN",
+    "GS_EVENT_CREDITS",
+    "GS_EVENT_SHOW_GOALS",
+    "GS_EVENT_HOTKEY_SCREEN",
+    "GS_EVENT_VIEW_MEDALS",
+    "GS_EVENT_DEBRIEF",
+    "GS_EVENT_GOTO_VIEW_CUTSCENES_SCREEN",
+    "GS_EVENT_TRAINING_PAUSE",
+    "GS_EVENT_INGAME_PRE_JOIN",
+    "GS_EVENT_PLAYER_WARPOUT_START",
+    "GS_EVENT_PLAYER_WARPOUT_START_FORCED",
+    "GS_EVENT_PLAYER_WARPOUT_STOP",
+    "GS_EVENT_PLAYER_WARPOUT_DONE_STAGE1",
+    "GS_EVENT_PLAYER_WARPOUT_DONE_STAGE2",
+    "GS_EVENT_PLAYER_WARPOUT_DONE",
+    "GS_EVENT_INITIAL_PLAYER_SELECT",
+    "GS_EVENT_GAME_INIT",
+    "GS_EVENT_CAMPAIGN_ROOM",
+    "GS_EVENT_CMD_BRIEF",
+    "GS_EVENT_TOGGLE_GLIDE",
+    "GS_EVENT_RED_ALERT",
+    "GS_EVENT_SIMULATOR_ROOM",
+    "GS_EVENT_END_CAMPAIGN",
+    "GS_EVENT_LOOP_BRIEF",
+    "GS_EVENT_CAMPAIGN_CHEAT",
+    "GS_EVENT_LAB",
+    "GS_EVENT_FICTION_VIEWER"
+};
 
 int Num_gs_event_text = sizeof (GS_event_text) / sizeof (char*);
 
 // Text of state, corresponding to enum values for GS_STATE_*
-// XSTR:OFF
-const char* GS_state_text[] = { "NOT A VALID STATE", // 0
-                                "GS_STATE_MAIN_MENU",
-                                "GS_STATE_GAME_PLAY",
-                                "GS_STATE_GAME_PAUSED",
-                                "GS_STATE_QUIT_GAME",
-                                "GS_STATE_OPTIONS_MENU", // 5
-                                "GS_STATE_BARRACKS_MENU",
-                                "GS_STATE_TECH_MENU",
-                                "GS_STATE_TRAINING_MENU",
-                                "GS_STATE_LOAD_MISSION_MENU",
-                                "GS_STATE_BRIEFING", // 10
-                                "GS_STATE_SHIP_SELECT",
-                                "GS_STATE_DEBUG_PAUSED",
-                                "GS_STATE_HUD_CONFIG",
-                                "GS_STATE_MULTI_JOIN_GAME",
-                                "GS_STATE_CONTROL_CONFIG", // 15
-                                "GS_STATE_WEAPON_SELECT",
-                                "GS_STATE_MISSION_LOG_SCROLLBACK",
-                                "GS_STATE_DEATH_DIED",
-                                "GS_STATE_DEATH_BLEW_UP",
-                                "GS_STATE_SIMULATOR_ROOM", // 20
-                                "GS_STATE_CREDITS",
-                                "GS_STATE_SHOW_GOALS",
-                                "GS_STATE_HOTKEY_SCREEN",
-                                "GS_STATE_VIEW_MEDALS",
-                                "GS_STATE_MULTI_HOST_SETUP", // 25
-                                "GS_STATE_MULTI_CLIENT_SETUP",
-                                "GS_STATE_DEBRIEF",
-                                "GS_STATE_VIEW_CUTSCENES",
-                                "GS_STATE_MULTI_STD_WAIT",
-                                "GS_STATE_STANDALONE_MAIN", // 30
-                                "GS_STATE_MULTI_PAUSED",
-                                "GS_STATE_TEAM_SELECT",
-                                "GS_STATE_TRAINING_PAUSED",
-                                "GS_STATE_INGAME_PRE_JOIN",
-                                "GS_STATE_EVENT_DEBUG", // 35
-                                "GS_STATE_STANDALONE_POSTGAME",
-                                "GS_STATE_INITIAL_PLAYER_SELECT",
-                                "GS_STATE_MULTI_MISSION_SYNC",
-                                "GS_STATE_MULTI_START_GAME",
-                                "GS_STATE_MULTI_HOST_OPTIONS", // 40
-                                "GS_STATE_MULTI_DOGFIGHT_DEBRIEF",
-                                "GS_STATE_CAMPAIGN_ROOM",
-                                "GS_STATE_CMD_BRIEF",
-                                "GS_STATE_RED_ALERT",
-                                "GS_STATE_END_OF_CAMPAIGN", // 45
-                                "GS_STATE_GAMEPLAY_HELP",
-                                "GS_STATE_LOOP_BRIEF",
-                                "GS_STATE_PXO",
-                                "GS_STATE_LAB",
-                                "GS_STATE_PXO_HELP", // 50
-                                "GS_STATE_START_GAME",
-                                "GS_STATE_FICTION_VIEWER" };
-// XSTR:ON
+const char* GS_state_text[] = {
+    "INVALID STATE",
+    "GS_STATE_MAIN_MENU",
+    "GS_STATE_GAME_PLAY",
+    "GS_STATE_GAME_PAUSED",
+    "GS_STATE_QUIT_GAME",
+    "GS_STATE_OPTIONS_MENU",
+    "GS_STATE_BARRACKS_MENU",
+    "GS_STATE_TECH_MENU",
+    "GS_STATE_TRAINING_MENU",
+    "GS_STATE_LOAD_MISSION_MENU",
+    "GS_STATE_BRIEFING",
+    "GS_STATE_SHIP_SELECT",
+    "GS_STATE_DEBUG_PAUSED",
+    "GS_STATE_HUD_CONFIG",
+    "GS_STATE_CONTROL_CONFIG",
+    "GS_STATE_WEAPON_SELECT",
+    "GS_STATE_MISSION_LOG_SCROLLBACK",
+    "GS_STATE_DEATH_DIED",
+    "GS_STATE_DEATH_BLEW_UP",
+    "GS_STATE_SIMULATOR_ROOM",
+    "GS_STATE_CREDITS",
+    "GS_STATE_SHOW_GOALS",
+    "GS_STATE_HOTKEY_SCREEN",
+    "GS_STATE_VIEW_MEDALS",
+    "GS_STATE_DEBRIEF",
+    "GS_STATE_VIEW_CUTSCENES",
+    "GS_STATE_TEAM_SELECT",
+    "GS_STATE_TRAINING_PAUSED",
+    "GS_STATE_INGAME_PRE_JOIN",
+    "GS_STATE_EVENT_DEBUG",
+    "GS_STATE_INITIAL_PLAYER_SELECT",
+    "GS_STATE_CAMPAIGN_ROOM",
+    "GS_STATE_CMD_BRIEF",
+    "GS_STATE_RED_ALERT",
+    "GS_STATE_END_OF_CAMPAIGN",
+    "GS_STATE_GAMEPLAY_HELP",
+    "GS_STATE_LOOP_BRIEF",
+    "GS_STATE_LAB",
+    "GS_STATE_START_GAME",
+    "GS_STATE_FICTION_VIEWER",
+    "GS_NUM_STATES"
+};
 
 int Num_gs_state_text = sizeof (GS_state_text) / sizeof (char*);
 

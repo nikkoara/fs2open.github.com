@@ -3,9 +3,6 @@
 #include "hud/hudshield.h"
 #include "hud/hudwingmanstatus.h"
 #include "io/timer.h"
-#include "network/multi.h"
-#include "network/multimsgs.h"
-#include "network/multiutil.h"
 #include "object/objcollide.h"
 #include "object/object.h"
 #include "playerman/player.h"
@@ -92,21 +89,6 @@ static void ship_weapon_do_hit_stuff (
     float blast = wip->mass;
     vm_vec_copy_scale (&force, &weapon_obj->phys_info.vel, blast);
 
-    // send player pain packet
-    if ((MULTIPLAYER_MASTER) && !(shipp->flags[Ship::Ship_Flags::Dying])) {
-        int np_index = multi_find_player_by_object (pship_obj);
-
-        // if this is a player ship
-        if ((np_index >= 0) && (np_index != MY_NET_PLAYER_NUM) &&
-            (wip->subtype == WP_LASER)) {
-            send_player_pain_packet (
-                &Net_players[np_index], wp->weapon_info_index,
-                wip->damage *
-                    weapon_get_damage_scale (wip, weapon_obj, pship_obj),
-                &force, hitpos, quadrant_num);
-        }
-    }
-
     ship_apply_local_damage (
         pship_obj, weapon_obj, world_hitpos, damage, quadrant_num,
         CREATE_SPARKS, submodel_num);
@@ -125,7 +107,7 @@ static void ship_weapon_do_hit_stuff (
     // is to apply damage, not physics, so I moved it here.
     // don't apply whack for multiplayer_client from laser - will occur with
     // pain packet
-    if (!((wip->subtype == WP_LASER) && MULTIPLAYER_CLIENT)) {
+    if (wip->subtype != WP_LASER) {
         // apply a whack
         ship_apply_whack (&force, hitpos, pship_obj);
     }

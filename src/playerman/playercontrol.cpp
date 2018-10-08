@@ -18,8 +18,6 @@
 #include "io/timer.h"
 #include "mission/missiongoals.h"
 #include "mission/missionmessage.h"
-#include "network/multi_obj.h"
-#include "network/multiutil.h"
 #include "object/object.h"
 #include "object/objectdock.h"
 #include "observer/observer.h"
@@ -864,11 +862,6 @@ void read_keyboard_controls (
         // keyboard: fire the current secondary weapon
         if (check_control (FIRE_SECONDARY)) {
             ci->fire_secondary_count++;
-
-            // if we're a multiplayer client, set our accum bits now
-            if (MULTIPLAYER_CLIENT && (Net_player != NULL)) {
-                Net_player->s_info.accum_buttons |= OOC_FIRE_SECONDARY;
-            }
         }
 
         // keyboard: launch countermeasures, but not if AI controlling Player
@@ -1229,13 +1222,6 @@ void player_clear_speed_matching () {
  */
 void player_match_target_speed (
     char* no_target_text, char* match_off_text, char* match_on_text) {
-    // multiplayer observers can't match target speed
-    if ((Game_mode & GM_MULTIPLAYER) && (Net_player != NULL) &&
-        ((Net_player->flags & NETINFO_FLAG_OBSERVER) ||
-         (Player_obj->type == OBJ_OBSERVER))) {
-        return;
-    }
-
     if (Player_ai->target_objnum == -1) {
         if (no_target_text) {
             if (no_target_text[0]) {
@@ -1373,29 +1359,20 @@ void player_save_target_and_weapon_link_prefs () {
     }
 
     if (Player->flags & PLAYER_FLAGS_AUTO_MATCH_SPEED) {
-        // multiplayer observers can't match target speed
-        if (!((Game_mode & GM_MULTIPLAYER) && (Net_player != NULL) &&
-              ((Net_player->flags & NETINFO_FLAG_OBSERVER) ||
-               (Player_obj->type == OBJ_OBSERVER)))) {
-            Player->save_flags |= PLAYER_FLAGS_AUTO_MATCH_SPEED;
-        }
+        Player->save_flags |= PLAYER_FLAGS_AUTO_MATCH_SPEED;
     }
 
-    // if we're in multiplayer mode don't do this because we will desync
-    // ourselves with the server
-    if (!(Game_mode & GM_MULTIPLAYER)) {
-        if (Player_ship->flags[Ship::Ship_Flags::Primary_linked]) {
-            Player->save_flags |= PLAYER_FLAGS_LINK_PRIMARY;
-        }
-        else {
-            Player->flags &= ~PLAYER_FLAGS_LINK_PRIMARY;
-        }
-        if (Player_ship->flags[Ship::Ship_Flags::Secondary_dual_fire]) {
-            Player->save_flags |= PLAYER_FLAGS_LINK_SECONDARY;
-        }
-        else {
-            Player->flags &= ~PLAYER_FLAGS_LINK_SECONDARY;
-        }
+    if (Player_ship->flags[Ship::Ship_Flags::Primary_linked]) {
+        Player->save_flags |= PLAYER_FLAGS_LINK_PRIMARY;
+    }
+    else {
+        Player->flags &= ~PLAYER_FLAGS_LINK_PRIMARY;
+    }
+    if (Player_ship->flags[Ship::Ship_Flags::Secondary_dual_fire]) {
+        Player->save_flags |= PLAYER_FLAGS_LINK_SECONDARY;
+    }
+    else {
+        Player->flags &= ~PLAYER_FLAGS_LINK_SECONDARY;
     }
 }
 
@@ -1617,9 +1594,6 @@ void player_stop_cargo_scan_sound () {
  * pending; 0   if no praise is pending
  */
 int player_process_pending_praise () {
-    // in multiplayer, never praise
-    if (Game_mode & GM_MULTIPLAYER) { return 0; }
-
     if (timestamp_elapsed (Player->praise_delay_timestamp)) {
         int ship_index;
 
@@ -2108,8 +2082,6 @@ void player_set_next_all_alone_msg_timestamp () {
  * Maybe play message from Terran Command 'You're all alone now, pilot'
  */
 void player_maybe_play_all_alone_msg () {
-    if (Game_mode & GM_MULTIPLAYER) { return; }
-
     if (!Player_all_alone_msg_inited) {
         player_init_all_alone_msg ();
         Player_all_alone_msg_inited = 1;

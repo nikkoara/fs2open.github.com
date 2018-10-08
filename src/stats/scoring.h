@@ -43,17 +43,6 @@ extern int Num_medals;
    stats, and updates any campaign stats NOTE : in single player mode, if the
    player is going back to replay an old mission, the stats shouldn't be stored
    again
-
-   MULTI PLAYER :
-        scoring_level_init() is called in game_level_init() again.
-        init_multiplayer_stats() is called on all computers in the game when
-   moving _into_ the MISSION_SYNC state
-
-        scoring_level_close() is called on all machines when the host selects
-   accept. If the host is not on the standalone he sends a packet to all
-   players indicating that they should save their data. If he _is_ on the
-   standalone, he should send only to the standalone, and then it rebroadcasts
-   the packet ot everyone else.
 */
 
 struct rank_stuff  {
@@ -146,8 +135,7 @@ void scoring_check_medal (scoring_struct* sc);
 void scoring_add_damage (object* ship_obj, object* other_obj, float damage);
 int scoring_eval_kill (object* ship_obj);
 int scoring_eval_kill_on_weapon (object* weapon_obj, object* other_obj);
-void scoring_eval_assists (
-    ship* sp, int killer_sig, bool enemy_player = false);
+void scoring_eval_assists (ship* sp, int killer_sig);
 
 // bash the passed player to the specified rank
 void scoring_bash_rank (player* pl, int rank);

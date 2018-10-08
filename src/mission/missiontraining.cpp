@@ -10,7 +10,6 @@
 #include "mission/missionparse.h"
 #include "mission/missiontraining.h"
 #include "mod_table/mod_table.h"
-#include "network/multi.h"
 #include "parse/parselo.h"
 #include "parse/sexp.h"
 #include "playerman/player.h"
@@ -244,20 +243,9 @@ void HudGaugeDirectives::render (float /*frametime*/) {
                     Mission_events[z].count);
             }
 
-            // if this is a multiplayer tvt game, and this is event is not for
-            // my team, don't display it
-            if ((MULTI_TEAM) && (Net_player != NULL)) {
-                if ((Mission_events[z].team != -1) &&
-                    (Net_player->p_info.team != Mission_events[z].team)) {
-                    continue;
-                }
-            }
-
             switch (mission_get_event_status (z)) {
             case EVENT_CURRENT: c = &Color_bright_white; break;
-
             case EVENT_FAILED: c = &Color_bright_red; break;
-
             case EVENT_SATISFIED:
                 t = Mission_events[z].satisfied_time;
                 if (t + i2f (2) > Missiontime) {
@@ -391,16 +379,6 @@ void sort_training_objectives () {
     for (i = 0; i < offset; i++) {
         event_status = mission_get_event_status (TRAINING_OBJ_LINES_MASK (i));
 
-        // if this is a multiplayer tvt game, and this is event is for another
-        // team, don't touch it
-        if (MULTI_TEAM && (Net_player != NULL)) {
-            if ((Mission_events[TRAINING_OBJ_LINES_MASK (i)].team != -1) &&
-                (Net_player->p_info.team !=
-                 Mission_events[TRAINING_OBJ_LINES_MASK (i)].team)) {
-                continue;
-            }
-        }
-
         if (event_status == EVENT_CURRENT) {
             Training_obj_lines[i] |= TRAINING_OBJ_STATUS_UNKNOWN;
             num_offset_events++;
@@ -436,17 +414,6 @@ void sort_training_objectives () {
     // be shown, since some will need to be bumped
     for (i = offset; i < Training_obj_num_lines; i++) {
         event_status = mission_get_event_status (TRAINING_OBJ_LINES_MASK (i));
-
-        // if this is a multiplayer tvt game, and this is event is for another
-        // team, it can be bumped
-        if (MULTI_TEAM && (Net_player != NULL)) {
-            if ((Mission_events[TRAINING_OBJ_LINES_MASK (i)].team != -1) &&
-                (Net_player->p_info.team !=
-                 Mission_events[TRAINING_OBJ_LINES_MASK (i)].team)) {
-                Training_obj_lines[i] |= TRAINING_OBJ_STATUS_KNOWN;
-                continue;
-            }
-        }
 
         if (event_status == EVENT_CURRENT) {
             Training_obj_lines[i] |= TRAINING_OBJ_STATUS_UNKNOWN;

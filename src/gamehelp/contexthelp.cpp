@@ -21,7 +21,6 @@
 #include "missionui/missiondebrief.h"
 #include "missionui/missionshipchoice.h"
 #include "missionui/missionweaponchoice.h"
-#include "network/multiui.h"
 #include "parse/parselo.h"
 
 ////////////////////////////////////////////////////////////////////
@@ -201,14 +200,6 @@ void launch_context_help () {
         break;
 
     case GS_STATE_DEBRIEF: overlay_id = Debrief_overlay_id; break;
-
-    case GS_STATE_MULTI_HOST_SETUP:
-        overlay_id = Multi_create_overlay_id;
-        break;
-
-    case GS_STATE_MULTI_START_GAME: overlay_id = Multi_sg_overlay_id; break;
-
-    case GS_STATE_MULTI_JOIN_GAME: overlay_id = Multi_join_overlay_id; break;
 
     case GS_STATE_HOTKEY_SCREEN: overlay_id = Hotkey_overlay_id; break;
 

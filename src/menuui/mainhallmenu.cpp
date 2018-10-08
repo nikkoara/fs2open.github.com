@@ -21,10 +21,6 @@
 #include "menuui/playermenu.h"
 #include "menuui/snazzyui.h"
 #include "mission/missioncampaign.h"
-#include "network/multi.h"
-#include "network/multi_voice.h"
-#include "network/multiui.h"
-#include "network/multiutil.h"
 #include "parse/parselo.h"
 #include "playerman/player.h"
 #include "popup/popup.h"
@@ -289,118 +285,6 @@ void main_hall_process_help_stuff ();
 
 // are we currently recording voice?
 int Recording = 0;
-
-/*
- * Called when multiplayer clicks on the ready room door.  May pop up dialog
- * depending on network connection status and errors
- */
-void main_hall_do_multi_ready () {
-    int error;
-
-    error = psnet_get_network_status ();
-    switch (error) {
-    case NETWORK_ERROR_NO_TYPE:
-        popup (
-            PF_USE_AFFIRMATIVE_ICON | PF_NO_NETWORKING, 1, POPUP_OK,
-            XSTR (
-                "You have not defined your type of Internet connection.  "
-                "Please run the Launcher, hit the setup button, and go to the "
-                "Network tab and choose your connection type.",
-                360));
-        break;
-    case NETWORK_ERROR_NO_WINSOCK:
-        popup (
-            PF_USE_AFFIRMATIVE_ICON | PF_NO_NETWORKING, 1, POPUP_OK,
-            XSTR (
-                "Winsock is not installed.  You must have TCP/IP and Winsock "
-                "installed to play multiplayer FreeSpace.",
-                361));
-        break;
-    case NETWORK_ERROR_NO_PROTOCOL:
-        if (Multi_options_g.protocol == NET_TCP) {
-            popup (
-                PF_USE_AFFIRMATIVE_ICON | PF_NO_NETWORKING, 1, POPUP_OK,
-                XSTR (
-                    "TCP/IP protocol not found.  This protocol is required "
-                    "for multiplayer FreeSpace.",
-                    1602));
-        }
-        break;
-    case NETWORK_ERROR_CONNECT_TO_ISP:
-        popup (
-            PF_USE_AFFIRMATIVE_ICON | PF_NO_NETWORKING, 1, POPUP_OK,
-            XSTR (
-                "You have selected Dial Up Networking as your type of "
-                "connection to the Internet.  You are not currently "
-                "connected.  You must connect to your ISP before continuing "
-                "on past this point.",
-                363));
-        break;
-    case NETWORK_ERROR_LAN_AND_RAS:
-        popup (
-            PF_USE_AFFIRMATIVE_ICON | PF_NO_NETWORKING, 1, POPUP_OK,
-            XSTR (
-                "You have indicated that you use a LAN for networking.  You "
-                "also appear to be dialed into your ISP.  Please disconnect "
-                "from your service provider, or choose Dial Up Networking.",
-                364));
-        break;
-
-    case NETWORK_ERROR_NONE:
-    default: break;
-    }
-
-    // if our selected protocol is not active
-    if ((Multi_options_g.protocol == NET_TCP) && !Tcp_active) {
-        if (Tcp_failure_code == WSAEADDRINUSE) {
-            popup (
-                PF_USE_AFFIRMATIVE_ICON | PF_NO_NETWORKING, 1, POPUP_OK,
-                XSTR (
-                    "You have selected TCP/IP for multiplayer FreeSpace, but "
-                    "the TCP socket is already in use.  Check for another "
-                    "instance and/or use the \"-port <port_num>\" command "
-                    "line option to select an available port.",
-                    1604));
-        }
-        else {
-            popup (
-                PF_USE_AFFIRMATIVE_ICON | PF_NO_NETWORKING, 1, POPUP_OK,
-                XSTR (
-                    "You have selected TCP/IP for multiplayer FreeSpace, but "
-                    "the TCP/IP protocol was not detected on your machine.",
-                    362));
-        }
-        return;
-    }
-
-    if (error != NETWORK_ERROR_NONE) { return; }
-
-    // 7/9/98 -- MWA.  Deal with the connection speed issue.  make a call to
-    // the multiplayer code to determine is a valid connection setting exists
-    if (Multi_connection_speed == CONNECTION_SPEED_NONE) {
-        popup (
-            PF_USE_AFFIRMATIVE_ICON | PF_NO_NETWORKING, 1, POPUP_OK,
-            XSTR (
-                "You must define your connection speed.  Please run the "
-                "Launcher, hit the setup button, and go to the Network tab "
-                "and choose your connection speed.",
-                986));
-        return;
-    }
-
-    // go to parallax online
-    if (Om_tracker_flag) {
-        Multi_options_g.protocol = NET_TCP;
-        gameseq_post_event (GS_EVENT_PXO);
-    }
-    else {
-        // go to the regular join game screen
-        gameseq_post_event (GS_EVENT_MULTI_JOIN_GAME);
-    }
-
-    // select protocol
-    psnet_use_protocol (Multi_options_g.protocol);
-}
 
 // blit some small color indicators to show whether ships.tbl and weapons.tbl
 // are valid green == valid, red == invalid. ships.tbl will be on the left,
@@ -903,7 +787,6 @@ void main_hall_do (float frametime) {
 
         if (cheat_found) {
             // Found a cheat, clear the buffer.
-
             Main_hall_cheat = "";
         }
     }
@@ -1003,19 +886,6 @@ void main_hall_do (float frametime) {
         case CAMPAIGN_ROOM_REGION:
             gamesnd_play_iface (InterfaceSounds::IFACE_MOUSE_CLICK);
             gameseq_post_event (GS_EVENT_CAMPAIGN_ROOM);
-            break;
-
-        // clicked on the multiplayer region
-        case MULTIPLAYER_REGION:
-            // Make sure we are in multi mode.
-            Player->flags |= PLAYER_FLAGS_IS_MULTI;
-            Game_mode = GM_MULTIPLAYER;
-
-            main_hall_do_multi_ready ();
-
-            // NOTE : this isn't a great thing to be calling this anymore. But
-            // we'll leave it for now
-            gameseq_post_event (GS_EVENT_MULTI_JOIN_GAME);
             break;
 
         // load mission key was pressed

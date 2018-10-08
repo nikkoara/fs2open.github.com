@@ -6,7 +6,6 @@
 #include "hud/hudshield.h"
 #include "hud/hudtargetbox.h"
 #include "io/timer.h"
-#include "network/multi.h"
 #include "object/object.h"
 #include "object/objectshield.h"
 #include "parse/parselo.h"
@@ -195,9 +194,8 @@ void hud_shield_equalize (object* objp, player* pl) {
     if (objp->flags[Object::Object_Flags::No_shields]) return;
 
     // maybe impose a 2% penalty - server side and single player only
-    if (!MULTIPLAYER_CLIENT &&
-        ((pl->shield_penalty_stamp < 0) ||
-         timestamp_elapsed_safe (pl->shield_penalty_stamp, 1000))) {
+    if (pl->shield_penalty_stamp < 0 ||
+         timestamp_elapsed_safe (pl->shield_penalty_stamp, 1000)) {
         penalty = 0.02f;
 
         // reset the penalty timestamp

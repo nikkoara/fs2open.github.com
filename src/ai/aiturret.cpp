@@ -11,8 +11,6 @@
 #include "iff_defs/iff_defs.h"
 #include "io/timer.h"
 #include "math/staticrand.h"
-#include "network/multi.h"
-#include "network/multimsgs.h"
 #include "object/objectdock.h"
 #include "render/3d.h"
 #include "ship/ship.h"
@@ -1895,57 +1893,45 @@ void turret_set_next_fire_timestamp (
     if (!((wip->wi_flags[Weapon::Info_Flags::Same_turret_cooldown]) ||
           ((wip->burst_shots > 0) &&
            (wip->burst_flags[Weapon::Burst_Flags::Fast_firing])))) {
+
         // make side even for team vs. team
-        if (MULTI_TEAM) {
-            // flak guns need to fire more rapidly
-            if (wip->wi_flags[Weapon::Info_Flags::Flak]) {
+        // flak guns need to fire more rapidly
+        if (wip->wi_flags[Weapon::Info_Flags::Flak]) {
+            if (Ships[aip->shipnum].team == Player_ship->team) {
                 wait *= aip->ai_ship_fire_delay_scale_friendly * 0.5f;
-                if (aip->ai_class_autoscale)
-                    wait += (Num_ai_classes - aip->ai_class - 1) * 40.0f;
             }
             else {
-                wait *= aip->ai_ship_fire_delay_scale_friendly;
-                if (aip->ai_class_autoscale)
-                    wait += (Num_ai_classes - aip->ai_class - 1) * 100.0f;
+                wait *= aip->ai_ship_fire_delay_scale_hostile * 0.5f;
             }
+            if (aip->ai_class_autoscale)
+                wait += (Num_ai_classes - aip->ai_class - 1) * 40.0f;
+        }
+        else if (wip->wi_flags[Weapon::Info_Flags::Huge]) {
+            // make huge weapons fire independently of team
+            wait *= aip->ai_ship_fire_delay_scale_friendly;
+            if (aip->ai_class_autoscale)
+                wait += (Num_ai_classes - aip->ai_class - 1) * 100.0f;
         }
         else {
-            // flak guns need to fire more rapidly
-            if (wip->wi_flags[Weapon::Info_Flags::Flak]) {
-                if (Ships[aip->shipnum].team == Player_ship->team) {
-                    wait *= aip->ai_ship_fire_delay_scale_friendly * 0.5f;
-                }
-                else {
-                    wait *= aip->ai_ship_fire_delay_scale_hostile * 0.5f;
-                }
-                if (aip->ai_class_autoscale)
-                    wait += (Num_ai_classes - aip->ai_class - 1) * 40.0f;
-            }
-            else if (wip->wi_flags[Weapon::Info_Flags::Huge]) {
-                // make huge weapons fire independently of team
+            // give team friendly an advantage
+            if (Ships[aip->shipnum].team == Player_ship->team) {
                 wait *= aip->ai_ship_fire_delay_scale_friendly;
-                if (aip->ai_class_autoscale)
-                    wait += (Num_ai_classes - aip->ai_class - 1) * 100.0f;
             }
             else {
-                // give team friendly an advantage
-                if (Ships[aip->shipnum].team == Player_ship->team) {
-                    wait *= aip->ai_ship_fire_delay_scale_friendly;
-                }
-                else {
-                    wait *= aip->ai_ship_fire_delay_scale_hostile;
-                }
-                if (aip->ai_class_autoscale)
-                    wait += (Num_ai_classes - aip->ai_class - 1) * 100.0f;
+                wait *= aip->ai_ship_fire_delay_scale_hostile;
             }
+            if (aip->ai_class_autoscale)
+                wait += (Num_ai_classes - aip->ai_class - 1) * 100.0f;
         }
+
         // vary wait time +/- 10%
         wait *= frand_range (0.9f, 1.1f);
     }
 
-    if (turret->rof_scaler != 1.0f) wait /= get_adjusted_turret_rof (turret);
+    if (turret->rof_scaler != 1.0f)
+        wait /= get_adjusted_turret_rof (turret);
 
-    (*fs_dest) = timestamp ((int)wait);
+    *fs_dest = timestamp ((int)wait);
 }
 
 /**
@@ -1988,7 +1974,6 @@ bool turret_fire_weapon (
     int weapon_objnum;
     ai_info* parent_aip;
     ship* parent_ship;
-    float flak_range = 0.0f;
     weapon_info* wip;
     weapon* wp;
     object* objp;
@@ -2272,9 +2257,6 @@ bool turret_fire_weapon (
                                 objp, turret_pos, predicted_pos,
                                 ship_get_subsystem_strength (
                                     parent_ship, SUBSYSTEM_WEAPONS));
-
-                            // determine what that range was
-                            flak_range = flak_get_range (objp);
                         }
                         else {
                             flak_set_range (objp, flak_range_override);
@@ -2286,25 +2268,6 @@ bool turret_fire_weapon (
                             turret_pos, turret_fvec,
                             &Objects[parent_ship->objnum].phys_info,
                             wip->muzzle_flash);
-                    }
-
-                    // in multiplayer (and the master), then send a turret
-                    // fired packet.
-                    if (MULTIPLAYER_MASTER && (weapon_objnum != -1)) {
-                        int subsys_index;
-
-                        subsys_index =
-                            ship_get_index_from_subsys (turret, parent_objnum);
-                        ASSERT (subsys_index != -1);
-                        if (wip->wi_flags[Weapon::Info_Flags::Flak]) {
-                            send_flak_fired_packet (
-                                parent_objnum, subsys_index, weapon_objnum,
-                                flak_range);
-                        }
-                        else {
-                            send_turret_fired_packet (
-                                parent_objnum, subsys_index, weapon_objnum);
-                        }
                     }
 
                     if (wip->launch_snd.isValid ()) {
@@ -2425,17 +2388,6 @@ void turret_swarm_fire_from_turret (turret_swarm_info* tsi) {
                         Weapon_info[tsi->weapon_class].launch_snd),
                     &turret_pos, &View_position);
             }
-        }
-
-        // in multiplayer (and the master), then send a turret fired packet.
-        if (MULTIPLAYER_MASTER && (weapon_objnum != -1)) {
-            int subsys_index;
-
-            subsys_index =
-                ship_get_index_from_subsys (tsi->turret, tsi->parent_objnum);
-            ASSERT (subsys_index != -1);
-            send_turret_fired_packet (
-                tsi->parent_objnum, subsys_index, weapon_objnum);
         }
     }
 }

@@ -30,7 +30,6 @@
 #include "object/object.h"
 #include "hud/hudconfig.h"
 #include "hud/hudmessage.h"
-#include "network/multi_pmsg.h"
 #include "starfield/supernova.h"
 #include "mission/missionmessage.h"
 #include "menuui/mainhallmenu.h"
@@ -40,12 +39,6 @@
 #include "species_defs/species_defs.h"
 #include "asteroid/asteroid.h"
 #include "iff_defs/iff_defs.h"
-#include "network/multi.h"
-#include "network/multiutil.h"
-#include "network/multimsgs.h"
-#include "network/multi_pause.h"
-#include "network/multi_observer.h"
-#include "network/multi_endgame.h"
 #include "autopilot/autopilot.h"
 #include "cmdline/cmdline.h"
 #include "object/objectshield.h"
@@ -359,75 +352,77 @@ int Critical_key_set[] = {
     SHIELD_XFER_RIGHT,  XFER_SHIELD,        XFER_LASER,
 };
 
-int Non_critical_key_set[] = { MATCH_TARGET_SPEED,
-                               TOGGLE_AUTO_MATCH_TARGET_SPEED,
-                               TARGET_NEXT,
-                               TARGET_PREV,
-                               TARGET_NEXT_CLOSEST_HOSTILE,
-                               TARGET_PREV_CLOSEST_HOSTILE,
-                               TOGGLE_AUTO_TARGETING,
-                               TARGET_NEXT_CLOSEST_FRIENDLY,
-                               TARGET_PREV_CLOSEST_FRIENDLY,
-                               TARGET_SHIP_IN_RETICLE,
-                               TARGET_LAST_TRANMISSION_SENDER,
-                               TARGET_CLOSEST_REPAIR_SHIP,
-                               TARGET_CLOSEST_SHIP_ATTACKING_TARGET,
-                               STOP_TARGETING_SHIP,
-                               TARGET_CLOSEST_SHIP_ATTACKING_SELF,
-                               TARGET_TARGETS_TARGET,
-                               TARGET_SUBOBJECT_IN_RETICLE,
-                               TARGET_PREV_SUBOBJECT,
-                               TARGET_NEXT_SUBOBJECT,
-                               STOP_TARGETING_SUBSYSTEM,
-                               TARGET_NEXT_BOMB,
-                               TARGET_PREV_BOMB,
-                               TARGET_NEXT_UNINSPECTED_CARGO,
-                               TARGET_PREV_UNINSPECTED_CARGO,
-                               TARGET_NEWEST_SHIP,
-                               TARGET_NEXT_LIVE_TURRET,
-                               TARGET_PREV_LIVE_TURRET,
-                               ATTACK_MESSAGE,
-                               DISARM_MESSAGE,
-                               DISABLE_MESSAGE,
-                               ATTACK_SUBSYSTEM_MESSAGE,
-                               CAPTURE_MESSAGE,
-                               ENGAGE_MESSAGE,
-                               FORM_MESSAGE,
-                               PROTECT_MESSAGE,
-                               COVER_MESSAGE,
-                               WARP_MESSAGE,
-                               IGNORE_MESSAGE,
-                               REARM_MESSAGE,
-                               VIEW_CHASE,
-                               VIEW_EXTERNAL,
-                               VIEW_EXTERNAL_TOGGLE_CAMERA_LOCK,
-                               VIEW_OTHER_SHIP,
-                               VIEW_TOPDOWN,
-                               VIEW_TRACK_TARGET,
-                               RADAR_RANGE_CYCLE,
-                               SQUADMSG_MENU,
-                               SHOW_GOALS,
-                               END_MISSION,
-                               ADD_REMOVE_ESCORT,
-                               ESCORT_CLEAR,
-                               TARGET_NEXT_ESCORT_SHIP,
-                               MULTI_MESSAGE_ALL,
-                               MULTI_MESSAGE_FRIENDLY,
-                               MULTI_MESSAGE_HOSTILE,
-                               MULTI_MESSAGE_TARGET,
-                               MULTI_OBSERVER_ZOOM_TO,
-                               TOGGLE_HUD_CONTRAST,
+int Non_critical_key_set[] = {
+    MATCH_TARGET_SPEED,
+    TOGGLE_AUTO_MATCH_TARGET_SPEED,
+    TARGET_NEXT,
+    TARGET_PREV,
+    TARGET_NEXT_CLOSEST_HOSTILE,
+    TARGET_PREV_CLOSEST_HOSTILE,
+    TOGGLE_AUTO_TARGETING,
+    TARGET_NEXT_CLOSEST_FRIENDLY,
+    TARGET_PREV_CLOSEST_FRIENDLY,
+    TARGET_SHIP_IN_RETICLE,
+    TARGET_LAST_TRANMISSION_SENDER,
+    TARGET_CLOSEST_REPAIR_SHIP,
+    TARGET_CLOSEST_SHIP_ATTACKING_TARGET,
+    STOP_TARGETING_SHIP,
+    TARGET_CLOSEST_SHIP_ATTACKING_SELF,
+    TARGET_TARGETS_TARGET,
+    TARGET_SUBOBJECT_IN_RETICLE,
+    TARGET_PREV_SUBOBJECT,
+    TARGET_NEXT_SUBOBJECT,
+    STOP_TARGETING_SUBSYSTEM,
+    TARGET_NEXT_BOMB,
+    TARGET_PREV_BOMB,
+    TARGET_NEXT_UNINSPECTED_CARGO,
+    TARGET_PREV_UNINSPECTED_CARGO,
+    TARGET_NEWEST_SHIP,
+    TARGET_NEXT_LIVE_TURRET,
+    TARGET_PREV_LIVE_TURRET,
+    ATTACK_MESSAGE,
+    DISARM_MESSAGE,
+    DISABLE_MESSAGE,
+    ATTACK_SUBSYSTEM_MESSAGE,
+    CAPTURE_MESSAGE,
+    ENGAGE_MESSAGE,
+    FORM_MESSAGE,
+    PROTECT_MESSAGE,
+    COVER_MESSAGE,
+    WARP_MESSAGE,
+    IGNORE_MESSAGE,
+    REARM_MESSAGE,
+    VIEW_CHASE,
+    VIEW_EXTERNAL,
+    VIEW_EXTERNAL_TOGGLE_CAMERA_LOCK,
+    VIEW_OTHER_SHIP,
+    VIEW_TOPDOWN,
+    VIEW_TRACK_TARGET,
+    RADAR_RANGE_CYCLE,
+    SQUADMSG_MENU,
+    SHOW_GOALS,
+    END_MISSION,
+    ADD_REMOVE_ESCORT,
+    ESCORT_CLEAR,
+    TARGET_NEXT_ESCORT_SHIP,
+    MULTI_MESSAGE_ALL,
+    MULTI_MESSAGE_FRIENDLY,
+    MULTI_MESSAGE_HOSTILE,
+    MULTI_MESSAGE_TARGET,
+    MULTI_OBSERVER_ZOOM_TO,
+    TOGGLE_HUD_CONTRAST,
 
-                               MULTI_TOGGLE_NETINFO,
-                               MULTI_SELF_DESTRUCT,
+    MULTI_TOGGLE_NETINFO,
+    MULTI_SELF_DESTRUCT,
 
-                               TOGGLE_HUD,
+    TOGGLE_HUD,
 
-                               HUD_TARGETBOX_TOGGLE_WIREFRAME,
-                               AUTO_PILOT_TOGGLE,
-                               NAV_CYCLE,
-                               TOGGLE_GLIDING,
-                               CYCLE_PRIMARY_WEAPON_SEQUENCE };
+    HUD_TARGETBOX_TOGGLE_WIREFRAME,
+    AUTO_PILOT_TOGGLE,
+    NAV_CYCLE,
+    TOGGLE_GLIDING,
+    CYCLE_PRIMARY_WEAPON_SEQUENCE
+};
 
 int Ignored_keys[CCFG_MAX];
 
@@ -601,12 +596,6 @@ int get_next_weapon_looped (int current_weapon, int subtype) {
 }
 
 void process_debug_keys (int k) {
-    // Kazan -- NO CHEATS IN MULTI
-    if (Game_mode & GM_MULTIPLAYER) {
-        Cheats_enabled = 0;
-        return;
-    }
-
     switch (k) {
     case KEY_DEBUGGED + KEY_Q:
     case KEY_DEBUGGED1 + KEY_Q: Snapshot_all_events = true; break;
@@ -1133,21 +1122,7 @@ void process_debug_keys (int k) {
     }
 
     case KEY_DEBUGGED + KEY_D:
-        extern int OO_update_index;
-
-        if (MULTIPLAYER_MASTER) {
-            do {
-                OO_update_index++;
-            } while ((OO_update_index < (MAX_PLAYERS - 1)) &&
-                     !MULTI_CONNECTED (Net_players[OO_update_index]));
-            if (OO_update_index >= MAX_PLAYERS - 1) { OO_update_index = -1; }
-        }
-        else {
-            if (OO_update_index < 0) { OO_update_index = MY_NET_PLAYER_NUM; }
-            else {
-                OO_update_index = -1;
-            }
-        }
+        ASSERT (0);
         break;
 
     // change player ship to next flyable type
@@ -1443,49 +1418,34 @@ void process_player_ship_keys (int k) {
 void game_do_end_mission_popup () {
     int pf_flags, choice;
 
-    // do the multiplayer version of this
-    if (Game_mode & GM_MULTIPLAYER) { multi_quit_game (PROMPT_ALL); }
-    else {
-        // single player version....
-        // do housekeeping things.
-        game_stop_time ();
-        game_stop_looped_sounds ();
-        snd_stop_all ();
+    // do housekeeping things.
+    game_stop_time ();
+    game_stop_looped_sounds ();
+    snd_stop_all ();
 
-        pf_flags =
-            PF_BODY_BIG | PF_USE_AFFIRMATIVE_ICON | PF_USE_NEGATIVE_ICON;
-        choice = popup (
-            pf_flags, 3, POPUP_NO, XSTR ("&Yes, Quit", 28),
-            XSTR ("Yes, &Restart", 29),
-            XSTR ("Do you really want to end the mission?", 30));
+    pf_flags =
+        PF_BODY_BIG | PF_USE_AFFIRMATIVE_ICON | PF_USE_NEGATIVE_ICON;
+    
+    choice = popup (
+        pf_flags, 3, POPUP_NO, XSTR ("&Yes, Quit", 28),
+        XSTR ("Yes, &Restart", 29),
+        XSTR ("Do you really want to end the mission?", 30));
 
-        switch (choice) {
-        case 1: gameseq_post_event (GS_EVENT_END_GAME); break;
-
-        case 2: gameseq_post_event (GS_EVENT_ENTER_GAME); break;
-
-        default: break; // do nothing
-        }
-
-        game_start_time ();
-        game_flush ();
+    switch (choice) {
+    case 1: gameseq_post_event (GS_EVENT_END_GAME); break;
+    case 2: gameseq_post_event (GS_EVENT_ENTER_GAME); break;
+    default: break; // do nothing
     }
+
+    game_start_time ();
+    game_flush ();
 }
 
 /**
  * Handle pause keypress
  */
 void game_process_pause_key () {
-    // special processing for multiplayer
-    if (Game_mode & GM_MULTIPLAYER) {
-        if (Multi_pause_status) { multi_pause_request (0); }
-        else {
-            multi_pause_request (1);
-        }
-    }
-    else {
-        gameseq_post_event (GS_EVENT_PAUSE_GAME);
-    }
+    gameseq_post_event (GS_EVENT_PAUSE_GAME);
 }
 
 /**
@@ -1495,12 +1455,6 @@ void game_process_cheats (int k) {
     size_t i;
 
     if (k == 0) { return; }
-
-    // no cheats in multiplayer, ever
-    if (Game_mode & GM_MULTIPLAYER) {
-        Cheats_enabled = 0;
-        return;
-    }
 
     for (i = 0; i < CHEAT_BUFFER_LEN; i++) {
         CheatBuffer[i] = CheatBuffer[i + 1];
@@ -1556,7 +1510,6 @@ void game_process_cheats (int k) {
     }
     if (detectedCheatCode == CHEAT_CODE_PIRATE &&
         (Game_mode & GM_IN_MISSION) && (Player_obj != NULL)) {
-        extern void prevent_spawning_collision (object * new_obj);
         ship_subsys* ptr;
         char name[NAME_LENGTH];
         int ship_idx, ship_class;
@@ -1598,9 +1551,6 @@ void game_process_cheats (int k) {
 
         shipp->flags.set (Ship::Ship_Flags::Escort);
         shipp->escort_priority = 1000 - ship_idx;
-
-        // now make sure we're not colliding with anyone
-        prevent_spawning_collision (&Objects[objnum]);
 
         // Goober5000 - beam free
         for (ptr = GET_FIRST (&shipp->subsys_list);
@@ -1723,53 +1673,16 @@ void game_process_keys () {
                                   // button_info bit vectors
 }
 
-int button_function_critical (int n, net_player* p = NULL) {
+int button_function_critical (int n) {
     object* objp;
     player* pl;
-    net_player* npl;
     int at_self; // flag indicating the object is local (for hud messages, etc)
 
     ASSERT (n >= 0);
 
-    // multiplayer clients should leave critical button bits alone and pass
-    // them to the server instead
-    if (MULTIPLAYER_CLIENT) {
-        // if this flag is set, we should apply the button itself (came from
-        // the server)
-        if (!Multi_button_info_ok) { return 0; }
-    }
-
-    // in single player mode make sure we're using the player object and the
-    // player himself, otherwise use the object and player pertaining to the
-    // passed net_player
-    npl = NULL;
-    if (p == NULL) {
-        objp = Player_obj;
-        pl = Player;
-
-        if (Game_mode & GM_MULTIPLAYER) {
-            npl = Net_player;
-
-            // if we're the server in multiplayer and we're an observer, don't
-            // process our own critical button functions
-            if ((Net_player->flags & NETINFO_FLAG_AM_MASTER) &&
-                (Net_player->flags & NETINFO_FLAG_OBSERVER)) {
-                return 0;
-            }
-        }
-
-        at_self = 1;
-    }
-    else {
-        objp = &Objects[p->m_player->objnum];
-        pl = p->m_player;
-        npl = p;
-        at_self = 0;
-
-        if (NETPLAYER_IS_DEAD (npl) || (Ships[Objects[pl->objnum].instance]
-                                            .flags[Ship::Ship_Flags::Dying]))
-            return 0;
-    }
+    objp = Player_obj;
+    pl = Player;
+    at_self = 1;
 
     switch (n) {
     // cycle num primaries to fire at once
@@ -1807,12 +1720,6 @@ int button_function_critical (int n, net_player* p = NULL) {
                     [shipp->weapons.current_primary_bank] =
                     timestamp (250); // 1/4 second delay until can fire
             }
-
-            // multiplayer server should maintain bank/link status here
-            if (MULTIPLAYER_MASTER) {
-                ASSERT (npl != NULL);
-                multi_server_update_player_weapons (npl, shipp);
-            }
         }
         break;
 
@@ -1830,12 +1737,6 @@ int button_function_critical (int n, net_player* p = NULL) {
                     [shipp->weapons.current_primary_bank] =
                     timestamp (250); // 1/4 second delay until can fire
             }
-
-            // multiplayer server should maintain bank/link status here
-            if (MULTIPLAYER_MASTER) {
-                ASSERT (npl != NULL);
-                multi_server_update_player_weapons (npl, shipp);
-            }
         }
         break;
 
@@ -1852,12 +1753,6 @@ int button_function_critical (int n, net_player* p = NULL) {
                 shipp->weapons.next_secondary_fire_stamp
                     [shipp->weapons.current_secondary_bank] =
                     timestamp (250); // 1/4 second delay until can fire
-            }
-
-            // multiplayer server should maintain bank/link status here
-            if (MULTIPLAYER_MASTER) {
-                ASSERT (npl != NULL);
-                multi_server_update_player_weapons (npl, shipp);
             }
         }
         break;
@@ -1909,12 +1804,6 @@ int button_function_critical (int n, net_player* p = NULL) {
                 hud_gauge_popup_start (HUD_WEAPONS_GAUGE);
             }
         }
-
-        // multiplayer server should maintain bank/link status here
-        if (MULTIPLAYER_MASTER) {
-            ASSERT (npl != NULL);
-            multi_server_update_player_weapons (npl, &Ships[objp->instance]);
-        }
         break;
     }
 
@@ -1922,72 +1811,36 @@ int button_function_critical (int n, net_player* p = NULL) {
     case INCREASE_WEAPON:
         if (at_self) control_used (INCREASE_WEAPON);
         increase_recharge_rate (objp, WEAPONS);
-
-        // multiplayer server should maintain bank/link status here
-        if (MULTIPLAYER_MASTER) {
-            ASSERT (npl != NULL);
-            multi_server_update_player_weapons (npl, &Ships[objp->instance]);
-        }
         break;
 
     // decrease weapon recharge rate
     case DECREASE_WEAPON:
         if (at_self) control_used (DECREASE_WEAPON);
         decrease_recharge_rate (objp, WEAPONS);
-
-        // multiplayer server should maintain bank/link status here
-        if (MULTIPLAYER_MASTER) {
-            ASSERT (npl != NULL);
-            multi_server_update_player_weapons (npl, &Ships[objp->instance]);
-        }
         break;
 
     // increase shield recharge rate
     case INCREASE_SHIELD:
         if (at_self) control_used (INCREASE_SHIELD);
         increase_recharge_rate (objp, SHIELDS);
-
-        // multiplayer server should maintain bank/link status here
-        if (MULTIPLAYER_MASTER) {
-            ASSERT (npl != NULL);
-            multi_server_update_player_weapons (npl, &Ships[objp->instance]);
-        }
         break;
 
     // decrease shield recharge rate
     case DECREASE_SHIELD:
         if (at_self) control_used (DECREASE_SHIELD);
         decrease_recharge_rate (objp, SHIELDS);
-
-        // multiplayer server should maintain bank/link status here
-        if (MULTIPLAYER_MASTER) {
-            ASSERT (npl != NULL);
-            multi_server_update_player_weapons (npl, &Ships[objp->instance]);
-        }
         break;
 
     // increase energy to engines
     case INCREASE_ENGINE:
         if (at_self) control_used (INCREASE_ENGINE);
         increase_recharge_rate (objp, ENGINES);
-
-        // multiplayer server should maintain bank/link status here
-        if (MULTIPLAYER_MASTER) {
-            ASSERT (npl != NULL);
-            multi_server_update_player_weapons (npl, &Ships[objp->instance]);
-        }
         break;
 
     // decrease energy to engines
     case DECREASE_ENGINE:
         if (at_self) control_used (DECREASE_ENGINE);
         decrease_recharge_rate (objp, ENGINES);
-
-        // multiplayer server should maintain bank/link status here
-        if (MULTIPLAYER_MASTER) {
-            ASSERT (npl != NULL);
-            multi_server_update_player_weapons (npl, &Ships[objp->instance]);
-        }
         break;
 
     // equalize recharge rates
@@ -1996,12 +1849,6 @@ int button_function_critical (int n, net_player* p = NULL) {
 
         set_default_recharge_rates (objp);
         snd_play (gamesnd_get_game_sound (GameSounds::ENERGY_TRANS));
-
-        // multiplayer server should maintain bank/link status here
-        if (MULTIPLAYER_MASTER) {
-            ASSERT (npl != NULL);
-            multi_server_update_player_weapons (npl, &Ships[objp->instance]);
-        }
         break;
 
     // equalize shield energy to all quadrants
@@ -2203,6 +2050,7 @@ int button_function_demo_valid (int n) {
         else {
             gamesnd_play_error_beep ();
         }
+        
         ret = 1;
         break;
     }
@@ -2319,7 +2167,6 @@ int button_function (int n) {
 
     /**
      * This switch handles the critical buttons
-     *
      * button_function_critical is also called from network
      */
     switch (n) {
@@ -2364,30 +2211,16 @@ int button_function (int n) {
     int keyHasBeenUsed = TRUE;
 
     switch (n) {
-    // message all netplayers button
-    case MULTI_MESSAGE_ALL: multi_msg_key_down (MULTI_MSG_ALL); break;
-
-    // message all friendlies button
+    case MULTI_MESSAGE_ALL:
     case MULTI_MESSAGE_FRIENDLY:
-        multi_msg_key_down (MULTI_MSG_FRIENDLY);
+    case MULTI_MESSAGE_HOSTILE:
+    case MULTI_MESSAGE_TARGET:
+        ASSERT (0);
         break;
-
-    // message all hostiles button
-    case MULTI_MESSAGE_HOSTILE: multi_msg_key_down (MULTI_MSG_HOSTILE); break;
-
-    // message targeted ship (if player)
-    case MULTI_MESSAGE_TARGET: multi_msg_key_down (MULTI_MSG_TARGET); break;
 
     // undefined in multiplayer for clients right now
     // toggle auto-match target speed
     case TOGGLE_AUTO_MATCH_TARGET_SPEED:
-        // multiplayer observers can't match target speed
-        if ((Game_mode & GM_MULTIPLAYER) && (Net_player != NULL) &&
-            ((Net_player->flags & NETINFO_FLAG_OBSERVER) ||
-             (Player_obj->type == OBJ_OBSERVER))) {
-            break;
-        }
-
         Player->flags ^= PLAYER_FLAGS_AUTO_MATCH_SPEED;
         control_used (TOGGLE_AUTO_MATCH_TARGET_SPEED);
         hud_gauge_popup_start (HUD_AUTO_SPEED);
@@ -2421,13 +2254,6 @@ int button_function (int n) {
 
     // end the mission
     case END_MISSION:
-        // in multiplayer, all end mission requests should go through the
-        // server
-        if (Game_mode & GM_MULTIPLAYER) {
-            multi_handle_end_mission_request ();
-            break;
-        }
-
         control_used (END_MISSION);
 
         if (collide_predict_large_ship (Player_obj, 200.0f) ||
@@ -2472,41 +2298,10 @@ int button_function (int n) {
         }
         break;
 
-    // if i'm an observer, zoom to my targeted object
-    case MULTI_OBSERVER_ZOOM_TO: multi_obs_zoom_to_target (); break;
-
     // toggle between high and low HUD contrast
     case TOGGLE_HUD_CONTRAST:
         gamesnd_play_iface (InterfaceSounds::USER_SELECT);
         hud_toggle_contrast ();
-        break;
-
-    // toggle network info
-    case MULTI_TOGGLE_NETINFO:
-        extern int Multi_display_netinfo;
-        Multi_display_netinfo = !Multi_display_netinfo;
-        break;
-
-    // self destruct (multiplayer only)
-    case MULTI_SELF_DESTRUCT:
-        if (!(Game_mode & GM_MULTIPLAYER)) { break; }
-
-        // bogus netplayer
-        if ((Net_player == NULL) || (Net_player->m_player == NULL)) { break; }
-
-        // blow myself up, if I'm the server
-        if (Net_player->flags & NETINFO_FLAG_AM_MASTER) {
-            if ((Net_player->m_player->objnum >= 0) &&
-                (Net_player->m_player->objnum < MAX_OBJECTS) &&
-                (Objects[Net_player->m_player->objnum].type == OBJ_SHIP) &&
-                (Objects[Net_player->m_player->objnum].instance >= 0) &&
-                (Objects[Net_player->m_player->objnum].instance < MAX_SHIPS)) {
-                ship_self_destruct (&Objects[Net_player->m_player->objnum]);
-            }
-        }
-        else { // otherwise send a packet to the server
-            send_self_destruct_packet ();
-        }
         break;
 
     case TOGGLE_HUD:
@@ -2749,11 +2544,6 @@ int button_function (int n) {
     case END_MISSION:
         // in multiplayer, all end mission requests should go through the
         // server
-        if (Game_mode & GM_MULTIPLAYER) {
-            multi_handle_end_mission_request ();
-            break;
-        }
-
         control_used (END_MISSION);
 
         if (collide_predict_large_ship (Player_obj, 200.0f) ||
