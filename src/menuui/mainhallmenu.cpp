@@ -338,7 +338,7 @@ void main_hall_init (const std::string& main_hall_name) {
 
     // sanity checks
     if (Main_hall_defines.empty ()) {
-        ASSERTF (LOCATION, "No main halls were loaded to initialize.");
+        ASSERTX (0, "No main halls were loaded to initialize.");
     }
     else if (main_hall_name == "") {
         // we were passed a blank main hall name, so load the first available
@@ -452,20 +452,10 @@ void main_hall_init (const std::string& main_hall_name) {
             LOCATION, "WARNING! Couldn't load main hall background mask %s\n",
             Main_hall->mask.c_str ());
         if (gr_screen.res == 0) {
-            ASSERTF (
-                LOCATION,
-                "Could not load in main hall mask '%s'!\n\n(This error most "
-                "likely means that you are missing required 640x480 interface "
-                "art.)",
-                Main_hall->mask.c_str ());
+            ASSERTX (0, "Could not load in main hall mask '%s'!\n\n(This error most likely means that you are missing required 640x480 interface art.)",Main_hall->mask.c_str ());
         }
         else {
-            ASSERTF (
-                LOCATION,
-                "Could not load in main hall mask '%s'!\n\n(This error most "
-                "likely means that you are missing required 1024x768 "
-                "interface art.)",
-                Main_hall->mask.c_str ());
+            ASSERTX (0, "Could not load in main hall mask '%s'!\n\n(This error most likely means that you are missing required 1024x768 interface art.)",Main_hall->mask.c_str ());
         }
     }
     else {
@@ -841,7 +831,7 @@ void main_hall_do (float frametime) {
             }
 
             if (region_action == -1) {
-                ASSERTF (LOCATION, "Region %d doesn't have an action!", code);
+                ASSERTX (0, "Region %d doesn't have an action!", code);
             }
             else if (region_action == START_REGION) {
                 if (Player->flags & PLAYER_FLAGS_IS_MULTI) {
@@ -1765,9 +1755,7 @@ void main_hall_maybe_blit_tooltips () {
     if (Main_hall_mouse_region < 0) { return; }
 
     if (Main_hall_mouse_region >= (int)Main_hall->regions.size ()) {
-        ASSERTF (
-            LOCATION, "Missing region description for index %d!\n",
-            Main_hall_mouse_region);
+        ASSERTX (0, "Missing region description for index %d!\n",Main_hall_mouse_region);
     }
 
     // set the color and blit the string
@@ -2153,10 +2141,7 @@ void parse_main_hall_table (const char* filename) {
         }
 
         if (num_resolutions < 1) {
-            ASSERTF (
-                LOCATION,
-                "$Num Resolutions in %s is %d. (Must be 1 or greater)",
-                filename, num_resolutions);
+            ASSERTX (0, "$Num Resolutions in %s is %d. (Must be 1 or greater)",filename, num_resolutions);
         }
 
         // go for it
@@ -2182,12 +2167,7 @@ void parse_main_hall_table (const char* filename) {
                             m->name = temp_string;
                         }
                         else {
-                            ASSERTF (
-                                LOCATION,
-                                "A mainhall with the name '%s' already "
-                                "exists. All mainhalls must have unique "
-                                "names.",
-                                temp_string);
+                            ASSERTX (0, "A mainhall with the name '%s' already exists. All mainhalls must have unique names.",temp_string);
                         }
                     }
                     else {
@@ -2210,16 +2190,7 @@ void parse_main_hall_table (const char* filename) {
                                 temp_string, Main_hall_defines.at (count)
                                                  .at (0)
                                                  .name.c_str ()) != 0) {
-                            ASSERTF (
-                                LOCATION,
-                                "The mainhall '%s' has different names for "
-                                "different resolutions. All resolutions must "
-                                "have the same name. Either remove the hi-res "
-                                "entries' names entirely or set them to match "
-                                "the first resolution entry's name.",
-                                Main_hall_defines.at (0)
-                                    .at (count)
-                                    .name.c_str ());
+                            ASSERTX (0, "The mainhall '%s' has different names for different resolutions. All resolutions must have the same name. Either remove the hi-res entries' names entirely or set them to match the first resolution entry's name.",Main_hall_defines.at (0).at (count).name.c_str ());
                         }
                     }
 
@@ -2537,10 +2508,7 @@ void parse_main_hall_table (const char* filename) {
                                 err_msg += Main_hall_region_map[i].name;
                             }
 
-                            ASSERTF (
-                                LOCATION,
-                                "Unkown Door Region '%s'! Expected one of: %s",
-                                temp_scp_string.c_str (), err_msg.c_str ());
+                            ASSERTX (0, "Unkown Door Region '%s'! Expected one of: %s",temp_scp_string.c_str (), err_msg.c_str ());
                         }
 
                         m->regions[idx].action = action;

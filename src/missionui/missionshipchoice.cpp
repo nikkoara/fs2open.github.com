@@ -638,10 +638,10 @@ void ship_select_init () {
         bm_load (Ship_select_background_mask_fname[gr_screen.res]);
     if (ShipSelectMaskBitmap < 0) {
         if (gr_screen.res == GR_640) {
-            ASSERTF (LOCATION, "Could not load in 'shipselect-m'!");
+            ASSERTX (0, "Could not load in 'shipselect-m'!");
         }
         else if (gr_screen.res == GR_1024) {
-            ASSERTF (LOCATION, "Could not load in '2_shipselect-m'!");
+            ASSERTX (0, "Could not load in '2_shipselect-m'!");
         }
     }
 

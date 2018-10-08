@@ -47,10 +47,7 @@ debug_command::debug_command (
     int ret = 0;
 
     if (dc_commands_size >= DC_MAX_COMMANDS) {
-        ASSERTF (
-            LOCATION,
-            "Too many debug console commands! Please inform a coder to "
-            "increase DC_MAX_COMMANDS.");
+        ASSERTX (0, "Too many debug console commands! Please inform a coder to increase DC_MAX_COMMANDS.");
         return;
     }
 
@@ -59,11 +56,7 @@ debug_command::debug_command (
         ret = strcasecmp (dc_commands[i]->name, _name);
 
         if (ret == 0) {
-            ASSERTF (
-                LOCATION,
-                "Debug Command %s already exists! Please inform a coder "
-                "immediately.",
-                _name);
+            ASSERTX (0, "Debug Command %s already exists! Please inform a coder immediately.",_name);
             return;
         }
         else if (ret > 0) {

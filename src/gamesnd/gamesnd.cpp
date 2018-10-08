@@ -1659,11 +1659,7 @@ void gamesnd_parse_soundstbl () {
             errorString.append ("\n");
         }
 
-        ASSERTF (
-            LOCATION,
-            "The following species are missing flyby sounds in "
-            "sounds.tbl:\n%s",
-            errorString.c_str ());
+        ASSERTX (0, "The following species are missing flyby sounds in sounds.tbl:\n%s",errorString.c_str ());
     }
 
     missingFlybySounds.clear ();

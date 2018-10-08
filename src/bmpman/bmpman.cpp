@@ -1094,9 +1094,7 @@ static int bm_load_info (
         case DDS_CUBEMAP_UNCOMPRESSED: *c_type = BM_TYPE_CUBEMAP_DDS; break;
 
         default:
-            ASSERTF (
-                LOCATION, "Bad DDS file compression! Not using DXT1,3,5: %s",
-                filename);
+            ASSERTX (0, "Bad DDS file compression! Not using DXT1,3,5: %s",filename);
             return -1;
         }
     }
@@ -1554,9 +1552,7 @@ int bm_load_animation (
                 filename, anim_frames, anim_fps);
         }
         if (anim_fps == 0) {
-            ASSERTF (
-                LOCATION, "animation (%s) has invalid fps of 0, fix this!",
-                filename);
+            ASSERTX (0, "animation (%s) has invalid fps of 0, fix this!",filename);
         }
         anim_total_time = anim_frames / i2fl (anim_fps);
     }
@@ -1569,18 +1565,13 @@ int bm_load_animation (
         anim_read_header (&the_anim, img_cfp);
 
         if (the_anim.width < 0 || the_anim.height < 0) {
-            ASSERTF (
-                LOCATION,
-                "Ani file %s has a faulty header and cannot be loaded.",
-                real_filename);
+            ASSERTX (0, "Ani file %s has a faulty header and cannot be loaded.",real_filename);
         }
 
         anim_frames = the_anim.total_frames;
         anim_fps = the_anim.fps;
         if (anim_fps == 0) {
-            ASSERTF (
-                LOCATION, "animation (%s) has invalid fps of 0, fix this!",
-                filename);
+            ASSERTX (0, "animation (%s) has invalid fps of 0, fix this!",filename);
         }
         anim_total_time = anim_frames / i2fl (anim_fps);
         anim_width = the_anim.width;
@@ -2495,9 +2486,7 @@ void bm_lock_user (
         break;
 
     default:
-        ASSERTF (
-            LOCATION, "Unhandled user bitmap conversion from %d to %d bpp",
-            be->info.user.bpp, bmp->bpp);
+        ASSERTX (0, "Unhandled user bitmap conversion from %d to %d bpp",be->info.user.bpp, bmp->bpp);
         break;
     }
 

@@ -445,9 +445,7 @@ void credits_init () {
         case END: Credit_text_parts.push_back (fs2_open_credit_text); break;
 
         default:
-            ASSERTF (
-                LOCATION, "Unimplemented credits position %d. Get a coder!",
-                (int)SCP_credits_position);
+            ASSERTX (0, "Unimplemented credits position %d. Get a coder!",(int)SCP_credits_position);
             break;
         }
     }

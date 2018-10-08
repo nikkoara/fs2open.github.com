@@ -1286,10 +1286,7 @@ void parse_menumusic () {
         }
 
         if (!skip_to_start_of_string_either ("$Name:", "#Menu Music End")) {
-            ASSERTF (
-                LOCATION,
-                "Couldn't find $Name or #Menu Music End. Music.tbl or "
-                "-mus.tbm is invalid.\n");
+            ASSERTX (0, "Couldn't find $Name or #Menu Music End. Music.tbl or -mus.tbm is invalid.\n");
         }
 
         return;

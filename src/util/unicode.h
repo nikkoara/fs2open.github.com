@@ -447,10 +447,7 @@ octet_iterator encode (codepoint_t cp, octet_iterator buffer) {
             return detail::append (cp, buffer);
         }
         catch (const std::exception& e) {
-            ASSERTF (
-                LOCATION,
-                "Exception while encoding Unicode code point %" PRIu32 ": %s",
-                (uint32_t)cp, e.what ());
+            ASSERTX (0, "Exception while encoding Unicode code point %" PRIu32 ": %s",(uint32_t)cp, e.what ());
             return buffer;
         }
     }
@@ -479,9 +476,7 @@ size_t num_codepoints (octet_iterator start, octet_iterator end) {
             return static_cast< size_t > (detail::distance (start, end));
         }
         catch (const std::exception& e) {
-            ASSERTF (
-                LOCATION, "Exception while counting Unicode code points: %s",
-                e.what ());
+            ASSERTX (0, "Exception while counting Unicode code points: %s",e.what ());
             return 0;
         }
     }

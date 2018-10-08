@@ -36,29 +36,11 @@ void check_version (const char* libname, uint32_t current, uint32_t compiled) {
     auto compiled_minor = AV_VERSION_MINOR (compiled);
 
     if (current_major != compiled_major) {
-        ASSERTF (
-            LOCATION,
-            "The major version of the %s library is not the same as the one "
-            "this executable was compiled with!\n"
-            "Current major version is %" PRIu32
-            " but this executable was compiled with major version %" PRIu32
-            ".\n"
-            "This may be caused by using outdated DLLs, if you downloaded "
-            "these builds then try reextracting the zip file.",
-            libname, current_major, compiled_major);
+        ASSERTX (0, "The major version of the %s library is not the same as the one this executable was compiled with!\nCurrent major version is %" PRIu32" but this executable was compiled with major version %" PRIu32".\nThis may be caused by using outdated DLLs, if you downloaded these builds then try reextracting the zip file.",libname, current_major, compiled_major);
     }
 
     if (current_minor < compiled_minor) {
-        ASSERTF (
-            LOCATION,
-            "The minor version of the %s library is not the same as the one "
-            "this executable was compiled with!\n"
-            "Current minor version is %" PRIu32
-            " but this executable was compiled with minor version %" PRIu32
-            ".\n"
-            "This may be caused by using outdated DLLs, if you downloaded "
-            "these builds then try reextracting the zip file.",
-            libname, current_minor, compiled_minor);
+        ASSERTX (0, "The minor version of the %s library is not the same as the one this executable was compiled with!\nCurrent minor version is %" PRIu32" but this executable was compiled with minor version %" PRIu32".\nThis may be caused by using outdated DLLs, if you downloaded these builds then try reextracting the zip file.",libname, current_minor, compiled_minor);
     }
 }
 } // namespace

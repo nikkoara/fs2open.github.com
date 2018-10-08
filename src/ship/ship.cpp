@@ -649,7 +649,7 @@ static int ship_obj_list_add (int objnum) {
         if (!(Ship_objs[i].flags & SHIP_OBJ_USED)) break;
     }
     if (i == MAX_SHIP_OBJS) {
-        ASSERTF (LOCATION, "Fatal Error: Ran out of ship object nodes\n");
+        ASSERTX (0, "Fatal Error: Ran out of ship object nodes\n");
         return -1;
     }
 
@@ -752,11 +752,7 @@ static void parse_engine_wash (bool replace) {
                 ewt.name);
         }
         else {
-            ASSERTF (
-                LOCATION,
-                "Error:  Engine wash %s already exists.  All engine wash "
-                "names must be unique.",
-                ewt.name);
+            ASSERTX (0, "Error:  Engine wash %s already exists.  All engine wash names must be unique.",ewt.name);
         }
     }
     else {
@@ -1970,10 +1966,7 @@ static int parse_ship (const char* filename, bool replace) {
 
         // Check if there are too many ship classes
         if (Ship_info.size () >= MAX_SHIP_CLASSES) {
-            ASSERTF (
-                LOCATION,
-                "Too many ship classes before '%s'; maximum is %d.\n", buf,
-                MAX_SHIP_CLASSES);
+            ASSERTX (0, "Too many ship classes before '%s'; maximum is %d.\n", buf,MAX_SHIP_CLASSES);
         }
 
         // Init vars
@@ -2509,10 +2502,7 @@ static int parse_ship_values (
         }
 
         if (!found) {
-            ASSERTF (
-                LOCATION,
-                "Invalid Species %s defined in table entry for ship %s.\n",
-                temp, sip->name);
+            ASSERTX (0, "Invalid Species %s defined in table entry for ship %s.\n",temp, sip->name);
         }
     }
 
@@ -3765,12 +3755,7 @@ static int parse_ship_values (
 
     // Goober5000 - ensure number of banks checks out
     if (sip->num_primary_banks > MAX_SHIP_PRIMARY_BANKS) {
-        ASSERTF (
-            LOCATION,
-            "%s '%s' has too many primary banks (%d).  Maximum for ships is "
-            "currently %d.\n",
-            info_type_name, sip->name, sip->num_primary_banks,
-            MAX_SHIP_PRIMARY_BANKS);
+        ASSERTX (0, "%s '%s' has too many primary banks (%d).  Maximum for ships is currently %d.\n",info_type_name, sip->name, sip->num_primary_banks,MAX_SHIP_PRIMARY_BANKS);
     }
 
     memset (sip->allowed_weapons, 0, sizeof (int) * MAX_WEAPON_TYPES);
@@ -4186,11 +4171,7 @@ static int parse_ship_values (
         else if (optional_string ("$Afterburner Particle Bitmap:"))
             afterburner = true;
         else
-            ASSERTF (
-                LOCATION,
-                "formatting error in the thruster's particle section for %s "
-                "'%s'\n",
-                info_type_name, sip->name);
+            ASSERTX (0, "formatting error in the thruster's particle section for %s '%s'\n",info_type_name, sip->name);
 
         generic_anim_init (&tpart.thruster_bitmap, NULL);
         stuff_string (
@@ -4675,11 +4656,7 @@ static int parse_ship_values (
                     }
                 }
                 else {
-                    ASSERTF (
-                        LOCATION,
-                        "Malformed $Subsystem entry '%s' in %s '%s'.\n\n"
-                        "Specify a turning rate or remove the trailing comma.",
-                        sp->subobj_name, info_type_name, sip->name);
+                    ASSERTX (0, "Malformed $Subsystem entry '%s' in %s '%s'.\n\nSpecify a turning rate or remove the trailing comma.",sp->subobj_name, info_type_name, sip->name);
                 }
             }
 
@@ -6590,7 +6567,7 @@ static void ship_set (int ship_index, int objnum, int ship_type) {
     polymodel* pm = model_get (sip->model_num);
 
     ASSERT (strlen (shipp->ship_name) <= NAME_LENGTH - 1);
-    
+
     shipp->ship_info_index = ship_type;
     shipp->objnum = objnum;
     shipp->score = sip->score;
@@ -6637,7 +6614,7 @@ static void ship_set (int ship_index, int objnum, int ship_type) {
 
         if (Fred_running) { EE ("general") << err_msg; }
         else
-            ASSERTF (LOCATION, "%s", err_msg);
+            ASSERTX (0, "%s", err_msg);
     }
 
     ets_init_ship (objp); // init ship fields that are used for the ETS
@@ -9827,12 +9804,7 @@ static void ship_set_default_weapons (ship* shipp, ship_info* sip) {
     // Primary banks
     if (pm->n_guns > sip->num_primary_banks) {
         ASSERT (pm->n_guns <= MAX_SHIP_PRIMARY_BANKS);
-        ASSERTF (
-            LOCATION,
-            "There are %d primary banks in the model file,\nbut only %d "
-            "primary banks specified for %s.\nThis must be fixed, as it will "
-            "cause crashes.\n",
-            pm->n_guns, sip->num_primary_banks, sip->name);
+        ASSERTX (0, "There are %d primary banks in the model file,\nbut only %d primary banks specified for %s.\nThis must be fixed, as it will cause crashes.\n",pm->n_guns, sip->num_primary_banks, sip->name);
         for (i = sip->num_primary_banks; i < pm->n_guns; i++) {
             // Make unspecified weapon for bank be a laser
             for (j = 0; j < Num_player_weapon_precedence; j++) {
@@ -9864,12 +9836,7 @@ static void ship_set_default_weapons (ship* shipp, ship_info* sip) {
     // Secondary banks
     if (pm->n_missiles > sip->num_secondary_banks) {
         ASSERT (pm->n_missiles <= MAX_SHIP_SECONDARY_BANKS);
-        ASSERTF (
-            LOCATION,
-            "There are %d secondary banks in the model file,\nbut only %d "
-            "secondary banks specified for %s.\nThis must be fixed, as it "
-            "will cause crashes.\n",
-            pm->n_missiles, sip->num_secondary_banks, sip->name);
+        ASSERTX (0, "There are %d secondary banks in the model file,\nbut only %d secondary banks specified for %s.\nThis must be fixed, as it will cause crashes.\n",pm->n_missiles, sip->num_secondary_banks, sip->name);
         for (i = sip->num_secondary_banks; i < pm->n_missiles; i++) {
             // Make unspecified weapon for bank be a missile
             for (j = 0; j < Num_player_weapon_precedence; j++) {
@@ -10144,14 +10111,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
     }
     else {
         if (t >= SHIPS_LIMIT) {
-            ASSERTF (
-                LOCATION,
-                XSTR (
-                    "There is a limit of %d ships in the mission at once.  "
-                    "Please be sure that you do not have more than %d ships "
-                    "present in the mission at the same time.",
-                    1495),
-                SHIPS_LIMIT, SHIPS_LIMIT);
+            ASSERTX (0, XSTR ("There is a limit of %d ships in the mission at once.  Please be sure that you do not have more than %d ships present in the mission at the same time.",1495),SHIPS_LIMIT, SHIPS_LIMIT);
             return -1;
         }
     }
@@ -10646,11 +10606,7 @@ void change_ship_type (int n, int ship_type, int by_sexp) {
     ss = GET_FIRST (&sp->subsys_list);
     while (ss != END_OF_LIST (&sp->subsys_list)) {
         if (num_saved_subsystems == sip_orig->n_subsystems) {
-            ASSERTF (
-                LOCATION,
-                "Subsystem mismatch while changing ship class from '%s' to "
-                "'%s'!",
-                sip_orig->name, sip->name);
+            ASSERTX (0, "Subsystem mismatch while changing ship class from '%s' to '%s'!",sip_orig->name, sip->name);
             break;
         }
 
@@ -11365,7 +11321,7 @@ int ship_launch_countermeasure (object* objp, int rand_val) {
         &pos, &objp->orient, shipp->current_cmeasure, OBJ_INDEX (objp));
     if (cobjnum >= 0) {
         cmeasure_set_ship_launch_vel (&Objects[cobjnum], objp, arand);
-        // WARNINGF (LOCATION, "Cmeasure created by %s", shipp->ship_name);
+        II ("general") << "countermeasure created by : " << shipp->ship_name;
 
         // Play sound effect for counter measure launch
         ASSERT (shipp->current_cmeasure < Num_weapon_types);
@@ -11614,7 +11570,7 @@ bool in_autoaim_fov (ship* shipp, int bank_to_fire, object* obj) {
         sip->aiming_flags[Ship::Aiming_Flags::Autoaim_convergence] ||
         The_mission.ai_profile->player_autoaim_fov[Game_skill_level] > 0.0f) &&
         aip->target_objnum != -1;
-    
+
     has_autoaim =
         ((has_converging_autoaim ||
           (sip->aiming_flags[Ship::Aiming_Flags::Autoaim])) &&
@@ -11748,12 +11704,12 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
         sip->aiming_flags[Ship::Aiming_Flags::Autoaim_convergence] ||
         The_mission.ai_profile->player_autoaim_fov[Game_skill_level] > 0.0f) &&
          aip->target_objnum != -1;
-    
+
     has_autoaim =
         ((has_converging_autoaim ||
           (sip->aiming_flags[Ship::Aiming_Flags::Autoaim])) &&
          aip->target_objnum != -1);
-    
+
     needs_target_pos =
         ((has_autoaim ||
           (sip->aiming_flags[Ship::Aiming_Flags::Auto_convergence])) &&
@@ -14019,7 +13975,9 @@ void ship_model_start (object* objp) {
         case SUBSYSTEM_GAS_COLLECT:
         case SUBSYSTEM_ACTIVATION:
         case SUBSYSTEM_TURRET: break;
-        default: ASSERTF (LOCATION, "Illegal subsystem type.\n"); break;
+        default:
+            ASSERTX (0, "Illegal subsystem type.\n");
+            break;
         }
 
         if (psub->subobj_num >= 0) {
@@ -14086,7 +14044,9 @@ void ship_model_update_instance (object* objp) {
         case SUBSYSTEM_GAS_COLLECT:
         case SUBSYSTEM_ACTIVATION:
         case SUBSYSTEM_TURRET: break;
-        default: ASSERTF (LOCATION, "Illegal subsystem type.\n"); break;
+        default:
+            ASSERTX (0, "Illegal subsystem type.\n");
+            break;
         }
 
         if (psub->subobj_num >= 0) {
@@ -14138,7 +14098,9 @@ int ship_find_num_crewpoints (object* objp) {
         case SUBSYSTEM_ENGINE:
         case SUBSYSTEM_GAS_COLLECT:
         case SUBSYSTEM_ACTIVATION: break;
-        default: ASSERTF (LOCATION, "Illegal subsystem type.\n"); break;
+        default:
+            ASSERTX (0, "Illegal subsystem type.\n");
+            break;
         }
     }
     return n;
@@ -14170,7 +14132,9 @@ int ship_find_num_turrets (object* objp) {
         case SUBSYSTEM_ENGINE:
         case SUBSYSTEM_GAS_COLLECT:
         case SUBSYSTEM_ACTIVATION: break;
-        default: ASSERTF (LOCATION, "Illegal subsystem type.\n"); break;
+        default:
+            ASSERTX (0, "Illegal subsystem type.\n");
+            break;
         }
     }
     return n;
@@ -17163,7 +17127,7 @@ void ship_do_cargo_revealed (ship* shipp, int /* from_network */) {
     // don't do anything if we already know the cargo
     if (shipp->flags[Ship_Flags::Cargo_revealed]) { return; }
 
-    // WARNINGF (LOCATION, "Revealing cargo for %s", shipp->ship_name);
+    II ("general") << "revealing cargo for : " << shipp->ship_name;
 
     shipp->flags.set (Ship_Flags::Cargo_revealed);
     shipp->time_cargo_revealed = Missiontime;
@@ -17456,12 +17420,7 @@ void ship_page_in () {
     // pre-allocate the subsystems, this really only needs to happen for ships
     // which don't exist yet (ie, ships NOT in Ships[])
     if (!ship_allocate_subsystems (num_subsystems_needed, true)) {
-        ASSERTF (
-            LOCATION,
-            "Attempt to page in new subsystems subsystems failed, which "
-            "shouldn't be possible anymore. Currently allocated %d subsystems "
-            "(%d in use)",
-            Num_ship_subsystems_allocated, Num_ship_subsystems);
+        ASSERTX (0, "Attempt to page in new subsystems subsystems failed, which shouldn't be possible anymore. Currently allocated %d subsystems (%d in use)",Num_ship_subsystems_allocated, Num_ship_subsystems);
     }
 
     WARNINGF (LOCATION, "About to page in ships!\n");
@@ -19312,11 +19271,7 @@ void ArmorType::ParseData () {
                     // Nuke: idiot-proof
                     if ((temp_int < 0) ||
                         (temp_int >= AT_NUM_STORAGE_LOCATIONS)) {
-                        ASSERTF (
-                            LOCATION,
-                            "+Stored Value: is out of range. Should be "
-                            "between 0 and %i. Read: %i, Using value 0.",
-                            AT_NUM_STORAGE_LOCATIONS - 1, temp_int);
+                        ASSERTX (0, "+Stored Value: is out of range. Should be between 0 and %i. Read: %i, Using value 0.",AT_NUM_STORAGE_LOCATIONS - 1, temp_int);
                         temp_int = AT_CONSTANT_NOT_USED;
                     }
                     adt.altArguments.push_back (temp_int);
@@ -19332,10 +19287,7 @@ void ArmorType::ParseData () {
                     temp_int = armor_type_constants_get (buf);
                     // Nuke: idiot proof some more
                     if (temp_int == AT_CONSTANT_BAD_VAL) {
-                        ASSERTF (
-                            LOCATION,
-                            "Invalid +Constant: name, '%s'. Using value 0.",
-                            buf);
+                        ASSERTX (0, "Invalid +Constant: name, '%s'. Using value 0.",buf);
                         temp_int = AT_CONSTANT_NOT_USED;
                     }
                     adt.altArguments.push_back (temp_int);
@@ -19393,11 +19345,7 @@ void ArmorType::ParseData () {
             stuff_string (buf, F_NAME, NAME_LENGTH);
             temp_int = difficulty_scale_type_get (buf);
             if (temp_int == ADT_DIFF_SCALE_BAD_VAL) {
-                ASSERTF (
-                    LOCATION,
-                    "Invalid +Difficulty Scale Type: name: '%s'. Reverting to "
-                    "default behavior.",
-                    buf);
+                ASSERTX (0, "Invalid +Difficulty Scale Type: name: '%s'. Reverting to default behavior.",buf);
                 adt.difficulty_scale_type = ADT_DIFF_SCALE_FIRST;
             }
             else {

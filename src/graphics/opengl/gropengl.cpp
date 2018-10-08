@@ -1314,12 +1314,7 @@ static void init_extensions () {
 
     // we require a minimum GLSL version
     if (GLSL_version < MIN_REQUIRED_GLSL_VERSION) {
-        ASSERTF (
-            LOCATION,
-            "Current GL Shading Langauge Version of %d is less than the "
-            "required version of %d. Switch video modes or update your "
-            "drivers.",
-            GLSL_version, MIN_REQUIRED_GLSL_VERSION);
+        ASSERTX (0, "Current GL Shading Langauge Version of %d is less than the required version of %d. Switch video modes or update your drivers.",GLSL_version, MIN_REQUIRED_GLSL_VERSION);
     }
 
     GLint max_texture_units;
@@ -1345,11 +1340,7 @@ static void init_extensions () {
         Cmdline_height = 0;
     }
     else if (max_texture_units < 4) {
-        ASSERTF (
-            LOCATION,
-            "Not enough texture units found for proper rendering support! We "
-            "need at least 4, we found %d.",
-            max_texture_units);
+        ASSERTX (0, "Not enough texture units found for proper rendering support! We need at least 4, we found %d.",max_texture_units);
     }
 }
 
@@ -1370,30 +1361,19 @@ bool gr_opengl_init (std::unique_ptr< os::GraphicsOperations >&& graphicsOps) {
     graphic_operations = std::move (graphicsOps);
 
     if (opengl_init_display_device ()) {
-        ASSERTF (
-            LOCATION,
-            "Unable to initialize display device!\n"
-            "This most likely means that your graphics drivers do not support "
-            "the minimum required OpenGL version which is %d.%d.\n",
-            (MIN_REQUIRED_GL_VERSION / 10), (MIN_REQUIRED_GL_VERSION % 10));
+        ASSERTX (0, "Unable to initialize display device!\nThis most likely means that your graphics drivers do not support the minimum required OpenGL version which is %d.%d.\n",(MIN_REQUIRED_GL_VERSION / 10), (MIN_REQUIRED_GL_VERSION % 10));
     }
 
     // Initialize function pointers
     if (!gladLoadGLLoader (GL_context->getLoaderFunction ())) {
-        ASSERTF (LOCATION, "Failed to load OpenGL!");
+        ASSERTX (0, "Failed to load OpenGL!");
     }
 
     // version check
     GL_version = (GLVersion.major * 10) + GLVersion.minor;
 
     if (GL_version < MIN_REQUIRED_GL_VERSION) {
-        ASSERTF (
-            LOCATION,
-            "Current GL Version of %d.%d is less than the "
-            "required version of %d.%d.\n"
-            "Switch video modes or update your drivers.",
-            GLVersion.major, GLVersion.minor, (MIN_REQUIRED_GL_VERSION / 10),
-            (MIN_REQUIRED_GL_VERSION % 10));
+        ASSERTX (0, "Current GL Version of %d.%d is less than the required version of %d.%d.\nSwitch video modes or update your drivers.",GLVersion.major, GLVersion.minor, (MIN_REQUIRED_GL_VERSION / 10),(MIN_REQUIRED_GL_VERSION % 10));
     }
 
     GL_initted = true;

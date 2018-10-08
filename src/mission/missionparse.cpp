@@ -1017,11 +1017,7 @@ void parse_player_info2 (mission* pm) {
     }
 
     if (nt != Num_teams)
-        ASSERTF (
-            LOCATION,
-            "Not enough ship/weapon pools for mission.  There are %d teams "
-            "and only %d pools.",
-            Num_teams, nt);
+        ASSERTX (0, "Not enough ship/weapon pools for mission.  There are %d teams and only %d pools.",Num_teams, nt);
 }
 
 void parse_cutscenes (mission* pm) {
@@ -1646,11 +1642,7 @@ void parse_briefing (mission* /*pm*/, int flags) {
     }
 
     if (nt != Num_teams)
-        ASSERTF (
-            LOCATION,
-            "Not enough briefings in mission file.  There are %d teams and "
-            "only %d briefings.",
-            Num_teams, nt);
+        ASSERTX (0, "Not enough briefings in mission file.  There are %d teams and only %d briefings.",Num_teams, nt);
 }
 
 /**
@@ -1698,11 +1690,7 @@ void parse_debriefing_new (mission* /*pm*/) {
     }
 
     if (nt != Num_teams)
-        ASSERTF (
-            LOCATION,
-            "Not enough debriefings for mission.  There are %d teams and only "
-            "%d debriefings;\n",
-            Num_teams, nt);
+        ASSERTX (0, "Not enough debriefings for mission.  There are %d teams and only %d debriefings;\n",Num_teams, nt);
 }
 
 void position_ship_for_knossos_warpin (p_object* p_objp) {
@@ -2569,11 +2557,7 @@ void parse_bring_in_docked_wing (p_object* p_objp, int wingnum, int shipnum) {
     }
     // how did we get more than one wave here?
     else if (wingp->current_wave > 1)
-        ASSERTF (
-            LOCATION,
-            "Wing %s was created from docked ships but somehow has more than "
-            "one wave!",
-            wingp->name);
+        ASSERTX (0, "Wing %s was created from docked ships but somehow has more than one wave!",wingp->name);
 
     // increment tallies
     wingp->total_arrived_count++;
@@ -3154,9 +3138,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
     if (optional_string ("+Arrival Delay:")) {
         stuff_int (&delay);
         if (delay < 0)
-            ASSERTF (
-                LOCATION, "Cannot have arrival delay < 0 (ship %s)",
-                p_objp->name);
+            ASSERTX (0, "Cannot have arrival delay < 0 (ship %s)",p_objp->name);
     }
 
     if (!Fred_running)
@@ -3200,9 +3182,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
     if (optional_string ("+Departure Delay:")) {
         stuff_int (&delay);
         if (delay < 0)
-            ASSERTF (
-                LOCATION, "Cannot have departure delay < 0 (ship %s)",
-                p_objp->name);
+            ASSERTX (0, "Cannot have departure delay < 0 (ship %s)",p_objp->name);
     }
 
     if (!Fred_running)
@@ -4615,9 +4595,7 @@ void parse_wing (mission* pm) {
     if (optional_string ("+Arrival delay:")) {
         stuff_int (&delay);
         if (delay < 0)
-            ASSERTF (
-                LOCATION, "Cannot have arrival delay < 0 on wing %s",
-                wingp->name);
+            ASSERTX (0, "Cannot have arrival delay < 0 on wing %s",wingp->name);
     }
     else
         delay = 0;
@@ -4657,9 +4635,7 @@ void parse_wing (mission* pm) {
     if (optional_string ("+Departure delay:")) {
         stuff_int (&delay);
         if (delay < 0)
-            ASSERTF (
-                LOCATION, "Cannot have departure delay < 0 on wing %s",
-                wingp->name);
+            ASSERTX (0, "Cannot have departure delay < 0 on wing %s",wingp->name);
     }
     else
         delay = 0;
@@ -4811,18 +4787,10 @@ void parse_wing (mission* pm) {
 
         // error checking
         if (assigned == 0) {
-            ASSERTF (
-                LOCATION,
-                "Cannot load mission -- for wing %s, ship %s is not present "
-                "in #Objects section.\n",
-                wingp->name, ship_name);
+            ASSERTX (0, "Cannot load mission -- for wing %s, ship %s is not present in #Objects section.\n",wingp->name, ship_name);
         }
         else if (assigned > 1) {
-            ASSERTF (
-                LOCATION,
-                "Cannot load mission -- for wing %s, ship %s is specified "
-                "multiple times in wing.\n",
-                wingp->name, ship_name);
+            ASSERTX (0, "Cannot load mission -- for wing %s, ship %s is specified multiple times in wing.\n",wingp->name, ship_name);
         }
     }
 
@@ -4940,10 +4908,7 @@ void post_process_ships_wings () {
 
     // error checking for custom wings
     if (strcmp (Starting_wing_names[0], TVT_wing_names[0]) != 0) {
-        ASSERTF (
-            LOCATION,
-            "The first starting wing and the first team-versus-team wing must "
-            "have the same wing name.\n");
+        ASSERTX (0, "The first starting wing and the first team-versus-team wing must have the same wing name.\n");
     }
 
     // Goober5000 - for FRED, the ships are initialized after the wings, so we
@@ -5087,11 +5052,7 @@ void parse_event (mission* /*pm*/) {
     // _argv[-1] - negative repeat count is now legal; means repeat
     // indefinitely.
     if (event->repeat_count == 0) {
-        ASSERTF (
-            LOCATION,
-            "Repeat count for mission event %s is 0.\nMust be >= 1 or "
-            "negative!",
-            event->name);
+        ASSERTX (0, "Repeat count for mission event %s is 0.\nMust be >= 1 or negative!",event->name);
     }
 }
 
@@ -6077,7 +6038,7 @@ void post_process_mission () {
                     Sexp_nodes[bad_node].text);
 
                 if (!Fred_running) {
-                    ASSERTF (LOCATION, "%s", error_msg.c_str ());
+                    ASSERTX (0, "%s", error_msg.c_str ());
                 }
                 else {
                     WARNINGF (LOCATION, "%s", error_msg.c_str ());
@@ -6279,9 +6240,7 @@ int parse_main (const char* mission_name, int flags) {
             // fail situation.
             if (!ftemp) {
                 if (!Fred_running)
-                    ASSERTF (
-                        LOCATION, "Couldn't open mission '%s'\n",
-                        mission_name);
+                    ASSERTX (0, "Couldn't open mission '%s'\n",mission_name);
 
                 Current_file_length = -1;
                 Current_file_checksum = 0;

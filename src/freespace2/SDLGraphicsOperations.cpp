@@ -133,7 +133,7 @@ SDLGraphicsOperations::SDLGraphicsOperations () {
     setenv ("force_s3tc_enable", "true", 1);
 
     if (SDL_InitSubSystem (SDL_INIT_VIDEO) < 0) {
-        ASSERTF (LOCATION, "Couldn't init SDL video: %s", SDL_GetError ());
+        ASSERTX (0, "Couldn't init SDL video: %s", SDL_GetError ());
         return;
     }
 }

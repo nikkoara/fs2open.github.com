@@ -306,10 +306,7 @@ void parse_helptbl (const char* filename) {
                         name, MAX_HELP_OVERLAYS);
 
                     if (!skip_to_string ("$end")) {
-                        ASSERTF (
-                            LOCATION,
-                            "Couldn't find $end. Help.tbl or -hlp.tbm is "
-                            "invalid.\n");
+                        ASSERTX (0, "Couldn't find $end. Help.tbl or -hlp.tbm is invalid.\n");
                     }
 
                     continue;
@@ -341,10 +338,7 @@ void parse_helptbl (const char* filename) {
             }
 
             if (help_overlaylist[overlay_id].num_resolutions < 1) {
-                ASSERTF (
-                    LOCATION,
-                    "+resolutions in %s is %d. (Must be 1 or greater)",
-                    filename, help_overlaylist[overlay_id].num_resolutions);
+                ASSERTX (0, "+resolutions in %s is %d. (Must be 1 or greater)",filename, help_overlaylist[overlay_id].num_resolutions);
             }
 
             if (optional_string ("+font")) {

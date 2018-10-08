@@ -537,9 +537,7 @@ void ds_init_channels () {
         Channels = new channel[MAX_CHANNELS];
     }
     catch (const std::bad_alloc&) {
-        ASSERTF (
-            LOCATION, "Unable to allocate %zu bytes for %d audio channels.",
-            sizeof (channel) * MAX_CHANNELS, MAX_CHANNELS);
+        ASSERTX (0, "Unable to allocate %zu bytes for %d audio channels.",sizeof (channel) * MAX_CHANNELS, MAX_CHANNELS);
     }
 }
 

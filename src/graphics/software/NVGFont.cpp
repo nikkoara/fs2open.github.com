@@ -157,12 +157,7 @@ void NVGFont::getStringSize (
                         int spacing;
 
                         if (m_specialCharacters == nullptr) {
-                            ASSERTF (
-                                LOCATION,
-                                "Font %s has no special characters font! This "
-                                "is usually caused by ignoring a font table "
-                                "parsing warning.",
-                                getName ().c_str ());
+                            ASSERTX (0, "Font %s has no special characters font! This is usually caused by ignoring a font table parsing warning.",getName ().c_str ());
                         }
 
                         get_char_width_old (

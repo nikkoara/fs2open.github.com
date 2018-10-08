@@ -42,11 +42,10 @@ typedef int errno_t;
 #ifndef SAFESTRINGS_TEST_APP
 
 #ifndef __safe_strings_error_handler
-#define __safe_strings_error_handler( val )                                \
-    ASSERTF (                                                   \
-        file, line,                                                        \
-        "%s: String error. Please Report.\nTrying to put into %zu" \
-        " byte buffer:\n%s",                                               \
+#define __safe_strings_error_handler( val )                         \
+    ASSERTX (0,                                                     \
+        "%s: String error. Please Report.\nTrying to put into %zu"  \
+        " byte buffer:\n%s",                                        \
         #val, sizeInBytes, strSource)
 #endif
 
@@ -64,6 +63,7 @@ typedef int errno_t;
 extern errno_t scp_strcpy_s (
     const char* file, int line, char* strDest, size_t sizeInBytes,
     const char* strSource);
+
 extern errno_t scp_strcat_s (
     const char* file, int line, char* strDest, size_t sizeInBytes,
     const char* strSource);

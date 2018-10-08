@@ -259,9 +259,7 @@ void error_display (int error_level, const char* format, ...) {
             LOCATION, "%s(line %i):\n%s: %s", Current_filename,
             get_line_num (), type, error_text.c_str ());
     else
-        ASSERTF (
-            LOCATION, "%s(line %i):\n%s: %s", Current_filename,
-            get_line_num (), type, error_text.c_str ());
+        ASSERTX (0, "%s(line %i):\n%s: %s", Current_filename,get_line_num (), type, error_text.c_str ());
 }
 
 // Advance Mp to the next eoln character.
@@ -824,7 +822,7 @@ char* alloc_text_until (char* instr, char* endstr) {
     char* foundstr = stristr (instr, endstr);
 
     if (foundstr == NULL) {
-        ASSERTF (LOCATION, "Missing [%s] in file", endstr);
+        ASSERTX (0, "Missing [%s] in file", endstr);
         throw parse::ParseException ("End string not found");
     }
     else {
@@ -841,9 +839,7 @@ char* alloc_text_until (char* instr, char* endstr) {
             rstr[foundstr - instr] = '\0';
         }
         else {
-            ASSERTF (
-                LOCATION,
-                "Could not allocate enough memory in alloc_text_until");
+            ASSERTX (0, "Could not allocate enough memory in alloc_text_until");
         }
 
         return rstr;
@@ -970,9 +966,7 @@ char* alloc_block (const char* startstr, const char* endstr, int extra_chars) {
 
     // Check that we left the file
     if (level > 0) {
-        ASSERTF (
-            LOCATION, "Unclosed pair of \"%s\" and \"%s\" on line %d in file",
-            startstr, endstr, get_line_num ());
+        ASSERTX (0, "Unclosed pair of \"%s\" and \"%s\" on line %d in file",startstr, endstr, get_line_num ());
         throw parse::ParseException ("End string not found");
     }
     else {
@@ -1029,11 +1023,7 @@ int get_string_or_variable (char* str) {
     }
     else {
         get_string (str);
-        ASSERTF (
-            LOCATION,
-            "Invalid entry \"%s\"  found in get_string_or_variable. Must be a "
-            "quoted string or a string variable name.",
-            str);
+        ASSERTX (0, "Invalid entry \"%s\"  found in get_string_or_variable. Must be a quoted string or a string variable name.",str);
     }
 
     return result;
@@ -1067,11 +1057,7 @@ int get_string_or_variable (std::string& str) {
     }
     else {
         get_string (str);
-        ASSERTF (
-            LOCATION,
-            "Invalid entry \"%s\"  found in get_string_or_variable. Must be a "
-            "quoted string or a string variable name.",
-            str.c_str ());
+        ASSERTX (0, "Invalid entry \"%s\"  found in get_string_or_variable. Must be a quoted string or a string variable name.",str.c_str ());
     }
 
     return result;
@@ -1162,7 +1148,7 @@ void stuff_string (char* outstr, int type, int len, const char* terminators) {
         break;
 
     default:
-        ASSERTF (LOCATION, "Unhandled string type %d in stuff_string!", type);
+        ASSERTX (0, "Unhandled string type %d in stuff_string!", type);
     }
 
     if (type == F_FILESPEC) {
@@ -1249,7 +1235,7 @@ void stuff_string (std::string& outstr, int type, const char* terminators) {
         break;
 
     default:
-        ASSERTF (LOCATION, "Unhandled string type %d in stuff_string!", type);
+        ASSERTX (0, "Unhandled string type %d in stuff_string!", type);
     }
 
     if (type == F_FILESPEC) {
@@ -1840,10 +1826,7 @@ void read_file_text (
 
     // if we are paused then processed_text and raw_text must not be NULL!!
     if (Parsing_paused && ((processed_text == NULL) || (raw_text == NULL))) {
-        ASSERTF (
-            LOCATION,
-            "ERROR: Neither processed_text nor raw_text may be NULL when "
-            "parsing is paused!!\n");
+        ASSERTX (0, "ERROR: Neither processed_text nor raw_text may be NULL when parsing is paused!!\n");
     }
 
     // read the raw text
@@ -1909,10 +1892,7 @@ void allocate_parse_text (size_t size) {
         (char*)vm_malloc (sizeof (char) * size, memory::quiet_alloc);
 
     if ((Parse_text == nullptr) || (Parse_text_raw == nullptr)) {
-        ASSERTF (
-            LOCATION,
-            "Unable to allocate enough memory for Mission_text!  "
-            "Aborting...\n");
+        ASSERTX (0, "Unable to allocate enough memory for Mission_text!  Aborting...\n");
     }
 
     memset (Parse_text, 0, sizeof (char) * size);
@@ -2312,15 +2292,11 @@ int stuff_int_or_variable (int& i, bool positive_value) {
                 value = atoi (Sexp_variables[index].text);
             }
             else {
-                ASSERTF (
-                    LOCATION,
-                    "Invalid variable type \"%s\" found in mission. Variable "
-                    "must be a number variable!",
-                    str);
+                ASSERTX (0, "Invalid variable type \"%s\" found in mission. Variable must be a number variable!",str);
             }
         }
         else {
-            ASSERTF (LOCATION, "Invalid variable name \"%s\" found.", str);
+            ASSERTX (0, "Invalid variable name \"%s\" found.", str);
         }
 
         // zero negative values if requested
@@ -2352,15 +2328,11 @@ int stuff_int_or_variable (int* ilp, int count, bool positive_value) {
                 value = atoi (Sexp_variables[index].text);
             }
             else {
-                ASSERTF (
-                    LOCATION,
-                    "Invalid variable type \"%s\" found in mission. Variable "
-                    "must be a number variable!",
-                    str);
+                ASSERTX (0, "Invalid variable type \"%s\" found in mission. Variable must be a number variable!",str);
             }
         }
         else {
-            ASSERTF (LOCATION, "Invalid variable name \"%s\" found.", str);
+            ASSERTX (0, "Invalid variable name \"%s\" found.", str);
         }
 
         // zero negative values if requested
@@ -2674,9 +2646,7 @@ int stuff_int_list (int* ilp, int max_ints, int lookup_type) {
             case RAW_INTEGER_TYPE: num = atoi (str); break;
 
             default:
-                ASSERTF (
-                    LOCATION, "Unknown lookup_type %d in stuff_int_list",
-                    lookup_type);
+                ASSERTX (0, "Unknown lookup_type %d in stuff_int_list",lookup_type);
                 break;
             }
 
@@ -2764,7 +2734,7 @@ int stuff_loadout_list (int* ilp, int max_ints, int lookup_type) {
 
     while (*Mp != ')') {
         if (count >= max_ints) {
-            ASSERTF (LOCATION, "Loadout contains too many entries.\n");
+            ASSERTX (0, "Loadout contains too many entries.\n");
         }
 
         index = -1;
@@ -2779,11 +2749,7 @@ int stuff_loadout_list (int* ilp, int max_ints, int lookup_type) {
             sexp_variable_index = get_index_sexp_variable_name (str);
 
             if (sexp_variable_index < 0) {
-                ASSERTF (
-                    LOCATION,
-                    "Invalid SEXP variable name \"%s\" found in "
-                    "stuff_loadout_list.",
-                    str);
+                ASSERTX (0, "Invalid SEXP variable name \"%s\" found in stuff_loadout_list.",str);
             }
 
             strcpy_s (str, Sexp_variables[sexp_variable_index].text);
@@ -2942,16 +2908,12 @@ void mark_int_list (int* ilp, int max_ints, int lookup_type) {
             case WEAPON_LIST_TYPE: num = weapon_info_lookup (str); break;
 
             default:
-                ASSERTF (
-                    LOCATION, "Unknown lookup_type %d in mark_int_list",
-                    lookup_type);
+                ASSERTX (0, "Unknown lookup_type %d in mark_int_list",lookup_type);
                 break;
             }
 
             if ((num < 0) || (num >= max_ints))
-                ASSERTF (
-                    LOCATION,
-                    "Unable to find string \"%s\" in mark_int_list.\n", str);
+                ASSERTX (0, "Unable to find string \"%s\" in mark_int_list.\n", str);
 
             // ilp[num] = 1;
         }

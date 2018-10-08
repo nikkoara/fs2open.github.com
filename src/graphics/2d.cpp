@@ -1003,8 +1003,7 @@ bool gr_init (
         // If the format of that string changes you'll have to change
         // this too!!!
         if (sscanf (ptr + 5, "(%dx%d)x%d ", &width, &height, &depth) != 3) {
-            ASSERTF (
-                LOCATION, "Can't understand 'VideocardFs2open' config entry!");
+            ASSERTX (0, "Can't understand 'VideocardFs2open' config entry!");
         }
     }
 
@@ -1151,20 +1150,7 @@ bool gr_init (
         }
     }
     if (missing_installation) {
-        ASSERTF (
-            LOCATION,
-            "\nWeb cursor bitmap not found.  This is most likely due to one "
-            "of three reasons:\n"
-            "    1) You're running FreeSpace Open from somewhere other than "
-            "your FreeSpace 2 folder;\n"
-            "    2) You've somehow corrupted your FreeSpace 2 installation, "
-            "e.g. by modifying or removing the retail VP files;\n"
-            "    3) You haven't installed FreeSpace 2 at all.  (Note that "
-            "installing FreeSpace Open does NOT remove the need for a "
-            "FreeSpace 2 installation.)\n"
-            "Number 1 can be fixed by simply moving the FreeSpace Open "
-            "executable file to the FreeSpace 2 folder.  Numbers 2 and 3 can "
-            "be fixed by installing or reinstalling FreeSpace 2.\n");
+        ASSERTX (0, "\nWeb cursor bitmap not found.  This is most likely due to one of three reasons:\n    1) You're running FreeSpace Open from somewhere other than your FreeSpace 2 folder;\n    2) You've somehow corrupted your FreeSpace 2 installation, e.g. by modifying or removing the retail VP files;\n    3) You haven't installed FreeSpace 2 at all.  (Note that installing FreeSpace Open does NOT remove the need for a FreeSpace 2 installation.)\nNumber 1 can be fixed by simply moving the FreeSpace Open executable file to the FreeSpace 2 folder.  Numbers 2 and 3 can be fixed by installing or reinstalling FreeSpace 2.\n");
     }
 
     WARNINGF (LOCATION, "GRAPHICS: Initializing default colors...\n");

@@ -271,7 +271,7 @@ int goal_text::add (const char* text) {
 
     max = MAX_GOAL_LINES - m_num_lines;
     if (max < 1) {
-        ASSERTF (LOCATION, "Goal text space exhausted");
+        ASSERTX (0, "Goal text space exhausted");
         return 0;
     }
 
@@ -417,10 +417,7 @@ void mission_show_goals_init () {
             break;
 
         default:
-            ASSERTF (
-                LOCATION,
-                "Unknown goal priority encountered when displaying goals in "
-                "mission\n");
+            ASSERTX (0, "Unknown goal priority encountered when displaying goals in mission\n");
             break;
         } // end switch
     }     // end for

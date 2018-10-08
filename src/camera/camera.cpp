@@ -266,7 +266,7 @@ void camera::set_rotation_facing (
 
 void camera::set_rotation_velocity (
     angles_t* /*in_rotation_rate*/, float /*in_acceleration_time*/) {
-    ASSERTF (LOCATION, "This function is disabled until further notice.");
+    ASSERTX (0, "This function is disabled until further notice.");
 }
 
 void camera::do_frame (float /*in_frametime*/) {}

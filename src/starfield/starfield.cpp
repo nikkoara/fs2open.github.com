@@ -218,9 +218,7 @@ void stars_load_debris_vclips (debris_vclip* vclips) {
             vclips[i].nframes = 1;
 
             if (vclips[i].bm <= 0) {
-                ASSERTF (
-                    LOCATION, "Couldn't load animation/bitmap '%s'\n",
-                    vclips[i].name);
+                ASSERTX (0, "Couldn't load animation/bitmap '%s'\n",vclips[i].name);
             }
         }
     }

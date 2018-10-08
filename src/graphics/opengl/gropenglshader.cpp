@@ -598,11 +598,7 @@ static void handle_includes_impl (
 
             if (first_quote == std::string::npos ||
                 second_quote == std::string::npos) {
-                ASSERTF (
-                    LOCATION,
-                    "Shader %s:%d: Malformed include line. Could not find "
-                    "both quote charaters.",
-                    filename.c_str (), line_num);
+                ASSERTX (0, "Shader %s:%d: Malformed include line. Could not find both quote charaters.",filename.c_str (), line_num);
             }
 
             auto file_name =
@@ -618,11 +614,7 @@ static void handle_includes_impl (
                     stack_string << "\t" << name << "\n";
                 }
 
-                ASSERTF (
-                    LOCATION,
-                    "Shader %s:%d: Detected cyclic include! Previous includes "
-                    "(top level file first):\n%s",
-                    filename.c_str (), line_num, stack_string.str ().c_str ());
+                ASSERTX (0, "Shader %s:%d: Detected cyclic include! Previous includes (top level file first):\n%s",filename.c_str (), line_num, stack_string.str ().c_str ());
             }
 
             ++include_counter;
@@ -778,10 +770,7 @@ void opengl_compile_shader_actual (
     catch (const std::exception&) {
         // Since all shaders are required a compilation failure is a fatal
         // error
-        ASSERTF (
-            LOCATION,
-            "A shader failed to compile! Check the debug log for more "
-            "information.");
+        ASSERTX (0, "A shader failed to compile! Check the debug log for more information.");
     }
 
     new_shader.shader = sdr_info->type_id;

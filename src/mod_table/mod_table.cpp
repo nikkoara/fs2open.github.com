@@ -68,14 +68,7 @@ void parse_mod_table (const char* filename) {
                 gameversion::format_version (Targetted_version).c_str ());
 
             if (!gameversion::check_at_least (Targetted_version)) {
-                ASSERTF (
-                    LOCATION,
-                    "This modification needs at least version %s of FreeSpace "
-                    "Open. However, the current is only %s!",
-                    gameversion::format_version (Targetted_version).c_str (),
-                    gameversion::format_version (
-                        gameversion::get_executable_version ())
-                        .c_str ());
+                ASSERTX (0, "This modification needs at least version %s of FreeSpace Open. However, the current is only %s!",gameversion::format_version (Targetted_version).c_str (),gameversion::format_version (gameversion::get_executable_version ()).c_str ());
             }
         }
 

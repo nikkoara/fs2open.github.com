@@ -108,7 +108,9 @@ int joy_ff_init () {
     auto numHaptics = SDL_NumHaptics ();
     WARNINGF (LOCATION, "  Available haptic devices:\n");
 
-    if (numHaptics <= 0) { WARNINGF (LOCATION, "    <none>\n"); }
+    if (numHaptics <= 0) {
+        WARNINGF (LOCATION, "    <none>\n");
+    }
     else {
         for (int i = 0; i < numHaptics; ++i) {
             WARNINGF (LOCATION, "    %s\n", SDL_HapticName (i));

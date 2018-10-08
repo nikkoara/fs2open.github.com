@@ -1050,7 +1050,7 @@ int read_model_file (
 
     if (!fp) {
         if (ferror == 1) {
-            ASSERTF (LOCATION, "Can't open model file <%s>", filename);
+            ASSERTX (0, "Can't open model file <%s>", filename);
         }
         else if (ferror == 0) {
             WARNINGF (LOCATION, "Can't open model file <%s>", filename);
@@ -1088,7 +1088,7 @@ int read_model_file (
     id = cfread_int (fp);
 
     if (id != POF_HEADER_ID)
-        ASSERTF (LOCATION, "Bad ID in model file <%s>", filename);
+        ASSERTX (0, "Bad ID in model file <%s>", filename);
 
     // Version is major*100+minor
     // So, major = version / 100;
@@ -1185,12 +1185,7 @@ int read_model_file (
 
             pm->num_debris_objects = cfread_int (fp);
             if (pm->num_debris_objects > MAX_DEBRIS_OBJECTS) {
-                ASSERTF (
-                    LOCATION,
-                    "Model %s specified that it contains %d debris objects "
-                    "but only %d are supported by the "
-                    "engine.",
-                    filename, pm->num_debris_objects, MAX_DEBRIS_OBJECTS);
+                ASSERTX (0, "Model %s specified that it contains %d debris objects but only %d are supported by the engine.",filename, pm->num_debris_objects, MAX_DEBRIS_OBJECTS);
             }
             // mprintf(( "There are %d debris objects\n",
             // pm->num_debris_objects ));
@@ -1670,14 +1665,7 @@ int read_model_file (
                 // Find end of number
                 parsed_string = strchr (parsed_string, ',');
                 if (parsed_string == NULL) {
-                    ASSERTF (
-                        LOCATION,
-                        "Submodel '%s' of model '%s' has an improperly "
-                        "formatted $uvec: declaration in its properties."
-                        "\n\n$uvec: should be followed by 3 numbers separated "
-                        "with commas."
-                        "\n\nCouldn't find first comma (,)!",
-                        pm->submodel[n].name, filename);
+                    ASSERTX (0, "Submodel '%s' of model '%s' has an improperly formatted $uvec: declaration in its properties.\n\n$uvec: should be followed by 3 numbers separated with commas.\n\nCouldn't find first comma (,)!",pm->submodel[n].name, filename);
                 }
                 parsed_string++;
 
@@ -1691,14 +1679,7 @@ int read_model_file (
                 // Find end of number
                 parsed_string = strchr (parsed_string, ',');
                 if (parsed_string == NULL) {
-                    ASSERTF (
-                        LOCATION,
-                        "Submodel '%s' of model '%s' has an improperly "
-                        "formatted $uvec: declaration in its properties."
-                        "\n\n$uvec: should be followed by 3 numbers separated "
-                        "with commas."
-                        "\n\nCouldn't find second comma (,)!",
-                        pm->submodel[n].name, filename);
+                    ASSERTX (0, "Submodel '%s' of model '%s' has an improperly formatted $uvec: declaration in its properties.\n\n$uvec: should be followed by 3 numbers separated with commas.\n\nCouldn't find second comma (,)!",pm->submodel[n].name, filename);
                 }
                 parsed_string++;
 
@@ -1722,14 +1703,7 @@ int read_model_file (
                     // Find end of number
                     parsed_string = strchr (parsed_string, ',');
                     if (parsed_string == NULL) {
-                        ASSERTF (
-                            LOCATION,
-                            "Submodel '%s' of model '%s' has an improperly "
-                            "formatted $fvec: declaration in its properties."
-                            "\n\n$fvec: should be followed by 3 numbers "
-                            "separated with commas."
-                            "\n\nCouldn't find first comma (,)!",
-                            pm->submodel[n].name, filename);
+                        ASSERTX (0, "Submodel '%s' of model '%s' has an improperly formatted $fvec: declaration in its properties.\n\n$fvec: should be followed by 3 numbers separated with commas.\n\nCouldn't find first comma (,)!",pm->submodel[n].name, filename);
                     }
                     parsed_string++;
 
@@ -1743,14 +1717,7 @@ int read_model_file (
                     // Find end of number
                     parsed_string = strchr (parsed_string, ',');
                     if (parsed_string == NULL) {
-                        ASSERTF (
-                            LOCATION,
-                            "Submodel '%s' of model '%s' has an improperly "
-                            "formatted $fvec: declaration in its properties."
-                            "\n\n$fvec: should be followed by 3 numbers "
-                            "separated with commas."
-                            "\n\nCouldn't find second comma (,)!",
-                            pm->submodel[n].name, filename);
+                        ASSERTX (0, "Submodel '%s' of model '%s' has an improperly formatted $fvec: declaration in its properties.\n\n$fvec: should be followed by 3 numbers separated with commas.\n\nCouldn't find second comma (,)!",pm->submodel[n].name, filename);
                     }
                     parsed_string++;
 
@@ -1833,10 +1800,7 @@ int read_model_file (
             {
                 int nchunks = cfread_int (fp); // Throw away nchunks
                 if (nchunks > 0) {
-                    ASSERTF (
-                        LOCATION,
-                        "Model '%s' is chunked.  See John or Adam!\n",
-                        pm->filename);
+                    ASSERTX (0, "Model '%s' is chunked.  See John or Adam!\n",pm->filename);
                 }
             }
             pm->submodel[n].bsp_data_size = cfread_int (fp);
@@ -1920,12 +1884,7 @@ int read_model_file (
                                              // shield_vertex list
 #ifndef NDEBUG
                         if (pm->shield.tris[i].verts[j] >= pm->shield.nverts) {
-                            ASSERTF (
-                                LOCATION,
-                                "Ship %s has a bogus shield mesh.\nOnly %i "
-                                "vertices, index %i found.\n",
-                                filename, pm->shield.nverts,
-                                pm->shield.tris[i].verts[j]);
+                            ASSERTX (0, "Ship %s has a bogus shield mesh.\nOnly %i vertices, index %i found.\n",filename, pm->shield.nverts,pm->shield.tris[i].verts[j]);
                         }
 #endif
                     }
@@ -1937,12 +1896,7 @@ int read_model_file (
 #ifndef NDEBUG
                         if (pm->shield.tris[i].neighbors[j] >=
                             pm->shield.ntris) {
-                            ASSERTF (
-                                LOCATION,
-                                "Ship %s has a bogus shield mesh.\nOnly %i "
-                                "triangles, index %i found.\n",
-                                filename, pm->shield.ntris,
-                                pm->shield.tris[i].neighbors[j]);
+                            ASSERTX (0, "Ship %s has a bogus shield mesh.\nOnly %i triangles, index %i found.\n",filename, pm->shield.ntris,pm->shield.tris[i].neighbors[j]);
                         }
 #endif
                     }
@@ -2972,7 +2926,7 @@ int model_load (
 
     // No empty slot
     if (num == -1) {
-        ASSERTF (LOCATION, "Too many models");
+        ASSERTX (0, "Too many models");
         return -1;
     }
 
@@ -3325,11 +3279,7 @@ void model_maybe_fixup_subsys_path (polymodel* pm, int path_num) {
 
     ASSERT (mp != NULL);
     if (mp->nverts <= 1) {
-        ASSERTF (
-            LOCATION,
-            "Subsystem Path (%s) Parent (%s) in model (%s) has less than 2 "
-            "vertices/points!",
-            mp->name, mp->parent_name, pm->filename);
+        ASSERTX (0, "Subsystem Path (%s) Parent (%s) in model (%s) has less than 2 vertices/points!",mp->name, mp->parent_name, pm->filename);
     }
 
     index_1 = 1;
@@ -3478,7 +3428,7 @@ int model_get_parent_submodel_for_live_debris (
         // get next child
         mn = child->next_sibling;
     }
-    ASSERTF (LOCATION, "Could not find parent submodel for live debris");
+    ASSERTX (0, "Could not find parent submodel for live debris");
     return -1;
 }
 

@@ -622,10 +622,7 @@ void shockwave_level_init () {
         }
 
         if (i < 0)
-            ASSERTF (
-                LOCATION,
-                "ERROR:  Unable to open neither 3D nor 2D default "
-                "shockwaves!!");
+            ASSERTX (0, "ERROR:  Unable to open neither 3D nor 2D default shockwaves!!");
 
         Default_shockwave_loaded = 1;
     }

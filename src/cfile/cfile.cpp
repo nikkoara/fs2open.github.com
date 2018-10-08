@@ -1212,7 +1212,7 @@ int cfwrite (const void* buf, int elsize, int nelem, CFILE* cfile) {
     Cfile_block* cb = &Cfile_block_list[cfile->id];
 
     if (cb->lib_offset != 0) {
-        ASSERTF (LOCATION, "Attempt to write to a VP file (unsupported)");
+        ASSERTX (0, "Attempt to write to a VP file (unsupported)");
         return 0;
     }
 
@@ -1250,8 +1250,7 @@ int cfputc (int c, CFILE* cfile) {
     Cfile_block* cb = &Cfile_block_list[cfile->id];
 
     if (cb->lib_offset != 0) {
-        ASSERTF (
-            LOCATION, "Attempt to write character to a VP file (unsupported)");
+        ASSERTX (0, "Attempt to write character to a VP file (unsupported)");
         return EOF;
     }
 
@@ -1291,8 +1290,7 @@ int cfputs (const char* str, CFILE* cfile) {
     Cfile_block* cb = &Cfile_block_list[cfile->id];
 
     if (cb->lib_offset != 0) {
-        ASSERTF (
-            LOCATION, "Attempt to write character to a VP file (unsupported)");
+        ASSERTX (0, "Attempt to write character to a VP file (unsupported)");
         return EOF;
     }
 

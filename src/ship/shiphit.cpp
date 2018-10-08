@@ -1307,7 +1307,6 @@ ship_hit_create_sparks (object* ship_objp, vec3d* hitpos, int submodel_num) {
 
 // Called from ship_hit_kill() when we detect the player has been killed.
 static void player_died_start (object* killer_objp) {
-    // WARNINGF (LOCATION, "starting my player death");
     gameseq_post_event (GS_EVENT_DEATH_DIED);
 
     /*  vm_vec_scale_add(&Dead_camera_pos, &Player_obj->pos,

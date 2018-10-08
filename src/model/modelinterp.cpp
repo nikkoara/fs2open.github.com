@@ -1275,11 +1275,7 @@ void submodel_get_two_random_points (
     // two) to be found
     if (nv <= 0) {
         polymodel* pm = model_get (model_num);
-        ASSERTF (
-            LOCATION,
-            "Model %d ('%s') must have at least one point from "
-            "submodel_get_points_internal!",
-            model_num, (pm == NULL) ? "<null model?!?>" : pm->filename);
+        ASSERTX (0, "Model %d ('%s') must have at least one point from submodel_get_points_internal!",model_num, (pm == NULL) ? "<null model?!?>" : pm->filename);
 
         // in case people ignore the error...
         vm_vec_zero (v1);
@@ -1344,11 +1340,7 @@ void submodel_get_two_random_points_better (
         // because of the less immediate expectation for at least one point
         // (preferably two) to be found
         if (nv <= 0) {
-            ASSERTF (
-                LOCATION,
-                "Model %d ('%s') must have at least one point from "
-                "submodel_get_points_internal!",
-                model_num, (pm == NULL) ? "<null model?!?>" : pm->filename);
+            ASSERTX (0, "Model %d ('%s') must have at least one point from submodel_get_points_internal!",model_num, (pm == NULL) ? "<null model?!?>" : pm->filename);
 
             // in case people ignore the error...
             vm_vec_zero (v1);
@@ -2112,8 +2104,7 @@ void interp_pack_vertex_buffers (polymodel* pm, int mn) {
     }
 
     if (!rval) {
-        ASSERTF (
-            LOCATION, "Unable to pack vertex buffer for '%s'\n", pm->filename);
+        ASSERTX (0, "Unable to pack vertex buffer for '%s'\n", pm->filename);
     }
 }
 
@@ -2227,11 +2218,7 @@ void interp_configure_vertex_buffers (polymodel* pm, int mn) {
         // for the moment we can only support INT_MAX worth of verts per index
         // buffer
         if (total_verts > INT_MAX) {
-            ASSERTF (
-                LOCATION,
-                "Unable to generate vertex buffer data because model '%s' "
-                "with %i verts is over the maximum of %i verts!\n",
-                pm->filename, total_verts, INT_MAX);
+            ASSERTX (0, "Unable to generate vertex buffer data because model '%s' with %i verts is over the maximum of %i verts!\n",pm->filename, total_verts, INT_MAX);
         }
     }
 
@@ -2264,7 +2251,7 @@ void interp_configure_vertex_buffers (polymodel* pm, int mn) {
     poly_list* model_list = new (std::nothrow) poly_list;
 
     if (!model_list) {
-        ASSERTF (LOCATION, "Unable to allocate memory for poly_list!\n");
+        ASSERTX (0, "Unable to allocate memory for poly_list!\n");
     }
 
     model->buffer.model_list = model_list;
@@ -2339,9 +2326,7 @@ void interp_configure_vertex_buffers (polymodel* pm, int mn) {
         model_interp_config_buffer (&pm->vert_source, &model->buffer, false);
 
     if (!rval) {
-        ASSERTF (
-            LOCATION, "Unable to configure vertex buffer for '%s'\n",
-            pm->filename);
+        ASSERTX (0, "Unable to configure vertex buffer for '%s'\n",pm->filename);
     }
 }
 

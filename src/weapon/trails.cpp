@@ -273,7 +273,7 @@ void trail_render (trail* trailp) {
     if (!nv) return;
 
     if (nv < 3)
-        ASSERTF (LOCATION, "too few verts in trail render\n");
+        ASSERTX (0, "too few verts in trail render\n");
 
     // there should always be three verts in the last section and 2 everyware
     // else, therefore there should always be an odd number of verts

@@ -1220,7 +1220,8 @@ void cmdline_debug_print_cmdline () {
         }
     }
 
-    if (!found) WARNINGF (LOCATION, "\n  <none>");
+    if (!found)
+        WARNINGF (LOCATION, "\n  <none>");
 
     WARNINGF (LOCATION, "\n");
 
@@ -1718,21 +1719,12 @@ cmdline_parm::~cmdline_parm () {
 // checks if the objects args variable is valid
 // returns true if it is, shows an error box and returns false if not valid.
 bool cmdline_parm::check_if_args_is_valid () {
-    if (args == NULL) {
-        ASSERTF (
-            __FILE__, __LINE__,
-            "Command line flag passed that requires an argument, but the "
-            "argument is missing!\r\n"
-            "The flag is '%s', make sure that you have an argument that "
-            "follows it.\r\n"
-            "You may need to close your launcher and remove the flag manually "
-            "from %s/data/cmdline_fso.cfg\r\n",
-            name, "<Freespace directory>");
+    if (0 == args) {
+        ASSERTX (0, "missing command line argument (%s) value", name);
         return false;
     }
-    else {
+    else
         return true;
-    }
 }
 
 // returns - true if the parameter exists on the command line, otherwise false

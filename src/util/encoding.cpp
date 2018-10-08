@@ -88,11 +88,7 @@ int check_encoding_and_skip_bom (
     if (Unicode_text_mode) {
         if (encoding != util::Encoding::UTF8) {
             // This is probably fatal, so let's abort right here and now.
-            ASSERTF (
-                LOCATION,
-                "%s is in an Unicode/UTF format that cannot be read by "
-                "FreeSpace Open. Please convert it to UTF-8\n",
-                filename);
+            ASSERTX (0, "%s is in an Unicode/UTF format that cannot be read by FreeSpace Open. Please convert it to UTF-8\n",filename);
         }
         if (util::has_bom (probe)) {
             // The encoding has to be UTF-8 here so we know that the BOM is 3
@@ -107,12 +103,7 @@ int check_encoding_and_skip_bom (
     else {
         if (encoding != util::Encoding::ASCII) {
             // This is probably fatal, so let's abort right here and now.
-            ASSERTF (
-                LOCATION,
-                "%s is in Unicode/UTF format and cannot be read by FreeSpace "
-                "Open without turning on Unicode mode. Please convert it to "
-                "ASCII/ANSI\n",
-                filename);
+            ASSERTX (0, "%s is in Unicode/UTF format and cannot be read by FreeSpace Open without turning on Unicode mode. Please convert it to ASCII/ANSI\n",filename);
         }
     }
 

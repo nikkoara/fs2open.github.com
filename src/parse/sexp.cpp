@@ -4578,7 +4578,7 @@ int verify_sexp_tree (int node) {
 
     if ((Sexp_nodes[node].type == SEXP_NOT_USED) ||
         (Sexp_nodes[node].first == node) || (Sexp_nodes[node].rest == node)) {
-        ASSERTF (LOCATION, "Sexp node is corrupt");
+        ASSERTX (0, "Sexp node is corrupt");
         return -1;
     }
 
@@ -6226,7 +6226,9 @@ int check_sexp_syntax (
             }
             break;
 
-        default: ASSERTF (LOCATION, "Unhandled argument format");
+        default:
+            ASSERTX (0, "Unhandled argument format");
+            break;
         }
 
         node = Sexp_nodes[node].rest;
@@ -6352,7 +6354,7 @@ int get_sexp () {
     while (*Mp != ')') {
         // end of string or end of file
         if (*Mp == '\0') {
-            ASSERTF (LOCATION, "Unexpected end of sexp!");
+            ASSERTX (0, "Unexpected end of sexp!");
             return -1;
         }
 
@@ -6367,9 +6369,7 @@ int get_sexp () {
             auto len = strcspn (Mp + 1, "\"");
             // was closing quote not found?
             if (*(Mp + 1 + len) != '\"') {
-                ASSERTF (
-                    LOCATION,
-                    "Unexpected end of quoted string embedded in sexp!");
+                ASSERTX (0, "Unexpected end of quoted string embedded in sexp!");
                 return -1;
             }
 
@@ -6381,11 +6381,7 @@ int get_sexp () {
                 // reduce length by 1 for end \"
                 auto length = len - 1;
                 if (length >= 2 * TOKEN_LENGTH + 2) {
-                    ASSERTF (
-                        LOCATION,
-                        "Variable token %s is too long. Needs to be %d "
-                        "characters or shorter.",
-                        Mp, 2 * TOKEN_LENGTH + 2 - 1);
+                    ASSERTX (0, "Variable token %s is too long. Needs to be %d characters or shorter.",Mp, 2 * TOKEN_LENGTH + 2 - 1);
                     return -1;
                 }
 
@@ -6401,11 +6397,7 @@ int get_sexp () {
             else {
                 // token is too long?
                 if (len >= TOKEN_LENGTH) {
-                    ASSERTF (
-                        LOCATION,
-                        "Token %s is too long. Needs to be %d characters or "
-                        "shorter.",
-                        Mp, TOKEN_LENGTH - 1);
+                    ASSERTX (0, "Token %s is too long. Needs to be %d characters or shorter.",Mp, TOKEN_LENGTH - 1);
                     return -1;
                 }
 
@@ -6432,18 +6424,14 @@ int get_sexp () {
 
                 // end of string or end of file?
                 if (*Mp == '\0') {
-                    ASSERTF (LOCATION, "Unexpected end of sexp!");
+                    ASSERTX (0, "Unexpected end of sexp!");
                     return -1;
                 }
 
                 // token is too long?
                 if (len >= TOKEN_LENGTH - 1) {
                     token[TOKEN_LENGTH - 1] = '\0';
-                    ASSERTF (
-                        LOCATION,
-                        "Token %s is too long. Needs to be %d characters or "
-                        "shorter.",
-                        token, TOKEN_LENGTH - 1);
+                    ASSERTX (0, "Token %s is too long. Needs to be %d characters or shorter.",token, TOKEN_LENGTH - 1);
                     return -1;
                 }
 
@@ -6719,8 +6707,7 @@ int stuff_sexp_variable_list () {
         }
         else {
             type = SEXP_VARIABLE_UNKNOWN;
-            ASSERTF (
-                LOCATION, "SEXP variable '%s' is an unknown type!", var_name);
+            ASSERTX (0, "SEXP variable '%s' is an unknown type!", var_name);
         }
 
         // possibly get network-variable
@@ -6770,10 +6757,7 @@ int stuff_sexp_variable_list () {
             ignore_white_space ();
 
             // notify of error
-            ASSERTF (
-                LOCATION,
-                "Error parsing sexp variables - unknown persistence type "
-                "encountered.  You can continue from here without trouble.");
+            ASSERTX (0, "Error parsing sexp variables - unknown persistence type encountered.  You can continue from here without trouble.");
         }
 
         // check if variable name already exists
@@ -9179,10 +9163,7 @@ int sexp_hits_left_subsystem (int n) {
 
             // we reached end of ship subsys list without finding subsys_name
             if (ship_class_unchanged (shipnum)) {
-                ASSERTF (
-                    LOCATION,
-                    "Invalid subsystem '%s' passed to hits-left-subsystem",
-                    subsys_name);
+                ASSERTX (0, "Invalid subsystem '%s' passed to hits-left-subsystem",subsys_name);
             }
             return SEXP_NAN;
 
@@ -9282,9 +9263,7 @@ int sexp_hits_left_subsystem_specific (int node) {
 
     // we reached end of ship subsys list without finding subsys_name
     if (ship_class_unchanged (ship_num)) {
-        ASSERTF (
-            LOCATION, "Invalid subsystem '%s' passed to hits-left-subsystem",
-            subsys_name);
+        ASSERTX (0, "Invalid subsystem '%s' passed to hits-left-subsystem",subsys_name);
     }
     return SEXP_NAN;
 }
@@ -9485,7 +9464,9 @@ bool sexp_get_subsystem_world_pos (
     ASSERT (subsys_name);
     ASSERT (subsys_world_pos);
 
-    if (shipnum < 0) { ASSERTF (LOCATION, "Error - nonexistent ship.\n"); }
+    if (shipnum < 0) {
+        ASSERTX (0, "Error - nonexistent ship.\n");
+    }
 
     // find the ship subsystem
     ship_subsys* ss = ship_get_subsys (&Ships[shipnum], subsys_name);
@@ -9500,10 +9481,7 @@ bool sexp_get_subsystem_world_pos (
     if (ship_class_unchanged (shipnum)) {
         // this ship should have had the subsystem named as it shouldn't have
         // changed class
-        ASSERTF (
-            LOCATION,
-            "sexp_get_subsystem_world_pos could not find subsystem '%s'",
-            subsys_name);
+        ASSERTX (0, "sexp_get_subsystem_world_pos could not find subsystem '%s'",subsys_name);
     }
     return false;
 }
@@ -10479,11 +10457,7 @@ int sexp_percent_ships_arrive_depart_destroy_disarm_disable (int n, int what) {
             else if (what == OP_PERCENT_SHIPS_ARRIVED)
                 count += Wings[wingnum].total_arrived_count;
             else
-                ASSERTF (
-                    LOCATION,
-                    "Invalid status check '%d' for wing '%s' in "
-                    "sexp_percent_ships_arrive_depart_destroy_disarm_disable",
-                    what, name);
+                ASSERTX (0, "Invalid status check '%d' for wing '%s' in sexp_percent_ships_arrive_depart_destroy_disarm_disable",what, name);
         }
         else {
             // must be a ship, so increment the total by 1, then determine if
@@ -10513,11 +10487,7 @@ int sexp_percent_ships_arrive_depart_destroy_disarm_disable (int n, int what) {
                     count++;
             }
             else
-                ASSERTF (
-                    LOCATION,
-                    "Invalid status check '%d' for ship '%s' in "
-                    "sexp_percent_ships_depart_destroy_disarm_disable",
-                    what, name);
+                ASSERTX (0, "Invalid status check '%d' for ship '%s' in sexp_percent_ships_depart_destroy_disarm_disable",what, name);
         }
     }
 
@@ -10930,11 +10900,7 @@ void sexp_set_scanned_unscanned (int n, int flag) {
 
         // if we didn't find the subsystem -- bad
         if (ss == NULL && ship_class_unchanged (shipnum)) {
-            ASSERTF (
-                LOCATION,
-                "Couldn't find subsystem '%s' on ship '%s' in "
-                "sexp_set_scanned_unscanned",
-                subsys_name, ship_name);
+            ASSERTX (0, "Couldn't find subsystem '%s' on ship '%s' in sexp_set_scanned_unscanned",subsys_name, ship_name);
         }
 
         // but if it did, loop again
@@ -13813,9 +13779,7 @@ void sexp_next_mission (int n) {
     mission_name = CTEXT (n);
 
     if (mission_name == NULL) {
-        ASSERTF (
-            LOCATION,
-            "Mission name is NULL in campaign file for next-mission command!");
+        ASSERTX (0, "Mission name is NULL in campaign file for next-mission command!");
     }
 
     for (i = 0; i < Campaign.num_missions; i++) {
@@ -13824,10 +13788,7 @@ void sexp_next_mission (int n) {
             return;
         }
     }
-    ASSERTF (
-        LOCATION,
-        "Mission name %s not found in campaign file for next-mission command",
-        mission_name);
+    ASSERTX (0, "Mission name %s not found in campaign file for next-mission command",mission_name);
 }
 
 /**
@@ -14863,11 +14824,7 @@ void sexp_add_background_bitmap (int n) {
             sexp_modify_variable (number_as_str, sexp_var);
         }
         else {
-            ASSERTF (
-                LOCATION,
-                "sexp-add-background-bitmap: Variable %s must be a number "
-                "variable!",
-                Sexp_variables[sexp_var].variable_name);
+            ASSERTX (0, "sexp-add-background-bitmap: Variable %s must be a number variable!",Sexp_variables[sexp_var].variable_name);
             return;
         }
     }
@@ -14956,10 +14913,7 @@ void sexp_add_sun_bitmap (int n) {
             sexp_modify_variable (number_as_str, sexp_var);
         }
         else {
-            ASSERTF (
-                LOCATION,
-                "sexp-add-sun-bitmap: Variable %s must be a number variable!",
-                Sexp_variables[sexp_var].variable_name);
+            ASSERTX (0, "sexp-add-sun-bitmap: Variable %s must be a number variable!",Sexp_variables[sexp_var].variable_name);
             return;
         }
     }
@@ -21092,11 +21046,7 @@ int sexp_return_player_data (int node, int type) {
             break;
 
         default:
-            ASSERTF (
-                LOCATION,
-                "return-player-data was called with invalid type %d on node "
-                "%d!",
-                type, node);
+            ASSERTX (0, "return-player-data was called with invalid type %d on node %d!",type, node);
         }
     }
 
@@ -21181,10 +21131,7 @@ void sexp_subsys_set_random (int node) {
     if (high > 100) { high = 100; }
 
     if (low > high) {
-        ASSERTF (
-            LOCATION,
-            "subsys-set-random was passed an invalid range (%d ... %d)!", low,
-            high);
+        ASSERTX (0, "subsys-set-random was passed an invalid range (%d ... %d)!", low,high);
         return;
     }
 
@@ -23158,7 +23105,7 @@ int generate_event_log_flags_mask (int result) {
     case SEXP_FALSE: matches |= MLF_SEXP_FALSE; break;
 
     default:
-        ASSERTF (LOCATION, "SEXP has a value which isn't true or false.");
+        ASSERTX (0, "SEXP has a value which isn't true or false.");
         break;
     }
 
@@ -25579,10 +25526,7 @@ int get_sexp_main () {
         strncpy (buf, Mp, 512);
         if (buf[511] != '\0') strcpy (&buf[506], "[...]");
 
-        ASSERTF (
-            LOCATION,
-            "Expected to find an open parenthesis in the following sexp:\n%s",
-            buf);
+        ASSERTX (0, "Expected to find an open parenthesis in the following sexp:\n%s",buf);
         return -1;
     }
 
@@ -25593,9 +25537,7 @@ int get_sexp_main () {
     if (!Fred_running && (start_node >= 0)) {
         op = get_operator_index (CTEXT (start_node));
         if (op < 0) {
-            ASSERTF (
-                LOCATION, "Can't find operator %s in operator list!\n",
-                CTEXT (start_node));
+            ASSERTX (0, "Can't find operator %s in operator list!\n",CTEXT (start_node));
             return -1;
         }
     }
@@ -28860,7 +28802,7 @@ void sexp_add_array_block_variable (int index, bool is_numeric) {
  */
 void sexp_modify_variable (
     const char* text, int index, bool /* sexp_callback */) {
-    
+
     ASSERT (index >= 0 && index < MAX_SEXP_VARIABLES);
     ASSERT (Sexp_variables[index].type & SEXP_VARIABLE_SET);
 
@@ -28913,7 +28855,7 @@ void sexp_modify_variable (int n) {
         sexp_modify_variable (new_text, sexp_variable_index);
     }
     else {
-        ASSERTF (LOCATION, "Invalid variable type.\n");
+        ASSERTX (0, "Invalid variable type.\n");
     }
 }
 
@@ -28977,7 +28919,7 @@ void sexp_set_variable_by_index (int node) {
         sexp_modify_variable (new_text, sexp_variable_index);
     }
     else {
-        ASSERTF (LOCATION, "Invalid variable type.\n");
+        ASSERTX (0, "Invalid variable type.\n");
     }
 }
 

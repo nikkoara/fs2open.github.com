@@ -459,7 +459,7 @@ int mission_campaign_load (
         }
 
         if (i == MAX_CAMPAIGN_TYPES)
-            ASSERTF (LOCATION, "Unknown campaign type %s!", type);
+            ASSERTX (0, "Unknown campaign type %s!", type);
 
         Campaign.desc = NULL;
         if (optional_string ("+Description:"))
@@ -714,9 +714,7 @@ int mission_campaign_load_by_name (char* filename) {
         }
     }
     else {
-        ASSERTF (
-            LOCATION,
-            "Tried to load campaign file with illegal length/extension!");
+        ASSERTX (0, "Tried to load campaign file with illegal length/extension!");
     }
 
     if (!mission_campaign_get_info (filename, name, &type, &max_players)) {
@@ -1630,7 +1628,7 @@ int mission_campaign_parse_is_multi (char* filename, char* name) {
             if (!strcasecmp (temp, campaign_types[i])) { return i; }
         }
 
-        ASSERTF (LOCATION, "Unknown campaign type %s", temp);
+        ASSERTX (0, "Unknown campaign type %s", temp);
         return -1;
     }
     catch (const parse::ParseException& e) {

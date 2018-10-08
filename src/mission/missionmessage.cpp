@@ -236,7 +236,7 @@ void persona_parse () {
         (Persona*)vm_realloc (Personas, sizeof (Persona) * (Num_personas + 1));
 
     if (Personas == NULL)
-        ASSERTF (LOCATION, "Not enough memory to allocate Personas!");
+        ASSERTX (0, "Not enough memory to allocate Personas!");
 
     memset (&Personas[Num_personas], 0, sizeof (Persona));
 
@@ -1330,7 +1330,7 @@ void message_queue_process () {
             // related
             if ((Playing_messages[i].builtin_type != MESSAGE_OOPS) &&
                 (Playing_messages[i].builtin_type != MESSAGE_HAMMER_SWINE)) {
-                
+
                 if (Player_ship->team == Iff_traitor) {
                     message_kill_playing (i);
                     Message_shipnum = -1;
@@ -1956,13 +1956,13 @@ typedef struct matching_builtin {
 void message_send_builtin_to_player (
     int type, ship* shipp, int priority, int timing, int group, int delay,
     int /* multi_target */, int multi_team_filter) {
-    
+
     int i,
         persona_index = -1,
         persona_species = -1,
         message_index = -1,
         random_selection = -1;
-    
+
     int source;
     int num_matching_builtins = 0;
     const char* who_from;
@@ -2143,8 +2143,7 @@ void message_send_builtin_to_player (
                 "looking for message for any persona of any species");
         break;
     case -1:
-        ASSERTF (
-            LOCATION, "Couldn't find any builtin message of type %d\n", type);
+        ASSERTX (0, "Couldn't find any builtin message of type %d\n", type);
         return;
     }
 

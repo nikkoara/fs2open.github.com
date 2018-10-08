@@ -52,9 +52,7 @@ char* clean_filename (char* name) {
 // retrieve the current working directory
 int _getcwd (char* out_buf, unsigned int len) {
     if (getcwd (out_buf, len) == NULL) {
-        ASSERTF (
-            __FILE__, __LINE__, "buffer overflow in getcwd (buf size = %u)",
-            len);
+        ASSERTX (0, "buffer overflow in getcwd (buf size = %u)",len);
     }
 
     return 1;

@@ -2765,7 +2765,7 @@ camid game_render_frame_setup () {
     if (!Main_camera.isValid ()) { Main_camera = cam_create ("Main camera"); }
     camera* main_cam = Main_camera.getCamera ();
     if (main_cam == NULL) {
-        ASSERTF (LOCATION, "Unable to generate main camera");
+        ASSERTX (0, "Unable to generate main camera");
         return camid ();
     }
 
@@ -3162,7 +3162,7 @@ void game_render_frame (camid cid) {
     // projection and view matrix is setup
     if (Cmdline_env)
         stars_setup_environment_mapping (cid);
-    
+
     gr_zbuffer_clear (TRUE);
     gr_scene_texture_begin ();
 
@@ -3376,21 +3376,21 @@ void game_simulation_frame () {
     // only process the message queue when the player is "in" the game
     if (!Pre_player_entry) {
         // process any messages send to the player
-        message_queue_process (); 
+        message_queue_process ();
     }
 
     // maybe distort incoming message if comms damaged
-    message_maybe_distort (); 
-    
+    message_maybe_distort ();
+
     // AI objects get repaired in ai_process, called from move code...deal with
-    // player.     
+    // player.
     player_repair_frame (flFrametime);
 
     // maybe send off a delayed praise message to the player
     player_process_pending_praise ();
 
     // maybe tell the player he is all alone
-    player_maybe_play_all_alone_msg (); 
+    player_maybe_play_all_alone_msg ();
 
     // process some stuff every frame (before frame is rendered)
     emp_process_local ();
@@ -3418,7 +3418,7 @@ void game_simulation_frame () {
     obj_snd_do_frame ();
 
     game_maybe_update_sound_environment ();
-    
+
     snd_update_listener (
         &Eye_position, &Player_obj->phys_info.vel, &Eye_matrix);
 
@@ -4323,9 +4323,9 @@ void game_process_event (int current_state, int event) {
             gameseq_set_state (GS_STATE_GAME_PLAY, 1);
         }
 
-        Start_time = f2fl (timer_get_approx_seconds ());        
+        Start_time = f2fl (timer_get_approx_seconds ());
         WARNINGF (LOCATION, "Entering game at time = %7.3f\n", Start_time);
-        
+
         break;
 
     case GS_EVENT_END_GAME:
@@ -4995,7 +4995,7 @@ void game_enter_state (int old_state, int new_state) {
         if (old_state != GS_STATE_GAME_PAUSED) {
             event_music_first_pattern (); // start the first pattern
         }
-        
+
         player_restore_target_and_weapon_link_prefs ();
 
         Game_mode |= GM_IN_MISSION;
@@ -5013,7 +5013,7 @@ void game_enter_state (int old_state, int new_state) {
             game_start_time ();
 
         Game_subspace_effect = 0;
-        
+
         if (The_mission.flags[Mission::Mission_Flags::Subspace]) {
             Game_subspace_effect = 1;
             if (!(Game_mode & GM_STANDALONE_SERVER)) {
@@ -5022,7 +5022,7 @@ void game_enter_state (int old_state, int new_state) {
         }
 
         sound_env_set (&Game_sound_env);
-        
+
         joy_ff_mission_init (
             Ship_info[Player_ship->ship_info_index].rotation_time);
 
@@ -5116,7 +5116,7 @@ void game_do_state (int state) {
     // Legal to set the should skip state anywhere in this function; do stuff
     // that may need to be done regardless of state.
     //
-    game_do_state_common (state); 
+    game_do_state_common (state);
 
     if (Game_do_state_should_skip) { return; }
 
@@ -5487,7 +5487,7 @@ int game_main (int argc, char* argv[]) {
         // Since tracing is always active this needs to happen in the main loop
         tracing::process_events ();
     }
-    
+
     game_shutdown ();
 
     return 0;
@@ -6447,15 +6447,14 @@ int actual_main (int argc, char* argv[]) {
 #if !defined(DONT_CATCH_MAIN_EXCEPTIONS)
     }
     catch (const std::exception& ex) {
-        ASSERTF (
-            LOCATION, "Caught std::exception in main(): '%s'!", ex.what ());
+        ASSERTX (0, "Caught std::exception in main(): '%s'!", ex.what ());
         fprintf (
             stderr, "Caught std::exception in main(): '%s'!\n", ex.what ());
 
         result = EXIT_FAILURE;
     }
     catch (...) {
-        ASSERTF (LOCATION, "Caught exception in main()!");
+        ASSERTX (0, "Caught exception in main()!");
         fprintf (stderr, "Caught exception in main()!\n");
 
         result = EXIT_FAILURE;

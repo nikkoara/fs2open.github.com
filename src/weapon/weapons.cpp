@@ -483,7 +483,7 @@ int missile_obj_list_add (int objnum) {
         if (!(Missile_objs[i].flags & MISSILE_OBJ_USED)) break;
     }
     if (i == MAX_MISSILE_OBJS) {
-        ASSERTF (LOCATION, "Fatal Error: Ran out of missile object nodes\n");
+        ASSERTX (0, "Fatal Error: Ran out of missile object nodes\n");
         return -1;
     }
 
@@ -877,10 +877,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         }
 
         if (Num_weapon_types >= MAX_WEAPON_TYPES) {
-            ASSERTF (
-                LOCATION,
-                "Too many weapon classes before '%s'; maximum is %d.\n", fname,
-                MAX_WEAPON_TYPES);
+            ASSERTX (0, "Too many weapon classes before '%s'; maximum is %d.\n", fname,MAX_WEAPON_TYPES);
         }
 
         wip = &Weapon_info[Num_weapon_types];
@@ -1475,11 +1472,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
             }
         }
         else {
-            ASSERTF (
-                LOCATION,
-                "Illegal homing type = %s.\nMust be HEAT, ASPECT or "
-                "JAVELIN.\n",
-                temp_type);
+            ASSERTX (0, "Illegal homing type = %s.\nMust be HEAT, ASPECT or JAVELIN.\n",temp_type);
         }
     }
 
@@ -4361,7 +4354,7 @@ void find_homing_object_by_sig (object* weapon_objp, int sig) {
     weapon* wp = &Weapons[weapon_objp->instance];
 
     ship_obj* sop = GET_FIRST (&Ship_obj_list);
-    
+
     while (sop != END_OF_LIST (&Ship_obj_list)) {
         object* objp;
 
@@ -5390,9 +5383,7 @@ void weapon_process_post (object* obj, float frame_time) {
             break;
         case ALWAYS: play_sound = true; break;
         default:
-            ASSERTF (
-                LOCATION, "Unknown in-flight sound status %d!",
-                (int)wip->in_flight_play_type);
+            ASSERTX (0, "Unknown in-flight sound status %d!",(int)wip->in_flight_play_type);
             break;
         }
 

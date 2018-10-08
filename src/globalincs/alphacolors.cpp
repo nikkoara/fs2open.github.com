@@ -436,11 +436,7 @@ void parse_everything_else (const char* filename) {
                 stuff_string (temp, F_RAW);
                 if (temp[0] == '$') {
                     if (temp[1] == '\0') {
-                        ASSERTF (
-                            LOCATION,
-                            "%s - found a '$Tag:' entry with a solitary "
-                            "'$'.\n",
-                            filename);
+                        ASSERTX (0, "%s - found a '$Tag:' entry with a solitary '$'.\n",filename);
                     }
                     tag = temp[1];
                     if (temp[2] != '\0') {
@@ -452,9 +448,7 @@ void parse_everything_else (const char* filename) {
                     }
                 }
                 else if (temp[0] == '\0') {
-                    ASSERTF (
-                        LOCATION, "%s - found a '$Tag:' entry with no tag.\n",
-                        filename);
+                    ASSERTX (0, "%s - found a '$Tag:' entry with no tag.\n",filename);
                 }
                 else {
                     tag = temp[0];
@@ -522,11 +516,7 @@ void parse_everything_else (const char* filename) {
                             if (temp == COLOR_NAMES[j]) { break; }
                         }
                         if (j == TOTAL_COLORS) {
-                            ASSERTF (
-                                LOCATION,
-                                "Unknown color '%s' in %s, for definition of "
-                                "tag '$%c'.\n",
-                                temp.c_str (), filename, tag);
+                            ASSERTX (0, "Unknown color '%s' in %s, for definition of tag '$%c'.\n",temp.c_str (), filename, tag);
                         }
                         Tagged_Colors[tag] = COLOR_LIST[j];
                     }
@@ -585,11 +575,7 @@ void parse_everything_else (const char* filename) {
                     stuff_string (temp, F_RAW);
                     if (temp[0] == '$') {
                         if (temp[1] == '\0') {
-                            ASSERTF (
-                                LOCATION,
-                                "%s - default text color '%s' entry with a "
-                                "solitary '$'.\n",
-                                filename, color_names[i]);
+                            ASSERTX (0, "%s - default text color '%s' entry with a solitary '$'.\n",filename, color_names[i]);
                         }
                         *color_value[i] = temp[1];
                         if (temp[2] != '\0') {
@@ -601,11 +587,7 @@ void parse_everything_else (const char* filename) {
                         }
                     }
                     else if (temp[0] == '\0') {
-                        ASSERTF (
-                            LOCATION,
-                            "%s - default text color '%s' entry with no "
-                            "tag.\n",
-                            filename, color_names[i]);
+                        ASSERTX (0, "%s - default text color '%s' entry with no tag.\n",filename, color_names[i]);
                     }
                     else {
                         *color_value[i] = temp[0];

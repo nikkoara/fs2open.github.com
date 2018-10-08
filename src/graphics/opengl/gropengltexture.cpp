@@ -86,11 +86,7 @@ void opengl_tcache_init () {
     // available to us 1024 is what we need with the standard resolutions -
     // taylor
     if (GL_max_texture_width < 1024) {
-        ASSERTF (
-            LOCATION,
-            "A minimum texture size of \"1024x1024\" is required for FS2_Open "
-            "but only \"%ix%i\" was found.  Can not continue.",
-            GL_max_texture_width, GL_max_texture_height);
+        ASSERTX (0, "A minimum texture size of \"1024x1024\" is required for FS2_Open but only \"%ix%i\" was found.  Can not continue.",GL_max_texture_width, GL_max_texture_height);
     }
 
     // check what mipmap filter we should be using
@@ -1161,7 +1157,9 @@ int gr_opengl_preload (int bitmap_num, int is_aabitmap) {
         bitmap_num, (is_aabitmap) ? TCACHE_TYPE_AABITMAP : TCACHE_TYPE_NORMAL,
         &u_scale, &v_scale, &array_index);
 
-    if (!retval) { WARNINGF (LOCATION, "Texture upload failed!\n"); }
+    if (!retval) {
+        WARNINGF (LOCATION, "Texture upload failed!\n");
+    }
 
     return retval;
 }

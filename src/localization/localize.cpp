@@ -134,7 +134,8 @@ void lcl_init (int lang_init) {
             NULL, "Language",
             Lcl_languages[FS2_OPEN_DEFAULT_LANGUAGE].lang_name);
 
-        if (ret == NULL) ASSERTF (LOCATION, "Default language not found.");
+        if (ret == NULL)
+            ASSERTX (0, "Default language not found.");
 
         strcpy_s (lang_string, ret);
 
@@ -282,9 +283,7 @@ void parse_stringstbl_common (const char* filename, const bool external) {
                 return;
             }
             else if (!external && (index < 0 || index >= XSTR_SIZE)) {
-                ASSERTF (
-                    LOCATION, "Invalid strings table index specified (%i)",
-                    index);
+                ASSERTX (0, "Invalid strings table index specified (%i)",index);
             }
 
             if (!external) {
@@ -394,7 +393,7 @@ void parse_stringstbl_common (const char* filename, const bool external) {
                 if (sscanf (p_offset, "%d%d", &offset_lo, &offset_hi) <
                     num_offsets_on_this_line) {
                     // whatever is in the file ain't a proper offset
-                    ASSERTF (LOCATION, "%s is corrupt", filename);
+                    ASSERTX (0, "%s is corrupt", filename);
                 }
             }
 

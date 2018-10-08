@@ -6,10 +6,6 @@ namespace memory {
 const quiet_alloc_t quiet_alloc;
 void out_of_memory () {
     ERRORF (LOCATION, "out of memory");
-    ASSERTF (
-        LOCATION,
-        "Out of memory.  Try closing down other applications, increasing "
-        "your\n"
-        "virtual memory size, or installing more physical RAM.\n");
+    ASSERTX (0, "Out of memory.  Try closing down other applications, increasing your\nvirtual memory size, or installing more physical RAM.\n");
 }
 } // namespace memory

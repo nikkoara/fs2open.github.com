@@ -772,9 +772,7 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
         anim_read_header (ptr, fp);
 
         if (ptr->width < 0 || ptr->height < 0) {
-            ASSERTF (
-                LOCATION,
-                "Ani file %s has a faulty header and cannot be loaded.", name);
+            ASSERTX (0, "Ani file %s has a faulty header and cannot be loaded.", name);
         }
 
         if (ptr->num_keys > 0) {
@@ -1000,9 +998,7 @@ void anim_display_info (char* real_filename) {
     anim_read_header (&A, fp);
 
     if (A.width < 0 || A.height < 0) {
-        ASSERTF (
-            LOCATION, "Ani file %s has a faulty header and cannot be loaded.",
-            filename);
+        ASSERTX (0, "Ani file %s has a faulty header and cannot be loaded.",filename);
     }
 
     // read the keyframe frame nums and offsets

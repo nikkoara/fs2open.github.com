@@ -1936,14 +1936,7 @@ static void asteroid_parse_tbl () {
                 case ASTEROID_TYPE_MEDIUM: msg.append (" medium\n"); break;
                 case ASTEROID_TYPE_LARGE: msg.append (" large\n"); break;
                 default:
-                    ASSERTF (
-                        LOCATION,
-                        "Get a coder! Math has broken!\n"
-                        "Important numbers:\n"
-                        "\ttally: %zu"
-                        "\n"
-                        "\tNUM_DEBRIS_SIZES: %d\n",
-                        tally, NUM_DEBRIS_SIZES);
+                    ASSERTX (0, "Get a coder! Math has broken!\nImportant numbers:\n\ttally: %zu\n\tNUM_DEBRIS_SIZES: %d\n",tally, NUM_DEBRIS_SIZES);
                     msg.append (" unknown\n");
                 }
                 parsed_asteroids.push_back (msg);
@@ -1963,17 +1956,7 @@ static void asteroid_parse_tbl () {
                 WARNINGF (LOCATION, "%s", iter->c_str ());
             }
 #endif
-            ASSERTF (
-                LOCATION,
-                "Found %zu asteroids/debris when %zu"
-                " expected\n\n"
-                "<Number expected> = <Number of species> * %d + %d generic "
-                "asteroids\n%zu = %zu"
-                "*%d + %d\n\n"
-                "See the debug log for a listing of all parsed asteroids\n",
-                tally, max_asteroids, NUM_DEBRIS_SIZES, NUM_DEBRIS_SIZES,
-                max_asteroids, Species_info.size (), NUM_DEBRIS_SIZES,
-                NUM_DEBRIS_SIZES);
+            ASSERTX (0, "Found %zu asteroids/debris when %zu expected\n\n<Number expected> = <Number of species> * %d + %d generic asteroids\n%zu = %zu*%d + %d\n\nSee the debug log for a listing of all parsed asteroids\n",tally, max_asteroids, NUM_DEBRIS_SIZES, NUM_DEBRIS_SIZES,max_asteroids, Species_info.size (), NUM_DEBRIS_SIZES,NUM_DEBRIS_SIZES);
         }
 
         Asteroid_impact_explosion_ani = -1;

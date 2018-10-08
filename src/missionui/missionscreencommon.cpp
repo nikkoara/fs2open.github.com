@@ -980,7 +980,7 @@ void load_wing_icons (const char* filename) {
 
     first_frame = bm_load_animation (filename, &num_frames);
     if (first_frame == -1) {
-        ASSERTF (LOCATION, "Could not load icons from %s\n", filename);
+        ASSERTX (0, "Could not load icons from %s\n", filename);
         return;
     }
 

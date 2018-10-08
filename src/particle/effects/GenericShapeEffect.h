@@ -83,7 +83,7 @@ private:
             return out;
         }
         default:
-            ASSERTF (LOCATION, "Unhandled direction value!");
+            ASSERTX (0, "Unhandled direction value!");
             return vmd_zero_vector;
         }
     }

@@ -310,7 +310,7 @@ void brief_parse_icon_tbl () {
                 errormsg += "\n";
             }
 
-            ASSERTF (LOCATION, "%s", errormsg.c_str ());
+            ASSERTX (0, "%s", errormsg.c_str ());
         }
     }
     catch (const parse::ParseException& e) {

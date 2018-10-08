@@ -1279,7 +1279,7 @@ int model_collide (mc_info* mc_info_obj) {
     Mc->edge_hit = 0;
 
     if ((Mc->flags & MC_CHECK_SHIELD) && (Mc->flags & MC_CHECK_MODEL)) {
-        ASSERTF (LOCATION, "Checking both shield and model!\n");
+        ASSERTX (0, "Checking both shield and model!\n");
         return 0;
     }
 

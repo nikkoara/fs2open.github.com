@@ -828,7 +828,7 @@ void techroom_change_tab (int num) {
                 Ship_list = new tech_list_entry[Ship_info.size ()];
 
                 if (Ship_list == NULL)
-                    ASSERTF (LOCATION, "Couldn't init ships list!");
+                    ASSERTX (0, "Couldn't init ships list!");
             }
 
             Ship_list_size = 0;
@@ -893,7 +893,7 @@ void techroom_change_tab (int num) {
                 Weapon_list = new tech_list_entry[Num_weapon_types];
 
                 if (Weapon_list == NULL)
-                    ASSERTF (LOCATION, "Couldn't init ships list!");
+                    ASSERTX (0, "Couldn't init ships list!");
             }
 
             Weapon_list_size = 0;

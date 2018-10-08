@@ -770,9 +770,7 @@ bool validate_ship_ets_indxes (
         break;
 
     default:
-        ASSERTF (
-            LOCATION, "Encountered a ship (%s) with a broken ETS",
-            ship_p->ship_name);
+        ASSERTX (0, "Encountered a ship (%s) with a broken ETS",ship_p->ship_name);
         break;
     }
     return true;

@@ -127,7 +127,7 @@ void radar_stuff_blip_info (
         break;
 
     default:
-        ASSERTF (LOCATION, "Illegal blip type in radar.");
+        ASSERTX (0, "Illegal blip type in radar.");
         break;
     }
 }
@@ -444,7 +444,7 @@ void HudGaugeRadar::drawRange () {
         break;
 
     default:
-        ASSERTF (LOCATION, "Unknown radar range: %d!\n", HUD_config.rp_dist);
+        ASSERTX (0, "Unknown radar range: %d!\n", HUD_config.rp_dist);
         break;
     }
 }

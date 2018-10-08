@@ -295,9 +295,7 @@ int generic_anim_stream (generic_anim* ga, const bool cache) {
     if (ga->type == BM_TYPE_PNG) { ga->total_time = ga->png.anim->anim_time; }
     else {
         if (anim_fps == 0) {
-            ASSERTF (
-                LOCATION, "animation (%s) has invalid fps of zero, fix this!",
-                ga->filename);
+            ASSERTX (0, "animation (%s) has invalid fps of zero, fix this!",ga->filename);
         }
         ga->total_time = ga->num_frames / (float)anim_fps;
     }

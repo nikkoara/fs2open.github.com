@@ -224,10 +224,7 @@ void obj_snd_stop (object* objp, int index) {
 
     // sanity
     if (index >= (int)objp->objsnd_num.size ()) {
-        ASSERTF (
-            LOCATION,
-            "Object sound index %d is bigger than the actual size %d!", index,
-            (int)objp->objsnd_num.size ());
+        ASSERTX (0, "Object sound index %d is bigger than the actual size %d!", index,(int)objp->objsnd_num.size ());
         return;
     }
 

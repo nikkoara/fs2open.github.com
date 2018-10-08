@@ -775,11 +775,7 @@ void red_alert_delete_ship (p_object* pobjp, int ship_state) {
             pobjp->flags.set (Mission::Parse_Object_Flags::SF_Cannot_arrive);
     }
     else
-        ASSERTF (
-            LOCATION,
-            "Red Alert: asked to delete ship (%s) with invalid ship state "
-            "(%d)",
-            pobjp->name, ship_state);
+        ASSERTX (0, "Red Alert: asked to delete ship (%s) with invalid ship state (%d)",pobjp->name, ship_state);
 }
 
 /*

@@ -511,10 +511,7 @@ void parse_hud_gauges_tbl (const char* filename) {
 
 void hud_positions_init () {
     if (!ships_inited) {
-        ASSERTF (
-            LOCATION,
-            "Could not initialize hudparse.cpp as ships were not inited "
-            "first.");
+        ASSERTX (0, "Could not initialize hudparse.cpp as ships were not inited first.");
         return;
     }
 
@@ -1112,10 +1109,7 @@ gauge_load_common (gauge_settings* settings, T* preAllocated = NULL) {
                 }
 
                 if (optional_string ("Offset:")) {
-                    ASSERTF (
-                        LOCATION,
-                        "HUD gauges table: Offset must also have Origin "
-                        "defined");
+                    ASSERTX (0, "HUD gauges table: Offset must also have Origin defined");
                 }
 
                 if (!(settings->use_coords && use_default_pos)) {
@@ -1305,9 +1299,7 @@ void load_gauge_custom (gauge_settings* settings) {
             }
 
             if (optional_string ("Offset:")) {
-                ASSERTF (
-                    LOCATION,
-                    "HUD gauges table: Offset must also have Origin defined");
+                ASSERTX (0, "HUD gauges table: Offset must also have Origin defined");
             }
 
             if (!use_default_pos) {
@@ -2821,9 +2813,7 @@ void load_gauge_radar_dradis (gauge_settings* settings) {
             }
 
             if (optional_string ("Offset:")) {
-                ASSERTF (
-                    LOCATION,
-                    "HUD gauges table: Offset must also have Origin defined");
+                ASSERTX (0, "HUD gauges table: Offset must also have Origin defined");
             }
 
             settings->coords[0] =

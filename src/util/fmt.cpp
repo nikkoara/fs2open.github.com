@@ -1,6 +1,7 @@
 // -*- mode: c++; -*-
 
 #include "defs.hpp"
+#include "log/log.hpp"
 #include "util/fmt.hpp"
 
 #include <filesystem>
@@ -72,6 +73,8 @@ fs2_vsnfmt (char* pbuf, size_t len, char const* fmt, va_list ap) {
         }
 #endif // FS2_NO_POSIX_VSNPRINTF
 
+        WW ("general") << "vsnfmt malloc : " << len;
+
         pbuf = reinterpret_cast< char* > (malloc (len));
 
         if (0 == pbuf)
@@ -104,7 +107,14 @@ fs2_snfmt (char* pbuf, size_t len, char const* fmt, ...) {
 ////////////////////////////////////////////////////////////////////////
 
 struct guard_t : private boost::noncopyable {
+    guard_t () = delete;
     guard_t (char* p, bool b) : p_ (p), own_ (b) { }
+
+    guard_t (const guard_t&) = delete;
+    guard_t (guard_t&&) = delete;
+
+    guard_t& operator= (const guard_t&) = delete;
+    guard_t& operator= (guard_t&&) = delete;
 
     ~guard_t () {
         if (own_ && p_) free (p_);

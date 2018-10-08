@@ -864,9 +864,7 @@ void gr_string (
         }
     }
     else {
-        ASSERTF (
-            LOCATION, "Invalid type enumeration for font \"%s\". Get a coder!",
-            currentFont->getName ().c_str ());
+        ASSERTX (0, "Invalid type enumeration for font \"%s\". Get a coder!",currentFont->getName ().c_str ());
     }
 }
 

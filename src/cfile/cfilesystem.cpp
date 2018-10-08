@@ -316,11 +316,7 @@ cf_add_mod_roots (const char* rootDirectory, uint32_t basic_location) {
 
             std::string rootPath = ss.str ();
             if (rootPath.size () + 1 >= CF_MAX_PATHNAME_LENGTH) {
-                ASSERTF (
-                    LOCATION,
-                    "The length of mod directory path '%s' exceeds the "
-                    "maximum of %d!\n",
-                    rootPath.c_str (), CF_MAX_PATHNAME_LENGTH);
+                ASSERTX (0, "The length of mod directory path '%s' exceeds the maximum of %d!\n",rootPath.c_str (), CF_MAX_PATHNAME_LENGTH);
             }
 
             // normalize the path to the native path format
@@ -417,7 +413,7 @@ void cf_build_root_list (const char* cdrom_dir) {
     char working_directory[CF_MAX_PATHNAME_LENGTH];
 
     if (!_getcwd (working_directory, CF_MAX_PATHNAME_LENGTH)) {
-        ASSERTF (LOCATION, "Can't get current working directory -- %d", errno);
+        ASSERTX (0, "Can't get current working directory -- %d", errno);
     }
 
     cf_add_mod_roots (working_directory, CF_LOCATION_ROOT_GAME);

@@ -62,7 +62,9 @@ void UI_WINDOW::set_mask_bmap (const char* fname) {
 
     bmap = bm_load (fname);
 
-    if (bmap < 0) { ASSERTF (LOCATION, "Could not load in %s!", fname); }
+    if (bmap < 0) {
+        ASSERTX (0, "Could not load in %s!", fname);
+    }
     else {
         set_mask_bmap (bmap, fname);
     }
@@ -109,7 +111,7 @@ void UI_WINDOW::set_foreground_bmap (const char* fname) {
     // load in the background bitmap
     foreground_bmap_id = bm_load (fname);
     if (foreground_bmap_id < 0) {
-        ASSERTF (LOCATION, "Could not load in %s!", fname);
+        ASSERTX (0, "Could not load in %s!", fname);
     }
 }
 
@@ -654,98 +656,3 @@ void UI_WINDOW::do_dump_check () {
         }
 #endif
 }
-
-/*
-void parse_tooltip(int n)
-{
-    char buf[MESSAGE_LENGTH];
-
-    stuff_int(&Tooltips[n].hotspot);
-    stuff_string(buf, F_MESSAGE, NULL);
-    Tooltips[n].text = vm_strdup(buf);
-}
-
-int parse_tooltips_group(int group, int n)
-{
-    char buf[NAME_LENGTH];
-
-    Assert(group < MAX_TOOLTIP_GROUPS);
-    required_string("$Mask Filename:");
-    stuff_string(buf, F_NAME, NULL);
-    Tooltip_groups[group].mask = vm_strdup(buf);
-    Tooltip_groups[group].start = n;
-
-    while (1) {
-        if (check_for_string("#") || check_for_string("$")) {
-            Tooltip_groups[group].end = n;
-            return n;
-        }
-
-        Assert(n < MAX_TOOLTIPS);
-        parse_tooltip(n++);
-    }
-}
-
-void parse_ship_tooltip(int n)
-{
-}
-
-void parse_weapon_tooltip(int n)
-{
-}
-
-void parse_tooltips()
-{
-    int n, rval;
-
-    // open localization
-    lcl_ext_open();
-
-    if ((rval = setjmp(parse_abort)) != 0) {
-        mprintf(("TABLES: Unable to parse '%s'!  Error code = %i.\n",
-"tooltips.tbl", rval)); lcl_ext_close(); return;
-    }
-
-    read_file_text("tooltips.tbl");
-
-    n = Num_tooltip_groups = 0;
-    reset_parse();
-
-    if (optional_string("#UI"))
-        while (required_string_either("#", "$")) {
-            n = parse_tooltips_group(Num_tooltip_groups, n);
-            Num_tooltip_groups++;
-        }
-
-    if (optional_string("#Ships"))
-        while (required_string_either("#", "$")) {
-            parse_ship_tooltip(Num_ship_tooltips);
-            Num_ship_tooltips++;
-        }
-
-    if (optional_string("#Weapons"))
-        while (required_string_either("#", "$")) {
-            parse_ship_tooltip(Num_weapon_tooltips);
-            Num_weapon_tooltips++;
-        }
-
-    required_string("#End");
-
-    // close localization
-    lcl_ext_close();
-}
-
-void init_tooltips()
-{
-    static int inited = 0;
-
-    if (!inited) {
-        parse_tooltips();
-        inited = 1;
-    }
-}
-*/
-
-void ok_clicked () { WARNINGF (LOCATION, "OK Clicked!\n"); }
-
-void do_help () { WARNINGF (LOCATION, "Help!\n"); }

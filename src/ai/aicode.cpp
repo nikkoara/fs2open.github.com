@@ -3059,11 +3059,7 @@ void ai_find_path (
             ship* shipp = &Ships[objp->instance];
             pm = model_get (Ship_info[shipp->ship_info_index].model_num);
             if (path_num >= pm->n_paths)
-                ASSERTF (
-                    LOCATION,
-                    "ai_find_path tring to find a path (%d) that doesn't "
-                    "exist, on ship %s",
-                    path_num, shipp->ship_name);
+                ASSERTX (0, "ai_find_path tring to find a path (%d) that doesn't exist, on ship %s",path_num, shipp->ship_name);
 
             aip->goal_objnum = objnum;
             aip->goal_signature = objp->signature;
@@ -3357,11 +3353,7 @@ void ai_dock_with_object (
 
         // make sure we have a path
         if (path_num < 0) {
-            ASSERTF (
-                LOCATION,
-                "Cannot find a dock path for ship %s, dock index %d.  "
-                "Aborting dock.\n",
-                Ships[dockee->instance].ship_name, dockee_index);
+            ASSERTX (0, "Cannot find a dock path for ship %s, dock index %d.  Aborting dock.\n",Ships[dockee->instance].ship_name, dockee_index);
             ai_mission_goal_complete (aip);
             return;
         }
@@ -4373,9 +4365,7 @@ float ai_path () {
     case AI_PATH_MODE_NORMAL: return ai_path_0 (); break;
     case AI_PATH_MODE_ALT1: return ai_path_1 (); break;
     default:
-        ASSERTF (
-            LOCATION, "Invalid path mode found: %d\n",
-            The_mission.ai_profile->ai_path_mode);
+        ASSERTX (0, "Invalid path mode found: %d\n",The_mission.ai_profile->ai_path_mode);
         return ai_path_0 ();
     }
 }
@@ -11650,7 +11640,7 @@ void ai_get_dock_goal_indexes (
     }
 
     default: {
-        ASSERTF (LOCATION, "Unknown docking submode!");
+        ASSERTX (0, "Unknown docking submode!");
         docker_index = -1;
         dockee_index = -1;
         break;
@@ -12539,7 +12529,9 @@ void process_subobjects (int objnum) {
         case SUBSYSTEM_SOLAR:
         case SUBSYSTEM_GAS_COLLECT:
         case SUBSYSTEM_ACTIVATION: break;
-        default: ASSERTF (LOCATION, "Illegal subsystem type.\n");
+        default:
+            ASSERTX (0, "Illegal subsystem type.\n");
+            break;
         }
 
         // do solar/radar/gas/activator rotation here

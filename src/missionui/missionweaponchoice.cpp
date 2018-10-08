@@ -415,7 +415,7 @@ int wl_get_pilot_subsys_index (p_object* pobjp) {
     }
 
     if (pilot_index == -1) {
-        ASSERTF (LOCATION, "Parse object doesn't have a pilot subsystem\n");
+        ASSERTX (0, "Parse object doesn't have a pilot subsystem\n");
         return -1;
     }
 
@@ -1884,9 +1884,7 @@ void weapon_select_init () {
     WeaponSelectMaskBitmap =
         bm_load (Wl_loadout_select_mask[Uses_apply_all_button][gr_screen.res]);
     if (WeaponSelectMaskBitmap < 0) {
-        ASSERTF (
-            LOCATION, "Could not load in '%s'!",
-            Wl_loadout_select_mask[Uses_apply_all_button][gr_screen.res]);
+        ASSERTX (0, "Could not load in '%s'!",Wl_loadout_select_mask[Uses_apply_all_button][gr_screen.res]);
     }
 
     Weaponselect_mask_w = -1;

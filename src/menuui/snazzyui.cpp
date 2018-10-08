@@ -188,7 +188,7 @@ void read_menu_tbl (
 
     fp = cfopen (NOX ("menu.tbl"), "rt");
     if (fp == NULL) {
-        ASSERTF (LOCATION, "menu.tbl could not be opened\n");
+        ASSERTX (0, "menu.tbl could not be opened\n");
 
         return;
     }

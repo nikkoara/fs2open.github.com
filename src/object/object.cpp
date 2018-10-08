@@ -612,10 +612,7 @@ void obj_delete (int objnum) {
     case OBJ_BEAM: break;
     case OBJ_NONE: Int3 (); break;
     default:
-        ASSERTF (
-            LOCATION,
-            "Unhandled object type %d in obj_delete_all_that_should_be_dead",
-            objp->type);
+        ASSERTX (0, "Unhandled object type %d in obj_delete_all_that_should_be_dead",objp->type);
     }
 
     // delete any dock information we still have
@@ -1148,9 +1145,7 @@ void obj_move_all_pre (object* objp, float frametime) {
     case OBJ_BEAM: break;
     case OBJ_NONE: Int3 (); break;
     default:
-        ASSERTF (
-            LOCATION, "Unhandled object type %d in obj_move_all_pre\n",
-            objp->type);
+        ASSERTX (0, "Unhandled object type %d in obj_move_all_pre\n",objp->type);
     }
 
     objp->pre_move_event.notify_all (objp);
@@ -1386,9 +1381,7 @@ void obj_move_all_post (object* objp, float frametime) {
     case OBJ_NONE: Int3 (); break;
 
     default:
-        ASSERTF (
-            LOCATION, "Unhandled object type %d in obj_move_all_post\n",
-            objp->type);
+        ASSERTX (0, "Unhandled object type %d in obj_move_all_post\n",objp->type);
     }
 
     objp->post_move_event.notify_all (objp);
@@ -1642,7 +1635,7 @@ void obj_queue_render (object* obj, model_draw_list* scene) {
     case OBJ_GHOST: break;
     case OBJ_BEAM: break;
     default:
-        ASSERTF (LOCATION, "Unhandled obj type %d in obj_render", obj->type);
+        ASSERTX (0, "Unhandled obj type %d in obj_render", obj->type);
     }
 }
 

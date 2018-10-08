@@ -66,9 +66,7 @@ ParticleEffectPtr constructEffect (const std::string& name, EffectType type) {
         break;
     }
     default: {
-        ASSERTF (
-            LOCATION, "Unimplemented effect type %d encountered! Get a coder!",
-            static_cast< int > (type));
+        ASSERTX (0, "Unimplemented effect type %d encountered! Get a coder!",static_cast< int > (type));
         throw std::runtime_error ("Unimplemented effect type encountered!");
     }
     }

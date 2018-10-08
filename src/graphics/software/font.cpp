@@ -226,12 +226,7 @@ void parse_vfnt_font (const std::string& fontFilename) {
 
         if (default_special_char_index < 0 ||
             default_special_char_index >= MAX_SPECIAL_CHAR_IDX) {
-            ASSERTF (
-                LOCATION,
-                "Default special character index (%d) for font (%s), must be "
-                "0 - %u",
-                default_special_char_index, fontName.c_str (),
-                MAX_SPECIAL_CHAR_IDX);
+            ASSERTX (0, "Default special character index (%d) for font (%s), must be 0 - %u",default_special_char_index, fontName.c_str (),MAX_SPECIAL_CHAR_IDX);
         }
 
         for (auto i = 0; i < (int)Lcl_languages.size (); ++i) {
@@ -270,12 +265,7 @@ void parse_vfnt_font (const std::string& fontFilename) {
 
             if (special_char_index < 0 ||
                 special_char_index >= MAX_SPECIAL_CHAR_IDX) {
-                ASSERTF (
-                    LOCATION,
-                    "Special character index (%d) for font (%s), language "
-                    "(%s) is invalid, must be 0 - %u",
-                    special_char_index, fontName.c_str (), lang_name,
-                    MAX_SPECIAL_CHAR_IDX);
+                ASSERTX (0, "Special character index (%d) for font (%s), language (%s) is invalid, must be 0 - %u",special_char_index, fontName.c_str (), lang_name,MAX_SPECIAL_CHAR_IDX);
             }
 
             Lcl_languages[lang_idx].special_char_indexes[font_id] =
@@ -353,11 +343,7 @@ void parse_fonts_tbl () {
 
     // double check
     if (FontManager::numberOfFonts () < 3) {
-        ASSERTF (
-            LOCATION,
-            "At least three fonts have to be loaded but only %d valid entries "
-            "were found!",
-            FontManager::numberOfFonts ());
+        ASSERTX (0, "At least three fonts have to be loaded but only %d valid entries were found!",FontManager::numberOfFonts ());
     }
 }
 } // namespace
@@ -419,11 +405,7 @@ void stuff_first (std::string& firstFont) {
         parse_type (type, firstFont);
     }
     catch (const parse::ParseException& e) {
-        ASSERTF (
-            LOCATION,
-            "Failed to setup font parsing. This may be caused by an empty "
-            "fonts.tbl file.\nError message: %s",
-            e.what ());
+        ASSERTX (0, "Failed to setup font parsing. This may be caused by an empty fonts.tbl file.\nError message: %s",e.what ());
         firstFont = "";
     }
 }

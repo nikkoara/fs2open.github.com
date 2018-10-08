@@ -416,10 +416,7 @@ void parse_medal_tbl () {
         for (i = 0; i < Num_medals; i++) {
             if (Medals[i].kills_needed < prev_badge_kills &&
                 Medals[i].kills_needed != 0)
-                ASSERTF (
-                    LOCATION,
-                    "Badges must appear sorted by lowest kill # first in "
-                    "medals.tbl\nFind Allender for most information.");
+                ASSERTX (0, "Badges must appear sorted by lowest kill # first in medals.tbl\nFind Allender for most information.");
 
             if (Medals[i].kills_needed > 0)
                 prev_badge_kills = Medals[i].kills_needed;
