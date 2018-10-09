@@ -237,7 +237,8 @@ void close_help () {
                      help_overlaylist[overlay_id].textlist.at (0).begin ();
                  ii != help_overlaylist[overlay_id].textlist.at (0).end ();
                  ++ii) {
-                safe_kill (ii->string);
+                if (ii->string)
+                    free (ii->string);
             }
         }
     }
@@ -313,7 +314,7 @@ void parse_helptbl (const char* filename) {
                 }
                 else {
                     overlay_id = num_help_overlays;
-                    strcpy_s (help_overlaylist[overlay_id].name, name);
+                    strcpy (help_overlaylist[overlay_id].name, name);
                     num_help_overlays++;
                 }
             }
@@ -448,7 +449,7 @@ void parse_helptbl (const char* filename) {
                     help_overlaylist[overlay_id]
                         .textlist.at (0)
                         .at (currcount)
-                        .string = vm_strdup (buf);
+                        .string = strdup (buf);
 
                     help_overlaylist[overlay_id].textcount++;
                     break;

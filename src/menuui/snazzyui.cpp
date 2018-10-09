@@ -162,7 +162,7 @@ void snazzy_menu_add_region (
     interface_snd_id click_sound) {
     region->mask = mask;
     region->key = key;
-    strcpy_s (region->text, text);
+    strcpy (region->text, text);
     region->click_sound = click_sound;
 }
 
@@ -227,7 +227,7 @@ void read_menu_tbl (
                     return;
                 }
                 *p2 = 0;
-                strcpy_s (regions[*num_regions].text, ++p1);
+                strcpy (regions[*num_regions].text, ++p1);
                 p2++;
 
                 // get the tokens mask number

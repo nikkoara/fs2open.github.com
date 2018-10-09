@@ -41,7 +41,7 @@ int generic_anim_init_and_stream (
     if (attempt_hi_res && (gr_screen.res == GR_1024)) {
         // attempt to load a hi-res animation
         memset (filename, 0, NAME_LENGTH);
-        strcpy_s (filename, "2_");
+        strcpy (filename, "2_");
         strncat (filename, anim_filename, NAME_LENGTH - 3);
 
         // remove extension
@@ -57,7 +57,7 @@ int generic_anim_init_and_stream (
     // we failed to stream hi-res, or we aren't running in hi-res, so try
     // low-res
     if (stream_result < 0) {
-        strcpy_s (filename, anim_filename);
+        strcpy (filename, anim_filename);
 
         // remove extension
         p = strchr (filename, '.');
@@ -78,7 +78,7 @@ void generic_anim_init (generic_anim* ga) { generic_anim_init (ga, NULL); }
 // Goober5000
 void generic_anim_init (generic_anim* ga, const char* filename) {
     if (filename != NULL)
-        strcpy_s (ga->filename, filename);
+        strcpy (ga->filename, filename);
     else
         memset (ga->filename, 0, MAX_FILENAME_LEN);
     ga->first_frame = -1;
@@ -166,7 +166,7 @@ int generic_anim_stream (generic_anim* ga, const bool cache) {
 
     if (img_cfp == NULL) { return -1; }
 
-    strcat_s (ga->filename, ext_list[res.extension_index]);
+    strcat (ga->filename, ext_list[res.extension_index]);
     ga->type = type_list[res.extension_index];
     // seek to the end
     cfseek (img_cfp, 0, CF_SEEK_END);
@@ -185,7 +185,7 @@ int generic_anim_stream (generic_anim* ga, const bool cache) {
 
 #ifndef NDEBUG
         // for debug of ANI sizes
-        strcpy_s (ga->ani.animation->name, ga->filename);
+        strcpy (ga->ani.animation->name, ga->filename);
 #endif
 
         ga->num_frames = ga->ani.animation->total_frames;

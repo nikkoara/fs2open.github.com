@@ -269,7 +269,7 @@ void neb2_init () {
             stuff_string (name, F_NAME, MAX_FILENAME_LEN);
 
             if (Neb2_bitmap_count < MAX_NEB2_BITMAPS) {
-                strcpy_s (Neb2_bitmap_filenames[Neb2_bitmap_count++], name);
+                strcpy (Neb2_bitmap_filenames[Neb2_bitmap_count++], name);
             }
             else {
                 WARNINGF (
@@ -288,7 +288,7 @@ void neb2_init () {
             stuff_string (name, F_NAME, MAX_FILENAME_LEN);
 
             if (Neb2_poof_count < MAX_NEB2_POOFS) {
-                strcpy_s (Neb2_poof_filenames[Neb2_poof_count++], name);
+                strcpy (Neb2_poof_filenames[Neb2_poof_count++], name);
             }
             else {
                 WARNINGF (

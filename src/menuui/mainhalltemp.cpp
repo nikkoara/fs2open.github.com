@@ -133,11 +133,11 @@ void mht_do () {
         if (Player->flags & PLAYER_FLAGS_IS_MULTI) { break; }
 
         if (Num_recent_missions > 0) {
-            strcpy_s (Game_current_mission_filename, Recent_missions[0]);
+            strcpy (Game_current_mission_filename, Recent_missions[0]);
         }
         else {
             mission_load_up_campaign ();
-            strcpy_s (
+            strcpy (
                 Game_current_mission_filename, Campaign.missions[0].name);
         }
 

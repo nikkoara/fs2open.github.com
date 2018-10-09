@@ -1379,16 +1379,16 @@ bool parm_stuff_args (cmdline_parm* parm, int argc, char* argv[], int index) {
 
             if (saved_args != NULL) {
                 // saved args go first, then new arg
-                strcpy_s (parm->args, buffersize, saved_args);
+                strcpy (parm->args, saved_args);
                 // add a separator too, so that we can tell the args apart
-                strcat_s (parm->args, buffersize, ",");
+                strcat (parm->args, ",");
                 // now the new arg
-                strcat_s (parm->args, buffersize, argv[index + 1]);
+                strcat (parm->args, argv[index + 1]);
 
                 delete[] saved_args;
             }
             else {
-                strcpy_s (parm->args, buffersize, argv[index + 1]);
+                strcpy (parm->args, argv[index + 1]);
             }
 
             return true;
@@ -1630,7 +1630,7 @@ void os_init_cmdline (int argc, char* argv[]) {
                     // replace the newline character with a NULL
                     if ((p = strrchr (buf, '\n')) != NULL) { *p = '\0'; }
                     // append a space for the os_parse_parms() check
-                    strcat_s (buf, len, " ");
+                    strcat (buf, " ");
                     os_process_cmdline (buf);
                 }
                 delete[] buf;
@@ -1655,7 +1655,7 @@ void os_init_cmdline (int argc, char* argv[]) {
                     if ((p = strrchr (buf, '\n')) != NULL) { *p = '\0'; }
 
                     // append a space for the os_parse_parms() check
-                    strcat_s (buf, len, " ");
+                    strcat (buf, " ");
 
                     os_process_cmdline (buf);
                 }
@@ -1889,8 +1889,8 @@ static void handle_unix_modlist (char** modlist, size_t* len) {
     memset (new_modlist, 0, total_len + 1);
     end = mod_paths.end ();
     for (ii = mod_paths.begin (); ii != end; ++ii) {
-        strcat_s (new_modlist, total_len + 1, ii->c_str ());
-        strcat_s (new_modlist, total_len + 1, ","); // replace later with NUL
+        strcat (new_modlist, ii->c_str ());
+        strcat (new_modlist, ","); // replace later with NUL
     }
 
     // make the rest of the modlist manipulation unaware that anything happened
@@ -2001,7 +2001,7 @@ bool SetCmdlineParams () {
         size_t len = strlen (Cmdline_mod);
         char* modlist = new char[len + 2];
         memset (modlist, 0, len + 2);
-        strcpy_s (modlist, len + 2, Cmdline_mod);
+        strcpy (modlist, Cmdline_mod);
 
         // handle case-insensitive searching
         handle_unix_modlist (&modlist, &len);

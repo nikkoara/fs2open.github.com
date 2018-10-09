@@ -77,7 +77,7 @@ void UI_INPUTBOX::create (
     }
 
     base_create (wnd, UI_KIND_INPUTBOX, _x, _y, _w, th + 4);
-    text = (char*)vm_malloc (_text_len + 1);
+    text = (char*)malloc (_text_len + 1);
 
     // input boxes no longer use background
     _flags |= UI_INPUTBOX_FLAG_NO_BACK;
@@ -85,7 +85,7 @@ void UI_INPUTBOX::create (
     // if its in "password" mode, allocate a second string
     // and copy it
     if (_flags & UI_INPUTBOX_FLAG_PASSWD) {
-        passwd_text = (char*)vm_malloc (_text_len + 1);
+        passwd_text = (char*)malloc (_text_len + 1);
         memset (passwd_text, INPUTBOX_PASSWD_CHAR, strlen (_text));
         passwd_text[strlen (_text)] = 0;
     }
@@ -112,43 +112,43 @@ void UI_INPUTBOX::create (
 void UI_INPUTBOX::set_valid_chars (const char* vchars) {
     // free up any existing string
     if (valid_chars != NULL) {
-        vm_free (valid_chars);
+        free (valid_chars);
         valid_chars = NULL;
     }
 
-    valid_chars = vm_strdup (vchars);
+    valid_chars = strdup (vchars);
 }
 
 void UI_INPUTBOX::set_invalid_chars (const char* ichars) {
     // free up any existing string
     if (invalid_chars != NULL) {
-        vm_free (invalid_chars);
+        free (invalid_chars);
         invalid_chars = NULL;
     }
 
-    invalid_chars = vm_strdup (ichars);
+    invalid_chars = strdup (ichars);
 }
 
 void UI_INPUTBOX::destroy () {
     if (text) {
-        vm_free (text);
+        free (text);
         text = NULL;
     }
 
     // free any valid chars
     if (valid_chars != NULL) {
-        vm_free (valid_chars);
+        free (valid_chars);
         valid_chars = NULL;
     }
 
     // free any invalid chars
     if (invalid_chars != NULL) {
-        vm_free (invalid_chars);
+        free (invalid_chars);
         invalid_chars = NULL;
     }
 
     if ((flags & UI_INPUTBOX_FLAG_PASSWD) && passwd_text) {
-        vm_free (passwd_text);
+        free (passwd_text);
         passwd_text = NULL;
     }
 

@@ -32,10 +32,10 @@ int pcx_read_header (
     char filename[MAX_FILENAME_LEN];
 
     if (img_cfp == NULL) {
-        strcpy_s (filename, real_filename);
+        strcpy (filename, real_filename);
         char* p = strchr (filename, '.');
         if (p) *p = 0;
-        strcat_s (filename, ".pcx");
+        strcat (filename, ".pcx");
 
         PCXfile = cfopen (filename, "rb");
         if (!PCXfile) return PCX_ERROR_OPENING;
@@ -94,10 +94,10 @@ int pcx_read_bitmap (
     COLOR32 bit_32;
     ubyte r, g, b, al;
 
-    strcpy_s (filename, real_filename);
+    strcpy (filename, real_filename);
     char* p = strchr (filename, '.');
     if (p) *p = 0;
-    strcat_s (filename, ".pcx");
+    strcat (filename, ".pcx");
 
     PCXfile = cfopen (filename, "rb", CFILE_NORMAL, cf_type);
     if (!PCXfile) { return PCX_ERROR_OPENING; }
@@ -329,10 +329,10 @@ int pcx_write_bitmap (
     FILE* PCXfile;
     char filename[MAX_FILENAME_LEN];
 
-    strcpy_s (filename, real_filename);
+    strcpy (filename, real_filename);
     char* p = strchr (filename, '.');
     if (p) *p = 0;
-    strcat_s (filename, ".pcx");
+    strcat (filename, ".pcx");
 
     memset (&header, 0, sizeof (PCXHeader));
 

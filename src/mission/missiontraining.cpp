@@ -236,7 +236,7 @@ void HudGaugeDirectives::render (float /*frametime*/) {
             c = &Color_bright_green;
         }
         else {
-            strcpy_s (buf, Mission_events[z].objective_text);
+            strcpy (buf, Mission_events[z].objective_text);
             if (Mission_events[z].count) {
                 sprintf (
                     buf + strlen (buf), NOX (" [%d]"),
@@ -582,7 +582,7 @@ void training_mission_shutdown () {
     // Goober5000
     for (i = 0; i < TRAINING_MESSAGE_QUEUE_MAX; i++) {
         if (Training_message_queue[i].special_message != NULL) {
-            vm_free (Training_message_queue[i].special_message);
+            free (Training_message_queue[i].special_message);
             Training_message_queue[i].special_message = NULL;
         }
     }
@@ -787,7 +787,7 @@ int message_play_training_voice (int index) {
         }
         else {
             game_snd_entry tmp_gs;
-            strcpy_s (tmp_gs.filename, Message_waves[index].name);
+            strcpy (tmp_gs.filename, Message_waves[index].name);
             Message_waves[index].num = snd_load (&tmp_gs, 0, 0);
             if (!Message_waves[index].num.isValid ()) {
                 WARNINGF (
@@ -890,17 +890,17 @@ void message_training_queue (const char* text, int timestamp, int length) {
         if (Training_message_queue[Training_message_queue_count]
                 .special_message != NULL) {
             Int3 ();
-            vm_free (Training_message_queue[Training_message_queue_count]
+            free (Training_message_queue[Training_message_queue_count]
                          .special_message);
             Training_message_queue[Training_message_queue_count]
                 .special_message = NULL;
         }
 
         // Goober5000 - replace variables if necessary
-        strcpy_s (temp_buf, Messages[m].message);
+        strcpy (temp_buf, Messages[m].message);
         if (sexp_replace_variable_names_with_values (temp_buf, MESSAGE_LENGTH))
             Training_message_queue[Training_message_queue_count]
-                .special_message = vm_strdup (temp_buf);
+                .special_message = strdup (temp_buf);
 
         Training_message_queue_count++;
     }
@@ -913,7 +913,7 @@ void message_training_remove_from_queue (int idx) {
     // we're overwriting all messages with the next message, but to
     // avoid memory leaks, we should free the special message entry
     if (Training_message_queue[idx].special_message != NULL) {
-        vm_free (Training_message_queue[idx].special_message);
+        free (Training_message_queue[idx].special_message);
         Training_message_queue[idx].special_message = NULL;
     }
 

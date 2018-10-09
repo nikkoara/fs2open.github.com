@@ -10,12 +10,12 @@ extern GLfloat GL_max_anisotropy;
 opengl_state GL_state;
 
 opengl_texture_state::~opengl_texture_state () {
-    if (units != NULL) { vm_free (units); }
+    if (units != NULL) { free (units); }
 }
 
 void opengl_texture_state::init (GLuint n_units) {
     ASSERT (n_units > 0);
-    units = (opengl_texture_unit*)vm_malloc (
+    units = (opengl_texture_unit*)malloc (
         n_units * sizeof (opengl_texture_unit));
     num_texture_units = n_units;
 
@@ -599,12 +599,12 @@ void opengl_state::StencilMask (GLuint mask) {
 }
 
 opengl_array_state::~opengl_array_state () {
-    if (client_texture_units != NULL) { vm_free (client_texture_units); }
+    if (client_texture_units != NULL) { free (client_texture_units); }
 }
 
 void opengl_array_state::init (GLuint n_units) {
     ASSERT (n_units > 0);
-    client_texture_units = (opengl_client_texture_unit*)vm_malloc (
+    client_texture_units = (opengl_client_texture_unit*)malloc (
         n_units * sizeof (opengl_client_texture_unit));
     num_client_texture_units = n_units;
     active_client_texture_unit = 0;

@@ -1512,15 +1512,15 @@ void load_gauge_weapon_energy (gauge_settings* settings) {
     settings->slew = true;
 
     if (Hud_reticle_style == HUD_RETICLE_STYLE_FS1) {
-        if (gr_screen.res == GR_640) { strcpy_s (fname, "energy2_fs1"); }
+        if (gr_screen.res == GR_640) { strcpy (fname, "energy2_fs1"); }
         else {
-            strcpy_s (fname, "2_energy2_fs1");
+            strcpy (fname, "2_energy2_fs1");
         }
     }
     else {
-        if (gr_screen.res == GR_640) { strcpy_s (fname, "energy2"); }
+        if (gr_screen.res == GR_640) { strcpy (fname, "energy2"); }
         else {
-            strcpy_s (fname, "2_energy2");
+            strcpy (fname, "2_energy2");
         }
     }
 
@@ -1729,7 +1729,7 @@ void load_gauge_escort_view (gauge_settings* settings) {
     }
 
     if (header_text[0] == '\0') {
-        strcpy_s (header_text, XSTR ("monitoring", 285));
+        strcpy (header_text, XSTR ("monitoring", 285));
     }
 
     hud_gauge->initBitmaps (fname_top, fname_middle, fname_bottom);
@@ -1762,15 +1762,15 @@ void load_gauge_afterburner (gauge_settings* settings) {
     settings->slew = true;
 
     if (Hud_reticle_style == HUD_RETICLE_STYLE_FS1) {
-        if (gr_screen.res == GR_640) { strcpy_s (fname, "energy2_fs1"); }
+        if (gr_screen.res == GR_640) { strcpy (fname, "energy2_fs1"); }
         else {
-            strcpy_s (fname, "2_energy2_fs1");
+            strcpy (fname, "2_energy2_fs1");
         }
     }
     else {
-        if (gr_screen.res == GR_640) { strcpy_s (fname, "energy2"); }
+        if (gr_screen.res == GR_640) { strcpy (fname, "energy2"); }
         else {
-            strcpy_s (fname, "2_energy2");
+            strcpy (fname, "2_energy2");
         }
     }
 
@@ -1863,9 +1863,9 @@ void load_gauge_threat_indicator (gauge_settings* settings) {
             Lock_warn_offsets[0] = 79;
             Lock_warn_offsets[1] = 0;
 
-            strcpy_s (fname_arc, "toparc1_fs1");
-            strcpy_s (fname_laser, "toparc2_fs1");
-            strcpy_s (fname_lock, "toparc3_fs1");
+            strcpy (fname_arc, "toparc1_fs1");
+            strcpy (fname_laser, "toparc2_fs1");
+            strcpy (fname_lock, "toparc3_fs1");
         }
         else {
             settings->offset[0] = -126;
@@ -1877,9 +1877,9 @@ void load_gauge_threat_indicator (gauge_settings* settings) {
             Lock_warn_offsets[0] = 126;
             Lock_warn_offsets[1] = 0;
 
-            strcpy_s (fname_arc, "2_toparc1_fs1");
-            strcpy_s (fname_laser, "2_toparc2_fs1");
-            strcpy_s (fname_lock, "2_toparc3_fs1");
+            strcpy (fname_arc, "2_toparc1_fs1");
+            strcpy (fname_laser, "2_toparc2_fs1");
+            strcpy (fname_lock, "2_toparc3_fs1");
         }
     }
     else {
@@ -1893,9 +1893,9 @@ void load_gauge_threat_indicator (gauge_settings* settings) {
             Lock_warn_offsets[0] = 35;
             Lock_warn_offsets[1] = 93;
 
-            strcpy_s (fname_arc, "rightarc1");
-            strcpy_s (fname_laser, "toparc2");
-            strcpy_s (fname_lock, "toparc3");
+            strcpy (fname_arc, "rightarc1");
+            strcpy (fname_laser, "toparc2");
+            strcpy (fname_lock, "toparc3");
         }
         else {
             settings->offset[0] = 62;
@@ -1907,9 +1907,9 @@ void load_gauge_threat_indicator (gauge_settings* settings) {
             Lock_warn_offsets[0] = 57;
             Lock_warn_offsets[1] = 150;
 
-            strcpy_s (fname_arc, "2_rightarc1");
-            strcpy_s (fname_laser, "2_toparc2");
-            strcpy_s (fname_lock, "2_toparc3");
+            strcpy (fname_arc, "2_rightarc1");
+            strcpy (fname_laser, "2_toparc2");
+            strcpy (fname_lock, "2_toparc3");
         }
     }
 
@@ -1957,13 +1957,13 @@ void load_gauge_center_reticle (gauge_settings* settings) {
             settings->offset[0] = -12;
             settings->offset[1] = -5;
 
-            strcpy_s (fname, "reticle1_fs1");
+            strcpy (fname, "reticle1_fs1");
         }
         else {
             settings->offset[0] = -19;
             settings->offset[1] = -8;
 
-            strcpy_s (fname, "2_reticle1_fs1");
+            strcpy (fname, "2_reticle1_fs1");
         }
     }
     else {
@@ -1971,13 +1971,13 @@ void load_gauge_center_reticle (gauge_settings* settings) {
             settings->offset[0] = -12;
             settings->offset[1] = -5;
 
-            strcpy_s (fname, "reticle1");
+            strcpy (fname, "reticle1");
         }
         else {
             settings->offset[0] = -19;
             settings->offset[1] = -14;
 
-            strcpy_s (fname, "2_reticle1");
+            strcpy (fname, "2_reticle1");
         }
     }
 
@@ -2048,7 +2048,7 @@ void load_gauge_throttle (gauge_settings* settings) {
             orbit_center_offset[0] = 103;
             orbit_center_offset[1] = -1;
             orbit_radius = 104;
-            strcpy_s (fname, "leftarc_fs1");
+            strcpy (fname, "leftarc_fs1");
         }
         else {
             settings->offset[0] = -165;
@@ -2065,7 +2065,7 @@ void load_gauge_throttle (gauge_settings* settings) {
             orbit_center_offset[0] = 165;
             orbit_center_offset[1] = -1;
             orbit_radius = 166;
-            strcpy_s (fname, "2_leftarc_fs1");
+            strcpy (fname, "2_leftarc_fs1");
         }
         show_background = true;
     }
@@ -2085,7 +2085,7 @@ void load_gauge_throttle (gauge_settings* settings) {
             orbit_center_offset[0] = 104;
             orbit_center_offset[1] = 75;
             orbit_radius = 104;
-            strcpy_s (fname, "leftarc");
+            strcpy (fname, "leftarc");
         }
         else {
             settings->offset[0] = -166;
@@ -2102,7 +2102,7 @@ void load_gauge_throttle (gauge_settings* settings) {
             orbit_center_offset[0] = 166;
             orbit_center_offset[1] = 118;
             orbit_radius = 166;
-            strcpy_s (fname, "2_leftarc");
+            strcpy (fname, "2_leftarc");
         }
     }
 
@@ -2573,7 +2573,7 @@ void load_gauge_radar_std (gauge_settings* settings) {
         Radar_dist_offsets[2][0] = 111;
         Radar_dist_offsets[2][1] = 92;
 
-        strcpy_s (fname, "radar1");
+        strcpy (fname, "radar1");
     }
     else {
         settings->offset[0] = -101;
@@ -2597,7 +2597,7 @@ void load_gauge_radar_std (gauge_settings* settings) {
         Radar_dist_offsets[2][0] = 185;
         Radar_dist_offsets[2][1] = 150;
 
-        strcpy_s (fname, "2_radar1");
+        strcpy (fname, "2_radar1");
     }
 
     auto hud_gauge = gauge_load_common< HudGaugeRadarStd > (settings);
@@ -2672,7 +2672,7 @@ void load_gauge_radar_orb (gauge_settings* settings) {
         Radar_dist_offsets[2][0] = 111;
         Radar_dist_offsets[2][1] = 92;
 
-        strcpy_s (fname, "radar1");
+        strcpy (fname, "radar1");
     }
     else {
         settings->offset[0] = -101;
@@ -2696,7 +2696,7 @@ void load_gauge_radar_orb (gauge_settings* settings) {
         Radar_dist_offsets[2][0] = 185;
         Radar_dist_offsets[2][1] = 150;
 
-        strcpy_s (fname, "2_radar1");
+        strcpy (fname, "2_radar1");
     }
 
     auto hud_gauge = gauge_load_common< HudGaugeRadarOrb > (settings);
@@ -4202,12 +4202,12 @@ void load_gauge_weapon_linking (gauge_settings* settings) {
         Weapon_link_offsets[LINK_THREE_SECONDARY][0] = 17;
         Weapon_link_offsets[LINK_THREE_SECONDARY][1] = 34;
 
-        strcpy_s (fname_arc, "rightarc1_fs1");
-        strcpy_s (fname_primary_link_1, "rightarc2_fs1");
-        strcpy_s (fname_primary_link_2, "rightarc3_fs1");
-        strcpy_s (fname_secondary_link_1, "rightarc4_fs1");
-        strcpy_s (fname_secondary_link_2, "rightarc5_fs1");
-        strcpy_s (fname_secondary_link_3, "rightarc6_fs1");
+        strcpy (fname_arc, "rightarc1_fs1");
+        strcpy (fname_primary_link_1, "rightarc2_fs1");
+        strcpy (fname_primary_link_2, "rightarc3_fs1");
+        strcpy (fname_secondary_link_1, "rightarc4_fs1");
+        strcpy (fname_secondary_link_2, "rightarc5_fs1");
+        strcpy (fname_secondary_link_3, "rightarc6_fs1");
     }
     else {
         settings->offset[0] = 86;
@@ -4224,12 +4224,12 @@ void load_gauge_weapon_linking (gauge_settings* settings) {
         Weapon_link_offsets[LINK_THREE_SECONDARY][0] = 28;
         Weapon_link_offsets[LINK_THREE_SECONDARY][1] = 55;
 
-        strcpy_s (fname_arc, "2_rightarc1_fs1");
-        strcpy_s (fname_primary_link_1, "2_rightarc2_fs1");
-        strcpy_s (fname_primary_link_2, "2_rightarc3_fs1");
-        strcpy_s (fname_secondary_link_1, "2_rightarc4_fs1");
-        strcpy_s (fname_secondary_link_2, "2_rightarc5_fs1");
-        strcpy_s (fname_secondary_link_3, "2_rightarc6_fs1");
+        strcpy (fname_arc, "2_rightarc1_fs1");
+        strcpy (fname_primary_link_1, "2_rightarc2_fs1");
+        strcpy (fname_primary_link_2, "2_rightarc3_fs1");
+        strcpy (fname_secondary_link_1, "2_rightarc4_fs1");
+        strcpy (fname_secondary_link_2, "2_rightarc5_fs1");
+        strcpy (fname_secondary_link_3, "2_rightarc6_fs1");
     }
 
     auto hud_gauge = gauge_load_common< HudGaugeWeaponLinking > (settings);
@@ -4337,8 +4337,8 @@ void load_gauge_lock (gauge_settings* settings) {
             Lock_target_box_height = 30;
             loop_locked_anim = true;
 
-            strcpy_s (fname_lock, "lock1_fs1");
-            strcpy_s (fname_spin, "lockspin_fs1");
+            strcpy (fname_lock, "lock1_fs1");
+            strcpy (fname_spin, "lockspin_fs1");
         }
         else {
             Lock_gauge_half_w = 24;
@@ -4351,8 +4351,8 @@ void load_gauge_lock (gauge_settings* settings) {
             Lock_target_box_height = 30;
             loop_locked_anim = true;
 
-            strcpy_s (fname_lock, "2_lock1_fs1");
-            strcpy_s (fname_spin, "2_lockspin_fs1");
+            strcpy (fname_lock, "2_lock1_fs1");
+            strcpy (fname_spin, "2_lockspin_fs1");
         }
     }
     else {
@@ -4367,8 +4367,8 @@ void load_gauge_lock (gauge_settings* settings) {
             Lock_target_box_height = 30;
             loop_locked_anim = false;
 
-            strcpy_s (fname_lock, "lock1");
-            strcpy_s (fname_spin, "lockspin");
+            strcpy (fname_lock, "lock1");
+            strcpy (fname_spin, "lockspin");
         }
         else {
             Lock_gauge_half_w = 28;
@@ -4381,8 +4381,8 @@ void load_gauge_lock (gauge_settings* settings) {
             Lock_target_box_height = 30;
             loop_locked_anim = false;
 
-            strcpy_s (fname_lock, "2_lock1");
-            strcpy_s (fname_spin, "2_lockspin");
+            strcpy (fname_lock, "2_lock1");
+            strcpy (fname_spin, "2_lockspin");
         }
     }
 
@@ -4631,13 +4631,13 @@ void load_gauge_lead (gauge_settings* settings) {
             Lead_indicator_half[0] = 12.5f;
             Lead_indicator_half[1] = 12.5f;
 
-            strcpy_s (fname, "lead1_fs1");
+            strcpy (fname, "lead1_fs1");
         }
         else {
             Lead_indicator_half[0] = 20.0f;
             Lead_indicator_half[1] = 20.0f;
 
-            strcpy_s (fname, "2_lead1_fs1");
+            strcpy (fname, "2_lead1_fs1");
         }
     }
     else {
@@ -4645,13 +4645,13 @@ void load_gauge_lead (gauge_settings* settings) {
             Lead_indicator_half[0] = 8.0f;
             Lead_indicator_half[1] = 8.0f;
 
-            strcpy_s (fname, "lead1");
+            strcpy (fname, "lead1");
         }
         else {
             Lead_indicator_half[0] = 13.0f;
             Lead_indicator_half[1] = 13.0f;
 
-            strcpy_s (fname, "2_lead1");
+            strcpy (fname, "2_lead1");
         }
     }
 

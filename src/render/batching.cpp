@@ -967,11 +967,11 @@ void batching_allocate_and_load_buffer (primitive_batch_buffer* draw_queue) {
 
     if (draw_queue->buffer_size < draw_queue->desired_buffer_size) {
         if (draw_queue->buffer_ptr != NULL) {
-            vm_free (draw_queue->buffer_ptr);
+            free (draw_queue->buffer_ptr);
         }
 
         draw_queue->buffer_size = draw_queue->desired_buffer_size;
-        draw_queue->buffer_ptr = vm_malloc (draw_queue->desired_buffer_size);
+        draw_queue->buffer_ptr = malloc (draw_queue->desired_buffer_size);
     }
 
     draw_queue->desired_buffer_size = 0;
@@ -1086,7 +1086,7 @@ void batching_shutdown () {
         primitive_batch_buffer* batch_buffer = &buffer_iter->second;
 
         if (batch_buffer->buffer_ptr != NULL) {
-            vm_free (batch_buffer->buffer_ptr);
+            free (batch_buffer->buffer_ptr);
             batch_buffer->buffer_ptr = nullptr;
         }
     }

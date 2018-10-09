@@ -12,7 +12,7 @@ void UI_RADIO::create (
     _h = 18;
 
     if (_text)
-        text = vm_strdup (_text);
+        text = strdup (_text);
     else
         text = NULL;
 
@@ -25,7 +25,7 @@ void UI_RADIO::create (
 }
 
 void UI_RADIO::destroy () {
-    if (text) vm_free (text);
+    if (text) free (text);
 
     UI_GADGET::destroy ();
 }

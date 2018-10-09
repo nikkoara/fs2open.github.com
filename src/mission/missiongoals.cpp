@@ -363,11 +363,11 @@ void mission_event_shutdown () {
 
     for (i = 0; i < Num_mission_events; i++) {
         if (Mission_events[i].objective_text) {
-            vm_free (Mission_events[i].objective_text);
+            free (Mission_events[i].objective_text);
             Mission_events[i].objective_text = NULL;
         }
         if (Mission_events[i].objective_key_text) {
-            vm_free (Mission_events[i].objective_key_text);
+            free (Mission_events[i].objective_key_text);
             Mission_events[i].objective_key_text = NULL;
         }
     }

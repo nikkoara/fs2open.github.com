@@ -508,7 +508,7 @@ int fiction_viewer_ui_name_to_index (const char* ui_name) {
 }
 
 void fiction_viewer_reset () {
-    if (Fiction_viewer_text != nullptr) vm_free (Fiction_viewer_text);
+    if (Fiction_viewer_text != nullptr) free (Fiction_viewer_text);
     Fiction_viewer_text = nullptr;
 
     Fiction_viewer_stages.clear ();
@@ -575,7 +575,7 @@ void fiction_viewer_load (int stage) {
         int file_length =
             util::check_encoding_and_skip_bom (fp, stagep->story_filename);
 
-        char* Fiction_viewer_text_raw = (char*)vm_malloc (file_length + 1);
+        char* Fiction_viewer_text_raw = (char*)malloc (file_length + 1);
         Fiction_viewer_text_raw[file_length] = '\0';
 
         // copy all the text
@@ -597,13 +597,13 @@ void fiction_viewer_load (int stage) {
             // conversion
             auto length =
                 get_converted_string_length (Fiction_viewer_text_raw) + 1;
-            Fiction_viewer_text = (char*)vm_malloc (length);
+            Fiction_viewer_text = (char*)malloc (length);
 
             maybe_convert_foreign_characters (
                 Fiction_viewer_text_raw, Fiction_viewer_text);
 
             // deallocate space for raw text
-            vm_free (Fiction_viewer_text_raw);
+            free (Fiction_viewer_text_raw);
         }
     }
 }

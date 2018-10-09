@@ -199,7 +199,7 @@ void parse_medal_tbl () {
             stuff_string (Medals_background_filename, F_NAME, NAME_LENGTH);
         }
         else {
-            strcpy_s (
+            strcpy (
                 Medals_background_filename,
                 Default_medals_background_filename);
         }
@@ -209,7 +209,7 @@ void parse_medal_tbl () {
             stuff_string (Medals_mask_filename, F_NAME, NAME_LENGTH);
         }
         else {
-            strcpy_s (Medals_mask_filename, Default_medals_mask_filename);
+            strcpy (Medals_mask_filename, Default_medals_mask_filename);
         }
 
         // configurable hotspot for the exit button
@@ -327,7 +327,7 @@ void parse_medal_tbl () {
                     temp_medal.debrief_bitmap, F_NAME, MAX_FILENAME_LEN);
             }
             else if (Num_medals < NUM_MEDALS_FS2) {
-                strcpy_s (
+                strcpy (
                     temp_medal.debrief_bitmap,
                     Default_debriefing_bitmaps[Num_medals]);
             }
@@ -335,7 +335,7 @@ void parse_medal_tbl () {
                 WARNINGF (
                     LOCATION, "No default debriefing bitmap for medal '%s'!",
                     temp_medal.name);
-                strcpy_s (temp_medal.debrief_bitmap, "");
+                strcpy (temp_medal.debrief_bitmap, "");
             }
 
             required_string ("$Num mods:");
@@ -560,8 +560,8 @@ void medal_main_init (player* pl, int mode) {
 
     Init_flags = 0;
 
-    strcpy_s (bitmap_buf, Resolution_prefixes[gr_screen.res]);
-    strcat_s (bitmap_buf, Medals_background_filename);
+    strcpy (bitmap_buf, Resolution_prefixes[gr_screen.res]);
+    strcat (bitmap_buf, Medals_background_filename);
 
     Medals_bitmap = bm_load (bitmap_buf);
     if (Medals_bitmap < 0) {
@@ -575,8 +575,8 @@ void medal_main_init (player* pl, int mode) {
     Medals_mask_w = -1;
     Medals_mask_h = -1;
 
-    strcpy_s (bitmap_buf, Resolution_prefixes[gr_screen.res]);
-    strcat_s (bitmap_buf, Medals_mask_filename);
+    strcpy (bitmap_buf, Resolution_prefixes[gr_screen.res]);
+    strcat (bitmap_buf, Medals_mask_filename);
 
     Medals_bitmap_mask = bm_load (bitmap_buf);
     if (Medals_bitmap_mask < 0) {
@@ -610,7 +610,7 @@ void blit_label (const char* label, int num) {
     // the mod table
     if (Lcl_gr && !Disable_built_in_translations) {
         char translated_label[256];
-        strcpy_s (translated_label, label);
+        strcpy (translated_label, label);
         lcl_translate_medal_name_gr (translated_label);
 
         // set correct string
@@ -623,7 +623,7 @@ void blit_label (const char* label, int num) {
     }
     else if (Lcl_pl && !Disable_built_in_translations) {
         char translated_label[256];
-        strcpy_s (translated_label, label);
+        strcpy (translated_label, label);
         lcl_translate_medal_name_pl (translated_label);
 
         // set correct string

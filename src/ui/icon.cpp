@@ -11,7 +11,7 @@
 void UI_ICON::create (
     UI_WINDOW* wnd, char* _text, int _x, int _y, int _w, int _h) {
     if (_text)
-        text = vm_strdup (_text);
+        text = strdup (_text);
     else
         text = NULL;
 
@@ -21,7 +21,7 @@ void UI_ICON::create (
 
 void UI_ICON::destroy () {
     if (text) {
-        vm_free (text);
+        free (text);
         text = NULL;
     }
 

@@ -899,9 +899,9 @@ void debrief_traitor_init () {
 
             // DKA 9/13/99      Only 1 traitor msg for FS2
             // if ( Player->main_hall ) {
-            // strcpy_s(stagep->voice, NOX("3_"));
+            // strcpy(stagep->voice, NOX("3_"));
             // } else {
-            // strcpy_s(stagep->voice, NOX("1_"));
+            // strcpy(stagep->voice, NOX("1_"));
             // }
 
             // Goober5000
@@ -1429,8 +1429,8 @@ void debrief_setup_ship_kill_stats (int /*stage_num*/) {
 
         kill_info->num = kill_arr[i];
 
-        strcpy_s (kill_info->text, it->name);
-        strcat_s (kill_info->text, NOX (":"));
+        strcpy (kill_info->text, it->name);
+        strcat (kill_info->text, NOX (":"));
     }
 
     Num_text_lines += 2;
@@ -1598,7 +1598,7 @@ void debrief_init () {
     show_stats_init ();
     debrief_voice_init ();
 
-    strcpy_s (Debrief_current_callsign, Player->callsign);
+    strcpy (Debrief_current_callsign, Player->callsign);
     Debrief_player = Player;
 
     debrief_set_stages_and_multi_stuff ();
@@ -1673,7 +1673,7 @@ void debrief_close () {
         delete [] Debrief_stats_kills;
         Debrief_stats_kills = NULL;
     }
-    
+
     game_flush ();
 
     Stage_voice = -1;
@@ -1793,7 +1793,7 @@ void debrief_add_award_text (const char* str) {
             : Debrief_award_text_width[gr_screen.res][DB_WITHOUT_MEDAL];
 
     // copy in the line
-    strcpy_s (Debrief_award_text[Debrief_award_text_num_lines], str);
+    strcpy (Debrief_award_text[Debrief_award_text_num_lines], str);
 
     if (!Disable_built_in_translations) {
         // maybe translate for displaying
@@ -1958,7 +1958,7 @@ void debrief_do_frame (float frametime) {
 
     // draw the title of the mission
     gr_set_color_fast (&Color_bright_white);
-    strcpy_s (buf, The_mission.name);
+    strcpy (buf, The_mission.name);
     font::force_fit_string (buf, 255, Debrief_title_coords[gr_screen.res][2]);
     gr_string (
         Debrief_title_coords[gr_screen.res][0],

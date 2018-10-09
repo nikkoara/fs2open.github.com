@@ -624,7 +624,7 @@ void red_alert_bash_subsys_status (
             ASSERT (new_idx == pobjp->subsys_index + j);
             sssp = &Subsys_status[new_idx];
 
-            strcpy_s (sssp->name, psub->subobj_name);
+            strcpy (sssp->name, psub->subobj_name);
         }
 
         float max_hits =

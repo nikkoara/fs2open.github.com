@@ -120,7 +120,7 @@ bool WaveFile::Open (const char* pszFilename, bool keep_ext) {
 
     // NOTE: the extension will be removed and set to the actual extension of
     // keep_ext is false, otherwise it's not changed
-    strcpy_s (filename, pszFilename);
+    strcpy (filename, pszFilename);
 
     try {
         CFILE* cfp = nullptr;
@@ -164,7 +164,7 @@ bool WaveFile::Open (const char* pszFilename, bool keep_ext) {
             if (dot && (strlen (dot) > 2)) { (*dot) = 0; }
 
             // set proper filename for later use
-            strcat_s (filename, audio_ext_list[res.extension_index]);
+            strcat (filename, audio_ext_list[res.extension_index]);
 
             cfp = cfopen_special (
                 res.full_name.c_str (), "rb", res.size, res.offset,

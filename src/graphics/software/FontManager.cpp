@@ -101,7 +101,7 @@ font* FontManager::loadFontOld (const std::string& typeface) {
         return NULL;
     }
 
-    strcpy_s (fnt->filename, typeface.c_str ());
+    strcpy (fnt->filename, typeface.c_str ());
     cfread (&fnt->id, 4, 1, fp);
     cfread (&fnt->version, sizeof (int), 1, fp);
     cfread (&fnt->num_chars, sizeof (int), 1, fp);
@@ -114,7 +114,7 @@ font* FontManager::loadFontOld (const std::string& typeface) {
     cfread (&fnt->pixel_data_size, sizeof (int), 1, fp);
 
     if (fnt->kern_data_size) {
-        fnt->kern_data = (font_kernpair*)vm_malloc (fnt->kern_data_size);
+        fnt->kern_data = (font_kernpair*)malloc (fnt->kern_data_size);
         ASSERT (fnt->kern_data != NULL);
         cfread (fnt->kern_data, fnt->kern_data_size, 1, fp);
     }
@@ -122,7 +122,7 @@ font* FontManager::loadFontOld (const std::string& typeface) {
         fnt->kern_data = NULL;
     }
     if (fnt->char_data_size) {
-        fnt->char_data = (font_char*)vm_malloc (fnt->char_data_size);
+        fnt->char_data = (font_char*)malloc (fnt->char_data_size);
         ASSERT (fnt->char_data != NULL);
         cfread (fnt->char_data, fnt->char_data_size, 1, fp);
     }
@@ -130,7 +130,7 @@ font* FontManager::loadFontOld (const std::string& typeface) {
         fnt->char_data = NULL;
     }
     if (fnt->pixel_data_size) {
-        fnt->pixel_data = (ubyte*)vm_malloc (fnt->pixel_data_size);
+        fnt->pixel_data = (ubyte*)malloc (fnt->pixel_data_size);
         ASSERT (fnt->pixel_data != NULL);
         cfread (fnt->pixel_data, fnt->pixel_data_size, 1, fp);
     }
@@ -159,9 +159,9 @@ font* FontManager::loadFontOld (const std::string& typeface) {
 
     fnt->bm_w = w;
     fnt->bm_h = h;
-    fnt->bm_data = (ubyte*)vm_malloc (fnt->bm_w * fnt->bm_h);
-    fnt->bm_u = (int*)vm_malloc (sizeof (int) * fnt->num_chars);
-    fnt->bm_v = (int*)vm_malloc (sizeof (int) * fnt->num_chars);
+    fnt->bm_data = (ubyte*)malloc (fnt->bm_w * fnt->bm_h);
+    fnt->bm_u = (int*)malloc (sizeof (int) * fnt->num_chars);
+    fnt->bm_v = (int*)malloc (sizeof (int) * fnt->num_chars);
 
     memset (fnt->bm_data, 0, fnt->bm_w * fnt->bm_h);
 

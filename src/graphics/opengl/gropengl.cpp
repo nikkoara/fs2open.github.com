@@ -313,8 +313,7 @@ void gr_opengl_print_screen (const char* filename) {
         pixels = (GLubyte*)glMapBuffer (GL_PIXEL_PACK_BUFFER, GL_READ_ONLY);
     }
     else {
-        pixels = (GLubyte*)vm_malloc (
-            gr_screen.max_w * gr_screen.max_h * 4, memory::quiet_alloc);
+        pixels = (GLubyte*)malloc (gr_screen.max_w * gr_screen.max_h * 4);
 
         if (pixels == NULL) { return; }
 
@@ -339,7 +338,7 @@ void gr_opengl_print_screen (const char* filename) {
         glDeleteBuffers (1, &pbo);
     }
 
-    if (pixels != NULL) { vm_free (pixels); }
+    if (pixels != NULL) { free (pixels); }
 }
 
 void gr_opengl_shutdown () {
@@ -361,7 +360,7 @@ void gr_opengl_shutdown () {
     }
 
     if (GL_original_gamma_ramp != NULL) {
-        vm_free (GL_original_gamma_ramp);
+        free (GL_original_gamma_ramp);
         GL_original_gamma_ramp = NULL;
     }
 
@@ -578,8 +577,8 @@ void gr_opengl_set_gamma (float gamma) {
     // new way - but not while running FRED
     if (!Fred_running && !Cmdline_no_set_gamma &&
         os::getSDLMainWindow () != nullptr) {
-        gamma_ramp = (ushort*)vm_malloc (
-            3 * 256 * sizeof (ushort), memory::quiet_alloc);
+
+        gamma_ramp = (ushort*)malloc (3 * 256 * sizeof (ushort));
 
         if (gamma_ramp == NULL) {
             Int3 ();
@@ -595,7 +594,7 @@ void gr_opengl_set_gamma (float gamma) {
             os::getSDLMainWindow (), gamma_ramp, (gamma_ramp + 256),
             (gamma_ramp + 512));
 
-        vm_free (gamma_ramp);
+        free (gamma_ramp);
     }
 }
 
@@ -634,8 +633,7 @@ int gr_opengl_save_screen () {
         return -1;
     }
 
-    GL_saved_screen = (ubyte*)vm_malloc (
-        gr_screen.max_w * gr_screen.max_h * 4, memory::quiet_alloc);
+    GL_saved_screen = (ubyte*)malloc (gr_screen.max_w * gr_screen.max_h * 4);
 
     if (!GL_saved_screen) {
         WARNINGF (LOCATION, "Couldn't get memory for saved screen!\n");
@@ -652,7 +650,7 @@ int gr_opengl_save_screen () {
 
         if (!GL_screen_pbo) {
             if (GL_saved_screen) {
-                vm_free (GL_saved_screen);
+                free (GL_saved_screen);
                 GL_saved_screen = NULL;
             }
 
@@ -691,12 +689,12 @@ int gr_opengl_save_screen () {
             32, gr_screen.max_w, gr_screen.max_h, GL_saved_screen, 0);
     }
     else {
-        opengl_screen_tmp = (ubyte*)vm_malloc (
-            gr_screen.max_w * gr_screen.max_h * 4, memory::quiet_alloc);
+        opengl_screen_tmp = (ubyte*)malloc (
+            gr_screen.max_w * gr_screen.max_h * 4);
 
         if (!opengl_screen_tmp) {
             if (GL_saved_screen) {
-                vm_free (GL_saved_screen);
+                free (GL_saved_screen);
                 GL_saved_screen = NULL;
             }
 
@@ -722,7 +720,7 @@ int gr_opengl_save_screen () {
             dptr += width_times_pixel;
         }
 
-        vm_free (opengl_screen_tmp);
+        free (opengl_screen_tmp);
 
         GL_saved_screen_id = bm_create (
             32, gr_screen.max_w, gr_screen.max_h, GL_saved_screen, 0);
@@ -753,7 +751,7 @@ void gr_opengl_restore_screen (int bmp_id) {
 void gr_opengl_free_screen (int bmp_id) {
     if (!GL_saved_screen) return;
 
-    vm_free (GL_saved_screen);
+    free (GL_saved_screen);
     GL_saved_screen = NULL;
 
     ASSERT ((bmp_id < 0) || (bmp_id == GL_saved_screen_id));
@@ -962,8 +960,8 @@ int opengl_init_display_device () {
 
     // allocate storage for original gamma settings
     if (!Cmdline_no_set_gamma && (GL_original_gamma_ramp == NULL)) {
-        GL_original_gamma_ramp = (ushort*)vm_malloc (
-            3 * 256 * sizeof (ushort), memory::quiet_alloc);
+        GL_original_gamma_ramp = (ushort*)malloc (
+            3 * 256 * sizeof (ushort));
 
         if (GL_original_gamma_ramp == NULL) {
             WARNINGF (

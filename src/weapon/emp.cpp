@@ -436,7 +436,7 @@ void emp_hud_string (
     if (!*str) return;
 
     // copy the string
-    strcpy_s (tmp, str);
+    strcpy (tmp, str);
 
     // if the emp effect is not active, don't even bother messing with the text
     if (emp_active_local ()) {
@@ -505,7 +505,7 @@ void emp_maybe_reformat_text (char* text, int /*max_len*/, int gauge_id) {
         case EG_WEAPON_S2:
             int wep_index;
             wep_index = (int)frand_range (0.0f, (float)(MAX_WEAPON_TYPES - 1));
-            strcpy_s (
+            strcpy (
                 wt->str,
                 Weapon_info[wep_index >= MAX_WEAPON_TYPES ? 0 : wep_index]
                     .get_display_string ());
@@ -518,11 +518,11 @@ void emp_maybe_reformat_text (char* text, int /*max_len*/, int gauge_id) {
             // choose a random ship
             int shipnum;
             shipnum = ship_get_random_targetable_ship ();
-            if (shipnum >= 0) { strcpy_s (wt->str, Ships[shipnum].ship_name); }
+            if (shipnum >= 0) { strcpy (wt->str, Ships[shipnum].ship_name); }
             break;
 
         // directives title
-        case EG_OBJ_TITLE: strcpy_s (wt->str, ""); break;
+        case EG_OBJ_TITLE: strcpy (wt->str, ""); break;
 
         // directives themselves
         case EG_OBJ1:
@@ -530,7 +530,7 @@ void emp_maybe_reformat_text (char* text, int /*max_len*/, int gauge_id) {
         case EG_OBJ3:
         case EG_OBJ4:
         case EG_OBJ5:
-            strcpy_s (wt->str, text);
+            strcpy (wt->str, text);
             emp_randomize_chars (wt->str);
             break;
 
@@ -544,7 +544,7 @@ void emp_maybe_reformat_text (char* text, int /*max_len*/, int gauge_id) {
         case EG_TBOX_HULL:
         case EG_TBOX_NAME:
         case EG_TBOX_INTEG:
-            strcpy_s (wt->str, text);
+            strcpy (wt->str, text);
             emp_randomize_chars (wt->str);
             break;
 
@@ -559,7 +559,7 @@ void emp_maybe_reformat_text (char* text, int /*max_len*/, int gauge_id) {
         case EG_SQ8:
         case EG_SQ9:
         case EG_SQ10:
-            strcpy_s (wt->str, text);
+            strcpy (wt->str, text);
             emp_randomize_chars (wt->str);
             break;
 

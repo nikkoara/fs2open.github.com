@@ -657,7 +657,7 @@ int scoring_eval_kill (object* ship_objp) {
 
             if (Ship_info[si_index].flags[Ship::Info_Flags::Ship_copy]) {
                 char temp[NAME_LENGTH];
-                strcpy_s (temp, Ship_info[si_index].name);
+                strcpy (temp, Ship_info[si_index].name);
                 end_string_at_first_hash_symbol (temp);
 
                 // Goober5000 - previous error checking guarantees that this

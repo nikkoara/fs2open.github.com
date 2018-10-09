@@ -691,7 +691,7 @@ static bool opengl_post_init_table () {
 
         // Built-in per-ship effects
         ship_effect se1;
-        strcpy_s (se1.name, "FS1 Ship select");
+        strcpy (se1.name, "FS1 Ship select");
         se1.shader_effect = 0;
         se1.disables_rendering = false;
         se1.invert_timer = false;
@@ -705,7 +705,7 @@ static bool opengl_post_init_table () {
 
                 required_string ("$Name:");
                 stuff_string (tbuf, F_NAME, NAME_LENGTH);
-                strcpy_s (se.name, tbuf);
+                strcpy (se.name, tbuf);
 
                 required_string ("$Shader Effect:");
                 stuff_int (&se.shader_effect);

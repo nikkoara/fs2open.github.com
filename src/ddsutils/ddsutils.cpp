@@ -43,10 +43,10 @@ int dds_read_header (
         ASSERT (filename != NULL);
 
         // make sure there is an extension
-        strcpy_s (real_name, filename);
+        strcpy (real_name, filename);
         char* p = strchr (real_name, '.');
         if (p) { *p = 0; }
-        strcat_s (real_name, ".dds");
+        strcat (real_name, ".dds");
 
         // try to open the file
         ddsfile = cfopen (real_name, "rb");
@@ -290,10 +290,10 @@ int dds_read_bitmap (
     ASSERT (filename != NULL);
 
     // make sure there is an extension
-    strcpy_s (real_name, filename);
+    strcpy (real_name, filename);
     char* p = strchr (real_name, '.');
     if (p) { *p = 0; }
-    strcat_s (real_name, ".dds");
+    strcat (real_name, ".dds");
 
     // open it up and go to the data section
     cfp = cfopen (real_name, "rb", CFILE_NORMAL, cf_type);
@@ -359,12 +359,12 @@ void dds_save_image (
     else {
         ASSERT (strlen (filename) < MAX_FILENAME_LEN - 5);
 
-        strcpy_s (real_filename, filename);
+        strcpy (real_filename, filename);
 
         char* p = strchr (real_filename, '.');
         if (p) { *p = 0; }
 
-        strcat_s (real_filename, ".dds");
+        strcat (real_filename, ".dds");
     }
 
     CFILE* image = cfopen (real_filename, "wb", CFILE_NORMAL, CF_TYPE_CACHE);

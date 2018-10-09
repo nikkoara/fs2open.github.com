@@ -2654,7 +2654,7 @@ void hud_target_subsystem_in_reticle () {
             Player_ai, nearest_subsys, Player_ai->target_objnum);
         char r_name[NAME_LENGTH];
         int i;
-        strcpy_s (r_name, ship_subsys_get_name (Player_ai->targeted_subsys));
+        strcpy (r_name, ship_subsys_get_name (Player_ai->targeted_subsys));
         for (i = 0; r_name[i] > 0; i++) {
             if (r_name[i] == '|') r_name[i] = ' ';
         }
@@ -5616,7 +5616,7 @@ void HudGaugeWeaponEnergy::render (float /*frametime*/) {
                 setGaugeColor (HUD_C_NORMAL);
             }
             if (gr_screen.max_w_unscaled == 640) {
-                strcpy_s (
+                strcpy (
                     shortened_name,
                     Weapon_info[Player_ship->weapons.primary_bank_weapons[x]]
                         .get_display_string ());
@@ -5747,7 +5747,7 @@ void HudGaugeWeaponEnergy::render (float /*frametime*/) {
                 // show all primary banks
                 for (i = 0; i < Player_ship->weapons.num_primary_banks; i++) {
                     wip = &Weapon_info[sw->primary_bank_weapons[i]];
-                    strcpy_s (buf, wip->get_display_string ());
+                    strcpy (buf, wip->get_display_string ());
 
                     if (Armed_alignment) { gr_get_string_size (&w, &h, buf); }
                     else {
@@ -5764,7 +5764,7 @@ void HudGaugeWeaponEnergy::render (float /*frametime*/) {
                 // just show the current armed bank
                 i = Player_ship->weapons.current_primary_bank;
                 wip = &Weapon_info[sw->primary_bank_weapons[i]];
-                strcpy_s (buf, wip->get_display_string ());
+                strcpy (buf, wip->get_display_string ());
 
                 if (Armed_alignment) { gr_get_string_size (&w, &h, buf); }
                 else {
@@ -6082,7 +6082,7 @@ void HudGaugeWeapons::render (float /*frametime*/) {
                     position[0] + frame_offset_x[ballistic_hud_index], y);
         }
 
-        strcpy_s (
+        strcpy (
             name,
             Weapon_info[sw->primary_bank_weapons[i]].get_display_string ());
         if (Lcl_gr && !Disable_built_in_translations) {
@@ -6167,15 +6167,15 @@ void HudGaugeWeapons::render (float /*frametime*/) {
         if (wip->has_alternate_name ()) {
             // Do not apply the cluster bomb hack if we have an alternate name
             // to make translating that name possible
-            strcpy_s (weapon_name, wip->get_display_string ());
+            strcpy (weapon_name, wip->get_display_string ());
         }
         else {
             // HACK - make Cluster Bomb fit on the HUD.
             if (!strcasecmp (wip->name, "cluster bomb")) {
-                strcpy_s (weapon_name, NOX ("Cluster"));
+                strcpy (weapon_name, NOX ("Cluster"));
             }
             else {
-                strcpy_s (weapon_name, wip->get_display_string ());
+                strcpy (weapon_name, wip->get_display_string ());
             }
         }
 
@@ -6318,9 +6318,9 @@ void hud_target_add_display_list (
         gr_init_color (&element.bracket_clr, 0, 0, 0);
     }
 
-    if (name) { strcpy_s (element.name, name); }
+    if (name) { strcpy (element.name, name); }
     else {
-        strcpy_s (element.name, "");
+        strcpy (element.name, "");
     }
 
     target_display_list.push_back (element);
@@ -6753,7 +6753,7 @@ void HudGaugeWarheadCount::render (float /*frametime*/) {
     if (ammo <= 0) { return; }
 
     char weapon_name[NAME_LENGTH + 10];
-    strcpy_s (weapon_name, wip->get_display_string ());
+    strcpy (weapon_name, wip->get_display_string ());
     end_string_at_first_hash_symbol (weapon_name);
 
     setGaugeColor ();
@@ -6872,7 +6872,7 @@ void HudGaugeWeaponList::initBgFirstHeight (int h) { _background_first_h = h; }
 void HudGaugeWeaponList::initBgEntryHeight (int h) { _background_entry_h = h; }
 
 void HudGaugeWeaponList::initHeaderText (char* text) {
-    strcpy_s (header_text, text);
+    strcpy (header_text, text);
 }
 
 void HudGaugeWeaponList::initHeaderOffsets (int x, int y) {
@@ -6974,7 +6974,7 @@ void HudGaugePrimaryWeapons::render (float /*frametime*/) {
             _background_entry.first_frame, position[0],
             position[1] + bg_y_offset);
 
-        strcpy_s (
+        strcpy (
             name,
             Weapon_info[sw->primary_bank_weapons[i]].get_display_string ());
 
@@ -7106,7 +7106,7 @@ void HudGaugeSecondaryWeapons::render (float /*frametime*/) {
 
         maybeFlashWeapon (num_primaries + i);
 
-        strcpy_s (weapon_name, wip->get_display_string ());
+        strcpy (weapon_name, wip->get_display_string ());
         end_string_at_first_hash_symbol (weapon_name);
 
         if (sw->current_secondary_bank == i) {

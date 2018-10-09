@@ -812,7 +812,7 @@ void player_select_delete_pilot () {
     // build up the path name length
     // make sure we do this based upon whether we're in single or multiplayer
     // mode
-    strcpy_s (filename, Pilots[Player_select_pilot]);
+    strcpy (filename, Pilots[Player_select_pilot]);
 
     del_rval = delete_pilot_file (filename);
 
@@ -880,7 +880,7 @@ int player_select_get_last_pilot_info () {
 
     if (last_player == NULL) { return 0; }
     else {
-        strcpy_s (Player_select_last_pilot, last_player);
+        strcpy (Player_select_last_pilot, last_player);
     }
 
     // handle changing from pre-pilot code to post-pilot code
@@ -1145,7 +1145,7 @@ void player_select_process_input (int k) {
             Player->flags |= PLAYER_FLAGS_STRUCTURE_IN_USE;
         }
 
-        strcpy_s (Player->callsign, buf);
+        strcpy (Player->callsign, buf);
         init_new_pilot (Player, !Player_select_clone_flag);
 
         // set him as being a multiplayer pilot if we're in the correct mode
@@ -1192,7 +1192,7 @@ void player_select_display_copyright () {
     int sx, sy, w;
     char Copyright_msg1[256], Copyright_msg2[256];
 
-    // strcpy_s(Copyright_msg1, XSTR("Descent: FreeSpace - The Great War,
+    // strcpy(Copyright_msg1, XSTR("Descent: FreeSpace - The Great War,
     // Copyright c 1998, Volition, Inc.", -1));
     gr_set_color_fast (&Color_white);
 
@@ -1201,7 +1201,7 @@ void player_select_display_copyright () {
     if (Unicode_text_mode) {
         // Use a Unicode character if we are in unicode mode instead of using
         // special characters
-        strcpy_s (
+        strcpy (
             Copyright_msg2, XSTR (
                                 "Copyright \xC2\xA9 1999, Volition, Inc.  All "
                                 "rights reserved.",
@@ -1284,7 +1284,7 @@ void player_select_eval_very_first_pilot () {
             (Player_select_initial_count == 0)) {
             // set up the data
             Player_select_very_first_pilot = 1;
-            strcpy_s (
+            strcpy (
                 Player_select_very_first_pilot_callsign,
                 Pilots[Player_select_pilot]);
         }
@@ -1414,7 +1414,7 @@ void player_tips_close () {
 
     for (i = 0; i < MAX_PLAYER_TIPS; i++) {
         if (Player_tips[i] != NULL) {
-            vm_free (Player_tips[i]);
+            free (Player_tips[i]);
             Player_tips[i] = NULL;
         }
     }

@@ -114,7 +114,7 @@ void dock_evaluate_all_docked_objects (
     else {
         // create a bit array to mark the objects we check
         ubyte* visited_bitstring =
-            (ubyte*)vm_malloc (calculate_num_bytes (Parse_objects.size ()));
+            (ubyte*)malloc (calculate_num_bytes (Parse_objects.size ()));
 
         // clear it
         memset (
@@ -124,7 +124,7 @@ void dock_evaluate_all_docked_objects (
         dock_evaluate_tree (objp, infop, function, visited_bitstring);
 
         // destroy the bit array
-        vm_free (visited_bitstring);
+        free (visited_bitstring);
         visited_bitstring = NULL;
     }
 }
@@ -231,8 +231,8 @@ void dock_add_instance (
     p_dock_instance* item;
 
     // create item
-    item = (p_dock_instance*)vm_malloc (sizeof (p_dock_instance));
-    strcpy_s (item->dockpoint_used, dockpoint);
+    item = (p_dock_instance*)malloc (sizeof (p_dock_instance));
+    strcpy (item->dockpoint_used, dockpoint);
     item->docked_objp = other_objp;
 
     // prepend item to existing list
@@ -245,7 +245,7 @@ void dock_free_dock_list (p_object* objp) {
     while (objp->dock_list != NULL) {
         p_dock_instance* ptr = objp->dock_list;
         objp->dock_list = ptr->next;
-        vm_free (ptr);
+        free (ptr);
     }
 }
 

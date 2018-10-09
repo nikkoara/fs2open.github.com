@@ -685,7 +685,7 @@ void gr_set_palette_internal (
 void gr_set_palette (
     const char* name, ubyte* palette, int restrict_font_to_128) {
     char* p;
-    strcpy_s (Gr_current_palette_name, name);
+    strcpy (Gr_current_palette_name, name);
     p = strchr (Gr_current_palette_name, '.');
     if (p) *p = 0;
     gr_screen.signature = Gr_signature++;
@@ -1787,41 +1787,41 @@ void poly_list::allocate (int _verts) {
     if (_verts <= currently_allocated) return;
 
     if (vert != NULL) {
-        vm_free (vert);
+        free (vert);
         vert = NULL;
     }
 
     if (norm != NULL) {
-        vm_free (norm);
+        free (norm);
         norm = NULL;
     }
 
     if (tsb != NULL) {
-        vm_free (tsb);
+        free (tsb);
         tsb = NULL;
     }
 
     if (submodels != NULL) {
-        vm_free (submodels);
+        free (submodels);
         submodels = NULL;
     }
 
     if (sorted_indices != NULL) {
-        vm_free (sorted_indices);
+        free (sorted_indices);
         sorted_indices = NULL;
     }
 
     if (_verts) {
-        vert = (vertex*)vm_malloc (sizeof (vertex) * _verts);
-        norm = (vec3d*)vm_malloc (sizeof (vec3d) * _verts);
+        vert = (vertex*)malloc (sizeof (vertex) * _verts);
+        norm = (vec3d*)malloc (sizeof (vec3d) * _verts);
 
         if (Cmdline_normal) {
-            tsb = (tsb_t*)vm_malloc (sizeof (tsb_t) * _verts);
+            tsb = (tsb_t*)malloc (sizeof (tsb_t) * _verts);
         }
 
-        submodels = (int*)vm_malloc (sizeof (int) * _verts);
+        submodels = (int*)malloc (sizeof (int) * _verts);
 
-        sorted_indices = (uint*)vm_malloc (sizeof (uint) * _verts);
+        sorted_indices = (uint*)malloc (sizeof (uint) * _verts);
     }
 
     n_verts = 0;
@@ -1830,27 +1830,27 @@ void poly_list::allocate (int _verts) {
 
 poly_list::~poly_list () {
     if (vert != NULL) {
-        vm_free (vert);
+        free (vert);
         vert = NULL;
     }
 
     if (norm != NULL) {
-        vm_free (norm);
+        free (norm);
         norm = NULL;
     }
 
     if (tsb != NULL) {
-        vm_free (tsb);
+        free (tsb);
         tsb = NULL;
     }
 
     if (submodels != NULL) {
-        vm_free (submodels);
+        free (submodels);
         submodels = NULL;
     }
 
     if (sorted_indices != NULL) {
-        vm_free (sorted_indices);
+        free (sorted_indices);
         sorted_indices = NULL;
     }
 }
@@ -1949,9 +1949,7 @@ void poly_list::make_index_buffer (std::vector< int >& vertex_list) {
     // calculate tangent space data (must be done early)
     calculate_tangent ();
 
-    // using vm_malloc() here rather than 'new' so we get the extra
-    // out-of-memory check
-    nverts_good = (ubyte*)vm_malloc (n_verts);
+    nverts_good = (ubyte*)malloc (n_verts);
 
     ASSERT (nverts_good != NULL);
     if (nverts_good == NULL) return;
@@ -1972,7 +1970,7 @@ void poly_list::make_index_buffer (std::vector< int >& vertex_list) {
 
     // if there is nothig to change then bail
     if (n_verts == nverts) {
-        if (nverts_good != NULL) { vm_free (nverts_good); }
+        if (nverts_good != NULL) { free (nverts_good); }
 
         return;
     }
@@ -1996,7 +1994,7 @@ void poly_list::make_index_buffer (std::vector< int >& vertex_list) {
 
     ASSERT (nverts == buffer_list_internal.n_verts);
 
-    if (nverts_good != NULL) { vm_free (nverts_good); }
+    if (nverts_good != NULL) { free (nverts_good); }
 
     buffer_list_internal.generate_sorted_index_list ();
 

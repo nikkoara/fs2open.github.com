@@ -64,7 +64,7 @@ CJumpNode::CJumpNode (CJumpNode&& other) noexcept
     m_display_color = other.m_display_color;
     m_pos = other.m_pos;
 
-    strcpy_s (m_name, other.m_name);
+    strcpy (m_name, other.m_name);
 }
 
 CJumpNode& CJumpNode::operator= (CJumpNode&& other) noexcept {
@@ -82,7 +82,7 @@ CJumpNode& CJumpNode::operator= (CJumpNode&& other) noexcept {
         m_display_color = other.m_display_color;
         m_pos = other.m_pos;
 
-        strcpy_s (m_name, other.m_name);
+        strcpy (m_name, other.m_name);
     }
 
     return *this;
@@ -205,7 +205,7 @@ void CJumpNode::SetName (const char* new_name) {
         m_name, new_name);
 #endif
 
-    strcpy_s (m_name, new_name);
+    strcpy (m_name, new_name);
 }
 
 /**

@@ -44,7 +44,7 @@ camera::~camera () {
 }
 
 void camera::clear () {
-    strcpy_s (name, "");
+    strcpy (name, "");
     sig = -1;
     reset ();
 }

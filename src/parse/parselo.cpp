@@ -237,11 +237,11 @@ void error_display (int error_level, const char* format, ...) {
     va_list args;
 
     if (error_level == 0) {
-        strcpy_s (type, "Warning");
+        strcpy (type, "Warning");
         Warning_count++;
     }
     else {
-        strcpy_s (type, "Error");
+        strcpy (type, "Error");
         Error_count++;
     }
 
@@ -271,7 +271,7 @@ void advance_to_eoln (const char* more_terminators) {
     terminators[0] = EOLN;
     terminators[1] = 0;
     if (more_terminators != NULL)
-        strcat_s (terminators, more_terminators);
+        strcat (terminators, more_terminators);
     else
         terminators[1] = 0;
 
@@ -714,7 +714,7 @@ void copy_to_eoln (
     terminators[0] = EOLN;
     terminators[1] = 0;
     if (more_terminators != NULL)
-        strcat_s (terminators, more_terminators);
+        strcat (terminators, more_terminators);
     else
         terminators[1] = 0;
 
@@ -743,7 +743,7 @@ void copy_to_eoln (
     terminators[0] = EOLN;
     terminators[1] = 0;
     if (more_terminators != NULL)
-        strcat_s (terminators, more_terminators);
+        strcat (terminators, more_terminators);
     else
         terminators[1] = 0;
 
@@ -832,7 +832,7 @@ char* alloc_text_until (char* instr, char* endstr) {
         }
 
         char* rstr = NULL;
-        rstr = (char*)vm_malloc ((foundstr - instr + 1) * sizeof (char));
+        rstr = (char*)malloc ((foundstr - instr + 1) * sizeof (char));
 
         if (rstr != NULL) {
             strncpy (rstr, instr, foundstr - instr);
@@ -975,7 +975,7 @@ char* alloc_block (const char* startstr, const char* endstr, int extra_chars) {
 
         // Allocate the memory
         // WMC - Don't forget the null character that's added later on.
-        rval = (char*)vm_malloc ((flen + extra_chars + 1) * sizeof (char));
+        rval = (char*)malloc ((flen + extra_chars + 1) * sizeof (char));
 
         // Copy the text (if memory was allocated)
         if (rval != NULL) {
@@ -1325,7 +1325,7 @@ char* stuff_and_malloc_string (int type, char* terminators) {
 
     if (tmp_result.empty ()) return NULL;
 
-    return vm_strdup (tmp_result.c_str ());
+    return strdup (tmp_result.c_str ());
 }
 
 void stuff_malloc_string (char** dest, int type, char* terminators) {
@@ -1334,7 +1334,7 @@ void stuff_malloc_string (char** dest, int type, char* terminators) {
     char* new_val = stuff_and_malloc_string (type, terminators);
 
     if (new_val != NULL) {
-        if ((*dest) != NULL) { vm_free (*dest); }
+        if ((*dest) != NULL) { free (*dest); }
 
         (*dest) = new_val;
     }
@@ -1822,7 +1822,7 @@ void read_file_text (
     // copy the filename
     if (!filename) throw parse::ParseException ("Invalid filename");
 
-    strcpy_s (Current_filename_sub, filename);
+    strcpy (Current_filename_sub, filename);
 
     // if we are paused then processed_text and raw_text must not be NULL!!
     if (Parsing_paused && ((processed_text == NULL) || (raw_text == NULL))) {
@@ -1844,12 +1844,12 @@ void stop_parse () {
     ASSERT (!Parsing_paused);
 
     if (Parse_text != nullptr) {
-        vm_free (Parse_text);
+        free (Parse_text);
         Parse_text = nullptr;
     }
 
     if (Parse_text_raw != nullptr) {
-        vm_free (Parse_text_raw);
+        free (Parse_text_raw);
         Parse_text_raw = nullptr;
     }
 
@@ -1878,22 +1878,20 @@ void allocate_parse_text (size_t size) {
     }
 
     if (Parse_text != nullptr) {
-        vm_free (Parse_text);
+        free (Parse_text);
         Parse_text = nullptr;
     }
 
     if (Parse_text_raw != nullptr) {
-        vm_free (Parse_text_raw);
+        free (Parse_text_raw);
         Parse_text_raw = nullptr;
     }
 
-    Parse_text = (char*)vm_malloc (sizeof (char) * size, memory::quiet_alloc);
-    Parse_text_raw =
-        (char*)vm_malloc (sizeof (char) * size, memory::quiet_alloc);
+    Parse_text = (char*)malloc (sizeof (char) * size);
+    ASSERT (Parse_text);
 
-    if ((Parse_text == nullptr) || (Parse_text_raw == nullptr)) {
-        ASSERTX (0, "Unable to allocate enough memory for Mission_text!  Aborting...\n");
-    }
+    Parse_text_raw = (char*)malloc (sizeof (char) * size);
+    ASSERT (Parse_text_raw);
 
     memset (Parse_text, 0, sizeof (char) * size);
     memset (Parse_text_raw, 0, sizeof (char) * size);
@@ -1945,13 +1943,13 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
     if (file_is_encrypted) {
         int unscrambled_len;
         char* scrambled_text;
-        scrambled_text = (char*)vm_malloc (file_len + 1);
+        scrambled_text = (char*)malloc (file_len + 1);
         ASSERT (scrambled_text);
         cfread (scrambled_text, file_len, 1, mf);
         // unscramble text
         unencrypt (scrambled_text, file_len, raw_text, &unscrambled_len);
         file_len = unscrambled_len;
-        vm_free (scrambled_text);
+        free (scrambled_text);
     }
     else {
         cfread (raw_text, file_len, 1, mf);
@@ -2136,10 +2134,10 @@ void process_raw_file_text (char* processed_text, char* raw_text) {
        The file
             // you are trying to read is truly too large.  Look at *filename
        to see the file name. Assert(mp_raw - file_text_raw + strlen(outbuf) <
-       PARSE_TEXT_SIZE); strcpy_s(mp_raw, outbuf); mp_raw += strlen(outbuf);
+       PARSE_TEXT_SIZE); strcpy(mp_raw, outbuf); mp_raw += strlen(outbuf);
 
             in_comment = strip_comments(outbuf, in_comment);
-            strcpy_s(mp, outbuf);
+            strcpy(mp, outbuf);
             mp += strlen(outbuf);
         }
 
@@ -2752,7 +2750,7 @@ int stuff_loadout_list (int* ilp, int max_ints, int lookup_type) {
                 ASSERTX (0, "Invalid SEXP variable name \"%s\" found in stuff_loadout_list.",str);
             }
 
-            strcpy_s (str, Sexp_variables[sexp_variable_index].text);
+            strcpy (str, Sexp_variables[sexp_variable_index].text);
         }
 
         switch (lookup_type) {
@@ -3137,7 +3135,7 @@ void pause_parse () {
     Warning_count_save = Warning_count;
     Error_count_save = Error_count;
 
-    strcpy_s (Current_filename_save, Current_filename);
+    strcpy (Current_filename_save, Current_filename);
 
     Parsing_paused = 1;
 }
@@ -3152,7 +3150,7 @@ void unpause_parse () {
     Warning_count = Warning_count_save;
     Error_count = Error_count_save;
 
-    strcpy_s (Current_filename, Current_filename_save);
+    strcpy (Current_filename, Current_filename_save);
 
     Parsing_paused = 0;
 }
@@ -3166,7 +3164,7 @@ void reset_parse (char* text) {
     Warning_count = 0;
     Error_count = 0;
 
-    strcpy_s (Current_filename, Current_filename_sub);
+    strcpy (Current_filename, Current_filename_sub);
 }
 
 // Display number of warnings and errors at the end of a parse.
@@ -3741,12 +3739,12 @@ ptrdiff_t replace_one (
         }
 
         // allocate temp string to hold extra stuff
-        char* temp = (char*)vm_malloc (sizeof (char) * max_len);
+        char* temp = (char*)malloc (sizeof (char) * max_len);
 
         // ensure allocation was successful
         if (temp) {
             // save remainder of string
-            strcpy_s (temp, sizeof (char) * max_len, ch + strlen (oldstr));
+            strcpy (temp, ch + strlen (oldstr));
 
             // replace
             strcpy (ch, newstr);
@@ -3756,7 +3754,7 @@ ptrdiff_t replace_one (
         }
 
         // free temp string
-        vm_free (temp);
+        free (temp);
     }
     // not found
     else {

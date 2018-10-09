@@ -836,7 +836,7 @@ void hud_config_init_ui () {
 
     HC_select_all = 0;
 
-    strcpy_s (HC_fname, "");
+    strcpy (HC_fname, "");
 }
 
 int hud_config_show_flag_is_set (int i) {
@@ -1307,7 +1307,7 @@ void hud_config_button_do (int n) {
         else {
             out = cf_add_ext (name, ".hcf");
         }
-        HC_filenames[HC_num_files++] = vm_strdup (out);
+        HC_filenames[HC_num_files++] = strdup (out);
         hud_config_color_save (out);
 
         HC_fname_input.set_text (out);
@@ -1906,7 +1906,7 @@ void hud_config_color_close () {
     // free all
     for (idx = 0; idx < HC_num_files; idx++) {
         if (HC_filenames[idx] != NULL) {
-            vm_free (HC_filenames[idx]);
+            free (HC_filenames[idx]);
             HC_filenames[idx] = NULL;
         }
     }

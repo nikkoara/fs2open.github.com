@@ -98,13 +98,13 @@ int jpeg_read_header (
     char filename[MAX_FILENAME_LEN];
 
     if (img_cfp == NULL) {
-        strcpy_s (filename, real_filename);
+        strcpy (filename, real_filename);
 
         char* p = strchr (filename, '.');
 
         if (p) *p = 0;
 
-        strcat_s (filename, ".jpg");
+        strcat (filename, ".jpg");
 
         jpeg_file = cfopen (filename, "rb");
 
@@ -163,10 +163,10 @@ int jpeg_read_bitmap (
     CFILE* img_cfp = NULL;
     JSAMPARRAY buffer = NULL;
 
-    strcpy_s (filename, real_filename);
+    strcpy (filename, real_filename);
     char* p = strchr (filename, '.');
     if (p) *p = 0;
-    strcat_s (filename, ".jpg");
+    strcat (filename, ".jpg");
 
     img_cfp = cfopen (filename, "rb", CFILE_NORMAL, cf_type);
 
@@ -216,11 +216,12 @@ int jpeg_read_bitmap (
         // efficient
         int size = jpeg_info.output_width * jpeg_info.output_components *
                    jpeg_info.rec_outbuf_height;
+
         // a standard malloc doesn't appear to work properly here (debug
         // vm_malloc??), crashes in lib
+        // DON'T free() THIS! jpeg lib does it
         buffer = (*jpeg_info.mem->alloc_sarray) (
-            (j_common_ptr)&jpeg_info, JPOOL_IMAGE, size,
-            1); // DON'T free() THIS! jpeg lib does it
+            (j_common_ptr)&jpeg_info, JPOOL_IMAGE, size, 1);
 
         // begin decompression process --
         jpeg_start_decompress (&jpeg_info);

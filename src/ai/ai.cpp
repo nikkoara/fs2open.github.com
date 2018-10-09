@@ -87,7 +87,7 @@ char* ai_get_goal_target_name (const char* name, int* index) {
         "Goal target name %s is too long. Needs to be 31 characters or less.",
         name);
     i = Total_goal_target_names++;
-    strcpy_s (Goal_target_names[i], name);
+    strcpy (Goal_target_names[i], name);
     *index = i;
     return Goal_target_names[i];
 }

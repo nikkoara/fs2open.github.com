@@ -347,13 +347,13 @@ int targa_read_header (
     char filename[MAX_FILENAME_LEN];
 
     if (img_cfp == NULL) {
-        strcpy_s (filename, real_filename);
+        strcpy (filename, real_filename);
 
         char* p = strchr (filename, '.');
 
         if (p) *p = 0;
 
-        strcat_s (filename, ".tga");
+        strcat (filename, ".tga");
 
         targa_file = cfopen (filename, "rb");
 
@@ -499,10 +499,10 @@ int targa_read_bitmap (
     int xfile_offset = 0;
 
     // open the file
-    strcpy_s (filename, real_filename);
+    strcpy (filename, real_filename);
     char* p = strchr (filename, '.');
     if (p) *p = 0;
-    strcat_s (filename, ".tga");
+    strcat (filename, ".tga");
 
     targa_file = cfopen (filename, "rb", CFILE_NORMAL, cf_type);
     if (!targa_file) { return TARGA_ERROR_READING; }
@@ -635,7 +635,7 @@ int targa_read_bitmap (
 
     ASSERT (bytes_remaining > 0);
 
-    ubyte* fileptr = (ubyte*)vm_malloc (bytes_remaining);
+    ubyte* fileptr = (ubyte*)malloc (bytes_remaining);
     ASSERT (fileptr);
     if (fileptr == NULL) { return TARGA_ERROR_READING; }
 
@@ -681,7 +681,7 @@ int targa_read_bitmap (
         }
     }
 
-    vm_free (fileptr);
+    free (fileptr);
     cfclose (targa_file);
     targa_file = NULL;
 
@@ -708,10 +708,10 @@ int targa_write_bitmap (
     int bytes_per_pixel = (bpp >> 3);
 
     // open the file
-    strcpy_s (filename, real_filename);
+    strcpy (filename, real_filename);
     char* p = strchr (filename, '.');
     if (p) *p = 0;
-    strcat_s (filename, ".tga");
+    strcat (filename, ".tga");
 
     f = cfopen (filename, "wb");
     if (!f) { return TARGA_ERROR_READING; }
@@ -757,7 +757,7 @@ int targa_write_bitmap (
     // )
 
     ubyte* compressed_data;
-    compressed_data = (ubyte*)vm_malloc (w * h * bytes_per_pixel);
+    compressed_data = (ubyte*)malloc (w * h * bytes_per_pixel);
     ASSERT (compressed_data);
     if (compressed_data == NULL) {
         cfclose (f);
@@ -769,7 +769,7 @@ int targa_write_bitmap (
         (char*)compressed_data, (char*)data, 3, bytes_per_pixel,
         w * h * bytes_per_pixel);
     if (compressed_data_len < 0) {
-        vm_free (compressed_data);
+        free (compressed_data);
         cfclose (f);
         return -1;
     }

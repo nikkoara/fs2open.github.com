@@ -323,7 +323,7 @@ HudGauge::HudGauge (
 
     texture_target_fname[0] = '\0';
 
-    if (_custom_name) { strcpy_s (custom_name, _custom_name); }
+    if (_custom_name) { strcpy (custom_name, _custom_name); }
     else {
         custom_name[0] = '\0';
     }
@@ -1045,7 +1045,7 @@ void HudGauge::initCockpitTarget (
     target_x = _target_x;
     target_y = _target_y;
 
-    strcpy_s (texture_target_fname, display_name);
+    strcpy (texture_target_fname, display_name);
     target_w = _target_w;
     target_h = _target_h;
 
@@ -2005,7 +2005,7 @@ void HudGaugeDamage::render (float /*frametime*/) {
         }
         else {
             char temp_name[NAME_LENGTH];
-            strcpy_s (temp_name, hud_subsys_list[best_index].name);
+            strcpy (temp_name, hud_subsys_list[best_index].name);
             hud_targetbox_truncate_subsys_name (temp_name);
             info.name = temp_name;
         }
@@ -2129,7 +2129,7 @@ void hud_anim_init (hud_anim* ha, int sx, int sy, const char* filename) {
     ha->time_elapsed = 0.0f;
     ha->sx = sx;
     ha->sy = sy;
-    strcpy_s (ha->filename, filename);
+    strcpy (ha->filename, filename);
 }
 
 /**
@@ -2247,7 +2247,7 @@ void hud_num_make_mono (char* num_str, int font_num) {
  * @brief Flashing text gauge
  */
 void hud_init_text_flash_gauge () {
-    strcpy_s (Hud_text_flash, "");
+    strcpy (Hud_text_flash, "");
     Hud_text_flash_timer = timestamp (0);
     Hud_text_flash_interval = 0;
 }
@@ -2255,7 +2255,7 @@ void hud_init_text_flash_gauge () {
 void hud_start_text_flash (const char* txt, int t, int interval) {
     // bogus
     if (txt == NULL) {
-        strcpy_s (Hud_text_flash, "");
+        strcpy (Hud_text_flash, "");
         return;
     }
 
@@ -2734,9 +2734,9 @@ void HudGaugeSupport::render (float /*frametime*/) {
             }
 
             if (repairing)
-                strcpy_s (outstr, XSTR ("repairing", 227));
+                strcpy (outstr, XSTR ("repairing", 227));
             else
-                strcpy_s (outstr, XSTR ("rearming", 228));
+                strcpy (outstr, XSTR ("rearming", 228));
         }
         else {
             if (Player_rearm_eta > 0) {
@@ -2749,14 +2749,14 @@ void HudGaugeSupport::render (float /*frametime*/) {
                 sprintf (outstr, "%02d:%02d.%02d", min, sec, hund);
             }
             else {
-                strcpy_s (outstr, XSTR ("Waiting...", 1603));
+                strcpy (outstr, XSTR ("Waiting...", 1603));
             }
         }
         renderStringAlignCenter (
             position[0], position[1] + text_val_offset_y, w, outstr);
     }
     else if (Player_ai->ai_flags[AI::AI_Flags::Repair_obstructed]) {
-        strcpy_s (outstr, XSTR ("obstructed", 229));
+        strcpy (outstr, XSTR ("obstructed", 229));
         renderStringAlignCenter (
             position[0], position[1] + text_val_offset_y, w, outstr);
     }
@@ -2764,10 +2764,10 @@ void HudGaugeSupport::render (float /*frametime*/) {
         if (Hud_support_objnum == -1) {
             if (The_mission.support_ships.arrival_location ==
                 ARRIVE_FROM_DOCK_BAY) {
-                strcpy_s (outstr, XSTR ("exiting hangar", 1622));
+                strcpy (outstr, XSTR ("exiting hangar", 1622));
             }
             else {
-                strcpy_s (outstr, XSTR ("warping in", 230));
+                strcpy (outstr, XSTR ("warping in", 230));
             }
             renderStringAlignCenter (
                 position[0], position[1] + text_val_offset_y, w, outstr);
@@ -2779,11 +2779,11 @@ void HudGaugeSupport::render (float /*frametime*/) {
             aip =
                 &Ai_info[Ships[Objects[Hud_support_objnum].instance].ai_index];
             if (aip->goal_objnum != OBJ_INDEX (Player_obj)) {
-                strcpy_s (outstr, XSTR ("busy", 231));
+                strcpy (outstr, XSTR ("busy", 231));
                 show_time = 0;
             }
             else {
-                strcpy_s (outstr, XSTR ("dock in:", 232));
+                strcpy (outstr, XSTR ("dock in:", 232));
                 show_time = 1;
             }
 

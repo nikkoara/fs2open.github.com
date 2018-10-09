@@ -20,7 +20,7 @@ typedef struct mflash_blob_info {
     float radius;
 
     mflash_blob_info (const mflash_blob_info& mbi) {
-        strcpy_s (name, mbi.name);
+        strcpy (name, mbi.name);
         anim_id = mbi.anim_id;
         offset = mbi.offset;
         radius = mbi.radius;
@@ -31,7 +31,7 @@ typedef struct mflash_blob_info {
     }
 
     mflash_blob_info& operator= (const mflash_blob_info& r) {
-        strcpy_s (name, r.name);
+        strcpy (name, r.name);
         anim_id = r.anim_id;
         offset = r.offset;
         radius = r.radius;
@@ -48,13 +48,13 @@ typedef struct mflash_info {
     mflash_info () : used_this_level (0) { name[0] = '\0'; }
 
     mflash_info (const mflash_info& mi) {
-        strcpy_s (name, mi.name);
+        strcpy (name, mi.name);
         used_this_level = mi.used_this_level;
         blobs = mi.blobs;
     }
 
     mflash_info& operator= (const mflash_info& r) {
-        strcpy_s (name, r.name);
+        strcpy (name, r.name);
         used_this_level = r.used_this_level;
         blobs = r.blobs;
 

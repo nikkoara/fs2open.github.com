@@ -619,7 +619,7 @@ void wl_render_overhead_view (float frametime) {
                 else {
                     // high-res
                     char filename[NAME_LENGTH + 2] = "2_";
-                    strcat_s (filename, sip->overhead_filename);
+                    strcat (filename, sip->overhead_filename);
                     wl_ship->overhead_bitmap = bm_load_animation (
                         sip->overhead_filename, nullptr, nullptr, nullptr,
                         nullptr, false, CF_TYPE_INTERFACE);
@@ -634,7 +634,7 @@ void wl_render_overhead_view (float frametime) {
                 else {
                     // high-res
                     char filename[NAME_LENGTH + 2] = "2_";
-                    strcat_s (filename, sip->overhead_filename);
+                    strcat (filename, sip->overhead_filename);
                     wl_ship->overhead_bitmap = bm_load (filename);
                 }
             }
@@ -2326,7 +2326,7 @@ void wl_weapon_desc_start_wipe () {
     Weapon_desc_wipe_done = 0;
 
     // break title into two lines if too long
-    strcpy_s (Weapon_desc_lines[0], Weapon_info[Selected_wl_class].title);
+    strcpy (Weapon_desc_lines[0], Weapon_info[Selected_wl_class].title);
     gr_get_string_size (
         &w, &h, Weapon_info[Selected_wl_class].title, title_len);
     if (w > Weapon_title_max_width[gr_screen.res]) {
@@ -2341,7 +2341,7 @@ void wl_weapon_desc_start_wipe () {
         }
 
         Weapon_desc_lines[0][currchar_src] = '\0'; // shorten line 0
-        strcpy_s (
+        strcpy (
             Weapon_desc_lines[1],
             &(Weapon_desc_lines[0][currchar_src + 1])); // copy remainder into
                                                         // line 1
@@ -2505,7 +2505,7 @@ void weapon_select_do (float frametime) {
     gr_reset_clip ();
 
     weapon_select_render (frametime);
-    
+
     int* weapon_ani_coords = Wl_weapon_ani_coords[gr_screen.res];
 
     if (Selected_wl_class != -1 &&
@@ -2635,7 +2635,7 @@ void weapon_select_do (float frametime) {
                 // might have to get weapon name translation
                 if (Lcl_gr && !Disable_built_in_translations) {
                     char display_name[NAME_LENGTH];
-                    strcpy_s (
+                    strcpy (
                         display_name, Weapon_info[Carried_wl_icon.weapon_class]
                                           .get_display_string ());
                     lcl_translate_wep_name_gr (display_name);
@@ -3162,12 +3162,12 @@ void start_weapon_animation (int weapon_class) {
         p = strchr (Weapon_info[weapon_class].anim_filename, '.');
         if (p) *p = '\0';
         if (gr_screen.res == GR_1024) {
-            strcpy_s (animation_filename, "2_");
-            strcat_s (
+            strcpy (animation_filename, "2_");
+            strcat (
                 animation_filename, Weapon_info[weapon_class].anim_filename);
         }
         else {
-            strcpy_s (
+            strcpy (
                 animation_filename, Weapon_info[weapon_class].anim_filename);
         }
 
@@ -3367,7 +3367,7 @@ int wl_swap_slot_slot (
                 char display_name[NAME_LENGTH];
                 char txt[39 + NAME_LENGTH];
 
-                strcpy_s (
+                strcpy (
                     display_name,
                     Weapon_info[slot->wep[from_bank]].get_display_string ());
 
@@ -3544,7 +3544,7 @@ int wl_grab_from_list (
             char display_name[NAME_LENGTH];
             char txt[39 + NAME_LENGTH];
 
-            strcpy_s (
+            strcpy (
                 display_name, Weapon_info[from_list].get_display_string ());
 
             // might have to get weapon name translation
@@ -3629,7 +3629,7 @@ int wl_swap_list_slot (
             char display_name[NAME_LENGTH];
             char txt[39 + NAME_LENGTH];
 
-            strcpy_s (
+            strcpy (
                 display_name, Weapon_info[from_list].get_display_string ());
 
             // might have to get weapon name translation
@@ -3724,7 +3724,7 @@ int wl_drop (
 
     mode = wss_get_mode (
         from_bank, from_list, to_bank, to_list, ship_slot);
-        
+
     if (mode >= 0) {
         update = wl_apply (
             mode, from_bank, from_list, to_bank, to_list, ship_slot,
@@ -3811,7 +3811,7 @@ void wl_apply_current_loadout_to_all_ships_in_current_wing () {
             // maybe localize
             const char* wep_display_name;
             if (Lcl_gr && !Disable_built_in_translations) {
-                strcpy_s (
+                strcpy (
                     buf,
                     Weapon_info[weapon_type_to_add].get_display_string ());
                 lcl_translate_wep_name_gr (buf);

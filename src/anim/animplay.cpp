@@ -162,7 +162,7 @@ anim_instance* anim_play (anim_play_struct* aps) {
     if (anim_instance_is_streamed (instance)) {
         instance->file_offset = instance->parent->file_offset;
     }
-    instance->frame = (ubyte*)vm_malloc (
+    instance->frame = (ubyte*)malloc (
         instance->parent->width * instance->parent->height * 2);
     ASSERT (instance->frame != NULL);
     memset (
@@ -585,7 +585,7 @@ int anim_stop_playing (anim_instance* instance) {
 void anim_release_render_instance (anim_instance* instance) {
     ASSERT (instance != NULL);
 
-    if (instance->frame != NULL) vm_free (instance->frame);
+    if (instance->frame != NULL) free (instance->frame);
 
     instance->frame = NULL;
     instance->parent->instance_count--;
@@ -738,10 +738,10 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
 
     ASSERT (real_filename != NULL);
 
-    strcpy_s (name, real_filename);
+    strcpy (name, real_filename);
     char* p = strchr (name, '.');
     if (p) { *p = 0; }
-    strcat_s (name, ".ani");
+    strcat (name, ".ani");
 
     ptr = first_anim;
     while (ptr) {
@@ -754,14 +754,14 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
         fp = cfopen (name, "rb", CFILE_NORMAL, cf_dir_type);
         if (!fp) return NULL;
 
-        ptr = (anim*)vm_malloc (sizeof (anim));
+        ptr = (anim*)malloc (sizeof (anim));
         ASSERT (ptr);
 
         ptr->flags = 0;
         ptr->next = first_anim;
         first_anim = ptr;
         ASSERT (strlen (name) < PATH_MAX - 1);
-        strcpy_s (ptr->name, name);
+        strcpy (ptr->name, name);
         ptr->instance_count = 0;
         ptr->width = 0;
         ptr->height = 0;
@@ -777,7 +777,7 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
 
         if (ptr->num_keys > 0) {
             ptr->keys =
-                (key_frame*)vm_malloc (sizeof (key_frame) * ptr->num_keys);
+                (key_frame*)malloc (sizeof (key_frame) * ptr->num_keys);
             ASSERT (ptr->keys != NULL);
         }
 
@@ -824,7 +824,7 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
             if (ptr->flags & ANF_STREAMED) {
                 ptr->data = NULL;
                 ptr->cache_file_offset = ptr->file_offset;
-                ptr->cache = (ubyte*)vm_malloc (ANI_STREAM_CACHE_SIZE + 2);
+                ptr->cache = (ubyte*)malloc (ANI_STREAM_CACHE_SIZE + 2);
                 ASSERT (ptr->cache);
                 cfseek (ptr->cfile_ptr, offset, CF_SEEK_SET);
                 cfread (ptr->cache, ANI_STREAM_CACHE_SIZE, 1, ptr->cfile_ptr);
@@ -837,7 +837,7 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
             // Not a memory mapped file (or streamed)
             ptr->flags &= ~ANF_MEM_MAPPED;
             ptr->flags &= ~ANF_STREAMED;
-            ptr->data = (ubyte*)vm_malloc (count);
+            ptr->data = (ubyte*)malloc (count);
             ptr->file_offset = -1;
             cfread (ptr->data, count, 1, fp);
         }
@@ -880,27 +880,27 @@ int anim_free (anim* ptr) {
     if (ptr->instance_count > 0) return -1;
 
     if (ptr->keys != NULL) {
-        vm_free (ptr->keys);
+        free (ptr->keys);
         ptr->keys = NULL;
     }
 
     if (ptr->flags & (ANF_MEM_MAPPED | ANF_STREAMED)) {
         cfclose (ptr->cfile_ptr);
         if (ptr->cache != NULL) {
-            vm_free (ptr->cache);
+            free (ptr->cache);
             ptr->cache = NULL;
         }
     }
     else {
         ASSERT (ptr->data);
         if (ptr->data != NULL) {
-            vm_free (ptr->data);
+            free (ptr->data);
             ptr->data = NULL;
         }
     }
 
     *prev_anim = ptr->next;
-    vm_free (ptr);
+    free (ptr);
     return 0;
 }
 
@@ -942,7 +942,7 @@ int anim_write_frames_out (char* filename) {
     int i, j;
     ubyte** row_data;
 
-    strcpy_s (root_name, filename);
+    strcpy (root_name, filename);
     root_name[strlen (filename) - 4] = 0;
 
     source_anim = anim_load (filename);
@@ -950,13 +950,13 @@ int anim_write_frames_out (char* filename) {
 
     ai = init_anim_instance (source_anim, 16);
 
-    row_data = (ubyte**)vm_malloc ((source_anim->height + 1) * 4);
+    row_data = (ubyte**)malloc ((source_anim->height + 1) * 4);
 
     for (i = 0; i < source_anim->total_frames; i++) {
         anim_get_next_raw_buffer (ai, 0, 0, 16);
-        strcpy_s (pcxname, root_name);
+        strcpy (pcxname, root_name);
         sprintf (buf, "%04d", i);
-        strcat_s (pcxname, buf);
+        strcat (pcxname, buf);
 
         for (j = 0; j < source_anim->height; j++) {
             row_data[j] = &ai->frame[j * source_anim->width];
@@ -969,7 +969,7 @@ int anim_write_frames_out (char* filename) {
         printf (".");
     }
     printf ("\n");
-    vm_free (row_data);
+    free (row_data);
     return 0;
 }
 
@@ -984,10 +984,10 @@ void anim_display_info (char* real_filename) {
     int i, uncompressed, compressed, *key_frame_nums = NULL, tmp;
     char filename[MAX_FILENAME_LEN];
 
-    strcpy_s (filename, real_filename);
+    strcpy (filename, real_filename);
     char* p = strchr (filename, '.');
     if (p) { *p = 0; }
-    strcat_s (filename, ".ani");
+    strcat (filename, ".ani");
 
     fp = cfopen (filename, "rb");
     if (!fp) {
@@ -1002,7 +1002,7 @@ void anim_display_info (char* real_filename) {
     }
 
     // read the keyframe frame nums and offsets
-    key_frame_nums = (int*)vm_malloc (sizeof (int) * A.num_keys);
+    key_frame_nums = (int*)malloc (sizeof (int) * A.num_keys);
     ASSERT (key_frame_nums != NULL);
     if (key_frame_nums == NULL) return;
 
@@ -1045,7 +1045,7 @@ void anim_display_info (char* real_filename) {
 
     printf ("ac version:                %d\n", A.version);
 
-    if (key_frame_nums != NULL) { vm_free (key_frame_nums); }
+    if (key_frame_nums != NULL) { free (key_frame_nums); }
 
     cfclose (fp);
 }

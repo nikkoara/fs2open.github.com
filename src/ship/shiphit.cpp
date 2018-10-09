@@ -230,7 +230,7 @@ void do_subobj_destroyed_stuff (
                     psub->alt_dmg_sub_name);
             else {
                 char r_name[NAME_LENGTH];
-                strcpy_s (r_name, ship_subsys_get_name (subsys));
+                strcpy (r_name, ship_subsys_get_name (subsys));
                 for (i = 0; r_name[i] > 0; i++) {
                     if (r_name[i] == '|') r_name[i] = ' ';
                 }
@@ -897,10 +897,10 @@ static void shiphit_record_player_killer (object* killer_objp, player* p) {
             }
         }
 
-        strcpy_s (
+        strcpy (
             p->killer_parent_name,
             Ships[Objects[killer_objp->parent].instance].ship_name);
-        
+
         end_string_at_first_hash_symbol (p->killer_parent_name);
 
         break;
@@ -918,7 +918,7 @@ static void shiphit_record_player_killer (object* killer_objp, player* p) {
             p->flags |= PLAYER_FLAGS_KILLED_SELF_SHOCKWAVE;
         }
 
-        strcpy_s (
+        strcpy (
             p->killer_parent_name,
             Ships[Objects[killer_objp->parent].instance].ship_name);
 
@@ -940,7 +940,7 @@ static void shiphit_record_player_killer (object* killer_objp, player* p) {
             p->flags |= PLAYER_FLAGS_KILLED_BY_ENGINE_WASH;
         }
 
-        strcpy_s (
+        strcpy (
             p->killer_parent_name, Ships[killer_objp->instance].ship_name);
 
         end_string_at_first_hash_symbol (p->killer_parent_name);
@@ -968,7 +968,7 @@ static void shiphit_record_player_killer (object* killer_objp, player* p) {
         if (beam_obj != -1) {
             if ((Objects[beam_obj].type == OBJ_SHIP) &&
                 (Objects[beam_obj].instance >= 0)) {
-                strcpy_s (
+                strcpy (
                     p->killer_parent_name,
                     Ships[Objects[beam_obj].instance].ship_name);
                 end_string_at_first_hash_symbol (p->killer_parent_name);
@@ -978,7 +978,7 @@ static void shiphit_record_player_killer (object* killer_objp, player* p) {
                     .species;
         }
         else {
-            strcpy_s (p->killer_parent_name, "");
+            strcpy (p->killer_parent_name, "");
         }
         break;
 

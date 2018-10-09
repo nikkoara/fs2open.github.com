@@ -99,7 +99,7 @@ void pack_file (
     }
 
     memset (path, 0, sizeof (path));
-    strcpy_s (path, filename);
+    strcpy (path, filename);
 
     fswrite_int ((int*)&Total_size, fp_out_hdr);
     fswrite_int (&filesize, fp_out_hdr);
@@ -142,7 +142,7 @@ void add_directory (const char* dirname) {
     char* tmpptr;
     int i = 0;
 
-    strcpy_s (path, dirname);
+    strcpy (path, dirname);
 
     fswrite_int ((int*)&Total_size, fp_out_hdr);
     fswrite_int (&i, fp_out_hdr);
@@ -167,7 +167,7 @@ void pack_directory (char* filespec) {
     ts = filespec + (strlen (filespec) - 1);
     while ((*ts == DIR_SEPARATOR_CHAR) && (ts > filespec)) *ts = '\0';
 
-    strcpy_s (tmp1, filespec);
+    strcpy (tmp1, filespec);
 
     add_directory (filespec);
     strcat (tmp1, DIR_SEPARATOR_STR "*.*");
@@ -195,7 +195,7 @@ void pack_directory (char* filespec) {
             if ((strcmp (dir->d_name, ".svn") == 0)) { continue; }
 
             if (S_ISDIR (buf.st_mode)) {
-                strcpy_s (tmp, filespec);
+                strcpy (tmp, filespec);
                 strcat (tmp, "/");
                 strcat (tmp, dir->d_name);
                 pack_directory (tmp);
@@ -253,14 +253,14 @@ int main (int argc, char* argv[]) {
 
     if (argc < 3) { print_instructions (); }
 
-    strcpy_s (archive, argv[1]);
+    strcpy (archive, argv[1]);
     p = strchr (archive, '.');
     if (p) *p = 0; // remove extension
 
-    strcpy_s (archive_dat, archive);
+    strcpy (archive_dat, archive);
     strcat (archive_dat, ".vp");
 
-    strcpy_s (archive_hdr, archive);
+    strcpy (archive_hdr, archive);
     strcat (archive_hdr, ".hdr");
 
     fp_out = fopen (archive_dat, "wb");

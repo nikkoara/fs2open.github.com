@@ -344,7 +344,7 @@ void dock_evaluate_all_docked_objects (
     else {
         // create a bit array to mark the objects we check
         ubyte* visited_bitstring =
-            (ubyte*)vm_malloc (calculate_num_bytes (MAX_OBJECTS));
+            (ubyte*)malloc (calculate_num_bytes (MAX_OBJECTS));
 
         // clear it
         memset (visited_bitstring, 0, calculate_num_bytes (MAX_OBJECTS));
@@ -353,7 +353,7 @@ void dock_evaluate_all_docked_objects (
         dock_evaluate_tree (objp, infop, function, visited_bitstring);
 
         // destroy the bit array
-        vm_free (visited_bitstring);
+        free (visited_bitstring);
         visited_bitstring = NULL;
     }
 }
@@ -696,7 +696,7 @@ void dock_add_instance (object* objp, int dockpoint, object* other_objp) {
     dock_instance* item;
 
     // create item
-    item = (dock_instance*)vm_malloc (sizeof (dock_instance));
+    item = (dock_instance*)malloc (sizeof (dock_instance));
     item->dockpoint_used = dockpoint;
     item->docked_objp = other_objp;
 
@@ -735,7 +735,7 @@ void dock_remove_instance (object* objp, object* other_objp) {
         }
 
         // delete it
-        vm_free (ptr);
+        free (ptr);
     }
     else {
         // Trigger an assertion, we can recover from this one, thankfully.
@@ -750,7 +750,7 @@ void dock_free_dock_list (object* objp) {
     while (objp->dock_list != NULL) {
         dock_instance* ptr = objp->dock_list;
         objp->dock_list = ptr->next;
-        vm_free (ptr);
+        free (ptr);
     }
 }
 

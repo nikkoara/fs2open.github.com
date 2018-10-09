@@ -292,9 +292,6 @@ void CAP (T& v, T mn, T mx) {
             (x) = (max);      \
     } while (false)
 
-// Memory management functions
-#include "globalincs/fsmemory.h"
-
 class camid {
 private:
     int sig;
@@ -311,7 +308,6 @@ public:
 };
 
 #include "globalincs/vmallocator.h"
-#include "globalincs/safe_strings.h"
 
 // check to see that a passed sting is valid, ie:
 // - has >0 length

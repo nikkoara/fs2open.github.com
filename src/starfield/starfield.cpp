@@ -581,7 +581,7 @@ void parse_startbl (const char* filename) {
                 stuff_string (name, F_NAME, MAX_FILENAME_LEN);
 
                 if (Num_debris_normal < MAX_DEBRIS_VCLIPS) {
-                    strcpy_s (
+                    strcpy (
                         Debris_vclips_normal[Num_debris_normal++].name, name);
                 }
                 else {
@@ -602,7 +602,7 @@ void parse_startbl (const char* filename) {
                 stuff_string (name, F_NAME, MAX_FILENAME_LEN);
 
                 if (Num_debris_nebula < MAX_DEBRIS_VCLIPS) {
-                    strcpy_s (
+                    strcpy (
                         Debris_vclips_nebula[Num_debris_nebula++].name, name);
                 }
                 else {

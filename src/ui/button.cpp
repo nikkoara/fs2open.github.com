@@ -22,7 +22,7 @@ void UI_BUTTON::create (
     text = NULL;
 
     if (_text) {
-        if (_text[0] != '\0') { text = vm_strdup (_text); }
+        if (_text[0] != '\0') { text = strdup (_text); }
     }
 
     // register gadget with UI window
@@ -51,7 +51,7 @@ void UI_BUTTON::create (
 
 void UI_BUTTON::destroy () {
     if (text) {
-        vm_free (text);
+        free (text);
         text = NULL;
     }
 

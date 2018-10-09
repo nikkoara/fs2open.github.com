@@ -560,7 +560,7 @@ void HudGaugeThrottle::render (float /*frametime*/) {
 
         if (Show_percent) {
             if (Player_obj->phys_info.flags & PF_AFTERBURNER_ON) {
-                strcpy_s (buf, "A/B");
+                strcpy (buf, "A/B");
             }
             else {
                 sprintf (

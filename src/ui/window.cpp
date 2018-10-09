@@ -183,11 +183,9 @@ void UI_WINDOW::destroy () {
         // free up this struct
         if (xstrs[idx] != NULL) {
             if (xstrs[idx]->xstr != NULL) {
-                // This const_cast is safe since the string was allocated by
-                // vm_strdup
-                vm_free (const_cast< char* > (xstrs[idx]->xstr));
+                free (const_cast< char* > (xstrs[idx]->xstr));
             }
-            vm_free (xstrs[idx]);
+            free (xstrs[idx]);
             xstrs[idx] = NULL;
         }
     }
@@ -440,14 +438,14 @@ void UI_WINDOW::add_XSTR (
     }
 
     // allocate a new struct
-    xstrs[idx] = (UI_XSTR*)vm_malloc (sizeof (UI_XSTR));
+    xstrs[idx] = (UI_XSTR*)malloc (sizeof (UI_XSTR));
     if (xstrs[idx] == NULL) { return; }
     ui_x = xstrs[idx];
 
     // fill in the data
-    ui_x->xstr = vm_strdup (string);
+    ui_x->xstr = strdup (string);
     if (ui_x->xstr == NULL) {
-        vm_free (ui_x);
+        free (ui_x);
         xstrs[idx] = NULL;
         return;
     }
@@ -484,14 +482,14 @@ void UI_WINDOW::add_XSTR (UI_XSTR* xstr) {
     }
 
     // allocate a new struct
-    xstrs[idx] = (UI_XSTR*)vm_malloc (sizeof (UI_XSTR));
+    xstrs[idx] = (UI_XSTR*)malloc (sizeof (UI_XSTR));
     if (xstrs[idx] == NULL) { return; }
     ui_x = xstrs[idx];
 
     // fill in the data
-    ui_x->xstr = vm_strdup (xstr->xstr);
+    ui_x->xstr = strdup (xstr->xstr);
     if (ui_x->xstr == NULL) {
-        vm_free (ui_x);
+        free (ui_x);
         xstrs[idx] = NULL;
         return;
     }

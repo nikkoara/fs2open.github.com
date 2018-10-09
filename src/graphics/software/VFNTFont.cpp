@@ -84,32 +84,32 @@ font::font ()
 
 font::~font () {
     if (this->kern_data) {
-        vm_free (this->kern_data);
+        free (this->kern_data);
         this->kern_data = NULL;
     }
 
     if (this->char_data) {
-        vm_free (this->char_data);
+        free (this->char_data);
         this->char_data = NULL;
     }
 
     if (this->pixel_data) {
-        vm_free (this->pixel_data);
+        free (this->pixel_data);
         this->pixel_data = NULL;
     }
 
     if (this->bm_data) {
-        vm_free (this->bm_data);
+        free (this->bm_data);
         this->bm_data = NULL;
     }
 
     if (this->bm_u) {
-        vm_free (this->bm_u);
+        free (this->bm_u);
         this->bm_u = NULL;
     }
 
     if (this->bm_v) {
-        vm_free (this->bm_v);
+        free (this->bm_v);
         this->bm_v = NULL;
     }
 }

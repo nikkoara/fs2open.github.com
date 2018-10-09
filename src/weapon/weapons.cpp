@@ -263,7 +263,7 @@ int weapon_explosions::Load (char* filename, int expected_lods) {
 
     new_wei.lod_count = 1;
 
-    strcpy_s (new_wei.lod[0].filename, filename);
+    strcpy (new_wei.lod[0].filename, filename);
     new_wei.lod[0].bitmap_id = bm_load_animation (
         filename, &new_wei.lod[0].num_frames, &new_wei.lod[0].fps, nullptr,
         nullptr, true);
@@ -287,7 +287,7 @@ int weapon_explosions::Load (char* filename, int expected_lods) {
                 name_tmp, &nframes, &nfps, nullptr, nullptr, true);
 
             if (bitmap_id > 0) {
-                strcpy_s (new_wei.lod[idx].filename, name_tmp);
+                strcpy (new_wei.lod[idx].filename, name_tmp);
                 new_wei.lod[idx].bitmap_id = bitmap_id;
                 new_wei.lod[idx].num_frames = nframes;
                 new_wei.lod[idx].fps = nfps;
@@ -584,7 +584,7 @@ void parse_wi_flags (
                 // We need more spawning slots
                 // allocate in slots of 10
                 if ((Num_spawn_types % 10) == 0) {
-                    Spawn_names = (char**)vm_realloc (
+                    Spawn_names = (char**)realloc (
                         Spawn_names,
                         (Num_spawn_types + 10) * sizeof (*Spawn_names));
                 }
@@ -618,7 +618,8 @@ void parse_wi_flags (
                         .spawn_count;
 
                 Spawn_names[Num_spawn_types] =
-                    vm_strndup (&flag_text[skip_length], name_length);
+                    strndup (&flag_text[skip_length], name_length);
+
                 Num_spawn_types++;
                 weaponp->num_spawn_weapons_defined++;
             }
@@ -884,7 +885,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         wip->reset ();
         first_time = true;
 
-        strcpy_s (wip->name, fname);
+        strcpy (wip->name, fname);
         Num_weapon_types++;
     }
 
@@ -922,7 +923,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
 
     if (optional_string ("+Description:")) {
         if (wip->desc != NULL) {
-            vm_free (wip->desc);
+            free (wip->desc);
             wip->desc = NULL;
         }
 
@@ -968,7 +969,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
 
     if (optional_string ("+Tech Description:")) {
         if (wip->tech_desc != NULL) {
-            vm_free (wip->tech_desc);
+            free (wip->tech_desc);
             wip->tech_desc = NULL;
         }
 
@@ -3000,7 +3001,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         if (wip->num_substitution_patterns == 0) {
             // pattern is empty, initialize pattern with the weapon being
             // currently parsed.
-            strcpy_s (wip->weapon_substitution_pattern_names[0], wip->name);
+            strcpy (wip->weapon_substitution_pattern_names[0], wip->name);
             wip->num_substitution_patterns++;
         }
 
@@ -3026,7 +3027,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                     // now duplicate the current pattern into the new area so
                     // the current pattern holds
                     for (size_t i = current_size; i < desired_size; i++) {
-                        strcpy_s (
+                        strcpy (
                             wip->weapon_substitution_pattern_names[i],
                             wip->weapon_substitution_pattern_names
                                 [i % current_size]);
@@ -3038,7 +3039,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
             shifted by offset if needed.*/
             for (size_t pos = (period + offset - 1) % period;
                  pos < wip->num_substitution_patterns; pos += period) {
-                strcpy_s (
+                strcpy (
                     wip->weapon_substitution_pattern_names[pos], subname);
             }
         }
@@ -3059,14 +3060,14 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
                     // with the current weapon.
                     for (size_t i = wip->num_substitution_patterns;
                          i < (size_t)index; i++) {
-                        strcpy_s (
+                        strcpy (
                             wip->weapon_substitution_pattern_names[i],
                             subname);
                     }
                     wip->num_substitution_patterns = index + 1;
                 }
 
-                strcpy_s (
+                strcpy (
                     wip->weapon_substitution_pattern_names[index], subname);
             }
         }
@@ -3167,7 +3168,7 @@ void parse_weaponstbl (const char* filename) {
                 if (!strlen (Default_cmeasure_name)) {
                     // We can't be sure that index will be the same after
                     // sorting, so save the name
-                    strcpy_s (Default_cmeasure_name, Weapon_info[idx].name);
+                    strcpy (Default_cmeasure_name, Weapon_info[idx].name);
                 }
             }
 
@@ -3895,12 +3896,12 @@ void weapon_close () {
 
     for (i = 0; i < MAX_WEAPON_TYPES; i++) {
         if (Weapon_info[i].desc) {
-            vm_free (Weapon_info[i].desc);
+            free (Weapon_info[i].desc);
             Weapon_info[i].desc = NULL;
         }
 
         if (Weapon_info[i].tech_desc) {
-            vm_free (Weapon_info[i].tech_desc);
+            free (Weapon_info[i].tech_desc);
             Weapon_info[i].tech_desc = NULL;
         }
     }
@@ -3913,12 +3914,12 @@ void weapon_close () {
     if (Spawn_names != NULL) {
         for (i = 0; i < Num_spawn_types; i++) {
             if (Spawn_names[i] != NULL) {
-                vm_free (Spawn_names[i]);
+                free (Spawn_names[i]);
                 Spawn_names[i] = NULL;
             }
         }
 
-        vm_free (Spawn_names);
+        free (Spawn_names);
         Spawn_names = NULL;
     }
 }

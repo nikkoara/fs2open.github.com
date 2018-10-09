@@ -56,10 +56,10 @@ static void png_scp_flush (png_structp png_ptr) {
 }
 
 static png_voidp png_malloc_fn (png_structp, png_size_t size) {
-    return vm_malloc (size);
+    return malloc (size);
 }
 
-static void png_free_fn (png_structp, png_voidp ptr) { vm_free (ptr); }
+static void png_free_fn (png_structp, png_voidp ptr) { free (ptr); }
 
 static void png_error_fn (png_structp png_ptr, png_const_charp message) {
     png_status* status =
@@ -120,12 +120,12 @@ int png_read_header (
     status.filename = real_filename;
 
     if (img_cfp == NULL) {
-        strcpy_s (filename, real_filename);
+        strcpy (filename, real_filename);
 
         char* p = strchr (filename, '.');
 
         if (p) *p = 0;
-        strcat_s (filename, ".png");
+        strcat (filename, ".png");
 
         status.cfp = cfopen (filename, "rb");
 
@@ -221,10 +221,10 @@ int png_read_bitmap (
     status.reading_header = false;
     status.filename = real_filename;
 
-    strcpy_s (filename, real_filename);
+    strcpy (filename, real_filename);
     char* p = strchr (filename, '.');
     if (p) *p = 0;
-    strcat_s (filename, ".png");
+    strcat (filename, ".png");
 
     status.cfp = cfopen (filename, "rb", CFILE_NORMAL, cf_type);
 
@@ -797,10 +797,10 @@ void apng_ani::goto_start () {
 int apng_ani::load_header () {
     char filename[MAX_FILENAME_LEN];
 
-    strcpy_s (filename, _filename.c_str ());
+    strcpy (filename, _filename.c_str ());
     char* p = strchr (filename, '.');
     if (p != nullptr) *p = 0;
-    strcat_s (filename, ".png");
+    strcat (filename, ".png");
 
     _cfp = cfopen (filename, "rb");
 

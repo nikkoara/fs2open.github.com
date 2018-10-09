@@ -773,26 +773,26 @@ void audiostream_init () {
     // Allocate memory for the buffer which holds the uncompressed wave data
     // that is streamed from the disk during a load/cue
     if (Wavedata_load_buffer == NULL) {
-        Wavedata_load_buffer = (ubyte*)vm_malloc (BIGBUF_SIZE);
+        Wavedata_load_buffer = (ubyte*)malloc (BIGBUF_SIZE);
         ASSERT (Wavedata_load_buffer != NULL);
     }
 
     // Allocate memory for the buffer which holds the uncompressed wave data
     // that is streamed from the disk during a service interval
     if (Wavedata_service_buffer == NULL) {
-        Wavedata_service_buffer = (ubyte*)vm_malloc (BIGBUF_SIZE);
+        Wavedata_service_buffer = (ubyte*)malloc (BIGBUF_SIZE);
         ASSERT (Wavedata_service_buffer != NULL);
     }
 
     // Allocate memory for the buffer which holds the compressed wave data that
     // is read from the hard disk
     if (Compressed_buffer == NULL) {
-        Compressed_buffer = (ubyte*)vm_malloc (COMPRESSED_BUFFER_SIZE);
+        Compressed_buffer = (ubyte*)malloc (COMPRESSED_BUFFER_SIZE);
         ASSERT (Compressed_buffer != NULL);
     }
 
     if (Compressed_service_buffer == NULL) {
-        Compressed_service_buffer = (ubyte*)vm_malloc (COMPRESSED_BUFFER_SIZE);
+        Compressed_service_buffer = (ubyte*)malloc (COMPRESSED_BUFFER_SIZE);
         ASSERT (Compressed_service_buffer != NULL);
     }
 
@@ -826,22 +826,22 @@ void audiostream_close () {
 
     // free global buffers
     if (Wavedata_load_buffer) {
-        vm_free (Wavedata_load_buffer);
+        free (Wavedata_load_buffer);
         Wavedata_load_buffer = NULL;
     }
 
     if (Wavedata_service_buffer) {
-        vm_free (Wavedata_service_buffer);
+        free (Wavedata_service_buffer);
         Wavedata_service_buffer = NULL;
     }
 
     if (Compressed_buffer) {
-        vm_free (Compressed_buffer);
+        free (Compressed_buffer);
         Compressed_buffer = NULL;
     }
 
     if (Compressed_service_buffer) {
-        vm_free (Compressed_service_buffer);
+        free (Compressed_service_buffer);
         Compressed_service_buffer = NULL;
     }
 
@@ -881,7 +881,7 @@ int audiostream_open (const char* filename, int type) {
     }
 
     // copy filename, since we might modify it
-    strcpy_s (fname, filename);
+    strcpy (fname, filename);
 
     switch (type) {
     case ASF_VOICE:

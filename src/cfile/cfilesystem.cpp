@@ -107,7 +107,7 @@ cf_file* cf_create_file () {
 
     if (File_blocks[block] == NULL) {
         File_blocks[block] =
-            (cf_file_block*)vm_malloc (sizeof (cf_file_block));
+            (cf_file_block*)malloc (sizeof (cf_file_block));
         ASSERT (File_blocks[block] != NULL);
         memset (File_blocks[block], 0, sizeof (cf_file_block));
     }
@@ -138,7 +138,7 @@ cf_root* cf_create_root () {
 
     if (Root_blocks[block] == NULL) {
         Root_blocks[block] =
-            (cf_root_block*)vm_malloc (sizeof (cf_root_block));
+            (cf_root_block*)malloc (sizeof (cf_root_block));
         ASSERT (Root_blocks[block] != NULL);
     }
 
@@ -210,7 +210,7 @@ void cf_build_pack_list (cf_root* root) {
 
     // allocate a temporary array of temporary roots so we can easily sort them
     temp_roots_sort =
-        (cf_root_sort*)vm_malloc (sizeof (cf_root_sort) * temp_root_count);
+        (cf_root_sort*)malloc (sizeof (cf_root_sort) * temp_root_count);
 
     if (temp_roots_sort == NULL) {
         Int3 ();
@@ -220,16 +220,16 @@ void cf_build_pack_list (cf_root* root) {
     // now just setup all the root info
     root_index = 0;
     for (i = CF_TYPE_ROOT; i < CF_MAX_PATH_TYPES; i++) {
-        strcpy_s (filespec, root->path);
+        strcpy (filespec, root->path);
 
         if (strlen (Pathtypes[i].path)) {
-            strcat_s (filespec, Pathtypes[i].path);
+            strcat (filespec, Pathtypes[i].path);
 
             if (filespec[strlen (filespec) - 1] != DIR_SEPARATOR_CHAR)
-                strcat_s (filespec, DIR_SEPARATOR_STR);
+                strcat (filespec, DIR_SEPARATOR_STR);
         }
 
-        strcat_s (filespec, "*.[vV][pP]");
+        strcat (filespec, "*.[vV][pP]");
         glob_t globinfo;
 
         memset (&globinfo, 0, sizeof (globinfo));
@@ -250,7 +250,7 @@ void cf_build_pack_list (cf_root* root) {
                     rptr_sort = &temp_roots_sort[root_index++];
 
                     // fill in all the proper info
-                    strcpy_s (rptr_sort->path, globinfo.gl_pathv[j]);
+                    strcpy (rptr_sort->path, globinfo.gl_pathv[j]);
                     rptr_sort->roottype = CF_ROOTTYPE_PACK;
                     rptr_sort->cf_type = i;
                 }
@@ -272,7 +272,7 @@ void cf_build_pack_list (cf_root* root) {
     for (i = 0; i < temp_root_count; i++) {
         auto new_root = cf_create_root ();
         new_root->location_flags = root->location_flags;
-        strcpy_s (new_root->path, root->path);
+        strcpy (new_root->path, root->path);
 
 #ifndef NDEBUG
         uint chksum = 0;
@@ -284,12 +284,12 @@ void cf_build_pack_list (cf_root* root) {
 
         // mwa -- 4/2/98 put in the next 2 lines because the path name needs to
         // be there to find the files.
-        strcpy_s (new_root->path, temp_roots_sort[i].path);
+        strcpy (new_root->path, temp_roots_sort[i].path);
         new_root->roottype = CF_ROOTTYPE_PACK;
     }
 
     // free up the temp list
-    vm_free (temp_roots_sort);
+    free (temp_roots_sort);
 }
 
 static char normalize_directory_separator (char in) {
@@ -368,7 +368,7 @@ void cf_build_root_list (const char* cdrom_dir) {
         // install
         if ((strlen (root->path) < (CF_MAX_PATHNAME_LENGTH - 1)) &&
             (root->path[strlen (root->path) - 1] != DIR_SEPARATOR_CHAR)) {
-            strcat_s (
+            strcat (
                 root->path, DIR_SEPARATOR_STR); // put trailing backslash on
                                                 // for easier path construction
         }
@@ -387,7 +387,7 @@ void cf_build_root_list (const char* cdrom_dir) {
         // =========================================================================
         // set users HOME directory as default for loading and saving files
         root = cf_create_root ();
-        strcpy_s (root->path, Cfile_user_dir);
+        strcpy (root->path, Cfile_user_dir);
 
         root->location_flags |= CF_LOCATION_ROOT_USER | CF_LOCATION_TYPE_ROOT;
         if (Cmdline_mod == nullptr || strlen (Cmdline_mod) <= 0) {
@@ -399,7 +399,7 @@ void cf_build_root_list (const char* cdrom_dir) {
         // install
         if ((strlen (root->path) < (CF_MAX_PATHNAME_LENGTH - 1)) &&
             (root->path[strlen (root->path) - 1] != DIR_SEPARATOR_CHAR)) {
-            strcat_s (
+            strcat (
                 root->path, DIR_SEPARATOR_STR); // put trailing backslash on
                                                 // for easier path construction
         }
@@ -426,14 +426,14 @@ void cf_build_root_list (const char* cdrom_dir) {
         root->location_flags |= CF_LOCATION_TYPE_PRIMARY_MOD;
     }
 
-    strcpy_s (root->path, working_directory);
+    strcpy (root->path, working_directory);
 
     size_t path_len = strlen (root->path);
 
     // do we already have a slash? as in the case of a root directory install
     if ((path_len < (CF_MAX_PATHNAME_LENGTH - 1)) &&
         (root->path[path_len - 1] != DIR_SEPARATOR_CHAR)) {
-        strcat_s (
+        strcat (
             root->path, DIR_SEPARATOR_STR); // put trailing backslash on for
                                             // easier path construction
     }
@@ -448,7 +448,7 @@ void cf_build_root_list (const char* cdrom_dir) {
     // Check the real CD if one...
     if (cdrom_dir && (strlen (cdrom_dir) < CF_MAX_PATHNAME_LENGTH)) {
         root = cf_create_root ();
-        strcpy_s (root->path, cdrom_dir);
+        strcpy (root->path, cdrom_dir);
         root->roottype = CF_ROOTTYPE_PATH;
 
         //======================================================
@@ -469,7 +469,7 @@ void cf_build_root_list (const char* cdrom_dir) {
 int is_ext_in_list (const char* ext_list, const char* ext) {
     char tmp_ext[128];
 
-    strcpy_s (tmp_ext, ext);
+    strcpy (tmp_ext, ext);
     stolower (tmp_ext);
     if (strstr (ext_list, tmp_ext)) { return 1; }
 
@@ -496,12 +496,12 @@ void cf_search_root_path (int root_index) {
             continue;
         }
 
-        strcpy_s (search_path, root->path);
+        strcpy (search_path, root->path);
 
         if (strlen (Pathtypes[i].path)) {
-            strcat_s (search_path, Pathtypes[i].path);
+            strcat (search_path, Pathtypes[i].path);
             if (search_path[strlen (search_path) - 1] != DIR_SEPARATOR_CHAR) {
-                strcat_s (search_path, DIR_SEPARATOR_STR);
+                strcat (search_path, DIR_SEPARATOR_STR);
             }
         }
 
@@ -592,7 +592,7 @@ void cf_search_root_path (int root_index) {
                             // Found a file!!!!
                             cf_file* file = cf_create_file ();
 
-                            strcpy_s (file->name_ext, dir->d_name);
+                            strcpy (file->name_ext, dir->d_name);
                             file->root_index = root_index;
                             file->pathtype_index = i;
 
@@ -601,7 +601,7 @@ void cf_search_root_path (int root_index) {
 
                             file->pack_offset = 0; // Mark as a non-packed file
 
-                            file->real_name = vm_strdup (fn.c_str ());
+                            file->real_name = strdup (fn.c_str ());
 
                             num_files++;
                             // mprintf(( "Found file '%s'\n", file->name_ext
@@ -671,7 +671,7 @@ void cf_search_root_pack (int root_index) {
 
     char search_path[CF_MAX_PATHNAME_LENGTH];
 
-    strcpy_s (search_path, "");
+    strcpy (search_path, "");
 
     // Go through all the files
     int i;
@@ -700,9 +700,9 @@ void cf_search_root_pack (int root_index) {
             else {
                 if (search_path_len &&
                     (search_path[search_path_len - 1] != DIR_SEPARATOR_CHAR)) {
-                    strcat_s (search_path, DIR_SEPARATOR_STR);
+                    strcat (search_path, DIR_SEPARATOR_STR);
                 }
-                strcat_s (search_path, find.filename);
+                strcat (search_path, find.filename);
             }
 
             // mprintf(( "Current dir = '%s'\n", search_path ));
@@ -717,7 +717,7 @@ void cf_search_root_pack (int root_index) {
                         if (is_ext_in_list (Pathtypes[j].extensions, ext)) {
                             // Found a file!!!!
                             cf_file* file = cf_create_file ();
-                            strcpy_s (file->name_ext, find.filename);
+                            strcpy (file->name_ext, find.filename);
                             file->root_index = root_index;
                             file->pathtype_index = j;
                             file->write_time = (time_t)find.write_time;
@@ -791,7 +791,7 @@ void cf_free_secondary_filelist () {
     // Free the root blocks
     for (i = 0; i < CF_MAX_ROOT_BLOCKS; i++) {
         if (Root_blocks[i]) {
-            vm_free (Root_blocks[i]);
+            free (Root_blocks[i]);
             Root_blocks[i] = NULL;
         }
     }
@@ -803,12 +803,12 @@ void cf_free_secondary_filelist () {
             // Free file paths
             for (auto& f : File_blocks[i]->files) {
                 if (f.real_name) {
-                    vm_free (f.real_name);
+                    free (f.real_name);
                     f.real_name = nullptr;
                 }
             }
 
-            vm_free (File_blocks[i]);
+            free (File_blocks[i]);
             File_blocks[i] = NULL;
         }
     }
@@ -1090,7 +1090,7 @@ CFileLocationExt cf_find_file_location_ext (
             p = strrchr (filespec, '.');
             if (p && (strlen (p) > 2)) (*p) = 0;
 
-            strcat_s (filespec, ext_list[cur_ext]);
+            strcat (filespec, ext_list[cur_ext]);
 
             cf_create_default_path_string (
                 longname, sizeof (longname) - 1, search_order[ui], filespec,
@@ -1187,7 +1187,7 @@ CFileLocationExt cf_find_file_location_ext (
              fli != file_list_index.end (); ++fli) {
             cf_file* f = *fli;
 
-            strcat_s (filespec, ext_list[cur_ext]);
+            strcat (filespec, ext_list[cur_ext]);
 
             if (localize) {
                 // create localized filespec
@@ -1329,7 +1329,7 @@ static int cf_file_already_in_list (
 
     if (size == 0) { return 0; }
 
-    strcpy_s (name_no_extension, filename);
+    strcpy (name_no_extension, filename);
     char* p = strrchr (name_no_extension, '.');
     if (p) *p = 0;
 
@@ -1511,7 +1511,7 @@ int cf_file_already_in_list (
 
     char name_no_extension[MAX_PATH_LEN];
 
-    strcpy_s (name_no_extension, filename);
+    strcpy (name_no_extension, filename);
     char* p = strrchr (name_no_extension, '.');
     if (p) *p = 0;
 
@@ -1547,7 +1547,7 @@ int cf_get_file_list (
     ASSERT (list);
 
     if (!info && (sort == CF_SORT_TIME)) {
-        info = (file_list_info*)vm_malloc (sizeof (file_list_info) * max);
+        info = (file_list_info*)malloc (sizeof (file_list_info) * max);
         own_flag = 1;
     }
 
@@ -1589,7 +1589,7 @@ int cf_get_file_list (
                 else
                     l = strlen (dir->d_name);
 
-                list[num_files] = (char*)vm_malloc (l + 1);
+                list[num_files] = (char*)malloc (l + 1);
                 strncpy (list[num_files], dir->d_name, l);
                 list[num_files][l] = 0;
                 if (info) info[num_files].write_time = buf.st_mtime;
@@ -1665,7 +1665,7 @@ int cf_get_file_list (
                 else
                     l = strlen (f->name_ext);
 
-                list[num_files] = (char*)vm_malloc (l + 1);
+                list[num_files] = (char*)malloc (l + 1);
                 strncpy (list[num_files], f->name_ext, l);
                 list[num_files][l] = 0;
 
@@ -1680,7 +1680,7 @@ int cf_get_file_list (
         cf_sort_filenames (num_files, list, sort, info);
     }
 
-    if (own_flag) { vm_free (info); }
+    if (own_flag) { free (info); }
 
     Get_file_list_filter = NULL;
 
@@ -1693,7 +1693,7 @@ int cf_file_already_in_list_preallocated (
 
     char name_no_extension[MAX_PATH_LEN];
 
-    strcpy_s (name_no_extension, filename);
+    strcpy (name_no_extension, filename);
     char* p = strrchr (name_no_extension, '.');
     if (p) *p = 0;
 
@@ -1733,7 +1733,7 @@ int cf_get_file_list_preallocated (
     }
 
     if (!info && (sort == CF_SORT_TIME)) {
-        info = (file_list_info*)vm_malloc (sizeof (file_list_info) * max);
+        info = (file_list_info*)malloc (sizeof (file_list_info) * max);
 
         if (info) own_flag = 1;
     }
@@ -1771,7 +1771,7 @@ int cf_get_file_list_preallocated (
 
             if (!Get_file_list_filter ||
                 (*Get_file_list_filter) (dir->d_name)) {
-                strcpy_s (arr[num_files], dir->d_name);
+                strcpy (arr[num_files], dir->d_name);
                 char* ptr = strrchr (arr[num_files], '.');
                 if (ptr) { *ptr = 0; }
 
@@ -1858,7 +1858,7 @@ int cf_get_file_list_preallocated (
         cf_sort_filenames (num_files, list, sort, info);
     }
 
-    if (own_flag) { vm_free (info); }
+    if (own_flag) { free (info); }
 
     Get_file_list_filter = NULL;
 
@@ -1910,19 +1910,18 @@ int cf_create_default_path_string (
         ASSERT (CF_TYPE_SPECIFIED (pathtype));
 
         strncpy (path, root->path, path_max);
-
-        strcat_s (path, path_max, Pathtypes[pathtype].path);
+        strcat (path, Pathtypes[pathtype].path);
 
         // Don't add slash for root directory
         if (Pathtypes[pathtype].path[0] != '\0') {
             if (path[strlen (path) - 1] != DIR_SEPARATOR_CHAR) {
-                strcat_s (path, path_max, DIR_SEPARATOR_STR);
+                strcat (path, DIR_SEPARATOR_STR);
             }
         }
 
         // add filename
         if (filename) {
-            strcat_s (path, path_max, filename);
+            strcat (path, filename);
 
             // localize filename
             if (localize) {
@@ -2001,7 +2000,7 @@ int cf_create_default_path_string (
                 s_path << DIR_SEPARATOR_STR;
             }
             // if ( path[strlen(path)-1] != DIR_SEPARATOR_CHAR ) {
-            // strcat_s(path, path_max, DIR_SEPARATOR_STR);
+            // strcat(path, DIR_SEPARATOR_STR);
             // }
         }
 

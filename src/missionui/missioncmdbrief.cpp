@@ -474,7 +474,7 @@ void cmd_brief_ani_wave_init (int index) {
     if (!name[0] || !strcasecmp (name, NOX ("<default>")) ||
         !strcasecmp (name, NOX ("none.ani"))) {
         name = NOX ("CB_default");
-        strcpy_s (Cur_cmd_brief->stage[index].ani_filename, name);
+        strcpy (Cur_cmd_brief->stage[index].ani_filename, name);
     }
 }
 

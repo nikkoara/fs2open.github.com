@@ -61,7 +61,7 @@ extern int Cmdline_old_collision_sys;
 
 void obj_pairs_close () {
     if (Obj_pairs != NULL) {
-        vm_free (Obj_pairs);
+        free (Obj_pairs);
         Obj_pairs = NULL;
     }
 
@@ -95,11 +95,11 @@ void obj_reset_pairs () {
     Num_pairs = 0;
 
     if (Obj_pairs != NULL) {
-        vm_free (Obj_pairs);
+        free (Obj_pairs);
         Obj_pairs = NULL;
     }
 
-    Obj_pairs = (obj_pair*)vm_malloc (sizeof (obj_pair) * MIN_PAIRS);
+    Obj_pairs = (obj_pair*)malloc (sizeof (obj_pair) * MIN_PAIRS);
 
     if (Obj_pairs == NULL) {
         WARNINGF (LOCATION, "Unable to create space for collision pairs!!\n");
@@ -431,7 +431,7 @@ void obj_add_pair (object* A, object* B, int check_time, int add_to_end) {
         int prev_free_mark = (int)(pair_free_list.next - old_pairs_ptr);
         int prev_used_mark = (int)(pair_used_list.next - old_pairs_ptr);
 
-        Obj_pairs = (obj_pair*)vm_realloc (
+        Obj_pairs = (obj_pair*)realloc (
             Obj_pairs, sizeof (obj_pair) * (Num_pairs_allocated + PAIRS_BUMP));
 
         // allow us to fail here and only if we don't do we setup the new pairs

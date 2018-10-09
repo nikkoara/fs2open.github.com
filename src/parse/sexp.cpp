@@ -4209,7 +4209,7 @@ void arg_item::add_data_dup (char* str) {
 
     // create item
     item = new arg_item;
-    item->text = vm_strdup (str);
+    item->text = strdup (str);
     item->flags |= ARG_ITEM_F_DUP;
     item->nesting_level = Sexp_current_argument_nesting_level;
 
@@ -4251,7 +4251,7 @@ void arg_item::expunge () {
     while (this->next != NULL) {
         ptr = this->next->next;
 
-        if (this->next->flags & ARG_ITEM_F_DUP) vm_free (this->next->text);
+        if (this->next->flags & ARG_ITEM_F_DUP) free (this->next->text);
         delete this->next;
 
         this->next = ptr;
@@ -4266,7 +4266,7 @@ void arg_item::clear_nesting_level () {
            this->next->nesting_level >= Sexp_current_argument_nesting_level) {
         ptr = this->next->next;
 
-        if (this->next->flags & ARG_ITEM_F_DUP) vm_free (this->next->text);
+        if (this->next->flags & ARG_ITEM_F_DUP) free (this->next->text);
         delete this->next;
 
         this->next = ptr;
@@ -4298,7 +4298,7 @@ void sexp_nodes_init () {
 
     // if all the persistent nodes are gone, free all the nodes
     if (last_persistent_node == -1) {
-        vm_free (Sexp_nodes);
+        free (Sexp_nodes);
         Sexp_nodes = NULL;
         Num_sexp_nodes = 0;
     }
@@ -4311,7 +4311,7 @@ void sexp_nodes_init () {
         Num_sexp_nodes +=
             SEXP_NODE_INCREMENT - (Num_sexp_nodes % SEXP_NODE_INCREMENT);
 
-        Sexp_nodes = (sexp_node*)vm_realloc (
+        Sexp_nodes = (sexp_node*)realloc (
             Sexp_nodes, sizeof (sexp_node) * Num_sexp_nodes);
         ASSERT (Sexp_nodes != NULL);
     }
@@ -4322,7 +4322,7 @@ void sexp_nodes_init () {
 static void sexp_nodes_close () {
     // free all sexp nodes... should only be done on game shutdown
     if (Sexp_nodes != NULL) {
-        vm_free (Sexp_nodes);
+        free (Sexp_nodes);
         Sexp_nodes = NULL;
         Num_sexp_nodes = 0;
     }
@@ -4379,7 +4379,7 @@ int alloc_sexp (const char* text, int type, int subtype, int first, int rest) {
 
         // allocate in blocks of SEXP_NODE_INCREMENT
         Num_sexp_nodes += SEXP_NODE_INCREMENT;
-        Sexp_nodes = (sexp_node*)vm_realloc (
+        Sexp_nodes = (sexp_node*)realloc (
             Sexp_nodes, sizeof (sexp_node) * Num_sexp_nodes);
 
         ASSERT (Sexp_nodes != NULL);
@@ -4401,7 +4401,7 @@ int alloc_sexp (const char* text, int type, int subtype, int first, int rest) {
     ASSERT (strlen (text) < TOKEN_LENGTH);
     ASSERT (type >= 0);
 
-    strcpy_s (Sexp_nodes[node].text, text);
+    strcpy (Sexp_nodes[node].text, text);
     Sexp_nodes[node].type = type;
     Sexp_nodes[node].subtype = subtype;
     Sexp_nodes[node].first = first;
@@ -6442,25 +6442,25 @@ int get_sexp () {
 
             // maybe replace deprecated names
             if (!strcasecmp (token, "set-ship-position"))
-                strcpy_s (token, "set-object-position");
+                strcpy (token, "set-object-position");
             else if (!strcasecmp (token, "set-ship-facing"))
-                strcpy_s (token, "set-object-facing");
+                strcpy (token, "set-object-facing");
             else if (!strcasecmp (token, "set-ship-facing-object"))
-                strcpy_s (token, "set-object-facing-object");
+                strcpy (token, "set-object-facing-object");
             else if (!strcasecmp (token, "ai-chase-any-except"))
-                strcpy_s (token, "ai-chase-any");
+                strcpy (token, "ai-chase-any");
             else if (!strcasecmp (token, "change-ship-model"))
-                strcpy_s (token, "change-ship-class");
+                strcpy (token, "change-ship-class");
             else if (!strcasecmp (token, "radar-set-max-range"))
-                strcpy_s (token, "hud-set-max-targeting-range");
+                strcpy (token, "hud-set-max-targeting-range");
             else if (!strcasecmp (token, "ship-subsys-vanished"))
-                strcpy_s (token, "ship-subsys-vanish");
+                strcpy (token, "ship-subsys-vanish");
             else if (!strcasecmp (token, "directive-is-variable"))
-                strcpy_s (token, "directive-value");
+                strcpy (token, "directive-value");
             else if (!strcasecmp (token, "variable-array-get"))
-                strcpy_s (token, "get-variable-by-index");
+                strcpy (token, "get-variable-by-index");
             else if (!strcasecmp (token, "variable-array-set"))
-                strcpy_s (token, "set-variable-by-index");
+                strcpy (token, "set-variable-by-index");
 
             op = get_operator_index (token);
             if (op >= 0) {
@@ -11522,7 +11522,7 @@ int test_argument_vector_for_condition (
             // memory leak
             if ((val == SEXP_FALSE || val == SEXP_KNOWN_FALSE) &&
                 already_dupped)
-                vm_free (argument_vector[i]);
+                free (argument_vector[i]);
 
             // clear argument, but not list, as we'll need it later
             Sexp_replacement_arguments.pop_back ();
@@ -11830,8 +11830,8 @@ int eval_for_counter (int arg_handler_node, int condition_node) {
          ((counter_step > 0) ? i <= counter_stop : i >= counter_stop);
          i += counter_step) {
         sprintf (buf, "%d", i);
-        argument_vector.push_back (vm_strdup (buf));
-        // Note: we do not call vm_free() on the contents of argument_vector,
+        argument_vector.push_back (strdup (buf));
+        // Note: we do not call free() on the contents of argument_vector,
         // and we don't for the very good reason that those pointers are then
         // passed along by test_argument_vector_for_condition(), below. The
         // strings will then be freed by arg_item::expunge() or
@@ -14755,7 +14755,7 @@ void sexp_add_background_bitmap (int n) {
     starfield_list_entry sle;
 
     // filename
-    strcpy_s (sle.filename, CTEXT (n));
+    strcpy (sle.filename, CTEXT (n));
     n = CDR (n);
 
     // sanity checking
@@ -14853,7 +14853,7 @@ void sexp_add_sun_bitmap (int n) {
     starfield_list_entry sle;
 
     // filename
-    strcpy_s (sle.filename, CTEXT (n));
+    strcpy (sle.filename, CTEXT (n));
     n = CDR (n);
 
     // sanity checking
@@ -14966,7 +14966,7 @@ void sexp_nebula_toggle_poof (int n) {
 void sexp_nebula_change_pattern (int n) {
     if (!(The_mission.flags[Mission::Mission_Flags::Fullneb])) return;
 
-    strcpy_s (Neb2_texture_name, (CTEXT (n)));
+    strcpy (Neb2_texture_name, (CTEXT (n)));
 
     neb2_post_level_init ();
 }
@@ -18366,7 +18366,7 @@ void parse_copy_damage (p_object* target_pobjp, ship* source_shipp) {
             int new_idx = insert_subsys_status (target_pobjp);
             target_sssp = &Subsys_status[new_idx];
 
-            strcpy_s (target_sssp->name, source_ss->system_info->subobj_name);
+            strcpy (target_sssp->name, source_ss->system_info->subobj_name);
         }
 
         // copy
@@ -18545,7 +18545,7 @@ void sexp_set_skybox_orientation (int n) {
 void sexp_set_skybox_model (int n) {
     char new_skybox_model[TOKEN_LENGTH + 1]; // max input is TOKEN_LENGTH, +1
                                              // for NUL
-    strcpy_s (new_skybox_model, CTEXT (n));
+    strcpy (new_skybox_model, CTEXT (n));
     int new_skybox_model_flags = DEFAULT_NMODEL_FLAGS;
 
     // check if we need to reset the animated texture timestamp
@@ -20249,7 +20249,7 @@ void sexp_set_support_ship (int n) {
         }
         // if not found, make a new entry
         if (temp_val < 0) {
-            strcpy_s (Parse_names[Num_parse_names], CTEXT (n));
+            strcpy (Parse_names[Num_parse_names], CTEXT (n));
             temp_val = Num_parse_names;
             Num_parse_names++;
         }
@@ -20284,7 +20284,7 @@ void sexp_set_support_ship (int n) {
         }
         // if not found, make a new entry
         if (temp_val < 0) {
-            strcpy_s (Parse_names[Num_parse_names], CTEXT (n));
+            strcpy (Parse_names[Num_parse_names], CTEXT (n));
             temp_val = Num_parse_names;
             Num_parse_names++;
         }
@@ -20360,7 +20360,7 @@ void sexp_set_arrival_info (int node) {
         }
         // if not found, make a new entry
         if (arrival_anchor < 0) {
-            strcpy_s (Parse_names[Num_parse_names], CTEXT (n));
+            strcpy (Parse_names[Num_parse_names], CTEXT (n));
             arrival_anchor = Num_parse_names;
             Num_parse_names++;
         }
@@ -20454,7 +20454,7 @@ void sexp_set_departure_info (int node) {
         }
         // if not found, make a new entry
         if (departure_anchor < 0) {
-            strcpy_s (Parse_names[Num_parse_names], CTEXT (n));
+            strcpy (Parse_names[Num_parse_names], CTEXT (n));
             departure_anchor = Num_parse_names;
             Num_parse_names++;
         }
@@ -21585,8 +21585,8 @@ void sexp_string_concatenate (int n) {
     }
 
     // concatenate strings
-    strcpy_s (new_text, str1);
-    strcat_s (new_text, str2);
+    strcpy (new_text, str1);
+    strcat (new_text, str2);
 
     // check length
     if (strlen (new_text) >= TOKEN_LENGTH) {
@@ -25550,7 +25550,7 @@ int run_sexp (const char* sexpression) {
     int n, i, sexp_val = UNINITIALIZED;
     char buf[8192];
 
-    strcpy_s (buf, sexpression);
+    strcpy (buf, sexpression);
 
     // HACK: ! -> "
     for (i = 0; i < (int)strlen (buf); i++)
@@ -28745,8 +28745,8 @@ void add_block_variable (
     const char* text, const char* var_name, int type, int index) {
     ASSERT ((index >= 0) && (index < MAX_SEXP_VARIABLES));
 
-    strcpy_s (Block_variables[index].text, text);
-    strcpy_s (Block_variables[index].variable_name, var_name);
+    strcpy (Block_variables[index].text, text);
+    strcpy (Block_variables[index].variable_name, var_name);
     Block_variables[index].type &= ~SEXP_VARIABLE_NOT_USED;
     Block_variables[index].type = (type | SEXP_VARIABLE_SET);
 }
@@ -28772,8 +28772,8 @@ int sexp_add_variable (
     }
 
     if (index >= 0) {
-        strcpy_s (Sexp_variables[index].text, text);
-        strcpy_s (Sexp_variables[index].variable_name, var_name);
+        strcpy (Sexp_variables[index].text, text);
+        strcpy (Sexp_variables[index].variable_name, var_name);
         Sexp_variables[index].type &= ~SEXP_VARIABLE_NOT_USED;
         Sexp_variables[index].type = (type | SEXP_VARIABLE_SET);
     }
@@ -28786,8 +28786,8 @@ int sexp_add_variable (
 void sexp_add_array_block_variable (int index, bool is_numeric) {
     ASSERT (index >= 0 && index < MAX_SEXP_VARIABLES);
 
-    strcpy_s (Sexp_variables[index].text, "");
-    strcpy_s (Sexp_variables[index].variable_name, "variable array block");
+    strcpy (Sexp_variables[index].text, "");
+    strcpy (Sexp_variables[index].variable_name, "variable array block");
 
     if (is_numeric)
         Sexp_variables[index].type = SEXP_VARIABLE_NUMBER | SEXP_VARIABLE_SET;
@@ -28818,7 +28818,7 @@ void sexp_modify_variable (
     }
     else {
         // no variables, so no substitution
-        strcpy_s (Sexp_variables[index].text, text);
+        strcpy (Sexp_variables[index].text, text);
     }
 
     Sexp_variables[index].type |= SEXP_VARIABLE_MODIFIED;
@@ -29102,8 +29102,8 @@ void sexp_fred_modify_variable (
     ASSERT (Sexp_variables[index].type & SEXP_VARIABLE_SET);
     ASSERT ((type & SEXP_VARIABLE_NUMBER) || (type & SEXP_VARIABLE_STRING));
 
-    strcpy_s (Sexp_variables[index].text, text);
-    strcpy_s (Sexp_variables[index].variable_name, var_name);
+    strcpy (Sexp_variables[index].text, text);
+    strcpy (Sexp_variables[index].variable_name, var_name);
     Sexp_variables[index].type =
         (SEXP_VARIABLE_SET | SEXP_VARIABLE_MODIFIED | type);
 }

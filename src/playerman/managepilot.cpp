@@ -99,10 +99,10 @@ void init_new_pilot (player* p, int reset) {
     }
 
     // unassigned squadron
-    strcpy_s (p->s_squad_name, XSTR ("Unassigned", 1255));
-    strcpy_s (p->s_squad_filename, "");
-    strcpy_s (p->m_squad_name, XSTR ("Unassigned", 1255));
-    strcpy_s (p->m_squad_filename, "");
+    strcpy (p->s_squad_name, XSTR ("Unassigned", 1255));
+    strcpy (p->s_squad_filename, "");
+    strcpy (p->m_squad_name, XSTR ("Unassigned", 1255));
+    strcpy (p->m_squad_filename, "");
 
     // set him to be a single player pilot by default (the actual creation
     // routines will change this if necessary)
@@ -147,14 +147,14 @@ int campaign_file_list_filter (const char* filename) {
     if (mission_campaign_get_info (
             filename, name, &type, &max_players, &desc)) {
         if (type == CAMPAIGN_TYPE_SINGLE) {
-            Campaign_names[local_num_campaigns] = vm_strdup (name);
+            Campaign_names[local_num_campaigns] = strdup (name);
             local_num_campaigns++;
 
             return 1;
         }
     }
 
-    if (desc != NULL) vm_free (desc);
+    if (desc != NULL) free (desc);
 
     return 0;
 }
@@ -169,8 +169,8 @@ void pilot_set_start_campaign (player* p) {
     char* campaign_file_list[MAX_CAMPAIGNS];
 
     memset (wild_card, 0, sizeof (wild_card));
-    strcpy_s (wild_card, NOX ("*"));
-    strcat_s (wild_card, FS_CAMPAIGN_FILE_EXT);
+    strcpy (wild_card, NOX ("*"));
+    strcat (wild_card, FS_CAMPAIGN_FILE_EXT);
 
     // set filter for cf_get_file_list() if there isn't one set already (the
     // simroom has a special one)
@@ -186,7 +186,7 @@ void pilot_set_start_campaign (player* p) {
 
     for (i = 0; i < rc; i++) {
         if (!strcasecmp (campaign_file_list[i], Default_campaign_file_name)) {
-            strcpy_s (p->current_campaign, campaign_file_list[i]);
+            strcpy (p->current_campaign, campaign_file_list[i]);
             return;
         }
     }
@@ -231,13 +231,13 @@ void pilot_set_start_campaign (player* p) {
     }
 
     if (rc > 0)
-        strcpy_s (p->current_campaign, campaign_file_list[0]);
+        strcpy (p->current_campaign, campaign_file_list[0]);
     else
-        strcpy_s (p->current_campaign, "<none>");
+        strcpy (p->current_campaign, "<none>");
 }
 
 void pilot_set_short_callsign (player* p, int max_width) {
-    strcpy_s (p->short_callsign, p->callsign);
+    strcpy (p->short_callsign, p->callsign);
     font::set_font (font::FONT1);
     font::force_fit_string (p->short_callsign, CALLSIGN_LEN - 1, max_width);
     gr_get_string_size (&(p->short_callsign_width), NULL, p->short_callsign);
@@ -246,12 +246,12 @@ void pilot_set_short_callsign (player* p, int max_width) {
 // pick a random image for the passed player
 void pilot_set_random_pic (player* p) {
     // if there are no available pilot pics, set the image filename to null
-    if (Num_pilot_images <= 0) { strcpy_s (p->image_filename, ""); }
+    if (Num_pilot_images <= 0) { strcpy (p->image_filename, ""); }
     else {
         // pick a random name from the list
         int random_index = rand () % Num_pilot_images;
         ASSERT ((random_index >= 0) && (random_index < Num_pilot_images));
-        strcpy_s (p->image_filename, Pilot_images_arr[random_index]);
+        strcpy (p->image_filename, Pilot_images_arr[random_index]);
     }
 }
 
@@ -372,9 +372,9 @@ void player_set_squad (player* p, char* squad_name) {
     // sanity check
     if (p == NULL) { return; }
 
-    if (Game_mode & GM_MULTIPLAYER) { strcpy_s (p->m_squad_name, squad_name); }
+    if (Game_mode & GM_MULTIPLAYER) { strcpy (p->m_squad_name, squad_name); }
     else {
-        strcpy_s (p->s_squad_name, squad_name);
+        strcpy (p->s_squad_name, squad_name);
     }
 }
 
@@ -506,17 +506,17 @@ void player::reset () {
 void player::assign (const player* other) {
     int i;
 
-    strcpy_s (callsign, other->callsign);
-    strcpy_s (short_callsign, other->short_callsign);
+    strcpy (callsign, other->callsign);
+    strcpy (short_callsign, other->short_callsign);
     short_callsign_width = other->short_callsign_width;
 
-    strcpy_s (image_filename, other->image_filename);
-    strcpy_s (s_squad_filename, other->s_squad_filename);
-    strcpy_s (s_squad_name, other->s_squad_name);
-    strcpy_s (m_squad_filename, other->m_squad_filename);
-    strcpy_s (m_squad_name, other->m_squad_name);
+    strcpy (image_filename, other->image_filename);
+    strcpy (s_squad_filename, other->s_squad_filename);
+    strcpy (s_squad_name, other->s_squad_name);
+    strcpy (m_squad_filename, other->m_squad_filename);
+    strcpy (m_squad_name, other->m_squad_name);
 
-    strcpy_s (current_campaign, other->current_campaign);
+    strcpy (current_campaign, other->current_campaign);
     readyroom_listing_mode = other->readyroom_listing_mode;
 
     flags = other->flags;
@@ -616,7 +616,7 @@ void player::assign (const player* other) {
     killer_objtype = other->killer_objtype;
     killer_species = other->killer_species;
     killer_weapon_index = other->killer_weapon_index;
-    strcpy_s (killer_parent_name, other->killer_parent_name);
+    strcpy (killer_parent_name, other->killer_parent_name);
 
     check_for_all_alone_msg = other->check_for_all_alone_msg;
 
@@ -651,5 +651,5 @@ void player::assign (const player* other) {
     memcpy (&lua_bi_full, &other->lua_bi_full, sizeof (button_info));
 
     player_was_multi = other->player_was_multi;
-    strcpy_s (language, other->language);
+    strcpy (language, other->language);
 }

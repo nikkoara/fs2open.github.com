@@ -35,14 +35,14 @@ GPUMemoryHeap::~GPUMemoryHeap () {
     }
 
     if (_dataBuffer != nullptr) {
-        vm_free (_dataBuffer);
+        free (_dataBuffer);
 
         _dataBuffer = nullptr;
         _bufferSize = 0;
     }
 }
 void GPUMemoryHeap::resizeBuffer (size_t newSize) {
-    _dataBuffer = vm_realloc (_dataBuffer, newSize);
+    _dataBuffer = realloc (_dataBuffer, newSize);
     _bufferSize = newSize;
 
     gr_update_buffer_data (_bufferHandle, _bufferSize, _dataBuffer);

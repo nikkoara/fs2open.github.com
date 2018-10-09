@@ -498,7 +498,7 @@ void parse_mission_info (mission* pm, bool basic = false) {
     if (optional_string ("$Mission Desc:"))
         stuff_string (pm->mission_desc, F_MULTITEXT, MISSION_DESC_LENGTH);
     else
-        strcpy_s (pm->mission_desc, NOX ("No description\n"));
+        strcpy (pm->mission_desc, NOX ("No description\n"));
 
     pm->game_type = MISSION_TYPE_SINGLE; // default to single player only
     if (optional_string ("+Game Type:")) {
@@ -684,8 +684,8 @@ void parse_mission_info (mission* pm, bool basic = false) {
     }
 
     // possible squadron reassignment
-    strcpy_s (pm->squad_name, "");
-    strcpy_s (pm->squad_filename, "");
+    strcpy (pm->squad_name, "");
+    strcpy (pm->squad_filename, "");
     if (optional_string ("+SquadReassignName:")) {
         stuff_string (pm->squad_name, F_NAME, NAME_LENGTH);
         if (optional_string ("+SquadReassignLogo:")) {
@@ -694,8 +694,8 @@ void parse_mission_info (mission* pm, bool basic = false) {
     }
     // always clear out squad reassignments if not single player
     if (Game_mode & GM_MULTIPLAYER) {
-        strcpy_s (pm->squad_name, "");
-        strcpy_s (pm->squad_filename, "");
+        strcpy (pm->squad_name, "");
+        strcpy (pm->squad_filename, "");
     }
     // reassign the player
     else {
@@ -740,7 +740,7 @@ void parse_mission_info (mission* pm, bool basic = false) {
         "$Load Screen 640:", "$Load Screen 1024:", pm->loading_screen[GR_640],
         pm->loading_screen[GR_1024]);
 
-    strcpy_s (pm->skybox_model, "");
+    strcpy (pm->skybox_model, "");
     if (optional_string ("$Skybox Model:")) {
         stuff_string (pm->skybox_model, F_NAME, MAX_FILENAME_LEN);
     }
@@ -883,10 +883,10 @@ void parse_player_info2 (mission* pm) {
             // if the list isn't set by a variable leave the variable name
             // empty
             if (list[i + 1] == -1) {
-                strcpy_s (ptr->ship_list_variables[num_choices], "");
+                strcpy (ptr->ship_list_variables[num_choices], "");
             }
             else {
-                strcpy_s (
+                strcpy (
                     ptr->ship_list_variables[num_choices],
                     Sexp_variables[list[i + 1]].variable_name);
             }
@@ -896,10 +896,10 @@ void parse_player_info2 (mission* pm) {
             // if the list isn't set by a variable leave the variable name
             // empty
             if (list[i + 3] == -1) {
-                strcpy_s (ptr->ship_count_variables[num_choices], "");
+                strcpy (ptr->ship_count_variables[num_choices], "");
             }
             else {
-                strcpy_s (
+                strcpy (
                     ptr->ship_count_variables[num_choices],
                     Sexp_variables[list[i + 3]].variable_name);
             }
@@ -971,11 +971,11 @@ void parse_player_info2 (mission* pm) {
                     // if the list isn't set by a variable leave the variable
                     // name empty
                     if (list2[i + 1] == -1) {
-                        strcpy_s (
+                        strcpy (
                             ptr->weaponry_pool_variable[num_choices], "");
                     }
                     else {
-                        strcpy_s (
+                        strcpy (
                             ptr->weaponry_pool_variable[num_choices],
                             Sexp_variables[list2[i + 1]].variable_name);
                     }
@@ -983,11 +983,11 @@ void parse_player_info2 (mission* pm) {
                     // if the list isn't set by a variable leave the variable
                     // name empty
                     if (list2[i + 3] == -1) {
-                        strcpy_s (
+                        strcpy (
                             ptr->weaponry_amount_variable[num_choices], "");
                     }
                     else {
-                        strcpy_s (
+                        strcpy (
                             ptr->weaponry_amount_variable[num_choices],
                             Sexp_variables[list2[i + 3]].variable_name);
                     }
@@ -1183,7 +1183,7 @@ void parse_music (mission* pm, int flags) {
     // Goober5000 - if briefing not specified in import, default to BRIEF1
     if (!strcasecmp (pm->briefing_music_name, "none") &&
         (flags & MPF_IMPORT_FSM))
-        strcpy_s (pm->briefing_music_name, "BRIEF1");
+        strcpy (pm->briefing_music_name, "BRIEF1");
 
     // Goober5000 - old way of grabbing substitute music, but here for reverse
     // compatibility
@@ -1202,25 +1202,25 @@ void parse_music (mission* pm, int flags) {
         if (!strcasecmp (pm->event_music_name, "none")) goto done_event_music;
 
         // set the FS1 equivalent as the substitute
-        strcpy_s (pm->substitute_event_music_name, "FS1-");
-        strcat_s (pm->substitute_event_music_name, pm->event_music_name);
+        strcpy (pm->substitute_event_music_name, "FS1-");
+        strcat (pm->substitute_event_music_name, pm->event_music_name);
 
         // if we have Marauder, it's in FS2 as Deuteronomy, so we're done
         if (!strcasecmp (pm->event_music_name, "7: Marauder") &&
             event_music_get_soundtrack_index ("5: Deuteronomy") >= 0) {
-            strcpy_s (pm->event_music_name, "5: Deuteronomy");
+            strcpy (pm->event_music_name, "5: Deuteronomy");
             goto done_event_music;
         }
 
         // search for something with the same track number
-        strcpy_s (temp, pm->event_music_name);
+        strcpy (temp, pm->event_music_name);
         ch = strchr (temp, ':');
         if (ch != NULL) {
             *(ch + 1) = '\0';
 
             for (i = 0; i < Num_soundtracks; i++) {
                 if (!strncmp (temp, Soundtracks[i].name, strlen (temp))) {
-                    strcpy_s (pm->event_music_name, Soundtracks[i].name);
+                    strcpy (pm->event_music_name, Soundtracks[i].name);
                     goto done_event_music;
                 }
             }
@@ -1228,7 +1228,7 @@ void parse_music (mission* pm, int flags) {
 
         // last resort: pick a random track out of the 7 FS2 soundtracks
         num = (Num_soundtracks < 7) ? Num_soundtracks : 7;
-        strcpy_s (pm->event_music_name, Soundtracks[rand () % num].name);
+        strcpy (pm->event_music_name, Soundtracks[rand () % num].name);
 
     done_event_music:
 
@@ -1237,13 +1237,13 @@ void parse_music (mission* pm, int flags) {
             goto done_briefing_music;
 
         // set the FS1 equivalent as the substitute
-        strcpy_s (pm->substitute_briefing_music_name, "FS1-");
-        strcat_s (pm->substitute_briefing_music_name, pm->briefing_music_name);
+        strcpy (pm->substitute_briefing_music_name, "FS1-");
+        strcat (pm->substitute_briefing_music_name, pm->briefing_music_name);
 
         // Choco Mousse is the FS1 title soundtrack, so use Aquitaine in FS2
         if (!strcasecmp (pm->briefing_music_name, "Choco Mousse") &&
             event_music_get_spooled_music_index ("Aquitaine") >= 0) {
-            strcpy_s (pm->briefing_music_name, "Aquitaine");
+            strcpy (pm->briefing_music_name, "Aquitaine");
             goto done_briefing_music;
         }
 
@@ -1254,7 +1254,7 @@ void parse_music (mission* pm, int flags) {
         // last resort: pick a random track out of the first 7 FS2 briefings
         // (the regular ones)...
         num = (Num_music_files < 7) ? Num_music_files : 7;
-        strcpy_s (pm->briefing_music_name, Spooled_music[rand () % num].name);
+        strcpy (pm->briefing_music_name, Spooled_music[rand () % num].name);
 
     done_briefing_music:
 
@@ -1464,7 +1464,7 @@ void parse_briefing (mission* /*pm*/, int flags) {
                 if (Fred_running) { ASSERT (bs->lines != NULL); }
                 else {
                     if (bs->num_lines > 0) {
-                        bs->lines = (brief_line*)vm_malloc (
+                        bs->lines = (brief_line*)malloc (
                             sizeof (brief_line) * bs->num_lines);
                         ASSERT (bs->lines != NULL);
                     }
@@ -1487,7 +1487,7 @@ void parse_briefing (mission* /*pm*/, int flags) {
             if (Fred_running) { ASSERT (bs->icons != NULL); }
             else {
                 if (bs->num_icons > 0) {
-                    bs->icons = (brief_icon*)vm_malloc (
+                    bs->icons = (brief_icon*)malloc (
                         sizeof (brief_icon) * bs->num_icons);
                     ASSERT (bs->icons != NULL);
                 }
@@ -1942,7 +1942,7 @@ int parse_create_object_sub (p_object* p_objp) {
 
     shipp->group = p_objp->group;
     shipp->team = p_objp->team;
-    strcpy_s (shipp->ship_name, p_objp->name);
+    strcpy (shipp->ship_name, p_objp->name);
     shipp->display_name = p_objp->display_name;
     shipp->escort_priority = p_objp->escort_priority;
     shipp->use_special_explosion = p_objp->use_special_explosion;
@@ -2051,7 +2051,7 @@ int parse_create_object_sub (p_object* p_objp) {
     // handle the replacement textures
     if (!p_objp->replacement_textures.empty ()) {
         shipp->ship_replacement_textures =
-            (int*)vm_malloc (MAX_REPLACEMENT_TEXTURES * sizeof (int));
+            (int*)malloc (MAX_REPLACEMENT_TEXTURES * sizeof (int));
 
         for (i = 0; i < MAX_REPLACEMENT_TEXTURES; i++)
             shipp->ship_replacement_textures[i] = -1;
@@ -3415,14 +3415,14 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
         }
 
         // put this information into the Initially_docked array
-        strcpy_s (
+        strcpy (
             Initially_docked[Total_initially_docked].docker, p_objp->name);
-        strcpy_s (
+        strcpy (
             Initially_docked[Total_initially_docked].dockee, docked_with);
-        strcpy_s (
+        strcpy (
             Initially_docked[Total_initially_docked].docker_point,
             docker_point);
-        strcpy_s (
+        strcpy (
             Initially_docked[Total_initially_docked].dockee_point,
             dockee_point);
         Total_initially_docked++;
@@ -3498,7 +3498,7 @@ int parse_object (mission* pm, int /*flag*/, p_object* p_objp) {
         char* p;
 
         while (optional_string ("+old:")) {
-            strcpy_s (tr.ship_name, p_objp->name);
+            strcpy (tr.ship_name, p_objp->name);
             tr.new_texture_id = -1;
 
             stuff_string (tr.old_texture, F_NAME, MAX_FILENAME_LEN);
@@ -4995,7 +4995,7 @@ void parse_event (mission* /*pm*/) {
 
     if (optional_string ("+Objective:")) {
         stuff_string (buf, F_NAME, NAME_LENGTH);
-        event->objective_text = vm_strdup (buf);
+        event->objective_text = strdup (buf);
     }
     else {
         event->objective_text = NULL;
@@ -5003,7 +5003,7 @@ void parse_event (mission* /*pm*/) {
 
     if (optional_string ("+Objective key:")) {
         stuff_string (buf, F_NAME, NAME_LENGTH);
-        event->objective_key_text = vm_strdup (buf);
+        event->objective_key_text = strdup (buf);
     }
     else {
         event->objective_key_text = NULL;
@@ -5198,15 +5198,15 @@ void parse_messages (mission* pm, int flags) {
     required_string ("#Messages");
 
     // command stuff by Goober5000 ---------------------------------------
-    strcpy_s (pm->command_sender, DEFAULT_COMMAND);
+    strcpy (pm->command_sender, DEFAULT_COMMAND);
     if (optional_string ("$Command Sender:")) {
         char temp[NAME_LENGTH];
         stuff_string (temp, F_NAME, NAME_LENGTH);
 
         if (*temp == '#')
-            strcpy_s (pm->command_sender, &temp[1]);
+            strcpy (pm->command_sender, &temp[1]);
         else
-            strcpy_s (pm->command_sender, temp);
+            strcpy (pm->command_sender, temp);
     }
 
     pm->command_persona = Default_command_persona;
@@ -5412,7 +5412,7 @@ void parse_bitmaps (mission* pm) {
     Mission_palette = 1;
 
     // neb2 info
-    strcpy_s (Neb2_texture_name, "Eraseme3");
+    strcpy (Neb2_texture_name, "Eraseme3");
     Neb2_poof_flags =
         ((1 << 0) | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5));
     if (optional_string ("+Neb2:")) {
@@ -5673,7 +5673,7 @@ void parse_variables () {
                 else if (
                     Sexp_variables[j].type & SEXP_VARIABLE_IS_PERSISTENT) {
                     Sexp_variables[j].type = current_pv.type;
-                    strcpy_s (Sexp_variables[j].text, current_pv.text);
+                    strcpy (Sexp_variables[j].text, current_pv.text);
                     break;
                 }
                 else {
@@ -5713,7 +5713,7 @@ void parse_variables () {
                     // replace the default values with the ones saved to the
                     // player file
                     Sexp_variables[j].type = Player->variables[i].type;
-                    strcpy_s (
+                    strcpy (
                         Sexp_variables[j].text, Player->variables[i].text);
 
                     /*
@@ -5789,7 +5789,7 @@ int parse_mission (mission* pm, int flags) {
     Subsys_status_size = 0;
 
     if (Subsys_status != NULL) {
-        vm_free (Subsys_status);
+        free (Subsys_status);
         Subsys_status = NULL;
     }
 
@@ -5858,24 +5858,24 @@ int parse_mission (mission* pm, int flags) {
             }
 
             if (Game_mode & GM_CAMPAIGN_MODE) {
-                strcat_s (text, "(The current campaign is \"");
-                strcat_s (text, Campaign.name);
+                strcat (text, "(The current campaign is \"");
+                strcat (text, Campaign.name);
             }
             else {
-                strcat_s (text, "(The current mission is \"");
-                strcat_s (text, pm->name);
+                strcat (text, "(The current mission is \"");
+                strcat (text, pm->name);
             }
 
-            strcat_s (text, "\", and the current mod is \"");
+            strcat (text, "\", and the current mod is \"");
 
             if (Cmdline_mod == NULL || *Cmdline_mod == 0) {
-                strcat_s (text, "<retail default> ");
+                strcat (text, "<retail default> ");
             }
             else {
                 for (char* mod_token = Cmdline_mod; *mod_token != '\0';
                      mod_token += strlen (mod_token) + 1) {
-                    strcat_s (text, mod_token);
-                    strcat_s (text, " ");
+                    strcat (text, mod_token);
+                    strcat (text, " ");
                 }
             }
 
@@ -6162,7 +6162,7 @@ int get_mission_info (const char* filename, mission* mission_p, bool basic) {
 
     char* p = strrchr (real_fname, '.');
     if (p) *p = 0;                              // remove any extension
-    strcat_s (real_fname, FS_MISSION_FILE_EXT); // append mission extension
+    strcat (real_fname, FS_MISSION_FILE_EXT); // append mission extension
 
     int filelength;
 
@@ -6277,7 +6277,7 @@ int parse_main (const char* mission_name, int flags) {
         }
     } while (0);
 
-    if (!Fred_running) strcpy_s (Mission_filename, mission_name);
+    if (!Fred_running) strcpy (Mission_filename, mission_name);
 
     return rval;
 }
@@ -6286,7 +6286,7 @@ int parse_main (const char* mission_name, int flags) {
 void mission_parse_close () {
     // free subsystems
     if (Subsys_status != NULL) {
-        vm_free (Subsys_status);
+        free (Subsys_status);
         Subsys_status = NULL;
     }
 
@@ -6942,7 +6942,7 @@ void mission_parse_mark_reinforcement_available (char* name) {
             if (!(rp->flags & RF_IS_AVAILABLE)) {
                 rp->flags |= RF_IS_AVAILABLE;
             }
-            
+
             return;
         }
     }
@@ -7583,7 +7583,7 @@ int allocate_subsys_status () {
         ASSERT (MIN_SUBSYS_STATUS_SIZE > 0);
 
         Subsys_status_size += MIN_SUBSYS_STATUS_SIZE;
-        Subsys_status = (subsys_status*)vm_realloc (
+        Subsys_status = (subsys_status*)realloc (
             Subsys_status, sizeof (subsys_status) * Subsys_status_size);
     }
 
@@ -7690,7 +7690,7 @@ int get_parse_name_index (const char* name) {
 
     ASSERT (i < MAX_SHIPS + MAX_WINGS);
     ASSERT (strlen (name) < NAME_LENGTH);
-    strcpy_s (Parse_names[i], name);
+    strcpy (Parse_names[i], name);
     return Num_parse_names++;
 }
 
@@ -7752,7 +7752,7 @@ int get_special_anchor (char* name) {
 
     if (strncasecmp (name, "<any ", 5) != 0) return -1;
 
-    strcpy_s (tmp, name + 5);
+    strcpy (tmp, name + 5);
     iff_name = strtok (tmp, " >");
 
     // hack substitute "hostile" for "enemy"
@@ -7837,10 +7837,10 @@ void mission_add_to_arriving_support (object* requester_objp) {
         return;
     }
 
-    strcpy_s (
+    strcpy (
         Arriving_repair_targets[Num_arriving_repair_targets],
         Ships[requester_objp->instance].ship_name);
-    
+
     Num_arriving_repair_targets++;
 }
 
@@ -8095,7 +8095,7 @@ int mission_remove_scheduled_repair (object* objp) {
 
     // ship is found -- compress the array
     for (i = index; i < Num_arriving_repair_targets - 1; i++)
-        strcpy_s (Arriving_repair_targets[i], Arriving_repair_targets[i + 1]);
+        strcpy (Arriving_repair_targets[i], Arriving_repair_targets[i + 1]);
 
     Num_arriving_repair_targets--;
 
@@ -8145,7 +8145,7 @@ int mission_parse_add_alt (const char* name) {
     // maybe add
     if (Mission_alt_type_count < MAX_ALT_TYPE_NAMES) {
         // stuff the name
-        strcpy_s (Mission_alt_types[Mission_alt_type_count++], name);
+        strcpy (Mission_alt_types[Mission_alt_type_count++], name);
 
         // done
         return Mission_alt_type_count - 1;
@@ -8163,7 +8163,7 @@ void mission_parse_remove_alt (const char* name) {
         if (!strcmp (Mission_alt_types[i], name)) {
             // remove this name by overwriting it with the last name
             if (i < Mission_alt_type_count - 1)
-                strcpy_s (
+                strcpy (
                     Mission_alt_types[i],
                     Mission_alt_types[Mission_alt_type_count - 1]);
 
@@ -8218,7 +8218,7 @@ int mission_parse_add_callsign (const char* name) {
     // maybe add
     if (Mission_callsign_count < MAX_CALLSIGNS) {
         // stuff the name
-        strcpy_s (Mission_callsigns[Mission_callsign_count++], name);
+        strcpy (Mission_callsigns[Mission_callsign_count++], name);
 
         // done
         return Mission_callsign_count - 1;
@@ -8236,7 +8236,7 @@ void mission_parse_remove_callsign (const char* name) {
         if (!strcmp (Mission_callsigns[i], name)) {
             // remove this callsign by overwriting it with the last callsign
             if (i < Mission_callsign_count - 1)
-                strcpy_s (
+                strcpy (
                     Mission_callsigns[i],
                     Mission_callsigns[Mission_callsign_count - 1]);
 

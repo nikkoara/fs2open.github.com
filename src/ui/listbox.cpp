@@ -484,7 +484,7 @@ int UI_LISTBOX::add_string (char* str) {
             return 0; // we've reached our limit
 
         else {
-            list[num_items] = vm_strdup (str);
+            list[num_items] = strdup (str);
             num_items++;
             return 1;
         }

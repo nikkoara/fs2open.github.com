@@ -168,7 +168,7 @@ void cf_sort_filenames (int n, char** list, int sort, file_list_info* info) {
             t = list[n - 1 - i];
 
             if (list[i] != t) {
-                strcpy_s (buffer, list[i]);
+                strcpy (buffer, list[i]);
                 strcpy (list[i], t);
                 strcpy (t, buffer);
 

@@ -54,7 +54,7 @@ void model_octant_find_shields (polymodel* pm, model_octant* oct) {
     }
 
     oct->shield_tris =
-        (shield_tri**)vm_malloc (sizeof (shield_tri*) * oct->nshield_tris);
+        (shield_tri**)malloc (sizeof (shield_tri*) * oct->nshield_tris);
     ASSERT (oct->shield_tris != NULL);
 
     n = 0;
@@ -280,7 +280,7 @@ void model_octant_find_faces (polymodel* pm, model_octant* oct) {
         return;
     }
 
-    oct->verts = (vec3d**)vm_malloc (sizeof (vec3d*) * oct->nverts);
+    oct->verts = (vec3d**)malloc (sizeof (vec3d*) * oct->nverts);
     ASSERT (oct->verts != NULL);
 
     oct->nverts = 0;
@@ -346,12 +346,12 @@ void model_octant_free (polymodel* pm) {
         model_octant* oct = &pm->octants[i];
 
         if (oct->verts) {
-            vm_free (oct->verts);
+            free (oct->verts);
             oct->verts = NULL;
         }
 
         if (oct->shield_tris) {
-            vm_free (oct->shield_tris);
+            free (oct->shield_tris);
             oct->shield_tris = NULL;
         }
     }

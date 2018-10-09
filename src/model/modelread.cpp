@@ -162,54 +162,55 @@ void model_unload (int modelnum, int force) {
     // order to get the slots back so we set "release" to true.
     model_page_out_textures (pm->id, true);
 
-    safe_kill (pm->ship_bay);
+    if (pm->ship_bay)
+        free (pm->ship_bay);
 
     if (pm->paths) {
         for (i = 0; i < pm->n_paths; i++) {
             for (j = 0; j < pm->paths[i].nverts; j++) {
                 if (pm->paths[i].verts[j].turret_ids) {
-                    vm_free (pm->paths[i].verts[j].turret_ids);
+                    free (pm->paths[i].verts[j].turret_ids);
                 }
             }
-            if (pm->paths[i].verts) { vm_free (pm->paths[i].verts); }
+            if (pm->paths[i].verts) { free (pm->paths[i].verts); }
         }
-        vm_free (pm->paths);
+        free (pm->paths);
     }
 
-    if (pm->shield.verts) { vm_free (pm->shield.verts); }
+    if (pm->shield.verts) { free (pm->shield.verts); }
 
-    if (pm->shield.tris) { vm_free (pm->shield.tris); }
+    if (pm->shield.tris) { free (pm->shield.tris); }
 
-    if (pm->missile_banks) { vm_free (pm->missile_banks); }
+    if (pm->missile_banks) { free (pm->missile_banks); }
 
     if (pm->docking_bays) {
         for (i = 0; i < pm->n_docks; i++) {
             if (pm->docking_bays[i].splines) {
-                vm_free (pm->docking_bays[i].splines);
+                free (pm->docking_bays[i].splines);
             }
         }
-        vm_free (pm->docking_bays);
+        free (pm->docking_bays);
     }
 
     if (pm->thrusters) {
         for (i = 0; i < pm->n_thrusters; i++) {
-            if (pm->thrusters[i].points) vm_free (pm->thrusters[i].points);
+            if (pm->thrusters[i].points) free (pm->thrusters[i].points);
         }
 
-        vm_free (pm->thrusters);
+        free (pm->thrusters);
     }
 
     if (pm->glow_point_banks) { // free the glows!!! -Bobboau
         for (i = 0; i < pm->n_glow_point_banks; i++) {
             if (pm->glow_point_banks[i].points)
-                vm_free (pm->glow_point_banks[i].points);
+                free (pm->glow_point_banks[i].points);
         }
 
-        vm_free (pm->glow_point_banks);
+        free (pm->glow_point_banks);
     }
 
 #ifndef NDEBUG
-    if (pm->debug_info) { vm_free (pm->debug_info); }
+    if (pm->debug_info) { free (pm->debug_info); }
 #endif
 
     model_octant_free (pm);
@@ -219,7 +220,7 @@ void model_unload (int modelnum, int force) {
             pm->submodel[i].buffer.clear ();
 
             if (pm->submodel[i].bsp_data) {
-                vm_free (pm->submodel[i].bsp_data);
+                free (pm->submodel[i].bsp_data);
             }
 
             if (pm->submodel[i].collision_tree_index >= 0) {
@@ -228,7 +229,7 @@ void model_unload (int modelnum, int force) {
             }
 
             if (pm->submodel[i].outline_buffer != nullptr) {
-                vm_free (pm->submodel[i].outline_buffer);
+                free (pm->submodel[i].outline_buffer);
                 pm->submodel[i].outline_buffer = nullptr;
             }
         }
@@ -236,13 +237,13 @@ void model_unload (int modelnum, int force) {
         delete[] pm->submodel;
     }
 
-    if (pm->xc) { vm_free (pm->xc); }
+    if (pm->xc) { free (pm->xc); }
 
-    if (pm->lights) { vm_free (pm->lights); }
+    if (pm->lights) { free (pm->lights); }
 
-    if (pm->gun_banks) { vm_free (pm->gun_banks); }
+    if (pm->gun_banks) { free (pm->gun_banks); }
 
-    if (pm->shield_collision_tree) { vm_free (pm->shield_collision_tree); }
+    if (pm->shield_collision_tree) { free (pm->shield_collision_tree); }
 
     if (pm->shield.buffer_id > -1) {
         gr_delete_buffer (pm->shield.buffer_id);
@@ -260,7 +261,7 @@ void model_unload (int modelnum, int force) {
     }
 
     if (pm->vert_source.Vertex_list != NULL) {
-        vm_free (pm->vert_source.Vertex_list);
+        free (pm->vert_source.Vertex_list);
         pm->vert_source.Vertex_list = NULL;
     }
 
@@ -272,7 +273,7 @@ void model_unload (int modelnum, int force) {
     }
 
     if (pm->vert_source.Index_list != NULL) {
-        vm_free (pm->vert_source.Index_list);
+        free (pm->vert_source.Index_list);
         pm->vert_source.Index_list = NULL;
     }
 
@@ -488,7 +489,7 @@ void model_copy_subsystems (
                 dest->turn_rate = source->turn_rate;
                 dest->turret_gun_sobj = source->turret_gun_sobj;
 
-                strcpy_s (dest->name, source->name);
+                strcpy (dest->name, source->name);
 
                 if (dest->type == SUBSYSTEM_TURRET) {
                     int nfp;
@@ -504,7 +505,7 @@ void model_copy_subsystems (
                             source->turret_firing_point[nfp];
 
                     if (dest->flags[Model::Subsystem_Flags::Crewpoint])
-                        strcpy_s (dest->crewspot, source->crewspot);
+                        strcpy (dest->crewspot, source->crewspot);
                 }
                 break;
             }
@@ -525,9 +526,9 @@ static void set_subsystem_info (
     if ((p = strstr (props, "$name")) != NULL)
         get_user_prop_value (p + 5, subsystemp->name);
     else
-        strcpy_s (subsystemp->name, dname);
+        strcpy (subsystemp->name, dname);
 
-    strcpy_s (lcdname, dname);
+    strcpy (lcdname, dname);
     stolower (lcdname);
 
     // check the name for its specific type
@@ -542,7 +543,7 @@ static void set_subsystem_info (
         if ((p = strstr (props, "$fov")) != NULL)
             get_user_prop_value (p + 4, buf); // get the value of the fov
         else
-            strcpy_s (buf, "180");
+            strcpy (buf, "180");
         angle = fl_radians (atoi (buf)) / 2.0f;
         subsystemp->turret_fov = cosf (angle);
         subsystemp->turret_num_firing_points = 0;
@@ -767,7 +768,7 @@ void do_new_subsystem (
                                     // of the subsystem
             subsystemp->radius = rad;
             set_subsystem_info (model_num, subsystemp, props, subobj_name);
-            strcpy_s (
+            strcpy (
                 subsystemp->subobj_name, subobj_name); // copy the object name
             return;
         }
@@ -991,13 +992,13 @@ bool maybe_swap_mins_maxs (vec3d* mins, vec3d* maxs) {
                 // prep string
                 char hex_str[5];
                 char text[100 + (5 * NUM_BYTES)];
-                strcpy_s(text, "The following is the correct hex string for the minima and maxima:\n");
+                strcpy(text, "The following is the correct hex string for the minima and maxima:\n");
 
                 // append hex values to the string
                 for (int i = 0; i < NUM_BYTES; i++)
                 {
                         sprintf(hex_str, "%02X ", z._byte[i]);
-                        strcat_s(text, hex_str);
+                        strcat(text, hex_str);
                 }
 
                 // notify the user
@@ -1090,7 +1091,7 @@ int read_model_file (
 
     pm->version = version;
     ASSERT (strlen (filename) < FILESPEC_LENGTH);
-    strcpy_s (pm->filename, filename);
+    strcpy (pm->filename, filename);
 
     memset (&pm->view_positions, 0, sizeof (pm->view_positions));
 
@@ -1259,7 +1260,7 @@ int read_model_file (
             if (pm->version >= 2014) {
                 pm->num_xc = cfread_int (fp);
                 if (pm->num_xc > 0) {
-                    pm->xc = (cross_section*)vm_malloc (
+                    pm->xc = (cross_section*)malloc (
                         pm->num_xc * sizeof (cross_section));
                     for (i = 0; i < pm->num_xc; i++) {
                         pm->xc[i].z = cfread_float (fp);
@@ -1276,7 +1277,7 @@ int read_model_file (
                 // mprintf(( "Found %d lights!\n", pm->num_lights ));
 
                 if (pm->num_lights > 0) {
-                    pm->lights = (bsp_light*)vm_malloc (
+                    pm->lights = (bsp_light*)malloc (
                         sizeof (bsp_light) * pm->num_lights);
                     for (i = 0; i < pm->num_lights; i++) {
                         cfread_vector (&pm->lights[i].pos, fp);
@@ -1450,7 +1451,7 @@ int read_model_file (
             }
 
             if (pm->submodel[n].name[0] == '\0') {
-                strcpy_s (pm->submodel[n].name, "unknown object name");
+                strcpy (pm->submodel[n].name, "unknown object name");
             }
 
             bool rotating_submodel_has_subsystem =
@@ -1789,7 +1790,7 @@ int read_model_file (
             pm->submodel[n].bsp_data_size = cfread_int (fp);
             if (pm->submodel[n].bsp_data_size > 0) {
                 pm->submodel[n].bsp_data =
-                    (ubyte*)vm_malloc (pm->submodel[n].bsp_data_size);
+                    (ubyte*)malloc (pm->submodel[n].bsp_data_size);
                 cfread (
                     pm->submodel[n].bsp_data, 1, pm->submodel[n].bsp_data_size,
                     fp);
@@ -1830,7 +1831,7 @@ int read_model_file (
         case ID_SLDC: // kazan - Shield Collision tree
         {
             pm->sldc_size = cfread_int (fp);
-            pm->shield_collision_tree = (ubyte*)vm_malloc (pm->sldc_size);
+            pm->shield_collision_tree = (ubyte*)malloc (pm->sldc_size);
             cfread (pm->shield_collision_tree, 1, pm->sldc_size, fp);
             // mprintf(( "Shield Collision Tree, %d bytes in size\n",
             // pm->sldc_size));
@@ -1841,7 +1842,7 @@ int read_model_file (
                 cfread_int (fp); // get the number of vertices in the list
 
             if (pm->shield.nverts > 0) {
-                pm->shield.verts = (shield_vertex*)vm_malloc (
+                pm->shield.verts = (shield_vertex*)malloc (
                     pm->shield.nverts * sizeof (shield_vertex));
                 ASSERT (pm->shield.verts);
                 for (i = 0; i < pm->shield.nverts;
@@ -1854,7 +1855,7 @@ int read_model_file (
                 fp); // get the number of triangles that compose the shield
 
             if (pm->shield.ntris > 0) {
-                pm->shield.tris = (shield_tri*)vm_malloc (
+                pm->shield.tris = (shield_tri*)malloc (
                     pm->shield.ntris * sizeof (shield_tri));
                 ASSERT (pm->shield.tris);
                 for (i = 0; i < pm->shield.ntris; i++) {
@@ -1892,7 +1893,7 @@ int read_model_file (
 
             if (pm->n_guns > 0) {
                 pm->gun_banks =
-                    (w_bank*)vm_malloc (sizeof (w_bank) * pm->n_guns);
+                    (w_bank*)malloc (sizeof (w_bank) * pm->n_guns);
                 ASSERT (pm->gun_banks != NULL);
 
                 for (i = 0; i < pm->n_guns; i++) {
@@ -1915,7 +1916,7 @@ int read_model_file (
 
             if (pm->n_missiles > 0) {
                 pm->missile_banks =
-                    (w_bank*)vm_malloc (sizeof (w_bank) * pm->n_missiles);
+                    (w_bank*)malloc (sizeof (w_bank) * pm->n_missiles);
                 ASSERT (pm->missile_banks != NULL);
 
                 for (i = 0; i < pm->n_missiles; i++) {
@@ -1940,7 +1941,7 @@ int read_model_file (
 
             if (pm->n_docks > 0) {
                 pm->docking_bays =
-                    (dock_bay*)vm_malloc (sizeof (dock_bay) * pm->n_docks);
+                    (dock_bay*)malloc (sizeof (dock_bay) * pm->n_docks);
                 ASSERT (pm->docking_bays != NULL);
 
                 for (i = 0; i < pm->n_docks; i++) {
@@ -1980,7 +1981,7 @@ int read_model_file (
 
                     bay->num_spline_paths = cfread_int (fp);
                     if (bay->num_spline_paths > 0) {
-                        bay->splines = (int*)vm_malloc (
+                        bay->splines = (int*)malloc (
                             sizeof (int) * bay->num_spline_paths);
                         for (j = 0; j < bay->num_spline_paths; j++)
                             bay->splines[j] = cfread_int (fp);
@@ -2070,7 +2071,7 @@ int read_model_file (
             pm->glow_point_banks = NULL;
 
             if (gpb_num > 0) {
-                pm->glow_point_banks = (glow_point_bank*)vm_malloc (
+                pm->glow_point_banks = (glow_point_bank*)malloc (
                     sizeof (glow_point_bank) * gpb_num);
                 ASSERT (pm->glow_point_banks != NULL);
             }
@@ -2090,7 +2091,7 @@ int read_model_file (
                 bank->points = NULL;
 
                 if (bank->num_points > 0)
-                    bank->points = (glow_point*)vm_malloc (
+                    bank->points = (glow_point*)malloc (
                         sizeof (glow_point) * bank->num_points);
 
                 // if((bank->off_time > 0) && (bank->disp_time > 0))
@@ -2181,7 +2182,7 @@ int read_model_file (
             pm->n_thrusters = cfread_int (fp);
 
             if (pm->n_thrusters > 0) {
-                pm->thrusters = (thruster_bank*)vm_malloc (
+                pm->thrusters = (thruster_bank*)malloc (
                     sizeof (thruster_bank) * pm->n_thrusters);
                 ASSERT (pm->thrusters != NULL);
 
@@ -2192,7 +2193,7 @@ int read_model_file (
                     bank->points = NULL;
 
                     if (bank->num_points > 0)
-                        bank->points = (glow_point*)vm_malloc (
+                        bank->points = (glow_point*)malloc (
                             sizeof (glow_point) * bank->num_points);
 
                     bank->obj_num = -1;
@@ -2454,23 +2455,11 @@ int read_model_file (
             break;
         }
 
-            /*                  case ID_IDTA:           //Interpreter data
-                            //mprintf(0,"Got chunk IDTA, len=%d\n",len);
-
-                            pm->model_data = (ubyte *)vm_malloc(len);
-                            pm->model_data_size = len;
-                            Assert(pm->model_data != NULL );
-
-                            cfread(pm->model_data,1,len,fp);
-
-                            break;
-            */
-
         case ID_INFO: // don't need to do anything with info stuff
 
 #ifndef NDEBUG
             pm->debug_info_size = len;
-            pm->debug_info = (char*)vm_malloc (pm->debug_info_size + 1);
+            pm->debug_info = (char*)malloc (pm->debug_info_size + 1);
             ASSERT (pm->debug_info != NULL);
             memset (pm->debug_info, 0, len + 1);
             cfread (pm->debug_info, 1, len, fp);
@@ -2485,7 +2474,7 @@ int read_model_file (
             if (pm->n_paths <= 0) { break; }
 
             pm->paths =
-                (model_path*)vm_malloc (sizeof (model_path) * pm->n_paths);
+                (model_path*)malloc (sizeof (model_path) * pm->n_paths);
             ASSERT (pm->paths != NULL);
 
             memset (pm->paths, 0, sizeof (model_path) * pm->n_paths);
@@ -2499,8 +2488,8 @@ int read_model_file (
                     // get rid of leading '$' char in name
                     if (pm->paths[i].parent_name[0] == '$') {
                         char tmpbuf[MAX_NAME_LEN];
-                        strcpy_s (tmpbuf, pm->paths[i].parent_name + 1);
-                        strcpy_s (pm->paths[i].parent_name, tmpbuf);
+                        strcpy (tmpbuf, pm->paths[i].parent_name + 1);
+                        strcpy (pm->paths[i].parent_name, tmpbuf);
                     }
                     // store the sub_model index (ie index into pm->submodel)
                     // of the parent
@@ -2519,7 +2508,7 @@ int read_model_file (
                 }
 
                 pm->paths[i].nverts = cfread_int (fp);
-                pm->paths[i].verts = (mp_vert*)vm_malloc (
+                pm->paths[i].verts = (mp_vert*)malloc (
                     sizeof (mp_vert) * pm->paths[i].nverts);
                 pm->paths[i].goal = pm->paths[i].nverts - 1;
                 pm->paths[i].type = MP_TYPE_UNUSED;
@@ -2541,7 +2530,7 @@ int read_model_file (
 
                         if (nturrets > 0) {
                             pm->paths[i].verts[j].turret_ids =
-                                (int*)vm_malloc (sizeof (int) * nturrets);
+                                (int*)malloc (sizeof (int) * nturrets);
                             for (k = 0; k < nturrets; k++)
                                 pm->paths[i].verts[j].turret_ids[k] =
                                     cfread_int (fp);
@@ -2679,7 +2668,7 @@ void model_load_texture (polymodel* pm, int i, char* file) {
     // we also have to make sure there is always a trailing NUL since
     // overflow doesn't add it
     char tmp_name[MAX_FILENAME_LEN];
-    strcpy_s (tmp_name, file);
+    strcpy (tmp_name, file);
     stolower (tmp_name);
 
     texture_map* tmap = &pm->maps[i];
@@ -2728,8 +2717,8 @@ void model_load_texture (polymodel* pm, int i, char* file) {
         tglow->clear ();
     }
     else {
-        strcpy_s (tmp_name, file);
-        strcat_s (tmp_name, "-glow");
+        strcpy (tmp_name, file);
+        strcat (tmp_name, "-glow");
         stolower (tmp_name);
 
         tglow->LoadTexture (tmp_name, pm->filename);
@@ -2746,15 +2735,15 @@ void model_load_texture (polymodel* pm, int i, char* file) {
     }
     else {
         // look for reflectance map
-        strcpy_s (tmp_name, file);
-        strcat_s (tmp_name, "-reflect");
+        strcpy (tmp_name, file);
+        strcat (tmp_name, "-reflect");
         stolower (tmp_name);
 
         tspecgloss->LoadTexture (tmp_name, pm->filename);
 
         // look for a legacy shine map as well
-        strcpy_s (tmp_name, file);
-        strcat_s (tmp_name, "-shine");
+        strcpy (tmp_name, file);
+        strcat (tmp_name, "-shine");
         stolower (tmp_name);
 
         tspec->LoadTexture (tmp_name, pm->filename);
@@ -2769,8 +2758,8 @@ void model_load_texture (polymodel* pm, int i, char* file) {
         tnorm->clear ();
     }
     else {
-        strcpy_s (tmp_name, file);
-        strcat_s (tmp_name, "-normal");
+        strcpy (tmp_name, file);
+        strcat (tmp_name, "-normal");
         stolower (tmp_name);
 
         tnorm->LoadTexture (tmp_name, pm->filename);
@@ -2782,8 +2771,8 @@ void model_load_texture (polymodel* pm, int i, char* file) {
         theight->clear ();
     }
     else {
-        strcpy_s (tmp_name, file);
-        strcat_s (tmp_name, "-height");
+        strcpy (tmp_name, file);
+        strcat (tmp_name, "-height");
         stolower (tmp_name);
 
         theight->LoadTexture (tmp_name, pm->filename);
@@ -2792,8 +2781,8 @@ void model_load_texture (polymodel* pm, int i, char* file) {
     // ambient occlusion maps
     texture_info* tambient = &tmap->textures[TM_AMBIENT_TYPE];
 
-    strcpy_s (tmp_name, file);
-    strcat_s (tmp_name, "-ao");
+    strcpy (tmp_name, file);
+    strcat (tmp_name, "-ao");
     stolower (tmp_name);
 
     tambient->LoadTexture (tmp_name, pm->filename);
@@ -2802,8 +2791,8 @@ void model_load_texture (polymodel* pm, int i, char* file) {
     // -------------------------------------------------------------
     texture_info* tmisc = &tmap->textures[TM_MISC_TYPE];
 
-    strcpy_s (tmp_name, file);
-    strcat_s (tmp_name, "-misc");
+    strcpy (tmp_name, file);
+    strcat (tmp_name, "-misc");
     stolower (tmp_name);
 
     tmisc->LoadTexture (tmp_name, pm->filename);
@@ -2943,9 +2932,9 @@ int model_load (
 #ifndef NDEBUG
     char busy_text[60] = { '\0' };
 
-    strcat_s (busy_text, "** ModelLoad: ");
-    strcat_s (busy_text, filename);
-    strcat_s (busy_text, " **");
+    strcat (busy_text, "** ModelLoad: ");
+    strcat (busy_text, filename);
+    strcat (busy_text, " **");
 
     game_busy (busy_text);
 #endif
@@ -2981,8 +2970,8 @@ int model_load (
         int j;
         char destroyed_name[128];
 
-        strcpy_s (destroyed_name, pm->submodel[i].name);
-        strcat_s (destroyed_name, "-destroyed");
+        strcpy (destroyed_name, pm->submodel[i].name);
+        strcat (destroyed_name, "-destroyed");
         for (j = 0; j < pm->n_models; j++) {
             if (!strcasecmp (pm->submodel[j].name, destroyed_name)) {
                 pm->submodel[i].my_replacement = j;
@@ -2995,8 +2984,8 @@ int model_load (
         // alive
         char live_debris_name[128];
 
-        strcpy_s (live_debris_name, "debris-");
-        strcat_s (live_debris_name, pm->submodel[i].name);
+        strcpy (live_debris_name, "debris-");
+        strcat (live_debris_name, pm->submodel[i].name);
 
         pm->submodel[i].num_live_debris = 0;
         for (j = 0; j < pm->n_models; j++) {
@@ -3177,7 +3166,7 @@ int model_create_instance (bool is_ship, int model_num) {
     }
 
     polymodel_instance* pmi =
-        (polymodel_instance*)vm_malloc (sizeof (polymodel_instance));
+        (polymodel_instance*)malloc (sizeof (polymodel_instance));
     memset (pmi, 0, sizeof (polymodel_instance));
     pmi->model_num = model_num;
 
@@ -3192,7 +3181,7 @@ int model_create_instance (bool is_ship, int model_num) {
 
     polymodel* pm = model_get (model_num);
 
-    pmi->submodel = (submodel_instance*)vm_malloc (
+    pmi->submodel = (submodel_instance*)malloc (
         sizeof (submodel_instance) * pm->n_models);
 
     for (i = 0; i < pm->n_models; i++) {
@@ -3232,9 +3221,9 @@ void model_delete_instance (int model_instance_num) {
 
     polymodel_instance* pmi = Polygon_model_instances[model_instance_num];
 
-    if (pmi->submodel) { vm_free (pmi->submodel); }
+    if (pmi->submodel) { free (pmi->submodel); }
 
-    vm_free (pmi);
+    free (pmi);
 
     Polygon_model_instances[model_instance_num] = NULL;
 
@@ -3318,7 +3307,7 @@ void model_set_bay_path_nums (polymodel* pm) {
     int i;
 
     if (pm->ship_bay != NULL) {
-        vm_free (pm->ship_bay);
+        free (pm->ship_bay);
         pm->ship_bay = NULL;
     }
 
@@ -3330,7 +3319,7 @@ void model_set_bay_path_nums (polymodel* pm) {
     */
 
     // malloc out storage for the path information
-    pm->ship_bay = (ship_bay_t*)vm_malloc (sizeof (ship_bay_t));
+    pm->ship_bay = (ship_bay_t*)malloc (sizeof (ship_bay_t));
     ASSERT (pm->ship_bay != NULL);
 
     pm->ship_bay->num_paths = 0;
@@ -5605,19 +5594,19 @@ void model_remove_bsp_collision_tree (int tree_index) {
     Bsp_collision_tree_list[tree_index].used = false;
 
     if (Bsp_collision_tree_list[tree_index].node_list) {
-        vm_free (Bsp_collision_tree_list[tree_index].node_list);
+        free (Bsp_collision_tree_list[tree_index].node_list);
     }
 
     if (Bsp_collision_tree_list[tree_index].leaf_list) {
-        vm_free (Bsp_collision_tree_list[tree_index].leaf_list);
+        free (Bsp_collision_tree_list[tree_index].leaf_list);
     }
 
     if (Bsp_collision_tree_list[tree_index].point_list) {
-        vm_free (Bsp_collision_tree_list[tree_index].point_list);
+        free (Bsp_collision_tree_list[tree_index].point_list);
     }
 
     if (Bsp_collision_tree_list[tree_index].vert_list) {
-        vm_free (Bsp_collision_tree_list[tree_index].vert_list);
+        free (Bsp_collision_tree_list[tree_index].vert_list);
     }
 }
 

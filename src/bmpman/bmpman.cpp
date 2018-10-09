@@ -40,9 +40,9 @@
 #define EFF_FILENAME_CHECK                                  \
     {                                                       \
         if (be->type == BM_TYPE_EFF)                        \
-            strcpy_s (filename, be->info.ani.eff.filename); \
+            strcpy (filename, be->info.ani.eff.filename); \
         else                                                \
-            strcpy_s (filename, be->filename);              \
+            strcpy (filename, be->filename);              \
     }
 // --------------------------------------------------------------------------------------------------------------------
 // Monitor variables
@@ -170,13 +170,13 @@ bitmap_lookup::bitmap_lookup (int bitmap_num) : Bitmap_data (NULL) {
     Height = be->bm.h;
 
     Bitmap_data =
-        (ubyte*)vm_malloc (Width * Height * Num_channels * sizeof (ubyte));
+        (ubyte*)malloc (Width * Height * Num_channels * sizeof (ubyte));
 
     gr_get_bitmap_from_texture ((void*)Bitmap_data, bitmap_num);
 }
 
 bitmap_lookup::~bitmap_lookup () {
-    if (Bitmap_data != NULL) { vm_free (Bitmap_data); }
+    if (Bitmap_data != NULL) { free (Bitmap_data); }
 }
 
 bool bitmap_lookup::valid () { return Bitmap_data != NULL; }
@@ -679,7 +679,7 @@ void bm_free_data (bitmap_slot* bs, bool release) {
 #ifdef BMPMAN_NDEBUG
     bm_texture_ram -= be->data_size;
 #endif
-    vm_free ((void*)bmp->data);
+    free ((void*)bmp->data);
 
     // reset the load_count to at least 1, don't do this in SkipFree though
     // since the real count ends up wrong
@@ -735,7 +735,7 @@ void bm_free_data_fast (int handle) {
     bm_texture_ram -= be->data_size;
     be->data_size = 0;
 #endif
-    vm_free ((void*)bmp->data);
+    free ((void*)bmp->data);
     bmp->data = 0;
 }
 
@@ -1186,7 +1186,7 @@ int bm_load (const char* real_filename) {
 
         if (rval < 0) return -1;
 
-        strcat_s (filename, bm_ext_list[rval]);
+        strcat (filename, bm_ext_list[rval]);
         type = bm_type_list[rval];
     }
 
@@ -1222,7 +1222,7 @@ int bm_load (const char* real_filename) {
 
     // Mark the slot as filled, because cf_read might load a new bitmap
     // into this slot.
-    strcpy_s (entry->filename, filename);
+    strcpy (entry->filename, filename);
     entry->type = type;
     entry->comp_type = c_type;
     entry->signature = Bm_next_signature++;
@@ -1485,7 +1485,7 @@ int bm_load_animation (
     }
 
     // used later if EFF type
-    strcpy_s (clean_name, filename);
+    strcpy (clean_name, filename);
 
     // Lets find out what type it is
     {
@@ -1514,7 +1514,7 @@ int bm_load_animation (
 
         if (rval < 0) return -1;
 
-        strcat_s (filename, bm_ani_ext_list[rval]);
+        strcat (filename, bm_ani_ext_list[rval]);
         type = bm_ani_type_list[rval];
     }
 
@@ -1561,7 +1561,7 @@ int bm_load_animation (
     else if (type == BM_TYPE_ANI) {
 #ifndef NDEBUG
         // for debug of ANI sizes
-        strcpy_s (the_anim.name, real_filename);
+        strcpy (the_anim.name, real_filename);
 #endif
         anim_read_header (&the_anim, img_cfp);
 
@@ -1584,7 +1584,7 @@ int bm_load_animation (
         // keyframe, so we don't care other anis only have the first frame
         if (the_anim.num_keys == 2) {
             the_anim.keys =
-                (key_frame*)vm_malloc (sizeof (key_frame) * the_anim.num_keys);
+                (key_frame*)malloc (sizeof (key_frame) * the_anim.num_keys);
             ASSERT (the_anim.keys != NULL);
 
             for (i = 0; i < the_anim.num_keys; i++) {
@@ -1595,7 +1595,7 @@ int bm_load_animation (
             // some retail anis have their keyframes reversed
             key = MAX (the_anim.keys[0].frame_num, the_anim.keys[1].frame_num);
 
-            vm_free (the_anim.keys);
+            free (the_anim.keys);
             the_anim.keys = nullptr;
         }
     }
@@ -2052,7 +2052,9 @@ void bm_lock_ani (
         bm_free_data (slot);
         bm->flags = 0;
         bm->bpp = bpp;
+
         bm->data = (ptr_u)bm_malloc (first_frame + i, size);
+        ASSERT (bm->data);
 
         frame_data = anim_get_next_raw_buffer (
             the_anim_instance, 0, flags & BMP_AABITMAP ? 1 : 0, bm->bpp);
@@ -2155,8 +2157,7 @@ void bm_lock_apng (
         // Unload any existing data
         bm_free_data (slot);
 
-        ubyte* data =
-            static_cast< ubyte* > (bm_malloc (first_frame + i, be->mem_taken));
+        ubyte* data = static_cast< ubyte* > (bm_malloc (first_frame + i, be->mem_taken));
         try {
             // this is a reasonably expensive operation
             // especially when run on all frames at once
@@ -2537,7 +2538,8 @@ int bm_make_render_target (int width, int height, int flags) {
 }
 
 void* bm_malloc (int n, size_t size) {
-    if (size == 0) return nullptr;
+    if (size == 0)
+        return 0;
 
 #ifdef BMPMAN_NDEBUG
     auto entry = bm_get_entry (n);
@@ -2546,7 +2548,7 @@ void* bm_malloc (int n, size_t size) {
     bm_texture_ram += size;
 #endif
 
-    return vm_malloc (size);
+    return malloc (size);
 }
 
 void bm_page_in_aabitmap (int handle, int nframes) {
@@ -2842,7 +2844,7 @@ int bm_release (int handle, int clear_render_targets) {
             // Fill in bogus structures!
 
             // For debugging:
-            strcpy_s (entry->filename, "IVE_BEEN_RELEASED!");
+            strcpy (entry->filename, "IVE_BEEN_RELEASED!");
             entry->signature =
                 0xDEADBEEF; // a unique signature identifying the data
             entry->palette_checksum =
@@ -2873,7 +2875,7 @@ int bm_release (int handle, int clear_render_targets) {
         // Fill in bogus structures!
 
         // For debugging:
-        strcpy_s (entry->filename, "IVE_BEEN_RELEASED!");
+        strcpy (entry->filename, "IVE_BEEN_RELEASED!");
         entry->signature =
             0xDEADBEEF; // a unique signature identifying the data
         entry->palette_checksum = 0xDEADBEEF; // checksum used to be sure
@@ -2913,7 +2915,7 @@ int bm_reload (int bitmap_handle, const char* filename) {
         return -1;
     }
 
-    strcpy_s (entry->filename, filename);
+    strcpy (entry->filename, filename);
     return bitmap_handle;
 }
 

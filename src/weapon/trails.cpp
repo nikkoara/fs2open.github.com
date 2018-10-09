@@ -96,7 +96,7 @@ static int Trail_verts_allocated = 0;
 
 static void deallocate_trail_verts () {
     if (Trail_v_list != NULL) {
-        vm_free (Trail_v_list);
+        free (Trail_v_list);
         Trail_v_list = NULL;
     }
 }
@@ -107,11 +107,11 @@ static void allocate_trail_verts (int num_verts) {
     if (num_verts <= Trail_verts_allocated) return;
 
     if (Trail_v_list != NULL) {
-        vm_free (Trail_v_list);
+        free (Trail_v_list);
         Trail_v_list = NULL;
     }
 
-    Trail_v_list = (vertex*)vm_malloc (num_verts * sizeof (vertex));
+    Trail_v_list = (vertex*)malloc (num_verts * sizeof (vertex));
 
     memset (Trail_v_list, 0, sizeof (vertex) * Trail_verts_allocated);
 

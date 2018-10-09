@@ -137,7 +137,7 @@ void lcl_init (int lang_init) {
         if (ret == NULL)
             ASSERTX (0, "Default language not found.");
 
-        strcpy_s (lang_string, ret);
+        strcpy (lang_string, ret);
 
         // look it up
         lang = -1;
@@ -209,7 +209,7 @@ void parse_stringstbl_quick (const char* filename) {
                 for (i = 0; i < (int)Lcl_languages.size (); i++) {
                     if (!strcmp (
                             Lcl_languages[i].lang_name, language.lang_name)) {
-                        strcpy_s (
+                        strcpy (
                             Lcl_languages[i].lang_ext, language.lang_ext);
                         Lcl_languages[i].special_char_indexes[0] =
                             language.special_char_indexes[0];
@@ -247,12 +247,12 @@ void parse_stringstbl_common (const char* filename, const bool external) {
 
         // move down to the proper section
         memset (language_tag, 0, sizeof (language_tag));
-        strcpy_s (language_tag, "#");
+        strcpy (language_tag, "#");
         if (external && Lcl_current_lang == FS2_OPEN_DEFAULT_LANGUAGE) {
-            strcat_s (language_tag, "default");
+            strcat (language_tag, "default");
         }
         else {
-            strcat_s (language_tag, Lcl_languages[Lcl_current_lang].lang_name);
+            strcat (language_tag, Lcl_languages[Lcl_current_lang].lang_name);
         }
 
         if (skip_to_string (language_tag) != 1) {
@@ -356,11 +356,11 @@ void parse_stringstbl_common (const char* filename, const bool external) {
             if (Parsing_modular_table) {
                 if (external &&
                     (Lcl_ext_str.find (index) != Lcl_ext_str.end ())) {
-                    vm_free ((void*)Lcl_ext_str[index]);
+                    free ((void*)Lcl_ext_str[index]);
                     Lcl_ext_str.erase (Lcl_ext_str.find (index));
                 }
                 else if (!external && (Xstr_table[index].str != NULL)) {
-                    vm_free ((void*)Xstr_table[index].str);
+                    free ((void*)Xstr_table[index].str);
                     Xstr_table[index].str = NULL;
                 }
             }
@@ -377,10 +377,10 @@ void parse_stringstbl_common (const char* filename, const bool external) {
             }
 
             if (external) {
-                Lcl_ext_str.insert (std::make_pair (index, vm_strdup (buf)));
+                Lcl_ext_str.insert (std::make_pair (index, strdup (buf)));
             }
             else {
-                Xstr_table[index].str = vm_strdup (buf);
+                Xstr_table[index].str = strdup (buf);
             }
 
             // the rest of this loop applies only to strings.tbl,
@@ -469,13 +469,13 @@ void lcl_xstr_close () {
 
     for (i = 0; i < XSTR_SIZE; i++) {
         if (Xstr_table[i].str != NULL) {
-            vm_free ((void*)Xstr_table[i].str);
+            free ((void*)Xstr_table[i].str);
             Xstr_table[i].str = NULL;
         }
     }
 
     for (const auto& entry : Lcl_ext_str) {
-        if (entry.second != nullptr) { vm_free (entry.second); }
+        if (entry.second != nullptr) { free (entry.second); }
     }
     Lcl_ext_str.clear ();
 }
@@ -592,12 +592,11 @@ int lcl_add_dir_to_path_with_filename (char* current_path, size_t path_max) {
     }
 
     // add extension
-    strcat_s (
-        current_path, path_max, Lcl_languages[Lcl_current_lang].lang_ext);
-    strcat_s (current_path, path_max, DIR_SEPARATOR_STR);
+    strcat (current_path, Lcl_languages[Lcl_current_lang].lang_ext);
+    strcat (current_path, DIR_SEPARATOR_STR);
 
     // copy rest of filename from temp
-    strcat_s (current_path, path_max, temp);
+    strcat (current_path, temp);
 
     delete[] temp;
     return 1;
@@ -1256,14 +1255,14 @@ void lcl_translate_brief_icon_name_gr (char* name) {
     }
     else if ((pos = strstr (name, "Transport")) != NULL) {
         pos += 9; // strlen of "transport"
-        strcpy_s (buf, "Transporter");
-        strcat_s (buf, pos);
+        strcpy (buf, "Transporter");
+        strcat (buf, pos);
         strcpy (name, buf);
     }
     else if ((pos = strstr (name, "Jump Node")) != NULL) {
         pos += 9; // strlen of "jump node"
-        strcpy_s (buf, "Sprungknoten");
-        strcat_s (buf, pos);
+        strcpy (buf, "Sprungknoten");
+        strcat (buf, pos);
         strcpy (name, buf);
     }
     else if (!strcasecmp (name, "Orion under repair")) {
@@ -1432,14 +1431,14 @@ void lcl_translate_brief_icon_name_pl (char* name) {
     }
     else if ((pos = strstr (name, "Transport")) != NULL) {
         pos += 9; // strlen of "transport"
-        strcpy_s (buf, "Transportowiec");
-        strcat_s (buf, pos);
+        strcpy (buf, "Transportowiec");
+        strcat (buf, pos);
         strcpy (name, buf);
     }
     else if ((pos = strstr (name, "Jump Node")) != NULL) {
         pos += 9; // strlen of "jump node"
-        strcpy_s (buf, "W\xEAze\xB3 skokowy");
-        strcat_s (buf, pos);
+        strcpy (buf, "W\xEAze\xB3 skokowy");
+        strcat (buf, pos);
         strcpy (name, buf);
     }
     else if (!strcasecmp (name, "Orion under repair")) {
@@ -1471,32 +1470,32 @@ void lcl_translate_targetbox_name_gr (char* name) {
 
     if ((pos = strstr (name, "Sentry")) != NULL) {
         pos += 6; // strlen of "sentry"
-        strcpy_s (buf, "Sperrgesch\x81tz");
-        strcat_s (buf, pos);
+        strcpy (buf, "Sperrgesch\x81tz");
+        strcat (buf, pos);
         strcpy (name, buf);
     }
     else if ((pos = strstr (name, "Support")) != NULL) {
         pos += 7; // strlen of "support"
-        strcpy_s (buf, "Versorger");
-        strcat_s (buf, pos);
+        strcpy (buf, "Versorger");
+        strcat (buf, pos);
         strcpy (name, buf);
     }
     else if ((pos = strstr (name, "Unknown")) != NULL) {
         pos += 7; // strlen of "unknown"
-        strcpy_s (buf, "Unbekannt");
-        strcat_s (buf, pos);
+        strcpy (buf, "Unbekannt");
+        strcat (buf, pos);
         strcpy (name, buf);
     }
     else if ((pos = strstr (name, "Drone")) != NULL) {
         pos += 5; // strlen of "drone"
-        strcpy_s (buf, "Drohne");
-        strcat_s (buf, pos);
+        strcpy (buf, "Drohne");
+        strcat (buf, pos);
         strcpy (name, buf);
     }
     else if ((pos = strstr (name, "Jump Node")) != NULL) {
         pos += 9; // strlen of "jump node"
-        strcpy_s (buf, "Sprungknoten");
-        strcat_s (buf, pos);
+        strcpy (buf, "Sprungknoten");
+        strcat (buf, pos);
         strcpy (name, buf);
     }
     else if (!strcasecmp (name, "Instructor")) {
@@ -1522,32 +1521,32 @@ void lcl_translate_targetbox_name_pl (char* name) {
 
     if ((pos = strstr (name, "Sentry")) != NULL) {
         pos += 6; // strlen of "sentry"
-        strcpy_s (buf, "Stra\xBFnik");
-        strcat_s (buf, pos);
+        strcpy (buf, "Stra\xBFnik");
+        strcat (buf, pos);
         strcpy (name, buf);
     }
     else if ((pos = strstr (name, "Support")) != NULL) {
         pos += 7; // strlen of "support"
-        strcpy_s (buf, "Wsparcie");
-        strcat_s (buf, pos);
+        strcpy (buf, "Wsparcie");
+        strcat (buf, pos);
         strcpy (name, buf);
     }
     else if ((pos = strstr (name, "Unknown")) != NULL) {
         pos += 7; // strlen of "unknown"
-        strcpy_s (buf, "Nieznany");
-        strcat_s (buf, pos);
+        strcpy (buf, "Nieznany");
+        strcat (buf, pos);
         strcpy (name, buf);
     }
     else if ((pos = strstr (name, "Drone")) != NULL) {
         pos += 5; // strlen of "drone"
-        strcpy_s (buf, "Sonda");
-        strcat_s (buf, pos);
+        strcpy (buf, "Sonda");
+        strcat (buf, pos);
         strcpy (name, buf);
     }
     else if ((pos = strstr (name, "Jump Node")) != NULL) {
         pos += 9; // strlen of "jump node"
-        strcpy_s (buf, "W\xEAze\xB3 skokowy");
-        strcat_s (buf, pos);
+        strcpy (buf, "W\xEAze\xB3 skokowy");
+        strcat (buf, pos);
         strcpy (name, buf);
     }
     else if (!strcasecmp (name, "Instructor")) {

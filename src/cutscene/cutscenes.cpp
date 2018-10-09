@@ -27,7 +27,7 @@ void cutscene_close () {
     for (std::vector< cutscene_info >::iterator cut = Cutscenes.begin ();
          cut != Cutscenes.end (); ++cut)
         if (cut->description != NULL) {
-            vm_free (cut->description);
+            free (cut->description);
             cut->description = NULL;
         }
 }
@@ -60,7 +60,7 @@ void cutscene_init () {
             stuff_string (buf, F_MULTITEXT, sizeof (buf));
             drop_white_space (buf);
             compact_multitext_string (buf);
-            cutinfo.description = vm_strdup (buf);
+            cutinfo.description = strdup (buf);
 
             if (optional_string ("$cd:")) {
                 // Option isn't needed anymore. Consume the token and ignore it
@@ -103,7 +103,7 @@ void cutscene_mark_viewable (const char* filename) {
     ASSERT (filename != NULL);
 
     // strip off extension
-    strcpy_s (file, filename);
+    strcpy (file, filename);
     char* p = strchr (file, '.');
     if (p) { *p = 0; }
 
@@ -113,7 +113,7 @@ void cutscene_mark_viewable (const char* filename) {
     for (std::vector< cutscene_info >::iterator cut = Cutscenes.begin ();
          cut != Cutscenes.end (); ++cut) {
         // change the cutscene file name to lower case
-        strcpy_s (cut_file, cut->filename);
+        strcpy (cut_file, cut->filename);
         stolower (cut_file);
 
         // see if the stripped filename matches the cutscene filename
@@ -241,7 +241,7 @@ void cutscenes_screen_play () {
         (Selected_line >= 0) && (Selected_line < (int)Cutscene_list.size ()));
     which_cutscene = Cutscene_list[Selected_line];
 
-    strcpy_s (name, Cutscenes[which_cutscene].filename);
+    strcpy (name, Cutscenes[which_cutscene].filename);
     // full_name = cf_add_ext(name, NOX(".mve"));
 
     main_hall_stop_music (true);
@@ -253,7 +253,7 @@ void cutscenes_screen_play () {
         char str[256];
 
         if (Cmdline_nomovies)
-            strcpy_s (str, XSTR ("Movies are currently disabled.", 1574));
+            strcpy (str, XSTR ("Movies are currently disabled.", 1574));
         else
             sprintf (
                 str, XSTR ("Unable to play movie %s.", 204),

@@ -13,7 +13,7 @@ void UI_CHECKBOX::create (
     _h = 18;
 
     if (_text)
-        text = vm_strdup (_text);
+        text = strdup (_text);
     else
         text = NULL;
 
@@ -25,7 +25,7 @@ void UI_CHECKBOX::create (
 }
 
 void UI_CHECKBOX::destroy () {
-    if (text) vm_free (text);
+    if (text) free (text);
 
     UI_GADGET::destroy ();
 }

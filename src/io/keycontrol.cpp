@@ -494,7 +494,7 @@ void debug_cycle_targeted_ship (int delta) {
         sip = &Ship_info[si_index];
 
         // if it has test in the name, jump over it
-        strcpy_s (name, sip->name);
+        strcpy (name, sip->name);
         stolower (name);
         if (strstr (name, NOX ("test")) != NULL) continue;
 
@@ -1425,7 +1425,7 @@ void game_do_end_mission_popup () {
 
     pf_flags =
         PF_BODY_BIG | PF_USE_AFFIRMATIVE_ICON | PF_USE_NEGATIVE_ICON;
-    
+
     choice = popup (
         pf_flags, 3, POPUP_NO, XSTR ("&Yes, Quit", 28),
         XSTR ("Yes, &Restart", 29),
@@ -1542,7 +1542,7 @@ void game_process_cheats (int k) {
             sprintf (name, NOX ("Volition Bravos %d"), ship_idx);
             if ((ship_name_lookup (name) == -1) &&
                 (ship_find_exited_ship_by_name (name) == -1)) {
-                strcpy_s (shipp->ship_name, name);
+                strcpy (shipp->ship_name, name);
                 break;
             }
 

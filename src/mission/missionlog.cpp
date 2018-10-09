@@ -198,17 +198,17 @@ void mission_log_add_entry (
     entry->type = type;
     if (pname) {
         ASSERT (strlen (pname) < NAME_LENGTH);
-        strcpy_s (entry->pname, pname);
+        strcpy (entry->pname, pname);
     }
     else
-        strcpy_s (entry->pname, EMPTY_LOG_NAME);
+        strcpy (entry->pname, EMPTY_LOG_NAME);
 
     if (sname) {
         ASSERT (strlen (sname) < NAME_LENGTH);
-        strcpy_s (entry->sname, sname);
+        strcpy (entry->sname, sname);
     }
     else
-        strcpy_s (entry->sname, EMPTY_LOG_NAME);
+        strcpy (entry->sname, EMPTY_LOG_NAME);
 
     entry->index = info_index;
     entry->flags = 0;
@@ -503,9 +503,9 @@ void message_log_add_seg (
     parent = &Log_lines[n];
     while (*parent) parent = &((*parent)->next);
 
-    seg = (log_text_seg*)vm_malloc (sizeof (log_text_seg));
+    seg = (log_text_seg*)malloc (sizeof (log_text_seg));
     ASSERT (seg);
-    seg->text = vm_strdup (text);
+    seg->text = strdup (text);
     seg->color = msg_color;
     seg->x = x;
     seg->flags = flags;
@@ -527,7 +527,7 @@ void message_log_add_segs (
 
     // duplicate the string so that we can split it without modifying the
     // source
-    char* dup_string = vm_strdup (source_string);
+    char* dup_string = strdup (source_string);
     char* str = dup_string;
     char* split = NULL;
 
@@ -556,7 +556,7 @@ void message_log_add_segs (
     }
 
     // free the buffer
-    vm_free (dup_string);
+    free (dup_string);
 }
 
 void message_log_remove_segs (int n) {
@@ -567,7 +567,7 @@ void message_log_remove_segs (int n) {
     ptr = Log_lines[n];
     while (ptr) {
         ptr2 = ptr->next;
-        vm_free (ptr);
+        free (ptr);
         ptr = ptr2;
     }
 
@@ -673,7 +673,7 @@ void message_log_init_scrollback (int pw) {
                 sprintf (text, XSTR ("Arrived (wave %d)", 407), entry->index);
             }
             else {
-                strcpy_s (text, XSTR ("Arrived", 406));
+                strcpy (text, XSTR ("Arrived", 406));
             }
             message_log_add_segs (text, LOG_COLOR_NORMAL);
             break;
@@ -774,9 +774,9 @@ void message_log_init_scrollback (int pw) {
 
             sprintf (text, XSTR ("%s objective ", 419), Goal_type_text (type));
             if (entry->type == LOG_GOAL_SATISFIED)
-                strcat_s (text, XSTR ("satisfied.", 420));
+                strcat (text, XSTR ("satisfied.", 420));
             else
-                strcat_s (text, XSTR ("failed.", 421));
+                strcat (text, XSTR ("failed.", 421));
 
             message_log_add_segs (
                 text, LOG_COLOR_BRIGHT,
@@ -841,7 +841,7 @@ void mission_log_scrollback (
             }
             }
 
-            strcpy_s (buf, seg->text);
+            strcpy (buf, seg->text);
             if (seg->x < ACTION_X)
                 font::force_fit_string (buf, 256, ACTION_X - OBJECT_X - 8);
             else

@@ -70,8 +70,8 @@ void fhash_flush () {
                 moveup = moveup->next;
 
                 // free up this element
-                if (backup->str != NULL) { vm_free (backup->str); }
-                vm_free (backup);
+                if (backup->str != NULL) { free (backup->str); }
+                free (backup);
             }
 
             // null this element
@@ -156,12 +156,12 @@ void fhash_insert (const char* str, int id, int n) {
     fhash_node* moveup;
 
     // allocate the new node
-    new_node = (fhash_node*)vm_malloc (sizeof (fhash_node));
+    new_node = (fhash_node*)malloc (sizeof (fhash_node));
     ASSERT (new_node);
     if (new_node == NULL) { return; }
 
     // fill in the node
-    new_node->str = vm_strdup (str);
+    new_node->str = strdup (str);
     new_node->id = id;
     new_node->next = NULL;
     new_node->prev = NULL;

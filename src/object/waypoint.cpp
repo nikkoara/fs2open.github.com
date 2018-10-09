@@ -58,7 +58,7 @@ waypoint_list::waypoint_list () { this->m_name[0] = '\0'; }
 waypoint_list::waypoint_list (const char* name) {
     ASSERT (name != NULL);
     ASSERT (find_matching_waypoint_list (name) == NULL);
-    strcpy_s (this->m_name, name);
+    strcpy (this->m_name, name);
 }
 
 waypoint_list::~waypoint_list () {
@@ -71,7 +71,7 @@ std::vector< waypoint >& waypoint_list::get_waypoints () { return waypoints; }
 
 void waypoint_list::set_name (const char* name) {
     ASSERT (name != NULL);
-    strcpy_s (this->m_name, name);
+    strcpy (this->m_name, name);
 }
 
 //********************FUNCTIONS********************

@@ -119,7 +119,7 @@ void show_stats_numbers (int stage, int sx, int sy, int dy, int add_mission) {
         else
             pct = (float)0.0;
         sprintf (text, "%d", (int)pct);
-        strcat_s (text, " %");
+        strcat (text, " %");
         gr_printf_menu (sx, sy, "%s", text);
         sy += dy;
         if (Active_player->stats.mp_shots_fired > 0)
@@ -129,7 +129,7 @@ void show_stats_numbers (int stage, int sx, int sy, int dy, int add_mission) {
         else
             pct = (float)0.0;
         sprintf (text, "%d", (int)pct);
-        strcat_s (text, " %");
+        strcat (text, " %");
         gr_printf_menu (sx, sy, "%s", text);
         sy += 2 * dy;
 
@@ -149,7 +149,7 @@ void show_stats_numbers (int stage, int sx, int sy, int dy, int add_mission) {
         else
             pct = (float)0.0;
         sprintf (text, "%d", (int)pct);
-        strcat_s (text, " %");
+        strcat (text, " %");
         gr_printf_menu (sx, sy, "%s", text);
         sy += dy;
         if (Active_player->stats.ms_shots_fired > 0)
@@ -159,7 +159,7 @@ void show_stats_numbers (int stage, int sx, int sy, int dy, int add_mission) {
         else
             pct = (float)0.0;
         sprintf (text, "%d", (int)pct);
-        strcat_s (text, " %");
+        strcat (text, " %");
         gr_printf_menu (sx, sy, "%s", text);
         sy += 2 * dy;
 
@@ -216,7 +216,7 @@ void show_stats_numbers (int stage, int sx, int sy, int dy, int add_mission) {
         else
             pct = (float)0.0;
         sprintf (text, "%d", (int)pct);
-        strcat_s (text, " %");
+        strcat (text, " %");
         gr_printf_menu (sx, sy, "%s", text);
         sy += dy;
         if ((Active_player->stats.p_bonehead_hits + add.p_bonehead_hits) > 0)
@@ -227,7 +227,7 @@ void show_stats_numbers (int stage, int sx, int sy, int dy, int add_mission) {
         else
             pct = (float)0.0;
         sprintf (text, "%d", (int)pct);
-        strcat_s (text, " %");
+        strcat (text, " %");
         gr_printf_menu (sx, sy, "%s", text);
         sy += 2 * dy;
 
@@ -254,7 +254,7 @@ void show_stats_numbers (int stage, int sx, int sy, int dy, int add_mission) {
         else
             pct = (float)0.0;
         sprintf (text, "%d", (int)pct);
-        strcat_s (text, " %");
+        strcat (text, " %");
         gr_printf_menu (sx, sy, "%s", text);
         sy += dy;
         if ((Active_player->stats.s_bonehead_hits + add.s_bonehead_hits) > 0)
@@ -265,7 +265,7 @@ void show_stats_numbers (int stage, int sx, int sy, int dy, int add_mission) {
         else
             pct = (float)0.0;
         sprintf (text, "%d", (int)pct);
-        strcat_s (text, " %");
+        strcat (text, " %");
         gr_printf_menu (sx, sy, "%s", text);
         sy += 2 * dy;
 

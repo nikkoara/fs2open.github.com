@@ -455,7 +455,7 @@ void common_set_interface_palette (const char* filename) {
     if ((InterfacePaletteBitmap != -1) && !strcasecmp (filename, buf))
         return; // already set to this palette
 
-    strcpy_s (buf, filename);
+    strcpy (buf, filename);
 
     // unload the interface bitmap from memory
     if (InterfacePaletteBitmap != -1) {

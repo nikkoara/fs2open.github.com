@@ -407,7 +407,7 @@ int opengl_texture_set_level (
     }
 
     case TCACHE_TYPE_AABITMAP: {
-        texmem = (ubyte*)vm_malloc (tex_w * tex_h * byte_mult);
+        texmem = (ubyte*)malloc (tex_w * tex_h * byte_mult);
         texmemp = texmem;
 
         ASSERT (texmem != NULL);
@@ -455,7 +455,7 @@ int opengl_texture_set_level (
             tSlot->texture_target, 0, 0, 0, tSlot->array_index, tex_w, tex_h,
             1, aa_format, GL_UNSIGNED_BYTE, texmem);
 
-        if (texmem != NULL) { vm_free (texmem); }
+        if (texmem != NULL) { free (texmem); }
 
         break;
     }
@@ -463,7 +463,7 @@ int opengl_texture_set_level (
     case TCACHE_TYPE_INTERFACE: {
         // if we aren't resizing then we can just use bmp_data directly
         if (resize) {
-            texmem = (ubyte*)vm_malloc (tex_w * tex_h * byte_mult);
+            texmem = (ubyte*)malloc (tex_w * tex_h * byte_mult);
             texmemp = texmem;
 
             ASSERT (texmem != NULL);
@@ -489,7 +489,7 @@ int opengl_texture_set_level (
             tSlot->texture_target, 0, 0, 0, tSlot->array_index, mipmap_w,
             mipmap_h, 1, glFormat, texFormat, (resize) ? texmem : bmp_data);
 
-        if (texmem != NULL) { vm_free (texmem); }
+        if (texmem != NULL) { free (texmem); }
 
         break;
     }
@@ -572,7 +572,7 @@ int opengl_texture_set_level (
     default: {
         // if we aren't resizing then we can just use bmp_data directly
         if (resize) {
-            texmem = (ubyte*)vm_malloc (tex_w * tex_h * byte_mult);
+            texmem = (ubyte*)malloc (tex_w * tex_h * byte_mult);
             texmemp = texmem;
 
             ASSERT (texmem != NULL);
@@ -621,7 +621,7 @@ int opengl_texture_set_level (
             if (mipmap_h <= 0) { mipmap_h = 1; }
         }
 
-        if (texmem != NULL) { vm_free (texmem); }
+        if (texmem != NULL) { free (texmem); }
 
         break;
     }
@@ -1262,7 +1262,7 @@ int opengl_compress_image (
         compressed_size += testing;
     }
 
-    out_data = (ubyte*)vm_malloc (compressed_size * sizeof (ubyte));
+    out_data = (ubyte*)malloc (compressed_size * sizeof (ubyte));
 
     ASSERT (out_data != NULL);
 
@@ -1479,7 +1479,7 @@ void gr_opengl_update_texture (
     if (byte_mult == 1) {
         texFormat = GL_UNSIGNED_BYTE;
         glFormat = GL_RED;
-        texmem = (ubyte*)vm_malloc (width * height * byte_mult);
+        texmem = (ubyte*)malloc (width * height * byte_mult);
         ubyte* texmemp = texmem;
 
         ASSERT (texmem != NULL);
@@ -1531,7 +1531,7 @@ void gr_opengl_update_texture (
         t->texture_target, 0, 0, 0, t->array_index, width, height, 1, glFormat,
         texFormat, (texmem) ? texmem : data);
 
-    if (texmem != NULL) vm_free (texmem);
+    if (texmem != NULL) free (texmem);
 }
 
 // -----------------------------------------------------------------------------
@@ -1599,27 +1599,27 @@ int opengl_check_framebuffer () {
 
         switch (status) {
         case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-            strcpy_s (err_txt, "Incomplete attachments!");
+            strcpy (err_txt, "Incomplete attachments!");
             break;
 
         case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-            strcpy_s (err_txt, "Missing one or more image attachments!");
+            strcpy (err_txt, "Missing one or more image attachments!");
             break;
 
         case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
-            strcpy_s (err_txt, "Draw buffer attachment point is NONE!");
+            strcpy (err_txt, "Draw buffer attachment point is NONE!");
             break;
 
         case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-            strcpy_s (err_txt, "Read buffer attachment point is NONE!");
+            strcpy (err_txt, "Read buffer attachment point is NONE!");
             break;
 
         case GL_FRAMEBUFFER_UNSUPPORTED:
-            strcpy_s (
+            strcpy (
                 err_txt, "Attached images violate current FBO restrictions!");
             break;
 
-        default: strcpy_s (err_txt, "Unknown error!\n"); break;
+        default: strcpy (err_txt, "Unknown error!\n"); break;
         }
 
         ERRORF (LOCATION, "Framebuffer ERROR: %s\n", err_txt);

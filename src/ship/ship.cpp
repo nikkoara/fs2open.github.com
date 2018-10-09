@@ -821,13 +821,13 @@ static int lightningtype_match (char* p) {
 
 #define CHECK_THEN_COPY(attribute)                                            \
     do {                                                                      \
-        if (other.attribute != NULL) attribute = vm_strdup (other.attribute); \
+        if (other.attribute != NULL) attribute = strdup (other.attribute); \
     } while (false)
 
 void ship_info::clone (const ship_info& other) {
-    strcpy_s (name, other.name);
-    strcpy_s (alt_name, other.alt_name);
-    strcpy_s (short_name, other.short_name);
+    strcpy (name, other.name);
+    strcpy (alt_name, other.alt_name);
+    strcpy (short_name, other.short_name);
     species = other.species;
     class_type = other.class_type;
 
@@ -838,17 +838,17 @@ void ship_info::clone (const ship_info& other) {
     CHECK_THEN_COPY (desc);
     CHECK_THEN_COPY (tech_desc);
 
-    strcpy_s (tech_title, other.tech_title);
+    strcpy (tech_title, other.tech_title);
 
     CHECK_THEN_COPY (ship_length);
     CHECK_THEN_COPY (gun_mounts);
     CHECK_THEN_COPY (missile_banks);
 
-    strcpy_s (cockpit_pof_file, other.cockpit_pof_file);
+    strcpy (cockpit_pof_file, other.cockpit_pof_file);
     cockpit_offset = other.cockpit_offset;
-    strcpy_s (pof_file, other.pof_file);
-    strcpy_s (pof_file_hud, other.pof_file_hud);
-    strcpy_s (pof_file_tech, other.pof_file_tech);
+    strcpy (pof_file, other.pof_file);
+    strcpy (pof_file_hud, other.pof_file_hud);
+    strcpy (pof_file_tech, other.pof_file_tech);
     num_detail_levels = other.num_detail_levels;
     memcpy (
         detail_distance, other.detail_distance,
@@ -877,7 +877,7 @@ void ship_info::clone (const ship_info& other) {
     slide_accel = other.slide_accel;
     slide_decel = other.slide_decel;
 
-    strcpy_s (warpin_anim, other.warpin_anim);
+    strcpy (warpin_anim, other.warpin_anim);
     warpin_radius = other.warpin_radius;
     warpin_snd_start = other.warpin_snd_start;
     warpin_snd_end = other.warpin_snd_end;
@@ -886,7 +886,7 @@ void ship_info::clone (const ship_info& other) {
     warpin_decel_exp = other.warpin_decel_exp;
     warpin_type = other.warpin_type;
 
-    strcpy_s (warpout_anim, other.warpout_anim);
+    strcpy (warpout_anim, other.warpout_anim);
     warpout_radius = other.warpout_radius;
     warpout_snd_start = other.warpout_snd_start;
     warpout_snd_end = other.warpout_snd_end;
@@ -942,7 +942,7 @@ void ship_info::clone (const ship_info& other) {
 
     if (other.n_subsystems > 0) {
         if (n_subsystems < 1) {
-            subsystems = (model_subsystem*)vm_malloc (
+            subsystems = (model_subsystem*)malloc (
                 sizeof (model_subsystem) * other.n_subsystems);
         }
         else {
@@ -950,23 +950,23 @@ void ship_info::clone (const ship_info& other) {
                 for (int j = 0; j < subsystems[i].n_triggers; j++) {
                     if (i < other.n_subsystems) {
                         subsystems[i].triggers =
-                            (queued_animation*)vm_realloc (
+                            (queued_animation*)realloc (
                                 subsystems[i].triggers,
                                 sizeof (queued_animation) *
                                     (other.subsystems[i].n_triggers));
                     }
                     else {
-                        vm_free (subsystems[i].triggers);
+                        free (subsystems[i].triggers);
                     }
                 }
             }
-            subsystems = (model_subsystem*)vm_realloc (
+            subsystems = (model_subsystem*)realloc (
                 subsystems, sizeof (model_subsystem) * other.n_subsystems);
         }
 
         ASSERT (subsystems != NULL);
         for (int i = n_subsystems; i < other.n_subsystems; i++) {
-            subsystems[i].triggers = (queued_animation*)vm_malloc (
+            subsystems[i].triggers = (queued_animation*)malloc (
                 sizeof (queued_animation) * (other.subsystems[i].n_triggers));
         }
 
@@ -1058,10 +1058,10 @@ void ship_info::clone (const ship_info& other) {
         sizeof (int) * MAX_SHIP_WEAPONS * MAX_WEAPON_TYPES);
 
     shield_icon_index = other.shield_icon_index;
-    strcpy_s (icon_filename, other.icon_filename);
+    strcpy (icon_filename, other.icon_filename);
     model_icon_angles = other.model_icon_angles;
-    strcpy_s (anim_filename, other.anim_filename);
-    strcpy_s (overhead_filename, other.overhead_filename);
+    strcpy (anim_filename, other.anim_filename);
+    strcpy (overhead_filename, other.overhead_filename);
     selection_effect = other.selection_effect;
 
     bii_index_ship = other.bii_index_ship;
@@ -1119,7 +1119,7 @@ void ship_info::clone (const ship_info& other) {
     draw_distortion = other.draw_distortion;
 
     splodeing_texture = other.splodeing_texture;
-    strcpy_s (splodeing_texture_name, other.splodeing_texture_name);
+    strcpy (splodeing_texture_name, other.splodeing_texture_name);
 
     replacement_textures = other.replacement_textures;
 
@@ -1489,7 +1489,7 @@ void ship_info::move (ship_info&& other) {
 #define CHECK_THEN_FREE(attribute) \
     do {                           \
         if (attribute != NULL) {   \
-            vm_free (attribute);   \
+            free (attribute);   \
             attribute = NULL;      \
         }                          \
     } while (false)
@@ -1825,7 +1825,7 @@ ship_info::ship_info () {
     draw_distortion = true;
 
     splodeing_texture = -1;
-    strcpy_s (splodeing_texture_name, "boom");
+    strcpy (splodeing_texture_name, "boom");
 
     replacement_textures.clear ();
 
@@ -1893,12 +1893,12 @@ ship_info::~ship_info () {
     if (subsystems != NULL) {
         for (int n = 0; n < n_subsystems; n++) {
             if (subsystems[n].triggers != NULL) {
-                vm_free (subsystems[n].triggers);
+                free (subsystems[n].triggers);
                 subsystems[n].triggers = NULL;
             }
         }
 
-        vm_free (subsystems);
+        free (subsystems);
         subsystems = NULL;
     }
 
@@ -1974,7 +1974,7 @@ static int parse_ship (const char* filename, bool replace) {
         sip = &Ship_info.back ();
         first_time = true;
 
-        strcpy_s (sip->name, buf);
+        strcpy (sip->name, buf);
     }
 
     // Use a template for this ship.
@@ -1993,7 +1993,7 @@ static int parse_ship (const char* filename, bool replace) {
             if (template_id != -1) {
                 first_time = false;
                 sip->clone (Ship_templates[template_id]);
-                strcpy_s (sip->name, buf);
+                strcpy (sip->name, buf);
             }
             else {
                 WARNINGF (
@@ -2053,7 +2053,7 @@ static int parse_ship_template () {
         Ship_templates.push_back (ship_info ());
         sip = &Ship_templates.back ();
 
-        strcpy_s (sip->name, buf);
+        strcpy (sip->name, buf);
         // Use another template for this template. This allows for template
         // hierarchies. - Turey
         if (optional_string ("+Use Template:")) {
@@ -2064,7 +2064,7 @@ static int parse_ship_template () {
             if (template_id != -1) {
                 first_time = false;
                 sip->clone (Ship_templates[template_id]);
-                strcpy_s (sip->name, buf);
+                strcpy (sip->name, buf);
             }
             else {
                 WARNINGF (
@@ -2578,7 +2578,7 @@ static int parse_ship_values (
                 if (!cf_exists_full (temp, CF_TYPE_MODELS)) valid = false;
 
         if (valid)
-            strcpy_s (sip->cockpit_pof_file, temp);
+            strcpy (sip->cockpit_pof_file, temp);
         else
             WARNINGF (
                 LOCATION, "Ship %s\nCockpit POF file \"%s\" invalid!",
@@ -2652,7 +2652,7 @@ static int parse_ship_values (
                 if (!cf_exists_full (temp, CF_TYPE_MODELS)) valid = false;
 
         if (valid)
-            strcpy_s (sip->pof_file, temp);
+            strcpy (sip->pof_file, temp);
         else
             WARNINGF (
                 LOCATION, "Ship %s\nPOF file \"%s\" invalid!", sip->name,
@@ -2673,7 +2673,7 @@ static int parse_ship_values (
                 if (!cf_exists_full (temp, CF_TYPE_MODELS)) valid = false;
 
         if (valid)
-            strcpy_s (sip->pof_file_tech, temp);
+            strcpy (sip->pof_file_tech, temp);
         else
             WARNINGF (
                 LOCATION, "Ship %s\nTechroom POF file \"%s\" invalid!",
@@ -2687,7 +2687,7 @@ static int parse_ship_values (
         char* p;
 
         while (optional_string ("+old:")) {
-            strcpy_s (tr.ship_name, sip->name);
+            strcpy (tr.ship_name, sip->name);
             tr.new_texture_id = -1;
 
             stuff_string (tr.old_texture, F_NAME, MAX_FILENAME_LEN);
@@ -2738,7 +2738,7 @@ static int parse_ship_values (
                 if (!cf_exists_full (temp, CF_TYPE_MODELS)) valid = false;
 
         if (valid)
-            strcpy_s (sip->pof_file_hud, temp);
+            strcpy (sip->pof_file_hud, temp);
         else
             WARNINGF (
                 LOCATION, "Ship \"%s\" POF target file \"%s\" invalid!",
@@ -4059,7 +4059,7 @@ static int parse_ship_values (
         stuff_string (name_tmp, F_NAME, sizeof (name_tmp));
 
         if (VALID_FNAME (name_tmp)) {
-            strcpy_s (sip->thruster_glow_info.normal.filename, name_tmp);
+            strcpy (sip->thruster_glow_info.normal.filename, name_tmp);
             thruster_glow_anim_load (&sip->thruster_glow_info.normal);
         }
     }
@@ -4068,7 +4068,7 @@ static int parse_ship_values (
         stuff_string (name_tmp, F_NAME, sizeof (name_tmp));
 
         if (VALID_FNAME (name_tmp)) {
-            strcpy_s (sip->thruster_glow_info.afterburn.filename, name_tmp);
+            strcpy (sip->thruster_glow_info.afterburn.filename, name_tmp);
             thruster_glow_anim_load (&sip->thruster_glow_info.afterburn);
         }
     }
@@ -4585,7 +4585,7 @@ static int parse_ship_values (
                 sp = &subsystems[n_subsystems++]; // subsystems a local -- when
                                                   // done, we will malloc and
                                                   // copy
-                strcpy_s (sp->subobj_name, name_tmp);
+                strcpy (sp->subobj_name, name_tmp);
 
                 // Init blank values
                 sp->max_subsys_strength = 0.0f;
@@ -4662,12 +4662,12 @@ static int parse_ship_values (
 
             if (optional_string ("$Alt Subsystem Name:")) {
                 stuff_string (buf, F_NAME, SHIP_MULTITEXT_LENGTH);
-                strcpy_s (sp->alt_sub_name, buf);
+                strcpy (sp->alt_sub_name, buf);
             }
 
             if (optional_string ("$Alt Damage Popup Subsystem Name:")) {
                 stuff_string (buf, F_NAME, SHIP_MULTITEXT_LENGTH);
-                strcpy_s (sp->alt_dmg_sub_name, buf);
+                strcpy (sp->alt_dmg_sub_name, buf);
             }
 
             if (optional_string ("$Armor Type:")) {
@@ -4935,7 +4935,7 @@ static int parse_ship_values (
                 if (!strcasecmp (name_tmp, "triggered")) {
                     queued_animation* current_trigger;
 
-                    sp->triggers = (queued_animation*)vm_realloc (
+                    sp->triggers = (queued_animation*)realloc (
                         sp->triggers,
                         sizeof (queued_animation) * (sp->n_triggers + 1));
                     ASSERT (sp->triggers != NULL);
@@ -4962,7 +4962,7 @@ static int parse_ship_values (
                             current_trigger->sub_name, F_NAME, NAME_LENGTH);
                     }
                     else {
-                        strcpy_s (current_trigger->sub_name, "<none>");
+                        strcpy (current_trigger->sub_name, "<none>");
                     }
 
                     if (current_trigger->type == TRIGGER_TYPE_INITIAL) {
@@ -5150,12 +5150,12 @@ static int parse_ship_values (
     if (n_subsystems > 0) {
         if (sip->n_subsystems < 1) {
             sip->n_subsystems = n_subsystems;
-            sip->subsystems = (model_subsystem*)vm_malloc (
+            sip->subsystems = (model_subsystem*)malloc (
                 sizeof (model_subsystem) * sip->n_subsystems);
         }
         else {
             sip->n_subsystems += n_subsystems;
-            sip->subsystems = (model_subsystem*)vm_realloc (
+            sip->subsystems = (model_subsystem*)realloc (
                 sip->subsystems, sizeof (model_subsystem) * sip->n_subsystems);
         }
 
@@ -5196,7 +5196,7 @@ static void parse_ship_type () {
     if (idx >= 0) { stp = &Ship_types[idx]; }
     else {
         stp = &stp_buf;
-        strcpy_s (stp->name, name_buf);
+        strcpy (stp->name, name_buf);
     }
 
     const char* ship_type = NULL;
@@ -5490,7 +5490,7 @@ static void ship_set_default_player_ship () {
     // find the first with the default flag
     for (auto it = Ship_info.cbegin (); it != Ship_info.end (); ++it) {
         if (it->flags[Ship::Info_Flags::Default_player_ship]) {
-            strcpy_s (default_player_ship, it->name);
+            strcpy (default_player_ship, it->name);
             return;
         }
     }
@@ -5498,14 +5498,14 @@ static void ship_set_default_player_ship () {
     // find the first player ship
     for (auto it = Ship_info.cbegin (); it != Ship_info.end (); ++it) {
         if (it->flags[Ship::Info_Flags::Player_ship]) {
-            strcpy_s (default_player_ship, it->name);
+            strcpy (default_player_ship, it->name);
             return;
         }
     }
 
     // find the first ship
     if (!Ship_info.empty ()) {
-        strcpy_s (default_player_ship, Ship_info[0].name);
+        strcpy (default_player_ship, Ship_info[0].name);
     }
 }
 
@@ -5648,7 +5648,7 @@ static void ship_parse_post_cleanup () {
         // if we have a ship copy, then check to be sure that our base ship
         // exists
         if (sip->flags[Ship::Info_Flags::Ship_copy]) {
-            strcpy_s (name_tmp, sip->name);
+            strcpy (name_tmp, sip->name);
 
             if (end_string_at_first_hash_symbol (name_tmp)) {
                 if (ship_info_lookup (name_tmp) < 0) {
@@ -5790,7 +5790,7 @@ void ship_init () {
         // ships.tbl
         {
             Num_engine_wash_types = 0;
-            strcpy_s (default_player_ship, "");
+            strcpy (default_player_ship, "");
 
             // Parse main TBL first
             parse_shiptbl ("ships.tbl");
@@ -5907,20 +5907,20 @@ void ship_level_init () {
     // Goober5000
 
     // set starting wing names to default
-    strcpy_s (Starting_wing_names[0], "Alpha");
-    strcpy_s (Starting_wing_names[1], "Beta");
-    strcpy_s (Starting_wing_names[2], "Gamma");
+    strcpy (Starting_wing_names[0], "Alpha");
+    strcpy (Starting_wing_names[1], "Beta");
+    strcpy (Starting_wing_names[2], "Gamma");
 
     // set squadron wing names to default
-    strcpy_s (Squadron_wing_names[0], "Alpha");
-    strcpy_s (Squadron_wing_names[1], "Beta");
-    strcpy_s (Squadron_wing_names[2], "Gamma");
-    strcpy_s (Squadron_wing_names[3], "Delta");
-    strcpy_s (Squadron_wing_names[4], "Epsilon");
+    strcpy (Squadron_wing_names[0], "Alpha");
+    strcpy (Squadron_wing_names[1], "Beta");
+    strcpy (Squadron_wing_names[2], "Gamma");
+    strcpy (Squadron_wing_names[3], "Delta");
+    strcpy (Squadron_wing_names[4], "Epsilon");
 
     // set tvt wing names to default
-    strcpy_s (TVT_wing_names[0], "Alpha");
-    strcpy_s (TVT_wing_names[1], "Zeta");
+    strcpy (TVT_wing_names[0], "Alpha");
+    strcpy (TVT_wing_names[1], "Zeta");
 
     // Empty the subsys list
     ship_clear_subsystems ();
@@ -5947,7 +5947,7 @@ void ship_level_init () {
 void ship_add_exited_ship (ship* sp, Ship::Exit_Flags reason) {
     exited_ship entry;
 
-    strcpy_s (entry.ship_name, sp->ship_name);
+    strcpy (entry.ship_name, sp->ship_name);
     entry.display_string = sp->get_display_string ();
     entry.obj_signature = Objects[sp->objnum].signature;
     entry.ship_class = sp->ship_info_index;
@@ -7050,7 +7050,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
 
         // if the table has set an name copy it
         if (ship_system->system_info->alt_sub_name[0] != '\0') {
-            strcpy_s (
+            strcpy (
                 ship_system->sub_name, ship_system->system_info->alt_sub_name);
         }
         else {
@@ -7647,7 +7647,7 @@ void ship_init_cockpit_displays (ship* shipp) {
 
     // ship's cockpit texture replacements haven't been setup yet, so do it.
     Player_cockpit_textures =
-        (int*)vm_malloc (MAX_REPLACEMENT_TEXTURES * sizeof (int));
+        (int*)malloc (MAX_REPLACEMENT_TEXTURES * sizeof (int));
 
     int i;
 
@@ -7680,7 +7680,7 @@ void ship_clear_cockpit_displays () {
     Player_displays.clear ();
 
     if (Player_cockpit_textures != NULL) {
-        vm_free (Player_cockpit_textures);
+        free (Player_cockpit_textures);
         Player_cockpit_textures = NULL;
     }
 }
@@ -7743,7 +7743,7 @@ static void ship_add_cockpit_display (
         }
     }
 
-    strcpy_s (new_display.name, display->name);
+    strcpy (new_display.name, display->name);
     new_display.offset[0] = display->offset[0];
     new_display.offset[1] = display->offset[1];
     new_display.size[0] = display->size[0];
@@ -7872,12 +7872,12 @@ void ship_delete (object* obj) {
     shipp->objnum = -1;
 
     if (shipp->shield_integrity != NULL) {
-        vm_free (shipp->shield_integrity);
+        free (shipp->shield_integrity);
         shipp->shield_integrity = NULL;
     }
 
     if (shipp->ship_replacement_textures != NULL) {
-        vm_free (shipp->ship_replacement_textures);
+        free (shipp->ship_replacement_textures);
         shipp->ship_replacement_textures = NULL;
     }
 
@@ -10217,7 +10217,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
         strcpy (shipp->ship_name + name_len, suffix);
     }
     else {
-        strcpy_s (shipp->ship_name, ship_name);
+        strcpy (shipp->ship_name, ship_name);
     }
 
     ship_set_default_weapons (
@@ -10234,7 +10234,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
     // Allocate shield and initialize it.
     if (pm->shield.ntris) {
         shipp->shield_integrity =
-            (float*)vm_malloc (sizeof (float) * pm->shield.ntris);
+            (float*)malloc (sizeof (float) * pm->shield.ntris);
         for (i = 0; i < pm->shield.ntris; i++)
             shipp->shield_integrity[i] = 1.0f;
     }
@@ -10405,14 +10405,14 @@ static void ship_model_change (int n, int ship_type) {
     objp->shield_quadrant.resize (objp->n_quadrants);
 
     if (sp->shield_integrity != NULL) {
-        vm_free (sp->shield_integrity);
+        free (sp->shield_integrity);
         sp->shield_integrity = NULL;
     }
 
     // Allocate shield and initialize it.
     if (pm->shield.ntris) {
         sp->shield_integrity =
-            (float*)vm_malloc (sizeof (float) * pm->shield.ntris);
+            (float*)malloc (sizeof (float) * pm->shield.ntris);
 
         for (i = 0; i < pm->shield.ntris; i++) {
             sp->shield_integrity[i] = 1.0f;
@@ -12930,7 +12930,7 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
                     }
                     else {
                         char missile_name[NAME_LENGTH];
-                        strcpy_s (missile_name, wip->get_display_string ());
+                        strcpy (missile_name, wip->get_display_string ());
                         end_string_at_first_hash_symbol (missile_name);
                         HUD_sourced_printf (
                             HUD_SOURCE_HIDDEN,
@@ -13021,7 +13021,7 @@ int ship_fire_secondary (object* obj, int allow_swarm) {
         if (obj == Player_obj)
             if (ship_maybe_play_secondary_fail_sound (wip)) {
                 char missile_name[NAME_LENGTH];
-                strcpy_s (
+                strcpy (
                     missile_name,
                     Weapon_info[weapon_idx].get_display_string ());
                 end_string_at_first_hash_symbol (missile_name);
@@ -13801,11 +13801,11 @@ int ship_info_lookup (const char* token) {
     }
 
     // get first part of new string
-    strcpy_s (temp1, token);
+    strcpy (temp1, token);
     end_string_at_first_hash_symbol (temp1);
 
     // get second part
-    strcpy_s (temp2, p + 1);
+    strcpy (temp2, p + 1);
 
     // found a hash
     if (*p == '#') {
@@ -15165,12 +15165,12 @@ void ship_close () {
         ship* shipp = &Ships[i];
 
         if (shipp->shield_integrity != NULL) {
-            vm_free (shipp->shield_integrity);
+            free (shipp->shield_integrity);
             shipp->shield_integrity = NULL;
         }
 
         if (shipp->ship_replacement_textures != NULL) {
-            vm_free (shipp->ship_replacement_textures);
+            free (shipp->ship_replacement_textures);
             shipp->ship_replacement_textures = NULL;
         }
 
@@ -16270,7 +16270,7 @@ std::string ship_return_orders (ship* sp) {
     case AI_GOAL_DESTROY_SUBSYSTEM: {
         if (aip->targeted_subsys != nullptr) {
             char subsys_name[NAME_LENGTH];
-            strcpy_s (
+            strcpy (
                 subsys_name, aip->targeted_subsys->system_info->subobj_name);
             hud_targetbox_truncate_subsys_name (subsys_name);
             sprintf (

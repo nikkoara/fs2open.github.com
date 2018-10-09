@@ -398,9 +398,9 @@ void gr_opengl_deferred_light_cylinder_init (
         (segments + 1) * 2 * 3 + 6; // Can someone verify this?
     unsigned int nIndex = deferred_light_cylinder_icount =
         12 * (segments + 1) - 6; // This too
-    float* Vertices = (float*)vm_malloc (sizeof (float) * nVertex);
+    float* Vertices = (float*)malloc (sizeof (float) * nVertex);
     float* pVertex = Vertices;
-    ushort* Indices = (ushort*)vm_malloc (sizeof (ushort) * nIndex);
+    ushort* Indices = (ushort*)malloc (sizeof (ushort) * nIndex);
     ushort* pIndex = Indices;
 
     float fDeltaSegAngle = (2.0f * PI / segments);
@@ -475,7 +475,7 @@ void gr_opengl_deferred_light_cylinder_init (
 
         glBindBuffer (GL_ARRAY_BUFFER, 0);
 
-        vm_free (Vertices);
+        free (Vertices);
         Vertices = NULL;
     }
 
@@ -497,7 +497,7 @@ void gr_opengl_deferred_light_cylinder_init (
 
         glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
 
-        vm_free (Indices);
+        free (Indices);
         Indices = NULL;
     }
 }
@@ -515,9 +515,9 @@ void gr_opengl_deferred_light_sphere_init (
     unsigned int nVertex = (rings + 1) * (segments + 1) * 3;
     unsigned int nIndex = deferred_light_sphere_icount =
         6 * rings * (segments + 1);
-    float* Vertices = (float*)vm_malloc (sizeof (float) * nVertex);
+    float* Vertices = (float*)malloc (sizeof (float) * nVertex);
     float* pVertex = Vertices;
-    ushort* Indices = (ushort*)vm_malloc (sizeof (ushort) * nIndex);
+    ushort* Indices = (ushort*)malloc (sizeof (ushort) * nIndex);
     ushort* pIndex = Indices;
 
     float fDeltaRingAngle = (PI / rings);
@@ -574,7 +574,7 @@ void gr_opengl_deferred_light_sphere_init (
 
         glBindBuffer (GL_ARRAY_BUFFER, 0);
 
-        vm_free (Vertices);
+        free (Vertices);
         Vertices = NULL;
     }
 
@@ -596,7 +596,7 @@ void gr_opengl_deferred_light_sphere_init (
 
         glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
 
-        vm_free (Indices);
+        free (Indices);
         Indices = NULL;
     }
 }

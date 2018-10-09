@@ -200,7 +200,7 @@ void labviewer_change_model (
                 subsystems, 0);
 
             if (Lab_model_num >= 0) {
-                strcpy_s (Lab_model_filename, model_fname);
+                strcpy (Lab_model_filename, model_fname);
             }
             else {
                 memset (Lab_model_filename, 0, sizeof (Lab_model_filename));
@@ -226,7 +226,7 @@ void labviewer_change_model (
                             model_load (wip->external_model_name, 0, NULL);
                     }
                     if (Lab_weaponmodel_num[l] >= 0) {
-                        strcpy_s (
+                        strcpy (
                             Lab_weaponmodel_filename[l],
                             wip->external_model_name);
                     }
@@ -248,7 +248,7 @@ void labviewer_change_model (
                             model_load (wip->external_model_name, 0, NULL);
                     }
                     if (Lab_weaponmodel_num[l] >= 0) {
-                        strcpy_s (
+                        strcpy (
                             Lab_weaponmodel_filename[l],
                             wip->external_model_name);
                     }
@@ -1720,7 +1720,7 @@ void labviewer_change_background_actual () {
         skip_to_start_of_string_either (
             "$Skybox Model:", "#Background bitmaps");
 
-        strcpy_s (skybox_model, "");
+        strcpy (skybox_model, "");
         if (optional_string ("$Skybox Model:")) {
             stuff_string (skybox_model, F_NAME, MAX_FILENAME_LEN);
 
@@ -1758,7 +1758,7 @@ void labviewer_change_background_actual () {
                 ambient_light_level & 0xff, (ambient_light_level >> 8) & 0xff,
                 (ambient_light_level >> 16) & 0xff);
 
-            strcpy_s (Neb2_texture_name, "Eraseme3");
+            strcpy (Neb2_texture_name, "Eraseme3");
             Neb2_poof_flags =
                 ((1 << 0) | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) |
                  (1 << 5));

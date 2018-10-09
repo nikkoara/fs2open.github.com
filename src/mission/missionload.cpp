@@ -36,7 +36,7 @@ void ml_update_recent_missions (char* filename) {
     int i, j;
 
     for (i = 0; i < Num_recent_missions; i++) {
-        strcpy_s (tmp[i], Recent_missions[i]);
+        strcpy (tmp[i], Recent_missions[i]);
     }
 
     // get a pointer to just the basename of the filename (including extension)
@@ -47,12 +47,12 @@ void ml_update_recent_missions (char* filename) {
     }
 
     ASSERT (strlen (p) < MAX_FILENAME_LEN);
-    strcpy_s (Recent_missions[0], p);
+    strcpy (Recent_missions[0], p);
 
     j = 1;
     for (i = 0; i < Num_recent_missions; i++) {
         if (strcasecmp (Recent_missions[0], tmp[i]) != 0) {
-            strcpy_s (Recent_missions[j++], tmp[i]);
+            strcpy (Recent_missions[j++], tmp[i]);
             if (j >= MAX_RECENT_MISSIONS) { break; }
         }
     }
@@ -92,7 +92,7 @@ int mission_load (char* filename_ext) {
 
     WARNINGF (LOCATION, "MISSION LOAD: '%s'\n", filename_ext);
 
-    strcpy_s (filename, filename_ext);
+    strcpy (filename, filename_ext);
     ext = strrchr (filename, '.');
     if (ext) {
         WARNINGF (LOCATION, "Hmmm... Extension passed to mission_load...\n");
@@ -106,7 +106,7 @@ int mission_load (char* filename_ext) {
         return -1;
     }
 
-    strcat_s (filename, FS_MISSION_FILE_EXT);
+    strcat (filename, FS_MISSION_FILE_EXT);
 
     // does the magical mission parsing
     // creates all objects, except for the player object
@@ -187,8 +187,8 @@ void mission_load_menu_init () {
     mlm_active = 1;
 
     memset (wild_card, 0, 256);
-    strcpy_s (wild_card, NOX ("*"));
-    strcat_s (wild_card, FS_MISSION_FILE_EXT);
+    strcpy (wild_card, NOX ("*"));
+    strcat (wild_card, FS_MISSION_FILE_EXT);
     mlm_nfiles = cf_get_file_list (
         MLM_MAX_MISSIONS, mlm_missions, CF_TYPE_MISSIONS, wild_card,
         CF_SORT_NAME);
@@ -216,10 +216,10 @@ void mission_load_menu_init () {
 
     mission_campaign_build_list (0);
     for (i = 0; i < Num_campaigns; i++) {
-        strcpy_s (Campaign_name_list[i + 1], Campaign_names[i]);
+        strcpy (Campaign_name_list[i + 1], Campaign_names[i]);
     }
-    strcpy_s (Campaign_name_list[0], NOX ("All campaigns"));
-    strcpy_s (Campaign_name_list[1], NOX ("Player Missions"));
+    strcpy (Campaign_name_list[0], NOX ("All campaigns"));
+    strcpy (Campaign_name_list[1], NOX ("Player Missions"));
 
     for (i = 0; i < Num_campaigns + 2; i++) {
         campaign_names[i] = Campaign_name_list[i];
@@ -330,19 +330,19 @@ void mission_load_menu_do () {
         else {
             char mission_name[NAME_LENGTH];
             if (Campaign_filter_index == 0) {
-                strcpy_s (mission_name, mlm_missions[selected]);
+                strcpy (mission_name, mlm_missions[selected]);
             }
             else if (Campaign_filter_index == 1) {
-                strcpy_s (mission_name, jtmp_missions[selected]);
+                strcpy (mission_name, jtmp_missions[selected]);
             }
             else {
-                strcpy_s (mission_name, Campaign_missions[selected]);
+                strcpy (mission_name, Campaign_missions[selected]);
             }
             strncpy (mission_name_final, mission_name, MAX_FILENAME_LEN);
         }
 
         // go
-        strcpy_s (Game_current_mission_filename, mission_name_final);
+        strcpy (Game_current_mission_filename, mission_name_final);
         WARNINGF (LOCATION, "Selected '%s'\n", Game_current_mission_filename);
         gameseq_post_event (GS_EVENT_START_GAME);
     }
@@ -370,14 +370,14 @@ void mission_load_menu_close () {
 
     for (i = 0; i < mlm_nfiles; i++) {
         if (mlm_missions[i]) {
-            vm_free (mlm_missions[i]);
+            free (mlm_missions[i]);
             mlm_missions[i] = NULL;
         }
     }
 
     for (i = 0; i < jtmp_nfiles; i++) {
         if (jtmp_missions[i]) {
-            vm_free (jtmp_missions[i]);
+            free (jtmp_missions[i]);
             jtmp_missions[i] = NULL;
         }
     }

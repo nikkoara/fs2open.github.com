@@ -207,7 +207,7 @@ void parse_species_tbl (const char* filename) {
                 }
             }
             else {
-                strcpy_s (species->species_name, species_name);
+                strcpy (species->species_name, species_name);
             }
 
             // Goober5000 - IFF

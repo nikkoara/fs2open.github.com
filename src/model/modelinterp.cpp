@@ -202,20 +202,20 @@ int model_should_render_engine_glow (int objnum, int bank_obj);
 int model_interp_get_texture (texture_info* tinfo, fix base_frametime);
 
 void model_deallocate_interp_data () {
-    if (Interp_verts != NULL) vm_free (Interp_verts);
+    if (Interp_verts != NULL) free (Interp_verts);
 
-    if (Interp_points != NULL) vm_free (Interp_points);
+    if (Interp_points != NULL) free (Interp_points);
 
-    if (Interp_splode_points != NULL) vm_free (Interp_splode_points);
+    if (Interp_splode_points != NULL) free (Interp_splode_points);
 
-    if (Interp_splode_verts != NULL) vm_free (Interp_splode_verts);
+    if (Interp_splode_verts != NULL) free (Interp_splode_verts);
 
-    if (Interp_norms != NULL) vm_free (Interp_norms);
+    if (Interp_norms != NULL) free (Interp_norms);
 
-    if (Interp_light_applied != NULL) vm_free (Interp_light_applied);
+    if (Interp_light_applied != NULL) free (Interp_light_applied);
 
     if (Interp_lighting_temp.lights != NULL)
-        vm_free (Interp_lighting_temp.lights);
+        free (Interp_lighting_temp.lights);
 
     Num_interp_verts_allocated = 0;
     Num_interp_norms_allocated = 0;
@@ -240,19 +240,19 @@ void model_allocate_interp_data (int n_verts, int n_norms) {
 
     if (n_verts > Num_interp_verts_allocated) {
         if (Interp_verts != NULL) {
-            vm_free (Interp_verts);
+            free (Interp_verts);
             Interp_verts = NULL;
         }
         // Interp_verts can't be reliably realloc'd so free and malloc it on
         // each resize (no data needs to be carried over)
-        Interp_verts = (vec3d**)vm_malloc (n_verts * sizeof (vec3d*));
+        Interp_verts = (vec3d**)malloc (n_verts * sizeof (vec3d*));
 
         Interp_points =
-            (vertex*)vm_realloc (Interp_points, n_verts * sizeof (vertex));
-        Interp_splode_points = (vertex*)vm_realloc (
+            (vertex*)realloc (Interp_points, n_verts * sizeof (vertex));
+        Interp_splode_points = (vertex*)realloc (
             Interp_splode_points, n_verts * sizeof (vertex));
         Interp_splode_verts =
-            (vec3d*)vm_realloc (Interp_splode_verts, n_verts * sizeof (vec3d));
+            (vec3d*)realloc (Interp_splode_verts, n_verts * sizeof (vec3d));
 
         Num_interp_verts_allocated = n_verts;
 
@@ -263,28 +263,28 @@ void model_allocate_interp_data (int n_verts, int n_norms) {
 
     if (n_norms > Num_interp_norms_allocated) {
         if (Interp_norms != NULL) {
-            vm_free (Interp_norms);
+            free (Interp_norms);
             Interp_norms = NULL;
         }
         // Interp_norms can't be reliably realloc'd so free and malloc it on
         // each resize (no data needs to be carried over)
-        Interp_norms = (vec3d**)vm_malloc (n_norms * sizeof (vec3d*));
+        Interp_norms = (vec3d**)malloc (n_norms * sizeof (vec3d*));
 
         // these next two lighting things aren't values that need to be carried
         // over, but we need to make sure they are 0 by default
         if (Interp_light_applied != NULL) {
-            vm_free (Interp_light_applied);
+            free (Interp_light_applied);
             Interp_light_applied = NULL;
         }
 
         if (Interp_lighting_temp.lights != NULL) {
-            vm_free (Interp_lighting_temp.lights);
+            free (Interp_lighting_temp.lights);
             Interp_lighting_temp.lights = NULL;
         }
 
-        Interp_light_applied = (ubyte*)vm_malloc (n_norms * sizeof (ubyte));
+        Interp_light_applied = (ubyte*)malloc (n_norms * sizeof (ubyte));
         Interp_lighting_temp.lights =
-            (model_light*)vm_malloc (n_norms * sizeof (model_light));
+            (model_light*)malloc (n_norms * sizeof (model_light));
 
         memset (Interp_light_applied, 0, n_norms * sizeof (ubyte));
         memset (
@@ -1960,7 +1960,7 @@ void model_interp_submit_buffers (
         vert_src->Base_vertex_offset = offset / vertex_stride;
         vert_src->Vertex_offset = offset;
 
-        vm_free (vert_src->Vertex_list);
+        free (vert_src->Vertex_list);
         vert_src->Vertex_list = NULL;
     }
 
@@ -1970,7 +1970,7 @@ void model_interp_submit_buffers (
             vert_src->Index_list, vert_src->Index_offset,
             vert_src->Ibuffer_handle);
 
-        vm_free (vert_src->Index_list);
+        free (vert_src->Index_list);
         vert_src->Index_list = NULL;
     }
 }
@@ -1984,7 +1984,7 @@ bool model_interp_pack_buffer (
     int i, n_verts = 0;
     size_t j;
     if (vert_src->Vertex_list == NULL) {
-        vert_src->Vertex_list = vm_malloc (vert_src->Vertex_list_size);
+        vert_src->Vertex_list = malloc (vert_src->Vertex_list_size);
 
         // return invalid if we don't have the memory
         if (vert_src->Vertex_list == NULL) { return false; }
@@ -1993,7 +1993,7 @@ bool model_interp_pack_buffer (
     }
 
     if (vert_src->Index_list == NULL) {
-        vert_src->Index_list = vm_malloc (vert_src->Index_list_size);
+        vert_src->Index_list = malloc (vert_src->Index_list_size);
 
         // return invalid if we don't have the memory
         if (vert_src->Index_list == NULL) { return false; }
@@ -2228,7 +2228,7 @@ void interp_configure_vertex_buffers (polymodel* pm, int mn) {
     if (outline_n_lines > 0) {
         model->n_verts_outline = outline_n_lines * 2;
         model->outline_buffer =
-            (vertex*)vm_malloc (sizeof (vertex) * model->n_verts_outline);
+            (vertex*)malloc (sizeof (vertex) * model->n_verts_outline);
 
         bsp_polies->generate_lines (-1, model->outline_buffer);
     }
@@ -2629,7 +2629,7 @@ int model_should_render_engine_glow (int objnum, int bank_obj) {
 
         char subname[MAX_NAME_LEN];
         // shipp->subsystems isn't always valid here so don't use it
-        strcpy_s (subname, sip->subsystems[bank_obj].subobj_name);
+        strcpy (subname, sip->subsystems[bank_obj].subobj_name);
 
         ssp = GET_FIRST (&shipp->subsys_list);
         while (ssp != END_OF_LIST (&shipp->subsys_list)) {

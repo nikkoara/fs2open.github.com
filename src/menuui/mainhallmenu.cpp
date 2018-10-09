@@ -885,14 +885,14 @@ void main_hall_do (float frametime) {
         case QUICK_START_REGION:
 #if !defined(NDEBUG)
             if (Num_recent_missions > 0) {
-                strcpy_s (Game_current_mission_filename, Recent_missions[0]);
+                strcpy (Game_current_mission_filename, Recent_missions[0]);
             }
             else {
                 if (mission_load_up_campaign ()) {
                     main_hall_set_notify_string (
                         XSTR ("Campaign file is currently unavailable", 1606));
                 }
-                strcpy_s (
+                strcpy (
                     Game_current_mission_filename, Campaign.missions[0].name);
             }
             Campaign.current_mission = -1;
@@ -1640,7 +1640,7 @@ void main_hall_handle_random_intercom_sounds () {
  * @param str Notification string
  */
 void main_hall_set_notify_string (const char* str) {
-    strcpy_s (Main_hall_notify_text, str);
+    strcpy (Main_hall_notify_text, str);
     Main_hall_notify_stamp = timestamp (MAIN_HALL_NOTIFY_TIME);
 }
 
@@ -1652,7 +1652,7 @@ void main_hall_notify_do () {
     if (Main_hall_notify_stamp != -1) {
         // if the text time has expired
         if (timestamp_elapsed (Main_hall_notify_stamp)) {
-            strcpy_s (Main_hall_notify_text, "");
+            strcpy (Main_hall_notify_text, "");
             Main_hall_notify_stamp = -1;
         }
         else {
@@ -1814,7 +1814,7 @@ void main_hall_process_help_stuff () {
     font::set_font (Main_hall->font);
 
     // otherwise print out the message
-    strcpy_s (str, XSTR ("Press F1 for help", 371));
+    strcpy (str, XSTR ("Press F1 for help", 371));
     gr_get_string_size (&w, &h, str);
 
     int y_anim_offset = Main_hall_f1_text_frame;

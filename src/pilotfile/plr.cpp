@@ -704,8 +704,8 @@ bool pilotfile::load_player (const char* callsign, player* _p) {
     // values since we don't have a pilot file
     if ((Game_mode & GM_MULTIPLAYER) && (Game_mode & GM_STANDALONE_SERVER)) {
         Player->insignia_texture = -1;
-        strcpy_s (Player->callsign, NOX ("Standalone"));
-        strcpy_s (Player->short_callsign, NOX ("Standalone"));
+        strcpy (Player->callsign, NOX ("Standalone"));
+        strcpy (Player->short_callsign, NOX ("Standalone"));
 
         return true;
     }
@@ -846,7 +846,7 @@ bool pilotfile::load_player (const char* callsign, player* _p) {
     }
 
     // restore the callsign into the Player structure
-    strcpy_s (p->callsign, callsign);
+    strcpy (p->callsign, callsign);
 
     // restore the truncated callsign into Player structure
     pilot_set_short_callsign (p, SHORT_CALLSIGN_PIXEL_W);

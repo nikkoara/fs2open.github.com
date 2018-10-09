@@ -44,7 +44,7 @@ static float Mc_edge_time;
 
 void model_collide_free_point_list () {
     if (Mc_point_list != NULL) {
-        vm_free (Mc_point_list);
+        free (Mc_point_list);
         Mc_point_list = NULL;
     }
 }
@@ -55,11 +55,11 @@ void model_collide_allocate_point_list (int n_points) {
     ASSERT (n_points > 0);
 
     if (Mc_point_list != NULL) {
-        vm_free (Mc_point_list);
+        free (Mc_point_list);
         Mc_point_list = NULL;
     }
 
-    Mc_point_list = (vec3d**)vm_malloc (sizeof (vec3d*) * n_points);
+    Mc_point_list = (vec3d**)malloc (sizeof (vec3d*) * n_points);
 
     ASSERT (Mc_point_list != NULL);
 }
@@ -905,7 +905,7 @@ void model_collide_parse_bsp (
     // copy point list
     ASSERT (n_verts != -1);
 
-    tree->point_list = (vec3d*)vm_malloc (sizeof (vec3d) * n_verts);
+    tree->point_list = (vec3d*)malloc (sizeof (vec3d) * n_verts);
 
     for (i = 0; i < (size_t)n_verts; ++i) {
         tree->point_list[i] = *Mc_point_list[i];
@@ -916,7 +916,7 @@ void model_collide_parse_bsp (
     // copy node info. this might be a good time to organize the nodes into a
     // cache efficient tree layout.
     tree->n_nodes = (int)node_buffer.size ();
-    tree->node_list = (bsp_collision_node*)vm_malloc (
+    tree->node_list = (bsp_collision_node*)malloc (
         sizeof (bsp_collision_node) * node_buffer.size ());
     memcpy (
         tree->node_list, &node_buffer[0],
@@ -925,7 +925,7 @@ void model_collide_parse_bsp (
 
     // copy leaves.
     tree->n_leaves = (int)leaf_buffer.size ();
-    tree->leaf_list = (bsp_collision_leaf*)vm_malloc (
+    tree->leaf_list = (bsp_collision_leaf*)malloc (
         sizeof (bsp_collision_leaf) * leaf_buffer.size ());
     memcpy (
         tree->leaf_list, &leaf_buffer[0],
@@ -933,7 +933,7 @@ void model_collide_parse_bsp (
     leaf_buffer.clear ();
 
     // finally copy the vert list.
-    tree->vert_list = (model_tmap_vert*)vm_malloc (
+    tree->vert_list = (model_tmap_vert*)malloc (
         sizeof (model_tmap_vert) * vert_buffer.size ());
     memcpy (
         tree->vert_list, &vert_buffer[0],

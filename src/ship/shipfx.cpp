@@ -3228,12 +3228,12 @@ CombinedVariable::CombinedVariable (gamesnd_id n_snd) {
 
 CombinedVariable::CombinedVariable (char* n_String) {
     Type = TYPE_STRING;
-    su_String = (char*)vm_malloc (strlen (n_String) + 1);
+    su_String = (char*)malloc (strlen (n_String) + 1);
     strcpy (su_String, n_String);
 }
 
 CombinedVariable::~CombinedVariable () {
-    if (Type == TYPE_STRING) { vm_free (su_String); }
+    if (Type == TYPE_STRING) { free (su_String); }
 }
 
 int CombinedVariable::getFloat (float* output) {
@@ -3757,9 +3757,9 @@ WE_BSG::WE_BSG (object* n_objp, int n_direction)
     char tmp_name[MAX_FILENAME_LEN];
     memset (tmp_name, 0, MAX_FILENAME_LEN);
     if (direction == WD_WARP_IN)
-        strcpy_s (tmp_name, sip->warpin_anim);
+        strcpy (tmp_name, sip->warpin_anim);
     else if (direction == WD_WARP_OUT)
-        strcpy_s (tmp_name, sip->warpout_anim);
+        strcpy (tmp_name, sip->warpout_anim);
     stolower (tmp_name);
 
     if (strlen (tmp_name)) {

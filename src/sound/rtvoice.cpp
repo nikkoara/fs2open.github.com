@@ -127,18 +127,24 @@ int rtvoice_init_recording (int /*qos*/) {
 
                 // malloc out the voice data buffer for raw (uncompressed) recorded sound
                 if ( Rtv_capture_raw_buffer ) {
-                        vm_free(Rtv_capture_raw_buffer);
+                        free(Rtv_capture_raw_buffer);
                         Rtv_capture_raw_buffer=NULL;
                 }
-                Rtv_capture_raw_buffer = (unsigned char*)vm_malloc(Rtv_capture_raw_buffer_size);
+
+                Rtv_capture_raw_buffer = (unsigned char*)malloc (
+                    Rtv_capture_raw_buffer_size);
 
                 // malloc out voice data buffer for compressed recorded sound
                 if ( Rtv_capture_compressed_buffer ) {
-                        vm_free(Rtv_capture_compressed_buffer);
+                        free(Rtv_capture_compressed_buffer);
                         Rtv_capture_compressed_buffer=NULL;
                 }
-                Rtv_capture_compressed_buffer_size=Rtv_capture_raw_buffer_size; // be safe and allocate same as uncompressed
-                Rtv_capture_compressed_buffer = (unsigned char*)vm_malloc(Rtv_capture_compressed_buffer_size);
+
+                // be safe and allocate same as uncompressed
+                Rtv_capture_compressed_buffer_size=Rtv_capture_raw_buffer_size;
+
+                Rtv_capture_compressed_buffer = (unsigned char*)malloc (
+                    Rtv_capture_compressed_buffer_size);
 
                 Rtv_recording_inited=1;
         }
@@ -167,12 +173,12 @@ void rtvoice_close_recording () {
     if (Rtv_recording) { rtvoice_stop_recording (); }
 
     if (Rtv_capture_raw_buffer) {
-        vm_free (Rtv_capture_raw_buffer);
+        free (Rtv_capture_raw_buffer);
         Rtv_capture_raw_buffer = NULL;
     }
 
     if (Rtv_capture_compressed_buffer) {
-        vm_free (Rtv_capture_compressed_buffer);
+        free (Rtv_capture_compressed_buffer);
         Rtv_capture_compressed_buffer = NULL;
     }
 
@@ -258,7 +264,7 @@ void rtvoice_uncompress (
 // Close down the real-time voice playback system
 void rtvoice_close_playback () {
     if (Rtv_playback_uncompressed_buffer) {
-        vm_free (Rtv_playback_uncompressed_buffer);
+        free (Rtv_playback_uncompressed_buffer);
         Rtv_playback_uncompressed_buffer = NULL;
     }
 
@@ -288,7 +294,7 @@ int rtvoice_init_playback () {
         rtvf = &Rtv_formats[Rtv_playback_format];
 
         if (Rtv_playback_uncompressed_buffer) {
-            vm_free (Rtv_playback_uncompressed_buffer);
+            free (Rtv_playback_uncompressed_buffer);
             Rtv_playback_uncompressed_buffer = NULL;
         }
 
@@ -296,7 +302,7 @@ int rtvoice_init_playback () {
             rtvf->frequency *
             (RTV_BUFFER_TIME)*fl2i (rtvf->bits_per_sample / 8.0f);
         Rtv_playback_uncompressed_buffer =
-            (unsigned char*)vm_malloc (Rtv_playback_uncompressed_buffer_size);
+            (unsigned char*)malloc (Rtv_playback_uncompressed_buffer_size);
         ASSERT (Rtv_playback_uncompressed_buffer);
 
         Rtv_playback_inited = 1;

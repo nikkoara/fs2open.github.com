@@ -267,7 +267,7 @@ void pilotfile::csg_read_missions () {
 
         if (missionp->num_goals > 0) {
             missionp->goals =
-                (mgoal*)vm_malloc (missionp->num_goals * sizeof (mgoal));
+                (mgoal*)malloc (missionp->num_goals * sizeof (mgoal));
             ASSERT (missionp->goals != NULL);
 
             memset (missionp->goals, 0, missionp->num_goals * sizeof (mgoal));
@@ -283,7 +283,7 @@ void pilotfile::csg_read_missions () {
 
         if (missionp->num_events > 0) {
             missionp->events =
-                (mevent*)vm_malloc (missionp->num_events * sizeof (mevent));
+                (mevent*)malloc (missionp->num_events * sizeof (mevent));
             ASSERT (missionp->events != NULL);
 
             memset (
@@ -299,7 +299,7 @@ void pilotfile::csg_read_missions () {
         missionp->num_variables = cfread_int (cfp);
 
         if (missionp->num_variables > 0) {
-            missionp->variables = (sexp_variable*)vm_malloc (
+            missionp->variables = (sexp_variable*)malloc (
                 missionp->num_variables * sizeof (sexp_variable));
             ASSERT (missionp->variables != NULL);
 
@@ -1326,19 +1326,19 @@ void pilotfile::csg_reset_data () {
 
         if (missionp->goals) {
             missionp->num_goals = 0;
-            vm_free (missionp->goals);
+            free (missionp->goals);
             missionp->goals = NULL;
         }
 
         if (missionp->events) {
             missionp->num_events = 0;
-            vm_free (missionp->events);
+            free (missionp->events);
             missionp->events = NULL;
         }
 
         if (missionp->variables) {
             missionp->num_variables = 0;
-            vm_free (missionp->variables);
+            free (missionp->variables);
             missionp->variables = NULL;
         }
 
@@ -1539,7 +1539,7 @@ bool pilotfile::load_savefile (const char* campaign) {
     // if the campaign (for whatever reason) doesn't have a squad image, use
     // the multi one
     if (p->s_squad_filename[0] == '\0') {
-        strcpy_s (p->s_squad_filename, p->m_squad_filename);
+        strcpy (p->s_squad_filename, p->m_squad_filename);
     }
     player_set_squad_bitmap (p, p->s_squad_filename, false);
 

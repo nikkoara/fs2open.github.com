@@ -577,16 +577,16 @@ int cc_line_query_visible (int n) {
 config_item_undo* get_undo_block (int size) {
     config_item_undo* ptr;
 
-    ptr = (config_item_undo*)vm_malloc (sizeof (config_item_undo));
+    ptr = (config_item_undo*)malloc (sizeof (config_item_undo));
     ASSERT (ptr);
     ptr->next = Config_item_undo;
     Config_item_undo = ptr;
 
     ptr->size = size;
     if (size) {
-        ptr->index = (int*)vm_malloc (sizeof (int) * size);
+        ptr->index = (int*)malloc (sizeof (int) * size);
         ASSERT (ptr->index);
-        ptr->list = (config_item*)vm_malloc (sizeof (config_item) * size);
+        ptr->list = (config_item*)malloc (sizeof (config_item) * size);
         ASSERT (ptr->list);
     }
     else {
@@ -609,11 +609,11 @@ void free_undo_block () {
 
     Config_item_undo = ptr->next;
     if (ptr->size) {
-        vm_free (ptr->list);
-        vm_free (ptr->index);
+        free (ptr->list);
+        free (ptr->index);
     }
 
-    vm_free (ptr);
+    free (ptr);
 }
 
 // undo the most recent binding changes
@@ -1375,28 +1375,28 @@ void control_config_init () {
     control_config_conflict_check ();
 
     // setup strings
-    Joy_axis_action_text[0] = vm_strdup (XSTR ("Turn (Yaw) Axis", 1016));
-    Joy_axis_action_text[1] = vm_strdup (XSTR ("Pitch Axis", 1017));
-    Joy_axis_action_text[2] = vm_strdup (XSTR ("Bank Axis", 1018));
+    Joy_axis_action_text[0] = strdup (XSTR ("Turn (Yaw) Axis", 1016));
+    Joy_axis_action_text[1] = strdup (XSTR ("Pitch Axis", 1017));
+    Joy_axis_action_text[2] = strdup (XSTR ("Bank Axis", 1018));
     Joy_axis_action_text[3] =
-        vm_strdup (XSTR ("Absolute Throttle Axis", 1019));
+        strdup (XSTR ("Absolute Throttle Axis", 1019));
     Joy_axis_action_text[4] =
-        vm_strdup (XSTR ("Relative Throttle Axis", 1020));
-    Joy_axis_text[0] = vm_strdup (XSTR ("Joystick/Mouse X Axis", 1021));
-    Joy_axis_text[1] = vm_strdup (XSTR ("Joystick/Mouse Y Axis", 1022));
-    Joy_axis_text[2] = vm_strdup (XSTR ("Joystick Z Axis", 1023));
-    Joy_axis_text[3] = vm_strdup (XSTR ("Joystick rX Axis", 1024));
-    Joy_axis_text[4] = vm_strdup (XSTR ("Joystick rY Axis", 1025));
-    Joy_axis_text[5] = vm_strdup (XSTR ("Joystick rZ Axis", 1026));
-    Mouse_button_text[0] = vm_strdup ("");
-    Mouse_button_text[1] = vm_strdup (XSTR ("Left Button", 1027));
-    Mouse_button_text[2] = vm_strdup (XSTR ("Right Button", 1028));
-    Mouse_button_text[3] = vm_strdup (XSTR ("Mid Button", 1029));
-    Mouse_button_text[4] = vm_strdup ("");
-    Mouse_axis_text[0] = vm_strdup (XSTR ("L/R", 1030));
-    Mouse_axis_text[1] = vm_strdup (XSTR ("U/B", 1031));
-    Invert_text[0] = vm_strdup (XSTR ("N", 1032));
-    Invert_text[1] = vm_strdup (XSTR ("Y", 1033));
+        strdup (XSTR ("Relative Throttle Axis", 1020));
+    Joy_axis_text[0] = strdup (XSTR ("Joystick/Mouse X Axis", 1021));
+    Joy_axis_text[1] = strdup (XSTR ("Joystick/Mouse Y Axis", 1022));
+    Joy_axis_text[2] = strdup (XSTR ("Joystick Z Axis", 1023));
+    Joy_axis_text[3] = strdup (XSTR ("Joystick rX Axis", 1024));
+    Joy_axis_text[4] = strdup (XSTR ("Joystick rY Axis", 1025));
+    Joy_axis_text[5] = strdup (XSTR ("Joystick rZ Axis", 1026));
+    Mouse_button_text[0] = strdup ("");
+    Mouse_button_text[1] = strdup (XSTR ("Left Button", 1027));
+    Mouse_button_text[2] = strdup (XSTR ("Right Button", 1028));
+    Mouse_button_text[3] = strdup (XSTR ("Mid Button", 1029));
+    Mouse_button_text[4] = strdup ("");
+    Mouse_axis_text[0] = strdup (XSTR ("L/R", 1030));
+    Mouse_axis_text[1] = strdup (XSTR ("U/B", 1031));
+    Invert_text[0] = strdup (XSTR ("N", 1032));
+    Invert_text[1] = strdup (XSTR ("Y", 1033));
 
     control_config_list_prepare ();
 }
@@ -1422,31 +1422,31 @@ void control_config_close () {
     // free strings
     for (idx = 0; idx < NUM_JOY_AXIS_ACTIONS; idx++) {
         if (Joy_axis_action_text[idx] != NULL) {
-            vm_free (Joy_axis_action_text[idx]);
+            free (Joy_axis_action_text[idx]);
             Joy_axis_action_text[idx] = NULL;
         }
     }
     for (idx = 0; idx < NUM_AXIS_TEXT; idx++) {
         if (Joy_axis_text[idx] != NULL) {
-            vm_free (Joy_axis_text[idx]);
+            free (Joy_axis_text[idx]);
             Joy_axis_text[idx] = NULL;
         }
     }
     for (idx = 0; idx < NUM_MOUSE_TEXT; idx++) {
         if (Mouse_button_text[idx] != NULL) {
-            vm_free (Mouse_button_text[idx]);
+            free (Mouse_button_text[idx]);
             Mouse_button_text[idx] = NULL;
         }
     }
     for (idx = 0; idx < NUM_MOUSE_AXIS_TEXT; idx++) {
         if (Mouse_axis_text[idx] != NULL) {
-            vm_free (Mouse_axis_text[idx]);
+            free (Mouse_axis_text[idx]);
             Mouse_axis_text[idx] = NULL;
         }
     }
     for (idx = 0; idx < NUM_INVERT_TEXT; idx++) {
         if (Invert_text[idx] != NULL) {
-            vm_free (Invert_text[idx]);
+            free (Invert_text[idx]);
             Invert_text[idx] = NULL;
         }
     }
@@ -1482,7 +1482,7 @@ void control_config_do_frame (float frametime) {
             Ui_window.process (0);
 
             if (k == KEY_ESC) {
-                strcpy_s (bound_string, XSTR ("Canceled", 206));
+                strcpy (bound_string, XSTR ("Canceled", 206));
                 bound_timestamp = timestamp (2500);
                 control_config_do_cancel ();
             }
@@ -1496,7 +1496,7 @@ void control_config_do_frame (float frametime) {
                 if (bind) {
                     if (Axis_override >= 0) {
                         control_config_bind_axis (z, Axis_override);
-                        strcpy_s (bound_string, Joy_axis_text[Axis_override]);
+                        strcpy (bound_string, Joy_axis_text[Axis_override]);
                         font::force_fit_string (
                             bound_string, 39,
                             Conflict_wnd_coords[gr_screen.res]
@@ -1536,7 +1536,7 @@ void control_config_do_frame (float frametime) {
             }
 
             if (k == KEY_ESC) {
-                strcpy_s (bound_string, XSTR ("Canceled", 206));
+                strcpy (bound_string, XSTR ("Canceled", 206));
                 bound_timestamp = timestamp (2500);
                 control_config_do_cancel ();
             }
@@ -1574,7 +1574,7 @@ void control_config_do_frame (float frametime) {
                     ASSERT (!(z & JOY_AXIS));
                     control_config_bind_key (z, k);
 
-                    strcpy_s (bound_string, textify_scancode (k));
+                    strcpy (bound_string, textify_scancode (k));
                     font::force_fit_string (
                         bound_string, 39,
                         Conflict_wnd_coords[gr_screen.res][CONTROL_W_COORD]);
@@ -1590,7 +1590,7 @@ void control_config_do_frame (float frametime) {
                         ASSERT (!(z & JOY_AXIS));
                         control_config_bind_joy (z, i);
 
-                        strcpy_s (bound_string, Joy_button_text[i]);
+                        strcpy (bound_string, Joy_button_text[i]);
                         font::force_fit_string (
                             bound_string, 39,
                             Conflict_wnd_coords[gr_screen.res]
@@ -1619,7 +1619,7 @@ void control_config_do_frame (float frametime) {
                                 ASSERT (!(z & JOY_AXIS));
                                 control_config_bind_joy (z, i);
 
-                                strcpy_s (bound_string, Joy_button_text[i]);
+                                strcpy (bound_string, Joy_button_text[i]);
                                 font::force_fit_string (
                                     bound_string, 39,
                                     Conflict_wnd_coords[gr_screen.res]
@@ -1984,11 +1984,11 @@ void control_config_do_frame (float frametime) {
         gr_printf_menu (x - w / 2, y - font_height, "%s", str);
 
         if (Control_config[i].hasXSTR) {
-            strcpy_s (
+            strcpy (
                 buf, XSTR (Control_config[i].text, CONTROL_CONFIG_XSTR + i));
         }
         else {
-            strcpy_s (buf, Control_config[i].text);
+            strcpy (buf, Control_config[i].text);
         }
 
         font::force_fit_string (
@@ -2037,7 +2037,7 @@ void control_config_do_frame (float frametime) {
 
         gr_set_color_fast (c);
         if (Cc_lines[line].label) {
-            strcpy_s (buf, Cc_lines[line].label);
+            strcpy (buf, Cc_lines[line].label);
             font::force_fit_string (
                 buf, 255, Control_list_ctrl_w[gr_screen.res]);
             gr_printf_menu (
@@ -2057,7 +2057,7 @@ void control_config_do_frame (float frametime) {
             }
             else {
                 if (k >= 0) {
-                    strcpy_s (buf, textify_scancode (k));
+                    strcpy (buf, textify_scancode (k));
                     if (Conflicts[z].key >= 0) {
                         if (c == &Color_text_normal)
                             gr_set_color_fast (&Color_text_error);
@@ -2091,7 +2091,7 @@ void control_config_do_frame (float frametime) {
                 }
 
                 if (j >= 0) {
-                    strcpy_s (buf, Joy_button_text[j]);
+                    strcpy (buf, Joy_button_text[j]);
                     if (Conflicts[z].joy >= 0) {
                         if (c == &Color_text_normal) {
                             gr_set_color_fast (&Color_text_error);

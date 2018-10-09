@@ -67,9 +67,7 @@ fs2_SOURCES =                                   \
     gamesnd/eventmusic.cpp                      \
     gamesnd/gamesnd.cpp                         \
     globalincs/alphacolors.cpp                  \
-    globalincs/memory/memory.cpp                \
-    globalincs/safe_strings.cpp                 \
-    globalincs/systemvars.cpp                   \
+	globalincs/systemvars.cpp                   \
     globalincs/version.cpp                      \
     graphics/2d.cpp                             \
     graphics/decal_draw_list.cpp                \

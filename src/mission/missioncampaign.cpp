@@ -94,7 +94,7 @@ int mission_campaign_get_info (
     auto fname_len = strlen (fname);
     if ((fname_len < 4) ||
         strcasecmp (fname + fname_len - 4, FS_CAMPAIGN_FILE_EXT) != 0) {
-        strcat_s (fname, FS_CAMPAIGN_FILE_EXT);
+        strcat (fname, FS_CAMPAIGN_FILE_EXT);
         fname_len += 4;
     }
     ASSERT (fname_len < MAX_FILENAME_LEN);
@@ -182,7 +182,7 @@ int mission_campaign_get_mission_list (
         while (skip_to_string ("$Mission:") > 0) {
             stuff_string (name, F_NAME, MAX_FILENAME_LEN);
             if (num < max)
-                list[num++] = vm_strdup (name);
+                list[num++] = strdup (name);
             else
                 WARNINGF (
                     LOCATION, "Maximum number of missions exceeded (%d)!",
@@ -196,7 +196,7 @@ int mission_campaign_get_mission_list (
             filename, e.what ());
 
         // since we can't return count of allocated elements, free them instead
-        for (i = 0; i < num; i++) vm_free (list[i]);
+        for (i = 0; i < num; i++) free (list[i]);
 
         num = -1;
     }
@@ -211,17 +211,17 @@ void mission_campaign_free_list () {
 
     for (i = 0; i < Num_campaigns; i++) {
         if (Campaign_names[i] != NULL) {
-            vm_free (Campaign_names[i]);
+            free (Campaign_names[i]);
             Campaign_names[i] = NULL;
         }
 
         if (Campaign_file_names[i] != NULL) {
-            vm_free (Campaign_file_names[i]);
+            free (Campaign_file_names[i]);
             Campaign_file_names[i] = NULL;
         }
 
         if (Campaign_descs[i] != NULL) {
-            vm_free (Campaign_descs[i]);
+            free (Campaign_descs[i]);
             Campaign_descs[i] = NULL;
         }
     }
@@ -241,7 +241,7 @@ int mission_campaign_maybe_add (const char* filename) {
     if (mission_campaign_get_info (
             filename, name, &type, &max_players, &desc)) {
         if (!MC_multiplayer && (type == CAMPAIGN_TYPE_SINGLE)) {
-            Campaign_names[Num_campaigns] = vm_strdup (name);
+            Campaign_names[Num_campaigns] = strdup (name);
 
             if (MC_desc) Campaign_descs[Num_campaigns] = desc;
 
@@ -251,7 +251,7 @@ int mission_campaign_maybe_add (const char* filename) {
         }
     }
 
-    if (desc != NULL) vm_free (desc);
+    if (desc != NULL) free (desc);
 
     return 0;
 }
@@ -274,8 +274,8 @@ void mission_campaign_build_list (bool desc, bool sort, bool multiplayer) {
     MC_multiplayer = multiplayer;
 
     memset (wild_card, 0, sizeof (wild_card));
-    strcpy_s (wild_card, NOX ("*"));
-    strcat_s (wild_card, FS_CAMPAIGN_FILE_EXT);
+    strcpy (wild_card, NOX ("*"));
+    strcat (wild_card, FS_CAMPAIGN_FILE_EXT);
 
     // if we have already been loaded then free everything and reload
     if (Num_campaigns != 0) mission_campaign_free_list ();
@@ -428,7 +428,7 @@ int mission_campaign_load (
         // able to reclaim nodes previously used by another campaign.
         mission_campaign_clear ();
 
-        strcpy_s (Campaign.filename, filename);
+        strcpy (Campaign.filename, filename);
 
         // only initialize the sexpression stuff when Fred isn't running. It'll
         // screw things up major if it does
@@ -449,7 +449,7 @@ int mission_campaign_load (
         stuff_string (name, F_NAME, NAME_LENGTH);
 
         // Store campaign name in the global struct
-        strcpy_s (Campaign.name, name);
+        strcpy (Campaign.name, name);
 
         required_string ("$Type:");
         stuff_string (type, F_NAME, NAME_LENGTH);
@@ -490,7 +490,7 @@ int mission_campaign_load (
             required_string ("$Mission:");
             stuff_string (name, F_NAME, NAME_LENGTH);
             cm = &Campaign.missions[Campaign.num_missions];
-            cm->name = vm_strdup (name);
+            cm->name = strdup (name);
 
             cm->notes = NULL;
 
@@ -620,15 +620,15 @@ int mission_campaign_load (
             // it's possible to have data already loaded from the pilotfile
             // if so free it to avoid memory leaks
             if (cm->goals != nullptr) {
-                vm_free (cm->goals);
+                free (cm->goals);
                 cm->goals = nullptr;
             }
             if (cm->events != nullptr) {
-                vm_free (cm->events);
+                free (cm->events);
                 cm->events = nullptr;
             }
             if (cm->variables != nullptr) {
-                vm_free (cm->variables);
+                free (cm->variables);
                 cm->variables = nullptr;
             }
 
@@ -707,7 +707,7 @@ int mission_campaign_load_by_name (char* filename) {
     // make sure to tack on .fsc on the end if its not there already
     if (filename[0] != '\0') {
         if (strlen (filename) > 4) {
-            strcpy_s (test, filename + (strlen (filename) - 4));
+            strcpy (test, filename + (strlen (filename) - 4));
             if (strcmp (test, FS_CAMPAIGN_FILE_EXT) != 0) {
                 strcat (filename, FS_CAMPAIGN_FILE_EXT);
             }
@@ -725,8 +725,8 @@ int mission_campaign_load_by_name (char* filename) {
     }
 
     Num_campaigns = 0;
-    Campaign_file_names[Num_campaigns] = vm_strdup (filename);
-    Campaign_names[Num_campaigns] = vm_strdup (name);
+    Campaign_file_names[Num_campaigns] = strdup (filename);
+    Campaign_names[Num_campaigns] = strdup (name);
     Num_campaigns++;
     mission_campaign_load (filename);
     return 0;
@@ -734,7 +734,7 @@ int mission_campaign_load_by_name (char* filename) {
 
 int mission_campaign_load_by_name_csfe (char* filename, char* callsign) {
     Game_mode |= GM_NORMAL;
-    strcpy_s (Player->callsign, callsign);
+    strcpy (Player->callsign, callsign);
     return mission_campaign_load_by_name (filename);
 }
 
@@ -786,7 +786,7 @@ int campaign_savefile_save (char* pname) {
     else
         Game_mode |= GM_MULTIPLAYER;
 
-    strcpy_s (Player->callsign, pname);
+    strcpy (Player->callsign, pname);
 
     return (int)Pilot.save_savefile ();
 }
@@ -809,7 +809,7 @@ void mission_campaign_savefile_delete (const char* cfilename) {
 }
 
 void campaign_delete_save (char* cfn, char* pname) {
-    strcpy_s (Player->callsign, pname);
+    strcpy (Player->callsign, pname);
     mission_campaign_savefile_delete (cfn);
 }
 
@@ -841,8 +841,8 @@ void mission_campaign_delete_all_savefiles (const char* pilot_name) {
     Get_file_list_filter = filter_save;
 
     for (i = 0; i < num_files; i++) {
-        strcpy_s (filename, names[i].c_str ());
-        strcat_s (filename, ext);
+        strcpy (filename, names[i].c_str ());
+        strcat (filename, ext);
         cf_delete (
             filename, dir_type,
             CF_LOCATION_ROOT_USER | CF_LOCATION_ROOT_GAME |
@@ -861,7 +861,7 @@ void campaign_savefile_load (char* fname, char* pname) {
     else
         Game_mode |= GM_MULTIPLAYER;
 
-    strcpy_s (Player->callsign, pname);
+    strcpy (Player->callsign, pname);
 
     Pilot.load_savefile (fname);
 }
@@ -881,7 +881,7 @@ int mission_campaign_next_mission () {
     if (Campaign.num_missions < 1) return -2;
 
     Campaign.current_mission = Campaign.next_mission;
-    strcpy_s (
+    strcpy (
         Game_current_mission_filename,
         Campaign.missions[Campaign.current_mission].name);
 
@@ -922,7 +922,7 @@ int mission_campaign_previous_mission () {
     // reset the player stats to be the stats from this level
     Player->stats.assign (Campaign.missions[Campaign.current_mission].stats);
 
-    strcpy_s (
+    strcpy (
         Game_current_mission_filename,
         Campaign.missions[Campaign.current_mission].name);
     Num_granted_ships = 0;
@@ -997,13 +997,13 @@ void mission_campaign_store_goals_and_events () {
     // file we might have goal and event status if the player replayed a
     // mission
     if (mission_obj->goals != NULL) {
-        vm_free (mission_obj->goals);
+        free (mission_obj->goals);
         mission_obj->goals = NULL;
     }
 
     mission_obj->num_goals = Num_goals;
     if (mission_obj->num_goals > 0) {
-        mission_obj->goals = (mgoal*)vm_malloc (sizeof (mgoal) * Num_goals);
+        mission_obj->goals = (mgoal*)malloc (sizeof (mgoal) * Num_goals);
         ASSERT (mission_obj->goals != NULL);
     }
 
@@ -1014,10 +1014,10 @@ void mission_campaign_store_goals_and_events () {
             char goal_name[NAME_LENGTH];
 
             sprintf (goal_name, NOX ("Goal #%d"), i);
-            strcpy_s (mission_obj->goals[i].name, goal_name);
+            strcpy (mission_obj->goals[i].name, goal_name);
         }
         else
-            strcpy_s (mission_obj->goals[i].name, Mission_goals[i].name);
+            strcpy (mission_obj->goals[i].name, Mission_goals[i].name);
         ASSERT (
             Mission_goals[i].satisfied !=
             GOAL_INCOMPLETE); // should be true or false at this point!!!
@@ -1027,14 +1027,14 @@ void mission_campaign_store_goals_and_events () {
     // do the same thing for events as we did for goals
     // we might have goal and event status if the player replayed a mission
     if (mission_obj->events != NULL) {
-        vm_free (mission_obj->events);
+        free (mission_obj->events);
         mission_obj->events = NULL;
     }
 
     mission_obj->num_events = Num_mission_events;
     if (mission_obj->num_events > 0) {
         mission_obj->events =
-            (mevent*)vm_malloc (sizeof (mevent) * Num_mission_events);
+            (mevent*)malloc (sizeof (mevent) * Num_mission_events);
         ASSERT (mission_obj->events != NULL);
     }
 
@@ -1050,10 +1050,10 @@ void mission_campaign_store_goals_and_events () {
                 "Mission goal in mission %s must have a +Name field! using %s "
                 "for campaign save file\n",
                 mission_obj->name, name);
-            strcpy_s (mission_obj->events[i].name, event_name);
+            strcpy (mission_obj->events[i].name, event_name);
         }
         else
-            strcpy_s (mission_obj->events[i].name, Mission_events[i].name);
+            strcpy (mission_obj->events[i].name, Mission_events[i].name);
 
         // getting status for the events is a little different.  If the formula
         // value for the event entry is -1, then we know the value of the
@@ -1082,7 +1082,7 @@ void mission_campaign_store_variables (
     // handle variables that are saved on mission victory
     // -------------------------------------
     if (mission_obj->variables != NULL) {
-        vm_free (mission_obj->variables);
+        free (mission_obj->variables);
         mission_obj->variables = NULL;
     }
 
@@ -1111,7 +1111,7 @@ void mission_campaign_store_variables (
                             add_it = false;
                             Campaign.persistent_variables[j].type =
                                 Sexp_variables[i].type;
-                            strcpy_s (
+                            strcpy (
                                 Campaign.persistent_variables[j].text,
                                 Sexp_variables[i].text);
                             break;
@@ -1221,20 +1221,20 @@ void mission_campaign_mission_over (bool do_next_mission) {
         // like erasing any fact that the player played this mission in the
         // campaign.
         if (mission_obj->goals != NULL) {
-            vm_free (mission_obj->goals);
+            free (mission_obj->goals);
             mission_obj->goals = NULL;
         }
         mission_obj->num_goals = 0;
 
         if (mission_obj->events != NULL) {
-            vm_free (mission_obj->events);
+            free (mission_obj->events);
             mission_obj->events = NULL;
         }
         mission_obj->num_events = 0;
 
         // Goober5000
         if (mission_obj->variables != NULL) {
-            vm_free (mission_obj->variables);
+            free (mission_obj->variables);
             mission_obj->variables = NULL;
         }
         mission_obj->num_variables = 0;
@@ -1255,7 +1255,7 @@ void mission_campaign_clear () {
     int i;
 
     if (Campaign.desc != NULL) {
-        vm_free (Campaign.desc);
+        free (Campaign.desc);
         Campaign.desc = NULL;
     }
 
@@ -1263,44 +1263,44 @@ void mission_campaign_clear () {
     // we must also free any goal stuff that was from a previous campaign
     for (i = 0; i < Campaign.num_missions; i++) {
         if (Campaign.missions[i].name != NULL) {
-            vm_free (Campaign.missions[i].name);
+            free (Campaign.missions[i].name);
             Campaign.missions[i].name = NULL;
         }
 
         if (Campaign.missions[i].notes != NULL) {
-            vm_free (Campaign.missions[i].notes);
+            free (Campaign.missions[i].notes);
             Campaign.missions[i].notes = NULL;
         }
 
         if (Campaign.missions[i].goals != NULL) {
-            vm_free (Campaign.missions[i].goals);
+            free (Campaign.missions[i].goals);
             Campaign.missions[i].goals = NULL;
         }
 
         if (Campaign.missions[i].events != NULL) {
-            vm_free (Campaign.missions[i].events);
+            free (Campaign.missions[i].events);
             Campaign.missions[i].events = NULL;
         }
 
         // Goober5000
         if (Campaign.missions[i].variables != NULL) {
-            vm_free (Campaign.missions[i].variables);
+            free (Campaign.missions[i].variables);
             Campaign.missions[i].variables = NULL;
         }
 
         // the next three are strdup'd return values from parselo.cpp - taylor
         if (Campaign.missions[i].mission_branch_desc != NULL) {
-            vm_free (Campaign.missions[i].mission_branch_desc);
+            free (Campaign.missions[i].mission_branch_desc);
             Campaign.missions[i].mission_branch_desc = NULL;
         }
 
         if (Campaign.missions[i].mission_branch_brief_anim != NULL) {
-            vm_free (Campaign.missions[i].mission_branch_brief_anim);
+            free (Campaign.missions[i].mission_branch_brief_anim);
             Campaign.missions[i].mission_branch_brief_anim = NULL;
         }
 
         if (Campaign.missions[i].mission_branch_brief_sound != NULL) {
-            vm_free (Campaign.missions[i].mission_branch_brief_sound);
+            free (Campaign.missions[i].mission_branch_brief_sound);
             Campaign.missions[i].mission_branch_brief_sound = NULL;
         }
 
@@ -1412,11 +1412,11 @@ void read_mission_goal_list (int num) {
             if (skip_to_string ("$Notes:")) {
                 stuff_string (notes, F_NOTES, NOTES_LENGTH);
                 if (Campaign.missions[num].notes) {
-                    vm_free (Campaign.missions[num].notes);
+                    free (Campaign.missions[num].notes);
                 }
 
                 Campaign.missions[num].notes =
-                    (char*)vm_malloc (strlen (notes) + 1);
+                    (char*)malloc (strlen (notes) + 1);
                 strcpy (Campaign.missions[num].notes, notes);
             }
         }
@@ -1480,27 +1480,27 @@ void read_mission_goal_list (int num) {
         Campaign.missions[num].num_goals = count;
         if (count) {
             Campaign.missions[num].goals =
-                (mgoal*)vm_malloc (count * sizeof (mgoal));
+                (mgoal*)malloc (count * sizeof (mgoal));
             ASSERT (
                 Campaign.missions[num].goals); // make sure we got the memory
             memset (Campaign.missions[num].goals, 0, count * sizeof (mgoal));
 
             for (i = 0; i < count; i++) {
-                strcpy_s (Campaign.missions[num].goals[i].name, goals[i]);
+                strcpy (Campaign.missions[num].goals[i].name, goals[i]);
             }
         }
         // copy the events
         Campaign.missions[num].num_events = event_count;
         if (event_count) {
             Campaign.missions[num].events =
-                (mevent*)vm_malloc (event_count * sizeof (mevent));
+                (mevent*)malloc (event_count * sizeof (mevent));
             ASSERT (Campaign.missions[num].events);
             memset (
                 Campaign.missions[num].events, 0,
                 event_count * sizeof (mevent));
 
             for (i = 0; i < event_count; i++) {
-                strcpy_s (Campaign.missions[num].events[i].name, events[i]);
+                strcpy (Campaign.missions[num].events[i].name, events[i]);
             }
         }
 
@@ -1534,7 +1534,7 @@ int mission_campaign_find_mission (char* name) {
 
     // look for an extension on the file.  If no extension, add default ".fsm"
     // onto the end of the filename
-    strcpy_s (realname, name);
+    strcpy (realname, name);
     if (strchr (name, '.') == NULL) {
         sprintf (realname, NOX ("%s%s"), name, FS_MISSION_FILE_EXT);
     }
@@ -1702,7 +1702,7 @@ int mission_load_up_campaign (player* pl) {
     }
 
     // update pilot with the new current campaign
-    if (rc == 0) { strcpy_s (pl->current_campaign, Campaign.filename); }
+    if (rc == 0) { strcpy (pl->current_campaign, Campaign.filename); }
 
     return rc;
 }
@@ -1827,10 +1827,10 @@ void mission_campaign_jump_to_mission (char* name, bool no_skip) {
     mission_load_up_campaign ();
 
     // tack the .fs2 onto the input name
-    strcpy_s (dest_name, name);
+    strcpy (dest_name, name);
     p = strchr (dest_name, '.');
     if (p != NULL) *p = '\0';
-    strcat_s (dest_name, ".fs2");
+    strcat (dest_name, ".fs2");
 
     // search for our mission
     for (i = 0; i < Campaign.num_missions; i++) {

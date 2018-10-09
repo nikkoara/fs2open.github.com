@@ -136,7 +136,7 @@ HudGaugeEscort::HudGaugeEscort ()
           255, 255, 255) {}
 
 void HudGaugeEscort::initHeaderText (char* text) {
-    strcpy_s (header_text, text);
+    strcpy (header_text, text);
 }
 
 void HudGaugeEscort::initHeaderTextOffsets (int x, int y) {
@@ -324,7 +324,7 @@ void HudGaugeEscort::renderIcon (int x, int y, int index) {
     }
 
     // print out ship name
-    strcpy_s (buf, sp->get_display_string ());
+    strcpy (buf, sp->get_display_string ());
     font::force_fit_string (buf, 255, ship_name_max_width);
 
     end_string_at_first_hash_symbol (buf);

@@ -404,7 +404,7 @@ void credits_init () {
     Credits_artwork_index = -1;
 
     // this is moved up here so we can override it if desired
-    strcpy_s (Credits_music_name, "Cinema");
+    strcpy (Credits_music_name, "Cinema");
 
     // parse credits early so as to set up any overrides (for music and such)
     Credits_parsed = false;

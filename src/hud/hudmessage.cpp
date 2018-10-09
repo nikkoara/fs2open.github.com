@@ -470,7 +470,7 @@ void HUD_fixed_printf (float duration, color col, const char* format, ...) {
         tmp[MAX_HUD_LINE_LEN - 1] = '\0';
     }
 
-    strcpy_s (HUD_fixed_text[0].text, tmp);
+    strcpy (HUD_fixed_text[0].text, tmp);
 
     if (duration == 0.0f) { HUD_fixed_text[0].end_time = timestamp (-1); }
     else {
@@ -609,7 +609,7 @@ void hud_add_line_to_scrollback (
     if (EMPTY (&Msg_scrollback_free_list)) {
         new_line = GET_FIRST (&Msg_scrollback_used_list);
         list_remove (&Msg_scrollback_used_list, new_line);
-        vm_free (new_line->text);
+        free (new_line->text);
     }
     else {
         new_line = GET_FIRST (&Msg_scrollback_free_list);
@@ -621,7 +621,7 @@ void hud_add_line_to_scrollback (
     new_line->underline_width = underline_width;
     new_line->time = t;
     new_line->source = source;
-    new_line->text = (char*)vm_malloc (strlen (text) + 1);
+    new_line->text = (char*)malloc (strlen (text) + 1);
     strcpy (new_line->text, text);
     list_append (&Msg_scrollback_used_list, new_line);
 }
@@ -637,7 +637,7 @@ void hud_add_msg_to_scrollback (const char* text, int source, int t) {
 
     w = 0;
     ASSERT (msg_len < HUD_MSG_LENGTH_MAX);
-    strcpy_s (buf, text);
+    strcpy (buf, text);
     ptr = strstr (buf, NOX (": "));
     if (ptr) { gr_get_string_size (&w, NULL, buf, (int)(ptr - buf)); }
 
@@ -675,7 +675,7 @@ void hud_free_scrollback_list () {
     A = GET_FIRST (&Msg_scrollback_used_list);
     while (A != END_OF_LIST (&Msg_scrollback_used_list)) {
         if (A->text != NULL) {
-            vm_free (A->text);
+            free (A->text);
             A->text = NULL;
         }
 

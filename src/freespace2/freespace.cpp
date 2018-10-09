@@ -1589,8 +1589,8 @@ void game_init () {
 
     getcwd (whee, MAX_PATH_LEN - 1);
 
-    strcat_s (whee, DIR_SEPARATOR_STR);
-    strcat_s (whee, EXE_FNAME);
+    strcat (whee, DIR_SEPARATOR_STR);
+    strcat (whee, EXE_FNAME);
 
     // Initialize the libraries
     s1 = timer_get_milliseconds ();
@@ -1637,7 +1637,7 @@ void game_init () {
     snd_init ();
 
     auto sdlGraphicsOperations = std::make_unique< SDLGraphicsOperations > ();
-    
+
     if (gr_init (std::move (sdlGraphicsOperations)) == false) {
         EE ("general") << "error intializing graphics!";
         exit (1);
@@ -2565,17 +2565,17 @@ void say_view_target () {
             case OBJ_SHIP:
                 if (Ships[Objects[Player_ai->target_objnum].instance]
                         .flags[Ship::Ship_Flags::Hide_ship_name]) {
-                    strcpy_s (view_target_name, "targeted ship");
+                    strcpy (view_target_name, "targeted ship");
                 }
                 else {
-                    strcpy_s (
+                    strcpy (
                         view_target_name,
                         Ships[Objects[Player_ai->target_objnum].instance]
                             .get_display_string ());
                 }
                 break;
             case OBJ_WEAPON:
-                strcpy_s (
+                strcpy (
                     view_target_name,
                     Weapon_info
                         [Weapons[Objects[Player_ai->target_objnum].instance]
@@ -2584,12 +2584,12 @@ void say_view_target () {
                 Viewer_mode &= ~VM_OTHER_SHIP;
                 break;
             case OBJ_JUMP_NODE: {
-                strcpy_s (view_target_name, XSTR ("jump node", 184));
+                strcpy (view_target_name, XSTR ("jump node", 184));
                 Viewer_mode &= ~VM_OTHER_SHIP;
                 break;
             }
             case OBJ_DEBRIS: {
-                strcpy_s (view_target_name, "Debris");
+                strcpy (view_target_name, "Debris");
                 Viewer_mode &= ~VM_OTHER_SHIP;
                 break;
             }
@@ -2612,7 +2612,7 @@ void say_view_target () {
             if (Show_viewing_from_self) {
                 color col;
                 gr_init_color (&col, 0, 255, 0);
-                
+
                 HUD_fixed_printf (
                     2.0f, col, "%s", XSTR ("Viewing from self\n", 188));
             }
@@ -4793,7 +4793,7 @@ void game_enter_state (int old_state, int new_state) {
         }
 
         if (Cmdline_start_mission) {
-            strcpy_s (Game_current_mission_filename, Cmdline_start_mission);
+            strcpy (Game_current_mission_filename, Cmdline_start_mission);
             WARNINGF (
                 LOCATION, "Straight to mission '%s'\n",
                 Game_current_mission_filename);
@@ -5331,7 +5331,7 @@ void game_spew_pof_info_sub (
         int _idx;                                  \
         for (_idx = 0; _idx < num_files; _idx++) { \
             if (pof_list[_idx] != NULL) {          \
-                vm_free (pof_list[_idx]);          \
+                free (pof_list[_idx]);          \
                 pof_list[_idx] = NULL;             \
             }                                      \
         }                                          \
@@ -5782,25 +5782,25 @@ void game_show_event_debug (float /*frametime*/) {
             buf[i] = 0;
             while (i--) buf[i] = ' ';
 
-            strcat_s (buf, Sexp_nodes[z & 0x7fff].text);
+            strcat (buf, Sexp_nodes[z & 0x7fff].text);
             switch (Sexp_nodes[z & 0x7fff].value) {
-            case SEXP_TRUE: strcat_s (buf, NOX (" (True)")); break;
+            case SEXP_TRUE: strcat (buf, NOX (" (True)")); break;
 
-            case SEXP_FALSE: strcat_s (buf, NOX (" (False)")); break;
+            case SEXP_FALSE: strcat (buf, NOX (" (False)")); break;
 
             case SEXP_KNOWN_TRUE:
-                strcat_s (buf, NOX (" (Always true)"));
+                strcat (buf, NOX (" (Always true)"));
                 break;
 
             case SEXP_KNOWN_FALSE:
-                strcat_s (buf, NOX (" (Always false)"));
+                strcat (buf, NOX (" (Always false)"));
                 break;
 
-            case SEXP_CANT_EVAL: strcat_s (buf, NOX (" (Can't eval)")); break;
+            case SEXP_CANT_EVAL: strcat (buf, NOX (" (Can't eval)")); break;
 
             case SEXP_NAN:
             case SEXP_NAN_FOREVER:
-                strcat_s (buf, NOX (" (Not a number)"));
+                strcat (buf, NOX (" (Not a number)"));
                 break;
             }
         }
@@ -6024,7 +6024,7 @@ void game_format_time (fix m_time, char* time_str) {
         sprintf (time_str, XSTR ("%d:", 201), hours);
         // if there are less than 10 minutes, print a leading 0
         if (minutes < 10) {
-            strcpy_s (tmp, NOX ("0"));
+            strcpy (tmp, NOX ("0"));
             strcat (time_str, tmp);
         }
     }
@@ -6040,7 +6040,7 @@ void game_format_time (fix m_time, char* time_str) {
 
     // print the seconds
     if (seconds < 10) {
-        strcpy_s (tmp, NOX ("0"));
+        strcpy (tmp, NOX ("0"));
         strcat (time_str, tmp);
     }
     sprintf (tmp, "%d", seconds);
@@ -6055,12 +6055,12 @@ void get_version_string (char* str, int max_size) {
     sprintf (str, "FreeSpace 2 Open v%s", FS_VERSION_FULL);
 
 #ifndef NDEBUG
-    strcat_s (str, max_size, " Debug");
+    strcat (str, " Debug");
 #endif
 
     // Lets get some more info in here
     switch (gr_screen.mode) {
-    case GR_OPENGL: strcat_s (str, max_size, " OpenGL"); break;
+    case GR_OPENGL: strcat (str, " OpenGL"); break;
     }
 }
 

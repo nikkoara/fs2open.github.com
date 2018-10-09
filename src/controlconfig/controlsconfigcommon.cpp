@@ -1558,19 +1558,19 @@ char* translate_key (char* key) {
 
     // both key and joystick button are mapped to this control
     if ((key_code >= 0) && (joy_code >= 0)) {
-        strcpy_s (text, key_text);
-        strcat_s (text, " or ");
-        strcat_s (text, joy_text);
+        strcpy (text, key_text);
+        strcat (text, " or ");
+        strcat (text, joy_text);
     }
     // if we only have one
     else if (key_code >= 0) {
-        strcpy_s (text, key_text);
+        strcpy (text, key_text);
     }
     else if (joy_code >= 0) {
-        strcpy_s (text, joy_text);
+        strcpy (text, joy_text);
     }
     else {
-        strcpy_s (text, "None");
+        strcpy (text, "None");
     }
 
     return text;
@@ -1585,27 +1585,27 @@ const char* textify_scancode (int code) {
 
     *text = 0;
     if (code & KEY_ALTED && !(keycode == KEY_LALT || keycode == KEY_RALT)) {
-        if (Lcl_gr) { strcat_s (text, "Alt-"); }
+        if (Lcl_gr) { strcat (text, "Alt-"); }
         else if (Lcl_fr) {
-            strcat_s (text, "Alt-");
+            strcat (text, "Alt-");
         }
         else {
-            strcat_s (text, "Alt-");
+            strcat (text, "Alt-");
         }
     }
 
     if (code & KEY_SHIFTED &&
         !(keycode == KEY_LSHIFT || keycode == KEY_RSHIFT)) {
-        if (Lcl_gr) { strcat_s (text, "Shift-"); }
+        if (Lcl_gr) { strcat (text, "Shift-"); }
         else if (Lcl_fr) {
-            strcat_s (text, "Maj.-");
+            strcat (text, "Maj.-");
         }
         else {
-            strcat_s (text, "Shift-");
+            strcat (text, "Shift-");
         }
     }
 
-    strcat_s (text, Scan_code_text[keycode]);
+    strcat (text, Scan_code_text[keycode]);
     return text;
 }
 
@@ -1617,16 +1617,16 @@ const char* textify_scancode_universal (int code) {
     static char text[40];
     *text = 0;
     if (code & KEY_ALTED && !(keycode == KEY_LALT || keycode == KEY_RALT)) {
-        strcat_s (text, "Alt-");
+        strcat (text, "Alt-");
     }
 
     if (code & KEY_SHIFTED &&
         !(keycode == KEY_LSHIFT || keycode == KEY_RSHIFT)) {
-        strcat_s (text, "Shift-");
+        strcat (text, "Shift-");
     }
 
     // Always use the english version here
-    strcat_s (text, Scan_code_text_english[keycode]);
+    strcat (text, Scan_code_text_english[keycode]);
     return text;
 }
 // XSTR:ON

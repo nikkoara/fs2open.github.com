@@ -318,7 +318,8 @@ public:
     }
 
     ~flash_ball () {
-        if (ray) vm_free (ray);
+        if (ray)
+            free (ray);
     }
 
     void initialize (

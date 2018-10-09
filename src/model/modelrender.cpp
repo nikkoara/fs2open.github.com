@@ -72,7 +72,7 @@ model_render_params::model_render_params ()
 }
 
 model_render_params::~model_render_params () {
-    if (Manage_replacement_textures) vm_free (Replacement_textures);
+    if (Manage_replacement_textures) free (Replacement_textures);
 }
 
 uint model_render_params::get_model_flags () { return Model_flags; }
@@ -156,7 +156,7 @@ void model_render_params::set_replacement_textures (int* textures) {
 void model_render_params::set_replacement_textures (
     int modelnum, std::vector< texture_replace >& replacement_textures) {
     Replacement_textures =
-        (int*)vm_malloc (MAX_REPLACEMENT_TEXTURES * sizeof (int));
+        (int*)malloc (MAX_REPLACEMENT_TEXTURES * sizeof (int));
     Manage_replacement_textures = true;
 
     polymodel* pm = model_get (modelnum);
@@ -275,9 +275,9 @@ void model_batch_buffer::allocate_memory () {
     auto size = Submodel_matrices.size () * sizeof (matrix4);
 
     if (Mem_alloc == NULL || Mem_alloc_size < size) {
-        if (Mem_alloc != NULL) { vm_free (Mem_alloc); }
+        if (Mem_alloc != NULL) { free (Mem_alloc); }
 
-        Mem_alloc = vm_malloc (size);
+        Mem_alloc = malloc (size);
     }
 
     Mem_alloc_size = size;

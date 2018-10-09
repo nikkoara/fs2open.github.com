@@ -268,7 +268,7 @@ void barracks_squad_change_popup ();
 #define STRCPY1(a, b)                         \
     do {                                      \
         ASSERT (strlen (b) < STAT_COLUMN1_W); \
-        strcpy_s (a, b);                      \
+        strcpy (a, b);                      \
     } while (0)
 
 void barracks_init_stats (scoring_struct* stats) {
@@ -404,7 +404,7 @@ void barracks_init_stats (scoring_struct* stats) {
     Num_stat_lines++;
 
     ASSERT (Num_stat_lines < Max_stat_lines);
-    strcpy_s (Stat_labels[Num_stat_lines], XSTR ("Current Score:", 1583));
+    strcpy (Stat_labels[Num_stat_lines], XSTR ("Current Score:", 1583));
     sprintf (Stats[Num_stat_lines], "%d", stats->score);
     Num_stat_lines++;
 
@@ -521,7 +521,7 @@ int barracks_new_pilot_selected () {
         if (!Pilot.load_savefile (Cur_pilot->current_campaign)) {
             // set single player squad image to multi if campaign can't be
             // loaded
-            strcpy_s (
+            strcpy (
                 Cur_pilot->s_squad_filename, Cur_pilot->m_squad_filename);
         }
     }
@@ -529,7 +529,7 @@ int barracks_new_pilot_selected () {
     // init stuff to reflect new pilot
     int i;
     barracks_init_stats (&Cur_pilot->stats);
-    strcpy_s (stripped, Cur_pilot->image_filename);
+    strcpy (stripped, Cur_pilot->image_filename);
     barracks_strip_pcx (stripped);
     for (i = 0; i < Num_pilot_images; i++) {
         if (!strcasecmp (stripped, Pilot_image_names[i])) { break; }
@@ -537,10 +537,10 @@ int barracks_new_pilot_selected () {
     Pic_number = i;
 
     if (Game_mode & GM_MULTIPLAYER) {
-        strcpy_s (stripped, Cur_pilot->m_squad_filename);
+        strcpy (stripped, Cur_pilot->m_squad_filename);
     }
     else {
-        strcpy_s (stripped, Cur_pilot->s_squad_filename);
+        strcpy (stripped, Cur_pilot->s_squad_filename);
     }
     barracks_strip_pcx (stripped);
     for (i = 0; i < Num_pilot_squad_images; i++) {
@@ -724,7 +724,7 @@ void barracks_prev_pic () {
 
     // copy pilot pic filename into pilot struct
     if ((Pic_number >= 0) && (Pic_number < Num_pilot_images)) {
-        strcpy_s (Cur_pilot->image_filename, Pilot_image_names[Pic_number]);
+        strcpy (Cur_pilot->image_filename, Pilot_image_names[Pic_number]);
     }
 
     // play scroll sound
@@ -745,7 +745,7 @@ void barracks_next_pic () {
 
     // copy pilot pic filename into pilot struct
     if ((Pic_number >= 0) && (Pic_number < Num_pilot_images)) {
-        strcpy_s (Cur_pilot->image_filename, Pilot_image_names[Pic_number]);
+        strcpy (Cur_pilot->image_filename, Pilot_image_names[Pic_number]);
     }
 
     // play scroll sound
@@ -770,12 +770,12 @@ void barracks_prev_squad_pic () {
     if ((Pic_squad_number >= 0) &&
         (Pic_squad_number < Num_pilot_squad_images)) {
         if (Game_mode & GM_MULTIPLAYER) {
-            strcpy_s (
+            strcpy (
                 Cur_pilot->m_squad_filename,
                 Pilot_squad_image_names[Pic_squad_number]);
         }
         else {
-            strcpy_s (
+            strcpy (
                 Cur_pilot->s_squad_filename,
                 Pilot_squad_image_names[Pic_squad_number]);
         }
@@ -801,12 +801,12 @@ void barracks_next_squad_pic () {
     if ((Pic_squad_number >= 0) &&
         (Pic_squad_number < Num_pilot_squad_images)) {
         if (Game_mode & GM_MULTIPLAYER) {
-            strcpy_s (
+            strcpy (
                 Cur_pilot->m_squad_filename,
                 Pilot_squad_image_names[Pic_squad_number]);
         }
         else {
-            strcpy_s (
+            strcpy (
                 Cur_pilot->s_squad_filename,
                 Pilot_squad_image_names[Pic_squad_number]);
         }
@@ -848,7 +848,7 @@ void barracks_delete_pilot () {
 
     if (!strcasecmp (Pilots[Selected_line], Cur_pilot->callsign)) { active = 1; }
 
-    strcpy_s (buf, Pilots[Selected_line]);
+    strcpy (buf, Pilots[Selected_line]);
 
     del_rval = delete_pilot_file (buf);
 
@@ -1243,7 +1243,7 @@ void barracks_accept_new_pilot_callsign () {
         if (!strcasecmp (buf, Pilots[i])) {
             z = 1;
             if (pilot_verify_overwrite () == 1) {
-                strcpy_s (name, Pilots[Selected_line]);
+                strcpy (name, Pilots[Selected_line]);
                 for (z = i; z < Num_pilots - 1; z++) {
                     strcpy (Pilots[z], Pilots[z + 1]);
                     Pilot_ranks[z] = Pilot_ranks[z + 1];
@@ -1267,7 +1267,7 @@ void barracks_accept_new_pilot_callsign () {
     }
 
     strcpy (Pilots[0], buf);
-    strcpy_s (Cur_pilot->callsign, buf);
+    strcpy (Cur_pilot->callsign, buf);
     init_new_pilot (Cur_pilot, !Clone_flag);
 
     // again, make sure we set his flags correctly to ensure that he gets saved

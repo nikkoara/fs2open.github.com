@@ -1294,7 +1294,7 @@ void parse_gamesnd_new (game_snd* gs, bool no_create) {
     }
 
     // If the name _doesn't_ match <same> put it into gs->filename;
-    if (strcasecmp (name, "<same>") != 0) { strcpy_s (entry->filename, name); }
+    if (strcasecmp (name, "<same>") != 0) { strcpy (entry->filename, name); }
     else if (!no_create) {
         // Throw an error if <same> was specified but we are creating a new
         // entry

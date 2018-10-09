@@ -196,8 +196,8 @@ int cfile_init (const char* exe_dir, const char* cdrom_dir) {
     cfile_chdir (buf);
 
     // set root directory
-    strcpy_s (Cfile_root_dir, buf);
-    strcpy_s (Cfile_user_dir, os_get_config_path ().c_str ());
+    strcpy (Cfile_root_dir, buf);
+    strcpy (Cfile_user_dir, os_get_config_path ().c_str ());
 
     for (i = 0; i < MAX_CFILE_BLOCKS; i++) {
         Cfile_block_list[i].type = CFILE_BLOCK_UNUSED;
@@ -266,7 +266,7 @@ int cfile_push_chdir (int type) {
 
     if (Cfile_stack_pos >= CFILE_STACK_MAX) { return -1; }
 
-    strcpy_s (Cfile_stack[Cfile_stack_pos++], OriginalDirectory);
+    strcpy (Cfile_stack[Cfile_stack_pos++], OriginalDirectory);
 
     cf_create_default_path_string (dir, sizeof (dir) - 1, type, NULL);
 
@@ -350,10 +350,10 @@ char* cf_add_ext (const char* filename, const char* ext) {
     size_t flen = strlen (filename);
     size_t elen = strlen (ext);
     ASSERT (flen < MAX_PATH_LEN);
-    strcpy_s (path, filename);
+    strcpy (path, filename);
     if ((flen < 4) || strcasecmp (path + flen - elen, ext) != 0) {
         ASSERT (flen + elen < MAX_PATH_LEN);
-        strcat_s (path, ext);
+        strcat (path, ext);
     }
 
     return path;
@@ -566,7 +566,7 @@ CFILE* _cfopen (
         // For write-only files, require a full path or a path type
         if (strpbrk (file_path, "/")) {
             // Full path given?
-            strcpy_s (longname, file_path);
+            strcpy (longname, file_path);
         }
         else {
             // Path type given?
@@ -606,11 +606,11 @@ CFILE* _cfopen (
                 if (mode[i] == 'b') need_b = false;
             }
             happy_mode[i] = '\0';
-            if (need_b) strcat_s (happy_mode, "b");
+            if (need_b) strcat (happy_mode, "b");
             //*****END PROCESSING OF MODE*****
         }
         else {
-            strcpy_s (happy_mode, mode);
+            strcpy (happy_mode, mode);
         }
 
         FILE* fp = fopen (longname, happy_mode);
@@ -623,7 +623,7 @@ CFILE* _cfopen (
 
     char copy_file_path[MAX_PATH_LEN]; // FIX change in memory from
                                        // cf_find_file_location
-    strcpy_s (copy_file_path, file_path);
+    strcpy (copy_file_path, file_path);
 
     auto find_res = cf_find_file_location (
         copy_file_path, dir_type, localize, location_flags);

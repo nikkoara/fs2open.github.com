@@ -134,7 +134,7 @@ grid* create_grid (
     ASSERT (square_size > 0.0);
     if (double_fine_gridlines) d = 2;
 
-    if (gridp == NULL) gridp = (grid*)vm_malloc (sizeof (grid));
+    if (gridp == NULL) gridp = (grid*)malloc (sizeof (grid));
 
     ASSERT (gridp);
 

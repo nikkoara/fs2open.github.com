@@ -197,9 +197,6 @@ void detail_level_set (int level);
 // Returns the current detail level or -1 if custom.
 int current_detail_level ();
 
-#define safe_kill(a) \
-    if (a) vm_free (a)
-
 // Goober5000
 void insertion_sort (
     void* array, size_t array_size, size_t element_size,

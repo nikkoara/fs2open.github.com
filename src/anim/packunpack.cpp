@@ -37,7 +37,7 @@ anim_instance* init_anim_instance (anim* ptr, int bpp) {
     }
 
     ptr->instance_count++;
-    inst = (anim_instance*)vm_malloc (sizeof (anim_instance));
+    inst = (anim_instance*)malloc (sizeof (anim_instance));
     ASSERT (inst);
     memset (inst, 0, sizeof (anim_instance));
     inst->frame_num = -1;
@@ -48,7 +48,7 @@ anim_instance* init_anim_instance (anim* ptr, int bpp) {
     inst->stop_now = FALSE;
     inst->aa_color = NULL;
 
-    inst->frame = (ubyte*)vm_malloc (
+    inst->frame = (ubyte*)malloc (
         inst->parent->width * inst->parent->height * (bpp >> 3));
     ASSERT (inst->frame != NULL);
     memset (
@@ -60,14 +60,14 @@ anim_instance* init_anim_instance (anim* ptr, int bpp) {
 
 void free_anim_instance (anim_instance* inst) {
     ASSERT (inst->frame);
-    vm_free (inst->frame);
+    free (inst->frame);
     inst->frame = NULL;
     inst->parent->instance_count--;
     inst->parent = NULL;
     inst->data = NULL;
     inst->file_offset = -1;
 
-    vm_free (inst);
+    free (inst);
 }
 
 int anim_get_next_frame (anim_instance* inst) {

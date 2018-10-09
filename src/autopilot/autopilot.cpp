@@ -1405,7 +1405,7 @@ bool AddNav_Ship (char* Nav, char* TargetName, int flags) {
     // Create the NavPoint struct
     NavPoint tnav;
 
-    strcpy_s (tnav.m_NavName, Nav);
+    strcpy (tnav.m_NavName, Nav);
     tnav.flags = NP_SHIP | flags;
 
     ASSERT (!(tnav.flags & NP_WAYPOINT));
@@ -1443,7 +1443,7 @@ bool AddNav_Waypoint (char* Nav, char* WP_Path, int node, int flags) {
     // Create the NavPoint struct
     NavPoint tnav;
 
-    strcpy_s (tnav.m_NavName, Nav);
+    strcpy (tnav.m_NavName, Nav);
     tnav.flags = NP_WAYPOINT | flags;
 
     ASSERT (!(tnav.flags & NP_SHIP));

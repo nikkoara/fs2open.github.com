@@ -343,7 +343,7 @@ void HudGaugeTargetBox::initBitmaps (
         }
     }
 
-    strcpy_s (static_fname, fname_static);
+    strcpy (static_fname, fname_static);
 }
 
 void HudGaugeTargetBox::initialize () {
@@ -456,10 +456,10 @@ void HudGaugeTargetBox::renderTargetIntegrity (
 
     // print out status of ship
     switch (Current_ts) {
-    case TS_DIS: strcpy_s (buf, XSTR ("dis", 344)); break;
-    case TS_OK: strcpy_s (buf, XSTR ("ok", 345)); break;
-    case TS_DMG: strcpy_s (buf, XSTR ("dmg", 346)); break;
-    case TS_CRT: strcpy_s (buf, XSTR ("crt", 347)); break;
+    case TS_DIS: strcpy (buf, XSTR ("dis", 344)); break;
+    case TS_OK: strcpy (buf, XSTR ("ok", 345)); break;
+    case TS_DMG: strcpy (buf, XSTR ("dmg", 346)); break;
+    case TS_CRT: strcpy (buf, XSTR ("crt", 347)); break;
     }
 
     maybeFlashElement (TBOX_FLASH_STATUS);
@@ -787,7 +787,7 @@ void HudGaugeTargetBox::renderTargetDebris (object* target_objp) {
         mission_parse_lookup_alt_index (
             debrisp->parent_alt_name, printable_ship_class);
     else
-        strcpy_s (
+        strcpy (
             printable_ship_class,
             (Ship_info[debrisp->ship_info_index].alt_name[0])
                 ? Ship_info[debrisp->ship_info_index].alt_name
@@ -1074,7 +1074,7 @@ void HudGaugeTargetBox::renderTargetWeapon (object* target_objp) {
             sprintf (outstr, XSTR ("impact: %.1f sec", 1596), dist / speed);
         }
         else {
-            strcpy_s (outstr, XSTR ("unknown", 349));
+            strcpy (outstr, XSTR ("unknown", 349));
         }
 
         renderString (
@@ -1188,7 +1188,7 @@ void HudGaugeTargetBox::renderTargetAsteroid (object* target_objp) {
     switch (asteroidp->asteroid_type) {
     case ASTEROID_TYPE_SMALL:
     case ASTEROID_TYPE_MEDIUM:
-    case ASTEROID_TYPE_LARGE: strcpy_s (hud_name, NOX ("asteroid")); break;
+    case ASTEROID_TYPE_LARGE: strcpy (hud_name, NOX ("asteroid")); break;
 
     default:
         sprintf (
@@ -1272,7 +1272,7 @@ void HudGaugeTargetBox::renderTargetJumpNode (object* target_objp) {
         renderTargetIntegrity (1);
         setGaugeColor ();
 
-        strcpy_s (outstr, jnp->GetName ());
+        strcpy (outstr, jnp->GetName ());
         end_string_at_first_hash_symbol (outstr);
         renderString (
             position[0] + Name_offsets[0], position[1] + Name_offsets[1],
@@ -1476,7 +1476,7 @@ void HudGaugeExtraTargetData::render (float /*frametime*/) {
             auto orders = ship_return_orders (target_shipp);
             if (!orders.empty ()) {
                 char outstr[256];
-                strcpy_s (outstr, orders.c_str ());
+                strcpy (outstr, orders.c_str ());
                 font::force_fit_string (outstr, 255, order_max_w);
                 orders = outstr;
                 has_orders = 1;
@@ -1492,9 +1492,9 @@ void HudGaugeExtraTargetData::render (float /*frametime*/) {
 
         if (has_orders) {
             char outstr[256];
-            strcpy_s (outstr, XSTR ("time to: ", 338));
+            strcpy (outstr, XSTR ("time to: ", 338));
             if (ship_return_time_to_goal (tmpbuf, target_shipp)) {
-                strcat_s (outstr, tmpbuf);
+                strcat (outstr, tmpbuf);
 
                 renderString (
                     position[0] + time_offsets[0],
@@ -1836,10 +1836,10 @@ void HudGaugeTargetBox::renderTargetShipInfo (object* target_objp) {
     if ((target_shipp->flags[Ship::Ship_Flags::Disabled]) ||
         (ship_subsys_disrupted (target_shipp, SUBSYSTEM_ENGINE))) {
         if (target_shipp->flags[Ship::Ship_Flags::Disabled]) {
-            strcpy_s (outstr, XSTR ("DISABLED", 342));
+            strcpy (outstr, XSTR ("DISABLED", 342));
         }
         else {
-            strcpy_s (outstr, XSTR ("DISRUPTED", 343));
+            strcpy (outstr, XSTR ("DISRUPTED", 343));
         }
         gr_get_string_size (&w, &h, outstr);
 
@@ -2107,7 +2107,7 @@ void HudGaugeTargetBox::showTargetData (float /*frametime*/) {
                     aip->submode <= SM_BIG_PARALLEL); // Must be <= largest
                                                       // chase submode value.
                 sprintf (outstr2, " / %s", Submode_text[aip->submode]);
-                strcat_s (outstr, outstr2);
+                strcat (outstr, outstr2);
                 break;
             case AIM_STRAFE:
                 ASSERT (
@@ -2117,7 +2117,7 @@ void HudGaugeTargetBox::showTargetData (float /*frametime*/) {
                 sprintf (
                     outstr2, " / %s",
                     Strafe_submode_text[aip->submode - AIS_STRAFE_ATTACK]);
-                strcat_s (outstr, outstr2);
+                strcat (outstr, outstr2);
                 break;
             case AIM_WAYPOINTS: break;
             default: break;
@@ -2139,7 +2139,7 @@ void HudGaugeTargetBox::showTargetData (float /*frametime*/) {
                 vec3d v2t;
 
                 if (aip->target_objnum == OBJ_INDEX (Player_obj))
-                    strcpy_s (target_str, "Player!");
+                    strcpy (target_str, "Player!");
                 else
                     sprintf (
                         target_str, "%s",

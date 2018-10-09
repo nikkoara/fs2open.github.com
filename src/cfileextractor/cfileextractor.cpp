@@ -197,7 +197,7 @@ void read_index (int lc = 0) {
             // lowercase the filename if wanted
             if (lc == 1) lowercase (vpinfo.file_name);
 
-            strcpy_s (vpinfo.file_path, path);
+            strcpy (vpinfo.file_path, path);
             VP_FileInfo.push_back (vpinfo);
         }
     }
@@ -289,7 +289,7 @@ void extract_all_files (char* file) {
             sprintf (path2, "%s%s%s", out_dir, DIR_SEPARATOR_STR, path);
         }
         else {
-            strcpy_s (path2, path);
+            strcpy (path2, path);
         }
 
         fp_out = fopen (path2, "wb");

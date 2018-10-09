@@ -173,11 +173,11 @@ void hud_init_comm_orders () {
                                             XSTR ("Abort Rearm", 298) };
 
     for (i = 0; i < NUM_COMM_ORDER_TYPES; i++) {
-        strcpy_s (Comm_order_types[i], temp_comm_order_types[i]);
+        strcpy (Comm_order_types[i], temp_comm_order_types[i]);
     }
 
     for (i = 0; i < NUM_COMM_ORDER_ITEMS; i++) {
-        strcpy_s (
+        strcpy (
             Comm_orders[i].name,
             XSTR (Sexp_comm_orders[i].name, Sexp_comm_orders[i].xstring));
         Comm_orders[i].item = Sexp_comm_orders[i].item;
@@ -374,7 +374,7 @@ int hud_squadmsg_count_ships (int add_to_menu) {
         count++;
         if (add_to_menu) {
             ASSERT (Num_menu_items < MAX_MENU_ITEMS);
-            strcpy_s (
+            strcpy (
                 MsgItems[Num_menu_items].text, shipp->get_display_string ());
             end_string_at_first_hash_symbol (
                 MsgItems[Num_menu_items]
@@ -454,7 +454,7 @@ int hud_squadmsg_count_wings (int add_to_menu) {
             count++;
             if (add_to_menu) {
                 ASSERT (Num_menu_items < MAX_MENU_ITEMS);
-                strcpy_s (MsgItems[Num_menu_items].text, Wings[wingnum].name);
+                strcpy (MsgItems[Num_menu_items].text, Wings[wingnum].name);
                 end_string_at_first_hash_symbol (
                     MsgItems[Num_menu_items].text);
                 MsgItems[Num_menu_items].instance = wingnum;
@@ -476,7 +476,7 @@ int hud_squadmsg_count_wings (int add_to_menu) {
             count++;
             if (add_to_menu) {
                 ASSERT (Num_menu_items < MAX_MENU_ITEMS);
-                strcpy_s (MsgItems[Num_menu_items].text, Wings[i].name);
+                strcpy (MsgItems[Num_menu_items].text, Wings[i].name);
                 end_string_at_first_hash_symbol (
                     MsgItems[Num_menu_items].text);
                 MsgItems[Num_menu_items].instance = i;
@@ -639,7 +639,7 @@ void hud_squadmsg_repair_rearm (int toggle_state, object* objp) {
 
     int player_index = -1;
     int   team_index = -1;
-    
+
     // this is essentially a check for multiplayer server/client mode
     // in multiplayer mode, the server may have to issue this command when
     // received from a client
@@ -1000,7 +1000,7 @@ int hud_squadmsg_send_ship_command (
     int shipnum, int command, int send_message, int update_history) {
 
     int player_num = -1;
-    
+
     ai_info* ainfo;
     int ai_mode, ai_submode; // ai mode and submode needed for ship commands
     char* target_shipname;   // ship number of possible targets
@@ -1214,7 +1214,7 @@ int hud_squadmsg_send_ship_command (
 
         case ABORT_REARM_REPAIR_ITEM:
             hud_squadmsg_repair_rearm_abort (0);
-            
+
             // add the order to the squad message history
             hud_add_issued_order (Ships[shipnum].ship_name, command);
             hud_update_last_order (
@@ -1286,9 +1286,9 @@ int hud_squadmsg_send_ship_command (
 // returns whether or not a message was sent
 int hud_squadmsg_send_wing_command (
     int wingnum, int command, int send_message, int update_history) {
-    
+
     int player_num = -1;
-        
+
     ai_info* ainfo;
     int ai_mode, ai_submode; // ai mode and submode needed for ship commands
     char* target_shipname;   // ship number of possible targets
@@ -1479,7 +1479,7 @@ int hud_squadmsg_send_wing_command (
 
     // this is the _response_
     message_sent = 0;
-    
+
     if (send_message) {
         int ship_num;
 
@@ -1560,7 +1560,7 @@ void hud_squadmsg_type_select () {
 
     // Add the items
     for (i = 0; i < NUM_COMM_ORDER_TYPES; i++) {
-        strcpy_s (MsgItems[i].text, Comm_order_types[i]);
+        strcpy (MsgItems[i].text, Comm_order_types[i]);
         MsgItems[i].active = 1; // assume active
     }
     Num_menu_items = NUM_COMM_ORDER_TYPES;
@@ -1638,7 +1638,7 @@ void hud_squadmsg_type_select () {
     }
 
 do_main_menu:
-    strcpy_s (Squad_msg_title, XSTR ("Message What", 316));
+    strcpy (Squad_msg_title, XSTR ("Message What", 316));
     k = hud_squadmsg_get_key ();
     if (k !=
         -1) { // when k != -1, we have a key that associates with menu item
@@ -1677,7 +1677,7 @@ void hud_squadmsg_ship_select () {
         hud_squadmsg_count_ships (1);
     }
 
-    strcpy_s (Squad_msg_title, XSTR ("Select Ship", 317));
+    strcpy (Squad_msg_title, XSTR ("Select Ship", 317));
     k = hud_squadmsg_get_key ();
     if (k != -1) { // if true, we have selected a ship.
         if (Msg_shortcut_command == -1) {
@@ -1708,7 +1708,7 @@ void hud_squadmsg_wing_select () {
         hud_squadmsg_count_wings (1);
     }
 
-    strcpy_s (Squad_msg_title, XSTR ("Select Wing", 318));
+    strcpy (Squad_msg_title, XSTR ("Select Wing", 318));
     k = hud_squadmsg_get_key ();
     if (k != -1) { // if true, we have selected a ship.
         if (Msg_shortcut_command ==
@@ -1872,7 +1872,7 @@ void hud_squadmsg_reinforcement_select () {
             }
 
             ASSERT (Num_menu_items < MAX_MENU_ITEMS);
-            strcpy_s (MsgItems[Num_menu_items].text, rp->name);
+            strcpy (MsgItems[Num_menu_items].text, rp->name);
             end_string_at_first_hash_symbol (MsgItems[Num_menu_items].text);
             MsgItems[Num_menu_items].instance = i;
             MsgItems[Num_menu_items].active = 0;
@@ -1886,7 +1886,7 @@ void hud_squadmsg_reinforcement_select () {
     }
 
     // hud_squadmsg_display_menu( "Select Reinforcement" );
-    strcpy_s (
+    strcpy (
         Squad_msg_title,
         XSTR ("Select Ship/Wing", 319)); // AL 11-14-97: Reinforcement didn't
                                          // fit, so using this for now
@@ -1937,7 +1937,7 @@ void hud_squadmsg_ship_command () {
         // the ship.
         if (default_orders & Comm_orders[i].item) {
             ASSERT (Num_menu_items < MAX_MENU_ITEMS);
-            strcpy_s (MsgItems[Num_menu_items].text, Comm_orders[i].name);
+            strcpy (MsgItems[Num_menu_items].text, Comm_orders[i].name);
             MsgItems[Num_menu_items].instance = Comm_orders[i].item;
             MsgItems[Num_menu_items].active = 0;
             // check the bit to see if the command is active
@@ -1994,7 +1994,7 @@ void hud_squadmsg_ship_command () {
                     // either modify the text if a partial accept, or grey it
                     // out if no one accepts
                     if (partial_accept) {
-                        strcat_s (
+                        strcat (
                             MsgItems[Num_menu_items].text, XSTR ("(*)", 320));
                     }
                     else {
@@ -2007,7 +2007,7 @@ void hud_squadmsg_ship_command () {
         }
     }
 
-    strcpy_s (Squad_msg_title, XSTR ("What Command", 321));
+    strcpy (Squad_msg_title, XSTR ("What Command", 321));
     k = hud_squadmsg_get_key ();
 
     // when we get a valid goal, we must add the goal to the ai ship's goal
@@ -2065,7 +2065,7 @@ void hud_squadmsg_wing_command () {
         // allow all messages to be available in the wing.
         if (default_orders & Comm_orders[i].item) {
             ASSERT (Num_menu_items < MAX_MENU_ITEMS);
-            strcpy_s (MsgItems[Num_menu_items].text, Comm_orders[i].name);
+            strcpy (MsgItems[Num_menu_items].text, Comm_orders[i].name);
             MsgItems[Num_menu_items].instance = Comm_orders[i].item;
             MsgItems[Num_menu_items].active = 0;
 
@@ -2085,7 +2085,7 @@ void hud_squadmsg_wing_command () {
         }
     }
 
-    strcpy_s (Squad_msg_title, XSTR ("What Command", 321));
+    strcpy (Squad_msg_title, XSTR ("What Command", 321));
 
     k = hud_squadmsg_get_key ();
     if (k != -1) {

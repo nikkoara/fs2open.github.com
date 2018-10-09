@@ -115,7 +115,7 @@ void parse_mod_table (const char* filename) {
                 temp[maxlen] = 0;
             }
 
-            strcpy_s (Default_campaign_file_name, temp);
+            strcpy (Default_campaign_file_name, temp);
         }
 
         if (optional_string ("#Ignored Campaign File Names")) {

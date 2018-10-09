@@ -55,7 +55,7 @@ static char* read_line_from_file (FILE* fp) {
     int buflen, eol;
 
     buflen = 80;
-    buf = (char*)vm_malloc (buflen);
+    buf = (char*)malloc (buflen);
     buf_start = buf;
     eol = 0;
 
@@ -64,7 +64,7 @@ static char* read_line_from_file (FILE* fp) {
 
         if (fgets (buf_start, 80, fp) == NULL) {
             if (buf_start == buf) {
-                vm_free (buf);
+                free (buf);
                 return NULL;
             }
             else {
@@ -82,7 +82,7 @@ static char* read_line_from_file (FILE* fp) {
         else {
             buflen += 80;
 
-            buf = (char*)vm_realloc (buf, buflen);
+            buf = (char*)realloc (buf, buflen);
 
             /* be sure to skip over the proper amount of nulls */
             buf_start = buf + (buflen - 80) - (buflen / 80) + 1;
@@ -139,7 +139,7 @@ static Profile* profile_read (const char* file) {
 
     if (fp == NULL) return NULL;
 
-    Profile* profile = (Profile*)vm_malloc (sizeof (Profile));
+    Profile* profile = (Profile*)malloc (sizeof (Profile));
     profile->sections = NULL;
 
     Section** sp_ptr = &(profile->sections);
@@ -160,10 +160,10 @@ static Profile* profile_read (const char* file) {
                 *pend = 0;
 
                 if (*ptr) {
-                    sp = (Section*)vm_malloc (sizeof (Section));
+                    sp = (Section*)malloc (sizeof (Section));
                     sp->next = NULL;
 
-                    sp->name = vm_strdup (ptr);
+                    sp->name = strdup (ptr);
                     sp->pairs = NULL;
 
                     *sp_ptr = sp;
@@ -189,10 +189,10 @@ static Profile* profile_read (const char* file) {
                 if (key && *key && value /* && *value */) {
                     if (sp != NULL) {
                         KeyValue* kvp =
-                            (KeyValue*)vm_malloc (sizeof (KeyValue));
+                            (KeyValue*)malloc (sizeof (KeyValue));
 
-                        kvp->key = vm_strdup (key);
-                        kvp->value = vm_strdup (value);
+                        kvp->key = strdup (key);
+                        kvp->value = strdup (value);
 
                         kvp->next = NULL;
 
@@ -203,7 +203,7 @@ static Profile* profile_read (const char* file) {
             }         // else it's just a comment or empty string
         }
 
-        vm_free (str);
+        free (str);
     }
 
     fclose (fp);
@@ -222,27 +222,27 @@ static void profile_free (Profile* profile) {
         while (kvp != NULL) {
             KeyValue* kvt = kvp;
 
-            vm_free (kvp->key);
-            vm_free (kvp->value);
+            free (kvp->key);
+            free (kvp->value);
 
             kvp = kvp->next;
-            vm_free (kvt);
+            free (kvt);
         }
 
-        vm_free (sp->name);
+        free (sp->name);
 
         sp = sp->next;
-        vm_free (st);
+        free (st);
     }
 
-    vm_free (profile);
+    free (profile);
 }
 
 static Profile* profile_update (
     Profile* profile, const char* section, const char* key,
     const char* value) {
     if (profile == NULL) {
-        profile = (Profile*)vm_malloc (sizeof (Profile));
+        profile = (Profile*)malloc (sizeof (Profile));
 
         profile->sections = NULL;
     }
@@ -259,16 +259,16 @@ static Profile* profile_update (
 
             while (kvp != NULL) {
                 if (strcmp (key, kvp->key) == 0) {
-                    vm_free (kvp->value);
+                    free (kvp->value);
 
                     if (value == NULL) {
                         *kvp_ptr = kvp->next;
 
-                        vm_free (kvp->key);
-                        vm_free (kvp);
+                        free (kvp->key);
+                        free (kvp);
                     }
                     else {
-                        kvp->value = vm_strdup (value);
+                        kvp->value = strdup (value);
                     }
 
                     /* all done */
@@ -281,10 +281,10 @@ static Profile* profile_update (
 
             if (value != NULL) {
                 /* key not found */
-                kvp = (KeyValue*)vm_malloc (sizeof (KeyValue));
+                kvp = (KeyValue*)malloc (sizeof (KeyValue));
                 kvp->next = NULL;
-                kvp->key = vm_strdup (key);
-                kvp->value = vm_strdup (value);
+                kvp->key = strdup (key);
+                kvp->value = strdup (value);
             }
 
             *kvp_ptr = kvp;
@@ -298,14 +298,14 @@ static Profile* profile_update (
     }
 
     /* section not found */
-    sp = (Section*)vm_malloc (sizeof (Section));
+    sp = (Section*)malloc (sizeof (Section));
     sp->next = NULL;
-    sp->name = vm_strdup (section);
+    sp->name = strdup (section);
 
-    kvp = (KeyValue*)vm_malloc (sizeof (KeyValue));
+    kvp = (KeyValue*)malloc (sizeof (KeyValue));
     kvp->next = NULL;
-    kvp->key = vm_strdup (key);
-    kvp->value = vm_strdup (value);
+    kvp->key = strdup (key);
+    kvp->value = strdup (value);
 
     sp->pairs = kvp;
 
@@ -374,14 +374,14 @@ static void profile_save (Profile* profile, const char* file) {
 
 // initialize the registry. setup default keys to use
 void os_init_registry_stuff (const char* company, const char* app) {
-    if (company) { strcpy_s (szCompanyName, company); }
+    if (company) { strcpy (szCompanyName, company); }
     else {
-        strcpy_s (szCompanyName, Osreg_company_name);
+        strcpy (szCompanyName, Osreg_company_name);
     }
 
-    if (app) { strcpy_s (szAppName, app); }
+    if (app) { strcpy (szAppName, app); }
     else {
-        strcpy_s (szAppName, Osreg_app_name);
+        strcpy (szAppName, Osreg_app_name);
     }
 
     Os_reg_inited = 1;

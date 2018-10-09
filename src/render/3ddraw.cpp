@@ -1376,8 +1376,8 @@ void flash_ball::initialize (
     center = *pcenter;
 
     if (n_rays < number) {
-        if (ray) vm_free (ray);
-        ray = (flash_beam*)vm_malloc (sizeof (flash_beam) * number);
+        if (ray) free (ray);
+        ray = (flash_beam*)malloc (sizeof (flash_beam) * number);
         n_rays = number;
     }
 
@@ -1445,8 +1445,8 @@ void flash_ball::defpoint (int off, ubyte* bsp_data) {
     vec3d* src = vp (off + bsp_data + offset);
 
     if (n_rays < nverts) {
-        if (ray) vm_free (ray);
-        ray = (flash_beam*)vm_malloc (sizeof (flash_beam) * nverts);
+        if (ray) free (ray);
+        ray = (flash_beam*)malloc (sizeof (flash_beam) * nverts);
         n_rays = nverts;
     }
 

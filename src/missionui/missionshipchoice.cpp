@@ -916,7 +916,7 @@ void ship_select_blit_ship_info () {
 
         // Goober5000
         char temp[NAME_LENGTH];
-        strcpy_s (temp, (sip->alt_name[0]) ? sip->alt_name : sip->name);
+        strcpy (temp, (sip->alt_name[0]) ? sip->alt_name : sip->name);
         end_string_at_first_hash_symbol (temp);
 
         gr_string (
@@ -968,7 +968,7 @@ void ship_select_blit_ship_info () {
     else if (ShipSelectModelNum >= 0) {
         polymodel* pm = model_get (ShipSelectModelNum);
         sprintf (str, "%d", fl2i (pm->maxs.xyz.z - pm->mins.xyz.z));
-        strcat_s (str, " M");
+        strcat (str, " M");
         gr_string (
             Ship_info_coords[gr_screen.res][SHIP_SELECT_X_COORD] + 4, y_start,
             str, GR_RESIZE_MENU);
@@ -1011,19 +1011,19 @@ void ship_select_blit_ship_info () {
     else if (ShipSelectModelNum >= 0) {
         int sum = fl2i (sip->rotation_time.xyz.x + sip->rotation_time.xyz.y);
         if (sum <= 6)
-            strcpy_s (str, "Excellent");
+            strcpy (str, "Excellent");
         else if (sum < 7)
-            strcpy_s (str, "High");
+            strcpy (str, "High");
         else if (sum < 8)
-            strcpy_s (str, "Good");
+            strcpy (str, "Good");
         else if (sum < 9)
-            strcpy_s (str, "Average");
+            strcpy (str, "Average");
         else if (sum < 10)
-            strcpy_s (str, "Poor");
+            strcpy (str, "Poor");
         else if (sum < 15)
-            strcpy_s (str, "Very Poor");
+            strcpy (str, "Very Poor");
         else
-            strcpy_s (str, "Extremely Poor");
+            strcpy (str, "Extremely Poor");
 
         gr_string (
             Ship_info_coords[gr_screen.res][SHIP_SELECT_X_COORD] + 4, y_start,
@@ -1051,27 +1051,27 @@ void ship_select_blit_ship_info () {
     else {
         int sum = fl2i (sip->max_hull_strength + sip->max_shield_strength);
         if (sum <= 600)
-            strcpy_s (str, "Light");
+            strcpy (str, "Light");
         else if (sum <= 700)
-            strcpy_s (str, "Average");
+            strcpy (str, "Average");
         else if (sum <= 900)
-            strcpy_s (str, "Medium");
+            strcpy (str, "Medium");
         else if (sum <= 1100)
-            strcpy_s (str, "Heavy");
+            strcpy (str, "Heavy");
         else if (sum <= 1300)
-            strcpy_s (str, "Very Heavy");
+            strcpy (str, "Very Heavy");
         else if (sum <= 2000)
-            strcpy_s (str, "Ultra Heavy");
+            strcpy (str, "Ultra Heavy");
         else if (sum <= 30000)
-            strcpy_s (str, "Light Capital");
+            strcpy (str, "Light Capital");
         else if (sum <= 75000)
-            strcpy_s (str, "Medium Capital");
+            strcpy (str, "Medium Capital");
         else if (sum <= 200000)
-            strcpy_s (str, "Heavy Capital");
+            strcpy (str, "Heavy Capital");
         else if (sum <= 800000)
-            strcpy_s (str, "Very Heavy Capital");
+            strcpy (str, "Very Heavy Capital");
         else
-            strcpy_s (str, "Ultra Heavy Capital");
+            strcpy (str, "Ultra Heavy Capital");
 
         gr_string (
             Ship_info_coords[gr_screen.res][SHIP_SELECT_X_COORD] + 4, y_start,
@@ -1105,7 +1105,7 @@ void ship_select_blit_ship_info () {
         if (sum != 0)
             sprintf (str, "%d", sum);
         else
-            strcpy_s (str, "None");
+            strcpy (str, "None");
         gr_string (
             Ship_info_coords[gr_screen.res][SHIP_SELECT_X_COORD] + 4, y_start,
             str, GR_RESIZE_MENU);
@@ -1120,7 +1120,7 @@ void ship_select_blit_ship_info () {
             sprintf (str, "%d", sip->num_primary_banks);
         }
         else {
-            strcpy_s (str, "None");
+            strcpy (str, "None");
         }
         gr_string (
             Ship_info_coords[gr_screen.res][SHIP_SELECT_X_COORD] + 4, y_start,
@@ -1145,7 +1145,7 @@ void ship_select_blit_ship_info () {
             sprintf (str, "%d", sip->num_secondary_banks);
         }
         else {
-            strcpy_s (str, "None");
+            strcpy (str, "None");
         }
         gr_string (
             Ship_info_coords[gr_screen.res][SHIP_SELECT_X_COORD] + 4, y_start,
@@ -1237,7 +1237,7 @@ void ship_select_blit_ship_info () {
                                     [SHIP_SELECT_SHIP_INFO_MAX_LINE_LEN];
     int Ship_select_ship_info_line_count;
 
-    strcpy_s (Ship_select_ship_info_text, sip->desc);
+    strcpy (Ship_select_ship_info_text, sip->desc);
 
     if (Ship_select_ship_info_text[0] != '\0') {
         // split the string into multiple lines
@@ -1775,11 +1775,11 @@ void start_ship_animation (int ship_class, int /*play_sound*/) {
         p = strchr (Ship_info[ship_class].anim_filename, '.');
         if (p) *p = '\0';
         if (gr_screen.res == GR_1024) {
-            strcpy_s (animation_filename, "2_");
-            strcat_s (animation_filename, Ship_info[ship_class].anim_filename);
+            strcpy (animation_filename, "2_");
+            strcat (animation_filename, Ship_info[ship_class].anim_filename);
         }
         else {
-            strcpy_s (animation_filename, Ship_info[ship_class].anim_filename);
+            strcpy (animation_filename, Ship_info[ship_class].anim_filename);
         }
 
         generic_anim_init (&Ss_icons[ship_class].ss_anim, animation_filename);
@@ -1918,8 +1918,8 @@ void commit_pressed () {
 
     // save the player loadout
     if (!(Game_mode & GM_MULTIPLAYER)) {
-        strcpy_s (Player_loadout.filename, Game_current_mission_filename);
-        strcpy_s (Player_loadout.last_modified, The_mission.modified);
+        strcpy (Player_loadout.filename, Game_current_mission_filename);
+        strcpy (Player_loadout.last_modified, The_mission.modified);
         wss_save_loadout ();
     }
 

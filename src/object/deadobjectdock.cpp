@@ -85,7 +85,7 @@ void dead_dock_add_instance (object* objp, int dockpoint, object* other_objp) {
     dock_instance* item;
 
     // create item
-    item = (dock_instance*)vm_malloc (sizeof (dock_instance));
+    item = (dock_instance*)malloc (sizeof (dock_instance));
     item->dockpoint_used = dockpoint;
     item->docked_objp = other_objp;
 
@@ -124,7 +124,7 @@ void dead_dock_remove_instance (object* objp, object* other_objp) {
         }
 
         // delete it
-        vm_free (ptr);
+        free (ptr);
     }
     else {
         // Trigger assertion. We can recover from this, thankfully
@@ -139,7 +139,7 @@ void dock_free_dead_dock_list (object* objp) {
     while (objp->dead_dock_list != NULL) {
         dock_instance* ptr = objp->dead_dock_list;
         objp->dead_dock_list = ptr->next;
-        vm_free (ptr);
+        free (ptr);
     }
 }
 

@@ -1976,7 +1976,7 @@ static void asteroid_parse_tbl () {
             stuff_string (Asteroid_icon_closeup_model, F_NAME, NAME_LENGTH);
         }
         else {
-            strcpy_s (
+            strcpy (
                 Asteroid_icon_closeup_model,
                 Asteroid_info[ASTEROID_TYPE_LARGE]
                     .pof_files[0]); // magic file from retail

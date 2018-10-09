@@ -17,12 +17,12 @@
 
 geometry_batcher::~geometry_batcher () {
     if (vert != NULL) {
-        vm_free (vert);
+        free (vert);
         vert = NULL;
     }
 
     if (radius_list != NULL) {
-        vm_free (radius_list);
+        free (radius_list);
         radius_list = NULL;
     }
 }
@@ -35,17 +35,17 @@ geometry_batcher::~geometry_batcher () {
 void geometry_batcher::allocate_internal (int n_verts) {
     if (n_verts > n_allocated) {
         if (vert != NULL) {
-            vm_free (vert);
+            free (vert);
             vert = NULL;
         }
 
         if (radius_list != NULL) {
-            vm_free (radius_list);
+            free (radius_list);
             radius_list = NULL;
         }
 
-        vert = (vertex*)vm_malloc (sizeof (vertex) * n_verts);
-        radius_list = (float*)vm_malloc (sizeof (float) * n_verts);
+        vert = (vertex*)malloc (sizeof (vertex) * n_verts);
+        radius_list = (float*)malloc (sizeof (float) * n_verts);
 
         ASSERT ((vert != NULL));
         ASSERT ((radius_list != NULL));
@@ -85,8 +85,8 @@ void geometry_batcher::add_allocate (int quad, int n_tri) {
     float* old_radius_list = radius_list;
 
     if (to_alloc > n_allocated) {
-        vert = (vertex*)vm_malloc (sizeof (vertex) * to_alloc);
-        radius_list = (float*)vm_malloc (sizeof (float) * to_alloc);
+        vert = (vertex*)malloc (sizeof (vertex) * to_alloc);
+        radius_list = (float*)malloc (sizeof (float) * to_alloc);
 
         ASSERT ((vert != NULL));
         ASSERT ((radius_list != NULL));
@@ -96,14 +96,14 @@ void geometry_batcher::add_allocate (int quad, int n_tri) {
 
         if (old_vert != NULL) {
             memcpy (vert, old_vert, sizeof (vertex) * n_to_render * 3);
-            vm_free (old_vert);
+            free (old_vert);
         }
 
         if (old_radius_list != NULL) {
             memcpy (
                 radius_list, old_radius_list,
                 sizeof (float) * n_to_render * 3);
-            vm_free (old_radius_list);
+            free (old_radius_list);
         }
 
         n_allocated = to_alloc;
@@ -116,8 +116,8 @@ void geometry_batcher::clone (const geometry_batcher& geo) {
     use_radius = geo.use_radius;
 
     if (n_allocated > 0) {
-        vert = (vertex*)vm_malloc (sizeof (vertex) * n_allocated);
-        radius_list = (float*)vm_malloc (sizeof (float) * n_allocated);
+        vert = (vertex*)malloc (sizeof (vertex) * n_allocated);
+        radius_list = (float*)malloc (sizeof (float) * n_allocated);
 
         memcpy (vert, geo.vert, sizeof (vertex) * n_allocated);
         memcpy (radius_list, geo.radius_list, sizeof (float) * n_allocated);
@@ -1096,10 +1096,10 @@ void geometry_batch_render (int stream_buffer) {
     size_t n_verts = 0;
 
     if (Batch_geometry_buffer_size < (n_to_render * sizeof (particle_pnt))) {
-        if (Batch_geometry_buffer != NULL) { vm_free (Batch_geometry_buffer); }
+        if (Batch_geometry_buffer != NULL) { free (Batch_geometry_buffer); }
 
         Batch_geometry_buffer_size = n_to_render * sizeof (particle_pnt);
-        Batch_geometry_buffer = vm_malloc (Batch_geometry_buffer_size);
+        Batch_geometry_buffer = malloc (Batch_geometry_buffer_size);
     }
 
     batch_load_buffer_geometry_shader_map_bitmaps (
@@ -1118,10 +1118,10 @@ void batch_render_all (int stream_buffer) {
         int n_verts = 0;
 
         if ((Batch_buffer_size < (n_to_render * sizeof (effect_vertex)))) {
-            if (Batch_buffer != NULL) { vm_free (Batch_buffer); }
+            if (Batch_buffer != NULL) { free (Batch_buffer); }
 
             Batch_buffer_size = n_to_render * sizeof (effect_vertex);
-            Batch_buffer = vm_malloc (Batch_buffer_size);
+            Batch_buffer = malloc (Batch_buffer_size);
         }
 
         batch_load_buffer_lasers ((effect_vertex*)Batch_buffer, &n_verts);
@@ -1153,7 +1153,7 @@ void batch_reset () {
 
 void batch_render_close () {
     if (Batch_buffer != NULL) {
-        vm_free (Batch_buffer);
+        free (Batch_buffer);
         Batch_buffer = NULL;
     }
 

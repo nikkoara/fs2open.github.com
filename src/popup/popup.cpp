@@ -558,7 +558,7 @@ void popup_close (popup_info* pi, int screen_id) {
 
     for (i = 0; i < pi->nchoices; i++) {
         if (pi->button_text[i] != NULL) {
-            vm_free (pi->button_text[i]);
+            free (pi->button_text[i]);
             pi->button_text[i] = NULL;
         }
     }
@@ -935,7 +935,7 @@ void popup_maybe_assign_keypress (popup_info* pi, int n, char* str) {
 
     len = (int)strlen (str) + 1;
 
-    pi->button_text[n] = (char*)vm_malloc (len);
+    pi->button_text[n] = (char*)malloc (len);
     memset (pi->button_text[n], 0, len);
 
     j = 0;
@@ -1094,7 +1094,7 @@ char* popup_input (int flags, const char* caption, int max_output_len) {
 
     // get msg text
     ASSERT (caption != NULL);
-    strcpy_s (Popup_info.raw_text, caption);
+    strcpy (Popup_info.raw_text, caption);
     ASSERT (strlen (Popup_info.raw_text) < POPUP_MAX_CHARS);
 
     // set input text length
@@ -1131,7 +1131,7 @@ void popup_kill_any_active () {
 // change the text inside of the popup
 void popup_change_text (const char* new_text) {
     // copy the raw text
-    strcpy_s (Popup_info.raw_text, new_text);
+    strcpy (Popup_info.raw_text, new_text);
 
     // recalculate all display information
     popup_split_lines (&Popup_info, Popup_flags);

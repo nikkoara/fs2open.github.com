@@ -119,7 +119,7 @@ DCF (objsnd, "Persistent sound stuff") {
             }
 
             if (Objects[osp->objnum].type == OBJ_SHIP) {
-                strcpy_s (
+                strcpy (
                     buf2, Ships[Objects[osp->objnum].instance].ship_name);
             }
             else if (Objects[osp->objnum].type == OBJ_DEBRIS) {

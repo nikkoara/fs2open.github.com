@@ -123,8 +123,8 @@ void os_init (const char* wclass, const char* title, const char* app_name) {
         os_init_registry_stuff (Osreg_company_name, app_name);
     }
 
-    strcpy_s (szWinTitle, title);
-    strcpy_s (szWinClass, wclass);
+    strcpy (szWinTitle, title);
+    strcpy (szWinClass, wclass);
 
     SDL_version compiled;
     SDL_version linked;
@@ -166,7 +166,7 @@ void os_set_title (const char* title) {
     ASSERTX (
         mainSDLWindow != nullptr,
         "This function may only be called with a valid SDL Window.");
-    strcpy_s (szWinTitle, title);
+    strcpy (szWinTitle, title);
 
     SDL_SetWindowTitle (mainSDLWindow, szWinTitle);
 }

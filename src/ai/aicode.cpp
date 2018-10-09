@@ -456,9 +456,9 @@ int create_object_hash (object* objp) {
 }
 
 void free_ai_stuff () {
-    if (Ai_classes != NULL) vm_free (Ai_classes);
+    if (Ai_classes != NULL) free (Ai_classes);
 
-    if (Ai_class_names != NULL) vm_free (Ai_class_names);
+    if (Ai_class_names != NULL) free (Ai_class_names);
 }
 
 /**
@@ -788,9 +788,9 @@ void parse_aitbl () {
         Num_ai_classes = 0;
         Num_alloced_ai_classes = AI_CLASS_INCREMENT;
         Ai_classes =
-            (ai_class*)vm_malloc (Num_alloced_ai_classes * sizeof (ai_class));
+            (ai_class*)malloc (Num_alloced_ai_classes * sizeof (ai_class));
         Ai_class_names =
-            (char**)vm_malloc (Num_alloced_ai_classes * sizeof (char*));
+            (char**)malloc (Num_alloced_ai_classes * sizeof (char*));
 
         required_string ("#AI Classes");
 
@@ -801,14 +801,14 @@ void parse_aitbl () {
 
             if (Num_ai_classes >= Num_alloced_ai_classes) {
                 Num_alloced_ai_classes += AI_CLASS_INCREMENT;
-                Ai_classes = (ai_class*)vm_realloc (
+                Ai_classes = (ai_class*)realloc (
                     Ai_classes, Num_alloced_ai_classes * sizeof (ai_class));
 
                 // Ai_class_names doesn't realloc all that well so we have to
                 // do it the hard way. Luckily, it's contents can be easily
                 // replaced so we don't have to save anything.
-                vm_free (Ai_class_names);
-                Ai_class_names = (char**)vm_malloc (
+                free (Ai_class_names);
+                Ai_class_names = (char**)malloc (
                     Num_alloced_ai_classes * sizeof (char*));
                 reset_ai_class_names ();
             }

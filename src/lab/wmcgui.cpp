@@ -105,9 +105,9 @@ bool ObjectClassInfoEntry::Parse () {
         }
 
         // We MUST have the end tag
-        strcpy_s (buf2, "</");
-        strcat_s (buf2, buf);
-        strcat_s (buf2, ">");
+        strcpy (buf2, "</");
+        strcat (buf2, buf);
+        strcat (buf2, ">");
 
         required_string (buf2);
         return true;
@@ -171,9 +171,9 @@ void GUISystem::ParseClassInfo (const char* filename) {
 
 void ClassInfoEntry::Parse (const char* tag, int in_type) {
     char buf[MAX_FILENAME_LEN];
-    strcpy_s (buf, "+");
-    strcat_s (buf, tag);
-    if (in_type != CIE_IMAGE_BORDER) { strcat_s (buf, ":"); }
+    strcpy (buf, "+");
+    strcat (buf, tag);
+    if (in_type != CIE_IMAGE_BORDER) { strcat (buf, ":"); }
 
     if (optional_string (buf)) {
         CIEType = in_type;
@@ -2336,9 +2336,9 @@ bool Text::Save () {
             return true;
         }
         else if (SaveType & T_ST_MALLOC && len < uSaveMax) {
-            if (*chpSavePointer != NULL) { vm_free (*chpSavePointer); }
+            if (*chpSavePointer != NULL) { free (*chpSavePointer); }
 
-            *chpSavePointer = (char*)vm_malloc (sizeof (char) * (len + 1));
+            *chpSavePointer = (char*)malloc (sizeof (char) * (len + 1));
             strcpy (*chpSavePointer, Content.c_str ());
             return true;
         }

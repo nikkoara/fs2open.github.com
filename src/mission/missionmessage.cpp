@@ -212,7 +212,7 @@ int comm_between_player_and_ship (int other_shipnum);
 
 static void persona_parse_close () {
     if (Personas != NULL) {
-        vm_free (Personas);
+        free (Personas);
         Personas = NULL;
     }
 }
@@ -233,7 +233,7 @@ void persona_parse () {
     // this way should cause the least amount of problems on the various
     // platforms - taylor
     Personas =
-        (Persona*)vm_realloc (Personas, sizeof (Persona) * (Num_personas + 1));
+        (Persona*)realloc (Personas, sizeof (Persona) * (Num_personas + 1));
 
     if (Personas == NULL)
         ASSERTX (0, "Not enough memory to allocate Personas!");
@@ -306,7 +306,7 @@ int add_avi (char* avi_name) {
 
     // would have returned if a slot existed.
     generic_anim_init (&extra.anim_data, avi_name);
-    strcpy_s (extra.name, avi_name);
+    strcpy (extra.name, avi_name);
     extra.num = sound_load_id::invalid ();
     extra.exists =
         (generic_anim_load (&extra.anim_data) ==
@@ -329,7 +329,7 @@ int add_wave (const char* wave_name) {
     }
 
     generic_anim_init (&extra.anim_data);
-    strcpy_s (extra.name, wave_name);
+    strcpy (extra.name, wave_name);
     extra.num = sound_load_id::invalid ();
     Message_waves.push_back (extra);
     Num_message_waves++;
@@ -393,7 +393,7 @@ void message_parse (bool importing_from_fsm) {
 
         if (!Fred_running) { msg.avi_info.index = add_avi (avi_name); }
         else {
-            msg.avi_info.name = vm_strdup (avi_name);
+            msg.avi_info.name = strdup (avi_name);
         }
     }
 
@@ -408,7 +408,7 @@ void message_parse (bool importing_from_fsm) {
         stuff_string (wave_name, F_NAME, MAX_FILENAME_LEN);
         if (!Fred_running) { msg.wave_info.index = add_wave (wave_name); }
         else {
-            msg.wave_info.name = vm_strdup (wave_name);
+            msg.wave_info.name = strdup (wave_name);
         }
     }
 
@@ -778,7 +778,7 @@ void message_mission_shutdown () {
     // Goober5000 - free up special messages
     for (i = 0; i < MAX_MESSAGE_Q; i++) {
         if (MessageQ[i].special_message != NULL) {
-            vm_free (MessageQ[i].special_message);
+            free (MessageQ[i].special_message);
             MessageQ[i].special_message = NULL;
         }
     }
@@ -788,7 +788,7 @@ void message_mission_shutdown () {
 void message_mission_close () {
     // free the persona data
     if (Personas != NULL) {
-        vm_free (Personas);
+        free (Personas);
         Personas = NULL;
     }
 }
@@ -958,7 +958,7 @@ void message_remove_from_queue (message_q* q) {
 
     // Goober5000
     if (q->special_message != NULL) {
-        vm_free (q->special_message);
+        free (q->special_message);
         q->special_message = NULL;
     }
 
@@ -984,7 +984,7 @@ void message_load_wave (int index, const char* filename) {
     }
 
     game_snd_entry tmp_gs;
-    strcpy_s (tmp_gs.filename, filename);
+    strcpy (tmp_gs.filename, filename);
     Message_waves[index].num = snd_load (&tmp_gs, 0, 0);
 
     if (!Message_waves[index].num.isValid ())
@@ -998,7 +998,7 @@ bool message_filename_is_generic (char* filename) {
     char truncated_filename[MAX_FILENAME_LEN];
 
     // truncate any file extension
-    strcpy_s (truncated_filename, filename);
+    strcpy (truncated_filename, filename);
     char* ptr = strchr (truncated_filename, '.');
 
     // extension must be a recognized sound file
@@ -1033,7 +1033,7 @@ bool message_play_wave (message_q* q) {
 
     if (m->wave_info.index >= 0) {
         index = m->wave_info.index;
-        strcpy_s (filename, Message_waves[index].name);
+        strcpy (filename, Message_waves[index].name);
 
         // if we need to bash the wave name because of "conversion" to terran
         // command, do it here
@@ -1057,9 +1057,9 @@ bool message_play_wave (message_q* q) {
 
             // prepend the command name, and then the rest of the filename.
             p++;
-            strcpy_s (new_filename, COMMAND_WAVE_PREFIX);
-            strcat_s (new_filename, p);
-            strcpy_s (filename, new_filename);
+            strcpy (new_filename, COMMAND_WAVE_PREFIX);
+            strcat (new_filename, p);
+            strcpy (filename, new_filename);
         }
 
         // load the sound file into memory
@@ -1146,7 +1146,7 @@ void message_play_anim (message_q* q) {
     anim_info = &Message_avis[m->avi_info.index];
 
     // get the filename.  Strip off the extension since we won't need it anyway
-    strcpy_s (ani_name, anim_info->name);
+    strcpy (ani_name, anim_info->name);
     p = strchr (ani_name, '.'); // gets us to the extension
     if (p) { *p = '\0'; }
 
@@ -1169,7 +1169,7 @@ void message_play_anim (message_q* q) {
         // to the command persona so the correct head plays.
         if (q->flags & MQF_CONVERT_TO_COMMAND) {
             persona_index = The_mission.command_persona;
-            strcpy_s (ani_name, COMMAND_HEAD_PREFIX);
+            strcpy (ani_name, COMMAND_HEAD_PREFIX);
         }
 
         // Goober5000 - guard against negative array indexing; this way, if no
@@ -1188,7 +1188,7 @@ void message_play_anim (message_q* q) {
                 else {
                     rand_index = ((int)Missiontime % MAX_WINGMAN_HEADS);
                 }
-                strcpy_s (temp, ani_name);
+                strcpy (temp, ani_name);
                 sprintf (ani_name, "%s%c", temp, 'a' + rand_index);
                 subhead_selected = TRUE;
             }
@@ -1212,7 +1212,7 @@ void message_play_anim (message_q* q) {
                     rand_index = ((int)Missiontime % MAX_COMMAND_HEADS);
                 }
 
-                strcpy_s (temp, ani_name);
+                strcpy (temp, ani_name);
                 sprintf (ani_name, "%s%c", temp, 'a' + rand_index);
                 subhead_selected = TRUE;
             }
@@ -1227,7 +1227,7 @@ void message_play_anim (message_q* q) {
         if (!subhead_selected) {
             // choose between a and b
             rand_index = ((int)Missiontime % MAX_WINGMAN_HEADS);
-            strcpy_s (temp, ani_name);
+            strcpy (temp, ani_name);
             sprintf (ani_name, "%s%c", temp, 'a' + rand_index);
             WARNINGF (
                 LOCATION,
@@ -1252,7 +1252,7 @@ void message_play_anim (message_q* q) {
         message_mission_free_avi (m->avi_info.index);
     }
 
-    strcpy_s (anim_info->anim_data.filename, ani_name);
+    strcpy (anim_info->anim_data.filename, ani_name);
     if (!Full_color_head_anis) anim_info->anim_data.use_hud_color = true;
 
     if (generic_anim_stream (&anim_info->anim_data, false) < 0) {
@@ -1630,12 +1630,12 @@ void message_queue_process () {
     // or not the voice played
     if (Sound_enabled &&
         !Playing_messages[Num_messages_playing].wave.isValid ()) {
-        strcat_s (buf, NOX ("..(no wavefile for voice)"));
+        strcat (buf, NOX ("..(no wavefile for voice)"));
         snd_play (gamesnd_get_game_sound (GameSounds::CUE_VOICE));
     }
 #endif
 
-    strcpy_s (who_from, q->who_from);
+    strcpy (who_from, q->who_from);
 
     // if this is a ship, do we use name or callsign or ship class?
     if (Message_shipnum >= 0) {
@@ -1724,19 +1724,19 @@ void message_queue_message (
     MessageQ[i].builtin_type = builtin_type;
     MessageQ[i].min_delay_stamp = timestamp (delay);
     MessageQ[i].group = group;
-    strcpy_s (MessageQ[i].who_from, who_from);
+    strcpy (MessageQ[i].who_from, who_from);
 
     // Goober5000 - this shouldn't happen, but let's be safe
     if (MessageQ[i].special_message != NULL) {
         Int3 ();
-        vm_free (MessageQ[i].special_message);
+        free (MessageQ[i].special_message);
         MessageQ[i].special_message = NULL;
     }
 
     // Goober5000 - replace variables if necessary
-    strcpy_s (temp_buf, Messages[message_num].message);
+    strcpy (temp_buf, Messages[message_num].message);
     if (sexp_replace_variable_names_with_values (temp_buf, MESSAGE_LENGTH))
-        MessageQ[i].special_message = vm_strdup (temp_buf);
+        MessageQ[i].special_message = strdup (temp_buf);
 
     // SPECIAL HACK -- if the who_from is terran command, and there is a
     // wingman persona attached to this message, then set a bit to tell the
@@ -2407,8 +2407,8 @@ void message_pagein_mission_messages () {
 bool add_message (
     const char* name, char* message, int persona_index, int multi_team) {
     MissionMessage msg;
-    strcpy_s (msg.name, name);
-    strcpy_s (msg.message, message);
+    strcpy (msg.name, name);
+    strcpy (msg.message, message);
     msg.persona_index = persona_index;
     msg.multi_team = multi_team;
     msg.avi_info.index = -1;
@@ -2423,7 +2423,7 @@ bool change_message (
     const char* name, char* message, int persona_index, int multi_team) {
     for (int i = Num_builtin_messages; i < Num_messages; i++) {
         if (!strcmp (Messages[i].name, name)) {
-            strcpy_s (Messages[i].message, message);
+            strcpy (Messages[i].message, message);
             Messages[i].persona_index = persona_index;
             Messages[i].multi_team = multi_team;
 

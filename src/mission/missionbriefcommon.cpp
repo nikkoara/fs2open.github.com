@@ -360,7 +360,7 @@ void mission_brief_common_init () {
                 Briefings[i].stages[j].text = "";
 
                 if (Briefings[i].stages[j].icons == NULL) {
-                    Briefings[i].stages[j].icons = (brief_icon*)vm_malloc (
+                    Briefings[i].stages[j].icons = (brief_icon*)malloc (
                         sizeof (brief_icon) * MAX_STAGE_ICONS);
                     ASSERT (Briefings[i].stages[j].icons != NULL);
                     memset (
@@ -369,7 +369,7 @@ void mission_brief_common_init () {
                 }
 
                 if (Briefings[i].stages[j].lines == NULL) {
-                    Briefings[i].stages[j].lines = (brief_line*)vm_malloc (
+                    Briefings[i].stages[j].lines = (brief_line*)malloc (
                         sizeof (brief_line) * MAX_BRIEF_STAGE_LINES);
                     ASSERT (Briefings[i].stages[j].lines != NULL);
                     memset (
@@ -442,12 +442,12 @@ void mission_brief_common_reset () {
             }
             else {
                 if (Briefings[i].stages[j].icons) {
-                    vm_free (Briefings[i].stages[j].icons);
+                    free (Briefings[i].stages[j].icons);
                     Briefings[i].stages[j].icons = NULL;
                 }
 
                 if (Briefings[i].stages[j].lines) {
-                    vm_free (Briefings[i].stages[j].lines);
+                    free (Briefings[i].stages[j].lines);
                     Briefings[i].stages[j].lines = NULL;
                 }
             }
@@ -975,7 +975,7 @@ void brief_render_icon (
             else {
                 if (Lcl_gr && !Disable_built_in_translations) {
                     char buf[128];
-                    strcpy_s (buf, bi->label);
+                    strcpy (buf, bi->label);
                     lcl_translate_brief_icon_name_gr (buf);
                     gr_get_string_size (&w, &h, buf);
                     gr_string (
@@ -983,7 +983,7 @@ void brief_render_icon (
                 }
                 else if (Lcl_pl && !Disable_built_in_translations) {
                     char buf[128];
-                    strcpy_s (buf, bi->label);
+                    strcpy (buf, bi->label);
                     lcl_translate_brief_icon_name_pl (buf);
                     gr_get_string_size (&w, &h, buf);
                     gr_string (
@@ -2020,7 +2020,7 @@ grid* brief_create_grid (
     ASSERT (square_size > 0.0);
     if (double_fine_gridlines) d = 2;
 
-    if (gridp == NULL) gridp = (grid*)vm_malloc (sizeof (grid));
+    if (gridp == NULL) gridp = (grid*)malloc (sizeof (grid));
 
     ASSERT (gridp);
 
