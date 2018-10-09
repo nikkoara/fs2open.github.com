@@ -5,7 +5,6 @@
 
 #include "defs.hpp"
 
-#include "windows_stub/config.h"
 #include "globalincs/scp_defines.h"
 #include "util/strings.h"
 
@@ -15,6 +14,8 @@
 #include <cstring>
 #include <algorithm>
 #include <cstdint>
+
+#include <SDL.h>
 
 // value to represent an uninitialized state in any int or uint
 #define UNINITIALIZED 0x7f8e6d9c

@@ -3,8 +3,10 @@
 #ifndef FREESPACE2_CFILE_CFILE_H
 #define FREESPACE2_CFILE_CFILE_H
 
-#include <ctime>
 #include "globalincs/pstypes.h"
+
+#include <ctime>
+#include <sys/stat.h>
 
 #include <stdexcept>
 
@@ -252,6 +254,11 @@ int cf_is_valid (CFILE* cfile);
 
 // Returns size of file...
 int cfilelength (CFILE* fp);
+
+inline int cfilelength (int fd) {
+    struct stat st;
+    return 0 == fstat (fd, &st) ? st.st_size : -1;
+}
 
 // Reads data
 int cfread (void* buf, int elsize, int nelem, CFILE* fp);

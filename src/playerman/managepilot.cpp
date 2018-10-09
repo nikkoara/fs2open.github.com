@@ -28,6 +28,9 @@
 #include "sound/sound.h"
 #include "weapon/weapon.h"
 
+#include <filesystem>
+namespace fs = std::filesystem;
+
 // pilot pic image list stuff ( call pilot_load_pic_list() to make these valid
 // )
 char Pilot_images_arr[MAX_PILOT_IMAGES][MAX_FILENAME_LEN];
@@ -44,28 +47,18 @@ int Num_pilot_squad_images = 0;
 // obsoleted, and when a pilot is deleted used in barracks and player_select
 // returns 0 on failure, 1 on success
 int delete_pilot_file (char* pilot_name) {
-    int delreturn;
-    char filename[MAX_FILENAME_LEN];
-    char basename[MAX_FILENAME_LEN];
+    const auto basename = fs::path (pilot_name).stem ();
+    const auto filename = fs::path (basename) += ".plr";
 
-    // get the player file.
-    _splitpath (pilot_name, NULL, NULL, basename, NULL);
-
-    strcpy_s (filename, basename);
-    strcat_s (filename, NOX (".plr"));
-
-    delreturn = cf_delete (
-        filename, CF_TYPE_PLAYERS,
+    int result = cf_delete (
+        filename.c_str (), CF_TYPE_PLAYERS,
         CF_LOCATION_ROOT_USER | CF_LOCATION_ROOT_GAME | CF_LOCATION_TYPE_ROOT);
 
     // we must try and delete the campaign save files for a pilot as well.
-    if (delreturn) {
-        mission_campaign_delete_all_savefiles (basename);
-        return 1;
-    }
-    else {
-        return 0;
-    }
+    if (result)
+        mission_campaign_delete_all_savefiles (basename.c_str ());
+
+    return result;
 }
 
 // this works on barracks and player_select interface screens

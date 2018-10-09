@@ -728,30 +728,6 @@ void sim_room_scroll_line_down () {
         gamesnd_play_iface (InterfaceSounds::GENERAL_FAIL);
 }
 
-/*  Goober5000 - why are there two nearly identical functions?
-    (campaign_room_reset_campaign and sim_room_reset_campaign)
-    Looks like this function should be deprecated...
-
-// returns: 0 = success, !0 = aborted or failed
-int sim_room_reset_campaign()
-{
-    int z, rval = 1;
-
-    z = popup(PF_TITLE_BIG | PF_TITLE_RED, 2, POPUP_CANCEL, POPUP_OK, XSTR(
-"Warning\nThis will cause all progress in your\ncurrent campaign to be lost",
-110) );
-
-    if (z) {
-        mission_campaign_savefile_delete(Campaign.filename);
-        mission_campaign_load(Campaign.filename);
-
-        rval = 0;
-    }
-
-    return rval;
-}
-*/
-
 // Decide if we should offer choice to resume this savegame
 int sim_room_can_resume_savegame (char* /*savegame_filename*/) {
 #ifdef FREESPACE_SAVERESTORE_SYSTEM
@@ -769,71 +745,6 @@ int sim_room_can_resume_savegame (char* /*savegame_filename*/) {
 #else
     return 0;
 #endif
-}
-
-// Decide wether to resume a save game or not
-// exit:        1       =>      savegame has been restored
-// 0       =>      no restore, proceed to briefing
-// -1      =>      don't start mission at all
-int sim_room_maybe_resume_savegame () {
-    // MWA -- 3/26/98 -- removed all savegame references in game
-    return 0;
-
-    /*
-    char savegame_filename[_MAX_FNAME];
-    int popup_rval = -1, resume_savegame = 0;
-
-    // Generate the save-game filename for this campaign
-    memset(savegame_filename, 0, _MAX_FNAME);
-    mission_campaign_savefile_generate_root(savegame_filename);
-    strcat_s(savegame_filename, NOX("svg"));
-
-    // Decide if we should offer choice to resume this savegame
-    if ( sim_room_can_resume_savegame(savegame_filename) ) {
-        popup_rval = popup(0, 3, XSTR("&Cancel",-1), XSTR("&Overwrite",-1),
-    XSTR("&Resume",-1), XSTR("A save game for this mission exists.", -1));
-        switch ( popup_rval ) {
-        case 0:
-        case -1:
-            resume_savegame = -1;
-            break;
-        case 1:
-            resume_savegame = 0;
-            break;
-        case 2:
-            resume_savegame = 1;
-            break;
-        default:
-            Int3();
-            resume_savegame = -1;
-            break;
-        }
-    } else {
-        resume_savegame = 0;
-    }
-
-    if (resume_savegame == 1) {
-        if ( state_restore_all(savegame_filename) == -1 ) {
-            popup_rval = popup(PF_TITLE_BIG | PF_TITLE_RED, 2, POPUP_NO,
-    POPUP_YES, XSTR("Error\nSaved misison could not be loaded.\nDo you wish to
-    start this mission from the beginning?", -1)); if (popup_rval == 1) {
-                resume_savegame = 0;
-            } else {
-                resume_savegame = -1;
-            }
-
-        } else {
-            resume_savegame = 1;
-        }
-    }
-
-    // If we are resuming this savegame, then delete the file
-    if (resume_savegame == 1) {
-        cf_delete(savegame_filename);
-    }
-
-    return resume_savegame;
-    */
 }
 
 int readyroom_continue_campaign () {
@@ -1604,9 +1515,11 @@ int campaign_room_reset_campaign (int n) {
         strcat (filename, FS_CAMPAIGN_FILE_EXT);
 
         mission_campaign_savefile_delete (filename);
+
         mission_campaign_load (
             filename, NULL, 1,
             false); // retail doesn't reset stats when resetting the campaign
+
         mission_campaign_next_mission ();
 
         vm_free (filename);

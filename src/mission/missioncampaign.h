@@ -199,8 +199,8 @@ bool campaign_is_ignored (const char* filename);
 extern int mission_campaign_save (void);
 
 // declaration for local campaign save game load function
-extern void mission_campaign_savefile_delete (char* cfilename);
-extern void mission_campaign_delete_all_savefiles (char* pilot_name);
+extern void mission_campaign_savefile_delete (const char* cfilename);
+extern void mission_campaign_delete_all_savefiles (const char* pilot_name);
 
 // if a given campaign is a multiplayer campaign, we can load and save the
 // multiplayer info portion with these functions
@@ -234,9 +234,6 @@ extern void mission_campaign_maybe_play_movie (int type);
 
 // save persistent information
 extern void mission_campaign_save_persistent (int type, int index);
-
-void mission_campaign_savefile_generate_root (
-    char* filename, player* pl = NULL);
 
 int mission_campaign_savefile_save ();
 

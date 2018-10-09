@@ -339,8 +339,8 @@ profile_get_value (Profile* profile, const char* section, const char* key) {
 
 static void profile_save (Profile* profile, const char* file) {
     FILE* fp = NULL;
-    char tmp[MAX_PATH] = "";
-    char tmp2[MAX_PATH] = "";
+    char tmp[PATH_MAX] = "";
+    char tmp2[PATH_MAX] = "";
 
     if (profile == NULL) return;
 

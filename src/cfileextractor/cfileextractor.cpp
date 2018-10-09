@@ -24,11 +24,7 @@
 FILE* fp_in = NULL;
 FILE* fp_out = NULL;
 
-#ifndef MAX_PATH
-#define MAX_PATH 255
-#endif
-
-char out_dir[MAX_PATH];
+char out_dir[PATH_MAX];
 
 #define BLOCK_SIZE (1024 * 1024)
 
@@ -242,7 +238,7 @@ void extract_all_files (char* file) {
         // save the file path to a temp location and recursively make the
         // needed directories
         if (have_outdir) {
-            if ((out_len + 1 + strlen (path)) > MAX_PATH - 1)
+            if ((out_len + 1 + strlen (path)) > PATH_MAX - 1)
                 print_error (ERR_PATH_TOO_LONG);
 
             sprintf (
@@ -287,7 +283,7 @@ void extract_all_files (char* file) {
 
         // this is cheap, I know.
         if (have_outdir) {
-            if ((out_len + 1 + strlen (path)) > MAX_PATH - 1)
+            if ((out_len + 1 + strlen (path)) > PATH_MAX - 1)
                 print_error (ERR_PATH_TOO_LONG);
 
             sprintf (path2, "%s%s%s", out_dir, DIR_SEPARATOR_STR, path);
@@ -453,7 +449,7 @@ int main (int argc, char* argv[]) {
     // if the header is invalid then read_header() should exit us out
     read_header ();
 
-    memset (out_dir, 0, MAX_PATH);
+    memset (out_dir, 0, PATH_MAX);
 
     // TODO: add filter based extraction
     for (int i = 1; i < argc - 1; i++) {
@@ -477,7 +473,7 @@ int main (int argc, char* argv[]) {
         else if (
             !strcmp (argv[i], "-o") && (i + 1 < argc) &&
             (argv[i + 1][0] != '-')) {
-            strncpy (out_dir, argv[i + 1], MAX_PATH - 1);
+            strncpy (out_dir, argv[i + 1], PATH_MAX - 1);
             i++; // have to increment "i" past the output directory
         }
         else {

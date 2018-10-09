@@ -237,7 +237,7 @@ static int _cfile_chdir (const char* new_dir, const char* /* cur_dir */) {
     if (*path == '\0') { path = no_dir; }
 
     /* This chdir might get a critical error! */
-    status = _chdir (path);
+    status = chdir (path);
     if (status != 0) { return 2; }
 
     return 0;
@@ -260,7 +260,7 @@ int cfile_push_chdir (int type) {
     char dir[CFILE_ROOT_DIRECTORY_LEN];
     char OriginalDirectory[CFILE_ROOT_DIRECTORY_LEN];
 
-    _getcwd (OriginalDirectory, CFILE_ROOT_DIRECTORY_LEN - 1);
+    getcwd (OriginalDirectory, CFILE_ROOT_DIRECTORY_LEN - 1);
 
     ASSERT (Cfile_stack_pos < CFILE_STACK_MAX);
 
@@ -285,7 +285,7 @@ int cfile_push_chdir (int type) {
 int cfile_chdir (const char* dir) {
     char OriginalDirectory[CFILE_ROOT_DIRECTORY_LEN];
 
-    _getcwd (OriginalDirectory, CFILE_ROOT_DIRECTORY_LEN - 1);
+    getcwd (OriginalDirectory, CFILE_ROOT_DIRECTORY_LEN - 1);
 
     return _cfile_chdir (dir, OriginalDirectory);
 }
@@ -377,7 +377,7 @@ int cf_delete (const char* filename, int path_type, uint32_t location_flags) {
         longname, sizeof (longname) - 1, path_type, filename, false,
         location_flags);
 
-    return (_unlink (longname) != -1);
+    return (unlink (longname) != -1);
 }
 
 // Same as _access function to read a file's access bits
@@ -470,7 +470,7 @@ static void mkdir_recursive (const char* path) {
         pre = pos;
         if (dir.empty ()) continue; // if leading / first time is 0 length
 
-        _mkdir (dir.c_str ());
+        mkdir (dir.c_str (), 0777);
     }
 }
 
@@ -847,7 +847,7 @@ cf_open_fill_cfblock (const char* source, int line, FILE* fp, int type) {
 
         int pos = ftell (fp);
         if (pos == -1L) pos = 0;
-        cf_init_lowlevel_read_code (cfp, 0, filelength (fileno (fp)), 0);
+        cf_init_lowlevel_read_code (cfp, 0, cfilelength (fileno (fp)), 0);
 
         return cfp;
     }
@@ -927,7 +927,7 @@ static CFILE* cf_open_mapped_fill_cfblock (
         cf_init_lowlevel_read_code (cfp, 0, 0, 0);
 
         cfbp->fp = fp;
-        cfbp->data_length = filelength (fileno (fp));
+        cfbp->data_length = cfilelength (fileno (fp));
 
         cfbp->data = mmap (
             NULL,              // start
@@ -1233,7 +1233,7 @@ int cfwrite (const void* buf, int elsize, int nelem, CFILE* cfile) {
     }
 
 #if defined(CHECK_SIZE) && !defined(NDEBUG)
-    ASSERT (cb->size == filelength (fileno (cb->fp)));
+    ASSERT (cb->size == cfilelength (fileno (cb->fp)));
 #endif
 
     return (int)(bytes_written / elsize);
@@ -1271,7 +1271,7 @@ int cfputc (int c, CFILE* cfile) {
     }
 
 #if defined(CHECK_SIZE) && !defined(NDEBUG)
-    ASSERT (cb->size == filelength (fileno (cb->fp)));
+    ASSERT (cb->size == cfilelength (fileno (cb->fp)));
 #endif
 
     return result;
@@ -1308,7 +1308,7 @@ int cfputs (const char* str, CFILE* cfile) {
     }
 
 #if defined(CHECK_SIZE) && !defined(NDEBUG)
-    ASSERT (cb->size == filelength (fileno (cb->fp)));
+    ASSERT (cb->size == cfilelength (fileno (cb->fp)));
 #endif
 
     return result;
@@ -1658,7 +1658,7 @@ int cflush (CFILE* cfile) {
     int result = fflush (cb->fp);
 
     // WMC - update filesize
-    cb->size = filelength (fileno (cb->fp));
+    cb->size = cfilelength (fileno (cb->fp));
 
     return result;
 }

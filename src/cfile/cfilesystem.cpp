@@ -412,7 +412,7 @@ void cf_build_root_list (const char* cdrom_dir) {
 
     char working_directory[CF_MAX_PATHNAME_LENGTH];
 
-    if (!_getcwd (working_directory, CF_MAX_PATHNAME_LENGTH)) {
+    if (!getcwd (working_directory, CF_MAX_PATHNAME_LENGTH)) {
         ASSERTX (0, "Can't get current working directory -- %d", errno);
     }
 
@@ -642,7 +642,7 @@ void cf_search_root_pack (int root_index) {
     // Read the file header
     if (!fp) { return; }
 
-    if (filelength (fileno (fp)) <
+    if (cfilelength (fileno (fp)) <
         (int)(sizeof (VP_FILE_HEADER) + (sizeof (int) * 3))) {
         WARNINGF (
             LOCATION, "Skipping VP file ('%s') of invalid size...\n",
@@ -848,7 +848,7 @@ CFileLocation cf_find_file_location (
         FILE* fp = fopen (filespec, "rb");
         if (fp) {
             CFileLocation res (true);
-            res.size = static_cast< size_t > (filelength (fileno (fp)));
+            res.size = static_cast< size_t > (cfilelength (fileno (fp)));
             res.offset = 0;
             res.full_name = filespec;
             fclose (fp);
@@ -901,7 +901,7 @@ CFileLocation cf_find_file_location (
                 if (fp) {
                     CFileLocation res (true);
                     res.size =
-                        static_cast< size_t > (filelength (fileno (fp)));
+                        static_cast< size_t > (cfilelength (fileno (fp)));
 
                     fclose (fp);
 
@@ -1103,7 +1103,7 @@ CFileLocationExt cf_find_file_location_ext (
                     CFileLocationExt res (cur_ext);
                     res.found = true;
                     res.size =
-                        static_cast< size_t > (filelength (fileno (fp)));
+                        static_cast< size_t > (cfilelength (fileno (fp)));
 
                     fclose (fp);
 
@@ -1389,11 +1389,11 @@ int cf_get_file_list (
         while ((dir = readdir (dirp)) != NULL) {
             if (fnmatch (filter, dir->d_name, 0) != 0) continue;
 
-            char fn[MAX_PATH];
-            if (snprintf (fn, MAX_PATH, "%s/%s", filespec, dir->d_name) >=
-                MAX_PATH) {
+            char fn[PATH_MAX];
+            if (snprintf (fn, PATH_MAX, "%s/%s", filespec, dir->d_name) >=
+                PATH_MAX) {
                 // Make sure the string is null terminated
-                fn[MAX_PATH - 1] = 0;
+                fn[PATH_MAX - 1] = 0;
             }
 
             struct stat buf;
@@ -1569,11 +1569,11 @@ int cf_get_file_list (
 
             if (fnmatch (filter, dir->d_name, 0) != 0) continue;
 
-            char fn[MAX_PATH];
-            if (snprintf (fn, MAX_PATH, "%s/%s", filespec, dir->d_name) >=
-                MAX_PATH) {
+            char fn[PATH_MAX];
+            if (snprintf (fn, PATH_MAX, "%s/%s", filespec, dir->d_name) >=
+                PATH_MAX) {
                 // Make sure the string is null terminated
-                fn[MAX_PATH - 1] = 0;
+                fn[PATH_MAX - 1] = 0;
             }
 
             struct stat buf;
@@ -1755,11 +1755,11 @@ int cf_get_file_list_preallocated (
 
             if (fnmatch (filter, dir->d_name, 0) != 0) continue;
 
-            char fn[MAX_PATH];
-            if (snprintf (fn, MAX_PATH, "%s/%s", filespec, dir->d_name) >=
-                MAX_PATH) {
+            char fn[PATH_MAX];
+            if (snprintf (fn, PATH_MAX, "%s/%s", filespec, dir->d_name) >=
+                PATH_MAX) {
                 // Make sure the string is null terminated
-                fn[MAX_PATH - 1] = 0;
+                fn[PATH_MAX - 1] = 0;
             }
 
             struct stat buf;

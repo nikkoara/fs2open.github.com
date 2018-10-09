@@ -13,6 +13,9 @@
 #include "stats/medals.h"
 #include "ui/ui.h"
 
+#include <filesystem>
+namespace fs = std::filesystem;
+
 #ifndef NDEBUG
 #include "cmdline/cmdline.h"
 #endif
@@ -788,41 +791,42 @@ void init_medal_bitmaps () {
         Medal_display_info[idx].bitmap = -1;
 
         if (Player_score->medal_counts[idx] > 0) {
-            int num_medals;
-            char filename[MAX_FILENAME_LEN], base[MAX_FILENAME_LEN];
-
             // possibly load a different filename that is specified by the
             // bitmap filename for this medal.  if the player has > 1 of these
             // types of medals, then determien which of the possible version to
             // use based on the player's count of this medal
-            strcpy_s (filename, Medals[idx].bitmap);
+            auto filename = fs::path (Medals[idx].bitmap);
+            auto basename = filename.stem ();
 
-            _splitpath (filename, NULL, NULL, base, NULL);
+            int num_medals = Player_score->medal_counts[idx];
 
-            num_medals = Player_score->medal_counts[idx];
-
-            // can't display more than the maximum number of version for this
-            // medal
-            if (num_medals > Medals[idx].num_versions)
+            if (num_medals > Medals[idx].num_versions) {
+                // can't display more than the maximum number of version for
+                // this medal
                 num_medals = Medals[idx].num_versions;
+            }
 
             if (num_medals > 1) {
                 // append the proper character onto the end of the medal
                 // filename.  Base version has no character. next version is a,
                 // then b, etc.
-                char temp[MAX_FILENAME_LEN];
-                strcpy_s (temp, base);
-                sprintf (base, "%s%c", temp, (num_medals - 2) + 'a');
+                basename += char ((num_medals - 2) + 'a');
             }
 
             // hi-res support
-            if (gr_screen.res == GR_1024) { sprintf (filename, "2_%s", base); }
+            if (gr_screen.res == GR_1024) {
+                filename = fs::path ("2_") += basename;
+            }
 
-            // base now contains the actual medal bitmap filename needed to
-            // load we don't need to pass extension to bm_load anymore, so just
-            // use the basename as is.
-            Medal_display_info[idx].bitmap =
-                bm_load ((gr_screen.res == GR_1024) ? filename : base);
+            //
+            // base now contains the actual medal bitmap filename needed to load
+            // we don't need to pass extension to bm_load anymore, so just use
+            // the basename as is.
+            //
+            Medal_display_info[idx].bitmap = bm_load (
+                gr_screen.res == GR_1024
+                ? filename.c_str () : basename.c_str ());
+
             ASSERT (Medal_display_info[idx].bitmap != -1);
         }
     }

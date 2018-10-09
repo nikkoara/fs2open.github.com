@@ -8,6 +8,9 @@
 #include <sys/stat.h>
 #include <glob.h>
 
+#include <filesystem>
+namespace fs = std::filesystem;
+
 #include "freespace2/freespace.h"
 #include "cfile/cfile.h"
 #include "cutscene/cutscenes.h"
@@ -775,31 +778,6 @@ void mission_campaign_init () {
 }
 
 /**
- * Fill in the root of the campaign save filename
- */
-void mission_campaign_savefile_generate_root (char* filename, player* pl) {
-    char base[_MAX_FNAME];
-
-    ASSERT (strlen (Campaign.filename) != 0); //-V805
-
-    if (pl == NULL) {
-        ASSERT ((Player_num >= 0) && (Player_num < MAX_PLAYERS));
-        pl = &Players[Player_num];
-    }
-
-    ASSERT (pl != NULL);
-
-    // build up the filename for the save file.  There could be a problem with
-    // filename length, but this problem can get fixed in several ways --
-    // ignore the problem for now though.
-    _splitpath (Campaign.filename, NULL, NULL, base, NULL);
-
-    ASSERT ((strlen (base) + strlen (pl->callsign) + 1) < _MAX_FNAME);
-
-    sprintf (filename, NOX ("%s.%s."), pl->callsign, base);
-}
-
-/**
  * The following function always only ever ever ever called by CSFE!!!!!
  */
 int campaign_savefile_save (char* pname) {
@@ -821,20 +799,12 @@ int campaign_savefile_save (char* pname) {
  * Deletes any save file in the players directory for the given
  * campaign filename
  */
-void mission_campaign_savefile_delete (char* cfilename) {
-    char filename[_MAX_FNAME], base[_MAX_FNAME];
-
-    _splitpath (cfilename, NULL, NULL, base, NULL);
-
-    if (Player->flags & PLAYER_FLAGS_IS_MULTI) {
-        return; // no such thing as a multiplayer campaign savefile
-    }
-
-    // only support the new filename here - taylor
-    sprintf (filename, NOX ("%s.%s.csg"), Player->callsign, base);
+void mission_campaign_savefile_delete (const char* cfilename) {
+    auto filename = fs::path (cfilename).stem ();
+    ((filename += ".") += Player->callsign) += ".csg";
 
     cf_delete (
-        filename, CF_TYPE_PLAYERS,
+        filename.c_str (), CF_TYPE_PLAYERS,
         CF_LOCATION_ROOT_USER | CF_LOCATION_ROOT_GAME | CF_LOCATION_TYPE_ROOT);
 }
 
@@ -849,7 +819,7 @@ void campaign_delete_save (char* cfn, char* pname) {
  *
  * @param pilot_name Name of pilot
  */
-void mission_campaign_delete_all_savefiles (char* pilot_name) {
+void mission_campaign_delete_all_savefiles (const char* pilot_name) {
     int dir_type, num_files, i;
     char file_spec[MAX_FILENAME_LEN + 2];
     char filename[1024];

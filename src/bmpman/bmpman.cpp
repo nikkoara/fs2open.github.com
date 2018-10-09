@@ -2211,30 +2211,6 @@ void bm_lock_dds (
 
     error = dds_read_bitmap (filename, data, &dds_bpp, be->dir_type);
 
-#if BYTE_ORDER == BIG_ENDIAN
-    // same as with TGA, we need to byte swap 16 & 32-bit, uncompressed, DDS
-    // images
-    if ((be->comp_type == BM_TYPE_DDS) ||
-        (be->comp_type == BM_TYPE_CUBEMAP_DDS)) {
-        size_t i = 0;
-
-        if (dds_bpp == 32) {
-            unsigned int* swap_tmp;
-
-            for (i = 0; i < be->mem_taken; i += 4) {
-                swap_tmp = (unsigned int*)(data + i);
-            }
-        }
-        else if (dds_bpp == 16) {
-            unsigned short* swap_tmp;
-
-            for (i = 0; i < be->mem_taken; i += 2) {
-                swap_tmp = (unsigned short*)(data + i);
-            }
-        }
-    }
-#endif
-
     bmp->bpp = dds_bpp;
     bmp->data = (ptr_u)data;
     bmp->flags = 0;
@@ -3436,17 +3412,10 @@ SDL_Surface* bm_to_sdl_surface (int handle) {
     bm_get_info (handle, &w, &h, nullptr, nullptr);
     Uint32 rmask, gmask, bmask, amask;
 
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    rmask = 0x0000ff00;
-    gmask = 0x00ff0000;
-    bmask = 0xff000000;
-    amask = 0x000000ff;
-#else
     rmask = 0x00ff0000;
     gmask = 0x0000ff00;
     bmask = 0x000000ff;
     amask = 0xff000000;
-#endif
 
     SDL_Surface* bitmapSurface =
         SDL_CreateRGBSurface (0, w, h, 32, rmask, gmask, bmask, amask);

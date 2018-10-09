@@ -217,7 +217,7 @@ void draw_brackets_diamond (
     half_width = (int)std::lround (width / 2.0f);
     half_height = (int)std::lround (height / 2.0f);
 
-    side_len = (float)_hypot (half_width, half_height);
+    side_len = (float)hypot (half_width, half_height);
     bracket_len = side_len / 8;
 
     x_delta = (int)std::lround (bracket_len * width / side_len);
@@ -257,7 +257,7 @@ void draw_brackets_diamond_quick (
     half_width = (int)std::lround (width / 2.0f);
     half_height = (int)std::lround (height / 2.0f);
 
-    side_len = (float)_hypot (half_width, half_height);
+    side_len = (float)hypot (half_width, half_height);
     bracket_len = side_len / 8;
 
     x_delta = (int)std::lround (bracket_len * width / side_len);

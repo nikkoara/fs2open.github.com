@@ -716,7 +716,7 @@ void hud_calculate_lock_position (float frametime) {
 
         if (!delta_y && !delta_x) { hypotenuse = 0; }
         else {
-            hypotenuse = _hypot (delta_y, delta_x);
+            hypotenuse = hypot (delta_y, delta_x);
         }
 
         Players[Player_num].lock_dist_to_target = (float)hypotenuse;
@@ -863,7 +863,7 @@ void hud_calculate_lock_position (float frametime) {
 
         if (!delta_y && !delta_x) { hypotenuse = 0; }
         else {
-            hypotenuse = _hypot (delta_y, delta_x);
+            hypotenuse = hypot (delta_y, delta_x);
         }
 
         Players[Player_num].lock_time_to_target += frametime;
@@ -945,7 +945,7 @@ void hud_calculate_lock_start_pos () {
         return;
     }
 
-    hypotenuse = _hypot (delta_y, delta_x);
+    hypotenuse = hypot (delta_y, delta_x);
 
     if (hypotenuse >= Lock_start_dist) {
         Players[Player_num].lock_indicator_start_x =

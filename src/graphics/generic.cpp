@@ -7,8 +7,6 @@
 #define BMPMAN_INTERNAL
 #include "bmpman/bm_internal.h"
 
-#define MAX_PATH 255
-
 #ifdef TIMER
 #include "io/timer.h"
 #endif

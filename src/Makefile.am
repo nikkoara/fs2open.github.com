@@ -125,10 +125,7 @@ fs2_SOURCES =                                   \
     hud/hudtargetbox.cpp                        \
     hud/hudwingmanstatus.cpp                    \
     iff_defs/iff_defs.cpp                       \
-    inetfile/cftp.cpp                           \
-    inetfile/chttpget.cpp                       \
-    inetfile/inetgetfile.cpp                    \
-    io/cursor.cpp                               \
+	io/cursor.cpp                               \
     io/joy-sdl.cpp                              \
     io/joy_ff-sdl.cpp                           \
     io/key.cpp                                  \
@@ -146,8 +143,7 @@ fs2_SOURCES =                                   \
     localization/fhash.cpp                      \
     localization/localize.cpp                   \
     log/log.cpp                                 \
-    math/fix.cpp                                \
-    math/floating.cpp                           \
+	math/floating.cpp                           \
     math/fvi.cpp                                \
     math/spline.cpp                             \
     math/staticrand.cpp                         \
@@ -300,8 +296,7 @@ fs2_SOURCES =                                   \
     weapon/shockwave.cpp                        \
     weapon/swarm.cpp                            \
     weapon/trails.cpp                           \
-    weapon/weapons.cpp                          \
-    windows_stub/stubs.cpp
+	weapon/weapons.cpp
 
 fs2_CPPFLAGS =                                  \
     -DSCP_UNIX                                  \

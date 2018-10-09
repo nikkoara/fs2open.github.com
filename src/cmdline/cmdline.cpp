@@ -1623,7 +1623,7 @@ void os_init_cmdline (int argc, char* argv[]) {
             if (fp) {
                 char *buf, *p;
 
-                auto len = static_cast< int > (filelength (fileno (fp))) + 2;
+                auto len = static_cast< int > (cfilelength (fileno (fp))) + 2;
                 buf = new char[len];
 
                 if (fgets (buf, len - 1, fp) != nullptr) {
@@ -1647,7 +1647,7 @@ void os_init_cmdline (int argc, char* argv[]) {
             if (fp) {
                 char *buf, *p;
 
-                auto len = static_cast< int > (filelength (fileno (fp))) + 2;
+                auto len = static_cast< int > (cfilelength (fileno (fp))) + 2;
                 buf = new char[len];
 
                 if (fgets (buf, len - 1, fp) != nullptr) {

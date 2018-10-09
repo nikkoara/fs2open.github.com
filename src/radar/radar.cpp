@@ -349,7 +349,7 @@ void HudGaugeRadarStd::plotBlip (blip* b, int* x, int* y) {
         float hypotenuse;
         float max_radius;
 
-        hypotenuse = (float)_hypot (new_x_dist, new_y_dist);
+        hypotenuse = (float)hypot (new_x_dist, new_y_dist);
         max_radius = i2fl (Radar_radius[0] - 5);
 
         if (hypotenuse >= max_radius) {

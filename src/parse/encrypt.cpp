@@ -9,13 +9,9 @@
 #include "globalincs/pstypes.h"
 #include "parse/encrypt.h"
 
-#if BYTE_ORDER == BIG_ENDIAN
-const uint Encrypt_new_signature = 0x551a335c; // new encrpytion
-const uint Encrypt_signature = 0xefbeadde;     // full encryption
-#else
 const uint Encrypt_new_signature = 0x5c331a55; // new encryption
 const uint Encrypt_signature = 0xdeadbeef;     // full encryption
-#endif
+
 const uint Encrypt_signature_8bit =
     0xcacacaca; // light encryption - doesn't use 7bit chars
 

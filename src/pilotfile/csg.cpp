@@ -24,6 +24,8 @@
 #include <iostream>
 #include <sstream>
 #include <limits>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 void pilotfile::csg_read_flags () {
     // tips?
@@ -1363,31 +1365,25 @@ void pilotfile::csg_close () {
 }
 
 bool pilotfile::load_savefile (const char* campaign) {
-    char base[_MAX_FNAME] = { '\0' };
-    std::ostringstream buf;
+    if (0 == campaign || 0 == campaign [0])
+        return false;
 
-    if (Game_mode & GM_MULTIPLAYER) { return false; }
-
-    if ((campaign == NULL) || !strlen (campaign)) { return false; }
-
-    // set player ptr first thing
-    ASSERT ((Player_num >= 0) && (Player_num < MAX_PLAYERS));
+    ASSERT (0 <= Player_num && Player_num < MAX_PLAYERS);
     p = &Players[Player_num];
+    ASSERT (p);
 
-    // build up filename for the savefile...
-    _splitpath ((char*)campaign, NULL, NULL, base, NULL);
+    //
+    // Create filename:
+    //
+    auto stem = fs::path (campaign).stem ();
+    filename = ((fs::path (p->callsign) += ".") += stem) += ".csg";
 
-    buf << p->callsign << "." << base << ".csg";
+    auto campaign_file = fs::path (stem) += FS_CAMPAIGN_FILE_EXT;
 
-    filename = buf.str ().c_str ();
-
-    // if campaign file doesn't exist, abort so we don't load irrelevant data
-    buf.str (std::string ());
-    buf << base << FS_CAMPAIGN_FILE_EXT;
-    if (!cf_exists_full ((char*)buf.str ().c_str (), CF_TYPE_MISSIONS)) {
+    if (!cf_exists_full (campaign_file.c_str (), CF_TYPE_MISSIONS)) {
         WARNINGF (
             LOCATION, "CSG => Unable to find campaign file '%s'!\n",
-            buf.str ().c_str ());
+            campaign_file.c_str ());
         return false;
     }
 
@@ -1556,23 +1552,18 @@ bool pilotfile::load_savefile (const char* campaign) {
 }
 
 bool pilotfile::save_savefile () {
-    char base[_MAX_FNAME] = { '\0' };
-    std::ostringstream buf;
-
-    if (Game_mode & GM_MULTIPLAYER) { return false; }
-
     // set player ptr first thing
-    ASSERT ((Player_num >= 0) && (Player_num < MAX_PLAYERS));
+    ASSERT (0 <= Player_num && Player_num < MAX_PLAYERS);
     p = &Players[Player_num];
+    ASSERT (p);
 
-    if (!strlen (Campaign.filename)) { return false; }
+    if (0 == Campaign.filename [0]) {
+        return false;
+    }
 
-    // build up filename for the savefile...
-    _splitpath (Campaign.filename, NULL, NULL, base, NULL);
-
-    buf << p->callsign << "." << base << ".csg";
-
-    filename = buf.str ().c_str ();
+    const auto basename = fs::path (Campaign.filename).stem ();
+    const auto filename = (
+        (fs::path (p->callsign) += ".") += basename) += ".csg";
 
     // make sure that we can actually save this safely
     if (m_data_invalid) {

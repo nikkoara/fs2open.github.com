@@ -1587,7 +1587,7 @@ void game_init () {
 
     memset (whee, 0, sizeof (whee));
 
-    _getcwd (whee, MAX_PATH_LEN - 1);
+    getcwd (whee, MAX_PATH_LEN - 1);
 
     strcat_s (whee, DIR_SEPARATOR_STR);
     strcat_s (whee, EXE_FNAME);
@@ -3291,7 +3291,7 @@ void game_flip_page_and_time_it () {
     t2 = timer_get_fixed_seconds ();
     d = t2 - t1;
     t = (gr_screen.max_w * gr_screen.max_h * gr_screen.bytes_per_pixel) / 1024;
-    sprintf (transfer_text, NOX ("%d MB/s"), (int)fixmuldiv (t, 65, d));
+    sprintf (transfer_text, NOX ("%.2f MB/s"), double (t) * 65 / d);
 }
 
 void game_simulation_frame () {

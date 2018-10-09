@@ -288,7 +288,7 @@ void gr_opengl_print_screen (const char* filename) {
     // save to a "screenshots" directory and tack on the filename
     snprintf (tmp, MAX_PATH_LEN - 1, "screenshots/%s.png", filename);
 
-    _mkdir (os_get_config_path ("screenshots").c_str ());
+    mkdir (os_get_config_path ("screenshots").c_str (), 0777);
 
     // glReadBuffer(GL_FRONT);
 

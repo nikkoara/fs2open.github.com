@@ -25,6 +25,8 @@
 #include "tracing/tracing.h"
 
 #include <algorithm>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 flag_def_list model_render_flags[] = {
     { "no lighting", MR_NO_LIGHTING, 0 }, { "transparent", MR_ALL_XPARENT, 0 },
@@ -770,11 +772,9 @@ void do_new_subsystem (
             return;
         }
     }
-#ifndef NDEBUG
-    char bname[_MAX_FNAME];
 
+#ifndef NDEBUG
     if (!ss_warning_shown) {
-        _splitpath (model_filename, NULL, NULL, bname, NULL);
         // Lets still give a comment about it and not just erase it
         WARNINGF (
             LOCATION,
@@ -795,16 +795,18 @@ void do_new_subsystem (
 
 #ifndef NDEBUG
     if (ss_fp) {
-        _splitpath (model_filename, NULL, NULL, bname, NULL);
         WARNINGF (
             LOCATION,
             "A subsystem was found in model %s that does not have a record in "
             "ships.tbl.\nA list of subsystems for this ship will be dumped "
             "to:\n\ndata%stables%s%s.subsystems for inclusion\ninto "
             "ships.tbl.\n",
-            model_filename, DIR_SEPARATOR_STR, DIR_SEPARATOR_STR, bname);
+            model_filename, DIR_SEPARATOR_STR, DIR_SEPARATOR_STR,
+            fs::path (model_filename).stem ().c_str ());
+
         char tmp_buffer[128];
         sprintf (tmp_buffer, "$Subsystem:\t\t\t%s,1,0.0\n", subobj_name);
+
         cfputs (tmp_buffer, ss_fp);
     }
 #endif
@@ -1065,25 +1067,6 @@ int read_model_file (
     cfseek (fp, 0, SEEK_SET);
     cf_chksum_long (fp, &Global_checksum);
     cfseek (fp, 0, SEEK_SET);
-
-    // code to get a filename to write out subsystem information for each model
-    // that is read.  This info is essentially debug stuff that is used to help
-    // get models into the game quicker
-#if 0
-        {
-                char bname[_MAX_FNAME];
-
-                _splitpath(filename, NULL, NULL, bname, NULL);
-                sprintf(debug_name, "%s.subsystems", bname);
-                ss_fp = cfopen(debug_name, "wb", CFILE_NORMAL, CF_TYPE_TABLES );
-                if ( !ss_fp )   {
-                        mprintf(( "Can't open debug file for writing subsystems for %s\n", filename));
-                } else {
-                        strcpy_s(model_filename, filename);
-                        ss_warning_shown = 0;
-                }
-        }
-#endif
 
     id = cfread_int (fp);
 
@@ -2678,7 +2661,7 @@ int read_model_file (
         if (ss_fp) {
             size = cfilelength (ss_fp);
             cfclose (ss_fp);
-            if (size <= 0) { _unlink (debug_name); }
+            if (size <= 0) { unlink (debug_name); }
         }
     }
 #endif
