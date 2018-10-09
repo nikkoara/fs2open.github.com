@@ -2,8 +2,8 @@
 
 * Configuration
 
-** TODO cxxabi.h autoconf test
-** TODO execinfo.h autoconf test
+** DONE cxxabi.h autoconf test
+** DONE execinfo.h autoconf test
 ** TODO Endianness autoconf tests
 
 * Cleanup 
@@ -11,18 +11,19 @@
 ** TODO Swap INT_SWAP to Boost
 ** DONE De-Apple-ification
 ** DONE De-Win32-ification
-** TODO De-INTEL_INT-ify.
+** DONE De-INTEL_INT-ify.
 ** TODO Remove TRUE/FALSE macros
-** TODO Remove SIZE_T_ARG, PTRDIFF_T_ARG
-** TODO Remove UREACHABLE
+** DONE Remove SIZE_T_ARG, PTRDIFF_T_ARG
+** DONE Remove UREACHABLE
 ** TODO Get rid of SEXP formatters
 
 * Re-writes
 
 ** TODO cfile[[de]archiver] to C++17 filesystem API
 ** TODO base64 code move to Boost
-** TODO Convert to BOOST asserts
-** TODO Fix Boost logging
+** DONE Convert to BOOST asserts
+** DONE Fix Boost logging
 ** TODO Unicode class text_iterator has defects
-** TODO Redo Assertion
-** TODO Redo vs[n]printf hackery
+** DONE Redo Assertion
+** DONE Redo vs[n]printf hackery
+** TODO Replace insertion_sort's
