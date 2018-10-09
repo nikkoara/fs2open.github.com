@@ -67,7 +67,8 @@ int Bm_paging = 0;
 const BM_TYPE bm_type_list[] = { BM_TYPE_DDS, BM_TYPE_TGA, BM_TYPE_PNG,
                                  BM_TYPE_JPG, BM_TYPE_PCX };
 const char* bm_ext_list[] = { ".dds", ".tga", ".png", ".jpg", ".pcx" };
-const int BM_NUM_TYPES = sizeof (bm_type_list) / sizeof (bm_type_list[0]);
+
+const int BM_NUM_TYPES = sizeof bm_type_list / sizeof *bm_type_list;
 
 const BM_TYPE bm_ani_type_list[] = { BM_TYPE_EFF, BM_TYPE_ANI, BM_TYPE_PNG };
 // NOTE: it would be better to have apng files use the .apng extension
