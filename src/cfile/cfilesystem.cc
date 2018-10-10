@@ -352,67 +352,35 @@ void cf_build_root_list (const char* cdrom_dir) {
 
     cf_root* root = nullptr;
 
-    if (os_is_legacy_mode ()) {
-        cf_add_mod_roots (os_get_legacy_user_dir (), CF_LOCATION_ROOT_USER);
+    // =========================================================================
+    // now look for mods under the users HOME directory to use before
+    // system ones
+    cf_add_mod_roots (Cfile_user_dir, CF_LOCATION_ROOT_USER);
+    // =========================================================================
 
-        root = cf_create_root ();
+    // =========================================================================
+    // set users HOME directory as default for loading and saving files
+    root = cf_create_root ();
+    strcpy (root->path, Cfile_user_dir);
 
-        strncpy (
-            root->path, os_get_legacy_user_dir (),
-            CF_MAX_PATHNAME_LENGTH - 1);
-
-        root->location_flags |= CF_LOCATION_ROOT_USER | CF_LOCATION_TYPE_ROOT;
-
-        if (Cmdline_mod == nullptr || strlen (Cmdline_mod) <= 0) {
-            // If there are no mods then the root is the primary mod
-            root->location_flags |= CF_LOCATION_TYPE_PRIMARY_MOD;
-        }
-
-        // do we already have a slash? as in the case of a root directory
-        // install
-        if ((strlen (root->path) < (CF_MAX_PATHNAME_LENGTH - 1)) &&
-            (root->path[strlen (root->path) - 1] != '/')) {
-            strcat (
-                root->path, "/"); // put trailing backslash on
-                                                // for easier path construction
-        }
-        root->roottype = CF_ROOTTYPE_PATH;
-
-        // Next, check any VP files under the current directory.
-        cf_build_pack_list (root);
+    root->location_flags |= CF_LOCATION_ROOT_USER | CF_LOCATION_TYPE_ROOT;
+    if (Cmdline_mod == nullptr || strlen (Cmdline_mod) <= 0) {
+        // If there are no mods then the root is the primary mod
+        root->location_flags |= CF_LOCATION_TYPE_PRIMARY_MOD;
     }
-    else if (!Cmdline_portable_mode) {
-        // =========================================================================
-        // now look for mods under the users HOME directory to use before
-        // system ones
-        cf_add_mod_roots (Cfile_user_dir, CF_LOCATION_ROOT_USER);
-        // =========================================================================
 
-        // =========================================================================
-        // set users HOME directory as default for loading and saving files
-        root = cf_create_root ();
-        strcpy (root->path, Cfile_user_dir);
-
-        root->location_flags |= CF_LOCATION_ROOT_USER | CF_LOCATION_TYPE_ROOT;
-        if (Cmdline_mod == nullptr || strlen (Cmdline_mod) <= 0) {
-            // If there are no mods then the root is the primary mod
-            root->location_flags |= CF_LOCATION_TYPE_PRIMARY_MOD;
-        }
-
-        // do we already have a slash? as in the case of a root directory
-        // install
-        if ((strlen (root->path) < (CF_MAX_PATHNAME_LENGTH - 1)) &&
-            (root->path[strlen (root->path) - 1] != '/')) {
-            strcat (
-                root->path, "/"); // put trailing backslash on
-                                                // for easier path construction
-        }
-        root->roottype = CF_ROOTTYPE_PATH;
-
-        // Next, check any VP files under the current directory.
-        cf_build_pack_list (root);
-        // =========================================================================
+    // do we already have a slash? as in the case of a root directory
+    // install
+    if ((strlen (root->path) < (CF_MAX_PATHNAME_LENGTH - 1)) &&
+        (root->path[strlen (root->path) - 1] != '/')) {
+        strcat (
+            root->path, "/"); // put trailing backslash on
+        // for easier path construction
     }
+    root->roottype = CF_ROOTTYPE_PATH;
+
+    // Next, check any VP files under the current directory.
+    cf_build_pack_list (root);
 
     char working_directory[CF_MAX_PATHNAME_LENGTH];
 

@@ -13,21 +13,15 @@
 
 #include <SDL_events.h>
 
-// set if running under MsDev - done after os_init(...) has returned
-extern int Os_debugger_running;
-
-const char* os_get_legacy_user_dir ();
-
 // If app_name is NULL or ommited, then TITLE is used
 // for the app name, which is where registry keys are stored.
-void os_init (
-    const char* wclass, const char* title, const char* app_name = nullptr);
+void os_init (const char*, const char*, const char* = 0);
 
 // set the main window title
-void os_set_title (const char* title);
+void os_set_title (const char*);
 
 // call at program end
-void os_cleanup ();
+void os_fini ();
 
 // Returns 1 if app is not the foreground app.
 int os_foreground ();
@@ -41,12 +35,9 @@ void os_ignore_events ();
 void os_poll ();
 
 // Sleeps for n milliseconds or until app becomes active.
-void os_sleep (uint ms);
+inline void os_sleep (uint ms) { SDL_Delay (ms); }
 
-/**
- * @brief Determines if FSO is running in legacy config mode
- */
-bool os_is_legacy_mode ();
+inline constexpr bool os_is_legacy_mode () { return false; }
 
 /**
  * @brief Gets a path to a configuration file

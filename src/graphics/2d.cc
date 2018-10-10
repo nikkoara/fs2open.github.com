@@ -1171,8 +1171,6 @@ void gr_force_windowed () {
     case GR_STUB: break;
     default: Int3 (); // Invalid graphics mode
     }
-
-    if (Os_debugger_running) { os_sleep (1000); }
 }
 
 int gr_activated = 0;

@@ -1045,8 +1045,6 @@ int Cmdline_objupd = 3; // client object updates on LAN by default
 // Launcher related options
 cmdline_parm portable_mode ("-portable_mode", NULL, AT_NONE);
 
-bool Cmdline_portable_mode = false;
-
 // Troubleshooting
 cmdline_parm loadallweapons_arg (
     "-loadallweps", NULL, AT_NONE); // Cmdline_load_all_weapons
@@ -1129,8 +1127,6 @@ cmdline_parm reparse_mainhall_arg (
     "-reparse_mainhall", NULL, AT_NONE); // Cmdline_reparse_mainhall
 cmdline_parm frame_profile_write_file (
     "-profile_write_file", NULL, AT_NONE); // Cmdline_profile_write_file
-cmdline_parm no_unfocused_pause_arg (
-    "-no_unfocused_pause", NULL, AT_NONE); // Cmdline_no_unfocus_pause
 cmdline_parm benchmark_mode_arg (
     "-benchmark_mode", NULL, AT_NONE); // Cmdline_benchmark_mode
 cmdline_parm noninteractive_arg (
@@ -1161,7 +1157,6 @@ char* Cmdline_center_res = 0;
 int Cmdline_verify_vps = 0;
 int Cmdline_reparse_mainhall = 0;
 bool Cmdline_profile_write_file = false;
-bool Cmdline_no_unfocus_pause = false;
 bool Cmdline_benchmark_mode = false;
 bool Cmdline_noninteractive = false;
 bool Cmdline_frame_profile = false;
@@ -1578,57 +1573,30 @@ void os_init_cmdline (int argc, char* argv[]) {
 
     if (!has_cmdline_only_flag (argc, argv)) {
         // Only parse the config file in the current directory if we are in
-        // legacy config mode
-        if (os_is_legacy_mode ()) {
-            // read the cmdline_fso.cfg file from the data folder, and pass the
-            // command line arguments to the the parse_parms and validate_parms
-            // line.  Read these first so anything actually on the command line
-            // will take precedence
-            fp = fopen ("data/cmdline_fso.cfg", "rt");
+        // legacy config mode parse user specific cmdline_fso config file
+        // (will supersede options in global file)
+        fp = fopen (os_get_config_path ("data/cmdline_fso.cfg").c_str (), "rt");
 
-            // if the file exists, get a single line, and deal with it
-            if (fp) {
-                char *buf, *p;
+        // if the file exists, get a single line, and deal with it
+        if (fp) {
+            char *buf, *p;
 
-                auto len = static_cast< int > (cfilelength (fileno (fp))) + 2;
-                buf = new char[len];
+            auto len = static_cast< int > (cfilelength (fileno (fp))) + 2;
+            buf = new char[len];
 
-                if (fgets (buf, len - 1, fp) != nullptr) {
-                    // replace the newline character with a NULL
-                    if ((p = strrchr (buf, '\n')) != NULL) { *p = '\0'; }
-                    // append a space for the os_parse_parms() check
-                    strcat (buf, " ");
-                    os_process_cmdline (buf);
-                }
-                delete[] buf;
-                fclose (fp);
+            if (fgets (buf, len - 1, fp) != nullptr) {
+                // replace the newline character with a NULL
+                if ((p = strrchr (buf, '\n')) != NULL) { *p = '\0'; }
+
+                // append a space for the os_parse_parms() check
+                strcat (buf, " ");
+
+                os_process_cmdline (buf);
             }
-        }
-        else {
-            // parse user specific cmdline_fso config file (will supersede
-            // options in global file)
-            fp = fopen (
-                os_get_config_path ("data/cmdline_fso.cfg").c_str (), "rt");
 
-            // if the file exists, get a single line, and deal with it
-            if (fp) {
-                char *buf, *p;
+            delete[] buf;
 
-                auto len = static_cast< int > (cfilelength (fileno (fp))) + 2;
-                buf = new char[len];
-
-                if (fgets (buf, len - 1, fp) != nullptr) {
-                    // replace the newline character with a NULL
-                    if ((p = strrchr (buf, '\n')) != NULL) { *p = '\0'; }
-
-                    // append a space for the os_parse_parms() check
-                    strcat (buf, " ");
-
-                    os_process_cmdline (buf);
-                }
-                delete[] buf;
-                fclose (fp);
-            }
+            fclose (fp);
         }
     } // If cmdline included PARSE_COMMAND_LINE_STRING
 
@@ -2086,8 +2054,6 @@ bool SetCmdlineParams () {
 
     if (nograb_arg.found ()) { Cmdline_nograb = true; }
 
-    if (portable_mode.found ()) { Cmdline_portable_mode = true; }
-
     if (env.found ()) { Cmdline_env = 0; }
 
     if (ballistic_gauge.found ()) { Cmdline_ballistic_gauge = 1; }
@@ -2153,8 +2119,6 @@ bool SetCmdlineParams () {
     if (frame_profile_write_file.found ()) {
         Cmdline_profile_write_file = true;
     }
-
-    if (no_unfocused_pause_arg.found ()) { Cmdline_no_unfocus_pause = true; }
 
     if (benchmark_mode_arg.found ()) { Cmdline_benchmark_mode = true; }
 

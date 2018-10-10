@@ -4033,19 +4033,15 @@ int game_check_key () {
 int game_poll () {
     int k, state;
 
-    if (!Cmdline_no_unfocus_pause) {
-        if (!os_foreground ()) {
-            game_stop_time ();
-            os_sleep (1);
-            game_start_time ();
+    if (!os_foreground ()) {
 
-            // If we're in a single player game, pause it.
-            if (!(Game_mode & GM_MULTIPLAYER)) {
-                if ((gameseq_get_state () == GS_STATE_GAME_PLAY) &&
-                    (!popup_active ()) && (!popupdead_is_active ())) {
-                    game_process_pause_key ();
-                }
-            }
+        game_stop_time ();
+        os_sleep (1);
+        game_start_time ();
+
+        if ((gameseq_get_state () == GS_STATE_GAME_PLAY) &&
+            (!popup_active ()) && (!popupdead_is_active ())) {
+            game_process_pause_key ();
         }
     }
 
@@ -5506,7 +5502,7 @@ void game_shutdown () {
     tracing::shutdown ();
 
     gr_close ();
-    os_cleanup ();
+    os_fini ();
     cfile_close ();
 
     // although the comment in cmdline.cpp said this isn't needed,
