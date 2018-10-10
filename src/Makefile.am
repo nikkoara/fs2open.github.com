@@ -198,7 +198,6 @@ fs2_SOURCES =                                   \
 	object/parseobjectdock.cc                   \
 	object/waypoint.cc                          \
 	observer/observer.cc                        \
-	osapi/DebugWindow.cc                        \
 	osapi/osapi.cc                              \
 	osapi/osregistry.cc                         \
 	parse/encrypt.cc                            \
