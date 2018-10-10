@@ -96,7 +96,7 @@ AudioDecoder::AudioDecoder (DecoderStatus* status)
         OUT_SAMPLE_FORMAT);
 
     if (ret < 0) {
-        WARNINGF (LOCATION, "FFMPEG: Failed to allocate samples array!\n");
+        WARNINGF (LOCATION, "FFMPEG: Failed to allocate samples array!");
     }
 }
 
@@ -155,7 +155,7 @@ void AudioDecoder::handleDecodedFrame (AVFrame* frame) {
     auto outBufsize = av_samples_get_buffer_size (
         &m_outLinesize, OUT_NUM_CHANNELS, ret, OUT_SAMPLE_FORMAT, 1);
     if (outBufsize < 0) {
-        WARNINGF (LOCATION, "FFMPEG: Could not get sample buffer size!\n");
+        WARNINGF (LOCATION, "FFMPEG: Could not get sample buffer size!");
         return;
     }
 

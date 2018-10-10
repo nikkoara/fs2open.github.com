@@ -145,19 +145,19 @@ void HudGaugeDirectives::initBitmaps (
     directives_top.first_frame =
         bm_load_animation (fname_top, &directives_top.num_frames);
     if (directives_top.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_top);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_top);
     }
 
     directives_middle.first_frame =
         bm_load_animation (fname_middle, &directives_middle.num_frames);
     if (directives_middle.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_middle);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_middle);
     }
 
     directives_bottom.first_frame =
         bm_load_animation (fname_bottom, &directives_bottom.num_frames);
     if (directives_bottom.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_bottom);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_bottom);
     }
 }
 
@@ -772,9 +772,7 @@ int message_play_training_voice (int index) {
                     Training_voice_soundstream = audiostream_open (
                         Message_waves[index].name, ASF_VOICE);
                     if (Training_voice_soundstream < 0) {
-                        WARNINGF (
-                            LOCATION, "Unable to load voice file %s\n",
-                            Message_waves[index].name);
+                        WARNINGF (LOCATION, "Unable to load voice file %s",Message_waves[index].name);
                     }
                 }
             } // Training_voice should be valid and loaded now
@@ -793,9 +791,7 @@ int message_play_training_voice (int index) {
             strcpy (tmp_gs.filename, Message_waves[index].name);
             Message_waves[index].num = snd_load (&tmp_gs, 0, 0);
             if (!Message_waves[index].num.isValid ()) {
-                WARNINGF (
-                    LOCATION, "Cannot load message wave: %s.  Will not play\n",
-                    Message_waves[index].name);
+                WARNINGF (LOCATION, "Cannot load message wave: %s.  Will not play",Message_waves[index].name);
                 return -1;
             }
         }

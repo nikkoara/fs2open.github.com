@@ -349,11 +349,7 @@ void main_hall_init (const std::string& main_hall_name) {
         main_hall_get_name (main_hall_to_load, 0);
     }
     else if (main_hall_get_pointer (main_hall_name) == NULL) {
-        WARNINGF (
-            LOCATION,
-            "Tried to load a main hall called '%s', but it does not exist; "
-            "loading first available main hall.",
-            main_hall_name.c_str ());
+        WARNINGF (LOCATION,"Tried to load a main hall called '%s', but it does not exist; loading first available main hall.",main_hall_name.c_str ());
         main_hall_get_name (main_hall_to_load, 0);
     }
     else {
@@ -434,10 +430,7 @@ void main_hall_init (const std::string& main_hall_name) {
     // load the background bitmap
     Main_hall_bitmap = bm_load (Main_hall->bitmap);
     if (Main_hall_bitmap < 0) {
-        WARNINGF (
-            LOCATION,
-            "WARNING! Couldn't load main hall background bitmap %s\n",
-            Main_hall->bitmap.c_str ());
+        WARNINGF (LOCATION,"WARNING! Couldn't load main hall background bitmap %s",Main_hall->bitmap.c_str ());
     }
     else {
         bm_get_info (
@@ -451,9 +444,7 @@ void main_hall_init (const std::string& main_hall_name) {
     // load the mask
     Main_hall_mask = bm_load (Main_hall->mask);
     if (Main_hall_mask < 0) {
-        WARNINGF (
-            LOCATION, "WARNING! Couldn't load main hall background mask %s\n",
-            Main_hall->mask.c_str ());
+        WARNINGF (LOCATION, "WARNING! Couldn't load main hall background mask %s",Main_hall->mask.c_str ());
         if (gr_screen.res == 0) {
             ASSERTX (0, "Could not load in main hall mask '%s'!\n\n(This error most likely means that you are missing required 640x480 interface art.)",Main_hall->mask.c_str ());
         }
@@ -496,10 +487,7 @@ void main_hall_init (const std::string& main_hall_name) {
         Main_hall_misc_anim.push_back (temp_anim);
         Main_hall_misc_anim.at (idx).ani.bg_type = bg_type;
         if (generic_anim_stream (&Main_hall_misc_anim.at (idx)) == -1) {
-            WARNINGF (
-                LOCATION,
-                "WARNING!, Could not load misc %s anim in main hall\n",
-                Main_hall->misc_anim_name.at (idx).c_str ());
+            WARNINGF (LOCATION,"WARNING!, Could not load misc %s anim in main hall",Main_hall->misc_anim_name.at (idx).c_str ());
         }
         else {
             // start paused
@@ -525,10 +513,7 @@ void main_hall_init (const std::string& main_hall_name) {
         Main_hall_door_anim.push_back (temp_anim);
         Main_hall_door_anim.at (idx).ani.bg_type = bg_type;
         if (generic_anim_stream (&Main_hall_door_anim.at (idx)) == -1) {
-            WARNINGF (
-                LOCATION,
-                "WARNING!, Could not load door anim %s in main hall\n",
-                Main_hall->door_anim_name.at (idx).c_str ());
+            WARNINGF (LOCATION,"WARNING!, Could not load door anim %s in main hall",Main_hall->door_anim_name.at (idx).c_str ());
         }
         else {
             Main_hall_door_anim.at (idx).direction =
@@ -697,11 +682,7 @@ void main_hall_do (float frametime) {
 
                         if (generic_anim_stream (
                                 &Main_hall_misc_anim.at (idx)) == -1) {
-                            WARNINGF (
-                                LOCATION,
-                                "WARNING! Could not load misc %s anim in main "
-                                "hall\n",
-                                Main_hall->misc_anim_name.at (idx).c_str ());
+                            WARNINGF (LOCATION,"WARNING! Could not load misc %s anim in main hall",Main_hall->misc_anim_name.at (idx).c_str ());
                         }
                         else {
                             // start paused
@@ -742,12 +723,7 @@ void main_hall_do (float frametime) {
 
                             if (generic_anim_stream (
                                     &Main_hall_door_anim.at (idx)) == -1) {
-                                WARNINGF (
-                                    LOCATION,
-                                    "WARNING! Could not load door anim %s in "
-                                    "main hall\n",
-                                    Main_hall->door_anim_name.at (idx)
-                                        .c_str ());
+                                WARNINGF (LOCATION,"WARNING! Could not load door anim %s in main hall",Main_hall->door_anim_name.at (idx).c_str ());
                             }
                             else {
                                 Main_hall_door_anim.at (idx).direction =
@@ -769,11 +745,7 @@ void main_hall_do (float frametime) {
                     // Note: This can also happen if the cheat triggers a
                     // second time since the animations are already switched at
                     // that point.
-                    WARNINGF (
-                        LOCATION,
-                        "Could not find animation '%s' for cheat '%s'!",
-                        Main_hall->cheat_anim_from.at (c_idx).c_str (),
-                        Main_hall->cheat.at (c_idx).c_str ());
+                    WARNINGF (LOCATION,"Could not find animation '%s' for cheat '%s'!",Main_hall->cheat_anim_from.at (c_idx).c_str (),Main_hall->cheat.at (c_idx).c_str ());
                 }
             }
         }
@@ -1134,8 +1106,7 @@ void main_hall_start_music () {
     // get music
     Main_hall_music_index = main_hall_get_music_index (main_hall_id ());
     if (Main_hall_music_index < 0) {
-        WARNINGF (
-            LOCATION, "No music file exists to play music at the main menu!");
+        WARNINGF (LOCATION, "No music file exists to play music at the main menu!");
         return;
     }
 
@@ -1145,8 +1116,7 @@ void main_hall_start_music () {
     // get handle
     Main_hall_music_handle = audiostream_open (filename, ASF_MENUMUSIC);
     if (Main_hall_music_handle < 0) {
-        WARNINGF (
-            LOCATION, "No music file exists to play music at the main menu!");
+        WARNINGF (LOCATION, "No music file exists to play music at the main menu!");
         return;
     }
 
@@ -2209,11 +2179,7 @@ void parse_main_hall_table (const char* filename) {
                         // Since the value is longer than the cheat buffer it
                         // will never match.
 
-                        WARNINGF (
-                            LOCATION,
-                            "The value '%s' for '+Cheat String:' is too long! "
-                            "It can be at most %d characters long.",
-                            temp_scp_string.c_str (), MAIN_HALL_MAX_CHEAT_LEN);
+                        WARNINGF (LOCATION,"The value '%s' for '+Cheat String:' is too long! It can be at most %d characters long.",temp_scp_string.c_str (), MAIN_HALL_MAX_CHEAT_LEN);
                     }
 
                     required_string ("+Anim To Change:");

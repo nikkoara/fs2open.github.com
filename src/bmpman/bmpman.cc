@@ -545,6 +545,7 @@ DCF (bmpslots, "Writes bitmap slot info to fs2_open.log") {
         dc_printf ("\tWrites bitmap slot info to fs2_open.log\n");
         return;
     }
+
     bm_print_bitmaps ();
 }
 
@@ -1422,7 +1423,7 @@ bm_load_image_data (int handle, int bpp, ubyte flags, bool nodebug) {
             break;
 
         default:
-            WARNINGF (LOCATION, "Unsupported type in bm_lock -- %d\n", c_type);
+            WARNINGF (LOCATION, "Unsupported type in bm_lock -- %d", c_type);
             return -1;
         }
 
@@ -1470,22 +1471,14 @@ int bm_load_animation (
     strncpy (filename, real_filename, MAX_FILENAME_LEN - 1);
     char* p = strchr (filename, '.');
     if (p) {
-        WARNINGF (
-            LOCATION,
-            "Someone passed an extension to bm_load_animation for file '%s'\n",
-            real_filename);
+        WARNINGF (LOCATION,"Someone passed an extension to bm_load_animation for file '%s'",real_filename);
         *p = 0;
     }
 
     // safety catch for strcat...
     // MAX_FILENAME_LEN-5 == '.' plus 3 letter ext plus NULL terminator
     if (strlen (filename) > MAX_FILENAME_LEN - 5) {
-        WARNINGF (
-            LOCATION,
-            "Passed filename, '%s', is too long to support an "
-            "extension!!\n\nMaximum length, minus the extension, is %i "
-            "characters.\n",
-            filename, MAX_FILENAME_LEN - 5);
+        WARNINGF (LOCATION,"Passed filename, '%s', is too long to support an extension!!\n\nMaximum length, minus the extension, is %i characters.",filename, MAX_FILENAME_LEN - 5);
         return -1;
     }
 
@@ -1533,12 +1526,7 @@ int bm_load_animation (
     // for -5 here since the filename should already have the extension on it,
     // and it must have passed the previous check
     if (strlen (filename) > MAX_FILENAME_LEN - 5) {
-        WARNINGF (
-            LOCATION,
-            "Passed filename, '%s', is too long to support an extension and "
-            "frames!!\n\nMaximum length for an ANI/EFF/APNG, minus the "
-            "extension, is %i characters.\n",
-            filename, MAX_FILENAME_LEN - 10);
+        WARNINGF (LOCATION,"Passed filename, '%s', is too long to support an extension and frames!!\n\nMaximum length for an ANI/EFF/APNG, minus the extension, is %i characters.",filename, MAX_FILENAME_LEN - 10);
         if (img_cfp != nullptr) cfclose (img_cfp);
         return -1;
     }
@@ -1553,9 +1541,7 @@ int bm_load_animation (
             return -1;
         }
         else {
-            WARNINGF (
-                LOCATION, "BMPMAN: Found EFF (%s) with %d frames at %d fps.\n",
-                filename, anim_frames, anim_fps);
+            WARNINGF (LOCATION, "BMPMAN: Found EFF (%s) with %d frames at %d fps.",filename, anim_frames, anim_fps);
         }
         if (anim_fps == 0) {
             ASSERTX (0, "animation (%s) has invalid fps of 0, fix this!",filename);
@@ -1620,7 +1606,7 @@ int bm_load_animation (
             img_size = the_apng.imgsize ();
         }
         catch (const apng::ApngException& e) {
-            WARNINGF (LOCATION, "Failed to load apng: %s\n", e.what ());
+            WARNINGF (LOCATION, "Failed to load apng: %s", e.what ());
             if (img_cfp != nullptr) cfclose (img_cfp);
             return -1;
         }
@@ -1670,22 +1656,14 @@ int bm_load_animation (
                     &img_size)) {
                 // if we didn't get anything then bail out now
                 if (i == 0) {
-                    WARNINGF (
-                        LOCATION,
-                        "EFF: No frame images were found.  EFF, %s, is "
-                        "invalid.\n",
-                        filename);
+                    WARNINGF (LOCATION,"EFF: No frame images were found.  EFF, %s, is invalid.",filename);
 
                     if (img_cfp != nullptr) cfclose (img_cfp);
 
                     return -1;
                 }
 
-                WARNINGF (
-                    LOCATION,
-                    "EFF: Unable to load all frames for '%s', stopping at "
-                    "#%d\n",
-                    filename, i);
+                WARNINGF (LOCATION,"EFF: Unable to load all frames for '%s', stopping at #%d",filename, i);
 
                 // reset total frames to current
                 anim_frames = i;
@@ -1754,49 +1732,25 @@ int bm_load_animation (
             // this can't be used as a texture array
             is_array = false;
 
-            WARNINGF (
-                LOCATION,
-                "Animation '%s' has images that are of different sizes "
-                "(currently at frame %d)."
-                "Performance could be improved by making all images the same "
-                "size.",
-                filename, i + 1);
+            WARNINGF (LOCATION,"Animation '%s' has images that are of different sizes (currently at frame %d).Performance could be improved by making all images the same size.",filename, i + 1);
         }
         if (first_entry->comp_type != entry->comp_type) {
             // Different compression type
             is_array = false;
 
-            WARNINGF (
-                LOCATION,
-                "Animation '%s' has images that are of different compression "
-                "formats (currently at frame %d)."
-                "Performance could be improved by making all images the same "
-                "compression format.",
-                filename, i + 1);
+            WARNINGF (LOCATION,"Animation '%s' has images that are of different compression formats (currently at frame %d).Performance could be improved by making all images the same compression format.",filename, i + 1);
         }
         if (first_entry->bm.true_bpp != entry->bm.true_bpp) {
             // We found a frame with an incompatible pixel format
             is_array = false;
 
-            WARNINGF (
-                LOCATION,
-                "Animation '%s' has images that are of different pixel "
-                "formats (currently at frame %d)."
-                "Performance could be improved by making all images the same "
-                "pixel format.",
-                filename, i + 1);
+            WARNINGF (LOCATION,"Animation '%s' has images that are of different pixel formats (currently at frame %d).Performance could be improved by making all images the same pixel format.",filename, i + 1);
         }
         if (first_entry->num_mipmaps != entry->num_mipmaps) {
             // We found a frame with a different number of mipmaps
             is_array = false;
 
-            WARNINGF (
-                LOCATION,
-                "Animation '%s' has images that have a different number of "
-                "mipmaps (currently at frame %d)."
-                "Performance could be improved by giving all frames the same "
-                "number of mipmaps.",
-                filename, i + 1);
+            WARNINGF (LOCATION,"Animation '%s' has images that have a different number of mipmaps (currently at frame %d).Performance could be improved by giving all frames the same number of mipmaps.",filename, i + 1);
         }
     }
 
@@ -2170,8 +2124,7 @@ void bm_lock_apng (
             the_apng->next_frame ();
         }
         catch (const apng::ApngException& e) {
-            WARNINGF (
-                LOCATION, "Failed to get next apng frame: %s", e.what ());
+            WARNINGF (LOCATION, "Failed to get next apng frame: %s", e.what ());
             bm_release (first_frame);
             return;
         }
@@ -2184,10 +2137,7 @@ void bm_lock_apng (
         cumulative_frame_delay += the_apng->frame.delay;
         be->info.ani.apng.frame_delay = cumulative_frame_delay;
 
-        WARNINGF (
-            LOCATION, "locking apng frame: %s (%i|%i|%i) (%f) %zu\n",
-            be->filename, bpp, bmp->bpp, bm->true_bpp,
-            be->info.ani.apng.frame_delay, be->mem_taken);
+        WARNINGF (LOCATION, "locking apng frame: %s (%i|%i|%i) (%f) %zu",be->filename, bpp, bmp->bpp, bm->true_bpp,be->info.ani.apng.frame_delay, be->mem_taken);
     }
 }
 
@@ -2316,7 +2266,7 @@ void bm_lock_pcx (
         (flags & BMP_MASK_BITMAP) != 0, be->dir_type);
 
     if (pcx_error != PCX_ERROR_NONE) {
-        WARNINGF (LOCATION, "Couldn't load PCX!!! (%s)\n", filename);
+        WARNINGF (LOCATION, "Couldn't load PCX!!! (%s)", filename);
         return;
     }
 
@@ -2614,8 +2564,7 @@ void bm_page_in_stop () {
                     if (bm_preloading) {
                         if (!gr_preload (
                                 entry.handle, (entry.preloaded == 2))) {
-                            WARNINGF (
-                                LOCATION, "Out of VRAM.  Done preloading.\n");
+                            WARNINGF (LOCATION, "Out of VRAM.  Done preloading.");
                             bm_preloading = 0;
                         }
                     }
@@ -2727,9 +2676,7 @@ bool bm_page_out (int handle) {
     // it's possible to hit < 0 here when model_page_out_textures() is
     // called from anywhere other than in a mission
     if (entry->preload_count > 0) {
-        WARNINGF (
-            LOCATION, "PAGE-OUT: %s - preload_count remaining: %d\n",
-            entry->filename, entry->preload_count);
+        WARNINGF (LOCATION, "PAGE-OUT: %s - preload_count remaining: %d",entry->filename, entry->preload_count);
 
         // lets decrease it for next time around
         entry->preload_count--;
@@ -2745,29 +2692,18 @@ void bm_print_bitmaps () {
     for (auto& block : bm_blocks) {
         for (auto& slot : block) {
             auto& entry = slot.entry;
-
             if (entry.type != BM_TYPE_NONE) {
                 if (entry.data_size) {
-                    WARNINGF (
-                        LOCATION,
-                        "BMPMAN = num: %d, name: %s, handle: %d - (%s) size: "
-                        "%.3fM\n",
-                        entry.handle, entry.filename, entry.handle,
-                        entry.data_size ? "*LOCKED*" : "",
-                        ((float)entry.data_size / 1024.0f) / 1024.0f);
+                    WARNINGF (LOCATION, "BMPMAN = num: %d, name: %s, handle: %d - (%s) size: %.3fM", entry.handle, entry.filename, entry.handle, entry.data_size ? "*LOCKED*" : "", ((float)entry.data_size / 1024.0f) / 1024.0f);
                 }
                 else {
-                    WARNINGF (
-                        LOCATION, "BMPMAN = num: %d, name: %s, handle: %d\n",
-                        entry.handle, entry.filename, entry.handle);
+                    WARNINGF (LOCATION, "BMPMAN = num: %d, name: %s, handle: %d",entry.handle, entry.filename, entry.handle);
                 }
             }
         }
     }
 
-    WARNINGF (
-        LOCATION, "BMPMAN = LOCKED memory usage: %.3fM\n",
-        ((float)bm_texture_ram / 1024.0f) / 1024.0f);
+    WARNINGF (LOCATION, "BMPMAN = LOCKED memory usage: %.3fM",((float)bm_texture_ram / 1024.0f) / 1024.0f);
 #endif
 }
 
@@ -2797,11 +2733,7 @@ int bm_release (int handle, int clear_render_targets) {
 
     // If it is locked, cannot free it.
     if (be->ref_count != 0) {
-        WARNINGF (
-            LOCATION,
-            "Tried to release %s that has a lock count of %d.. not "
-            "releasing\n",
-            be->filename, be->ref_count);
+        WARNINGF (LOCATION,"Tried to release %s that has a lock count of %d.. not releasing",be->filename, be->ref_count);
         return 0;
     }
 
@@ -2812,18 +2744,12 @@ int bm_release (int handle, int clear_render_targets) {
     if (be->load_count > 0) be->load_count--;
 
     if (be->load_count != 0) {
-        WARNINGF (
-            LOCATION,
-            "Tried to release %s that has a load count of %d.. not "
-            "releasing\n",
-            be->filename, be->load_count + 1);
+        WARNINGF (LOCATION,"Tried to release %s that has a load count of %d.. not releasing",be->filename, be->load_count + 1);
         return 0;
     }
 
     if (be->type != BM_TYPE_USER) {
-        WARNINGF (
-            LOCATION, "Releasing bitmap %s with handle %i\n", be->filename,
-            handle);
+        WARNINGF (LOCATION, "Releasing bitmap %s with handle %i", be->filename,handle);
     }
 
     // be sure that all frames of an ani are unloaded - taylor
@@ -2912,11 +2838,7 @@ int bm_reload (int bitmap_handle, const char* filename) {
     if (entry->type == BM_TYPE_NONE) return -1;
 
     if (entry->ref_count) {
-        WARNINGF (
-            LOCATION,
-            "Trying to reload a bitmap that is still locked. Filename: %s, "
-            "ref_count: %d",
-            entry->filename, entry->ref_count);
+        WARNINGF (LOCATION,"Trying to reload a bitmap that is still locked. Filename: %s, ref_count: %d",entry->filename, entry->ref_count);
         return -1;
     }
 
@@ -3037,11 +2959,7 @@ bool bm_set_render_target (int handle, int face) {
             (entry->type != BM_TYPE_RENDER_TARGET_DYNAMIC)) {
             // odds are that someone passed a normal texture created with
             // bm_load()
-            WARNINGF (
-                LOCATION,
-                "Trying to set invalid bitmap (handle: %i) as render "
-                "target!\n",
-                handle);
+            WARNINGF (LOCATION,"Trying to set invalid bitmap (handle: %i) as render target!",handle);
             return false;
         }
     }
@@ -3139,10 +3057,7 @@ int bm_unload (int handle, int clear_render_targets, bool nodebug) {
 
     // If it is locked, cannot free it.
     if (be->ref_count != 0 && !nodebug) {
-        WARNINGF (
-            LOCATION,
-            "Tried to unload %s that has a lock count of %d.. not unloading",
-            be->filename, be->ref_count);
+        WARNINGF (LOCATION,"Tried to unload %s that has a lock count of %d.. not unloading",be->filename, be->ref_count);
         return 0;
     }
 
@@ -3154,11 +3069,7 @@ int bm_unload (int handle, int clear_render_targets, bool nodebug) {
         if (be->load_count > 0) be->load_count--;
 
         if (be->load_count != 0 && !nodebug) {
-            WARNINGF (
-                LOCATION,
-                "Tried to unload %s that has a load count of %d.. not "
-                "unloading",
-                be->filename, be->load_count + 1);
+            WARNINGF (LOCATION,"Tried to unload %s that has a load count of %d.. not unloading",be->filename, be->load_count + 1);
             return 0;
         }
     }
@@ -3236,11 +3147,7 @@ int bm_unload_fast (int handle, int clear_render_targets) {
 
     // If it is locked, cannot free it.
     if (be->ref_count != 0) {
-        WARNINGF (
-            LOCATION,
-            "Tried to unload_fast %s that has a lock count of %d.. not "
-            "unloading\n",
-            be->filename, be->ref_count);
+        WARNINGF (LOCATION,"Tried to unload_fast %s that has a lock count of %d.. not unloading",be->filename, be->ref_count);
         return 0;
     }
 
@@ -3248,9 +3155,7 @@ int bm_unload_fast (int handle, int clear_render_targets) {
 
     // unlike bm_unload(), we handle each frame of an animation separately, for
     // safer use in the graphics API
-    WARNINGF (
-        LOCATION, "Fast-unloading %s.  %dx%dx%d\n", be->filename, bmp->w,
-        bmp->h, bmp->bpp);
+    WARNINGF (LOCATION, "Fast-unloading %s.  %dx%dx%d", be->filename, bmp->w,bmp->h, bmp->bpp);
     bm_free_data_fast (handle); // clears flags, bbp, data, etc
 
     return 1;

@@ -542,21 +542,14 @@ void shockwave_level_init () {
         // 4983
         if (Cmdline_enable_3d_shockwave &&
             cf_exists_full (Default_shockwave_3D_filename, CF_TYPE_MODELS)) {
-            WARNINGF (
-                LOCATION,
-                "SHOCKWAVE =>  Loading default shockwave model... \n");
+            WARNINGF (LOCATION,"SHOCKWAVE =>  Loading default shockwave model... ");
 
             i = shockwave_load (Default_shockwave_3D_filename, true);
 
             if (i >= 0)
-                WARNINGF (
-                    LOCATION,
-                    "SHOCKWAVE =>  Default model load: SUCCEEDED!!\n");
+                WARNINGF (LOCATION,"SHOCKWAVE =>  Default model load: SUCCEEDED!!");
             else
-                WARNINGF (
-                    LOCATION,
-                    "SHOCKWAVE =>  Default model load: FAILED!!  Falling back "
-                    "to 2D effect...\n");
+                WARNINGF (LOCATION,"SHOCKWAVE =>  Default model load: FAILED!!  Falling back to 2D effect...");
             ASSERTX (
                 i <= 0,
                 "Default 3D shockwave should be the first shockwave loaded, "
@@ -568,21 +561,14 @@ void shockwave_level_init () {
         // chief1983 - added some messages similar to those for the 3d
         // shockwave
         if (i < 0 || Cmdline_fb_explosions) {
-            WARNINGF (
-                LOCATION,
-                "SHOCKWAVE =>  Loading default shockwave animation... \n");
+            WARNINGF (LOCATION,"SHOCKWAVE =>  Loading default shockwave animation... ");
 
             i = shockwave_load (Default_shockwave_2D_filename);
 
             if (i >= 0)
-                WARNINGF (
-                    LOCATION,
-                    "SHOCKWAVE =>  Default animation load: SUCCEEDED!!\n");
+                WARNINGF (LOCATION,"SHOCKWAVE =>  Default animation load: SUCCEEDED!!");
             else
-                WARNINGF (
-                    LOCATION,
-                    "SHOCKWAVE =>  Default animation load: FAILED!!  Checking "
-                    "if 3d effect was already tried...\n");
+                WARNINGF (LOCATION,"SHOCKWAVE =>  Default animation load: FAILED!!  Checking if 3d effect was already tried...");
             ASSERTX (
                 i <= 1,
                 "Default 2D shockwave should be either the first or second "
@@ -601,22 +587,14 @@ void shockwave_level_init () {
         // checked as it should have tried the first time through
         if (i < 0 && !Cmdline_enable_3d_shockwave &&
             cf_exists_full (Default_shockwave_3D_filename, CF_TYPE_MODELS)) {
-            WARNINGF (
-                LOCATION,
-                "SHOCKWAVE =>  Loading default shockwave model as last "
-                "resort... \n");
+            WARNINGF (LOCATION,"SHOCKWAVE =>  Loading default shockwave model as last resort... ");
 
             i = shockwave_load (Default_shockwave_3D_filename, true);
 
             if (i >= 0)
-                WARNINGF (
-                    LOCATION,
-                    "SHOCKWAVE =>  Default model load: SUCCEEDED!!\n");
+                WARNINGF (LOCATION,"SHOCKWAVE =>  Default model load: SUCCEEDED!!");
             else
-                WARNINGF (
-                    LOCATION,
-                    "SHOCKWAVE =>  Default model load: FAILED!!  No effect "
-                    "loaded...\n");
+                WARNINGF (LOCATION,"SHOCKWAVE =>  Default model load: FAILED!!  No effect loaded...");
             ASSERTX (
                 i <= 0,
                 "Default 3D shockwave should be the first shockwave loaded, "

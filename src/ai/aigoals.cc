@@ -538,10 +538,7 @@ int ai_goal_find_dockpoint (int shipnum, int dock_type) {
 
     // insanity?
     if (loop_count >= 100)
-        WARNINGF (
-            LOCATION,
-            "Too many iterations while looking for a dockpoint on %s.\n",
-            shipp->ship_name);
+        WARNINGF (LOCATION,"Too many iterations while looking for a dockpoint on %s.",shipp->ship_name);
 
     // if we're here, just return the first dockpoint
     return model_find_dock_index (
@@ -1046,10 +1043,7 @@ void ai_add_goal_sub_sexp (
     }
 
     if (aigp->priority > MAX_GOAL_PRIORITY) {
-        WARNINGF (
-            LOCATION,
-            "bashing sexpression priority of goal %s from %d to %d.\n", text,
-            aigp->priority, MAX_GOAL_PRIORITY);
+        WARNINGF (LOCATION,"bashing sexpression priority of goal %s from %d to %d.", text,aigp->priority, MAX_GOAL_PRIORITY);
         aigp->priority = MAX_GOAL_PRIORITY;
     }
 
@@ -1444,11 +1438,7 @@ void ai_copy_mission_wing_goal (ai_goal* aigp, ai_info* aip) {
     }
 
     if (j >= MAX_AI_GOALS) {
-        WARNINGF (
-            LOCATION,
-            "Unable to assign wing goal to ship %s; the ship goals are "
-            "already filled to capacity",
-            Ships[aip->shipnum].ship_name);
+        WARNINGF (LOCATION,"Unable to assign wing goal to ship %s; the ship goals are already filled to capacity",Ships[aip->shipnum].ship_name);
     }
 }
 
@@ -1522,11 +1512,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
             aigp->wp_list = find_matching_waypoint_list (aigp->target_name);
 
             if (aigp->wp_list == NULL) {
-                WARNINGF (
-                    LOCATION,
-                    "Unknown waypoint list %s - not found in mission file.  "
-                    "Killing ai goal",
-                    aigp->target_name);
+                WARNINGF (LOCATION,"Unknown waypoint list %s - not found in mission file.  Killing ai goal",aigp->target_name);
                 return AI_GOAL_NOT_ACHIEVABLE;
             }
         }
@@ -1594,9 +1580,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
         else {
             // not supposed to ever happen, but could if there is a mismatch
             // between the table and model subsystems
-            WARNINGF (
-                LOCATION, "Couldn't find subsystem %d for ship %s\n",
-                aigp->ai_submode, Ships[sindex].ship_name);
+            WARNINGF (LOCATION, "Couldn't find subsystem %d for ship %s",aigp->ai_submode, Ships[sindex].ship_name);
             status = 0;
         }
         break;
@@ -1731,12 +1715,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
             status = SHIP_STATUS_GONE;
         }
         else {
-            WARNINGF (
-                LOCATION,
-                "Potentially incorrect behaviour in AI goal for ship %s: Ship "
-                "%s could not be found among currently active, departed, or "
-                "yet-to-arrive ships.\nPlease check the mission file.\n",
-                Ships[objp->instance].ship_name, aigp->target_name);
+            WARNINGF (LOCATION,"Potentially incorrect behaviour in AI goal for ship %s: Ship %s could not be found among currently active, departed, or yet-to-arrive ships.\nPlease check the mission file.",Ships[objp->instance].ship_name, aigp->target_name);
             status = SHIP_STATUS_UNKNOWN;
         }
     }
@@ -2237,9 +2216,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
             aip->submode_start_time = Missiontime;
         }
         else {
-            WARNINGF (
-                LOCATION, "Ship %s told to guard itself.  Goal ignored.\n",
-                Ships[objp->instance].ship_name);
+            WARNINGF (LOCATION, "Ship %s told to guard itself.  Goal ignored.",Ships[objp->instance].ship_name);
         }
         // -- What is this doing here?? -- MK, 7/30/97 --
         // ai_do_default_behavior( objp );
@@ -2520,11 +2497,7 @@ void ai_update_goal_references (
             break;
 
         default:
-            WARNINGF (
-                LOCATION,
-                "unhandled FRED reference type %d in "
-                "ai_update_goal_references",
-                type);
+            WARNINGF (LOCATION,"unhandled FRED reference type %d in ai_update_goal_references",type);
             break;
         }
 

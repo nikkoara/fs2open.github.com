@@ -219,16 +219,10 @@ bool WaveFile::Open (const char* pszFilename, bool keep_ext) {
             throw FFmpegException ("Invalid audio format.");
         }
 
-        WARNINGF (
-            LOCATION, "SOUND => %s => Using codec %s (%s)\n", filename,
-            audio_codec->long_name, audio_codec->name);
+        WARNINGF (LOCATION, "SOUND => %s => Using codec %s (%s)", filename,audio_codec->long_name, audio_codec->name);
     }
     catch (const FFmpegException& e) {
-        WARNINGF (
-            LOCATION,
-            "SOUND ==> Could not open wave file %s for streaming. Reason: "
-            "%s\n",
-            filename, e.what ());
+        WARNINGF (LOCATION,"SOUND ==> Could not open wave file %s for streaming. Reason: %s",filename, e.what ());
         return false;
     }
 

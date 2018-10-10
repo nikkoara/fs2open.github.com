@@ -103,7 +103,7 @@ void obj_reset_pairs () {
     Obj_pairs = (obj_pair*)malloc (sizeof (obj_pair) * MIN_PAIRS);
 
     if (Obj_pairs == NULL) {
-        WARNINGF (LOCATION, "Unable to create space for collision pairs!!\n");
+        WARNINGF (LOCATION, "Unable to create space for collision pairs!!");
         return;
     }
 
@@ -407,8 +407,7 @@ void obj_add_pair (object* A, object* B, int check_time, int add_to_end) {
     // collision pair list.
 
     if (pair_free_list.next == NULL) {
-        WARNINGF (
-            LOCATION, "Out of object pairs!! Not all collisions will work!");
+        WARNINGF (LOCATION, "Out of object pairs!! Not all collisions will work!");
         return;
     }
 
@@ -604,11 +603,7 @@ void obj_check_all_collisions () {
     // %9.5f]\n", Num_hull_pieces, Weapons_created, pairs_not_created,
     // Pairs_created, 100.0f*(float)pairs_not_created/(float)(pairs_not_created
     // + Pairs_created) ));
-    WARNINGF (
-        LOCATION,
-        "[pairs_created: %3d, pairs_not_created: %3d, percent saved %6.3f]\n",
-        Pairs_created, pairs_not_created,
-        100.0f * pairs_not_created / (Pairs_created + pairs_not_created));
+    WARNINGF (LOCATION,"[pairs_created: %3d, pairs_not_created: %3d, percent saved %6.3f]",Pairs_created, pairs_not_created,100.0f * pairs_not_created / (Pairs_created + pairs_not_created));
     pairs_not_created = 0;
     Weapons_created = 0;
     Pairs_created = 0;

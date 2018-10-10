@@ -344,13 +344,7 @@ bool StartAutopilot () {
     if (speed_cap < 1.0f) {
         /* We need to deal with this so that incorrectly flagged ships will not
         cause the engine to fail to limit all the ships speeds correctly. */
-        WARNINGF (
-            LOCATION,
-            "Ship speed cap is way too small (%f)!\n"
-            "This is normally caused by a ship that has nav-carry-status set, "
-            "but cannot move itself (like a Cargo container).\n"
-            "Speed cap has been set to 1.0 m/s.",
-            speed_cap);
+        WARNINGF (LOCATION,"Ship speed cap is way too small (%f)!\nThis is normally caused by a ship that has nav-carry-status set, but cannot move itself (like a Cargo container).\nSpeed cap has been set to 1.0 m/s.",speed_cap);
         speed_cap = 1.0f;
     }
 

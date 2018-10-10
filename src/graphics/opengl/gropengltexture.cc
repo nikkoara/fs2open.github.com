@@ -108,11 +108,7 @@ void opengl_tcache_init () {
 
     // if we can't do at least 128x128 then just disable FBOs
     if (GL_max_renderbuffer_size < 128) {
-        WARNINGF (
-            LOCATION,
-            "Max dimensions of FBO, %ix%i, is less the required minimum!!  "
-            "Extension will be disabled!\n",
-            GL_max_renderbuffer_size, GL_max_renderbuffer_size);
+        WARNINGF (LOCATION,"Max dimensions of FBO, %ix%i, is less the required minimum!!  Extension will be disabled!",GL_max_renderbuffer_size, GL_max_renderbuffer_size);
         Cmdline_no_fbo = 1;
     }
 
@@ -885,9 +881,7 @@ int opengl_create_texture (
     }
 
     if ((width < 1) || (height < 1)) {
-        WARNINGF (
-            LOCATION, "Bitmap %s is too small at %dx%d.\n",
-            bm_get_filename (bitmap_handle), width, height);
+        WARNINGF (LOCATION, "Bitmap %s is too small at %dx%d.",bm_get_filename (bitmap_handle), width, height);
         return 0;
     }
 
@@ -911,7 +905,7 @@ int opengl_create_texture (
     }
 
     if (tslot->texture_id == 0) {
-        WARNINGF (LOCATION, "!!OpenGL DEBUG!! t->texture_id == 0\n");
+        WARNINGF (LOCATION, "!!OpenGL DEBUG!! t->texture_id == 0");
         tslot->reset ();
         return 0;
     }
@@ -996,9 +990,7 @@ int opengl_create_texture (
         auto bmp = bm_lock (frame, bits_per_pixel, bitmap_flags);
 
         if (bmp == NULL) {
-            WARNINGF (
-                LOCATION, "Couldn't lock bitmap %d (%s).\n", frame,
-                bm_get_filename (frame));
+            WARNINGF (LOCATION, "Couldn't lock bitmap %d (%s).", frame,bm_get_filename (frame));
             continue;
         }
 
@@ -1164,7 +1156,7 @@ int gr_opengl_preload (int bitmap_num, int is_aabitmap) {
         &u_scale, &v_scale, &array_index);
 
     if (!retval) {
-        WARNINGF (LOCATION, "Texture upload failed!\n");
+        WARNINGF (LOCATION, "Texture upload failed!");
     }
 
     return retval;
@@ -1726,7 +1718,7 @@ int opengl_set_render_target (int slot, int face, int is_static) {
     fbo = opengl_get_fbo (ts->fbo_id);
 
     if (fbo == NULL) {
-        WARNINGF (LOCATION, "Tried to get an OpenGL FBO that didn't exist!\n");
+        WARNINGF (LOCATION, "Tried to get an OpenGL FBO that didn't exist!");
         return 0;
     }
 
@@ -1865,7 +1857,7 @@ int opengl_make_render_target (
 
     if (opengl_check_framebuffer ()) {
         // Oops!!  reset everything and then bail
-        WARNINGF (LOCATION, "OpenGL: Unable to create FBO!\n");
+        WARNINGF (LOCATION, "OpenGL: Unable to create FBO!");
         auto fbo_id = ts->fbo_id;
 
         GL_state.BindFrameBuffer (0);
@@ -1910,7 +1902,7 @@ int opengl_make_render_target (
 
     opengl_set_texture_target ();
 
-    WARNINGF (LOCATION, "OpenGL: Created %ix%i FBO!\n", ts->w, ts->h);
+    WARNINGF (LOCATION, "OpenGL: Created %ix%i FBO!", ts->w, ts->h);
 
     return 1;
 }

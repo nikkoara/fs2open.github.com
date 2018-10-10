@@ -888,7 +888,7 @@ void game_level_init () {
     if (!(Game_mode & GM_STANDALONE_SERVER)) {
         model_page_in_start (); // mark any existing models as unused but don't
                                 // unload them yet
-        WARNINGF (LOCATION, "Beginning level bitmap paging...\n");
+        WARNINGF (LOCATION, "Beginning level bitmap paging...");
         bm_page_in_start ();
     }
     else {
@@ -1107,11 +1107,9 @@ void game_loading_callback_close () {
     Game_loading_callback_inited = 0;
 
 #ifndef NDEBUG
-    WARNINGF (LOCATION, "=================== ENDING LOAD ================\n");
-    WARNINGF (
-        LOCATION, "Real count = %d, Estimated count = %d\n", real_count,
-        COUNT_ESTIMATE);
-    WARNINGF (LOCATION, "================================================\n");
+    WARNINGF (LOCATION, "=================== ENDING LOAD ================");
+    WARNINGF (LOCATION, "Real count = %d, Estimated count = %d", real_count,COUNT_ESTIMATE);
+    WARNINGF (LOCATION, "================================================");
 #else
     // to remove warnings in release build
     real_count = 0;
@@ -1159,10 +1157,7 @@ void freespace_mission_load_stuff () {
     // server IE : we _don't_ want to load any sounds or bitmap/texture info on
     // this machine.
     if (!(Game_mode & GM_STANDALONE_SERVER)) {
-        WARNINGF (
-            LOCATION,
-            "=================== STARTING LEVEL DATA LOAD "
-            "==================\n");
+        WARNINGF (LOCATION,"=================== STARTING LEVEL DATA LOAD ==================");
 
         game_busy (NOX ("** setting up event music **"));
         event_music_level_init (
@@ -1264,9 +1259,7 @@ void game_post_level_init () {
  * Tells the server to load the mission and initialize structures
  */
 int game_start_mission () {
-    WARNINGF (
-        LOCATION,
-        "=================== STARTING LEVEL LOAD ==================\n");
+    WARNINGF (LOCATION,"=================== STARTING LEVEL LOAD ==================");
 
     int s1 = timer_get_milliseconds ();
 
@@ -1285,7 +1278,7 @@ int game_start_mission () {
         popup (
             PF_BODY_BIG | PF_USE_AFFIRMATIVE_ICON, 1, POPUP_OK,
             XSTR ("Attempt to load the mission failed", 169));
-        
+
         gameseq_post_event (GS_EVENT_MAIN_MENU);
         game_loading_callback_close ();
         game_level_close ();
@@ -1315,7 +1308,7 @@ int game_start_mission () {
 
     int e1 = timer_get_milliseconds ();
 
-    WARNINGF (LOCATION, "Level load took %f seconds.\n", (e1 - s1) / 1000.0f);
+    WARNINGF (LOCATION, "Level load took %f seconds.", (e1 - s1) / 1000.0f);
     return 1;
 }
 
@@ -1558,11 +1551,11 @@ void game_init () {
 
     // Initialize the timer before the os
     timer_init ();
-    
+
     os_init (Osreg_class_name, Window_title.c_str (), Osreg_app_name);
 
 #ifndef NDEBUG
-    WARNINGF (LOCATION, "FreeSpace 2 Open version: %s\n", FS_VERSION_FULL);
+    WARNINGF (LOCATION, "FreeSpace 2 Open version: %s", FS_VERSION_FULL);
 
     extern void cmdline_debug_print_cmdline ();
     cmdline_debug_print_cmdline ();
@@ -1737,14 +1730,10 @@ void game_init () {
 
     libs::ffmpeg::initialize ();
 
-    WARNINGF (
-        LOCATION, "Ships.tbl is : %s\n",
-        Game_ships_tbl_valid ? "VALID" : "INVALID!!!!");
-    WARNINGF (
-        LOCATION, "Weapons.tbl is : %s\n",
-        Game_weapons_tbl_valid ? "VALID" : "INVALID!!!!");
+    WARNINGF (LOCATION, "Ships.tbl is : %s",Game_ships_tbl_valid ? "VALID" : "INVALID!!!!");
+    WARNINGF (LOCATION, "Weapons.tbl is : %s",Game_weapons_tbl_valid ? "VALID" : "INVALID!!!!");
 
-    WARNINGF (LOCATION, "cfile_init() took %d\n", e1 - s1);
+    WARNINGF (LOCATION, "cfile_init() took %d", e1 - s1);
 
     // if we are done initializing, start showing the cursor
     io::mouse::CursorManager::get ()->showCursor (true);
@@ -1804,11 +1793,7 @@ void game_show_framerate () {
 
     cur_time = f2fl (timer_get_approx_seconds ());
     if (cur_time - Start_time > 30.0f) {
-        WARNINGF (
-            LOCATION,
-            "%i frames executed in %7.3f seconds, %7.3f frames per second.\n",
-            Framecount, cur_time - Start_time,
-            Framecount / (cur_time - Start_time));
+        WARNINGF (LOCATION,"%i frames executed in %7.3f seconds, %7.3f frames per second.",Framecount, cur_time - Start_time,Framecount / (cur_time - Start_time));
         Start_time += 1000.0f;
     }
 
@@ -2212,9 +2197,7 @@ void show_debug_stuff () {
         }
     }
 
-    WARNINGF (
-        LOCATION, "Frame: %i Lasers: %4i, Missiles: %4i\n", Framecount,
-        laser_count, missile_count);
+    WARNINGF (LOCATION, "Frame: %i Lasers: %4i, Missiles: %4i", Framecount,laser_count, missile_count);
 }
 
 extern int Tool_enabled;
@@ -2273,25 +2256,25 @@ void game_tst_frame () {
         case 0:
             tst_bitmap = bm_load ("ig_jim");
             left = 1;
-            WARNINGF (LOCATION, "TST 0\n");
+            WARNINGF (LOCATION, "TST 0");
             break;
 
         case 1:
             tst_bitmap = bm_load ("ig_kan");
             left = 0;
-            WARNINGF (LOCATION, "TST 1\n");
+            WARNINGF (LOCATION, "TST 1");
             break;
 
         case 2:
             tst_bitmap = bm_load ("ig_jim");
             left = 1;
-            WARNINGF (LOCATION, "TST 2\n");
+            WARNINGF (LOCATION, "TST 2");
             break;
 
         default:
             tst_bitmap = bm_load ("ig_kan");
             left = 0;
-            WARNINGF (LOCATION, "TST 3\n");
+            WARNINGF (LOCATION, "TST 3");
             break;
         }
 
@@ -2412,9 +2395,7 @@ void do_timing_test (float frame_time) {
         test_time += frame_time;
         if (framecount >= NUM_FRAMES_TEST) {
             test_running = 0;
-            WARNINGF (
-                LOCATION, "%d frames took %.3f seconds\n", NUM_FRAMES_TEST,
-                test_time);
+            WARNINGF (LOCATION, "%d frames took %.3f seconds", NUM_FRAMES_TEST,test_time);
             for (i = 0; i < NUM_MIXED_SOUNDS; i++) snd_stop (snds[i]);
         }
     }
@@ -3071,12 +3052,7 @@ camid game_render_frame_setup () {
                     observer_get_eye (&eye_pos, &eye_orient, Viewer_obj);
                     break;
                 default:
-                    WARNINGF (
-                        LOCATION,
-                        "Invalid Value for Viewer_obj->type. Expected values "
-                        "are OBJ_SHIP (1) and OBJ_OBSERVER (12), we "
-                        "encountered %d. Please tell a coder.\n",
-                        Viewer_obj->type);
+                    WARNINGF (LOCATION,"Invalid Value for Viewer_obj->type. Expected values are OBJ_SHIP (1) and OBJ_OBSERVER (12), we encountered %d. Please tell a coder.",Viewer_obj->type);
                     Int3 ();
                 }
             }
@@ -4196,13 +4172,11 @@ int game_poll () {
         // Now we have four digit precision :) -WMC
         if (counter > 9999) {
             // This should pop up a dialogue or something ingame.
-            WARNINGF (
-                LOCATION,
-                "Screenshot count has reached max of 9999. Resetting to 0.");
+            WARNINGF (LOCATION,"Screenshot count has reached max of 9999. Resetting to 0.");
             counter = 0;
         }
 
-        WARNINGF (LOCATION, "Dumping screen to '%s'\n", tmp_name);
+        WARNINGF (LOCATION, "Dumping screen to '%s'", tmp_name);
         gr_print_screen (tmp_name);
 
         game_start_time ();
@@ -4231,9 +4205,7 @@ void os_close () { gameseq_post_event (GS_EVENT_QUIT_GAME); }
 // All code to process events.   This is the only place
 // that you should change the state of the game.
 void game_process_event (int current_state, int event) {
-    WARNINGF (
-        LOCATION, "Got event %s (%d) in state %s (%d)\n", GS_event_text[event],
-        event, GS_state_text[current_state], current_state);
+    WARNINGF (LOCATION, "Got event %s (%d) in state %s (%d)", GS_event_text[event],event, GS_state_text[current_state], current_state);
 
     switch (event) {
     case GS_EVENT_SIMULATOR_ROOM:
@@ -4307,7 +4279,7 @@ void game_process_event (int current_state, int event) {
         }
 
         Start_time = f2fl (timer_get_approx_seconds ());
-        WARNINGF (LOCATION, "Entering game at time = %7.3f\n", Start_time);
+        WARNINGF (LOCATION, "Entering game at time = %7.3f", Start_time);
 
         break;
 
@@ -4367,10 +4339,7 @@ void game_process_event (int current_state, int event) {
             event_music_player_death ();
         }
         else {
-            WARNINGF (
-                LOCATION,
-                "Ignoring GS_EVENT_DEATH_BLEW_UP because we're in state %d\n",
-                current_state);
+            WARNINGF (LOCATION,"Ignoring GS_EVENT_DEATH_BLEW_UP because we're in state %d",current_state);
         }
         break;
 
@@ -4433,8 +4402,7 @@ void game_process_event (int current_state, int event) {
 
     case GS_EVENT_PLAYER_WARPOUT_START:
         if (Player->control_mode != PCM_NORMAL) {
-            WARNINGF (
-                LOCATION, "Player isn't in normal mode; cannot warp out.\n");
+            WARNINGF (LOCATION, "Player isn't in normal mode; cannot warp out.");
         }
         else {
             Player->saved_viewer_mode = Viewer_mode;
@@ -4453,7 +4421,7 @@ void game_process_event (int current_state, int event) {
                 Player->control_mode = PCM_NORMAL;
                 Viewer_mode = Player->saved_viewer_mode;
                 hud_subspace_notify_abort ();
-                WARNINGF (LOCATION, "Player put back to normal mode.\n");
+                WARNINGF (LOCATION, "Player put back to normal mode.");
                 if (Warpout_sound.isValid ()) {
                     snd_stop (Warpout_sound);
                     Warpout_sound = sound_handle::invalid ();
@@ -4465,16 +4433,10 @@ void game_process_event (int current_state, int event) {
     case GS_EVENT_PLAYER_WARPOUT_DONE_STAGE1: // player ship got up to speed
         if (Player->control_mode != PCM_WARPOUT_STAGE1) {
             gameseq_post_event (GS_EVENT_PLAYER_WARPOUT_STOP);
-            WARNINGF (
-                LOCATION,
-                "Player put back to normal mode, because of invalid sequence "
-                "in stage1.\n");
+            WARNINGF (LOCATION,"Player put back to normal mode, because of invalid sequence in stage1.");
         }
         else {
-            WARNINGF (
-                LOCATION,
-                "Hit target speed.  Starting warp effect and moving to stage "
-                "2!\n");
+            WARNINGF (LOCATION,"Hit target speed.  Starting warp effect and moving to stage 2!");
             shipfx_warpout_start (Player_obj);
             Player->control_mode = PCM_WARPOUT_STAGE2;
 
@@ -4491,20 +4453,17 @@ void game_process_event (int current_state, int event) {
                                               // effect
         if (Player->control_mode != PCM_WARPOUT_STAGE2) {
             gameseq_post_event (GS_EVENT_PLAYER_WARPOUT_STOP);
-            WARNINGF (
-                LOCATION,
-                "Player put back to normal mode, because of invalid sequence "
-                "in stage2.\n");
+            WARNINGF (LOCATION,"Player put back to normal mode, because of invalid sequence in stage2.");
         }
         else {
-            WARNINGF (LOCATION, "Hit warp effect.  Moving to stage 3!\n");
+            WARNINGF (LOCATION, "Hit warp effect.  Moving to stage 3!");
             Player->control_mode = PCM_WARPOUT_STAGE3;
         }
         break;
 
     case GS_EVENT_PLAYER_WARPOUT_DONE: // player ship got through the warp
                                        // effect
-        WARNINGF (LOCATION, "Player warped out.  Going to debriefing!\n");
+        WARNINGF (LOCATION, "Player warped out.  Going to debriefing!");
         Player->control_mode = PCM_NORMAL;
         Viewer_mode = Player->saved_viewer_mode;
         Warpout_sound = sound_handle::invalid ();
@@ -4777,9 +4736,7 @@ void game_enter_state (int old_state, int new_state) {
 
         if (Cmdline_start_mission) {
             strcpy (Game_current_mission_filename, Cmdline_start_mission);
-            WARNINGF (
-                LOCATION, "Straight to mission '%s'\n",
-                Game_current_mission_filename);
+            WARNINGF (LOCATION, "Straight to mission '%s'",Game_current_mission_filename);
             gameseq_post_event (GS_EVENT_START_GAME);
             // This stops the mission from loading again when you go back to
             // the hall
@@ -5922,9 +5879,7 @@ void Time_model (int modelnum) {
 
     Tmap_npixels /= framecount;
 
-    WARNINGF (
-        LOCATION, "'%s' is %.2f FPS\n", pof_file,
-        i2fl (framecount) / f2fl (t2 - t1));
+    WARNINGF (LOCATION, "'%s' is %.2f FPS", pof_file,i2fl (framecount) / f2fl (t2 - t1));
     fprintf (
         Time_fp, "\"%s\"\t%.0f\t%d\t%d\t%d\t%d\n", pof_file,
         i2fl (framecount) / f2fl (t2 - t1), bitmaps_used_this_frame,
@@ -5937,7 +5892,7 @@ DCF_BOOL (time_models, Time_models)
 void Do_model_timings_test () {
     if (!Time_models) return;
 
-    WARNINGF (LOCATION, "Timing models!\n");
+    WARNINGF (LOCATION, "Timing models!");
 
     int i;
 
@@ -6120,8 +6075,7 @@ int detect_lang () {
     // now compare the checksum/filesize against known #'s
     for (idx = 0; idx < NUM_BUILTIN_LANGUAGES; idx++) {
         if (Lcl_builtin_languages[idx].checksum == (int)file_checksum) {
-            WARNINGF (
-                LOCATION, "AutoLang: Language auto-detection successful...\n");
+            WARNINGF (LOCATION, "AutoLang: Language auto-detection successful...");
             return idx;
         }
     }
@@ -6130,7 +6084,7 @@ int detect_lang () {
     ERRORF (
         LOCATION, "ERROR: Unknown Language Checksum: %i\n",
         (int)file_checksum);
-    WARNINGF (LOCATION, "Using default language settings...\n");
+    WARNINGF (LOCATION, "Using default language settings...");
 
     return -1;
 }

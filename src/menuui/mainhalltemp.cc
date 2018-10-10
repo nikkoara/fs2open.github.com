@@ -171,9 +171,7 @@ void mht_do () {
 void mht_close () {
     // unload any bitmaps
     if (!bm_unload (Mht_bitmap)) {
-        WARNINGF (
-            LOCATION, "WARNING : could not unload background bitmap %s\n",
-            Mht_bitmap_fname[gr_screen.res]);
+        WARNINGF (LOCATION, "WARNING : could not unload background bitmap %s",Mht_bitmap_fname[gr_screen.res]);
     }
 
     // destroy the UI_WINDOW

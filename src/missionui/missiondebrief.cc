@@ -669,9 +669,7 @@ void debrief_ui_init () {
         Debrief_single_name[gr_screen.res], Debrief_multi_name[gr_screen.res]);
 
     if (Background_bitmap < 0) {
-        WARNINGF (
-            LOCATION,
-            "Could not load the background bitmap for debrief screen");
+        WARNINGF (LOCATION,"Could not load the background bitmap for debrief screen");
     }
 
     Award_bg_bitmap = bm_load (Debrief_award_background[gr_screen.res]);
@@ -953,7 +951,7 @@ void debrief_assemble_optional_mission_popup_text (
     if (mission_loop_desc == NULL) {
         strcpy (
             buffer, XSTR ("<No Mission Loop Description Available>", 1490));
-        WARNINGF (LOCATION, "No mission loop description available\n");
+        WARNINGF (LOCATION, "No mission loop description available");
     }
     else {
         strcpy (buffer, mission_loop_desc);

@@ -215,10 +215,7 @@ void launch_context_help () {
     case GS_STATE_CMD_BRIEF: overlay_id = Cmd_brief_overlay_id; break;
 
     default:
-        WARNINGF (
-            LOCATION,
-            "WARNING ==> There is no context help available for state %s\n",
-            GS_state_text[Source_game_state - 1]);
+        WARNINGF (LOCATION,"WARNING ==> There is no context help available for state %s",GS_state_text[Source_game_state - 1]);
         break;
 
     } // end switch
@@ -303,11 +300,7 @@ void parse_helptbl (const char* filename) {
 
             if (overlay_id < 0) {
                 if (num_help_overlays >= MAX_HELP_OVERLAYS) {
-                    WARNINGF (
-                        LOCATION,
-                        "Could not load help overlay '%s' as maximum number "
-                        "of help overlays was reached (Max is %d)",
-                        name, MAX_HELP_OVERLAYS);
+                    WARNINGF (LOCATION,"Could not load help overlay '%s' as maximum number of help overlays was reached (Max is %d)",name, MAX_HELP_OVERLAYS);
 
                     if (!skip_to_string ("$end")) {
                         ASSERTX (0, "Couldn't find $end. Help.tbl or -hlp.tbm is invalid.\n");

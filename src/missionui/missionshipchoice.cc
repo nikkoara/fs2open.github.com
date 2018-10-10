@@ -629,8 +629,7 @@ void ship_select_init () {
                                      // which can release common button
                                      // bitmaps.
         common_reset_buttons ();
-        WARNINGF (
-            LOCATION, "ship_select_init() returning without doing anything");
+        WARNINGF (LOCATION, "ship_select_init() returning without doing anything");
         return;
     }
 
@@ -1485,12 +1484,7 @@ void ship_select_do (float frametime) {
             if (Ss_icons[Carried_ss_icon.ship_class].model_index == -1) {
                 Ss_icons[Carried_ss_icon.ship_class].model_index = model_load (
                     sip->pof_file, sip->n_subsystems, &sip->subsystems[0]);
-                WARNINGF (
-                    LOCATION,
-                    "SL WARNING: Had to attempt to page in model for %s paged "
-                    "in manually! Result: %d\n",
-                    sip->name,
-                    Ss_icons[Carried_ss_icon.ship_class].model_index);
+                WARNINGF (LOCATION,"SL WARNING: Had to attempt to page in model for %s paged in manually! Result: %d",sip->name,Ss_icons[Carried_ss_icon.ship_class].model_index);
             }
             gr_set_color_fast (&Icon_colors[ICON_FRAME_SELECTED]);
 
@@ -1546,8 +1540,7 @@ void ship_select_close () {
     ship_select_common_close ();
 
     if (!Ship_select_open) {
-        WARNINGF (
-            LOCATION, "ship_select_close() returning without doing anything");
+        WARNINGF (LOCATION, "ship_select_close() returning without doing anything");
         return;
     }
 
@@ -1676,11 +1669,7 @@ void draw_ship_icon_with_number (int screen_offset, int ship_class) {
         if (ss_icon->model_index == -1) {
             ss_icon->model_index = model_load (
                 sip->pof_file, sip->n_subsystems, &sip->subsystems[0]);
-            WARNINGF (
-                LOCATION,
-                "SL WARNING: Had to attempt to page in model for %s paged in "
-                "manually! Result: %d\n",
-                sip->name, ss_icon->model_index);
+            WARNINGF (LOCATION,"SL WARNING: Had to attempt to page in model for %s paged in manually! Result: %d",sip->name, ss_icon->model_index);
         }
         gr_set_color_fast (color_to_draw);
 
@@ -1726,8 +1715,7 @@ void start_ship_animation (int ship_class, int /*play_sound*/) {
     char animation_filename[CF_MAX_FILENAME_LENGTH + 4];
 
     if (ship_class < 0) {
-        WARNINGF (
-            LOCATION, "No ship class passed in to start_ship_animation\n");
+        WARNINGF (LOCATION, "No ship class passed in to start_ship_animation");
         ShipSelectModelNum = -1;
         return;
     }
@@ -1752,10 +1740,7 @@ void start_ship_animation (int ship_class, int /*play_sound*/) {
         model_page_in_textures (ShipSelectModelNum, ship_class);
 
         if (sip->model_num < 0) {
-            WARNINGF (
-                LOCATION,
-                "Couldn't load model file %s in missionshipchoice.cpp\n",
-                sip->pof_file);
+            WARNINGF (LOCATION,"Couldn't load model file %s in missionshipchoice.cpp",sip->pof_file);
         }
     }
     else {
@@ -2268,11 +2253,7 @@ void ss_blit_ship_icon (int x, int y, int ship_class, int bmap_num) {
             if (icon->model_index == -1) {
                 icon->model_index = model_load (
                     sip->pof_file, sip->n_subsystems, &sip->subsystems[0]);
-                WARNINGF (
-                    LOCATION,
-                    "SL WARNING: Had to attempt to page in model for %s paged "
-                    "in manually! Result: %d\n",
-                    sip->name, icon->model_index);
+                WARNINGF (LOCATION,"SL WARNING: Had to attempt to page in model for %s paged in manually! Result: %d",sip->name, icon->model_index);
             }
             if (icon->model_index != -1) {
                 gr_set_color_fast (&Icon_colors[bmap_num]);
@@ -2942,11 +2923,7 @@ void ss_init_wing_info (int wing_num, int starting_wing_num) {
     wp = &Wings[ss_wing->wingnum];
     // niffiwan: don't overrun the array
     if (wp->current_count > MAX_WING_SLOTS) {
-        WARNINGF (
-            LOCATION,
-            "Starting Wing '%s' has '%d' ships. Truncating ship selection to "
-            "'MAX_WING_SLOTS'\n",
-            Starting_wing_names[ss_wing->wingnum], wp->current_count);
+        WARNINGF (LOCATION,"Starting Wing '%s' has '%d' ships. Truncating ship selection to 'MAX_WING_SLOTS'",Starting_wing_names[ss_wing->wingnum], wp->current_count);
         ss_wing->num_slots = MAX_WING_SLOTS;
     }
     else {
@@ -2964,11 +2941,7 @@ void ss_init_wing_info (int wing_num, int starting_wing_num) {
             if (p_objp->wingnum == WING_INDEX (wp)) {
                 // niffiwan: don't overrun the array
                 if (ss_wing->num_slots >= MAX_WING_SLOTS) {
-                    WARNINGF (
-                        LOCATION,
-                        "Starting Wing '%s' has more than 'MAX_WING_SLOTS' "
-                        "ships\n",
-                        Starting_wing_names[ss_wing->wingnum]);
+                    WARNINGF (LOCATION,"Starting Wing '%s' has more than 'MAX_WING_SLOTS' ships",Starting_wing_names[ss_wing->wingnum]);
                     break;
                 }
                 slot = &ss_wing->ss_slots[ss_wing->num_slots++];

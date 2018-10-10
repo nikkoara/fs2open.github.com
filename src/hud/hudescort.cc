@@ -185,21 +185,21 @@ void HudGaugeEscort::initBitmaps (
     Escort_gauges[0].first_frame =
         bm_load_animation (fname_top, &Escort_gauges[0].num_frames);
     if (Escort_gauges[0].first_frame == -1) {
-        WARNINGF (LOCATION, "Could not load in ani: %s\n", fname_top);
+        WARNINGF (LOCATION, "Could not load in ani: %s", fname_top);
         return;
     }
 
     Escort_gauges[1].first_frame =
         bm_load_animation (fname_middle, &Escort_gauges[1].num_frames);
     if (Escort_gauges[1].first_frame == -1) {
-        WARNINGF (LOCATION, "Could not load in ani: %s\n", fname_middle);
+        WARNINGF (LOCATION, "Could not load in ani: %s", fname_middle);
         return;
     }
 
     Escort_gauges[2].first_frame =
         bm_load_animation (fname_bottom, &Escort_gauges[2].num_frames);
     if (Escort_gauges[2].first_frame == -1) {
-        WARNINGF (LOCATION, "Could not load in ani: %s\n", fname_bottom);
+        WARNINGF (LOCATION, "Could not load in ani: %s", fname_bottom);
         return;
     }
 }
@@ -456,7 +456,7 @@ void hud_create_complete_escort_list (escort_info* escorts, int* num_escorts) {
 
         // break out of the loop when we have reached our max
         if (*num_escorts == MAX_COMPLETE_ESCORT_LIST) {
-            WARNINGF (LOCATION, "exceeded max ships in big escort list\n");
+            WARNINGF (LOCATION, "exceeded max ships in big escort list");
             break;
         }
 

@@ -109,28 +109,19 @@ public:
         if (_diffuseBitmap == -1 && VALID_FNAME (_diffuseFilename)) {
             _diffuseBitmap = bm_load_either (_diffuseFilename.c_str ());
             if (_diffuseBitmap == -1) {
-                WARNINGF (
-                    LOCATION,
-                    "Bitmap '%s' failed to load for decal definition %s!",
-                    _diffuseFilename.c_str (), _name.c_str ());
+                WARNINGF (LOCATION,"Bitmap '%s' failed to load for decal definition %s!",_diffuseFilename.c_str (), _name.c_str ());
             }
         }
         if (_glowBitmap == -1 && VALID_FNAME (_glowFilename)) {
             _glowBitmap = bm_load_either (_glowFilename.c_str ());
             if (_glowBitmap == -1) {
-                WARNINGF (
-                    LOCATION,
-                    "Bitmap '%s' failed to load for decal definition %s!",
-                    _glowFilename.c_str (), _name.c_str ());
+                WARNINGF (LOCATION,"Bitmap '%s' failed to load for decal definition %s!",_glowFilename.c_str (), _name.c_str ());
             }
         }
         if (_normalBitmap == -1 && VALID_FNAME (_normalMapFilename)) {
             _normalBitmap = bm_load_either (_normalMapFilename.c_str ());
             if (_normalBitmap == -1) {
-                WARNINGF (
-                    LOCATION,
-                    "Bitmap '%s' failed to load for decal definition %s!",
-                    _normalMapFilename.c_str (), _name.c_str ());
+                WARNINGF (LOCATION,"Bitmap '%s' failed to load for decal definition %s!",_normalMapFilename.c_str (), _name.c_str ());
             }
         }
     }
@@ -191,26 +182,17 @@ void parse_decals_table (const char* filename) {
     if (!gr_is_capable (CAPABILITY_DEFERRED_LIGHTING)) {
         // we need deferred lighting
         decal_system_active = false;
-        WARNINGF (
-            LOCATION,
-            "Note: Decal system has been disabled due to lack of deferred "
-            "lighting.\n");
+        WARNINGF (LOCATION,"Note: Decal system has been disabled due to lack of deferred lighting.");
     }
     if (!gr_is_capable (CAPABILITY_NORMAL_MAP)) {
         // We need normal mapping for the full feature range
         decal_system_active = false;
-        WARNINGF (
-            LOCATION,
-            "Note: Decal system has been disabled due to lack of normal "
-            "mapping.\n");
+        WARNINGF (LOCATION,"Note: Decal system has been disabled due to lack of normal mapping.");
     }
     if (!gr_is_capable (CAPABILITY_SEPARATE_BLEND_FUNCTIONS)) {
         // WWe need separate blending functions for different color buffers
         decal_system_active = false;
-        WARNINGF (
-            LOCATION,
-            "Note: Decal system has been disabled due to lack of separate "
-            "color buffer blend functions.\n");
+        WARNINGF (LOCATION,"Note: Decal system has been disabled due to lack of separate color buffer blend functions.");
     }
 }
 

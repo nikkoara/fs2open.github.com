@@ -476,7 +476,7 @@ int ds_load_buffer (int* sid, int /*flags*/, ffmpeg::WaveFile* file) {
     // All sounds are required to have a software buffer
     *sid = ds_get_sid ();
     if (*sid == -1) {
-        WARNINGF (LOCATION, "SOUND ==> No more sound buffers available");
+        II << "no sound buffers available";
         return -1;
     }
 
@@ -563,7 +563,7 @@ void ds_init_buffers () {
 bool ds_check_for_openal_soft () {
     const ALchar* renderer = alGetString (AL_RENDERER);
     if (renderer == NULL) {
-        WARNINGF (LOCATION, "ds_check_for_openal_soft: renderer is null!");
+        II << "ds_check_for_openal_soft: renderer is null!";
         return false;
     }
     else if (!strcasecmp ((const char*)renderer, "OpenAL Soft")) {
@@ -583,7 +583,7 @@ int ds_init () {
     ALCint attrList[] = { ALC_FREQUENCY, 22050, 0 };
     unsigned int sample_rate = 22050;
 
-    WARNINGF (LOCATION, "Initializing OpenAL...\n");
+    II << "Initializing OpenAL...";
 
     Ds_sound_quality = os_config_read_uint ("Sound", "Quality", DS_SQ_MEDIUM);
     CLAMP (Ds_sound_quality, DS_SQ_LOW, DS_SQ_HIGH);
@@ -634,12 +634,9 @@ int ds_init () {
 
     alcGetError (ds_sound_device);
 
-    WARNINGF (LOCATION, "  OpenAL Vendor     : %s\n", alGetString (AL_VENDOR));
-    WARNINGF (
-        LOCATION, "  OpenAL Renderer   : %s\n", alGetString (AL_RENDERER));
-    WARNINGF (
-        LOCATION, "  OpenAL Version    : %s\n", alGetString (AL_VERSION));
-    WARNINGF (LOCATION, "\n");
+    II << "OpenAL vendor   : " << alGetString (AL_VENDOR);
+    II << "OpenAL Renderer : " << alGetString (AL_RENDERER);
+    II << "OpenAL Version  : " << alGetString (AL_VERSION);
 
     // we need to clear out all errors before moving on
     alcGetError (NULL);
@@ -652,12 +649,12 @@ int ds_init () {
     // it)
     if (alIsExtensionPresent ((const ALchar*)"AL_LOKI_play_position") ==
         AL_TRUE) {
-        WARNINGF (LOCATION, "  Found extension \"AL_LOKI_play_position\".\n");
+        II << "found OpenAL extension AL_LOKI_play_position";
         AL_play_position = 1;
     }
 
     if (alIsExtensionPresent ((const ALchar*)"AL_EXT_float32") == AL_TRUE) {
-        WARNINGF (LOCATION, "  Found extension \"AL_EXT_float32\".\n");
+        II << "found OpenAL extension AL_EXT_float32";
         Ds_float_supported = 1;
     }
 
@@ -665,7 +662,7 @@ int ds_init () {
 
     if (alcIsExtensionPresent (
             ds_sound_device, (const ALchar*)"ALC_EXT_EFX") == AL_TRUE) {
-        WARNINGF (LOCATION, "  Found extension \"ALC_EXT_EFX\".\n");
+        II << "found OpenAL extension ALC_EXT_EFX";
         Ds_use_eax = os_config_read_uint ("Sound", "EnableEFX", Fred_running);
     }
 
@@ -684,17 +681,15 @@ int ds_init () {
 
     if (!Cmdline_no_enhanced_sound) {
         if (!ds_check_for_openal_soft ()) {
-            WARNINGF (
-                LOCATION,
-                "You are not using OpenAL Soft. Disabling enhanced sound.\n");
+            WARNINGF (LOCATION,"You are not using OpenAL Soft. Disabling enhanced sound.");
             Cmdline_no_enhanced_sound = 1;
         }
         else {
-            WARNINGF (LOCATION, "Enhanced sound is enabled.\n");
+            II << "enhanced sound enabled.";
         }
     }
     else {
-        WARNINGF (LOCATION, "Enhanced sound is manually disabled.\n");
+        II << "enhanced sound manually disabled.";
     }
 
     // setup default listener position/orientation
@@ -708,14 +703,13 @@ int ds_init () {
     ds_init_channels ();
     ds_init_buffers ();
 
-    WARNINGF (LOCATION, "\n");
-
     {
         ALCint freq = 0;
+
         OpenAL_ErrorPrint (alcGetIntegerv (
             ds_sound_device, ALC_FREQUENCY, sizeof (ALCint), &freq));
 
-        WARNINGF (LOCATION, "  Sample rate: %d (%d)\n", freq, sample_rate);
+        II << "sample rate : " << freq << "/" << sample_rate;
     }
 
     if (Ds_use_eax) {
@@ -726,18 +720,16 @@ int ds_init () {
         alcGetIntegerv (
             ds_sound_device, ALC_MAX_AUXILIARY_SENDS, 1, &max_sends);
 
-        WARNINGF (LOCATION, "  EFX version: %d.%d\n", (int)major, (int)minor);
-        WARNINGF (LOCATION, "  Max auxiliary sends: %d\n", max_sends);
+        II << "EFX version : " << (int)major << "." << (int)minor;
+        II << "max auxiliary sends : " << max_sends;
     }
     else {
-        WARNINGF (LOCATION, "  EFX enabled: NO\n");
+        II << "EFX not enabled";
     }
 
-    WARNINGF (LOCATION, "  Playback device: %s\n", playback_device.c_str ());
-    WARNINGF (
-        LOCATION, "  Capture device: %s\n",
-        (capture_device.empty ()) ? "<not available>"
-                                  : capture_device.c_str ());
+    II << "playback device : " << playback_device;
+    II << "capture device  : " << capture_device.empty ()
+        ? "null" : capture_device;
 
     II << "OpenAL initialized";
 
@@ -1218,7 +1210,7 @@ int ds_create_buffer (
 
     sid = ds_get_sid ();
     if (sid == -1) {
-        WARNINGF (LOCATION, "SOUND ==> No more OpenAL buffers available");
+        II << "no OpenAL buffers available";
         return -1;
     }
 
@@ -2070,10 +2062,7 @@ int ds_eax_init () {
             "alAuxiliaryEffectSlotfv");
     }
     catch (const std::exception& err) {
-        WARNINGF (
-            LOCATION, "\n  EFX:  Unable to load function: %s()\n",
-            err.what ());
-
+        EE << "EFX : unable to load function : " << err.what ();
         Ds_eax_inited = 0;
         return -1;
     }
@@ -2081,21 +2070,21 @@ int ds_eax_init () {
     v_alGenAuxiliaryEffectSlots (1, &AL_EFX_aux_id);
 
     if (alGetError () != AL_NO_ERROR) {
-        WARNINGF (LOCATION, "\n  EFX:  Unable to create Aux effect!\n");
+        II << "EFX:  Unable to create Aux effect!";
         return -1;
     }
 
     v_alGenEffecs (1, &AL_EFX_effect_id);
 
     if (alGetError () != AL_NO_ERROR) {
-        WARNINGF (LOCATION, "\n  EFX:  Unable to create effect!\n");
+        II << "EFX:  Unable to create effect!";
         return -1;
     }
 
     v_alEffecti (AL_EFX_effect_id, AL_EFFECT_TYPE, AL_EFFECT_EAXREVERB);
 
     if (alGetError () != AL_NO_ERROR) {
-        WARNINGF (LOCATION, "\n  EFX:  EAXReverb not supported!\n");
+        II << "EFX:  EAXReverb not supported!";
         return -1;
     }
 
@@ -2103,7 +2092,7 @@ int ds_eax_init () {
         AL_EFX_aux_id, AL_EFFECTSLOT_EFFECT, AL_EFX_effect_id);
 
     if (alGetError () != AL_NO_ERROR) {
-        WARNINGF (LOCATION, "\n  EFX:  Couldn't load effect!\n");
+        II << "EFX:  Couldn't load effect!";
         return -1;
     }
 

@@ -60,10 +60,7 @@ void SubtitleDecoder::pushSubtitleFrame (
     AVPacket* packet, AVSubtitle* subtitle) {
     if (subtitle->format != 1) {
         // Non-text subtitles are not supported yet.
-        WARNINGF (
-            LOCATION,
-            "FFmpeg: Detected a non-text subtitle! This is not supported "
-            "yet!\n");
+        WARNINGF (LOCATION,"FFmpeg: Detected a non-text subtitle! This is not supported yet!");
         return;
     }
     if (subtitle->num_rects < 1) { return; }
@@ -90,10 +87,7 @@ void SubtitleDecoder::pushSubtitleFrame (
     auto subtitle_rect = subtitle->rects[0];
     if (subtitle_rect->type == SUBTITLE_BITMAP) {
         // Same as above, non-text subtitles are not supported yet.
-        WARNINGF (
-            LOCATION,
-            "FFmpeg: Detected a non-text subtitle! This is not supported "
-            "yet!\n");
+        WARNINGF (LOCATION,"FFmpeg: Detected a non-text subtitle! This is not supported yet!");
         return;
     }
     else if (subtitle_rect->type == SUBTITLE_TEXT) {
@@ -128,8 +122,7 @@ void SubtitleDecoder::pushSubtitleFrame (
         }
     }
     else {
-        WARNINGF (
-            LOCATION, "FFmpeg: Detected unknown subtitle name in movie!\n");
+        WARNINGF (LOCATION, "FFmpeg: Detected unknown subtitle name in movie!");
         return;
     }
 

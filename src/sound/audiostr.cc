@@ -293,17 +293,13 @@ bool AudioStream::Create (char* pszFilename) {
             }
             else {
                 // Error opening file
-                WARNINGF (
-                    LOCATION, "SOUND => Failed to open wave file: %s\n\r",
-                    pszFilename);
+                WARNINGF (LOCATION, "SOUND => Failed to open wave file: %s\n\r",pszFilename);
                 fRtn = false;
             }
         }
         else {
             // Error, unable to create WaveFile object
-            WARNINGF (
-                LOCATION, "SOUND => Failed to create WaveFile object %s\n\r",
-                pszFilename);
+            WARNINGF (LOCATION, "SOUND => Failed to create WaveFile object %s\n\r",pszFilename);
             fRtn = false;
         }
     }

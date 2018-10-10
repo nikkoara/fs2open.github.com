@@ -47,13 +47,11 @@ static void check_and_print_haptic_feature (
     uint32_t flags, uint32_t check_flag, const char* description) {
     auto has_flag = (flags & check_flag) == check_flag;
 
-    WARNINGF (
-        LOCATION, "      Supports %s: %s\n", description,
-        has_flag ? "true" : "false");
+    WARNINGF (LOCATION, "      Supports %s: %s", description,has_flag ? "true" : "false");
 }
 
 static void print_haptic_support () {
-    WARNINGF (LOCATION, "    Haptic feature support:\n");
+    WARNINGF (LOCATION, "    Haptic feature support:");
 
     auto supported = SDL_HapticQuery (haptic);
     check_and_print_haptic_feature (
@@ -96,8 +94,7 @@ int joy_ff_init () {
         return 0;
     }
 
-    WARNINGF (LOCATION, "\n");
-    WARNINGF (LOCATION, "  Initializing Haptic...\n");
+    WARNINGF (LOCATION, "  Initializing Haptic...");
 
     if (SDL_InitSubSystem (SDL_INIT_HAPTIC) < 0) {
         ERRORF (
@@ -108,14 +105,14 @@ int joy_ff_init () {
 
 #ifndef NDEBUG
     auto numHaptics = SDL_NumHaptics ();
-    WARNINGF (LOCATION, "  Available haptic devices:\n");
+    WARNINGF (LOCATION, "  Available haptic devices:");
 
     if (numHaptics <= 0) {
-        WARNINGF (LOCATION, "    <none>\n");
+        WARNINGF (LOCATION, "    <none>");
     }
     else {
         for (int i = 0; i < numHaptics; ++i) {
-            WARNINGF (LOCATION, "    %s\n", SDL_HapticName (i));
+            WARNINGF (LOCATION, "    %s", SDL_HapticName (i));
         }
     }
 #endif
@@ -171,19 +168,12 @@ int joy_ff_init () {
         }
     }
 
-    WARNINGF (LOCATION, "\n");
-    WARNINGF (
-        LOCATION, "    Number of haptic axes: %d\n",
-        SDL_HapticNumAxes (haptic));
-    WARNINGF (
-        LOCATION, "    Number of effects supported: %d\n",
-        SDL_HapticNumEffects (haptic));
-    WARNINGF (
-        LOCATION, "    Number of simultaneous effects: %d\n",
-        SDL_HapticNumEffectsPlaying (haptic));
+    WARNINGF (LOCATION, "    Number of haptic axes: %d",SDL_HapticNumAxes (haptic));
+    WARNINGF (LOCATION, "    Number of effects supported: %d",SDL_HapticNumEffects (haptic));
+    WARNINGF (LOCATION, "    Number of simultaneous effects: %d",SDL_HapticNumEffectsPlaying (haptic));
     print_haptic_support ();
 
-    WARNINGF (LOCATION, "  ... Haptic successfully initialized!\n");
+    WARNINGF (LOCATION, "  ... Haptic successfully initialized!");
 
     return 0;
 }
@@ -209,22 +199,22 @@ static int joy_ff_has_valid_effects () {
     supported = SDL_HapticQuery (haptic);
 
     if (!(supported & SDL_HAPTIC_CONSTANT)) {
-        WARNINGF (LOCATION, " missing constant effect\n");
+        WARNINGF (LOCATION, " missing constant effect");
         rval = 0;
     }
 
     if (!(supported & SDL_HAPTIC_SINE)) {
-        WARNINGF (LOCATION, " missing sine effect\n");
+        WARNINGF (LOCATION, " missing sine effect");
         rval = 0;
     }
 
     if (!(supported & SDL_HAPTIC_SAWTOOTHDOWN)) {
-        WARNINGF (LOCATION, " missing sawtoothdown effect\n");
+        WARNINGF (LOCATION, " missing sawtoothdown effect");
         rval = 0;
     }
 
     if (!(supported & SDL_HAPTIC_SPRING)) {
-        WARNINGF (LOCATION, " missing spring effect\n");
+        WARNINGF (LOCATION, " missing spring effect");
         rval = 0;
     }
 
@@ -661,9 +651,7 @@ void joy_ff_play_secondary_shoot (int gain) {
         }
 
         secondary_ff_level = gain;
-        WARNINGF (
-            LOCATION, "FF: Secondary force = 0x%04x\n",
-            pSecShootEffect.eff.constant.level);
+        WARNINGF (LOCATION, "FF: Secondary force = 0x%04x",pSecShootEffect.eff.constant.level);
     }
 
     joy_ff_start_effect (&pSecShootEffect, "SecShootEffect");

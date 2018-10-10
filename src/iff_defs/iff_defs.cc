@@ -78,7 +78,7 @@ int iff_init_color (int r, int g, int b) {
 
     // make sure we're under the limit
     if (num_iff_colors >= MAX_IFF_COLORS) {
-        WARNINGF (LOCATION, "Too many iff colors!  Ignoring the rest...\n");
+        WARNINGF (LOCATION, "Too many iff colors!  Ignoring the rest...");
         return 0;
     }
 
@@ -284,9 +284,7 @@ void iff_init () {
 
             // make sure we're under the limit
             if (Num_iffs >= MAX_IFFS) {
-                WARNINGF (
-                    LOCATION, "Too many iffs in iffs_defs.tbl!  Max is %d.\n",
-                    MAX_IFFS);
+                WARNINGF (LOCATION, "Too many iffs in iffs_defs.tbl!  Max is %d.",MAX_IFFS);
                 skip_to_start_of_string ("#End", NULL);
                 break;
             }
@@ -371,9 +369,7 @@ void iff_init () {
                                  flag_strings[string_idx]))
                         iff->flags |= IFFF_WING_NAME_HIDDEN;
                     else
-                        WARNINGF (
-                            LOCATION, "Bogus string in iff flags: %s\n",
-                            flag_strings[string_idx]);
+                        WARNINGF (LOCATION, "Bogus string in iff flags: %s",flag_strings[string_idx]);
                 }
             }
 
@@ -406,11 +402,7 @@ void iff_init () {
         Iff_traitor = iff_lookup (traitor_name);
         if (Iff_traitor < 0) {
             Iff_traitor = 0;
-            WARNINGF (
-                LOCATION,
-                "Traitor IFF %s not found in iff_defs.tbl!  Defaulting to "
-                "%s.\n",
-                traitor_name, Iff_info[Iff_traitor].iff_name);
+            WARNINGF (LOCATION,"Traitor IFF %s not found in iff_defs.tbl!  Defaulting to %s.",traitor_name, Iff_info[Iff_traitor].iff_name);
         }
 
         // next get the attackees and colors
@@ -436,11 +428,7 @@ void iff_init () {
                     if (target_iff >= 0)
                         iff->attackee_bitmask |= iff_get_mask (target_iff);
                     else
-                        WARNINGF (
-                            LOCATION,
-                            "Attack target IFF %s not found for IFF %s in "
-                            "iff_defs.tbl!\n",
-                            attack_names[cur_iff][list_index], iff->iff_name);
+                        WARNINGF (LOCATION,"Attack target IFF %s not found for IFF %s in iff_defs.tbl!",attack_names[cur_iff][list_index], iff->iff_name);
                 }
 
                 // are we within the number of colors listed?
@@ -455,12 +443,7 @@ void iff_init () {
                             observed_color_table[cur_iff][list_index]
                                 .color_index;
                     else
-                        WARNINGF (
-                            LOCATION,
-                            "Observed color IFF %s not found for IFF %s in "
-                            "iff_defs.tbl!\n",
-                            observed_color_table[cur_iff][list_index].iff_name,
-                            iff->iff_name);
+                        WARNINGF (LOCATION,"Observed color IFF %s not found for IFF %s in iff_defs.tbl!",observed_color_table[cur_iff][list_index].iff_name,iff->iff_name);
                 }
             }
 

@@ -197,11 +197,7 @@ int ship_ship_check_collision (
 #ifndef NDEBUG
         static bool Warned_about_fast_rotational_collisions = false;
         if (!Warned_about_fast_rotational_collisions) {
-            WARNINGF (
-                LOCATION,
-                "Ship '%s' rotates too quickly!  Rotational collision "
-                "detection has been skipped.",
-                heavy_sip->name);
+            WARNINGF (LOCATION,"Ship '%s' rotates too quickly!  Rotational collision detection has been skipped.",heavy_sip->name);
             Warned_about_fast_rotational_collisions = true;
         }
 #endif
@@ -394,11 +390,7 @@ int ship_ship_check_collision (
             if (aip->mode == AIM_CHASE)
                 submode_string = Submode_text[aip->submode];
 
-            WARNINGF (
-                LOCATION,
-                "Player collided with ship %s, AI mode = %s, submode = %s\n",
-                Ships[collide_obj->instance].ship_name, Mode_text[aip->mode],
-                submode_string);
+            WARNINGF (LOCATION,"Player collided with ship %s, AI mode = %s, submode = %s",Ships[collide_obj->instance].ship_name, Mode_text[aip->mode],submode_string);
         }
 #endif
 
@@ -807,9 +799,7 @@ void calculate_ship_ship_collision_physics (
         // the
         //-v_light normalized.          v_rel_normal_m = -v_rel_normal_m;
 
-        WARNINGF (
-            LOCATION, "Frame %i reset v_rel_normal_m %f Edge %i\n", Framecount,
-            v_rel_normal_m, ship_ship_hit_info->edge_hit);
+        WARNINGF (LOCATION, "Frame %i reset v_rel_normal_m %f Edge %i", Framecount,v_rel_normal_m, ship_ship_hit_info->edge_hit);
         v_rel_normal_m = -v_rel_normal_m;
     }
 
@@ -955,9 +945,7 @@ void calculate_ship_ship_collision_physics (
                   (heavy_denom + light_denom);
     ship_ship_hit_info->impulse = impulse_mag;
     if (impulse_mag < 0) {
-        WARNINGF (
-            LOCATION,
-            "negative impulse mag -- Get Dave A if not Descent Physics");
+        WARNINGF (LOCATION,"negative impulse mag -- Get Dave A if not Descent Physics");
         impulse_mag = -impulse_mag;
     }
 
@@ -1654,9 +1642,7 @@ void collect_ship_ship_physics_info (
 
     float mag = float(fabs (vm_vec_mag (r_light) - core_rad));
     if (mag > 0.1) {
-        WARNINGF (
-            LOCATION, "Framecount: %i |r_light - core_rad| > 0.1)\n",
-            Framecount);
+        WARNINGF (LOCATION, "Framecount: %i |r_light - core_rad| > 0.1)",Framecount);
     }
 
     if (ship_ship_hit_info->edge_hit) {
@@ -1669,8 +1655,7 @@ void collect_ship_ship_physics_info (
     // r dot n may not be negative if hit by moving model parts.
     float dot = vm_vec_dot (r_light, &ship_ship_hit_info->collision_normal);
     if (dot > 0) {
-        WARNINGF (
-            LOCATION, "Framecount: %i r dot normal %f > 0\n", Framecount, dot);
+        WARNINGF (LOCATION, "Framecount: %i r dot normal %f > 0", Framecount, dot);
     }
 
     vm_vec_zero (heavy_collide_cm_pos);
@@ -1685,26 +1670,8 @@ void collect_ship_ship_physics_info (
 
 // sphere_sphere_case_handled separately
 #ifdef COLLIDE_DEBUG
-    WARNINGF (
-        LOCATION,
-        "Frame: %i %s info: last_pos: [%4.1f, %4.1f, %4.1f], collide_pos: "
-        "[%4.1f, %4.1f %4.1f] vel: [%4.1f, %4.1f %4.1f]\n",
-        Framecount, Ships[heavier_obj->instance].ship_name,
-        heavier_obj->last_pos.x, heavier_obj->last_pos.y,
-        heavier_obj->last_pos.z, heavy_collide_cm_pos.x,
-        heavy_collide_cm_pos.y, heavy_collide_cm_pos.z,
-        heavier_obj->phys_info.vel.x, heavier_obj->phys_info.vel.y,
-        heavier_obj->phys_info.vel.z);
+    WARNINGF (LOCATION,"Frame: %i %s info: last_pos: [%4.1f, %4.1f, %4.1f], collide_pos: [%4.1f, %4.1f %4.1f] vel: [%4.1f, %4.1f %4.1f]",Framecount, Ships[heavier_obj->instance].ship_name,heavier_obj->last_pos.x, heavier_obj->last_pos.y,heavier_obj->last_pos.z, heavy_collide_cm_pos.x,heavy_collide_cm_pos.y, heavy_collide_cm_pos.z,heavier_obj->phys_info.vel.x, heavier_obj->phys_info.vel.y,heavier_obj->phys_info.vel.z);
 
-    WARNINGF (
-        LOCATION,
-        "Frame: %i %s info: last_pos: [%4.1f, %4.1f, %4.1f], collide_pos: "
-        "[%4.1f, %4.1f, %4.1f] vel: [%4.1f, %4.1f, %4.1f]\n",
-        Framecount, Ships[lighter_obj->instance].ship_name,
-        lighter_obj->last_pos.x, lighter_obj->last_pos.y,
-        lighter_obj->last_pos.z, light_collide_cm_pos.x,
-        light_collide_cm_pos.y, light_collide_cm_pos.z,
-        lighter_obj->phys_info.vel.x, lighter_obj->phys_info.vel.y,
-        lighter_obj->phys_info.vel.z);
+    WARNINGF (LOCATION,"Frame: %i %s info: last_pos: [%4.1f, %4.1f, %4.1f], collide_pos: [%4.1f, %4.1f, %4.1f] vel: [%4.1f, %4.1f, %4.1f]",Framecount, Ships[lighter_obj->instance].ship_name,lighter_obj->last_pos.x, lighter_obj->last_pos.y,lighter_obj->last_pos.z, light_collide_cm_pos.x,light_collide_cm_pos.y, light_collide_cm_pos.z,lighter_obj->phys_info.vel.x, lighter_obj->phys_info.vel.y,lighter_obj->phys_info.vel.z);
 #endif
 }

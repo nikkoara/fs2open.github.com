@@ -264,33 +264,27 @@ bool openal_init_device (std::string* playback, std::string* capture) {
 
 #ifndef NDEBUG
     if (!PlaybackDevices.empty ()) {
-        WARNINGF (LOCATION, "  Available Playback Devices:");
+        II << "available playback devices : ";
 
         for (size_t idx = 0; idx < PlaybackDevices.size (); idx++) {
-            WARNINGF (
-                LOCATION, "    %s", PlaybackDevices[idx].device_name.c_str ());
-
             if (PlaybackDevices[idx].type == OAL_DEVICE_USER) {
-                WARNINGF (LOCATION, "  *preferred*");
+                II << "  --> >>" <<PlaybackDevices[idx].device_name << "<<";
             }
             else if (PlaybackDevices[idx].type == OAL_DEVICE_DEFAULT) {
-                WARNINGF (LOCATION, "  *default*");
+                II << "  --> " <<PlaybackDevices[idx].device_name << " *";
             }
         }
     }
 
     if (!CaptureDevices.empty ()) {
-        WARNINGF (LOCATION, "  Available Capture Devices:");
+        II << "available capture devices : ";
 
         for (size_t idx = 0; idx < CaptureDevices.size (); idx++) {
-            WARNINGF (
-                LOCATION, "    %s", CaptureDevices[idx].device_name.c_str ());
-
             if (CaptureDevices[idx].type == OAL_DEVICE_USER) {
-                WARNINGF (LOCATION, "  *preferred*");
+                II << "  --> >>" << CaptureDevices[idx].device_name << "<<";
             }
             else if (CaptureDevices[idx].type == OAL_DEVICE_DEFAULT) {
-                WARNINGF (LOCATION, "  *default*");
+                II << "  --> " << CaptureDevices[idx].device_name << "*";
             }
         }
     }

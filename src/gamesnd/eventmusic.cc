@@ -375,10 +375,7 @@ void event_music_force_switch () {
     Patterns[Current_pattern].next_pattern =
         Patterns[Current_pattern].default_next_pattern;
     Patterns[Current_pattern].force_pattern = FALSE;
-    WARNINGF (
-        LOCATION, "EVENTMUSIC => switching to %s from %s\n",
-        Pattern_info[new_pattern].pattern_name,
-        Pattern_info[Current_pattern].pattern_name);
+    WARNINGF (LOCATION, "EVENTMUSIC => switching to %s from %s",Pattern_info[new_pattern].pattern_name,Pattern_info[Current_pattern].pattern_name);
 
     // actually switch the pattern
     Current_pattern = new_pattern;
@@ -1086,9 +1083,7 @@ bool parse_soundtrack_line (int strack_idx, int pattern_idx) {
 
     // Check if we can add this pattern
     if (pattern_idx >= MAX_PATTERNS) {
-        WARNINGF (
-            LOCATION, "Too many $Name: entries for soundtrack %s",
-            Soundtracks[strack_idx].name);
+        WARNINGF (LOCATION, "Too many $Name: entries for soundtrack %s",Soundtracks[strack_idx].name);
         return false;
     }
 
@@ -1099,11 +1094,7 @@ bool parse_soundtrack_line (int strack_idx, int pattern_idx) {
         token = strtok (NULL, NOX (" ,\t"));
         // If we have no more items, get out and return
         if (token == NULL && count != 2) {
-            WARNINGF (
-                LOCATION,
-                "Missing or additional field for soundtrack %s, pattern %s",
-                Soundtracks[strack_idx].name,
-                Pattern_info[pattern_idx].pattern_desc);
+            WARNINGF (LOCATION,"Missing or additional field for soundtrack %s, pattern %s",Soundtracks[strack_idx].name,Pattern_info[pattern_idx].pattern_desc);
             break;
         }
 
@@ -1142,11 +1133,7 @@ void parse_soundtrack () {
     // Get a valid strack_idx
     if (strack_idx < 0 && (nocreate || Num_soundtracks >= MAX_SOUNDTRACKS)) {
         if (Num_soundtracks >= MAX_SOUNDTRACKS) {
-            WARNINGF (
-                LOCATION,
-                "Maximum number of soundtracks reached after '%s'; max is "
-                "'%d'",
-                Soundtracks[MAX_SOUNDTRACKS - 1].name, MAX_SOUNDTRACKS);
+            WARNINGF (LOCATION,"Maximum number of soundtracks reached after '%s'; max is '%d'",Soundtracks[MAX_SOUNDTRACKS - 1].name, MAX_SOUNDTRACKS);
         }
 
         // Track doesn't exist and has nocreate, so don't create it
@@ -1212,11 +1199,7 @@ void parse_soundtrack () {
             }
 
             if (i == Num_pattern_types) {
-                WARNINGF (
-                    LOCATION,
-                    "Could not find new index for pattern %d of soundtrack "
-                    "'%s'",
-                    old_pattern_num, Soundtracks[strack_idx].name);
+                WARNINGF (LOCATION,"Could not find new index for pattern %d of soundtrack '%s'",old_pattern_num, Soundtracks[strack_idx].name);
             }
 
             old_pattern_num++;
@@ -1280,11 +1263,7 @@ void parse_menumusic () {
 
     if (idx < 0 && (nocreate || Num_music_files >= MAX_SPOOLED_MUSIC)) {
         if (Num_music_files >= MAX_SPOOLED_MUSIC) {
-            WARNINGF (
-                LOCATION,
-                "Could not load spooled music file after '%s' as maximum "
-                "number of spooled music was reached (Max is %d)",
-                Spooled_music[Num_music_files - 1].name, MAX_SPOOLED_MUSIC);
+            WARNINGF (LOCATION,"Could not load spooled music file after '%s' as maximum number of spooled music was reached (Max is %d)",Spooled_music[Num_music_files - 1].name, MAX_SPOOLED_MUSIC);
         }
 
         if (!skip_to_start_of_string_either ("$Name:", "#Menu Music End")) {
@@ -1356,10 +1335,7 @@ void event_music_parse_musictbl (const char* filename) {
 //
 void event_music_change_pattern (int new_pattern) {
     if (Event_music_enabled == FALSE) {
-        WARNINGF (
-            LOCATION,
-            "EVENTMUSIC ==> Requested a song switch when event music is not "
-            "enabled");
+        WARNINGF (LOCATION,"EVENTMUSIC ==> Requested a song switch when event music is not enabled");
         return;
     }
 
@@ -1469,10 +1445,7 @@ void event_music_start_default () {
 //
 void event_music_pause () {
     if (Event_music_enabled == FALSE) {
-        WARNINGF (
-            LOCATION,
-            "EVENTMUSIC ==> Requested a song switch when event music is not "
-            "enabled");
+        WARNINGF (LOCATION,"EVENTMUSIC ==> Requested a song switch when event music is not enabled");
         return;
     }
 
@@ -1498,10 +1471,7 @@ void event_music_pause () {
 //
 void event_music_unpause () {
     if (Event_music_enabled == FALSE) {
-        WARNINGF (
-            LOCATION,
-            "EVENTMUSIC ==> Requested a song switch when event music is not "
-            "enabled");
+        WARNINGF (LOCATION,"EVENTMUSIC ==> Requested a song switch when event music is not enabled");
         return;
     }
 
@@ -1680,9 +1650,7 @@ void event_music_set_soundtrack (char* name) {
     Current_soundtrack_num = event_music_get_soundtrack_index (name);
 
     if (Current_soundtrack_num == -1) {
-        WARNINGF (
-            LOCATION,
-            "Current soundtrack set to -1 in event_music_set_soundtrack\n");
+        WARNINGF (LOCATION,"Current soundtrack set to -1 in event_music_set_soundtrack");
     }
 }
 
@@ -1719,9 +1687,7 @@ void event_music_set_score (int score_index, const char* name) {
 // reset what sort of music is to be used for this mission
 void event_music_reset_choices () {
     Current_soundtrack_num = -1;
-    WARNINGF (
-        LOCATION,
-        "Current soundtrack set to -1 in event_music_reset_choices\n");
+    WARNINGF (LOCATION,"Current soundtrack set to -1 in event_music_reset_choices");
     Mission_music[SCORE_BRIEFING] = -1;
     Mission_music[SCORE_FICTION_VIEWER] = -1;
     event_music_set_score (SCORE_DEBRIEF_SUCCESS, "Success");

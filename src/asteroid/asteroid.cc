@@ -286,8 +286,7 @@ object* asteroid_create (
         OBJ_ASTEROID, -1, n, &orient, &pos, radius, asteroid_default_flagset);
 
     if ((objnum == -1) || (objnum >= MAX_OBJECTS)) {
-        WARNINGF (
-            LOCATION, "Couldn't create asteroid -- out of object slots\n");
+        WARNINGF (LOCATION, "Couldn't create asteroid -- out of object slots");
         return NULL;
     }
 
@@ -376,7 +375,7 @@ void asteroid_sub_create (
     // Now, bash some values.
     vm_vec_scale_add (
         &new_objp->pos, &parent_objp->pos, relvec, 0.5f * parent_objp->radius);
-    
+
     float parent_speed = vm_vec_mag_quick (&parent_objp->phys_info.vel);
 
     if (parent_speed < 0.1f) {
@@ -388,12 +387,12 @@ void asteroid_sub_create (
         asteroid_type, (frand () + 2.0f) * parent_speed);
 
     vm_vec_scale_add2 (&new_objp->phys_info.vel, relvec, speed);
-    
+
     if (vm_vec_mag_quick (&new_objp->phys_info.vel) > 80.0f)
         vm_vec_scale (&new_objp->phys_info.vel, 0.5f);
 
     new_objp->phys_info.desired_vel = new_objp->phys_info.vel;
-    
+
     vm_vec_scale_add (
         &new_objp->last_pos, &new_objp->pos, &new_objp->phys_info.vel,
         -flFrametime);
@@ -431,7 +430,7 @@ static void asteroid_load (int asteroid_info_index, int asteroid_subtype) {
                 << ", detail level mismatch (needs " << pm->n_detail_levels
                 << ")";
         }
-        
+
         // Stuff detail level distances.
         for (i = 0; i < pm->n_detail_levels; i++)
             pm->detail_depth[i] = i < asip->num_detail_levels
@@ -582,10 +581,10 @@ void asteroid_level_init () {
  */
 static int asteroid_should_wrap (object* objp, asteroid_field* asfieldp) {
     if (objp->pos.xyz.x < asfieldp->min_bound.xyz.x ||
-        objp->pos.xyz.y < asfieldp->min_bound.xyz.y || 
-        objp->pos.xyz.z < asfieldp->min_bound.xyz.z || 
-        objp->pos.xyz.x > asfieldp->max_bound.xyz.x || 
-        objp->pos.xyz.y > asfieldp->max_bound.xyz.y || 
+        objp->pos.xyz.y < asfieldp->min_bound.xyz.y ||
+        objp->pos.xyz.z < asfieldp->min_bound.xyz.z ||
+        objp->pos.xyz.x > asfieldp->max_bound.xyz.x ||
+        objp->pos.xyz.y > asfieldp->max_bound.xyz.y ||
         objp->pos.xyz.z > asfieldp->max_bound.xyz.z)
         return 1;
 
@@ -1251,11 +1250,7 @@ static float asteroid_create_explosion (object* objp) {
     if (fireball_type < 0) { fireball_type = FIREBALL_ASTEROID; }
 
     if (fireball_type >= Num_fireball_types) {
-        WARNINGF (
-            LOCATION,
-            "Invalid fireball type %i specified for an asteroid, only %i "
-            "fireball types are defined.",
-            fireball_type, Num_fireball_types);
+        WARNINGF (LOCATION,"Invalid fireball type %i specified for an asteroid, only %i fireball types are defined.",fireball_type, Num_fireball_types);
 
         return 0;
     }
@@ -1853,11 +1848,7 @@ static void asteroid_parse_section (asteroid_info* asip) {
             asip->split_info.push_back (new_split);
         }
         else
-            WARNINGF (
-                LOCATION,
-                "Invalid asteroid reference %i used for $Split in asteroids "
-                "table, ignoring.",
-                split_type);
+            WARNINGF (LOCATION,"Invalid asteroid reference %i used for $Split in asteroids table, ignoring.",split_type);
     }
 }
 
@@ -1955,7 +1946,7 @@ static void asteroid_parse_tbl () {
             for (std::vector< std::string >::iterator iter =
                      parsed_asteroids.begin ();
                  iter != parsed_asteroids.end (); ++iter) {
-                WARNINGF (LOCATION, "Asteroid.tbl as parsed:\n");
+                WARNINGF (LOCATION, "Asteroid.tbl as parsed:");
                 WARNINGF (LOCATION, "%s", iter->c_str ());
             }
 #endif

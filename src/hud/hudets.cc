@@ -817,7 +817,7 @@ void HudGaugeEts::initLetter (char _letter) { Letter = _letter; }
 void HudGaugeEts::initBitmaps (char* fname) {
     Ets_bar.first_frame = bm_load_animation (fname, &Ets_bar.num_frames);
     if (Ets_bar.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 }
 

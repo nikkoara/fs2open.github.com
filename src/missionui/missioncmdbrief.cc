@@ -173,9 +173,7 @@ void cmd_brief_init_voice () {
             Cur_cmd_brief->stage[i].wave = audiostream_open (
                 Cur_cmd_brief->stage[i].wave_filename, ASF_VOICE);
             if (Cur_cmd_brief->stage[i].wave < 0) {
-                WARNINGF (
-                    LOCATION, "Failed to load \"%s\"\n",
-                    Cur_cmd_brief->stage[i].wave_filename);
+                WARNINGF (LOCATION, "Failed to load \"%s\"",Cur_cmd_brief->stage[i].wave_filename);
             }
         }
     }

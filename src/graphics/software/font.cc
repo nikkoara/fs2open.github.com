@@ -252,11 +252,7 @@ void parse_vfnt_font (const std::string& fontFilename) {
         }
 
         if (lang_idx == -1) {
-            WARNINGF (
-                LOCATION,
-                "Ignoring invalid language (%s) specified by font (%s); not "
-                "built-in or in strings.tbl",
-                lang_name, fontName.c_str ());
+            WARNINGF (LOCATION,"Ignoring invalid language (%s) specified by font (%s); not built-in or in strings.tbl",lang_name, fontName.c_str ());
             skip_to_start_of_string_either ("+Language:", "$Font:", "#End");
             continue;
         }

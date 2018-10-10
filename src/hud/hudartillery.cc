@@ -64,10 +64,7 @@ void parse_ssm (const char* filename) {
             stuff_string (s.name, F_NAME, NAME_LENGTH);
             if (*s.name == 0) {
                 sprintf (s.name, "SSM %zu", Ssm_info.size ());
-                WARNINGF (
-                    LOCATION,
-                    "Found an SSM entry without a name.  Assigning \"%s\".\n",
-                    s.name);
+                WARNINGF (LOCATION,"Found an SSM entry without a name.  Assigning \"%s\".",s.name);
             }
 
             // stuff data
@@ -98,12 +95,7 @@ void parse_ssm (const char* filename) {
                 // 4 seconds!"
                 if ((s.warp_time) < 4.0f) {
                     // So let's warn them before they try to use it, shall we?
-                    WARNINGF (
-                        LOCATION,
-                        "Expected a '+WarpTime:' value equal or greater than "
-                        "4.0, found '%f' in weapon '%s'.\n Setting to 4.0, "
-                        "please check and set to a number 4.0 or greater!\n",
-                        s.warp_time, weapon_name);
+                    WARNINGF (LOCATION,"Expected a '+WarpTime:' value equal or greater than 4.0, found '%f' in weapon '%s'.\n Setting to 4.0, please check and set to a number 4.0 or greater!",s.warp_time, weapon_name);
                     // And then make the Assert obsolete -- Zacam
                     s.warp_time = 4.0f;
                 }
@@ -202,7 +194,7 @@ void parse_ssm (const char* filename) {
 // game init
 void ssm_init () {
     if (cf_exists_full ("ssm.tbl", CF_TYPE_TABLES)) {
-        WARNINGF (LOCATION, "TABLES => Starting parse of 'ssm.tbl'...\n");
+        WARNINGF (LOCATION, "TABLES => Starting parse of 'ssm.tbl'...");
         parse_ssm ("ssm.tbl");
     }
     parse_modular_table (NOX ("*-ssm.tbm"), parse_ssm);

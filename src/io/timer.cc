@@ -133,8 +133,7 @@ void timestamp_inc (fix frametime) {
     }
 
     if (timestamp_ticker < 2) {
-        WARNINGF (
-            LOCATION, "Whoa!!!  timestamp_ticker < 2 -- resetting to 2!!!\n");
+        WARNINGF (LOCATION, "Whoa!!!  timestamp_ticker < 2 -- resetting to 2!!!");
         timestamp_ticker = 2;
     }
 }

@@ -630,11 +630,7 @@ void parse_ai_class () {
             if (aicp->ai_glide_attack_percent[i] < 0.0f ||
                 aicp->ai_glide_attack_percent[i] > 100.0f) {
                 aicp->ai_glide_attack_percent[i] = 0.0f;
-                WARNINGF (
-                    LOCATION,
-                    "$Glide Attack Percent should be between 0 and 100.0 "
-                    "(read %f). Setting to 0.",
-                    aicp->ai_glide_attack_percent[i]);
+                WARNINGF (LOCATION,"$Glide Attack Percent should be between 0 and 100.0 (read %f). Setting to 0.",aicp->ai_glide_attack_percent[i]);
             }
             aicp->ai_glide_attack_percent[i] /= 100.0;
         }
@@ -646,11 +642,7 @@ void parse_ai_class () {
             if (aicp->ai_circle_strafe_percent[i] < 0.0f ||
                 aicp->ai_circle_strafe_percent[i] > 100.0f) {
                 aicp->ai_circle_strafe_percent[i] = 0.0f;
-                WARNINGF (
-                    LOCATION,
-                    "$Circle Strafe Percent should be between 0 and 100.0 "
-                    "(read %f). Setting to 0.",
-                    aicp->ai_circle_strafe_percent[i]);
+                WARNINGF (LOCATION,"$Circle Strafe Percent should be between 0 and 100.0 (read %f). Setting to 0.",aicp->ai_circle_strafe_percent[i]);
             }
             aicp->ai_circle_strafe_percent[i] /= 100.0;
         }
@@ -662,11 +654,7 @@ void parse_ai_class () {
             if (aicp->ai_glide_strafe_percent[i] < 0.0f ||
                 aicp->ai_glide_strafe_percent[i] > 100.0f) {
                 aicp->ai_glide_strafe_percent[i] = 0.0f;
-                WARNINGF (
-                    LOCATION,
-                    "$Glide Strafe Percent should be between 0 and 100.0 "
-                    "(read %f). Setting to 0.",
-                    aicp->ai_glide_strafe_percent[i]);
+                WARNINGF (LOCATION,"$Glide Strafe Percent should be between 0 and 100.0 (read %f). Setting to 0.",aicp->ai_glide_strafe_percent[i]);
             }
             aicp->ai_glide_strafe_percent[i] /= 100.0;
         }
@@ -679,11 +667,7 @@ void parse_ai_class () {
             if (aicp->ai_random_sidethrust_percent[i] < 0.0f ||
                 aicp->ai_random_sidethrust_percent[i] > 100.0f) {
                 aicp->ai_random_sidethrust_percent[i] = 0.0f;
-                WARNINGF (
-                    LOCATION,
-                    "$Random Sidethrust Percent should be between 0 and 100.0 "
-                    "(read %f). Setting to 0.",
-                    aicp->ai_random_sidethrust_percent[i]);
+                WARNINGF (LOCATION,"$Random Sidethrust Percent should be between 0 and 100.0 (read %f). Setting to 0.",aicp->ai_random_sidethrust_percent[i]);
             }
             aicp->ai_random_sidethrust_percent[i] /= 100.0;
         }
@@ -1266,11 +1250,7 @@ void ai_turn_towards_vector (
            WP_MISSILE))) {
         if (delta_time < 0.25f &&
             vm_vec_dot (&objp->orient.vec.fvec, &tvec) < 0.1f)
-            WARNINGF (
-                LOCATION,
-                "A ship rotated too far. Offending vessel is %s, please "
-                "investigate.\n",
-                Ships[objp->instance].ship_name);
+            WARNINGF (LOCATION,"A ship rotated too far. Offending vessel is %s, please investigate.",Ships[objp->instance].ship_name);
     }
 #endif
     pip->rotvel = vel_out;
@@ -2360,7 +2340,7 @@ void ai_set_goal_maybe_abort_dock (object* objp, ai_info* aip) {
         else {
             repair_obj = &Objects[aip->support_ship_objnum];
         }
-        
+
         ai_do_objects_repairing_stuff (objp, repair_obj, REPAIR_INFO_ABORT);
     }
     aip->next_rearm_request_timestamp = timestamp (
@@ -2406,10 +2386,7 @@ void ai_attack_object (
     if (!(Ship_info[Ships[attacker->instance].ship_info_index]
               .is_small_ship ()) &&
         (attacked != NULL)) {
-        WARNINGF (
-            LOCATION, "AI ship %s is large ship ordered to attack %s\n",
-            Ships[attacker->instance].ship_name,
-            Ships[attacked->instance].ship_name);
+        WARNINGF (LOCATION, "AI ship %s is large ship ordered to attack %s",Ships[attacker->instance].ship_name,Ships[attacked->instance].ship_name);
     }
 
     // This is how "engage enemy" gets processed
@@ -3198,10 +3175,7 @@ void ai_do_objects_docked_stuff (
 
     // make sure they're not already docked!
     if (dock_check_find_direct_docked_object (docker, dockee)) {
-        WARNINGF (
-            LOCATION,
-            "Call to ai_do_objects_docked_stuff when objects are already "
-            "docked!  Trace out and fix!\n");
+        WARNINGF (LOCATION,"Call to ai_do_objects_docked_stuff when objects are already docked!  Trace out and fix!");
         return;
     }
 
@@ -3242,10 +3216,7 @@ void ai_do_objects_undocked_stuff (object* docker, object* dockee) {
 
     // make sure they're not already undocked!
     if (!dock_check_find_direct_docked_object (docker, dockee)) {
-        WARNINGF (
-            LOCATION,
-            "Call to ai_do_objects_undocked_stuff when objects are already "
-            "undocked!  Trace out and fix!\n");
+        WARNINGF (LOCATION,"Call to ai_do_objects_undocked_stuff when objects are already undocked!  Trace out and fix!");
         return;
     }
 
@@ -3404,8 +3375,7 @@ void ai_start_waypoints (object* objp, waypoint_list* wp_list, int wp_flags) {
 
     if ((aip->mode == AIM_WAYPOINTS) && (aip->wp_list == wp_list)) {
         if (aip->wp_index == INVALID_WAYPOINT_POSITION) {
-            WARNINGF (
-                LOCATION, "aip->wp_index should have been assigned already!");
+            WARNINGF (LOCATION, "aip->wp_index should have been assigned already!");
             aip->wp_index = 0;
         }
         return;
@@ -3484,11 +3454,7 @@ void ai_form_on_wing (object* objp, object* goal_objp) {
 
     // Only fighters or bombers allowed to form on wing.
     if (!(sip->is_fighter_bomber ())) {
-        WARNINGF (
-            LOCATION,
-            "Ship %s tried to form on player's wing, but not fighter or "
-            "bomber.\n",
-            shipp->ship_name);
+        WARNINGF (LOCATION,"Ship %s tried to form on player's wing, but not fighter or bomber.",shipp->ship_name);
         return;
     }
 
@@ -4922,8 +4888,7 @@ void ai_waypoints () {
     // sanity checking for stuff that should never happen
     if (aip->wp_index == INVALID_WAYPOINT_POSITION) {
         if (aip->wp_list == NULL) {
-            WARNINGF (
-                LOCATION, "Waypoints should have been assigned already!");
+            WARNINGF (LOCATION, "Waypoints should have been assigned already!");
             ai_start_waypoints (Pl_objp, &Waypoint_lists.front (), WPF_REPEAT);
         }
         else {
@@ -4990,29 +4955,18 @@ void ai_fly_to_ship () {
     aip = &Ai_info[Ships[Pl_objp->instance].ai_index];
 
     if (aip->mode != AIM_FLY_TO_SHIP) {
-        WARNINGF (
-            LOCATION,
-            "ai_fly_to_ship called for '%s' when ai_info.mode not equal to "
-            "AIM_FLY_TO_SHIP. Is actually '%d'",
-            Ships[Pl_objp->instance].ship_name, aip->mode);
+        WARNINGF (LOCATION,"ai_fly_to_ship called for '%s' when ai_info.mode not equal to AIM_FLY_TO_SHIP. Is actually '%d'",Ships[Pl_objp->instance].ship_name, aip->mode);
         aip->mode = AIM_NONE;
         return;
     }
     if (aip->active_goal < 0 || aip->active_goal >= MAX_AI_GOALS) {
-        WARNINGF (
-            LOCATION,
-            "'%s' is trying to fly-to a ship without an active AI_GOAL\n\n"
-            "Active ai mode is '%d'",
-            Ships[Pl_objp->instance].ship_name, aip->active_goal);
+        WARNINGF (LOCATION,"'%s' is trying to fly-to a ship without an active AI_GOAL\n\nActive ai mode is '%d'",Ships[Pl_objp->instance].ship_name, aip->active_goal);
         aip->mode = AIM_NONE;
         return;
     }
     ASSERT (aip->goals[aip->active_goal].target_name != NULL);
     if (aip->goals[aip->active_goal].target_name[0] == '\0') {
-        WARNINGF (
-            LOCATION,
-            "'%s' is trying to fly-to-ship without a name for the ship",
-            Ships[Pl_objp->instance].ship_name);
+        WARNINGF (LOCATION,"'%s' is trying to fly-to-ship without a name for the ship",Ships[Pl_objp->instance].ship_name);
         aip->mode = AIM_NONE;
         ai_remove_ship_goal (
             aip,
@@ -5035,20 +4989,11 @@ void ai_fly_to_ship () {
         for (int i = 0; i < MAX_AI_GOALS; i++) {
             if (aip->mode == AIM_FLY_TO_SHIP ||
                 aip->goals[i].ai_mode == AI_GOAL_FLY_TO_SHIP) {
-                WARNINGF (
-                    LOCATION, "Ship '%s' told to fly to target ship '%s'",
-                    Ships[Pl_objp->instance].ship_name,
-                    aip->goals[i].target_name);
+                WARNINGF (LOCATION, "Ship '%s' told to fly to target ship '%s'",Ships[Pl_objp->instance].ship_name,aip->goals[i].target_name);
             }
         }
 #endif
-        WARNINGF (
-            LOCATION,
-            "Ship '%s' told to fly to a ship but none of the ships it was "
-            "told to fly to exist.\n"
-            "See log before this message for list of ships set as fly-to "
-            "tagets",
-            Ships[Pl_objp->instance].ship_name);
+        WARNINGF (LOCATION,"Ship '%s' told to fly to a ship but none of the ships it was told to fly to exist.\nSee log before this message for list of ships set as fly-to tagets",Ships[Pl_objp->instance].ship_name);
         aip->mode = AIM_NONE;
         ai_remove_ship_goal (
             aip,
@@ -5729,10 +5674,7 @@ ai_select_primary_weapon_OLD (const object* objp, Weapon::Info_Flags flags) {
                 if (!(Weapon_info[swp->primary_bank_weapons[i]]
                           .wi_flags[Weapon::Info_Flags::Puncture])) {
                     swp->current_primary_bank = i;
-                    WARNINGF (
-                        LOCATION, "%i: Ship %s selecting weapon %s\n",
-                        Framecount, Ships[objp->instance].ship_name,
-                        Weapon_info[swp->primary_bank_weapons[i]].name);
+                    WARNINGF (LOCATION, "%i: Ship %s selecting weapon %s",Framecount, Ships[objp->instance].ship_name,Weapon_info[swp->primary_bank_weapons[i]].name);
                     return i;
                 }
             }
@@ -5825,10 +5767,7 @@ int ai_select_primary_weapon (
                 if (Weapon_info[swp->primary_bank_weapons[i]]
                         .wi_flags[Weapon::Info_Flags::Capital_plus]) {
                     swp->current_primary_bank = i;
-                    WARNINGF (
-                        LOCATION, "%i: Ship %s selecting weapon %s\n",
-                        Framecount, Ships[objp->instance].ship_name,
-                        Weapon_info[swp->primary_bank_weapons[i]].name);
+                    WARNINGF (LOCATION, "%i: Ship %s selecting weapon %s",Framecount, Ships[objp->instance].ship_name,Weapon_info[swp->primary_bank_weapons[i]].name);
                     return i;
                 }
             }
@@ -6037,9 +5976,7 @@ void set_primary_weapon_linkage (object* objp) {
     if (Num_weapons > (int)(MAX_WEAPONS * 0.75f) ||
         sip->flags[Ship::Info_Flags::No_primary_linking]) {
         if (shipp->flags[Ship::Ship_Flags::Primary_linked])
-            WARNINGF (
-                LOCATION, "Frame %i, ship %s: Unlinking primaries.\n",
-                Framecount, shipp->ship_name);
+            WARNINGF (LOCATION, "Frame %i, ship %s: Unlinking primaries.",Framecount, shipp->ship_name);
         shipp->flags.remove (Ship::Ship_Flags::Primary_linked);
         return; // If low on slots or primary linking disallowed, don't link.
     }
@@ -6150,9 +6087,7 @@ int ai_fire_primary_weapon (object* objp) {
     // If low on slots, fire a little less often.
     if (Num_weapons > (int)(0.9f * MAX_WEAPONS)) {
         if (frand () > 0.5f) {
-            WARNINGF (
-                LOCATION, "Frame %i, %s not fire.\n", Framecount,
-                shipp->ship_name);
+            WARNINGF (LOCATION, "Frame %i, %s not fire.", Framecount,shipp->ship_name);
             return 0;
         }
     }
@@ -7099,7 +7034,7 @@ void set_predicted_enemy_pos (
         scale +=
             (MAX_EMP_INACCURACY *
              (shipp->emp_intensity < 0.5f ? 0.5f : shipp->emp_intensity));
-        WARNINGF (LOCATION, "AI miss scale factor (EMP) %f\n", scale);
+        WARNINGF (LOCATION, "AI miss scale factor (EMP) %f", scale);
     }
 
     // if stealthy ship, throw his aim off, more when farther away and when dot
@@ -7267,10 +7202,7 @@ void do_random_sidethrust (ai_info* aip, ship_info* sip) {
             -1.0f, 1.0f);
     }
     else {
-        WARNINGF (
-            LOCATION,
-            "Division by zero in do_random_sidethrust averted. Please tell a "
-            "coder.\n");
+        WARNINGF (LOCATION,"Division by zero in do_random_sidethrust averted. Please tell a coder.");
         side_vec.x = 1.0f;
         side_vec.y = 1.0f;
     }
@@ -8979,11 +8911,7 @@ void ai_chase () {
             go_after_it = true;
             // ... but also log this in debug so it doesn't go unchecked (NOTE
             // that this can completely flood a debug log!)
-            WARNINGF (
-                LOCATION,
-                "AI-WARNING: No class_type specified for '%s', assuming that "
-                "it's ok to chase!\n",
-                esip->name);
+            WARNINGF (LOCATION,"AI-WARNING: No class_type specified for '%s', assuming that it's ok to chase!",esip->name);
         }
     }
 
@@ -11597,10 +11525,7 @@ void ai_get_dock_goal_indexes (
     case AIS_DOCK_1:
     case AIS_DOCK_2:
     case AIS_DOCK_3:
-        WARNINGF (
-            LOCATION,
-            "Normally dock indexes should be calculated for only AIS_DOCK_0 "
-            "and AIS_UNDOCK_0.  Trace out and debug.");
+        WARNINGF (LOCATION,"Normally dock indexes should be calculated for only AIS_DOCK_0 and AIS_UNDOCK_0.  Trace out and debug.");
     case AIS_DOCK_0: {
         // get them from the active goal
         ASSERT (aigp != NULL);
@@ -11618,10 +11543,7 @@ void ai_get_dock_goal_indexes (
     case AIS_DOCK_4A:
     case AIS_UNDOCK_1:
     case AIS_UNDOCK_2:
-        WARNINGF (
-            LOCATION,
-            "Normally dock indexes should be calculated for only AIS_DOCK_0 "
-            "and AIS_UNDOCK_0.  Trace out and debug.");
+        WARNINGF (LOCATION,"Normally dock indexes should be calculated for only AIS_DOCK_0 and AIS_UNDOCK_0.  Trace out and debug.");
     case AIS_UNDOCK_0: {
         // get them from the guy I'm docked to
         ASSERT (goal_objp != NULL);
@@ -11634,12 +11556,7 @@ void ai_get_dock_goal_indexes (
 
     case AIS_UNDOCK_3:
     case AIS_UNDOCK_4: {
-        WARNINGF (
-            LOCATION,
-            "Normally dock indexes should be calculated for only AIS_DOCK_0 "
-            "and AIS_UNDOCK_0.  Additionally, dock indexes can't always be "
-            "determined for AIS_UNDOCK_3 or AIS_UNDOCK_4.  Trace out and "
-            "debug.");
+        WARNINGF (LOCATION,"Normally dock indexes should be calculated for only AIS_DOCK_0 and AIS_UNDOCK_0.  Additionally, dock indexes can't always be determined for AIS_UNDOCK_3 or AIS_UNDOCK_4.  Trace out and debug.");
         docker_index = -1;
         dockee_index = -1;
         break;
@@ -11930,13 +11847,7 @@ void ai_dock () {
             char* goal_dock_path_name =
                 model_get (goal_sip->model_num)->paths[aip->mp_index].name;
 
-            WARNINGF (
-                LOCATION,
-                "Ship class %s has only %i points on dock path \"%s\".  "
-                "Recommended minimum number of points is 4.  Docking along "
-                "that path will look strange.  You may wish to edit the "
-                "model.",
-                goal_ship_class_name, aip->path_length, goal_dock_path_name);
+            WARNINGF (LOCATION,"Ship class %s has only %i points on dock path \"%s\".  Recommended minimum number of points is 4.  Docking along that path will look strange.  You may wish to edit the model.",goal_ship_class_name, aip->path_length, goal_dock_path_name);
         }
 
         aip->submode = AIS_DOCK_1;
@@ -11958,10 +11869,7 @@ void ai_dock () {
             int r1;
             if ((r1 = maybe_avoid_big_ship (
                      Pl_objp, goal_objp, aip, &goal_objp->pos, 7.0f)) != 0) {
-                WARNINGF (
-                    LOCATION, "Support ship %s avoiding large ship %s\n",
-                    Ships[Pl_objp->instance].ship_name,
-                    Ships[Objects[r1].instance].ship_name);
+                WARNINGF (LOCATION, "Support ship %s avoiding large ship %s",Ships[Pl_objp->instance].ship_name,Ships[Objects[r1].instance].ship_name);
                 break;
             }
         } // else {
@@ -12008,9 +11916,7 @@ void ai_dock () {
         int r;
 
         if ((r = maybe_dock_obstructed (Pl_objp, goal_objp, 0)) != -1) {
-            WARNINGF (
-                LOCATION, "Dock 2: Obstructed by %s\n",
-                Ships[Objects[r].instance].ship_name);
+            WARNINGF (LOCATION, "Dock 2: Obstructed by %s",Ships[Objects[r].instance].ship_name);
             accelerate_ship (aip, 0.0f);
 
             aip->submode = AIS_DOCK_1;
@@ -12050,9 +11956,7 @@ void ai_dock () {
         int r;
 
         if ((r = maybe_dock_obstructed (Pl_objp, goal_objp, 0)) != -1) {
-            WARNINGF (
-                LOCATION, "Dock 1: Obstructed by %s\n",
-                Ships[Objects[r].instance].ship_name);
+            WARNINGF (LOCATION, "Dock 1: Obstructed by %s",Ships[Objects[r].instance].ship_name);
             accelerate_ship (aip, 0.0f);
 
             aip->submode = AIS_DOCK_2;
@@ -12515,11 +12419,7 @@ void process_subobjects (int objnum) {
                     ai_fire_from_turret (shipp, pss, objnum);
             }
             else {
-                WARNINGF (
-                    LOCATION,
-                    "Turret %s on ship %s has no firing points assigned to "
-                    "it.\nThis needs to be fixed in the model.\n",
-                    psub->name, shipp->ship_name);
+                WARNINGF (LOCATION,"Turret %s on ship %s has no firing points assigned to it.\nThis needs to be fixed in the model.",psub->name, shipp->ship_name);
             }
             break;
 
@@ -14104,20 +14004,12 @@ int ai_acquire_emerge_path (
     ship_bay_t* bay = pm->ship_bay;
 
     if (bay == NULL) {
-        WARNINGF (
-            LOCATION,
-            "Ship %s was set to arrive from fighter bay on object %s, but no "
-            "fighter bay exists on that ships' model (%s).\n",
-            shipp->ship_name, parent_shipp->ship_name, pm->filename);
+        WARNINGF (LOCATION,"Ship %s was set to arrive from fighter bay on object %s, but no fighter bay exists on that ships' model (%s).",shipp->ship_name, parent_shipp->ship_name, pm->filename);
         return -1;
     }
 
     if (bay->num_paths <= 0) {
-        WARNINGF (
-            LOCATION,
-            "Ship %s was set to arrive from fighter bay on object %s, but no "
-            "fighter bay paths exist on that ships' model (%s).\n",
-            shipp->ship_name, parent_shipp->ship_name, pm->filename);
+        WARNINGF (LOCATION,"Ship %s was set to arrive from fighter bay on object %s, but no fighter bay paths exist on that ships' model (%s).",shipp->ship_name, parent_shipp->ship_name, pm->filename);
         return -1;
     }
 
@@ -14349,12 +14241,7 @@ int ai_acquire_depart_path (
     ai_info* aip = &Ai_info[shipp->ai_index];
 
     if (parent_objnum < 0) {
-        WARNINGF (
-            LOCATION,
-            "In ai_acquire_depart_path(), specified a negative object number "
-            "for the parent ship!  (Departing ship is %s.)  Looking for "
-            "another ship...",
-            shipp->ship_name);
+        WARNINGF (LOCATION,"In ai_acquire_depart_path(), specified a negative object number for the parent ship!  (Departing ship is %s.)  Looking for another ship...",shipp->ship_name);
 
         // try to locate a capital ship on the same team:
         int shipnum = ship_get_ship_for_departure (shipp->team);
@@ -14429,7 +14316,7 @@ void ai_bay_depart () {
     if (anchor_shipnum < 0 ||
         !ship_useful_for_departure (
             anchor_shipnum, Ships[Pl_objp->instance].departure_path_mask)) {
-        WARNINGF (LOCATION, "Aborting bay departure!\n");
+        WARNINGF (LOCATION, "Aborting bay departure!");
         aip->mode = AIM_NONE;
 
         Ships[Pl_objp->instance].flags.remove (
@@ -15622,9 +15509,7 @@ void ai_frame (int objnum) {
     if ((En_objp != NULL) && (En_objp->pos.xyz.x == Pl_objp->pos.xyz.x) &&
         (En_objp->pos.xyz.y == Pl_objp->pos.xyz.y) &&
         (En_objp->pos.xyz.z == Pl_objp->pos.xyz.z)) {
-        WARNINGF (
-            LOCATION, "Object and its enemy have same position.  Object #%d\n",
-            OBJ_INDEX (Pl_objp));
+        WARNINGF (LOCATION, "Object and its enemy have same position.  Object #%d",OBJ_INDEX (Pl_objp));
         En_objp = NULL;
     }
 
@@ -16003,11 +15888,7 @@ void init_aip_from_class_and_profile (
     // since we use it so much in this function, sanity check the value for
     // Game_skill_level
     if (Game_skill_level < 0 || Game_skill_level >= NUM_SKILL_LEVELS) {
-        WARNINGF (
-            LOCATION,
-            "Invalid skill level %i! Valid range 0 to %i. Resetting to "
-            "default.",
-            Game_skill_level, NUM_SKILL_LEVELS);
+        WARNINGF (LOCATION,"Invalid skill level %i! Valid range 0 to %i. Resetting to default.",Game_skill_level, NUM_SKILL_LEVELS);
         Game_skill_level = game_get_default_skill_level ();
     }
 
@@ -16317,15 +16198,7 @@ void maybe_process_friendly_hit (
 
         // Done with adjustments to damage.  Evaluate based on current
         // friendly_damage
-        WARNINGF (
-            LOCATION,
-            "Friendly damage: %.1f, threshold: %.1f, inc damage: %.1f, max "
-            "burst: %d\n",
-            pp->friendly_damage,
-            FRIENDLY_DAMAGE_THRESHOLD *
-                (1.0f +
-                 (float)(NUM_SKILL_LEVELS + 1 - Game_skill_level) / 3.0f),
-            pp->damage_this_burst, MAX_BURST_DAMAGE);
+        WARNINGF (LOCATION,"Friendly damage: %.1f, threshold: %.1f, inc damage: %.1f, max burst: %d",pp->friendly_damage,FRIENDLY_DAMAGE_THRESHOLD *(1.0f +(float)(NUM_SKILL_LEVELS + 1 - Game_skill_level) / 3.0f),pp->damage_this_burst, MAX_BURST_DAMAGE);
 
         if (is_instructor (objp_hit)) {
             // it's not nice to hit your instructor
@@ -17053,9 +16926,7 @@ int ai_abort_rearm_request (object* requester_objp) {
                     }
                 }
                 else {
-                    WARNINGF (
-                        LOCATION,
-                        "Not aborting rearm since already undocking");
+                    WARNINGF (LOCATION,"Not aborting rearm since already undocking");
                 }
             }
         }
@@ -17249,8 +17120,7 @@ static void cheat_fire_synaptic (object* objp, ship* shipp) {
     ai_select_secondary_weapon (objp, swp, &flags, NULL);
     if (timestamp_elapsed (swp->next_secondary_fire_stamp[current_bank])) {
         if (ship_fire_secondary (objp)) {
-            WARNINGF (
-                LOCATION, "ship %s cheat fired synaptic!\n", shipp->ship_name);
+            WARNINGF (LOCATION, "ship %s cheat fired synaptic!", shipp->ship_name);
             swp->next_secondary_fire_stamp[current_bank] = timestamp (2500);
         }
     }

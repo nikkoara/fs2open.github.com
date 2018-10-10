@@ -76,14 +76,14 @@ int load_nebula_sub (char* filename) {
     // ID of NEBU
     cfread (id, 4, 1, fp);
     if (strncmp (id, NEBULA_FILE_ID, 4) != 0) {
-        WARNINGF (LOCATION, "Not a valid nebula file.\n");
+        WARNINGF (LOCATION, "Not a valid nebula file.");
         return 0;
     }
     cfread (&version, sizeof (int), 1, fp);
     major = version / 100;
 
     if (major != NEBULA_MAJOR_VERSION) {
-        WARNINGF (LOCATION, "An out of date nebula file.\n");
+        WARNINGF (LOCATION, "An out of date nebula file.");
         return 0;
     }
 

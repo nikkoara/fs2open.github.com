@@ -168,10 +168,7 @@ void alpha_colors_init () {
     }
 
     if (cf_exists_full ("colors.tbl", CF_TYPE_TABLES)) {
-        WARNINGF (
-            LOCATION,
-            "TABLES => Starting parse of 'colors.tbl' (checking '#Start "
-            "Colors' section only)...\n");
+        WARNINGF (LOCATION,"TABLES => Starting parse of 'colors.tbl' (checking '#Start Colors' section only)...");
         parse_colors ("colors.tbl");
     }
     parse_modular_table (NOX ("*-clr.tbm"), parse_colors);
@@ -190,10 +187,7 @@ void alpha_colors_init () {
     }
 
     if (cf_exists_full ("colors.tbl", CF_TYPE_TABLES)) {
-        WARNINGF (
-            LOCATION,
-            "TABLES => Starting parse of 'colors.tbl' (skipping '#Start "
-            "Colors' section)...\n");
+        WARNINGF (LOCATION,"TABLES => Starting parse of 'colors.tbl' (skipping '#Start Colors' section)...");
         parse_everything_else ("colors.tbl");
     }
     parse_modular_table (NOX ("*-clr.tbm"), parse_everything_else);
@@ -230,26 +224,16 @@ void parse_colors (const char* filename) {
             for (i = 0; i < TOTAL_COLORS; i++) {
                 if (optional_string (color_names[i])) {
                     // if so, get its rgba values and initialise it using them
-                    WARNINGF (
-                        LOCATION, "'%s' has been redefined.\n",
-                        color_names[i]);
+                    WARNINGF (LOCATION, "'%s' has been redefined.",color_names[i]);
                     // if (check_for_string("(")) {
                     stuff_int_list (rgba, 4, RAW_INTEGER_TYPE);
                     for (j = 0; j < 4; j++) {
                         if (rgba[j] < 0) {
-                            WARNINGF (
-                                LOCATION,
-                                "RGBA value for '%s' in %s too low (%d), "
-                                "capping to 0.\n",
-                                color_names[i], filename, rgba[j]);
+                            WARNINGF (LOCATION,"RGBA value for '%s' in %s too low (%d), capping to 0.",color_names[i], filename, rgba[j]);
                             rgba[j] = 0;
                         }
                         else if (rgba[j] > 255) {
-                            WARNINGF (
-                                LOCATION,
-                                "RGBA value for '%s' in %s too high (%d), "
-                                "capping to 255.\n",
-                                color_names[i], filename, rgba[j]);
+                            WARNINGF (LOCATION,"RGBA value for '%s' in %s too high (%d), capping to 255.",color_names[i], filename, rgba[j]);
                             rgba[j] = 255;
                         }
                     }
@@ -305,12 +289,7 @@ void parse_everything_else (const char* filename) {
                 temp = temp2;
 
                 if (!strcasecmp (temp2, "none")) {
-                    WARNINGF (
-                        LOCATION,
-                        "Team color in '%s' defined with a name of '%s'; this "
-                        "won't be usable due to 'None' being used for a lack "
-                        "of a team color by the engine.\n",
-                        filename, temp2);
+                    WARNINGF (LOCATION,"Team color in '%s' defined with a name of '%s'; this won't be usable due to 'None' being used for a lack of a team color by the engine.",filename, temp2);
                 }
 
                 if (required_string ("$Team Stripe Color:")) {
@@ -365,27 +344,17 @@ void parse_everything_else (const char* filename) {
             for (i = 0; i < INTERFACE_COLORS; i++) {
                 if (optional_string (color_names[i])) {
                     // if so, get its rgba values and initialise it using them
-                    WARNINGF (
-                        LOCATION, "'%s' has been redefined.\n",
-                        color_names[i]);
+                    WARNINGF (LOCATION, "'%s' has been redefined.",color_names[i]);
                     if (check_for_string ("(")) {
                         // If we have a list of integers, use them.
                         stuff_int_list (rgba, 4, RAW_INTEGER_TYPE);
                         for (j = 0; j < 4; j++) {
                             if (rgba[j] < 0) {
-                                WARNINGF (
-                                    LOCATION,
-                                    "RGBA value for '%s' in %s too low (%d), "
-                                    "capping to 0.\n",
-                                    color_names[i], filename, rgba[j]);
+                                WARNINGF (LOCATION,"RGBA value for '%s' in %s too low (%d), capping to 0.",color_names[i], filename, rgba[j]);
                                 rgba[j] = 0;
                             }
                             else if (rgba[j] > 255) {
-                                WARNINGF (
-                                    LOCATION,
-                                    "RGBA value for '%s' in %s too high (%d), "
-                                    "capping to 255.\n",
-                                    color_names[i], filename, rgba[j]);
+                                WARNINGF (LOCATION,"RGBA value for '%s' in %s too high (%d), capping to 255.",color_names[i], filename, rgba[j]);
                                 rgba[j] = 255;
                             }
                         }
@@ -405,12 +374,7 @@ void parse_everything_else (const char* filename) {
                             if (temp == COLOR_NAMES[j]) { break; }
                         }
                         if (j == TOTAL_COLORS) {
-                            WARNINGF (
-                                LOCATION,
-                                "Unknown color '%s' in %s, for definition of "
-                                "'%s'; using default ('%s').\n",
-                                temp.c_str (), filename, color_names[i],
-                                COLOR_NAMES[interface_defaults[i]]);
+                            WARNINGF (LOCATION,"Unknown color '%s' in %s, for definition of '%s'; using default ('%s').",temp.c_str (), filename, color_names[i],COLOR_NAMES[interface_defaults[i]]);
                         }
                         else {
                             ASSERTX (
@@ -443,11 +407,7 @@ void parse_everything_else (const char* filename) {
                     }
                     tag = temp[1];
                     if (temp[2] != '\0') {
-                        WARNINGF (
-                            LOCATION,
-                            "%s - tag '$%c' has extra text in its "
-                            "definition.\n",
-                            filename, tag);
+                        WARNINGF (LOCATION,"%s - tag '$%c' has extra text in its definition.",filename, tag);
                     }
                 }
                 else if (temp[0] == '\0') {
@@ -456,11 +416,7 @@ void parse_everything_else (const char* filename) {
                 else {
                     tag = temp[0];
                     if (temp[1] != '\0') {
-                        WARNINGF (
-                            LOCATION,
-                            "%s - tag '$%c' has extra text in its "
-                            "definition.\n",
-                            filename, tag);
+                        WARNINGF (LOCATION,"%s - tag '$%c' has extra text in its definition.",filename, tag);
                     }
                 }
 
@@ -484,19 +440,11 @@ void parse_everything_else (const char* filename) {
                         stuff_int_list (rgba, 4, RAW_INTEGER_TYPE);
                         for (j = 0; j < 4; j++) {
                             if (rgba[j] < 0) {
-                                WARNINGF (
-                                    LOCATION,
-                                    "RGBA value for '$%c' in %s too low (%d), "
-                                    "capping to 0.\n",
-                                    tag, filename, rgba[j]);
+                                WARNINGF (LOCATION,"RGBA value for '$%c' in %s too low (%d), capping to 0.",tag, filename, rgba[j]);
                                 rgba[j] = 0;
                             }
                             else if (rgba[j] > 255) {
-                                WARNINGF (
-                                    LOCATION,
-                                    "RGBA value for '$%c' in %s too high "
-                                    "(%d), capping to 255.\n",
-                                    tag, filename, rgba[j]);
+                                WARNINGF (LOCATION,"RGBA value for '$%c' in %s too high (%d), capping to 255.",tag, filename, rgba[j]);
                                 rgba[j] = 255;
                             }
                         }
@@ -582,11 +530,7 @@ void parse_everything_else (const char* filename) {
                         }
                         *color_value[i] = temp[1];
                         if (temp[2] != '\0') {
-                            WARNINGF (
-                                LOCATION,
-                                "%s - default text color '%s' has extra text "
-                                "after the tag '$%c'.\n",
-                                filename, color_names[i], *color_value[i]);
+                            WARNINGF (LOCATION,"%s - default text color '%s' has extra text after the tag '$%c'.",filename, color_names[i], *color_value[i]);
                         }
                     }
                     else if (temp[0] == '\0') {
@@ -595,11 +539,7 @@ void parse_everything_else (const char* filename) {
                     else {
                         *color_value[i] = temp[0];
                         if (temp[1] != '\0') {
-                            WARNINGF (
-                                LOCATION,
-                                "%s - default text color '%s' has extra text "
-                                "after the tag '$%c'.\n",
-                                filename, color_names[i], *color_value[i]);
+                            WARNINGF (LOCATION,"%s - default text color '%s' has extra text after the tag '$%c'.",filename, color_names[i], *color_value[i]);
                         }
                     }
                     if (Tagged_Colors.find (*color_value[i]) ==
@@ -608,11 +548,7 @@ void parse_everything_else (const char* filename) {
                         // complaining with a Warning(); the tag might be
                         // defined in a later-loading TBM, and if it isn't,
                         // nothing too terrible will happen.
-                        WARNINGF (
-                            LOCATION,
-                            "%s - default text color '%s' set to non-existant "
-                            "tag '$%c'.\n",
-                            filename, color_names[i], *color_value[i]);
+                        WARNINGF (LOCATION,"%s - default text color '%s' set to non-existant tag '$%c'.",filename, color_names[i], *color_value[i]);
                     }
                 }
             }

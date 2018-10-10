@@ -170,9 +170,7 @@ void CJumpNode::SetModel (char* model_name, bool show_polys) {
     int new_model = model_load (model_name, 0, NULL, 0);
 
     if (new_model == -1) {
-        WARNINGF (
-            LOCATION, "Couldn't load model file %s for jump node %s",
-            model_name, m_name);
+        WARNINGF (LOCATION, "Couldn't load model file %s for jump node %s",model_name, m_name);
         return;
     }
 

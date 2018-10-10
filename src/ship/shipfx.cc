@@ -580,8 +580,7 @@ void shipfx_warpin_start (object* objp) {
     ship* shipp = &Ships[objp->instance];
 
     if (shipp->is_arriving ()) {
-        WARNINGF (
-            LOCATION, "Ship '%s' is already arriving!\n", shipp->ship_name);
+        WARNINGF (LOCATION, "Ship '%s' is already arriving!", shipp->ship_name);
         Int3 ();
         return;
     }
@@ -645,8 +644,7 @@ static int compute_special_warpout_stuff (
     }
 
     if (!valid_reference_ship) {
-        WARNINGF (
-            LOCATION, "Special warpout reference ship is not a Knossos\n");
+        WARNINGF (LOCATION, "Special warpout reference ship is not a Knossos");
         return -1;
     }
     sip = &Ship_info[Ships[objp->instance].ship_info_index];
@@ -671,7 +669,7 @@ static int compute_special_warpout_stuff (
     dist_to_plane += pm->mins.xyz.z;
 
     if (dist_to_plane < 0) {
-        WARNINGF (LOCATION, "warpout started too late\n");
+        WARNINGF (LOCATION, "warpout started too late");
         return -1;
     }
 
@@ -686,7 +684,7 @@ static int compute_special_warpout_stuff (
     if (-vm_vec_dot (&objp->orient.vec.fvec, &facing_normal) <
         max_warpout_angle) { // within allowed angle
         Int3 ();
-        WARNINGF (LOCATION, "special warpout angle exceeded\n");
+        WARNINGF (LOCATION, "special warpout angle exceeded");
         return -1;
     }
 
@@ -716,7 +714,7 @@ static void compute_warpout_stuff (
             return;
         }
         else {
-            WARNINGF (LOCATION, "Invalid special warp\n");
+            WARNINGF (LOCATION, "Invalid special warp");
         }
     }
 
@@ -793,7 +791,7 @@ void shipfx_warpout_start (object* objp) {
     shipp = &Ships[objp->instance];
 
     if (shipp->flags[Ship::Ship_Flags::Depart_warp]) {
-        WARNINGF (LOCATION, "Ship is already departing!\n");
+        WARNINGF (LOCATION, "Ship is already departing!");
         return;
     }
 
@@ -2955,9 +2953,7 @@ void engine_wash_ship_process (ship* shipp) {
                 if ((wash_sip->is_huge_ship ()) &&
                     !Engine_wash_info.empty ()) {
                     bank->wash_info_pointer = &Engine_wash_info[0];
-                    WARNINGF (
-                        LOCATION, "Adding default engine wash to ship %s",
-                        wash_sip->name);
+                    WARNINGF (LOCATION, "Adding default engine wash to ship %s",wash_sip->name);
                 }
                 else {
                     continue;
@@ -3685,10 +3681,7 @@ int WE_Default::warpFrame (float frametime) {
             if (timestamp_elapsed (total_time_end)) {
                 // Something went wrong... oh well, warp him out anyway.
                 if (Player->control_mode != PCM_WARPOUT_STAGE3) {
-                    WARNINGF (
-                        LOCATION,
-                        "Hmmm... player ship warpout time elapsed, but he "
-                        "wasn't in warp stage 3.\n");
+                    WARNINGF (LOCATION,"Hmmm... player ship warpout time elapsed, but he wasn't in warp stage 3.");
                 }
 
                 this->warpEnd ();
@@ -3701,12 +3694,7 @@ int WE_Default::warpFrame (float frametime) {
             if (timed_out) {
                 int delta_ms = timestamp_until (total_time_end);
                 if (delta_ms > 1000.0f * frametime) {
-                    WARNINGF (
-                        LOCATION,
-                        "Frame %i: Ship %s missed departue cue by %7.3f "
-                        "seconds.\n",
-                        Framecount, shipp->ship_name,
-                        -(float)delta_ms / 1000.0f);
+                    WARNINGF (LOCATION,"Frame %i: Ship %s missed departue cue by %7.3f seconds.",Framecount, shipp->ship_name,-(float)delta_ms / 1000.0f);
                 }
             }
 

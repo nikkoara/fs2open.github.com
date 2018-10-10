@@ -1488,12 +1488,8 @@ void brief_do_frame (float frametime) {
                 if (sip->model_num < 0)
                     sip->model_num = model_load (sip->pof_file, 0, NULL);
 
-                WARNINGF (
-                    LOCATION, "Shiptype = %d (%s)\n", Closeup_icon->ship_class,
-                    sip->name);
-                WARNINGF (
-                    LOCATION, "Modelnum = %d (%s)\n", sip->model_num,
-                    sip->pof_file);
+                WARNINGF (LOCATION, "Shiptype = %d (%s)", Closeup_icon->ship_class,sip->name);
+                WARNINGF (LOCATION, "Modelnum = %d (%s)", sip->model_num,sip->pof_file);
                 brief_setup_closeup (Closeup_icon);
             }
 
@@ -1509,12 +1505,8 @@ void brief_do_frame (float frametime) {
                 if (sip->model_num < 0)
                     sip->model_num = model_load (sip->pof_file, 0, NULL);
 
-                WARNINGF (
-                    LOCATION, "Shiptype = %d (%s)\n", Closeup_icon->ship_class,
-                    sip->name);
-                WARNINGF (
-                    LOCATION, "Modelnum = %d (%s)\n", sip->model_num,
-                    sip->pof_file);
+                WARNINGF (LOCATION, "Shiptype = %d (%s)", Closeup_icon->ship_class,sip->name);
+                WARNINGF (LOCATION, "Modelnum = %d (%s)", sip->model_num,sip->pof_file);
                 brief_setup_closeup (Closeup_icon);
             }
 
@@ -1793,8 +1785,7 @@ void briefing_start_music () {
                 Briefing_music_handle, Master_event_music_volume, 1);
     }
     else {
-        WARNINGF (
-            LOCATION, "No music file exists to play music at this briefing!");
+        WARNINGF (LOCATION, "No music file exists to play music at this briefing!");
     }
 }
 

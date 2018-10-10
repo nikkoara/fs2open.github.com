@@ -262,11 +262,7 @@ void brief_parse_icon_tbl () {
         Briefing_icon_info.clear ();
         while (required_string_either ("#End", "$Name:")) {
             if (Briefing_icon_info.size () >= max_icons) {
-                WARNINGF (
-                    LOCATION,
-                    "Too many icons in icons.tbl; only the first %zu"
-                    " will be used",
-                    max_icons);
+                WARNINGF (LOCATION,"Too many icons in icons.tbl; only the first %zu will be used",max_icons);
                 skip_to_start_of_string ("#End");
                 break;
             }
@@ -525,20 +521,13 @@ briefing_icon_info* brief_get_icon_info (brief_icon* bi) {
                 if (sip->bii_index_wing_with_cargo >= 0)
                     return &Briefing_icon_info[sip->bii_index_wing_with_cargo];
                 else
-                    WARNINGF (
-                        LOCATION,
-                        "Ship '%s' is missing the wing-with-cargo briefing "
-                        "icon!",
-                        sip->name);
+                    WARNINGF (LOCATION,"Ship '%s' is missing the wing-with-cargo briefing icon!",sip->name);
             }
             else {
                 if (sip->bii_index_wing >= 0)
                     return &Briefing_icon_info[sip->bii_index_wing];
                 else
-                    WARNINGF (
-                        LOCATION,
-                        "Ship '%s' is missing the wing briefing icon!",
-                        sip->name);
+                    WARNINGF (LOCATION,"Ship '%s' is missing the wing briefing icon!",sip->name);
             }
         }
         else {
@@ -546,11 +535,7 @@ briefing_icon_info* brief_get_icon_info (brief_icon* bi) {
                 if (sip->bii_index_ship_with_cargo >= 0)
                     return &Briefing_icon_info[sip->bii_index_ship_with_cargo];
                 else
-                    WARNINGF (
-                        LOCATION,
-                        "Ship '%s' is missing the ship-with-cargo briefing "
-                        "icon!",
-                        sip->name);
+                    WARNINGF (LOCATION,"Ship '%s' is missing the ship-with-cargo briefing icon!",sip->name);
             }
         }
 
@@ -748,10 +733,7 @@ void brief_render_icon_line (int stage_num, int line_num) {
     bs = &Briefing->stages[stage_num];
 
     if (bl->start_icon < 0 || bl->start_icon >= bs->num_icons) {
-        WARNINGF (
-            LOCATION,
-            "Start icon (%d/%d) missing for line %d in briefing stage %d",
-            bl->start_icon, bs->num_icons, line_num, stage_num);
+        WARNINGF (LOCATION,"Start icon (%d/%d) missing for line %d in briefing stage %d",bl->start_icon, bs->num_icons, line_num, stage_num);
         // Remove line
         bs->num_lines--;
         for (i = line_num; i < bs->num_lines; i++)
@@ -760,10 +742,7 @@ void brief_render_icon_line (int stage_num, int line_num) {
     }
     if (bl->end_icon < 0 ||
         bl->end_icon >= Briefing->stages[stage_num].num_icons) {
-        WARNINGF (
-            LOCATION,
-            "End icon (%d/%d) missing for line %d in briefing stage %d",
-            bl->end_icon, bs->num_icons, line_num, stage_num);
+        WARNINGF (LOCATION,"End icon (%d/%d) missing for line %d in briefing stage %d",bl->end_icon, bs->num_icons, line_num, stage_num);
         // Remove line
         bs->num_lines--;
         for (i = line_num; i < bs->num_lines; i++)
@@ -1422,17 +1401,13 @@ bool brief_verify_color_tag (unicode::codepoint_t color_tag) {
         std::string tag_str;
         unicode::encode (color_tag, std::back_inserter (tag_str));
 
-        WARNINGF (
-            LOCATION, "Invalid text color tag '$%s' used in mission: '%s'.\n",
-            tag_str.c_str (), Mission_filename);
+        WARNINGF (LOCATION, "Invalid text color tag '$%s' used in mission: '%s'.",tag_str.c_str (), Mission_filename);
         return false;
     }
     char char_tag = (char)color_tag;
 
     if (Tagged_Colors.find (char_tag) == Tagged_Colors.end ()) {
-        WARNINGF (
-            LOCATION, "Invalid text color tag '$%c' used in mission: '%s'.\n",
-            char_tag, Mission_filename);
+        WARNINGF (LOCATION, "Invalid text color tag '$%c' used in mission: '%s'.",char_tag, Mission_filename);
         return false;
     }
     return true;
@@ -1677,10 +1652,7 @@ int brief_set_move_list (int new_stage, int current_stage, float time) {
                 if (vm_vec_cmp (&cb->icons[i].pos, &newb->icons[j].pos)) {
                     k = brief_get_free_move_icon ();
                     if (k == -1) {
-                        WARNINGF (
-                            LOCATION,
-                            "Too many briefing icons are moving "
-                            "simultaneously!");
+                        WARNINGF (LOCATION,"Too many briefing icons are moving simultaneously!");
                         return 0;
                     }
                     imi = &Icon_movers[k];

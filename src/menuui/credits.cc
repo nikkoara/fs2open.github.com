@@ -314,8 +314,7 @@ void credits_parse_table (const char* filename) {
             else if (!strcasecmp (mode, "End"))
                 SCP_credits_position = END;
             else
-                WARNINGF (
-                    LOCATION, "Unknown credits position mode \"%s\".", mode);
+                WARNINGF (LOCATION, "Unknown credits position mode \"%s\".", mode);
         }
 
         ignore_white_space ();

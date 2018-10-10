@@ -160,21 +160,6 @@ void skip_token () {
     while ((*Mp != '\0') && !is_white_space (*Mp)) Mp++;
 }
 
-// Display a diagnostic message if Verbose is set.
-// (Verbose is set if -v command line switch is present.)
-void diag_printf (const char* format, ...) {
-#ifndef NDEBUG
-    std::string buffer;
-    va_list args;
-
-    va_start (args, format);
-    vsprintf (buffer, format, args);
-    va_end (args);
-
-    WARNINGF (LOCATION, "%s", buffer.c_str ());
-#endif
-}
-
 // Grab and return (a pointer to) a bunch of tokens, terminating at
 // ERROR_LENGTH chars, or end of line.
 char* next_tokens () {
@@ -252,15 +237,10 @@ void error_display (int error_level, const char* format, ...) {
     vsprintf (error_text, format, args);
     va_end (args);
 
-    WARNINGF (
-        LOCATION,
-        "%s(line %i): %s: %s\n", Current_filename, get_line_num (), type,
-        error_text.c_str ());
+    WARNINGF (LOCATION,"%s(line %i): %s: %s", Current_filename, get_line_num (), type,error_text.c_str ());
 
     if (error_level == 0 || Cmdline_noparseerrors)
-        WARNINGF (
-            LOCATION, "%s(line %i):\n%s: %s", Current_filename,
-            get_line_num (), type, error_text.c_str ());
+        WARNINGF (LOCATION, "%s(line %i):\n%s: %s", Current_filename,get_line_num (), type, error_text.c_str ());
     else
         ASSERTX (0, "%s(line %i):\n%s: %s", Current_filename,get_line_num (), type, error_text.c_str ());
 }
@@ -397,15 +377,13 @@ int required_string (const char* pstr) {
     }
 
     if (count == RS_MAX_TRIES) {
-        WARNINGF (
-            LOCATION, "Error: Unable to find required token [%s]\n", pstr);
-        WARNINGF (
-            LOCATION, "Error: Unable to find required token [%s]\n", pstr);
+        WARNINGF (LOCATION, "Error: Unable to find required token [%s]", pstr);
+        WARNINGF (LOCATION, "Error: Unable to find required token [%s]", pstr);
         throw parse::ParseException ("Required string not found");
     }
 
     Mp += strlen (pstr);
-    diag_printf ("Found required string [%s]", token_found = pstr);
+    II << "parsed required string : " << (token_found = pstr);
     return 1;
 }
 
@@ -524,14 +502,14 @@ int required_string_fred (const char* pstr, const char* end) {
     }
 
     if (!Mp || *Mp == '\0') {
-        diag_printf ("Required string [%s] not found", pstr);
+        II << "missing required string : " << pstr;
         Mp = backup;
         Token_found_flag = 0;
         return 0;
     }
 
     Mp += strlen (pstr);
-    diag_printf ("Found required string [%s]", pstr);
+    II << "parsed required string : " << pstr;
     Token_found_flag = 1;
     return 1;
 }
@@ -562,14 +540,14 @@ int optional_string_fred (
     }
 
     if (!Mp || *Mp == '\0') {
-        diag_printf ("Optional string [%s] not found", pstr);
+        II << "missing optional : " << pstr;
         Mp = mp_save;
         Token_found_flag = 0;
         return 0;
     }
 
     Mp += strlen (pstr);
-    diag_printf ("Found optional string [%s]", pstr);
+    II << "parsed optional string : " << pstr;
     Token_found_flag = 1;
     return 1;
 }
@@ -590,12 +568,12 @@ int required_string_either (const char* str1, const char* str2) {
     for (int count = 0; count < RS_MAX_TRIES; ++count) {
         if (strncasecmp (str1, Mp, strlen (str1)) == 0) {
             // Mp += strlen(str1);
-            diag_printf ("Found required string [%s]", token_found = str1);
+            II << "parsed required string : " << (token_found = str1);
             return 0;
         }
         else if (strncasecmp (str2, Mp, strlen (str2)) == 0) {
             // Mp += strlen(str2);
-            diag_printf ("Found required string [%s]", token_found = str2);
+            II << "parsed required string : " << (token_found = str2);
             return 1;
         }
 
@@ -607,12 +585,8 @@ int required_string_either (const char* str1, const char* str2) {
         ignore_white_space ();
     }
 
-    WARNINGF (
-        LOCATION, "Error: Unable to find either required token [%s] or [%s]\n",
-        str1, str2);
-    WARNINGF (
-        LOCATION, "Error: Unable to find either required token [%s] or [%s]\n",
-        str1, str2);
+    WARNINGF (LOCATION, "Error: Unable to find either required token [%s] or [%s]",str1, str2);
+    WARNINGF (LOCATION, "Error: Unable to find either required token [%s] or [%s]",str1, str2);
     throw parse::ParseException ("Required string not found");
 }
 
@@ -642,8 +616,7 @@ int required_string_one_of (int arg_count, ...) {
         for (idx = 0; idx < arg_count; idx++) {
             expected = va_arg (vl, char*);
             if (strncasecmp (expected, Mp, strlen (expected)) == 0) {
-                diag_printf (
-                    "Found required string [%s]", token_found = expected);
+                II << "parsed required string : " << (token_found = expected);
                 va_end (vl);
                 return idx;
             }
@@ -684,12 +657,12 @@ int required_string_either_fred (const char* str1, const char* str2) {
     while (*Mp != '\0') {
         if (!strncasecmp (str1, Mp, strlen (str1))) {
             // Mp += strlen(str1);
-            diag_printf ("Found required string [%s]", token_found = str1);
+            II << "parsed required string : " << (token_found = str1);
             return fred_parse_flag = 0;
         }
         else if (!strncasecmp (str2, Mp, strlen (str2))) {
             // Mp += strlen(str2);
-            diag_printf ("Found required string [%s]", token_found = str2);
+            II << "parsed required string : " << (token_found = str2);
             return fred_parse_flag = 1;
         }
 
@@ -698,8 +671,7 @@ int required_string_either_fred (const char* str1, const char* str2) {
     }
 
     if (*Mp == '\0')
-        diag_printf (
-            "Unable to find either required token [%s] or [%s]\n", str1, str2);
+        II << "missing both " << str1 << ", and " << str2;
 
     return -1;
 }
@@ -860,9 +832,7 @@ void copy_text_until (
     foundstr = stristr (instr, endstr);
 
     if (foundstr == NULL) {
-        WARNINGF (
-            LOCATION, "Error.  Looking for [%s], but never found it.\n",
-            endstr);
+        WARNINGF (LOCATION, "Error.  Looking for [%s], but never found it.",endstr);
         throw parse::ParseException ("End string not found");
     }
 
@@ -871,10 +841,7 @@ void copy_text_until (
         outstr[foundstr - instr] = 0;
     }
     else {
-        WARNINGF (
-            LOCATION,
-            "Error.  Too much text (%zu chars, %i allowed) before %s\n",
-            foundstr - instr - strlen (endstr), max_chars, endstr);
+        WARNINGF (LOCATION,"Error.  Too much text (%zu chars, %i allowed) before %s",foundstr - instr - strlen (endstr), max_chars, endstr);
 
         throw parse::ParseException ("Too much text found");
     }
@@ -888,9 +855,7 @@ void copy_text_until (std::string& outstr, char* instr, const char* endstr) {
     foundstr = stristr (instr, endstr);
 
     if (foundstr == NULL) {
-        WARNINGF (
-            LOCATION, "Error.  Looking for [%s], but never found it.\n",
-            endstr);
+        WARNINGF (LOCATION, "Error.  Looking for [%s], but never found it.",endstr);
         throw parse::ParseException ("End string not found");
     }
 
@@ -1186,7 +1151,7 @@ void stuff_string (char* outstr, int type, int len, const char* terminators) {
         strncpy (outstr, read_str, final_len);
     }
 
-    diag_printf ("Stuffed string = [%.30s]", outstr);
+    II << "parsed string : " << outstr;
 }
 
 // Stuff a string into a string buffer.
@@ -1264,7 +1229,7 @@ void stuff_string (std::string& outstr, int type, const char* terminators) {
         outstr = read_str;
     }
 
-    diag_printf ("Stuffed string = [%.30s]", outstr.c_str ());
+    II << "parsed string : " << outstr.c_str ();
 }
 
 // stuff a string, but only until the end of a line. don't ignore leading
@@ -1290,7 +1255,7 @@ void stuff_string_line (char* outstr, int len) {
     // external string - hash it
     if (fhash_active () && (tag_id > -2)) { fhash_add_str (outstr, tag_id); }
 
-    diag_printf ("Stuffed string = [%.30s]", outstr);
+    II << "parsed string : " << outstr;
 }
 
 // ditto for std::string
@@ -1313,7 +1278,7 @@ void stuff_string_line (std::string& outstr) {
         fhash_add_str (outstr.c_str (), tag_id);
     }
 
-    diag_printf ("Stuffed string = [%.30s]", outstr.c_str ());
+    II << "parsed string : " << outstr.c_str ();
 }
 
 // Exactly the same as stuff string only Malloc's the buffer.
@@ -1977,15 +1942,7 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
                 // Latin1 is the encoding of retail data and for legacy reasons
                 // we convert that to UTF-8. We still output a warning
                 // though...
-                WARNINGF (
-                    LOCATION,
-                    "Found Latin-1 encoded file %s. This file will be "
-                    "automatically converted to UTF-8 but "
-                    "it may cause parsing issues with retail FS2 files since "
-                    "those contained invalid data.\n"
-                    "To silence this warning you must convert the files to "
-                    "UTF-8, e.g. by using a program like iconv.",
-                    filename);
+                WARNINGF (LOCATION,"Found Latin-1 encoded file %s. This file will be automatically converted to UTF-8 but it may cause parsing issues with retail FS2 files since those contained invalid data.\nTo silence this warning you must convert the files to UTF-8, e.g. by using a program like iconv.",filename);
 
                 // SDL2 has iconv functionality so we use that to convert from
                 // Latin1 to UTF-8
@@ -2014,12 +1971,7 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
                         allocate_parse_text (Parse_text_size + 300);
                     }
                     else {
-                        WARNINGF (
-                            LOCATION,
-                            "File reencoding failed (error code %zu"
-                            ")!\n"
-                            "You will probably encounter encoding issues.",
-                            err);
+                        WARNINGF (LOCATION,"File reencoding failed (error code %zu)!\nYou will probably encounter encoding issues.",err);
 
                         // Copy the original data back to the mission text
                         // pointer so that we don't loose any data here
@@ -2029,13 +1981,7 @@ void read_raw_file_text (const char* filename, int mode, char* raw_text) {
                 } while (true);
             }
             else {
-                WARNINGF (
-                    LOCATION,
-                    "Found invalid UTF-8 encoding in file %s at "
-                    "position %zd"
-                    "!\n"
-                    "This may cause parsing errors and should be fixed!",
-                    filename, invalid - raw_text);
+                WARNINGF (LOCATION,"Found invalid UTF-8 encoding in file %s at position %zd!\nThis may cause parsing errors and should be fixed!",filename, invalid - raw_text);
             }
         }
     }
@@ -2210,7 +2156,7 @@ void stuff_float (float* f) {
 
     if (*Mp == ',') Mp++;
 
-    diag_printf ("Stuffed float: %f", *f);
+    II << "parsed float : " << *f;
 }
 
 int stuff_float_optional (float* f, bool raw) {
@@ -2247,7 +2193,7 @@ void stuff_int (int* i) {
 
     if (*Mp == ',') Mp++;
 
-    diag_printf ("Stuffed int: %i", *i);
+    II << "parsed int : " << *i;
 }
 
 int stuff_int_optional (int* i, bool raw) {
@@ -2413,13 +2359,11 @@ void stuff_boolean (bool* b, bool a_to_eol) {
         }
         else {
             *b = false;
-            WARNINGF (
-                LOCATION, "Boolean '%s' type unknown; assuming 'no/false'",
-                token);
+            WARNINGF (LOCATION, "Boolean '%s' type unknown; assuming 'no/false'",token);
         }
     }
 
-    diag_printf ("Stuffed bool: %s", (b) ? NOX ("true") : NOX ("false"));
+    II << "parsed bool : " << b;
 }
 
 int stuff_bool_list (bool* blp, int max_bools) {
@@ -2487,7 +2431,7 @@ void stuff_ubyte (ubyte* i) {
 
     if (*Mp == ',') Mp++;
 
-    diag_printf ("Stuffed byte: %i", *i);
+    II << "parsed byte : " << unsigned (*i);
 }
 
 int parse_string_flag_list (int* dest, flag_def_list defs[], int defs_size) {
@@ -2775,11 +2719,7 @@ int stuff_loadout_list (int* ilp, int max_ints, int lookup_type) {
         if (index < 0 && (lookup_type == MISSION_LOADOUT_SHIP_LIST ||
                           lookup_type == MISSION_LOADOUT_WEAPON_LIST)) {
             // print a warning in debug mode
-            WARNINGF (
-                LOCATION,
-                "Invalid type \"%s\" found in loadout of mission "
-                "file...skipping",
-                str);
+            WARNINGF (LOCATION,"Invalid type \"%s\" found in loadout of mission file...skipping",str);
             // increment counter for release FRED builds.
             Num_unknown_loadout_classes++;
 
@@ -2792,11 +2732,7 @@ int stuff_loadout_list (int* ilp, int max_ints, int lookup_type) {
         if ((lookup_type == MISSION_LOADOUT_SHIP_LIST) &&
             (!(Ship_info[index].flags[Ship::Info_Flags::Player_ship]))) {
             clean_loadout_list_entry ();
-            WARNINGF (
-                LOCATION,
-                "Ship type \"%s\" found in loadout of mission file. This "
-                "class is not marked as a player ship...skipping",
-                str);
+            WARNINGF (LOCATION,"Ship type \"%s\" found in loadout of mission file. This class is not marked as a player ship...skipping",str);
             continue;
         }
         else if (
@@ -2804,18 +2740,9 @@ int stuff_loadout_list (int* ilp, int max_ints, int lookup_type) {
             (!(Weapon_info[index]
                    .wi_flags[Weapon::Info_Flags::Player_allowed]))) {
             clean_loadout_list_entry ();
-            WARNINGF (
-                LOCATION,
-                "Weapon type %s found in loadout of mission file. This class "
-                "is not marked as a player allowed weapon...skipping\n",
-                str);
+            WARNINGF (LOCATION,"Weapon type %s found in loadout of mission file. This class is not marked as a player allowed weapon...skipping",str);
             if (!Is_standalone)
-                WARNINGF (
-                    LOCATION,
-                    "Weapon type \"%s\" found in loadout of mission file. "
-                    "This class is not marked as a player allowed "
-                    "weapon...skipping",
-                    str);
+                WARNINGF (LOCATION,"Weapon type \"%s\" found in loadout of mission file. This class is not marked as a player allowed weapon...skipping",str);
             continue;
         }
 
@@ -3173,8 +3100,7 @@ void reset_parse (char* text) {
 // Display number of warnings and errors at the end of a parse.
 void display_parse_diagnostics () {
     WARNINGF (LOCATION, "\nParse complete.");
-    WARNINGF (
-        LOCATION, "%i errors.  %i warnings.\n", Error_count, Warning_count);
+    WARNINGF (LOCATION, "%i errors.  %i warnings.", Error_count, Warning_count);
 }
 
 // Splits a string into 2 lines if the string is wider than max_pixel_w pixels.
@@ -4022,9 +3948,7 @@ int parse_modular_table (
 
     for (i = 0; i < num_files; i++) {
         tbl_file_names[i] += ".tbm";
-        WARNINGF (
-            LOCATION, "TBM  =>  Starting parse of '%s' ...\n",
-            tbl_file_names[i].c_str ());
+        WARNINGF (LOCATION, "TBM  =>  Starting parse of '%s' ...",tbl_file_names[i].c_str ());
         (*parse_callback) (tbl_file_names[i].c_str ());
     }
 

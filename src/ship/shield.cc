@@ -702,7 +702,7 @@ void copy_shield_to_globals (
             Shield_hits[shnum].tri_list[count++] = gi;
 
             if (count >= MAX_TRIS_PER_HIT) {
-                WARNINGF (LOCATION, "Too many triangles in shield hit.\n");
+                WARNINGF (LOCATION, "Too many triangles in shield hit.");
                 break;
             }
         }

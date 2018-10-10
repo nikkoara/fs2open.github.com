@@ -119,7 +119,7 @@ void enumerateJoysticks (std::vector< JoystickPtr >& outVec) {
     outVec.clear ();
     outVec.reserve (static_cast< size_t > (num));
 
-    WARNINGF (LOCATION, "Printing joystick info:\n");
+    WARNINGF (LOCATION, "Printing joystick info:");
 
     for (auto i = 0; i < num; ++i) {
         auto ptr = JoystickPtr (new Joystick (i));
@@ -148,23 +148,14 @@ void setCurrentJoystick (Joystick* stick) {
     currentJoystick = stick;
 
     if (currentJoystick != nullptr) {
-        WARNINGF (
-            LOCATION, "  Using '%s' as the primary joystick\n",
-            currentJoystick->getName ().c_str ());
-        WARNINGF (LOCATION, "\n");
-        WARNINGF (
-            LOCATION, "  Number of axes: %d\n", currentJoystick->numAxes ());
-        WARNINGF (
-            LOCATION, "  Number of buttons: %d\n",
-            currentJoystick->numButtons ());
-        WARNINGF (
-            LOCATION, "  Number of hats: %d\n", currentJoystick->numHats ());
-        WARNINGF (
-            LOCATION, "  Number of trackballs: %d\n",
-            currentJoystick->numBalls ());
+        WARNINGF (LOCATION, "  Using '%s' as the primary joystick",currentJoystick->getName ().c_str ());
+        WARNINGF (LOCATION, "  Number of axes: %d", currentJoystick->numAxes ());
+        WARNINGF (LOCATION, "  Number of buttons: %d",currentJoystick->numButtons ());
+        WARNINGF (LOCATION, "  Number of hats: %d", currentJoystick->numHats ());
+        WARNINGF (LOCATION, "  Number of trackballs: %d",currentJoystick->numBalls ());
     }
     else {
-        WARNINGF (LOCATION, " Using no joystick.\n");
+        WARNINGF (LOCATION, " Using no joystick.");
     }
 }
 
@@ -241,7 +232,7 @@ bool device_event_handler (const SDL_Event& evt) {
 
             addedStick = added.get ();
             // This is a new stick so we can output it's information
-            WARNINGF (LOCATION, "A new joystick has been connected:\n");
+            WARNINGF (LOCATION, "A new joystick has been connected:");
             addedStick->printInfo ();
 
             joysticks.push_back (std::move (added));
@@ -578,10 +569,10 @@ void Joystick::handleBallEvent (const SDL_JoyBallEvent& evt) {
 }
 
 void Joystick::printInfo () {
-    WARNINGF (LOCATION, "  Joystick name: %s\n", getName ().c_str ());
-    WARNINGF (LOCATION, "  Joystick GUID: %s\n", getGUID ().c_str ());
-    WARNINGF (LOCATION, "  Joystick ID: %d\n", getID ());
-    WARNINGF (LOCATION, "  Joystick device ID: %d\n", _device_id);
+    WARNINGF (LOCATION, "  Joystick name: %s", getName ().c_str ());
+    WARNINGF (LOCATION, "  Joystick GUID: %s", getGUID ().c_str ());
+    WARNINGF (LOCATION, "  Joystick ID: %d", getID ());
+    WARNINGF (LOCATION, "  Joystick device ID: %d", _device_id);
 }
 int Joystick::getDeviceId () const { return _device_id; }
 
@@ -590,7 +581,7 @@ bool init () {
 
     if (initialized) { return true; }
 
-    WARNINGF (LOCATION, "Initializing Joystick...\n");
+    WARNINGF (LOCATION, "Initializing Joystick...");
 
     if (SDL_InitSubSystem (SDL_INIT_JOYSTICK) < 0) {
         ERRORF (
@@ -609,7 +600,7 @@ bool init () {
     }
 
     if (SDL_NumJoysticks () < 1) {
-        WARNINGF (LOCATION, "  No joysticks found\n");
+        WARNINGF (LOCATION, "  No joysticks found");
     }
 
     // Get the initial list of connected joysticks
@@ -644,7 +635,7 @@ bool init () {
     }
 
     if (currentJoystick == nullptr) {
-        WARNINGF (LOCATION, "  No joystick is being used.\n");
+        WARNINGF (LOCATION, "  No joystick is being used.");
     }
 
     initialized = true;

@@ -393,12 +393,7 @@ const char* os_config_read_string (
     const char* section, const char* name, const char* default_value) {
     Profile* p = profile_read (Osreg_config_file_name);
 
-    WARNINGF (
-        LOCATION,
-        "os_config_read_string(): section = \"%s\", name = \"%s\", default "
-        "value: \"%s\"\n",
-        (section) ? section : DEFAULT_SECTION, name,
-        (default_value) ? default_value : NOX ("NULL"));
+    WARNINGF (LOCATION,"os_config_read_string(): section = \"%s\", name = \"%s\", default value: \"%s\"",(section) ? section : DEFAULT_SECTION, name,(default_value) ? default_value : NOX ("NULL"));
 
     if (section == NULL) section = DEFAULT_SECTION;
 

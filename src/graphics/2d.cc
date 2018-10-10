@@ -917,17 +917,13 @@ static void init_window_icon () {
 
     auto icon_handle = bm_load (Window_icon_path);
     if (icon_handle < 0) {
-        WARNINGF (
-            LOCATION, "Failed to load window icon '%s'!",
-            Window_icon_path.c_str ());
+        WARNINGF (LOCATION, "Failed to load window icon '%s'!",Window_icon_path.c_str ());
         return;
     }
 
     auto surface = bm_to_sdl_surface (icon_handle);
     if (surface == nullptr) {
-        WARNINGF (
-            LOCATION, "Convert icon '%s' to a SDL surface!",
-            Window_icon_path.c_str ());
+        WARNINGF (LOCATION, "Convert icon '%s' to a SDL surface!",Window_icon_path.c_str ());
         bm_release (icon_handle);
         return;
     }
@@ -1126,7 +1122,7 @@ bool gr_init (
 
     io::mouse::CursorManager::init ();
 
-    WARNINGF (LOCATION, "Initializing path renderer...\n");
+    WARNINGF (LOCATION, "Initializing path renderer...");
     graphics::paths::PathRenderer::init ();
 
     // Initialize uniform buffer managers
@@ -1155,7 +1151,7 @@ bool gr_init (
         ASSERTX (0, "\nWeb cursor bitmap not found.  This is most likely due to one of three reasons:\n    1) You're running FreeSpace Open from somewhere other than your FreeSpace 2 folder;\n    2) You've somehow corrupted your FreeSpace 2 installation, e.g. by modifying or removing the retail VP files;\n    3) You haven't installed FreeSpace 2 at all.  (Note that installing FreeSpace Open does NOT remove the need for a FreeSpace 2 installation.)\nNumber 1 can be fixed by simply moving the FreeSpace Open executable file to the FreeSpace 2 folder.  Numbers 2 and 3 can be fixed by installing or reinstalling FreeSpace 2.\n");
     }
 
-    WARNINGF (LOCATION, "GRAPHICS: Initializing default colors...\n");
+    WARNINGF (LOCATION, "GRAPHICS: Initializing default colors...");
 
     gr_set_color (0, 0, 0);
     gr_set_clear_color (0, 0, 0);

@@ -127,10 +127,7 @@ void cutscene_mark_viewable (const char* filename) {
         i++;
     }
 
-    WARNINGF (
-        LOCATION,
-        "Could not find cutscene '%s' in listing; cannot mark it viewable...",
-        filename);
+    WARNINGF (LOCATION,"Could not find cutscene '%s' in listing; cannot mark it viewable...",filename);
 }
 
 #define NUM_BUTTONS 8

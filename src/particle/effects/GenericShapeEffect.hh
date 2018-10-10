@@ -43,11 +43,7 @@ private:
         case ConeDirection::Normal: {
             vec3d normal;
             if (!source->getOrientation ()->getNormal (&normal)) {
-                WARNINGF (
-                    LOCATION,
-                    "Effect '%s' tried to use normal direction for source "
-                    "without a normal!\n",
-                    m_name.c_str ());
+                WARNINGF (LOCATION,"Effect '%s' tried to use normal direction for source without a normal!",m_name.c_str ());
                 return source->getOrientation ()->getDirectionVector (
                     source->getOrigin ());
             }
@@ -59,11 +55,7 @@ private:
                 source->getOrigin ());
             vec3d normal;
             if (!source->getOrientation ()->getNormal (&normal)) {
-                WARNINGF (
-                    LOCATION,
-                    "Effect '%s' tried to use normal direction for source "
-                    "without a normal!\n",
-                    m_name.c_str ());
+                WARNINGF (LOCATION,"Effect '%s' tried to use normal direction for source without a normal!",m_name.c_str ());
                 return out;
             }
 

@@ -111,9 +111,7 @@ int mission_campaign_get_info (
             required_string ("$Name:");
             stuff_string (name, F_NAME, NAME_LENGTH);
             if (name == NULL) {
-                WARNINGF (
-                    LOCATION, "No name found for campaign file %s\n",
-                    filename);
+                WARNINGF (LOCATION, "No name found for campaign file %s",filename);
                 break;
             }
 
@@ -127,8 +125,7 @@ int mission_campaign_get_info (
             }
 
             if (name == NULL) {
-                WARNINGF (
-                    LOCATION, "Invalid campaign type \"%s\"\n", campaign_type);
+                WARNINGF (LOCATION, "Invalid campaign type \"%s\"", campaign_type);
                 break;
             }
 
@@ -187,9 +184,7 @@ int mission_campaign_get_mission_list (
             if (num < max)
                 list[num++] = strdup (name);
             else
-                WARNINGF (
-                    LOCATION, "Maximum number of missions exceeded (%d)!",
-                    max);
+                WARNINGF (LOCATION, "Maximum number of missions exceeded (%d)!",max);
         }
     }
     catch (const parse::ParseException& e) {
@@ -523,9 +518,7 @@ int mission_campaign_load (
                 main_hall_defines* mhd = main_hall_get_pointer (temp);
                 if (mhd != NULL) { cm->main_hall = temp; }
                 else {
-                    WARNINGF (
-                        LOCATION, "Substitute main hall '%s' not found\n",
-                        temp);
+                    WARNINGF (LOCATION, "Substitute main hall '%s' not found",temp);
                 }
             }
 
@@ -974,10 +967,7 @@ void mission_campaign_eval_next_mission () {
         WARNINGF (LOCATION, "No next mission to proceed to.");
     }
     else {
-        WARNINGF (
-            LOCATION, "Next mission is number %d [%s]\n",
-            Campaign.next_mission,
-            Campaign.missions[Campaign.next_mission].name);
+        WARNINGF (LOCATION, "Next mission is number %d [%s]",Campaign.next_mission,Campaign.missions[Campaign.next_mission].name);
     }
 }
 
@@ -1048,11 +1038,7 @@ void mission_campaign_store_goals_and_events () {
             char event_name[NAME_LENGTH];
 
             sprintf (event_name, NOX ("Event #%d"), i);
-            WARNINGF (
-                LOCATION,
-                "Mission goal in mission %s must have a +Name field! using %s "
-                "for campaign save file\n",
-                mission_obj->name, name);
+            WARNINGF (LOCATION,"Mission goal in mission %s must have a +Name field! using %s for campaign save file",mission_obj->name, name);
             strcpy (mission_obj->events[i].name, event_name);
         }
         else
@@ -1445,9 +1431,7 @@ void read_mission_goal_list (int num) {
 
                 event_count++;
                 if (event_count > MAX_MISSION_EVENTS) {
-                    WARNINGF (
-                        LOCATION, "Maximum number of events exceeded (%d)!",
-                        MAX_MISSION_EVENTS);
+                    WARNINGF (LOCATION, "Maximum number of events exceeded (%d)!",MAX_MISSION_EVENTS);
                     event_count = MAX_MISSION_EVENTS;
                     break;
                 }
@@ -1471,9 +1455,7 @@ void read_mission_goal_list (int num) {
 
                 count++;
                 if (count > MAX_GOALS) {
-                    WARNINGF (
-                        LOCATION, "Maximum number of goals exceeded (%d)!",
-                        MAX_GOALS);
+                    WARNINGF (LOCATION, "Maximum number of goals exceeded (%d)!",MAX_GOALS);
                     count = MAX_GOALS;
                     break;
                 }

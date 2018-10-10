@@ -374,21 +374,16 @@ void Player::decoderThread () {
         m_decoder->startDecoding ();
     }
     catch (const std::exception& e) {
-        WARNINGF (
-            LOCATION,
-            "Video: An exception was thrown while decoding the video: %s\n",
-            e.what ());
+        WARNINGF (LOCATION,"Video: An exception was thrown while decoding the video: %s",e.what ());
     }
     catch (...) {
-        WARNINGF (
-            LOCATION,
-            "Video: An exception was thrown while decoding the video!\n");
+        WARNINGF (LOCATION,"Video: An exception was thrown while decoding the video!");
     }
 }
 
 std::unique_ptr< Player > Player::newPlayer (
     const std::string& name, const PlaybackProperties& properties) {
-    WARNINGF (LOCATION, "Creating player for movie '%s'.\n", name.c_str ());
+    WARNINGF (LOCATION, "Creating player for movie '%s'.", name.c_str ());
 
     auto decoder = findDecoder (name, properties);
 

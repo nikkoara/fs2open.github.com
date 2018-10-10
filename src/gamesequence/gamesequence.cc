@@ -160,11 +160,7 @@ void gameseq_init () {
 
 void gameseq_post_event (int event) {
     if (state_processing_event_post) {
-        WARNINGF (
-            LOCATION,
-            "Received post for event %s during state transtition. Find "
-            "Allender if you are unsure if this is bad.\n",
-            GS_event_text[event]);
+        WARNINGF (LOCATION,"Received post for event %s during state transtition. Find Allender if you are unsure if this is bad.",GS_event_text[event]);
     }
 
     ASSERT (gs[gs_current_stack].queue_tail < MAX_GAMESEQ_EVENTS);
@@ -214,10 +210,7 @@ void gameseq_set_state (int new_state, int override) {
 
     // Flush all events!!
     while ((event = gameseq_get_event ()) != -1) {
-        WARNINGF (
-            LOCATION,
-            "Throwing out event %d because of state set from %d to %d\n",
-            event, old_state, new_state);
+        WARNINGF (LOCATION,"Throwing out event %d because of state set from %d to %d",event, old_state, new_state);
     }
 
     ASSERT (state_reentry == 1); // Get John! (Invalid state sequencing!)

@@ -95,13 +95,7 @@ GLuint compile_shader_object (
     // we failed, bail out now...
     if (status == 0) {
         // basic error check
-        WARNINGF (
-            LOCATION, "%s shader failed to compile:\n%s\n",
-            (shader_type == GL_VERTEX_SHADER)
-                ? "Vertex"
-                : ((shader_type == GL_GEOMETRY_SHADER) ? "Geometry"
-                                                       : "Fragment"),
-            info_log.c_str ());
+        WARNINGF (LOCATION, "%s shader failed to compile:\n%s",(shader_type == GL_VERTEX_SHADER)? "Vertex": ((shader_type == GL_GEOMETRY_SHADER) ? "Geometry": "Fragment"),info_log.c_str ());
 
         // this really shouldn't exist, but just in case
         if (shader_object) { glDeleteProgram (shader_object); }
@@ -111,13 +105,7 @@ GLuint compile_shader_object (
 
     // we succeeded, maybe output warnings too
     if (info_log.size () > 5) {
-        WARNINGF (
-            LOCATION, "%s shader compiled with warnings:\n%s\n",
-            (shader_type == GL_VERTEX_SHADER)
-                ? "Vertex"
-                : ((shader_type == GL_GEOMETRY_SHADER) ? "Geometry"
-                                                       : "Fragment"),
-            info_log.c_str ());
+        WARNINGF (LOCATION, "%s shader compiled with warnings:\n%s",(shader_type == GL_VERTEX_SHADER)? "Vertex": ((shader_type == GL_GEOMETRY_SHADER) ? "Geometry": "Fragment"),info_log.c_str ());
     }
 
     return shader_object;
@@ -134,15 +122,14 @@ void link_program (GLuint program) {
 
     // we failed, bail out now...
     if (status == GL_FALSE) {
-        WARNINGF (LOCATION, "Shader failed to link:\n%s\n", log.c_str ());
+        WARNINGF (LOCATION, "Shader failed to link:\n%s", log.c_str ());
 
         throw std::runtime_error ("Failed to compile shader!");
     }
 
     // we succeeded, maybe output warnings too
     if (log.size () > 5) {
-        WARNINGF (
-            LOCATION, "Shader linked with warnings:\n%s\n", log.c_str ());
+        WARNINGF (LOCATION, "Shader linked with warnings:\n%s", log.c_str ());
     }
 }
 
@@ -864,8 +851,7 @@ GLint opengl::ShaderUniforms::findUniformLocation (const std::string& name) {
         if (location == -1) {
             // This can happen if the uniform has been optimized out by the
             // driver
-            WARNINGF (
-                LOCATION, "Failed to find uniform '%s'.\n", name.c_str ());
+            WARNINGF (LOCATION, "Failed to find uniform '%s'.", name.c_str ());
         }
 
         _uniform_locations.insert (std::make_pair (name, location));

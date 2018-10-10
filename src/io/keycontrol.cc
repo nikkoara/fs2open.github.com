@@ -1305,7 +1305,7 @@ void ppsk_hotkeys (int k) {
     case KEY_F11 + KEY_SHIFTED:
     case KEY_F12 + KEY_SHIFTED:
         hotkey_set = mission_hotkey_get_set_num (k & (~KEY_SHIFTED));
-        WARNINGF (LOCATION, "Adding to set %d\n", hotkey_set + 1);
+        WARNINGF (LOCATION, "Adding to set %d", hotkey_set + 1);
         if (Player_ai->target_objnum == -1)
             HUD_sourced_printf (
                 HUD_SOURCE_HIDDEN,
@@ -2054,7 +2054,7 @@ int button_function_demo_valid (int n) {
         else {
             gamesnd_play_error_beep ();
         }
-        
+
         ret = 1;
         break;
     }
@@ -2603,7 +2603,7 @@ int button_function (int n) {
     /**
      * All keys should have been handled above, if not panic
      */
-    WARNINGF (LOCATION, "Unknown key %d at %s:%u\n", n, __FILE__, __LINE__);
+    WARNINGF (LOCATION, "Unknown key %d at %s:%u", n, __FILE__, __LINE__);
     Int3 ();
 
     return 1;

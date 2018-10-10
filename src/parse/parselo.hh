@@ -91,8 +91,7 @@ extern void ignore_gray_space ();
 // error
 extern int get_line_num ();
 extern char* next_tokens ();
-extern void diag_printf (const char* format, ...)
-    __attribute__ ((format (printf, 1, 2)));
+
 extern void
 error_display (int error_level, const char* format, ...)
     __attribute__ ((format (printf, 2, 3)));
@@ -218,7 +217,7 @@ void stuff_flagset (T* dest) {
 
     if (*Mp == ',') Mp++;
 
-    diag_printf ("Stuffed flagset: %" PRIu64 "\n", dest->to_u64 ());
+    II << "parsed flagset : " << dest->to_u64 ();
 }
 
 extern int

@@ -37,7 +37,7 @@ void HudGaugeRadarStd::initBitmaps (char* fname) {
     Radar_gauge.first_frame =
         bm_load_animation (fname, &Radar_gauge.num_frames);
     if (Radar_gauge.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 }
 

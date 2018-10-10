@@ -203,10 +203,7 @@ bool is_object_radius_in_turret_fov (
             return true;
         }
         else {
-            WARNINGF (
-                LOCATION,
-                "Function 'is_object_radius_in_turret_fov' was "
-                "called\nwithout need to fix turret alignments\n");
+            WARNINGF (LOCATION,"Function 'is_object_radius_in_turret_fov' was called\nwithout need to fix turret alignments");
             return false;
         }
     }
@@ -2806,7 +2803,7 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
     }
 
     if (lep == NULL) {
-        WARNINGF (LOCATION, "last enemy is null\n");
+        WARNINGF (LOCATION, "last enemy is null");
         return;
     }
 
@@ -3015,7 +3012,7 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
         }
 
         if (!something_was_ok_to_fire) {
-            WARNINGF (LOCATION, "nothing ok to fire\n");
+            WARNINGF (LOCATION, "nothing ok to fire");
 
             if (ss->turret_best_weapon >= 0) {
                 // Impose a penalty on turret accuracy for losing site of its

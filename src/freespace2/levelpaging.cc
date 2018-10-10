@@ -58,5 +58,5 @@ void level_page_in () {
         bm_page_in_stop ();
     }
 
-    WARNINGF (LOCATION, "Ending level bitmap paging...\n");
+    WARNINGF (LOCATION, "Ending level bitmap paging...");
 }

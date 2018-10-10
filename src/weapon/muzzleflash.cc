@@ -116,11 +116,7 @@ void parse_mflash_tbl (const char* filename) {
             // a mflash of the same name exists, don't add it again
             else {
                 if (!override_mflash) {
-                    WARNINGF (
-                        LOCATION,
-                        "Muzzle flash \"%s\" already exists!  Using existing "
-                        "entry instead.",
-                        mflash.name);
+                    WARNINGF (LOCATION,"Muzzle flash \"%s\" already exists!  Using existing entry instead.",mflash.name);
                 }
             }
         }
@@ -174,12 +170,7 @@ void mflash_page_in (bool load_all) {
                 ++idx;
             }
             else {
-                WARNINGF (
-                    LOCATION,
-                    "Muzleflash \"%s\", blob [%d/%zu"
-                    "]\nMuzzleflash blob \"%s\" not found!  Deleting.",
-                    Mflash_info[i].name, original_idx, original_num_blobs,
-                    Mflash_info[i].blobs[idx].name);
+                WARNINGF (LOCATION,"Muzleflash \"%s\", blob [%d/%zu]\nMuzzleflash blob \"%s\" not found!  Deleting.",Mflash_info[i].name, original_idx, original_num_blobs,Mflash_info[i].blobs[idx].name);
                 Mflash_info[i].blobs.erase (
                     Mflash_info[i].blobs.begin () + idx);
             }

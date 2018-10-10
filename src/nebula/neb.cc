@@ -274,11 +274,7 @@ void neb2_init () {
                 strcpy (Neb2_bitmap_filenames[Neb2_bitmap_count++], name);
             }
             else {
-                WARNINGF (
-                    LOCATION,
-                    "nebula.tbl\nExceeded maximum number of nebulas "
-                    "(%d)!\nSkipping %s.",
-                    MAX_NEB2_BITMAPS, name);
+                WARNINGF (LOCATION,"nebula.tbl\nExceeded maximum number of nebulas (%d)!\nSkipping %s.",MAX_NEB2_BITMAPS, name);
             }
         }
 
@@ -293,11 +289,7 @@ void neb2_init () {
                 strcpy (Neb2_poof_filenames[Neb2_poof_count++], name);
             }
             else {
-                WARNINGF (
-                    LOCATION,
-                    "nebula.tbl\nExceeded maximum number of nebula poofs "
-                    "(%d)!\nSkipping %s.",
-                    MAX_NEB2_POOFS, name);
+                WARNINGF (LOCATION,"nebula.tbl\nExceeded maximum number of nebula poofs (%d)!\nSkipping %s.",MAX_NEB2_POOFS, name);
             }
         }
 
@@ -873,7 +865,7 @@ void neb2_regen () {
     vec3d eye_pos;
     matrix eye_orient;
 
-    WARNINGF (LOCATION, "Regenerating local nebula!\n");
+    WARNINGF (LOCATION, "Regenerating local nebula!");
 
     // get eye position and orientation
     neb2_get_eye_pos (&eye_pos);

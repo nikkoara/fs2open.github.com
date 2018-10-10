@@ -346,9 +346,7 @@ int mission_ui_background_load (
     if (custom_background && (*custom_background != '\0')) {
         background_bitmap = bm_load (custom_background);
         if (background_bitmap < 0)
-            WARNINGF (
-                LOCATION, "Failed to load custom background bitmap %s!\n",
-                custom_background);
+            WARNINGF (LOCATION, "Failed to load custom background bitmap %s!",custom_background);
     }
 
     // if special background failed to load, or if no special background was
@@ -377,11 +375,7 @@ void common_music_init (int score_index) {
     if (Mission_music[score_index] < 0) {
         if (Num_music_files > 0) {
             Mission_music[score_index] = 0;
-            WARNINGF (
-                LOCATION,
-                "No briefing music is selected, so play first briefing track: "
-                "%s\n",
-                Spooled_music[Mission_music[score_index]].name);
+            WARNINGF (LOCATION,"No briefing music is selected, so play first briefing track: %s",Spooled_music[Mission_music[score_index]].name);
         }
         else {
             return;
@@ -536,8 +530,7 @@ void common_reset_team_pointers () {
 // This function also sets the palette based on the file palette01.pcx
 void common_select_init () {
     if (Common_select_inited) {
-        WARNINGF (
-            LOCATION, "common_select_init() returning without doing anything");
+        WARNINGF (LOCATION, "common_select_init() returning without doing anything");
         return;
     }
 
@@ -821,7 +814,7 @@ void common_check_keys (int k) {
         }
 
         // go through the single player quit process
-        gameseq_post_event (GS_EVENT_MAIN_MENU);        
+        gameseq_post_event (GS_EVENT_MAIN_MENU);
         break;
     }
 
@@ -934,9 +927,7 @@ void common_check_keys (int k) {
 // are finally exited.
 void common_select_close () {
     if (!Common_select_inited) {
-        WARNINGF (
-            LOCATION,
-            "common_select_close() returning without doing anything");
+        WARNINGF (LOCATION,"common_select_close() returning without doing anything");
         return;
     }
 
@@ -1203,11 +1194,7 @@ void wss_direct_restore_loadout () {
                 if (p_objp->wingnum == WING_INDEX (wp)) {
                     // niffiwan: don't overrun the array
                     if (j >= MAX_WING_SLOTS) {
-                        WARNINGF (
-                            LOCATION,
-                            "Starting Wing '%s' has more than "
-                            "'MAX_WING_SLOTS' ships\n",
-                            Starting_wing_names[i]);
+                        WARNINGF (LOCATION,"Starting Wing '%s' has more than 'MAX_WING_SLOTS' ships",Starting_wing_names[i]);
                         break;
                     }
                     slot =

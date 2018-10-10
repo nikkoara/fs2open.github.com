@@ -481,11 +481,7 @@ static int ship_weapon_check_collision (
                 if (!(shipp->flags[Ship::Ship_Flags::Dont_collide_invis])) {
                     wp->lifeleft = 0.001f;
                     if (ship_objp == Player_obj)
-                        WARNINGF (
-                            LOCATION,
-                            "Frame %i: Weapon %d set to detonate, dist = "
-                            "%7.3f.\n",
-                            Framecount, OBJ_INDEX (weapon_objp), dist);
+                        WARNINGF (LOCATION,"Frame %i: Weapon %d set to detonate, dist = %7.3f.",Framecount, OBJ_INDEX (weapon_objp), dist);
                     valid_hit_occurred = 1;
                 }
             }

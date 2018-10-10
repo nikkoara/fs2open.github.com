@@ -494,9 +494,7 @@ void player_select_close () {
 
     // actually set up the Player struct here
     if ((Player_select_pilot == -1) || (Player_select_num_pilots == 0)) {
-        WARNINGF (
-            LOCATION,
-            "WARNING! No pilot selected! We should be exiting the game now!");
+        WARNINGF (LOCATION,"WARNING! No pilot selected! We should be exiting the game now!");
         return;
     }
 

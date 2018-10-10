@@ -280,9 +280,7 @@ void cf_build_pack_list (cf_root* root) {
 #ifndef NDEBUG
         uint chksum = 0;
         cf_chksum_pack (temp_roots_sort[i].path, &chksum);
-        WARNINGF (
-            LOCATION, "Found root pack '%s' with a checksum of 0x%08x\n",
-            temp_roots_sort[i].path, chksum);
+        WARNINGF (LOCATION, "Found root pack '%s' with a checksum of 0x%08x",temp_roots_sort[i].path, chksum);
 #endif
 
         // mwa -- 4/2/98 put in the next 2 lines because the path name needs to
@@ -358,10 +356,13 @@ void cf_build_root_list (const char* cdrom_dir) {
         cf_add_mod_roots (os_get_legacy_user_dir (), CF_LOCATION_ROOT_USER);
 
         root = cf_create_root ();
+
         strncpy (
-            root->path, os_get_legacy_user_dir (), CF_MAX_PATHNAME_LENGTH - 1);
+            root->path, os_get_legacy_user_dir (),
+            CF_MAX_PATHNAME_LENGTH - 1);
 
         root->location_flags |= CF_LOCATION_ROOT_USER | CF_LOCATION_TYPE_ROOT;
+
         if (Cmdline_mod == nullptr || strlen (Cmdline_mod) <= 0) {
             // If there are no mods then the root is the primary mod
             root->location_flags |= CF_LOCATION_TYPE_PRIMARY_MOD;
@@ -436,9 +437,8 @@ void cf_build_root_list (const char* cdrom_dir) {
     // do we already have a slash? as in the case of a root directory install
     if ((path_len < (CF_MAX_PATHNAME_LENGTH - 1)) &&
         (root->path[path_len - 1] != '/')) {
-        strcat (
-            root->path, "/"); // put trailing backslash on for
-                                            // easier path construction
+        strcat (root->path, "/"); // put trailing backslash on for
+                                  // easier path construction
     }
 
     root->roottype = CF_ROOTTYPE_PATH;
@@ -486,7 +486,7 @@ void cf_search_root_path (int root_index) {
 
     cf_root* root = cf_get_root (root_index);
 
-    WARNINGF (LOCATION, "Searching root '%s' ... ", root->path);
+    II << "searching root : " << root->path << " ... ";
 
     char search_path[CF_MAX_PATHNAME_LENGTH];
 
@@ -618,7 +618,7 @@ void cf_search_root_path (int root_index) {
         }
     }
 
-    WARNINGF (LOCATION, "%i files\n", num_files);
+    II << "found " << num_files << " in root";
 }
 
 typedef struct VP_FILE_HEADER {
@@ -648,9 +648,7 @@ void cf_search_root_pack (int root_index) {
 
     if (cfilelength (fileno (fp)) <
         (int)(sizeof (VP_FILE_HEADER) + (sizeof (int) * 3))) {
-        WARNINGF (
-            LOCATION, "Skipping VP file ('%s') of invalid size...\n",
-            root->path);
+        WARNINGF (LOCATION, "Skipping VP file ('%s') of invalid size...",root->path);
         fclose (fp);
         return;
     }
@@ -659,11 +657,7 @@ void cf_search_root_pack (int root_index) {
 
     ASSERT (sizeof (VP_header) == 16);
     if (fread (&VP_header, sizeof (VP_header), 1, fp) != 1) {
-        WARNINGF (
-            LOCATION,
-            "Skipping VP file ('%s') because the header could not be "
-            "read...\n",
-            root->path);
+        WARNINGF (LOCATION,"Skipping VP file ('%s') because the header could not be read...",root->path);
         fclose (fp);
         return;
     }
@@ -683,10 +677,7 @@ void cf_search_root_pack (int root_index) {
         VP_FILE find;
 
         if (fread (&find, sizeof (VP_FILE), 1, fp) != 1) {
-            WARNINGF (
-                LOCATION,
-                "Failed to read file entry (currently in directory %s)!\n",
-                search_path);
+            WARNINGF (LOCATION,"Failed to read file entry (currently in directory %s)!",search_path);
             break;
         }
 
@@ -741,7 +732,7 @@ void cf_search_root_pack (int root_index) {
 
     fclose (fp);
 
-    WARNINGF (LOCATION, "%i files\n", num_files);
+    WARNINGF (LOCATION, "%i files", num_files);
 }
 
 void cf_search_memory_root (int) {}
@@ -777,7 +768,7 @@ void cf_build_secondary_filelist (const char* cdrom_dir) {
     // Init the file blocks
     for (i = 0; i < CF_MAX_FILE_BLOCKS; i++) { File_blocks[i] = NULL; }
 
-    WARNINGF (LOCATION, "Building file index...\n");
+    II << "building file index ...";
 
     // build the list of searchable roots
     cf_build_root_list (cdrom_dir);
@@ -785,8 +776,7 @@ void cf_build_secondary_filelist (const char* cdrom_dir) {
     // build the list of files themselves
     cf_build_file_list ();
 
-    WARNINGF (
-        LOCATION, "Found %d roots and %d files.\n", Num_roots, Num_files);
+    WARNINGF (LOCATION, "Found %d roots and %d files.", Num_roots, Num_files);
 }
 
 void cf_free_secondary_filelist () {

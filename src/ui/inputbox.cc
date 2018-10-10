@@ -54,7 +54,7 @@ void UI_INPUTBOX::init_cursor () {
     cursor_first_frame =
         bm_load_animation ("cursor1", &cursor_nframes, &cursor_fps);
     if (cursor_first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load input box cursor: cursor1.ani\n");
+        WARNINGF (LOCATION, "Cannot load input box cursor: cursor1.ani");
         return;
     }
     cursor_elapsed_time = 0;

@@ -1204,16 +1204,16 @@ bool Cmdline_deprecated_cache_bitmaps = false;
 void cmdline_debug_print_cmdline () {
     cmdline_parm* parmp;
     int found = 0;
-    WARNINGF (LOCATION, "Passed cmdline options:");
 
     for (parmp = GET_FIRST (&Parm_list); parmp != END_OF_LIST (&Parm_list);
          parmp = GET_NEXT (parmp)) {
         if (parmp->name_found) {
-            if (parmp->args != NULL) {
-                WARNINGF (LOCATION, "\n  %s %s", parmp->name, parmp->args);
+            if (parmp->args) {
+                II << "command line options: " << parmp->name
+                   << " = " << parmp->args;
             }
             else {
-                WARNINGF (LOCATION, "\n  %s", parmp->name);
+                II << "command line options: " << parmp->name;
             }
             found++;
         }
@@ -1222,77 +1222,45 @@ void cmdline_debug_print_cmdline () {
     if (!found)
         WARNINGF (LOCATION, "\n  <none>");
 
-    WARNINGF (LOCATION, "\n");
-
     // Print log messages about any deprecated flags we found - CommanderDJ
     if (Cmdline_deprecated_spec == 1) {
-        WARNINGF (
-            LOCATION,
-            "Deprecated flag '-spec' found. Please remove from your "
-            "cmdline.\n");
+        WARNINGF (LOCATION,"Deprecated flag '-spec' found. Please remove from your cmdline.");
     }
 
     if (Cmdline_deprecated_glow == 1) {
-        WARNINGF (
-            LOCATION,
-            "Deprecated flag '-glow' found. Please remove from your "
-            "cmdline.\n");
+        WARNINGF (LOCATION,"Deprecated flag '-glow' found. Please remove from your cmdline.");
     }
 
     if (Cmdline_deprecated_normal == 1) {
-        WARNINGF (
-            LOCATION,
-            "Deprecated flag '-normal' found. Please remove from your "
-            "cmdline.\n");
+        WARNINGF (LOCATION,"Deprecated flag '-normal' found. Please remove from your cmdline.");
     }
 
     if (Cmdline_deprecated_env == 1) {
-        WARNINGF (
-            LOCATION,
-            "Deprecated flag '-env' found. Please remove from your "
-            "cmdline.\n");
+        WARNINGF (LOCATION,"Deprecated flag '-env' found. Please remove from your cmdline.");
     }
 
     if (Cmdline_deprecated_tbp == 1) {
-        WARNINGF (
-            LOCATION,
-            "Deprecated flag '-tbp' found. Please remove from your "
-            "cmdline.\n");
+        WARNINGF (LOCATION,"Deprecated flag '-tbp' found. Please remove from your cmdline.");
     }
 
     if (Cmdline_deprecated_jpgtga == 1) {
-        WARNINGF (
-            LOCATION,
-            "Deprecated flag '-jpgtga' found. Please remove from your "
-            "cmdline.\n");
+        WARNINGF (LOCATION,"Deprecated flag '-jpgtga' found. Please remove from your cmdline.");
     }
 
     if (Cmdline_deprecated_nohtl == 1) {
-        WARNINGF (
-            LOCATION,
-            "Deprecated flag '-nohtl' found. Please remove from your "
-            "cmdline.\n");
+        WARNINGF (LOCATION,"Deprecated flag '-nohtl' found. Please remove from your cmdline.");
     }
 
     if (Cmdline_deprecated_brief_lighting == 1) {
-        WARNINGF (
-            LOCATION,
-            "Deprecated flag '-brief_lighting' found. Please remove from your "
-            "cmdline.\n");
+        WARNINGF (LOCATION,"Deprecated flag '-brief_lighting' found. Please remove from your cmdline.");
     }
 
     if (Cmdline_deprecated_missile_lighting) {
-        WARNINGF (
-            LOCATION,
-            "Deprecated flag '-missile_lighting' found. Please remove from "
-            "your cmdline.\n");
+        WARNINGF (LOCATION,"Deprecated flag '-missile_lighting' found. Please remove from your cmdline.");
     }
 
     if (Cmdline_deprecated_cache_bitmaps) {
-        WARNINGF (
-            LOCATION,
-            "Deprecated flag '-cache_bitmaps' found. Please remove from your "
-            "cmdline.\n");
+        WARNINGF (LOCATION,"Deprecated flag '-cache_bitmaps' found. Please remove from your cmdline.");
     }
 }
 #endif
@@ -1804,11 +1772,7 @@ unix_get_single_dir_names (const std::string& parent, const std::string& dir) {
 
     DIR* dp;
     if ((dp = opendir (parent.c_str ())) == NULL) {
-        WARNINGF (
-            LOCATION,
-            "Can't open directory '%s' when searching mod paths. Ignoring. "
-            "errno=%d",
-            parent.c_str (), errno);
+        WARNINGF (LOCATION,"Can't open directory '%s' when searching mod paths. Ignoring. errno=%d",parent.c_str (), errno);
         return ret;
     }
 

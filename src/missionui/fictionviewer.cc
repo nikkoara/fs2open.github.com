@@ -270,10 +270,7 @@ void fiction_viewer_init () {
             bm_load (Fiction_viewer_stages[Fiction_viewer_active_stage]
                          .background[gr_screen.res]);
         if (Fiction_viewer_bitmap < 0)
-            WARNINGF (
-                LOCATION, "Failed to load custom background bitmap %s!\n",
-                Fiction_viewer_stages[Fiction_viewer_active_stage]
-                    .background[gr_screen.res]);
+            WARNINGF (LOCATION, "Failed to load custom background bitmap %s!",Fiction_viewer_stages[Fiction_viewer_active_stage].background[gr_screen.res]);
         else if (Fiction_viewer_ui < 0)
             Fiction_viewer_ui = 0;
     }
@@ -302,9 +299,7 @@ void fiction_viewer_init () {
 
     // no ui is valid?
     if (Fiction_viewer_ui < 0) {
-        WARNINGF (
-            LOCATION,
-            "No fiction viewer graphics -- cannot display fiction viewer!");
+        WARNINGF (LOCATION,"No fiction viewer graphics -- cannot display fiction viewer!");
         return;
     }
 
@@ -554,9 +549,7 @@ void fiction_viewer_load (int stage) {
         if (ui_index >= 0)
             Fiction_viewer_ui = ui_index;
         else
-            WARNINGF (
-                LOCATION, "Unrecognized fiction viewer UI: %s",
-                stagep->ui_name);
+            WARNINGF (LOCATION, "Unrecognized fiction viewer UI: %s",stagep->ui_name);
     }
 
     // see if we have a matching font
@@ -570,9 +563,7 @@ void fiction_viewer_load (int stage) {
     CFILE* fp =
         cfopen (stagep->story_filename, "rb", CFILE_NORMAL, CF_TYPE_FICTION);
     if (fp == NULL) {
-        WARNINGF (
-            LOCATION, "Unable to load story file '%s'.",
-            stagep->story_filename);
+        WARNINGF (LOCATION, "Unable to load story file '%s'.",stagep->story_filename);
     }
     else {
         // allocate space for raw text

@@ -302,9 +302,7 @@ void parse_medal_tbl () {
                     Default_medal_coords[GR_640][Num_medals][1];
             }
             else {
-                WARNINGF (
-                    LOCATION, "No default GR_640 position for medal '%s'!",
-                    temp_medal.name);
+                WARNINGF (LOCATION, "No default GR_640 position for medal '%s'!",temp_medal.name);
                 temp_display.coords[GR_640].x = 0;
                 temp_display.coords[GR_640].y = 0;
             }
@@ -319,9 +317,7 @@ void parse_medal_tbl () {
                     Default_medal_coords[GR_1024][Num_medals][1];
             }
             else {
-                WARNINGF (
-                    LOCATION, "No default GR_1024 position for medal '%s'!",
-                    temp_medal.name);
+                WARNINGF (LOCATION, "No default GR_1024 position for medal '%s'!",temp_medal.name);
                 temp_display.coords[GR_1024].x = 0;
                 temp_display.coords[GR_1024].y = 0;
             }
@@ -336,9 +332,7 @@ void parse_medal_tbl () {
                     Default_debriefing_bitmaps[Num_medals]);
             }
             else {
-                WARNINGF (
-                    LOCATION, "No default debriefing bitmap for medal '%s'!",
-                    temp_medal.name);
+                WARNINGF (LOCATION, "No default debriefing bitmap for medal '%s'!",temp_medal.name);
                 strcpy (temp_medal.debrief_bitmap, "");
             }
 
@@ -382,12 +376,7 @@ void parse_medal_tbl () {
                     if (optional_string ("+Persona:")) {
                         stuff_int (&persona);
                         if (persona < 0) {
-                            WARNINGF (
-                                LOCATION,
-                                "Debriefing text for %s is assigned to an "
-                                "invalid persona: %i (must be 0 or "
-                                "greater).\n",
-                                temp_medal.name, persona);
+                            WARNINGF (LOCATION,"Debriefing text for %s is assigned to an invalid persona: %i (must be 0 or greater).",temp_medal.name, persona);
                             continue;
                         }
                     }
@@ -395,10 +384,7 @@ void parse_medal_tbl () {
                 }
                 if (temp_medal.promotion_text.find (-1) ==
                     temp_medal.promotion_text.end ()) {
-                    WARNINGF (
-                        LOCATION,
-                        "%s medal is missing default debriefing text.\n",
-                        temp_medal.name);
+                    WARNINGF (LOCATION,"%s medal is missing default debriefing text.",temp_medal.name);
                     temp_medal.promotion_text[-1] = "";
                 }
             }
@@ -569,8 +555,7 @@ void medal_main_init (player* pl, int mode) {
 
     Medals_bitmap = bm_load (bitmap_buf);
     if (Medals_bitmap < 0) {
-        WARNINGF (
-            LOCATION, "Error loading medal background bitmap %s", bitmap_buf);
+        WARNINGF (LOCATION, "Error loading medal background bitmap %s", bitmap_buf);
     }
     else {
         Init_flags |= MEDAL_BITMAP_INIT;

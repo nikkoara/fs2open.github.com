@@ -281,7 +281,7 @@ void trail_render (trail* trailp) {
     // there should always be three verts in the last section and 2 everyware
     // else, therefore there should always be an odd number of verts
     if ((nv % 2) != 1)
-        WARNINGF (LOCATION, "even number of verts in trail render\n");
+        WARNINGF (LOCATION, "even number of verts in trail render");
 
     TRACE_SCOPE (tracing::TrailDraw);
     // gr_set_bitmap( ti->texture.bitmap_id, GR_ALPHABLEND_FILTER,

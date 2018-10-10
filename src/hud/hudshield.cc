@@ -109,8 +109,7 @@ void hud_shield_level_init () {
     Shield_mini_gauge.first_frame =
         bm_load_animation ("targhit1", &Shield_mini_gauge.num_frames);
     if (Shield_mini_gauge.first_frame == -1) {
-        WARNINGF (
-            LOCATION, "Could not load in the HUD shield ani: targhit1\n");
+        WARNINGF (LOCATION, "Could not load in the HUD shield ani: targhit1");
         return;
     }
     Shield_mini_loaded = 1;
@@ -163,9 +162,7 @@ void hud_ship_icon_page_in (ship_info* sip) {
             Hud_shield_filenames.at (sip->shield_icon_index).c_str (),
             &sgp->num_frames);
         if (sgp->first_frame == -1) {
-            WARNINGF (
-                LOCATION, "Could not load in the HUD shield ani: %s\n",
-                Hud_shield_filenames.at (sip->shield_icon_index).c_str ());
+            WARNINGF (LOCATION, "Could not load in the HUD shield ani: %s",Hud_shield_filenames.at (sip->shield_icon_index).c_str ());
             return;
         }
     }
@@ -578,10 +575,7 @@ void HudGaugeShield::showShields (object* objp, int mode) {
             if (sgp->first_frame == -1) {
                 if (!shield_ani_warning_displayed_already) {
                     shield_ani_warning_displayed_already = true;
-                    WARNINGF (
-                        LOCATION, "Could not load in the HUD shield ani: %s\n",
-                        Hud_shield_filenames.at (sip->shield_icon_index)
-                            .c_str ());
+                    WARNINGF (LOCATION, "Could not load in the HUD shield ani: %s",Hud_shield_filenames.at (sip->shield_icon_index).c_str ());
                 }
                 return;
             }
@@ -809,9 +803,7 @@ void HudGaugeShield::showShields (object* objp, int mode) {
                     break;
                 // Whoops?
                 default:
-                    WARNINGF (
-                        LOCATION, "Invalid shield quadrant %d specified!\n",
-                        i);
+                    WARNINGF (LOCATION, "Invalid shield quadrant %d specified!",i);
                     break;
                 }
             }
@@ -944,8 +936,7 @@ void HudGaugeShieldMini::initBitmaps (char* fname) {
     Shield_mini_gauge.first_frame =
         bm_load_animation (fname, &Shield_mini_gauge.num_frames);
     if (Shield_mini_gauge.first_frame == -1) {
-        WARNINGF (
-            LOCATION, "Could not load in the HUD shield ani: %s\n", fname);
+        WARNINGF (LOCATION, "Could not load in the HUD shield ani: %s", fname);
     }
 }
 

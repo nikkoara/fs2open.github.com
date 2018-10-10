@@ -203,11 +203,7 @@ void parse_hud_gauges_tbl (const char* filename) {
             stuff_float (&Hud_unit_multiplier);
 
             if (Hud_unit_multiplier <= 0.0f) {
-                WARNINGF (
-                    LOCATION,
-                    "\"$Length Unit Multiplier:\" value of \"%f\" is invalid! "
-                    " Resetting to default.",
-                    Hud_unit_multiplier);
+                WARNINGF (LOCATION,"\"$Length Unit Multiplier:\" value of \"%f\" is invalid!  Resetting to default.",Hud_unit_multiplier);
                 Hud_unit_multiplier = 1.0f;
             }
         }
@@ -216,11 +212,7 @@ void parse_hud_gauges_tbl (const char* filename) {
             stuff_float (&Hud_speed_multiplier);
 
             if (Hud_speed_multiplier <= 0.0f) {
-                WARNINGF (
-                    LOCATION,
-                    "\"$Speed Unit Multiplier:\" value of \"%f\" is invalid!  "
-                    "Resetting to default.",
-                    Hud_speed_multiplier);
+                WARNINGF (LOCATION,"\"$Speed Unit Multiplier:\" value of \"%f\" is invalid!  Resetting to default.",Hud_speed_multiplier);
                 Hud_speed_multiplier = 1.0f;
             }
         }
@@ -261,8 +253,7 @@ void parse_hud_gauges_tbl (const char* filename) {
             skip_to_start_of_string ("#Gauge Config");
 
             if (temp < 0)
-                WARNINGF (
-                    LOCATION, "Undefined reticle style in hud_gauges.tbl!");
+                WARNINGF (LOCATION, "Undefined reticle style in hud_gauges.tbl!");
             else
                 Hud_reticle_style = temp;
         }
@@ -282,10 +273,7 @@ void parse_hud_gauges_tbl (const char* filename) {
             ship_classes.clear ();
             switch (optional_string_either ("$Ship:", "$Ships:")) {
             case 0:
-                WARNINGF (
-                    LOCATION,
-                    "$Ship in hud_gauges.tbl and -hdg.tbms is deprecated. Use "
-                    "\"$Ships: (\"Some ship class\") instead.\n");
+                WARNINGF (LOCATION,"$Ship in hud_gauges.tbl and -hdg.tbms is deprecated. Use \"$Ships: (\"Some ship class\") instead.");
 
                 if (!ships_inited) {
                     // just in case ship info has not been initialized.
@@ -2902,11 +2890,7 @@ void load_gauge_radar_dradis (gauge_settings* settings) {
         stuff_float (&loop_snd_volume);
 
         if (loop_snd_volume <= 0.0f) {
-            WARNINGF (
-                LOCATION,
-                "\"Loop Volume:\" value of \"%f\" is invalid! Must be more "
-                "than zero! Resetting to default.",
-                arrival_beep_delay);
+            WARNINGF (LOCATION,"\"Loop Volume:\" value of \"%f\" is invalid! Must be more than zero! Resetting to default.",arrival_beep_delay);
             loop_snd_volume = 1.0f;
         }
     }
@@ -2918,11 +2902,7 @@ void load_gauge_radar_dradis (gauge_settings* settings) {
         stuff_float (&arrival_beep_delay);
 
         if (arrival_beep_delay < 0.0f) {
-            WARNINGF (
-                LOCATION,
-                "\"Minimum Beep Delay:\" value of \"%f\" is invalid! Must be "
-                "more than or equal to zero! Resetting to default.",
-                arrival_beep_delay);
+            WARNINGF (LOCATION,"\"Minimum Beep Delay:\" value of \"%f\" is invalid! Must be more than or equal to zero! Resetting to default.",arrival_beep_delay);
             arrival_beep_delay = 0.0f;
         }
     }
@@ -2934,11 +2914,7 @@ void load_gauge_radar_dradis (gauge_settings* settings) {
         stuff_float (&departure_beep_delay);
 
         if (departure_beep_delay < 0.0f) {
-            WARNINGF (
-                LOCATION,
-                "\"Minimum Beep Delay:\" value of \"%f\" is invalid! Must be "
-                "more than or equal to zero! Resetting to default.",
-                departure_beep_delay);
+            WARNINGF (LOCATION,"\"Minimum Beep Delay:\" value of \"%f\" is invalid! Must be more than or equal to zero! Resetting to default.",departure_beep_delay);
             departure_beep_delay = 0.0f;
         }
     }
@@ -3616,10 +3592,7 @@ void load_gauge_talking_head (gauge_settings* settings) {
         stuff_int_list (Anim_offsets, 2);
     }
     if (optional_string ("Animation Background Size:")) {
-        WARNINGF (
-            LOCATION,
-            "Animation Background Size in hud_gauges.tbl and -hdg.tbms is "
-            "deprecated. Use \"Animation Size\" instead.\n");
+        WARNINGF (LOCATION,"Animation Background Size in hud_gauges.tbl and -hdg.tbms is deprecated. Use \"Animation Size\" instead.");
         stuff_int_list (Anim_size, 2);
     }
     if (optional_string ("Animation Size:")) { stuff_int_list (Anim_size, 2); }

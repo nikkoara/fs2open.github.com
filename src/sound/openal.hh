@@ -65,11 +65,11 @@ OpenALInformation openal_get_platform_information ();
 } while (0)
 
 #ifndef AL_BYTE_LOKI
-// in case it's not defined by older/other drivers
+
 #define AL_BYTE_LOKI    0x100C
 #endif
 
-// not define by older OpenAL versions
+
 #ifndef AL_BYTE_OFFSET
 #define AL_BYTE_OFFSET  0x1026
 #endif
@@ -124,4 +124,4 @@ OpenALInformation openal_get_platform_information ();
 #define AL_FORMAT_STEREO_FLOAT32        0x10011
 #endif
 
-#endif // FREESPACE2_SOUND_OPENAL_HH
+#endif 

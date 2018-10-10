@@ -91,7 +91,7 @@ void UI_SLIDER2::process (int /*focus*/) {
         if (mouse_locked == 1)
             if (captureCallback != NULL) {
                 captureCallback ();
-                WARNINGF (LOCATION, "Called captureCallback()!\n");
+                WARNINGF (LOCATION, "Called captureCallback()!");
             }
         mouse_locked = 0;
     }

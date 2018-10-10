@@ -88,15 +88,10 @@ static void png_warning_fn (png_structp png_ptr, png_const_charp message) {
         reinterpret_cast< png_status* > (png_get_error_ptr (png_ptr));
 
     if (status->writing) {
-        WARNINGF (
-            LOCATION, "PNG warning while writing %s: %s\n", status->filename,
-            message);
+        WARNINGF (LOCATION, "PNG warning while writing %s: %s", status->filename,message);
     }
     else {
-        WARNINGF (
-            LOCATION, "PNG warning while reading %s of %s: %s\n",
-            status->reading_header ? "header" : "pixel data", status->filename,
-            message);
+        WARNINGF (LOCATION, "PNG warning while reading %s of %s: %s",status->reading_header ? "header" : "pixel data", status->filename,message);
     }
 }
 
@@ -168,7 +163,7 @@ int png_read_header (
     }
 
     if (setjmp (png_jmpbuf (png_ptr))) {
-        WARNINGF (LOCATION, "png_read_header: something went wrong\n");
+        WARNINGF (LOCATION, "png_read_header: something went wrong");
         /* Free all of the memory associated with the png_ptr and info_ptr */
         png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
         cfclose (status.cfp);
@@ -244,7 +239,7 @@ int png_read_bitmap (
         NULL, NULL);
 
     if (png_ptr == NULL) {
-        WARNINGF (LOCATION, "png_read_bitmap: png_ptr went wrong\n");
+        WARNINGF (LOCATION, "png_read_bitmap: png_ptr went wrong");
         cfclose (status.cfp);
         return PNG_ERROR_READING;
     }
@@ -252,14 +247,14 @@ int png_read_bitmap (
     /* Allocate/initialize the memory for image information.  REQUIRED. */
     info_ptr = png_create_info_struct (png_ptr);
     if (info_ptr == NULL) {
-        WARNINGF (LOCATION, "png_read_bitmap: info_ptr went wrong\n");
+        WARNINGF (LOCATION, "png_read_bitmap: info_ptr went wrong");
         cfclose (status.cfp);
         png_destroy_read_struct (&png_ptr, NULL, NULL);
         return PNG_ERROR_READING;
     }
 
     if (setjmp (png_jmpbuf (png_ptr))) {
-        WARNINGF (LOCATION, "png_read_bitmap: something went wrong\n");
+        WARNINGF (LOCATION, "png_read_bitmap: something went wrong");
         /* Free all of the memory associated with the png_ptr and info_ptr */
         png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
         cfclose (status.cfp);
@@ -693,9 +688,7 @@ void apng_ani::prev_frame () {
     _reading = false;
     if (current_frame > 0) {
         frame = _frames.at (--current_frame);
-        WARNINGF (
-            LOCATION, "apng prev_frame; (%03i/%03u)\n", current_frame,
-            static_cast< uint > (_frames.size ()));
+        WARNINGF (LOCATION, "apng prev_frame; (%03i/%03u)", current_frame,static_cast< uint > (_frames.size ()));
     }
 }
 
@@ -736,13 +729,7 @@ void apng_ani::next_frame () {
             _process_chunk ();
         }
 
-        WARNINGF (
-            LOCATION,
-            "apng next_frame; new (%03i/%03u/%03i) (%u) (%u) %03u|%03u "
-            "%03u|%03u (%02u) (%04f)\n",
-            current_frame, static_cast< uint > (_frames.size ()), nframes,
-            _dispose_op, _blend_op, _framew, _x_offset, _frameh, _y_offset,
-            static_cast< uint > (_frame_offsets.size ()), frame.delay);
+        WARNINGF (LOCATION,"apng next_frame; new (%03i/%03u/%03i) (%u) (%u) %03u|%03u %03u|%03u (%02u) (%04f)",current_frame, static_cast< uint > (_frames.size ()), nframes,_dispose_op, _blend_op, _framew, _x_offset, _frameh, _y_offset,static_cast< uint > (_frame_offsets.size ()), frame.delay);
 
         if (_got_IDAT && _processing_finish ()) {
             _apng_failed ("couldn't finish fdat apng frame");
@@ -763,9 +750,7 @@ void apng_ani::next_frame () {
     }
     else {
         if (current_frame < nframes) {
-            WARNINGF (
-                LOCATION, "apng next_frame; used old (%03i/%03u)\n",
-                current_frame, static_cast< uint > (_frames.size ()));
+            WARNINGF (LOCATION, "apng next_frame; used old (%03i/%03u)",current_frame, static_cast< uint > (_frames.size ()));
             frame = _frames.at (current_frame);
         }
     }

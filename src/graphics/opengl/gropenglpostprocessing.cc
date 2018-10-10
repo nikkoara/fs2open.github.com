@@ -244,9 +244,7 @@ void gr_opengl_post_process_begin () {
 }
 
 void recompile_fxaa_shader () {
-    WARNINGF (
-        LOCATION, "Recompiling FXAA shader with preset %d\n",
-        Cmdline_fxaa_preset);
+    WARNINGF (LOCATION, "Recompiling FXAA shader with preset %d",Cmdline_fxaa_preset);
 
     // start recompile by grabbing deleting the current shader we have,
     // assuming it's already created
@@ -681,10 +679,7 @@ static bool opengl_post_init_table () {
                     Post_effects.push_back (eff);
                 }
                 else if (!warned) {
-                    WARNINGF (
-                        LOCATION,
-                        "post_processing.tbl can only have a max of 32 "
-                        "effects! Ignoring extra...\n");
+                    WARNINGF (LOCATION,"post_processing.tbl can only have a max of 32 effects! Ignoring extra...");
                     warned = true;
                 }
             }
@@ -923,9 +918,7 @@ void opengl_setup_bloom_textures () {
 }
 
 static bool opengl_init_shadow_framebuffer (int size, GLenum color_format) {
-    WARNINGF (
-        LOCATION, "Trying to create %dx%d %d-bit shadow framebuffer\n", size,
-        size, color_format == GL_RGBA32F ? 32 : 16);
+    WARNINGF (LOCATION, "Trying to create %dx%d %d-bit shadow framebuffer", size,size, color_format == GL_RGBA32F ? 32 : 16);
 
     glGenFramebuffers (1, &Post_shadow_framebuffer_id);
     GL_state.BindFrameBuffer (Post_shadow_framebuffer_id);
@@ -967,7 +960,7 @@ static bool opengl_init_shadow_framebuffer (int size, GLenum color_format) {
     auto status = glCheckFramebufferStatus (GL_FRAMEBUFFER);
     if (status == GL_FRAMEBUFFER_COMPLETE) {
         // Everything is fine
-        WARNINGF (LOCATION, "Shadow framebuffer created successfully.\n");
+        WARNINGF (LOCATION, "Shadow framebuffer created successfully.");
         return true;
     }
 
@@ -1021,10 +1014,7 @@ static bool opengl_post_init_framebuffer () {
 
         if (!opengl_init_shadow_framebuffer (size, GL_RGBA32F)) {
             if (!opengl_init_shadow_framebuffer (size, GL_RGBA16F)) {
-                WARNINGF (
-                    LOCATION,
-                    "Failed to create either 32 or 16-bit color shadow "
-                    "framebuffer. Disabling shadow support.\n");
+                WARNINGF (LOCATION,"Failed to create either 32 or 16-bit color shadow framebuffer. Disabling shadow support.");
                 Cmdline_shadow_quality = 0;
             }
         }
@@ -1062,10 +1052,7 @@ void opengl_post_process_init () {
     // We need to read the tbl first. This is mostly for FRED's benefit, as
     // otherwise the list of post effects for the sexp doesn't get updated.
     if (!opengl_post_init_table ()) {
-        WARNINGF (
-            LOCATION,
-            "  Unable to read post-processing table! Disabling "
-            "post-processing...\n\n");
+        WARNINGF (LOCATION,"  Unable to read post-processing table! Disabling post-processing...\n");
         Cmdline_postprocess = 0;
         return;
     }
@@ -1080,19 +1067,13 @@ void opengl_post_process_init () {
     }
 
     if (!opengl_post_init_shaders ()) {
-        WARNINGF (
-            LOCATION,
-            "  Unable to initialize post-processing shaders! Disabling "
-            "post-processing...\n\n");
+        WARNINGF (LOCATION,"  Unable to initialize post-processing shaders! Disabling post-processing...\n");
         Cmdline_postprocess = 0;
         return;
     }
 
     if (!opengl_post_init_framebuffer ()) {
-        WARNINGF (
-            LOCATION,
-            "  Unable to initialize post-processing framebuffer! Disabling "
-            "post-processing...\n\n");
+        WARNINGF (LOCATION,"  Unable to initialize post-processing framebuffer! Disabling post-processing...\n");
         Cmdline_postprocess = 0;
         return;
     }

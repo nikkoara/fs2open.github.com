@@ -699,9 +699,7 @@ void anim_read_header (anim* ptr, CFILE* fp) {
 
     if (diff != 0) {
         if (ptr->height > 16) {
-            WARNINGF (
-                LOCATION, "ANI %s with size %dx%d (%.1f%% wasted)\n",
-                ptr->name, ptr->width, ptr->height, waste);
+            WARNINGF (LOCATION, "ANI %s with size %dx%d (%.1f%% wasted)",ptr->name, ptr->width, ptr->height, waste);
         }
     }
 #endif

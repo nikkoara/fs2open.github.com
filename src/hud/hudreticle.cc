@@ -199,7 +199,7 @@ HudGaugeReticle::HudGaugeReticle ()
 void HudGaugeReticle::initBitmaps (char* fname) {
     crosshair.first_frame = bm_load_animation (fname, &crosshair.num_frames);
     if (crosshair.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 }
 
@@ -298,11 +298,7 @@ void HudGaugeReticle::getFirepointStatus () {
         pm = model_get (sip->model_num);
 
         if (pm->n_view_positions == 0) {
-            WARNINGF (
-                LOCATION,
-                "Model %s does not have a defined eyepoint. Firepoint display "
-                "could not be generated\n",
-                pm->filename);
+            WARNINGF (LOCATION,"Model %s does not have a defined eyepoint. Firepoint display could not be generated",pm->filename);
         }
         else {
             if (pm->n_guns > 0) {
@@ -474,7 +470,7 @@ void HudGaugeThrottle::initBitmaps (char* fname) {
         bm_load_animation (fname, &throttle_frames.num_frames);
 
     if (throttle_frames.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 }
 
@@ -744,19 +740,19 @@ void HudGaugeThreatIndicator::initBitmaps (
     threat_arc.first_frame =
         bm_load_animation (fname_arc, &threat_arc.num_frames);
     if (threat_arc.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_arc);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_arc);
     }
 
     laser_warn.first_frame =
         bm_load_animation (fname_laser, &laser_warn.num_frames);
     if (laser_warn.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_laser);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_laser);
     }
 
     lock_warn.first_frame =
         bm_load_animation (fname_lock, &lock_warn.num_frames);
     if (lock_warn.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_lock);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_lock);
     }
 }
 
@@ -889,37 +885,35 @@ void HudGaugeWeaponLinking::initBitmaps (
     char* fname_secondary_link_3) {
     arc.first_frame = bm_load_animation (fname_arc, &arc.num_frames);
     if (arc.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_arc);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_arc);
     }
 
     weapon_linking_modes[LINK_ONE_PRIMARY].first_frame = bm_load_animation (
         fname_primary_link_1,
         &weapon_linking_modes[LINK_ONE_PRIMARY].num_frames);
     if (weapon_linking_modes[LINK_ONE_PRIMARY].first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_primary_link_1);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_primary_link_1);
     }
 
     weapon_linking_modes[LINK_TWO_PRIMARY].first_frame = bm_load_animation (
         fname_primary_link_2,
         &weapon_linking_modes[LINK_TWO_PRIMARY].num_frames);
     if (weapon_linking_modes[LINK_TWO_PRIMARY].first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_primary_link_2);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_primary_link_2);
     }
 
     weapon_linking_modes[LINK_ONE_SECONDARY].first_frame = bm_load_animation (
         fname_secondary_link_1,
         &weapon_linking_modes[LINK_ONE_SECONDARY].num_frames);
     if (weapon_linking_modes[LINK_ONE_SECONDARY].first_frame < 0) {
-        WARNINGF (
-            LOCATION, "Cannot load hud ani: %s\n", fname_secondary_link_1);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_secondary_link_1);
     }
 
     weapon_linking_modes[LINK_TWO_SECONDARY].first_frame = bm_load_animation (
         fname_secondary_link_2,
         &weapon_linking_modes[LINK_TWO_SECONDARY].num_frames);
     if (weapon_linking_modes[LINK_TWO_SECONDARY].first_frame < 0) {
-        WARNINGF (
-            LOCATION, "Cannot load hud ani: %s\n", fname_secondary_link_2);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_secondary_link_2);
     }
 
     weapon_linking_modes[LINK_THREE_SECONDARY].first_frame =
@@ -927,8 +921,7 @@ void HudGaugeWeaponLinking::initBitmaps (
             fname_secondary_link_3,
             &weapon_linking_modes[LINK_THREE_SECONDARY].num_frames);
     if (weapon_linking_modes[LINK_THREE_SECONDARY].first_frame < 0) {
-        WARNINGF (
-            LOCATION, "Cannot load hud ani: %s\n", fname_secondary_link_3);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_secondary_link_3);
     }
 }
 

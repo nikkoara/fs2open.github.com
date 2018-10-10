@@ -562,9 +562,7 @@ int model_collide_sub (void* model_ptr) {
             }
             break;
         default:
-            WARNINGF (
-                LOCATION, "Bad chunk type %d, len=%d in model_collide_sub\n",
-                chunk_type, chunk_size);
+            WARNINGF (LOCATION, "Bad chunk type %d, len=%d in model_collide_sub",chunk_type, chunk_size);
             Int3 (); // Bad chunk type!
             return 0;
         }
@@ -1323,12 +1321,7 @@ int model_collide (mc_info* mc_info_obj) {
 
     if (Mc->flags & MC_CHECK_SPHERELINE) {
         if (Mc->radius <= 0.0f) {
-            WARNINGF (
-                LOCATION,
-                "Attempting to collide with a sphere, but the sphere's radius "
-                "is <= 0.0f!\n\n(model file is %s; submodel is %d, mc_flags "
-                "are %d)",
-                Mc_pm->filename, first_submodel, Mc->flags);
+            WARNINGF (LOCATION,"Attempting to collide with a sphere, but the sphere's radius is <= 0.0f!\n\n(model file is %s; submodel is %d, mc_flags are %d)",Mc_pm->filename, first_submodel, Mc->flags);
             return 0;
         }
 

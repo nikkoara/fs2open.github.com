@@ -109,13 +109,13 @@ static void dump_opened_files () {
     for (int i = 0; i < MAX_CFILE_BLOCKS; i++) {
         auto cb = &Cfile_block_list[i];
         if (cb->type != CFILE_BLOCK_UNUSED) {
-            WARNINGF (LOCATION, "    %s:%d\n", cb->source_file, cb->line_num);
+            WARNINGF (LOCATION, "    %s:%d", cb->source_file, cb->line_num);
         }
     }
 }
 
 void cfile_close () {
-    WARNINGF (LOCATION, "Still opened files:\n");
+    WARNINGF (LOCATION, "Still opened files:");
     dump_opened_files ();
 
     cf_free_secondary_filelist ();
@@ -505,8 +505,7 @@ void cf_create_directory (int dir_type, uint32_t location_flags) {
             longname, sizeof (longname) - 1, dir_tree[i], nullptr, false,
             location_flags);
         if (stat (longname, &statbuf) != 0) {
-            WARNINGF (
-                LOCATION, "CFILE: Creating new directory '%s'\n", longname);
+            WARNINGF (LOCATION, "CFILE: Creating new directory '%s'", longname);
             mkdir_recursive (longname);
         }
     }
@@ -631,9 +630,7 @@ CFILE* _cfopen (
         copy_file_path, dir_type, localize, location_flags);
     if (find_res.found) {
         // Fount it, now create a cfile out of it
-        WARNINGF (
-            LOCATION, "Requested file %s found at: %s\n", file_path,
-            find_res.full_name.c_str ());
+        II << "found " << file_path << " : " << find_res.full_name;
 
         if (type & CFILE_MEMORY_MAPPED) {
             // Can't open memory mapped files out of pack or memory files
@@ -757,7 +754,7 @@ static int cfget_cfile_block () {
     WARNINGF (LOCATION, "A free Cfile_block could not be found.");
 
     // Dump a list of all opened files
-    WARNINGF (LOCATION, "Out of cfile blocks! Currently opened files:\n");
+    WARNINGF (LOCATION, "Out of cfile blocks! Currently opened files:");
     dump_opened_files ();
 
     ASSERT (0);

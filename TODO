@@ -16,6 +16,7 @@
 ** DONE Remove SIZE_T_ARG, PTRDIFF_T_ARG
 ** DONE Remove UREACHABLE
 ** TODO Get rid of SEXP formatters
+** TODO Take DCFs out
 
 * Re-writes
 

@@ -134,10 +134,7 @@ void os_init (const char* wclass, const char* title, const char* app_name) {
     SDL_VERSION (&compiled);
     SDL_GetVersion (&linked);
 
-    WARNINGF (
-        LOCATION, "  Initializing SDL %d.%d.%d (compiled with %d.%d.%d)...\n",
-        linked.major, linked.minor, linked.patch, compiled.major,
-        compiled.minor, compiled.patch);
+    WARNINGF (LOCATION, "  Initializing SDL %d.%d.%d (compiled with %d.%d.%d)...",linked.major, linked.minor, linked.patch, compiled.major,compiled.minor, compiled.patch);
 
     if (SDL_Init (SDL_INIT_EVENTS) < 0) {
         fprintf (stderr, "Couldn't init SDL: %s", SDL_GetError ());
@@ -326,7 +323,7 @@ void os_deinit () {
 }
 
 void debug_int3 (const char* file, int line) {
-    WARNINGF (LOCATION, "Int3(): From %s at line %d\n", file, line);
+    WARNINGF (LOCATION, "Int3(): From %s at line %d", file, line);
 
     gr_activate (0);
 

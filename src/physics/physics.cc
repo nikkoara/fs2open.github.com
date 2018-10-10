@@ -960,9 +960,7 @@ void physics_apply_whack (
     if (!(pi->flags & PF_USE_VEL) &&
         (vm_vec_mag_squared (&pi->vel) > MAX_SHIP_SPEED * MAX_SHIP_SPEED)) {
         // Get DaveA
-        WARNINGF (
-            LOCATION, "speed reset in physics_apply_whack [speed: %f]\n",
-            vm_vec_mag (&pi->vel));
+        WARNINGF (LOCATION, "speed reset in physics_apply_whack [speed: %f]",vm_vec_mag (&pi->vel));
         vm_vec_normalize (&pi->vel);
         vm_vec_scale (&pi->vel, (float)RESET_SHIP_SPEED);
     }
@@ -1179,9 +1177,7 @@ void physics_apply_shock (
     if (!(pi->flags & PF_USE_VEL) &&
         (vm_vec_mag_squared (&pi->vel) > MAX_SHIP_SPEED * MAX_SHIP_SPEED)) {
         // Get DaveA
-        WARNINGF (
-            LOCATION, "speed reset in physics_apply_shock [speed: %f]\n",
-            vm_vec_mag (&pi->vel));
+        WARNINGF (LOCATION, "speed reset in physics_apply_shock [speed: %f]",vm_vec_mag (&pi->vel));
         vm_vec_normalize (&pi->vel);
         vm_vec_scale (&pi->vel, (float)RESET_SHIP_SPEED);
     }
@@ -1237,9 +1233,7 @@ void physics_collide_whack (
     if (!(pi->flags & PF_USE_VEL) &&
         (vm_vec_mag_squared (&pi->vel) > MAX_SHIP_SPEED * MAX_SHIP_SPEED)) {
         // Get DaveA
-        WARNINGF (
-            LOCATION, "speed reset in physics_collide_whack [speed: %f]\n",
-            vm_vec_mag (&pi->vel));
+        WARNINGF (LOCATION, "speed reset in physics_collide_whack [speed: %f]",vm_vec_mag (&pi->vel));
         vm_vec_normalize (&pi->vel);
         vm_vec_scale (&pi->vel, (float)RESET_SHIP_SPEED);
     }

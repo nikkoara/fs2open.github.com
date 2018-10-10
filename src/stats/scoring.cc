@@ -75,11 +75,7 @@ void parse_rank_tbl () {
                 if (optional_string ("+Persona:")) {
                     stuff_int (&persona);
                     if (persona < 0) {
-                        WARNINGF (
-                            LOCATION,
-                            "Debriefing text for %s rank is assigned to an "
-                            "invalid persona: %i (must be 0 or greater).\n",
-                            Ranks[idx].name, persona);
+                        WARNINGF (LOCATION,"Debriefing text for %s rank is assigned to an invalid persona: %i (must be 0 or greater).",Ranks[idx].name, persona);
                         continue;
                     }
                 }
@@ -87,9 +83,7 @@ void parse_rank_tbl () {
             }
             if (Ranks[idx].promotion_text.find (-1) ==
                 Ranks[idx].promotion_text.end ()) {
-                WARNINGF (
-                    LOCATION, "%s rank is missing default debriefing text.\n",
-                    Ranks[idx].name);
+                WARNINGF (LOCATION, "%s rank is missing default debriefing text.",Ranks[idx].name);
                 Ranks[idx].promotion_text[-1] = "";
             }
             idx++;
@@ -100,14 +94,7 @@ void parse_rank_tbl () {
         // be sure that all rank points are in order
         for (idx = 0; idx < NUM_RANKS - 1; idx++) {
             if (Ranks[idx].points >= Ranks[idx + 1].points)
-                WARNINGF (
-                    LOCATION,
-                    "Rank #%d (%s) has a higher \"$Points:\" value (%d) than "
-                    "the following rank (%s, %d points). This shouldn't "
-                    "actually crash FSO, but it might result in unexpected or "
-                    "incorrect behavior.\n",
-                    idx + 1, Ranks[idx].name, Ranks[idx].points,
-                    Ranks[idx + 1].name, Ranks[idx + 1].points);
+                WARNINGF (LOCATION,"Rank #%d (%s) has a higher \"$Points:\" value (%d) than the following rank (%s, %d points). This shouldn't actually crash FSO, but it might result in unexpected or incorrect behavior.",idx + 1, Ranks[idx].name, Ranks[idx].points,Ranks[idx + 1].name, Ranks[idx + 1].points);
         }
     }
     catch (const parse::ParseException& e) {
@@ -571,14 +558,14 @@ int scoring_eval_kill (object* ship_objp) {
     ship* dead_ship = 0; // the ship which was killed
 
      // percentage to scale the killer's score by if we score based on the
-     // amount of damage caused 
+     // amount of damage caused
     float scoring_scale_by_damage = 1;
-    
+
     int kill_score;
 
     // we don't evaluate kills on anything except ships
     if (ship_objp->type != OBJ_SHIP) { return -1; }
-    
+
     if ((ship_objp->instance < 0) || (ship_objp->instance >= MAX_SHIPS)) {
         return -1;
     }
@@ -674,7 +661,7 @@ int scoring_eval_kill (object* ship_objp) {
 
                     kill_score = -(int)(
                         dead_ship->score * scoring_get_scale_factor ());
-                    
+
                     plr->stats.m_score += kill_score;
                 }
             }
@@ -732,7 +719,7 @@ int scoring_eval_kill_on_weapon (object* weapon_obj, object* other_obj) {
 
     weapon* dead_wp =
         &Weapons[weapon_obj->instance]; // the weapon that was killed
-    
+
     weapon_info* dead_wip =
         &Weapon_info[dead_wp->weapon_info_index]; // info on the weapon that
                                                   // was killed
@@ -767,7 +754,7 @@ int scoring_eval_kill_on_weapon (object* weapon_obj, object* other_obj) {
 
                     kill_score = -(int)(
                         dead_wip->score * scoring_get_scale_factor ());
-                    
+
                     plr->stats.m_score += kill_score;
                 }
             }
@@ -796,7 +783,7 @@ void scoring_eval_assists (ship* sp, int killer_sig) {
     // percentage to scale the score by if we score based on the amount
     // of damage caused
     float scoring_scale_by_damage = 1;
-    
+
     int assist_score;
     float scoring_scale_factor;
 
@@ -824,11 +811,7 @@ void scoring_eval_assists (ship* sp, int killer_sig) {
                 if ((sp->damage_ship[idx] / sp->total_damage_received) >=
                     Assist_percentage) {
                     plr->stats.m_assists++;
-                    WARNINGF (
-                        LOCATION,
-                        "-==============GAVE PLAYER %s AN "
-                        "ASSIST=====================-\n",
-                        plr->callsign);
+                    WARNINGF (LOCATION,"-==============GAVE PLAYER %s AN ASSIST=====================-",plr->callsign);
                 }
 
                 scoring_scale_factor = scoring_get_scale_factor ();

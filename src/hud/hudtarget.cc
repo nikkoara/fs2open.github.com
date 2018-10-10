@@ -717,9 +717,7 @@ void hud_target_hotkey_add_remove (int k, object* ctarget, int how_to_add) {
     htarget_list *hitem, *plist;
 
     if ((k < 0) || (k >= MAX_KEYED_TARGETS)) {
-        WARNINGF (
-            LOCATION, "Bogus hotkey %d sent to hud_target_hotkey_add_remove\n",
-            k);
+        WARNINGF (LOCATION, "Bogus hotkey %d sent to hud_target_hotkey_add_remove",k);
         return;
     }
 
@@ -757,9 +755,7 @@ void hud_target_hotkey_add_remove (int k, object* ctarget, int how_to_add) {
             return;
         }
 
-        WARNINGF (
-            LOCATION, "Hotkey: Adding %s\n",
-            Ships[ctarget->instance].ship_name);
+        WARNINGF (LOCATION, "Hotkey: Adding %s",Ships[ctarget->instance].ship_name);
         hitem = GET_FIRST (&htarget_free_list);
         list_remove (&htarget_free_list, hitem);
         list_append (plist, hitem);
@@ -767,9 +763,7 @@ void hud_target_hotkey_add_remove (int k, object* ctarget, int how_to_add) {
         hitem->how_added = how_to_add;
     }
     else {
-        WARNINGF (
-            LOCATION, "Hotkey: Removing %s\n",
-            Ships[ctarget->instance].ship_name);
+        WARNINGF (LOCATION, "Hotkey: Removing %s",Ships[ctarget->instance].ship_name);
         list_remove (plist, hitem);
         list_append (&htarget_free_list, hitem);
         hitem->objp = NULL; // for safety
@@ -3329,7 +3323,7 @@ void hud_prune_hotkeys () {
                 (objp->flags[Object::Object_Flags::Should_be_dead]) ||
                 (sp->is_dying_or_departing ())) {
                 if (sp != NULL) {
-                    WARNINGF (LOCATION, "Hotkey: Pruning %s\n", sp->ship_name);
+                    WARNINGF (LOCATION, "Hotkey: Pruning %s", sp->ship_name);
                 }
 
                 htarget_list* temp;
@@ -3819,7 +3813,7 @@ void HudGaugeLeadIndicator::initBitmaps (char* fname) {
     Lead_indicator_gauge.first_frame =
         bm_load_animation (fname, &Lead_indicator_gauge.num_frames);
     if (Lead_indicator_gauge.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 }
 
@@ -4164,7 +4158,7 @@ void HudGaugeLeadSight::initBitmaps (char* fname) {
     Lead_sight.first_frame = bm_load_animation (fname, &Lead_sight.num_frames);
 
     if (Lead_sight.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
     else {
         int w, h;
@@ -4737,7 +4731,7 @@ void HudGaugeAutoTarget::initBitmaps (char* fname) {
     Toggle_frame.first_frame =
         bm_load_animation (fname, &Toggle_frame.num_frames);
     if (Toggle_frame.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 }
 
@@ -4823,7 +4817,7 @@ void HudGaugeAutoSpeed::initBitmaps (char* fname) {
     Toggle_frame.first_frame =
         bm_load_animation (fname, &Toggle_frame.num_frames);
     if (Toggle_frame.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 }
 
@@ -5383,7 +5377,7 @@ void HudGaugeCmeasures::initBitmaps (char* fname) {
     Cmeasure_gauge.first_frame =
         bm_load_animation (fname, &Cmeasure_gauge.num_frames);
     if (Cmeasure_gauge.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 }
 
@@ -5434,7 +5428,7 @@ void HudGaugeAfterburner::initBitmaps (char* fname) {
     Energy_bar.first_frame = bm_load_animation (fname, &Energy_bar.num_frames);
 
     if (Energy_bar.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 }
 
@@ -5523,7 +5517,7 @@ void HudGaugeWeaponEnergy::initShowBallistics (bool show_ballistics) {
 void HudGaugeWeaponEnergy::initBitmaps (char* fname) {
     Energy_bar.first_frame = bm_load_animation (fname, &Energy_bar.num_frames);
     if (Energy_bar.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
     else {
         if (Energy_bar.num_frames != 4) {
@@ -5878,7 +5872,7 @@ void HudGaugeWeapons::initBitmapsPrimaryTop (
     primary_top[0].first_frame =
         bm_load_animation (fname, &primary_top[0].num_frames);
     if (primary_top[0].first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 
     primary_top[1].first_frame =
@@ -5895,7 +5889,7 @@ void HudGaugeWeapons::initBitmapsPrimaryMiddle (
     primary_middle[0].first_frame =
         bm_load_animation (fname, &primary_middle[0].num_frames);
     if (primary_middle[0].first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 
     primary_middle[1].first_frame =
@@ -5928,7 +5922,7 @@ void HudGaugeWeapons::initBitmapsSecondaryTop (
     secondary_top[0].first_frame =
         bm_load_animation (fname, &secondary_top[0].num_frames);
     if (secondary_top[0].first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 
     secondary_top[1].first_frame =
@@ -5945,7 +5939,7 @@ void HudGaugeWeapons::initBitmapsSecondaryMiddle (
     secondary_middle[0].first_frame =
         bm_load_animation (fname, &secondary_middle[0].num_frames);
     if (secondary_middle[0].first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 
     secondary_middle[1].first_frame =
@@ -5962,7 +5956,7 @@ void HudGaugeWeapons::initBitmapsSecondaryBottom (
     secondary_bottom[0].first_frame =
         bm_load_animation (fname, &secondary_bottom[0].num_frames);
     if (secondary_bottom[0].first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 
     secondary_bottom[1].first_frame =
@@ -6707,7 +6701,7 @@ void HudGaugeWarheadCount::initBitmap (char* fname) {
     Warhead.first_frame = bm_load_animation (fname, &Warhead.num_frames);
 
     if (Warhead.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 }
 
@@ -6845,19 +6839,19 @@ void HudGaugeWeaponList::initBitmaps (
     _background_first.first_frame =
         bm_load_animation (fname_first, &_background_first.num_frames);
     if (_background_first.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_first);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_first);
     }
 
     _background_entry.first_frame =
         bm_load_animation (fname_entry, &_background_entry.num_frames);
     if (_background_entry.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_entry);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_entry);
     }
 
     _background_last.first_frame =
         bm_load_animation (fname_last, &_background_last.num_frames);
     if (_background_last.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_last);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_last);
     }
 }
 

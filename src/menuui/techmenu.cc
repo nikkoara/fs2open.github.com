@@ -334,8 +334,7 @@ void techroom_select_new_entry () {
                 // don't unload any spot within 5 of current
                 if ((i < Cur_entry + 5) && (i > Cur_entry - 5)) continue;
 
-                WARNINGF (
-                    LOCATION, "TECH ROOM: Dumping excess ship textures...\n");
+                WARNINGF (LOCATION, "TECH ROOM: Dumping excess ship textures...");
 
                 model_page_out_textures (Current_list[i].model_num);
 
@@ -1125,7 +1124,7 @@ void techroom_intel_init () {
         while (optional_string ("$Entry:")) {
             ASSERT (Intel_info_size < MAX_INTEL_ENTRIES);
             if (Intel_info_size >= MAX_INTEL_ENTRIES) {
-                WARNINGF (LOCATION, "TECHMENU: Too many intel entries!\n");
+                WARNINGF (LOCATION, "TECHMENU: Too many intel entries!");
                 break;
             }
 
@@ -1190,16 +1189,12 @@ void techroom_init () {
     Tech_background_bitmap = bm_load (Tech_background_filename[gr_screen.res]);
     if (Tech_background_bitmap < 0) {
         // failed to load bitmap, not a good thing
-        WARNINGF (
-            LOCATION, "Error loading techroom background bitmap %s",
-            Tech_background_filename[gr_screen.res]);
+        WARNINGF (LOCATION, "Error loading techroom background bitmap %s",Tech_background_filename[gr_screen.res]);
     }
 
     Tech_background_bitmap_mask = bm_load (Tech_mask_filename[gr_screen.res]);
     if (Tech_background_bitmap_mask < 0) {
-        WARNINGF (
-            LOCATION, "Error loading techroom background mask %s",
-            Tech_mask_filename[gr_screen.res]);
+        WARNINGF (LOCATION, "Error loading techroom background mask %s",Tech_mask_filename[gr_screen.res]);
         return;
     }
     else {
@@ -1313,8 +1308,7 @@ void techroom_init () {
         Intel_list[idx].bitmap = -1;
     }
 
-    WARNINGF (
-        LOCATION, "Techroom successfully initialized, now changing tab...\n");
+    WARNINGF (LOCATION, "Techroom successfully initialized, now changing tab...");
     techroom_change_tab (Tab);
 }
 

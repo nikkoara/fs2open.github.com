@@ -37,11 +37,7 @@ void FSFont::computeFontMetrics () {
 }
 void FSFont::checkFontMetrics () {
     if (_height <= 1.0f) {
-        WARNINGF (
-            LOCATION,
-            "The height of font %s has an invalid height of %f, must be "
-            "greater than one!",
-            getName ().c_str (), _height);
+        WARNINGF (LOCATION,"The height of font %s has an invalid height of %f, must be greater than one!",getName ().c_str (), _height);
     }
 }
 float FSFont::getAscender () { return _ascender; }

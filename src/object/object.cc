@@ -235,9 +235,7 @@ int free_object_slots (int num_used) {
     original_num_to_free = num_to_free;
 
     if (num_to_free > olind) {
-        WARNINGF (
-            LOCATION, "Asked to free %i objects, but can only free %i.\n",
-            num_to_free, olind);
+        WARNINGF (LOCATION, "Asked to free %i objects, but can only free %i.",num_to_free, olind);
         num_to_free = olind;
     }
 
@@ -245,7 +243,7 @@ int free_object_slots (int num_used) {
         if ((Objects[obj_list[i]].type == OBJ_DEBRIS) &&
             (Debris[Objects[obj_list[i]].instance].flags & DEBRIS_EXPIRE)) {
             num_to_free--;
-            WARNINGF (LOCATION, "Freeing   DEBRIS object %3i\n", obj_list[i]);
+            WARNINGF (LOCATION, "Freeing   DEBRIS object %3i", obj_list[i]);
             Objects[obj_list[i]].flags.set (
                 Object::Object_Flags::Should_be_dead);
         }
@@ -257,7 +255,7 @@ int free_object_slots (int num_used) {
         if ((tmp_obj->type == OBJ_FIREBALL) &&
             (fireball_is_perishable (tmp_obj))) {
             num_to_free--;
-            WARNINGF (LOCATION, "Freeing FIREBALL object %3i\n", obj_list[i]);
+            WARNINGF (LOCATION, "Freeing FIREBALL object %3i", obj_list[i]);
             tmp_obj->flags.set (Object::Object_Flags::Should_be_dead);
         }
     }
@@ -383,7 +381,7 @@ int obj_allocate (void) {
     object* objp;
 
     if (!Object_inited) {
-        WARNINGF (LOCATION, "Why hasn't obj_init() been called yet?\n");
+        WARNINGF (LOCATION, "Why hasn't obj_init() been called yet?");
         obj_init ();
     }
 
@@ -396,7 +394,7 @@ int obj_allocate (void) {
 
     if (Num_objects >= MAX_OBJECTS) {
 #ifndef NDEBUG
-        WARNINGF (LOCATION, "Object creation failed - too many objects!\n");
+        WARNINGF (LOCATION, "Object creation failed - too many objects!");
 #endif
         return -1;
     }
@@ -439,7 +437,7 @@ void obj_free (int objnum) {
     object* objp;
 
     if (!Object_inited) {
-        WARNINGF (LOCATION, "Why hasn't obj_init() been called yet?\n");
+        WARNINGF (LOCATION, "Why hasn't obj_init() been called yet?");
         obj_init ();
     }
 
@@ -537,7 +535,7 @@ void obj_delete_all () {
         obj_delete (i);
     }
 
-    WARNINGF (LOCATION, "Cleanup: Deleted %i objects\n", counter);
+    WARNINGF (LOCATION, "Cleanup: Deleted %i objects", counter);
 }
 
 /**
@@ -552,9 +550,7 @@ void obj_delete (int objnum) {
     ASSERT (objnum >= 0 && objnum < MAX_OBJECTS);
     objp = &Objects[objnum];
     if (objp->type == OBJ_NONE) {
-        WARNINGF (
-            LOCATION, "obj_delete() called for already deleted object %d.\n",
-            objnum);
+        WARNINGF (LOCATION, "obj_delete() called for already deleted object %d.",objnum);
         return;
     };
 
@@ -606,7 +602,7 @@ void obj_delete (int objnum) {
                 break;*/
     case OBJ_GHOST:
         if (!(Game_mode & GM_MULTIPLAYER)) {
-            WARNINGF (LOCATION, "Tried to delete a ghost!\n");
+            WARNINGF (LOCATION, "Tried to delete a ghost!");
             objp->flags.remove (Object::Object_Flags::Should_be_dead);
             return;
         }
@@ -636,7 +632,7 @@ void obj_delete_all_that_should_be_dead () {
     object *objp, *temp;
 
     if (!Object_inited) {
-        WARNINGF (LOCATION, "Why hasn't obj_init() been called yet?\n");
+        WARNINGF (LOCATION, "Why hasn't obj_init() been called yet?");
         obj_init ();
     }
 
@@ -1012,27 +1008,25 @@ void obj_check_object (object* obj) {
             CheckObjects[objnum].type = OBJ_SHIP;
         }
         else {
-            WARNINGF (
-                LOCATION, "Object type changed! Old: %i, Current: %i\n",
-                CheckObjects[objnum].type, obj->type);
+            WARNINGF (LOCATION, "Object type changed! Old: %i, Current: %i",CheckObjects[objnum].type, obj->type);
             Int3 ();
         }
     }
     if (CheckObjects[objnum].signature != obj->signature) {
-        WARNINGF (LOCATION, "Object signature changed!\n");
+        WARNINGF (LOCATION, "Object signature changed!");
         Int3 ();
     }
     if ((CheckObjects[objnum].flags[Object::Object_Flags::Collides]) !=
         (obj->flags[Object::Object_Flags::Collides])) {
-        WARNINGF (LOCATION, "Object flags changed!\n");
+        WARNINGF (LOCATION, "Object flags changed!");
         Int3 ();
     }
     if (CheckObjects[objnum].parent_sig != obj->parent_sig) {
-        WARNINGF (LOCATION, "Object parent sig changed!\n");
+        WARNINGF (LOCATION, "Object parent sig changed!");
         Int3 ();
     }
     if (CheckObjects[objnum].parent_type != obj->parent_type) {
-        WARNINGF (LOCATION, "Object's parent type changed!\n");
+        WARNINGF (LOCATION, "Object's parent type changed!");
         Int3 ();
     }
 }
@@ -1075,8 +1069,7 @@ void obj_set_flags (
         // observers can't collide or be hit, and they therefore have no hit or
         // collide functions So, don't allow this bit to be set
         if (obj->type == OBJ_OBSERVER) {
-            WARNINGF (
-                LOCATION, "Illegal to set collision bit for OBJ_OBSERVER!!\n");
+            WARNINGF (LOCATION, "Illegal to set collision bit for OBJ_OBSERVER!!");
             Int3 ();
         }
 

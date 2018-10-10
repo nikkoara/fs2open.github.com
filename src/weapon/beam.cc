@@ -470,9 +470,7 @@ int beam_fire (beam_fire_info* fire_info) {
     // check to see if its legal to fire at this guy
     if (beam_ok_to_fire (new_item) != 1) {
         beam_delete (new_item);
-        WARNINGF (
-            LOCATION,
-            "Killing beam at initial fire because of illegal targeting!!!\n");
+        WARNINGF (LOCATION,"Killing beam at initial fire because of illegal targeting!!!");
         return -1;
     }
 
@@ -1850,9 +1848,7 @@ int beam_get_model (object* objp) {
 
     default:
         // this shouldn't happen too often
-        WARNINGF (
-            LOCATION, "Beam couldn't find a good object model/type!! (%d)\n",
-            objp->type);
+        WARNINGF (LOCATION, "Beam couldn't find a good object model/type!! (%d)",objp->type);
         return -1;
     }
 }
@@ -3285,7 +3281,7 @@ void beam_handle_collisions (beam* b) {
                     &b->f_collisions[idx].cinfo.hit_point_world,
                     wi->damage);
                 break;
-                
+
             case OBJ_SHIP:
                 // hit the ship - again, the innards of this code handle
                 // multiplayer cases maybe vaporize ship.
@@ -3405,18 +3401,13 @@ int beam_ok_to_fire (beam* b) {
     }
     // if my own object is invalid, stop firing
     if (b->objp->signature != b->sig) {
-        WARNINGF (
-            LOCATION,
-            "BEAM : killing beam because of invalid parent object "
-            "SIGNATURE!\n");
+        WARNINGF (LOCATION,"BEAM : killing beam because of invalid parent object SIGNATURE!");
         return -1;
     }
 
     // if my own object is a ghost
     if (b->objp->type != OBJ_SHIP) {
-        WARNINGF (
-            LOCATION,
-            "BEAM : killing beam because of invalid parent object TYPE!\n");
+        WARNINGF (LOCATION,"BEAM : killing beam because of invalid parent object TYPE!");
         return -1;
     }
 
@@ -3446,9 +3437,7 @@ int beam_ok_to_fire (beam* b) {
     if (!(b->flags & BF_FORCE_FIRING)) {
         // if the shooting turret is destroyed
         if (b->subsys->current_hits <= 0.0f) {
-            WARNINGF (
-                LOCATION,
-                "BEAM : killing beam because turret has been destroyed!\n");
+            WARNINGF (LOCATION,"BEAM : killing beam because turret has been destroyed!");
             return -1;
         }
 
@@ -3476,9 +3465,7 @@ int beam_ok_to_fire (beam* b) {
             }
 
             if (!(turret_fov_test (b->subsys, &turret_normal, &aim_dir))) {
-                WARNINGF (
-                    LOCATION,
-                    "BEAM : powering beam down because of FOV condition!");
+                WARNINGF (LOCATION,"BEAM : powering beam down because of FOV condition!");
                 return 0;
             }
         }
@@ -3489,9 +3476,7 @@ int beam_ok_to_fire (beam* b) {
                 (b->flags & BF_IS_FIGHTER_BEAM) > 0);
             if (vm_vec_dot (&aim_dir, &turret_dir) <
                 b->subsys->system_info->turret_fov) {
-                WARNINGF (
-                    LOCATION,
-                    "BEAM : powering beam down because of FOV condition!");
+                WARNINGF (LOCATION,"BEAM : powering beam down because of FOV condition!");
                 return 0;
             }
         }

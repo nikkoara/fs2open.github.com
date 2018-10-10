@@ -55,10 +55,7 @@ struct ThreadedEventProcessor {
             q_.wait_push_back (*event);
         }
         catch (const sync_queue_is_closed&) {
-            WARNINGF (
-                LOCATION,
-                "Stream queue was closed in processEvent! This should not be "
-                "possible...");
+            WARNINGF (LOCATION,"Stream queue was closed in processEvent! This should not be possible...");
         }
     }
 

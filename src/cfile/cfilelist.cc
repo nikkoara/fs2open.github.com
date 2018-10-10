@@ -87,9 +87,7 @@ void cf_sort_filenames (
         return;
     }
 
-    WARNINGF (
-        LOCATION, "Unknown sorting method %d passed to cf_sort_filenames()\n",
-        sort);
+    WARNINGF (LOCATION, "Unknown sorting method %d passed to cf_sort_filenames()",sort);
 }
 
 // Sorts a list of filenames using the specified sorting method (CF_SORT_*).
@@ -186,9 +184,7 @@ void cf_sort_filenames (int n, char** list, int sort, file_list_info* info) {
         return;
     }
 
-    WARNINGF (
-        LOCATION, "Unknown sorting method %d passed to cf_sort_filenames()\n",
-        sort);
+    WARNINGF (LOCATION, "Unknown sorting method %d passed to cf_sort_filenames()",sort);
 }
 
 #if (0) // these aren't used anywhere now

@@ -189,10 +189,7 @@ void initialize_player_state (Player* player, PlaybackState* state) {
         font::FontManager::getFontIndex (Movie_subtitle_font);
 
     if (state->subtitle_font < 0) {
-        WARNINGF (
-            LOCATION,
-            "Failed to load subtitle font '%s'! Subtitles will be disabled.",
-            Movie_subtitle_font.c_str ());
+        WARNINGF (LOCATION,"Failed to load subtitle font '%s'! Subtitles will be disabled.",Movie_subtitle_font.c_str ());
     }
 }
 

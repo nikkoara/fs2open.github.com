@@ -565,10 +565,7 @@ void wl_render_overhead_view (float frametime) {
     ship_class = Wss_slots[Selected_wl_slot].ship_class;
     if (ship_class < 0 ||
         ship_class >= static_cast< int > (Ship_info.size ())) {
-        WARNINGF (
-            LOCATION,
-            "Invalid ship class (%d) passed for render_overhead_view",
-            ship_class);
+        WARNINGF (LOCATION,"Invalid ship class (%d) passed for render_overhead_view",ship_class);
         return;
     }
     ship_info* sip = &Ship_info[ship_class];
@@ -644,11 +641,7 @@ void wl_render_overhead_view (float frametime) {
 
             // Did we load anything?
             if (wl_ship->overhead_bitmap < 0) {
-                WARNINGF (
-                    LOCATION,
-                    "Unable to load overhead image for ship '%s', generating "
-                    "one instead",
-                    sip->name);
+                WARNINGF (LOCATION,"Unable to load overhead image for ship '%s', generating one instead",sip->name);
                 display_type = 1;
             }
             else {
@@ -680,10 +673,7 @@ void wl_render_overhead_view (float frametime) {
         }
 
         if (wl_ship->model_num < 0) {
-            WARNINGF (
-                LOCATION,
-                "Couldn't load model file '%s' in missionweaponchoice.cpp\n",
-                sip->pof_file);
+            WARNINGF (LOCATION,"Couldn't load model file '%s' in missionweaponchoice.cpp",sip->pof_file);
         }
         else {
             matrix object_orient = IDENTITY_MATRIX;
@@ -1853,8 +1843,7 @@ void weapon_select_init () {
                                 // returning from the hotkey screen, which can
                                 // release common button bitmaps.
         common_reset_buttons ();
-        WARNINGF (
-            LOCATION, "weapon_select_init() returning without doing anything");
+        WARNINGF (LOCATION, "weapon_select_init() returning without doing anything");
 
         // if we're in multiplayer always select the player's ship
         wl_reset_selected_slot ();
@@ -2696,9 +2685,7 @@ void weapon_select_do (float frametime) {
  */
 void weapon_select_close () {
     if (!Weapon_select_open) {
-        WARNINGF (
-            LOCATION,
-            "weapon_select_close() returning without doing anything");
+        WARNINGF (LOCATION,"weapon_select_close() returning without doing anything");
         return;
     }
 

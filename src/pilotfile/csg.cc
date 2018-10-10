@@ -149,11 +149,7 @@ void pilotfile::csg_read_info () {
                 Campaign.ships_allowed[ship_list[idx].index] = 1;
             }
             else {
-                WARNINGF (
-                    LOCATION,
-                    "Found invalid ship \"%s\" in campaign save file. "
-                    "Skipping...\n",
-                    ship_list[idx].name.c_str ());
+                WARNINGF (LOCATION,"Found invalid ship \"%s\" in campaign save file. Skipping...",ship_list[idx].name.c_str ());
             }
         }
     }
@@ -168,11 +164,7 @@ void pilotfile::csg_read_info () {
                 Campaign.weapons_allowed[weapon_list[idx].index] = 1;
             }
             else {
-                WARNINGF (
-                    LOCATION,
-                    "Found invalid weapon \"%s\" in campaign save file. "
-                    "Skipping...\n",
-                    weapon_list[idx].name.c_str ());
+                WARNINGF (LOCATION,"Found invalid weapon \"%s\" in campaign save file. Skipping...",weapon_list[idx].name.c_str ());
             }
         }
     }
@@ -446,11 +438,7 @@ void pilotfile::csg_read_techroom () {
                     Ship::Info_Flags::In_tech_database);
             }
             else {
-                WARNINGF (
-                    LOCATION,
-                    "Found invalid ship \"%s\" in campaign save file. "
-                    "Skipping...\n",
-                    ship_list[idx].name.c_str ());
+                WARNINGF (LOCATION,"Found invalid ship \"%s\" in campaign save file. Skipping...",ship_list[idx].name.c_str ());
             }
         }
     }
@@ -466,11 +454,7 @@ void pilotfile::csg_read_techroom () {
                     Weapon::Info_Flags::In_tech_database);
             }
             else {
-                WARNINGF (
-                    LOCATION,
-                    "Found invalid weapon \"%s\" in campaign save file. "
-                    "Skipping...\n",
-                    weapon_list[idx].name.c_str ());
+                WARNINGF (LOCATION,"Found invalid weapon \"%s\" in campaign save file. Skipping...",weapon_list[idx].name.c_str ());
             }
         }
     }
@@ -486,11 +470,7 @@ void pilotfile::csg_read_techroom () {
                     IIF_IN_TECH_DATABASE;
             }
             else {
-                WARNINGF (
-                    LOCATION,
-                    "Found invalid intel entry \"%s\" in campaign save file. "
-                    "Skipping...\n",
-                    intel_list[idx].name.c_str ());
+                WARNINGF (LOCATION,"Found invalid intel entry \"%s\" in campaign save file. Skipping...",intel_list[idx].name.c_str ());
             }
         }
     }
@@ -594,11 +574,7 @@ void pilotfile::csg_read_loadout () {
         if ((ship_idx >= (int)ship_list.size ()) ||
             (ship_idx < -1)) { // on the casts, assume that ship & weapon lists
                                // will never exceed ~2 billion
-            WARNINGF (
-                LOCATION,
-                "CSG => Parse Warning: Invalid value for ship index (%d), "
-                "emptying slot.\n",
-                ship_idx);
+            WARNINGF (LOCATION,"CSG => Parse Warning: Invalid value for ship index (%d), emptying slot.",ship_idx);
             ship_idx = -1;
         }
 
@@ -618,11 +594,7 @@ void pilotfile::csg_read_loadout () {
             wep_idx = cfread_int (cfp);
 
             if ((wep_idx >= (int)weapon_list.size ()) || (wep_idx < -1)) {
-                WARNINGF (
-                    LOCATION,
-                    "CSG => Parse Warning: Invalid value for primary weapon "
-                    "index (%d), emptying slot.\n",
-                    wep_idx);
+                WARNINGF (LOCATION,"CSG => Parse Warning: Invalid value for primary weapon index (%d), emptying slot.",wep_idx);
                 wep_idx = -1;
             }
 
@@ -649,11 +621,7 @@ void pilotfile::csg_read_loadout () {
             wep_idx = cfread_int (cfp);
 
             if ((wep_idx >= (int)weapon_list.size ()) || (wep_idx < -1)) {
-                WARNINGF (
-                    LOCATION,
-                    "CSG => Parse Warning: Invalid value for secondary weapon "
-                    "index (%d), emptying slot.\n",
-                    wep_idx);
+                WARNINGF (LOCATION,"CSG => Parse Warning: Invalid value for secondary weapon index (%d), emptying slot.",wep_idx);
                 wep_idx = -1;
             }
 
@@ -840,11 +808,7 @@ void pilotfile::csg_read_redalert () {
         i = cfread_int (cfp);
         if ((i >= (int)ship_list.size ()) ||
             (i < RED_ALERT_LOWEST_VALID_SHIP_CLASS)) {
-            WARNINGF (
-                LOCATION,
-                "CSG => Parse Warning: Invalid value for red alert ship index "
-                "(%d), emptying slot.\n",
-                i);
+            WARNINGF (LOCATION,"CSG => Parse Warning: Invalid value for red alert ship index (%d), emptying slot.",i);
             ras.ship_class = RED_ALERT_DESTROYED_SHIP_CLASS;
         }
         else if (
@@ -1385,9 +1349,7 @@ bool pilotfile::load_savefile (const char* campaign) {
     auto campaign_file = fs::path (stem) += FS_CAMPAIGN_FILE_EXT;
 
     if (!cf_exists_full (campaign_file.c_str (), CF_TYPE_MISSIONS)) {
-        WARNINGF (
-            LOCATION, "CSG => Unable to find campaign file '%s'!\n",
-            campaign_file.c_str ());
+        WARNINGF (LOCATION, "CSG => Unable to find campaign file '%s'!",campaign_file.c_str ());
         return false;
     }
 
@@ -1400,18 +1362,14 @@ bool pilotfile::load_savefile (const char* campaign) {
         CF_LOCATION_ROOT_USER | CF_LOCATION_ROOT_GAME | CF_LOCATION_TYPE_ROOT);
 
     if (!cfp) {
-        WARNINGF (
-            LOCATION, "CSG => Unable to open '%s' for reading!\n",
-            filename.c_str ());
+        WARNINGF (LOCATION, "CSG => Unable to open '%s' for reading!",filename.c_str ());
         return false;
     }
 
     unsigned int csg_id = cfread_uint (cfp);
 
     if (csg_id != CSG_FILE_ID) {
-        WARNINGF (
-            LOCATION, "CSG => Invalid header id for '%s'!\n",
-            filename.c_str ());
+        WARNINGF (LOCATION, "CSG => Invalid header id for '%s'!",filename.c_str ());
         csg_close ();
         return false;
     }
@@ -1419,9 +1377,7 @@ bool pilotfile::load_savefile (const char* campaign) {
     // version, now used
     csg_ver = cfread_ubyte (cfp);
 
-    WARNINGF (
-        LOCATION, "CSG => Loading '%s' with version %d...\n",
-        filename.c_str (), (int)csg_ver);
+    WARNINGF (LOCATION, "CSG => Loading '%s' with version %d...",filename.c_str (), (int)csg_ver);
 
     csg_reset_data ();
 
@@ -1438,85 +1394,81 @@ bool pilotfile::load_savefile (const char* campaign) {
         try {
             switch (section_id) {
             case Section::Flags:
-                WARNINGF (LOCATION, "CSG => Parsing:  Flags...\n");
+                WARNINGF (LOCATION, "CSG => Parsing:  Flags...");
                 m_have_flags = true;
                 csg_read_flags ();
                 break;
 
             case Section::Info:
-                WARNINGF (LOCATION, "CSG => Parsing:  Info...\n");
+                WARNINGF (LOCATION, "CSG => Parsing:  Info...");
                 m_have_info = true;
                 csg_read_info ();
                 break;
 
             case Section::Variables:
-                WARNINGF (LOCATION, "CSG => Parsing:  Variables...\n");
+                WARNINGF (LOCATION, "CSG => Parsing:  Variables...");
                 csg_read_variables ();
                 break;
 
             case Section::HUD:
-                WARNINGF (LOCATION, "CSG => Parsing:  HUD...\n");
+                WARNINGF (LOCATION, "CSG => Parsing:  HUD...");
                 csg_read_hud ();
                 break;
 
             case Section::RedAlert:
-                WARNINGF (LOCATION, "CSG => Parsing:  RedAlert...\n");
+                WARNINGF (LOCATION, "CSG => Parsing:  RedAlert...");
                 csg_read_redalert ();
                 break;
 
             case Section::Scoring:
-                WARNINGF (LOCATION, "CSG => Parsing:  Scoring...\n");
+                WARNINGF (LOCATION, "CSG => Parsing:  Scoring...");
                 csg_read_stats ();
                 break;
 
             case Section::Loadout:
-                WARNINGF (LOCATION, "CSG => Parsing:  Loadout...\n");
+                WARNINGF (LOCATION, "CSG => Parsing:  Loadout...");
                 csg_read_loadout ();
                 break;
 
             case Section::Techroom:
-                WARNINGF (LOCATION, "CSG => Parsing:  Techroom...\n");
+                WARNINGF (LOCATION, "CSG => Parsing:  Techroom...");
                 csg_read_techroom ();
                 break;
 
             case Section::Missions:
-                WARNINGF (LOCATION, "CSG => Parsing:  Missions...\n");
+                WARNINGF (LOCATION, "CSG => Parsing:  Missions...");
                 csg_read_missions ();
                 break;
 
             case Section::Settings:
-                WARNINGF (LOCATION, "CSG => Parsing:  Settings...\n");
+                WARNINGF (LOCATION, "CSG => Parsing:  Settings...");
                 csg_read_settings ();
                 break;
 
             case Section::Controls:
-                WARNINGF (LOCATION, "CSG => Parsing:  Controls...\n");
+                WARNINGF (LOCATION, "CSG => Parsing:  Controls...");
                 csg_read_controls ();
                 break;
 
             case Section::Cutscenes:
-                WARNINGF (LOCATION, "CSG => Parsing:  Cutscenes...\n");
+                WARNINGF (LOCATION, "CSG => Parsing:  Cutscenes...");
                 csg_read_cutscenes ();
                 break;
 
             case Section::LastMissions:
-                WARNINGF (LOCATION, "CSG => Parsing:  Last Missions...\n");
+                WARNINGF (LOCATION, "CSG => Parsing:  Last Missions...");
                 csg_read_lastmissions ();
                 break;
 
             default:
-                WARNINGF (
-                    LOCATION, "CSG => Skipping unknown section 0x%04x!\n",
-                    (uint32_t)section_id);
+                WARNINGF (LOCATION, "CSG => Skipping unknown section 0x%04x!",(uint32_t)section_id);
                 break;
             }
         }
         catch (cfile::max_read_length& msg) {
             // read to max section size, move to next section, discarding
             // extra/unknown data
-            WARNINGF (
-                LOCATION, "CSG => Warning: (0x%04x) %s\n",
-                (uint32_t)section_id, msg.what ());
+            WARNINGF (LOCATION, "CSG => Warning: (0x%04x) %s",(uint32_t)section_id, msg.what ());
         }
         catch (const char* err) {
             ERRORF (LOCATION, "CSG => ERROR: %s\n", err);
@@ -1531,11 +1483,7 @@ bool pilotfile::load_savefile (const char* campaign) {
         size_t offset_pos = (start_pos + section_size) - cftell (cfp);
 
         if (offset_pos) {
-            WARNINGF (
-                LOCATION,
-                "CSG => Warning: (0x%04x) Short read, information may have "
-                "been lost!\n",
-                (uint32_t)section_id);
+            WARNINGF (LOCATION,"CSG => Warning: (0x%04x) Short read, information may have been lost!",(uint32_t)section_id);
             cfseek (cfp, (int)offset_pos, CF_SEEK_CUR);
         }
     }
@@ -1547,7 +1495,7 @@ bool pilotfile::load_savefile (const char* campaign) {
     }
     player_set_squad_bitmap (p, p->s_squad_filename, false);
 
-    WARNINGF (LOCATION, "CSG => Loading complete!\n");
+    WARNINGF (LOCATION, "CSG => Loading complete!");
 
     // cleanup and return
     csg_close ();
@@ -1571,10 +1519,7 @@ bool pilotfile::save_savefile () {
 
     // make sure that we can actually save this safely
     if (m_data_invalid) {
-        WARNINGF (
-            LOCATION,
-            "CSG => Skipping save of '%s' due to invalid data check!\n",
-            filename.c_str ());
+        WARNINGF (LOCATION,"CSG => Skipping save of '%s' due to invalid data check!",filename.c_str ());
         return false;
     }
 
@@ -1594,9 +1539,7 @@ bool pilotfile::save_savefile () {
         CF_LOCATION_ROOT_USER | CF_LOCATION_ROOT_GAME | CF_LOCATION_TYPE_ROOT);
 
     if (!cfp) {
-        WARNINGF (
-            LOCATION, "CSG => Unable to open '%s' for saving!\n",
-            filename.c_str ());
+        WARNINGF (LOCATION, "CSG => Unable to open '%s' for saving!",filename.c_str ());
         return false;
     }
 
@@ -1604,9 +1547,7 @@ bool pilotfile::save_savefile () {
     cfwrite_int (CSG_FILE_ID, cfp);
     cfwrite_ubyte (CSG_VERSION, cfp);
 
-    WARNINGF (
-        LOCATION, "CSG => Saving '%s' with version %d...\n", filename.c_str (),
-        (int)CSG_VERSION);
+    WARNINGF (LOCATION, "CSG => Saving '%s' with version %d...", filename.c_str (),(int)CSG_VERSION);
 
     // flags and info sections go first
     csg_write_flags ();
@@ -1646,17 +1587,14 @@ bool pilotfile::get_csg_rank (int* rank) {
         CF_LOCATION_ROOT_USER | CF_LOCATION_ROOT_GAME | CF_LOCATION_TYPE_ROOT);
 
     if (!cfp) {
-        WARNINGF (
-            LOCATION, "CSG => Unable to open '%s'!\n", filename.c_str ());
+        WARNINGF (LOCATION, "CSG => Unable to open '%s'!", filename.c_str ());
         return false;
     }
 
     unsigned int csg_id = cfread_uint (cfp);
 
     if (csg_id != CSG_FILE_ID) {
-        WARNINGF (
-            LOCATION, "CSG => Invalid header id for '%s'!\n",
-            filename.c_str ());
+        WARNINGF (LOCATION, "CSG => Invalid header id for '%s'!",filename.c_str ());
         csg_close ();
         return false;
     }
@@ -1664,9 +1602,7 @@ bool pilotfile::get_csg_rank (int* rank) {
     // version, now used
     csg_ver = cfread_ubyte (cfp);
 
-    WARNINGF (
-        LOCATION, "CSG => Get Rank from '%s' with version %d...\n",
-        filename.c_str (), (int)csg_ver);
+    WARNINGF (LOCATION, "CSG => Get Rank from '%s' with version %d...",filename.c_str (), (int)csg_ver);
 
     // the point of all this: read in the CSG contents
     while (!m_have_flags && !cfeof (cfp)) {
@@ -1682,7 +1618,7 @@ bool pilotfile::get_csg_rank (int* rank) {
         try {
             switch (section_id) {
             case Section::Flags:
-                WARNINGF (LOCATION, "CSG => Parsing:  Flags...\n");
+                WARNINGF (LOCATION, "CSG => Parsing:  Flags...");
                 m_have_flags = true;
                 csg_read_flags ();
                 break;
@@ -1693,9 +1629,7 @@ bool pilotfile::get_csg_rank (int* rank) {
         catch (cfile::max_read_length& msg) {
             // read to max section size, move to next section, discarding
             // extra/unknown data
-            WARNINGF (
-                LOCATION, "CSG => (0x%04x) %s\n", (uint32_t)section_id,
-                msg.what ());
+            WARNINGF (LOCATION, "CSG => (0x%04x) %s", (uint32_t)section_id,msg.what ());
         }
         catch (const char* err) {
             ERRORF (LOCATION, "CSG => ERROR: %s\n", err);
@@ -1710,11 +1644,7 @@ bool pilotfile::get_csg_rank (int* rank) {
         offset_pos = (start_pos + section_size) - cftell (cfp);
 
         if (offset_pos) {
-            WARNINGF (
-                LOCATION,
-                "CSG => Warning: (0x%04x) Short read, information may have "
-                "been lost!\n",
-                (uint32_t)section_id);
+            WARNINGF (LOCATION,"CSG => Warning: (0x%04x) Short read, information may have been lost!",(uint32_t)section_id);
             cfseek (cfp, (int)offset_pos, CF_SEEK_CUR);
         }
     }
@@ -1722,7 +1652,7 @@ bool pilotfile::get_csg_rank (int* rank) {
     // this is what we came for...
     *rank = p->stats.rank;
 
-    WARNINGF (LOCATION, "CSG => Get Rank complete!\n");
+    WARNINGF (LOCATION, "CSG => Get Rank complete!");
 
     // cleanup & return
     csg_close ();

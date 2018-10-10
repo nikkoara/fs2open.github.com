@@ -514,11 +514,7 @@ void red_alert_bash_weapons (red_alert_ship_status* ras, p_object* pobjp) {
     }
 
     if (sssp == NULL) {
-        WARNINGF (
-            LOCATION,
-            "Parse object data for ship '%s' doesn't contain the 'Pilot' "
-            "subsystem!",
-            pobjp->name);
+        WARNINGF (LOCATION,"Parse object data for ship '%s' doesn't contain the 'Pilot' subsystem!",pobjp->name);
         return;
     }
 
@@ -838,11 +834,7 @@ void red_alert_bash_wingman_status () {
                             change_ship_type (
                                 SHIP_INDEX (shipp), ras->ship_class);
                         else
-                            WARNINGF (
-                                LOCATION,
-                                "Invalid ship class specified in red alert "
-                                "data for ship %s. Using mission defaults.\n",
-                                shipp->ship_name);
+                            WARNINGF (LOCATION,"Invalid ship class specified in red alert data for ship %s. Using mission defaults.",shipp->ship_name);
                     }
 
                     // restore hull (but not shields)
@@ -850,11 +842,7 @@ void red_alert_bash_wingman_status () {
                         ras->hull <= ship_objp->hull_strength)
                         ship_objp->hull_strength = ras->hull;
                     else
-                        WARNINGF (
-                            LOCATION,
-                            "Invalid health in red alert data for ship %s. "
-                            "Using mission defaults.\n",
-                            shipp->ship_name);
+                        WARNINGF (LOCATION,"Invalid health in red alert data for ship %s. Using mission defaults.",shipp->ship_name);
 
                     // restore weapons and subsys
                     red_alert_bash_weapons (ras, &shipp->weapons);
@@ -939,11 +927,7 @@ void red_alert_bash_wingman_status () {
                                 static_cast< int > (Ship_info.size ()))
                             swap_parse_object (pobjp, ras->ship_class);
                         else {
-                            WARNINGF (
-                                LOCATION,
-                                "Invalid ship class specified in red alert "
-                                "data for ship %s. Using mission defaults.\n",
-                                pobjp->name);
+                            WARNINGF (LOCATION,"Invalid ship class specified in red alert data for ship %s. Using mission defaults.",pobjp->name);
 
                             // We will break anyway to this should work
                             break;
@@ -957,11 +941,7 @@ void red_alert_bash_wingman_status () {
                         pobjp->initial_hull =
                             (int)(ras->hull * 100.0f / pobjp->ship_max_hull_strength);
                     else
-                        WARNINGF (
-                            LOCATION,
-                            "Invalid health in red alert data for ship %s. "
-                            "Using mission defaults.\n",
-                            pobjp->name);
+                        WARNINGF (LOCATION,"Invalid health in red alert data for ship %s. Using mission defaults.",pobjp->name);
 
                     // restore weapons and subsys
                     red_alert_bash_weapons (ras, pobjp);

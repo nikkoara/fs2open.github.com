@@ -98,20 +98,12 @@ void parse_ai_profiles_tbl (const char* filename) {
             else {
                 // don't create multiple profiles with the same name
                 if (previous_profile != NULL) {
-                    WARNINGF (
-                        LOCATION,
-                        "An ai profile named '%s' already exists!  The new "
-                        "one will not be created.\n",
-                        profile_name);
+                    WARNINGF (LOCATION,"An ai profile named '%s' already exists!  The new one will not be created.",profile_name);
                 }
                 else {
                     // make sure we're under the limit
                     if (Num_ai_profiles >= MAX_AI_PROFILES) {
-                        WARNINGF (
-                            LOCATION,
-                            "Too many profiles in ai_profiles.tbl!  Max is "
-                            "%d.\n",
-                            MAX_AI_PROFILES - 1); // -1 because one is built-in
+                        WARNINGF (LOCATION,"Too many profiles in ai_profiles.tbl!  Max is %d.",MAX_AI_PROFILES - 1);
                         skip_to_string ("#End", NULL);
                         break;
                     }
@@ -253,11 +245,7 @@ void parse_ai_profiles_tbl (const char* filename) {
                     for (i = 0; i < NUM_SKILL_LEVELS; i++) {
                         if (profile->glide_attack_percent[i] < 0.0f ||
                             profile->glide_attack_percent[i] > 100.0f) {
-                            WARNINGF (
-                                LOCATION,
-                                "$Glide Attack Percent should be between 0 "
-                                "and 100.0 (read %f). Setting to 0.",
-                                profile->glide_attack_percent[i]);
+                            WARNINGF (LOCATION,"$Glide Attack Percent should be between 0 and 100.0 (read %f). Setting to 0.",profile->glide_attack_percent[i]);
                             profile->glide_attack_percent[i] = 0.0f;
                         }
                         profile->glide_attack_percent[i] /= 100.0;
@@ -273,11 +261,7 @@ void parse_ai_profiles_tbl (const char* filename) {
                     for (i = 0; i < NUM_SKILL_LEVELS; i++) {
                         if (profile->circle_strafe_percent[i] < 0.0f ||
                             profile->circle_strafe_percent[i] > 100.0f) {
-                            WARNINGF (
-                                LOCATION,
-                                "$Circle Strafe Percent should be between 0 "
-                                "and 100.0 (read %f). Setting to 0.",
-                                profile->circle_strafe_percent[i]);
+                            WARNINGF (LOCATION,"$Circle Strafe Percent should be between 0 and 100.0 (read %f). Setting to 0.",profile->circle_strafe_percent[i]);
                             profile->circle_strafe_percent[i] = 0.0f;
                         }
                         profile->circle_strafe_percent[i] /= 100.0;
@@ -293,11 +277,7 @@ void parse_ai_profiles_tbl (const char* filename) {
                     for (i = 0; i < NUM_SKILL_LEVELS; i++) {
                         if (profile->glide_strafe_percent[i] < 0.0f ||
                             profile->glide_strafe_percent[i] > 100.0f) {
-                            WARNINGF (
-                                LOCATION,
-                                "$Glide Strafe Percent should be between 0 "
-                                "and 100.0 (read %f). Setting to 0.",
-                                profile->glide_strafe_percent[i]);
+                            WARNINGF (LOCATION,"$Glide Strafe Percent should be between 0 and 100.0 (read %f). Setting to 0.",profile->glide_strafe_percent[i]);
                             profile->glide_strafe_percent[i] = 0.0f;
                         }
                         profile->glide_strafe_percent[i] /= 100.0;
@@ -313,11 +293,7 @@ void parse_ai_profiles_tbl (const char* filename) {
                     for (i = 0; i < NUM_SKILL_LEVELS; i++) {
                         if (profile->random_sidethrust_percent[i] < 0.0f ||
                             profile->random_sidethrust_percent[i] > 100.0f) {
-                            WARNINGF (
-                                LOCATION,
-                                "$Random Sidethrust Percent should be between "
-                                "0 and 100.0 (read %f). Setting to 0.",
-                                profile->random_sidethrust_percent[i]);
+                            WARNINGF (LOCATION,"$Random Sidethrust Percent should be between 0 and 100.0 (read %f). Setting to 0.",profile->random_sidethrust_percent[i]);
                             profile->random_sidethrust_percent[i] = 0.0f;
                         }
                         profile->random_sidethrust_percent[i] /= 100.0;
@@ -391,11 +367,7 @@ void parse_ai_profiles_tbl (const char* filename) {
                     for (i = 0; i < NUM_SKILL_LEVELS; i++) {
                         // Enforce range
                         if (fov_list[i] < 0.0f || fov_list[i] >= 360.0f) {
-                            WARNINGF (
-                                LOCATION,
-                                "$Player Autoaim FOV should be >= 0 and < "
-                                "360.0 (read %f). Setting to 0.",
-                                fov_list[i]);
+                            WARNINGF (LOCATION,"$Player Autoaim FOV should be >= 0 and < 360.0 (read %f). Setting to 0.",fov_list[i]);
                             fov_list[i] = 0.0f;
                         }
 
@@ -594,9 +566,7 @@ void parse_ai_profiles_tbl (const char* filename) {
                     int j = ai_path_type_match (buf);
                     if (j >= 0) { profile->ai_path_mode = j; }
                     else {
-                        WARNINGF (
-                            LOCATION, "Invalid ai path mode '%s' specified",
-                            buf);
+                        WARNINGF (LOCATION, "Invalid ai path mode '%s' specified",buf);
                     }
                 }
 
@@ -642,21 +612,14 @@ void parse_ai_profiles_tbl (const char* filename) {
                 // compatibility
                 if (optional_string (
                         "$perform less checks for death screams:")) {
-                    WARNINGF (
-                        LOCATION,
-                        "\"$perform less checks for death screams\" flag is "
-                        "deprecated in favor of \"$perform fewer checks for "
-                        "death screams\"\n");
+                    WARNINGF (LOCATION,"\"$perform less checks for death screams\" flag is deprecated in favor of \"$perform fewer checks for death screams\"");
                     bool temp;
                     stuff_boolean (&temp);
                     profile->flags.set (
                         AI::Profile_Flags::Perform_fewer_scream_checks, temp);
                 }
                 if (optional_string ("$allow primary link delay:")) {
-                    WARNINGF (
-                        LOCATION,
-                        "\"$allow primary link delay\" flag is deprecated in "
-                        "favor of \"$allow primary link at mission start\"\n");
+                    WARNINGF (LOCATION,"\"$allow primary link delay\" flag is deprecated in favor of \"$allow primary link at mission start\"");
                     bool temp;
                     stuff_boolean (&temp);
                     profile->flags.set (
@@ -669,9 +632,7 @@ void parse_ai_profiles_tbl (const char* filename) {
                     char tmp[60];
                     memset (tmp, 0, 60);
                     strncpy (tmp, Mp, 59);
-                    WARNINGF (
-                        LOCATION,
-                        "Unrecognized parameter in ai_profiles: %s\n", tmp);
+                    WARNINGF (LOCATION,"Unrecognized parameter in ai_profiles: %s", tmp);
 
                     Mp++;
                 }

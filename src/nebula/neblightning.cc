@@ -352,9 +352,7 @@ void nebl_render_all () {
 
                         Num_lbolts--;
 
-                        WARNINGF (
-                            LOCATION, "Released bolt. %d used nodes!\n",
-                            Num_lnodes);
+                        WARNINGF (LOCATION, "Released bolt. %d used nodes!",Num_lnodes);
                     }
 
                     b->used = 0;

@@ -94,28 +94,27 @@ void HudGaugeRadarDradis::initBitmaps (
     char* fname_target_brackets, char* fname_unknown) {
     xy_plane = bm_load (fname_xy); // Base
     if (xy_plane < 0) {
-        WARNINGF (LOCATION, "Cannot load hud bitmap: %s\n", fname_xy);
+        WARNINGF (LOCATION, "Cannot load hud bitmap: %s", fname_xy);
     }
 
     xz_yz_plane = bm_load (fname_xz_yz); // Two vertical cross rings
     if (xz_yz_plane < 0) {
-        WARNINGF (LOCATION, "Cannot load hud bitmap: %s\n", fname_xz_yz);
+        WARNINGF (LOCATION, "Cannot load hud bitmap: %s", fname_xz_yz);
     }
 
     sweep_plane = bm_load (fname_sweep); // Sweep lines
     if (sweep_plane < 0) {
-        WARNINGF (LOCATION, "Cannot load hud bitmap: %s\n", fname_sweep);
+        WARNINGF (LOCATION, "Cannot load hud bitmap: %s", fname_sweep);
     }
 
     target_brackets = bm_load (fname_target_brackets);
     if (target_brackets < 0) {
-        WARNINGF (
-            LOCATION, "Cannot load hud bitmap: %s\n", fname_target_brackets);
+        WARNINGF (LOCATION, "Cannot load hud bitmap: %s", fname_target_brackets);
     }
 
     unknown_contact_icon = bm_load (fname_unknown);
     if (unknown_contact_icon < 0) {
-        WARNINGF (LOCATION, "Cannot load hud bitmap: %s\n", fname_unknown);
+        WARNINGF (LOCATION, "Cannot load hud bitmap: %s", fname_unknown);
     }
 }
 

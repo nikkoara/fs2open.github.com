@@ -349,7 +349,7 @@ HudGauge::HudGauge (
         custom_frame.first_frame =
             bm_load_animation (frame_fname, &custom_frame.num_frames);
         if (custom_frame.first_frame < 0) {
-            WARNINGF (LOCATION, "Cannot load hud ani: %s\n", frame_fname);
+            WARNINGF (LOCATION, "Cannot load hud ani: %s", frame_fname);
         }
     }
 }
@@ -1548,7 +1548,7 @@ void HudGaugeMissionTime::initBitmaps (const char* fname) {
     time_gauge.first_frame = bm_load_animation (fname, &time_gauge.num_frames);
 
     if (time_gauge.first_frame == -1) {
-        WARNINGF (LOCATION, "Could not load in ani: %s\n", fname);
+        WARNINGF (LOCATION, "Could not load in ani: %s", fname);
     }
 }
 
@@ -1858,19 +1858,19 @@ void HudGaugeDamage::initBitmaps (
     damage_top.first_frame =
         bm_load_animation (fname_top, &damage_top.num_frames);
     if (damage_top.first_frame == -1) {
-        WARNINGF (LOCATION, "Could not load in the ani: %s\n", fname_top);
+        WARNINGF (LOCATION, "Could not load in the ani: %s", fname_top);
     }
 
     damage_middle.first_frame =
         bm_load_animation (fname_middle, &damage_middle.num_frames);
     if (damage_middle.first_frame == -1) {
-        WARNINGF (LOCATION, "Could not load in the ani: %s\n", fname_middle);
+        WARNINGF (LOCATION, "Could not load in the ani: %s", fname_middle);
     }
 
     damage_bottom.first_frame =
         bm_load_animation (fname_bottom, &damage_bottom.num_frames);
     if (damage_bottom.first_frame == -1) {
-        WARNINGF (LOCATION, "Could not load in the ani: %s\n", fname_bottom);
+        WARNINGF (LOCATION, "Could not load in the ani: %s", fname_bottom);
     }
 }
 
@@ -2161,9 +2161,7 @@ int hud_anim_load (hud_anim* ha) {
     }
 
     if (ha->first_frame == -1) {
-        WARNINGF (
-            LOCATION, "Couldn't load hud animation for file '%s'",
-            ha->filename);
+        WARNINGF (LOCATION, "Couldn't load hud animation for file '%s'",ha->filename);
         return -1;
     }
 
@@ -2343,7 +2341,7 @@ void HudGaugeKills::initBitmaps (const char* fname) {
     Kills_gauge.first_frame =
         bm_load_animation (fname, &Kills_gauge.num_frames);
     if (Kills_gauge.first_frame == -1) {
-        WARNINGF (LOCATION, "Could not load in the ani: %s\n", fname);
+        WARNINGF (LOCATION, "Could not load in the ani: %s", fname);
     }
 }
 
@@ -2404,7 +2402,7 @@ void HudGaugeLag::initBitmaps (const char* fname) {
         bm_load_animation (fname, &Netlag_icon.num_frames);
 
     if (Netlag_icon.first_frame == -1) {
-        WARNINGF (LOCATION, "Could not load in the netlag ani: %s\n", fname);
+        WARNINGF (LOCATION, "Could not load in the netlag ani: %s", fname);
     }
 }
 
@@ -2510,10 +2508,7 @@ int hud_get_dock_time (object* docker_objp) {
     if (aip->goal_objnum == -1) {
         // This can happen when you target a support ship as it warps in
         // just give a debug warning instead of a fault - taylor
-        WARNINGF (
-            LOCATION,
-            "'aip->goal_objnum == -1' in hud_get_dock_time(), line %i\n",
-            __LINE__);
+        WARNINGF (LOCATION,"'aip->goal_objnum == -1' in hud_get_dock_time(), line %i",__LINE__);
         return 0;
     }
 
@@ -2672,7 +2667,7 @@ void HudGaugeSupport::initTextDockValueOffsetX (int x) {
 void HudGaugeSupport::initBitmaps (const char* fname) {
     background.first_frame = bm_load_animation (fname, &background.num_frames);
     if (background.first_frame == -1) {
-        WARNINGF (LOCATION, "Could not load in ani: %s\n", fname);
+        WARNINGF (LOCATION, "Could not load in ani: %s", fname);
     }
 }
 
@@ -3204,7 +3199,7 @@ void HudGaugeObjectiveNotify::initBitmaps (const char* fname) {
     Objective_display_gauge.first_frame =
         bm_load_animation (fname, &Objective_display_gauge.num_frames);
     if (Objective_display_gauge.first_frame == -1) {
-        WARNINGF (LOCATION, "Could not load in ani: %s\n", fname);
+        WARNINGF (LOCATION, "Could not load in ani: %s", fname);
     }
 }
 
@@ -3688,7 +3683,7 @@ void HudGaugeFlightPath::initBitmap (const char* fname) {
     Marker.first_frame = bm_load_animation (fname, &Marker.num_frames);
 
     if (Marker.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 }
 

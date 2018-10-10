@@ -935,11 +935,7 @@ void parse_iface_sound_list (
 
         // if we're using the old format, double check the size)
         if (!scp_list && (destination.size () != (unsigned)check)) {
-            WARNINGF (
-                LOCATION,
-                "%s in '%s' has %zu entries. This does not match entered size "
-                "of %i.",
-                tag, object_name, destination.size (), check);
+            WARNINGF (LOCATION,"%s in '%s' has %zu entries. This does not match entered size of %i.",tag, object_name, destination.size (), check);
         }
     }
 }
@@ -1105,11 +1101,7 @@ void parse_gamesnd_old (game_snd* gs) {
             if (stuff_int_optional (&temp_min, true) == 2) {
                 ignore_gray_space ();
                 if (stuff_int_optional (&temp_max, true) == 2) {
-                    WARNINGF (
-                        LOCATION,
-                        "Dutifully converting retail sound %s, '%s' to a 3D "
-                        "sound...\n",
-                        gs->name.c_str (), entry.filename);
+                    WARNINGF (LOCATION,"Dutifully converting retail sound %s, '%s' to a 3D sound...",gs->name.c_str (), entry.filename);
                     is_3d = 1;
 
                     gs->flags |= GAME_SND_USE_DS3D;
@@ -1123,11 +1115,7 @@ void parse_gamesnd_old (game_snd* gs) {
     // check for extra values per Mantis #2408
     ignore_gray_space ();
     if (stuff_int_optional (&temp, true) == 2) {
-        WARNINGF (
-            LOCATION,
-            "Unexpected extra value %d found for sound '%s' (filename '%s')!  "
-            "Check the format of the sounds.tbl (or .tbm) entry.",
-            temp, gs->name.c_str (), entry.filename);
+        WARNINGF (LOCATION,"Unexpected extra value %d found for sound '%s' (filename '%s')!  Check the format of the sounds.tbl (or .tbm) entry.",temp, gs->name.c_str (), entry.filename);
     }
 
     advance_to_eoln (NULL);
@@ -1368,9 +1356,7 @@ void gamesnd_parse_entry (
     if (!no_create) {
         if (lookupVector != NULL) {
             if (gamesnd_lookup_name (name.c_str (), *lookupVector) >= 0) {
-                WARNINGF (
-                    LOCATION, "Duplicate sound name \"%s\" found!",
-                    name.c_str ());
+                WARNINGF (LOCATION, "Duplicate sound name \"%s\" found!",name.c_str ());
             }
         }
 
@@ -1380,9 +1366,7 @@ void gamesnd_parse_entry (
         int vectorIndex = gamesnd_lookup_name (name.c_str (), *lookupVector);
 
         if (vectorIndex < 0) {
-            WARNINGF (
-                LOCATION, "No existing sound entry with name \"%s\" found!",
-                name.c_str ());
+            WARNINGF (LOCATION, "No existing sound entry with name \"%s\" found!",name.c_str ());
             no_create = false;
             gs->name = name;
         }

@@ -489,7 +489,7 @@ void turret_swarm_set_up_info (
     tsi = &Turret_swarm_info[tsi_index];
 
     if (turret->turret_swarm_num == MAX_TFP) {
-        WARNINGF (LOCATION, "Overlapping turret swarm firing intervals\n");
+        WARNINGF (LOCATION, "Overlapping turret swarm firing intervals");
         turret_swarm_delete (turret->turret_swarm_info_index[0]);
         int old_s;
         for (old_s = 0; old_s < (MAX_TFP - 1); old_s++) {
@@ -635,11 +635,7 @@ void turret_swarm_maybe_fire_missile (int shipnum) {
                     }
                 }
                 else {
-                    WARNINGF (
-                        LOCATION,
-                        "Found turret swarm info on ship: %s with turret: %s, "
-                        "but signature does not match.",
-                        shipp->ship_name, subsys->system_info->subobj_name);
+                    WARNINGF (LOCATION,"Found turret swarm info on ship: %s with turret: %s, but signature does not match.",shipp->ship_name, subsys->system_info->subobj_name);
                     shipp->num_turret_swarm_info--;
                     subsys->turret_swarm_num--;
                     turret_swarm_delete (subsys->turret_swarm_info_index[k]);

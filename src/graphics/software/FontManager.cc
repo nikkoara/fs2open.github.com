@@ -91,8 +91,7 @@ font* FontManager::loadFontOld (const std::string& typeface) {
     CFILE* fp =
         cfopen (typeface.c_str (), "rb", CFILE_NORMAL, CF_TYPE_ANY, localize);
     if (fp == NULL) {
-        WARNINGF (
-            LOCATION, "Unable to find font file \"%s\".", typeface.c_str ());
+        WARNINGF (LOCATION, "Unable to find font file \"%s\".", typeface.c_str ());
         return NULL;
     }
 
@@ -242,10 +241,7 @@ FontManager::loadNVGFont (const std::string& fileName, float fontSize) {
         std::unique_ptr< ubyte[] > fontData (new ubyte[size]);
 
         if (!fontData) {
-            WARNINGF (
-                LOCATION,
-                "Couldn't allocate %zu bytes for reading font file \"%s\"!",
-                size, fileName.c_str ());
+            WARNINGF (LOCATION,"Couldn't allocate %zu bytes for reading font file \"%s\"!",size, fileName.c_str ());
             cfclose (fontFile);
             return NULL;
         }

@@ -213,16 +213,13 @@ int generic_anim_stream (generic_anim* ga, const bool cache) {
                 ga->png.anim = new apng::apng_ani (ga->filename, cache);
             }
             catch (const apng::ApngException& e) {
-                WARNINGF (LOCATION, "Failed to load apng: %s\n", e.what ());
+                WARNINGF (LOCATION, "Failed to load apng: %s", e.what ());
                 delete ga->png.anim;
                 ga->png.anim = nullptr;
                 ga->type = BM_TYPE_NONE;
                 return -1;
             }
-            WARNINGF (
-                LOCATION, "apng read OK (%ix%i@%i) duration (%f)\n",
-                ga->png.anim->w, ga->png.anim->h, ga->png.anim->bpp,
-                ga->png.anim->anim_time);
+            WARNINGF (LOCATION, "apng read OK (%ix%i@%i) duration (%f)",ga->png.anim->w, ga->png.anim->h, ga->png.anim->bpp,ga->png.anim->anim_time);
         }
         ga->png.anim->goto_start ();
         ga->current_frame = 0;
@@ -251,10 +248,7 @@ int generic_anim_stream (generic_anim* ga, const bool cache) {
         }
         ga->bitmap_id = bm_load (frame_name);
         if (ga->bitmap_id < 0) {
-            WARNINGF (
-                LOCATION,
-                "Cannot find first frame for eff streaming. eff Filename: %s",
-                ga->filename);
+            WARNINGF (LOCATION,"Cannot find first frame for eff streaming. eff Filename: %s",ga->filename);
             return -1;
         }
         if (snprintf (frame_name, MAX_FILENAME_LEN, "%s_0001", ga->filename) >=
@@ -355,8 +349,8 @@ void generic_render_eff_stream (generic_anim* ga) {
 #endif
 
 #ifdef TIMER
-    WARNINGF (LOCATION, "=========================\n");
-    WARNINGF (LOCATION, "frame: %d\n", ga->current_frame);
+    WARNINGF (LOCATION, "=========================");
+    WARNINGF (LOCATION, "frame: %d", ga->current_frame);
 #endif
     char frame_name[MAX_FILENAME_LEN];
     if (snprintf (
@@ -386,8 +380,8 @@ void generic_render_eff_stream (generic_anim* ga) {
         }
     }
 #ifdef TIMER
-    WARNINGF (LOCATION, "end: %d\n", timer_get_fixed_seconds () - start_time);
-    WARNINGF (LOCATION, "=========================\n");
+    WARNINGF (LOCATION, "end: %d", timer_get_fixed_seconds () - start_time);
+    WARNINGF (LOCATION, "=========================");
 #endif
 }
 
@@ -402,8 +396,8 @@ void generic_render_ani_stream (generic_anim* ga) {
     if (ga->current_frame == ga->previous_frame) return;
 
 #ifdef TIMER
-    WARNINGF (LOCATION, "=========================\n");
-    WARNINGF (LOCATION, "frame: %d\n", ga->current_frame);
+    WARNINGF (LOCATION, "=========================");
+    WARNINGF (LOCATION, "frame: %d", ga->current_frame);
 #endif
 
     anim_check_for_palette_change (ga->ani.instance);
@@ -463,9 +457,8 @@ void generic_render_ani_stream (generic_anim* ga) {
             }
         }
 #ifdef TIMER
-        WARNINGF (
-            LOCATION, "proc: %d\n", timer_get_fixed_seconds () - start_time);
-        WARNINGF (LOCATION, "previous frame: %d\n", ga->previous_frame);
+        WARNINGF (LOCATION, "proc: %d", timer_get_fixed_seconds () - start_time);
+        WARNINGF (LOCATION, "previous frame: %d", ga->previous_frame);
 #endif
         for (i = ga->previous_frame + 1; i <= ga->current_frame; i++) {
             if (ga->ani.animation->flags & ANF_STREAMED) {
@@ -500,8 +493,8 @@ void generic_render_ani_stream (generic_anim* ga) {
     ga->ani.instance->last_bitmap = ga->bitmap_id;
 
 #ifdef TIMER
-    WARNINGF (LOCATION, "end: %d\n", timer_get_fixed_seconds () - start_time);
-    WARNINGF (LOCATION, "=========================\n");
+    WARNINGF (LOCATION, "end: %d", timer_get_fixed_seconds () - start_time);
+    WARNINGF (LOCATION, "=========================");
 #endif
 }
 
@@ -527,8 +520,7 @@ void generic_render_png_stream (generic_anim* ga) {
         }
     }
     catch (const apng::ApngException& e) {
-        WARNINGF (
-            LOCATION, "Unable to get next/prev apng frame: %s\n", e.what ());
+        WARNINGF (LOCATION, "Unable to get next/prev apng frame: %s", e.what ());
         return;
     }
 
@@ -713,13 +705,7 @@ void generic_anim_render_variable_frame_delay (
         }
 
         // verbose debug; but quite useful
-        WARNINGF (
-            LOCATION,
-            "apng generic render timings/frames: %04f %04f %04f %04f | %03i "
-            "%03i %03i\n",
-            frametime, ga->anim_time, ga->png.anim->frame.delay,
-            ga->png.previous_frame_time, ga->previous_frame, ga->current_frame,
-            ga->png.anim->current_frame);
+        WARNINGF (LOCATION,"apng generic render timings/frames: %04f %04f %04f %04f | %03i %03i %03i",frametime, ga->anim_time, ga->png.anim->frame.delay,ga->png.previous_frame_time, ga->previous_frame, ga->current_frame,ga->png.anim->current_frame);
 
         ASSERTX (
             ga->streaming != 0, "non-streaming apngs not implemented yet");
@@ -745,8 +731,7 @@ void generic_anim_render (
     generic_anim* ga, float frametime, int x, int y, bool menu,
     const generic_extras* ge) {
     if ((ge != nullptr) && (ga->use_hud_color == true)) {
-        WARNINGF (
-            LOCATION, "Monochrome generic anims can't use extra info (yet)");
+        WARNINGF (LOCATION, "Monochrome generic anims can't use extra info (yet)");
         return;
     }
 

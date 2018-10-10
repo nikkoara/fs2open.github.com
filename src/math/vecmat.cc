@@ -412,10 +412,7 @@ float vm_vec_copy_normalize (vec3d* dest, const vec3d* src) {
 
     // Mainly here to trap attempts to normalize a null vector.
     if (m <= 0.0f) {
-        WARNINGF (
-            LOCATION,
-            "Null vec3d in vec3d normalize.\nTrace out of vecmat.cpp and find "
-            "offending code.\n");
+        WARNINGF (LOCATION,"Null vec3d in vec3d normalize.\nTrace out of vecmat.cpp and find offending code.");
 
         dest->xyz.x = 1.0f;
         dest->xyz.y = 0.0f;
@@ -2151,7 +2148,7 @@ void vm_forward_interpolate (
     // DO NOT COMMENT THIS OUT!!
     if (!(fl_abs (theta_goal.xyz.z) < 0.001f))
         // check for proper rotation
-        WARNINGF (LOCATION, "vm_forward_interpolate: Bad rotation\n");
+        WARNINGF (LOCATION, "vm_forward_interpolate: Bad rotation");
 
     theta_end = vmd_zero_vector;
     float delta_theta;
@@ -2424,9 +2421,7 @@ void vm_find_bounding_sphere (
                 (rad * center->xyz.y + old_to_new * p->xyz.y) / old_to_p;
             center->xyz.z =
                 (rad * center->xyz.z + old_to_new * p->xyz.z) / old_to_p;
-            WARNINGF (
-                LOCATION, "New sphere: cen, rad = %f %f %f  %f\n",
-                center->xyz.x, center->xyz.y, center->xyz.z, rad);
+            WARNINGF (LOCATION, "New sphere: cen, rad = %f %f %f  %f",center->xyz.x, center->xyz.y, center->xyz.z, rad);
         }
     }
 

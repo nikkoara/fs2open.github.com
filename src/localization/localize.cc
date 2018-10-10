@@ -260,8 +260,7 @@ void parse_stringstbl_common (const char* filename, const bool external) {
         }
 
         if (skip_to_string (language_tag) != 1) {
-            WARNINGF (
-                LOCATION, "Current language not found in %s\n", filename);
+            WARNINGF (LOCATION, "Current language not found in %s", filename);
             return;
         }
 
@@ -370,14 +369,10 @@ void parse_stringstbl_common (const char* filename, const bool external) {
             }
 
             if (external && (Lcl_ext_str.find (index) != Lcl_ext_str.end ())) {
-                WARNINGF (
-                    LOCATION, "Tstrings table index %d used more than once",
-                    index);
+                WARNINGF (LOCATION, "Tstrings table index %d used more than once",index);
             }
             else if (!external && (Xstr_table[index].str != NULL)) {
-                WARNINGF (
-                    LOCATION, "Strings table index %d used more than once",
-                    index);
+                WARNINGF (LOCATION, "Strings table index %d used more than once",index);
             }
 
             if (external) {
@@ -488,8 +483,7 @@ void lcl_xstr_close () {
 void lcl_set_language (int lang) {
     Lcl_current_lang = lang;
 
-    WARNINGF (
-        LOCATION, "Setting language to %s\n", Lcl_languages[lang].lang_name);
+    WARNINGF (LOCATION, "Setting language to %s", Lcl_languages[lang].lang_name);
 
     ASSERTX (
         (Lcl_current_lang >= 0) &&

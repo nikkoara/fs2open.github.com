@@ -257,13 +257,7 @@ int collide_asteroid_ship (obj_pair* pair) {
                  Ships[pship->instance].ship_max_hull_strength / 8.0f)) {
                 ship_damage =
                     Ships[pship->instance].ship_max_hull_strength / 8.0f;
-                WARNINGF (
-                    LOCATION,
-                    "Pinning damage to %s from asteroid at %7.3f (%7.3f "
-                    "percent)\n",
-                    Ships[pship->instance].ship_name, ship_damage,
-                    100.0f * ship_damage /
-                        Ships[pship->instance].ship_max_hull_strength);
+                WARNINGF (LOCATION,"Pinning damage to %s from asteroid at %7.3f (%7.3f percent)",Ships[pship->instance].ship_name, ship_damage,100.0f * ship_damage /Ships[pship->instance].ship_max_hull_strength);
             }
 
             // Decrease damage during warp out because it's annoying when

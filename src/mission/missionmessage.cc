@@ -265,8 +265,7 @@ void persona_parse () {
     }
 
     if (i == MAX_PERSONA_TYPES)
-        WARNINGF (
-            LOCATION, "Unknown persona type in messages.tbl -- %s\n", type);
+        WARNINGF (LOCATION, "Unknown persona type in messages.tbl -- %s", type);
 
     char cstrtemp[NAME_LENGTH];
     if (optional_string ("+")) {
@@ -281,8 +280,7 @@ void persona_parse () {
         }
 
         if (j == (int)Species_info.size ())
-            WARNINGF (
-                LOCATION, "Unknown species in messages.tbl -- %s\n", cstrtemp);
+            WARNINGF (LOCATION, "Unknown species in messages.tbl -- %s", cstrtemp);
     }
 
     if (optional_string ("$Allow substitution of missing messages:")) {
@@ -373,10 +371,7 @@ void message_parse (bool importing_from_fsm) {
         msg.persona_index = message_persona_name_lookup (persona_name);
 
         if (msg.persona_index == -1)
-            WARNINGF (
-                LOCATION,
-                "Unknown persona in message %s in messages.tbl -- %s\n",
-                msg.name, persona_name);
+            WARNINGF (LOCATION,"Unknown persona in message %s in messages.tbl -- %s",msg.name, persona_name);
     }
 
     if (!Fred_running)
@@ -433,11 +428,7 @@ void message_parse (bool importing_from_fsm) {
         if (!found) {
             // found a mood, but it's not in the list of moods at the start of
             // the table
-            WARNINGF (
-                LOCATION,
-                "Message.tbl has an entry for mood type %s, but this mood is "
-                "not in the #Moods section of the table.",
-                buf.c_str ());
+            WARNINGF (LOCATION,"Message.tbl has an entry for mood type %s, but this mood is not in the #Moods section of the table.",buf.c_str ());
         }
     }
     else {
@@ -465,11 +456,7 @@ void message_parse (bool importing_from_fsm) {
             if (!found) {
                 // found a mood, but it's not in the list of moods at the start
                 // of the table
-                WARNINGF (
-                    LOCATION,
-                    "Message.tbl has an entry for exclude mood type %s, but "
-                    "this mood is not in the #Moods section of the table.",
-                    parsed_moods->c_str ());
+                WARNINGF (LOCATION,"Message.tbl has an entry for exclude mood type %s, but this mood is not in the #Moods section of the table.",parsed_moods->c_str ());
             }
         }
     }
@@ -494,10 +481,7 @@ void message_frequency_parse () {
     }
 
     if (builtin_type == -1) {
-        WARNINGF (
-            LOCATION,
-            "Unknown Builtin Message Type Detected. Type : %s not supported",
-            name);
+        WARNINGF (LOCATION,"Unknown Builtin Message Type Detected. Type : %s not supported",name);
         return;
     }
 
@@ -627,22 +611,14 @@ void parse_msgtbl () {
                 // get extension
                 char* ptr = strchr (filename, '.');
                 if (ptr == NULL) {
-                    WARNINGF (
-                        LOCATION,
-                        "Simulated speech override file '%s' was provided "
-                        "with no extension!",
-                        filename);
+                    WARNINGF (LOCATION,"Simulated speech override file '%s' was provided with no extension!",filename);
                     continue;
                 }
 
                 // test extension
                 if (strcasecmp (ptr, ".ogg") != 0 &&
                     strcasecmp (ptr, ".wav") != 0) {
-                    WARNINGF (
-                        LOCATION,
-                        "Simulated speech override file '%s' was provided "
-                        "with an extension other than .wav or .ogg!",
-                        filename);
+                    WARNINGF (LOCATION,"Simulated speech override file '%s' was provided with an extension other than .wav or .ogg!",filename);
                     continue;
                 }
 
@@ -761,7 +737,7 @@ void message_mission_free_avi (int m_index) {
 void message_mission_shutdown () {
     int i;
 
-    WARNINGF (LOCATION, "Unloading in mission messages\n");
+    WARNINGF (LOCATION, "Unloading in mission messages");
 
     training_mission_shutdown ();
 
@@ -991,9 +967,7 @@ void message_load_wave (int index, const char* filename) {
     Message_waves[index].num = snd_load (&tmp_gs, 0, 0);
 
     if (!Message_waves[index].num.isValid ())
-        WARNINGF (
-            LOCATION, "Cannot load message wave: %s.  Will not play\n",
-            Message_waves[index].name);
+        WARNINGF (LOCATION, "Cannot load message wave: %s.  Will not play",Message_waves[index].name);
 }
 
 // Goober5000
@@ -1050,11 +1024,7 @@ bool message_play_wave (message_q* q) {
             // message.  If found, then convert to TC_*
             p = strchr (filename, '_');
             if (p == NULL) {
-                WARNINGF (
-                    LOCATION,
-                    "Cannot convert %s to terran command wave -- find Sandeep "
-                    "or Allender\n",
-                    Message_waves[index].name);
+                WARNINGF (LOCATION,"Cannot convert %s to terran command wave -- find Sandeep or Allender",Message_waves[index].name);
                 return false;
             }
 
@@ -1204,11 +1174,7 @@ void message_play_anim (message_q* q) {
                 // play
                 if (!strncasecmp (ani_name, "Head-TP", 7) ||
                     !strncasecmp (ani_name, "Head-VP", 7)) {
-                    WARNINGF (
-                        LOCATION,
-                        "message '%s' incorrectly assigns a command/largeship "
-                        "persona to a wingman animation!\n",
-                        m->name);
+                    WARNINGF (LOCATION,"message '%s' incorrectly assigns a command/largeship persona to a wingman animation!",m->name);
                     rand_index = ((int)Missiontime % MAX_WINGMAN_HEADS);
                 }
                 else {
@@ -1220,10 +1186,7 @@ void message_play_anim (message_q* q) {
                 subhead_selected = TRUE;
             }
             else {
-                WARNINGF (
-                    LOCATION,
-                    "message '%s' uses an unrecognized persona type\n",
-                    m->name);
+                WARNINGF (LOCATION,"message '%s' uses an unrecognized persona type",m->name);
             }
         }
 
@@ -1232,13 +1195,9 @@ void message_play_anim (message_q* q) {
             rand_index = ((int)Missiontime % MAX_WINGMAN_HEADS);
             strcpy (temp, ani_name);
             sprintf (ani_name, "%s%c", temp, 'a' + rand_index);
-            WARNINGF (
-                LOCATION,
-                "message '%s' with invalid head.  Fix by assigning persona to "
-                "the message.\n",
-                m->name);
+            WARNINGF (LOCATION,"message '%s' with invalid head.  Fix by assigning persona to the message.",m->name);
         }
-        WARNINGF (LOCATION, "playing head %s for %s\n", ani_name, q->who_from);
+        WARNINGF (LOCATION, "playing head %s for %s", ani_name, q->who_from);
     }
 
     // check to see if the avi has been loaded.  If not, then load the AVI.  On
@@ -1248,10 +1207,7 @@ void message_play_anim (message_q* q) {
     // if there is something already here that's not this same file then go
     // ahead a let go of it - taylor
     if (!strstr (anim_info->anim_data.filename, ani_name)) {
-        WARNINGF (
-            LOCATION,
-            "clearing headani data due to name mismatch: (%s) (%s)\n",
-            anim_info->anim_data.filename, ani_name);
+        WARNINGF (LOCATION,"clearing headani data due to name mismatch: (%s) (%s)",anim_info->anim_data.filename, ani_name);
         message_mission_free_avi (m->avi_info.index);
     }
 
@@ -1259,9 +1215,7 @@ void message_play_anim (message_q* q) {
     if (!Full_color_head_anis) anim_info->anim_data.use_hud_color = true;
 
     if (generic_anim_stream (&anim_info->anim_data, false) < 0) {
-        WARNINGF (
-            LOCATION, "Cannot load message avi %s.  Will not play.\n",
-            ani_name);
+        WARNINGF (LOCATION, "Cannot load message avi %s.  Will not play.",ani_name);
         m->avi_info.index = -1; // if cannot load the avi -- set this index to
                                 // -1 to avoid trying to load multiple times
     }
@@ -1272,8 +1226,7 @@ void message_play_anim (message_q* q) {
         // head anims that are currently playing.  We will only play a head
         // anim of the newest messages being played
         if (Num_messages_playing > 0) {
-            WARNINGF (
-                LOCATION, "killing off any currently playing head animations");
+            WARNINGF (LOCATION, "killing off any currently playing head animations");
             message_kill_all (0);
         }
 
@@ -1406,11 +1359,7 @@ void message_queue_process () {
         if (timestamp_valid (q->window_timestamp) &&
             timestamp_elapsed (q->window_timestamp) && !q->group) {
             // remove message from queue and see if more to remove
-            WARNINGF (
-                LOCATION,
-                "Message %s didn't play because it didn't fit into time "
-                "window.\n",
-                Messages[q->message_num].name);
+            WARNINGF (LOCATION,"Message %s didn't play because it didn't fit into time window.",Messages[q->message_num].name);
             if (q->message_num <
                 Num_builtin_messages) { // we should only ever remove builtin
                                         // messages this way
@@ -1491,10 +1440,7 @@ void message_queue_process () {
             // unique messages higher than low priority will interrupt other
             // messages.
             message_kill_all (1);
-            WARNINGF (
-                LOCATION,
-                "Killing all currently playing messages to play unique "
-                "message");
+            WARNINGF (LOCATION,"Killing all currently playing messages to play unique message");
         }
         else if (
             message_playing_builtin () &&
@@ -1508,10 +1454,7 @@ void message_queue_process () {
                 if (message_get_priority (MESSAGE_GET_HIGHEST) < q->priority) {
                     // lower priority message playing -- kill it.
                     message_kill_all (1);
-                    WARNINGF (
-                        LOCATION,
-                        "Killing all currently playing messages to play high "
-                        "priority builtin");
+                    WARNINGF (LOCATION,"Killing all currently playing messages to play high priority builtin");
                 }
                 else if (
                     message_get_priority (MESSAGE_GET_LOWEST) > q->priority) {
@@ -1522,10 +1465,7 @@ void message_queue_process () {
                     // if we get here, then queued messages is a builtin
                     // message with the same priority as the currently playing
                     // messages.  This state will cause messages to overlap.
-                    WARNINGF (
-                        LOCATION,
-                        "playing builtin message (overlap) because priorities "
-                        "match");
+                    WARNINGF (LOCATION,"playing builtin message (overlap) because priorities match");
                 }
             }
         }
@@ -1538,10 +1478,7 @@ void message_queue_process () {
                 if (message_get_priority (MESSAGE_GET_HIGHEST) ==
                     MESSAGE_PRIORITY_LOW) {
                     message_kill_all (1);
-                    WARNINGF (
-                        LOCATION,
-                        "Killing low priority unique messages to play code "
-                        "message");
+                    WARNINGF (LOCATION,"Killing low priority unique messages to play code message");
                 }
                 else {
                     return; // do nothing.
@@ -1700,9 +1637,7 @@ void message_queue_message (
     // check to be sure that we haven't reached our max limit on these messages
     // yet.
     if (MessageQ_num == MAX_MESSAGE_Q) {
-        WARNINGF (
-            LOCATION,
-            "Message queue already full. Message will not be added!\n");
+        WARNINGF (LOCATION,"Message queue already full. Message will not be added!");
         return;
     }
 
@@ -1895,9 +1830,7 @@ void message_send_unique_to_player (
                 // command
                 m_persona = Messages[i].persona_index;
                 if (m_persona == -1) {
-                    WARNINGF (
-                        LOCATION, " Message %s has no persona assigned.\n",
-                        Messages[i].name);
+                    WARNINGF (LOCATION, " Message %s has no persona assigned.",Messages[i].name);
                 }
 
                 // get a ship. we allow silenced ships since this is a unique
@@ -1936,8 +1869,7 @@ void message_send_unique_to_player (
             return; // all done with displaying
         }
     }
-    WARNINGF (
-        LOCATION, "Couldn't find message id %s to send to player!\n", id);
+    WARNINGF (LOCATION, "Couldn't find message id %s to send to player!", id);
 }
 
 #define BUILTIN_MATCHES_TYPE 0
@@ -2011,8 +1943,7 @@ void message_send_builtin_to_player (
         persona_index = shipp->persona_index;
 
         if (persona_index == -1)
-            WARNINGF (
-                LOCATION, "Couldn't find persona for %s\n", shipp->ship_name);
+            WARNINGF (LOCATION, "Couldn't find persona for %s", shipp->ship_name);
 
         // be sure that this ship can actually send a message!!! (i.e.
         // not-not-flyable -- get it!)
@@ -2102,48 +2033,31 @@ void message_send_builtin_to_player (
 
     switch (best_match) {
     case BUILTIN_MATCHES_PERSONA_EXCLUDED:
-        WARNINGF (
-            LOCATION,
-            "Couldn't find builtin message %s for persona %d with a none "
-            "excluded mood\n",
-            Builtin_messages[type].name, persona_index);
+        WARNINGF (LOCATION,"Couldn't find builtin message %s for persona %d with a none excluded mood",Builtin_messages[type].name, persona_index);
         if (!Personas[persona_index].substitute_missing_messages) {
-            WARNINGF (
-                LOCATION,
-                "Persona does not allow substitution, skipping message.");
+            WARNINGF (LOCATION,"Persona does not allow substitution, skipping message.");
             return;
         }
         else
             WARNINGF (LOCATION, "using an excluded message for this persona");
         break;
     case BUILTIN_MATCHES_SPECIES:
-        WARNINGF (
-            LOCATION, "Couldn't find builtin message %s for persona %d\n",
-            Builtin_messages[type].name, persona_index);
+        WARNINGF (LOCATION, "Couldn't find builtin message %s for persona %d",Builtin_messages[type].name, persona_index);
         if (!Personas[persona_index].substitute_missing_messages) {
-            WARNINGF (
-                LOCATION,
-                "Persona does not allow substitution, skipping message.");
+            WARNINGF (LOCATION,"Persona does not allow substitution, skipping message.");
             return;
         }
         else
-            WARNINGF (
-                LOCATION, "using a message for any persona of that species");
+            WARNINGF (LOCATION, "using a message for any persona of that species");
         break;
     case BUILTIN_MATCHES_TYPE:
-        WARNINGF (
-            LOCATION, "Couldn't find builtin message %s for persona %d\n",
-            Builtin_messages[type].name, persona_index);
+        WARNINGF (LOCATION, "Couldn't find builtin message %s for persona %d",Builtin_messages[type].name, persona_index);
         if (!Personas[persona_index].substitute_missing_messages) {
-            WARNINGF (
-                LOCATION,
-                "Persona does not allow substitution, skipping message.");
+            WARNINGF (LOCATION,"Persona does not allow substitution, skipping message.");
             return;
         }
         else
-            WARNINGF (
-                LOCATION,
-                "looking for message for any persona of any species");
+            WARNINGF (LOCATION,"looking for message for any persona of any species");
         break;
     case -1:
         ASSERTX (0, "Couldn't find any builtin message of type %d\n", type);
@@ -2390,7 +2304,7 @@ int message_anim_is_playing () {
 void message_pagein_mission_messages () {
     int i;
 
-    WARNINGF (LOCATION, "Paging in mission messages\n");
+    WARNINGF (LOCATION, "Paging in mission messages");
 
     if (Num_messages <= Num_builtin_messages) { return; }
 

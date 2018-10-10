@@ -326,22 +326,20 @@ void HudGaugeTargetBox::initBitmaps (
     Monitor_frame.first_frame =
         bm_load_animation (fname_monitor, &Monitor_frame.num_frames);
     if (Monitor_frame.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_monitor);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_monitor);
     }
 
     Integrity_bar.first_frame =
         bm_load_animation (fname_integrity, &Integrity_bar.num_frames);
     if (Integrity_bar.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname_integrity);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname_integrity);
     }
 
     if (strlen (fname_monitor_mask) > 0) {
         Monitor_mask = bm_load_animation (fname_monitor_mask);
 
         if (Monitor_mask < 0) {
-            WARNINGF (
-                LOCATION, "Cannot load bitmap hud mask: %s\n",
-                fname_monitor_mask);
+            WARNINGF (LOCATION, "Cannot load bitmap hud mask: %s",fname_monitor_mask);
         }
     }
 
@@ -1430,7 +1428,7 @@ void HudGaugeExtraTargetData::initOrderMaxWidth (int width) {
 void HudGaugeExtraTargetData::initBitmaps (char* fname) {
     bracket.first_frame = bm_load_animation (fname, &bracket.num_frames);
     if (bracket.first_frame < 0) {
-        WARNINGF (LOCATION, "Cannot load hud ani: %s\n", fname);
+        WARNINGF (LOCATION, "Cannot load hud ani: %s", fname);
     }
 }
 
@@ -1636,10 +1634,7 @@ void get_turret_subsys_name (ship_weapon* swp, char* outstr) {
                     static bool Turret_illegal_subtype_warned = false;
                     if (!Turret_illegal_subtype_warned) {
                         Turret_illegal_subtype_warned = true;
-                        WARNINGF (
-                            LOCATION,
-                            "This turret has an illegal subtype!  Trace out "
-                            "and fix!");
+                        WARNINGF (LOCATION,"This turret has an illegal subtype!  Trace out and fix!");
                     }
                     sprintf (outstr, "%s", XSTR ("Turret", 1487));
                 }
