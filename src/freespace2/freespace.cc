@@ -1623,7 +1623,7 @@ void game_init () {
     auto sdlGraphicsOperations = std::make_unique< SDLGraphicsOperations > ();
 
     if (gr_init (std::move (sdlGraphicsOperations)) == false) {
-        EE ("general") << "error intializing graphics!";
+        EE << "error intializing graphics!";
         exit (1);
     }
 
@@ -1671,7 +1671,7 @@ void game_init () {
 
     gameseq_init ();
 
-    II ("general") << "Freespace2 Open Source Mission Log";
+    II << "Freespace2 Open Source Mission Log";
 
     io::joystick::init ();
 
@@ -3950,7 +3950,7 @@ void game_set_frametime (int state) {
 
     // If framerate is too low, cap it.
     if (Frametime > MAX_FRAMETIME) {
-        II ("general")
+        II
             << "frame " << Framecount << " took too long: "
             << f2fl (Frametime) << "/" << f2fl (debug_frametime);
         Frametime = MAX_FRAMETIME;

@@ -35,8 +35,7 @@ BOOST_LOG_GLOBAL_LOGGER_INIT(fs2_logger, fs2_logger_type) {
     min_severity_filter filter = expressions::channel_severity_filter (
         channel, severity);
 
-    filter ["general"]     = trivial::info;
-    filter ["multiplayer"] = trivial::warning;
+    filter ["general"] = trivial::warning;
 
     add_console_log (
         std::clog,

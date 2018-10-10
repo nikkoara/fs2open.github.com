@@ -23175,14 +23175,14 @@ void maybe_write_previous_event_to_log (int result) {
         return;
     }
 
-    II ("general") << "Event has changed state. Old state";
+    II << "Event has changed state. Old state";
 
     while (!this_event->backup_log_buffer.empty ()) {
-        II ("general") << this_event->backup_log_buffer.back ().c_str ();
+        II << this_event->backup_log_buffer.back ().c_str ();
         this_event->backup_log_buffer.pop_back ();
     }
 
-    II ("general") << "New state";
+    II << "New state";
 
     // backup the current buffer as this may be a repeating event
     current_log_to_backup_log_buffer ();
@@ -23220,7 +23220,7 @@ void maybe_write_to_event_log (int result) {
     }
 
     while (!Current_event_log_buffer->empty ()) {
-        II ("general") << Current_event_log_buffer->back ().c_str ();
+        II << Current_event_log_buffer->back ().c_str ();
         Current_event_log_buffer->pop_back ();
     }
 }
@@ -33674,7 +33674,7 @@ bool output_sexps (const char* filepath) {
     FILE* fp = fopen (filepath, "w");
 
     if (0 == fp) {
-        EE ("general") << "error creating SEXP operator list";
+        EE << "error creating SEXP operator list";
         return false;
     }
 

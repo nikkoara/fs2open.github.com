@@ -414,7 +414,7 @@ DCF (bm_used, "Shows BmpMan Slot Usage") {
                 case BM_TYPE_JPG: eff_jpg++; break;
                 case BM_TYPE_PCX: eff_pcx++; break;
                 default:
-                    EE ("general")
+                    EE
                         << "unhandled EFF image type "
                         << block[i].entry.info.ani.eff.type;
                     break;
@@ -423,7 +423,7 @@ DCF (bm_used, "Shows BmpMan Slot Usage") {
             case BM_TYPE_RENDER_TARGET_STATIC: render_target_static++; break;
             case BM_TYPE_RENDER_TARGET_DYNAMIC: render_target_dynamic++; break;
             default:
-                EE ("general")
+                EE
                     << "unhandled image type " << block[i].entry.type;
                 break;
             }
@@ -469,7 +469,7 @@ DCF (bm_used, "Shows BmpMan Slot Usage") {
 
     // TODO consider converting 1's to monospace to make debug console output
     // prettier
-    II ("general") << text.str ();
+    II << text.str ();
 }
 
 DCF (bmpman, "Shows/changes bitmap caching parameters and usage") {
@@ -1106,7 +1106,7 @@ static int bm_load_info (
     else if (type == BM_TYPE_TGA) {
         int tga_error = targa_read_header (filename, img_cfp, w, h, bpp, NULL);
         if (tga_error != TARGA_ERROR_NONE) {
-            EE ("general") << "load failed : " << filename;
+            EE << "load failed : " << filename;
             return -1;
         }
     }
@@ -1114,7 +1114,7 @@ static int bm_load_info (
     else if (type == BM_TYPE_PNG) {
         int png_error = png_read_header (filename, img_cfp, w, h, bpp, NULL);
         if (png_error != PNG_ERROR_NONE) {
-            EE ("general") << "load failed : " << filename;
+            EE << "load failed : " << filename;
             return -1;
         }
     }
@@ -1122,7 +1122,7 @@ static int bm_load_info (
     else if (type == BM_TYPE_JPG) {
         int jpg_error = jpeg_read_header (filename, img_cfp, w, h, bpp, NULL);
         if (jpg_error != JPEG_ERROR_NONE) {
-            EE ("general") << "load failed : " << filename;
+            EE << "load failed : " << filename;
             return -1;
         }
     }
@@ -1130,7 +1130,7 @@ static int bm_load_info (
     else if (type == BM_TYPE_PCX) {
         int pcx_error = pcx_read_header (filename, img_cfp, w, h, bpp, NULL);
         if (pcx_error != PCX_ERROR_NONE) {
-            EE ("general") << "load failed : " << filename;
+            EE << "load failed : " << filename;
             return -1;
         }
     }
@@ -1166,14 +1166,14 @@ int bm_load (const char* real_filename) {
     strncpy (filename, real_filename, MAX_FILENAME_LEN - 1);
     char* p = strrchr (filename, '.');
     if (p) {
-        WW ("general") << "unneeded extension to filename : " << real_filename;
+        WW << "unneeded extension to filename : " << real_filename;
         *p = 0;
     }
 
     // safety catch for strcat...
     // MAX_FILENAME_LEN-5 == '.' plus 3 letter ext plus NULL terminator
     if (strlen (filename) > MAX_FILENAME_LEN - 5) {
-        WW ("general") << "filename too long : " << filename;
+        WW << "filename too long : " << filename;
         return -1;
     }
 
@@ -1311,7 +1311,7 @@ bool bm_load_and_parse_eff (
         c_type = BM_TYPE_PCX;
     }
     else {
-        EE ("general") << "unknown file type " << ext << " in EFF parse";
+        EE << "unknown file type " << ext << " in EFF parse";
         return false;
     }
 
@@ -1352,13 +1352,13 @@ bm_load_image_data (int handle, int bpp, ubyte flags, bool nodebug) {
 
         if (be->type != BM_TYPE_USER && !nodebug) {
             if (bmp->data == 0)
-                II ("general")
+                II
                     << "loading " << be->filename << " for the first time";
         }
 
         if (!Bm_paging) {
             if (be->type != BM_TYPE_USER && !nodebug)
-                II ("general")
+                II
                     << "loading " << be->filename << " (" << bmp->w
                     << "x" << bmp->h << "/" << true_bpp << ")";
         }
@@ -2593,7 +2593,7 @@ void bm_page_in_start () {
 void bm_page_in_stop () {
     TRACE_SCOPE (tracing::PageInStop);
 
-    II ("general") << "loading all used bitmaps";
+    II << "loading all used bitmaps";
 
     // Load all the ones that are supposed to be loaded for this level.
     int n = 0;
@@ -2639,7 +2639,7 @@ void bm_page_in_stop () {
         }
     }
 
-    II ("general") << "Loaded " << n << " bitmaps used in this level";
+    II << "Loaded " << n << " bitmaps used in this level";
 
     Bm_paging = 0;
 }
@@ -3176,7 +3176,7 @@ int bm_unload (int handle, int clear_render_targets, bool nodebug) {
 
         for (i = 0; i < first_entry->info.ani.num_frames; i++) {
             if (!nodebug)
-                INFO ("general")
+                II
                     << "unloading " << be->filename << ", frame: " << i
                     << " (" << bmp->w << "x" << bmp->h << "/" << bmp->bpp
                     << ")";
@@ -3187,7 +3187,7 @@ int bm_unload (int handle, int clear_render_targets, bool nodebug) {
     }
     else {
         if (!nodebug)
-            INFO ("general")
+            II
                 << "unloading " << be->filename
                 << "(" << bmp->w << "x" << bmp->h << "/" << bmp->bpp
                 << ")";

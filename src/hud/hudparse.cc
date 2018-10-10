@@ -992,7 +992,7 @@ void load_gauge (int gauge, gauge_settings* settings) {
     default:
         // A value of -1 indicates we're ignoring a parse error, otherwise it's
         // a coding error:
-        EE ("general") << "invalid gauge value : " << gauge;
+        EE << "invalid gauge value : " << gauge;
         ASSERT (0);
         break;
     }

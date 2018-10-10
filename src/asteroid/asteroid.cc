@@ -425,7 +425,7 @@ static void asteroid_load (int asteroid_info_index, int asteroid_subtype) {
             model_get (asip->model_num[asteroid_subtype]);
 
         if (asip->num_detail_levels != pm->n_detail_levels) {
-            WW ("general")
+            WW
                 << "asteroid " << asip->name
                 << ", detail level mismatch (needs " << pm->n_detail_levels
                 << ")";

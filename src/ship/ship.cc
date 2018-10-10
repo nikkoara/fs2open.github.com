@@ -6614,7 +6614,7 @@ static void ship_set (int ship_index, int objnum, int ship_type) {
             Num_ship_subsystems_allocated, Num_ship_subsystems,
             shipp->ship_name);
 
-        if (Fred_running) { EE ("general") << err_msg; }
+        if (Fred_running) { EE << err_msg; }
         else
             ASSERTX (0, "%s", err_msg);
     }
@@ -11323,7 +11323,7 @@ int ship_launch_countermeasure (object* objp, int rand_val) {
         &pos, &objp->orient, shipp->current_cmeasure, OBJ_INDEX (objp));
     if (cobjnum >= 0) {
         cmeasure_set_ship_launch_vel (&Objects[cobjnum], objp, arand);
-        II ("general") << "countermeasure created by : " << shipp->ship_name;
+        II << "countermeasure created by : " << shipp->ship_name;
 
         // Play sound effect for counter measure launch
         ASSERT (shipp->current_cmeasure < Num_weapon_types);
@@ -17129,7 +17129,7 @@ void ship_do_cargo_revealed (ship* shipp, int /* from_network */) {
     // don't do anything if we already know the cargo
     if (shipp->flags[Ship_Flags::Cargo_revealed]) { return; }
 
-    II ("general") << "revealing cargo for : " << shipp->ship_name;
+    II << "revealing cargo for : " << shipp->ship_name;
 
     shipp->flags.set (Ship_Flags::Cargo_revealed);
     shipp->time_cargo_revealed = Missiontime;

@@ -2953,7 +2953,7 @@ int model_load (
 
 #ifdef _DEBUG
     if (Fred_running && Parse_normal_problem_count > 0) {
-        EE ("general") << "loading model " << filename << " failed ("
+        EE << "loading model " << filename << " failed ("
                        << Parse_normal_problem_count << " errors)";
     }
 #endif

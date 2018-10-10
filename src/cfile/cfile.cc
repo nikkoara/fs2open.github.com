@@ -176,7 +176,7 @@ int cfile_init (const char* exe_dir, const char* cdrom_dir) {
 
     // are we in a root directory?
     if (cfile_in_root_dir (buf)) {
-        EE ("general") << "cannot run from root directory";
+        EE << "cannot run from root directory";
         return 1;
     }
 

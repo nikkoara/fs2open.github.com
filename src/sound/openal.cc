@@ -252,7 +252,7 @@ bool openal_init_device (std::string* playback, std::string* capture) {
     auto platform_info = openal_get_platform_information ();
 
     if (platform_info.version_major <= 1 && platform_info.version_minor < 1) {
-        EE ("general") << "OpenAL version < v1.1";
+        EE << "OpenAL version < v1.1";
         return false;
     }
 

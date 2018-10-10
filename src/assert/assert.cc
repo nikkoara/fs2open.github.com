@@ -19,7 +19,7 @@ assert_format (
     auto suffix = fs2_fmt (file, line, fmt, ap);
     va_end (ap);
 
-    EE ("general") << prefix << " : " << suffix;
+    EE << prefix << " : " << suffix;
     
     std::terminate ();
 }

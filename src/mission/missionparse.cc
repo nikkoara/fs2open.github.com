@@ -5905,7 +5905,7 @@ int parse_mission (mission* pm, int flags) {
 
     post_process_mission ();
 
-    II ("general") << "Loaded mission: " << pm->name;
+    II << "Loaded mission: " << pm->name;
 
     // success
     return 0;

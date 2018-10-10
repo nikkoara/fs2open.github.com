@@ -738,7 +738,7 @@ int ds_init () {
         (capture_device.empty ()) ? "<not available>"
                                   : capture_device.c_str ());
 
-    INFO ("general") << "OpenAL initialized";
+    II << "OpenAL initialized";
 
     // we need to clear out any errors before moving on
     alcGetError (NULL);

@@ -1498,7 +1498,7 @@ void os_validate_parms (int argc, char* argv[]) {
                     exit (0);
                 }
                 else {
-                    II ("general")
+                    II
                         << "unrecognized command line argument: " << token;
                 }
             }

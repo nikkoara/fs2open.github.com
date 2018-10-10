@@ -74,7 +74,7 @@ fs2_vsnfmt (char* pbuf, size_t len, char const* fmt, va_list ap) {
         }
 #endif // FS2_NO_POSIX_VSNPRINTF
 
-        WW ("general") << "vsnfmt malloc : " << len;
+        WW << "vsnfmt malloc : " << len;
 
         pbuf = reinterpret_cast< char* > (malloc (len));
 

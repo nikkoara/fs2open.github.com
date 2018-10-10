@@ -25,29 +25,22 @@ BOOST_LOG_GLOBAL_LOGGER(fs2_logger, fs2_logger_type)
 #define FS2_WW(channel) FS2_LOG (channel, warning)
 #define FS2_II(channel) FS2_LOG (channel, info)
 
-#define ERROR FS2_EE
-#define WARN  FS2_WW
-#define INFO  FS2_II
+#define FS2_ERROR FS2_EE
+#define FS2_WARN  FS2_WW
+#define FS2_INFO  FS2_II
 
-#define EE  ERROR
-#define WW  WARN
-#define II  INFO
-
-#define FS2_ERROR ERROR
-#define FS2_WARN  WARN
-#define FS2_INFO  INFO
+#define EE  FS2_EE("general")
+#define WW  FS2_WW("general")
+#define II  FS2_II("general")
 
 #ifndef NDEBUG
-#  define ERRORF   EE ("general") << fs2_fmt
-#  define WARNINGF WW ("general") << fs2_fmt
+#  define ERRORF   EE << fs2_fmt
+#  define WARNINGF WW << fs2_fmt
+#  define RELEASE_WARNINGF WARNINGF
 #else
 #  define ERRORF(...)   ((void)0)
 #  define WARNINGF(...) ((void)0)
+#  define RELEASE_WARNINGF(...) ((void)0)
 #endif // NDEBUG
-
-#define WWF WARNINGF
-#define FS2_WARNINGF WARNINGF
-
-#define RELEASE_WARNINGF WARNINGF
 
 #endif // FREESPACE2_LOG_LOG_HH
