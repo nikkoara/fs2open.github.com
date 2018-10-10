@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "cmeasure/cmeasure.hh"
 #include "gamesnd/gamesnd.hh"
 #include "hud/hud.hh"
@@ -10,6 +9,7 @@
 #include "object/object.hh"
 #include "ship/ship.hh"
 #include "weapon/weapon.hh"
+#include "log/log.hh"
 
 int Cmeasures_homing_check = 0;
 int Countermeasures_enabled =

@@ -1,9 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <csetjmp>
 
+#include "defs.hh"
 #include "ai/aigoals.hh"
 #include "asteroid/asteroid.hh"
 #include "autopilot/autopilot.hh"
@@ -75,6 +74,8 @@
 #include "tracing/Monitor.hh"
 #include "tracing/tracing.hh"
 #include "ship.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 using namespace Ship;
 

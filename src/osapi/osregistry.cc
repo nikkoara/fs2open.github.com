@@ -1,11 +1,11 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "shared/types.hh"
 #include "osapi/osregistry.hh"
 #include "osapi/osapi.hh"
 #include "cmdline/cmdline.hh"
+#include "log/log.hh"
 
 namespace {
 

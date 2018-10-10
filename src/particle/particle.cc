@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "bmpman/bmpman.hh"
 #include "particle/particle.hh"
 #include "particle/ParticleManager.hh"
@@ -12,6 +11,7 @@
 #include "render/batching.hh"
 #include "tracing/tracing.hh"
 #include "tracing/Monitor.hh"
+#include "assert/assert.hh"
 
 using namespace particle;
 

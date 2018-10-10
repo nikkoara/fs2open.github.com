@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "gamesnd/gamesnd.hh"
 #include "hud/hudescort.hh"
 #include "hud/hudparse.hh"
@@ -16,6 +15,8 @@
 #include "ship/ship.hh"
 #include "weapon/emp.hh"
 #include "graphics/matrix.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #define NUM_SHIELD_LEVELS 8
 

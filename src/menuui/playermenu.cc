@@ -1,10 +1,9 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <climits>
 #include <cctype>
 
+#include "defs.hh"
 #include "cfile/cfile.hh"
 #include "cmdline/cmdline.hh"
 #include "debugconsole/console.hh"
@@ -25,8 +24,9 @@
 #include "playerman/player.hh"
 #include "popup/popup.hh"
 #include "ui/ui.hh"
-
 #include "graphics/paths/PathRenderer.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 // --------------------------------------------------------------------------------------------------------
 // PLAYER SELECT defines

@@ -3,12 +3,11 @@
 #ifndef FREESPACE2_UTIL_FMT_HH
 #define FREESPACE2_UTIL_FMT_HH
 
-#include "defs.hh"
-
 #include <cstdarg>
 #include <cstddef>
-
 #include <string>
+
+#include "defs.hh"
 
 char* fs2_snfmt  (char*, size_t, char const*, ...);
 char* fs2_vsnfmt (char*, size_t, char const*, va_list);

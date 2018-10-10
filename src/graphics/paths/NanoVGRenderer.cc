@@ -1,6 +1,8 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 //
 // Copyright (c) 2009-2013 Mikko Mononen memon@inside.org

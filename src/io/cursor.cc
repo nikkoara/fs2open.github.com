@@ -1,7 +1,10 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <cmath>
+#include <algorithm>
+#include <utility>
 
+#include "defs.hh"
 #include "bmpman/bmpman.hh"
 #include "cmdline/cmdline.hh"
 #include "gamesequence/gamesequence.hh"
@@ -11,10 +14,8 @@
 #include "popup/popup.hh"
 #include "popup/popupdead.hh"
 #include "shared/globals.hh"
-
-#include <cmath>
-#include <algorithm>
-#include <utility>
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 namespace {
 SDL_Cursor* bitmapToCursor (int bitmapNum) {

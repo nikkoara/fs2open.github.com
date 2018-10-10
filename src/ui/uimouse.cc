@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "io/timer.hh"
 #include "ui/ui.hh"
 #include "ui/uidefs.hh"

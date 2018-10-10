@@ -1,10 +1,10 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
-#include "tracing/TraceEventWriter.hh"
-
 #include <iomanip>
+
+#include "defs.hh"
+#include "tracing/TraceEventWriter.hh"
+#include "assert/assert.hh"
 
 namespace {
 using namespace tracing;

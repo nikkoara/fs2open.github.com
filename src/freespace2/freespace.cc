@@ -1,7 +1,13 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <unistd.h>
+#include <sys/stat.h>
+#include <SDL.h>
+#include <SDL_main.h>
+#include <cinttypes>
+#include <stdexcept>
 
+#include "defs.hh"
 #include "anim/animplay.hh"
 #include "asteroid/asteroid.hh"
 #include "autopilot/autopilot.hh"
@@ -128,15 +134,8 @@
 #include "weapon/muzzleflash.hh"
 #include "weapon/shockwave.hh"
 #include "weapon/weapon.hh"
-
-#include <cinttypes>
-#include <stdexcept>
-
-#include <unistd.h>
-#include <sys/stat.h>
-
-#include <SDL.h>
-#include <SDL_main.h>
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 extern int Om_tracker_flag; // needed for FS2OpenPXO config
 

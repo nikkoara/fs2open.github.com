@@ -1,9 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <algorithm>
 
+#include "defs.hh"
 #include "asteroid/asteroid.hh"
 #include "debris/debris.hh"
 #include "fireball/fireballs.hh"
@@ -36,11 +35,13 @@
 #include "weapon/shockwave.hh"
 #include "weapon/weapon.hh"
 #include "tracing/Monitor.hh"
+#include "log/log.hh"
 
 //#pragma optimize("", off)
 //#pragma auto_inline(off)
 
 struct ssm_firing_info;
+
 extern void ssm_create (
     object* target, vec3d* start, size_t ssm_index, ssm_firing_info* override,
     int team);

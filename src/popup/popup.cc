@@ -1,9 +1,9 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
+#include <cstdarg>
 #include <cstdarg>
 
+#include "defs.hh"
 #include "anim/animplay.hh"
 #include "freespace2/freespace.hh"
 #include "gamesequence/gamesequence.hh"

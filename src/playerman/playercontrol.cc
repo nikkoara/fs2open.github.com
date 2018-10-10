@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "autopilot/autopilot.hh"
 #include "camera/camera.hh"
 #include "controlconfig/controlsconfig.hh"
@@ -29,6 +28,7 @@
 #include "ship/shipfx.hh"
 #include "util/list.hh"
 #include "weapon/weapon.hh"
+#include "log/log.hh"
 
 #ifndef NDEBUG
 #include "io/key.hh"

@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "cmdline/cmdline.hh"
 #include "shared/alphacolors.hh"
 #include "shared/globals.hh"
@@ -23,6 +22,8 @@
 #include "graphics/material.hh"
 #include "graphics/light.hh"
 #include "ShaderProgram.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 extern int GLOWMAP;
 extern int CLOAKMAP;

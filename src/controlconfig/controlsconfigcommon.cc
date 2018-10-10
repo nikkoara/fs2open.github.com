@@ -1,10 +1,9 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cstdio>
 #include <cstdarg>
 
+#include "defs.hh"
 #include "cfile/cfile.hh"
 #include "controlconfig/controlsconfig.hh"
 #include "shared/globals.hh"
@@ -12,6 +11,7 @@
 #include "io/key.hh"
 #include "localization/localize.hh"
 #include "parse/parselo.hh"
+#include "log/log.hh"
 
 // z64: These enumerations MUST equal to those in controlsconfig.cpp...
 // z64: Really need a better way than this.
@@ -1675,6 +1675,7 @@ void control_config_common_close () {
 
 #include <map>
 #include <string>
+
 std::map< std::string, int > mKeyNameToVal;
 std::map< std::string, CC_type > mCCTypeNameToVal;
 std::map< std::string, char > mCCTabNameToVal;

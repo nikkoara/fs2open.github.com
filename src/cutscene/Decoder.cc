@@ -1,12 +1,11 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
-#include "cutscene/Decoder.hh"
-
+#include <boost/thread/sync_bounded_queue.hpp>
 #include <memory>
 
-#include <boost/thread/sync_bounded_queue.hpp>
+#include "cutscene/Decoder.hh"
+#include "assert/assert.hh"
+
 using namespace boost::concurrent;
 
 namespace cutscene {

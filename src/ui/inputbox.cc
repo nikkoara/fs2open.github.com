@@ -1,14 +1,14 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cctype>
 
+#include "defs.hh"
 #include "bmpman/bmpman.hh"
 #include "shared/alphacolors.hh"
 #include "io/timer.hh"
 #include "ui/ui.hh"
 #include "ui/uidefs.hh"
+#include "log/log.hh"
 
 #define INPUTBOX_PASSWD_CHAR '*' // the password protected char
 

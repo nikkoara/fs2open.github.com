@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "math/staticrand.hh"
 #include "math/vecmat.hh"
 

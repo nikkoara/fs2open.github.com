@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "cutscene/cutscenes.hh"
 #include "freespace2/freespace.hh"
 #include "gamesequence/gamesequence.hh"
@@ -15,6 +14,7 @@
 #include "popup/popup.hh"
 #include "ui/ui.hh"
 #include "util/strings.hh"
+#include "log/log.hh"
 
 extern int Cmdline_nomovies;
 

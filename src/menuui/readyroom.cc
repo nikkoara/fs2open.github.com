@@ -1,9 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cctype>
 
+#include "defs.hh"
 #include "cfile/cfile.hh"
 #include "freespace2/freespace.hh"
 #include "gamehelp/contexthelp.hh"
@@ -26,6 +25,7 @@
 #include "popup/popup.hh"
 #include "ui/ui.hh"
 #include "ui/uidefs.hh"
+#include "log/log.hh"
 
 #define MAX_MISSIONS 1024
 

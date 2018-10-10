@@ -1,11 +1,17 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cstring>
 #include <cctype>
+#include <cstdarg>
+
+#include "defs.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #define MODEL_LIB
+
+#include <algorithm>
+#include <filesystem>
 
 #include "asteroid/asteroid.hh"
 #include "bmpman/bmpman.hh"
@@ -27,8 +33,6 @@
 #include "util/strings.hh"
 #include "weapon/weapon.hh"
 
-#include <algorithm>
-#include <filesystem>
 namespace fs = std::filesystem;
 
 flag_def_list model_render_flags[] = {

@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "asteroid/asteroid.hh"
 #include "cmeasure/cmeasure.hh"
 #include "debris/debris.hh"
@@ -34,6 +33,8 @@
 #include "weapon/weapon.hh"
 #include "tracing/Monitor.hh"
 #include "graphics/light.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 /*
  *  Global variables

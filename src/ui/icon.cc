@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "shared/alphacolors.hh"
 #include "ui/ui.hh"
 #include "ui/uidefs.hh"

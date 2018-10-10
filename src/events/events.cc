@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "events.hh"
 
 namespace events {

@@ -1,9 +1,6 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "cutscene/ffmpeg/VideoDecoder.hh"
-
 #include "tracing/tracing.hh"
 
 namespace {

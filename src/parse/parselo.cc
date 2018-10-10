@@ -1,15 +1,15 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
 #include <cstdarg>
 #include <csetjmp>
-
 #include <cctype>
+#include <cstdarg>
+
+#include "defs.hh"
 #include "shared/version.hh"
 #include "localization/fhash.hh"
 #include "localization/localize.hh"
@@ -20,9 +20,10 @@
 #include "ship/ship.hh"
 #include "weapon/weapon.hh"
 #include "mod_table/mod_table.hh"
-
 #include "util/encoding.hh"
 #include "util/unicode.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #define ERROR_LENGTH 64
 #define RS_MAX_TRIES 5

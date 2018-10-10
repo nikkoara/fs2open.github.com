@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "asteroid/asteroid.hh"
 #include "debris/debris.hh"
 #include "debugconsole/console.hh"
@@ -21,6 +20,7 @@
 #include "render/3d.hh" // needed for View_position, which is used when playing 3d sound
 #include "ship/ship.hh"
 #include "ship/shiphit.hh"
+#include "log/log.hh"
 
 #define COLLIDE_DEBUG
 #undef COLLIDE_DEBUG

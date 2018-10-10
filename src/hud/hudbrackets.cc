@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "asteroid/asteroid.hh"
 #include "cmdline/cmdline.hh"
 #include "debris/debris.hh"
@@ -18,6 +17,8 @@
 #include "tracing/tracing.hh"
 #include "weapon/emp.hh"
 #include "weapon/weapon.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #define FADE_FACTOR 2   // how much the bounding brackets get faded
 #define LOWEST_RED 50   // lowest r value for bounding bracket

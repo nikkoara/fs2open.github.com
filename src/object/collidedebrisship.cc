@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "asteroid/asteroid.hh"
 #include "debris/debris.hh"
 #include "hud/hud.hh"
@@ -11,6 +10,7 @@
 #include "playerman/player.hh"
 #include "ship/ship.hh"
 #include "ship/shiphit.hh"
+#include "log/log.hh"
 
 void calculate_ship_ship_collision_physics (
     collision_info_struct* ship_ship_hit_info);

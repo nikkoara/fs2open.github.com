@@ -3,15 +3,13 @@
 #ifndef FREESPACE2_LOG_LOG_HH
 #define FREESPACE2_LOG_LOG_HH
 
-#include "defs.hh"
-
-#include "util/fmt.hh"
-
-#include <string>
-
 #include <boost/log/trivial.hpp>
 #include <boost/log/sources/global_logger_storage.hpp>
 #include <boost/log/sources/severity_channel_logger.hpp>
+#include <string>
+
+#include "defs.hh"
+#include "util/fmt.hh"
 
 using fs2_logger_type = boost::log::sources::severity_channel_logger_mt<
     boost::log::trivial::severity_level, std::string >;

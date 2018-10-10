@@ -1,16 +1,17 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
+#include <sys/stat.h>
+#include <glob.h>
 #include <cstdio>
 #include <cstring>
 #include <csetjmp>
 #include <cerrno>
-
-#include <sys/stat.h>
-#include <glob.h>
-
 #include <filesystem>
+
+#include "defs.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
+
 namespace fs = std::filesystem;
 
 #include "freespace2/freespace.hh"

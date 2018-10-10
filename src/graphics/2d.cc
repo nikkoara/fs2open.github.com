@@ -1,10 +1,11 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
+#include <SDL_cpuinfo.h>
+#include <SDL_surface.h>
 #include <climits>
 #include <algorithm>
 
+#include "defs.hh"
 #include "cmdline/cmdline.hh"
 #include "debugconsole/console.hh"
 #include "gamesequence/gamesequence.hh" //WMC - for scripting hooks in gr_flip()
@@ -29,9 +30,8 @@
 #include "popup/popup.hh"
 #include "render/3d.hh"
 #include "tracing/tracing.hh"
-
-#include <SDL_cpuinfo.h>
-#include <SDL_surface.h>
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 const char* Resolution_prefixes[GR_NUM_RESOLUTIONS] = { "", "2_" };
 

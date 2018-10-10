@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "cfile/cfile.hh"
 #include "gamehelp/contexthelp.hh"
 #include "gamesequence/gamesequence.hh"
@@ -30,6 +29,7 @@
 #include "stats/medals.hh"
 #include "stats/stats.hh"
 #include "ui/uidefs.hh"
+#include "log/log.hh"
 
 #define MAX_TOTAL_DEBRIEF_LINES 200
 

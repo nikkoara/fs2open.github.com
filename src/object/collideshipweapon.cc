@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "hud/hudshield.hh"
 #include "hud/hudwingmanstatus.hh"
 #include "io/timer.hh"
@@ -13,6 +12,7 @@
 #include "ship/shipfx.hh"
 #include "ship/shiphit.hh"
 #include "weapon/weapon.hh"
+#include "log/log.hh"
 
 extern float ai_endangered_time (object* ship_objp, object* weapon_objp);
 static int check_inside_radius_for_big_ships (

@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "cfile/cfile.hh"
 #include "cmdline/cmdline.hh"
 #include "math/floating.hh"
@@ -14,6 +13,8 @@
 #include "sound/dscap.hh"
 #include "sound/openal.hh"
 #include "sound/sound.hh" // jg18 - for enhanced sound
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 typedef struct sound_buffer {
     ALuint buf_id;  // OpenAL buffer id

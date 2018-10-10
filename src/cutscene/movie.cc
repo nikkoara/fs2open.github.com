@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "shared/types.hh"
 #include "shared/alphacolors.hh"
 #include "shared/globals.hh"
@@ -16,6 +15,7 @@
 #include "io/timer.hh"
 #include "io/key.hh"
 #include "mod_table/mod_table.hh"
+#include "log/log.hh"
 
 extern int Game_mode;
 

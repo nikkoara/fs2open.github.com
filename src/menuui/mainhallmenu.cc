@@ -1,10 +1,9 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cstdlib>
 #include <climits>
 
+#include "defs.hh"
 #include "anim/animplay.hh"
 #include "anim/packunpack.hh"
 #include "cmdline/cmdline.hh"
@@ -27,6 +26,8 @@
 #include "playerman/player.hh"
 #include "popup/popup.hh"
 #include "sound/audiostr.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #ifndef NDEBUG
 #include "cutscene/movie.hh"

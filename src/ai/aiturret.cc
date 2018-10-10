@@ -1,7 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <climits>
 
+#include "defs.hh"
 #include "ai/aibig.hh"
 #include "ai/aiinternal.hh"
 #include "asteroid/asteroid.hh"
@@ -22,8 +23,8 @@
 #include "weapon/muzzleflash.hh"
 #include "weapon/swarm.hh"
 #include "weapon/weapon.hh"
-
-#include <climits>
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 // How close a turret has to be point at its target before it
 // can fire.  If the dot of the gun normal and the vector from gun

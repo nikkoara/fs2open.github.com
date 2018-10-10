@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "asteroid/asteroid.hh"
 #include "bmpman/bmpman.hh"
 #include "cmdline/cmdline.hh"
@@ -32,6 +31,8 @@
 #include "weapon/muzzleflash.hh"
 #include "weapon/shockwave.hh"
 #include "weapon/weapon.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #ifndef NDEBUG
 extern float flFrametime;

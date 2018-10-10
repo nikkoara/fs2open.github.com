@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "cmdline/cmdline.hh"
 #include "freespace2/freespace.hh"
 #include "gropengl.hh"
@@ -17,6 +16,7 @@
 #include "ship/ship.hh"
 #include "tracing/tracing.hh"
 #include "ShaderProgram.hh"
+#include "log/log.hh"
 
 extern bool PostProcessing_override;
 extern int opengl_check_framebuffer ();

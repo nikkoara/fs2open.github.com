@@ -1,7 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <algorithm>
 
+#include "defs.hh"
 #include "shared/types.hh"
 #include "cmdline/cmdline.hh"
 #include "freespace2/freespace.hh"
@@ -18,8 +19,8 @@
 #include "tracing/tracing.hh"
 #include "render/3d.hh"
 #include "ShaderProgram.hh"
-
-#include <algorithm>
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 GLuint Scene_framebuffer;
 GLuint Scene_ldr_texture;

@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "cfile/cfile.hh"
 #include "cmdline/cmdline.hh"
 #include "graphics/2d.hh"
@@ -18,6 +17,8 @@
 #include "mod_table/mod_table.hh"
 #include "render/3d.hh"
 #include "ShaderProgram.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 std::vector< opengl_shader_t > GL_shader;
 

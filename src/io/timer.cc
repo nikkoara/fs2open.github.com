@@ -1,16 +1,16 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <SDL_timer.h>
+#include <climits>
 
+#include "defs.hh"
 #include "shared/types.hh"
 #include "io/timer.hh"
 #include "graphics/2d.hh"
 #include "shared/alphacolors.hh"
-
 #include "osapi/osapi.hh" // for multi-thread macros
-
-#include <SDL_timer.h>
-#include <climits>
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 static Uint64 Timer_perf_counter_freq =
     0; // perf counter frequency - number of ticks per second

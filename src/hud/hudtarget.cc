@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "asteroid/asteroid.hh"
 #include "cmdline/cmdline.hh"
 #include "debris/debris.hh"
@@ -36,6 +35,8 @@
 #include "ship/subsysdamage.hh"
 #include "weapon/emp.hh"
 #include "weapon/weapon.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 // Global values for the target bracket width and height, used for debugging
 int Hud_target_w, Hud_target_h;

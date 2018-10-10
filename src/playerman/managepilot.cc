@@ -1,7 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <filesystem>
 
+#include "defs.hh"
 #include "cfile/cfile.hh"
 #include "cutscene/cutscenes.hh"
 #include "freespace2/freespace.hh"
@@ -29,8 +30,8 @@
 #include "sound/audiostr.hh"
 #include "sound/sound.hh"
 #include "weapon/weapon.hh"
+#include "log/log.hh"
 
-#include <filesystem>
 namespace fs = std::filesystem;
 
 // pilot pic image list stuff ( call pilot_load_pic_list() to make these valid

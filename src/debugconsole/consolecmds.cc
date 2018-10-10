@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 /*
  * z64555's debug console
  * Created for the FreeSpace Source Code project
@@ -23,11 +21,12 @@
  * console.h
  */
 
+#include <algorithm>
+
 #include "debugconsole/console.hh"
 #include "debugconsole/consoleparse.hh"
 #include "io/key.hh"
-
-#include <algorithm>
+#include "assert/assert.hh"
 
 // ========================= GLOBALS =========================
 debug_command* dc_commands[DC_MAX_COMMANDS];

@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "anim/animplay.hh"
 #include "gamesequence/gamesequence.hh"
 #include "gamesnd/gamesnd.hh"
@@ -22,6 +21,8 @@
 #include "ship/subsysdamage.hh"
 #include "species_defs/species_defs.hh"
 #include "weapon/emp.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 std::vector< std::string > Builtin_moods;
 int Current_mission_mood;

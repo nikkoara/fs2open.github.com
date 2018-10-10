@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 /**
  * @file bm_examples.cpp
  * This file contains example code for using bmpman.

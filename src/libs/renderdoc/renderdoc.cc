@@ -1,13 +1,10 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <dlfcn.h>
 
 #include "renderdoc.hh"
 #include "renderdoc_app.hh"
-
 #include "shared/types.hh"
-
-#include <dlfcn.h>
 
 namespace {
 bool api_loaded = false;

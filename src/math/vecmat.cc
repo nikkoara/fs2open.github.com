@@ -1,8 +1,9 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cstdio>
+
+#include "defs.hh"
+#include "log/log.hh"
 #if _M_IX86_FP >= 1
 #include <xmmintrin.h>
 #endif

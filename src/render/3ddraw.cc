@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "bmpman/bmpman.hh"
 #include "cmdline/cmdline.hh"
 #include "shared/alphacolors.hh"
@@ -12,6 +11,7 @@
 #include "physics/physics.hh" // For Physics_viewer_bank for g3_draw_rotated_bitmap
 #include "render/3dinternal.hh"
 #include "render/batching.hh"
+#include "log/log.hh"
 
 /**
  * Deal with a clipped line

@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "asteroid/asteroid.hh"
 #include "cmdline/cmdline.hh"
 #include "debris/debris.hh"
@@ -25,6 +24,7 @@
 #include "species_defs/species_defs.hh"
 #include "weapon/emp.hh"
 #include "weapon/weapon.hh"
+#include "log/log.hh"
 
 #ifndef NDEBUG
 #include "hud/hudets.hh"

@@ -1,11 +1,13 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "anim/packunpack.hh"
 #include "shared/globals.hh"
 #include "graphics/2d.hh"
 #include "graphics/generic.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
+
 #define BMPMAN_INTERNAL
 #include "bmpman/bm_internal.hh"
 

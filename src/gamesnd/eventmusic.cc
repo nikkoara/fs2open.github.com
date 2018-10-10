@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "cmdline/cmdline.hh"
 #include "gamesnd/eventmusic.hh"
 #include "util/list.hh"
@@ -15,6 +14,8 @@
 #include "ship/ship.hh"
 #include "sound/audiostr.hh"
 #include "sound/sound.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #define HULL_VALUE_TO_PLAY_INTENSE_BATTLE_MUSIC 0.75f
 

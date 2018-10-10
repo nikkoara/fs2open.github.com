@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "bmpman/bmpman.hh"
 #include "gamesnd/gamesnd.hh"
 #include "shared/alphacolors.hh"
@@ -9,6 +8,7 @@
 #include "missionui/missionscreencommon.hh"
 #include "ui/ui.hh"
 #include "ui/uidefs.hh"
+#include "assert/assert.hh"
 
 /// DOT_SLIDER class down here
 void UI_DOT_SLIDER_NEW::create (

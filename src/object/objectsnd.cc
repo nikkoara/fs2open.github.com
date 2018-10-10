@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "cmdline/cmdline.hh"
 #include "debugconsole/console.hh"
 #include "gamesnd/gamesnd.hh"
@@ -15,6 +14,8 @@
 #include "sound/ds.hh"
 #include "sound/ds3d.hh"
 #include "species_defs/species_defs.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 // // --mharris port hack--
 // int ds_using_ds3d();

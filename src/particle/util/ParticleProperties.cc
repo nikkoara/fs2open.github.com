@@ -1,10 +1,7 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "particle/util/ParticleProperties.hh"
 #include "particle/ParticleManager.hh"
-
 #include "bmpman/bmpman.hh"
 
 namespace particle {

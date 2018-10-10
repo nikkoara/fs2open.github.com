@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "graphics/render.hh"
 #include "graphics/material.hh"
 #include "graphics/matrix.hh"
@@ -10,10 +9,10 @@
 #include "graphics/software/NVGFont.hh"
 #include "graphics/software/VFNTFont.hh"
 #include "graphics/paths/PathRenderer.hh"
-
 #include "mod_table/mod_table.hh"
 #include "localization/localize.hh"
 #include "matrix.hh"
+#include "assert/assert.hh"
 
 static void gr_flash_internal (int r, int g, int b, int a, bool alpha_flash) {
     CLAMP (r, 0, 255);

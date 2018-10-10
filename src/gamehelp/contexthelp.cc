@@ -1,10 +1,9 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cstring>
 #include <csetjmp>
 
+#include "defs.hh"
 #include "controlconfig/controlsconfig.hh"
 #include "debugconsole/console.hh"
 #include "gamehelp/contexthelp.hh"
@@ -24,6 +23,8 @@
 #include "missionui/missionshipchoice.hh"
 #include "missionui/missionweaponchoice.hh"
 #include "parse/parselo.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 ////////////////////////////////////////////////////////////////////
 // private function prototypes / structs

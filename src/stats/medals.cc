@@ -1,7 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <filesystem>
 
+#include "defs.hh"
 #include "debugconsole/console.hh"
 #include "gamesequence/gamesequence.hh"
 #include "gamesnd/gamesnd.hh"
@@ -14,8 +15,9 @@
 #include "popup/popup.hh"
 #include "stats/medals.hh"
 #include "ui/ui.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
-#include <filesystem>
 namespace fs = std::filesystem;
 
 #ifndef NDEBUG

@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "gamesnd/gamesnd.hh"
 #include "shared/alphacolors.hh"
 #include "util/list.hh"
@@ -18,6 +17,7 @@
 #include "playerman/player.hh"
 #include "ship/ship.hh"
 #include "weapon/emp.hh"
+#include "log/log.hh"
 
 int Show_escort_view;
 

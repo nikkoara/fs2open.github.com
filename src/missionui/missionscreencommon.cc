@@ -1,10 +1,9 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <climits> // this is need even when not building debug!!
 #include <type_traits>
 
+#include "defs.hh"
 #include "anim/animplay.hh"
 #include "cmdline/cmdline.hh"
 #include "cutscene/cutscenes.hh"
@@ -33,6 +32,8 @@
 #include "ship/ship.hh"
 #include "ui/uidefs.hh"
 #include "weapon/weapon.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 //////////////////////////////////////////////////////////////////
 // Game Globals

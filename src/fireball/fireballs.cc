@@ -1,7 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <cstdlib>
 
+#include "defs.hh"
 #include "asteroid/asteroid.hh"
 #include "cmdline/cmdline.hh"
 #include "fireball/fireballs.hh"
@@ -15,8 +16,8 @@
 #include "render/batching.hh"
 #include "ship/ship.hh"
 #include "tracing/Monitor.hh"
-
-#include <cstdlib>
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 // make use of the LOD checker for tbl/tbm parsing (from weapons.cpp)
 extern std::vector< lod_checker > LOD_checker;

@@ -1,13 +1,13 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "util/list.hh"
 #include "io/timer.hh"
 #include "object/object.hh"
 #include "ship/ship.hh"
 #include "weapon/swarm.hh"
 #include "weapon/weapon.hh"
+#include "log/log.hh"
 
 #define SWARM_DIST_OFFSET \
     2.0f // distance swarm missile should vary from original path

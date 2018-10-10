@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "shared/alphacolors.hh"
 #include "graphics/font.hh"
 #include "iff_defs/iff_defs.hh"
@@ -12,6 +11,8 @@
 #include "parse/parselo.hh"
 #include "playerman/player.hh"
 #include "ship/ship.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #define MAX_LOG_ENTRIES 700
 #define MAX_LOG_LINES 1000

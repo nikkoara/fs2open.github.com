@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "anim/animplay.hh"
 #include "anim/packunpack.hh"
 #include "bmpman/bmpman.hh"

@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "ai/aigoals.hh"
 #include "anim/animplay.hh"
 #include "anim/packunpack.hh"
@@ -36,6 +35,8 @@
 #include "ship/ship.hh"
 #include "species_defs/species_defs.hh"
 #include "weapon/weapon.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 //////////////////////////////////////////////////////
 // Game-wide Globals

@@ -1,12 +1,19 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #ifndef NDEBUG
 #define BMPMAN_NDEBUG
 #endif
 
 #define BMPMAN_INTERNAL
+
+#include <cctype>
+#include <climits>
+#include <iomanip>
+#include <memory>
 
 #include "anim/animplay.hh"
 #include "anim/packunpack.hh"
@@ -27,11 +34,6 @@
 #include "tgautils/tgautils.hh"
 #include "tracing/Monitor.hh"
 #include "tracing/tracing.hh"
-
-#include <cctype>
-#include <climits>
-#include <iomanip>
-#include <memory>
 
 // --------------------------------------------------------------------------------------------------------------------
 // Private macros.

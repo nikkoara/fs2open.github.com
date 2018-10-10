@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "anim/animplay.hh"
 #include "gamesnd/gamesnd.hh"
 #include "shared/alphacolors.hh"
@@ -24,6 +23,8 @@
 #include "ship/ship.hh"
 #include "sound/audiostr.hh"
 #include "species_defs/species_defs.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 // --------------------------------------------------------------------------------------
 // briefing screen

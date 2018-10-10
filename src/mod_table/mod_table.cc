@@ -1,6 +1,8 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 /*
  * Created by Hassan "Karajorma" Kazmi for the FreeSpace2 Source Code Project.

@@ -1,8 +1,7 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "UniformBuffer.hh"
+#include "assert/assert.hh"
 
 namespace graphics {
 namespace util {

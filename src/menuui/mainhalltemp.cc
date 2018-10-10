@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "freespace2/freespace.hh"
 #include "gamesequence/gamesequence.hh"
 #include "gamesnd/gamesnd.hh"
@@ -12,6 +11,7 @@
 #include "mission/missionload.hh"
 #include "playerman/player.hh"
 #include "ui/ui.hh"
+#include "log/log.hh"
 
 // ------------------------------------------------------------------------------------------------------------------------
 // TEMP MAIN HALL DEFINES/VARS

@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "bmpman/bmpman.hh"
 #include "freespace2/freespace.hh"
 #include "gamesnd/gamesnd.hh"
@@ -21,6 +20,7 @@
 #include "ship/subsysdamage.hh"
 #include "weapon/emp.hh"
 #include "weapon/weapon.hh"
+#include "log/log.hh"
 
 extern rcol Radar_color_rgb[MAX_RADAR_COLORS][MAX_RADAR_LEVELS];
 

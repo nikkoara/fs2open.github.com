@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "freespace2/freespace.hh"
 #include "gamesnd/gamesnd.hh"
 #include "shared/globals.hh"
@@ -14,6 +13,8 @@
 #include "ship/subsysdamage.hh"
 #include "weapon/emp.hh"
 #include "weapon/weapon.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 float Energy_levels[NUM_ENERGY_LEVELS] = { 0.0f,   0.0833f, 0.167f, 0.25f,
                                            0.333f, 0.417f,  0.5f,   0.583f,

@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "util/list.hh"
 #include "io/timer.hh"
 #include "object/objcollide.hh"
@@ -12,6 +11,7 @@
 #include "weapon/beam.hh"
 #include "weapon/weapon.hh"
 #include "tracing/Monitor.hh"
+#include "log/log.hh"
 
 //#define MAX_PAIRS 10000       // Bumped back to 10,000 by WMC
 // Reduced from 10,000 to 6,000 by MK on 4/1/98.
@@ -56,7 +56,6 @@ public:
 
 std::unordered_map< uint, collider_pair > Collision_cached_pairs;
 
-class checkobject;
 extern checkobject CheckObjects[MAX_OBJECTS];
 
 extern int Cmdline_old_collision_sys;

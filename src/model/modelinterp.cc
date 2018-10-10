@@ -1,8 +1,12 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #define MODEL_LIB
+
+#include <climits>
 
 #include "bmpman/bmpman.hh"
 #include "cmdline/cmdline.hh"
@@ -29,8 +33,6 @@
 #include "weapon/shockwave.hh"
 #include "tracing/Monitor.hh"
 #include "tracing/tracing.hh"
-
-#include <climits>
 
 float model_radius = 0;
 

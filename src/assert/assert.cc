@@ -1,14 +1,16 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <cstdarg>
 
-#ifndef NDEBUG
-
+#include "assert/assert.hh"
 #include "log/log.hh"
-#include "util/fmt.hh"
+#ifndef NDEBUG
 
 #include <cstdarg>
 #include <cstddef>
+
+#include "log/log.hh"
+#include "util/fmt.hh"
 
 void
 assert_format (

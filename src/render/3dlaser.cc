@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "cmdline/cmdline.hh"
 #include "debugconsole/console.hh"
 #include "shared/globals.hh"

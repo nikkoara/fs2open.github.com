@@ -1,6 +1,7 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "log/log.hh"
 
 /*
  * Created by Olivier "LuaPineapple" Hamel for the Freespace 2 Source Code

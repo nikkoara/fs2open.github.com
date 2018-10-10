@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "anim/animplay.hh"
 #include "anim/packunpack.hh"
 #include "bmpman/bmpman.hh"
@@ -14,6 +13,8 @@
 #include "render/3d.hh"
 #include "graphics/material.hh"
 #include "tracing/Monitor.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 static color Color_xparent;
 

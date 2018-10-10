@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "freespace2/freespace.hh"
 #include "gamesnd/eventmusic.hh"
 #include "hud/hudconfig.hh"
@@ -18,6 +17,7 @@
 #include "sound/audiostr.hh"
 #include "stats/medals.hh"
 #include "weapon/weapon.hh"
+#include "log/log.hh"
 
 void pilotfile::plr_read_flags () {
     // tips?

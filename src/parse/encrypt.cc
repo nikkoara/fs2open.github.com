@@ -1,14 +1,12 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
 
 #define ENCRYPT_NEW // new, better encryption scheme
 
-#include "shared/types.hh"
+#include "defs.hh"
 #include "parse/encrypt.hh"
 
 const uint Encrypt_new_signature = 0x5c331a55; // new encryption

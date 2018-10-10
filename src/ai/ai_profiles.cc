@@ -1,6 +1,7 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "log/log.hh"
 
 /*
  * Created by Ian "Goober5000" Warfield for the FreeSpace2 Source Code Project.
@@ -10,7 +11,6 @@
 
 #include "shared/types.hh"
 #include "ai/ai_profiles.hh"
-#include "shared/types.hh"
 #include "localization/localize.hh"
 #include "parse/parselo.hh"
 #include "ship/ship.hh"

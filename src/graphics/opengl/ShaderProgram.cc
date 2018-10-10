@@ -1,12 +1,13 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 //
 //
 
 #include "ShaderProgram.hh"
-
 #include "graphics/opengl/gropenglstate.hh"
 
 namespace {

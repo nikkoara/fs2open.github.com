@@ -1,6 +1,7 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "log/log.hh"
 
 /*
  * lab.cpp
@@ -2046,6 +2047,7 @@ void lab_init () {
 
 #include "controlconfig/controlsconfig.hh"
 #include "lab.hh"
+
 void lab_do_frame (float frametime) {
     GR_DEBUG_SCOPE ("Lab Frame");
 

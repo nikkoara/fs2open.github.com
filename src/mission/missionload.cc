@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "cfile/cfilesystem.hh"
 #include "freespace2/freespace.hh"
 #include "gamesequence/gamesequence.hh"
@@ -15,6 +14,7 @@
 #include "playerman/managepilot.hh"
 #include "ui/ui.hh"
 #include "tracing/tracing.hh"
+#include "log/log.hh"
 
 extern mission The_mission; // need to send this info to the briefing
 extern int shifted_ascii_table[];

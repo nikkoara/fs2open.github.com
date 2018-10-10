@@ -1,15 +1,15 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <SDL_haptic.h>
 
+#include "defs.hh"
 #include "shared/types.hh"
 #include "math/vecmat.hh"
 #include "osapi/osregistry.hh"
 #include "io/joy_ff.hh"
 #include "io/joy.hh"
 #include "osapi/osapi.hh"
-
-#include <SDL_haptic.h>
+#include "log/log.hh"
 
 #ifndef SDL_INIT_HAPTIC
 #define SDL_INIT_HAPTIC 0x00001000

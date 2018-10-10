@@ -1,7 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <cstdarg>
 
+#include "defs.hh"
 #include "ai/aigoals.hh"
 #include "asteroid/asteroid.hh"
 #include "bmpman/bmpman.hh"
@@ -45,6 +46,7 @@
 #include "starfield/supernova.hh"
 #include "weapon/emp.hh"
 #include "weapon/weapon.hh"
+#include "log/log.hh"
 
 std::vector< std::unique_ptr< HudGauge > > default_hud_gauges;
 

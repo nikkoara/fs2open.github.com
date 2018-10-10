@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "debugconsole/console.hh"
 #include "freespace2/freespace.hh" // for Missiontime
 #include "io/timer.hh"
@@ -9,6 +8,7 @@
 #include "ship/ship.hh"
 #include "weapon/corkscrew.hh"
 #include "weapon/weapon.hh"
+#include "log/log.hh"
 
 // corkscrew structure flags
 #define CS_FLAG_USED (1 << 0)    // this structure is in use

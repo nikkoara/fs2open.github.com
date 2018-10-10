@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "asteroid/asteroid.hh"
 #include "cmdline/cmdline.hh"
 #include "freespace2/freespace.hh"
@@ -34,6 +33,7 @@
 #include "render/3d.hh"
 #include "ship/ship.hh"
 #include "sound/audiostr.hh"
+#include "log/log.hh"
 
 static int Brief_goals_coords[GR_NUM_RESOLUTIONS][4] = {
     {

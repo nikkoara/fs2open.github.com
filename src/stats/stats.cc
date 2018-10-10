@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "shared/globals.hh"
 #include "hud/hud.hh"
 #include "playerman/player.hh"

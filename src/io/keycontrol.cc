@@ -1,12 +1,10 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "asteroid/asteroid.hh"
 #include "autopilot/autopilot.hh"
 #include "cmdline/cmdline.hh"
 #include "freespace2/freespace.hh"
-#include "freespace2/freespace.hh" //For time compression stuff
 #include "gamesequence/gamesequence.hh"
 #include "gamesnd/eventmusic.hh"
 #include "gamesnd/gamesnd.hh"
@@ -46,6 +44,8 @@
 #include "util/list.hh"
 #include "util/strings.hh"
 #include "weapon/weapon.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 /**
  * Natural number factor lookup class.

@@ -1,6 +1,7 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "assert/assert.hh"
 
 /*
  * Created by Ian "Goober5000" Warfield for the FreeSpace2 Source Code Project.

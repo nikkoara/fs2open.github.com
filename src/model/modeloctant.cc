@@ -1,8 +1,9 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cmath>
+
+#include "defs.hh"
+#include "log/log.hh"
 
 #define MODEL_LIB
 

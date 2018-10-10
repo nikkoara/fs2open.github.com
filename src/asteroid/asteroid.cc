@@ -1,7 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <algorithm>
 
+#include "defs.hh"
 #include "asteroid/asteroid.hh"
 #include "debugconsole/console.hh"
 #include "fireball/fireballs.hh"
@@ -29,8 +30,8 @@
 #include "species_defs/species_defs.hh"
 #include "stats/scoring.hh"
 #include "weapon/weapon.hh"
-
-#include <algorithm>
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #define ASTEROID_OBJ_USED (1 << 0) // flag used in asteroid_obj struct
 #define MAX_ASTEROID_OBJS \

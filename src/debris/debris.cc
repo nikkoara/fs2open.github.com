@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "cmdline/cmdline.hh"
 #include "debris/debris.hh"
 #include "fireball/fireballs.hh"
@@ -21,6 +20,7 @@
 #include "species_defs/species_defs.hh"
 #include "weapon/weapon.hh"
 #include "tracing/Monitor.hh"
+#include "log/log.hh"
 
 #define MAX_LIFE 10.0f
 #define MIN_RADIUS_FOR_PERSISTANT_DEBRIS \

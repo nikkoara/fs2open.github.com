@@ -1,9 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cctype> // for 'tolower'
 
+#include "defs.hh"
 #include "shared/alphacolors.hh"
 #include "util/list.hh"
 #include "hud/hudtargetbox.hh"
@@ -14,6 +13,7 @@
 #include "object/object.hh"
 #include "ship/ship.hh"
 #include "weapon/emp.hh"
+#include "log/log.hh"
 
 #define HUD_WINGMAN_STATUS_NUM_FRAMES 5
 #define BACKGROUND_LEFT 0

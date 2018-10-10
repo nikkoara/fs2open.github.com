@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "bmpman/bmpman.hh"
 #include "cfile/cfile.hh"
 #include "cmdline/cmdline.hh"
@@ -35,8 +34,9 @@
 #include "popup/popup.hh"
 #include "tracing/tracing.hh"
 #include "pngutils/pngutils.hh"
-
 #include "glad/glad.h"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 // minimum GL version we can reliably support is 3.2
 static const int MIN_REQUIRED_GL_VERSION = 32;

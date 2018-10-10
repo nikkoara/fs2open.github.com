@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "freespace2/freespace.hh"
 #include "gamesnd/gamesnd.hh"
 #include "hud/hudets.hh"
@@ -11,6 +10,7 @@
 #include "render/3d.hh" // needed for View_position, which is used when playing a 3D sound
 #include "ship/afterburner.hh"
 #include "ship/ship.hh"
+#include "log/log.hh"
 
 // ----------------------------------------------------------
 // Global to file

@@ -1,12 +1,10 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "log/log.hh"
 
 #include <cstdarg>
 #include <cstddef>
-
 #include <thread>
 #include <mutex>
 
@@ -18,7 +16,6 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/console.hpp>
 #include <boost/log/utility/setup/file.hpp>
-
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 using namespace boost::log;

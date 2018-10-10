@@ -1,6 +1,7 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "log/log.hh"
 
 /*
  * wmcgui.cpp

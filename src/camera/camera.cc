@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "camera/camera.hh"
 #include "shared/alphacolors.hh"
 #include "util/list.hh"
@@ -14,6 +13,8 @@
 #include "parse/parselo.hh"
 #include "playerman/player.hh" //player_get_padlock_orient
 #include "ship/ship.hh"        //compute_slew_matrix
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 //*************************IMPORTANT GLOBALS*************************
 float VIEWER_ZOOM_DEFAULT = 0.75f; // Default viewer zoom, 0.625 as per

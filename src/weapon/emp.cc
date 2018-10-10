@@ -1,9 +1,9 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
+#include <cstdarg>
 #include <cstdarg>
 
+#include "defs.hh"
 #include "debugconsole/console.hh"
 #include "freespace2/freespace.hh"
 #include "util/list.hh"
@@ -17,6 +17,7 @@
 #include "ship/ship.hh"
 #include "weapon/emp.hh"
 #include "weapon/weapon.hh"
+#include "log/log.hh"
 
 // ----------------------------------------------------------------------------------------------------
 // EMP EFFECT DEFINES/VARS

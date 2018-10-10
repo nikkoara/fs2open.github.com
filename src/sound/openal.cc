@@ -1,13 +1,13 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <string>
+#include <algorithm>
 
+#include "defs.hh"
 #include "shared/types.hh"
 #include "sound/openal.hh"
 #include "osapi/osregistry.hh"
-
-#include <string>
-#include <algorithm>
+#include "log/log.hh"
 
 static std::string Playback_device;
 static std::string Capture_device;

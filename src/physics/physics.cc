@@ -1,12 +1,11 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <cmath>
 
+#include "defs.hh"
 #include "ai/ai_profiles.hh" // for the damping issue
 #include "freespace2/freespace.hh"
 #include "io/timer.hh"
@@ -14,6 +13,7 @@
 #include "mod_table/mod_table.hh"
 #include "physics/physics.hh"
 #include "ship/ship.hh"
+#include "log/log.hh"
 
 // defines for physics functions
 #define MAX_TURN_LIMIT 0.2618f // about 15 degrees

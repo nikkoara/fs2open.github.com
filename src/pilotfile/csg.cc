@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "cutscene/cutscenes.hh"
 #include "freespace2/freespace.hh"
 #include "gamesnd/eventmusic.hh"
@@ -19,14 +18,17 @@
 #include "sound/audiostr.hh"
 #include "stats/medals.hh"
 #include "weapon/weapon.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #define REDALERT_INTERNAL
-#include "missionui/redalert.hh"
-
 #include <iostream>
 #include <sstream>
 #include <limits>
 #include <filesystem>
+
+#include "missionui/redalert.hh"
+
 namespace fs = std::filesystem;
 
 void pilotfile::csg_read_flags () {

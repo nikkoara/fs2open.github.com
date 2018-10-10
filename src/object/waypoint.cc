@@ -1,12 +1,12 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cctype>
 
+#include "defs.hh"
 #include "util/list.hh"
 #include "object/object.hh"
 #include "object/waypoint.hh"
+#include "log/log.hh"
 
 //********************GLOBALS********************
 std::list< waypoint_list > Waypoint_lists;

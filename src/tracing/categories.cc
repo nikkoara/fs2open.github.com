@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "tracing/categories.hh"
 
 namespace tracing {

@@ -1,16 +1,16 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <fstream>
 
+#include "defs.hh"
 #include "shared/types.hh"
 #include "gamesequence/gamesequence.hh"
 #include "freespace2/freespace.hh"
 #include "parse/parselo.hh"
-
-#include <fstream>
-
-#include <fcntl.h>
-#include <sys/stat.h>
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 namespace {
 const char* ORGANIZATION_NAME = "HardLightProductions";

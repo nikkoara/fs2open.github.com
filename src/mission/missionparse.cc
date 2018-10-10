@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -9,6 +7,7 @@
 #include <cstdarg>
 #include <csetjmp>
 
+#include "defs.hh"
 #include "ai/aigoals.hh"
 #include "asteroid/asteroid.hh"
 #include "bmpman/bmpman.hh"
@@ -57,6 +56,8 @@
 #include "weapon/weapon.hh"
 #include "tracing/Monitor.hh"
 #include "missionparse.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 static struct {
     char docker[NAME_LENGTH];

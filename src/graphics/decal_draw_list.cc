@@ -1,12 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "graphics/decal_draw_list.hh"
-
 #include "graphics/util/uniform_structs.hh"
 #include "graphics/matrix.hh"
-
 #include "render/3d.hh"
 #include "tracing/tracing.hh"
 #include "light.hh"

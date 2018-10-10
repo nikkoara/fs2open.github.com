@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 /*
  * Copyright (C) Freespace Open 2013.  All rights reserved.
  *

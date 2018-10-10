@@ -1,7 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <climits>
 
+#include "defs.hh"
 #include "cfile/cfile.hh"
 #include "cmdline/cmdline.hh"
 #include "debugconsole/console.hh"
@@ -19,10 +20,8 @@
 #include "sound/dscap.hh"
 #include "tracing/Monitor.hh"
 #include "tracing/tracing.hh"
-
-#include "shared/types.hh"
-
-#include <climits>
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 const unsigned int SND_ENHANCED_MAX_LIMIT = 15; // seems like a good max limit
 

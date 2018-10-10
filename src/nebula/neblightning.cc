@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "debugconsole/console.hh"
 #include "freespace2/freespace.hh"
 #include "gamesnd/gamesnd.hh"
@@ -14,6 +13,7 @@
 #include "parse/parselo.hh"
 #include "render/3d.hh"
 #include "weapon/emp.hh"
+#include "log/log.hh"
 
 // ------------------------------------------------------------------------------------------------------
 // NEBULA LIGHTNING DEFINES/VARS

@@ -1,6 +1,8 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 /*
  * Copyright (C) Freespace Open 2013.  All rights reserved.
@@ -29,7 +31,6 @@
 #include "particle/particle.hh"
 #include "render/3dinternal.hh"
 #include "render/batching.hh"
-#include "math/staticrand.hh"
 #include "ship/ship.hh"
 #include "ship/shipfx.hh"
 #include "tracing/tracing.hh"

@@ -1,6 +1,7 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "log/log.hh"
 
 /*
  * Created by Mike "Bobboau" Abegg for the FreeSpace2 Source Code Project.

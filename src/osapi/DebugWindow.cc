@@ -1,12 +1,9 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 //
 //
 
 #include "DebugWindow.hh"
-
 #include "shared/alphacolors.hh"
 
 namespace {

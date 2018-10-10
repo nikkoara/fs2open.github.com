@@ -1,9 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "particle/ParticleSourceWrapper.hh"
 #include "particle/ParticleSource.hh"
+#include "assert/assert.hh"
 
 namespace particle {
 ParticleSourceWrapper::ParticleSourceWrapper (

@@ -1,7 +1,11 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <dirent.h>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
 
+#include "defs.hh"
 #include "camera/camera.hh" //VIEWER_ZOOM_DEFAULT
 #include "cmdline/cmdline.hh"
 #include "util/list.hh"
@@ -10,19 +14,12 @@
 #include "shared/version.hh"
 #include "hud/hudconfig.hh"
 #include "parse/sexp.hh"
-#include "shared/version.hh"
-#include "shared/types.hh"
 #include "osapi/osapi.hh"
 #include "cfile/cfilesystem.hh"
 #include "sound/openal.hh"
 #include "io/joy.hh"
-
-#include "osapi/osapi.hh"
-#include <dirent.h>
-
-#include <cstring>
-#include <cstdlib>
-#include <cstdio>
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 enum cmdline_arg_type { AT_NONE = 0, AT_INT, AT_FLOAT, AT_STRING };
 

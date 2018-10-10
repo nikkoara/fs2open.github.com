@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "anim/animplay.hh"
 #include "anim/packunpack.hh"
 #include "cfile/cfile.hh"
@@ -28,6 +27,8 @@
 #include "render/batching.hh"
 #include "ship/ship.hh"
 #include "weapon/weapon.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #define IS_BANK_PRIMARY(x) (x < MAX_SHIP_PRIMARY_BANKS)
 #define IS_BANK_SECONDARY(x) (x >= MAX_SHIP_PRIMARY_BANKS)

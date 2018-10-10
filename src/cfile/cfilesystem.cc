@@ -1,14 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
-#include <cstdlib>
-#include <cstring>
-#include <cstdio>
-#include <cerrno>
-#include <sstream>
-#include <algorithm>
-
 #include <glob.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -16,7 +7,14 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <libgen.h>
+#include <cstdlib>
+#include <cstring>
+#include <cstdio>
+#include <cerrno>
+#include <sstream>
+#include <algorithm>
 
+#include "defs.hh"
 #include "cfile/cfile.hh"
 #include "cfile/cfilesystem.hh"
 #include "cmdline/cmdline.hh"
@@ -25,6 +23,8 @@
 #include "osapi/osapi.hh"
 #include "parse/parselo.hh"
 #include "util/strings.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 enum CfileRootType {
     CF_ROOTTYPE_PATH = 0,

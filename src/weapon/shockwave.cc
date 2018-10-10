@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "asteroid/asteroid.hh"
 #include "gamesnd/gamesnd.hh"
 #include "util/list.hh"
@@ -14,6 +13,8 @@
 #include "ship/shiphit.hh"
 #include "weapon/shockwave.hh"
 #include "weapon/weapon.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 // -----------------------------------------------------------
 // Module-wide globals

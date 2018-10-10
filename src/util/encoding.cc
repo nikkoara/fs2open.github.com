@@ -1,13 +1,11 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 //
 //
 
 #include "util/encoding.hh"
-
 #include "mod_table/mod_table.hh"
+#include "assert/assert.hh"
 
 namespace util {
 

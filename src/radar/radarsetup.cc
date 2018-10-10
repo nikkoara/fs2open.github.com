@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "bmpman/bmpman.hh"
 #include "debugconsole/console.hh"
 #include "freespace2/freespace.hh"
@@ -23,6 +22,7 @@
 #include "weapon/emp.hh"
 #include "weapon/weapon.hh"
 #include "mod_table/mod_table.hh"
+#include "assert/assert.hh"
 
 sound_handle Radar_static_looping = sound_handle::invalid ();
 

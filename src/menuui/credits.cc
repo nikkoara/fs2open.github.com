@@ -1,9 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cstdlib>
 
+#include "defs.hh"
 #include "cfile/cfile.hh"
 #include "freespace2/freespace.hh"
 #include "gamesequence/gamesequence.hh"
@@ -21,6 +20,8 @@
 #include "shared/alphacolors.hh"
 #include "sound/audiostr.hh"
 #include "ui/ui.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 // This is the fs2_open credit list, please only add yourself if you have
 // actually contributed code Rules!

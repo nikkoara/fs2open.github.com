@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "ai/aigoals.hh"
 #include "gamesnd/gamesnd.hh"
 #include "hud/hudmessage.hh"
@@ -21,6 +20,8 @@
 #include "util/list.hh"
 #include "weapon/emp.hh"
 #include "weapon/weapon.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 // defines for different modes in the squad messaging system
 

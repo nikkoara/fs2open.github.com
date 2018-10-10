@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "ai/ai.hh"
 #include "fireball/fireballs.hh"
 #include "gamesnd/gamesnd.hh"
@@ -16,6 +15,8 @@
 #include "sound/sound.hh"
 #include "weapon/beam.hh"
 #include "weapon/weapon.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 // -----------------------------------------------------------------------------------------------------------------------
 // ARTILLERY DEFINES/VARS

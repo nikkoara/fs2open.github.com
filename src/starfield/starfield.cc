@@ -1,9 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <climits>
 
+#include "defs.hh"
 #include "cmdline/cmdline.hh"
 #include "debugconsole/console.hh"
 #include "freespace2/freespace.hh"
@@ -23,6 +22,8 @@
 #include "starfield/starfield.hh"
 #include "starfield/supernova.hh"
 #include "tracing/tracing.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #define MAX_DEBRIS_VCLIPS 4
 #define DEBRIS_ROT_MIN 10000

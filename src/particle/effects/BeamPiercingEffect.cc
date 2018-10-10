@@ -1,10 +1,7 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "particle/effects/BeamPiercingEffect.hh"
 #include "particle/ParticleSource.hh"
-
 #include "bmpman/bmpman.hh"
 #include "parse/parselo.hh"
 

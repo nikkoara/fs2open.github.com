@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "cfile/cfile.hh"
 #include "gamesequence/gamesequence.hh"
 #include "hud/hudmessage.hh"
@@ -21,6 +20,7 @@
 #include "sound/audiostr.hh"
 #include "sound/sound.hh"
 #include "weapon/emp.hh"
+#include "log/log.hh"
 
 #define MAX_TRAINING_MESSAGE_LINES 10
 #define TRAINING_MESSAGE_WINDOW_WIDTH 266

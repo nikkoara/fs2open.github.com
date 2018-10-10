@@ -1,8 +1,12 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #define REDALERT_INTERNAL
+#include <stdexcept>
+
 #include "ai/aigoals.hh"
 #include "cfile/cfile.hh"
 #include "freespace2/freespace.hh"
@@ -28,8 +32,6 @@
 #include "ship/ship.hh"
 #include "sound/audiostr.hh"
 #include "weapon/weapon.hh"
-
-#include <stdexcept>
 
 /////////////////////////////////////////////////////////////////////////////
 // Red Alert Mission-Level

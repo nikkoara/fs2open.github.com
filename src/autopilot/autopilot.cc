@@ -1,10 +1,14 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 // Autopilot.cpp
 // Derek Meek
 // 4-30-2004
+
+#include <map>
 
 #include "ai/ai.hh"
 #include "ai/aigoals.hh"
@@ -26,8 +30,6 @@
 #include "parse/sexp.hh"
 #include "ship/ship.hh"
 #include "sound/audiostr.hh"
-
-#include <map>
 
 // Extern functions/variables
 extern int Player_use_ai;

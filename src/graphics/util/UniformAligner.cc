@@ -1,11 +1,10 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 //
 //
 
 #include "UniformAligner.hh"
+#include "assert/assert.hh"
 
 namespace {
 

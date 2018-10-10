@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "ai/ai_profiles.hh"
 #include "debugconsole/console.hh"
 #include "freespace2/freespace.hh"
@@ -18,6 +17,7 @@
 #include "stats/medals.hh"
 #include "stats/scoring.hh"
 #include "weapon/weapon.hh"
+#include "log/log.hh"
 
 /*
 // uncomment to get extra debug messages when a player scores

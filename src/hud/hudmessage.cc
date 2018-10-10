@@ -1,10 +1,10 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cstdlib>
 #include <cstdarg>
+#include <cstdarg>
 
+#include "defs.hh"
 #include "anim/animplay.hh"
 #include "freespace2/freespace.hh"
 #include "gamesequence/gamesequence.hh"
@@ -26,6 +26,7 @@
 #include "sound/audiostr.hh"
 #include "ui/ui.hh"
 #include "weapon/weapon.hh"
+#include "log/log.hh"
 
 /* replaced with those static ints that follow
 #define LIST_X          46

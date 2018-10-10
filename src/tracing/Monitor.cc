@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "tracing/Monitor.hh"
 #include "tracing/tracing.hh"
 

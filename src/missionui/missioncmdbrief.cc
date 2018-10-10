@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "anim/animplay.hh"
 #include "anim/packunpack.hh"
 #include "gamehelp/contexthelp.hh"
@@ -20,6 +19,7 @@
 #include "playerman/player.hh"
 #include "sound/audiostr.hh"
 #include "ui/uidefs.hh"
+#include "log/log.hh"
 
 #define NUM_CMD_SETTINGS 2
 

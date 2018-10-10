@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "debugconsole/console.hh"
 #include "freespace2/freespace.hh"
 #include "gamesequence/gamesequence.hh"
@@ -24,6 +23,8 @@
 #include "shared/alphacolors.hh"
 #include "tracing/tracing.hh"
 #include "ui/ui.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 // timestamp stuff for evaluating mission goals
 #define GOAL_TIMESTAMP 0            // make immediately eval

@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "cfile/cfile.hh"
 #include "gamesequence/gamesequence.hh"
 #include "gamesnd/gamesnd.hh"
@@ -16,6 +15,7 @@
 #include "popup/popup.hh"
 #include "ship/ship.hh"
 #include "ui/ui.hh"
+#include "log/log.hh"
 
 //////////////////////////////////////////////////////////////////////////////
 // Game-wide Globals

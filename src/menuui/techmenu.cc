@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "anim/animplay.hh"
 #include "anim/packunpack.hh"
 #include "cmdline/cmdline.hh"
@@ -27,6 +26,8 @@
 #include "ui/ui.hh"
 #include "ui/uidefs.hh"
 #include "weapon/weapon.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 #define REVOLUTION_RATE 5.2f
 

@@ -1,7 +1,10 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
+#include <algorithm>
+#include <cmath>
+#include <cstdarg>
 
+#include "defs.hh"
 #include "debugconsole/console.hh"
 #include "shared/alphacolors.hh"
 #include "shared/version.hh"
@@ -11,9 +14,6 @@
 #include "io/timer.hh"
 #include "math/fix.hh"
 #include "osapi/osapi.hh"
-
-#include <algorithm>
-#include <cmath>
 
 // ========================= GLOBALS =========================
 bool Dc_debug_on; //!< Flag used to print console and command debugging strings

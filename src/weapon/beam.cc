@@ -1,9 +1,8 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <algorithm>
 
+#include "defs.hh"
 #include "asteroid/asteroid.hh"
 #include "cmdline/cmdline.hh"
 #include "debris/debris.hh"
@@ -30,6 +29,7 @@
 #include "weapon/weapon.hh"
 #include "shared/globals.hh"
 #include "tracing/tracing.hh"
+#include "log/log.hh"
 
 // ------------------------------------------------------------------------------------------------
 // BEAM WEAPON DEFINES/VARS

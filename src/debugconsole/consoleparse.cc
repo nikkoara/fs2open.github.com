@@ -21,15 +21,16 @@
 // @todo Maybe make parser functions case-insensitive
 ////////////////
 
-#include "debugconsole/consoleparse.hh"
-#include "parse/parselo.hh"
-
 #include <climits>
 #include <cmath>
 #include <cfloat>
 #include <cstdarg>
 #include <cstring>
 #include <algorithm>
+#include <cstdarg>
+
+#include "debugconsole/consoleparse.hh"
+#include "parse/parselo.hh"
 
 // ========================= LOCALS =========================
 char Command_string[MAX_CLI_LEN]; //!< Command string buffer.

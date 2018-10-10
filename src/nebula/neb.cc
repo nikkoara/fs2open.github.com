@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "bmpman/bmpman.hh"
 #include "cmdline/cmdline.hh"
 #include "ddsutils/ddsutils.hh"
@@ -19,6 +18,7 @@
 #include "tgautils/tgautils.hh"
 #include "tracing/tracing.hh"
 #include "graphics/light.hh"
+#include "log/log.hh"
 
 // --------------------------------------------------------------------------------------------------------
 // NEBULA DEFINES/VARS

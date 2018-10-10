@@ -1,7 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include "hud/hudconfig.hh"
 #include "hud/hudobserver.hh"
 #include "hud/hudtargetbox.hh"

@@ -1,6 +1,7 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+#include "assert/assert.hh"
 
 /*
  * Code created by Thomas Whittaker (RT) for a FreeSpace 2 source code project

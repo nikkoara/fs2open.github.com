@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-
 #include "ai/aibig.hh"
 #include "asteroid/asteroid.hh"
 #include "cmdline/cmdline.hh"
@@ -39,6 +38,8 @@
 #include "weapon/flak.hh"
 #include "weapon/muzzleflash.hh"
 #include "weapon/swarm.hh"
+#include "assert/assert.hh"
+#include "log/log.hh"
 
 // Since SSMs are parsed after weapons, if we want to allow SSM strikes to be
 // specified by name, we need to store those names until after SSMs are parsed.

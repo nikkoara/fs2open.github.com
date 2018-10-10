@@ -1,25 +1,25 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
-#include "tracing/tracing.hh"
-#include "graphics/2d.hh"
-#include "parse/parselo.hh"
-#include "io/timer.hh"
-
-#include "TraceEventWriter.hh"
-#include "MainFrameTimer.hh"
-#include "FrameProfiler.hh"
-
 #include <cinttypes>
 #include <fstream>
 #include <future>
 #include <mutex>
 #include <queue>
 
+#include "defs.hh"
+#include "tracing/tracing.hh"
+#include "graphics/2d.hh"
+#include "parse/parselo.hh"
+#include "io/timer.hh"
+#include "TraceEventWriter.hh"
+#include "MainFrameTimer.hh"
+#include "FrameProfiler.hh"
+#include "assert/assert.hh"
+
 // A function for getting the id of the current thread
 #if __LINUX__
 #include <sys/syscall.h>
+
 static int64_t get_tid () { return (int64_t)syscall (SYS_gettid); }
 #else
 #include <pthread.h>

@@ -1,15 +1,15 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-
 #include <cstring>
 
+#include "defs.hh"
 #include "shared/types.hh"
 #include "tgautils/tgautils.hh"
 #include "cfile/cfile.hh"
 #include "bmpman/bmpman.hh"
 #include "graphics/2d.hh"
 #include "cmdline/cmdline.hh"
+#include "assert/assert.hh"
 
 // -----------------
 //
