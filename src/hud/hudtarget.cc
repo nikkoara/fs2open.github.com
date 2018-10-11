@@ -751,7 +751,7 @@ void hud_target_hotkey_add_remove (int k, object* ctarget, int how_to_add) {
     // should be removed
     if (hitem == END_OF_LIST (plist)) {
         if (EMPTY (&htarget_free_list)) {
-            Int3 (); // get Allender -- no more free hotkey target items
+            ASSERT (0);
             return;
         }
 
@@ -2482,7 +2482,7 @@ void hud_target_in_reticle_new () {
 
             mc.model_num = jnp->GetModelNumber ();
             break;
-        default: Int3 (); // Illegal object type.
+        default: ASSERT (0);
         }
 
         if (mc.model_num == -1) {
@@ -3191,7 +3191,7 @@ void hud_process_remote_detonate_missile () {
                         break;
 
                     default:
-                        Int3 (); // should never happen
+                        ASSERT (0);
                         return;
                     }
 
@@ -3407,7 +3407,7 @@ void hud_show_selection_set () {
             case OBJ_SHIP: break;
 
             default:
-                Int3 (); // should never happen
+                ASSERT (0);
                 return;
             }
             if (OBJ_INDEX (targetp) == Player_ai->target_objnum) {
@@ -3957,7 +3957,7 @@ void HudGaugeLeadIndicator::renderLeadCurrentTarget () {
     // If the target is out of range, then draw the correct frame for the lead
     // indicator
     if (Lead_indicator_gauge.first_frame == -1) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -4095,7 +4095,7 @@ void HudGaugeLeadIndicator::renderLeadQuick (
     // If the target is out of range, then draw the correct frame for the lead
     // indicator
     if (Lead_indicator_gauge.first_frame == -1) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -4259,7 +4259,7 @@ void HudGaugeLeadSight::render (float /*frametime*/) {
     // If the target is out of range, then draw the correct frame for the lead
     // indicator
     if (Lead_sight.first_frame == -1) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -4556,7 +4556,7 @@ void HudGaugeTargetTriangle::render (float /*frametime*/) {
 // start the weapon line (on the HUD) flashing
 void hud_start_flash_weapon (int index) {
     if (index >= MAX_WEAPON_FLASH_LINES) {
-        Int3 (); // Get Alan
+        ASSERT (0);
         return;
     }
 
@@ -4571,7 +4571,7 @@ void hud_start_flash_weapon (int index) {
 // maybe change the text color for the weapon line indicated by index
 void hud_maybe_flash_weapon (int index) {
     if (index >= MAX_WEAPON_FLASH_LINES) {
-        Int3 (); // Get Alan
+        ASSERT (0);
         return;
     }
 
@@ -5388,7 +5388,7 @@ void HudGaugeCmeasures::pageIn () {
 
 void HudGaugeCmeasures::render (float /*frametime*/) {
     if (Cmeasure_gauge.first_frame == -1) {
-        Int3 (); // failed to load coutermeasure gauge background
+        ASSERT (0);
         return;
     }
 
@@ -5406,7 +5406,7 @@ void HudGaugeCmeasures::render (float /*frametime*/) {
         position[0] + Cm_text_offsets[0], position[1] + Cm_text_offsets[1],
         XSTR ("cm.", 327));
     if (!Player_ship) {
-        Int3 (); // player ship doesn't exist?
+        ASSERT (0);
         return;
     }
     renderPrintf (
@@ -6261,7 +6261,7 @@ void hud_update_weapon_flash () {
     num_weapons = sw->num_primary_banks + sw->num_secondary_banks;
 
     if (num_weapons > MAX_WEAPON_FLASH_LINES) {
-        Int3 (); // Get Alan
+        ASSERT (0);
         return;
     }
 
@@ -6278,7 +6278,7 @@ void hud_update_weapon_flash () {
 
 void HudGaugeWeapons::maybeFlashWeapon (int index) {
     if (index >= MAX_WEAPON_FLASH_LINES) {
-        Int3 (); // Get Alan
+        ASSERT (0);
         return;
     }
 
@@ -6468,7 +6468,7 @@ void HudGaugeOffscreen::calculatePosition (
     if (!(eye_vertex->flags & PF_PROJECTED)) g3_project_vertex (eye_vertex);
 
     if (eye_vertex->flags & PF_OVERFLOW) {
-        Int3 (); // This is unlikely to happen, but can if a clip goes through
+        ASSERT (0);
                  // the player's eye.
         Player_ai->target_objnum = -1;
         return;
@@ -6529,7 +6529,7 @@ void HudGaugeOffscreen::calculatePosition (
             xpos = gr_screen.clip_right_unscaled - half_gauge_length;
     }
     else {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -6899,7 +6899,7 @@ void HudGaugeWeaponList::pageIn () {
 
 void HudGaugeWeaponList::maybeFlashWeapon (int index) {
     if (index >= MAX_WEAPON_FLASH_LINES) {
-        Int3 (); // Get Alan
+        ASSERT (0);
         return;
     }
 

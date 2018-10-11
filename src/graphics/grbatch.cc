@@ -656,7 +656,7 @@ float batch_add_laser (
     int texture, vec3d* p0, float width1, vec3d* p1, float width2, int r,
     int g, int b) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return 1;
     }
 
@@ -684,7 +684,7 @@ int batch_add_bitmap (
     int texture, int tmap_flags, vertex* pnt, int orient, float rad,
     float alpha, float depth) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return 1;
     }
 
@@ -735,7 +735,7 @@ int geometry_batch_add_bitmap (
     int texture, int tmap_flags, vertex* pnt, int orient, float rad,
     float alpha, float depth) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return 1;
     }
 
@@ -768,7 +768,7 @@ int batch_add_bitmap_rotated (
     int texture, int tmap_flags, vertex* pnt, float angle, float rad,
     float alpha, float depth) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return 1;
     }
 
@@ -807,7 +807,7 @@ int batch_add_bitmap_rotated (
 
 int batch_add_tri (int texture, int tmap_flags, vertex* verts, float alpha) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return 1;
     }
 
@@ -840,7 +840,7 @@ int batch_add_tri (int texture, int tmap_flags, vertex* verts, float alpha) {
 
 int batch_add_quad (int texture, int tmap_flags, vertex* verts, float alpha) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return 1;
     }
 
@@ -923,7 +923,7 @@ int batch_add_polygon (
     v[3].texture_position.v = 1.0f;
 
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return 1;
     }
 
@@ -958,7 +958,7 @@ int batch_add_beam (
     int texture, int tmap_flags, vec3d* start, vec3d* end, float width,
     float intensity) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return 1;
     }
 
@@ -1167,7 +1167,7 @@ int distortion_add_bitmap_rotated (
     int texture, int tmap_flags, vertex* pnt, float angle, float rad,
     float alpha, float depth) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return 1;
     }
 
@@ -1202,7 +1202,7 @@ int distortion_add_beam (
     int texture, int tmap_flags, vec3d* start, vec3d* end, float width,
     float intensity, float offset) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return 1;
     }
 

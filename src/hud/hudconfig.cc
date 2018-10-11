@@ -1342,7 +1342,7 @@ void hud_config_button_do (int n) {
 
     case HCB_SELECT_ALL: hud_config_select_all_toggle (!HC_select_all); break;
 
-    default: Int3 (); break;
+    default: ASSERT (0); break;
     }
 }
 
@@ -1406,7 +1406,7 @@ void hud_config_draw_gauge_status () {
         return;
     }
 
-    Int3 (); // should never get here
+    ASSERT (0);
 }
 
 // disable a HUD config button
@@ -1656,7 +1656,7 @@ void hud_config_color_save (char* name) {
 
     // bad
     if (out == NULL) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 

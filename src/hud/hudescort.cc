@@ -730,7 +730,7 @@ void hud_add_remove_ship_escort (int objnum, int supress_feedback) {
     int in_escort, i;
 
     if (objnum < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -761,7 +761,7 @@ void hud_remove_ship_from_escort (int objnum) {
     int in_escort, i;
 
     if (objnum < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 

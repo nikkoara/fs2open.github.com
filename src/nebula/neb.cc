@@ -584,7 +584,7 @@ int neb2_skip_render (object* objp, float z_depth) {
         break;
 
     // hmmm. unknown object type - should probably let it through
-    default: Int3 (); return 0;
+    default: ASSERT (0); return 0;
     }
     return 0;
 }
@@ -697,7 +697,7 @@ float neb2_get_alpha_offscreen (float sx, float sy, float incoming_alpha) {
     }
     // should never get here
     else {
-        Int3 ();
+        ASSERT (0);
     }
 
     return alpha < 0.0f ? 0.0f : alpha;
@@ -761,7 +761,7 @@ void neb2_copy (int xyz, int src, int dest) {
             }
         }
         break;
-    default: Int3 (); break;
+    default: ASSERT (0); break;
     }
 }
 
@@ -855,7 +855,7 @@ void neb2_gen_slice (int xyz, int src, vec3d* cube_center) {
             }
         }
         break;
-    default: Int3 (); break;
+    default: ASSERT (0); break;
     }
 }
 

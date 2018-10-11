@@ -1964,7 +1964,7 @@ void ai_big_strafe () {
 
     /*
         if ( aip->goal_objnum != aip->target_objnum ) {
-            Int3();     // what is going on here? - Get Alan
+            ASSERT (0);
             aip->mode = AIM_NONE;
             return;
         }
@@ -1985,7 +1985,7 @@ void ai_big_strafe () {
     case AIS_STRAFE_GLIDE_ATTACK: ai_big_strafe_glide_attack (); break;
     default:
 
-        Int3 (); // Illegal submode for AIM_STRAFE
+        ASSERT (0);
         break;
     }
 

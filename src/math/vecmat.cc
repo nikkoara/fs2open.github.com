@@ -1629,7 +1629,7 @@ void vm_matrix_to_rot_axis_and_angle (
             break;
 
         default:
-            Int3 (); // this should never happen
+            ASSERT (0);
             break;
         }
 

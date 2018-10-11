@@ -323,7 +323,7 @@ void mission_log_add_entry (
                 if (log_entries[i].index == index) { break; }
             }
             if (i == last_entry) {
-                Int3 (); // get Allender -- cannot find any departed ships from
+                ASSERT (0);
                          // wing that supposedly departed.
             }
         }
@@ -373,7 +373,7 @@ int mission_log_get_time_indexed (
             // in the other set.
             if ((type == LOG_SHIP_DOCKED) || (type == LOG_SHIP_UNDOCKED)) {
                 if (sname == NULL) {
-                    Int3 ();
+                    ASSERT (0);
                     return 0;
                 }
 
@@ -387,7 +387,7 @@ int mission_log_get_time_indexed (
             else {
                 // for non dock/undock goals, then the names are important!
                 if (pname == NULL) {
-                    Int3 ();
+                    ASSERT (0);
                     return 0;
                 }
 
@@ -454,7 +454,7 @@ int mission_log_get_count (
             // in the other set.
             if ((type == LOG_SHIP_DOCKED) || (type == LOG_SHIP_UNDOCKED)) {
                 if (sname == NULL) {
-                    Int3 ();
+                    ASSERT (0);
                     return 0;
                 }
 
@@ -468,7 +468,7 @@ int mission_log_get_count (
             else {
                 // for non dock/undock goals, then the names are important!
                 if (pname == NULL) {
-                    Int3 ();
+                    ASSERT (0);
                     return 0;
                 }
 

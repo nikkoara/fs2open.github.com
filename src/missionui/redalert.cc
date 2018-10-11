@@ -347,7 +347,7 @@ void red_alert_do_frame (float frametime) {
 
     // ensure that the red alert interface has been initialized
     if (!Red_alert_inited) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 

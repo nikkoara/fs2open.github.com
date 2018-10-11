@@ -857,7 +857,7 @@ void brief_render_icon (
 
         ga = &bii->regular;
         if (ga->first_frame < 0) {
-            Int3 ();
+            ASSERT (0);
             return;
         }
 
@@ -1684,7 +1684,7 @@ int brief_set_move_list (int new_stage, int current_stage, float time) {
         // Set up fading icon (to fade out)
         if (is_gone == 1) {
             if (Num_fade_icons >= MAX_FADING_ICONS) {
-                Int3 ();
+                ASSERT (0);
                 Num_fade_icons = 0;
             }
 

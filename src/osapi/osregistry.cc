@@ -29,8 +29,7 @@ registry_path () {
 
     static std::once_flag init_flag;
     std::call_once (init_flag, [&]() {
-        path = fs::path (
-            SDL_GetPrefPath ("Volition", "Freespace2")) /= "freespace2.ini";
+        path = fs2::os::get_config_path () /= "freespace2.ini";
     });
 
     ASSERT (!path.empty ());

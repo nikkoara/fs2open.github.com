@@ -206,7 +206,7 @@ void pilot_set_start_campaign (player* p) {
                 // if we hit this then a coder probably did something dumb
                 // (like not needing to sort)
                 if ((name1 == NULL) || (name2 == NULL)) {
-                    Int3 ();
+                    ASSERT (0);
                     break;
                 }
 

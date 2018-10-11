@@ -189,7 +189,7 @@ void opengl_bind_buffer_object (int handle) {
         GL_state.Array.BindUniformBuffer (buffer_obj.buffer_id);
         break;
     default:
-        Int3 ();
+        ASSERT (0);
         return;
         break;
     }
@@ -279,7 +279,7 @@ void gr_opengl_delete_buffer (int handle) {
     case GL_TEXTURE_BUFFER: GL_state.Array.BindTextureBuffer (0); break;
     case GL_UNIFORM_BUFFER: GL_state.Array.BindUniformBuffer (0); break;
     default:
-        Int3 ();
+        ASSERT (0);
         return;
         break;
     }

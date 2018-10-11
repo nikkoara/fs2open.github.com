@@ -143,7 +143,7 @@ int shockwave_create (
         OBJ_SHOCKWAVE, real_parent, i, &orient, &sw->pos, sw->outer_radius,
         tmp_flags + Object::Object_Flags::Renders);
 
-    if (objnum == -1) { Int3 (); }
+    if (objnum == -1) { ASSERT (0); }
 
     sw->objnum = objnum;
 
@@ -223,7 +223,7 @@ int shockwave_get_framenum (const int sw_idx, const int ani_id) {
     shockwave* sw;
 
     if ((sw_idx < 0) || (sw_idx >= MAX_SHOCKWAVES)) {
-        Int3 ();
+        ASSERT (0);
         return 0;
     }
 
@@ -358,7 +358,7 @@ void shockwave_move (object* shockwave_objp, float frametime) {
                     Weapon::Weapon_Flags::Destroyed_by_weapon);
             }
             break;
-        default: Int3 (); break;
+        default: ASSERT (0); break;
         }
 
         // If this shockwave hit the player, play shockwave impact sound

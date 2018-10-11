@@ -586,7 +586,7 @@ int bm_create (int bpp, int w, int h, void* data, int flags) {
 
     // make sure that we have valid data
     if (data == NULL) {
-        Int3 ();
+        ASSERT (0);
         return -1;
     }
 
@@ -3195,7 +3195,7 @@ static int find_block_of (int n, int start_block) {
     int nstart = 0;
 
     if (n < 1) {
-        Int3 ();
+        ASSERT (0);
         return -1;
     }
 

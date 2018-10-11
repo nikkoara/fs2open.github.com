@@ -21,19 +21,19 @@ anim_instance* init_anim_instance (anim* ptr, int bpp) {
     anim_instance* inst;
 
     if (!ptr) {
-        Int3 ();
+        ASSERT (0);
         return NULL;
     }
 
     if (ptr->flags & ANF_STREAMED) {
         if (ptr->file_offset < 0) {
-            Int3 ();
+            ASSERT (0);
             return NULL;
         }
     }
     else {
         if (!ptr->data) {
-            Int3 ();
+            ASSERT (0);
             return NULL;
         }
     }
@@ -518,7 +518,7 @@ int unpack_pixel (
                 bit_8 = (ubyte) (pix * 17);
             }
             break;
-        default: Int3 ();
+        default: ASSERT (0);
         }
     }
     else {
@@ -564,7 +564,7 @@ int unpack_pixel (
 
     case 8: *data = bit_8; break;
 
-    default: Int3 (); return 0;
+    default: ASSERT (0); return 0;
     }
 
     return pixel_size;
@@ -603,7 +603,7 @@ int unpack_pixel_count (
                 bit_8 = (ubyte) (pix * 17);
             }
             break;
-        default: Int3 ();
+        default: ASSERT (0);
         }
     }
     else {

@@ -56,7 +56,7 @@ clip_edge (int plane_flag, vertex* on_pnt, vertex* off_pnt, uint flags) {
         den = -vm_vec_dot (&G3_user_clip_normal, &ray_direction);
         if (den ==
             0.0f) {  // Ray & plane are parallel, so there is no intersection
-            Int3 (); // Get John
+            ASSERT (0);
             ratio = 1.0f;
         }
         else {

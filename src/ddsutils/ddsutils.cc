@@ -333,13 +333,13 @@ void dds_save_image (
     char real_filename[MAX_FILENAME_LEN];
 
     if (data == NULL) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
     // header size check
     if (sizeof (DDSURFACEDESC2) != 124) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 

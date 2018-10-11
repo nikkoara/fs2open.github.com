@@ -247,9 +247,7 @@ std::string get_frame_profile_output () {
 void shutdown () {
     while (!gpu_events.empty ()) {
         process_events ();
-
-        // Don't do busy waiting...
-        os_sleep (5);
+        fs2::os::sleep (5);
     }
 
     for (auto query : query_objects) { gr_delete_query_object (query); }

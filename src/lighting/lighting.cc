@@ -142,7 +142,7 @@ static void light_rotate (light* l) {
 
     case Light_Type::Cone: break;
 
-    default: Int3 (); // Invalid light type
+    default: ASSERT (0);
     }
 }
 

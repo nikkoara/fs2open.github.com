@@ -239,7 +239,7 @@ weapon_explosions::weapon_explosions () { ExplosionInfo.clear (); }
 
 int weapon_explosions::GetIndex (char* filename) {
     if (filename == NULL) {
-        Int3 ();
+        ASSERT (0);
         return -1;
     }
 
@@ -806,7 +806,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         if (!replace) {
             WARNINGF (LOCATION,"Weapon name %s already exists in weapons.tbl.  All weapon names must be unique; the second entry has been skipped",wip->name);
             if (!skip_to_start_of_string_either ("$Name:", "#End")) {
-                Int3 ();
+                ASSERT (0);
             }
             return -1;
         }
@@ -815,7 +815,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         // Don't create weapon if it has +nocreate and is in a modular table.
         if (!create_if_not_found && replace) {
             if (!skip_to_start_of_string_either ("$Name:", "#End")) {
-                Int3 ();
+                ASSERT (0);
             }
 
             return -1;
@@ -1001,7 +1001,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
 
         if (wip->render_type != WRT_LASER) {
             WARNINGF (LOCATION," Laser glow specified on non-LASER type weapon (%s)!",wip->name);
-            Int3 ();
+            ASSERT (0);
         }
         else {
             generic_anim_init (&wip->laser_glow_bitmap, fname);
@@ -3257,7 +3257,7 @@ void weapon_load_bitmaps (int weapon_index) {
     if (Fred_running) return;
 
     if ((weapon_index < 0) || (weapon_index >= Num_weapon_types)) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -3732,7 +3732,7 @@ void weapon_maybe_play_warning (weapon* wp) {
  */
 void detonate_nearby_missiles (object* killer_objp, object* missile_objp) {
     if (killer_objp->type != OBJ_WEAPON || missile_objp->type != OBJ_WEAPON) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -5321,7 +5321,7 @@ int weapon_create (
     if (n == MAX_WEAPONS) {
         // if we supposedly deleted weapons above, what happened here!!!!
         if (num_deleted) {
-            Int3 (); // get allender -- something funny is going on!!!
+            ASSERT (0);
         }
 
         return -1;
@@ -5332,7 +5332,7 @@ int weapon_create (
         wip->model_num = model_load (wip->pofbitmap_name, 0, NULL);
 
         if (wip->model_num < 0) {
-            Int3 ();
+            ASSERT (0);
             return -1;
         }
     }
@@ -6265,7 +6265,7 @@ void weapon_do_area_effect (
                     Weapon::Weapon_Flags::Destroyed_by_weapon);
             }
             break;
-        default: Int3 (); break;
+        default: ASSERT (0); break;
         }
 
     } // end for

@@ -781,7 +781,7 @@ void model_render_add_lightning (
             gr_init_color (&secondary, 255, 255, 10);
             break;
 
-        default: Int3 ();
+        default: ASSERT (0);
         }
 
         // render the actual arc segment
@@ -1226,7 +1226,7 @@ void model_render_children_buffers (
     int i;
 
     if ((mn < 0) || (mn >= pm->n_models)) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -2141,7 +2141,7 @@ void model_queue_render_thrusters (
     if (Rendering_to_shadow_map) { return; }
 
     if (pm == NULL) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -2560,7 +2560,7 @@ void model_render_debug_children (
     int i;
 
     if ((mn < 0) || (mn >= pm->n_models)) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 

@@ -185,7 +185,7 @@ const char* Skill_level_names (int level, int translate) {
         case 2: str = XSTR ("Medium", 471); break;
         case 3: str = XSTR ("Hard", 472); break;
         case 4: str = XSTR ("Insane", 473); break;
-        default: Int3 ();
+        default: ASSERT (0);
         }
     }
     else {
@@ -195,7 +195,7 @@ const char* Skill_level_names (int level, int translate) {
         case 2: str = NOX ("Medium"); break;
         case 3: str = NOX ("Hard"); break;
         case 4: str = NOX ("Insane"); break;
-        default: Int3 ();
+        default: ASSERT (0);
         }
     }
 
@@ -917,7 +917,7 @@ float get_skill_stealth_dist_scaler () {
     case 4: // insane
         return 1.3f;
 
-    default: Int3 ();
+    default: ASSERT (0);
     }
 
     return 1.0f;
@@ -943,7 +943,7 @@ float get_skill_stealth_dot_scaler () {
     case 4: // insane
         return 0.7f;
 
-    default: Int3 ();
+    default: ASSERT (0);
     }
 
     return 1.0f;
@@ -1926,7 +1926,7 @@ int is_ignore_object_sub (
     }
     // Ignoring a wing.
     else {
-        Int3 (); // Should never happen.  I thought I removed this behavior! --
+        ASSERT (0);
                  // MK, 5/17/98
         return 0;
     }
@@ -2377,7 +2377,7 @@ void ai_attack_object (
     aip->ok_to_target_timestamp = timestamp (0); // Guarantee we can target.
 
     if (attacker == attacked) {
-        Int3 (); // Bogus!  Who tried to get me to attack myself!  Trace out
+        ASSERT (0);
                  // and fix!
         return;
     }
@@ -2431,7 +2431,7 @@ void ai_attack_object (
         }
     }
     else {
-        Int3 (); // Not supported yet!
+        ASSERT (0);
     }
 }
 
@@ -2487,7 +2487,7 @@ void ai_evade_object (object* evader, object* evaded) {
     ASSERT (Ships[evader->instance].ai_index != -1);
 
     if (evaded == evader) {
-        Int3 (); // Bogus!  Who tried to get me to evade myself!  Trace out and
+        ASSERT (0);
                  // fix!
         return;
     }
@@ -3279,7 +3279,7 @@ void ai_dock_with_object (
         aip->submode = AIS_UNDOCK_0;
         aip->submode_start_time = Missiontime;
         break;
-    default: Int3 (); // Bogus dock_type.
+    default: ASSERT (0);
     }
 
     // Goober5000 - we no longer need to set dock_path_index because it's
@@ -4478,7 +4478,7 @@ void ai_safety () {
         aip->submode_start_time = Missiontime;
         break;
     case AISS_1a: // Pick a safe point because we just got whacked!
-        Int3 ();
+        ASSERT (0);
         break;
     case AISS_2:
         if (ai_safety_goto_spot (Pl_objp) < 25.0f) {
@@ -4488,7 +4488,7 @@ void ai_safety () {
         break;
     case AISS_3: ai_safety_circle_spot (Pl_objp); break;
     default:
-        Int3 (); // Illegal submode for ai_safety();
+        ASSERT (0);
         break;
     }
 }
@@ -7843,7 +7843,7 @@ void ai_stealth_sweep () {
     // pt6 back
     case SM_SS_BOX2: goal_pt = aip->goal_point; break;
 
-    default: Int3 ();
+    default: ASSERT (0);
     }
 
     // when close to goal_pt, update next goal pt
@@ -8691,12 +8691,12 @@ void ai_cruiser_chase () {
     ai_info* aip = &Ai_info[shipp->ai_index];
 
     if (En_objp->type != OBJ_SHIP) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
     if (En_objp->instance < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -8887,7 +8887,7 @@ void ai_chase () {
     flagset< Ship::Ship_Flags > enemy_shipp_flags;
     int has_fired = -1;
 
-    if (aip->mode != AIM_CHASE) { Int3 (); }
+    if (aip->mode != AIM_CHASE) { ASSERT (0); }
 
     // by default we try to chase anything
     bool go_after_it = true;
@@ -9424,7 +9424,7 @@ void ai_chase () {
                     aip->submode_start_time = Missiontime;
                 }
                 break;
-            default: Int3 (); // Impossible!
+            default: ASSERT (0);
             }
         }
 
@@ -11078,8 +11078,8 @@ void ai_big_guard () {
         break;
 
     default:
-        Int3 (); // Illegal submode for Guard mode.
-        // AL 06/03/97 comment out Int3() to allow milestone to get out the
+        ASSERT (0);
+
         // door
         aip->submode = AIS_GUARD_PATROL;
         aip->submode_start_time = Missiontime;
@@ -11107,7 +11107,7 @@ void ai_guard () {
     guard_objp = &Objects[aip->guard_objnum];
 
     if (guard_objp == Pl_objp) {
-        Int3 (); // This seems illegal.  Why is a ship guarding itself?
+        ASSERT (0);
         aip->guard_objnum = -1;
         return;
     }
@@ -11330,8 +11330,8 @@ void ai_guard () {
 
         break;
     default:
-        Int3 (); // Illegal submode for Guard mode.
-        // AL 06/03/97 comment out Int3() to allow milestone to get out the
+        ASSERT (0);
+
         // door
         aip->submode = AIS_GUARD_PATROL;
         aip->submode_start_time = Missiontime;
@@ -11477,7 +11477,7 @@ void ai_do_objects_repairing_stuff (
         stamp = timestamp (-1);
         break;
 
-    default: Int3 (); // bogus type of repair info
+    default: ASSERT (0);
     }
 
     // repair_objp might be NULL is we are cleaning up this mode because of the
@@ -11511,7 +11511,7 @@ void ai_do_objects_repairing_stuff (
         case REPAIR_INFO_BEGIN:
         case REPAIR_INFO_COMPLETE: break;
 
-        default: Int3 (); // bogus type of repair info
+        default: ASSERT (0);
         }
     }
 }
@@ -12306,7 +12306,7 @@ void ai_dock () {
     }
 
     default: {
-        Int3 (); // Error, bogus submode
+        ASSERT (0);
     }
 
     } // end of switch statement
@@ -13779,7 +13779,7 @@ void ai_maybe_evade_locked_missile (object* objp, ai_info* aip) {
                 case AIM_SENTRYGUN: break;
                 case AIM_WARP_OUT: break;
                 default:
-                    Int3 (); // Hey, what mode is it?
+                    ASSERT (0);
                     break;
                 }
             }
@@ -13839,7 +13839,7 @@ void maybe_evade_dumbfire_weapon (ai_info* aip) {
     case AIM_WARP_OUT:
     case AIM_FLY_TO_SHIP: return;
     default:
-        Int3 (); // Bogus mode!
+        ASSERT (0);
         return;
     }
 
@@ -13911,7 +13911,7 @@ void maybe_evade_dumbfire_weapon (ai_info* aip) {
         case AIM_BAY_EMERGE:
         case AIM_BAY_DEPART:
         case AIM_SENTRYGUN: break;
-        default: Int3 (); // Bogus mode!
+        default: ASSERT (0);
         }
     }
 }
@@ -13992,7 +13992,7 @@ int ai_acquire_emerge_path (
     ai_info* aip = &Ai_info[shipp->ai_index];
 
     if (parent_objnum == -1) {
-        Int3 ();
+        ASSERT (0);
         return -1;
     }
 
@@ -14443,12 +14443,12 @@ void ai_execute_behavior (ai_info* aip) {
     case AIM_SENTRYGUN: ai_sentrygun (); break;
     case AIM_WARP_OUT: break; // Note, handled directly from ai_frame().
     case AIM_GET_BEHIND:
-        // FIXME: got this from TBP and added it here to skip the Int3() but
+
         // don't really want to handle it properly until after 3.6.7 just to
         // avoid delaying release or breaking something - taylor
         break;
     default:
-        Int3 (); // This should never happen -- MK, 5/12/97
+        ASSERT (0);
         break;
     }
 
@@ -14791,7 +14791,7 @@ void ai_warp_out (object* objp) {
         break;
     }
     case AIS_WARP_5: break;
-    default: Int3 (); // Illegal submode for warping out.
+    default: ASSERT (0);
     }
 }
 
@@ -15058,7 +15058,7 @@ int aas_1 (object* objp, ai_info* aip, vec3d* safe_pos) {
         return 1;
     }
     else {
-        Int3 (); // Illegal -- supposedly avoiding a shockwave, but neither
+        ASSERT (0);
                  // ship nor weapon.  What is it!?
     }
 
@@ -15330,7 +15330,7 @@ void validate_mode_submode (ai_info* aip) {
         case SM_EVADE_WEAPON:
         case SM_FLY_AWAY:
         case SM_ATTACK_FOREVER: break;
-        default: Int3 ();
+        default: ASSERT (0);
         }
         break;
 
@@ -15342,7 +15342,7 @@ void validate_mode_submode (ai_info* aip) {
         case AIS_STRAFE_RETREAT1:
         case AIS_STRAFE_RETREAT2:
         case AIS_STRAFE_POSITION: break;
-        default: Int3 ();
+        default: ASSERT (0);
         }
         break;
     }
@@ -16444,7 +16444,7 @@ void ai_ship_hit (object* objp_ship, object* hit_objp, vec3d* hit_normal) {
             objp_hitter = hit_objp;
         }
         else {
-            Int3 (); // Should never happen.
+            ASSERT (0);
             return;
         }
         ASSERT (objp_hitter != NULL);
@@ -16527,7 +16527,7 @@ void ai_ship_hit (object* objp_ship, object* hit_objp, vec3d* hit_normal) {
         hitter_objnum = OBJ_INDEX (hit_objp);
     }
     else {
-        Int3 (); // Hmm, what kind of object hit this if not weapon or ship?
+        ASSERT (0);
                  // Get MikeK.
         return;
     }
@@ -16675,7 +16675,7 @@ void ai_ship_hit (object* objp_ship, object* hit_objp, vec3d* hit_normal) {
         return;
         break;
     case AIM_WARP_OUT: return; break;
-    default: Int3 (); // Bogus mode!
+    default: ASSERT (0);
     }
 
     if (timestamp_elapsed (aip->ok_to_target_timestamp)) {
@@ -17078,7 +17078,7 @@ void ai_rearm_repair (
 // is an index into polymodel->paths[])
 int ai_return_path_num_from_dockbay (object* dockee_objp, int dockbay_index) {
     if (dockbay_index < 0 || dockee_objp == NULL) {
-        Int3 (); // should never happen
+        ASSERT (0);
         return -1;
     }
 

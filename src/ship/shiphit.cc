@@ -986,7 +986,7 @@ static void shiphit_record_player_killer (object* killer_objp, player* p) {
         p->killer_species = -1;
         break;
 
-    default: Int3 (); break;
+    default: ASSERT (0); break;
     }
 }
 
@@ -1343,7 +1343,7 @@ static void player_died_start (object* killer_objp) {
             break;
 
         default:
-            Int3 (); // Killed by an object of a peculiar type.  What is it?
+            ASSERT (0);
             other_objp = killer_objp; // Enable to continue, just in case we
                                       // shipped it with this bug...
         }

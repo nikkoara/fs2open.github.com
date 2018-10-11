@@ -81,7 +81,7 @@ int Key_normal_game = 0;
 
 namespace {
 bool key_down_event_handler (const SDL_Event& e) {
-    if (!os::events::isWindowEvent (e, os::getSDLMainWindow ())) {
+    if (!fs2::os::events::isWindowEvent (e, fs2::os::getSDLMainWindow ())) {
         return false;
     }
 
@@ -95,7 +95,7 @@ bool key_down_event_handler (const SDL_Event& e) {
 }
 
 bool key_up_event_handler (const SDL_Event& e) {
-    if (!os::events::isWindowEvent (e, os::getSDLMainWindow ())) {
+    if (!fs2::os::events::isWindowEvent (e, fs2::os::getSDLMainWindow ())) {
         return false;
     }
 
@@ -410,7 +410,7 @@ int key_getch () {
     if (!key_inited) return 0;
 
     while (!key_checkch ()) {
-        os_poll ();
+        fs2::os::events::process_all ();
 
         dummy++;
     }
@@ -697,11 +697,11 @@ void key_init () {
 
     SDL_UnlockMutex (key_lock);
 
-    os::events::addEventListener (
-        SDL_KEYDOWN, os::events::DEFAULT_LISTENER_WEIGHT,
+    LISTEN (
+        SDL_KEYDOWN, fs2::os::events::DEFAULT_LISTENER_WEIGHT,
         key_down_event_handler);
-    os::events::addEventListener (
-        SDL_KEYUP, os::events::DEFAULT_LISTENER_WEIGHT, key_up_event_handler);
+    LISTEN (
+        SDL_KEYUP, fs2::os::events::DEFAULT_LISTENER_WEIGHT, key_up_event_handler);
 
     atexit (key_close);
 }

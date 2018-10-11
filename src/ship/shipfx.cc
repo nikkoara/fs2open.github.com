@@ -581,7 +581,7 @@ void shipfx_warpin_start (object* objp) {
 
     if (shipp->is_arriving ()) {
         WARNINGF (LOCATION, "Ship '%s' is already arriving!", shipp->ship_name);
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -683,7 +683,7 @@ static int compute_special_warpout_stuff (
 
     if (-vm_vec_dot (&objp->orient.vec.fvec, &facing_normal) <
         max_warpout_angle) { // within allowed angle
-        Int3 ();
+        ASSERT (0);
         WARNINGF (LOCATION, "special warpout angle exceeded");
         return -1;
     }
@@ -2528,7 +2528,7 @@ void shipfx_do_damaged_arcs_frame (ship* shipp) {
                     shipp->arc_pts[i][1] = v4;
                     break;
 
-                default: Int3 ();
+                default: ASSERT (0);
                 }
 
                 // determine what kind of arc to create
@@ -3555,7 +3555,7 @@ int WE_Default::warpStart () {
             sip->warpin_snd_start, sip->warpin_snd_end);
     }
     else {
-        Int3 ();
+        ASSERT (0);
     }
 
     // WMC - bail

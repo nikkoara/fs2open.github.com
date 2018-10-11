@@ -444,7 +444,7 @@ void insertion_sort (
     // allocate space for the element being moved
     current = malloc (element_size);
     if (current == NULL) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 

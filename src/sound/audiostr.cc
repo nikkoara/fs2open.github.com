@@ -566,7 +566,7 @@ bool AudioStream::ServiceBuffer (void) {
         else {
             // Error writing wave data
             fRtn = false;
-            Int3 ();
+            ASSERT (0);
         }
     }
 
@@ -892,7 +892,7 @@ int audiostream_open (const char* filename, int type) {
 
     case ASF_EVENTMUSIC: break;
 
-    default: Int3 (); return -1;
+    default: ASSERT (0); return -1;
     }
 
     rc = Audio_streams[i].Create (fname);

@@ -368,7 +368,7 @@ void common_music_init (int score_index) {
     if (Cmdline_freespace_no_music) { return; }
 
     if (score_index >= NUM_SCORES) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -875,7 +875,7 @@ void common_check_keys (int k) {
             case ON_SHIP_SELECT: Next_screen = ON_BRIEFING_SELECT; break;
 
             case ON_WEAPON_SELECT: Next_screen = ON_SHIP_SELECT; break;
-            default: Int3 (); break;
+            default: ASSERT (0); break;
             } // end switch
         }
 
@@ -902,7 +902,7 @@ void common_check_keys (int k) {
                 break;
 
             case ON_WEAPON_SELECT: Next_screen = ON_BRIEFING_SELECT; break;
-            default: Int3 (); break;
+            default: ASSERT (0); break;
             } // end switch
         }
 

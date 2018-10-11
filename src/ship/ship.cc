@@ -757,7 +757,7 @@ static void parse_engine_wash (bool replace) {
         // table.
         if (!create_if_not_found && replace) {
             if (!skip_to_start_of_string_either ("$Name:", "#End")) {
-                Int3 ();
+                ASSERT (0);
             }
             return;
         }
@@ -1941,7 +1941,7 @@ static int parse_ship (const char* filename, bool replace) {
         if (!replace) {
             WARNINGF (LOCATION,"Error:  Ship name %s already exists in %s.  All ship class names must be unique.",sip->name, filename);
             if (!skip_to_start_of_string_either ("$Name:", "#End")) {
-                Int3 ();
+                ASSERT (0);
             }
             return -1;
         }
@@ -1950,7 +1950,7 @@ static int parse_ship (const char* filename, bool replace) {
         // Don't create ship if it has +nocreate and is in a modular table.
         if (!create_if_not_found && replace) {
             if (!skip_to_start_of_string_either ("$Name:", "#End")) {
-                Int3 ();
+                ASSERT (0);
             }
 
             return -1;
@@ -5428,7 +5428,7 @@ static int ship_allocate_subsystems (int num_so, bool page_in = false) {
 
     // "0" itself is safe
     if (num_so < 0) {
-        Int3 ();
+        ASSERT (0);
         return 0;
     }
 
@@ -7504,12 +7504,12 @@ void ship_wing_cleanup (int shipnum, wing* wingp) {
                          WING_INDEX (wingp)) &&
                         !(Ships[Objects[so->objnum].instance]
                               .is_dying_or_departing ())) {
-                        // TODO: I think this Int3() is triggered when a wing
+
                         // whose ships are all docked to ships of another wing
                         // departs.  It can be reliably seen in TVWP chapter 1
                         // mission 7, when Torino and Iota wing depart. Not
                         // sure how to fix this. -- Goober5000
-                        Int3 ();
+                        ASSERT (0);
                     }
                 }
             }
@@ -7873,7 +7873,7 @@ static void ship_blow_up_area_apply_blast (object* exp_objp) {
                 ship_apply_whack (&force, &vec_ship_to_impact, objp);
                 break;
             case OBJ_ASTEROID: asteroid_hit (objp, NULL, NULL, damage); break;
-            default: Int3 (); break;
+            default: ASSERT (0); break;
             }
         } // end for
     }
@@ -8941,7 +8941,7 @@ static void ship_subsys_disrupted_maybe_check (ship* shipp) {
  */
 int ship_subsys_disrupted (ship_subsys* ss) {
     if (!ss) {
-        Int3 (); // should never happen, get Alan if it does.
+        ASSERT (0);
         return 0;
     }
 
@@ -8961,7 +8961,7 @@ void ship_subsys_set_disrupted (ship_subsys* ss, int time) {
     int time_left = 0;
 
     if (!ss) {
-        Int3 (); // should never happen, get Alan if it does.
+        ASSERT (0);
         return;
     }
 
@@ -9494,7 +9494,7 @@ static void ship_make_create_time_unique (ship* shipp) {
         }
 
         if (sanity_counter++ > MAX_SHIPS) {
-            Int3 ();
+            ASSERT (0);
             break;
         }
     }
@@ -9525,7 +9525,7 @@ static void ship_init_afterburners (ship* shipp) {
     shipp->ab_count = 0;
 
     if (shipp->ship_info_index < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -9544,7 +9544,7 @@ static void ship_init_afterburners (ship* shipp) {
         for (int j = 0; j < bank->num_points; j++) {
             // this means you've reached the max # of AB trails for a ship
             if (shipp->ab_count >= MAX_SHIP_CONTRAILS) {
-                Int3 ();
+                ASSERT (0);
                 break;
             }
 
@@ -11218,7 +11218,7 @@ int ship_fire_primary (object* obj, int stream_weapons, int force) {
         weapon_idx = swp->primary_bank_weapons[bank_to_fire];
         ASSERT (weapon_idx >= 0 && weapon_idx < MAX_WEAPON_TYPES);
         if ((weapon_idx < 0) || (weapon_idx >= MAX_WEAPON_TYPES)) {
-            Int3 (); // why would a ship try to fire a weapon that doesn't
+            ASSERT (0);
                      // exist?
             continue;
         }
@@ -12179,7 +12179,7 @@ void ship_process_targeting_lasers () {
 
             // hmm, why didn't it fire?
             if (shipp->targeting_laser_objnum < 0) {
-                Int3 ();
+                ASSERT (0);
                 ship_stop_targeting_laser (shipp);
             }
         }
@@ -12864,7 +12864,7 @@ int ship_select_next_primary (object* objp, int direction) {
         return 0;
     }
     else if (swp->num_primary_banks > MAX_SHIP_PRIMARY_BANKS) {
-        Int3 ();
+        ASSERT (0);
         return 0;
     }
     else {
@@ -13043,7 +13043,7 @@ int ship_select_next_secondary (object* objp) {
         return 0;
     }
     else if (swp->num_secondary_banks > MAX_SHIP_SECONDARY_BANKS) {
-        Int3 ();
+        ASSERT (0);
         return 0;
     }
     else {
@@ -13841,7 +13841,7 @@ int ship_get_index_from_subsys (
             ss = GET_NEXT (ss);
         }
         if (!error_bypass)
-            Int3 (); // get allender -- turret ref didn't fixup correctly!!!!
+            ASSERT (0);
         return -1;
     }
 }
@@ -13862,7 +13862,7 @@ int ship_get_subsys_index (ship* sp, const char* ss_name, int error_bypass) {
         ss = GET_NEXT (ss);
     }
 
-    if (!error_bypass) Int3 ();
+    if (!error_bypass) ASSERT (0);
 
     return -1;
 }

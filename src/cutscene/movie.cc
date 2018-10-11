@@ -35,7 +35,7 @@ struct PlaybackState {
 void processEvents (PlaybackState* state) {
     io::mouse::CursorManager::get ()->showCursor (false);
 
-    os_poll ();
+    fs2::os::events::process_all ();
 
     int k = key_inkey ();
     switch (k) {
@@ -219,9 +219,7 @@ void movie_display_loop (Player* player, PlaybackState* state) {
         processEvents (state);
 
         if (passed < sleepTime) {
-            auto sleep = sleepTime - passed;
-
-            os_sleep (static_cast< uint > (sleep));
+            fs2::os::sleep (unsigned (sleepTime - passed));
         }
     }
 }

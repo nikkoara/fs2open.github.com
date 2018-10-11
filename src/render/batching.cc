@@ -736,7 +736,7 @@ void batching_add_bitmap (
     int texture, vertex* pnt, int orient, float rad, float alpha,
     float depth) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -754,7 +754,7 @@ void batching_add_bitmap_rotated (
     int texture, vertex* pnt, float angle, float rad, float alpha,
     float depth) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -772,7 +772,7 @@ void batching_add_volume_bitmap (
     int texture, vertex* pnt, int orient, float rad, float alpha,
     float depth) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -796,7 +796,7 @@ void batching_add_volume_bitmap_rotated (
     int texture, vertex* pnt, float angle, float rad, float alpha,
     float depth) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -820,7 +820,7 @@ void batching_add_distortion_bitmap_rotated (
     int texture, vertex* pnt, float angle, float rad, float alpha,
     float depth) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -840,7 +840,7 @@ void batching_add_distortion_beam (
     int texture, vec3d* start, vec3d* end, float width, float intensity,
     float offset) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -859,7 +859,7 @@ void batching_add_distortion_beam (
 void batching_add_beam (
     int texture, vec3d* start, vec3d* end, float width, float intensity) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -875,7 +875,7 @@ void batching_add_beam (
 void batching_add_laser (
     int texture, vec3d* p0, float width1, vec3d* p1, float width2, int r,
     int g, int b) {
-    if (texture < 0) { Int3 (); }
+    if (texture < 0) { ASSERT (0); }
 
     primitive_batch* batch =
         batching_find_batch (texture, batch_info::FLAT_EMISSIVE);
@@ -888,7 +888,7 @@ void batching_add_polygon (
     int texture, vec3d* pos, matrix* orient, float width, float height,
     float alpha) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -904,7 +904,7 @@ void batching_add_polygon (
 
 void batching_add_quad (int texture, vertex* verts) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -916,7 +916,7 @@ void batching_add_quad (int texture, vertex* verts) {
 
 void batching_add_tri (int texture, vertex* verts) {
     if (texture < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 

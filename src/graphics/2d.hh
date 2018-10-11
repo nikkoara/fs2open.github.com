@@ -5,20 +5,24 @@
 
 #include "defs.hh"
 
-#include "graphics/grinternal.hh"
-#include "osapi/osapi.hh"
 #include "bmpman/bmpman.hh"
 #include "cfile/cfile.hh"
-#include "graphics/tmapper.hh"
 #include "cfile/cfile.hh"
-#include "math/vecmat.hh"
+#include "graphics/grinternal.hh"
+#include "graphics/tmapper.hh"
 #include "io/cursor.hh"
+#include "math/vecmat.hh"
+#include "osapi/osapi.hh"
+
+#include <functional>
 
 // Forward definition
 namespace graphics {
 namespace util {
+
 class UniformBuffer;
 class GPUMemoryHeap;
+
 } // namespace util
 } // namespace graphics
 
@@ -817,9 +821,9 @@ struct screen  {
     std::uint64_t (*gf_get_query_value) (int obj);
     void (*gf_delete_query_object) (int obj);
 
-    std::unique_ptr< os::Viewport > (*gf_create_viewport) (
-        const os::ViewPortProperties& props);
-    void (*gf_use_viewport) (os::Viewport* view);
+    std::unique_ptr< fs2::os::Viewport > (*gf_create_viewport) (
+        const fs2::os::ViewPortProperties& props);
+    void (*gf_use_viewport) (fs2::os::Viewport* view);
 
     void (*gf_bind_uniform_buffer) (
         uniform_block_type bind_point, size_t offset, size_t size, int buffer);
@@ -869,7 +873,7 @@ struct screen  {
 extern const char* Resolution_prefixes[GR_NUM_RESOLUTIONS];
 
 extern bool gr_init (
-    std::unique_ptr< os::GraphicsOperations >&& graphicsOps,
+    std::unique_ptr< fs2::os::GraphicsOperations >&& graphicsOps,
     int d_mode = GR_DEFAULT, int d_width = GR_DEFAULT,
     int d_height = GR_DEFAULT, int d_depth = GR_DEFAULT);
 
@@ -1160,11 +1164,11 @@ inline void gr_delete_query_object (int obj) {
     (*gr_screen.gf_delete_query_object) (obj);
 }
 
-inline std::unique_ptr< os::Viewport >
-gr_create_viewport (const os::ViewPortProperties& props) {
+inline std::unique_ptr< fs2::os::Viewport >
+gr_create_viewport (const fs2::os::ViewPortProperties& props) {
     return (*gr_screen.gf_create_viewport) (props);
 }
-inline void gr_use_viewport (os::Viewport* view) {
+inline void gr_use_viewport (fs2::os::Viewport* view) {
     (*gr_screen.gf_use_viewport) (view);
 }
 inline void gr_set_viewport (int x, int y, int width, int height) {

@@ -216,7 +216,7 @@ void cf_build_pack_list (cf_root* root) {
         (cf_root_sort*)malloc (sizeof (cf_root_sort) * temp_root_count);
 
     if (temp_roots_sort == NULL) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -1003,7 +1003,7 @@ CFileLocationExt cf_find_file_location_ext (
     // if we have a full path already then fail.  this function if for
     // searching via filter only!
     if (strpbrk (filename, "/")) { // do we have a full path already?
-        Int3 ();
+        ASSERT (0);
         return CFileLocationExt ();
     }
 
@@ -1331,7 +1331,7 @@ int cf_get_file_list (
     bool check_duplicates = !list.empty ();
 
     if (check_duplicates && (sort != CF_SORT_NONE)) {
-        Int3 ();
+        ASSERT (0);
         sort = CF_SORT_NONE;
     }
 
@@ -1981,10 +1981,10 @@ void cfile_spew_pack_file_crcs () {
     uint chksum = 0;
     time_t my_time;
 
-    FILE* out = fopen (os_get_config_path ("vp_crcs.txt").c_str (), "w");
+    FILE* out = fopen (fs2::os::get_config_path ("vp_crcs.txt").c_str (), "w");
 
     if (out == NULL) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 

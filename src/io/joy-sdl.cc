@@ -14,7 +14,7 @@
 #include "log/log.hh"
 
 using namespace io::joystick;
-using namespace os::events;
+using namespace fs2::os::events;
 
 namespace {
 typedef std::unique_ptr< Joystick > JoystickPtr;
@@ -572,7 +572,7 @@ void Joystick::printInfo () {
 int Joystick::getDeviceId () const { return _device_id; }
 
 bool init () {
-    using namespace os::events;
+    using namespace fs2::os::events;
 
     if (initialized) { return true; }
 

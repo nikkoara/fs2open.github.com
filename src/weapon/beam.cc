@@ -282,7 +282,7 @@ int beam_fire (beam_fire_info* fire_info) {
 
     // sanity check
     if (fire_info == NULL) {
-        Int3 ();
+        ASSERT (0);
         return -1;
     }
 
@@ -454,7 +454,7 @@ int beam_fire (beam_fire_info* fire_info) {
     if (objnum < 0) {
         beam_delete (new_item);
         WARNINGF (LOCATION, "obj_create() failed for beam weapon! bah!");
-        Int3 ();
+        ASSERT (0);
         return -1;
     }
     new_item->objnum = objnum;
@@ -495,7 +495,7 @@ int beam_fire_targeting (fighter_beam_fire_info* fire_info) {
 
     // sanity check
     if (fire_info == NULL) {
-        Int3 ();
+        ASSERT (0);
         return -1;
     }
 
@@ -582,7 +582,7 @@ int beam_fire_targeting (fighter_beam_fire_info* fire_info) {
     if (objnum < 0) {
         beam_delete (new_item);
         WARNINGF (LOCATION, "obj_create() failed for beam weapon! bah!");
-        Int3 ();
+        ASSERT (0);
         return -1;
     }
     new_item->objnum = objnum;
@@ -591,7 +591,7 @@ int beam_fire_targeting (fighter_beam_fire_info* fire_info) {
     beam_aim (new_item); // to fill in shot_point, etc.
 
     if (Beams[Objects[objnum].instance].objnum != objnum) {
-        Int3 ();
+        ASSERT (0);
         return -1;
     }
 
@@ -639,21 +639,21 @@ int beam_get_weapon_info_index (object* bm) {
 int beam_get_num_collisions (int objnum) {
     // sanity checks
     if ((objnum < 0) || (objnum >= MAX_OBJECTS)) {
-        Int3 ();
+        ASSERT (0);
         return -1;
     }
     if ((Objects[objnum].instance < 0) ||
         (Objects[objnum].instance >= MAX_BEAMS)) {
-        Int3 ();
+        ASSERT (0);
         return -1;
     }
     if (Beams[Objects[objnum].instance].objnum != objnum) {
-        Int3 ();
+        ASSERT (0);
         return -1;
     }
 
     if (Beams[Objects[objnum].instance].objnum < 0) {
-        Int3 ();
+        ASSERT (0);
         return -1;
     }
 
@@ -666,21 +666,21 @@ int beam_get_collision (
     int objnum, int num, int* collision_objnum, mc_info** cinfo) {
     // sanity checks
     if ((objnum < 0) || (objnum >= MAX_OBJECTS)) {
-        Int3 ();
+        ASSERT (0);
         return 0;
     }
     if ((Objects[objnum].instance < 0) ||
         (Objects[objnum].instance >= MAX_BEAMS)) {
-        Int3 ();
+        ASSERT (0);
         return 0;
     }
     if ((Beams[Objects[objnum].instance].objnum != objnum) ||
         (Beams[Objects[objnum].instance].objnum < 0)) {
-        Int3 ();
+        ASSERT (0);
         return 0;
     }
     if (num >= Beams[Objects[objnum].instance].r_collision_count) {
-        Int3 ();
+        ASSERT (0);
         return 0;
     }
 
@@ -814,7 +814,7 @@ void beam_type_c_move (beam* b) {
 
     // ugh
     if ((b->objp == NULL) || (b->objp->instance < 0)) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -976,7 +976,7 @@ void beam_move_all_pre () {
             case BEAM_TYPE_E: beam_type_e_move (b); break;
 
             // illegal beam type
-            default: Int3 ();
+            default: ASSERT (0);
             }
             if (b->subsys != NULL) { b->subsys->turret_next_fire_pos = temp; }
         }
@@ -1888,7 +1888,7 @@ int beam_start_firing (beam* b) {
 
     case BEAM_TYPE_E: break;
 
-    default: Int3 ();
+    default: ASSERT (0);
     }
 
     // determine if we can legitimately start firing, or if we need to take
@@ -2328,7 +2328,7 @@ void beam_get_octant_points (
 
     // bad bad bad bad bad bad
     if (m == NULL) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -2628,7 +2628,7 @@ int beam_collide_asteroid (obj_pair* pair) {
     // try and get a model
     model_num = beam_get_model (pair->b);
     if (model_num < 0) {
-        Int3 ();
+        ASSERT (0);
         return 1;
     }
 
@@ -2892,7 +2892,7 @@ void beam_add_collision (
     }
 
     if (bc == NULL) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -2926,7 +2926,7 @@ void beam_handle_collisions (beam* b) {
     // get beam weapon info
     if ((b->weapon_info_index < 0) ||
         (b->weapon_info_index >= Num_weapon_types)) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
     wi = &Weapon_info[b->weapon_info_index];
@@ -3367,7 +3367,7 @@ void beam_get_cull_vals (
     }
 
     // BAD BAD BAD - but this code will cause everything to cull properly
-    Int3 ();
+    ASSERT (0);
     *cull_dot = 1.0f;
     *cull_dist = 0.0f;
     return;
@@ -3386,10 +3386,10 @@ float beam_get_cone_dot (beam* b) {
 
     case BEAM_TYPE_B: return vm_vec_dot (&b->binfo.dir_a, &b->binfo.dir_b);
 
-    default: Int3 ();
+    default: ASSERT (0);
     }
 
-    Int3 ();
+    ASSERT (0);
     return 0.0f;
 }
 
@@ -3572,13 +3572,13 @@ void beam_apply_whack (beam* b, object* objp, vec3d* hit_point) {
 float beam_get_ship_damage (beam* b, object* objp) {
     // if the beam is on the same team as the object
     if ((objp == NULL) || (b == NULL)) {
-        Int3 ();
+        ASSERT (0);
         return 0.0f;
     }
 
     if ((objp->type != OBJ_SHIP) || (objp->instance < 0) ||
         (objp->instance >= MAX_SHIPS)) {
-        Int3 ();
+        ASSERT (0);
         return 0.0f;
     }
 

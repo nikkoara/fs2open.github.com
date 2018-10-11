@@ -371,10 +371,10 @@ bool gr_stub_init () {
     gr_screen.gf_get_query_value = gr_stub_get_query_value;
     gr_screen.gf_delete_query_object = gr_stub_delete_query_object;
 
-    gr_screen.gf_create_viewport = [](const os::ViewPortProperties&) {
-        return std::unique_ptr< os::Viewport > ();
+    gr_screen.gf_create_viewport = [](const fs2::os::ViewPortProperties&) {
+        return std::unique_ptr< fs2::os::Viewport > ();
     };
-    gr_screen.gf_use_viewport = [](os::Viewport*) {};
+    gr_screen.gf_use_viewport = [](fs2::os::Viewport*) {};
 
     gr_screen.gf_bind_uniform_buffer = [](uniform_block_type, size_t, size_t,
                                           int) {};

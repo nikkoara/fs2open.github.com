@@ -1087,7 +1087,7 @@ void message_calc_anim_start_frame (int time, generic_anim* ani, int reverse) {
     }
 
     if (start_frame < 0) {
-        Int3 ();
+        ASSERT (0);
         start_frame = 0;
     }
 
@@ -1666,7 +1666,7 @@ void message_queue_message (
 
     // Goober5000 - this shouldn't happen, but let's be safe
     if (MessageQ[i].special_message != NULL) {
-        Int3 ();
+        ASSERT (0);
         free (MessageQ[i].special_message);
         MessageQ[i].special_message = NULL;
     }
@@ -1788,7 +1788,7 @@ int message_get_persona (ship* shipp) {
 
     // for now -- we don't support other types of personas (non-wingman
     // personas)
-    Int3 ();
+    ASSERT (0);
     // return 0;
 
 I_Done:

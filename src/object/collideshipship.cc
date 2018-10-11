@@ -701,7 +701,7 @@ void calculate_ship_ship_collision_physics (
         }
         else {
             // we should have caught this already
-            Int3 ();
+            ASSERT (0);
             pm = NULL;
         }
 
@@ -733,7 +733,7 @@ void calculate_ship_ship_collision_physics (
             else {
                 // must be one of these axes or submodel_rot_hit is incorrectly
                 // set
-                Int3 ();
+                ASSERT (0);
             }
 
             // get world rotational velocity of rotating submodel

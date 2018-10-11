@@ -377,7 +377,7 @@ void ai_goal_purge_invalid_goals (
     // which might operate on that wing
     ship_index = ship_name_lookup (name);
     if (ship_index == -1) {
-        Int3 (); // get allender -- this is sort of odd
+        ASSERT (0);
         return;
     }
     wingnum = Ships[ship_index].wingnum;
@@ -875,7 +875,7 @@ void ai_add_goal_sub_sexp (
             aigp->wp_list = NULL;
         }
         else
-            Int3 ();
+            ASSERT (0);
 
         aigp->priority = atoi (CTEXT (CDR (CDR (node))));
         aigp->ai_mode = AI_GOAL_WAYPOINTS;
@@ -1034,12 +1034,12 @@ void ai_add_goal_sub_sexp (
             aigp->ai_mode = AI_GOAL_IGNORE_NEW;
         }
         else
-            Int3 (); // this is impossible
+            ASSERT (0);
 
         break;
 
     default:
-        Int3 (); // get ALLENDER -- invalid ai-goal specified for ai object!!!!
+        ASSERT (0);
     }
 
     if (aigp->priority > MAX_GOAL_PRIORITY) {
@@ -1232,7 +1232,7 @@ int ai_remove_goal_sexp_sub (int sexp, ai_goal* aigp) {
             (CDR (CDR (node)) >= 0) ? atoi (CTEXT (CDR (CDR (node)))) : -1;
         goalmode = AI_GOAL_IGNORE_NEW;
         break;
-    default: Int3 (); break;
+    default: ASSERT (0); break;
     };
 
     /* Attempt to find the goal */
@@ -1335,7 +1335,7 @@ void ai_add_goal_ship_internal (
     // ai_add_goal_sub_sexp
     if (!strcmp (name, Ships[aip->shipnum].ship_name)) {
         // not good
-        Int3 ();
+        ASSERT (0);
         return;
     }
 #endif
@@ -1396,7 +1396,7 @@ void ai_add_goal_ship_internal (
         break;
 
     default:
-        Int3 (); // unsupported internal goal -- see Mike K or Mark A.
+        ASSERT (0);
         return;
     }
 
@@ -1667,7 +1667,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
     }
 
     default:
-        Int3 ();
+        ASSERT (0);
         status = 0;
         break;
     }
@@ -1775,7 +1775,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
         }
 
         if ((aigp->dockee.index == -1) || (aigp->docker.index == -1)) {
-            Int3 (); // for now, allender wants to know about these things!!!!
+            ASSERT (0);
             return AI_GOAL_NOT_ACHIEVABLE;
         }
 
@@ -1867,7 +1867,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
                 aigp->flags.remove (AI::Goal_Flags::Subsys_needs_fixup);
             }
             else {
-                Int3 ();
+                ASSERT (0);
                 return AI_GOAL_NOT_ACHIEVABLE; // force this goal to be invalid
             }
         }
@@ -1914,7 +1914,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
         else if (status == SHIP_STATUS_UNKNOWN)
             return AI_GOAL_NOT_KNOWN;
 
-        Int3 (); // get allender -- bad logic
+        ASSERT (0);
         break;
     }
 
@@ -1926,7 +1926,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
         // short circuit a couple of cases.  Ship not arrived shouldn't happen.
         // Ship gone means we mark the goal as not achievable.
         if (status == SHIP_STATUS_NOT_ARRIVED) {
-            Int3 (); // get Allender.  this shouldn't happen!!!
+            ASSERT (0);
             return AI_GOAL_NOT_ACHIEVABLE;
         }
 
@@ -1935,7 +1935,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
         sindex = ship_name_lookup (aigp->target_name);
 
         if (sindex < 0) {
-            Int3 ();
+            ASSERT (0);
             return AI_GOAL_NOT_ACHIEVABLE;
         }
 
@@ -1970,7 +1970,7 @@ int ai_mission_goal_achievable (int objnum, ai_goal* aigp) {
         return AI_GOAL_ACHIEVABLE;
     }
 
-    default: Int3 (); // invalid case in switch:
+    default: ASSERT (0);
     }
 
     return AI_GOAL_NOT_KNOWN;
@@ -2445,7 +2445,7 @@ void ai_process_mission_orders (int objnum, ai_info* aip) {
             current_goal->dockee.index);
         break;
 
-    default: Int3 (); break;
+    default: ASSERT (0); break;
     }
 }
 

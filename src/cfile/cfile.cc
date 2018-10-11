@@ -199,7 +199,7 @@ int cfile_init (const char* exe_dir, const char* cdrom_dir) {
 
     // set root directory
     strcpy (Cfile_root_dir, buf);
-    strcpy (Cfile_user_dir, os_get_config_path ().c_str ());
+    strcpy (Cfile_user_dir, fs2::os::get_config_path ().c_str ());
 
     for (i = 0; i < MAX_CFILE_BLOCKS; i++) {
         Cfile_block_list[i].type = CFILE_BLOCK_UNUSED;
@@ -542,7 +542,7 @@ CFILE* _cfopen (
     charicters", file_path);*/
 
     if (!cfile_inited) {
-        Int3 ();
+        ASSERT (0);
         return NULL;
     }
 
@@ -553,7 +553,7 @@ CFILE* _cfopen (
 
     // Can only open read-only binary files in memory mapped mode.
     if ((type & CFILE_MEMORY_MAPPED) && strcmp (mode, "rb") != 0) {
-        Int3 ();
+        ASSERT (0);
         return NULL;
     }
 
@@ -672,7 +672,7 @@ CFILE* _cfopen_special (
     const char* source, int line, const char* file_path, const char* mode,
     const size_t size, const size_t offset, const void* data, int dir_type) {
     if (!cfile_inited) {
-        Int3 ();
+        ASSERT (0);
         return NULL;
     }
 
@@ -681,7 +681,7 @@ CFILE* _cfopen_special (
 
     // cfopen_special() only supports reading files, not creating them
     if (strchr (mode, 'w')) {
-        Int3 ();
+        ASSERT (0);
         return NULL;
     }
 
@@ -1495,7 +1495,7 @@ int cf_chksum_pack (const char* filename, uint* chk_long, bool full) {
     size_t max_size;
 
     if (chk_long == NULL) {
-        Int3 ();
+        ASSERT (0);
         return 0;
     }
 

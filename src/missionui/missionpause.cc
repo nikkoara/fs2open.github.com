@@ -205,7 +205,7 @@ void pause_do () {
     }
     else {
         // this should only be happening in a very unique multiplayer case
-        Int3 ();
+        ASSERT (0);
     }
 }
 

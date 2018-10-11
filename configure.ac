@@ -3,8 +3,9 @@
 AC_INIT([freespace2],[3.8.1],)
 
 AM_INIT_AUTOMAKE([-Wno-portability subdir-objects dist-bzip2 nostdinc foreign])
-AC_CONFIG_HEADERS([src/_config.hh:src/config.ac])
+AM_SILENT_RULES([yes])
 
+AC_CONFIG_HEADERS([src/_config.hh:src/config.ac])
 AC_CONFIG_MACRO_DIRS([etc/m4])
 
 AC_PROG_CXX

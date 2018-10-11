@@ -977,7 +977,7 @@ void HudGaugeWeaponLinking::render (float /*frametime*/) {
         break;
 
     default:
-        Int3 (); // shouldn't happen (get Alan if it does)
+        ASSERT (0);
         return;
         break;
     }
@@ -1007,7 +1007,7 @@ void HudGaugeWeaponLinking::render (float /*frametime*/) {
     case 3: gauge_index = LINK_THREE_SECONDARY; break;
 
     default:
-        Int3 (); // shouldn't happen (get Alan if it does)
+        ASSERT (0);
         return;
         break;
     }

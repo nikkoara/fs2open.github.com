@@ -291,7 +291,7 @@ void gameplay_help_button_pressed (int n) {
         gamesnd_play_iface (InterfaceSounds::COMMIT_PRESSED);
         break;
 
-    default: Int3 (); break;
+    default: ASSERT (0); break;
     }
 }
 
@@ -836,7 +836,7 @@ void gameplay_help_do_frame (float /*frametime*/) {
 
     // ensure the gameplay help interface has been initialized
     if (!Gameplay_help_inited) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 

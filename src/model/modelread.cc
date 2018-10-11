@@ -386,7 +386,7 @@ void model_init () {
     int i;
 
     if (model_initted) {
-        Int3 (); // Model_init shouldn't be called twice!
+        ASSERT (0);
         return;
     }
 
@@ -517,7 +517,7 @@ void model_copy_subsystems (
             }
         }
         if (j == n_subsystems)
-            Int3 (); // get allender -- something is amiss with models
+            ASSERT (0);
     }
 }
 
@@ -1152,7 +1152,7 @@ int read_model_file (
                         !is_valid_vec (&pm->moment_of_inertia.vec.uvec) ||
                         !is_valid_vec (&pm->moment_of_inertia.vec.fvec)) {
                         WARNINGF (LOCATION,"Moment of inertia values for model %s are invalid. This has to be fixed.",pm->filename);
-                        Int3 ();
+                        ASSERT (0);
                     }
                 }
                 else {
@@ -1178,7 +1178,7 @@ int read_model_file (
                         !is_valid_vec (&pm->moment_of_inertia.vec.uvec) ||
                         !is_valid_vec (&pm->moment_of_inertia.vec.fvec)) {
                         WARNINGF (LOCATION,"Moment of inertia values for model %s are invalid. This has to be fixed.",pm->filename);
-                        Int3 ();
+                        ASSERT (0);
                     }
 
                     // John remove this with change to bspgen
@@ -5182,7 +5182,7 @@ void model_init_submodel_axis_pt (
     }
     else {
         // must be one of these axes or submodel_rot_hit is incorrectly set
-        Int3 ();
+        ASSERT (0);
     }
 
     // copy submodel angs

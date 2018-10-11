@@ -60,7 +60,7 @@ void opengl_texture_state::SetTarget (GLenum tex_target) {
 
 void opengl_texture_state::SetActiveUnit (GLuint id) {
     if (id >= num_texture_units) {
-        Int3 ();
+        ASSERT (0);
         id = 0;
     }
 
@@ -97,7 +97,7 @@ void opengl_texture_state::Enable (
 
 void opengl_texture_state::Delete (GLuint tex_id) {
     if (tex_id == 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 

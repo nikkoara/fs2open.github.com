@@ -450,7 +450,7 @@ static int get_debris_weight (int ship_debris_index) {
     case ASTEROID_TYPE_SMALL:  return SMALL_DEBRIS_WEIGHT;
     case ASTEROID_TYPE_MEDIUM: return MEDIUM_DEBRIS_WEIGHT;
     case ASTEROID_TYPE_LARGE:  return LARGE_DEBRIS_WEIGHT;
-    default: Int3 (); return 1;
+    default: ASSERT (0); return 1;
     }
 }
 
@@ -1232,7 +1232,7 @@ static float asteroid_get_fireball_scale_multiplier (int num) {
         }
     }
 
-    Int3 (); // this should not happen.  asteroid should be used.
+    ASSERT (0);
     return 1.0f;
 }
 

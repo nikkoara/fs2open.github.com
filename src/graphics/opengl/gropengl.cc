@@ -86,10 +86,10 @@ GLuint GL_vao = 0;
 std::string GL_implementation_id;
 std::vector< GLint > GL_binary_formats;
 
-static std::unique_ptr< os::OpenGLContext > GL_context = nullptr;
+static std::unique_ptr< fs2::os::OpenGLContext > GL_context = nullptr;
 
-static std::unique_ptr< os::GraphicsOperations > graphic_operations = nullptr;
-static os::Viewport* current_viewport = nullptr;
+static std::unique_ptr< fs2::os::GraphicsOperations > graphic_operations = nullptr;
+static fs2::os::Viewport* current_viewport = nullptr;
 
 void opengl_go_fullscreen () {
     if (Cmdline_fullscreen_window || Cmdline_window || GL_fullscreen ||
@@ -289,7 +289,7 @@ void gr_opengl_print_screen (const char* filename) {
     // save to a "screenshots" directory and tack on the filename
     snprintf (tmp, MAX_PATH_LEN - 1, "screenshots/%s.png", filename);
 
-    mkdir (os_get_config_path ("screenshots").c_str (), 0777);
+    mkdir (fs2::os::get_config_path ("screenshots").c_str (), 0777);
 
     // glReadBuffer(GL_FRONT);
 
@@ -325,11 +325,11 @@ void gr_opengl_print_screen (const char* filename) {
     }
 
     if (!png_write_bitmap (
-            os_get_config_path (tmp).c_str (), gr_screen.max_w,
+            fs2::os::get_config_path (tmp).c_str (), gr_screen.max_w,
             gr_screen.max_h, true, pixels)) {
         RELEASE_WARNINGF (
             LOCATION, "Failed to write screenshot to \"%s\".",
-            os_get_config_path (tmp).c_str ());
+            fs2::os::get_config_path (tmp).c_str ());
     }
 
     if (pbo) {
@@ -354,9 +354,9 @@ void gr_opengl_shutdown () {
     glDeleteVertexArrays (1, &GL_vao);
     GL_vao = 0;
 
-    if (GL_original_gamma_ramp != NULL && os::getSDLMainWindow () != nullptr) {
+    if (GL_original_gamma_ramp != NULL && fs2::os::getSDLMainWindow () != nullptr) {
         SDL_SetWindowGammaRamp (
-            os::getSDLMainWindow (), GL_original_gamma_ramp,
+            fs2::os::getSDLMainWindow (), GL_original_gamma_ramp,
             (GL_original_gamma_ramp + 256), (GL_original_gamma_ramp + 512));
     }
 
@@ -388,7 +388,7 @@ void gr_opengl_cleanup (bool closing, int /*minimize*/) {
     current_viewport = nullptr;
 
     // All windows have to be closed before we destroy the OpenGL context
-    os::closeAllViewports ();
+    fs2::os::closeAllViewports ();
 
     gr_opengl_shutdown ();
 
@@ -577,12 +577,12 @@ void gr_opengl_set_gamma (float gamma) {
 
     // new way - but not while running FRED
     if (!Fred_running && !Cmdline_no_set_gamma &&
-        os::getSDLMainWindow () != nullptr) {
+        fs2::os::getSDLMainWindow () != nullptr) {
 
         gamma_ramp = (ushort*)malloc (3 * 256 * sizeof (ushort));
 
         if (gamma_ramp == NULL) {
-            Int3 ();
+            ASSERT (0);
             return;
         }
 
@@ -592,7 +592,7 @@ void gr_opengl_set_gamma (float gamma) {
         opengl_make_gamma_ramp (gamma, gamma_ramp);
 
         SDL_SetWindowGammaRamp (
-            os::getSDLMainWindow (), gamma_ramp, (gamma_ramp + 256),
+            fs2::os::getSDLMainWindow (), gamma_ramp, (gamma_ramp + 256),
             (gamma_ramp + 512));
 
         free (gamma_ramp);
@@ -827,7 +827,7 @@ int opengl_check_for_errors (const char* err_at) {
 
 void opengl_set_vsync (int status) {
     if ((status < 0) || (status > 1)) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -836,9 +836,9 @@ void opengl_set_vsync (int status) {
     GL_CHECK_FOR_ERRORS ("end of set_vsync()");
 }
 
-std::unique_ptr< os::Viewport >
-gr_opengl_create_viewport (const os::ViewPortProperties& props) {
-    os::ViewPortProperties attrs = props;
+std::unique_ptr< fs2::os::Viewport >
+gr_opengl_create_viewport (const fs2::os::ViewPortProperties& props) {
+    fs2::os::ViewPortProperties attrs = props;
     attrs.pixel_format.red_size = Gr_red.bits;
     attrs.pixel_format.green_size = Gr_green.bits;
     attrs.pixel_format.blue_size = Gr_blue.bits;
@@ -851,12 +851,12 @@ gr_opengl_create_viewport (const os::ViewPortProperties& props) {
         fs2::registry::read ("Default.OGL_AntiAliasSamples", 0);
 
     attrs.enable_opengl = true;
-    attrs.gl_attributes.profile = os::OpenGLProfile::Core;
+    attrs.gl_attributes.profile = fs2::os::OpenGLProfile::Core;
 
     return graphic_operations->createViewport (attrs);
 }
 
-void gr_opengl_use_viewport (os::Viewport* view) {
+void gr_opengl_use_viewport (fs2::os::Viewport* view) {
     graphic_operations->makeOpenGLContextCurrent (view, GL_context.get ());
     current_viewport = view;
 
@@ -977,17 +977,17 @@ int opengl_init_display_device () {
         }
     }
 
-    os::ViewPortProperties attrs;
+    fs2::os::ViewPortProperties attrs;
     attrs.enable_opengl = true;
 
     attrs.gl_attributes.major_version = MIN_REQUIRED_GL_VERSION / 10;
     attrs.gl_attributes.minor_version = MIN_REQUIRED_GL_VERSION % 10;
 
 #ifndef NDEBUG
-    attrs.gl_attributes.flags.set (os::OpenGLContextFlags::Debug);
+    attrs.gl_attributes.flags.set (fs2::os::OpenGLContextFlags::Debug);
 #endif
 
-    attrs.gl_attributes.profile = os::OpenGLProfile::Core;
+    attrs.gl_attributes.profile = fs2::os::OpenGLProfile::Core;
 
     attrs.display = fs2::registry::read ("Video.Display", 0);
     attrs.width = (uint32_t)gr_screen.max_w;
@@ -1000,10 +1000,10 @@ int opengl_init_display_device () {
     }
 
     if (!Cmdline_window && !Cmdline_fullscreen_window) {
-        attrs.flags.set (os::ViewPortFlags::Fullscreen);
+        attrs.flags.set (fs2::os::ViewPortFlags::Fullscreen);
     }
     else if (Cmdline_fullscreen_window) {
-        attrs.flags.set (os::ViewPortFlags::Borderless);
+        attrs.flags.set (fs2::os::ViewPortFlags::Borderless);
     }
 
     auto viewport = gr_opengl_create_viewport (attrs);
@@ -1025,17 +1025,17 @@ int opengl_init_display_device () {
 
     if (GL_context == nullptr) { return 1; }
 
-    auto port = os::addViewport (std::move (viewport));
-    os::setMainViewPort (port);
+    auto port = fs2::os::addViewport (std::move (viewport));
+    fs2::os::setMainViewPort (port);
 
     // We can't use gr_use_viewport because that tries to use OpenGL which
     // hasn't been initialized yet
     graphic_operations->makeOpenGLContextCurrent (port, GL_context.get ());
     current_viewport = port;
 
-    if (GL_original_gamma_ramp != NULL && os::getSDLMainWindow () != nullptr) {
+    if (GL_original_gamma_ramp != NULL && fs2::os::getSDLMainWindow () != nullptr) {
         SDL_GetWindowGammaRamp (
-            os::getSDLMainWindow (), GL_original_gamma_ramp,
+            fs2::os::getSDLMainWindow (), GL_original_gamma_ramp,
             (GL_original_gamma_ramp + 256), (GL_original_gamma_ramp + 512));
     }
 
@@ -1314,7 +1314,7 @@ static void init_extensions () {
     }
 }
 
-bool gr_opengl_init (std::unique_ptr< os::GraphicsOperations >&& graphicsOps) {
+bool gr_opengl_init (std::unique_ptr< fs2::os::GraphicsOperations >&& graphicsOps) {
     if (GL_initted) {
         gr_opengl_cleanup (false);
         GL_initted = false;

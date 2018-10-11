@@ -1156,7 +1156,7 @@ int get_nearest_turret_objnum (
                 }
                 break;
 
-            default: Int3 (); // Means invalid number passed.
+            default: ASSERT (0);
             }
         }
     }
@@ -1324,7 +1324,7 @@ int find_turret_enemy (
               missile_flag));
 
         if (Objects[enemy_objnum].flags[Object::Object_Flags::Protected]) {
-            Int3 ();
+            ASSERT (0);
             enemy_objnum = aip->target_objnum;
         }
     }
@@ -2009,7 +2009,7 @@ bool turret_fire_weapon (
         // weapon is type beam
         if ((wip->wi_flags[Weapon::Info_Flags::Beam]) &&
             (tobjp->flags[Object::Object_Flags::Beam_protected])) {
-            Int3 ();
+            ASSERT (0);
             return 0;
         }
         // should not get this far. check if ship is protected from flak and
@@ -2017,7 +2017,7 @@ bool turret_fire_weapon (
         else if (
             (wip->wi_flags[Weapon::Info_Flags::Flak]) &&
             (tobjp->flags[Object::Object_Flags::Flak_protected])) {
-            Int3 ();
+            ASSERT (0);
             return 0;
         }
         // should not get this far. check if ship is protected from laser and
@@ -2025,7 +2025,7 @@ bool turret_fire_weapon (
         else if (
             (wip->subtype == WP_LASER) &&
             (tobjp->flags[Object::Object_Flags::Laser_protected])) {
-            Int3 ();
+            ASSERT (0);
             return 0;
         }
         // should not get this far. check if ship is protected from missile and
@@ -2033,7 +2033,7 @@ bool turret_fire_weapon (
         else if (
             (wip->subtype == WP_MISSILE) &&
             (tobjp->flags[Object::Object_Flags::Missile_protected])) {
-            Int3 ();
+            ASSERT (0);
             return 0;
         }
     }

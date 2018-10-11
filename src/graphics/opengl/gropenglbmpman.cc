@@ -72,7 +72,7 @@ void gr_opengl_bm_save_render_target (int handle) {
         (ubyte*)bmp->data);
 
     if (rc != be->mem_taken) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 

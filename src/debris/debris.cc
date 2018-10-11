@@ -307,7 +307,7 @@ void debris_process_post (object* obj, float frame_time) {
                         db->arc_pts[i][1] = v4;
                         break;
 
-                    default: Int3 ();
+                    default: ASSERT (0);
                     }
 
                     n++;

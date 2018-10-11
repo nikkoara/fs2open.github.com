@@ -937,7 +937,7 @@ void ship_draw_shield (object* objp) {
 
         tri = &pm->shield.tris[i];
 
-        if (i == Break_value) Int3 ();
+        if (i == Break_value) ASSERT (0);
 
         // Hack! Only works for object in identity orientation.
         // Need to rotate eye position into object's reference frame.

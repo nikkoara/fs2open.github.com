@@ -205,7 +205,7 @@ float dock_calc_max_cross_sectional_radius_perpendicular_to_axis (
 
     case Z_AXIS: local_line_end.xyz.z = 1.0f; break;
 
-    default: Int3 (); return 0.0f;
+    default: ASSERT (0); return 0.0f;
     }
 
     // rotate and move the endpoint to go through the axis of the actual object
@@ -252,7 +252,7 @@ float dock_calc_max_semilatus_rectum_parallel_to_axis (
 
     case Z_AXIS: local_line_end.xyz.z = 1.0f; break;
 
-    default: Int3 (); return 0.0f;
+    default: ASSERT (0); return 0.0f;
     }
 
     // rotate and move the endpoint to go through the axis of the actual object

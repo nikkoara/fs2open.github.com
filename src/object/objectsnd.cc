@@ -253,7 +253,7 @@ void obj_snd_stop (object* objp, int index) {
                     break;
 
                 default:
-                    Int3 (); // get Alan
+                    ASSERT (0);
                     break;
                 }
             }
@@ -277,7 +277,7 @@ void obj_snd_stop (object* objp, int index) {
                 break;
 
             default:
-                Int3 (); // get Alan
+                ASSERT (0);
                 break;
             }
         }
@@ -364,7 +364,7 @@ int obj_snd_stop_lowest_vol (float new_vol) {
 
         if ((obj_snd_index == -1) ||
             (obj_snd_index >= (int)objp->objsnd_num.size ())) {
-            Int3 (); // get dave
+            ASSERT (0);
         }
         else {
             obj_snd_stop (objp, obj_snd_index);
@@ -621,7 +621,7 @@ void obj_snd_do_frame () {
                     break;
 
                 default:
-                    Int3 (); // get Alan
+                    ASSERT (0);
                     break;
                 } // end switch
 

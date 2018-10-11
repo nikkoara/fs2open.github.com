@@ -635,7 +635,7 @@ void message_translate_tokens (char* buf, const char* text) {
             // issues
             if (((toke2 - text) < 0) ||
                 ((toke2 - text) >= (ptr_s)sizeof (temp))) {
-                Int3 ();
+                ASSERT (0);
             }
             else {
                 strncpy (
@@ -694,7 +694,7 @@ void message_translate_tokens (char* buf, const char* text) {
             // issues
             if (((toke1 - text) < 0) ||
                 ((toke1 - text) >= (ptr_s)sizeof (temp))) {
-                Int3 ();
+                ASSERT (0);
             }
             else {
                 strncpy (
@@ -888,7 +888,7 @@ void message_training_queue (const char* text, int timestamp, int length) {
         // Goober5000 - this shouldn't happen, but let's be safe
         if (Training_message_queue[Training_message_queue_count]
                 .special_message != NULL) {
-            Int3 ();
+            ASSERT (0);
             free (Training_message_queue[Training_message_queue_count]
                          .special_message);
             Training_message_queue[Training_message_queue_count]

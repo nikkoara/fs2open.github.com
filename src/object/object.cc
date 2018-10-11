@@ -226,7 +226,7 @@ int free_object_slots (int num_used) {
             case OBJ_JUMP_NODE:
             case OBJ_BEAM: break;
             default:
-                Int3 (); // Hey, what kind of object is this?  Unknown!
+                ASSERT (0);
                 break;
             }
     }
@@ -609,7 +609,7 @@ void obj_delete (int objnum) {
         break;
     case OBJ_OBSERVER: observer_delete (objp); break;
     case OBJ_BEAM: break;
-    case OBJ_NONE: Int3 (); break;
+    case OBJ_NONE: ASSERT (0); break;
     default:
         ASSERTX (0, "Unhandled object type %d in obj_delete_all_that_should_be_dead",objp->type);
     }
@@ -981,7 +981,7 @@ void obj_move_call_physics (object* objp, float frametime) {
 void obj_check_object (object* obj) {
     int objnum = OBJ_INDEX (obj);
 
-    // PROGRAMMERS: If one of these Int3() gets hit, then someone
+
     // is changing a value in the object structure that might cause
     // collision detection to not work.  See John for more info if
     // you are hitting one of these.
@@ -1009,25 +1009,25 @@ void obj_check_object (object* obj) {
         }
         else {
             WARNINGF (LOCATION, "Object type changed! Old: %i, Current: %i",CheckObjects[objnum].type, obj->type);
-            Int3 ();
+            ASSERT (0);
         }
     }
     if (CheckObjects[objnum].signature != obj->signature) {
         WARNINGF (LOCATION, "Object signature changed!");
-        Int3 ();
+        ASSERT (0);
     }
     if ((CheckObjects[objnum].flags[Object::Object_Flags::Collides]) !=
         (obj->flags[Object::Object_Flags::Collides])) {
         WARNINGF (LOCATION, "Object flags changed!");
-        Int3 ();
+        ASSERT (0);
     }
     if (CheckObjects[objnum].parent_sig != obj->parent_sig) {
         WARNINGF (LOCATION, "Object parent sig changed!");
-        Int3 ();
+        ASSERT (0);
     }
     if (CheckObjects[objnum].parent_type != obj->parent_type) {
         WARNINGF (LOCATION, "Object's parent type changed!");
-        Int3 ();
+        ASSERT (0);
     }
 }
 #endif
@@ -1070,7 +1070,7 @@ void obj_set_flags (
         // collide functions So, don't allow this bit to be set
         if (obj->type == OBJ_OBSERVER) {
             WARNINGF (LOCATION, "Illegal to set collision bit for OBJ_OBSERVER!!");
-            Int3 ();
+            ASSERT (0);
         }
 
         obj->flags.set (Object::Object_Flags::Collides);
@@ -1094,7 +1094,7 @@ void obj_set_flags (
     if ((new_flags[Object::Object_Flags::Collides]) !=
         (obj->flags[Object::Object_Flags::Collides])) {
         WARNINGF (LOCATION, "Unhandled flag changing in obj_set_flags!");
-        Int3 ();
+        ASSERT (0);
     }
     else {
         // Since it wasn't an important flag, just bash it.
@@ -1139,7 +1139,7 @@ void obj_move_all_pre (object* objp, float frametime) {
     case OBJ_OBSERVER:
     case OBJ_JUMP_NODE: break;
     case OBJ_BEAM: break;
-    case OBJ_NONE: Int3 (); break;
+    case OBJ_NONE: ASSERT (0); break;
     default:
         ASSERTX (0, "Unhandled object type %d in obj_move_all_pre\n",objp->type);
     }
@@ -1374,7 +1374,7 @@ void obj_move_all_post (object* objp, float frametime) {
 
     case OBJ_BEAM: break;
 
-    case OBJ_NONE: Int3 (); break;
+    case OBJ_NONE: ASSERT (0); break;
 
     default:
         ASSERTX (0, "Unhandled object type %d in obj_move_all_post\n",objp->type);
@@ -1602,7 +1602,7 @@ void obj_queue_render (object* obj, model_draw_list* scene) {
             "ERROR!!!! Bogus obj %zd"
             " is rendering!\n",
             obj - Objects);
-        Int3 ();
+        ASSERT (0);
 #endif
         break;
     case OBJ_WEAPON:
@@ -1711,7 +1711,7 @@ int obj_team (object* objp) {
     case OBJ_ASTEROID: team = Iff_traitor; break;
 
     default:
-        Int3 (); // can't happen
+        ASSERT (0);
         break;
     } // end switch
 

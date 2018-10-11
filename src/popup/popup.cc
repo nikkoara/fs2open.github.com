@@ -821,7 +821,7 @@ int popup_do (popup_info* pi, int flags) {
     while (!done) {
         int k;
 
-        os_poll ();
+        fs2::os::events::process_all ();
 
         // if we were killed by a call to popup_kill_any_active(), kill the
         // popup
@@ -888,7 +888,7 @@ int popup_do_with_condition (popup_info* pi, int flags, int (*condition) ()) {
     while (!done) {
         int k;
 
-        os_poll ();
+        fs2::os::events::process_all ();
 
         game_set_frametime (-1);
         game_do_state_common (gameseq_get_state ());
@@ -984,7 +984,7 @@ int popup (int flags, int nchoices, ...) {
     va_list args;
 
     if (Popup_is_active) {
-        Int3 (); // should never happen
+        ASSERT (0);
         return -1;
     }
 
@@ -1041,7 +1041,7 @@ int popup_till_condition (int (*condition) (), ...) {
     int flags = 0;
 
     if (Popup_is_active) {
-        Int3 (); // should never happen
+        ASSERT (0);
         return -1;
     }
     // int nchoices = 1;
@@ -1083,7 +1083,7 @@ int popup_till_condition (int (*condition) (), ...) {
 // popup to return the value from an input box
 char* popup_input (int flags, const char* caption, int max_output_len) {
     if (Popup_is_active) {
-        Int3 (); // should never happen
+        ASSERT (0);
         return NULL;
     }
 

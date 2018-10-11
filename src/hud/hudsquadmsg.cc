@@ -197,7 +197,7 @@ char* comm_order_get_text (int item) {
     }
 
     // not found
-    Int3 ();
+    ASSERT (0);
     return NULL;
 }
 
@@ -1075,7 +1075,7 @@ int hud_squadmsg_send_ship_command (
                                    // goals code will deal with it
             }
             else
-                Int3 ();
+                ASSERT (0);
             message = MESSAGE_ATTACK_TARGET;
             break;
 
@@ -1247,7 +1247,7 @@ int hud_squadmsg_send_ship_command (
             break;
 
         default:
-            Int3 (); // get Allender -- illegal message
+            ASSERT (0);
             break;
         }
 
@@ -1365,7 +1365,7 @@ int hud_squadmsg_send_wing_command (
                 message = MESSAGE_ATTACK_TARGET;
             }
             else
-                Int3 ();
+                ASSERT (0);
 
             break;
 
@@ -1459,7 +1459,7 @@ int hud_squadmsg_send_wing_command (
         case KEEP_SAFE_DIST_ITEM: return 0;
 
         default:
-            Int3 (); // get Allender -- illegal message
+            ASSERT (0);
             break;
         }
 
@@ -1544,7 +1544,7 @@ int hud_squadmsg_reinforcements_available (int team) {
                 }
             }
             else {
-                Int3 (); // allender says bogus!  reinforcement should be here
+                ASSERT (0);
                          // since it wasn't a wing!
                 continue;
             }
@@ -1793,7 +1793,7 @@ void hud_squadmsg_call_reinforcement (int reinforcement_num) {
             p_objp->arrival_delay = timestamp (delay * 1000);
         }
         else {
-            Int3 (); // get allender -- I don't think that this can happen!!!!
+            ASSERT (0);
             return;
         }
     }
@@ -1869,7 +1869,7 @@ void hud_squadmsg_reinforcement_select () {
                     }
                 }
                 else {
-                    Int3 (); // allender says bogus!  reinforcement should be
+                    ASSERT (0);
                              // here since it wasn't a wing!
                     continue;
                 }
@@ -2303,7 +2303,7 @@ int hud_squadmsg_do_frame () {
     case SM_MODE_ALL_FIGHTERS: hud_squadmsg_msg_all_fighters (); break;
 
     default:
-        Int3 (); // get allender -- invalid mode in messaging system
+        ASSERT (0);
         break;
     }
 

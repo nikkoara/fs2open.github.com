@@ -206,7 +206,7 @@ void stars_load_debris_vclips (debris_vclip* vclips) {
     int i;
 
     if (vclips == NULL) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 

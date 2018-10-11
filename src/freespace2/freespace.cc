@@ -1063,7 +1063,7 @@ void game_loading_callback (int count) {
         static_cast< float > (count) / static_cast< float > (COUNT_ESTIMATE);
     CLAMP (progress, 0.0f, 1.0f);
 
-    os_ignore_events ();
+    fs2::os::events::buffer_all ();
 
     if (do_flip) gr_flip ();
 }
@@ -1537,6 +1537,7 @@ void game_init () {
 
     // Moved from rand32, if we're gonna break, break immediately.
     ASSERT (RAND_MAX == 0x7fff || RAND_MAX >= 0x7ffffffd);
+
     // seed the random number generator
     int game_init_seed = (int)time (NULL);
     srand (game_init_seed);
@@ -1549,14 +1550,12 @@ void game_init () {
     // Initialize the timer before the os
     timer_init ();
 
-    os_init ();
+    //
+    // Set window and quit handlers:
+    //
+    fs2::os::init ();
 
-#ifndef NDEBUG
     II << "FreeSpace 2 v" << FS_VERSION_FULL;
-    // TODO: remove
-    extern void cmdline_debug_print_cmdline ();
-    cmdline_debug_print_cmdline ();
-#endif
 
     memset (whee, 0, sizeof (whee));
 
@@ -2554,7 +2553,7 @@ void say_view_target () {
                 break;
             }
 
-            default: Int3 (); break;
+            default: ASSERT (0); break;
             }
 
             end_string_at_first_hash_symbol (view_target_name);
@@ -3049,7 +3048,7 @@ camid game_render_frame_setup () {
                     break;
                 default:
                     WARNINGF (LOCATION,"Invalid Value for Viewer_obj->type. Expected values are OBJ_SHIP (1) and OBJ_OBSERVER (12), we encountered %d. Please tell a coder.",Viewer_obj->type);
-                    Int3 ();
+                    ASSERT (0);
                 }
             }
         }
@@ -3405,7 +3404,7 @@ void game_maybe_do_dead_popup (float frametime) {
             }
             else {
                 // bogus?
-                Int3 ();
+                ASSERT (0);
             }
 
             gameseq_post_event (GS_EVENT_START_GAME);
@@ -3791,7 +3790,7 @@ void game_stop_time () {
         // f2fl(Last_delta_time)));
         if (Last_delta_time < 0) {
 #if defined(TIMER_TEST) && !defined(NDEBUG)
-            Int3 (); // get Matt!!!!
+            ASSERT (0);
 #endif
             Last_delta_time = 0;
         }
@@ -3816,7 +3815,7 @@ void game_start_time () {
         fix time;
         time = timer_get_fixed_seconds ();
 #if defined(TIMER_TEST) && !defined(NDEBUG)
-        if (Last_time < 0) Int3 (); // get Matt!!!!
+        if (Last_time < 0) ASSERT (0);
     }
 #endif
     // Take current time, and set it backwards to account for time
@@ -3913,7 +3912,7 @@ void game_set_frametime (int state) {
             thistime = cap - Frametime;
             // mprintf(("Sleeping for %6.3f seconds.\n",
             // f2fl(thistime)));
-            os_sleep (static_cast< int > (f2fl (thistime) * 1000.0f));
+            fs2::os::sleep (unsigned (f2fl (thistime) * 1000.0f));
             Frametime = cap;
             thistime = timer_get_fixed_seconds ();
         }
@@ -3986,9 +3985,9 @@ void game_do_frame () {
     // flFrametime /= 15.0;
 
     if (game_single_step && (last_single_step == game_single_step)) {
-        os_set_title ("SINGLE STEP MODE (Pause exits, any key steps)");
-        while (key_checkch () == 0) os_sleep (10);
-        os_set_title ("FreeSpace 2");
+        fs2::os::title ("SINGLE STEP MODE (Pause exits, any key steps)");
+        while (key_checkch () == 0) fs2::os::sleep (10);
+        fs2::os::title ("FreeSpace 2");
         Last_time = timer_get_fixed_seconds ();
     }
 
@@ -4028,10 +4027,10 @@ int game_check_key () {
 int game_poll () {
     int k, state;
 
-    if (!os_foreground ()) {
+    if (!fs2::os::is_foreground ()) {
 
         game_stop_time ();
-        os_sleep (1);
+        fs2::os::sleep (1);
         game_start_time ();
 
         if ((gameseq_get_state () == GS_STATE_GAME_PLAY) &&
@@ -4043,7 +4042,7 @@ int game_poll () {
     k = key_inkey ();
 
     // Move the mouse cursor with the joystick.
-    if (os_foreground () &&
+    if (fs2::os::is_foreground () &&
         !io::mouse::CursorManager::get ()->isCursorShown () &&
         (Use_joy_mouse)) {
         // Move the mouse cursor with the joystick
@@ -4282,7 +4281,7 @@ void game_process_event (int current_state, int event) {
             gameseq_set_state (GS_STATE_MAIN_MENU);
         }
         else
-            Int3 ();
+            ASSERT (0);
 
         break;
 
@@ -4490,7 +4489,7 @@ void game_process_event (int current_state, int event) {
         gameseq_set_state (GS_STATE_FICTION_VIEWER);
         break;
 
-    default: Int3 (); break;
+    default: ASSERT (0); break;
     }
 }
 
@@ -4816,7 +4815,7 @@ void game_enter_state (int old_state, int new_state) {
 
     case GS_STATE_DEBUG_PAUSED:
         // game_stop_time();
-        // os_set_title("FreeSpace 2 - PAUSED");
+        // fs2::os::title("FreeSpace 2 - PAUSED");
         // break;
         //
     case GS_STATE_TRAINING_PAUSED:
@@ -5409,7 +5408,7 @@ int game_main (int argc, char* argv[]) {
 
     while (1) {
         // only important for non THREADED mode
-        os_poll ();
+        fs2::os::events::process_all ();
 
         state = gameseq_process_events ();
         if (state == GS_STATE_QUIT_GAME)
@@ -5497,7 +5496,7 @@ void game_shutdown () {
     tracing::shutdown ();
 
     gr_close ();
-    os_fini ();
+    fs2::os::fini ();
     cfile_close ();
 
     // although the comment in cmdline.cpp said this isn't needed,

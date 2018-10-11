@@ -255,7 +255,7 @@ int model_octant_find_faces_sub (
         case OP_BOUNDBOX: break;
         default:
             WARNINGF (LOCATION,"Bad chunk type %d, len=%d in model_octant_find_faces_sub",chunk_type, chunk_size);
-            Int3 (); // Bad chunk type!
+            ASSERT (0);
             return 0;
         }
         p += chunk_size;

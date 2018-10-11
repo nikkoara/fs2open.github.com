@@ -417,7 +417,7 @@ void model_collide_flatpoly (ubyte* p) {
     if (nv <= 0) return;
 
     if (nv > TMAP_MAX_VERTS) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -455,7 +455,7 @@ void model_collide_tmappoly (ubyte* p) {
     if (nv <= 0) return;
 
     if (nv > TMAP_MAX_VERTS) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -563,7 +563,7 @@ int model_collide_sub (void* model_ptr) {
             break;
         default:
             WARNINGF (LOCATION, "Bad chunk type %d, len=%d in model_collide_sub",chunk_type, chunk_size);
-            Int3 (); // Bad chunk type!
+            ASSERT (0);
             return 0;
         }
         p += chunk_size;
@@ -676,7 +676,7 @@ void model_collide_parse_bsp_tmappoly (
     if (nv < 0) return;
 
     if (nv > TMAP_MAX_VERTS) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -715,7 +715,7 @@ void model_collide_parse_bsp_flatpoly (
     if (nv < 0) return;
 
     if (nv > TMAP_MAX_VERTS) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -886,7 +886,7 @@ void model_collide_parse_bsp (
                         leaf_buffer.back ().next = (int)leaf_buffer.size ();
                     }
                     else {
-                        Int3 ();
+                        ASSERT (0);
                     }
 
                     next_p += next_chunk_size;

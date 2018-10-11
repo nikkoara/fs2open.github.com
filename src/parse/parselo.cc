@@ -802,7 +802,7 @@ char* alloc_text_until (char* instr, char* endstr) {
     }
     else {
         if ((foundstr - instr) <= 0) {
-            Int3 (); // since this really shouldn't ever happen
+            ASSERT (0);
             return NULL;
         }
 
@@ -2709,7 +2709,7 @@ int stuff_loadout_list (int* ilp, int max_ints, int lookup_type) {
             index = weapon_info_lookup (str);
             break;
 
-        default: Int3 ();
+        default: ASSERT (0);
         }
 
         // Complain if this isn't a valid ship or weapon and we are loading a

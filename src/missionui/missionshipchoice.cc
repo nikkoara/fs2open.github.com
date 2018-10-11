@@ -498,7 +498,7 @@ void ship_select_check_buttons () {
 // reset the ship selection to the mission defaults
 void ss_reset_to_default () {
     if (Game_mode & GM_MULTIPLAYER) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -2008,7 +2008,7 @@ void pick_from_wing (int wb_num, int ws_num) {
         Carried_ss_icon.from_y = mouse_y;
     } break;
 
-    default: Int3 (); break;
+    default: ASSERT (0); break;
 
     } // end switch
 
@@ -2668,14 +2668,14 @@ void ss_reset_selected_ship () {
     }
 
     if (Selected_ss_class == -1) {
-        Int3 ();
+        ASSERT (0);
         for (i = 0; i < static_cast< int > (Ship_info.size ()); i++) {
             if (Ss_pool[i] > 0) { Selected_ss_class = i; }
         }
     }
 
     if (Selected_ss_class == -1) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 }
@@ -2984,7 +2984,7 @@ void ss_init_units () {
         ss_wing = &Ss_wings[i];
 
         if (ss_wing->wingnum < 0) {
-            Int3 ();
+            ASSERT (0);
             continue;
         }
 
@@ -3028,7 +3028,7 @@ void ss_init_units () {
                 objnum = Ships[wp->ship_index[j]].objnum;
                 if (Objects[objnum].flags[Object::Object_Flags::Player_ship]) {
                     if (ss_slot->status & WING_SLOT_LOCKED) {
-                        // Int3();      // Get Alan
+
 
                         // just unflag it
                         ss_slot->status &= ~(WING_SLOT_LOCKED);
@@ -3056,7 +3056,7 @@ void ss_init_units () {
                 if (Parse_objects[ss_slot->sa_index]
                         .flags[Mission::Parse_Object_Flags::OF_Player_start]) {
                     if (ss_slot->status & WING_SLOT_LOCKED) {
-                        // Int3();      // Get Alan
+
 
                         // just unflag it
                         ss_slot->status &= ~(WING_SLOT_LOCKED);

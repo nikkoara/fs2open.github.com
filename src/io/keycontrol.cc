@@ -1897,7 +1897,7 @@ int button_function_critical (int n) {
         transfer_energy_to_weapons (objp);
         break;
 
-    // following are not handled here, but we need to bypass the Int3()
+
     case LAUNCH_COUNTERMEASURE:
     case VIEW_SLEW:
     case VIEW_EXTERNAL:
@@ -1912,7 +1912,7 @@ int button_function_critical (int n) {
     case TOGGLE_GLIDING: return 0;
 
     default:
-        Int3 (); // bad bad bad
+        ASSERT (0);
         break;
     }
 
@@ -2155,7 +2155,7 @@ int button_function (int n) {
     }
 
     switch (n) {
-    // following are not handled here, but we need to bypass the Int3()
+
     case LAUNCH_COUNTERMEASURE:
     case VIEW_SLEW:
     case VIEW_TRACK_TARGET:
@@ -2423,7 +2423,7 @@ int button_function (int n) {
     }
     else {
         // if sensors are gone, and the passed key is one of the targeting
-        // keys, we need to exit here before we hit the Int3() later in this
+
         // function
         if (key_is_targeting (n)) { return 1; }
     }
@@ -2604,7 +2604,7 @@ int button_function (int n) {
      * All keys should have been handled above, if not panic
      */
     WARNINGF (LOCATION, "Unknown key %d at %s:%u", n, __FILE__, __LINE__);
-    Int3 ();
+    ASSERT (0);
 
     return 1;
 }

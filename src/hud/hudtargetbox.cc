@@ -2023,7 +2023,7 @@ void HudGaugeTargetBox::showTargetData (float /*frametime*/) {
     case OBJ_JUMP_NODE: return;
 
     default:
-        Int3 (); // can't happen
+        ASSERT (0);
         break;
     }
 

@@ -315,7 +315,7 @@ int UI_GADGET::is_mouse_on () {
         mask_data = (ubyte*)my_wnd->get_mask_data (&mask_w, &mask_h);
         if (mask_data == NULL) {
             WARNINGF (LOCATION, "No mask defined, but control is linked to hotspot");
-            Int3 ();
+            ASSERT (0);
             return 0;
         }
 

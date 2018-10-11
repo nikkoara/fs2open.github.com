@@ -1204,7 +1204,7 @@ void player_controls_init () {
  */
 void player_clear_speed_matching () {
     if (!Player) {
-        Int3 (); // why is Player NULL?
+        ASSERT (0);
         return;
     }
 
@@ -2166,7 +2166,7 @@ void player_get_padlock_orient (matrix* eye_orient) {
             &eye_orient->vec.rvec, &old_eye_orient.vec.fvec, -1.0f);
     }
     else {
-        Int3 ();
+        ASSERT (0);
     }
 }
 
@@ -2184,7 +2184,7 @@ void player_display_padlock_view () {
         padlock_view_index = 3;
     }
     else {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -2382,7 +2382,7 @@ camid player_get_cam () {
                 // make a call to get the eye point for the player object
                 observer_get_eye (&eye_pos, &eye_orient, viewer_obj);
                 break;
-            default: Int3 ();
+            default: ASSERT (0);
             }
         }
     }

@@ -280,7 +280,7 @@ int mission_hotkey_get_set_num (int k) {
         if (Key_sets[i] == k) { return i; }
     }
 
-    Int3 (); // get allender
+    ASSERT (0);
     return 0;
 }
 
@@ -933,12 +933,12 @@ void mission_hotkey_init () {
     Background_bitmap = bm_load (Hotkey_background_fname[gr_screen.res]);
     if (Background_bitmap < 0) {
         // bitmap didnt load -- this is bad
-        Int3 ();
+        ASSERT (0);
     }
     Wing_bmp = bm_load ("WingDesignator");
     if (Wing_bmp < 0) {
         // bitmap didnt load -- this is bad
-        Int3 ();
+        ASSERT (0);
     }
 
     Scroll_offset = 0;
@@ -1168,7 +1168,7 @@ void mission_hotkey_do_frame (float /*frametime*/) {
             hotkeys = Hotkey_bits[Hotkey_lines[line].index];
             break;
 
-        default: Int3 ();
+        default: ASSERT (0);
         }
 
         if (Hotkey_lines[line].type != HOTKEY_LINE_HEADING) {

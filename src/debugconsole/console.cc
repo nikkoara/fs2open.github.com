@@ -327,7 +327,7 @@ bool dc_pause_output (void) {
     do {
         loop = true;
 
-        os_poll ();
+        fs2::os::events::process_all ();
 
         dc_draw (FALSE);
 
@@ -497,7 +497,7 @@ bool dcmd_less (debug_command* first, debug_command* second) {
 void debug_console (void (*_func) (void)) {
     int done = 0;
 
-    while (key_inkey ()) { os_poll (); }
+    while (key_inkey ()) { fs2::os::events::process_all (); }
 
     if (!debug_inited) { dc_init (); }
 
@@ -505,7 +505,7 @@ void debug_console (void (*_func) (void)) {
 
     while (!done) {
         // poll the os
-        os_poll ();
+        fs2::os::events::process_all ();
 
         int k = key_inkey ();
         switch (k) {
@@ -601,5 +601,5 @@ void debug_console (void (*_func) (void)) {
         dc_draw (TRUE);
     }
 
-    while (key_inkey ()) { os_poll (); }
+    while (key_inkey ()) { fs2::os::events::process_all (); }
 }

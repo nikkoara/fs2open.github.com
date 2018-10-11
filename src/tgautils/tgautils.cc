@@ -580,7 +580,7 @@ int targa_read_bitmap (
 
     if ((bytes_per_pixel < 2) || (bytes_per_pixel > 4)) {
         cfclose (targa_file);
-        Int3 ();
+        ASSERT (0);
 
         return TARGA_ERROR_READING;
     }
@@ -602,7 +602,7 @@ int targa_read_bitmap (
     // read palette if one present.
 
     if (header.color_map_type) { // non-zero indicates palette in the file
-        Int3 ();
+        ASSERT (0);
 
         // Determine the size of the color map
         ASSERT (header.cmap_depth == 24);

@@ -52,13 +52,6 @@
 //
 // Legacy
 //
-#if defined(NDEBUG)
-#  define Int3() do { } while (0)
-#else
-void debug_int3 (const char* file, int line);
-#  define Int3() debug_int3 (__FILE__, __LINE__)
-#endif // NDEBUG
-
 #ifndef MIN
 #  define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #endif

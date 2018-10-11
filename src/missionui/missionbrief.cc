@@ -774,7 +774,7 @@ void brief_init () {
 
     // Non standard briefing in red alert mission
     if (red_alert_mission ()) {
-        Int3 (); // since we shouldn't be here
+        ASSERT (0);
         gameseq_post_event (GS_EVENT_RED_ALERT);
         return;
     }
@@ -945,7 +945,7 @@ void brief_render_closeup_text () {
         char                    *p_str[MAX_ICON_TEXT_LINES];
 
         if ( Closeup_icon == NULL ) {
-            Int3();
+            ASSERT (0);
             return;
         }
 
@@ -1649,7 +1649,7 @@ void brief_do_frame (float frametime) {
             brief_voice_stop (Last_brief_stage);
 
             if (Current_brief_stage < 0) {
-                Int3 ();
+                ASSERT (0);
                 Current_brief_stage = 0;
             }
 

@@ -1259,7 +1259,7 @@ void debrief_stats_render () {
 
         break;
 
-    default: Int3 (); break;
+    default: ASSERT (0); break;
     }
 
     gr_reset_clip ();

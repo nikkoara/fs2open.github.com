@@ -2378,7 +2378,7 @@ void HudGaugeKills::render (float /*frametime*/) {
     int w, h;
 
     if (!Player) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 

@@ -918,7 +918,7 @@ int ds_get_free_channel_retail (float new_volume, int snd_id, int priority) {
     case DS_LIMIT_THREE: limit = 3; break;
 
     default:
-        Int3 (); // get Alan
+        ASSERT (0);
         limit = 100;
         break;
     }

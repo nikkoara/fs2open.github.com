@@ -306,7 +306,7 @@ void mission_campaign_build_list (bool desc, bool sort, bool multiplayer) {
                     // if we hit this then a coder probably did something dumb
                     // (like not needing to sort)
                     if ((name1 == NULL) || (name2 == NULL)) {
-                        Int3 ();
+                        ASSERT (0);
                         break;
                     }
 
@@ -414,7 +414,7 @@ int mission_campaign_load (
     if (pl == NULL) pl = Player;
 
     if (!Fred_running && load_savefile && (pl == NULL)) {
-        Int3 ();
+        ASSERT (0);
         load_savefile = 0;
     }
 
@@ -1056,7 +1056,7 @@ void mission_campaign_store_goals_and_events () {
                 mission_obj->events[i].status = EVENT_FAILED;
         }
         else
-            Int3 ();
+            ASSERT (0);
     }
 }
 
@@ -1551,7 +1551,7 @@ void mission_campaign_maybe_play_movie (int type) {
             filename = Campaign.missions[mission_idx].briefing_cutscene;
         break;
 
-    default: Int3 (); break;
+    default: ASSERT (0); break;
     }
 
     // no filename, no movie!
@@ -1614,7 +1614,7 @@ void mission_campaign_save_persistent (int type, int sindex) {
         Num_granted_weapons++;
     }
     else
-        Int3 ();
+        ASSERT (0);
 }
 
 bool campaign_is_ignored (const char* filename) {

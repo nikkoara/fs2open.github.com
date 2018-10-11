@@ -758,7 +758,7 @@ void lcl_ext_localize_sub (
 
         strncpy (out, Lcl_ext_str[str_id], max_len);
     }
-    // otherwise use what we have - probably should Int3() or assert here
+
     else {
         if (strlen (text_str) > max_len)
             error_display (
@@ -835,7 +835,7 @@ void lcl_ext_localize_sub (const std::string& in, std::string& out, int* id) {
         // copy to the outgoing string
         out = Lcl_ext_str[str_id];
     }
-    // otherwise use what we have - probably should Int3() or assert here
+
     else {
         out = text_str;
     }
@@ -868,7 +868,7 @@ void lcl_ext_localize (const std::string& in, std::string& out, int* id) {
 // translate the specified string based upon the current language
 const char* XSTR (const char* str, int index) {
     if (!Xstr_inited) {
-        Int3 ();
+        ASSERT (0);
         return str;
     }
 

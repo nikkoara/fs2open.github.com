@@ -96,7 +96,7 @@ int ds_priority (int priority) {
     case SND_PRIORITY_SINGLE_INSTANCE: return DS_LIMIT_ONE;
     case SND_PRIORITY_DOUBLE_INSTANCE: return DS_LIMIT_TWO;
     case SND_PRIORITY_TRIPLE_INSTANCE: return DS_LIMIT_THREE;
-    default: Int3 (); return DS_MUST_PLAY;
+    default: ASSERT (0); return DS_MUST_PLAY;
     };
 }
 
@@ -515,7 +515,7 @@ sound_handle snd_play (
     if (!Sound_enabled) return sound_handle::invalid ();
 
     if (gs == NULL) {
-        Int3 ();
+        ASSERT (0);
         return sound_handle::invalid ();
     }
 
@@ -608,7 +608,7 @@ sound_handle snd_play_3d (
     if (!Sound_enabled) return sound_handle::invalid ();
 
     if (gs == NULL) {
-        Int3 ();
+        ASSERT (0);
         return sound_handle::invalid ();
     }
 
@@ -818,7 +818,7 @@ sound_handle snd_play_looping (
     if (!ds_initialized) return sound_handle::invalid ();
 
     if (gs == NULL) {
-        Int3 ();
+        ASSERT (0);
         return sound_handle::invalid ();
     }
 
@@ -1237,7 +1237,7 @@ int snd_time_remaining (sound_handle handle) {
     auto sdx = snd_get_sound_id (handle);
 
     if (!sdx.isValid ()) {
-        Int3 ();
+        ASSERT (0);
         return 0;
     }
 
@@ -1384,7 +1384,7 @@ void snd_adjust_audio_volume (int type, float percent, int time) {
             else
                 aav_data[type].delta = percent - aav_effect_volume;
             break;
-        default: Int3 ();
+        default: ASSERT (0);
         }
 
         aav_data[type].delta_time = time;

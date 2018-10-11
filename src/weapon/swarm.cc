@@ -162,7 +162,7 @@ void swarm_delete (int i) {
     swarmp = &Swarm_missiles[i];
 
     if (!(swarmp->flags & SWARM_USED)) {
-        Int3 (); // tried to delete a swarm missile that didn't exist, get Alan
+        ASSERT (0);
     }
 
     swarmp->flags = 0;
@@ -353,7 +353,7 @@ void swarm_update_direction (object* objp) {
             }
             break;
 
-        default: Int3 (); break;
+        default: ASSERT (0); break;
         }
 
         swarmp->new_target = swarmp->original_target;
@@ -427,7 +427,7 @@ void turret_swarm_delete (int i) {
     tswarmp = &Turret_swarm_info[i];
 
     if (!(tswarmp->flags & SWARM_USED)) {
-        Int3 (); // tried to delete a swarm missile that didn't exist, get
+        ASSERT (0);
                  // DaveA
     }
 

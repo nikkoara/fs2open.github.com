@@ -636,7 +636,7 @@ void player_select_button_pressed (int n) {
             if (!Pilot.load_player (Pilots[Player_select_pilot], Player)) {
                 ASSERTX (0, "Couldn't load pilot file, bailing");
                 Player = NULL;
-                Int3 ();
+                ASSERT (0);
             }
 
             // set the clone flag

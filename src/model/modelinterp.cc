@@ -347,7 +347,7 @@ void interp_clear_instance () {
  */
 void model_set_thrust (int /*model_num*/, mst_info* mst) {
     if (mst == NULL) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -1254,7 +1254,7 @@ static int submodel_get_points_internal (int model_num, int submodel_num) {
         case OP_BOUNDBOX: break;
         default:
             WARNINGF (LOCATION, "Bad chunk type %d, len=%d in submodel_get_points",chunk_type, chunk_size);
-            Int3 (); // Bad chunk type!
+            ASSERT (0);
             return 0;
         }
         p += chunk_size;
@@ -1401,7 +1401,7 @@ int submodel_get_num_verts (int model_num, int submodel_num) {
         case OP_BOUNDBOX: break;
         default:
             WARNINGF (LOCATION,"Bad chunk type %d, len=%d in submodel_get_num_verts",chunk_type, chunk_size);
-            Int3 (); // Bad chunk type!
+            ASSERT (0);
             return 0;
         }
         p += chunk_size;
@@ -1439,7 +1439,7 @@ int submodel_get_num_polys_sub (ubyte* p) {
         case OP_BOUNDBOX: break;
         default:
             WARNINGF (LOCATION,"Bad chunk type %d, len=%d in submodel_get_num_polys",chunk_type, chunk_size);
-            Int3 (); // Bad chunk type!
+            ASSERT (0);
             return 0;
         }
         p += chunk_size;
@@ -2124,7 +2124,7 @@ bool model_interp_config_buffer (
     if (vb == NULL) { return false; }
 
     if (!(vb->flags & VB_FLAG_POSITION)) {
-        Int3 ();
+        ASSERT (0);
         return false;
     }
 

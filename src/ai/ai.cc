@@ -33,7 +33,7 @@ int ai_get_slot (int shipnum) {
         }
 
     WARNINGF (LOCATION, "Couldn't get AI slot");
-    Int3 ();
+    ASSERT (0);
 
     return -1;
 }

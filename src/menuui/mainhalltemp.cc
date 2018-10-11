@@ -81,7 +81,7 @@ void mht_init () {
     Mht_bitmap = bm_load (Mht_bitmap_fname[gr_screen.res]);
     if (Mht_bitmap < 0) {
         // we failed to load the bitmap - this is very bad
-        Int3 ();
+        ASSERT (0);
     }
 
     // create the interface buttons

@@ -244,7 +244,7 @@ void fiction_viewer_button_pressed (int button) {
         break;
 
     default:
-        Int3 (); // unrecognized button
+        ASSERT (0);
         break;
     }
 }

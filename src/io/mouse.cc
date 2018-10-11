@@ -46,7 +46,7 @@ int Use_mouse_to_fly = 0;
 
 namespace {
 bool mouse_key_event_handler (const SDL_Event& e) {
-    if (!os::events::isWindowEvent (e, os::getSDLMainWindow ())) {
+    if (!fs2::os::events::isWindowEvent (e, fs2::os::getSDLMainWindow ())) {
         return false;
     }
 
@@ -61,7 +61,7 @@ bool mouse_key_event_handler (const SDL_Event& e) {
 }
 
 bool mouse_motion_event_handler (const SDL_Event& e) {
-    if (!os::events::isWindowEvent (e, os::getSDLMainWindow ())) {
+    if (!fs2::os::events::isWindowEvent (e, fs2::os::getSDLMainWindow ())) {
         return false;
     }
 
@@ -71,7 +71,7 @@ bool mouse_motion_event_handler (const SDL_Event& e) {
 }
 
 bool mouse_wheel_event_handler (const SDL_Event& e) {
-    if (!os::events::isWindowEvent (e, os::getSDLMainWindow ())) {
+    if (!fs2::os::events::isWindowEvent (e, fs2::os::getSDLMainWindow ())) {
         return false;
     }
 
@@ -144,19 +144,19 @@ void mouse_init () {
 
     SDL_UnlockMutex (mouse_lock);
 
-    os::events::addEventListener (
-        SDL_MOUSEBUTTONDOWN, os::events::DEFAULT_LISTENER_WEIGHT,
+    LISTEN (
+        SDL_MOUSEBUTTONDOWN, fs2::os::events::DEFAULT_LISTENER_WEIGHT,
         mouse_key_event_handler);
-    os::events::addEventListener (
-        SDL_MOUSEBUTTONUP, os::events::DEFAULT_LISTENER_WEIGHT,
+    LISTEN (
+        SDL_MOUSEBUTTONUP, fs2::os::events::DEFAULT_LISTENER_WEIGHT,
         mouse_key_event_handler);
 
-    os::events::addEventListener (
-        SDL_MOUSEMOTION, os::events::DEFAULT_LISTENER_WEIGHT,
+    LISTEN (
+        SDL_MOUSEMOTION, fs2::os::events::DEFAULT_LISTENER_WEIGHT,
         mouse_motion_event_handler);
 
-    os::events::addEventListener (
-        SDL_MOUSEWHEEL, os::events::DEFAULT_LISTENER_WEIGHT,
+    LISTEN (
+        SDL_MOUSEWHEEL, fs2::os::events::DEFAULT_LISTENER_WEIGHT,
         mouse_wheel_event_handler);
 
     atexit (mouse_close);
@@ -392,9 +392,9 @@ void mouse_get_delta (int* dx, int* dy, int* dz) {
 // Forces the actual windows cursor to be at (x,y).  This may be independent of
 // our tracked (x,y) mouse pos.
 void mouse_force_pos (int x, int y) {
-    if (os_foreground ()) { // only mess with windows's mouse if we are in
+    if (fs2::os::is_foreground ()) { // only mess with windows's mouse if we are in
                             // control of it
-        SDL_WarpMouseInWindow (os::getSDLMainWindow (), x, y);
+        SDL_WarpMouseInWindow (fs2::os::getSDLMainWindow (), x, y);
     }
 }
 

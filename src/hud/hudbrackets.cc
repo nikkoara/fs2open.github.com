@@ -467,7 +467,7 @@ void draw_bounding_brackets(int x1, int y1, int x2, int y2, int w_correction, in
                 }
 
                 if (Ships_attacking_bitmap == -1) {
-                        Int3();
+                        ASSERT (0);
                         return;
                 }
 
@@ -827,7 +827,7 @@ void HudGaugeBrackets::renderObjectBrackets (
             break;
 
         default:
-            Int3 (); // should never happen
+            ASSERT (0);
             return;
         }
 

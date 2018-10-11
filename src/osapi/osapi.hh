@@ -8,47 +8,35 @@
 #include "osapi/osregistry.hh"
 #include "util/flagset.hh"
 
+#include <filesystem>
 #include <functional>
 #include <memory>
+namespace fs = std::filesystem;
 
 #include <SDL_events.h>
 
-void os_init ();
-
-// set the main window title
-void os_set_title (const char*);
-
-// call at program end
-void os_fini ();
-
-// Returns 1 if app is not the foreground app.
-int os_foreground ();
-
-/**
- * @brief Removes all pending events and ignores them
- */
-void os_ignore_events ();
-
-// call to process windows messages. only does something in non THREADED mode
-void os_poll ();
-
-// Sleeps for n milliseconds or until app becomes active.
-inline void os_sleep (uint ms) { SDL_Delay (ms); }
-
-inline constexpr bool os_is_legacy_mode () { return false; }
-
-/**
- * @brief Gets a path to a configuration file
- * A relative path to the wanted file or directory. Directories should be
- * separated with '/'
- * @param subpath The path of the wanted file or directory, may be emtpy to get
- * the config directory
- *
- * @returns The path to the specified config path
- */
-std::string os_get_config_path (const std::string& subpath = "");
-
+namespace fs2 {
 namespace os {
+
+void init ();
+void fini ();
+
+void title (const char*);
+const char* title ();
+
+bool is_foreground ();
+
+inline void sleep (unsigned ms) { SDL_Delay (ms); }
+
+fs::path get_config_path ();
+fs::path get_config_path (const fs::path&);
+
+inline constexpr bool is_legacy_mode () { return false; }
+
+////////////////////////////////////////////////////////////////////////
+
+// TODO : all below
+
 /**
  * @defgroup os_graphics_api Graphics operations abstraction
  * @see @ref graphics_api_page
@@ -59,9 +47,7 @@ namespace os {
  * @brief Flags for OpenGL context creation
  * @ingroup os_graphics_api
  */
-FLAG_LIST (OpenGLContextFlags){ Debug = 0, ForwardCompatible,
-
-                                NUM_VALUES };
+enum class OpenGLContextFlags { Debug = 0, ForwardCompatible, NUM_VALUES };
 
 /**
  * @brief The required context profile
@@ -129,7 +115,7 @@ public:
  * @brief Flags for viewport creation
  * @ingroup os_graphics_api
  */
-FLAG_LIST (ViewPortFlags){ Fullscreen = 0, Borderless, Resizeable, NUM_VALUES };
+enum class ViewPortFlags { Fullscreen = 0, Borderless, Resizeable, NUM_VALUES };
 
 /**
  * @brief Properties of a viewport that should be created
@@ -168,7 +154,7 @@ enum class ViewportState { Windowed, Borderless, Fullscreen };
  */
 class Viewport {
 public:
-    virtual ~Viewport () {}
+    virtual ~Viewport () { }
 
     /**
      * @brief Returns a SDL_Window handle for this viewport
@@ -231,7 +217,7 @@ public:
  */
 class GraphicsOperations {
 public:
-    virtual ~GraphicsOperations () {}
+    virtual ~GraphicsOperations () { }
 
     /**
      * @brief Creates an OpenGL contex
@@ -360,6 +346,9 @@ addEventListener (SDL_EventType type, int weigth, const Listener& listener);
  */
 bool removeEventListener (ListenerIdentifier identifier);
 
+#define LISTEN   fs2::os::events::addEventListener
+#define UNLISTEN fs2::os::events::removeEventListener
+
 /**
  * @brief Checks if the event belongs to a window
  * This can be used to handle multiple windows correctly and only handle the
@@ -371,7 +360,12 @@ bool removeEventListener (ListenerIdentifier identifier);
  */
 bool isWindowEvent (const SDL_Event& e, SDL_Window* window);
 
-}}
+void buffer_all ();
+void process_all ();
+
+} // namespace events
+} // namespace os
+} // namespace fs2
 
 // Documentation pages
 /**

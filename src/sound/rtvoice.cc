@@ -336,7 +336,7 @@ int rtvoice_create_playback_buffer () {
     index = rtvoice_find_free_output_buffer ();
 
     if (index == -1) {
-        Int3 ();
+        ASSERT (0);
         return -1;
     }
 

@@ -155,7 +155,7 @@ int cscrew_create (object* obj) {
 //
 //
 void cscrew_delete (int i) {
-    if (!(Corkscrew_missiles[i].flags & CS_FLAG_USED)) { Int3 (); }
+    if (!(Corkscrew_missiles[i].flags & CS_FLAG_USED)) { ASSERT (0); }
 
     memset (&Corkscrew_missiles[i], 0, sizeof (cscrew_info));
 }

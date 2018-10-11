@@ -1350,7 +1350,7 @@ void main_hall_handle_mouse_location (int cur_region) {
     if (Main_hall_frame_skip) { return; }
 
     if (cur_region >= (int)Main_hall->regions.size ()) {
-        // MWA -- inserted return since Int3() was tripped when hitting L from
+
         // main menu.
         return;
     }

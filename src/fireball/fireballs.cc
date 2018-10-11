@@ -749,7 +749,7 @@ int fireball_create (
         OBJ_FIREBALL, parent_obj, n, &orient, pos, size, default_flags);
 
     if (objnum < 0) {
-        Int3 (); // Get John, we ran out of objects for fireballs
+        ASSERT (0);
         return objnum;
     }
 
@@ -788,7 +788,7 @@ int fireball_create (
         }
         break;
 
-    default: Int3 (); break;
+    default: ASSERT (0); break;
     }
 
     if (fb->fireball_render_type == FIREBALL_WARP_EFFECT) {
@@ -861,7 +861,7 @@ void fireball_get_color (int idx, float* red, float* green, float* blue) {
     ASSERT (red && blue && green);
 
     if ((idx < 0) || (idx >= Num_fireball_types)) {
-        Int3 ();
+        ASSERT (0);
 
         *red = 1.0f;
         *green = 1.0f;
@@ -996,6 +996,6 @@ void fireball_render (object* obj, model_draw_list* scene) {
             (Fireballs[num].flags & FBF_WARP_3D));
     } break;
 
-    default: Int3 ();
+    default: ASSERT (0);
     }
 }

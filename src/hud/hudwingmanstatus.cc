@@ -275,7 +275,7 @@ void HudGaugeWingmanStatus::renderBackground (int num_wings_to_draw) {
     int sx, sy, header_x, header_y, bitmap;
 
     if ((num_wings_to_draw < 1) || (num_wings_to_draw > 5)) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 

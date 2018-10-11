@@ -373,7 +373,7 @@ int UI_WINDOW::process (int key_in, int process_mouse) {
     UI_GADGET* tmp;
 
     // only does stuff in non THREADED mode
-    os_poll ();
+    fs2::os::events::process_all ();
 
     if (process_mouse) { ui_mouse_process (); }
 
@@ -435,7 +435,7 @@ void UI_WINDOW::add_XSTR (
 
     // if we don't have a free spot
     if (found < 0) {
-        Int3 (); // aieee! we need to up the max # of xstrs allowed in a
+        ASSERT (0);
                  // window.
         return;
     }
@@ -479,7 +479,7 @@ void UI_WINDOW::add_XSTR (UI_XSTR* xstr) {
 
     // if we don't have a free spot
     if (found < 0) {
-        Int3 (); // aieee! we need to up the max # of xstrs allowed in a
+        ASSERT (0);
                  // window.
         return;
     }

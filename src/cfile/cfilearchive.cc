@@ -122,7 +122,7 @@ int cfseek (CFILE* cfile, int offset, int where) {
     case CF_SEEK_END:
         goal_position = cb->size + offset + cb->lib_offset;
         break;
-    default: Int3 (); return 1;
+    default: ASSERT (0); return 1;
     }
 
     // Make sure we don't seek beyond the end of the file

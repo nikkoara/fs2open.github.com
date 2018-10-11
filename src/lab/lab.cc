@@ -1367,7 +1367,7 @@ void labviewer_make_ship_window (Button* /*caller*/) {
     labviewer_set_class_window (LAB_MODE_SHIP);
 
     if ((Lab_class_window == NULL) || (Lab_class_toolbar == NULL)) {
-        Int3 ();
+        ASSERT (0);
         Lab_mode = LAB_MODE_SHIP;
         return;
     }
@@ -1570,7 +1570,7 @@ void labviewer_make_weap_window (Button* /*caller*/) {
     labviewer_set_class_window (LAB_MODE_WEAPON);
 
     if ((Lab_class_window == NULL) || (Lab_class_toolbar == NULL)) {
-        Int3 ();
+        ASSERT (0);
         Lab_mode = LAB_MODE_WEAPON;
         return;
     }

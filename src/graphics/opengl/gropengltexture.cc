@@ -401,7 +401,7 @@ int opengl_texture_set_level (
             }
         }
         else {
-            Int3 ();
+            ASSERT (0);
             return 0;
         }
 
@@ -1175,7 +1175,7 @@ void gr_opengl_set_texture_addressing (int mode) {
         break;
     }
 
-    default: Int3 (); break;
+    default: ASSERT (0); break;
     }
 
     GL_CHECK_FOR_ERRORS ("end of set_texture_addressing()");
@@ -1711,7 +1711,7 @@ int opengl_set_render_target (int slot, int face, int is_static) {
     ASSERT (ts != NULL);
 
     if (!ts->texture_id) {
-        Int3 ();
+        ASSERT (0);
         return 0;
     }
 
@@ -1724,7 +1724,7 @@ int opengl_set_render_target (int slot, int face, int is_static) {
 
     if (!glIsFramebuffer (
             fbo->framebuffer_id) /*|| !glIsRenderbufferEXT(fbo->renderbuffer_id)*/) {
-        Int3 ();
+        ASSERT (0);
         return 0;
     }
 
@@ -1767,7 +1767,7 @@ int opengl_make_render_target (
 
     // got to have at least width and height!
     if (!w || !h) {
-        Int3 ();
+        ASSERT (0);
         return 0;
     }
 

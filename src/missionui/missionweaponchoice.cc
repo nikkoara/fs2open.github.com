@@ -1673,7 +1673,7 @@ void wl_remove_weps_from_pool (int* wep, int* wep_count, int ship_class) {
                         int secondary_bank_index;
                         secondary_bank_index = i - 3;
                         if (secondary_bank_index < 0) {
-                            Int3 ();
+                            ASSERT (0);
                             secondary_bank_index = 0;
                         }
                         new_wep_count = wl_calc_missile_fit (
@@ -3319,7 +3319,7 @@ int wl_swap_slot_slot (
     forced_update = 0;
 
     if (slot->ship_class == -1) {
-        Int3 (); // should not be possible
+        ASSERT (0);
         return forced_update;
     }
 
@@ -3461,7 +3461,7 @@ int wl_swap_slot_slot (
         }
     }
 
-    Int3 (); // should never get here
+    ASSERT (0);
     return forced_update;
 }
 

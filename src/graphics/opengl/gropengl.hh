@@ -10,7 +10,7 @@
 
 const ubyte GL_zero_3ub[3] = { 0, 0, 0 };
 
-bool gr_opengl_init (std::unique_ptr< os::GraphicsOperations >&& graphicsOps);
+bool gr_opengl_init (std::unique_ptr< fs2::os::GraphicsOperations >&& graphicsOps);
 void gr_opengl_cleanup (bool closing, int minimize = 1);
 int opengl_check_for_errors (const char* err_at = NULL);
 bool gr_opengl_is_capable (gr_capability capability);

@@ -354,7 +354,7 @@ void set_default_recharge_rates (object* obj) {
         break;
 
     default:
-        Int3 (); // if no systems, power output should be zero, and this
+        ASSERT (0);
                  // funtion shouldn't be called
         break;
     } // end switch
@@ -467,7 +467,7 @@ void increase_recharge_rate (object* obj, SYSTEM_TYPE ship_system) {
         }
 
         if (sanity++ > 10) {
-            Int3 (); // get Alan
+            ASSERT (0);
             break;
         }
     }
@@ -581,7 +581,7 @@ void decrease_recharge_rate (object* obj, SYSTEM_TYPE ship_system) {
         }
 
         if (sanity++ > 10) {
-            Int3 (); // get Alan
+            ASSERT (0);
             break;
         }
     }

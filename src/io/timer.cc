@@ -55,7 +55,7 @@ void timer_init () {
 
 fix timer_get_fixed_seconds () {
     if (!Timer_inited) {
-        Int3 (); // Make sure you call timer_init before anything that uses
+        ASSERT (0);
                  // timer functions!
         return 0;
     }
@@ -70,7 +70,7 @@ fix timer_get_approx_seconds () { return timer_get_fixed_seconds (); }
 
 int timer_get_seconds () {
     if (!Timer_inited) {
-        Int3 ();
+        ASSERT (0);
         return 0;
     }
 
@@ -79,7 +79,7 @@ int timer_get_seconds () {
 
 int timer_get_milliseconds () {
     if (!Timer_inited) {
-        Int3 (); // Make sure you call timer_init before anything that uses
+        ASSERT (0);
                  // timer functions!
         return 0;
     }

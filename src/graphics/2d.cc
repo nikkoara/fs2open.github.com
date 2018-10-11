@@ -631,7 +631,7 @@ void gr_close () {
 
     case GR_STUB: break;
 
-    default: Int3 (); // Invalid graphics mode
+    default: ASSERT (0);
     }
 
     bm_close ();
@@ -749,7 +749,7 @@ int gr_get_resolution_class (int width, int height) {
 }
 
 static bool gr_init_sub (
-    std::unique_ptr< os::GraphicsOperations >&& graphicsOps, int mode,
+    std::unique_ptr< fs2::os::GraphicsOperations >&& graphicsOps, int mode,
     int width, int height, int depth, float center_aspect_ratio) {
     int res = GR_1024;
     bool rc = false;
@@ -895,7 +895,7 @@ static bool gr_init_sub (
     switch (mode) {
     case GR_OPENGL: rc = gr_opengl_init (std::move (graphicsOps)); break;
     case GR_STUB: rc = gr_stub_init (); break;
-    default: Int3 (); // Invalid graphics mode
+    default: ASSERT (0);
     }
 
     if (!rc) { return false; }
@@ -904,7 +904,7 @@ static bool gr_init_sub (
 }
 
 static void init_window_icon () {
-    auto view = os::getMainViewport ();
+    auto view = fs2::os::getMainViewport ();
 
     if (view == nullptr) {
         // Graphics backend has no viewport
@@ -938,7 +938,7 @@ static void init_window_icon () {
 }
 
 bool gr_init (
-    std::unique_ptr< os::GraphicsOperations >&& graphicsOps, int d_mode,
+    std::unique_ptr< fs2::os::GraphicsOperations >&& graphicsOps, int d_mode,
     int d_width, int d_height, int d_depth) {
     int width = 1024, height = 768, depth = 32, mode = GR_OPENGL;
     float center_aspect_ratio = -1.0f;
@@ -949,7 +949,7 @@ bool gr_init (
 
         case GR_STUB: break;
 
-        default: Int3 (); // Invalid graphics mode
+        default: ASSERT (0);
         }
     }
 
@@ -1182,7 +1182,7 @@ void gr_force_windowed () {
     switch (gr_screen.mode) {
     case GR_OPENGL: break;
     case GR_STUB: break;
-    default: Int3 (); // Invalid graphics mode
+    default: ASSERT (0);
     }
 }
 
@@ -1195,14 +1195,14 @@ void gr_activate (int active) {
 
     if (active) {
         if (Cmdline_fullscreen_window || Cmdline_window) {
-            os::getMainViewport ()->restore ();
+            fs2::os::getMainViewport ()->restore ();
         }
         else {
-            os::getMainViewport ()->setState (os::ViewportState::Fullscreen);
+            fs2::os::getMainViewport ()->setState (fs2::os::ViewportState::Fullscreen);
         }
     }
     else {
-        os::getMainViewport ()->minimize ();
+        fs2::os::getMainViewport ()->minimize ();
     }
 
     switch (gr_screen.mode) {
@@ -1211,7 +1211,7 @@ void gr_activate (int active) {
         gr_opengl_activate (active);
         break;
     case GR_STUB: break;
-    default: Int3 (); // Invalid graphics mode
+    default: ASSERT (0);
     }
 }
 
@@ -1750,7 +1750,7 @@ int poly_list::find_first_vertex_fast (int idx) {
         // if this happens then idx was never in the index list to begin with
         // which is not good
         WARNINGF (LOCATION, "Sorted index list missing index %d!", idx);
-        Int3 ();
+        ASSERT (0);
         return idx;
     }
 

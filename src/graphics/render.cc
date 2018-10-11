@@ -247,7 +247,7 @@ void gr_aabitmap_ex (
         reclip = 0;
 
 #ifndef NDEBUG
-        if (count > 1) { Int3 (); }
+        if (count > 1) { ASSERT (0); }
 
         count++;
 #endif
@@ -363,7 +363,7 @@ void gr_bitmap_ex (
         reclip = 0;
 
 #ifndef NDEBUG
-        if (count > 1) { Int3 (); }
+        if (count > 1) { ASSERT (0); }
 
         count++;
 #endif

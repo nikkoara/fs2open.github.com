@@ -414,7 +414,7 @@ int popupdead_do_frame (float /*frametime*/) {
                     Popupdead_choice = POPUPDEAD_DO_MAIN_HALL;
                 break;
 
-            default: Int3 (); break;
+            default: ASSERT (0); break;
             }
         }
     }
@@ -442,7 +442,7 @@ int popupdead_do_frame (float /*frametime*/) {
                     Popupdead_choice = POPUPDEAD_DO_MAIN_HALL;
                 break;
 
-            default: Int3 (); break;
+            default: ASSERT (0); break;
             }
         }
     }

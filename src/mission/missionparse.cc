@@ -513,7 +513,7 @@ void parse_mission_info (mission* pm, bool basic = false) {
                 else if (i == OLD_GAME_TYPE_TRAINING)
                     pm->game_type = MISSION_TYPE_TRAINING;
                 else
-                    Int3 ();
+                    ASSERT (0);
 
                 if (pm->game_type & MISSION_TYPE_MULTI)
                     pm->game_type |= MISSION_TYPE_MULTI_COOP;
@@ -1738,7 +1738,7 @@ void parse_dock_one_docked_object (p_object* pobjp, p_object* parent_pobjp) {
 
     // check valid
     if (!objp || !parent_objp) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -1749,7 +1749,7 @@ void parse_dock_one_docked_object (p_object* pobjp, p_object* parent_pobjp) {
 
     // check valid
     if (!dockpoint_name || !parent_dockpoint_name) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
@@ -2119,7 +2119,7 @@ int parse_create_object_sub (p_object* p_objp) {
 
         // MWA  5/15/98 -- Added the following debug code because some orders
         // that ships will accept were apparently written out incorrectly with
-        // Fred.  This Int3() should trap these instances.
+
 #ifndef NDEBUG
         if (Fred_running) {
             int default_orders, remaining_orders;
@@ -4216,7 +4216,7 @@ int parse_wing_create_ships (
         // if we have the maximum number of ships in the wing, we must bail as
         // well
         if (wingp->current_count >= MAX_SHIPS_PER_WING) {
-            Int3 (); // this is bogus -- we should always allow all ships to be
+            ASSERT (0);
                      // created
             num_to_create = 0;
             break;
@@ -6650,7 +6650,7 @@ int mission_set_arrival_location (
         if (ai_acquire_emerge_path (
                 &Objects[objnum], anchor_objnum, path_mask, &pos, &fvec) ==
             -1) {
-            Int3 (); // get MWA or AL -- not sure what to do here when we
+            ASSERT (0);
                      // cannot acquire a path
             return -1;
         }
@@ -7740,7 +7740,7 @@ void mission_bring_in_support_ship (object* requester_objp) {
         if (i != -1)
             pobj->ship_class = i;
         else
-            Int3 (); // BOGUS!!!!  gotta figure something out here
+            ASSERT (0);
     }
 
     // set support ship hitpoints

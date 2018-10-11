@@ -424,12 +424,12 @@ void model_anim_submodel_trigger_rotate (
     int not_moving_count = 0;
 
     if (psub->model_num < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
     if (psub->subobj_num < 0) {
-        Int3 ();
+        ASSERT (0);
         return;
     }
 
