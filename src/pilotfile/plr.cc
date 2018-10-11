@@ -844,9 +844,9 @@ bool pilotfile::load_player (const char* callsign, player* _p) {
     hud_squadmsg_save_keys ();
 
     // set last pilot
-    os_config_write_string (NULL, "LastPlayer", (char*)callsign);
+    fs2::registry::write ("Default.LastPlayer", (char*)callsign);
 
-    WARNINGF (LOCATION, "PLR => Loading complete!");
+    II <<  "PLR => loading complete";
 
     // cleanup and return
     plr_close ();

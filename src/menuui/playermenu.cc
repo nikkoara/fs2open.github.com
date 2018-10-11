@@ -876,11 +876,15 @@ int player_select_get_last_pilot_info () {
     // TODO: Replace this with a function that does this properly for the new
     // pilot code.
 
-    const char* last_player = os_config_read_string (NULL, "LastPlayer", NULL);
+    // TODO: move to strings
+    const auto last_player = fs2::registry::read ("Default.LastPlayer", "");
 
-    if (last_player == NULL) { return 0; }
+    if (last_player.empty ()) {
+        return 0;
+    }
     else {
-        strcpy (Player_select_last_pilot, last_player);
+        ASSERT (sizeof Player_select_last_pilot > last_player.size ());
+        strcpy (Player_select_last_pilot, last_player.c_str ());
     }
 
     // handle changing from pre-pilot code to post-pilot code

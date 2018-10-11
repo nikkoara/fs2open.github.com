@@ -645,7 +645,7 @@ int barracks_pilot_accepted () {
     // MWA -- I think that we should be writing Cur_pilot here.
     Pilot.save_player (Cur_pilot);
 
-    os_config_write_string (NULL, "LastPlayer", Cur_pilot->callsign);
+    fs2::registry::write ("Default.LastPlayer", Cur_pilot->callsign);
 
     return 0;
 }

@@ -843,9 +843,8 @@ void options_cancel_exit () {
 }
 
 void options_change_gamma (float delta) {
-    char tmp_gamma_string[32];
-
     FreeSpace_gamma += delta;
+
     if (FreeSpace_gamma < 0.1f) {
         FreeSpace_gamma = 0.1f;
         gamesnd_play_iface (InterfaceSounds::GENERAL_FAIL);
@@ -859,9 +858,8 @@ void options_change_gamma (float delta) {
     }
 
     gr_set_gamma (FreeSpace_gamma);
-    sprintf (tmp_gamma_string, NOX ("%.2f"), FreeSpace_gamma);
 
-    os_config_write_string (NULL, NOX ("GammaD3D"), tmp_gamma_string);
+    fs2::registry::write ("Default.GammaD3D", FreeSpace_gamma);
 }
 
 void options_button_pressed (int n) {

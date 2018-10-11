@@ -581,23 +581,31 @@ bool ds_check_for_openal_soft () {
 int ds_init () {
     ALfloat list_orien[] = { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f };
     ALCint attrList[] = { ALC_FREQUENCY, 22050, 0 };
-    unsigned int sample_rate = 22050;
 
     II << "Initializing OpenAL...";
 
-    Ds_sound_quality = os_config_read_uint ("Sound", "Quality", DS_SQ_MEDIUM);
+    Ds_sound_quality = fs2::registry::read ("Sound.Quality", DS_SQ_MEDIUM);
     CLAMP (Ds_sound_quality, DS_SQ_LOW, DS_SQ_HIGH);
 
+    int sample_rate = 0;
+
     switch (Ds_sound_quality) {
-    case DS_SQ_HIGH: sample_rate = 48000; break;
+    case DS_SQ_HIGH:
+        sample_rate = 48000;
+        break;
 
-    case DS_SQ_MEDIUM: sample_rate = 44100; break;
+    case DS_SQ_MEDIUM:
+        sample_rate = 44100;
+        break;
 
-    default: sample_rate = 22050; break;
+    default:
+        sample_rate = 22050;
+        break;
     }
 
-    sample_rate = os_config_read_uint ("Sound", "SampleRate", sample_rate);
+    sample_rate = fs2::registry::read ("Sound.SampleRate", sample_rate);
     attrList[1] = sample_rate;
+
     std::string playback_device;
     std::string capture_device;
 
@@ -663,7 +671,7 @@ int ds_init () {
     if (alcIsExtensionPresent (
             ds_sound_device, (const ALchar*)"ALC_EXT_EFX") == AL_TRUE) {
         II << "found OpenAL extension ALC_EXT_EFX";
-        Ds_use_eax = os_config_read_uint ("Sound", "EnableEFX", Fred_running);
+        Ds_use_eax = fs2::registry::read ("Sound.EnableEFX", Fred_running);
     }
 
     if (Ds_use_eax == 1) {

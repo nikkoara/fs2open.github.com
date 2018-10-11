@@ -1,5 +1,15 @@
 // -*- mode: c++; -*-
 
+#include "defs.hh"
+
+#include "assert/assert.hh"
+#include "freespace2/freespace.hh"
+#include "gamesequence/gamesequence.hh"
+#include "log/log.hh"
+#include "osapi/osapi.hh"
+#include "parse/parselo.hh"
+#include "shared/types.hh"
+
 #include <fcntl.h>
 #include <sys/stat.h>
 
@@ -7,55 +17,52 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
-#include "defs.hh"
-#include "shared/types.hh"
-#include "gamesequence/gamesequence.hh"
-#include "freespace2/freespace.hh"
-#include "parse/parselo.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
+////////////////////////////////////////////////////////////////////////
 
 namespace {
 
-bool fAppActive = false;
+fs::path config_path;
 
-std::vector< std::unique_ptr< os::Viewport > > viewports;
-os::Viewport* mainViewPort = 0;
-SDL_Window* mainSDLWindow = 0;
+void
+init_config_path () {
+    config_path = fs::path (SDL_GetPrefPath ("Volition", "Freespace2"));
+    ASSERT (!config_path.empty ());
+}
 
 inline fs::path
 get_config_path () {
-    static fs::path config_path;
-
     static std::once_flag init_flag;
-    std::call_once (init_flag, [&]() {
-        config_path = fs::path (SDL_GetPrefPath ("Volition", "Freespace2")); });
-
-    ASSERT (!config_path.empty ());
-
+    std::call_once (init_flag, init_config_path);
     return config_path;
 }
 
-bool
-window_event_handler (const SDL_Event& e) {
-    ASSERT (mainSDLWindow);
+////////////////////////////////////////////////////////////////////////
 
-    if (os::events::isWindowEvent (e, mainSDLWindow)) {
+bool is_active = false;
+
+os::Viewport* main_viewport = 0;
+SDL_Window*   main_window   = 0;
+
+bool
+default_window_handler (const SDL_Event& e) {
+    ASSERT (main_window);
+
+    if (os::events::isWindowEvent (e, main_window)) {
         switch (e.window.event) {
         case SDL_WINDOWEVENT_MINIMIZED:
         case SDL_WINDOWEVENT_FOCUS_LOST: {
-            if (fAppActive) {
+            if (is_active) {
                 game_pause ();
-                fAppActive = false;
+                is_active = false;
             }
             break;
         }
         case SDL_WINDOWEVENT_MAXIMIZED:
         case SDL_WINDOWEVENT_RESTORED:
         case SDL_WINDOWEVENT_FOCUS_GAINED: {
-            if (!fAppActive) {
+            if (!is_active) {
                 game_unpause ();
-                fAppActive = true;
+                is_active = true;
             }
             break;
         }
@@ -64,7 +71,7 @@ window_event_handler (const SDL_Event& e) {
             break;
         }
 
-        gr_activate (fAppActive);
+        gr_activate (is_active);
 
         return true;
     }
@@ -73,7 +80,7 @@ window_event_handler (const SDL_Event& e) {
 }
 
 bool
-quit_handler (const SDL_Event&) {
+default_quit_handler (const SDL_Event&) {
     gameseq_post_event (GS_EVENT_QUIT_GAME);
     return true;
 }
@@ -82,92 +89,12 @@ quit_handler (const SDL_Event&) {
 
 ////////////////////////////////////////////////////////////////////////
 
-static std::vector< SDL_Event > buffered_events;
-
-void
-do_os_init (const char*, const char* title, const char* name) {
-    if (0 == name || 0 == name [0]) {
-        os_init_registry_stuff (Osreg_company_name, title);
-    }
-    else {
-        os_init_registry_stuff (Osreg_company_name, name);
-    }
-
-    SDL_version compiled, linked;
-
-    SDL_VERSION (&compiled);
-    SDL_GetVersion (&linked);
-
-    WARNINGF (LOCATION, "SDL v%d.%d.%d (compiled %d.%d.%d) ...", linked.major, linked.minor, linked.patch, compiled.major,compiled.minor, compiled.patch);
-
-    if (SDL_Init (SDL_INIT_EVENTS) < 0) {
-        EE << "SDL initialization failed : " << SDL_GetError ();
-        exit (1);
-    }
-
-    os::events::addEventListener (
-        SDL_WINDOWEVENT, os::events::DEFAULT_LISTENER_WEIGHT,
-        window_event_handler);
-
-    os::events::addEventListener (
-        SDL_QUIT, os::events::DEFAULT_LISTENER_WEIGHT, quit_handler);
-}
-
-void os_init (const char* cls, const char* title, const char* name) {
-    static std::once_flag init;
-    std::call_once (init, [&]() { do_os_init (cls, title, name); });
-}
-
-void os_set_title (const char* s) {
-    ASSERT (mainSDLWindow);
-    SDL_SetWindowTitle (mainSDLWindow, s);
-}
-
-void os_fini () {
-    os::closeAllViewports ();
-    SDL_Quit ();
-}
-
-int os_foreground () { return fAppActive; }
-
-void debug_int3 (const char* file, int line) {
-    II << file << ":" << line << " : int3";
-
-    gr_activate (0);
-
-#ifndef NDEBUG
-    SDL_TriggerBreakpoint ();
-#endif
-
-    gr_activate (1);
-}
-
-////////////////////////////////////////////////////////////////////////
-
 namespace os {
-
-Viewport* addViewport (std::unique_ptr< Viewport >&& viewport) {
-    auto port = viewport.get ();
-    viewports.push_back (std::move (viewport));
-    return port;
-}
-
-void setMainViewPort (Viewport* mainView) {
-    mainViewPort = mainView;
-    mainSDLWindow = mainView->toSDLWindow ();
-}
-
-SDL_Window* getSDLMainWindow () { return mainSDLWindow; }
-
-Viewport* getMainViewport () { return mainViewPort; }
-
-void closeAllViewports () { viewports.clear (); }
-
-////////////////////////////////////////////////////////////////////////
-
 namespace events {
+
 namespace {
 
+// TODO: redo this shit
 ListenerIdentifier nextListenerIdentifier;
 
 struct EventListenerData {
@@ -207,27 +134,35 @@ addEventListener (SDL_EventType type, int weight, const Listener& listener) {
     data.type = static_cast< uint32_t > (type);
 
     eventListeners.push_back (data);
+
     // This is suboptimal for runtime but we will iterate that vector often so
     // cache hits are more important
+    // TODO: redo this hack
     std::sort (eventListeners.begin (), eventListeners.end ());
 
     return data.identifier;
 }
 
-bool removeEventListener (ListenerIdentifier identifier) {
+bool
+removeEventListener (ListenerIdentifier identifier) {
     auto endIter = end (eventListeners);
     for (auto iter = begin (eventListeners); iter != endIter; ++iter) {
         if (iter->identifier == identifier) {
             eventListeners.erase (iter);
-            return true; // Identifiers are unique
+            return true;
         }
     }
 
     return false;
 }
 
-bool isWindowEvent (const SDL_Event& e, SDL_Window* window) {
+#define LISTEN   os::events::addEventListener
+#define UNLISTEN os::events::removeEventListener
+
+bool
+isWindowEvent (const SDL_Event& e, SDL_Window* window) {
     auto mainId = SDL_GetWindowID (window);
+
     switch (e.type) {
     case SDL_WINDOWEVENT: return mainId == e.window.windowID;
     case SDL_KEYDOWN:
@@ -248,15 +183,108 @@ bool isWindowEvent (const SDL_Event& e, SDL_Window* window) {
 
 ////////////////////////////////////////////////////////////////////////
 
-void os_ignore_events () {
+namespace os {
+
+std::vector< std::unique_ptr< os::Viewport > > viewports;
+
+Viewport*
+addViewport (std::unique_ptr< Viewport >&& viewport) {
+    auto port = viewport.get ();
+    viewports.push_back (std::move (viewport));
+    return port;
+}
+
+void
+setMainViewPort (Viewport* mainView) {
+    main_viewport = mainView;
+    main_window = mainView->toSDLWindow ();
+}
+
+SDL_Window*
+getSDLMainWindow () {
+    return main_window;
+}
+
+Viewport*
+getMainViewport () {
+    return main_viewport;
+}
+
+void
+closeAllViewports () {
+    viewports.clear ();
+}
+
+} // namespace os
+
+////////////////////////////////////////////////////////////////////////
+
+void
+do_os_init () {
+    SDL_version v;
+    SDL_GetVersion (&v);
+
+    II << "SDL v" << v.major << "." << v.minor << "." <<  v.patch;
+
+    if (SDL_Init (SDL_INIT_EVENTS) < 0) {
+        EE << "SDL initialization failed : " << SDL_GetError ();
+        exit (1);
+    }
+
+    LISTEN (
+        SDL_WINDOWEVENT, os::events::DEFAULT_LISTENER_WEIGHT,
+        default_window_handler);
+
+    LISTEN (
+        SDL_QUIT, os::events::DEFAULT_LISTENER_WEIGHT, default_quit_handler);
+}
+
+void os_init () {
+    static std::once_flag init;
+    std::call_once (init, [&]() { do_os_init (); });
+}
+
+void os_set_title (const char* s) {
+    ASSERT (main_window);
+    SDL_SetWindowTitle (main_window, s);
+}
+
+void os_fini () {
+    os::closeAllViewports ();
+    SDL_Quit ();
+}
+
+int os_foreground () { return is_active; }
+
+void debug_int3 (const char* file, int line) {
+    II << file << ":" << line << " : int3";
+
+    gr_activate (0);
+
+#ifndef NDEBUG
+    SDL_TriggerBreakpoint ();
+#endif
+
+    gr_activate (1);
+}
+
+////////////////////////////////////////////////////////////////////////
+
+static std::vector< SDL_Event > event_buffer;
+
+// TODO: re-api
+void
+os_ignore_events () {
     SDL_Event event;
+
     while (SDL_PollEvent (&event)) {
         // Add event to buffer
-        buffered_events.push_back (event);
+        event_buffer.push_back (event);
     }
 }
 
-static void handle_sdl_event (const SDL_Event& event) {
+static void
+process_event (const SDL_Event& event) {
     using namespace os::events;
 
     EventListenerData data;
@@ -266,11 +294,12 @@ static void handle_sdl_event (const SDL_Event& event) {
         eventListeners.begin (), eventListeners.end (), data, compare_type);
 
     if (iter != eventListeners.end ()) {
+        //
         // The vector contains all event listeners, the listeners are sorted
-        // for type and weight
-        // -> iterating through all listeners will yield them in increasing
-        // weight order but we can only do this until we have reached the end
-        // of the vector or the type has changed
+        // for type and weight -> iterating through all listeners will yield
+        // them in increasing weight order but we can only do this until we have
+        // reached the end of the vector or the type has changed:
+        //
         for (; iter != eventListeners.end () && iter->type == event.type;
              ++iter) {
             if (iter->listener (event)) {
@@ -281,16 +310,25 @@ static void handle_sdl_event (const SDL_Event& event) {
     }
 }
 
-void os_poll () {
-    for (const auto& event : buffered_events)
-        handle_sdl_event (event);
+void
+os_poll () {
+    //
+    // consume buffered events ...
+    //
+    for (const auto& event : event_buffer)
+        process_event (event);
 
-    buffered_events.clear ();
+    event_buffer.clear ();
 
+    //
+    // ... and pending events.
+    //
     for (SDL_Event event; SDL_PollEvent (&event);)
-        handle_sdl_event (event);
+        process_event (event);
 }
 
-std::string os_get_config_path (const std::string& suffix) {
+std::string
+os_get_config_path (const std::string& suffix) {
     return std::string (fs::path (get_config_path ()) += suffix);
 }
+

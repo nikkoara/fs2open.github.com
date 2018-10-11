@@ -65,7 +65,6 @@ static GLuint GL_screen_pbo = 0;
 
 float GL_alpha_threshold = 0.0f;
 
-extern const char* Osreg_title;
 extern std::string Window_title;
 
 extern GLfloat GL_anisotropy;
@@ -849,7 +848,7 @@ gr_opengl_create_viewport (const os::ViewPortProperties& props) {
     attrs.pixel_format.stencil_size = (gr_screen.bits_per_pixel == 32) ? 8 : 1;
 
     attrs.pixel_format.multi_samples =
-        os_config_read_uint (NULL, "OGL_AntiAliasSamples", 0);
+        fs2::registry::read ("Default.OGL_AntiAliasSamples", 0);
 
     attrs.enable_opengl = true;
     attrs.gl_attributes.profile = os::OpenGLProfile::Core;
@@ -990,12 +989,15 @@ int opengl_init_display_device () {
 
     attrs.gl_attributes.profile = os::OpenGLProfile::Core;
 
-    attrs.display = os_config_read_uint ("Video", "Display", 0);
+    attrs.display = fs2::registry::read ("Video.Display", 0);
     attrs.width = (uint32_t)gr_screen.max_w;
     attrs.height = (uint32_t)gr_screen.max_h;
 
-    attrs.title = Osreg_title;
-    if (!Window_title.empty ()) { attrs.title = Window_title; }
+    attrs.title = "FreeSpace 2";
+
+    if (!Window_title.empty ()) {
+        attrs.title = Window_title;
+    }
 
     if (!Cmdline_window && !Cmdline_fullscreen_window) {
         attrs.flags.set (os::ViewPortFlags::Fullscreen);

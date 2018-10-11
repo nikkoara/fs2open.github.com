@@ -88,23 +88,23 @@ openal_device_sort_func (const OALdevice& d1, const OALdevice& d2) {
 }
 
 static void find_playback_device (OpenALInformation* info) {
-    const char* user_device =
-        os_config_read_string ("Sound", "PlaybackDevice", NULL);
-    const char* default_device = info->default_playback_device.c_str ();
+    const auto config_device = fs2::registry::read (
+        "Sound.PlaybackDevice", "");
+
+    const auto default_device = info->default_playback_device;
 
     // in case they are the same, we only want to test it once
-    if ((user_device && default_device) &&
-        !strcmp (user_device, default_device)) {
-        user_device = NULL;
-    }
+    bool same_device = config_device == default_device;
 
     for (auto& device : info->playback_devices) {
+        // TODO: this seems wrong
         OALdevice new_device (device.c_str ());
 
-        if (user_device && !strcmp (device.c_str (), user_device)) {
-            new_device.type = OAL_DEVICE_USER;
+        if (same_device) {
+            if (config_device == device)
+                new_device.type = OAL_DEVICE_USER;
         }
-        else if (default_device && !strcmp (device.c_str (), default_device)) {
+        else if (default_device == device) {
             new_device.type = OAL_DEVICE_DEFAULT;
         }
 
@@ -121,7 +121,7 @@ static void find_playback_device (OpenALInformation* info) {
     ALCcontext* context = NULL;
 
     // for each device that we have available, try and figure out which to use
-    for (size_t idx = 0; idx < PlaybackDevices.size (); idx++) {
+    for (size_t idx = 0; idx < PlaybackDevices.size (); ++idx) {
         OALdevice* pdev = &PlaybackDevices[idx];
 
         // open our specfic device
@@ -181,23 +181,25 @@ static void find_playback_device (OpenALInformation* info) {
 }
 
 static void find_capture_device (OpenALInformation* info) {
-    const char* user_device =
-        os_config_read_string ("Sound", "CaptureDevice", NULL);
-    const char* default_device = info->default_capture_device.c_str ();
+    const auto config_device = fs2::registry::read (
+        "Sound.CaptureDevice", "");
 
+    const auto default_device = info->default_capture_device;
+
+    //
     // in case they are the same, we only want to test it once
-    if ((user_device && default_device) &&
-        !strcmp (user_device, default_device)) {
-        user_device = NULL;
-    }
+    //
+    const bool same_device = config_device == default_device;
 
     for (auto& device : info->capture_devices) {
+        // TODO: this whole thing seems wrong
         OALdevice new_device (device.c_str ());
 
-        if (user_device && !strcmp (device.c_str (), user_device)) {
-            new_device.type = OAL_DEVICE_USER;
+        if (!same_device) {
+            if (config_device == device)
+                new_device.type = OAL_DEVICE_USER;
         }
-        else if (default_device && !strcmp (device.c_str (), default_device)) {
+        else if (default_device == device) {
             new_device.type = OAL_DEVICE_DEFAULT;
         }
 

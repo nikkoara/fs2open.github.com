@@ -98,7 +98,7 @@ void opengl_tcache_init () {
     // check what mipmap filter we should be using
     // 0  ==  Bilinear
     // 1  ==  Trilinear
-    GL_mipmap_filter = os_config_read_uint (NULL, "TextureFilter", 1);
+    GL_mipmap_filter = fs2::registry::read ("Default.TextureFilter", 1);
 
     if (GL_mipmap_filter > 1) { GL_mipmap_filter = 1; }
 

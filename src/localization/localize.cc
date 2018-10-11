@@ -90,17 +90,9 @@ int lcl_is_valid_numeric_char (char c);
 // parses the string.tbl and reports back only on the languages it found
 void parse_stringstbl_quick (const char* filename);
 
-// ------------------------------------------------------------------------------------------------------------
-// LOCALIZE FUNCTIONS
-//
-
 // initialize localization, if no language is passed - use the language
 // specified in the registry
-void lcl_init (int lang_init) {
-    char lang_string[128];
-    const char* ret;
-    int lang, idx, i;
-
+void lcl_init (int default_language) {
     // initialize encryption
     encrypt_init ();
 
@@ -123,43 +115,37 @@ void lcl_init (int lang_init) {
     // the builtin languages as we might be dealing with an old style
     // strings.tbl which doesn't support anything beyond the builtin languages.
     // Note, we start at i = 1 because we added English above.
-    if ((int)Lcl_languages.size () == 1) {
-        for (i = 1; i < NUM_BUILTIN_LANGUAGES; i++) {
+    if (1U == Lcl_languages.size ()) {
+        for (size_t i = 1; i < NUM_BUILTIN_LANGUAGES; ++i) {
             Lcl_languages.push_back (Lcl_builtin_languages[i]);
         }
     }
 
-    // read the language from the registry
-    if (lang_init < 0) {
-        memset (lang_string, 0, 128);
-        // default to DEFAULT_LANGUAGE (which should be English so we don't
-        // have to put German text in tstrings in the #default section)
-        ret = os_config_read_string (
-            NULL, "Language",
+    size_t language_index = 0;
+
+    if (default_language < 0) {
+        auto lang = fs2::registry::read (
+            "Default.Language",
             Lcl_languages[FS2_OPEN_DEFAULT_LANGUAGE].lang_name);
 
-        if (ret == NULL)
-            ASSERTX (0, "Default language not found.");
+        ASSERT (!lang.empty ());
 
-        strcpy (lang_string, ret);
-
-        // look it up
-        lang = -1;
-        for (idx = 0; idx < (int)Lcl_languages.size (); idx++) {
-            if (!strcasecmp (Lcl_languages[idx].lang_name, lang_string)) {
-                lang = idx;
+        for (size_t i = 0; i < Lcl_languages.size (); ++i) {
+            if (0 == strcasecmp (Lcl_languages[i].lang_name, lang.c_str ())) {
+                language_index = i;
                 break;
             }
         }
-        if (lang < 0) { lang = 0; }
     }
     else {
-        ASSERT ((lang_init >= 0) && (lang_init < (int)Lcl_languages.size ()));
-        lang = lang_init;
+        ASSERT (
+            0 <= default_language &&
+            default_language < int (Lcl_languages.size ()));
+
+        language_index = default_language;
     }
 
-    // set the language (this function takes care of setting up file pointers)
-    lcl_set_language (lang);
+    lcl_set_language (int (language_index));
 }
 
 void lcl_close () { lcl_xstr_close (); }

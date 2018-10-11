@@ -1427,7 +1427,7 @@ DCF (use_joy_mouse, "Makes joystick move mouse cursor") {
         Use_joy_mouse = !Use_joy_mouse;
     } // Else, value was set/cleared by user
 
-    os_config_write_uint (NULL, NOX ("JoystickMovesCursor"), Use_joy_mouse);
+    fs2::registry::write ("Default.JoystickMovesCursor", Use_joy_mouse);
 }
 
 DCF_BOOL (palette_flash, Use_palette_flash);
@@ -1457,7 +1457,7 @@ DCF (low_mem, "Uses low memory settings regardless of RAM") {
         Use_low_mem = !Use_low_mem;
     } // Else, value was set/cleared by user
 
-    os_config_write_uint (NULL, NOX ("LowMem"), Use_low_mem);
+    fs2::registry::write ("Default.LowMem", Use_low_mem);
 }
 
 #ifndef NDEBUG
@@ -1485,8 +1485,7 @@ DCF (force_fullscreen, "Forces game to startup in fullscreen mode") {
         Use_fullscreen_at_startup = !Use_fullscreen_at_startup;
     } // Else, value was set/cleared by user
 
-    os_config_write_uint (
-        NULL, NOX ("ForceFullscreen"), Use_fullscreen_at_startup);
+    fs2::registry::write ("Default.ForceFullscreen", Use_fullscreen_at_startup);
 }
 #endif
 
@@ -1516,11 +1515,10 @@ DCF (gamma, "Sets and saves Gamma Factor") {
     else if (FreeSpace_gamma > 5.0f) {
         FreeSpace_gamma = 5.0f;
     }
+
     gr_set_gamma (FreeSpace_gamma);
 
-    char tmp_gamma_string[32];
-    sprintf (tmp_gamma_string, NOX ("%.2f"), FreeSpace_gamma);
-    os_config_write_string (NULL, NOX ("Gamma"), tmp_gamma_string);
+    fs2::registry::write ("Default.Gamma", FreeSpace_gamma);
 }
 
 #ifdef FS2_VOICER
@@ -1533,7 +1531,6 @@ DCF (gamma, "Sets and saves Gamma Factor") {
  */
 void game_init () {
     int s1, e1;
-    const char* ptr;
     char whee[MAX_PATH_LEN];
 
     Game_current_mission_filename[0] = 0;
@@ -1552,11 +1549,11 @@ void game_init () {
     // Initialize the timer before the os
     timer_init ();
 
-    os_init (Osreg_class_name, Window_title.c_str (), Osreg_app_name);
+    os_init ();
 
 #ifndef NDEBUG
-    WARNINGF (LOCATION, "FreeSpace 2 Open version: %s", FS_VERSION_FULL);
-
+    II << "FreeSpace 2 v" << FS_VERSION_FULL;
+    // TODO: remove
     extern void cmdline_debug_print_cmdline ();
     cmdline_debug_print_cmdline ();
 #endif
@@ -1592,17 +1589,17 @@ void game_init () {
     verify_weapons_tbl ();
 
     Use_joy_mouse = 0;
-    Use_low_mem = os_config_read_uint (NULL, NOX ("LowMem"), 0);
+    Use_low_mem = fs2::registry::read ("Default.LowMem", 0);
 
 #ifndef NDEBUG
     Use_fullscreen_at_startup =
-        os_config_read_uint (NULL, NOX ("ForceFullscreen"), 1);
+        fs2::registry::read ("Default.ForceFullscreen", 1);
 #endif
 
     // change FPS cap if told to do so (for those who can't use vsync or where
     // vsync isn't enough)
     uint max_fps = 0;
-    if ((max_fps = os_config_read_uint (NULL, NOX ("MaxFPS"), 0)) != 0) {
+    if ((max_fps = fs2::registry::read ("Default.MaxFPS", 0)) != 0) {
         if ((max_fps > 15) && (max_fps < 120)) {
             Framerate_cap = (int)max_fps;
         }
@@ -1623,8 +1620,7 @@ void game_init () {
     tracing::init ();
 
     // D3D's gamma system now works differently. 1.0 is the default value
-    ptr = os_config_read_string (NULL, NOX ("GammaD3D"), NOX ("1.0"));
-    FreeSpace_gamma = (float)atof (ptr);
+    FreeSpace_gamma = fs2::registry::read ("Default.GammaD3D", 1.f);
 
     font::init (); // loads up all fonts
 
@@ -3990,10 +3986,9 @@ void game_do_frame () {
     // flFrametime /= 15.0;
 
     if (game_single_step && (last_single_step == game_single_step)) {
-        os_set_title (
-            NOX ("SINGLE STEP MODE (Pause exits, any other key steps)"));
+        os_set_title ("SINGLE STEP MODE (Pause exits, any key steps)");
         while (key_checkch () == 0) os_sleep (10);
-        os_set_title (XSTR ("FreeSpace", 171));
+        os_set_title ("FreeSpace 2");
         Last_time = timer_get_fixed_seconds ();
     }
 
@@ -4152,7 +4147,7 @@ int game_poll () {
     case KEY_DEBUGGED + KEY_P: break;
 
     case KEY_PRINT_SCRN: {
-        static int counter = os_config_read_uint (NULL, "ScreenshotNum", 0);
+        static int counter = fs2::registry::read ("Default.ScreenshotNum", 0);
         char tmp_name[MAX_FILENAME_LEN];
 
         game_stop_time ();
@@ -4176,7 +4171,7 @@ int game_poll () {
         gr_print_screen (tmp_name);
 
         game_start_time ();
-        os_config_write_uint (NULL, "ScreenshotNum", counter);
+        fs2::registry::write ("Default.ScreenshotNum", counter);
     }
 
         k = 0;
@@ -4821,7 +4816,7 @@ void game_enter_state (int old_state, int new_state) {
 
     case GS_STATE_DEBUG_PAUSED:
         // game_stop_time();
-        // os_set_title("FreeSpace - PAUSED");
+        // os_set_title("FreeSpace 2 - PAUSED");
         // break;
         //
     case GS_STATE_TRAINING_PAUSED:
@@ -6051,7 +6046,7 @@ int detect_lang () {
     std::string first_font;
 
     // if the reg is set then let lcl_init() figure out what to do
-    if (os_config_read_string (NULL, NOX ("Language"), NULL) != NULL)
+    if (fs2::registry::read ("Default.Language", std::string ()).empty ())
         return -1;
 
     // try and open the file to verify

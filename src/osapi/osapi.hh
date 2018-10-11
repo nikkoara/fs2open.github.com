@@ -13,9 +13,7 @@
 
 #include <SDL_events.h>
 
-// If app_name is NULL or ommited, then TITLE is used
-// for the app name, which is where registry keys are stored.
-void os_init (const char*, const char*, const char* = 0);
+void os_init ();
 
 // set the main window title
 void os_set_title (const char*);
@@ -131,9 +129,7 @@ public:
  * @brief Flags for viewport creation
  * @ingroup os_graphics_api
  */
-FLAG_LIST (ViewPortFlags){ Fullscreen = 0, Borderless, Resizeable,
-
-                           NUM_VALUES };
+FLAG_LIST (ViewPortFlags){ Fullscreen = 0, Borderless, Resizeable, NUM_VALUES };
 
 /**
  * @brief Properties of a viewport that should be created
@@ -374,9 +370,8 @@ bool removeEventListener (ListenerIdentifier identifier);
  * @return @c true if the event belongs to the window, @c false otherwise
  */
 bool isWindowEvent (const SDL_Event& e, SDL_Window* window);
-} // namespace events
-/** @} */ // end of OsAPI
-} // namespace os
+
+}}
 
 // Documentation pages
 /**

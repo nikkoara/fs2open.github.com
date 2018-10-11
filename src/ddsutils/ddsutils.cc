@@ -347,7 +347,7 @@ void dds_save_image (
     // a sane filename
     memset (&real_filename, 0, sizeof (real_filename));
 
-    int count = os_config_read_uint (NULL, "ImageExportNum", 0);
+    int count = fs2::registry::read ("Default.ImageExportNum", 0);
 
     if (count > 999) count = 0;
 
@@ -356,7 +356,7 @@ void dds_save_image (
         else {
             sprintf (real_filename, "image%.3d.dds", count++);
         }
-        os_config_write_uint (NULL, "ImageExportNum", count);
+        fs2::registry::write ("Default.ImageExportNum", count);
     }
     else {
         ASSERT (strlen (filename) < MAX_FILENAME_LEN - 5);

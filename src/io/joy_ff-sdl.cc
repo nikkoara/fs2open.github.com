@@ -88,7 +88,7 @@ static void print_haptic_support () {
 int joy_ff_init () {
     int ff_enabled = 0;
 
-    ff_enabled = os_config_read_uint (NULL, "EnableJoystickFF", 1);
+    ff_enabled = fs2::registry::read ("Default.EnableJoystickFF", 1);
 
     if (!ff_enabled || io::joystick::getCurrentJoystick () == nullptr) {
         return 0;
@@ -146,11 +146,11 @@ int joy_ff_init () {
     }
 
     Joy_ff_directional_hit_effect_enabled =
-        os_config_read_uint (NULL, "EnableHitEffect", 1);
+        fs2::registry::read ("Default.EnableHitEffect", 1);
     // ForceFeedback.Strength lets the user specify how strong the effects
     // should be. This uses SDL_HapticSetGain which needs to be supported by
     // the haptic device
-    int ff_strength = os_config_read_uint ("ForceFeedback", "Strength", 100);
+    int ff_strength = fs2::registry::read ("ForceFeedback.Strength", 100);
     CLAMP (ff_strength, 0, 100);
     if (SDL_HapticQuery (haptic) & SDL_HAPTIC_GAIN) {
         SDL_HapticSetGain (haptic, ff_strength);

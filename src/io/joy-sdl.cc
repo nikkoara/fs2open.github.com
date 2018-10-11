@@ -79,39 +79,34 @@ std::string getJoystickGUID (SDL_Joystick* stick) {
 }
 
 bool isCurrentJoystick (Joystick* testStick) {
-    auto currentGUID =
-        os_config_read_string (nullptr, "CurrentJoystickGUID", nullptr);
-    auto currentId = (int)os_config_read_uint (nullptr, "CurrentJoystick", 0);
+    auto guid = fs2::registry::read ("Default.CurrentJoystickGUID", "");
+    auto   id = fs2::registry::read ("Default.CurrentJoystick", 0);
 
-    if ((currentGUID == nullptr) || !strcmp (currentGUID, "")) {
-        // Only use the id
-        return currentId == testStick->getDeviceId ();
+    if (guid.empty ()) {
+        return id == testStick->getDeviceId ();
     }
 
-    std::string guidStr (currentGUID);
-    std::transform (begin (guidStr), end (guidStr), begin (guidStr), toupper);
+    std::transform (begin (guid), end (guid), begin (guid), toupper);
 
-    if (testStick->getGUID () != guidStr) {
+    if (testStick->getGUID () != guid) {
         return false; // GUID doesn't match
     }
 
     // Build a list of all joysticks with the right guid
     size_t num_sticks = 0;
+
     for (auto& stick : joysticks) {
-        if (stick->getGUID () == guidStr) { ++num_sticks; }
+        if (stick->getGUID () == guid) { ++num_sticks; }
     }
 
-    if (num_sticks == 0) {
-        // Not the right GUID
+    switch (num_sticks) {
+    case 0:
         return false;
-    }
-    if (num_sticks == 1) {
-        // Only one option -> this is the right stick
+    case 1:
         return true;
+    default:
+        return testStick->getDeviceId () == id;
     }
-
-    // Multiple sticks -> check if the device id is the same
-    return testStick->getDeviceId () == currentId;
 }
 
 void enumerateJoysticks (std::vector< JoystickPtr >& outVec) {

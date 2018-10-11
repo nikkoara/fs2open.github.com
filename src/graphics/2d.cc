@@ -33,6 +33,9 @@
 #include "assert/assert.hh"
 #include "log/log.hh"
 
+#include <boost/format.hpp>
+using fmt = boost::format;
+
 const char* Resolution_prefixes[GR_NUM_RESOLUTIONS] = { "", "2_" };
 
 screen gr_screen;
@@ -939,7 +942,6 @@ bool gr_init (
     int d_width, int d_height, int d_depth) {
     int width = 1024, height = 768, depth = 32, mode = GR_OPENGL;
     float center_aspect_ratio = -1.0f;
-    const char* ptr = NULL;
     // If already inited, shutdown the previous graphics
     if (Gr_inited) {
         switch (gr_screen.mode) {
@@ -951,23 +953,23 @@ bool gr_init (
         }
     }
 
-    // We cannot continue without this, quit, but try to help the user out
-    // first
-    ptr = os_config_read_string (NULL, NOX ("VideocardFs2open"), NULL);
+    auto videocard = fs2::registry::read ("Default.VideocardFs2open", "");
 
     // if we don't have a config string then construct one, using OpenGL
     // 1024x768 32-bit as the default
-    if (ptr == NULL) {
+    if (videocard.empty ()) {
         // If we don't have a display mode, use SDL to get default settings
         // We need to initialize SDL to do this
 
         if (SDL_InitSubSystem (SDL_INIT_VIDEO) == 0) {
-            int display = static_cast< int > (
-                os_config_read_uint ("Video", "Display", 0));
             SDL_DisplayMode displayMode;
+
+            int display = fs2::registry::read ("Video.Display", 0);
+
             if (SDL_GetDesktopDisplayMode (display, &displayMode) == 0) {
                 width = displayMode.w;
                 height = displayMode.h;
+
                 int sdlBits = SDL_BITSPERPIXEL (displayMode.format);
 
                 if (SDL_ISPIXELFORMAT_ALPHA (displayMode.format)) {
@@ -984,25 +986,36 @@ bool gr_init (
                     }
                 }
 
-                std::string videomode;
-                sprintf (
-                    videomode, "OGL -(%dx%d)x%d bit", width, height, depth);
-
-                os_config_write_string (
-                    NULL, NOX ("VideocardFs2open"), videomode.c_str ());
+                fs2::registry::write (
+                    "Default.VideocardFs2open", (
+                        fmt ("OGL -%1%x%2%x%3%") % width % height
+                        % depth).str ());
             }
         }
     }
     else {
-        ASSERT (ptr != NULL);
-
         // NOTE: The "ptr+5" is to skip over the initial "????-" in the video
-        // string.
-        // If the format of that string changes you'll have to change
+        // string; if the format of that string changes you'll have to change
         // this too!!!
-        if (sscanf (ptr + 5, "(%dx%d)x%d ", &width, &height, &depth) != 3) {
-            ASSERTX (0, "Can't understand 'VideocardFs2open' config entry!");
+        auto params = videocard.substr (5);
+
+        std::transform (
+            params.begin (), params.end (), params.begin (),
+            [](auto c) { return 'x' == c ? ' ' : c; });
+
+        std::vector< int > arr;
+
+        {
+            std::istringstream ss (params);
+
+            arr = std::vector<  int > (
+                std::istream_iterator< int >{ ss },
+                std::istream_iterator< int > ());
         }
+
+        width  = arr [0];
+        height = arr [1];
+        depth  = arr [2];
     }
 
     if (Cmdline_res != NULL) {
