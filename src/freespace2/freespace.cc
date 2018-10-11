@@ -1533,10 +1533,6 @@ void game_init () {
     // Moved from rand32, if we're gonna break, break immediately.
     ASSERT (RAND_MAX == 0x7fff || RAND_MAX >= 0x7ffffffd);
 
-    // seed the random number generator
-    int game_init_seed = (int)time (NULL);
-    srand (game_init_seed);
-
     Framerate_delay = 0;
 
     // encrypt stuff
@@ -6358,40 +6354,19 @@ void game_unpause () {
     }
 }
 
-int actual_main (int argc, char* argv[]) {
-    int result = -1;
-    ASSERT (argc > 0);
+int
+main (int argc, char** argv) {
+    srand (time (0));
 
-#if !defined(DONT_CATCH_MAIN_EXCEPTIONS)
     try {
-#endif
-        result = game_main (argc, argv);
-#if !defined(DONT_CATCH_MAIN_EXCEPTIONS)
+        return game_main (argc, argv);
     }
     catch (const std::exception& ex) {
-        ASSERTX (0, "Caught std::exception in main(): '%s'!", ex.what ());
-        fprintf (
-            stderr, "Caught std::exception in main(): '%s'!\n", ex.what ());
-
-        result = EXIT_FAILURE;
+        EE << ex.what ();
+        return 1;
     }
     catch (...) {
-        ASSERTX (0, "Caught exception in main()!");
-        fprintf (stderr, "Caught exception in main()!\n");
-
-        result = EXIT_FAILURE;
+        EE << "unknown exception in main";
+        return 1;
     }
-#endif
-
-    return result;
-}
-
-#ifdef __cplusplus
-extern "C"
-#endif
-    int
-    main (int argc, char* argv[]) {
-    // The extern "C" causes problems with linking so we'll just call
-    // the actual main function here
-    return actual_main (argc, argv);
 }
