@@ -1521,11 +1521,6 @@ DCF (gamma, "Sets and saves Gamma Factor") {
     fs2::registry::write ("Default.Gamma", FreeSpace_gamma);
 }
 
-#ifdef FS2_VOICER
-// This is really awful but thank the guys of X11 for naming something "Window"
-#include <SDL_syswm.h> // For SDL_SysWMinfo
-#endif
-
 /**
  * Game initialisation
  */
