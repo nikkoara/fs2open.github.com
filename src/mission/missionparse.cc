@@ -26,7 +26,7 @@
 #include "lighting/lighting.hh"
 #include "localization/localize.hh"
 #include "math/fvi.hh"
-#include "math/staticrand.hh"
+#include "math/prng.hh"
 #include "mission/missionbriefcommon.hh"
 #include "mission/missioncampaign.hh"
 #include "mission/missiongoals.hh"

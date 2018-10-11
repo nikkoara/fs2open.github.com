@@ -140,8 +140,6 @@ fs2_SOURCES =                                   \
 	log/log.cc                                  \
 	math/floating.cc                            \
 	math/fvi.cc                                 \
-	math/spline.cc                              \
-	math/staticrand.cc                          \
 	math/vecmat.cc                              \
 	menuui/barracks.cc                          \
 	menuui/credits.cc                           \

@@ -13,7 +13,7 @@
 #include "shared/globals.hh"
 #include "iff_defs/iff_defs.hh"
 #include "io/timer.hh"
-#include "math/staticrand.hh"
+#include "math/prng.hh"
 #include "object/objectdock.hh"
 #include "render/3d.hh"
 #include "ship/ship.hh"
@@ -1587,11 +1587,8 @@ int aifft_rotate_turret (
 
         // Mess with the turret's accuracy if the weapon system is damaged.
         if (weapon_system_strength < 0.7f) {
-            vec3d rand_vec;
+            vec3d rand_vec = fs2::prng::rand3f (0);
 
-            static_randvec (
-                Missiontime >> 18,
-                &rand_vec); // Return same random number for two seconds.
             // Add to predicted_enemy_pos value in .45 to 1.5x radius of enemy
             // ship, so will often miss, but not by a huge amount.
             vm_vec_scale_add2 (

@@ -36,7 +36,7 @@
 #include "localization/localize.hh"
 #include "math/fix.hh"
 #include "math/fvi.hh"
-#include "math/staticrand.hh"
+#include "math/prng.hh"
 #include "mission/missiongoals.hh"
 #include "mission/missionlog.hh"
 #include "mission/missionmessage.hh"
@@ -835,8 +835,6 @@ void ai_init () {
 
         ai_inited = 1;
     }
-
-    init_semirand ();
 
     ai_level_init ();
 }
@@ -2807,7 +2805,7 @@ void copy_xlate_model_path_points (
 
         if (randomize_pnt == i) {
             vec3d v_rand;
-            static_randvec (OBJ_INDEX (objp), &v_rand);
+            v_rand = fs2::prng::rand3f (0);
             vm_vec_scale (&v_rand, 30.0f);
             vm_vec_add2 (&v1, &v_rand);
         }
@@ -5474,12 +5472,11 @@ void evade_ship () {
     // Make speed based on skill level, varying at highest skill level, which
     // is harder to hit.
     if (Game_skill_level == NUM_SKILL_LEVELS - 1) {
-        int rand_int;
-        float accel_val;
+        int rand_int = fs2::prng::randi (0);
 
-        rand_int = static_rand (OBJ_INDEX (Pl_objp));
-        accel_val =
-            (float)(((Missiontime ^ rand_int) >> 14) & 0x0f) / 32.0f + 0.5f;
+        float accel_val = float (
+            (((Missiontime ^ rand_int) >> 14) & 0x0f) / 32.0f + 0.5f);
+
         accelerate_ship (aip, accel_val);
     }
     else
@@ -5497,11 +5494,11 @@ void evade_ship () {
                     [AI::Profile_Flags::Smart_afterburner_management]) {
                 aip->afterburner_stop_time = (fix) (
                     Missiontime + F1_0 +
-                    static_randf (OBJ_INDEX (Pl_objp)) * F1_0 / 4);
+                    fs2::prng::randf (0) * F1_0 / 4);
             }
             else {
                 aip->afterburner_stop_time =
-                    Missiontime + F1_0 + static_rand (OBJ_INDEX (Pl_objp)) / 4;
+                    Missiontime + F1_0 + fs2::prng::randi (0) / 4;
             }
         }
     }
@@ -6006,8 +6003,9 @@ void set_primary_weapon_linkage (object* objp) {
         if (Missiontime < i2f (30))
             return;
         else if (Missiontime < i2f (120)) {
-            int r = static_rand ((Missiontime >> 17) ^ OBJ_INDEX (objp));
-            if ((r & 3) != 0) return;
+            // 1 in 4
+            if (3 & fs2::prng::randi (0))
+                return;
         }
     }
 
@@ -6178,8 +6176,7 @@ int ai_fire_primary_weapon (object* objp) {
             fof_spread_cooldown_factor;
 
         // Possibly change values every half-second
-        if (static_randf ((Missiontime + static_rand (aip->shipnum)) >> 15) >
-            burstFireProb)
+        if (fs2::prng::randf (0) > burstFireProb)
             return 0;
     }
 
@@ -6914,8 +6911,7 @@ void set_predicted_enemy_pos_turret (
                      4.0f * (1.0f - time_enemy_in_range / (2 * range_time)));
         }
 
-        static_randvec (
-            ((OBJ_INDEX (pobjp)) ^ (Missiontime >> 16)) & 7, &rand_vec);
+        rand_vec = fs2::prng::rand3f (0);
 
         vm_vec_scale_add2 (predicted_enemy_pos, &rand_vec, scale);
         G_collision_time = collision_time;
@@ -7053,8 +7049,7 @@ void set_predicted_enemy_pos (
     }
 
     // get a random vector that changes slowly over time (1x / sec)
-    static_randvec (
-        ((OBJ_INDEX (pobjp)) ^ (Missiontime >> 16)) & 7, &rand_vec);
+    rand_vec = fs2::prng::rand3f (0);
 
     vm_vec_scale_add2 (predicted_enemy_pos, &rand_vec, scale);
 
@@ -7172,40 +7167,34 @@ int ai_near_full_strength (object* objp) {
     return (get_hull_pct (objp) > 0.9f) || (get_shield_pct (objp) > 0.8f);
 }
 
-void do_random_sidethrust (ai_info* aip, ship_info* sip) {
+void do_random_sidethrust (ai_info*, ship_info* sip) {
     // Sidethrust vector is initially based on the velocity vector representing
     // the ship's current sideways motion.
     vec2d side_vec;
+
     // Length to hold circle strafe is random (1-3) + slide accel time, changes
     // every 4 seconds
-    int strafeHoldDirAmount =
-        (int)(sip->slide_accel) +
-        static_rand_range (
-            (Missiontime + static_rand (aip->shipnum)) >> 18, 1, 3);
+    int strafeHoldDirAmount = int (
+        sip->slide_accel) + fs2::prng::randi (0, 1, 3);
+
     // Get a random float using some of the more significant chunks of the
     // missiontime as a seed (>>16 means it changes every second) This means
     // that we get the same random values for a little bit. Using
-    // static_rand(shipnum) as a crude hash function to make sure that the seed
+    // fs2::prng::randi(shipnum) as a crude hash function to make sure that the seed
     // is different for each ship and direction The *2 ensures that y and x
     // stay separate.
-    if (strafeHoldDirAmount >
-        0) { // This may look unnecessary, but we're apparently still getting
-             // div by zero errors on Macs here.
-        side_vec.x = static_randf_range (
-            (((Missiontime + static_rand (aip->shipnum)) >> 16) /
-             strafeHoldDirAmount),
-            -1.0f, 1.0f);
-        side_vec.y = static_randf_range (
-            (((Missiontime + static_rand (aip->shipnum)) >> 16) /
-             strafeHoldDirAmount) *
-                2,
-            -1.0f, 1.0f);
+    if (strafeHoldDirAmount > 0) {
+        // This may look unnecessary, but we're apparently still getting
+        // div by zero errors on Macs here.
+        side_vec.x = fs2::prng::randf (0, -1.0f, 1.0f);
+        side_vec.y = fs2::prng::randf (0, -1.0f, 1.0f);
     }
     else {
-        WARNINGF (LOCATION,"Division by zero in do_random_sidethrust averted. Please tell a coder.");
+        EE << "division by zero";
         side_vec.x = 1.0f;
         side_vec.y = 1.0f;
     }
+
     // Scale it up so that the longest dimension is length 1.0. This ensures we
     // are always getting as much use out of sidethrust as possible.
     vm_vec_boxscale (&side_vec, 1.0f);
@@ -7323,8 +7312,7 @@ void attack_set_accel (
                             }
                             else {
                                 aip->afterburner_stop_time =
-                                    Missiontime + F1_0 +
-                                    static_rand (OBJ_INDEX (Pl_objp)) / 4;
+                                    Missiontime + F1_0 + fs2::prng::randi (0) / 4;
                             }
                         }
                     }
@@ -7904,7 +7892,7 @@ void ai_chase_attack (
     // center point.    How far from center we attack is based on speed, size
     // and distance to enemy
     if (En_objp->radius > En_objp->phys_info.speed) {
-        static_randvec (OBJ_INDEX (Pl_objp), &randvec);
+        randvec = fs2::prng::rand3f (0);
         scale = dist_to_enemy / (dist_to_enemy + En_objp->radius) *
                 En_objp->radius;
         scale *= 0.5f * En_objp->radius /
@@ -7997,7 +7985,7 @@ void ai_chase_ga (ai_info* aip, ship_info* sip) {
     else
         vec_from_enemy = Pl_objp->orient.vec.fvec;
 
-    static_randvec (Missiontime >> 15, &tvec);
+    tvec = fs2::prng::rand3f (0);
     vm_vec_scale (&tvec, 100.0f);
     vm_vec_scale_add2 (&tvec, &vec_from_enemy, 300.0f);
     vm_vec_add2 (&tvec, &Pl_objp->pos);
@@ -9107,8 +9095,7 @@ void ai_chase () {
         float current_weapon_range =
             Weapon_info[swp->primary_bank_weapons[swp->current_primary_bank]]
                 .weapon_range;
-        if (static_randf ((Missiontime + static_rand (aip->shipnum)) >> 17) <
-                aip->ai_random_sidethrust_percent &&
+        if (fs2::prng::randf (0) < aip->ai_random_sidethrust_percent &&
             ((Missiontime - aip->last_hit_time < i2f (5) &&
               aip->hitter_objnum >= 0) ||
              dist_to_enemy < current_weapon_range)) {
@@ -9144,9 +9131,7 @@ void ai_chase () {
                          MAX (1.0f, En_objp->radius + dist_to_enemy))) {
             // Every second, evaluate whether or not to break stalemate. The
             // more patient the ship, the less likely this is.
-            if (static_randf (
-                    (Missiontime + static_rand (aip->shipnum)) >> 16) >
-                (aip->ai_patience * .01)) {
+            if (fs2::prng::randf (0) > (aip->ai_patience * .01)) {
                 if ((sip->can_glide == true) &&
                     (frand () < aip->ai_glide_attack_percent)) {
                     // Maybe use glide attack
@@ -9210,8 +9195,7 @@ void ai_chase () {
             dist_to_enemy < CIRCLE_STRAFE_MAX_DIST + En_objp->radius &&
             (En_objp->phys_info.speed <
              MAX (sip->max_vel.xyz.x, sip->max_vel.xyz.y) * 1.5f) &&
-            (static_randf ((Missiontime + static_rand (aip->shipnum)) >> 19) <
-             aip->ai_circle_strafe_percent)) {
+            (fs2::prng::randf (0) < aip->ai_circle_strafe_percent)) {
             aip->submode = AIS_CHASE_CIRCLESTRAFE;
             aip->submode_start_time = Missiontime;
             aip->last_attack_time = Missiontime;
@@ -9372,8 +9356,7 @@ void ai_chase () {
             dist_to_enemy < CIRCLE_STRAFE_MAX_DIST + En_objp->radius &&
             (En_objp->phys_info.speed <
              MAX (sip->max_vel.xyz.x, sip->max_vel.xyz.y) * 1.5f) &&
-            (static_randf ((Missiontime + static_rand (aip->shipnum)) >> 19) <
-             aip->ai_circle_strafe_percent)) {
+            (fs2::prng::randf (0) < aip->ai_circle_strafe_percent)) {
             aip->submode = AIS_CHASE_CIRCLESTRAFE;
             aip->submode_start_time = Missiontime;
             aip->last_attack_time = Missiontime;
@@ -9546,9 +9529,8 @@ void ai_chase () {
         // Glide attack lasts at least as long as it takes to turn around and
         // fire for a couple seconds.
         if (Missiontime - aip->submode_start_time >
-            i2f (
-                (int)(sip->rotation_time.xyz.x) + 4 +
-                static_rand_range (Missiontime >> 19, 0, 3))) {
+            i2f ((int)(sip->rotation_time.xyz.x) + 4 +
+                 fs2::prng::randi (0, 0, 3))) {
             aip->submode = SM_ATTACK;
             aip->submode_start_time = Missiontime;
             aip->last_attack_time = Missiontime;
@@ -10891,7 +10873,7 @@ void ai_big_guard () {
         float radius, extended_z;
 
         // get random [0 to 1] based on OBJNUM
-        float objval = static_randf (OBJ_INDEX (Pl_objp));
+        float objval = fs2::prng::randf (0);
 
         // get position relative to cylinder of guard_objp
         extended_z = get_cylinder_points (
@@ -10919,11 +10901,7 @@ void ai_big_guard () {
         // how often to choose new desired_z
         // 1*(64) sec < 2000, 2*(64) < 2-4000 3*(64) > 4-8000, etc (Missiontime
         // >> 22 is 64 sec intervals)
-        int time_choose = int(floor (log (length * 0.001f) / log (2.0f)));
-        float desired_z =
-            min_z + length * static_randf (
-                                 (OBJ_INDEX (Pl_objp)) ^
-                                 (Missiontime >> (22 + time_choose)));
+        float desired_z = min_z + length * fs2::prng::randf (0);
 
         // get r from guard_ship
         float cur_guard_rad = vm_vec_dist (&Pl_objp->pos, &axis_pt);
@@ -11136,7 +11114,7 @@ void ai_guard () {
     vec3d v2g, rvec;
 
     // get random [0 to 1] based on OBJNUM
-    objval = static_randf (OBJ_INDEX (Pl_objp));
+    objval = fs2::prng::randf (0);
 
     switch (aip->submode) {
     case AIS_GUARD_STATIC:
@@ -11724,7 +11702,7 @@ void ai_stay_near () {
         goal_objp = &Objects[goal_objnum];
 
         // Make not all ships pursue same point.
-        static_randvec (OBJ_INDEX (Pl_objp), &rand_vec);
+        rand_vec = fs2::prng::rand3f (0);
 
         // Make sure point is in front hemisphere (relative to Pl_objp's
         // position.
@@ -15849,7 +15827,7 @@ void init_ai_object (int objnum) {
 
     aip->choose_enemy_timestamp = timestamp (
         3 * (NUM_SKILL_LEVELS - Game_skill_level) *
-        ((static_rand_alt () % 500) + 500));
+        ((fs2::prng::randi (0) % 500) + 500));
 
     aip->shockwave_object = -1;
     aip->shield_manage_timestamp = timestamp (1);

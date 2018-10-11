@@ -7,7 +7,7 @@
 #include "iff_defs/iff_defs.hh"
 #include "io/timer.hh"
 #include "math/fix.hh"
-#include "math/staticrand.hh"
+#include "math/prng.hh"
 #include "mission/missionparse.hh"
 #include "object/object.hh"
 #include "ship/afterburner.hh"
@@ -691,8 +691,7 @@ void ai_big_chase_attack (
         // schedule for each ship)
         if ((sip->can_glide == true) &&
             !(aip->ai_flags[AI::AI_Flags::Kamikaze]) &&
-            static_randf ((Missiontime + static_rand (aip->shipnum)) >> 19) <
-                aip->ai_glide_strafe_percent) {
+            fs2::prng::randf (0) < aip->ai_glide_strafe_percent) {
             aip->previous_mode = aip->mode;
             aip->mode = AIM_STRAFE;
             aip->submode_parm0 = Missiontime; // use parm0 as time strafe mode
@@ -1998,8 +1997,7 @@ void ai_big_strafe () {
         aip->submode == AIS_STRAFE_RETREAT2 ||
         aip->submode == AIS_STRAFE_POSITION) {
         // Re-roll for random sidethrust every 2 seconds
-        if (static_randf ((Missiontime + static_rand (aip->shipnum)) >> 17) <
-            aip->ai_random_sidethrust_percent) {
+        if (fs2::prng::randf (0) < aip->ai_random_sidethrust_percent) {
             do_random_sidethrust (
                 aip, &Ship_info[Ships[Objects[aip->target_objnum].instance]
                                     .ship_info_index]);

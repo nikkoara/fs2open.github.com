@@ -15,7 +15,7 @@
 #include "io/joy_ff.hh"
 #include "io/timer.hh"
 #include "math/fix.hh"
-#include "math/staticrand.hh"
+#include "math/prng.hh"
 #include "missionui/missionweaponchoice.hh"
 #include "object/objcollide.hh"
 #include "particle/effects/BeamPiercingEffect.hh"

@@ -23,7 +23,7 @@
 #include "io/timer.hh"
 #include "jumpnode/jumpnode.hh"
 #include "localization/localize.hh"
-#include "math/staticrand.hh"
+#include "math/prng.hh"
 #include "object/object.hh"
 #include "playerman/player.hh"
 #include "radar/radardradis.hh"

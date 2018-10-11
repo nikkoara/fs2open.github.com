@@ -59,7 +59,7 @@
 #include "lighting/lighting.hh"
 #include "localization/localize.hh"
 #include "math/fix.hh"
-#include "math/staticrand.hh"
+#include "math/prng.hh"
 #include "menuui/barracks.hh"
 #include "menuui/credits.hh"
 #include "menuui/mainhallmenu.hh"

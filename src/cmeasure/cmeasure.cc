@@ -4,7 +4,7 @@
 #include "cmeasure/cmeasure.hh"
 #include "gamesnd/gamesnd.hh"
 #include "hud/hud.hh"
-#include "math/staticrand.hh"
+#include "math/prng.hh"
 #include "mission/missionparse.hh"
 #include "object/object.hh"
 #include "ship/ship.hh"
@@ -28,7 +28,7 @@ void cmeasure_set_ship_launch_vel (
         -25.0f);
 
     // Get random velocity vector
-    static_randvec (arand + 1, &rand_vec);
+    rand_vec = fs2::prng::rand3f (0);
 
     // Add it to the rear velocity
     vm_vec_scale_add2 (&vel, &rand_vec, 2.0f);

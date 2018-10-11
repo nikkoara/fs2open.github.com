@@ -25,7 +25,7 @@
 #include "graphics/light.hh"
 #include "graphics/uniforms.hh"
 #include "io/timer.hh"
-#include "math/staticrand.hh"
+#include "math/prng.hh"
 #include "model/modelrender.hh"
 #include "nebula/neb.hh"
 #include "particle/particle.hh"
@@ -2106,10 +2106,10 @@ void model_render_glow_points (
                 int flick;
 
                 if (pm->submodel[pm->detail[0]].num_arcs) {
-                    flick = static_rand (timestamp () % 20) %
-                            (pm->submodel[pm->detail[0]].num_arcs +
-                             j); // the more damage, the more arcs, the more
-                                 // likely the lights will fail
+                    // the more damage, the more arcs, the more likely the lights
+                    // will fail
+                    flick = fs2::prng::randi (0) % (
+                        pm->submodel[pm->detail[0]].num_arcs + j);
                 }
                 else {
                     flick = 1;

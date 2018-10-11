@@ -20,7 +20,7 @@
 #include "io/key.hh"
 #include "io/timer.hh"
 #include "math/fvi.hh"
-#include "math/staticrand.hh"
+#include "math/prng.hh"
 #include "mission/missionparse.hh"
 #include "model/modelrender.hh"
 #include "model/modelsinc.hh"

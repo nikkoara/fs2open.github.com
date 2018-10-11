@@ -17,7 +17,7 @@
 #include "iff_defs/iff_defs.hh"
 #include "io/timer.hh"
 #include "localization/localize.hh"
-#include "math/staticrand.hh"
+#include "math/prng.hh"
 #include "math/vecmat.hh"
 #include "model/model.hh"
 #include "object/objcollide.hh"

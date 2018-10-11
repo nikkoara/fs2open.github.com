@@ -32,7 +32,7 @@
 #include "lighting/lighting.hh"
 #include "localization/localize.hh"
 #include "math/fvi.hh"
-#include "math/staticrand.hh"
+#include "math/prng.hh"
 #include "math/vecmat.hh"
 #include "mission/missioncampaign.hh"
 #include "mission/missionlog.hh"
@@ -16118,9 +16118,9 @@ static void awacs_maybe_ask_for_help (ship* sp, int multi_team_filter) {
     int message = -1;
     objp = &Objects[sp->objnum];
 
-    if (objp->hull_strength <
-        ((AWACS_HELP_HULL_LOW + 0.01f * (static_rand (OBJ_INDEX (objp)) & 5)) *
-         sp->ship_max_hull_strength)) {
+    if (objp->hull_strength < (
+            (AWACS_HELP_HULL_LOW + .01f * (fs2::prng::randi (0) & 5)) *
+            sp->ship_max_hull_strength)) {
         // awacs ship below 25 + (0-4) %
         if (!(sp->awacs_warning_flag[Ship::Awacs_Warning_Flags::Warn_25])) {
             message = MESSAGE_AWACS_25;
@@ -16128,9 +16128,9 @@ static void awacs_maybe_ask_for_help (ship* sp, int multi_team_filter) {
         }
     }
     else if (
-        objp->hull_strength <
-        ((AWACS_HELP_HULL_HI + 0.01f * (static_rand (OBJ_INDEX (objp)) & 5)) *
-         sp->ship_max_hull_strength)) {
+        objp->hull_strength < (
+            (AWACS_HELP_HULL_HI + 0.01f * (fs2::prng::randi (0) & 5)) *
+            sp->ship_max_hull_strength)) {
         // awacs ship below 75 + (0-4) %
         if (!(sp->awacs_warning_flag[Ship::Awacs_Warning_Flags::Warn_75])) {
             message = MESSAGE_AWACS_75;
