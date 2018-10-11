@@ -16,11 +16,15 @@
 #include "object/objectdock.hh"
 #include "ship/ship.hh"
 
+#include <bitset>
+
 // helper prototypes
 
 void dock_evaluate_tree (
     object* objp, dock_function_info* infop,
-    void (*function) (object*, dock_function_info*), ubyte* visited_bitstring);
+    void (*function) (object*, dock_function_info*),
+    std::bitset< MAX_OBJECTS >& visited);
+
 void dock_move_docked_children_tree (object* objp, object* parent_objp);
 void dock_count_total_docked_objects_helper (
     object* objp, dock_function_info* infop);
@@ -345,43 +349,34 @@ void dock_evaluate_all_docked_objects (
 
     // we have multiple objects docked and we must treat them as a tree
     else {
-        // create a bit array to mark the objects we check
-        ubyte* visited_bitstring =
-            (ubyte*)malloc (calculate_num_bytes (MAX_OBJECTS));
-
-        // clear it
-        memset (visited_bitstring, 0, calculate_num_bytes (MAX_OBJECTS));
-
-        // start evaluating the tree
-        dock_evaluate_tree (objp, infop, function, visited_bitstring);
-
-        // destroy the bit array
-        free (visited_bitstring);
-        visited_bitstring = NULL;
+        std::bitset< MAX_OBJECTS > visited;
+        dock_evaluate_tree (objp, infop, function, visited);
     }
 }
 
 void dock_evaluate_tree (
     object* objp, dock_function_info* infop,
     void (*function) (object*, dock_function_info*),
-    ubyte* visited_bitstring) {
+    std::bitset< MAX_OBJECTS >& visited) {
+
     // make sure we haven't visited this object already
-    if (get_bit (visited_bitstring, OBJ_INDEX (objp))) return;
+    if (visited [OBJ_INDEX (objp)])
+        return;
 
     // mark as visited
-    set_bit (visited_bitstring, OBJ_INDEX (objp));
+    visited [OBJ_INDEX (objp)] = true;
 
     // call the function for this object, and return if instructed
     function (objp, infop);
-    if (infop->early_return_condition) return;
+
+    if (infop->early_return_condition)
+        return;
 
     // iterate through all docked objects
-    for (dock_instance* ptr = objp->dock_list; ptr != NULL; ptr = ptr->next) {
-        // start another tree with the docked object as the root, and return if
-        // instructed
-        dock_evaluate_tree (
-            ptr->docked_objp, infop, function, visited_bitstring);
-        if (infop->early_return_condition) return;
+    for (dock_instance* ptr = objp->dock_list; ptr; ptr = ptr->next) {
+        dock_evaluate_tree (ptr->docked_objp, infop, function, visited);
+        if (infop->early_return_condition)
+            return;
     }
 }
 
