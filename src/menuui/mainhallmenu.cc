@@ -4,19 +4,22 @@
 #include <climits>
 
 #include "defs.hh"
+
 #include "anim/animplay.hh"
 #include "anim/packunpack.hh"
+#include "assert/assert.hh"
 #include "cmdline/cmdline.hh"
 #include "freespace2/freespace.hh"
 #include "gamehelp/contexthelp.hh"
 #include "gamesequence/gamesequence.hh"
 #include "gamesnd/eventmusic.hh"
 #include "gamesnd/gamesnd.hh"
-#include "shared/alphacolors.hh"
 #include "graphics/generic.hh"
 #include "io/key.hh"
 #include "io/mouse.hh"
 #include "io/timer.hh"
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "menuui/fishtank.hh"
 #include "menuui/mainhallmenu.hh"
 #include "menuui/playermenu.hh"
@@ -25,9 +28,8 @@
 #include "parse/parselo.hh"
 #include "playerman/player.hh"
 #include "popup/popup.hh"
+#include "shared/alphacolors.hh"
 #include "sound/audiostr.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
 
 #ifndef NDEBUG
 #include "cutscene/movie.hh"
@@ -1217,7 +1219,7 @@ void main_hall_render_misc_anims (float frametime, bool over_doors) {
                         int max =
                             Main_hall->misc_anim_delay.at (regen_idx).at (2);
                         Main_hall->misc_anim_delay.at (regen_idx).at (0) =
-                            timestamp (min + (int)(frand () * (max - min)));
+                            timestamp (min + (int)(fs2::prng::randf (0) * (max - min)));
                     }
 
                     // if the timestamp is not -1 and has popped, play the anim

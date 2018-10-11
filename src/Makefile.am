@@ -138,7 +138,6 @@ fs2_SOURCES =                                   \
 	localization/fhash.cc                       \
 	localization/localize.cc                    \
 	log/log.cc                                  \
-	math/floating.cc                            \
 	math/fvi.cc                                 \
 	math/vecmat.cc                              \
 	menuui/barracks.cc                          \

@@ -99,7 +99,7 @@ void shield_add_strength (object* objp, float delta) {
         // smart shield repair
         while (delta > 0.0f) {
             // WMC - Set to INT_MAX so that this is set to something
-            float weakest = i2fl (INT_MAX);
+            float weakest = float (INT_MAX);
             int weakest_idx = -1;
 
             // find weakest shield quadrant

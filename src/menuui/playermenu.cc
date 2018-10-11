@@ -4,15 +4,19 @@
 #include <cctype>
 
 #include "defs.hh"
+
+#include "assert/assert.hh"
 #include "cfile/cfile.hh"
 #include "cmdline/cmdline.hh"
 #include "debugconsole/console.hh"
 #include "freespace2/freespace.hh"
 #include "gamesequence/gamesequence.hh"
 #include "gamesnd/gamesnd.hh"
-#include "shared/alphacolors.hh"
+#include "graphics/paths/PathRenderer.hh"
 #include "io/key.hh"
 #include "localization/localize.hh"
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "menuui/mainhallmenu.hh"
 #include "menuui/playermenu.hh"
 #include "mission/missioncampaign.hh"
@@ -23,10 +27,8 @@
 #include "playerman/managepilot.hh"
 #include "playerman/player.hh"
 #include "popup/popup.hh"
+#include "shared/alphacolors.hh"
 #include "ui/ui.hh"
-#include "graphics/paths/PathRenderer.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
 
 // --------------------------------------------------------------------------------------------------------
 // PLAYER SELECT defines
@@ -1434,7 +1436,7 @@ void player_tips_popup () {
     Player_tips_shown = 1;
 
     // randomly pick one
-    tip = (int)frand_range (0.0f, (float)Num_player_tips - 1.0f);
+    tip = (int)fs2::prng::randf (0, 0.0f, (float)Num_player_tips - 1.0f);
 
     char all_txt[2048];
 

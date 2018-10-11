@@ -170,8 +170,8 @@ void opengl_post_pass_bloom () {
                 int bloom_height = height >> mipmap;
 
                 Current_shader->program->Uniforms.setUniformf (
-                    "texSize", (pass) ? 1.0f / i2fl (bloom_width)
-                                      : 1.0f / i2fl (bloom_height));
+                    "texSize", (pass) ? 1.0f / float (bloom_width)
+                                      : 1.0f / float (bloom_height));
                 Current_shader->program->Uniforms.setUniformi (
                     "level", mipmap);
                 Current_shader->program->Uniforms.setUniformf (

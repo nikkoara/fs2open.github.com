@@ -3,13 +3,15 @@
 #include <cstdio>
 
 #include "defs.hh"
+
 #include "log/log.hh"
+#include "math/prng.hh"
+#include "math/vecmat.hh"
+#include "util/RandomRange.hh"
+
 #if _M_IX86_FP >= 1
 #include <xmmintrin.h>
 #endif
-
-#include "math/vecmat.hh"
-#include "util/RandomRange.hh"
 
 #define SMALL_NUM 1e-7
 #define SMALLER_NUM 1e-20
@@ -25,20 +27,20 @@ matrix vmd_identity_matrix = IDENTITY_MATRIX;
 #define UNINITIALIZED_VALUE -12345678.9f
 
 bool vm_vec_equal (const vec4& self, const vec4& other) {
-    return fl_equal (self.a1d[0], other.a1d[0]) &&
-           fl_equal (self.a1d[1], other.a1d[1]) &&
-           fl_equal (self.a1d[2], other.a1d[2]) &&
-           fl_equal (self.a1d[3], other.a1d[3]);
+    return eqf (self.a1d[0], other.a1d[0]) &&
+           eqf (self.a1d[1], other.a1d[1]) &&
+           eqf (self.a1d[2], other.a1d[2]) &&
+           eqf (self.a1d[3], other.a1d[3]);
 }
 
 bool vm_vec_equal (const vec3d& self, const vec3d& other) {
-    return fl_equal (self.a1d[0], other.a1d[0]) &&
-           fl_equal (self.a1d[1], other.a1d[1]) &&
-           fl_equal (self.a1d[2], other.a1d[2]);
+    return eqf (self.a1d[0], other.a1d[0]) &&
+           eqf (self.a1d[1], other.a1d[1]) &&
+           eqf (self.a1d[2], other.a1d[2]);
 }
 
 bool vm_vec_equal (const vec2d& self, const vec2d& other) {
-    return fl_equal (self.x, other.x) && fl_equal (self.y, other.y);
+    return eqf (self.x, other.x) && eqf (self.y, other.y);
 }
 
 bool vm_matrix_equal (const matrix& self, const matrix& other) {
@@ -140,9 +142,9 @@ void vm_project_point_onto_plane (
 // Take abs(x), then sqrt.  Could insert warning message if desired.
 float asqrt (float x) {
     if (x < 0.0f)
-        return fl_sqrt (-x);
+        return sqrtf (-x);
     else
-        return fl_sqrt (x);
+        return sqrtf (x);
 }
 
 void vm_set_identity (matrix* m) {
@@ -329,7 +331,7 @@ float vm_vec_mag (const vec3d* v) {
 
     if (mag1 <= 0.0f) { return 0.0f; }
 
-    return fl_sqrt (mag1);
+    return sqrtf (mag1);
 }
 
 // returns squared magnitude of a vector, useful if you want to compare
@@ -365,9 +367,9 @@ float vm_vec_dist (const vec3d* v0, const vec3d* v1) {
 float vm_vec_mag_quick (const vec3d* v) {
     float a, b, c, bc, t;
 
-    a = fl_abs (v->xyz.x);
-    b = fl_abs (v->xyz.y);
-    c = fl_abs (v->xyz.z);
+    a = fabsf (v->xyz.x);
+    b = fabsf (v->xyz.y);
+    c = fabsf (v->xyz.z);
 
     if (a < b) {
         t = a;
@@ -751,7 +753,7 @@ matrix* vm_vec_ang_2_matrix (matrix* m, const vec3d* v, float a) {
     cosb = cosf (a);
 
     sinp = -v->xyz.y;
-    cosp = fl_sqrt (1.0f - sinp * sinp);
+    cosp = sqrtf (1.0f - sinp * sinp);
 
     sinh = v->xyz.x / cosp;
     cosh = v->xyz.z / cosp;
@@ -1013,7 +1015,7 @@ angles_t* vm_extract_angles_matrix (angles_t* a, const matrix* m) {
     sinh = sinf (a->h);
     cosh = cosf (a->h);
 
-    if (fl_abs (sinh) > fl_abs (cosh)) // sine is larger, so use it
+    if (fabsf (sinh) > fabsf (cosh)) // sine is larger, so use it
         cosp = m->vec.fvec.xyz.x * sinh;
     else // cosine is larger, so use it
         cosp = m->vec.fvec.xyz.z * cosh;
@@ -1137,9 +1139,9 @@ void vm_trackball (int idx, int idy, matrix* RotMat) {
     dx = (float)idx;
     dy = (float)idy;
 
-    dr = fl_sqrt (dx * dx + dy * dy);
+    dr = sqrtf (dx * dx + dy * dy);
 
-    denom = fl_sqrt (Radius * Radius + dr * dr);
+    denom = sqrtf (Radius * Radius + dr * dr);
 
     cos_theta = Radius / denom;
     sin_theta = dr / denom;
@@ -1362,9 +1364,9 @@ void compute_point_on_plane (vec3d* q, const plane* planep, const vec3d* p) {
 
 // Generate a fairly random vector that's fairly near normalized.
 void vm_vec_rand_vec_quick (vec3d* rvec) {
-    rvec->xyz.x = (frand () - 0.5f) * 2;
-    rvec->xyz.y = (frand () - 0.5f) * 2;
-    rvec->xyz.z = (frand () - 0.5f) * 2;
+    rvec->xyz.x = (fs2::prng::randf (0) - 0.5f) * 2;
+    rvec->xyz.y = (fs2::prng::randf (0) - 0.5f) * 2;
+    rvec->xyz.z = (fs2::prng::randf (0) - 0.5f) * 2;
 
     if (IS_VEC_NULL_SQ_SAFE (rvec)) rvec->xyz.x = 1.0f;
 
@@ -1408,9 +1410,9 @@ int vm_vec_cmp (const vec3d* a, const vec3d* b) {
 // Given two orientation matrices, return 0 if the same, else non-zero.
 int vm_matrix_cmp (const matrix* a, const matrix* b) {
     float tmp1, tmp2, tmp3;
-    tmp1 = fl_abs (vm_vec_dot (&a->vec.uvec, &b->vec.uvec) - 1.0f);
-    tmp2 = fl_abs (vm_vec_dot (&a->vec.fvec, &b->vec.fvec) - 1.0f);
-    tmp3 = fl_abs (vm_vec_dot (&a->vec.rvec, &b->vec.rvec) - 1.0f);
+    tmp1 = fabsf (vm_vec_dot (&a->vec.uvec, &b->vec.uvec) - 1.0f);
+    tmp2 = fabsf (vm_vec_dot (&a->vec.fvec, &b->vec.fvec) - 1.0f);
+    tmp3 = fabsf (vm_vec_dot (&a->vec.rvec, &b->vec.rvec) - 1.0f);
     // mprintf(( "Mat=%.16f, %.16f, %.16f\n", tmp1, tmp2, tmp3 ));
 
     if (tmp1 > 0.0000005f) return 1;
@@ -1431,7 +1433,7 @@ float vm_interp_angle (
     if (desired_angle > PI2) desired_angle -= PI2;
 
     delta = desired_angle - *h;
-    abs_delta = fl_abs (delta);
+    abs_delta = fabsf (delta);
 
     if ((force_front) && ((desired_angle > PI) ^ (*h > PI))) {
         // turn away from PI
@@ -1472,7 +1474,7 @@ float vm_delta_from_interp_angle (float current_angle, float desired_angle) {
 
     delta = desired_angle - current_angle;
 
-    if (fl_abs (delta) > PI) {
+    if (fabsf (delta) > PI) {
         if (delta > 0.0f) { delta = delta - PI2; }
         else {
             delta = PI2 - delta;
@@ -1576,7 +1578,7 @@ void vm_matrix_to_rot_axis_and_angle (
     else if (cos_theta > -0.999999875f) { // angle is within limits between 0
                                           // and PI
         *theta = acosf (cos_theta);
-        ASSERT (!fl_is_nan (*theta));
+        ASSERT (!IS_NAN (*theta));
 
         rot_axis->xyz.x = (m->vec.uvec.xyz.z - m->vec.fvec.xyz.y);
         rot_axis->xyz.y = (m->vec.fvec.xyz.x - m->vec.rvec.xyz.z);
@@ -1604,7 +1606,7 @@ void vm_matrix_to_rot_axis_and_angle (
         case 0:
             float ix;
 
-            rot_axis->xyz.x = fl_sqrt (m->a2d[0][0] + 1.0f);
+            rot_axis->xyz.x = sqrtf (m->a2d[0][0] + 1.0f);
             ix = 1.0f / rot_axis->xyz.x;
             rot_axis->xyz.y = m->a2d[0][1] * ix;
             rot_axis->xyz.z = m->a2d[0][2] * ix;
@@ -1613,7 +1615,7 @@ void vm_matrix_to_rot_axis_and_angle (
         case 1:
             float iy;
 
-            rot_axis->xyz.y = fl_sqrt (m->a2d[1][1] + 1.0f);
+            rot_axis->xyz.y = sqrtf (m->a2d[1][1] + 1.0f);
             iy = 1.0f / rot_axis->xyz.y;
             rot_axis->xyz.x = m->a2d[1][0] * iy;
             rot_axis->xyz.z = m->a2d[1][2] * iy;
@@ -1622,7 +1624,7 @@ void vm_matrix_to_rot_axis_and_angle (
         case 2:
             float iz;
 
-            rot_axis->xyz.z = fl_sqrt (m->a2d[2][2] + 1.0f);
+            rot_axis->xyz.z = sqrtf (m->a2d[2][2] + 1.0f);
             iz = 1.0f / rot_axis->xyz.z;
             rot_axis->xyz.x = m->a2d[2][0] * iz;
             rot_axis->xyz.y = m->a2d[2][1] * iz;
@@ -1665,7 +1667,7 @@ static float approach (
     }
 
     if (no_overshoot && (w_in * w_in > 2.0f * 1.05f * aa * theta_goal)) {
-        w_in = fl_sqrt (2.0f * aa * theta_goal);
+        w_in = sqrtf (2.0f * aa * theta_goal);
     }
 
     if (w_in * w_in > 2.0f * 1.05f * aa * theta_goal) { // overshoot condition
@@ -1675,7 +1677,7 @@ static float approach (
         if (delta_theta > theta_goal) { // pass goal during this frame
             float t_goal =
                 (-w_in +
-                 fl_sqrt (w_in * w_in + 2.0f * effective_aa * theta_goal)) /
+                 sqrtf (w_in * w_in + 2.0f * effective_aa * theta_goal)) /
                 effective_aa;
             // get time to theta_goal and away
             ASSERT (t_goal < delta_t);
@@ -1703,7 +1705,7 @@ static float approach (
     else if (w_in * w_in < 2.0f * 0.95f * aa * theta_goal) { // undershoot
                                                              // condition
         // find peak angular velocity
-        float wp_sqr = fl_abs (aa * theta_goal + 0.5f * w_in * w_in);
+        float wp_sqr = fabsf (aa * theta_goal + 0.5f * w_in * w_in);
         ASSERT (wp_sqr >= 0);
 
         if (wp_sqr > w_max * w_max) {
@@ -1740,7 +1742,7 @@ static float approach (
             }
             else {
                 // reaches wp this frame
-                float wp = fl_sqrt (wp_sqr);
+                float wp = sqrtf (wp_sqr);
                 float time_to_wp = (wp - w_in) / aa;
                 // Assert(time_to_wp > 0);      //WMC - this is not needed, right?
 
@@ -2062,9 +2064,9 @@ void get_camera_limits (
     else {
         // find acceleration limit using  (theta/2) takes (time/2)
         // and using const accel  theta = 1/2 acc * time^2
-        acc_max->xyz.x = 4.0f * fl_abs (angle.xyz.x) / (time * time);
-        acc_max->xyz.y = 4.0f * fl_abs (angle.xyz.y) / (time * time);
-        acc_max->xyz.z = 4.0f * fl_abs (angle.xyz.z) / (time * time);
+        acc_max->xyz.x = 4.0f * fabsf (angle.xyz.x) / (time * time);
+        acc_max->xyz.y = 4.0f * fabsf (angle.xyz.y) / (time * time);
+        acc_max->xyz.z = 4.0f * fabsf (angle.xyz.z) / (time * time);
 
         // find angular velocity limits
         // w_max = acc_max * time / 2
@@ -2146,7 +2148,7 @@ void vm_forward_interpolate (
     vm_vec_copy_scale (&theta_goal, &local_rot_axis, theta);
 
     // DO NOT COMMENT THIS OUT!!
-    if (!(fl_abs (theta_goal.xyz.z) < 0.001f))
+    if (!(fabsf (theta_goal.xyz.z) < 0.001f))
         // check for proper rotation
         WARNINGF (LOCATION, "vm_forward_interpolate: Bad rotation");
 
@@ -2400,8 +2402,8 @@ void vm_find_bounding_sphere (
 
     vm_vec_sub (&diff, &dia2, center);
     rad_sq = vm_vec_mag_squared (&diff);
-    rad = fl_sqrt (rad_sq);
-    ASSERT (!fl_is_nan (rad));
+    rad = sqrtf (rad_sq);
+    ASSERT (!IS_NAN (rad));
 
     // second pass
     for (i = 0; i < num_pnts; i++) {
@@ -2409,7 +2411,7 @@ void vm_find_bounding_sphere (
         vm_vec_sub (&diff, p, center);
         old_to_p_sq = vm_vec_mag_squared (&diff);
         if (old_to_p_sq > rad_sq) {
-            old_to_p = fl_sqrt (old_to_p_sq);
+            old_to_p = sqrtf (old_to_p_sq);
             // calc radius of new sphere
             rad = (rad + old_to_p) / 2.0f;
             rad_sq = rad * rad;
@@ -2526,7 +2528,7 @@ void vm_vec_random_cone (
     }
 
     // Get properly distributed spherical coordinates (DahBlount)
-    float z = util::UniformFloatRange (cosf (fl_radians (max_angle)), 1.0f)
+    float z = util::UniformFloatRange (cosf (to_radians (max_angle)), 1.0f)
                   .next (); // Take a 2-sphere slice
     float phi = util::UniformFloatRange (0.0f, PI2).next ();
     vm_vec_make (
@@ -2562,7 +2564,7 @@ void vm_vec_random_cone (
     // This might not seem intuitive, but the min_angle is the angle that will
     // have a larger z coordinate
     float z = util::UniformFloatRange (
-                  cosf (fl_radians (max_angle)), cosf (fl_radians (min_angle)))
+                  cosf (to_radians (max_angle)), cosf (to_radians (min_angle)))
                   .next (); // Take a 2-sphere slice
     float phi = util::UniformFloatRange (0.0f, PI2).next ();
     vm_vec_make (
@@ -2584,11 +2586,11 @@ void vm_vec_random_in_circle (
     // point somewhere in the plane
     vm_vec_scale_add (
         &temp, in, &orient->vec.rvec,
-        on_edge ? radius : frand_range (0.0f, radius));
+        on_edge ? radius : fs2::prng::randf (0, 0.0f, radius));
 
     // rotate to a random point on the circle
     vm_rot_point_around_line (
-        out, &temp, fl_radians (frand_range (0.0f, 359.0f)), in,
+        out, &temp, to_radians (fs2::prng::randf (0, 0.0f, 359.0f)), in,
         &orient->vec.fvec);
 }
 
@@ -2685,7 +2687,7 @@ void vm_vec_dist_squared_to_line (
 // SUSHI: 2D vector "box" scaling
 // Scales the vector in-place so that the longest dimension = scale
 void vm_vec_boxscale (vec2d* vec, float /*scale*/) {
-    float ratio = 1.0f / MAX (fl_abs (vec->x), fl_abs (vec->y));
+    float ratio = 1.0f / MAX (fabsf (vec->x), fabsf (vec->y));
     vec->x *= ratio;
     vec->y *= ratio;
 }

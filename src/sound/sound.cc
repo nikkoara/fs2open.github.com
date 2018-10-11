@@ -383,7 +383,7 @@ snd_load (game_snd_entry* entry, int flags, int /*allow_hardware_load*/) {
     }
 
     // NOTE: "si" values can change once loaded in the buffer
-    snd->duration = fl2i (1000.0f * audio_file->getDuration ());
+    snd->duration = int (1000.0f * audio_file->getDuration ());
 
     strcpy (snd->filename, entry->filename);
     snd->flags = SND_F_USED;
@@ -726,7 +726,7 @@ void snd_update_3d_pos (
             return;
         }
 
-        float min_range = (float)(fl2i ((gs->min) * range_factor));
+        float min_range = (float)(int ((gs->min) * range_factor));
         float max_range = (float)((int)std::lround ((gs->max) * range_factor));
 
         ds3d_update_buffer (channel, min_range, max_range, new_pos, NULL);
@@ -768,7 +768,7 @@ int snd_get_3d_vol_and_pan (
         gs != NULL,
         "*gs was NULL in snd_get_3d_vol_and_pan(); get a coder!\n");
 
-    float min_range = (float)(fl2i ((gs->min) * range_factor));
+    float min_range = (float)(int ((gs->min) * range_factor));
     float max_range = (float)((int)std::lround ((gs->max) * range_factor));
 
     distance =

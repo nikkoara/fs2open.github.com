@@ -369,7 +369,7 @@ void event_music_force_switch () {
         (Master_event_music_volume * aav_music_volume), 0); // no looping
     audiostream_set_sample_cutoff (
         Patterns[new_pattern].handle,
-        fl2i (
+        int (
             Patterns[new_pattern].num_measures *
             Patterns[new_pattern].samples_per_measure));
     Patterns[Current_pattern].next_pattern =
@@ -405,7 +405,7 @@ void event_music_do_frame () {
                 0); // no looping
             audiostream_set_sample_cutoff (
                 Patterns[Current_pattern].handle,
-                fl2i (
+                int (
                     Patterns[Current_pattern].num_measures *
                     Patterns[Current_pattern].samples_per_measure));
         }
@@ -435,7 +435,7 @@ void event_music_do_frame () {
                     0); // no looping
                 audiostream_set_sample_cutoff (
                     Patterns[Current_pattern].handle,
-                    fl2i (
+                    int (
                         Patterns[Current_pattern].num_measures *
                         Patterns[Current_pattern].samples_per_measure));
             }
@@ -885,7 +885,7 @@ int event_music_friendly_arrival () {
                 0); // no looping
             audiostream_set_sample_cutoff (
                 Patterns[SONG_AARV_1].handle,
-                fl2i (
+                int (
                     Patterns[SONG_AARV_1].num_measures *
                     Patterns[SONG_AARV_1].samples_per_measure));
         }
@@ -1489,7 +1489,7 @@ void event_music_unpause () {
             (Master_event_music_volume * aav_music_volume), 0); // no looping
         audiostream_set_sample_cutoff (
             Patterns[Current_pattern].handle,
-            fl2i (
+            int (
                 Patterns[Current_pattern].num_measures *
                 Patterns[Current_pattern].samples_per_measure));
     }

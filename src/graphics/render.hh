@@ -86,7 +86,7 @@ void gr_string (
 inline void gr_string (
     int x, int y, const char* string, int resize_mode = GR_RESIZE_FULL,
     int length = -1) {
-    gr_string (i2fl (x), i2fl (y), string, resize_mode, length);
+    gr_string (float (x), float (y), string, resize_mode, length);
 }
 
 /**

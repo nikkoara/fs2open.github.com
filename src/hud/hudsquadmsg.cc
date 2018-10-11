@@ -1,7 +1,9 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
 #include "ai/aigoals.hh"
+#include "assert/assert.hh"
 #include "gamesnd/gamesnd.hh"
 #include "hud/hudmessage.hh"
 #include "hud/hudsquadmsg.hh"
@@ -9,7 +11,9 @@
 #include "iff_defs/iff_defs.hh"
 #include "io/key.hh"
 #include "io/timer.hh"
+#include "log/log.hh"
 #include "math/fix.hh"
+#include "math/prng.hh"
 #include "mission/missionlog.hh"
 #include "mission/missionmessage.hh"
 #include "parse/parselo.hh"
@@ -20,8 +24,6 @@
 #include "util/list.hh"
 #include "weapon/emp.hh"
 #include "weapon/weapon.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
 
 // defines for different modes in the squad messaging system
 
@@ -1768,7 +1770,7 @@ void hud_squadmsg_call_reinforcement (int reinforcement_num) {
             // set up the arrival delay.  If it is 0, then make is some random
             // number of seconds
             delay = rp->arrival_delay;
-            if (delay == 0) delay = (int)(frand () * 3.0) + 3;
+            if (delay == 0) delay = (int)(fs2::prng::randf (0) * 3.0) + 3;
             Wings[i].arrival_delay = timestamp (delay * 1000);
             break;
         }
@@ -1788,7 +1790,7 @@ void hud_squadmsg_call_reinforcement (int reinforcement_num) {
             // set up the arrival delay
             delay = rp->arrival_delay;
             if (delay == 0)
-                delay = (int)(frand () * 3.0) +
+                delay = (int)(fs2::prng::randf (0) * 3.0) +
                         3; // between 3 and 6 seconds to arrive
             p_objp->arrival_delay = timestamp (delay * 1000);
         }
@@ -2486,7 +2488,7 @@ bool HudGaugeSquadMessage::maybeFlashPageScroll (bool flash_fast) {
     if (!timestamp_elapsed (flash_timer[0])) {
         if (timestamp_elapsed (flash_timer[1])) {
             if (flash_fast) {
-                flash_timer[1] = timestamp (fl2i (TBOX_FLASH_INTERVAL / 2.0f));
+                flash_timer[1] = timestamp (int (TBOX_FLASH_INTERVAL / 2.0f));
             }
             else {
                 flash_timer[1] = timestamp (TBOX_FLASH_INTERVAL);

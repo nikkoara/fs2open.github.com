@@ -452,7 +452,7 @@ void HudGaugeTargetBox::renderTargetIntegrity (
 
     if (force_obj_num == -1) ASSERT (Player_ai->target_objnum >= 0);
 
-    clip_h = fl2i ((1 - Pl_target_integrity) * integrity_bar_h);
+    clip_h = int ((1 - Pl_target_integrity) * integrity_bar_h);
 
     // print out status of ship
     switch (Current_ts) {
@@ -1285,8 +1285,8 @@ void HudGaugeTargetBox::renderTargetJumpNode (object* target_objp) {
         }
 
         // account for hud shaking
-        hx = fl2i (HUD_offset_x);
-        hy = fl2i (HUD_offset_y);
+        hx = int (HUD_offset_x);
+        hy = int (HUD_offset_y);
 
         sprintf (outstr, XSTR ("d: %.0f", 340), dist);
         hud_num_make_mono (outstr, font_num);
@@ -1341,7 +1341,7 @@ int HudGaugeTargetBox::maybeFlashElement (int index, int flash_fast) {
         if (timestamp_elapsed (Next_flash_timers[index])) {
             if (flash_fast) {
                 Next_flash_timers[index] =
-                    timestamp (fl2i (TBOX_FLASH_INTERVAL / 2.0f));
+                    timestamp (int (TBOX_FLASH_INTERVAL / 2.0f));
             }
             else {
                 Next_flash_timers[index] = timestamp (TBOX_FLASH_INTERVAL);
@@ -1560,7 +1560,7 @@ int HudGaugeExtraTargetData::maybeFlashDock (int flash_fast) {
     if (!timestamp_elapsed (flash_timer[0])) {
         if (timestamp_elapsed (flash_timer[1])) {
             if (flash_fast) {
-                flash_timer[1] = timestamp (fl2i (TBOX_FLASH_INTERVAL / 2.0f));
+                flash_timer[1] = timestamp (int (TBOX_FLASH_INTERVAL / 2.0f));
             }
             else {
                 flash_timer[1] = timestamp (TBOX_FLASH_INTERVAL);
@@ -1943,9 +1943,9 @@ void HudGaugeTargetBox::maybeRenderCargoScan (ship_info* target_sip) {
     // draw horizontal scan line
     x1 = position[0] +
          Cargo_scan_start_offsets[0]; // Cargo_scan_coords[gr_screen.res][0];
-    y1 = fl2i (
+    y1 = int (
         0.5f + position[1] + Cargo_scan_start_offsets[1] +
-        ((i2fl (Player->cargo_inspect_time) / scan_time) * Cargo_scan_h));
+        ((float (Player->cargo_inspect_time) / scan_time) * Cargo_scan_h));
     x2 = x1 + Cargo_scan_w;
 
     renderLine (x1, y1, x2, y1);
@@ -1953,16 +1953,16 @@ void HudGaugeTargetBox::maybeRenderCargoScan (ship_info* target_sip) {
     // RT Changed this to be optional
     if (Cmdline_dualscanlines) {
         // added 2nd horizontal scan line - phreak
-        y1 = fl2i (
+        y1 = int (
             position[1] + Cargo_scan_start_offsets[1] + Cargo_scan_h -
-            ((i2fl (Player->cargo_inspect_time) / scan_time) * Cargo_scan_h));
+            ((float (Player->cargo_inspect_time) / scan_time) * Cargo_scan_h));
         renderLine (x1, y1, x2, y1);
     }
 
     // draw vertical scan line
-    x1 = fl2i (
+    x1 = int (
         0.5f + position[0] + Cargo_scan_start_offsets[0] +
-        ((i2fl (Player->cargo_inspect_time) / scan_time) * Cargo_scan_w));
+        ((float (Player->cargo_inspect_time) / scan_time) * Cargo_scan_w));
     y1 = position[1] + Cargo_scan_start_offsets[1];
     y2 = y1 + Cargo_scan_h;
 
@@ -1971,9 +1971,9 @@ void HudGaugeTargetBox::maybeRenderCargoScan (ship_info* target_sip) {
     // RT Changed this to be optional
     if (Cmdline_dualscanlines) {
         // added 2nd vertical scan line - phreak
-        x1 = fl2i (
+        x1 = int (
             0.5f + Cargo_scan_w + position[0] + Cargo_scan_start_offsets[0] -
-            ((i2fl (Player->cargo_inspect_time) / scan_time) * Cargo_scan_w));
+            ((float (Player->cargo_inspect_time) / scan_time) * Cargo_scan_w));
         renderLine (x1, y1 - 3, x1, y2 - 1);
     }
 }
@@ -2030,8 +2030,8 @@ void HudGaugeTargetBox::showTargetData (float /*frametime*/) {
     int hx, hy;
 
     // Account for HUD shaking
-    hx = fl2i (HUD_offset_x);
-    hy = fl2i (HUD_offset_y);
+    hx = int (HUD_offset_x);
+    hy = int (HUD_offset_y);
 
     // print out the target distance and speed
     sprintf (

@@ -84,7 +84,7 @@ void warpin_queue_render (
 
         if (render_it) {
             // Add in noise
-            int noise_frame = fl2i (Missiontime / 15.0f) % NOISE_NUM_FRAMES;
+            int noise_frame = int (Missiontime / 15.0f) % NOISE_NUM_FRAMES;
 
             r *= (0.40f + Noise[noise_frame] * 0.30f);
 

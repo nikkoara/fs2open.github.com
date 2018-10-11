@@ -107,18 +107,18 @@ static void bitmap_ex_internal (
 
     bm_get_info (gr_screen.current_bitmap, &bw, &bh);
 
-    u0 = (i2fl (sx) / i2fl (bw));
-    v0 = (i2fl (sy) / i2fl (bh));
+    u0 = (float (sx) / float (bw));
+    v0 = (float (sy) / float (bh));
 
-    u1 = (i2fl (sx + w) / i2fl (bw));
-    v1 = (i2fl (sy + h) / i2fl (bh));
+    u1 = (float (sx + w) / float (bw));
+    v1 = (float (sy + h) / float (bh));
 
-    x1 = i2fl (
+    x1 = float (
         x + ((do_resize) ? gr_screen.offset_x_unscaled : gr_screen.offset_x));
-    y1 = i2fl (
+    y1 = float (
         y + ((do_resize) ? gr_screen.offset_y_unscaled : gr_screen.offset_y));
-    x2 = x1 + i2fl (w);
-    y2 = y1 + i2fl (h);
+    x2 = x1 + float (w);
+    y2 = y1 + float (h);
 
     if (do_resize) {
         gr_resize_screen_posf (&x1, &y1, NULL, NULL, resize_mode);
@@ -437,7 +437,7 @@ void gr_bitmap_ex (
 
     color clr;
     gr_init_alphacolor (
-        &clr, 255, 255, 255, fl2i (gr_screen.current_alpha * 255.0f));
+        &clr, 255, 255, 255, int (gr_screen.current_alpha * 255.0f));
 
     // We now have dx1,dy1 and dx2,dy2 and sx, sy all set validly within clip
     // regions.
@@ -485,8 +485,8 @@ static void gr_string_old (
 
     bm_get_info (fontData->bitmap_id, &ibw, &ibh);
 
-    bw = i2fl (ibw);
-    bh = i2fl (ibh);
+    bw = float (ibw);
+    bh = float (ibh);
 
     // if ( (gr_screen.custom_size && resize) ||
     //(gr_screen.rendering_to_texture != -1) ) {
@@ -585,11 +585,11 @@ static void gr_string_old (
             gr_resize_screen_posf (&x2, &y2, NULL, NULL, resize_mode);
         }
 
-        u0 = (i2fl (u + xd) / bw);
-        v0 = (i2fl (v + yd) / bh);
+        u0 = (float (u + xd) / bw);
+        v0 = (float (v + yd) / bh);
 
-        u1 = (i2fl ((u + xd) + wc) / bw);
-        v1 = (i2fl ((v + yd) + hc) / bh);
+        u1 = (float ((u + xd) + wc) / bw);
+        v1 = (float ((v + yd) + hc) / bh);
 
         if (buffer_offset == MAX_VERTS_PER_DRAW) {
             gr_render_primitives_immediate (
@@ -660,7 +660,7 @@ void setupTransforms (graphics::paths::PathRenderer* path, int resize_mode) {
 
     if (gr_screen.rendering_to_texture != -1) {
         // Flip the Y-axis when rendering to texture
-        path->translate (0.f, i2fl (gr_screen.max_h));
+        path->translate (0.f, float (gr_screen.max_h));
         path->scale (1.f, -1.f);
     }
 
@@ -677,9 +677,9 @@ void setupTransforms (graphics::paths::PathRenderer* path, int resize_mode) {
     int offset_y =
         ((do_resize) ? gr_screen.offset_y_unscaled : gr_screen.offset_y);
 
-    path->translate (i2fl (offset_x), i2fl (offset_y));
+    path->translate (float (offset_x), float (offset_y));
 
-    path->scissor (0.0f, 0.0f, i2fl (clip_width), i2fl (clip_height));
+    path->scissor (0.0f, 0.0f, float (clip_width), float (clip_height));
 }
 
 graphics::paths::PathRenderer* beginDrawing (int resize_mode) {
@@ -837,7 +837,7 @@ void gr_string (
                         nvgFont->getSpecialCharacterFont (), (ubyte)*text,
                         (ubyte)'\0', &width, &spacing);
 
-                    x += i2fl (spacing) * invscaleX;
+                    x += float (spacing) * invscaleX;
                 }
                 else if (doRender) {
                     if (doRender && tokenLength > 0) {
@@ -890,7 +890,7 @@ static void gr_line (float x1, float y1, float x2, float y2, int resize_mode) {
 }
 
 void gr_line (int x1, int y1, int x2, int y2, int resize_mode) {
-    gr_line (i2fl (x1), i2fl (y1), i2fl (x2), i2fl (y2), resize_mode);
+    gr_line (float (x1), float (y1), float (x2), float (y2), resize_mode);
 }
 
 void gr_aaline (vertex* v1, vertex* v2) {
@@ -915,11 +915,11 @@ void gr_gradient (int x1, int y1, int x2, int y2, int resize_mode) {
     endColor.alpha = 0;
 
     auto gradientPaint = path->createLinearGradient (
-        i2fl (x1), i2fl (y1), i2fl (x2), i2fl (y2), &gr_screen.current_color,
+        float (x1), float (y1), float (x2), float (y2), &gr_screen.current_color,
         &endColor);
 
-    path->moveTo (i2fl (x1), i2fl (y1));
-    path->lineTo (i2fl (x2), i2fl (y2));
+    path->moveTo (float (x1), float (y1));
+    path->lineTo (float (x2), float (y2));
 
     path->setStrokePaint (gradientPaint);
     path->stroke ();
@@ -933,7 +933,7 @@ void gr_pixel (int x, int y, int resize_mode) {
 void gr_circle (int xc, int yc, int d, int resize_mode) {
     auto path = beginDrawing (resize_mode);
 
-    path->circle (i2fl (xc), i2fl (yc), d / 2.0f);
+    path->circle (float (xc), float (yc), d / 2.0f);
     path->setFillColor (&gr_screen.current_color);
     path->fill ();
 
@@ -942,7 +942,7 @@ void gr_circle (int xc, int yc, int d, int resize_mode) {
 void gr_unfilled_circle (int xc, int yc, int d, int resize_mode) {
     auto path = beginDrawing (resize_mode);
 
-    path->circle (i2fl (xc), i2fl (yc), d / 2.0f);
+    path->circle (float (xc), float (yc), d / 2.0f);
     path->setStrokeColor (&gr_screen.current_color);
     path->stroke ();
 
@@ -964,17 +964,17 @@ void gr_arc (
 
     if (fill) {
         path->arc (
-            i2fl (xc), i2fl (yc), r, fl_radians (angle_start),
-            fl_radians (angle_end), DIR_CW);
-        path->lineTo (i2fl (xc), i2fl (yc));
+            float (xc), float (yc), r, to_radians (angle_start),
+            to_radians (angle_end), DIR_CW);
+        path->lineTo (float (xc), float (yc));
 
         path->setFillColor (&gr_screen.current_color);
         path->fill ();
     }
     else {
         path->arc (
-            i2fl (xc), i2fl (yc), r, fl_radians (angle_start),
-            fl_radians (angle_end), DIR_CW);
+            float (xc), float (yc), r, to_radians (angle_start),
+            to_radians (angle_end), DIR_CW);
         path->setStrokeColor (&gr_screen.current_color);
         path->stroke ();
     }
@@ -990,37 +990,37 @@ void gr_curve (int xc, int yc, int r, int direction, int resize_mode) {
 
     switch (direction) {
     case 0: {
-        centerX = i2fl (xc + r);
-        centerY = i2fl (yc + r);
-        beginAngle = fl_radians (180.f);
-        endAngle = fl_radians (270.f);
+        centerX = float (xc + r);
+        centerY = float (yc + r);
+        beginAngle = to_radians (180.f);
+        endAngle = to_radians (270.f);
         break;
     }
     case 1: {
-        centerX = i2fl (xc);
-        centerY = i2fl (yc + r);
-        beginAngle = fl_radians (270.f);
-        endAngle = fl_radians (360.f);
+        centerX = float (xc);
+        centerY = float (yc + r);
+        beginAngle = to_radians (270.f);
+        endAngle = to_radians (360.f);
         break;
     }
     case 2: {
-        centerX = i2fl (xc + r);
-        centerY = i2fl (yc);
-        beginAngle = fl_radians (90.f);
-        endAngle = fl_radians (180.f);
+        centerX = float (xc + r);
+        centerY = float (yc);
+        beginAngle = to_radians (90.f);
+        endAngle = to_radians (180.f);
         break;
     }
     case 3: {
-        centerX = i2fl (xc);
-        centerY = i2fl (yc);
-        beginAngle = fl_radians (0.f);
-        endAngle = fl_radians (90.f);
+        centerX = float (xc);
+        centerY = float (yc);
+        beginAngle = to_radians (0.f);
+        endAngle = to_radians (90.f);
         break;
     }
     default: return;
     }
 
-    path->arc (centerX, centerY, i2fl (r), beginAngle, endAngle, DIR_CW);
+    path->arc (centerX, centerY, float (r), beginAngle, endAngle, DIR_CW);
     path->setStrokeColor (&gr_screen.current_color);
     path->stroke ();
 
@@ -1030,7 +1030,7 @@ void gr_curve (int xc, int yc, int r, int direction, int resize_mode) {
 void gr_rect (int x, int y, int w, int h, int resize_mode) {
     auto path = beginDrawing (resize_mode);
 
-    path->rectangle (i2fl (x), i2fl (y), i2fl (w), i2fl (h));
+    path->rectangle (float (x), float (y), float (w), float (h));
     path->setFillColor (&gr_screen.current_color);
     path->fill ();
 
@@ -1048,7 +1048,7 @@ void gr_shade (int x, int y, int w, int h, int resize_mode) {
 
     auto path = beginDrawing (resize_mode);
 
-    path->rectangle (i2fl (x), i2fl (y), i2fl (w), i2fl (h));
+    path->rectangle (float (x), float (y), float (w), float (h));
     path->setFillColor (&clr);
     path->fill ();
 

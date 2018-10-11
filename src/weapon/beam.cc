@@ -1,20 +1,20 @@
 // -*- mode: c++; -*-
 
-#include <algorithm>
-
 #include "defs.hh"
+
 #include "asteroid/asteroid.hh"
 #include "cmdline/cmdline.hh"
 #include "debris/debris.hh"
 #include "debugconsole/console.hh"
 #include "freespace2/freespace.hh"
 #include "gamesnd/gamesnd.hh"
-#include "util/list.hh"
 #include "hud/hudmessage.hh"
 #include "hud/hudshield.hh"
 #include "iff_defs/iff_defs.hh"
 #include "io/timer.hh"
 #include "lighting/lighting.hh"
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "mod_table/mod_table.hh"
 #include "object/objcollide.hh"
 #include "object/object.hh"
@@ -23,13 +23,15 @@
 #include "particle/particle.hh"
 #include "playerman/player.hh"
 #include "render/3d.hh"
+#include "shared/globals.hh"
 #include "ship/ship.hh"
 #include "ship/shiphit.hh"
+#include "tracing/tracing.hh"
+#include "util/list.hh"
 #include "weapon/beam.hh"
 #include "weapon/weapon.hh"
-#include "shared/globals.hh"
-#include "tracing/tracing.hh"
-#include "log/log.hh"
+
+#include <algorithm>
 
 // ------------------------------------------------------------------------------------------------
 // BEAM WEAPON DEFINES/VARS
@@ -1177,7 +1179,7 @@ void beam_render (beam* b, float u_offset) {
         if ((bwsi->texture.first_frame < 0) || (bwsi->width <= 0.0f)) continue;
 
         // calculate the beam points
-        scale = frand_range (1.0f - bwsi->flicker, 1.0f + bwsi->flicker);
+        scale = fs2::prng::randf (0, 1.0f - bwsi->flicker, 1.0f + bwsi->flicker);
         beam_calc_facing_pts (
             &top1, &bottom1, &fvec, &b->last_start,
             bwsi->width * scale * b->shrink, bwsi->z_add);
@@ -1292,7 +1294,7 @@ void beam_generate_muzzle_particles (beam* b) {
 
     // randomly generate 10 to 20 particles
     particle_count =
-        (int)frand_range (0.0f, (float)wip->b_info.beam_particle_count);
+        (int)fs2::prng::randf (0, 0.0f, (float)wip->b_info.beam_particle_count);
 
     // get turret info - position and normal
     turret_pos = b->last_start;
@@ -1311,14 +1313,14 @@ void beam_generate_muzzle_particles (beam* b) {
             &particle_dir, &turret_norm, wip->b_info.beam_particle_angle, &m);
         vm_vec_scale_add (
             &particle_pos, &turret_pos, &particle_dir,
-            wip->b_info.beam_muzzle_radius * frand_range (0.75f, 0.9f));
+            wip->b_info.beam_muzzle_radius * fs2::prng::randf (0, 0.75f, 0.9f));
 
         // now generate some interesting values for the particle
         float p_time_ref =
             wip->b_info.beam_life + ((float)wip->b_info.beam_warmup / 1000.0f);
-        float p_life = frand_range (p_time_ref * 0.5f, p_time_ref * 0.7f);
+        float p_life = fs2::prng::randf (0, p_time_ref * 0.5f, p_time_ref * 0.7f);
         float p_vel = (wip->b_info.beam_muzzle_radius / p_life) *
-                      frand_range (0.85f, 1.2f);
+                      fs2::prng::randf (0, 0.85f, 1.2f);
         vm_vec_scale (&particle_dir, -p_vel);
         if (b->objp != NULL) {
             vm_vec_add2 (
@@ -1392,7 +1394,7 @@ void beam_render_muzzle_glow (beam* b) {
     // otherwise the beam is really firing
     else {
         pct = 1.0f;
-        rand_val = frand_range (0.90f, 1.0f);
+        rand_val = fs2::prng::randf (0, 0.90f, 1.0f);
     }
 
     rad = wip->b_info.beam_muzzle_radius * pct * rand_val;
@@ -1628,7 +1630,7 @@ void beam_add_light_small (beam* bm, object* objp, vec3d* pt_override = NULL) {
     // some noise
     if ((bm->warmup_stamp < 0) &&
         (bm->warmdown_stamp < 0)) // disable noise when warming up or down
-        noise = frand_range (
+        noise = fs2::prng::randf (0,
             1.0f - bwi->sections[0].flicker, 1.0f + bwi->sections[0].flicker);
     else
         noise = 1.0f;
@@ -1694,7 +1696,7 @@ void beam_add_light_large (beam* bm, object* objp, vec3d* pt0, vec3d* pt1) {
     bwi = &wip->b_info;
 
     // some noise
-    noise = frand_range (
+    noise = fs2::prng::randf (0,
         1.0f - bwi->sections[0].flicker, 1.0f + bwi->sections[0].flicker);
 
     // widest part of the beam
@@ -2038,7 +2040,7 @@ void beam_get_binfo (beam* b, float accuracy, int num_shots) {
         // all we will do is decide whether or not we will hit - type A beam
         // weapons are re-aimed immediately before firing
         b->binfo.shot_aim[0] =
-            frand_range (0.0f, 1.0f + miss_factor * accuracy);
+            fs2::prng::randf (0, 0.0f, 1.0f + miss_factor * accuracy);
         b->binfo.shot_count = 1;
 
         if (b->flags & BF_TARGETING_COORDS) {
@@ -2070,7 +2072,7 @@ void beam_get_binfo (beam* b, float accuracy, int num_shots) {
         else {
             beam_get_octant_points (
                 model_num, b->target,
-                (int)frand_range (0.0f, BEAM_NUM_GOOD_OCTANTS),
+                (int)fs2::prng::randf (0, 0.0f, BEAM_NUM_GOOD_OCTANTS),
                 Beam_good_slash_octants, &oct1, &oct2);
         }
 
@@ -2083,7 +2085,7 @@ void beam_get_binfo (beam* b, float accuracy, int num_shots) {
         vm_vec_normalize (&b->binfo.dir_b);
 
         // delta angle
-        b->binfo.delta_ang = fl_abs (
+        b->binfo.delta_ang = fabsf (
             vm_vec_delta_ang_norm (&b->binfo.dir_a, &b->binfo.dir_b, NULL));
         break;
 
@@ -2102,7 +2104,7 @@ void beam_get_binfo (beam* b, float accuracy, int num_shots) {
             // MK, 9/3/99: Added pow() function to make increasingly likely to
             // miss with subsequent shots.  30% more likely with each shot.
             float r = ((float)pow (1.3f, idx)) * miss_factor * accuracy;
-            b->binfo.shot_aim[idx] = frand_range (0.0f, 1.0f + r);
+            b->binfo.shot_aim[idx] = fs2::prng::randf (0, 0.0f, 1.0f + r);
         }
         break;
 
@@ -2940,7 +2942,7 @@ void beam_handle_collisions (beam* b) {
         b->f_collisions, b->f_collisions + b->f_collision_count,
         beam_sort_collisions_func);
 
-    float damage_time_mod = (flFrametime * 1000.0f) / i2fl (BEAM_DAMAGE_TIME);
+    float damage_time_mod = (flFrametime * 1000.0f) / float (BEAM_DAMAGE_TIME);
     float real_damage = wi->damage * damage_time_mod;
 
     // now apply all collisions until we reach a ship which "stops" the beam or
@@ -2998,9 +3000,9 @@ void beam_handle_collisions (beam* b) {
         if ((r_coll[r_coll_count].c_stamp == -1) ||
             timestamp_elapsed (r_coll[r_coll_count].c_stamp)) {
             float time_compression = f2fl (Game_time_compression);
-            float delay_time = i2fl (BEAM_DAMAGE_TIME) / time_compression;
+            float delay_time = float (BEAM_DAMAGE_TIME) / time_compression;
             apply_beam_physics = 1;
-            r_coll[r_coll_count].c_stamp = timestamp (fl2i (delay_time));
+            r_coll[r_coll_count].c_stamp = timestamp (int (delay_time));
         }
 
         // increment collision count
@@ -3019,7 +3021,7 @@ void beam_handle_collisions (beam* b) {
         if (draw_effects &&
             ((wi->piercing_impact_effect.isValid ()) ||
              (wi->flash_impact_weapon_expl_effect.isValid ()))) {
-            float rnd = frand ();
+            float rnd = fs2::prng::randf (0);
             int do_expl = 0;
             if ((rnd < 0.2f || apply_beam_physics) &&
                 wi->impact_weapon_expl_effect.isValid ()) {
@@ -3382,7 +3384,7 @@ float beam_get_cone_dot (beam* b) {
     case BEAM_TYPE_D:
     case BEAM_TYPE_E:
         // even though these beams don't move, return a _very_ small value
-        return cosf (fl_radians (50.5f));
+        return cosf (to_radians (50.5f));
 
     case BEAM_TYPE_B: return vm_vec_dot (&b->binfo.dir_a, &b->binfo.dir_b);
 

@@ -214,7 +214,7 @@ int fvi_segment_sphere (
         dist2 = dist * dist;
         radius2 = sphere_rad * sphere_rad;
 
-        shorten = fl_sqrt (radius2 - dist2);
+        shorten = sqrtf (radius2 - dist2);
 
         int_dist = w_dist - shorten;
 
@@ -278,7 +278,7 @@ int fvi_ray_sphere (
         dist2 = dist * dist;
         radius2 = sphere_rad * sphere_rad;
 
-        shorten = fl_sqrt (radius2 - dist2);
+        shorten = sqrtf (radius2 - dist2);
 
         int_dist = w_dist - shorten;
 
@@ -414,9 +414,9 @@ int fvi_point_face (
     norm = (float*)norm1;
 
     // project polygon onto plane by finding largest component of normal
-    t.xyz.x = fl_abs (norm[0]);
-    t.xyz.y = fl_abs (norm[1]);
-    t.xyz.z = fl_abs (norm[2]);
+    t.xyz.x = fabsf (norm[0]);
+    t.xyz.y = fabsf (norm[1]);
+    t.xyz.z = fabsf (norm[2]);
 
     if (t.xyz.x > t.xyz.y)
         if (t.xyz.x > t.xyz.z)
@@ -525,7 +525,7 @@ int fvi_sphere_plane (
     vs_dot_norm = vm_vec_dot (plane_normal, sphere_velocity);
 
     // protect against divide by zero
-    if (fl_abs (vs_dot_norm) > 1e-30) {
+    if (fabsf (vs_dot_norm) > 1e-30) {
         t1 = (-D - xs0_dot_norm + sphere_radius) / vs_dot_norm;
         t2 = (-D - xs0_dot_norm - sphere_radius) / vs_dot_norm;
     }
@@ -660,7 +660,7 @@ static int check_sphere_point (
     if (discriminant < 0) { return 0; }
 
     float radical, time1, time2;
-    radical = fl_sqrt (discriminant);
+    radical = sqrtf (discriminant);
     time1 = (-delta_x_dot_vs + radical) / vs_sqr;
     time2 = (-delta_x_dot_vs - radical) / vs_sqr;
 
@@ -805,7 +805,7 @@ int fvi_polyedge_sphereline (
         if (discriminant < 0.0f)
             root = 0.0f;
         else
-            root = fl_sqrt (discriminant);
+            root = sqrtf (discriminant);
 
         root1 = (-B + root) * invA;
         root2 = (-B - root) * invA;
@@ -816,7 +816,7 @@ int fvi_polyedge_sphereline (
             // try edge root1
             vm_vec_scale_add (&temp_edge_hit, &v0, &ve, root1);
             float q = vm_vec_dist_squared (&temp_edge_hit, &temp_sphere_hit);
-            if (fl_abs (q - Rs2) <
+            if (fabsf (q - Rs2) <
                 Rs_point2) { // error less than 0.1m absolute (2*delta*Radius)
                 goto Hit;
             }
@@ -826,7 +826,7 @@ int fvi_polyedge_sphereline (
             // try edge root2
             vm_vec_scale_add (&temp_edge_hit, &v0, &ve, root2);
             float q = vm_vec_dist_squared (&temp_edge_hit, &temp_sphere_hit);
-            if (fl_abs (q - Rs2) <
+            if (fabsf (q - Rs2) <
                 Rs_point2) { // error less than 0.1m absolute
                 goto Hit;
             }
@@ -851,7 +851,7 @@ int fvi_polyedge_sphereline (
         invA = 1.0f / A;
         discriminant = B * B - A * C;
         if (discriminant > 0.0f) {
-            root = fl_sqrt (discriminant);
+            root = sqrtf (discriminant);
             root1 = (-B + root) * invA;
             root2 = (-B - root) * invA;
 
@@ -880,7 +880,7 @@ int fvi_polyedge_sphereline (
         v1_hit = 0;
         discriminant = B * B - A * C;
         if (discriminant > 0.0f) {
-            root = fl_sqrt (discriminant);
+            root = sqrtf (discriminant);
             root1 = (-B + root) * invA;
             root2 = (-B - root) * invA;
 
@@ -1016,7 +1016,7 @@ int fvi_check_sphere_sphere (
 
     if (discriminant < 0) { return 0; }
 
-    float radical = fl_sqrt (discriminant);
+    float radical = sqrtf (discriminant);
 
     time1 = (-delta_x_dot_delta_v + radical) / delta_v_sqr;
     time2 = (-delta_x_dot_delta_v - radical) / delta_v_sqr;

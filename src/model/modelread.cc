@@ -550,7 +550,7 @@ static void set_subsystem_info (
             get_user_prop_value (p + 4, buf); // get the value of the fov
         else
             strcpy (buf, "180");
-        angle = fl_radians (atoi (buf)) / 2.0f;
+        angle = to_radians (atoi (buf)) / 2.0f;
         subsystemp->turret_fov = cosf (angle);
         subsystemp->turret_num_firing_points = 0;
 
@@ -1927,7 +1927,7 @@ int read_model_file (
                     vec3d diff;
                     vm_vec_normalized_dir (&diff, &bay->pnt[0], &bay->pnt[1]);
                     float dot = vm_vec_dot (&diff, &bay->norm[0]);
-                    if (fl_abs (dot) > 0.99f) {
+                    if (fabsf (dot) > 0.99f) {
                         WARNINGF (LOCATION,"Model '%s', docking port '%s' has docking slot positions that lie on the same axis as the docking normal.  This will cause a NULL VEC crash when docked to another ship.  A new docking normal will be generated.",filename, bay->name);
 
                         // generate a simple rotation matrix in all three
@@ -2957,13 +2957,13 @@ int model_load (
 
     // Find the core_radius... the minimum of
     float rx, ry, rz;
-    rx = fl_abs (
+    rx = fabsf (
         pm->submodel[pm->detail[0]].max.xyz.x -
         pm->submodel[pm->detail[0]].min.xyz.x);
-    ry = fl_abs (
+    ry = fabsf (
         pm->submodel[pm->detail[0]].max.xyz.y -
         pm->submodel[pm->detail[0]].min.xyz.y);
-    rz = fl_abs (
+    rz = fabsf (
         pm->submodel[pm->detail[0]].max.xyz.z -
         pm->submodel[pm->detail[0]].min.xyz.z);
 
@@ -3326,8 +3326,8 @@ int model_find_2d_bound_min (
             g3_project_vertex (&pt);
 
             if (!(pt.flags & PF_OVERFLOW)) {
-                x = fl2i (pt.screen.xyw.x);
-                y = fl2i (pt.screen.xyw.y);
+                x = int (pt.screen.xyw.x);
+                y = int (pt.screen.xyw.y);
                 if (n_valid_pts == 0) {
                     min_x = x;
                     min_y = y;
@@ -3389,8 +3389,8 @@ int submodel_find_2d_bound_min (
             g3_project_vertex (&pt);
 
             if (!(pt.flags & PF_OVERFLOW)) {
-                x = fl2i (pt.screen.xyw.x);
-                y = fl2i (pt.screen.xyw.y);
+                x = int (pt.screen.xyw.x);
+                y = int (pt.screen.xyw.y);
                 if (n_valid_pts == 0) {
                     min_x = x;
                     min_y = y;
@@ -3455,11 +3455,11 @@ int model_find_2d_bound (
     t = (height * Canv_h2) / pnt.world.xyz.z;
     h = t * Matrix_scale.xyz.y;
 
-    if (x1) *x1 = fl2i (pnt.screen.xyw.x - w);
-    if (y1) *y1 = fl2i (pnt.screen.xyw.y - h);
+    if (x1) *x1 = int (pnt.screen.xyw.x - w);
+    if (y1) *y1 = int (pnt.screen.xyw.y - h);
 
-    if (x2) *x2 = fl2i (pnt.screen.xyw.x + w);
-    if (y2) *y2 = fl2i (pnt.screen.xyw.y + h);
+    if (x2) *x2 = int (pnt.screen.xyw.x + w);
+    if (y2) *y2 = int (pnt.screen.xyw.y + h);
 
     return 0;
 }
@@ -3495,11 +3495,11 @@ int subobj_find_2d_bound (
     t = (height * Canv_h2) / pnt.world.xyz.z;
     h = t * Matrix_scale.xyz.y;
 
-    if (x1) *x1 = fl2i (pnt.screen.xyw.x - w);
-    if (y1) *y1 = fl2i (pnt.screen.xyw.y - h);
+    if (x1) *x1 = int (pnt.screen.xyw.x - w);
+    if (y1) *y1 = int (pnt.screen.xyw.y - h);
 
-    if (x2) *x2 = fl2i (pnt.screen.xyw.x + w);
-    if (y2) *y2 = fl2i (pnt.screen.xyw.y + h);
+    if (x2) *x2 = int (pnt.screen.xyw.x + w);
+    if (y2) *y2 = int (pnt.screen.xyw.y + h);
 
     return 0;
 }

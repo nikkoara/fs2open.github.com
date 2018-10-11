@@ -319,7 +319,7 @@ int obj_snd_get_freq (
     vs = vm_vec_dot (&v_so, &source->phys_info.vel);
 
     freq = source_freq * ((SPEED_SOUND + vo) / (SPEED_SOUND - vs));
-    return fl2i (freq);
+    return int (freq);
 }
 
 /**
@@ -688,7 +688,7 @@ void obj_snd_do_frame () {
         }
 
         ds3d_update_buffer (
-            channel, i2fl (gs->min), i2fl (gs->max), &source_pos, &vel);
+            channel, float (gs->min), float (gs->max), &source_pos, &vel);
         snd_get_3d_vol_and_pan (
             gs, &source_pos, &osp->vol, &osp->pan, add_distance);
     } // end for

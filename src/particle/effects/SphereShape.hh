@@ -5,7 +5,6 @@
 
 #include "defs.hh"
 
-#include "math/bitarray.hh"
 #include "util/RandomRange.hh"
 
 namespace particle {

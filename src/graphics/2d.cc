@@ -184,10 +184,10 @@ void gr_set_screen_scale (
         if (do_zoom) {
             gr_screen.max_w_unscaled_zoomed =
                 gr_screen.max_w_unscaled +
-                fl2i (Gr_menu_offset_X * 2.0f / Gr_resize_X);
+                int (Gr_menu_offset_X * 2.0f / Gr_resize_X);
             gr_screen.max_h_unscaled_zoomed =
                 gr_screen.max_h_unscaled +
-                fl2i (Gr_menu_offset_Y * 2.0f / Gr_resize_Y);
+                int (Gr_menu_offset_Y * 2.0f / Gr_resize_Y);
             if (gr_screen.max_w_unscaled_zoomed > gr_screen.max_w_unscaled) {
                 gr_screen.max_w_unscaled_zoomed = gr_screen.max_w_unscaled;
             }
@@ -716,7 +716,7 @@ void gr_screen_resize (int width, int height) {
     gr_screen.clip_width = gr_screen.clip_width_unscaled = gr_screen.max_w;
     gr_screen.clip_height = gr_screen.clip_height_unscaled = gr_screen.max_h;
     gr_screen.clip_aspect =
-        i2fl (gr_screen.clip_width) / i2fl (gr_screen.clip_height);
+        float (gr_screen.clip_width) / float (gr_screen.clip_height);
 
     if (gr_screen.custom_size) {
         gr_unsize_screen_pos (
@@ -869,7 +869,7 @@ static bool gr_init_sub (
     gr_screen.clip_width = gr_screen.clip_width_unscaled = gr_screen.max_w;
     gr_screen.clip_height = gr_screen.clip_height_unscaled = gr_screen.max_h;
     gr_screen.clip_aspect =
-        i2fl (gr_screen.clip_width) / i2fl (gr_screen.clip_height);
+        float (gr_screen.clip_width) / float (gr_screen.clip_height);
     gr_screen.clip_center_x =
         (gr_screen.clip_left + gr_screen.clip_right) * 0.5f;
     gr_screen.clip_center_y =
@@ -1310,10 +1310,10 @@ void gr_bitmap (int _x, int _y, int resize_mode) {
 
     bm_get_info (gr_screen.current_bitmap, &_w, &_h, NULL, NULL, NULL);
 
-    x = i2fl (_x);
-    y = i2fl (_y);
-    w = i2fl (_w);
-    h = i2fl (_h);
+    x = float (_x);
+    y = float (_y);
+    w = float (_w);
+    h = float (_h);
 
     auto do_resize = gr_resize_screen_posf (&x, &y, &w, &h, resize_mode);
 
@@ -1367,10 +1367,10 @@ void gr_bitmap_uv (
     float x, y, w, h;
     vertex verts[4];
 
-    x = i2fl (_x);
-    y = i2fl (_y);
-    w = i2fl (_w);
-    h = i2fl (_h);
+    x = float (_x);
+    y = float (_y);
+    w = float (_w);
+    h = float (_h);
 
     // I will tidy this up later - RT
     if (resize_mode != GR_RESIZE_NONE &&
@@ -2136,7 +2136,7 @@ void gr_flip (bool /* execute_scripting */) {
 }
 
 void gr_print_timestamp (int x, int y, fix timestamp, int resize_mode) {
-    int seconds = fl2i (f2fl (timestamp));
+    int seconds = int (f2fl (timestamp));
 
     // format the time information into strings
     std::string time;

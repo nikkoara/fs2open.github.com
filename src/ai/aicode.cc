@@ -1,8 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
 
 /**
  * @file
@@ -12,14 +10,12 @@
  * them to ships.
  */
 
-#include <climits>
-#include <map>
-
 #include "ai/ai.hh"
 #include "ai/ai_profiles.hh"
 #include "ai/aibig.hh"
 #include "ai/aigoals.hh"
 #include "ai/aiinternal.hh"
+#include "assert/assert.hh"
 #include "asteroid/asteroid.hh"
 #include "autopilot/autopilot.hh"
 #include "cmeasure/cmeasure.hh"
@@ -34,6 +30,7 @@
 #include "io/joy_ff.hh"
 #include "io/timer.hh"
 #include "localization/localize.hh"
+#include "log/log.hh"
 #include "math/fix.hh"
 #include "math/fvi.hh"
 #include "math/prng.hh"
@@ -63,6 +60,9 @@
 #include "weapon/flak.hh"
 #include "weapon/swarm.hh"
 #include "weapon/weapon.hh"
+
+#include <climits>
+#include <map>
 
 #define UNINITIALIZED_VALUE -99999.9f
 
@@ -2460,7 +2460,7 @@ void ai_attack_wing (object* attacker, int wingnum) {
     if (count > 0) {
         int index;
 
-        index = (int)(frand () * count);
+        index = (int)(fs2::prng::randf (0) * count);
 
         if (index >= count) index = 0;
 
@@ -2652,7 +2652,7 @@ void bisect_chord (vec3d* p0, vec3d* p1, vec3d* centerp, float radius) {
     vm_vec_sub2 (&tvec, centerp);
     if (vm_vec_mag_quick (&tvec) < 0.1f) {
         vm_vec_sub (&tvec, p0, p1);
-        if (fl_abs (tvec.xyz.x) <= fl_abs (tvec.xyz.z)) {
+        if (fabsf (tvec.xyz.x) <= fabsf (tvec.xyz.z)) {
             tvec.xyz.x = -tvec.xyz.z;
         }
         else {
@@ -3103,9 +3103,9 @@ int maybe_avoid_player (object* objp, vec3d* goal_pos) {
         vm_vec_sub (&avoid_vec, &n_vec_to_goal, &n_vec_to_player);
         if (vm_vec_mag_quick (&avoid_vec) < 0.01f) {
             vm_vec_copy_scale (
-                &avoid_vec, &objp->orient.vec.rvec, frand () - 0.5f);
+                &avoid_vec, &objp->orient.vec.rvec, fs2::prng::randf (0) - 0.5f);
             vm_vec_scale_add2 (
-                &avoid_vec, &objp->orient.vec.uvec, frand () - 0.5f);
+                &avoid_vec, &objp->orient.vec.uvec, fs2::prng::randf (0) - 0.5f);
             vm_vec_normalize (&avoid_vec);
         }
         else {
@@ -3523,8 +3523,8 @@ float compute_collision_time (
     if (discrim > 0.0f) {
         float t1, t2, t_solve;
 
-        t1 = (-pos_dot_vel + fl_sqrt (discrim)) / vel_sqr;
-        t2 = (-pos_dot_vel - fl_sqrt (discrim)) / vel_sqr;
+        t1 = (-pos_dot_vel + sqrtf (discrim)) / vel_sqr;
+        t2 = (-pos_dot_vel - sqrtf (discrim)) / vel_sqr;
 
         t_solve = BIGNUM;
 
@@ -3618,7 +3618,7 @@ void ai_update_aim (ai_info* aip) {
         aip->last_aim_enemy_vel = En_objp->phys_info.vel;
         aip->next_aim_pos_time =
             Missiontime +
-            fl2f (frand_range (0.0f, aip->ai_max_aim_update_delay));
+            fl2f (fs2::prng::randf (0, 0.0f, aip->ai_max_aim_update_delay));
     }
     else {
         // Update the position based on the velocity (assume no velocity vector
@@ -4678,7 +4678,7 @@ void ai_fly_to_target_position (
     }
     else if (dist_to_goal < 100.0f) {
         float slew_dot = vm_vec_dot (&Pl_objp->orient.vec.fvec, &nvel_vec);
-        if (fl_abs (slew_dot) < 0.9f) { accelerate_ship (aip, 0.0f); }
+        if (fabsf (slew_dot) < 0.9f) { accelerate_ship (aip, 0.0f); }
         else if (dot < 0.88f + 0.1f * (100.0f - dist_to_goal) / 100.0f) {
             accelerate_ship (aip, 0.0f);
         }
@@ -4830,11 +4830,11 @@ void ai_fly_to_target_position (
             &nearest_point, &Pl_objp->last_pos, &Pl_objp->pos, target_pos);
 
         if ((dist_to_goal <
-             (MIN_DIST_TO_WAYPOINT_GOAL + fl_sqrt (Pl_objp->radius) +
+             (MIN_DIST_TO_WAYPOINT_GOAL + sqrtf (Pl_objp->radius) +
               vm_vec_dist_quick (&Pl_objp->pos, &Pl_objp->last_pos))) ||
             (((r >= 0.0f) && (r <= 1.0f)) &&
              (vm_vec_dist_quick (&nearest_point, target_pos) <
-              (MIN_DIST_TO_WAYPOINT_GOAL + fl_sqrt (Pl_objp->radius))))) {
+              (MIN_DIST_TO_WAYPOINT_GOAL + sqrtf (Pl_objp->radius))))) {
             int treat_as_ship;
 
             // we must be careful when dealing with wings.  A ship in a wing
@@ -5354,7 +5354,7 @@ void evade_weapon () {
 
             if (aip->ai_profile_flags
                     [AI::Profile_Flags::Allow_vertical_dodge] &&
-                fl_abs (udot) > fl_abs (rdot)) {
+                fabsf (udot) > fabsf (rdot)) {
                 if ((udot < -0.5f) || (udot > 0.5f))
                     vm_vec_scale_add (
                         &goal_point, &Pl_objp->pos, &Pl_objp->orient.vec.uvec,
@@ -6084,7 +6084,7 @@ int ai_fire_primary_weapon (object* objp) {
 
     // If low on slots, fire a little less often.
     if (Num_weapons > (int)(0.9f * MAX_WEAPONS)) {
-        if (frand () > 0.5f) {
+        if (fs2::prng::randf (0) > 0.5f) {
             WARNINGF (LOCATION, "Frame %i, %s not fire.", Framecount,shipp->ship_name);
             return 0;
         }
@@ -7137,7 +7137,7 @@ float ai_endangered_time (object* ship_objp, object* weapon_objp) {
         (from_dot > 0.1f) &&
         (dist / (from_dot * from_dot) <
          48 * ship_objp->radius)) //: don't require them to see it, they have
-                                  // instruments!: && (fl_abs(to_dot) > 0.5f))
+                                  // instruments!: && (fabsf(to_dot) > 0.5f))
         return dist / weapon_objp->phys_info.speed;
     else
         return -1.0f;
@@ -7957,8 +7957,8 @@ void ai_chase_es (ai_info* aip, ship_info* sip) {
         vm_vec_scale_sub2 (&tvec, &Pl_objp->orient.vec.uvec, f2fl (scale));
 
     while (vm_vec_dist_quick (&tvec, &Pl_objp->pos) < 0.1f) {
-        tvec.xyz.x += frand ();
-        tvec.xyz.y += frand ();
+        tvec.xyz.x += fs2::prng::randf (0);
+        tvec.xyz.y += fs2::prng::randf (0);
     }
 
     float bank_override = Pl_objp->phys_info.speed;
@@ -8473,12 +8473,12 @@ float set_secondary_fire_delay (
     if (aip->ai_class_autoscale)
         t += (Num_ai_classes - aip->ai_class + 1) * 0.5f;
 
-    t *= frand_range (0.8f, 1.2f);
+    t *= fs2::prng::randf (0, 0.8f, 1.2f);
 
     // For the missiles that fire fairly quickly, occasionally add an
     // additional substantial delay.
     if (t < 5.0f)
-        if (frand () < 0.5f) t = t * 2.0f + 2.0f;
+        if (fs2::prng::randf (0) < 0.5f) t = t * 2.0f + 2.0f;
 
     return t;
 }
@@ -9133,7 +9133,7 @@ void ai_chase () {
             // more patient the ship, the less likely this is.
             if (fs2::prng::randf (0) > (aip->ai_patience * .01)) {
                 if ((sip->can_glide == true) &&
-                    (frand () < aip->ai_glide_attack_percent)) {
+                    (fs2::prng::randf (0) < aip->ai_glide_attack_percent)) {
                     // Maybe use glide attack
                     aip->submode = AIS_CHASE_GLIDEATTACK;
                     aip->submode_start_time = Missiontime;
@@ -9211,7 +9211,7 @@ void ai_chase () {
         else if (
             (Missiontime - aip->last_hit_target_time > i2f (6)) &&
             (dist_to_enemy < 500.0f) && (dot_to_enemy < 0.2f) &&
-            (frand () < (float)Game_skill_level / NUM_SKILL_LEVELS)) {
+            (fs2::prng::randf (0) < (float)Game_skill_level / NUM_SKILL_LEVELS)) {
             aip->submode = SM_GET_AWAY;
             aip->submode_start_time = Missiontime;
             aip->last_hit_target_time = Missiontime;
@@ -9241,7 +9241,7 @@ void ai_chase () {
                           (Num_ai_classes + NUM_SKILL_LEVELS)
                     : aip->ai_get_away_chance;
             if ((Missiontime - aip->last_hit_target_time > i2f (5)) &&
-                (frand () < get_away_chance)) {
+                (fs2::prng::randf (0) < get_away_chance)) {
                 aip->submode = SM_GET_AWAY;
                 aip->submode_start_time = Missiontime;
                 aip->last_hit_target_time = Missiontime;
@@ -9255,7 +9255,7 @@ void ai_chase () {
             enemy_sip != NULL && (enemy_sip->is_small_ship ()) &&
             (Missiontime - aip->submode_start_time > F1_0 * 2)) {
             if ((dot_to_enemy < 0.8f) && (dot_from_enemy > dot_to_enemy)) {
-                if (frand () > 0.5f) {
+                if (fs2::prng::randf (0) > 0.5f) {
                     aip->submode = SM_CONTINUOUS_TURN;
                     aip->submode_start_time = Missiontime;
                     aip->submode_parm0 = myrand () & 0x0f;
@@ -9285,7 +9285,7 @@ void ai_chase () {
                 (Pl_objp->phys_info.speed >=
                  Pl_objp->phys_info.max_vel.xyz.z / 2.0f) &&
                 (sip->can_glide == true) &&
-                (frand () < aip->ai_glide_attack_percent)) {
+                (fs2::prng::randf (0) < aip->ai_glide_attack_percent)) {
                 aip->last_attack_time = Missiontime;
                 aip->submode = AIS_CHASE_GLIDEATTACK;
             }
@@ -9385,7 +9385,7 @@ void ai_chase () {
                 break;
             case 2:
             case 3:
-                if (frand () < (float)0.5f * get_away_chance) {
+                if (fs2::prng::randf (0) < (float)0.5f * get_away_chance) {
                     aip->submode = SM_GET_AWAY;
                     aip->submode_start_time = Missiontime;
                 }
@@ -9452,7 +9452,7 @@ void ai_chase () {
                 (dist_to_enemy > rand_dist) || (dot_from_enemy < 0.4f)) {
                 // Sometimes use a glide attack instead (if we can)
                 if ((sip->can_glide == true) &&
-                    (frand () < aip->ai_glide_attack_percent)) {
+                    (fs2::prng::randf (0) < aip->ai_glide_attack_percent)) {
                     aip->submode = AIS_CHASE_GLIDEATTACK;
                 }
                 else {
@@ -9713,7 +9713,7 @@ void ai_chase () {
                                             if (hull_percent < 0.01f)
                                                 hull_percent = 0.01f;
 
-                                            if (frand () <
+                                            if (fs2::prng::randf (0) <
                                                 0.25f /
                                                     (30.0f * hull_percent) *
                                                     count) // With timestamp
@@ -9851,7 +9851,7 @@ float dock_move_towards_point (
         float speed;
 
         dist = vm_vec_normalized_dir (&v2g, finish, start);
-        speed = fl_sqrt (dist) * speed_scale;
+        speed = sqrtf (dist) * speed_scale;
 
         // Goober5000 - if we're on a rotating submodel and we're rotating with
         // it, adjust velocity for rotation
@@ -11359,7 +11359,7 @@ void ai_do_objects_repairing_stuff (
     case REPAIR_INFO_BROKEN:
         aip->ai_flags.remove (AI::AI_Flags::Being_repaired);
         aip->ai_flags.set (AI::AI_Flags::Awaiting_repair);
-        stamp = timestamp ((int)((30 + 10 * frand ()) * 1000));
+        stamp = timestamp ((int)((30 + 10 * fs2::prng::randf (0)) * 1000));
         break;
 
     case REPAIR_INFO_END:
@@ -11370,7 +11370,7 @@ void ai_do_objects_repairing_stuff (
         }
         aip->ai_flags.remove (AI::AI_Flags::Being_repaired);
         aip->ai_flags.remove (AI::AI_Flags::Awaiting_repair);
-        stamp = timestamp ((int)((30 + 10 * frand ()) * 1000));
+        stamp = timestamp ((int)((30 + 10 * fs2::prng::randf (0)) * 1000));
         break;
 
     case REPAIR_INFO_QUEUE:
@@ -11428,7 +11428,7 @@ void ai_do_objects_repairing_stuff (
                 Ships[repaired_objp->instance].ship_name, NULL);
         }
 
-        stamp = timestamp ((int)((30 + 10 * frand ()) * 1000));
+        stamp = timestamp ((int)((30 + 10 * fs2::prng::randf (0)) * 1000));
         break;
 
     case REPAIR_INFO_COMPLETE:
@@ -11443,7 +11443,7 @@ void ai_do_objects_repairing_stuff (
                 MESSAGE_PRIORITY_LOW, MESSAGE_TIME_SOON, 0, 0, p_index,
                 p_team);
         }
-        stamp = timestamp ((int)((30 + 10 * frand ()) * 1000));
+        stamp = timestamp ((int)((30 + 10 * fs2::prng::randf (0)) * 1000));
         break;
 
     case REPAIR_INFO_ONWAY:
@@ -11953,7 +11953,7 @@ void ai_dock () {
             ASSERT (dist != UNINITIALIZED_VALUE);
 
             float tolerance = 2 * flFrametime *
-                              (1.0f + fl_sqrt (goal_objp->phys_info.speed));
+                              (1.0f + sqrtf (goal_objp->phys_info.speed));
 
             // Goober5000
             if (rdinfo.submodel >= 0) {
@@ -12512,7 +12512,7 @@ object* get_wing_leader (int wingnum) {
 #define DEFAULT_WING_Y_DELTA 0.25f
 #define DEFAULT_WING_Z_DELTA 0.75f
 #define DEFAULT_WING_MAG                              \
-    (fl_sqrt (                                        \
+    (sqrtf (                                        \
         DEFAULT_WING_X_DELTA * DEFAULT_WING_X_DELTA + \
         DEFAULT_WING_Y_DELTA * DEFAULT_WING_Y_DELTA + \
         DEFAULT_WING_Z_DELTA * DEFAULT_WING_Z_DELTA))
@@ -13472,7 +13472,7 @@ void ai_maybe_launch_cmeasure (object* objp, ai_info* aip) {
             if (aip->ai_class_autoscale)
                 fire_chance *= (float)aip->ai_class / Num_ai_classes;
 
-            float r = frand ();
+            float r = fs2::prng::randf (0);
             if (fire_chance < r) {
                 shipp->cmeasure_fire_stamp = timestamp (
                     CMEASURE_WAIT +
@@ -13698,7 +13698,7 @@ void ai_maybe_evade_locked_missile (object* objp, ai_info* aip) {
                     if (((((Missiontime >> 18) ^ OBJ_INDEX (objp)) & 3) ==
                          0) ||
                         (objp->phys_info.speed < 40.0f) ||
-                        (frand () <
+                        (fs2::prng::randf (0) <
                          1.0f - (float)shipp->cmeasure_count / 8.0f)) {
                         if (aip->submode !=
                             SM_ATTACK_FOREVER) { // SM_ATTACK_FOREVER means
@@ -14640,7 +14640,7 @@ void ai_maybe_depart (object* objp) {
                         // if departure failed, try again at a later point
                         // (timestamp taken from ai_do_objects_repairing_stuff)
                         aip->warp_out_timestamp =
-                            timestamp ((int)((30 + 10 * frand ()) * 1000));
+                            timestamp ((int)((30 + 10 * fs2::prng::randf (0)) * 1000));
                     }
                 }
             }
@@ -14752,7 +14752,7 @@ void ai_warp_out (object* objp) {
         objp->phys_info.desired_vel = objp->phys_info.vel;
 
         if (timestamp_elapsed (aip->force_warp_time) ||
-            (fl_abs (objp->phys_info.speed - goal_speed) < 2.0f)) {
+            (fabsf (objp->phys_info.speed - goal_speed) < 2.0f)) {
             aip->submode = AIS_WARP_4;
             aip->submode_start_time = Missiontime;
         }
@@ -15064,12 +15064,18 @@ int ai_avoid_shockwave (object* objp, ai_info* aip) {
 
     // Don't all react right away.
     if (!(aip->ai_flags[AI::AI_Flags::Avoid_shockwave_started])) {
-        float evadeChance = (aip->ai_shockwave_evade_chance == FLT_MIN)
-                                ? ((float)aip->ai_class / 4.0f + 0.25f)
-                                : aip->ai_shockwave_evade_chance;
-        if (!rand_chance (
-                flFrametime, evadeChance)) // Chance to avoid in 1 second is
-                                           // 0.25 + ai_class/4
+        float evadeChance = aip->ai_shockwave_evade_chance;
+
+        if (FLT_MIN == evadeChance)
+            evadeChance = float (aip->ai_class) / 4.f + .25f;
+
+        ASSERT (1.f > flFrametime);
+        ASSERT (evadeChance <= 1.f / flFrametime);
+
+        //
+        // Chance to avoid in 1 second is 0.25 + ai_class/4
+        //
+        if (!(fs2::prng::randf (0) < flFrametime * evadeChance))
             return 0;
     }
 
@@ -16220,13 +16226,13 @@ void maybe_process_friendly_hit (
             Player_ship->team = Iff_traitor;
         }
         else if (
-            (damage > frand ()) &&
+            (damage > fs2::prng::randf (0)) &&
             (Missiontime - pp->last_warning_message_time > F1_0 * 4) &&
             (pp->friendly_damage > FRIENDLY_DAMAGE_THRESHOLD)) {
             // no closer than 4 sec intervals
-            // Note: (damage > frand()) added on 12/9/97 by MK.  Since damage
+            // Note: (damage > fs2::prng::randf()) added on 12/9/97 by MK.  Since damage
             // is now scaled down for big ships, we could get too       many
-            // warnings. Kind of tedious.  frand() returns a value in 0..1, so
+            // warnings. Kind of tedious.  fs2::prng::randf() returns a value in 0..1, so
             // this won't affect legit hits.
             process_friendly_hit_message (MESSAGE_OOPS, objp_hit);
             pp->last_warning_message_time = Missiontime;

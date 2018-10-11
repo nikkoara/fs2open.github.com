@@ -1,8 +1,7 @@
 // -*- mode: c++; -*-
 
-#include <algorithm>
-
 #include "defs.hh"
+
 #include "asteroid/asteroid.hh"
 #include "debris/debris.hh"
 #include "fireball/fireballs.hh"
@@ -10,13 +9,14 @@
 #include "gamesequence/gamesequence.hh"
 #include "gamesnd/eventmusic.hh"
 #include "gamesnd/gamesnd.hh"
-#include "util/list.hh"
 #include "hud/hud.hh"
 #include "hud/hudmessage.hh"
 #include "hud/hudtarget.hh"
 #include "iff_defs/iff_defs.hh"
 #include "io/joy_ff.hh"
 #include "io/timer.hh"
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "mission/missionlog.hh"
 #include "mod_table/mod_table.hh"
 #include "object/object.hh"
@@ -30,15 +30,14 @@
 #include "ship/ship.hh"
 #include "ship/shipfx.hh"
 #include "ship/shiphit.hh"
+#include "tracing/Monitor.hh"
+#include "util/list.hh"
 #include "weapon/beam.hh"
 #include "weapon/emp.hh"
 #include "weapon/shockwave.hh"
 #include "weapon/weapon.hh"
-#include "tracing/Monitor.hh"
-#include "log/log.hh"
 
-//#pragma optimize("", off)
-//#pragma auto_inline(off)
+#include <algorithm>
 
 struct ssm_firing_info;
 
@@ -381,7 +380,7 @@ static float subsys_get_range (object* other_obj, ship_subsys* subsys) {
 // debris 75% of the time. Don't worry about multiplayer since this debris is
 // the small stuff that cannot collide
 static void create_subsys_debris (object* ship_objp, vec3d* hitpos) {
-    float show_debris = frand ();
+    float show_debris = fs2::prng::randf (0);
 
     if (show_debris <= 0.75f) {
         int ndebris;
@@ -400,7 +399,7 @@ static void create_subsys_debris (object* ship_objp, vec3d* hitpos) {
 
 static void create_vaporize_debris (object* ship_objp, vec3d* hitpos) {
     int ndebris;
-    float show_debris = frand ();
+    float show_debris = fs2::prng::randf (0);
 
     ndebris = (int)(4.0f * ((0.5f + show_debris) * Detail.num_small_debris)) +
               5; // number of pieces of debris to create
@@ -1171,7 +1170,7 @@ static int choose_next_spark (object* ship_objp, vec3d* hitpos) {
     }
 
     // not same location, so maybe do random recyling
-    if (frand () > 0.5f) { return (rand () % num_sparks); }
+    if (fs2::prng::randf (0) > 0.5f) { return (rand () % num_sparks); }
 
     // initialize spark pairs
     for (i = 0; i < num_spark_pairs; i++) {
@@ -1379,7 +1378,7 @@ static void player_died_start (object* killer_objp) {
         &Dead_camera_pos, &Player_obj->pos, &vec_from_killer, dist);
 
     float dot = vm_vec_dot (&Player_obj->orient.vec.rvec, &vec_from_killer);
-    if (fl_abs (dot) > 0.8f)
+    if (fabsf (dot) > 0.8f)
         side_vec = &Player_obj->orient.vec.fvec;
     else
         side_vec = &Player_obj->orient.vec.rvec;
@@ -1410,7 +1409,7 @@ static void player_died_start (object* killer_objp) {
         // is faster)
 
 static void saturate_fabs (float* f, float max) {
-    if (fl_abs (*f) > max) {
+    if (fabsf (*f) > max) {
         if (*f > 0.0f)
             *f = max;
         else
@@ -1475,7 +1474,7 @@ void ship_generic_kill_stuff (object* objp, float percent_killed) {
     // Knossos gets 7-10 sec to die, time for "little" explosions
     if (Ship_info[sp->ship_info_index]
             .flags[Ship::Info_Flags::Knossos_device]) {
-        delta_time = 7000 + (int)(frand () * 3000.0f);
+        delta_time = 7000 + (int)(fs2::prng::randf (0) * 3000.0f);
         Ship_info[sp->ship_info_index].explosion_propagates = 0;
     }
 
@@ -1496,7 +1495,7 @@ void ship_generic_kill_stuff (object* objp, float percent_killed) {
     float vapChance = stp->vaporize_chance;
     if (sip->vaporize_chance > 0.0f) vapChance = sip->vaporize_chance;
 
-    if (sp->flags[Ship::Ship_Flags::Vaporize] || frand () < vapChance) {
+    if (sp->flags[Ship::Ship_Flags::Vaporize] || fs2::prng::randf (0) < vapChance) {
         // Assert(Ship_info[sp->ship_info_index].flags & SIF_SMALL_SHIP);
 
         // LIVE FOR 100 MS
@@ -1549,20 +1548,20 @@ void ship_generic_kill_stuff (object* objp, float percent_killed) {
         // if added rotvel is too random, we should decrease the random
         // component, putting a const in front of the rotvel.
         sp->deathroll_rotvel = objp->phys_info.rotvel;
-        sp->deathroll_rotvel.xyz.x += (frand () - 0.5f) * 2.0f * rotvel_mag;
+        sp->deathroll_rotvel.xyz.x += (fs2::prng::randf (0) - 0.5f) * 2.0f * rotvel_mag;
         saturate_fabs (
             &sp->deathroll_rotvel.xyz.x, 0.75f * DEATHROLL_ROTVEL_CAP);
-        sp->deathroll_rotvel.xyz.y += (frand () - 0.5f) * 3.0f * rotvel_mag;
+        sp->deathroll_rotvel.xyz.y += (fs2::prng::randf (0) - 0.5f) * 3.0f * rotvel_mag;
         saturate_fabs (
             &sp->deathroll_rotvel.xyz.y, 0.75f * DEATHROLL_ROTVEL_CAP);
-        sp->deathroll_rotvel.xyz.z += (frand () - 0.5f) * 6.0f * rotvel_mag;
+        sp->deathroll_rotvel.xyz.z += (fs2::prng::randf (0) - 0.5f) * 6.0f * rotvel_mag;
         // make z component  2x larger than larger of x,y
         float largest_mag = MAX (
-            fl_abs (sp->deathroll_rotvel.xyz.x),
-            fl_abs (sp->deathroll_rotvel.xyz.y));
-        if (fl_abs (sp->deathroll_rotvel.xyz.z) < 2.0f * largest_mag) {
+            fabsf (sp->deathroll_rotvel.xyz.x),
+            fabsf (sp->deathroll_rotvel.xyz.y));
+        if (fabsf (sp->deathroll_rotvel.xyz.z) < 2.0f * largest_mag) {
             sp->deathroll_rotvel.xyz.z *=
-                (2.0f * largest_mag / fl_abs (sp->deathroll_rotvel.xyz.z));
+                (2.0f * largest_mag / fabsf (sp->deathroll_rotvel.xyz.z));
         }
         saturate_fabs (
             &sp->deathroll_rotvel.xyz.z, 0.75f * DEATHROLL_ROTVEL_CAP);

@@ -133,7 +133,7 @@ void update_ets (object* objp, float fl_frametime) {
     // level
     if ((objp != Player_obj) || (Game_skill_level > 0)) {
         if (strength < SHIP_MIN_ENGINES_FOR_FULL_SPEED) {
-            ship_p->current_max_speed *= fl_sqrt (strength);
+            ship_p->current_max_speed *= sqrtf (strength);
         }
     }
 
@@ -274,7 +274,7 @@ void ai_manage_ets (object* obj) {
         }
 
         // check for return to normal values
-        if (fl_abs (shield_left_percent - 0.5f) < NORMAL_TOLERANCE_PERCENT) {
+        if (fabsf (shield_left_percent - 0.5f) < NORMAL_TOLERANCE_PERCENT) {
             if (ship_p->shield_recharge_index > DEFAULT_CHARGE_INDEX)
                 decrease_recharge_rate (obj, SHIELDS);
             else if (ship_p->shield_recharge_index < DEFAULT_CHARGE_INDEX)
@@ -282,7 +282,7 @@ void ai_manage_ets (object* obj) {
         }
     }
 
-    if (fl_abs (weapon_left_percent - 0.5f) < NORMAL_TOLERANCE_PERCENT) {
+    if (fabsf (weapon_left_percent - 0.5f) < NORMAL_TOLERANCE_PERCENT) {
         if (ship_p->weapon_recharge_index > DEFAULT_CHARGE_INDEX)
             decrease_recharge_rate (obj, WEAPONS);
         else if (ship_p->weapon_recharge_index < DEFAULT_CHARGE_INDEX)
@@ -833,7 +833,7 @@ void HudGaugeEts::pageIn () {
 void HudGaugeEts::blitGauge (int index) {
     int y_start, y_end, clip_h, w, h, x, y;
 
-    clip_h = fl2i ((1 - Energy_levels[index]) * ETS_bar_h);
+    clip_h = int ((1 - Energy_levels[index]) * ETS_bar_h);
 
     bm_get_info (Ets_bar.first_frame, &w, &h);
 

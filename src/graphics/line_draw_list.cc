@@ -58,8 +58,8 @@ void line_draw_list::flush () {
 void line_draw_list::add_vertex (
     int x, int y, int resize_mode, const color* color) {
     line_vertex vtx{};
-    vtx.position.x = i2fl (x);
-    vtx.position.y = i2fl (y);
+    vtx.position.x = float (x);
+    vtx.position.y = float (y);
 
     float w_scale = 1.0f;
     float h_scale = 1.0f;
@@ -73,8 +73,8 @@ void line_draw_list::add_vertex (
         ((do_resize) ? gr_screen.offset_y_unscaled : gr_screen.offset_y);
 
     // m!m - This is silly but there is no better solution at the moment...
-    vtx.position.x += i2fl (offset_x) * w_scale;
-    vtx.position.y += i2fl (offset_y) * h_scale;
+    vtx.position.x += float (offset_x) * w_scale;
+    vtx.position.y += float (offset_y) * h_scale;
 
     vtx.color.xyzw.x = color->red / 255.f;
     vtx.color.xyzw.y = color->green / 255.f;

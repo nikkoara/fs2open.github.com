@@ -1,17 +1,19 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
 #include "bmpman/bmpman.hh"
 #include "cmdline/cmdline.hh"
-#include "shared/alphacolors.hh"
 #include "graphics/grbatch.hh"
-#include "graphics/tmapper.hh"
 #include "graphics/matrix.hh"
+#include "graphics/tmapper.hh"
 #include "io/key.hh"
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "physics/physics.hh" // For Physics_viewer_bank for g3_draw_rotated_bitmap
 #include "render/3dinternal.hh"
 #include "render/batching.hh"
-#include "log/log.hh"
+#include "shared/alphacolors.hh"
 
 /**
  * Deal with a clipped line
@@ -111,8 +113,8 @@ int g3_draw_sphere (vertex* pnt, float rad) {
             t = r2 * Canv_w2 / pnt->world.xyz.z;
 
             gr_circle (
-                fl2i (pnt->screen.xyw.x), fl2i (pnt->screen.xyw.y),
-                fl2i (t * 2.0f), GR_RESIZE_NONE);
+                int (pnt->screen.xyw.x), int (pnt->screen.xyw.y),
+                int (t * 2.0f), GR_RESIZE_NONE);
         }
     }
 
@@ -149,11 +151,11 @@ int g3_get_bitmap_dims (
 
     if (bw < bh) {
         width = rad * 2.0f;
-        height = width * i2fl (bh) / i2fl (bw);
+        height = width * float (bh) / float (bw);
     }
     else if (bw > bh) {
         height = rad * 2.0f;
-        width = height * i2fl (bw) / i2fl (bh);
+        width = height * float (bw) / float (bh);
     }
     else {
         width = height = rad * 2.0f;
@@ -243,7 +245,7 @@ void g3_draw_horizon_line () {
     s2 = down_left > 0.0f;
     if (s1 != s2) {
         horz_pts[cpnt].x = 0.0f;
-        horz_pts[cpnt].y = fl_abs (up_left * Canv_h2 / horizon_vec.xyz.y);
+        horz_pts[cpnt].y = fabsf (up_left * Canv_h2 / horizon_vec.xyz.y);
         horz_pts[cpnt].edge = 0;
         cpnt++;
     }
@@ -252,7 +254,7 @@ void g3_draw_horizon_line () {
     s1 = up_left > 0.0f;
     s2 = up_right > 0.0f;
     if (s1 != s2) {
-        horz_pts[cpnt].x = fl_abs (up_left * Canv_w2 / horizon_vec.xyz.x);
+        horz_pts[cpnt].x = fabsf (up_left * Canv_w2 / horizon_vec.xyz.x);
         horz_pts[cpnt].y = 0.0f;
         horz_pts[cpnt].edge = 1;
         cpnt++;
@@ -262,8 +264,8 @@ void g3_draw_horizon_line () {
     s1 = up_right > 0.0f;
     s2 = down_right > 0.0f;
     if (s1 != s2) {
-        horz_pts[cpnt].x = i2fl (Canvas_width) - 1;
-        horz_pts[cpnt].y = fl_abs (up_right * Canv_h2 / horizon_vec.xyz.y);
+        horz_pts[cpnt].x = float (Canvas_width) - 1;
+        horz_pts[cpnt].y = fabsf (up_right * Canv_h2 / horizon_vec.xyz.y);
         horz_pts[cpnt].edge = 2;
         cpnt++;
     }
@@ -272,8 +274,8 @@ void g3_draw_horizon_line () {
     s1 = down_right > 0.0f;
     s2 = down_left > 0.0f;
     if (s1 != s2) {
-        horz_pts[cpnt].x = fl_abs (down_left * Canv_w2 / horizon_vec.xyz.x);
-        horz_pts[cpnt].y = i2fl (Canvas_height) - 1;
+        horz_pts[cpnt].x = fabsf (down_left * Canv_w2 / horizon_vec.xyz.x);
+        horz_pts[cpnt].y = float (Canvas_height) - 1;
         horz_pts[cpnt].edge = 3;
         cpnt++;
     }
@@ -293,8 +295,8 @@ void g3_draw_horizon_line () {
 
     // draw from left to right.
     gr_line (
-        fl2i (horz_pts[0].x), fl2i (horz_pts[0].y), fl2i (horz_pts[1].x),
-        fl2i (horz_pts[1].y), GR_RESIZE_NONE);
+        int (horz_pts[0].x), int (horz_pts[0].y), int (horz_pts[1].x),
+        int (horz_pts[1].y), GR_RESIZE_NONE);
 }
 
 // draw a perspective bitmap based on angles and radius
@@ -610,10 +612,10 @@ void g3_render_rect_scaler (material* mat_params, vertex* va, vertex* vb) {
     x1 = vb->screen.xyw.x;
     y1 = vb->screen.xyw.y;
 
-    xmin = i2fl (gr_screen.clip_left);
-    ymin = i2fl (gr_screen.clip_top);
-    xmax = i2fl (gr_screen.clip_right);
-    ymax = i2fl (gr_screen.clip_bottom);
+    xmin = float (gr_screen.clip_left);
+    ymin = float (gr_screen.clip_top);
+    xmax = float (gr_screen.clip_right);
+    ymax = float (gr_screen.clip_bottom);
 
     u0 = va->texture_position.u;
     v0 = va->texture_position.v;
@@ -661,10 +663,10 @@ void g3_render_rect_scaler (material* mat_params, vertex* va, vertex* vb) {
         clipped_y1 = ymax;
     }
 
-    dx0 = fl2i (clipped_x0);
-    dx1 = fl2i (clipped_x1);
-    dy0 = fl2i (clipped_y0);
-    dy1 = fl2i (clipped_y1);
+    dx0 = int (clipped_x0);
+    dx1 = int (clipped_x1);
+    dy0 = int (clipped_y0);
+    dy1 = int (clipped_y1);
 
     if ((dx1 <= dx0) || (dy1 <= dy0)) { return; }
 
@@ -716,11 +718,11 @@ void g3_render_rect_screen_aligned_2d (
 
     if (bw < bh) {
         width = rad * 2.0f;
-        height = width * i2fl (bh) / i2fl (bw);
+        height = width * float (bh) / float (bw);
     }
     else if (bw > bh) {
         height = rad * 2.0f;
-        width = height * i2fl (bw) / i2fl (bh);
+        width = height * float (bw) / float (bh);
     }
     else {
         width = height = rad * 2.0f;
@@ -947,7 +949,7 @@ void g3_render_laser_2d (
     taily = pt2.screen.xyw.y;
     tailr = (tail_width * Matrix_scale.xyz.x * Canv_w2 * pt2.screen.xyw.w);
 
-    float len_2d = fl_sqrt (
+    float len_2d = sqrtf (
         (tailx - headx) * (tailx - headx) + (taily - heady) * (taily - heady));
 
     // Cap the length if needed.
@@ -958,7 +960,7 @@ void g3_render_laser_2d (
         taily = heady + (taily - heady) * ratio;
         tailr = headr + (tailr - headr) * ratio;
 
-        len_2d = fl_sqrt (
+        len_2d = sqrtf (
             (tailx - headx) * (tailx - headx) +
             (taily - heady) * (taily - heady));
     }
@@ -980,7 +982,7 @@ void g3_render_laser_2d (
         if (h2 > max_r) h2 = max_r;
 
         len_2d = max_r;
-        if (fl_abs (tailx - headx) > 0.01f) {
+        if (fabsf (tailx - headx) > 0.01f) {
             a = (float)atan2 (taily - heady, tailx - headx);
         }
         else {
@@ -1095,14 +1097,14 @@ void g3_render_rod (color* clr, int num_points, vec3d* pvecs, float width) {
         g3_transfer_vertex (&pts[nv + 1], &vecs[1]);
 
         pts[nv].texture_position.u = 1.0f;
-        pts[nv].texture_position.v = i2fl (i);
+        pts[nv].texture_position.v = float (i);
         pts[nv].r = clr->red;
         pts[nv].g = clr->green;
         pts[nv].b = clr->blue;
         pts[nv].a = clr->alpha;
 
         pts[nv + 1].texture_position.u = 0.0f;
-        pts[nv + 1].texture_position.v = i2fl (i);
+        pts[nv + 1].texture_position.v = float (i);
         pts[nv + 1].r = clr->red;
         pts[nv + 1].g = clr->green;
         pts[nv + 1].b = clr->blue;
@@ -1150,8 +1152,8 @@ void g3_render_shield_icon (color* clr, coord2d coords[6], int resize_mode) {
     float sw = 0.1f;
 
     // stuff coords
-    v[0].screen.xyw.x = i2fl (coords[0].x);
-    v[0].screen.xyw.y = i2fl (coords[0].y);
+    v[0].screen.xyw.x = float (coords[0].x);
+    v[0].screen.xyw.y = float (coords[0].y);
     v[0].screen.xyw.w = sw;
     v[0].texture_position.u = 0.0f;
     v[0].texture_position.v = 0.0f;
@@ -1162,8 +1164,8 @@ void g3_render_shield_icon (color* clr, coord2d coords[6], int resize_mode) {
     v[0].b = (ubyte)clr->blue;
     v[0].a = 0;
 
-    v[1].screen.xyw.x = i2fl (coords[1].x);
-    v[1].screen.xyw.y = i2fl (coords[1].y);
+    v[1].screen.xyw.x = float (coords[1].x);
+    v[1].screen.xyw.y = float (coords[1].y);
     v[1].screen.xyw.w = sw;
     v[1].texture_position.u = 0.0f;
     v[1].texture_position.v = 0.0f;
@@ -1174,8 +1176,8 @@ void g3_render_shield_icon (color* clr, coord2d coords[6], int resize_mode) {
     v[1].b = (ubyte)clr->blue;
     v[1].a = (ubyte)clr->alpha;
 
-    v[2].screen.xyw.x = i2fl (coords[2].x);
-    v[2].screen.xyw.y = i2fl (coords[2].y);
+    v[2].screen.xyw.x = float (coords[2].x);
+    v[2].screen.xyw.y = float (coords[2].y);
     v[2].screen.xyw.w = sw;
     v[2].texture_position.u = 0.0f;
     v[2].texture_position.v = 0.0f;
@@ -1186,8 +1188,8 @@ void g3_render_shield_icon (color* clr, coord2d coords[6], int resize_mode) {
     v[2].b = (ubyte)clr->blue;
     v[2].a = 0;
 
-    v[3].screen.xyw.x = i2fl (coords[3].x);
-    v[3].screen.xyw.y = i2fl (coords[3].y);
+    v[3].screen.xyw.x = float (coords[3].x);
+    v[3].screen.xyw.y = float (coords[3].y);
     v[3].screen.xyw.w = sw;
     v[3].texture_position.u = 0.0f;
     v[3].texture_position.v = 0.0f;
@@ -1198,8 +1200,8 @@ void g3_render_shield_icon (color* clr, coord2d coords[6], int resize_mode) {
     v[3].b = (ubyte)clr->blue;
     v[3].a = (ubyte)clr->alpha;
 
-    v[4].screen.xyw.x = i2fl (coords[4].x);
-    v[4].screen.xyw.y = i2fl (coords[4].y);
+    v[4].screen.xyw.x = float (coords[4].x);
+    v[4].screen.xyw.y = float (coords[4].y);
     v[4].screen.xyw.w = sw;
     v[4].texture_position.u = 0.0f;
     v[4].texture_position.v = 0.0f;
@@ -1210,8 +1212,8 @@ void g3_render_shield_icon (color* clr, coord2d coords[6], int resize_mode) {
     v[4].b = (ubyte)clr->blue;
     v[4].a = 0;
 
-    v[5].screen.xyw.x = i2fl (coords[5].x);
-    v[5].screen.xyw.y = i2fl (coords[5].y);
+    v[5].screen.xyw.x = float (coords[5].x);
+    v[5].screen.xyw.y = float (coords[5].y);
     v[5].screen.xyw.w = sw;
     v[5].texture_position.u = 0.0f;
     v[5].texture_position.v = 0.0f;
@@ -1306,8 +1308,8 @@ void g3_render_colored_rect (
     float sw = 0.1f;
 
     // stuff coords
-    v[0].screen.xyw.x = i2fl (x);
-    v[0].screen.xyw.y = i2fl (y);
+    v[0].screen.xyw.x = float (x);
+    v[0].screen.xyw.y = float (y);
     v[0].screen.xyw.w = sw;
     v[0].texture_position.u = 0.0f;
     v[0].texture_position.v = 0.0f;
@@ -1318,8 +1320,8 @@ void g3_render_colored_rect (
     v[0].b = (ubyte)clr->blue;
     v[0].a = (ubyte)clr->alpha;
 
-    v[1].screen.xyw.x = i2fl (x + w);
-    v[1].screen.xyw.y = i2fl (y);
+    v[1].screen.xyw.x = float (x + w);
+    v[1].screen.xyw.y = float (y);
     v[1].screen.xyw.w = sw;
     v[1].texture_position.u = 0.0f;
     v[1].texture_position.v = 0.0f;
@@ -1330,8 +1332,8 @@ void g3_render_colored_rect (
     v[1].b = (ubyte)clr->blue;
     v[1].a = (ubyte)clr->alpha;
 
-    v[2].screen.xyw.x = i2fl (x + w);
-    v[2].screen.xyw.y = i2fl (y + h);
+    v[2].screen.xyw.x = float (x + w);
+    v[2].screen.xyw.y = float (y + h);
     v[2].screen.xyw.w = sw;
     v[2].texture_position.u = 0.0f;
     v[2].texture_position.v = 0.0f;
@@ -1342,8 +1344,8 @@ void g3_render_colored_rect (
     v[2].b = (ubyte)clr->blue;
     v[2].a = (ubyte)clr->alpha;
 
-    v[3].screen.xyw.x = i2fl (x);
-    v[3].screen.xyw.y = i2fl (y + h);
+    v[3].screen.xyw.x = float (x);
+    v[3].screen.xyw.y = float (y + h);
     v[3].screen.xyw.w = sw;
     v[3].texture_position.u = 0.0f;
     v[3].texture_position.v = 0.0f;
@@ -1427,7 +1429,7 @@ void flash_ball::initialize (
         if (max_ray_width == 0.0f)
             ray[i].width = min_ray_width;
         else
-            ray[i].width = frand_range (min_ray_width, max_ray_width);
+            ray[i].width = fs2::prng::randf (0, min_ray_width, max_ray_width);
     }
 }
 
@@ -1548,7 +1550,7 @@ void flash_ball::initialize (
         if (max_ray_width == 0.0f)
             ray[i].width = min_ray_width;
         else
-            ray[i].width = frand_range (min_ray_width, max_ray_width);
+            ray[i].width = fs2::prng::randf (0, min_ray_width, max_ray_width);
     }
 }
 

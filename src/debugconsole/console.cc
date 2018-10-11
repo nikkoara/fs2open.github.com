@@ -207,7 +207,7 @@ void dc_draw_cursor (std::string& cmd_string, int x, int y) {
         gr_rect (
             gr_screen.center_offset_x + (x + (w + 1)),
             gr_screen.center_offset_y + (y + (h + 1)), 2,
-            fl2i (font::get_current_font ()->getHeight ()), GR_RESIZE_NONE);
+            int (font::get_current_font ()->getHeight ()), GR_RESIZE_NONE);
     }
 }
 
@@ -286,7 +286,7 @@ void dc_init (void) {
 
     // Init window settings
     dc_font = font::FONT1;
-    row_height = ((fl2i (font::get_current_font ()->getHeight ())) * 3) /
+    row_height = ((int (font::get_current_font ()->getHeight ())) * 3) /
                  2; // Row/Line height, in pixels
 
     // This assumes that FONT1 is monospaced!

@@ -1,30 +1,31 @@
 // -*- mode: c++; -*-
 
-#include <climits>
-
 #include "defs.hh"
+
 #include "ai/aibig.hh"
 #include "ai/aiinternal.hh"
+#include "assert/assert.hh"
 #include "asteroid/asteroid.hh"
 #include "debugconsole/console.hh"
 #include "freespace2/freespace.hh"
 #include "gamesnd/gamesnd.hh"
-#include "util/list.hh"
-#include "shared/globals.hh"
 #include "iff_defs/iff_defs.hh"
 #include "io/timer.hh"
+#include "log/log.hh"
 #include "math/prng.hh"
 #include "object/objectdock.hh"
 #include "render/3d.hh"
+#include "shared/globals.hh"
 #include "ship/ship.hh"
 #include "ship/shipfx.hh"
+#include "util/list.hh"
 #include "weapon/beam.hh"
 #include "weapon/flak.hh"
 #include "weapon/muzzleflash.hh"
 #include "weapon/swarm.hh"
 #include "weapon/weapon.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
+
+#include <climits>
 
 // How close a turret has to be point at its target before it
 // can fire.  If the dot of the gun normal and the vector from gun
@@ -595,7 +596,7 @@ void evaluate_obj_as_target (object* objp, eval_enemy_obj_struct* eeo) {
                 float turret_stealth_find_chance = 0.5f;
                 float speed_mod =
                     -0.1f + vm_vec_mag_quick (&objp->phys_info.vel) / 70.0f;
-                if (frand () > (turret_stealth_find_chance + speed_mod)) {
+                if (fs2::prng::randf (0) > (turret_stealth_find_chance + speed_mod)) {
                     try_anyway = TRUE;
                 }
             }
@@ -1230,7 +1231,7 @@ int find_turret_enemy (
     }
     else {
         // maybe use aip->target_objnum as next target
-        if ((frand () < 0.8f) && (aip->target_objnum != -1) &&
+        if ((fs2::prng::randf (0) < 0.8f) && (aip->target_objnum != -1) &&
             Use_parent_target) {
             // check if aip->target_objnum is valid target
             auto target_flags = Objects[aip->target_objnum].flags;
@@ -1491,7 +1492,7 @@ void turret_ai_update_aim (ai_info* aip, object* En_Objp, ship_subsys* ss) {
         ss->last_aim_enemy_vel = En_Objp->phys_info.vel;
         ss->next_aim_pos_time =
             Missiontime +
-            fl2f (frand_range (0.0f, aip->ai_turret_max_aim_update_delay));
+            fl2f (fs2::prng::randf (0, 0.0f, aip->ai_turret_max_aim_update_delay));
     }
     else {
         // Update the position based on the velocity (assume no velocity vector
@@ -1805,7 +1806,7 @@ ship_subsys* aifft_find_turret_subsys (
                      ? aifft_list_size / aifft_max_checks
                      : 1;
     if (stride <= 0) { stride = 1; }
-    int offset = (int)frand_range (0.0f, (float)(aifft_list_size % stride));
+    int offset = (int)fs2::prng::randf (0, 0.0f, (float)(aifft_list_size % stride));
     int idx;
     float dot_fov_modifier = 0.0f;
 
@@ -1922,7 +1923,7 @@ void turret_set_next_fire_timestamp (
         }
 
         // vary wait time +/- 10%
-        wait *= frand_range (0.9f, 1.1f);
+        wait *= fs2::prng::randf (0, 0.9f, 1.1f);
     }
 
     if (turret->rof_scaler != 1.0f)
@@ -2294,7 +2295,7 @@ bool turret_fire_weapon (
         !(parent_aip->ai_profile_flags
               [AI::Profile_Flags::Dont_insert_random_turret_fire_delay]) &&
         last_shot_in_salvo) {
-        float wait = 1000.0f * frand_range (0.9f, 1.1f);
+        float wait = 1000.0f * fs2::prng::randf (0, 0.9f, 1.1f);
         turret->turret_next_fire_stamp = timestamp ((int)wait);
     }
 
@@ -2581,7 +2582,7 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
         if ((wip->wi_flags[Weapon::Info_Flags::Spawn]) &&
             !(wip->wi_flags[Weapon::Info_Flags::Smart_spawn])) {
             if ((num_ships_nearby >= 3) ||
-                ((num_ships_nearby >= 2) && (frand () < 0.1f))) {
+                ((num_ships_nearby >= 2) && (fs2::prng::randf (0) < 0.1f))) {
                 turret_fire_weapon (
                     i, ss, parent_objnum, &gpos,
                     &ss->turret_last_fire_direction);
@@ -2757,7 +2758,7 @@ void ai_fire_from_turret (ship* shipp, ship_subsys* ss, int parent_objnum) {
         }
         else {
             ss->turret_next_enemy_check_stamp = timestamp (
-                (int)(2000.0f * frand_range (0.9f, 1.1f))); // Check every two
+                (int)(2000.0f * fs2::prng::randf (0, 0.9f, 1.1f))); // Check every two
                                                             // seconds
         }
     }

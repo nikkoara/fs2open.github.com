@@ -1250,7 +1250,7 @@ void draw_gamma_box () {
     // Gamma_data[Options_gamma_coords[gr_screen.res][OPTIONS_W_COORD]*Options_gamma_coords[gr_screen.res][OPTIONS_H_COORD]*2];
     ushort Gamma_data[MAX_GAMMA_BITMAP_SIZE];
 
-    v = fl2i (pow (0.5f, 1.0f / FreeSpace_gamma) * 255.0f);
+    v = int (pow (0.5f, 1.0f / FreeSpace_gamma) * 255.0f);
     if (v > 255) { v = 255; }
     else if (v < 0) {
         v = 0;

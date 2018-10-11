@@ -550,7 +550,7 @@ void joy_ff_play_dir_effect (float x, float y) {
             y = -8000.0f;
         }
 
-        imag = (int)fl_sqrt (x * x + y * y);
+        imag = (int)sqrtf (x * x + y * y);
         if (imag > 10000) { imag = 10000; }
 
         degs = (float)atan2 (x, y);
@@ -562,7 +562,7 @@ void joy_ff_play_dir_effect (float x, float y) {
         if (pHitEffect1.loaded) {
             pHitEffect1.eff.constant.direction.dir[0] = idegs;
             pHitEffect1.eff.constant.level =
-                (Sint16)fl2i (0x7FFF * (imag / 10000.0f));
+                (Sint16)int (0x7FFF * (imag / 10000.0f));
 
             if (SDL_HapticUpdateEffect (
                     haptic, pHitEffect1.id, &pHitEffect1.eff) < 0) {
@@ -579,7 +579,7 @@ void joy_ff_play_dir_effect (float x, float y) {
         if (pHitEffect2.loaded) {
             pHitEffect2.eff.periodic.direction.dir[0] = idegs;
             pHitEffect2.eff.periodic.magnitude =
-                (Sint16)fl2i (0x7FFF * (imag / 10000.0f));
+                (Sint16)int (0x7FFF * (imag / 10000.0f));
 
             if (SDL_HapticUpdateEffect (
                     haptic, pHitEffect2.id, &pHitEffect2.eff) < 0) {
@@ -608,7 +608,7 @@ void joy_ff_play_primary_shoot (int gain) {
 
     if (gain != primary_ff_level) {
         pShootEffect.eff.periodic.magnitude =
-            (Sint16)fl2i (0x7FFF * (gain / 10000.0f));
+            (Sint16)int (0x7FFF * (gain / 10000.0f));
 
         if (SDL_HapticUpdateEffect (
                 haptic, pShootEffect.id, &pShootEffect.eff) < 0) {
@@ -639,7 +639,7 @@ void joy_ff_play_secondary_shoot (int gain) {
 
     if (gain != secondary_ff_level) {
         pSecShootEffect.eff.constant.level =
-            (Sint16)fl2i (0x7FFF * (gain / 10000.0f));
+            (Sint16)int (0x7FFF * (gain / 10000.0f));
         pSecShootEffect.eff.constant.length = (150000 + gain * 25) / 1000;
 
         if (SDL_HapticUpdateEffect (
@@ -671,7 +671,7 @@ void joy_ff_adjust_handling (int speed) {
 
     CLAMP (v, 0, 10000);
 
-    coeff = (Sint16)fl2i (0x7FFF * (v / 10000.0f));
+    coeff = (Sint16)int (0x7FFF * (v / 10000.0f));
 
     for (int i = 0; i < SDL_HapticNumAxes (haptic); i++) {
         pSpring.eff.condition.right_coeff[i] = coeff;
@@ -803,7 +803,7 @@ void joy_ff_fly_by (int mag) {
 
         pAfterburn1.eff.periodic.length = (6000 * mag + 400000) / 1000;
         pAfterburn1.eff.periodic.magnitude =
-            (Sint16)fl2i (0x7FFF * (gain / 10000.0f));
+            (Sint16)int (0x7FFF * (gain / 10000.0f));
 
         if (SDL_HapticUpdateEffect (haptic, pAfterburn1.id, &pAfterburn1.eff) <
             0) {
@@ -819,7 +819,7 @@ void joy_ff_fly_by (int mag) {
 
         pAfterburn2.eff.periodic.length = (6000 * mag + 400000) / 1000;
         pAfterburn2.eff.periodic.magnitude =
-            (Sint16)fl2i (0x7FFF * (gain / 10000.0f));
+            (Sint16)int (0x7FFF * (gain / 10000.0f));
 
         if (SDL_HapticUpdateEffect (haptic, pAfterburn2.id, &pAfterburn2.eff) <
             0) {

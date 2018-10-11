@@ -197,10 +197,10 @@ float bitmap_lookup::get_channel_red (float u, float v) {
     CLAMP (u, 0.0f, 1.0f);
     CLAMP (v, 0.0f, 1.0f);
 
-    int x = fl2i (map_texture_address (u) * (Width - 1));
-    int y = fl2i (map_texture_address (v) * (Height - 1));
+    int x = int (map_texture_address (u) * (Width - 1));
+    int y = int (map_texture_address (v) * (Height - 1));
 
-    return i2fl (Bitmap_data[(y * Width + x) * Num_channels]) / 255.0f;
+    return float (Bitmap_data[(y * Width + x) * Num_channels]) / 255.0f;
 }
 
 float bitmap_lookup::get_channel_green (float u, float v) {
@@ -209,28 +209,28 @@ float bitmap_lookup::get_channel_green (float u, float v) {
     CLAMP (u, 0.0, 1.0f);
     CLAMP (v, 0.0, 1.0f);
 
-    int x = fl2i (map_texture_address (u) * (Width - 1));
-    int y = fl2i (map_texture_address (v) * (Height - 1));
+    int x = int (map_texture_address (u) * (Width - 1));
+    int y = int (map_texture_address (v) * (Height - 1));
 
-    return i2fl (Bitmap_data[(y * Width + x) * Num_channels + 1]) / 255.0f;
+    return float (Bitmap_data[(y * Width + x) * Num_channels + 1]) / 255.0f;
 }
 
 float bitmap_lookup::get_channel_blue (float u, float v) {
     ASSERT (Bitmap_data != NULL);
 
-    int x = fl2i (map_texture_address (u) * (Width - 1));
-    int y = fl2i (map_texture_address (v) * (Height - 1));
+    int x = int (map_texture_address (u) * (Width - 1));
+    int y = int (map_texture_address (v) * (Height - 1));
 
-    return i2fl (Bitmap_data[(y * Width + x) * Num_channels + 2]) / 255.0f;
+    return float (Bitmap_data[(y * Width + x) * Num_channels + 2]) / 255.0f;
 }
 
 float bitmap_lookup::get_channel_alpha (float u, float v) {
     ASSERT (Bitmap_data != NULL);
 
-    int x = fl2i (map_texture_address (u) * (Width - 1));
-    int y = fl2i (map_texture_address (v) * (Height - 1));
+    int x = int (map_texture_address (u) * (Width - 1));
+    int y = int (map_texture_address (v) * (Height - 1));
 
-    return i2fl (Bitmap_data[(y * Width + x) * Num_channels + 3]) / 255.0f;
+    return float (Bitmap_data[(y * Width + x) * Num_channels + 3]) / 255.0f;
 }
 
 /**
@@ -493,11 +493,11 @@ DCF (bmpman, "Shows/changes bitmap caching parameters and usage") {
         if (Bm_max_ram > 1024 * 1024) {
             dc_printf (
                 "\tMax RAM allowed: %.1f MB\n",
-                i2fl (Bm_max_ram) / (1024.0f * 1024.0f));
+                float (Bm_max_ram) / (1024.0f * 1024.0f));
         }
         else if (Bm_max_ram > 1024) {
             dc_printf (
-                "\tMax RAM allowed: %.1f KB\n", i2fl (Bm_max_ram) / (1024.0f));
+                "\tMax RAM allowed: %.1f KB\n", float (Bm_max_ram) / (1024.0f));
         }
         else if (Bm_max_ram > 0) {
             dc_printf ("\tMax RAM allowed: %d bytes\n", Bm_max_ram);
@@ -787,10 +787,10 @@ int bm_get_anim_frame (
     else {
         if (divisor > 0.0f) {
             // scale to get the real elapsed time
-            frame = fl2i (elapsed_time / divisor * be->info.ani.num_frames);
+            frame = int (elapsed_time / divisor * be->info.ani.num_frames);
         }
         else {
-            frame = fl2i (elapsed_time * i2fl (be->info.ani.fps));
+            frame = int (elapsed_time * float (be->info.ani.fps));
         }
 
         if (loop == true) { frame %= be->info.ani.num_frames; }
@@ -1546,7 +1546,7 @@ int bm_load_animation (
         if (anim_fps == 0) {
             ASSERTX (0, "animation (%s) has invalid fps of 0, fix this!",filename);
         }
-        anim_total_time = anim_frames / i2fl (anim_fps);
+        anim_total_time = anim_frames / float (anim_fps);
     }
     // regular ani file
     else if (type == BM_TYPE_ANI) {
@@ -1565,7 +1565,7 @@ int bm_load_animation (
         if (anim_fps == 0) {
             ASSERTX (0, "animation (%s) has invalid fps of 0, fix this!",filename);
         }
-        anim_total_time = anim_frames / i2fl (anim_fps);
+        anim_total_time = anim_frames / float (anim_fps);
         anim_width = the_anim.width;
         anim_height = the_anim.height;
         bpp = 8;
@@ -1596,8 +1596,8 @@ int bm_load_animation (
             apng::apng_ani the_apng = apng::apng_ani (filename);
             anim_frames = the_apng.nframes;
             anim_total_time = the_apng.anim_time;
-            anim_fps = fl2i (
-                i2fl (anim_frames) /
+            anim_fps = int (
+                float (anim_frames) /
                 the_apng.anim_time); // note; apng bails on loading if
                                      // anim_time is <= 0.0f
             anim_width = the_apng.w;

@@ -489,9 +489,9 @@ void light_apply_rgb (
     CLAMP (gval, 0.0f, 1.0f);
     CLAMP (bval, 0.0f, 1.0f);
 
-    *param_r = ubyte (fl2i (rval * 255.0f));
-    *param_g = ubyte (fl2i (gval * 255.0f));
-    *param_b = ubyte (fl2i (bval * 255.0f));
+    *param_r = ubyte (int (rval * 255.0f));
+    *param_g = ubyte (int (gval * 255.0f));
+    *param_b = ubyte (int (bval * 255.0f));
 }
 
 void light_add_cone (

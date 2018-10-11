@@ -850,7 +850,7 @@ int weapon_will_never_hit (
                 return 1;
             }
             else {
-                root = fl_sqrt (discriminant);
+                root = sqrtf (discriminant);
                 root1 = (-b + root) / (2.0f * a) * 1000.0f; // get time in ms
                 root2 = (-b - root) / (2.0f * a) * 1000.0f; // get time in ms
             }
@@ -894,7 +894,7 @@ int weapon_will_never_hit (
 
             if (earliest_time > 100) {
                 current_pair->next_check_time =
-                    timestamp (fl2i (earliest_time));
+                    timestamp (int (earliest_time));
                 return 0;
             }
             else {
@@ -914,7 +914,7 @@ int weapon_will_never_hit (
                    (other->radius + 10.0f);
             if (dist > 0.0f) {
                 time = (dist * 1000.0f) / max_vel;
-                int time_ms = fl2i (time);
+                int time_ms = int (time);
 
                 // check if possible collision occurs after weapon expires
                 if (time_ms > 1000 * wp->lifeleft) return 1;

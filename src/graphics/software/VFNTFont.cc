@@ -18,7 +18,7 @@ VFNTFont::~VFNTFont () {}
 
 FontType VFNTFont::getType () const { return VFNT_FONT; }
 
-float VFNTFont::getTextHeight () const { return i2fl (fontPtr->h); }
+float VFNTFont::getTextHeight () const { return float (fontPtr->h); }
 
 font* VFNTFont::getFontData () { return this->fontPtr; }
 
@@ -41,7 +41,7 @@ void VFNTFont::getStringSize (
     bool checkLength = textLen >= 0;
 
     if (text != NULL) {
-        h += fl2i (this->getHeight ());
+        h += int (this->getHeight ());
         while (*text) {
             // Process one or more
             while (*text == '\n') {
@@ -53,7 +53,7 @@ void VFNTFont::getStringSize (
                     textLen--;
                 }
 
-                if (*text) { h += fl2i (this->getHeight ()); }
+                if (*text) { h += int (this->getHeight ()); }
 
                 w = 0;
             }
@@ -74,9 +74,9 @@ void VFNTFont::getStringSize (
         }
     }
 
-    if (h1) *h1 = i2fl (h);
+    if (h1) *h1 = float (h);
 
-    if (w1) *w1 = i2fl (longest_width);
+    if (w1) *w1 = float (longest_width);
 }
 
 font::font ()

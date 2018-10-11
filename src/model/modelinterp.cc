@@ -1,24 +1,20 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
 
 #define MODEL_LIB
 
-#include <climits>
-
+#include "assert/assert.hh"
 #include "bmpman/bmpman.hh"
 #include "cmdline/cmdline.hh"
 #include "debugconsole/console.hh"
 #include "gamesequence/gamesequence.hh"
 #include "gamesnd/gamesnd.hh"
-#include "shared/alphacolors.hh"
-#include "util/list.hh"
 #include "graphics/2d.hh"
 #include "graphics/util/GPUMemoryHeap.hh"
 #include "io/key.hh"
 #include "io/timer.hh"
+#include "log/log.hh"
 #include "math/fvi.hh"
 #include "math/prng.hh"
 #include "mission/missionparse.hh"
@@ -28,11 +24,15 @@
 #include "parse/parselo.hh"
 #include "particle/particle.hh"
 #include "render/3dinternal.hh"
+#include "shared/alphacolors.hh"
 #include "ship/ship.hh"
 #include "ship/shipfx.hh"
-#include "weapon/shockwave.hh"
 #include "tracing/Monitor.hh"
 #include "tracing/tracing.hh"
+#include "util/list.hh"
+#include "weapon/shockwave.hh"
+
+#include <climits>
 
 float model_radius = 0;
 
@@ -546,11 +546,11 @@ void model_interp_defpoints (ubyte* p, polymodel* pm, bsp_info* sm) {
 
                 Interp_verts[n] = src;
                 point.xyz.x =
-                    src->xyz.x + frand_range (GEOMETRY_NOISE, -GEOMETRY_NOISE);
+                    src->xyz.x + fs2::prng::randf (0, GEOMETRY_NOISE, -GEOMETRY_NOISE);
                 point.xyz.y =
-                    src->xyz.y + frand_range (GEOMETRY_NOISE, -GEOMETRY_NOISE);
+                    src->xyz.y + fs2::prng::randf (0, GEOMETRY_NOISE, -GEOMETRY_NOISE);
                 point.xyz.z =
-                    src->xyz.z + frand_range (GEOMETRY_NOISE, -GEOMETRY_NOISE);
+                    src->xyz.z + fs2::prng::randf (0, GEOMETRY_NOISE, -GEOMETRY_NOISE);
 
                 g3_rotate_vertex (dest, &point);
             }
@@ -589,9 +589,9 @@ void model_interp_edge_alpha (
 
     if (invert)
         *param_r = *param_g = *param_b =
-            ubyte (fl2i ((1.0f - d) * 254.0f * alpha));
+            ubyte (int ((1.0f - d) * 254.0f * alpha));
     else
-        *param_r = *param_g = *param_b = ubyte (fl2i (d * 254.0f * alpha));
+        *param_r = *param_g = *param_b = ubyte (int (d * 254.0f * alpha));
 }
 
 int Interp_subspace = 0;
@@ -887,9 +887,9 @@ void interp_render_arc_segment (vec3d* v1, vec3d* v2, int depth) {
         vec3d tmp;
         vm_vec_avg (&tmp, v1, v2);
 
-        tmp.xyz.x += (frand () - 0.5f) * d * scaler;
-        tmp.xyz.y += (frand () - 0.5f) * d * scaler;
-        tmp.xyz.z += (frand () - 0.5f) * d * scaler;
+        tmp.xyz.x += (fs2::prng::randf (0) - 0.5f) * d * scaler;
+        tmp.xyz.y += (fs2::prng::randf (0) - 0.5f) * d * scaler;
+        tmp.xyz.z += (fs2::prng::randf (0) - 0.5f) * d * scaler;
 
         // add additional point
         interp_render_arc_segment (v1, &tmp, depth + 1);
@@ -2656,7 +2656,7 @@ int model_interp_get_texture (texture_info* tinfo, fix base_frametime) {
             fl2f (total_time));
 
         // get animation frame
-        frame = fl2i ((cur_time * num_frames) / total_time);
+        frame = int ((cur_time * num_frames) / total_time);
         CLAMP (frame, 0, num_frames - 1);
 
         // advance to the correct frame

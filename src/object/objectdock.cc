@@ -9,7 +9,6 @@
  * create based on the source.
  */
 
-#include "math/bitarray.hh"
 #include "math/vecmat.hh"
 #include "mission/missionparse.hh"
 #include "object/object.hh"
@@ -230,7 +229,7 @@ float dock_calc_max_cross_sectional_radius_perpendicular_to_axis (
         dock_calc_max_cross_sectional_radius_squared_perpendicular_to_line_helper);
 
     // the radius is the square root of our result
-    return fl_sqrt (dfi.maintained_variables.float_value);
+    return sqrtf (dfi.maintained_variables.float_value);
 }
 
 float dock_calc_max_semilatus_rectum_parallel_to_axis (
@@ -277,7 +276,7 @@ float dock_calc_max_semilatus_rectum_parallel_to_axis (
         dock_calc_max_semilatus_rectum_squared_parallel_to_directrix_helper);
 
     // the semilatus rectum is the square root of our result
-    return fl_sqrt (dfi.maintained_variables.float_value);
+    return sqrtf (dfi.maintained_variables.float_value);
 }
 
 float dock_calc_docked_fspeed (object* objp) {

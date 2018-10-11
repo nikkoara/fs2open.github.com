@@ -1192,8 +1192,8 @@ anim_instance*
 HudGaugeTalkingHead::createAnim (int anim_start_frame, anim* anim_data) {
     anim_play_struct aps;
 
-    float scale_x = i2fl (Anim_size[0]) / i2fl (anim_data->width);
-    float scale_y = i2fl (Anim_size[1]) / i2fl (anim_data->height);
+    float scale_x = float (Anim_size[0]) / float (anim_data->width);
+    float scale_y = float (Anim_size[1]) / float (anim_data->height);
     anim_play_init (
         &aps, anim_data,
         fl2ir ((position[0] + Anim_offsets[0] + HUD_offset_x) / scale_x),
@@ -1234,8 +1234,8 @@ void HudGaugeTalkingHead::render (float frametime) {
             renderBitmap (
                 Head_frame.first_frame, position[0],
                 position[1]); // head ani border
-            float scale_x = i2fl (Anim_size[0]) / i2fl (head_anim->width);
-            float scale_y = i2fl (Anim_size[1]) / i2fl (head_anim->height);
+            float scale_x = float (Anim_size[0]) / float (head_anim->width);
+            float scale_y = float (Anim_size[1]) / float (head_anim->height);
             gr_set_screen_scale (
                 fl2ir (base_w / scale_x), fl2ir (base_h / scale_y));
             setGaugeColor ();

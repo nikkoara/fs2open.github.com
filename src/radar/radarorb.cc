@@ -1,16 +1,18 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
 #include "bmpman/bmpman.hh"
 #include "freespace2/freespace.hh"
 #include "gamesnd/gamesnd.hh"
-#include "util/list.hh"
 #include "graphics/font.hh"
 #include "graphics/matrix.hh"
 #include "iff_defs/iff_defs.hh"
 #include "io/timer.hh"
 #include "jumpnode/jumpnode.hh"
 #include "localization/localize.hh"
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "object/object.hh"
 #include "playerman/player.hh"
 #include "radar/radarorb.hh"
@@ -18,9 +20,9 @@
 #include "ship/awacs.hh"
 #include "ship/ship.hh"
 #include "ship/subsysdamage.hh"
+#include "util/list.hh"
 #include "weapon/emp.hh"
 #include "weapon/weapon.hh"
-#include "log/log.hh"
 
 extern rcol Radar_color_rgb[MAX_RADAR_COLORS][MAX_RADAR_LEVELS];
 
@@ -109,8 +111,8 @@ void HudGaugeRadarOrb::drawContact (vec3d* pnt, int rad) {
     g3_rotate_vertex (&verts[1], pnt);
     g3_project_vertex (&verts[1]);
 
-    float size = fl_sqrt (vm_vec_dist (&Orb_eye_position, pnt) * 8.0f);
-    if (size < i2fl (rad)) size = i2fl (rad);
+    float size = sqrtf (vm_vec_dist (&Orb_eye_position, pnt) * 8.0f);
+    if (size < float (rad)) size = float (rad);
 
     if (rad == Radar_blip_radius_target) {
         g3_draw_sphere (&verts[1], size / 100.0f);
@@ -129,8 +131,8 @@ void HudGaugeRadarOrb::drawContactHtl (vec3d* pnt, int rad) {
 
     vm_vec_normalize (&p);
 
-    float size = fl_sqrt (vm_vec_dist (&Orb_eye_position, pnt) * 8.0f);
-    if (size < i2fl (rad)) size = i2fl (rad);
+    float size = sqrtf (vm_vec_dist (&Orb_eye_position, pnt) * 8.0f);
+    if (size < float (rad)) size = float (rad);
 
     if (rad == Radar_blip_radius_target) {
         if (radar_target_id_flags & RTIF_PULSATE) {
@@ -161,8 +163,8 @@ void HudGaugeRadarOrb::blipDrawDistorted (blip* b, vec3d* pos) {
     if (emp_active_local ()) {
         scale = emp_current_intensity ();
         distortion_angle *=
-            frand_range (-3.0f, 3.0f) * frand_range (0.0f, scale);
-        dist *= frand_range (
+            fs2::prng::randf (0, -3.0f, 3.0f) * fs2::prng::randf (0, 0.0f, scale);
+        dist *= fs2::prng::randf (0,
             MAX (0.75f, 0.75f * scale), MIN (1.25f, 1.25f * scale));
 
         if (dist > 1.25f) dist = 1.25f;
@@ -197,8 +199,8 @@ void HudGaugeRadarOrb::blipDrawFlicker (blip* b, vec3d* pos) {
     if (!Radar_flicker_on[flicker_index]) { return; }
 
     if (rand () & 1) {
-        distortion_angle *= frand_range (0.1f, 2.0f);
-        dist *= frand_range (0.75f, 1.25f);
+        distortion_angle *= fs2::prng::randf (0, 0.1f, 2.0f);
+        dist *= fs2::prng::randf (0, 0.75f, 1.25f);
 
         if (dist > 1.25f) dist = 1.25f;
         if (dist < 0.75f) dist = 0.75f;
@@ -511,7 +513,7 @@ void HudGaugeRadarOrb::drawContactImage (
 
     // gr_set_bitmap(idx,GR_ALPHABLEND_NONE,GR_BITBLT_MODE_NORMAL,1.0f);
 
-    float sizef = fl_sqrt (vm_vec_dist (&Orb_eye_position, pnt) * 8.0f);
+    float sizef = sqrtf (vm_vec_dist (&Orb_eye_position, pnt) * 8.0f);
 
     // might need checks unless the targeted blip is always wanted to be larger
     float radius = (float)Radar_blip_radius_normal;

@@ -40,7 +40,7 @@ public:
             stuff_float (&deviation);
 
             m_normalDeviation =
-                ::util::NormalFloatRange (0.0, fl_radians (deviation));
+                ::util::NormalFloatRange (0.0, to_radians (deviation));
         }
     }
 

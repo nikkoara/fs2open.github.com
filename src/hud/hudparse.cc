@@ -4642,8 +4642,8 @@ void load_gauge_lead (gauge_settings* settings) {
 
         stuff_int_list (temp, 2);
 
-        Lead_indicator_half[0] = i2fl (temp[0]);
-        Lead_indicator_half[1] = i2fl (temp[1]);
+        Lead_indicator_half[0] = float (temp[0]);
+        Lead_indicator_half[1] = float (temp[1]);
     }
 
     hud_gauge->initHalfSize (Lead_indicator_half[0], Lead_indicator_half[1]);

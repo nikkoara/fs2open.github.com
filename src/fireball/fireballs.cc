@@ -799,7 +799,7 @@ int fireball_create (
         fb->total_time = warp_lifetime; // in seconds
     }
     else {
-        fb->total_time = i2fl (fl->num_frames) / fl->fps; // in seconds
+        fb->total_time = float (fl->num_frames) / fl->fps; // in seconds
     }
 
     fireball_set_framenum (n);
@@ -967,7 +967,7 @@ void fireball_render (object* obj, model_draw_list* scene) {
         // Make the big explosions rotate with the viewer.
         batching_add_volume_bitmap_rotated (
             Fireballs[num].current_bitmap, &p,
-            (i2fl (fb->orient) * PI) / 180.0f, obj->radius);
+            (float (fb->orient) * PI) / 180.0f, obj->radius);
     } break;
 
     case FIREBALL_WARP_EFFECT: {

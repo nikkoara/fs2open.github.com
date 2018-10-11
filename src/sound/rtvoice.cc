@@ -303,7 +303,7 @@ int rtvoice_init_playback () {
 
         Rtv_playback_uncompressed_buffer_size =
             rtvf->frequency *
-            (RTV_BUFFER_TIME)*fl2i (rtvf->bits_per_sample / 8.0f);
+            (RTV_BUFFER_TIME)*int (rtvf->bits_per_sample / 8.0f);
         Rtv_playback_uncompressed_buffer =
             (unsigned char*)malloc (Rtv_playback_uncompressed_buffer_size);
         ASSERT (Rtv_playback_uncompressed_buffer);

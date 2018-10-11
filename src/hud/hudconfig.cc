@@ -1450,7 +1450,7 @@ void hud_config_render_description () {
         gr_set_color_fast (&Color_normal);
 
         gr_get_string_size (&w, &h, HC_gauge_descriptions (HC_gauge_selected));
-        sx = fl2i (
+        sx = int (
             HC_gauge_description_coords[gr_screen.res][0] +
             (HC_gauge_description_coords[gr_screen.res][2] - w) / 2.0f);
         sy = HC_gauge_description_coords[gr_screen.res][1];

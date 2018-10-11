@@ -900,8 +900,8 @@ void HudGauge::renderCircle (int x, int y, int diameter) {
 }
 
 void HudGauge::setClip (int x, int y, int w, int h) {
-    int hx = fl2i (HUD_offset_x);
-    int hy = fl2i (HUD_offset_y);
+    int hx = int (HUD_offset_x);
+    int hy = int (HUD_offset_y);
 
     if (gr_screen.rendering_to_texture != -1) {
         gr_set_screen_scale (
@@ -957,8 +957,8 @@ void HudGauge::resetClip () {
         gr_set_clip (hx, hy, w, h);
     }
     else {
-        hx = fl2i (HUD_offset_x);
-        hy = fl2i (HUD_offset_y);
+        hx = int (HUD_offset_x);
+        hy = int (HUD_offset_y);
 
         gr_resize_screen_pos (&hx, &hy);
         gr_set_screen_scale (base_w, base_h);
@@ -1915,7 +1915,7 @@ void HudGaugeDamage::render (float /*frametime*/) {
         psub = pss->system_info;
         strength = ship_get_subsystem_strength (Player_ship, psub->type);
         if (strength < 1) {
-            screen_integrity = fl2i (strength * 100);
+            screen_integrity = int (strength * 100);
             if (screen_integrity == 0) {
                 if (strength > 0) { screen_integrity = 1; }
             }
@@ -2040,7 +2040,7 @@ void HudGaugeDamage::render (float /*frametime*/) {
     }
 
     hud_get_target_strength (Player_obj, &shield, &integrity);
-    screen_integrity = fl2i (integrity * 100);
+    screen_integrity = int (integrity * 100);
 
     // Show hull integrity if it's below 100% or if a subsystem is damaged
     // The second case is just to make the display look complete
@@ -2166,7 +2166,7 @@ int hud_anim_load (hud_anim* ha) {
     }
 
     ASSERT (fps != 0);
-    ha->total_time = i2fl (ha->num_frames) / fps;
+    ha->total_time = float (ha->num_frames) / fps;
     return 0;
 }
 
@@ -2326,7 +2326,7 @@ void HudGaugeTextWarnings::render (float /*frametime*/) {
     // string
     setGaugeColor (HUD_C_BRIGHT);
     renderString (
-        fl2i ((float)position[0] - ((float)w / 2.0f)), position[1],
+        int ((float)position[0] - ((float)w / 2.0f)), position[1],
         Hud_text_flash);
 }
 
@@ -2420,7 +2420,7 @@ bool HudGaugeLag::maybeFlashLag (bool flash_fast) {
     if (!timestamp_elapsed (flash_timer[0])) {
         if (timestamp_elapsed (flash_timer[1])) {
             if (flash_fast) {
-                flash_timer[1] = timestamp (fl2i (TBOX_FLASH_INTERVAL / 2.0f));
+                flash_timer[1] = timestamp (int (TBOX_FLASH_INTERVAL / 2.0f));
             }
             else {
                 flash_timer[1] = timestamp (TBOX_FLASH_INTERVAL);
@@ -2561,7 +2561,7 @@ int hud_get_dock_time (object* docker_objp) {
         d1 = MIN (d, 30.0f);
         time += d1 / 7.5f;
 
-        return fl2i (time);
+        return int (time);
     }
 }
 
@@ -3227,7 +3227,7 @@ bool HudGaugeObjectiveNotify::maybeFlashNotify (bool flash_fast) {
     if (!timestamp_elapsed (flash_timer[0])) {
         if (timestamp_elapsed (flash_timer[1])) {
             if (flash_fast) {
-                flash_timer[1] = timestamp (fl2i (TBOX_FLASH_INTERVAL / 2.0f));
+                flash_timer[1] = timestamp (int (TBOX_FLASH_INTERVAL / 2.0f));
             }
             else {
                 flash_timer[1] = timestamp (TBOX_FLASH_INTERVAL);
@@ -3456,9 +3456,9 @@ void HUD_set_offsets (
         g3_project_vertex (&pt);
 
         gr_unsize_screen_posf (&pt.screen.xyw.x, &pt.screen.xyw.y);
-        HUD_offset_x -= 0.45f * (i2fl (gr_screen.clip_width_unscaled) * 0.5f -
+        HUD_offset_x -= 0.45f * (float (gr_screen.clip_width_unscaled) * 0.5f -
                                  pt.screen.xyw.x);
-        HUD_offset_y -= 0.45f * (i2fl (gr_screen.clip_height_unscaled) * 0.5f -
+        HUD_offset_y -= 0.45f * (float (gr_screen.clip_height_unscaled) * 0.5f -
                                  pt.screen.xyw.y);
 
         if (HUD_offset_x > 100.0f) { HUD_offset_x = 100.0f; }
@@ -3536,8 +3536,8 @@ void HUD_get_nose_coordinates (int* x, int* y) {
     gr_unsize_screen_posf (&x_nose, &y_nose);
     gr_unsize_screen_posf (&x_center, &y_center);
 
-    *x = fl2i (x_nose - x_center);
-    *y = fl2i (y_nose - y_center);
+    *x = int (x_nose - x_center);
+    *y = int (y_nose - y_center);
     return;
 }
 
@@ -3545,8 +3545,8 @@ void HUD_get_nose_coordinates (int* x, int* y) {
  * @brief Like ::gr_reset_clip() only it accounts for HUD jittering
  */
 void HUD_reset_clip () {
-    int hx = fl2i (HUD_offset_x);
-    int hy = fl2i (HUD_offset_y);
+    int hx = int (HUD_offset_x);
+    int hy = int (HUD_offset_y);
 
     gr_set_clip (hx, hy, gr_screen.max_w_unscaled, gr_screen.max_h_unscaled);
 }
@@ -3555,8 +3555,8 @@ void HUD_reset_clip () {
  * @brief Like ::gr_set_clip() only it accounts for HUD jittering
  */
 void HUD_set_clip (int x, int y, int w, int h) {
-    int hx = fl2i (HUD_offset_x);
-    int hy = fl2i (HUD_offset_y);
+    int hx = int (HUD_offset_x);
+    int hy = int (HUD_offset_y);
 
     gr_set_clip (hx + x, hy + y, w, h);
 }
@@ -3715,8 +3715,8 @@ void HudGaugeFlightPath::render (float /*frametime*/) {
 
         if (!(v0.flags & PF_OVERFLOW)) {
             if (Marker.first_frame >= 0) {
-                sx = fl2i (v0.screen.xyw.x);
-                sy = fl2i (v0.screen.xyw.y);
+                sx = int (v0.screen.xyw.x);
+                sy = int (v0.screen.xyw.y);
 
                 unsize (&sx, &sy);
                 renderBitmap (

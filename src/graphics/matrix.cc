@@ -149,13 +149,13 @@ void gr_end_proj_matrix () {
     // the other way
     if (gr_screen.rendering_to_texture != -1) {
         create_orthographic_projection_matrix (
-            &gr_projection_matrix, 0.0f, i2fl (gr_screen.max_w), 0.0f,
-            i2fl (gr_screen.max_h), -1.0f, 1.0f);
+            &gr_projection_matrix, 0.0f, float (gr_screen.max_w), 0.0f,
+            float (gr_screen.max_h), -1.0f, 1.0f);
     }
     else {
         create_orthographic_projection_matrix (
-            &gr_projection_matrix, 0.0f, i2fl (gr_screen.max_w),
-            i2fl (gr_screen.max_h), 0.0f, -1.0f, 1.0f);
+            &gr_projection_matrix, 0.0f, float (gr_screen.max_w),
+            float (gr_screen.max_h), 0.0f, -1.0f, 1.0f);
     }
 
     gr_htl_projection_matrix_set = false;
@@ -226,13 +226,13 @@ void gr_set_2d_matrix (/*int x, int y, int w, int h*/) {
     // the other way
     if (gr_screen.rendering_to_texture != -1) {
         create_orthographic_projection_matrix (
-            &gr_projection_matrix, 0, i2fl (gr_screen.max_w), 0,
-            i2fl (gr_screen.max_h), -1, 1);
+            &gr_projection_matrix, 0, float (gr_screen.max_w), 0,
+            float (gr_screen.max_h), -1, 1);
     }
     else {
         create_orthographic_projection_matrix (
-            &gr_projection_matrix, 0, i2fl (gr_screen.max_w),
-            i2fl (gr_screen.max_h), 0, -1, 1);
+            &gr_projection_matrix, 0, float (gr_screen.max_w),
+            float (gr_screen.max_h), 0, -1, 1);
     }
 
     matrix4 identity_mat;
@@ -320,13 +320,13 @@ void gr_setup_viewport () {
     // the other way
     if (gr_screen.rendering_to_texture != -1) {
         create_orthographic_projection_matrix (
-            &gr_projection_matrix, 0, i2fl (gr_screen.max_w), 0,
-            i2fl (gr_screen.max_h), -1, 1);
+            &gr_projection_matrix, 0, float (gr_screen.max_w), 0,
+            float (gr_screen.max_h), -1, 1);
     }
     else {
         create_orthographic_projection_matrix (
-            &gr_projection_matrix, 0, i2fl (gr_screen.max_w),
-            i2fl (gr_screen.max_h), 0, -1, 1);
+            &gr_projection_matrix, 0, float (gr_screen.max_w),
+            float (gr_screen.max_h), 0, -1, 1);
     }
 }
 void gr_reset_matrices () {

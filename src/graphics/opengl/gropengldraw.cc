@@ -514,9 +514,9 @@ void gr_opengl_scene_texture_begin () {
 
     if (GL_rendering_to_texture) {
         Scene_texture_u_scale =
-            i2fl (gr_screen.max_w) / i2fl (Scene_texture_width);
+            float (gr_screen.max_w) / float (Scene_texture_width);
         Scene_texture_v_scale =
-            i2fl (gr_screen.max_h) / i2fl (Scene_texture_height);
+            float (gr_screen.max_h) / float (Scene_texture_height);
 
         CLAMP (Scene_texture_u_scale, 0.0f, 1.0f);
         CLAMP (Scene_texture_v_scale, 0.0f, 1.0f);

@@ -87,7 +87,7 @@ void material_set_unlit_color (
     color clr_with_alpha;
     gr_init_alphacolor (
         &clr_with_alpha, clr->red, clr->green, clr->blue,
-        fl2i (alpha * 255.0f));
+        int (alpha * 255.0f));
 
     material_set_unlit_color (
         mat_info, texture, &clr_with_alpha, blending, depth_testing);
@@ -351,23 +351,23 @@ void material::set_color (int r, int g, int b, int a) {
     CLAMP (g, 0, 255);
     CLAMP (a, 0, 255);
 
-    Clr.xyzw.x = i2fl (r) / 255.0f;
-    Clr.xyzw.y = i2fl (g) / 255.0f;
-    Clr.xyzw.z = i2fl (b) / 255.0f;
-    Clr.xyzw.w = i2fl (a) / 255.0f;
+    Clr.xyzw.x = float (r) / 255.0f;
+    Clr.xyzw.y = float (g) / 255.0f;
+    Clr.xyzw.z = float (b) / 255.0f;
+    Clr.xyzw.w = float (a) / 255.0f;
 }
 
 void material::set_color (color& clr_in) {
     if (clr_in.is_alphacolor) {
-        Clr.xyzw.x = i2fl (clr_in.red) / 255.0f;
-        Clr.xyzw.y = i2fl (clr_in.green) / 255.0f;
-        Clr.xyzw.z = i2fl (clr_in.blue) / 255.0f;
-        Clr.xyzw.w = i2fl (clr_in.alpha) / 255.0f;
+        Clr.xyzw.x = float (clr_in.red) / 255.0f;
+        Clr.xyzw.y = float (clr_in.green) / 255.0f;
+        Clr.xyzw.z = float (clr_in.blue) / 255.0f;
+        Clr.xyzw.w = float (clr_in.alpha) / 255.0f;
     }
     else {
-        Clr.xyzw.x = i2fl (clr_in.red) / 255.0f;
-        Clr.xyzw.y = i2fl (clr_in.green) / 255.0f;
-        Clr.xyzw.z = i2fl (clr_in.blue) / 255.0f;
+        Clr.xyzw.x = float (clr_in.red) / 255.0f;
+        Clr.xyzw.y = float (clr_in.green) / 255.0f;
+        Clr.xyzw.z = float (clr_in.blue) / 255.0f;
         Clr.xyzw.w = 1.0f;
     }
 }

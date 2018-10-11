@@ -1,12 +1,16 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
 #include "bmpman/bmpman.hh"
 #include "cmdline/cmdline.hh"
 #include "ddsutils/ddsutils.hh"
 #include "debugconsole/console.hh"
 #include "freespace2/freespace.hh"
+#include "graphics/light.hh"
 #include "jpgutils/jpgutils.hh"
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "mission/missionparse.hh"
 #include "nebula/neb.hh"
 #include "object/object.hh"
@@ -17,8 +21,6 @@
 #include "starfield/starfield.hh"
 #include "tgautils/tgautils.hh"
 #include "tracing/tracing.hh"
-#include "graphics/light.hh"
-#include "log/log.hh"
 
 // --------------------------------------------------------------------------------------------------------
 // NEBULA DEFINES/VARS
@@ -669,13 +671,13 @@ float neb2_get_alpha_offscreen (float sx, float sy, float incoming_alpha) {
 
     // determine how many pixels outside we are
     if (off_x) {
-        if (sx < 0.0f) { off_x_amount = fl_abs (sx); }
+        if (sx < 0.0f) { off_x_amount = fabsf (sx); }
         else {
             off_x_amount = sx - (float)gr_screen.max_w;
         }
     }
     if (off_y) {
-        if (sy < 0.0f) { off_y_amount = fl_abs (sy); }
+        if (sy < 0.0f) { off_y_amount = fabsf (sy); }
         else {
             off_y_amount = sy - (float)gr_screen.max_h;
         }
@@ -789,11 +791,11 @@ void neb2_gen_slice (int xyz, int src, vec3d* cube_center) {
                 v = &Neb2_cubes[src][idx1][idx2].pt;
 
                 v->xyz.x =
-                    h_incw + (ws * (float)src) + frand_range (-Nd->wj, Nd->wj);
+                    h_incw + (ws * (float)src) + fs2::prng::randf (0, -Nd->wj, Nd->wj);
                 v->xyz.y = h_inch + (hs * (float)idx1) +
-                           frand_range (-Nd->hj, Nd->hj);
+                           fs2::prng::randf (0, -Nd->hj, Nd->hj);
                 v->xyz.z = h_incd + (ds * (float)idx2) +
-                           frand_range (-Nd->dj, Nd->dj);
+                           fs2::prng::randf (0, -Nd->dj, Nd->dj);
                 vm_vec_add2 (v, &cube_corner);
 
                 // set the bitmap
@@ -802,7 +804,7 @@ void neb2_gen_slice (int xyz, int src, vec3d* cube_center) {
                 // set the rotation speed
                 Neb2_cubes[src][idx1][idx2].rot = 0.0f;
                 Neb2_cubes[src][idx1][idx2].rot_speed =
-                    frand_range (-max_rotation, max_rotation);
+                    fs2::prng::randf (0, -max_rotation, max_rotation);
                 Neb2_cubes[src][idx1][idx2].flash = 0.0f;
             }
         }
@@ -813,11 +815,11 @@ void neb2_gen_slice (int xyz, int src, vec3d* cube_center) {
                 v = &Neb2_cubes[idx1][src][idx2].pt;
 
                 v->xyz.x = h_incw + (ws * (float)idx1) +
-                           frand_range (-Nd->wj, Nd->wj);
+                           fs2::prng::randf (0, -Nd->wj, Nd->wj);
                 v->xyz.y =
-                    h_inch + (hs * (float)src) + frand_range (-Nd->hj, Nd->hj);
+                    h_inch + (hs * (float)src) + fs2::prng::randf (0, -Nd->hj, Nd->hj);
                 v->xyz.z = h_incd + (ds * (float)idx2) +
-                           frand_range (-Nd->dj, Nd->dj);
+                           fs2::prng::randf (0, -Nd->dj, Nd->dj);
                 vm_vec_add2 (v, &cube_corner);
 
                 // set the bitmap
@@ -826,7 +828,7 @@ void neb2_gen_slice (int xyz, int src, vec3d* cube_center) {
                 // set the rotation speed
                 Neb2_cubes[idx1][src][idx2].rot = 0.0f;
                 Neb2_cubes[idx1][src][idx2].rot_speed =
-                    frand_range (-max_rotation, max_rotation);
+                    fs2::prng::randf (0, -max_rotation, max_rotation);
                 Neb2_cubes[src][idx1][idx2].flash = 0.0f;
             }
         }
@@ -837,11 +839,11 @@ void neb2_gen_slice (int xyz, int src, vec3d* cube_center) {
                 v = &Neb2_cubes[idx1][idx2][src].pt;
 
                 v->xyz.x = h_incw + (ws * (float)idx1) +
-                           frand_range (-Nd->wj, Nd->wj);
+                           fs2::prng::randf (0, -Nd->wj, Nd->wj);
                 v->xyz.y = h_inch + (hs * (float)idx2) +
-                           frand_range (-Nd->hj, Nd->hj);
+                           fs2::prng::randf (0, -Nd->hj, Nd->hj);
                 v->xyz.z =
-                    h_incd + (ds * (float)src) + frand_range (-Nd->dj, Nd->dj);
+                    h_incd + (ds * (float)src) + fs2::prng::randf (0, -Nd->dj, Nd->dj);
                 vm_vec_add2 (v, &cube_corner);
 
                 // set the bitmap
@@ -850,7 +852,7 @@ void neb2_gen_slice (int xyz, int src, vec3d* cube_center) {
                 // set the rotation speed
                 Neb2_cubes[idx1][idx2][src].rot = 0.0f;
                 Neb2_cubes[idx1][idx2][src].rot_speed =
-                    frand_range (-max_rotation, max_rotation);
+                    fs2::prng::randf (0, -max_rotation, max_rotation);
                 Neb2_cubes[src][idx1][idx2].flash = 0.0f;
             }
         }
@@ -1049,7 +1051,7 @@ void neb2_render_player () {
 
                 gr_set_lighting (false, false);
                 // g3_draw_rotated_bitmap(&p,
-                // fl_radians(Neb2_cubes[idx1][idx2][idx3].rot), Nd->prad,
+                // to_radians(Neb2_cubes[idx1][idx2][idx3].rot), Nd->prad,
                 // TMAP_FLAG_TEXTURED);
                 material mat_params;
                 material_set_unlit (
@@ -1058,7 +1060,7 @@ void neb2_render_player () {
                 mat_params.set_color_scale (3.f);
                 g3_render_rect_screen_aligned_rotated (
                     &mat_params, &p,
-                    fl_radians (Neb2_cubes[idx1][idx2][idx3].rot), Nd->prad);
+                    to_radians (Neb2_cubes[idx1][idx2][idx3].rot), Nd->prad);
             }
         }
     }
@@ -1389,7 +1391,7 @@ int neb2_get_bitmap () {
     static int neb2_choose = 0;
 
     // get a random count
-    count = (int)frand_range (1.0f, 5.0f);
+    count = (int)fs2::prng::randf (0, 1.0f, 5.0f);
 
     // very ad-hoc
     while (count > 0) {

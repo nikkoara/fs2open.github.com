@@ -1,8 +1,10 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
 #include "ai/aibig.hh"
 #include "ai/aigoals.hh"
+#include "assert/assert.hh"
 #include "freespace2/freespace.hh"
 #include "iff_defs/iff_defs.hh"
 #include "io/timer.hh"
@@ -14,7 +16,6 @@
 #include "ship/ship.hh"
 #include "util/list.hh"
 #include "weapon/weapon.hh"
-#include "assert/assert.hh"
 
 #define SCAN_FIGHTERS_INTERVAL \
     2000 // how often an AI fighter/bomber should scan for enemy
@@ -140,7 +141,7 @@ void ai_bpap (
                 float dist, dot;
                 vec3d v2p;
 
-                index = (int)(frand () * (octp->nverts));
+                index = (int)(fs2::prng::randf (0) * (octp->nverts));
 
                 rel_point = *octp->verts[index];
                 vm_vec_unrotate (&result_point, &rel_point, &objp->orient);
@@ -241,7 +242,7 @@ void ai_big_pick_attack_point_turret (
     else {
         vec3d local_attack_point;
         ssp->turret_pick_big_attack_point_timestamp =
-            timestamp (2000 + (int)(frand () * 500.0f));
+            timestamp (2000 + (int)(fs2::prng::randf (0) * 500.0f));
         ai_bpap (
             objp, gpos, gvec, attack_point, &local_attack_point, fov,
             weapon_travel_dist, NULL, ssp);
@@ -278,7 +279,7 @@ void ai_big_pick_attack_point (
         }
 
         attacker_aip->pick_big_attack_point_timestamp =
-            timestamp (2000 + (int)(frand () * 500.0f));
+            timestamp (2000 + (int)(fs2::prng::randf (0) * 500.0f));
         break;
     }
     case OBJ_WEAPON: {
@@ -294,7 +295,7 @@ void ai_big_pick_attack_point (
             return;
         }
         wp->pick_big_attack_point_timestamp =
-            timestamp (2000 + (int)(frand () * 500.0f));
+            timestamp (2000 + (int)(fs2::prng::randf (0) * 500.0f));
 
         break;
     }
@@ -1251,7 +1252,7 @@ void ai_big_chase () {
         float dist_normal_to_enemy;
 
         if (vm_vec_mag_squared (&aip->big_attack_surface_normal) > 0.9) {
-            dist_normal_to_enemy = fl_abs (
+            dist_normal_to_enemy = fabsf (
                 (dist_to_enemy *
                  vm_vec_dot (&vec_to_enemy, &aip->big_attack_surface_normal)));
         }
@@ -1262,7 +1263,7 @@ void ai_big_chase () {
 
         // float time_to_enemy = dist_normal_to_enemy /
         // Pl_objp->phys_info.speed *
-        // fl_abs(vm_vec_dot(&Pl_objp->phys_info.vel,
+        // fabsf(vm_vec_dot(&Pl_objp->phys_info.vel,
         //&aip->big_attack_surface_normal));            if (Framecount % 30 == 1) {
         // mprintf(("normal dist; %.1f, time: %.1f\n",
         // dist_normal_to_enemy, time_to_enemy));
@@ -1280,7 +1281,7 @@ void ai_big_chase () {
             if (vm_vec_mag_squared (&aip->big_attack_surface_normal) > 0.9) {
                 if (Pl_objp->phys_info.speed > 0.1) {
                     time_to_enemy = dist_normal_to_enemy /
-                                    fl_abs (vm_vec_dot (
+                                    fabsf (vm_vec_dot (
                                         &Pl_objp->phys_info.vel,
                                         &aip->big_attack_surface_normal));
                 }
@@ -1936,7 +1937,7 @@ void ai_big_strafe_position () {
 
     // Maybe use AIS_STRAFE_GLIDE_ATTACK
     if ((sip->can_glide == true) && !(aip->ai_flags[AI::AI_Flags::Kamikaze]) &&
-        (frand () < aip->ai_glide_strafe_percent)) {
+        (fs2::prng::randf (0) < aip->ai_glide_strafe_percent)) {
         aip->submode = AIS_STRAFE_GLIDE_ATTACK;
         aip->submode_parm1 = 0;
     }
@@ -2097,7 +2098,7 @@ void ai_big_strafe_maybe_attack_turret (
     // Make decision to attack turret based on AI class.  The better AI ships
     // will realize that it is better to take out the turrets first on a big
     // ship.
-    if ((frand () * 100) > (aip->ai_courage - 15)) return;
+    if ((fs2::prng::randf (0) * 100) > (aip->ai_courage - 15)) return;
 
     // If ship is already attacking a subsystem, don't switch
     if (aip->targeted_subsys != NULL) { return; }
@@ -2120,7 +2121,7 @@ void ai_big_strafe_maybe_attack_turret (
                   Big_ships_can_attack_beam_turrets_on_untargeted_ships]) &&
         (Weapon_info[Weapons[weapon_objp->instance].weapon_info_index]
              .wi_flags[Weapon::Info_Flags::Beam]) &&
-        (frand () * 100 < 25.0f);
+        (fs2::prng::randf (0) * 100 < 25.0f);
 
     // unless we're making an exception, we should only attack a turret if it
     // sits on the current target

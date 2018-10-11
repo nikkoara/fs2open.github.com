@@ -261,9 +261,9 @@ void FrameProfiler::dump_output (
         // format the data
         char avg[64], min[64], max[64], num[64];
 
-        sprintf (avg, "%3.1fms", i2fl (avg_micro_seconds) * 0.000001f);
-        sprintf (min, "%3.1fms", i2fl (min_micro_seconds) * 0.000001f);
-        sprintf (max, "%3.1fms", i2fl (max_micro_seconds) * 0.000001f);
+        sprintf (avg, "%3.1fms", float (avg_micro_seconds) * 0.000001f);
+        sprintf (min, "%3.1fms", float (min_micro_seconds) * 0.000001f);
+        sprintf (max, "%3.1fms", float (max_micro_seconds) * 0.000001f);
         sprintf (num, "%3d", samples[i].profile_instances);
 
         std::string indented_name;

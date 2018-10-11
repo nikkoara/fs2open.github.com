@@ -897,13 +897,13 @@ void hud_make_shader (
     shader* sh, ubyte r, ubyte /*g*/, ubyte /*b*/, float dimmer = 1000.0f) {
     // The m matrix converts all colors to shades of green
     // float tmp = 16.0f*(0.0015625f * i2fl(HUD_color_alpha+1.0f));
-    float tmp = 0.025f * i2fl (HUD_color_alpha + 1.0f);
+    float tmp = 0.025f * float (HUD_color_alpha + 1.0f);
 
     ubyte R = ubyte (r * tmp);
     ubyte G = ubyte (r * tmp);
     ubyte B = ubyte (r * tmp);
     ubyte A = ubyte (
-        (float(r) / dimmer) * (i2fl (HUD_color_alpha) / 15.0f) * 255.0f);
+        (float(r) / dimmer) * (float (HUD_color_alpha) / 15.0f) * 255.0f);
 
     gr_create_shader (sh, R, G, B, A);
 }
@@ -2723,10 +2723,10 @@ void HudGaugeOrientationTee::renderOrientation (
     y4 = y1 - T_BASE_LENGTH * cosf (dot_product);
 
     // HACK! Should be antialiased!
-    renderLine (fl2i (x3), fl2i (y3), fl2i (x4), fl2i (y4)); // bottom of T
+    renderLine (int (x3), int (y3), int (x4), int (y4)); // bottom of T
     renderLine (
-        fl2i (x1), fl2i (y1), fl2i (x2),
-        fl2i (y2)); // part of T pointing towards center
+        int (x1), int (y1), int (x2),
+        int (y2)); // part of T pointing towards center
 }
 
 void hud_tri (float x1, float y1, float x2, float y2, float x3, float y3) {
@@ -2817,9 +2817,9 @@ void hud_tri (float x1, float y1, float x2, float y2, float x3, float y3) {
 
 void hud_tri_empty (
     float x1, float y1, float x2, float y2, float x3, float y3) {
-    gr_line (fl2i (x1), fl2i (y1), fl2i (x2), fl2i (y2));
-    gr_line (fl2i (x2), fl2i (y2), fl2i (x3), fl2i (y3));
-    gr_line (fl2i (x3), fl2i (y3), fl2i (x1), fl2i (y1));
+    gr_line (int (x1), int (y1), int (x2), int (y2));
+    gr_line (int (x2), int (y2), int (x3), int (y3));
+    gr_line (int (x3), int (y3), int (x1), int (y1));
 }
 
 HudGaugeReticleTriangle::HudGaugeReticleTriangle ()
@@ -2912,7 +2912,7 @@ void HudGaugeReticleTriangle::renderTriangleMissileTail (
 
     // draw the tail indicating length
     if (tail_len > 0) {
-        gr_line (fl2i (xpos), fl2i (ypos), fl2i (xtail), fl2i (ytail));
+        gr_line (int (xpos), int (ypos), int (xtail), int (ytail));
     }
     gr_reset_screen_scale ();
 }
@@ -2943,8 +2943,8 @@ void HudGaugeReticleTriangle::renderTriangle (
               PF_OVERFLOW)) { // make sure point projected
             int mag_squared;
 
-            projected_x = fl2i (hostile_vertex.screen.xyw.x);
-            projected_y = fl2i (hostile_vertex.screen.xyw.y);
+            projected_x = int (hostile_vertex.screen.xyw.x);
+            projected_y = int (hostile_vertex.screen.xyw.y);
 
             unsize (&projected_x, &projected_y);
 
@@ -3907,14 +3907,14 @@ void HudGaugeLeadIndicator::renderIndicator (
             }
 
             if (Lead_indicator_gauge.first_frame + frame_offset >= 0) {
-                sx = fl2i (lead_target_vertex.screen.xyw.x);
-                sy = fl2i (lead_target_vertex.screen.xyw.y);
+                sx = int (lead_target_vertex.screen.xyw.x);
+                sy = int (lead_target_vertex.screen.xyw.y);
 
                 unsize (&sx, &sy);
                 renderBitmap (
                     Lead_indicator_gauge.first_frame + frame_offset,
-                    fl2i (sx - Lead_indicator_half[0]),
-                    fl2i (sy - Lead_indicator_half[1]));
+                    int (sx - Lead_indicator_half[0]),
+                    int (sy - Lead_indicator_half[1]));
             }
         }
     }
@@ -4164,8 +4164,8 @@ void HudGaugeLeadSight::initBitmaps (char* fname) {
         int w, h;
 
         bm_get_info (Lead_sight.first_frame, &w, &h);
-        Lead_sight_half[0] = fl2i (w * 0.5f);
-        Lead_sight_half[1] = fl2i (h * 0.5f);
+        Lead_sight_half[0] = int (w * 0.5f);
+        Lead_sight_half[1] = int (h * 0.5f);
     }
 }
 
@@ -4219,8 +4219,8 @@ void HudGaugeLeadSight::renderSight (
         setGaugeColor ();
         renderBitmap (
             Lead_sight.first_frame + frame_offset,
-            fl2i (reticle_target_sx) + fl2i (HUD_offset_x),
-            fl2i (reticle_target_sy) + fl2i (HUD_offset_y));
+            int (reticle_target_sx) + int (HUD_offset_x),
+            int (reticle_target_sy) + int (HUD_offset_y));
     }
 }
 
@@ -5588,7 +5588,7 @@ void HudGaugeWeaponEnergy::render (float /*frametime*/) {
             setGaugeColor (HUD_C_BRIGHT);
             for (y = 0; y < 10; y++) {
                 renderGradientLine (
-                    currentx, currenty + y, currentx + fl2i (remaining),
+                    currentx, currenty + y, currentx + int (remaining),
                     currenty + y);
             }
         }
@@ -5642,7 +5642,7 @@ void HudGaugeWeaponEnergy::render (float /*frametime*/) {
                 ((float)Player_ship->weapons.primary_bank_ammo[x] /
                  (float)Player_ship->weapons.primary_bank_start_ammo[x]);
             if (remaining > 0) {
-                renderRect (currentx + 2, currenty + 2, fl2i (remaining), 6);
+                renderRect (currentx + 2, currenty + 2, int (remaining), 6);
             }
             // Increment for next 'line'
             currenty += 12;
@@ -5688,7 +5688,7 @@ void HudGaugeWeaponEnergy::render (float /*frametime*/) {
 
             if (max_ballistic_ammo > 0) {
                 percent_left =
-                    i2fl (ballistic_ammo) / i2fl (max_ballistic_ammo);
+                    float (ballistic_ammo) / float (max_ballistic_ammo);
             }
             else {
                 percent_left = 1.0f;
@@ -6489,7 +6489,7 @@ void HudGaugeOffscreen::calculatePosition (
     ypos = (ypos < 1) ? 0 : ypos;
 
     if (xpos >= gr_screen.clip_right_unscaled) {
-        xpos = i2fl (gr_screen.clip_right_unscaled);
+        xpos = float (gr_screen.clip_right_unscaled);
         *dir = 0;
 
         if (ypos < (half_gauge_length - gr_screen.clip_top_unscaled))
@@ -6499,7 +6499,7 @@ void HudGaugeOffscreen::calculatePosition (
             ypos = gr_screen.clip_bottom_unscaled - half_gauge_length;
     }
     else if (xpos <= gr_screen.clip_left_unscaled) {
-        xpos = i2fl (gr_screen.clip_left_unscaled);
+        xpos = float (gr_screen.clip_left_unscaled);
         *dir = 1;
 
         if (ypos < (half_gauge_length - gr_screen.clip_top_unscaled))
@@ -6509,7 +6509,7 @@ void HudGaugeOffscreen::calculatePosition (
             ypos = gr_screen.clip_bottom_unscaled - half_gauge_length;
     }
     else if (ypos <= gr_screen.clip_top_unscaled) {
-        ypos = i2fl (gr_screen.clip_top_unscaled);
+        ypos = float (gr_screen.clip_top_unscaled);
         *dir = 2;
 
         if (xpos < (half_gauge_length - gr_screen.clip_left_unscaled))
@@ -6519,7 +6519,7 @@ void HudGaugeOffscreen::calculatePosition (
             xpos = gr_screen.clip_right_unscaled - half_gauge_length;
     }
     else if (ypos >= gr_screen.clip_bottom_unscaled) {
-        ypos = i2fl (gr_screen.clip_bottom_unscaled);
+        ypos = float (gr_screen.clip_bottom_unscaled);
         *dir = 3;
 
         if (xpos < (half_gauge_length - gr_screen.clip_left_unscaled))
@@ -6618,7 +6618,7 @@ void HudGaugeOffscreen::renderOffscreenIndicator (
 
         if (buf[0]) {
             gr_string (
-                fl2i (xpos - w - 10), (int)std::lround (ypos - h / 2.0f), buf);
+                int (xpos - w - 10), (int)std::lround (ypos - h / 2.0f), buf);
         }
     }
     else if (dir == 1) {
@@ -6633,7 +6633,7 @@ void HudGaugeOffscreen::renderOffscreenIndicator (
 
         if (buf[0]) {
             gr_string (
-                fl2i (xpos + 10), (int)std::lround (ypos - h / 2.0f), buf);
+                int (xpos + 10), (int)std::lround (ypos - h / 2.0f), buf);
         }
     }
     else if (dir == 2) {
@@ -6648,7 +6648,7 @@ void HudGaugeOffscreen::renderOffscreenIndicator (
 
         if (buf[0]) {
             gr_string (
-                (int)std::lround (xpos - w / 2.0f), fl2i (ypos + 10), buf);
+                (int)std::lround (xpos - w / 2.0f), int (ypos + 10), buf);
         }
     }
     else if (dir == 3) {
@@ -6663,7 +6663,7 @@ void HudGaugeOffscreen::renderOffscreenIndicator (
 
         if (buf[0]) {
             gr_string (
-                (int)std::lround (xpos - w / 2.0f), fl2i (ypos - h - 10), buf);
+                (int)std::lround (xpos - w / 2.0f), int (ypos - h - 10), buf);
         }
     }
 
@@ -6677,13 +6677,13 @@ void HudGaugeOffscreen::renderOffscreenIndicator (
     }
 
     if (dir == 0 || dir == 3) {
-        gr_line (fl2i (x2), fl2i (y2), fl2i (x5), fl2i (y5));
+        gr_line (int (x2), int (y2), int (x5), int (y5));
     }
     else if (dir == 1) {
-        gr_line (fl2i (x2 - 1), fl2i (y2), fl2i (x5 - 1), fl2i (y5));
+        gr_line (int (x2 - 1), int (y2), int (x5 - 1), int (y5));
     }
     else {
-        gr_line (fl2i (x2), fl2i (y2 - 1), fl2i (x5), fl2i (y5 - 1));
+        gr_line (int (x2), int (y2 - 1), int (x5), int (y5 - 1));
     }
 
     gr_reset_screen_scale ();

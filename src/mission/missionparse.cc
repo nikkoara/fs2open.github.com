@@ -1,22 +1,15 @@
 // -*- mode: c++; -*-
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <cassert>
-#include <cstdarg>
-#include <csetjmp>
-
 #include "defs.hh"
+
 #include "ai/aigoals.hh"
+#include "assert/assert.hh"
 #include "asteroid/asteroid.hh"
 #include "bmpman/bmpman.hh"
 #include "cfile/cfile.hh"
 #include "cmdline/cmdline.hh"
 #include "debris/debris.hh"
 #include "gamesnd/eventmusic.hh"
-#include "shared/alphacolors.hh"
-#include "util/list.hh"
 #include "hud/hudescort.hh"
 #include "hud/hudets.hh"
 #include "hud/hudwingmanstatus.hh"
@@ -25,6 +18,7 @@
 #include "jumpnode/jumpnode.hh"
 #include "lighting/lighting.hh"
 #include "localization/localize.hh"
+#include "log/log.hh"
 #include "math/fvi.hh"
 #include "math/prng.hh"
 #include "mission/missionbriefcommon.hh"
@@ -34,30 +28,37 @@
 #include "mission/missionlog.hh"
 #include "mission/missionmessage.hh"
 #include "mission/missionparse.hh"
+#include "missionparse.hh"
 #include "missionui/fictionviewer.hh"
 #include "missionui/missioncmdbrief.hh"
 #include "missionui/redalert.hh"
 #include "mod_table/mod_table.hh"
 #include "nebula/neb.hh"
 #include "nebula/neblightning.hh"
-#include "object/parseobjectdock.hh"
 #include "object/objectshield.hh"
+#include "object/parseobjectdock.hh"
 #include "object/waypoint.hh"
 #include "parse/parselo.hh"
 #include "playerman/player.hh"
 #include "popup/popup.hh"
 #include "popup/popupdead.hh"
+#include "shared/alphacolors.hh"
 #include "ship/ship.hh"
 #include "ship/shipfx.hh"
 #include "ship/shiphit.hh"
 #include "sound/ds.hh"
 #include "starfield/nebula.hh"
 #include "starfield/starfield.hh"
-#include "weapon/weapon.hh"
 #include "tracing/Monitor.hh"
-#include "missionparse.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
+#include "util/list.hh"
+#include "weapon/weapon.hh"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cassert>
+#include <cstdarg>
+#include <csetjmp>
 
 static struct {
     char docker[NAME_LENGTH];
@@ -2278,7 +2279,7 @@ int parse_create_object_sub (p_object* p_objp) {
                 if (ptr->system_info->type == SUBSYSTEM_TURRET) {
                     ptr->weapons.flags.set (Ship::Weapon_Flags::Beam_Free);
                     ptr->turret_next_fire_stamp =
-                        timestamp ((int)frand_range (50.0f, 4000.0f));
+                        timestamp ((int)fs2::prng::randf (0, 50.0f, 4000.0f));
                 }
             }
 
@@ -3914,7 +3915,7 @@ void swap_parse_object (p_object* p_obj, int new_ship_class) {
         (new_ship_info->max_shield_strength > 0)) {
         // This ship is using special hitpoints to alter the shield strength
         float shield_multiplier = p_obj->ship_max_shield_strength /
-                                  i2fl (old_ship_info->max_shield_strength);
+                                  float (old_ship_info->max_shield_strength);
         p_obj->ship_max_shield_strength =
             new_ship_info->max_shield_strength * shield_multiplier;
     }
@@ -4112,7 +4113,7 @@ int parse_wing_create_ships (
                 ASSERT (wingp->wave_delay_min <= wingp->wave_delay_max);
                 time_to_arrive =
                     wingp->wave_delay_min +
-                    (int)(frand () * (wingp->wave_delay_max - wingp->wave_delay_min));
+                    (int)(fs2::prng::randf (0) * (wingp->wave_delay_max - wingp->wave_delay_min));
 
                 // MWA -- 5/18/98
                 // HACK HACK -- in the presense of Mike Comet and Mitri, I have
@@ -6684,7 +6685,7 @@ int mission_set_arrival_location (
             // cool function by MK to give a reasonable random vector "in
             // front" of a ship rvec and uvec are the right and up vectors. If
             // these are not available, this would be an expensive method.
-            x = cosf (fl_radians (45.0f));
+            x = cosf (to_radians (45.0f));
 
             r1 = rand () < RAND_MAX_2 ? -1 : 1;
             r2 = rand () < RAND_MAX_2 ? -1 : 1;
@@ -6960,7 +6961,7 @@ void mission_eval_arrivals () {
         int use_terran_cmd;
 
         // use terran command 25% of time
-        use_terran_cmd = ((frand () - 0.75) > 0.0f) ? 1 : 0;
+        use_terran_cmd = ((fs2::prng::randf (0) - 0.75) > 0.0f) ? 1 : 0;
 
         rship = ship_get_random_player_wing_ship (SHIP_GET_UNSILENCED);
         if ((rship < 0) || use_terran_cmd)
@@ -7633,7 +7634,7 @@ extern int pp_collide_any (
  * Caller tries several positions, passing vector in x, y, z.
  */
 int get_warp_in_pos (vec3d* pos, object* objp, float x, float y, float z) {
-    float rand_val = frand ();
+    float rand_val = fs2::prng::randf (0);
     rand_val = 1.0f + (rand_val - 0.5f) * 0.2f;
 
     *pos = objp->pos;

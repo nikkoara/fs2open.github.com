@@ -9,14 +9,6 @@
 // It uses a very baggy format, allocating 16 characters per token, regardless
 // of how many are used.
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <cctype>
-#include <cassert>
-#include <climits>
-#include <cstdint>
-
 #include "ai/aigoals.hh"
 #include "asteroid/asteroid.hh"
 #include "autopilot/autopilot.hh"
@@ -47,6 +39,7 @@
 #include "localization/localize.hh"
 #include "math/fix.hh"
 #include "math/fvi.hh"
+#include "math/prng.hh"
 #include "menuui/techmenu.hh" // for intel stuff
 #include "mission/missionbriefcommon.hh"
 #include "mission/missioncampaign.hh"
@@ -89,13 +82,21 @@
 #include "weapon/shockwave.hh"
 #include "weapon/weapon.hh"
 
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cctype>
+#include <cassert>
+#include <climits>
+#include <cstdint>
+
 #ifndef NDEBUG
-#include "hud/hudmessage.hh"
+#  include "hud/hudmessage.hh"
 #endif
 
 // Stupid windows workaround...
 #ifdef MessageBox
-#undef MessageBox
+#  undef MessageBox
 #endif
 
 #define TRUE 1
@@ -7981,7 +7982,7 @@ int sexp_num_ships_in_wing (int n) {
  * Gets the 'real' speed of an object, taking into account docking
  */
 int sexp_get_real_speed (object* obj) {
-    return fl2i (dock_calc_docked_speed (obj));
+    return int (dock_calc_docked_speed (obj));
 }
 
 /**
@@ -8678,7 +8679,7 @@ int sexp_special_warp_dist (int n) {
     if (!valid) { return SEXP_NAN; }
 
     // check if within 45 degree half-angle cone of facing
-    float dot = fl_abs (
+    float dot = fabsf (
         vm_vec_dot (&warp_objp->orient.vec.fvec, &ship_objp->orient.vec.fvec));
     if (dot < 0.707f) { return SEXP_NAN; }
 
@@ -9552,7 +9553,7 @@ int sexp_num_within_box (int n) {
     int retval = 0;
 
     for (i = 0; i < 6; i++) {
-        box_vals[i] = i2fl (eval_num (n));
+        box_vals[i] = float (eval_num (n));
         n = CDR (n);
     }
 
@@ -9599,13 +9600,13 @@ void sexp_set_object_speed (
         vm_vec_rotate (&subjective_vel, &objp->phys_info.vel, &objp->orient);
 
         // set it
-        subjective_vel.a1d[axis] = i2fl (speed);
+        subjective_vel.a1d[axis] = float (speed);
 
         // translate it back to objective
         vm_vec_unrotate (&objp->phys_info.vel, &subjective_vel, &objp->orient);
     }
     else {
-        objp->phys_info.vel.a1d[axis] = i2fl (speed);
+        objp->phys_info.vel.a1d[axis] = float (speed);
     }
 }
 
@@ -9645,12 +9646,12 @@ int sexp_get_object_speed (object* objp, int axis, bool subjective) {
         // return the speed based on the orentation of the object
         vec3d subjective_vel;
         vm_vec_rotate (&subjective_vel, &objp->phys_info.vel, &objp->orient);
-        speed = fl2i (subjective_vel.a1d[axis]);
+        speed = int (subjective_vel.a1d[axis]);
         vm_vec_unrotate (&objp->phys_info.vel, &subjective_vel, &objp->orient);
     }
     else {
         // return the speed according to the grid
-        speed = fl2i (objp->phys_info.vel.a1d[axis]);
+        speed = int (objp->phys_info.vel.a1d[axis]);
     }
     return speed;
 }
@@ -9690,14 +9691,14 @@ int sexp_calculate_coordinate (
     ASSERT (orient != NULL);
     ASSERT (axis >= 0 && axis <= 2);
 
-    if (relative_location == NULL) { return fl2i (origin->a1d[axis]); }
+    if (relative_location == NULL) { return int (origin->a1d[axis]); }
     else {
         vec3d new_world_pos;
 
         vm_vec_unrotate (&new_world_pos, relative_location, orient);
         vm_vec_add2 (&new_world_pos, origin);
 
-        return fl2i (new_world_pos.a1d[axis]);
+        return int (new_world_pos.a1d[axis]);
     }
 }
 
@@ -9718,7 +9719,7 @@ int sexp_calculate_angle (matrix* orient, int axis) {
     default: rad = 0.0f; break;
     }
 
-    float deg = fl_degrees (rad);
+    float deg = to_degrees (rad);
 
     int deg2 = static_cast< int > (deg < 0.0f ? deg - 0.5f : deg + 0.5f);
     if (deg2 < 0) deg2 += 360;
@@ -9810,11 +9811,11 @@ void sexp_set_object_position (int n) {
     sexp_get_object_ship_wing_point_team (&oswpt, CTEXT (n));
     n = CDR (n);
 
-    target_vec.xyz.x = i2fl (eval_num (n));
+    target_vec.xyz.x = float (eval_num (n));
     n = CDR (n);
-    target_vec.xyz.y = i2fl (eval_num (n));
+    target_vec.xyz.y = float (eval_num (n));
     n = CDR (n);
-    target_vec.xyz.z = i2fl (eval_num (n));
+    target_vec.xyz.z = float (eval_num (n));
     n = CDR (n);
 
     // retime all collision checks so they're performed
@@ -9878,11 +9879,11 @@ void sexp_set_object_orientation (int n) {
     sexp_get_object_ship_wing_point_team (&oswpt, CTEXT (n));
     n = CDR (n);
 
-    a.p = fl_radians (eval_num (n) % 360);
+    a.p = to_radians (eval_num (n) % 360);
     n = CDR (n);
-    a.b = fl_radians (eval_num (n) % 360);
+    a.b = to_radians (eval_num (n) % 360);
     n = CDR (n);
-    a.h = fl_radians (eval_num (n) % 360);
+    a.h = to_radians (eval_num (n) % 360);
     n = CDR (n);
 
     vm_angles_2_matrix (&target_orient, &a);
@@ -10332,7 +10333,7 @@ int sexp_get_damage_caused (int node) {
         if (sindex < 0) {
             // this is probably a ship which hasn't arrived and thus can't have
             // taken any damage yet
-            return fl2i (damage_caused);
+            return int (damage_caused);
         }
         else {
             damaged_sig = Ships_exited[sindex].obj_signature;
@@ -13106,11 +13107,11 @@ void sexp_set_explosion_option (int node) {
     // if we haven't changed anything yet, create a new special-exp with the
     // same values as a standard exp
     if (!shipp->use_special_explosion) {
-        shipp->special_exp_damage = fl2i (sci->damage);
-        shipp->special_exp_blast = fl2i (sci->blast);
-        shipp->special_exp_inner = fl2i (sci->inner_rad);
-        shipp->special_exp_outer = fl2i (sci->outer_rad);
-        shipp->special_exp_shockwave_speed = fl2i (sci->speed);
+        shipp->special_exp_damage = int (sci->damage);
+        shipp->special_exp_blast = int (sci->blast);
+        shipp->special_exp_inner = int (sci->inner_rad);
+        shipp->special_exp_outer = int (sci->outer_rad);
+        shipp->special_exp_shockwave_speed = int (sci->speed);
         shipp->special_exp_deathroll_time = 0;
 
         shipp->use_special_explosion = true;
@@ -13303,9 +13304,9 @@ void sexp_explosion_effect (int n)
             sci.blast = (float)max_blast;
             sci.damage = (float)max_damage;
             sci.speed = (float)shockwave_speed;
-            sci.rot_angles.p = frand_range (0.0f, 1.99f * PI);
-            sci.rot_angles.b = frand_range (0.0f, 1.99f * PI);
-            sci.rot_angles.h = frand_range (0.0f, 1.99f * PI);
+            sci.rot_angles.p = fs2::prng::randf (0, 0.0f, 1.99f * PI);
+            sci.rot_angles.b = fs2::prng::randf (0, 0.0f, 1.99f * PI);
+            sci.rot_angles.h = fs2::prng::randf (0, 0.0f, 1.99f * PI);
             shockwave_create (-1, &origin, &sci, SW_SHIP_DEATH);
         }
         else {
@@ -14597,11 +14598,11 @@ void sexp_add_background_bitmap (int n) {
     }
 
     // angles
-    sle.ang.p = fl_radians (eval_num (n) % 360);
+    sle.ang.p = to_radians (eval_num (n) % 360);
     n = CDR (n);
-    sle.ang.b = fl_radians (eval_num (n) % 360);
+    sle.ang.b = to_radians (eval_num (n) % 360);
     n = CDR (n);
-    sle.ang.h = fl_radians (eval_num (n) % 360);
+    sle.ang.h = to_radians (eval_num (n) % 360);
     n = CDR (n);
 
     // scale
@@ -14686,11 +14687,11 @@ void sexp_add_sun_bitmap (int n) {
     }
 
     // angles
-    sle.ang.p = fl_radians (eval_num (n) % 360);
+    sle.ang.p = to_radians (eval_num (n) % 360);
     n = CDR (n);
-    sle.ang.b = fl_radians (eval_num (n) % 360);
+    sle.ang.b = to_radians (eval_num (n) % 360);
     n = CDR (n);
-    sle.ang.h = fl_radians (eval_num (n) % 360);
+    sle.ang.h = to_radians (eval_num (n) % 360);
     n = CDR (n);
 
     // scale
@@ -16531,19 +16532,19 @@ void sexp_ship_create (int n) {
 
     n = CDR (n);
     if (n != -1) {
-        new_ship_ang.p = fl_radians (eval_num (n) % 360);
+        new_ship_ang.p = to_radians (eval_num (n) % 360);
         change_angles = true;
     }
 
     n = CDR (n);
     if (n != -1) {
-        new_ship_ang.b = fl_radians (eval_num (n) % 360);
+        new_ship_ang.b = to_radians (eval_num (n) % 360);
         change_angles = true;
     }
 
     n = CDR (n);
     if (n != -1) {
-        new_ship_ang.h = fl_radians (eval_num (n) % 360);
+        new_ship_ang.h = to_radians (eval_num (n) % 360);
         change_angles = true;
     }
 
@@ -16589,19 +16590,19 @@ void sexp_weapon_create (int n) {
     n = CDR (n);
 
     if (n >= 0) {
-        weapon_angles.p = fl_radians (eval_num (n) % 360);
+        weapon_angles.p = to_radians (eval_num (n) % 360);
         n = CDR (n);
         change_angles = true;
     }
 
     if (n >= 0) {
-        weapon_angles.b = fl_radians (eval_num (n) % 360);
+        weapon_angles.b = to_radians (eval_num (n) % 360);
         n = CDR (n);
         change_angles = true;
     }
 
     if (n >= 0) {
-        weapon_angles.h = fl_radians (eval_num (n) % 360);
+        weapon_angles.h = to_radians (eval_num (n) % 360);
         n = CDR (n);
         change_angles = true;
     }
@@ -17157,7 +17158,7 @@ int sexp_facing (int node) {
     vm_vec_normalize (&v2);
 
     a1 = vm_vec_dot (&v1, &v2);
-    a2 = cosf (fl_radians (angle));
+    a2 = cosf (to_radians (angle));
     if (a1 >= a2) { return SEXP_TRUE; }
 
     return SEXP_FALSE;
@@ -17216,7 +17217,7 @@ int sexp_is_facing (int node) {
     vm_vec_normalize (&v2);
 
     a1 = vm_vec_dot (&v1, &v2);
-    a2 = cosf (fl_radians (angle));
+    a2 = cosf (to_radians (angle));
     if (a1 >= a2) { return SEXP_TRUE; }
 
     return SEXP_FALSE;
@@ -17246,7 +17247,7 @@ int sexp_facing2 (int node) {
         &v2, wp_list->get_waypoints ().front ().get_pos (), &Player_obj->pos);
     vm_vec_normalize (&v2);
     a1 = vm_vec_dot (&v1, &v2);
-    a2 = cosf (fl_radians (atof (CTEXT (CDR (node)))));
+    a2 = cosf (to_radians (atof (CTEXT (CDR (node)))));
     if (a1 >= a2) { return SEXP_TRUE; }
 
     return SEXP_FALSE;
@@ -17807,7 +17808,7 @@ void set_secondary_ammo (
 
     // Is the number requested larger than the maximum allowed for that
     // particular bank?
-    maximum_allowed = fl2i (
+    maximum_allowed = int (
         shipp->weapons.secondary_bank_capacity[requested_bank] /
         Weapon_info[shipp->weapons.secondary_bank_weapons[requested_bank]]
             .cargo_size);
@@ -18092,13 +18093,13 @@ void parse_copy_damage (p_object* target_pobjp, ship* source_shipp) {
     target_pobjp->special_hitpoints = source_shipp->special_hitpoints;
     target_pobjp->ship_max_hull_strength =
         source_shipp->ship_max_hull_strength;
-    target_pobjp->initial_hull = fl2i (get_hull_pct (source_objp) * 100.0f);
+    target_pobjp->initial_hull = int (get_hull_pct (source_objp) * 100.0f);
 
     // ...and shields
     target_pobjp->ship_max_shield_strength =
         source_shipp->ship_max_shield_strength;
     target_pobjp->initial_shields =
-        fl2i (get_shield_pct (source_objp) * 100.0f);
+        int (get_shield_pct (source_objp) * 100.0f);
     target_pobjp->max_shield_recharge = source_shipp->max_shield_recharge;
 
     // search through all subsystems on source ship and map them onto target
@@ -18276,13 +18277,13 @@ void sexp_set_skybox_orientation (int n) {
     matrix m;
     angles_t a;
 
-    a.p = fl_radians (eval_num (n) % 360);
+    a.p = to_radians (eval_num (n) % 360);
     n = CDR (n);
 
-    a.b = fl_radians (eval_num (n) % 360);
+    a.b = to_radians (eval_num (n) % 360);
     n = CDR (n);
 
-    a.h = fl_radians (eval_num (n) % 360);
+    a.h = to_radians (eval_num (n) % 360);
     n = CDR (n);
 
     vm_angles_2_matrix (&m, &a);
@@ -18590,7 +18591,7 @@ void sexp_beam_free (int node) {
         if (!(turret->weapons.flags[Ship::Weapon_Flags::Beam_Free])) {
             turret->weapons.flags.set (Ship::Weapon_Flags::Beam_Free);
             turret->turret_next_fire_stamp =
-                timestamp ((int)frand_range (50.0f, 4000.0f));
+                timestamp ((int)fs2::prng::randf (0, 50.0f, 4000.0f));
         }
     }
 }
@@ -18631,7 +18632,7 @@ void sexp_beam_free_all (int node) {
                 (!(subsys->weapons.flags[Ship::Weapon_Flags::Beam_Free]))) {
                 subsys->weapons.flags.set (Ship::Weapon_Flags::Beam_Free);
                 subsys->turret_next_fire_stamp =
-                    timestamp ((int)frand_range (50.0f, 4000.0f));
+                    timestamp ((int)fs2::prng::randf (0, 50.0f, 4000.0f));
             }
 
             // next item
@@ -18706,7 +18707,7 @@ void sexp_turret_free (int node) {
         if (turret->weapons.flags[Ship::Weapon_Flags::Turret_Lock]) {
             turret->weapons.flags.remove (Ship::Weapon_Flags::Turret_Lock);
             turret->turret_next_fire_stamp =
-                timestamp ((int)frand_range (50.0f, 4000.0f));
+                timestamp ((int)fs2::prng::randf (0, 50.0f, 4000.0f));
         }
     }
 }
@@ -18732,7 +18733,7 @@ void sexp_turret_free_all (int node) {
                 (subsys->weapons.flags[Ship::Weapon_Flags::Turret_Lock])) {
                 subsys->weapons.flags.remove (Ship::Weapon_Flags::Turret_Lock);
                 subsys->turret_next_fire_stamp =
-                    timestamp ((int)frand_range (50.0f, 4000.0f));
+                    timestamp ((int)fs2::prng::randf (0, 50.0f, 4000.0f));
             }
 
             // next item
@@ -19473,7 +19474,7 @@ void set_turret_primary_ammo (
 
     // Is the number requested larger than the maximum allowed for that
     // particular bank?
-    int maximum_allowed = fl2i (
+    int maximum_allowed = int (
         turret->weapons.primary_bank_capacity[requested_bank] /
         Weapon_info[turret->weapons.primary_bank_weapons[requested_bank]]
             .cargo_size);
@@ -19570,7 +19571,7 @@ void set_turret_secondary_ammo (
 
     // Is the number requested larger than the maximum allowed for that
     // particular bank?
-    int maximum_allowed = fl2i (
+    int maximum_allowed = int (
         turret->weapons.secondary_bank_capacity[requested_bank] /
         Weapon_info[turret->weapons.secondary_bank_weapons[requested_bank]]
             .cargo_size);
@@ -21721,11 +21722,11 @@ void sexp_set_camera_position (int n) {
     float camera_acc_time = 0.0f;
     float camera_dec_time = 0.0f;
 
-    camera_vec.xyz.x = i2fl (eval_num (n));
+    camera_vec.xyz.x = float (eval_num (n));
     n = CDR (n);
-    camera_vec.xyz.y = i2fl (eval_num (n));
+    camera_vec.xyz.y = float (eval_num (n));
     n = CDR (n);
-    camera_vec.xyz.z = i2fl (eval_num (n));
+    camera_vec.xyz.z = float (eval_num (n));
     n = CDR (n);
 
     if (n != -1) {
@@ -21752,11 +21753,11 @@ void sexp_set_camera_rotation (int n) {
     float rot_dec_time = 0.0f;
 
     // Angles are in degrees
-    rot_angles.p = fl_radians (eval_num (n) % 360);
+    rot_angles.p = to_radians (eval_num (n) % 360);
     n = CDR (n);
-    rot_angles.b = fl_radians (eval_num (n) % 360);
+    rot_angles.b = to_radians (eval_num (n) % 360);
     n = CDR (n);
-    rot_angles.h = fl_radians (eval_num (n) % 360);
+    rot_angles.h = to_radians (eval_num (n) % 360);
     n = CDR (n);
     if (n != -1) {
         rot_time = eval_num (n) / 1000.0f;
@@ -21780,11 +21781,11 @@ void sexp_set_camera_facing (int n) {
     float rot_acc_time = 0.0f;
     float rot_dec_time = 0.0f;
 
-    location.xyz.x = i2fl (eval_num (n));
+    location.xyz.x = float (eval_num (n));
     n = CDR (n);
-    location.xyz.y = i2fl (eval_num (n));
+    location.xyz.y = float (eval_num (n));
     n = CDR (n);
-    location.xyz.z = i2fl (eval_num (n));
+    location.xyz.z = float (eval_num (n));
     n = CDR (n);
     if (n != -1) {
         rot_time = eval_num (n) / 1000.0f;
@@ -21859,7 +21860,7 @@ void sexp_set_camera_fov (int n) {
     float camera_acc_time = 0.0f;
     float camera_dec_time = 0.0f;
 
-    float camera_fov = fl_radians (eval_num (n) % 360);
+    float camera_fov = to_radians (eval_num (n) % 360);
     n = CDR (n);
 
     if (n != -1) {
@@ -21954,7 +21955,7 @@ void sexp_set_fov (int n) {
 
     // Cap FOV to something reasonable.
     float new_fov = (float)(eval_num (n) % 360);
-    Sexp_fov = fl_radians (new_fov);
+    Sexp_fov = to_radians (new_fov);
 }
 
 int sexp_get_fov () {
@@ -21963,9 +21964,9 @@ int sexp_get_fov () {
         return -1;
     else if (Sexp_fov > 0.0f)
         // SEXP override has been set
-        return (int)fl_degrees (Sexp_fov);
+        return (int)to_degrees (Sexp_fov);
     else
-        return (int)fl_degrees (cam->get_fov ());
+        return (int)to_degrees (cam->get_fov ());
 }
 
 /**

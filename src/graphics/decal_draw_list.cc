@@ -10,8 +10,8 @@
 namespace {
 
 // Discard any fragments where the angle to the direction to greater than 45°
-const float DECAL_ANGLE_CUTOFF = fl_radians (45.f);
-const float DECAL_ANGLE_FADE_START = fl_radians (30.f);
+const float DECAL_ANGLE_CUTOFF = to_radians (45.f);
+const float DECAL_ANGLE_FADE_START = to_radians (30.f);
 
 vec3d BOX_VERTS[] = {
     { { { -0.5f, -0.5f, -0.5f } } }, { { { -0.5f, 0.5f, -0.5f } } },

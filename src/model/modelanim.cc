@@ -385,7 +385,7 @@ void queued_animation_correct (queued_animation* qa) {
         if (((qa->vel.a1d[i] * qa->vel.a1d[i]) / qa->accel.a1d[i]) >
             fabs (qa->angle.a1d[i]))
             qa->vel.a1d[i] =
-                fl_sqrt (fabs (qa->accel.a1d[i] * qa->angle.a1d[i]));
+                sqrtf (fabs (qa->accel.a1d[i] * qa->angle.a1d[i]));
     }
 }
 
@@ -694,7 +694,7 @@ int model_anim_instance_get_actual_time (queued_animation* properties) {
     int temp = 0;
 
     for (int a = 0; a < 3; a++) {
-        temp = fl2i (
+        temp = int (
                    ((3.0f * properties->vel.a1d[a] * properties->vel.a1d[a]) +
                     (2.0f * properties->accel.a1d[a] *
                      fabs (properties->angle.a1d[a]))) /
@@ -851,7 +851,7 @@ int model_anim_get_time_type (
                         // T(total) =  (2V(maximum) - V(initial))/a +
                         // (S(turnpoint) - S(initial) + (V(initial)^2 -
                         // V(maximum)^2)/2a) / V(maximum)
-                        a_time = fl2i (
+                        a_time = int (
                             ((((2 * tr->rot_vel.a1d[a]) -
                                tr->current_ang.a1d[a]) /
                               tr->rot_accel.a1d[a]) +
@@ -866,8 +866,8 @@ int model_anim_get_time_type (
                     else {
                         // T(total)  = 2 * sqrt((S(final) - S(initial))/a - (
                         // (V(initial)/a)^2 ) / 2 ) - V(initial)/a
-                        a_time = fl2i (
-                            (2 * fl_sqrt (
+                        a_time = int (
+                            (2 * sqrtf (
                                      ((tr->end_angle.a1d[a] -
                                        tr->current_ang.a1d[a]) /
                                       tr->rot_accel.a1d[a]) -

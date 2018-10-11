@@ -1,15 +1,15 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-#include "assert/assert.hh"
-
 /*
  * Created by Ian "Goober5000" Warfield for the FreeSpace2 Source Code Project.
  * You may not sell or otherwise commercially exploit the source or things you
  * create based on the source.
  */
 
-#include "math/bitarray.hh"
+#include "defs.hh"
+
+#include "assert/assert.hh"
+#include "math/prng.hh"
 #include "mission/missionparse.hh"
 #include "object/parseobjectdock.hh"
 #include "shared/types.hh"
@@ -117,7 +117,7 @@ void dock_evaluate_all_docked_objects (
 
     // we have multiple objects docked and we must treat them as a tree
     else {
-        boost::dynamic_bitset< >& visited (Parse_objects.size ());
+        boost::dynamic_bitset< > visited (Parse_objects.size ());
         dock_evaluate_tree (objp, infop, function, visited);
     }
 }

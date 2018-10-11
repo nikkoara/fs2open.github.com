@@ -446,7 +446,7 @@ void shockwave_render (object* objp, model_draw_list* scene) {
                     shockwave_get_framenum (
                         objp->instance,
                         Shockwave_info[Default_2D_shockwave_index].bitmap_id),
-                &p, fl_radians (sw->rot_angles.p), sw->radius, intensity);
+                &p, to_radians (sw->rot_angles.p), sw->radius, intensity);
         }
     }
     else {
@@ -458,12 +458,12 @@ void shockwave_render (object* objp, model_draw_list* scene) {
                     ? (1.0f - (sw->time_elapsed / sw->total_time)) * 10.0f
                     : 1.0f;
             batching_add_distortion_bitmap_rotated (
-                sw->current_bitmap, &p, fl_radians (sw->rot_angles.p),
+                sw->current_bitmap, &p, to_radians (sw->rot_angles.p),
                 sw->radius, intensity);
         }
 
         batching_add_volume_bitmap_rotated (
-            sw->current_bitmap, &p, fl_radians (sw->rot_angles.p), sw->radius);
+            sw->current_bitmap, &p, to_radians (sw->rot_angles.p), sw->radius);
     }
 }
 

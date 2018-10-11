@@ -525,7 +525,7 @@ int ds_load_buffer (int* sid, int /*flags*/, ffmpeg::WaveFile* file) {
     sound_buffers[*sid].bits_per_sample =
         (file->getSampleByteSize () / file->getNumChannels ()) * 8;
     sound_buffers[*sid].nchannels = n_channels;
-    sound_buffers[*sid].nseconds = fl2i (file->getDuration ());
+    sound_buffers[*sid].nseconds = int (file->getDuration ());
     sound_buffers[*sid].nbytes = (int)audio_buffer.size ();
 
     return 0;

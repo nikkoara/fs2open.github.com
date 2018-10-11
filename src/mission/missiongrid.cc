@@ -70,7 +70,7 @@ void maybe_create_new_grid (
 
     compute_point_on_plane (&c, &tplane, pos);
     dist_to_plane =
-        fl_abs (vm_dist_to_plane (pos, &gridp->gmatrix.vec.uvec, &c));
+        fabsf (vm_dist_to_plane (pos, &gridp->gmatrix.vec.uvec, &c));
     square_size = 1.0f;
     while (dist_to_plane >= 25.0f) {
         square_size *= 10.0f;
@@ -92,9 +92,9 @@ void maybe_create_new_grid (
     }
 
     roundoff = (int)square_size * 10;
-    if (!ux) gpos.xyz.x = fl_roundoff (gpos.xyz.x, roundoff);
-    if (!uy) gpos.xyz.y = fl_roundoff (gpos.xyz.y, roundoff);
-    if (!uz) gpos.xyz.z = fl_roundoff (gpos.xyz.z, roundoff);
+    if (!ux) gpos.xyz.x = mroundf (gpos.xyz.x, roundoff);
+    if (!uy) gpos.xyz.y = mroundf (gpos.xyz.y, roundoff);
+    if (!uz) gpos.xyz.z = mroundf (gpos.xyz.z, roundoff);
 
     if ((square_size != gridp->square_size) ||
         (gpos.xyz.x != gridp->center.xyz.x) ||
@@ -159,7 +159,7 @@ grid* create_grid (
     gridp->planeD =
         -(center->xyz.x * uvec.xyz.x + center->xyz.y * uvec.xyz.y +
           center->xyz.z * uvec.xyz.z);
-    ASSERT (!fl_is_nan (gridp->planeD));
+    ASSERT (!IS_NAN (gridp->planeD));
 
     gridp->gmatrix.vec.fvec = dfvec;
     gridp->gmatrix.vec.rvec = drvec;

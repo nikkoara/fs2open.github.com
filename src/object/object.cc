@@ -1,17 +1,21 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
+#include "assert/assert.hh"
 #include "asteroid/asteroid.hh"
 #include "cmeasure/cmeasure.hh"
 #include "debris/debris.hh"
 #include "debugconsole/console.hh"
 #include "fireball/fireballs.hh"
 #include "freespace2/freespace.hh"
-#include "util/list.hh"
+#include "graphics/light.hh"
 #include "iff_defs/iff_defs.hh"
 #include "io/timer.hh"
 #include "jumpnode/jumpnode.hh"
 #include "lighting/lighting.hh"
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "mission/missionparse.hh" //For 2D Mode
 #include "object/deadobjectdock.hh"
 #include "object/objcollide.hh"
@@ -26,15 +30,13 @@
 #include "render/3d.hh"
 #include "ship/afterburner.hh"
 #include "ship/ship.hh"
+#include "tracing/Monitor.hh"
 #include "tracing/tracing.hh"
+#include "util/list.hh"
 #include "weapon/beam.hh"
 #include "weapon/shockwave.hh"
 #include "weapon/swarm.hh"
 #include "weapon/weapon.hh"
-#include "tracing/Monitor.hh"
-#include "graphics/light.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
 
 /*
  *  Global variables
@@ -1195,9 +1197,9 @@ void obj_move_all_post (object* objp, float frametime) {
                     // get the laser color
                     weapon_get_laser_color (&c, objp);
 
-                    r = i2fl (c.red) / 255.0f;
-                    g = i2fl (c.green) / 255.0f;
-                    b = i2fl (c.blue) / 255.0f;
+                    r = float (c.red) / 255.0f;
+                    g = float (c.green) / 255.0f;
+                    b = float (c.blue) / 255.0f;
 
                     // light_add_point( &objp->pos, 10.0f, 20.0f, 1.0f, r, g,
                     // b, objp->parent );
@@ -1244,10 +1246,10 @@ void obj_move_all_post (object* objp, float frametime) {
                         vm_vec_add2 (&tmp2, &objp->pos);
 
                         light_add_point (
-                            &tmp1, 10.0f, 20.0f, frand (), 1.0f, 1.0f, 1.0f,
+                            &tmp1, 10.0f, 20.0f, fs2::prng::randf (0), 1.0f, 1.0f, 1.0f,
                             -1);
                         light_add_point (
-                            &tmp2, 10.0f, 20.0f, frand (), 1.0f, 1.0f, 1.0f,
+                            &tmp2, 10.0f, 20.0f, fs2::prng::randf (0), 1.0f, 1.0f, 1.0f,
                             -1);
                     }
                 }
@@ -1291,7 +1293,7 @@ void obj_move_all_post (object* objp, float frametime) {
                 if (p > 0.5f) p = 1.0f - p;
 
                 p *= 2.0f;
-                float rad = p * (1.0f + frand () * 0.05f) * objp->radius;
+                float rad = p * (1.0f + fs2::prng::randf (0) * 0.05f) * objp->radius;
 
                 float intensity = 1.0f;
                 if (fireball_is_warp (objp)) {
@@ -1341,10 +1343,10 @@ void obj_move_all_post (object* objp, float frametime) {
                             vm_vec_add2 (&tmp2, &objp->pos);
 
                             light_add_point (
-                                &tmp1, 10.0f, 20.0f, frand (), 1.0f, 1.0f,
+                                &tmp1, 10.0f, 20.0f, fs2::prng::randf (0), 1.0f, 1.0f,
                                 1.0f, -1);
                             light_add_point (
-                                &tmp2, 10.0f, 20.0f, frand (), 1.0f, 1.0f,
+                                &tmp2, 10.0f, 20.0f, fs2::prng::randf (0), 1.0f, 1.0f,
                                 1.0f, -1);
                         }
                     }

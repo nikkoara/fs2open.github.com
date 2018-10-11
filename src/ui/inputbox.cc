@@ -235,7 +235,7 @@ void UI_INPUTBOX::draw () {
                 // 15 fps == 66.67 msec)
                 cursor_current_frame = bm_get_anim_frame (
                     cursor_first_frame,
-                    i2fl (timer_get_milliseconds ()) / 1000.0f, 0.0f, true);
+                    float (timer_get_milliseconds ()) / 1000.0f, 0.0f, true);
 
                 // draw current frame
                 gr_set_bitmap (cursor_first_frame + cursor_current_frame);

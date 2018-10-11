@@ -351,7 +351,7 @@ void opengl::ShaderUniforms::setUniformf (
         uniform_bind* bind_info = &_uniforms[uniform_index];
 
         if (bind_info->type == uniform_bind::FLOAT) {
-            if (fl_equal (_uniform_data_floats[bind_info->index], val)) {
+            if (eqf (_uniform_data_floats[bind_info->index], val)) {
                 return;
             }
 
@@ -571,7 +571,7 @@ void opengl::ShaderUniforms::setUniform1fv (
 
             // if the values are close enough, pass.
             for (int i = 0; i < count; ++i) {
-                if (!fl_equal (
+                if (!eqf (
                         val[i], _uniform_data_floats[bind_info->index + i])) {
                     equal = false;
                     break;

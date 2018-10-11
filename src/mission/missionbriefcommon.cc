@@ -683,8 +683,8 @@ void brief_render_fade_outs (float frametime) {
 
             bxf = screenX - w / 2.0f + 0.5f;
             byf = screenY - h / 2.0f + 0.5f;
-            bx = fl2i (bxf);
-            by = fl2i (byf);
+            bx = int (bxf);
+            by = int (byf);
 
             if (fi->fade_anim.first_frame >= 0) {
                 fi->fade_anim.sx = bx;
@@ -777,7 +777,7 @@ void brief_render_icon_line (int stage_num, int line_num) {
     brief_set_icon_color (icon[0]->team);
 
     gr_line (
-        fl2i (icon_x[0]), fl2i (icon_y[0]), fl2i (icon_x[1]), fl2i (icon_y[1]),
+        int (icon_x[0]), int (icon_y[0]), int (icon_x[1]), int (icon_y[1]),
         GR_RESIZE_NONE);
 }
 
@@ -881,9 +881,9 @@ void brief_render_icon (
         scaled_h = icon_h * h_scale_factor;
         bxf = sx - scaled_w / 2.0f + 0.5f;
         byf = sy - scaled_h / 2.0f + 0.5f;
-        bx = fl2i (bxf);
-        by = fl2i (byf);
-        bc = fl2i (sx);
+        bx = int (bxf);
+        by = int (byf);
+        bc = int (sx);
 
         if (((bx < 0) || (bx > gr_screen.max_w_unscaled) || (by < 0) ||
              (by > gr_screen.max_h_unscaled)) &&
@@ -951,7 +951,7 @@ void brief_render_icon (
                 bi->type == ICON_BOMBER_PLAYER) {
                 gr_get_string_size (&w, &h, Players[Player_num].callsign);
                 gr_string (
-                    bc - fl2i (w / 2.0f), by - h, Players[Player_num].callsign,
+                    bc - int (w / 2.0f), by - h, Players[Player_num].callsign,
                     GR_RESIZE_MENU);
             }
             else {
@@ -961,7 +961,7 @@ void brief_render_icon (
                     lcl_translate_brief_icon_name_gr (buf);
                     gr_get_string_size (&w, &h, buf);
                     gr_string (
-                        bc - fl2i (w / 2.0f), by - h, buf, GR_RESIZE_MENU);
+                        bc - int (w / 2.0f), by - h, buf, GR_RESIZE_MENU);
                 }
                 else if (Lcl_pl && !Disable_built_in_translations) {
                     char buf[128];
@@ -969,12 +969,12 @@ void brief_render_icon (
                     lcl_translate_brief_icon_name_pl (buf);
                     gr_get_string_size (&w, &h, buf);
                     gr_string (
-                        bc - fl2i (w / 2.0f), by - h, buf, GR_RESIZE_MENU);
+                        bc - int (w / 2.0f), by - h, buf, GR_RESIZE_MENU);
                 }
                 else {
                     gr_get_string_size (&w, &h, bi->label);
                     gr_string (
-                        bc - fl2i (w / 2.0f), by - h, bi->label,
+                        bc - int (w / 2.0f), by - h, bi->label,
                         GR_RESIZE_MENU);
                 }
             }
@@ -982,15 +982,15 @@ void brief_render_icon (
             // show icon as selected (FRED only)
             if (selected) {
                 gr_get_string_size (&w, &h, NOX ("(S)"));
-                gr_printf (bc - fl2i (w / 2.0f), by - h * 2, NOX ("(S)"));
+                gr_printf (bc - int (w / 2.0f), by - h * 2, NOX ("(S)"));
             }
         }
 
         // store screen x,y,w,h
         bi->x = bx;
         bi->y = by;
-        bi->w = fl2i (scaled_w);
-        bi->h = fl2i (scaled_h);
+        bi->w = int (scaled_w);
+        bi->h = int (scaled_h);
 
     } // end if vertex is projected
 }
@@ -1038,8 +1038,8 @@ void brief_start_highlight_anims (int stage_num) {
 
             bm_get_info (
                 bi->highlight_anim.first_frame, &anim_w, &anim_h, NULL);
-            x = fl2i (i2fl (bi->x) + bi->w / 2.0f - anim_w / 2.0f);
-            y = fl2i (i2fl (bi->y) + bi->h / 2.0f - anim_h / 2.0f);
+            x = int (float (bi->x) + bi->w / 2.0f - anim_w / 2.0f);
+            y = int (float (bi->y) + bi->h / 2.0f - anim_h / 2.0f);
             bi->hold_x = x;
             bi->hold_y = y;
             bi->flags |= BI_SHOWHIGHLIGHT;
@@ -1136,7 +1136,7 @@ void brief_render_line (int line_num, int x, int y, int instance) {
 
     // truncate_len is the number of characters currently displayed including
     // the bright white characters
-    size_t truncate_len = fl2i (
+    size_t truncate_len = int (
         Brief_text_wipe_time_elapsed / BRIEF_TEXT_WIPE_TIME *
         Max_briefing_line_len);
     if (truncate_len > src_len) { truncate_len = src_len; }
@@ -1928,7 +1928,7 @@ void brief_maybe_create_new_grid (
 
     compute_point_on_plane (&c, &tplane, pos);
     dist_to_plane =
-        fl_abs (vm_dist_to_plane (pos, &gridp->gmatrix.vec.uvec, &c));
+        fabsf (vm_dist_to_plane (pos, &gridp->gmatrix.vec.uvec, &c));
     square_size = 1.0f;
 
     while (dist_to_plane >= 25.0f) {
@@ -1951,9 +1951,9 @@ void brief_maybe_create_new_grid (
     }
 
     roundoff = (int)square_size * 10;
-    if (!ux) gpos.xyz.x = fl_roundoff (gpos.xyz.x, roundoff);
-    if (!uy) gpos.xyz.y = fl_roundoff (gpos.xyz.y, roundoff);
-    if (!uz) gpos.xyz.z = fl_roundoff (gpos.xyz.z, roundoff);
+    if (!ux) gpos.xyz.x = mroundf (gpos.xyz.x, roundoff);
+    if (!uy) gpos.xyz.y = mroundf (gpos.xyz.y, roundoff);
+    if (!uz) gpos.xyz.z = mroundf (gpos.xyz.z, roundoff);
 
     if ((square_size != gridp->square_size) ||
         (gpos.xyz.x != gridp->center.xyz.x) ||
@@ -2018,7 +2018,7 @@ grid* brief_create_grid (
     gridp->planeD =
         -(center->xyz.x * uvec.xyz.x + center->xyz.y * uvec.xyz.y +
           center->xyz.z * uvec.xyz.z);
-    ASSERT (!fl_is_nan (gridp->planeD));
+    ASSERT (!IS_NAN (gridp->planeD));
 
     gridp->gmatrix.vec.fvec = dfvec;
     gridp->gmatrix.vec.rvec = drvec;

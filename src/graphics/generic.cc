@@ -603,7 +603,7 @@ void generic_anim_render_fixed_frame_delay (
             ga->anim_time = fmod (ga->anim_time, ga->total_time);
         }
         ga->current_frame +=
-            fl2i (ga->anim_time * ga->num_frames / ga->total_time);
+            int (ga->anim_time * ga->num_frames / ga->total_time);
         // sanity check
         CLAMP (ga->current_frame, 0, ga->num_frames - 1);
         if (ga->streaming) {

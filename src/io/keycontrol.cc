@@ -1,6 +1,8 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
+#include "assert/assert.hh"
 #include "asteroid/asteroid.hh"
 #include "autopilot/autopilot.hh"
 #include "cmdline/cmdline.hh"
@@ -22,7 +24,9 @@
 #include "io/key.hh"
 #include "io/keycontrol.hh"
 #include "io/timer.hh"
+#include "log/log.hh"
 #include "math/fix.hh"
+#include "math/prng.hh"
 #include "menuui/mainhallmenu.hh"
 #include "mission/missiongoals.hh"
 #include "mission/missionhotkey.hh"
@@ -44,8 +48,6 @@
 #include "util/list.hh"
 #include "util/strings.hh"
 #include "weapon/weapon.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
 
 /**
  * Natural number factor lookup class.
@@ -1526,9 +1528,9 @@ void game_process_cheats (int k) {
 
         vec3d pos = Player_obj->pos;
         matrix orient = Player_obj->orient;
-        pos.xyz.x += frand_range (-700.0f, 700.0f);
-        pos.xyz.y += frand_range (-700.0f, 700.0f);
-        pos.xyz.z += frand_range (-700.0f, 700.0f);
+        pos.xyz.x += fs2::prng::randf (0, -700.0f, 700.0f);
+        pos.xyz.y += fs2::prng::randf (0, -700.0f, 700.0f);
+        pos.xyz.z += fs2::prng::randf (0, -700.0f, 700.0f);
 
         int objnum = ship_create (&orient, &pos, ship_class);
         if (objnum < 0) return;
@@ -1563,7 +1565,7 @@ void game_process_cheats (int k) {
             if (ptr->system_info->type == SUBSYSTEM_TURRET) {
                 ptr->weapons.flags.set (Ship::Weapon_Flags::Beam_Free);
                 ptr->turret_next_fire_stamp =
-                    timestamp ((int)frand_range (50.0f, 4000.0f));
+                    timestamp ((int)fs2::prng::randf (0, 50.0f, 4000.0f));
             }
         }
 

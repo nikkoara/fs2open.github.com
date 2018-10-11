@@ -18,8 +18,7 @@ const float CMEASURE_DETONATE_DISTANCE = 40.0f;
 
 // Used to set a countermeasure velocity after being launched from a ship as a
 // countermeasure ie not as a primary or secondary.
-void cmeasure_set_ship_launch_vel (
-    object* objp, object* parent_objp, int arand) {
+void cmeasure_set_ship_launch_vel (object* objp, object* parent_objp, int) {
     vec3d vel, rand_vec;
 
     // Get cmeasure rear velocity in world

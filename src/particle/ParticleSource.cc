@@ -1,10 +1,10 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-#include "math/bitarray.hh"
+
+#include "assert/assert.hh"
 #include "particle/ParticleSource.hh"
 #include "weapon/weapon.hh"
-#include "assert/assert.hh"
 
 namespace particle {
 SourceOrigin::SourceOrigin ()

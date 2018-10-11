@@ -1,7 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-#include "log/log.hh"
 
 /*
  * Created by Olivier "LuaPineapple" Hamel for the Freespace 2 Source Code
@@ -13,9 +12,6 @@
 #include "bmpman/bmpman.hh"
 #include "freespace2/freespace.hh"
 #include "gamesnd/gamesnd.hh"
-#include "util/list.hh"
-#include "shared/alphacolors.hh"
-#include "shared/globals.hh"
 #include "graphics/font.hh"
 #include "graphics/matrix.hh"
 #include "hud/hudwingmanstatus.hh"
@@ -23,15 +19,19 @@
 #include "io/timer.hh"
 #include "jumpnode/jumpnode.hh"
 #include "localization/localize.hh"
+#include "log/log.hh"
 #include "math/prng.hh"
 #include "object/object.hh"
 #include "playerman/player.hh"
 #include "radar/radardradis.hh"
 #include "radar/radarorb.hh"
 #include "render/3d.hh"
+#include "shared/alphacolors.hh"
+#include "shared/globals.hh"
 #include "ship/awacs.hh"
 #include "ship/ship.hh"
 #include "ship/subsysdamage.hh"
+#include "util/list.hh"
 #include "weapon/emp.hh"
 #include "weapon/weapon.hh"
 
@@ -165,7 +165,7 @@ void HudGaugeRadarDradis::drawContact (
     g3_transfer_vertex (&vert, &p);
 
     float sizef =
-        fl_sqrt (vm_vec_dist (&Orb_eye_position, pnt) * 8.0f) * scale_factor;
+        sqrtf (vm_vec_dist (&Orb_eye_position, pnt) * 8.0f) * scale_factor;
 
     if (clr_idx >= 0) {
         bm_get_info (clr_idx, &w, &h);
@@ -218,10 +218,10 @@ void HudGaugeRadarDradis::blipDrawDistorted (
     // maybe alter the effect if EMP is active
     if (emp_active_local ()) {
         temp_scale = emp_current_intensity ();
-        dist *= frand_range (
+        dist *= fs2::prng::randf (0,
             MAX (0.75f, 0.75f * temp_scale), MIN (1.25f, 1.25f * temp_scale));
         distortion_angle *=
-            frand_range (-3.0f, 3.0f) * frand_range (0.0f, temp_scale);
+            fs2::prng::randf (0, -3.0f, 3.0f) * fs2::prng::randf (0, 0.0f, temp_scale);
 
         if (dist > 1.0f) dist = 1.0f;
         if (dist < 0.1f) dist = 0.1f;
@@ -255,8 +255,8 @@ void HudGaugeRadarDradis::blipDrawFlicker (blip* b, vec3d* pos, float alpha) {
     if (!Radar_flicker_on[flicker_index]) return;
 
     if (rand () & 1) {
-        distortion_angle *= frand_range (0.1f, 2.0f);
-        dist *= frand_range (0.75f, 1.25f);
+        distortion_angle *= fs2::prng::randf (0, 0.1f, 2.0f);
+        dist *= fs2::prng::randf (0, 0.75f, 1.25f);
 
         if (dist > 1.0f) dist = 1.0f;
         if (dist < 0.1f) dist = 0.1f;
@@ -339,7 +339,7 @@ void HudGaugeRadarDradis::drawBlips (int blip_type, int bright, int distort) {
 void HudGaugeRadarDradis::setupViewHtl () {
     setClip (position[0], position[1], Radar_radius[0], Radar_radius[1]);
     gr_set_proj_matrix (
-        .625f * PI_2, i2fl (Radar_radius[0]) / i2fl (Radar_radius[1]), 0.001f,
+        .625f * PI_2, float (Radar_radius[0]) / float (Radar_radius[1]), 0.001f,
         5.0f);
     gr_set_view_matrix (&Orb_eye_position, &vmd_identity_matrix);
 
@@ -740,8 +740,8 @@ void HudGaugeRadarDradis::initSound (
     this->m_stealth_arrival_snd = stealth_arrival_snd;
     this->stealth_departure_snd = stealth_departue_snd;
 
-    this->arrival_beep_delay = fl2i (arrival_delay * 1000.0f);
-    this->departure_beep_delay = fl2i (departure_delay * 1000.0f);
+    this->arrival_beep_delay = int (arrival_delay * 1000.0f);
+    this->departure_beep_delay = int (departure_delay * 1000.0f);
 }
 
 void HudGaugeRadarDradis::onFrame (float /*frametime*/) {

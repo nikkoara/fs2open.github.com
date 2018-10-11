@@ -1,9 +1,10 @@
 // -*- mode: c++; -*-
 
-#include "particle/effects/BeamPiercingEffect.hh"
-#include "particle/ParticleSource.hh"
 #include "bmpman/bmpman.hh"
+#include "math/prng.hh"
 #include "parse/parselo.hh"
+#include "particle/ParticleSource.hh"
+#include "particle/effects/BeamPiercingEffect.hh"
 
 namespace particle {
 namespace effects {
@@ -20,7 +21,7 @@ bool BeamPiercingEffect::processSource (const ParticleSource* source) {
         info.type = PARTICLE_SMOKE;
     }
 
-    info.rad = m_radius * frand_range (0.5f, 2.0f);
+    info.rad = m_radius * fs2::prng::randf (0, 0.5f, 2.0f);
 
     vec3d fvec =
         source->getOrientation ()->getDirectionVector (source->getOrigin ());
@@ -40,13 +41,13 @@ bool BeamPiercingEffect::processSource (const ParticleSource* source) {
         back_v = base_v * (-0.2f);
     }
 
-    vm_vec_copy_scale (&info.vel, &fvec, base_v * frand_range (1.0f, 2.0f));
+    vm_vec_copy_scale (&info.vel, &fvec, base_v * fs2::prng::randf (0, 1.0f, 2.0f));
     vm_vec_scale_add2 (&info.vel, &rnd_vec, base_v * m_variance);
 
     // Create the primary piercing particle
     create (&info);
 
-    vm_vec_copy_scale (&info.vel, &fvec, back_v * frand_range (1.0f, 2.0f));
+    vm_vec_copy_scale (&info.vel, &fvec, back_v * fs2::prng::randf (0, 1.0f, 2.0f));
     vm_vec_scale_add2 (&info.vel, &rnd_vec, back_v * m_variance);
 
     // Create the splash particle

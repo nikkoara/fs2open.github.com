@@ -1038,7 +1038,7 @@ void labviewer_close_render_options_window (GUIObject* /*caller*/) {
     }
 
 void labviewer_render_options_set_ambient_factor (Slider* caller) {
-    gr_calculate_ambient_factor (fl2i (caller->GetSliderValue ()));
+    gr_calculate_ambient_factor (int (caller->GetSliderValue ()));
 }
 
 void labviewer_render_options_set_static_light_factor (Slider* caller) {
@@ -1046,7 +1046,7 @@ void labviewer_render_options_set_static_light_factor (Slider* caller) {
 }
 
 void labviewer_render_options_set_bloom (Slider* caller) {
-    Cmdline_bloom_intensity = fl2i (caller->GetSliderValue ());
+    Cmdline_bloom_intensity = int (caller->GetSliderValue ());
 }
 
 void labviewer_make_render_options_window (Button* /*caller*/) {

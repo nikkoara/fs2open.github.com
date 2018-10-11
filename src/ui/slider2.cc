@@ -115,13 +115,13 @@ void UI_SLIDER2::process (int /*focus*/) {
                         if (captureCallback != NULL) captureCallback ();
                     }
                 }
-                currentPosition = fl2i (
+                currentPosition = int (
                     (((float)currentItem / (float)numberItems) *
                      (float)numberPositions) -
                     .49);
             }
             else {
-                mouse_lock_move = fl2i (
+                mouse_lock_move = int (
                     ((((float)ui_mouse.y - (float)y - (float)slider_half_h) /
                       (float)numberPositions) *
                      (float)numberItems) -
@@ -137,7 +137,7 @@ void UI_SLIDER2::process (int /*focus*/) {
                     }
                 }
                 // currentPosition = ui_mouse.y - y - slider_half_h;
-                currentPosition = fl2i (
+                currentPosition = int (
                     (((float)currentItem / (float)numberItems) *
                      (float)numberPositions) -
                     .49);
@@ -165,13 +165,13 @@ void UI_SLIDER2::process (int /*focus*/) {
                         if (captureCallback != NULL) captureCallback ();
                     }
                 }
-                currentPosition = fl2i (
+                currentPosition = int (
                     (((float)currentItem / (float)numberItems) *
                      (float)numberPositions) -
                     .49);
             }
             else {
-                mouse_lock_move = fl2i (
+                mouse_lock_move = int (
                     ((((float)ui_mouse.y - (float)y - (float)slider_half_h) /
                       (float)numberPositions) *
                      (float)numberItems) -
@@ -187,7 +187,7 @@ void UI_SLIDER2::process (int /*focus*/) {
                     }
                 }
                 // currentPosition = ui_mouse.y - y - slider_half_h;
-                currentPosition = fl2i (
+                currentPosition = int (
                     (((float)currentItem / (float)numberItems) *
                      (float)numberPositions) -
                     .49);
@@ -225,7 +225,7 @@ void UI_SLIDER2::set_numberItems (int _numberItems, int _reset) {
     }
     else {
         // recalcluate current position
-        currentPosition = fl2i (
+        currentPosition = int (
             (((float)currentItem / (float)numberItems) *
              (float)numberPositions) -
             .49);
@@ -262,7 +262,7 @@ void UI_SLIDER2::set_currentItem (int _currentItem) {
     }
 
     if (numberItems > 0) {
-        currentPosition = fl2i (
+        currentPosition = int (
             ((float)currentItem / (float)numberItems) *
             (float)numberPositions);
     }
@@ -285,7 +285,7 @@ void UI_SLIDER2::force_currentItem (int _currentItem) {
 
     if (currentItem < 0) { currentItem = 0; };
 
-    currentPosition = fl2i (
+    currentPosition = int (
         ((float)currentItem / (float)numberItems) * (float)numberPositions);
 
 cpSafety: // helps fix math problem on x86_64
@@ -297,7 +297,7 @@ cpSafety: // helps fix math problem on x86_64
 void UI_SLIDER2::forceDown () {
     if (currentItem < numberItems) {
         currentItem++;
-        currentPosition = fl2i (
+        currentPosition = int (
             ((float)currentItem / (float)numberItems) *
             (float)numberPositions);
     }
@@ -306,7 +306,7 @@ void UI_SLIDER2::forceDown () {
 void UI_SLIDER2::forceUp () {
     if (currentItem > 0) {
         currentItem--;
-        currentPosition = fl2i (
+        currentPosition = int (
             ((float)currentItem / (float)numberItems) *
             (float)numberPositions);
 

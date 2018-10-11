@@ -1,13 +1,15 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-#include "util/list.hh"
+
 #include "io/timer.hh"
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "object/object.hh"
 #include "ship/ship.hh"
+#include "util/list.hh"
 #include "weapon/swarm.hh"
 #include "weapon/weapon.hh"
-#include "log/log.hh"
 
 #define SWARM_DIST_OFFSET \
     2.0f // distance swarm missile should vary from original path
@@ -227,9 +229,9 @@ void swarm_update_direction (object* objp) {
 
             // Set the change time. This is here because it's common to both
             // swarm_create() and turret_swarm_create()
-            swarmp->change_time = fl2i (
+            swarmp->change_time = int (
                 SWARM_CHANGE_DIR_TIME +
-                SWARM_TIME_VARIANCE * (frand () - 0.5f) * 2);
+                SWARM_TIME_VARIANCE * (fs2::prng::randf (0) - 0.5f) * 2);
 
             // Set target to straight ahead
             vm_vec_scale_add (
@@ -268,7 +270,7 @@ void swarm_update_direction (object* objp) {
                 missile_dist = SWARM_DIST_OFFSET;
             }
             swarmp->angle_offset = asinf (SWARM_DIST_OFFSET / missile_dist);
-            ASSERT (!fl_is_nan (swarmp->angle_offset));
+            ASSERT (!IS_NAN (swarmp->angle_offset));
         }
 
         vm_vec_sub (&obj_to_target, &swarmp->original_target, &objp->pos);

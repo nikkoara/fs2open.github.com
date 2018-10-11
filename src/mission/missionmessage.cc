@@ -2164,7 +2164,7 @@ void message_maybe_distort () {
             COMM_OK) {
             was_muted = Message_wave_muted;
             if (timestamp_elapsed (Next_mute_time)) {
-                Next_mute_time = fl2i (
+                Next_mute_time = int (
                     Distort_patterns[Distort_num][Distort_next++] *
                     Message_wave_duration);
                 if (Distort_next >= MAX_DISTORT_LEVELS) Distort_next = 0;
@@ -2248,7 +2248,7 @@ void message_maybe_distort_text (char* text, int shipnum) {
     size_t curr_offset = 0;
     std::string result_str;
     while (voice_duration > 0) {
-        size_t run = fl2i (Distort_patterns[Distort_num][Distort_next] * len);
+        size_t run = int (Distort_patterns[Distort_num][Distort_next] * len);
         auto upper_limit = std::min (len, curr_offset + run);
         auto num_chars = upper_limit - curr_offset;
         if (Distort_next & 1) {
@@ -2272,7 +2272,7 @@ void message_maybe_distort_text (char* text, int shipnum) {
             curr_offset += run;
         }
 
-        voice_duration -= fl2i (
+        voice_duration -= int (
             Distort_patterns[Distort_num][Distort_next] *
             Message_wave_duration);
         Distort_next++;

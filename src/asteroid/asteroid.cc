@@ -3,13 +3,13 @@
 #include <algorithm>
 
 #include "defs.hh"
+
+#include "assert/assert.hh"
 #include "asteroid/asteroid.hh"
 #include "debugconsole/console.hh"
 #include "fireball/fireballs.hh"
 #include "freespace2/freespace.hh"
 #include "gamesnd/gamesnd.hh"
-#include "util/list.hh"
-#include "shared/globals.hh"
 #include "hud/hud.hh"
 #include "hud/hudescort.hh"
 #include "hud/hudgauges.hh"
@@ -17,6 +17,7 @@
 #include "iff_defs/iff_defs.hh"
 #include "io/timer.hh"
 #include "localization/localize.hh"
+#include "log/log.hh"
 #include "math/prng.hh"
 #include "math/vecmat.hh"
 #include "model/model.hh"
@@ -25,13 +26,13 @@
 #include "parse/parselo.hh"
 #include "particle/particle.hh"
 #include "render/3d.hh"
+#include "shared/globals.hh"
 #include "ship/ship.hh"
 #include "ship/shiphit.hh"
 #include "species_defs/species_defs.hh"
 #include "stats/scoring.hh"
+#include "util/list.hh"
 #include "weapon/weapon.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
 
 #define ASTEROID_OBJ_USED (1 << 0) // flag used in asteroid_obj struct
 #define MAX_ASTEROID_OBJS \
@@ -267,14 +268,14 @@ object* asteroid_create (
 
     vm_vec_sub (&delta_bound, &asfieldp->max_bound, &asfieldp->min_bound);
 
-    pos.xyz.x = asfieldp->min_bound.xyz.x + delta_bound.xyz.x * frand ();
-    pos.xyz.y = asfieldp->min_bound.xyz.y + delta_bound.xyz.y * frand ();
-    pos.xyz.z = asfieldp->min_bound.xyz.z + delta_bound.xyz.z * frand ();
+    pos.xyz.x = asfieldp->min_bound.xyz.x + delta_bound.xyz.x * fs2::prng::randf (0);
+    pos.xyz.y = asfieldp->min_bound.xyz.y + delta_bound.xyz.y * fs2::prng::randf (0);
+    pos.xyz.z = asfieldp->min_bound.xyz.z + delta_bound.xyz.z * fs2::prng::randf (0);
 
     inner_bound_pos_fixup (asfieldp, &pos);
-    angs.p = frand () * PI2;
-    angs.b = frand () * PI2;
-    angs.h = frand () * PI2;
+    angs.p = fs2::prng::randf (0) * PI2;
+    angs.b = fs2::prng::randf (0) * PI2;
+    angs.h = fs2::prng::randf (0) * PI2;
 
     vm_angles_2_matrix (&orient, &angs);
     flagset< Object::Object_Flags > asteroid_default_flagset;
@@ -311,7 +312,7 @@ object* asteroid_create (
     vec3d rotvel;
 
     vm_vec_rand_vec_quick (&rotvel);
-    vm_vec_scale (&rotvel, frand () / 4.0f + 0.1f);
+    vm_vec_scale (&rotvel, fs2::prng::randf (0) / 4.0f + 0.1f);
     objp->phys_info.rotvel = rotvel;
     vm_vec_rand_vec_quick (&objp->phys_info.vel);
 
@@ -320,7 +321,7 @@ object* asteroid_create (
     speed = asteroid_cap_speed (
         asteroid_type,
         asfieldp->speed *
-        frand_range (
+        fs2::prng::randf (0,
             0.5f + (float)Game_skill_level / NUM_SKILL_LEVELS,
             2.0f + (float)(2 * Game_skill_level) / NUM_SKILL_LEVELS));
 
@@ -384,7 +385,7 @@ void asteroid_sub_create (
 
     new_objp->phys_info.vel = parent_objp->phys_info.vel;
     speed = asteroid_cap_speed (
-        asteroid_type, (frand () + 2.0f) * parent_speed);
+        asteroid_type, (fs2::prng::randf (0) + 2.0f) * parent_speed);
 
     vm_vec_scale_add2 (&new_objp->phys_info.vel, relvec, speed);
 
@@ -434,7 +435,7 @@ static void asteroid_load (int asteroid_info_index, int asteroid_subtype) {
         // Stuff detail level distances.
         for (i = 0; i < pm->n_detail_levels; i++)
             pm->detail_depth[i] = i < asip->num_detail_levels
-                ? i2fl (asip->detail_distance[i]) : 0.0f;
+                ? float (asip->detail_distance[i]) : 0.0f;
     }
 }
 
@@ -685,7 +686,7 @@ static void asteroid_aim_at_target (
         vm_vec_add2 (&rand_vec, &objp->orient.vec.rvec);
     vm_vec_normalize (&rand_vec);
 
-    speed = Asteroid_info[0].max_speed * (frand () / 2.0f + 0.5f);
+    speed = Asteroid_info[0].max_speed * (fs2::prng::randf (0) / 2.0f + 0.5f);
 
     vm_vec_copy_scale (&asteroid_objp->phys_info.vel, &rand_vec, -speed);
     asteroid_objp->phys_info.desired_vel = asteroid_objp->phys_info.vel;
@@ -729,7 +730,7 @@ static void maybe_throw_asteroid (int count) {
                 &Asteroid_field, ASTEROID_TYPE_LARGE, subtype);
             if (objp != NULL) {
                 asteroid_aim_at_target (
-                    A, objp, ASTEROID_MIN_COLLIDE_TIME + frand () * 20.0f);
+                    A, objp, ASTEROID_MIN_COLLIDE_TIME + fs2::prng::randf (0) * 20.0f);
 
                 // if asteroid is inside inner bound, kill it
                 if (asteroid_in_inner_bound (
@@ -1372,7 +1373,7 @@ void asteroid_hit (
             asteroid_do_area_effect (pasteroid_obj);
 
             asp->final_death_time = timestamp (
-                fl2i (explosion_life * 1000.0f) /
+                int (explosion_life * 1000.0f) /
                 5); // Wait till 30% of vclip time before breaking the asteroid
                     // up.
             if (hitpos) { asp->death_hit_pos = *hitpos; }
@@ -1485,7 +1486,7 @@ static void asteroid_maybe_break_up (object* pasteroid_obj) {
                     asteroid_sub_create (
                         pasteroid_obj, ASTEROID_TYPE_MEDIUM, &tvec);
 
-                    while (frand () > 0.6f) {
+                    while (fs2::prng::randf (0) > 0.6f) {
                         vec3d rvec, tvec2;
                         vm_vec_rand_vec_quick (&rvec);
                         vm_vec_scale_add (&tvec2, &vfh, &rvec, 0.75f);

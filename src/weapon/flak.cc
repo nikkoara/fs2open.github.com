@@ -2,6 +2,7 @@
 
 #include "defs.hh"
 
+#include "math/prng.hh"
 #include "object/object.hh"
 #include "weapon/flak.hh"
 #include "weapon/muzzleflash.hh"
@@ -55,7 +56,7 @@ void flak_pick_range (
         ((wip->flak_detonation_accuracy +
           (wip->flak_detonation_accuracy * 0.65f *
            (1.0f - weapon_subsys_strength))) *
-         frand_range (-1.0f, 1.0f));
+         fs2::prng::randf (0, -1.0f, 1.0f));
     final_range += random_range;
 
     // make sure we're firing at least 10 meters away, or the weapons' arm
@@ -93,7 +94,7 @@ void flak_jitter_aim (
                                         (1.0f - weapon_subsys_strength));
 
     // scale the rvec by some random value and make it the "pre-twist" value
-    float rand_dist = frand_range (0.0f, error_val);
+    float rand_dist = fs2::prng::randf (0, 0.0f, error_val);
     // no jitter - so do nothing
     if (rand_dist <= 0.0f) { return; }
     vm_vec_copy_scale (&rand_twist_pre, &temp.vec.rvec, rand_dist);
@@ -102,7 +103,7 @@ void flak_jitter_aim (
     // random angle
     vm_rot_point_around_line (
         &rand_twist_post, &rand_twist_pre,
-        fl_radians (359.0f * frand_range (0.0f, 1.0f)), &vmd_zero_vector, dir);
+        to_radians (359.0f * fs2::prng::randf (0, 0.0f, 1.0f)), &vmd_zero_vector, dir);
 
     // add the resulting vector to the base aim vector and normalize
     final_aim = *dir;

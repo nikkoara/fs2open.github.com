@@ -7,23 +7,25 @@
 
 #include "math/floating.hh"
 
-#define vm_is_vec_nan(v)                                 \
-    (fl_is_nan ((v)->xyz.x) || fl_is_nan ((v)->xyz.y) || \
-     fl_is_nan ((v)->xyz.z))
+#define vm_is_vec_nan(v) \
+    (IS_NAN ((v)->xyz.x) || IS_NAN ((v)->xyz.y) || IS_NAN ((v)->xyz.z))
 
 // Macros/functions to fill in fields of structures
 
 // macro to check if vector is zero
-#define IS_VEC_NULL_SQ_SAFE(v)                                               \
-    (IS_NEAR_ZERO ((v)->xyz.x, 1e-16) && IS_NEAR_ZERO ((v)->xyz.y, 1e-16) && \
-     IS_NEAR_ZERO ((v)->xyz.z, 1e-16))
+#define IS_VEC_NULL_SQ_SAFE(v)                  \
+    (IS_NEAR_ZERO ((v)->xyz.x, 1e-16f) &&       \
+     IS_NEAR_ZERO ((v)->xyz.y, 1e-16f) &&       \
+     IS_NEAR_ZERO ((v)->xyz.z, 1e-16f))
 
-#define IS_VEC_NULL(v)                                                       \
-    (IS_NEAR_ZERO ((v)->xyz.x, 1e-36) && IS_NEAR_ZERO ((v)->xyz.y, 1e-36) && \
-     IS_NEAR_ZERO ((v)->xyz.z, 1e-36))
+#define IS_VEC_NULL(v)                          \
+    (IS_NEAR_ZERO ((v)->xyz.x, 1e-36f) &&       \
+     IS_NEAR_ZERO ((v)->xyz.y, 1e-36f) &&       \
+     IS_NEAR_ZERO ((v)->xyz.z, 1e-36f))
 
-#define IS_MAT_NULL(v)                                               \
-    (IS_VEC_NULL (&(v)->vec.fvec) && IS_VEC_NULL (&(v)->vec.uvec) && \
+#define IS_MAT_NULL(v)                          \
+    (IS_VEC_NULL (&(v)->vec.fvec) &&            \
+     IS_VEC_NULL (&(v)->vec.uvec) &&            \
      IS_VEC_NULL (&(v)->vec.rvec))
 
 // macro to set a vector to zero.  we could do this with an in-line assembly
@@ -31,15 +33,17 @@
 // Note: NO RETURN VALUE
 #define vm_vec_zero(v) (v)->xyz.x = (v)->xyz.y = (v)->xyz.z = 0.0f
 
-/*
+
 //macro set set a matrix to the identity. Note: NO RETURN VALUE
-#define vm_set_identity(m) do {m->rvec.x = m->uvec.y = m->fvec.z = (float)1.0;
-\
-                                        m->rvec.y = m->rvec.z = \
-                                        m->uvec.x = m->uvec.z = \
-                                        m->fvec.x = m->fvec.y = (float)0.0;}
+/*
+#define vm_set_identity(m)                          \
+do {m->rvec.x = m->uvec.y = m->fvec.z = (float)1.0; \
+    m->rvec.y = m->rvec.z =                         \
+    m->uvec.x = m->uvec.z =                         \
+    m->fvec.x = m->fvec.y = (float)0.0;}            \
 while (0)
 */
+
 extern void vm_set_identity (matrix* m);
 
 #define vm_vec_make(v, _x, _y, _z) \

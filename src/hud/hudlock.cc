@@ -172,8 +172,8 @@ void HudGaugeLock::render (float frametime) {
     // our "virtual frame" so, we calculate where it should be drawn based on
     // the player's viewpoint.
     if (Player_ai->current_target_is_locked) {
-        sx = fl2i (lock_point.screen.xyw.x);
-        sy = fl2i (lock_point.screen.xyw.y);
+        sx = int (lock_point.screen.xyw.x);
+        sy = int (lock_point.screen.xyw.y);
         gr_unsize_screen_pos (&sx, &sy);
 
         // show the rotating triangles if target is locked
@@ -186,15 +186,15 @@ void HudGaugeLock::render (float frametime) {
             (gr_screen.clip_center_x < gr_screen.clip_center_y)
                 ? (gr_screen.clip_center_x / VIRTUAL_FRAME_HALF_WIDTH)
                 : (gr_screen.clip_center_y / VIRTUAL_FRAME_HALF_HEIGHT);
-        sx = fl2i (lock_point.screen.xyw.x) -
-             fl2i (
-                 i2fl (
+        sx = int (lock_point.screen.xyw.x) -
+             int (
+                 float (
                      Player->current_target_sx -
                      Players[Player_num].lock_indicator_x) *
                  scaling_factor);
-        sy = fl2i (lock_point.screen.xyw.y) -
-             fl2i (
-                 i2fl (
+        sy = int (lock_point.screen.xyw.y) -
+             int (
+                 float (
                      Player->current_target_sy -
                      Players[Player_num].lock_indicator_y) *
                  scaling_factor);
@@ -237,7 +237,7 @@ void hud_lock_reset (float lock_time_scale) {
         wip = &Weapon_info
                   [swp->secondary_bank_weapons[swp->current_secondary_bank]];
         Player->lock_time_to_target =
-            i2fl (wip->min_lock_time * lock_time_scale);
+            float (wip->min_lock_time * lock_time_scale);
     }
     else {
         Player->lock_time_to_target = 0.0f;
@@ -698,7 +698,7 @@ void hud_calculate_lock_position (float frametime) {
             Players[Player_num].lock_indicator_visible = 1;
 
             Players[Player_num].lock_time_to_target =
-                i2fl (wip->min_lock_time);
+                float (wip->min_lock_time);
             catching_up = 0;
         }
 
@@ -753,11 +753,11 @@ void hud_calculate_lock_position (float frametime) {
                                   Players[Player_num].lock_time_to_target;
         }
         else {
-            lock_pixels_per_sec = i2fl (wip->lock_pixels_per_sec);
+            lock_pixels_per_sec = float (wip->lock_pixels_per_sec);
         }
 
         if (lock_pixels_per_sec > wip->lock_pixels_per_sec) {
-            lock_pixels_per_sec = i2fl (wip->lock_pixels_per_sec);
+            lock_pixels_per_sec = float (wip->lock_pixels_per_sec);
         }
 
         if (catching_up) {
@@ -778,30 +778,30 @@ void hud_calculate_lock_position (float frametime) {
                 pixels_moved_while_locking * delta_y / hypotenuse;
         }
 
-        if (fl_abs ((float)accumulated_x_pixels) > 1.0f) {
+        if (fabsf ((float)accumulated_x_pixels) > 1.0f) {
             modf (accumulated_x_pixels, &int_portion);
 
             Players[Player_num].lock_indicator_x -= (int)int_portion;
 
-            if (fl_abs (
+            if (fabsf (
                     (float)Players[Player_num].lock_indicator_x -
                     (float)Player->current_target_sx) <
-                fl_abs ((float)int_portion))
+                fabsf ((float)int_portion))
                 Players[Player_num].lock_indicator_x =
                     Player->current_target_sx;
 
             accumulated_x_pixels -= int_portion;
         }
 
-        if (fl_abs ((float)accumulated_y_pixels) > 1.0f) {
+        if (fabsf ((float)accumulated_y_pixels) > 1.0f) {
             modf (accumulated_y_pixels, &int_portion);
 
             Players[Player_num].lock_indicator_y -= (int)int_portion;
 
-            if (fl_abs (
+            if (fabsf (
                     (float)Players[Player_num].lock_indicator_y -
                     (float)Player->current_target_sy) <
-                fl_abs ((float)int_portion))
+                fabsf ((float)int_portion))
                 Players[Player_num].lock_indicator_y =
                     Player->current_target_sy;
 
@@ -870,7 +870,7 @@ void hud_calculate_lock_position (float frametime) {
 
         if (Players[Player_num].lock_time_to_target > wip->min_lock_time)
             Players[Player_num].lock_time_to_target =
-                i2fl (wip->min_lock_time);
+                float (wip->min_lock_time);
 
         pixels_moved_while_degrading =
             2.0f * wip->lock_pixels_per_sec * frametime;
@@ -883,30 +883,30 @@ void hud_calculate_lock_position (float frametime) {
             accumulated_y_pixels +=
                 pixels_moved_while_degrading * delta_y / hypotenuse;
 
-        if (fl_abs ((float)accumulated_x_pixels) > 1.0f) {
+        if (fabsf ((float)accumulated_x_pixels) > 1.0f) {
             modf (accumulated_x_pixels, &int_portion);
 
             Players[Player_num].lock_indicator_x -= (int)int_portion;
 
-            if (fl_abs (
+            if (fabsf (
                     (float)Players[Player_num].lock_indicator_x -
                     (float)Players[Player_num].lock_indicator_start_x) <
-                fl_abs ((float)int_portion))
+                fabsf ((float)int_portion))
                 Players[Player_num].lock_indicator_x =
                     Players[Player_num].lock_indicator_start_x;
 
             accumulated_x_pixels -= int_portion;
         }
 
-        if (fl_abs ((float)accumulated_y_pixels) > 1.0f) {
+        if (fabsf ((float)accumulated_y_pixels) > 1.0f) {
             modf (accumulated_y_pixels, &int_portion);
 
             Players[Player_num].lock_indicator_y -= (int)int_portion;
 
-            if (fl_abs (
+            if (fabsf (
                     (float)Players[Player_num].lock_indicator_y -
                     (float)Players[Player_num].lock_indicator_start_y) <
-                fl_abs ((float)int_portion))
+                fabsf ((float)int_portion))
                 Players[Player_num].lock_indicator_y =
                     Players[Player_num].lock_indicator_start_y;
 
@@ -939,9 +939,9 @@ void hud_calculate_lock_start_pos () {
 
     if ((delta_x == 0.0) && (delta_y == 0.0)) {
         Players[Player_num].lock_indicator_start_x =
-            fl2i (gr_screen.clip_center_x + Lock_start_dist);
+            int (gr_screen.clip_center_x + Lock_start_dist);
         Players[Player_num].lock_indicator_start_y =
-            fl2i (gr_screen.clip_center_y);
+            int (gr_screen.clip_center_y);
         return;
     }
 
@@ -949,9 +949,9 @@ void hud_calculate_lock_start_pos () {
 
     if (hypotenuse >= Lock_start_dist) {
         Players[Player_num].lock_indicator_start_x =
-            fl2i (gr_screen.clip_center_x);
+            int (gr_screen.clip_center_x);
         Players[Player_num].lock_indicator_start_y =
-            fl2i (gr_screen.clip_center_y);
+            int (gr_screen.clip_center_y);
         return;
     }
 
@@ -960,9 +960,9 @@ void hud_calculate_lock_start_pos () {
     target_y = target_mag * (delta_y / hypotenuse);
 
     Players[Player_num].lock_indicator_start_x =
-        fl2i (gr_screen.clip_center_x - target_x);
+        int (gr_screen.clip_center_x - target_x);
     Players[Player_num].lock_indicator_start_y =
-        fl2i (gr_screen.clip_center_y - target_y);
+        int (gr_screen.clip_center_y - target_y);
 
     CLAMP (
         Players[Player_num].lock_indicator_start_x, gr_screen.clip_left,

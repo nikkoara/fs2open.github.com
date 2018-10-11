@@ -1,16 +1,18 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
 #include "asteroid/asteroid.hh"
 #include "debris/debris.hh"
 #include "hud/hud.hh"
 #include "io/timer.hh"
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "object/objcollide.hh"
 #include "object/object.hh"
 #include "playerman/player.hh"
 #include "ship/ship.hh"
 #include "ship/shiphit.hh"
-#include "log/log.hh"
 
 void calculate_ship_ship_collision_physics (
     collision_info_struct* ship_ship_hit_info);
@@ -95,7 +97,7 @@ int collide_debris_ship (obj_pair* pair) {
             // supercaps cap damage at 10-20% max hull ship damage
             if (Ship_info[Ships[pship->instance].ship_info_index]
                     .flags[Ship::Info_Flags::Supercap]) {
-                float cap_percent_damage = frand_range (0.1f, 0.2f);
+                float cap_percent_damage = fs2::prng::randf (0, 0.1f, 0.2f);
                 ship_damage = MIN (
                     ship_damage,
                     cap_percent_damage *
@@ -166,7 +168,7 @@ int collide_debris_ship (obj_pair* pair) {
                (ship_max_speed + debris_speed); // 10.0f is a safety factor
         time -= 200.0f; // allow one frame slow frame at ~5 fps
 
-        if (time > 100) { pair->next_check_time = timestamp (fl2i (time)); }
+        if (time > 100) { pair->next_check_time = timestamp (int (time)); }
         else {
             pair->next_check_time = timestamp (0); // check next time
         }
@@ -338,7 +340,7 @@ int collide_asteroid_ship (obj_pair* pair) {
             (asteroid_max_speed + ship_max_speed); // 10.0f is a safety factor
         time -= 200.0f; // allow one frame slow frame at ~5 fps
 
-        if (time > 100) { pair->next_check_time = timestamp (fl2i (time)); }
+        if (time > 100) { pair->next_check_time = timestamp (int (time)); }
         else {
             pair->next_check_time = timestamp (0); // check next time
         }

@@ -1,22 +1,24 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
 #include "ai/ai.hh"
+#include "assert/assert.hh"
 #include "fireball/fireballs.hh"
 #include "gamesnd/gamesnd.hh"
-#include "shared/alphacolors.hh"
-#include "util/list.hh"
 #include "hud/hudartillery.hh"
 #include "hud/hudmessage.hh"
 #include "io/timer.hh"
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "math/vecmat.hh"
 #include "object/object.hh"
 #include "parse/parselo.hh"
+#include "shared/alphacolors.hh"
 #include "sound/sound.hh"
+#include "util/list.hh"
 #include "weapon/beam.hh"
 #include "weapon/weapon.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
 
 // -----------------------------------------------------------------------------------------------------------------------
 // ARTILLERY DEFINES/VARS
@@ -212,12 +214,12 @@ void ssm_get_random_start_pos (
     if (s->max_radius == -1.0f)
         radius = s->radius;
     else
-        radius = frand_range (s->radius, s->max_radius);
+        radius = fs2::prng::randf (0, s->radius, s->max_radius);
 
     if (s->max_offset == -1.0f)
         offset = s->offset;
     else
-        offset = frand_range (s->offset, s->max_offset);
+        offset = fs2::prng::randf (0, s->offset, s->max_offset);
 
     switch (s->shape) {
     case SSM_SHAPE_SPHERE:
@@ -292,7 +294,7 @@ void ssm_create (
 
         for (idx = 0; idx < count; idx++) {
             ssm.sinfo.delay_stamp[idx] =
-                timestamp (200 + (int)frand_range (-199.0f, 1000.0f));
+                timestamp (200 + (int)fs2::prng::randf (0, -199.0f, 1000.0f));
             ssm_get_random_start_pos (
                 &ssm.sinfo.start_pos[idx], start, &dir, ssm_index);
         }

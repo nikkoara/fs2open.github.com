@@ -491,7 +491,7 @@ float key_down_timef (uint scancode) {
 
     SDL_UnlockMutex (key_lock);
 
-    return i2fl (time_down) / i2fl (delta_time);
+    return float (time_down) / float (delta_time);
 }
 
 // Returns number of times key has went from up to down since last call.

@@ -4,6 +4,7 @@
 #include "anim/packunpack.hh"
 #include "freespace2/freespace.hh"
 #include "gamesequence/gamesequence.hh"
+#include "math/prng.hh"
 #include "menuui/fishtank.hh"
 
 // fish
@@ -49,25 +50,25 @@ void fish_generate () {
     if (f == NULL) { return; }
 
     // left or right
-    f->left = frand_range (0.0f, 1.0f) < 0.5f ? 0 : 1;
+    f->left = fs2::prng::randf (0, 0.0f, 1.0f) < 0.5f ? 0 : 1;
 
     // start location
     if (f->left) {
-        f->x = gr_screen.max_w_unscaled_zoomed + frand_range (0.0f, 50.0f);
+        f->x = gr_screen.max_w_unscaled_zoomed + fs2::prng::randf (0, 0.0f, 50.0f);
     }
     else {
-        f->x = frand_range (0.0f, -50.0f) - FISH_ANIM_WIDTH;
+        f->x = fs2::prng::randf (0, 0.0f, -50.0f) - FISH_ANIM_WIDTH;
     }
     f->y =
-        frand_range (-40.0f, (float)gr_screen.max_h_unscaled_zoomed + 40.0f);
+        fs2::prng::randf (0, -40.0f, (float)gr_screen.max_h_unscaled_zoomed + 40.0f);
 
     // speed
-    if (f->left) { f->x_speed = frand_range (-1.0f, -15.0f); }
+    if (f->left) { f->x_speed = fs2::prng::randf (0, -1.0f, -15.0f); }
     else {
-        f->x_speed = frand_range (1.0f, 15.0f);
+        f->x_speed = fs2::prng::randf (0, 1.0f, 15.0f);
     }
-    f->y_speed = frand_range (0.0f, 1.0f) < 0.5f ? frand_range (1.0f, 4.0f)
-                                                 : frand_range (-1.0f, -4.0f);
+    f->y_speed = fs2::prng::randf (0, 0.0f, 1.0f) < 0.5f ? fs2::prng::randf (0, 1.0f, 4.0f)
+                                                 : fs2::prng::randf (0, -1.0f, -4.0f);
 
     // all fish start out offscreen
     f->onscreen = 0;
@@ -138,7 +139,7 @@ void fishtank_start () {
     Fish_inited = 1;
 
     // generate a random # of fish
-    int count = (int)frand_range (1.0f, (float)(MAX_FISH - 1));
+    int count = (int)fs2::prng::randf (0, 1.0f, (float)(MAX_FISH - 1));
     for (idx = 0; idx < count; idx++) { fish_generate (); }
 }
 

@@ -1,8 +1,6 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
 
 //
 // Detail level effects (Detail.shield_effects)
@@ -14,9 +12,12 @@
 // 4: Shrink-wrapped texture.  Lasts full-time.
 //
 
+#include "assert/assert.hh"
 #include "freespace2/freespace.hh"
-#include "mission/missionparse.hh"
+#include "log/log.hh"
 #include "math/fix.hh"
+#include "math/prng.hh"
+#include "mission/missionparse.hh"
 #include "model/model.hh"
 #include "object/objectshield.hh"
 #include "render/3d.hh"
@@ -544,7 +545,7 @@ void render_shield (int shield_num) {
             gr_init_alphacolor (
                 &clr, Shield_hits[shield_num].rgb[0],
                 Shield_hits[shield_num].rgb[1], Shield_hits[shield_num].rgb[2],
-                fl2i (alpha * 255.0f));
+                int (alpha * 255.0f));
             shield_render_decal (
                 pm, orient, centerp, &Shield_hits[shield_num].hit_orient,
                 &Shield_hits[shield_num].hit_pos, hit_radius, bitmap_id, &clr);
@@ -624,7 +625,7 @@ int get_free_global_shield_index () {
 
     // If couldn't find one, choose a random one.
     if (gi == MAX_SHIELD_TRI_BUFFER)
-        gi = (int)(frand () * MAX_SHIELD_TRI_BUFFER);
+        gi = (int)(fs2::prng::randf (0) * MAX_SHIELD_TRI_BUFFER);
 
     return gi;
 }
@@ -688,7 +689,7 @@ void copy_shield_to_globals (
 
             // If couldn't find one, choose a random one.
             if (gi == MAX_SHIELD_TRI_BUFFER)
-                gi = (int)(frand () * MAX_SHIELD_TRI_BUFFER);
+                gi = (int)(fs2::prng::randf (0) * MAX_SHIELD_TRI_BUFFER);
 
             Global_tris[gi].used = shieldp->tris[i].used;
             Global_tris[gi].trinum = i;

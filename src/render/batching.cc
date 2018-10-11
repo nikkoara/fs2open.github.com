@@ -98,11 +98,11 @@ void batching_determine_blend_color (color* clr, int texture, float alpha) {
 
     if (blend_mode == ALPHA_BLEND_ADDITIVE) {
         gr_init_alphacolor (
-            clr, fl2i (255.0f * alpha), fl2i (255.0f * alpha),
-            fl2i (255.0f * alpha), 255);
+            clr, int (255.0f * alpha), int (255.0f * alpha),
+            int (255.0f * alpha), 255);
     }
     else {
-        gr_init_alphacolor (clr, 255, 255, 255, fl2i (255.0f * alpha));
+        gr_init_alphacolor (clr, 255, 255, 255, int (255.0f * alpha));
     }
 }
 

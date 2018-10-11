@@ -234,7 +234,7 @@ void gr_opengl_set_clip (int x, int y, int w, int h, int resize_mode) {
     gr_screen.clip_width = w;
     gr_screen.clip_height = h;
 
-    gr_screen.clip_aspect = i2fl (w) / i2fl (h);
+    gr_screen.clip_aspect = float (w) / float (h);
     gr_screen.clip_center_x =
         (gr_screen.clip_left + gr_screen.clip_right) * 0.5f;
     gr_screen.clip_center_y =
@@ -272,7 +272,7 @@ void gr_opengl_reset_clip () {
     }
 
     gr_screen.clip_aspect =
-        i2fl (gr_screen.clip_width) / i2fl (gr_screen.clip_height);
+        float (gr_screen.clip_width) / float (gr_screen.clip_height);
     gr_screen.clip_center_x =
         (gr_screen.clip_left + gr_screen.clip_right) * 0.5f;
     gr_screen.clip_center_y =
@@ -781,9 +781,9 @@ void gr_opengl_set_fill_mode (int mode) {
 void gr_opengl_zbias (int bias) {
     if (bias) {
         GL_state.PolygonOffsetFill (GL_TRUE);
-        if (bias < 0) { GL_state.SetPolygonOffset (1.0, -i2fl (bias)); }
+        if (bias < 0) { GL_state.SetPolygonOffset (1.0, -float (bias)); }
         else {
-            GL_state.SetPolygonOffset (0.0, -i2fl (bias));
+            GL_state.SetPolygonOffset (0.0, -float (bias));
         }
     }
     else {

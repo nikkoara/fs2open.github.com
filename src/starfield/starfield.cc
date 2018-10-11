@@ -907,7 +907,7 @@ void stars_post_level_init () {
             starfield_bitmap_instance def_sun;
 
             // stuff some values
-            def_sun.ang.h = fl_radians (60.0f);
+            def_sun.ang.h = to_radians (60.0f);
 
             Suns.push_back (def_sun);
         }
@@ -1256,9 +1256,9 @@ void stars_draw_lens_flare (vertex* sun_vex, int sun_n) {
     /* (dx,dy) is a 2d vector equal to two times the vector from the sun's
     position to the center fo the screen meaning it is the vector to the
     opposite position on the screen. */
-    dx = 2.0f * (i2fl (gr_screen.clip_right - gr_screen.clip_left) * 0.5f -
+    dx = 2.0f * (float (gr_screen.clip_right - gr_screen.clip_left) * 0.5f -
                  sun_vex->screen.xyw.x);
-    dy = 2.0f * (i2fl (gr_screen.clip_bottom - gr_screen.clip_top) * 0.5f -
+    dy = 2.0f * (float (gr_screen.clip_bottom - gr_screen.clip_top) * 0.5f -
                  sun_vex->screen.xyw.y);
 
     for (j = 0; j < bm->n_flare_bitmaps; j++) {
@@ -1525,7 +1525,7 @@ void subspace_render () {
     if (!Rendering_to_env) {
         Subspace_glow_frame += flFrametime * 1.0f;
 
-        float total_time = i2fl (NOISE_NUM_FRAMES) / 15.0f;
+        float total_time = float (NOISE_NUM_FRAMES) / 15.0f;
 
         // Sanity checks
         if (Subspace_glow_frame < 0.0f) Subspace_glow_frame = 0.0f;
@@ -1536,7 +1536,7 @@ void subspace_render () {
         }
 
         framenum =
-            fl2i ((Subspace_glow_frame * NOISE_NUM_FRAMES) / total_time);
+            int ((Subspace_glow_frame * NOISE_NUM_FRAMES) / total_time);
 
         if (framenum < 0) framenum = 0;
         if (framenum >= NOISE_NUM_FRAMES) framenum = NOISE_NUM_FRAMES - 1;
@@ -1713,8 +1713,8 @@ void stars_draw_stars () {
 
         if (!can_draw) continue;
 
-        vDst.x = fl2i (p1.screen.xyw.x) - fl2i (p2.screen.xyw.x);
-        vDst.y = fl2i (p1.screen.xyw.y) - fl2i (p2.screen.xyw.y);
+        vDst.x = int (p1.screen.xyw.x) - int (p2.screen.xyw.x);
+        vDst.y = int (p1.screen.xyw.y) - int (p2.screen.xyw.y);
 
         if (((vDst.x * vDst.x) + (vDst.y * vDst.y)) <= 4) {
             p1.screen.xyw.x = p2.screen.xyw.x + 1.0f;
@@ -1766,10 +1766,10 @@ void stars_draw_debris () {
             // if we're in full neb mode
             if ((The_mission.flags[Mission::Mission_Flags::Fullneb]) &&
                 (Neb2_render_mode != NEB2_RENDER_NONE)) {
-                d->size = i2fl (myrand () % 4) * BASE_SIZE_NEB;
+                d->size = float (myrand () % 4) * BASE_SIZE_NEB;
             }
             else {
-                d->size = i2fl (myrand () % 4) * BASE_SIZE;
+                d->size = float (myrand () % 4) * BASE_SIZE;
             }
 
             vm_vec_sub (&d->last_pos, &d->pos, &Eye_position);

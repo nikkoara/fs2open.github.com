@@ -189,12 +189,12 @@ void trail_render (trail* trailp) {
 
         w = trailp->val[n] * w_size + ti->w_start;
         if (init_fade_out != 1.0f) {
-            l = (ubyte)fl2i (
+            l = (ubyte)int (
                 (trailp->val[n] * a_size + ti->a_start) * 255.0f *
                 init_fade_out * init_fade_out);
         }
         else {
-            l = (ubyte)fl2i ((trailp->val[n] * a_size + ti->a_start) * 255.0f);
+            l = (ubyte)int ((trailp->val[n] * a_size + ti->a_start) * 255.0f);
         }
 
         if (i == 0) {
@@ -225,7 +225,7 @@ void trail_render (trail* trailp) {
         top.a = bot.a = l;
 
         if (i > 0) {
-            float U = i2fl (i);
+            float U = float (i);
 
             if (i == num_sections - 1) {
                 // Last one...

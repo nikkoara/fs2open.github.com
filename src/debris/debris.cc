@@ -1,14 +1,16 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
 #include "cmdline/cmdline.hh"
 #include "debris/debris.hh"
 #include "fireball/fireballs.hh"
 #include "freespace2/freespace.hh"
 #include "gamesnd/gamesnd.hh"
-#include "util/list.hh"
 #include "io/timer.hh"
+#include "log/log.hh"
 #include "math/fix.hh"
+#include "math/prng.hh"
 #include "object/objcollide.hh"
 #include "object/objectsnd.hh"
 #include "particle/particle.hh"
@@ -18,9 +20,9 @@
 #include "ship/ship.hh"
 #include "ship/shipfx.hh"
 #include "species_defs/species_defs.hh"
-#include "weapon/weapon.hh"
 #include "tracing/Monitor.hh"
-#include "log/log.hh"
+#include "util/list.hh"
+#include "weapon/weapon.hh"
 
 #define MAX_LIFE 10.0f
 #define MIN_RADIUS_FOR_PERSISTANT_DEBRIS \
@@ -481,7 +483,7 @@ object* debris_create (
     if (hull_flag && sip->debris_min_lifetime >= 0.0f &&
         sip->debris_max_lifetime >= 0.0f) {
         db->lifeleft = ((sip->debris_max_lifetime - sip->debris_min_lifetime) *
-                        frand ()) +
+                        fs2::prng::randf (0)) +
                        sip->debris_min_lifetime;
     }
     else {
@@ -504,15 +506,15 @@ object* debris_create (
         if (sip->debris_min_lifetime >= 0.0f &&
             sip->debris_max_lifetime >= 0.0f) {
             db->must_survive_until =
-                timestamp (fl2i (sip->debris_min_lifetime * 1000.0f));
+                timestamp (int (sip->debris_min_lifetime * 1000.0f));
             db->lifeleft =
                 ((sip->debris_max_lifetime - sip->debris_min_lifetime) *
-                 frand ()) +
+                 fs2::prng::randf (0)) +
                 sip->debris_min_lifetime;
         }
         else if (sip->debris_min_lifetime >= 0.0f) {
             db->must_survive_until =
-                timestamp (fl2i (sip->debris_min_lifetime * 1000.0f));
+                timestamp (int (sip->debris_min_lifetime * 1000.0f));
             if (db->lifeleft < sip->debris_min_lifetime)
                 db->lifeleft = sip->debris_min_lifetime;
         }
@@ -547,7 +549,7 @@ object* debris_create (
     if (db->is_hull) {
         // Percent of debris pieces with arcs controlled via table (default
         // 50%)
-        if (frand () < sip->debris_arc_percent) { db->arc_frequency = 1000; }
+        if (fs2::prng::randf (0) < sip->debris_arc_percent) { db->arc_frequency = 1000; }
         else {
             db->arc_frequency = 0;
         }
@@ -604,7 +606,7 @@ object* debris_create (
             sip->debris_max_hitpoints >= 0.0f) {
             obj->hull_strength =
                 ((sip->debris_max_hitpoints - sip->debris_min_hitpoints) *
-                 frand ()) +
+                 fs2::prng::randf (0)) +
                 sip->debris_min_hitpoints;
         }
         else if (sip->debris_min_hitpoints >= 0.0f) {
@@ -632,7 +634,7 @@ object* debris_create (
     if (hull_flag) {
         float t;
         scale = exp_force *
-                i2fl (
+                float (
                     (myrand () % 20) +
                     10); // for radial_vel away from location of blast center
         db->sound_delay = timestamp (DEBRIS_SOUND_DELAY);
@@ -648,9 +650,9 @@ object* debris_create (
         // let fireball length be linked to radius of ship.  Range is .33
         // radius => 3.33 radius seconds.
         t = 1000 * Objects[db->source_objnum].radius / 3 +
-            myrand () % (fl2i (1000 * 3 * Objects[db->source_objnum].radius));
+            myrand () % (int (1000 * 3 * Objects[db->source_objnum].radius));
         db->fire_timeout =
-            timestamp (fl2i (t)); // fireballs last from 5 - 30 seconds
+            timestamp (int (t)); // fireballs last from 5 - 30 seconds
 
         if (Objects[db->source_objnum].radius <
             MIN_RADIUS_FOR_PERSISTANT_DEBRIS) {
@@ -664,7 +666,7 @@ object* debris_create (
     }
     else {
         scale = exp_force *
-                i2fl (
+                float (
                     (myrand () % 20) +
                     10); // for radial_vel away from blast center (non-hull)
     }
@@ -693,7 +695,7 @@ object* debris_create (
     // make sure rotational velocity does not get too high
     if (radius < 1.0) { radius = 1.0f; }
 
-    scale = (6.0f + i2fl (myrand () % 4)) / radius;
+    scale = (6.0f + float (myrand () % 4)) / radius;
 
     vm_vec_rand_vec_quick (&rotvel);
     vm_vec_scale (&rotvel, scale);

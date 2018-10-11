@@ -328,10 +328,10 @@ void hud_shield_show_mini (
     if (!Shield_mini_loaded) return;
 
     sx = (x_force == -1)
-             ? Shield_mini_coords[gr_screen.res][0] + fl2i (HUD_offset_x)
+             ? Shield_mini_coords[gr_screen.res][0] + int (HUD_offset_x)
              : x_force;
     sy = (y_force == -1)
-             ? Shield_mini_coords[gr_screen.res][1] + fl2i (HUD_offset_y)
+             ? Shield_mini_coords[gr_screen.res][1] + int (HUD_offset_y)
              : y_force;
 
     // draw the ship first
@@ -585,8 +585,8 @@ void HudGaugeShield::showShields (object* objp, int mode) {
     sx = position[0];
     sy = position[1];
 
-    sx += fl2i (HUD_offset_x);
-    sy += fl2i (HUD_offset_y);
+    sx += int (HUD_offset_x);
+    sy += int (HUD_offset_y);
 
     // draw the ship first
     maybeFlashShield (
@@ -692,12 +692,12 @@ void HudGaugeShield::showShields (object* objp, int mode) {
         range = MAX (HUD_COLOR_ALPHA_MAX, HUD_color_alpha + objp->n_quadrants);
 
         if (!(sip->flags[Ship::Info_Flags::Model_point_shields]))
-            hud_color_index = fl2i (
+            hud_color_index = int (
                 (objp->shield_quadrant[Quadrant_xlate[i]] / max_shield) *
                 range);
         else
             hud_color_index =
-                fl2i ((objp->shield_quadrant[i] / max_shield) * range);
+                int ((objp->shield_quadrant[i] / max_shield) * range);
 
         ASSERT (hud_color_index >= 0 && hud_color_index <= range);
 
@@ -966,8 +966,8 @@ void HudGaugeShieldMini::showMiniShields (object* objp) {
 
     setGaugeColor ();
 
-    sx = position[0] + fl2i (HUD_offset_x);
-    sy = position[1] + fl2i (HUD_offset_y);
+    sx = position[0] + int (HUD_offset_x);
+    sy = position[1] + int (HUD_offset_y);
 
     // draw the ship first
     maybeFlashShield (
@@ -1043,8 +1043,8 @@ void HudGaugeShieldMini::showIntegrity (float p_target_integrity) {
         if (p_target_integrity > 0) { numeric_integrity = 1; }
     }
 
-    final_pos[0] += fl2i (HUD_offset_x) + position[0];
-    final_pos[1] += fl2i (HUD_offset_y) + position[1];
+    final_pos[0] += int (HUD_offset_x) + position[0];
+    final_pos[1] += int (HUD_offset_y) + position[1];
 
     sprintf (text_integrity, "%d", numeric_integrity);
     if (numeric_integrity < 100) {

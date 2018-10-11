@@ -98,7 +98,7 @@ void chase_angles_to_value (angles_t* ap, angles_t* bp, int scale) {
     delta.h = ap->h - bp->h;
 
     // If we're very close, put ourselves at goal.
-    if ((fl_abs (delta.p) < 0.005f) && (fl_abs (delta.h) < 0.005f)) {
+    if ((fabsf (delta.p) < 0.005f) && (fabsf (delta.h) < 0.005f)) {
         ap->p = bp->p;
         ap->h = bp->h;
     }
@@ -1132,7 +1132,7 @@ void read_player_controls (object* objp, float frametime) {
                     // to next stage
                     float diffSpeed = objp->phys_info.fspeed;
                     if (target_warpout_speed != 0.0f) {
-                        diffSpeed = fl_abs (
+                        diffSpeed = fabsf (
                                         objp->phys_info.fspeed -
                                         target_warpout_speed) /
                                     target_warpout_speed;

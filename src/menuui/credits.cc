@@ -529,8 +529,8 @@ void credits_init () {
     }
 
     Credit_start_pos =
-        i2fl (Credits_text_coords[gr_screen.res][CREDITS_H_COORD]);
-    Credit_stop_pos = -i2fl (h);
+        float (Credits_text_coords[gr_screen.res][CREDITS_H_COORD]);
+    Credit_stop_pos = -float (h);
     Credit_position = Credit_start_pos;
 
     Ui_window.create (
@@ -776,7 +776,7 @@ void credits_do_frame (float /*frametime*/) {
     Credits_last_time = temp_time;
     timestamp_inc (i2f (Credits_frametime) / TIMESTAMP_FREQUENCY);
 
-    float fl_frametime = i2fl (Credits_frametime) / 1000.f;
+    float fl_frametime = float (Credits_frametime) / 1000.f;
     if (keyd_pressed[KEY_LSHIFT]) {
         Credit_position -= fl_frametime * Credits_scroll_rate * 4.0f;
     }

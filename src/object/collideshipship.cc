@@ -827,12 +827,12 @@ void calculate_ship_ship_collision_physics (
         light_local_vel.xyz.z < light_sip->collision_physics.landing_max_z &&
         light_local_vel.xyz.z > light_sip->collision_physics.landing_min_z &&
         light_local_vel.xyz.y > light_sip->collision_physics.landing_min_y &&
-        fl_abs (light_local_vel.xyz.x) <
+        fabsf (light_local_vel.xyz.x) <
             light_sip->collision_physics.landing_max_x &&
         light_uvec_dot_norm > 0 &&
         light_fvec_dot_norm < light_sip->collision_physics.landing_max_angle &&
         light_fvec_dot_norm > light_sip->collision_physics.landing_min_angle &&
-        fl_abs (light_rvec_dot_norm) <
+        fabsf (light_rvec_dot_norm) <
             light_sip->collision_physics.landing_max_rot_angle) {
         ship_ship_hit_info->is_landing = true;
     }
@@ -972,14 +972,14 @@ void calculate_ship_ship_collision_physics (
         light_local_vel.xyz.z < light_sip->collision_physics.reorient_max_z &&
         light_local_vel.xyz.z > light_sip->collision_physics.reorient_min_z &&
         light_local_vel.xyz.y > light_sip->collision_physics.reorient_min_y &&
-        fl_abs (light_local_vel.xyz.x) <
+        fabsf (light_local_vel.xyz.x) <
             light_sip->collision_physics.reorient_max_x &&
         light_uvec_dot_norm > 0 &&
         light_fvec_dot_norm <
             light_sip->collision_physics.reorient_max_angle &&
         light_fvec_dot_norm >
             light_sip->collision_physics.reorient_min_angle &&
-        fl_abs (light_rvec_dot_norm) <
+        fabsf (light_rvec_dot_norm) <
             light_sip->collision_physics.reorient_max_rot_angle) {
         vec3d landing_delta_rotvel;
         landing_delta_rotvel.xyz.x =
@@ -1353,7 +1353,7 @@ int collide_ship_ship (obj_pair* pair) {
         object *HeavyOne, *LightOne;
         // if two objects have the same mass, make the one with the larger
         // pointer address the HeavyOne.
-        if (fl_abs (A->phys_info.mass - B->phys_info.mass) < 1) {
+        if (fabsf (A->phys_info.mass - B->phys_info.mass) < 1) {
             if (A > B) {
                 HeavyOne = A;
                 LightOne = B;
@@ -1594,7 +1594,7 @@ int collide_ship_ship (obj_pair* pair) {
                (shipA_max_speed + shipB_max_speed);
         time -= 200.0f; // allow one frame slow frame at ~5 fps
 
-        if (time > 0) { pair->next_check_time = timestamp (fl2i (time)); }
+        if (time > 0) { pair->next_check_time = timestamp (int (time)); }
         else {
             pair->next_check_time = timestamp (0); // check next time
         }

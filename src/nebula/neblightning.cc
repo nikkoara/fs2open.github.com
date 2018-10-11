@@ -1,19 +1,21 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
 #include "debugconsole/console.hh"
 #include "freespace2/freespace.hh"
 #include "gamesnd/gamesnd.hh"
-#include "util/list.hh"
+#include "graphics/material.hh"
 #include "io/timer.hh"
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "mission/missionparse.hh"
 #include "nebula/neb.hh"
 #include "nebula/neblightning.hh"
-#include "graphics/material.hh"
 #include "parse/parselo.hh"
 #include "render/3d.hh"
+#include "util/list.hh"
 #include "weapon/emp.hh"
-#include "log/log.hh"
 
 // ------------------------------------------------------------------------------------------------------
 // NEBULA LIGHTNING DEFINES/VARS
@@ -360,8 +362,8 @@ void nebl_render_all () {
             }
 
             // pick some cool alpha values
-            Nebl_alpha = frand ();
-            Nebl_glow_alpha = frand ();
+            Nebl_alpha = fs2::prng::randf (0);
+            Nebl_glow_alpha = fs2::prng::randf (0);
 
             // otherwise render him
             Nebl_flash_count = 0;
@@ -385,7 +387,7 @@ void nebl_render_all () {
                     // quick distance from the center of the screen
                     float x = Nebl_flash_x - (gr_screen.max_w / 2.0f);
                     float y = Nebl_flash_y - (gr_screen.max_h / 2.0f);
-                    float dist = fl_sqrt ((x * x) + (y * y));
+                    float dist = sqrtf ((x * x) + (y * y));
                     if (dist / (gr_screen.max_w / 2.0f) < 1.0f) {
                         flash = 1.0f - (dist / (gr_screen.max_w / 2.0f));
 
@@ -407,7 +409,7 @@ void nebl_render_all () {
                         else {
                             bang = 1.0f - (Nebl_bang / 400.0f);
                         }
-                        if (frand_range (0.0f, 1.0f) < 0.5f) {
+                        if (fs2::prng::randf (0, 0.0f, 1.0f) < 0.5f) {
                             snd_play (
                                 gamesnd_get_game_sound (
                                     GameSounds::LIGHTNING_2),
@@ -450,27 +452,27 @@ void nebl_process () {
     // random stamp
     if (Nebl_stamp == -1) {
         Nebl_stamp = timestamp (
-            (int)frand_range ((float)Storm->min, (float)Storm->max));
+            (int)fs2::prng::randf (0, (float)Storm->min, (float)Storm->max));
         return;
     }
 
     // maybe make a bolt
     if (timestamp_elapsed (Nebl_stamp)) {
         // determine how many bolts to spew
-        num_bolts = (uint)frand_range (
+        num_bolts = (uint)fs2::prng::randf (0,
             (float)Storm->min_count, (float)Storm->max_count);
         for (idx = 0; idx < num_bolts; idx++) {
             // hmm. for now just pick a random bolt type and run with it
             int s1, s2, s3;
             int e1, e2, e3;
             do {
-                s1 = (int)frand_range (0.0f, (float)Neb2_slices);
-                s2 = (int)frand_range (0.0f, (float)Neb2_slices);
-                s3 = (int)frand_range (0.0f, (float)Neb2_slices);
+                s1 = (int)fs2::prng::randf (0, 0.0f, (float)Neb2_slices);
+                s2 = (int)fs2::prng::randf (0, 0.0f, (float)Neb2_slices);
+                s3 = (int)fs2::prng::randf (0, 0.0f, (float)Neb2_slices);
 
-                e1 = (int)frand_range (0.0f, (float)Neb2_slices);
-                e2 = (int)frand_range (0.0f, (float)Neb2_slices);
-                e3 = (int)frand_range (0.0f, (float)Neb2_slices);
+                e1 = (int)fs2::prng::randf (0, 0.0f, (float)Neb2_slices);
+                e2 = (int)fs2::prng::randf (0, 0.0f, (float)Neb2_slices);
+                e3 = (int)fs2::prng::randf (0, 0.0f, (float)Neb2_slices);
 
                 // never choose the middle cube
                 if ((s1 == 2) && (s2 == 2) && (s3 == 2)) {
@@ -498,7 +500,7 @@ void nebl_process () {
 
                 // now figure out how much of that good wing sauce to add
                 vec3d wing_sauce = Storm->flavor;
-                if (frand_range (0.0, 1.0f) < 0.5f) {
+                if (fs2::prng::randf (0, 0.0, 1.0f) < 0.5f) {
                     vm_vec_scale (&wing_sauce, -1.0f);
                 }
                 float how_much_of_that_good_wing_sauce_to_add =
@@ -521,13 +523,13 @@ void nebl_process () {
             }
 
             size_t type =
-                (size_t)frand_range (0.0f, (float)(Storm->num_bolt_types - 1));
+                (size_t)fs2::prng::randf (0, 0.0f, (float)(Storm->num_bolt_types - 1));
             nebl_bolt (Storm->bolt_types[type], &start, &strike);
         }
 
         // reset the timestamp
         Nebl_stamp = timestamp (
-            (int)frand_range ((float)Storm->min, (float)Storm->max));
+            (int)fs2::prng::randf (0, (float)Storm->min, (float)Storm->max));
     }
 }
 
@@ -716,7 +718,7 @@ int nebl_gen (
     vm_vec_avg (&tmp, left, right);
 
     // sometimes generate children
-    if (!child && (frand () <= Nebl_type->b_rand)) {
+    if (!child && (fs2::prng::randf (0) <= Nebl_type->b_rand)) {
         // get a point on the plane of the strike
         vec3d tmp2;
         vm_vec_random_in_circle (
@@ -737,9 +739,9 @@ int nebl_gen (
     }
 
     float scaler = 0.30f;
-    tmp.xyz.x += (frand () - 0.5f) * d * scaler;
-    tmp.xyz.y += (frand () - 0.5f) * d * scaler;
-    tmp.xyz.z += (frand () - 0.5f) * d * scaler;
+    tmp.xyz.x += (fs2::prng::randf (0) - 0.5f) * d * scaler;
+    tmp.xyz.y += (fs2::prng::randf (0) - 0.5f) * d * scaler;
+    tmp.xyz.z += (fs2::prng::randf (0) - 0.5f) * d * scaler;
 
     // generate left half
     l_node* ll = NULL;
@@ -1042,7 +1044,7 @@ void nebl_jitter (l_bolt* b) {
     while (moveup != NULL) {
         temp = moveup->pos;
         vm_vec_random_in_circle (
-            &moveup->pos, &temp, &m, frand_range (0.0f, length * bi->noise),
+            &moveup->pos, &temp, &m, fs2::prng::randf (0, 0.0f, length * bi->noise),
             0);
 
         // just on the main trunk

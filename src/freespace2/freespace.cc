@@ -763,20 +763,20 @@ void game_flash_diminish (float frametime) {
         int r, g, b;
 
         // Change the 200 to change the color range of colors.
-        r = fl2i (Game_flash_red * 128.0f);
-        g = fl2i (Game_flash_green * 128.0f);
-        b = fl2i (Game_flash_blue * 128.0f);
+        r = int (Game_flash_red * 128.0f);
+        g = int (Game_flash_green * 128.0f);
+        b = int (Game_flash_blue * 128.0f);
 
         if (Sun_spot > 0.0f && (!ls_on || ls_force_off)) {
-            r += fl2i (Sun_spot * 128.0f);
-            g += fl2i (Sun_spot * 128.0f);
-            b += fl2i (Sun_spot * 128.0f);
+            r += int (Sun_spot * 128.0f);
+            g += int (Sun_spot * 128.0f);
+            b += int (Sun_spot * 128.0f);
         }
 
         if (Big_expl_flash.cur_flash_intensity > 0.0f) {
-            r += fl2i (Big_expl_flash.cur_flash_intensity * 128.0f);
-            g += fl2i (Big_expl_flash.cur_flash_intensity * 128.0f);
-            b += fl2i (Big_expl_flash.cur_flash_intensity * 128.0f);
+            r += int (Big_expl_flash.cur_flash_intensity * 128.0f);
+            g += int (Big_expl_flash.cur_flash_intensity * 128.0f);
+            b += int (Big_expl_flash.cur_flash_intensity * 128.0f);
         }
 
         if (r < 0)
@@ -1922,8 +1922,8 @@ void game_show_framerate () {
         sy = gr_screen.center_offset_y + 100;
         gr_printf_no_resize (
             sx, sy, NOX ("Player Pos: (%d,%d,%d)"),
-            fl2i (Player_obj->pos.xyz.x), fl2i (Player_obj->pos.xyz.y),
-            fl2i (Player_obj->pos.xyz.z));
+            int (Player_obj->pos.xyz.x), int (Player_obj->pos.xyz.y),
+            int (Player_obj->pos.xyz.z));
     }
 
     MONITOR_INC (NumPolys, modelstats_num_polys);
@@ -2151,8 +2151,8 @@ void game_set_view_clip (float /*frametime*/) {
 
             if (View_percent < 5) { View_percent = 5; }
 
-            float fp = i2fl (View_percent) / 100.0f;
-            int fi = fl2i (fl_sqrt (fp) * 100.0f);
+            float fp = float (View_percent) / 100.0f;
+            int fi = int (sqrtf (fp) * 100.0f);
             if (fi > 100) fi = 100;
 
             xborder = (gr_screen.max_w * (100 - fi)) / 200;
@@ -2238,7 +2238,7 @@ void game_tst_frame () {
         tst_time = (int)time (NULL);
 
         // load the tst bitmap
-        switch ((int)frand_range (0.0f, 3.0)) {
+        switch ((int)fs2::prng::randf (0, 0.0f, 3.0)) {
         case 0:
             tst_bitmap = bm_load ("ig_jim");
             left = 1;
@@ -2274,7 +2274,7 @@ void game_tst_frame () {
         bm_get_info (tst_bitmap, &w, &h);
 
         // tst y
-        tst_y = frand_range (0.0f, (float)gr_screen.max_h - h);
+        tst_y = fs2::prng::randf (0, 0.0f, (float)gr_screen.max_h - h);
 
         snd_play (gamesnd_get_interface_sound (InterfaceSounds::VASUDAN_BUP));
 
@@ -2302,12 +2302,12 @@ void game_tst_frame () {
         if (tst_mode == 0) {
             tst_x += diff;
 
-            tst_offset -= fl_abs (diff);
+            tst_offset -= fabsf (diff);
         }
         else if (tst_mode == 2) {
             tst_x -= diff;
 
-            tst_offset -= fl_abs (diff);
+            tst_offset -= fabsf (diff);
         }
 
         // draw the bitmap
@@ -2325,7 +2325,7 @@ void game_tst_frame () {
                 case 0:
                     tst_mode = 1;
                     tst_stamp = timestamp (1000);
-                    tst_offset = fl_abs (tst_offset_total);
+                    tst_offset = fabsf (tst_offset_total);
                     break;
 
                 case 2: tst = 0; return;
@@ -2608,7 +2608,7 @@ float get_shake (float intensity, int decay_time, int max_decay_time) {
     if (decay_time >= 0) {
         ASSERT (max_decay_time > 0);
         shake *=
-            (0.5f - fl_abs (0.5f - (float)decay_time / (float)max_decay_time));
+            (0.5f - fabsf (0.5f - (float)decay_time / (float)max_decay_time));
     }
 
     return shake;
@@ -3471,7 +3471,7 @@ void game_shade_frame (float /*frametime*/) {
                 int duration = (Fade_end_timestamp - Fade_start_timestamp);
                 int elapsed = (timestamp () - Fade_start_timestamp);
 
-                alpha = fl2i (
+                alpha = int (
                     (float)startAlpha +
                     (((float)endAlpha - (float)startAlpha) / (float)duration) *
                         (float)elapsed);
@@ -3509,12 +3509,12 @@ void bars_do_frame (float frametime) {
         // Figure out where the bars should be
         int yborder;
         if (Cutscene_bar_flags & CUB_CUTSCENE)
-            yborder = fl2i (
+            yborder = int (
                 Cutscene_bars_progress *
                 (gr_screen.max_h / CUTSCENE_BAR_DIVISOR));
         else
             yborder = gr_screen.max_h / CUTSCENE_BAR_DIVISOR -
-                      fl2i (
+                      int (
                           Cutscene_bars_progress *
                           (gr_screen.max_h / CUTSCENE_BAR_DIVISOR));
 
@@ -3951,11 +3951,7 @@ void game_set_frametime (int state) {
 
     FrametimeOverall += Frametime;
 
-    /*  if ((Framecount > 0) && (Framecount < 10)) {
-            mprintf(("Frame %2i: frametime = %.3f (%.3f)\n", Framecount,
-       f2fl(Frametime), f2fl(debug_frametime)));
-        }
-    */
+    II << "frametime : " << std::hex << Frametime;
 }
 
 fix game_get_overall_frametime () { return FrametimeOverall; }
@@ -4047,8 +4043,8 @@ int game_poll () {
         jx = joy_get_scaled_reading (raw_axis[0]);
         jy = joy_get_scaled_reading (raw_axis[1]);
 
-        dx = fl2i (f2fl (jx) * flFrametime * 500.0f);
-        dy = fl2i (f2fl (jy) * flFrametime * 500.0f);
+        dx = int (f2fl (jx) * flFrametime * 500.0f);
+        dy = int (f2fl (jy) * flFrametime * 500.0f);
 
         if (dx || dy) {
             mouse_get_real_pos (&mx, &my);
@@ -5860,10 +5856,10 @@ void Time_model (int modelnum) {
 
     Tmap_npixels /= framecount;
 
-    WARNINGF (LOCATION, "'%s' is %.2f FPS", pof_file,i2fl (framecount) / f2fl (t2 - t1));
+    WARNINGF (LOCATION, "'%s' is %.2f FPS", pof_file,float (framecount) / f2fl (t2 - t1));
     fprintf (
         Time_fp, "\"%s\"\t%.0f\t%d\t%d\t%d\t%d\n", pof_file,
-        i2fl (framecount) / f2fl (t2 - t1), bitmaps_used_this_frame,
+        float (framecount) / f2fl (t2 - t1), bitmaps_used_this_frame,
         modelstats_num_polys, modelstats_num_verts, Tmap_npixels);
 }
 
@@ -6361,8 +6357,8 @@ main (int argc, char** argv) {
     try {
         return game_main (argc, argv);
     }
-    catch (const std::exception& ex) {
-        EE << ex.what ();
+    catch (const std::exception& x) {
+        EE << x.what ();
         return 1;
     }
     catch (...) {

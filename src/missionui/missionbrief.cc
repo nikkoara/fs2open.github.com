@@ -1842,7 +1842,7 @@ void brief_maybe_blit_scene_cut (float frametime) {
         }
 
         // draw the correct frame of animation
-        framenum = fl2i (
+        framenum = int (
             (Fade_anim.time_elapsed * Fade_anim.num_frames) /
             Fade_anim.total_time);
         if (framenum < 0) framenum = 0;
@@ -1868,7 +1868,7 @@ Fade_down_anim_start:
         }
 
         // draw the correct frame of animation
-        framenum = fl2i (
+        framenum = int (
             (Fade_anim.time_elapsed * Fade_anim.num_frames) /
             Fade_anim.total_time);
         if (framenum < 0) framenum = 0;

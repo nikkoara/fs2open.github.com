@@ -1,17 +1,19 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
+#include "assert/assert.hh"
 #include "bmpman/bmpman.hh"
-#include "particle/particle.hh"
-#include "particle/ParticleManager.hh"
 #include "debugconsole/console.hh"
-#include "shared/globals.hh"
 #include "graphics/2d.hh"
+#include "math/prng.hh"
+#include "particle/ParticleManager.hh"
+#include "particle/particle.hh"
 #include "render/3d.hh"
 #include "render/batching.hh"
-#include "tracing/tracing.hh"
+#include "shared/globals.hh"
 #include "tracing/Monitor.hh"
-#include "assert/assert.hh"
+#include "tracing/tracing.hh"
 
 using namespace particle;
 
@@ -135,7 +137,7 @@ bool init_particle (particle* part, particle_info* info) {
 
         if (part->nframes > 1 && info->lifetime_from_animation) {
             // Recalculate max life for ani's
-            part->max_life = i2fl (part->nframes) / i2fl (fps);
+            part->max_life = float (part->nframes) / float (fps);
         }
 
         break;
@@ -448,7 +450,7 @@ void emit (
     float min_dist = 125.0f;
     float dist = vm_vec_dist_quick (&pe->pos, &Eye_position) / range;
     if (dist > min_dist) {
-        percent = fl2i (i2fl (percent) * min_dist / dist);
+        percent = int (float (percent) * min_dist / dist);
         if (percent < 1) { return; }
     }
     // mprintf(( "Dist = %.1f, percent = %d%%\n", dist, percent ));
@@ -466,18 +468,18 @@ void emit (
         vec3d tmp_vel;
         vec3d normal; // What normal the particle emit arond
 
-        float radius = ((pe->max_rad - pe->min_rad) * frand ()) + pe->min_rad;
+        float radius = ((pe->max_rad - pe->min_rad) * fs2::prng::randf (0)) + pe->min_rad;
 
-        float speed = ((pe->max_vel - pe->min_vel) * frand ()) + pe->min_vel;
+        float speed = ((pe->max_vel - pe->min_vel) * fs2::prng::randf (0)) + pe->min_vel;
 
-        float life = ((pe->max_life - pe->min_life) * frand ()) + pe->min_life;
+        float life = ((pe->max_life - pe->min_life) * fs2::prng::randf (0)) + pe->min_life;
 
         normal.xyz.x =
-            pe->normal.xyz.x + (frand () * 2.0f - 1.0f) * pe->normal_variance;
+            pe->normal.xyz.x + (fs2::prng::randf (0) * 2.0f - 1.0f) * pe->normal_variance;
         normal.xyz.y =
-            pe->normal.xyz.y + (frand () * 2.0f - 1.0f) * pe->normal_variance;
+            pe->normal.xyz.y + (fs2::prng::randf (0) * 2.0f - 1.0f) * pe->normal_variance;
         normal.xyz.z =
-            pe->normal.xyz.z + (frand () * 2.0f - 1.0f) * pe->normal_variance;
+            pe->normal.xyz.z + (fs2::prng::randf (0) * 2.0f - 1.0f) * pe->normal_variance;
         vm_vec_normalize_safe (&normal);
         vm_vec_scale_add (&tmp_vel, &pe->vel, &normal, speed);
 

@@ -125,37 +125,37 @@ clip_edge (int plane_flag, vertex* on_pnt, vertex* off_pnt, uint flags) {
         if (flags & TMAP_FLAG_RAMP) {
             float on_b, off_b;
 
-            on_b = i2fl (on_pnt->b);
-            off_b = i2fl (off_pnt->b);
+            on_b = float (on_pnt->b);
+            off_b = float (off_pnt->b);
 
-            tmp->b = ubyte (fl2i (on_b + (off_b - on_b) * ratio));
+            tmp->b = ubyte (int (on_b + (off_b - on_b) * ratio));
         }
         if (flags & TMAP_FLAG_RGB) {
             float on_r, on_b, on_g;
             float off_r, off_b, off_g;
 
-            on_r = i2fl (on_pnt->r);
-            off_r = i2fl (off_pnt->r);
+            on_r = float (on_pnt->r);
+            off_r = float (off_pnt->r);
 
-            on_g = i2fl (on_pnt->g);
-            off_g = i2fl (off_pnt->g);
+            on_g = float (on_pnt->g);
+            off_g = float (off_pnt->g);
 
-            on_b = i2fl (on_pnt->b);
-            off_b = i2fl (off_pnt->b);
+            on_b = float (on_pnt->b);
+            off_b = float (off_pnt->b);
 
-            tmp->r = ubyte (fl2i (on_r + (off_r - on_r) * ratio));
-            tmp->g = ubyte (fl2i (on_g + (off_g - on_g) * ratio));
-            tmp->b = ubyte (fl2i (on_b + (off_b - on_b) * ratio));
+            tmp->r = ubyte (int (on_r + (off_r - on_r) * ratio));
+            tmp->g = ubyte (int (on_g + (off_g - on_g) * ratio));
+            tmp->b = ubyte (int (on_b + (off_b - on_b) * ratio));
         }
     }
 
     if (flags & TMAP_FLAG_ALPHA) {
         float on_a, off_a;
 
-        on_a = i2fl (on_pnt->a);
-        off_a = i2fl (off_pnt->a);
+        on_a = float (on_pnt->a);
+        off_a = float (off_pnt->a);
 
-        tmp->a = ubyte (fl2i (on_a + (off_a - on_a) * ratio));
+        tmp->a = ubyte (int (on_a + (off_a - on_a) * ratio));
     }
 
     g3_code_vertex (tmp);

@@ -619,7 +619,7 @@ void HudGaugeThrottle::renderThrottleSpeed (float current_speed, int y_end) {
 
         // draw current speed at (x_pos, y_end);
         sx = x_pos - w - 2;
-        sy = fl2i (y_end - h / 2.0f + 1.5);
+        sy = int (y_end - h / 2.0f + 1.5);
     }
     else {
         sx = position[0] + Orbit_center_offsets[0] - w;
@@ -822,7 +822,7 @@ void HudGaugeThreatIndicator::renderLockThreat () {
     if (Player->threat_flags & (THREAT_LOCK | THREAT_ATTEMPT_LOCK)) {
         if (timestamp_elapsed (lock_warn_timer)) {
             if (Player->threat_flags & THREAT_LOCK) {
-                lock_warn_timer = timestamp (fl2i (THREAT_LOCK_FLASH / 2.0f));
+                lock_warn_timer = timestamp (int (THREAT_LOCK_FLASH / 2.0f));
             }
             else {
                 lock_warn_timer = timestamp (THREAT_LOCK_FLASH);
@@ -1068,7 +1068,7 @@ void hud_update_reticle (player* pp) {
         // a less hacked up version of the missile launch warning
         hud_start_text_flash (
             XSTR ("Launch", 1507), THREAT_LOCK_FLASH,
-            fl2i (THREAT_LOCK_FLASH / 2.0f));
+            int (THREAT_LOCK_FLASH / 2.0f));
     }
 
     if (Player->threat_flags & (THREAT_ATTEMPT_LOCK)) {

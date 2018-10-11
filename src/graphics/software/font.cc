@@ -511,7 +511,7 @@ int get_char_width_old (
 
 int gr_get_font_height () {
     if (FontManager::isReady ()) {
-        return fl2i (FontManager::getCurrentFont ()->getHeight ());
+        return int (FontManager::getCurrentFont ()->getHeight ());
     }
     else {
         return 16;
@@ -533,8 +533,8 @@ void gr_get_string_size (int* w1, int* h1, const char* text, int len) {
     FontManager::getCurrentFont ()->getStringSize (
         text, static_cast< size_t > (len), -1, &w, &h);
 
-    if (w1) { *w1 = fl2i (ceil (w)); }
-    if (h1) { *h1 = fl2i (ceil (h)); }
+    if (w1) { *w1 = int (ceil (w)); }
+    if (h1) { *h1 = int (ceil (h)); }
 }
 
 MONITOR (FontChars)

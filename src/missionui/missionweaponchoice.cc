@@ -807,10 +807,10 @@ void wl_render_overhead_view (float frametime) {
                             &draw_point.screen.xyw.x, &draw_point.screen.xyw.y,
                             NULL, NULL, GR_RESIZE_MENU_NO_OFFSET);
 
-                        xc = fl2i (
+                        xc = int (
                             draw_point.screen.xyw.x +
                             Wl_overhead_coords[gr_screen.res][0]);
-                        yc = fl2i (
+                        yc = int (
                             draw_point.screen.xyw.y +
                             Wl_overhead_coords[gr_screen.res][1]);
 
@@ -900,10 +900,10 @@ void wl_render_overhead_view (float frametime) {
                             &draw_point.screen.xyw.x, &draw_point.screen.xyw.y,
                             NULL, NULL, GR_RESIZE_MENU_NO_OFFSET);
 
-                        xc = fl2i (
+                        xc = int (
                             draw_point.screen.xyw.x +
                             Wl_overhead_coords[gr_screen.res][0]);
-                        yc = fl2i (
+                        yc = int (
                             draw_point.screen.xyw.y +
                             Wl_overhead_coords[gr_screen.res][1]);
 
@@ -3121,7 +3121,7 @@ void wl_update_parse_object_weapons (p_object* pobjp, wss_unit* slot) {
                 slot->wep[sidx],
                 Ship_info[slot->ship_class].secondary_bank_ammo_capacity[j]);
             ss->secondary_ammo[j] = (int)std::lround (
-                i2fl (slot->wep_count[sidx]) / max_count * 100.0f);
+                float (slot->wep_count[sidx]) / max_count * 100.0f);
 
             j++;
         }

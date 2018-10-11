@@ -164,7 +164,7 @@ void NVGFont::getStringSize (
                             m_specialCharacters, static_cast< ubyte > (*s),
                             '\0', &charWidth, &spacing);
 
-                        lineWidth += i2fl (spacing);
+                        lineWidth += float (spacing);
                     }
                 }
                 break;

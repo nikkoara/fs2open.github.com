@@ -1299,7 +1299,7 @@ int Window::DoRefreshSize () {
             (float)((Coords[2] - CornerWidths[3]) - (Coords[0] + CornerWidths[2])) /
             (float)w;
         BorderRectLists[CIE_HANDLE_TM] = bitmap_rect_list (
-            Coords[0] + CornerWidths[2], Coords[1], fl2i (w * num), h, 0, 0,
+            Coords[0] + CornerWidths[2], Coords[1], int (w * num), h, 0, 0,
             num, 1.0f);
         // gr_bitmap_list(&BorderRectLists[CIE_HANDLE_BM], 1, GR_RESIZE_NONE);
     }
@@ -1309,7 +1309,7 @@ int Window::DoRefreshSize () {
             (float)((Coords[2] - CornerWidths[3]) - (Coords[0] + CornerWidths[2])) /
             (float)w;
         BorderRectLists[CIE_HANDLE_BM] = bitmap_rect_list (
-            Coords[0] + CornerWidths[2], Coords[3] - h, fl2i (w * num), h, 0,
+            Coords[0] + CornerWidths[2], Coords[3] - h, int (w * num), h, 0,
             0, num, 1.0f);
         // gr_bitmap_list(&BorderRectLists[CIE_HANDLE_BM], 1, GR_RESIZE_NONE);
     }
@@ -1319,7 +1319,7 @@ int Window::DoRefreshSize () {
             (float)((Coords[3] - BorderSizes[3]) - (Coords[1] + BorderSizes[1])) /
             (float)h;
         BorderRectLists[CIE_HANDLE_ML] = bitmap_rect_list (
-            Coords[0], Coords[1] + BorderSizes[1], w, fl2i (h * num), 0, 0,
+            Coords[0], Coords[1] + BorderSizes[1], w, int (h * num), 0, 0,
             1.0f, num);
     }
     if (IMG_HANDLE_IS_VALID (GetCIEImageHandle (WCI_BORDER, CIE_HANDLE_MR))) {
@@ -1328,7 +1328,7 @@ int Window::DoRefreshSize () {
             (float)((Coords[3] - BorderSizes[3]) - (Coords[1] + BorderSizes[1])) /
             (float)h;
         BorderRectLists[CIE_HANDLE_MR] = bitmap_rect_list (
-            Coords[2] - w, Coords[1] + BorderSizes[1], w, fl2i (h * num), 0, 0,
+            Coords[2] - w, Coords[1] + BorderSizes[1], w, int (h * num), 0, 0,
             1.0f, num);
     }
 
@@ -2546,7 +2546,7 @@ void ImageAnim::DoDraw (float frametime) {
         Progress = ElapsedTime / TotalTime;
     }
 
-    int CurrentFrame = fl2i (Progress * TotalFrames);
+    int CurrentFrame = int (Progress * TotalFrames);
     if (Progress > 1.0f) {
         if (ImageFlags & IF_BOUNCE) {
             Progress = 1.0f;
@@ -2693,14 +2693,14 @@ int Slider::DoRefreshSize () {
 }
 
 int Slider::GetSliderOffset () {
-    return fl2i (
+    return int (
         SliderScale * (BarCoords[2] - BarCoords[0] - SliderWidth) +
         BarCoords[0]);
 }
 
 float Slider::GetSliderPos (int x) {
-    return i2fl (x - BarCoords[0]) /
-           i2fl (BarCoords[2] - BarCoords[0] - SliderWidth);
+    return float (x - BarCoords[0]) /
+           float (BarCoords[2] - BarCoords[0] - SliderWidth);
 }
 
 void Slider::UpdateSlider (int x) {

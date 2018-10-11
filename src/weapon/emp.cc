@@ -1,23 +1,25 @@
 // -*- mode: c++; -*-
 
-#include <cstdarg>
-#include <cstdarg>
-
 #include "defs.hh"
+
 #include "debugconsole/console.hh"
 #include "freespace2/freespace.hh"
-#include "util/list.hh"
 #include "hud/hud.hh"
 #include "hud/hudlock.hh"
 #include "hud/hudtarget.hh"
 #include "iff_defs/iff_defs.hh"
 #include "io/timer.hh"
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "object/object.hh"
 #include "parse/parselo.hh"
 #include "ship/ship.hh"
+#include "util/list.hh"
 #include "weapon/emp.hh"
 #include "weapon/weapon.hh"
-#include "log/log.hh"
+
+#include <cstdarg>
+#include <cstdarg>
 
 // ----------------------------------------------------------------------------------------------------
 // EMP EFFECT DEFINES/VARS
@@ -410,7 +412,7 @@ void emp_process_local () {
 
         // reset the timestamp
         Emp_wacky_target_timestamp = timestamp (
-            (int)frand_range (100.0f, 750.0f * (1.0f - Emp_intensity)));
+            (int)fs2::prng::randf (0, 100.0f, 750.0f * (1.0f - Emp_intensity)));
     }
 }
 
@@ -420,7 +422,7 @@ int emp_should_blit_gauge () {
     if (!emp_active_local ()) { return 1; }
 
     // otherwise, randomly say no
-    return frand_range (0.0f, 1.0f) > Emp_intensity;
+    return fs2::prng::randf (0, 0.0f, 1.0f) > Emp_intensity;
 }
 
 // emp hud string
@@ -477,7 +479,7 @@ void emp_maybe_reformat_text (char* text, int /*max_len*/, int gauge_id) {
     if (!emp_active_local ()) { return; }
 
     // randomly _don't_ apply text craziness
-    if (frand_range (0.0f, 1.0f) > Emp_intensity) { return; }
+    if (fs2::prng::randf (0, 0.0f, 1.0f) > Emp_intensity) { return; }
 
     // if the gauge is EG_NULL, empty the string
     if (gauge_id == EG_NULL) {
@@ -500,7 +502,7 @@ void emp_maybe_reformat_text (char* text, int /*max_len*/, int gauge_id) {
         case EG_WEAPON_S1:
         case EG_WEAPON_S2:
             int wep_index;
-            wep_index = (int)frand_range (0.0f, (float)(MAX_WEAPON_TYPES - 1));
+            wep_index = (int)fs2::prng::randf (0, 0.0f, (float)(MAX_WEAPON_TYPES - 1));
             strcpy (
                 wt->str,
                 Weapon_info[wep_index >= MAX_WEAPON_TYPES ? 0 : wep_index]
@@ -565,7 +567,7 @@ void emp_maybe_reformat_text (char* text, int /*max_len*/, int gauge_id) {
 
         // recalculate the timestamp
         wt->stamp = timestamp (
-            (int)frand_range (100.0f, 750.0f * (1.0f - Emp_intensity)));
+            (int)fs2::prng::randf (0, 100.0f, 750.0f * (1.0f - Emp_intensity)));
 
         // copy the text
         strcpy (text, wt->str);
@@ -586,9 +588,9 @@ void emp_randomize_chars (char* str) {
 
     // shuffle chars around
     for (idx = 0; idx < (int)(strlen (str) - 1); idx++) {
-        if (frand_range (0.0f, 1.0f) < Emp_intensity) {
+        if (fs2::prng::randf (0, 0.0f, 1.0f) < Emp_intensity) {
             char_index =
-                (int)frand_range (0.0f, (float)(NUM_RANDOM_CHARS - 1));
+                (int)fs2::prng::randf (0, 0.0f, (float)(NUM_RANDOM_CHARS - 1));
             str[idx] = Emp_random_char[char_index];
         }
     }
@@ -600,8 +602,8 @@ void emp_hud_jitter (int* x, int* y) {
     if (!emp_active_local ()) { return; }
 
     // some movement
-    *x += (int)frand_range (-8.0f * Emp_intensity, 8.0f * Emp_intensity);
-    *y += (int)frand_range (-8.0f * Emp_intensity, 8.0f * Emp_intensity);
+    *x += (int)fs2::prng::randf (0, -8.0f * Emp_intensity, 8.0f * Emp_intensity);
+    *y += (int)fs2::prng::randf (0, -8.0f * Emp_intensity, 8.0f * Emp_intensity);
 }
 
 // current intensity of the EMP effect (0.0 - 1.0)

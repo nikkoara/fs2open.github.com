@@ -969,7 +969,7 @@ void ship_select_blit_ship_info () {
     }
     else if (ShipSelectModelNum >= 0) {
         polymodel* pm = model_get (ShipSelectModelNum);
-        sprintf (str, "%d", fl2i (pm->maxs.xyz.z - pm->mins.xyz.z));
+        sprintf (str, "%d", int (pm->maxs.xyz.z - pm->mins.xyz.z));
         strcat (str, " M");
         gr_string (
             Ship_info_coords[gr_screen.res][SHIP_SELECT_X_COORD] + 4, y_start,
@@ -990,7 +990,7 @@ void ship_select_blit_ship_info () {
     y_start += line_height;
     sprintf (
         str, XSTR ("%d m/s", 743),
-        fl2i ((float)sip->max_vel.xyz.z * Hud_speed_multiplier));
+        int ((float)sip->max_vel.xyz.z * Hud_speed_multiplier));
     gr_set_color_fast (text);
     gr_string (
         Ship_info_coords[gr_screen.res][SHIP_SELECT_X_COORD] + 4, y_start, str,
@@ -1011,7 +1011,7 @@ void ship_select_blit_ship_info () {
             sip->maneuverability_str, GR_RESIZE_MENU);
     }
     else if (ShipSelectModelNum >= 0) {
-        int sum = fl2i (sip->rotation_time.xyz.x + sip->rotation_time.xyz.y);
+        int sum = int (sip->rotation_time.xyz.x + sip->rotation_time.xyz.y);
         if (sum <= 6)
             strcpy (str, "Excellent");
         else if (sum < 7)
@@ -1051,7 +1051,7 @@ void ship_select_blit_ship_info () {
             sip->armor_str, GR_RESIZE_MENU);
     }
     else {
-        int sum = fl2i (sip->max_hull_strength + sip->max_shield_strength);
+        int sum = int (sip->max_hull_strength + sip->max_shield_strength);
         if (sum <= 600)
             strcpy (str, "Light");
         else if (sum <= 700)

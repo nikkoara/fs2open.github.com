@@ -333,7 +333,7 @@ void HudGaugeRadarStd::plotBlip (blip* b, int* x, int* y) {
         rscale = (float)acosf (pos->xyz.z / b->dist) / PI; // 2.0f;
     }
 
-    zdist = fl_sqrt ((pos->xyz.x * pos->xyz.x) + (pos->xyz.y * pos->xyz.y));
+    zdist = sqrtf ((pos->xyz.x * pos->xyz.x) + (pos->xyz.y * pos->xyz.y));
 
     float new_x_dist, clipped_x_dist;
     float new_y_dist, clipped_y_dist;
@@ -352,7 +352,7 @@ void HudGaugeRadarStd::plotBlip (blip* b, int* x, int* y) {
         float max_radius;
 
         hypotenuse = (float)hypot (new_x_dist, new_y_dist);
-        max_radius = i2fl (Radar_radius[0] - 5);
+        max_radius = float (Radar_radius[0] - 5);
 
         if (hypotenuse >= max_radius) {
             clipped_x_dist = max_radius * (new_x_dist / hypotenuse);
@@ -362,8 +362,8 @@ void HudGaugeRadarStd::plotBlip (blip* b, int* x, int* y) {
         }
     }
 
-    *x = fl2i (position[0] + Radar_center_offsets[0] + new_x_dist);
-    *y = fl2i (position[1] + Radar_center_offsets[1] - new_y_dist);
+    *x = int (position[0] + Radar_center_offsets[0] + new_x_dist);
+    *y = int (position[1] + Radar_center_offsets[1] - new_y_dist);
 }
 
 void HudGaugeRadarStd::drawCrosshairs (int x, int y) {

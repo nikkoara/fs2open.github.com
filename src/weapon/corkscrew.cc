@@ -1,14 +1,16 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
 #include "debugconsole/console.hh"
 #include "freespace2/freespace.hh" // for Missiontime
 #include "io/timer.hh"
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "object/object.hh"
 #include "ship/ship.hh"
 #include "weapon/corkscrew.hh"
 #include "weapon/weapon.hh"
-#include "log/log.hh"
 
 // corkscrew structure flags
 #define CS_FLAG_USED (1 << 0)    // this structure is in use
@@ -128,7 +130,7 @@ int cscrew_create (object* obj) {
 
     // determine if he is counterrotating
     if (wip->cs_crotate) {
-        if (frand_range (0.0f, 1.0f) < 0.5f) {
+        if (fs2::prng::randf (0, 0.0f, 1.0f) < 0.5f) {
             cscrewp->flags |= CS_FLAG_COUNTER;
         }
     }

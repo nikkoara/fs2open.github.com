@@ -575,7 +575,7 @@ size_t NanoVGRenderer::addUniformData (size_t num) {
     memset (&data, 0, sizeof (data));
     // Push an unitialized struct into the vector but set the viewport here
     // since that is the same for all elements
-    data.viewSize = { i2fl (_viewport.x), i2fl (_viewport.y) };
+    data.viewSize = { float (_viewport.x), float (_viewport.y) };
 
     auto current = _uniformData.size ();
     _uniformData.resize (current + num, data);

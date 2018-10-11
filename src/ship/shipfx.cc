@@ -1,6 +1,8 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
+#include "assert/assert.hh"
 #include "asteroid/asteroid.hh"
 #include "bmpman/bmpman.hh"
 #include "cmdline/cmdline.hh"
@@ -12,8 +14,10 @@
 #include "hud/hudmessage.hh"
 #include "io/timer.hh"
 #include "lighting/lighting.hh"
+#include "log/log.hh"
 #include "math/floating.hh"
 #include "math/fvi.hh"
+#include "math/prng.hh"
 #include "model/model.hh"
 #include "object/object.hh"
 #include "object/objectdock.hh"
@@ -31,8 +35,6 @@
 #include "weapon/muzzleflash.hh"
 #include "weapon/shockwave.hh"
 #include "weapon/weapon.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
 
 #ifndef NDEBUG
 extern float flFrametime;
@@ -179,7 +181,7 @@ static void shipfx_subsystem_maybe_create_live_debris (
                 vec3d rand_vec, vec_to_center;
 
                 float vel_mag = vm_vec_mag_quick (&radial_vel) * 1.3f *
-                                (0.9f + 0.2f * frand ());
+                                (0.9f + 0.2f * fs2::prng::randf (0));
                 vm_vec_normalized_dir (
                     &vec_to_center, &world_axis_pt, &end_world_pos);
                 vm_vec_rand_vec_quick (&rand_vec);
@@ -205,7 +207,7 @@ static void shipfx_subsystem_maybe_create_live_debris (
 
                 if (rotvel_mag > 0.1) {
                     float scale =
-                        (1.2f + 0.2f * frand ()) * vel_mag / rotvel_mag;
+                        (1.2f + 0.2f * fs2::prng::randf (0)) * vel_mag / rotvel_mag;
                     // always add *at least* rotvel
                     if (scale < 1) { scale = 1.0f; }
 
@@ -1550,7 +1552,7 @@ void shipfx_emit_spark (int n, int sn) {
                     // sparks only once when hull > 60%
                     float spark_duration =
                         (float)pow (2.0f, -5.0f * (hull_percent - 1.3f)) *
-                        (1.0f + 0.6f * (frand () - 0.5f)); // +- 30%
+                        (1.0f + 0.6f * (fs2::prng::randf (0) - 0.5f)); // +- 30%
                     shipp->sparks[spark_num].end_time =
                         timestamp ((int)(1000.0f * spark_duration));
                 }
@@ -1718,7 +1720,7 @@ static void split_ship_init (ship* shipp, split_ship* split_shipp) {
         init_clip_plane_dist = pm->split_plane[index];
     }
     else {
-        init_clip_plane_dist = 0.5f * (0.5f - frand ()) * pm->core_radius;
+        init_clip_plane_dist = 0.5f * (0.5f - fs2::prng::randf (0)) * pm->core_radius;
     }
 
     split_shipp->back_ship.cur_clip_plane_pt = init_clip_plane_dist;
@@ -1782,7 +1784,7 @@ static void split_ship_init (ship* shipp, split_ship* split_shipp) {
     float expl_length_scale = (ship_length - 200.0f) / 2000.0f;
     // s_r_f effects speed of "wipe" and rotvel
     float speed_reduction_factor = (1.0f + 0.001f * parent_ship_obj->radius);
-    float explosion_time = (3.0f + expl_length_scale + (frand () - 0.5f)) *
+    float explosion_time = (3.0f + expl_length_scale + (fs2::prng::randf (0) - 0.5f)) *
                            speed_reduction_factor;
     float long_length = MAX (front_length, back_length);
     float expl_vel = long_length / explosion_time;
@@ -1790,7 +1792,7 @@ static void split_ship_init (ship* shipp, split_ship* split_shipp) {
     split_shipp->back_ship.explosion_vel = -expl_vel;
 
     float rel_vel =
-        (0.6f + 0.2f * frand ()) * expl_vel * speed_reduction_factor;
+        (0.6f + 0.2f * fs2::prng::randf (0)) * expl_vel * speed_reduction_factor;
     float front_vel = rel_vel * back_length / ship_length;
     float back_vel = -rel_vel * front_length / ship_length;
 
@@ -1941,7 +1943,7 @@ void shipfx_queue_render_ship_halves_and_debris (
                             &half_ship->phys_info.rotvel);
                         vm_vec_add2 (&debris_vel, &half_ship->phys_info.vel);
                         vm_vec_copy_normalize (&radial_vel, &center_to_debris);
-                        float radial_mag = 10.0f + 30.0f * frand ();
+                        float radial_mag = 10.0f + 30.0f * fs2::prng::randf (0);
                         vm_vec_scale_add2 (
                             &debris_vel, &radial_vel, radial_mag);
                         debris_obj->phys_info.vel = debris_vel;
@@ -2000,7 +2002,7 @@ void shipfx_debris_limit_speed (debris* db, ship* shipp) {
     float curspeed = vm_vec_mag (&pi->vel);
     if (sip->debris_min_speed >= 0.0f && sip->debris_max_speed >= 0.0f) {
         float debris_speed =
-            ((sip->debris_max_speed - sip->debris_min_speed) * frand ()) +
+            ((sip->debris_max_speed - sip->debris_min_speed) * fs2::prng::randf (0)) +
             sip->debris_min_speed;
         if (fabs (curspeed) >= 0.001f) {
             float scale = debris_speed / curspeed;
@@ -2043,7 +2045,7 @@ void shipfx_debris_limit_speed (debris* db, ship* shipp) {
     if (sip->debris_min_rotspeed >= 0.0f && sip->debris_max_rotspeed >= 0.0f) {
         float debris_rotspeed =
             ((sip->debris_max_rotspeed - sip->debris_min_rotspeed) *
-             frand ()) +
+             fs2::prng::randf (0)) +
             sip->debris_min_rotspeed;
         if (fabs (currotvel) >= 0.001f) {
             float scale = debris_rotspeed / currotvel;
@@ -2181,7 +2183,7 @@ maybe_fireball_wipe (clip_ship* half_ship, sound_handle* handle_array) {
     // maybe make fireball to cover wipe.
     if (timestamp_elapsed (half_ship->next_fireball)) {
         if (half_ship->length_left >
-            0.2f * fl_abs (half_ship->explosion_vel)) {
+            0.2f * fabsf (half_ship->explosion_vel)) {
             ship_info* sip = &Ship_info[Ships[half_ship->parent_obj->instance]
                                             .ship_info_index];
 
@@ -2199,7 +2201,7 @@ maybe_fireball_wipe (clip_ship* half_ship, sound_handle* handle_array) {
             vm_vec_unrotate (&model_clip_plane_pt, &temp, &half_ship->orient);
             vm_vec_add2 (&model_clip_plane_pt, &orig_ship_world_center);
             vm_vec_rand_vec_quick (&temp);
-            vm_vec_scale (&temp, 0.1f * frand ());
+            vm_vec_scale (&temp, 0.1f * fs2::prng::randf (0));
             vm_vec_add2 (&model_clip_plane_pt, &temp);
 
             float rad = get_model_cross_section_at_z (
@@ -2207,13 +2209,13 @@ maybe_fireball_wipe (clip_ship* half_ship, sound_handle* handle_array) {
             if (rad < 1) {
                 // changed from 0.4 & 0.6 to 0.6 & 0.9 as later 1.5 multiplier
                 // was removed
-                rad = half_ship->parent_obj->radius * frand_range (0.6f, 0.9f);
+                rad = half_ship->parent_obj->radius * fs2::prng::randf (0, 0.6f, 0.9f);
             }
             else {
                 // make fireball radius (1.5 +/- .1) * model_cross_section
                 // value changed from 1.4 & 1.6 to 2.1 & 2.4 as later 1.5
                 // multiplier was removed
-                rad *= frand_range (2.1f, 2.4f);
+                rad *= fs2::prng::randf (0, 2.1f, 2.4f);
             }
 
             rad = MIN (rad, half_ship->parent_obj->radius);
@@ -2444,11 +2446,11 @@ void shipfx_do_damaged_arcs_frame (ship* shipp) {
 
         // if the emp effect is active or its disrupted
         if ((shipp->emp_intensity > 0.0f) || (disrupted_arc)) {
-            freq = fl2i (MAX_EMP_ARC_TIMESTAMP);
+            freq = int (MAX_EMP_ARC_TIMESTAMP);
         }
         // otherwise if we're arcing based upon damage
         else {
-            freq = fl2i ((damage + 0.1f) * 5000.0f);
+            freq = int ((damage + 0.1f) * 5000.0f);
         }
 
         // set the next arc time
@@ -2824,17 +2826,17 @@ void shipfx_do_shockwave_stuff (ship* shipp, shockwave_create_info* sci) {
         // create the shockwave
         shockwave_create_info sci2 = *sci;
         sci2.blast = (sci->blast / (float)sip->shockwave_count) *
-                     frand_range (0.75f, 1.25f);
+                     fs2::prng::randf (0, 0.75f, 1.25f);
         sci2.damage = (sci->damage / (float)sip->shockwave_count) *
-                      frand_range (0.75f, 1.25f);
-        sci2.speed = sci->speed * frand_range (0.75f, 1.25f);
-        sci2.rot_angles.p = frand_range (0.0f, 1.99f * PI);
-        sci2.rot_angles.b = frand_range (0.0f, 1.99f * PI);
-        sci2.rot_angles.h = frand_range (0.0f, 1.99f * PI);
+                      fs2::prng::randf (0, 0.75f, 1.25f);
+        sci2.speed = sci->speed * fs2::prng::randf (0, 0.75f, 1.25f);
+        sci2.rot_angles.p = fs2::prng::randf (0, 0.0f, 1.99f * PI);
+        sci2.rot_angles.b = fs2::prng::randf (0, 0.0f, 1.99f * PI);
+        sci2.rot_angles.h = fs2::prng::randf (0, 0.0f, 1.99f * PI);
 
         shockwave_create (
             shipp->objnum, &shockwave_pos, &sci2, SW_SHIP_DEATH,
-            (int)frand_range (0.0f, 350.0f));
+            (int)fs2::prng::randf (0, 0.0f, 350.0f));
 
         // next shockwave
         cur += step;
@@ -3049,7 +3051,7 @@ void engine_wash_ship_process (ship* shipp) {
                         else {
                             // check if inside cone - first fine apex of cone
                             inset_depth =
-                                (bank->points[j].radius / fl_tan (half_angle));
+                                (bank->points[j].radius / tanf (half_angle));
                             vm_vec_scale_add (
                                 &apex, &world_thruster_pos,
                                 &world_thruster_norm, -inset_depth);
@@ -3243,11 +3245,11 @@ int CombinedVariable::getFloat (float* output) {
         return 1;
     }
     if (Type == TYPE_IMAGE) {
-        *output = i2fl (su_Image);
+        *output = float (su_Image);
         return 1;
     }
     if (Type == TYPE_INT) {
-        *output = i2fl (su_Int);
+        *output = float (su_Int);
         return 1;
     }
     if (Type == TYPE_STRING) {
@@ -3273,7 +3275,7 @@ int CombinedVariable::getInt (int* output) {
     if (output == NULL) return 0;
 
     if (Type == TYPE_FLOAT) {
-        *output = fl2i (su_Float);
+        *output = int (su_Float);
         return 1;
     }
     if (Type == TYPE_IMAGE) {
@@ -3569,9 +3571,9 @@ int WE_Default::warpStart () {
 
     stage_time_start = total_time_start = timestamp ();
     if (direction == WD_WARP_IN) {
-        stage_duration[1] = fl2i (SHIPFX_WARP_DELAY * 1000.0f);
+        stage_duration[1] = int (SHIPFX_WARP_DELAY * 1000.0f);
         stage_duration[2] =
-            fl2i (shipfx_calculate_warp_time (objp, WD_WARP_IN) * 1000.0f);
+            int (shipfx_calculate_warp_time (objp, WD_WARP_IN) * 1000.0f);
         stage_time_end = timestamp (stage_duration[1]);
         total_time_end = stage_duration[1] + stage_duration[2];
         shipp->flags.set (Ship::Ship_Flags::Arriving_stage_1);
@@ -3582,11 +3584,11 @@ int WE_Default::warpStart () {
         // Make the warp effect stage 1 last SHIP_WARP_TIME1 seconds.
         if (objp == Player_obj) {
             stage_duration[1] =
-                fl2i (fireball_lifeleft (&Objects[warp_objnum]) * 1000.0f);
-            total_time_end = timestamp (fl2i (warp_time * 1000.0f));
+                int (fireball_lifeleft (&Objects[warp_objnum]) * 1000.0f);
+            total_time_end = timestamp (int (warp_time * 1000.0f));
         }
         else {
-            total_time_end = timestamp (fl2i (warp_time * 2.0f * 1000.0f));
+            total_time_end = timestamp (int (warp_time * 2.0f * 1000.0f));
         }
 
         // This is a hack to make the ship go at the right speed to go from
@@ -3642,7 +3644,7 @@ int WE_Default::warpFrame (float frametime) {
             objp->phys_info.forward_thrust =
                 0.0f; // How much the forward thruster is applied.  0-1.
 
-            stage_time_end = timestamp (fl2i (warp_time * 1000.0f));
+            stage_time_end = timestamp (int (warp_time * 1000.0f));
         }
         else if (
             (shipp->flags[Ship::Ship_Flags::Arriving_stage_2]) &&
@@ -3760,7 +3762,7 @@ WE_BSG::WE_BSG (object* n_objp, int n_direction)
         anim = bm_load_either (tmp_name, &anim_nframes, &anim_fps, NULL, true);
         if (anim > -1) {
             anim_total_time =
-                fl2i (((float)anim_nframes / (float)anim_fps) * 1000.0f);
+                int (((float)anim_nframes / (float)anim_fps) * 1000.0f);
         }
 
         // Setup shockwave name
@@ -3770,7 +3772,7 @@ WE_BSG::WE_BSG (object* n_objp, int n_direction)
         shockwave = bm_load_either (
             tmp_name, &shockwave_nframes, &shockwave_fps, NULL, true);
         if (shockwave > -1) {
-            shockwave_total_time = fl2i (
+            shockwave_total_time = int (
                 ((float)shockwave_nframes / (float)shockwave_fps) * 1000.0f);
         }
     }
@@ -3981,7 +3983,7 @@ int WE_BSG::warpShipRender () {
 
     if (anim > -1) {
         // Figure out which frame we're on
-        int anim_frame = fl2i (
+        int anim_frame = int (
             ((float)(timestamp () - total_time_start) / 1000.0f) *
             (float)anim_fps);
 
@@ -4007,7 +4009,7 @@ int WE_BSG::warpShipRender () {
     }
 
     if (stage == 1 && shockwave > -1) {
-        int shockwave_frame = fl2i (
+        int shockwave_frame = int (
             ((float)(timestamp () - stage_time_start) / 1000.0f) *
             (float)shockwave_fps);
 
@@ -4245,7 +4247,7 @@ int WE_Homeworld::warpShipRender () {
 
     int frame = 0;
     if (anim_fps > 0)
-        frame = fl2i (
+        frame = int (
             (int)(((float)(timestamp () - (float)total_time_start) / 1000.0f) * (float)anim_fps) %
             anim_nframes);
 

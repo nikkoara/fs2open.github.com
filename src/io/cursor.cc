@@ -110,7 +110,7 @@ void Cursor::setCurrentFrame () {
     if (mAnimationFrames.size () > 1) {
         // We are animated, compute the current frame
         float diffSeconds =
-            i2fl (timestamp () - mBeginTimeStamp) / TIMESTAMP_FREQUENCY;
+            float (timestamp () - mBeginTimeStamp) / TIMESTAMP_FREQUENCY;
 
         // Use the bmpman function for this. That also ensures that APNG
         // cursors work correctly

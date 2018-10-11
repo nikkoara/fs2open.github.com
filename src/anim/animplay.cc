@@ -269,7 +269,7 @@ int anim_show_next_frame (anim_instance* instance, float frametime) {
     else if (instance->direction == ANIM_DIRECT_REVERSE)
         n_frames = instance->start_at - instance->stop_at + 1;
 
-    time = n_frames / i2fl (instance->parent->fps);
+    time = n_frames / float (instance->parent->fps);
 
     percent_through = instance->time_elapsed / time;
 
@@ -783,7 +783,7 @@ anim* anim_load (const char* real_filename, int cf_dir_type, int file_mapped) {
         }
 
         // store how long the anim should take on playback (in seconds)
-        ptr->time = i2fl (ptr->total_frames) / ptr->fps;
+        ptr->time = float (ptr->total_frames) / ptr->fps;
 
         for (idx = 0; idx < ptr->num_keys; idx++) {
             ptr->keys[idx].frame_num = 0;
@@ -1016,7 +1016,7 @@ void anim_display_info (char* real_filename) {
     cfread (&compressed, 4, 1, fp);
 
     uncompressed = A.width * A.height * A.total_frames; // 8 bits per pixel
-    percent = i2fl (compressed) / uncompressed * 100.0f;
+    percent = float (compressed) / uncompressed * 100.0f;
 
     printf ("%% of uncompressed size:    %.0f%%\n", percent);
     printf ("Width:                     %d\n", A.width);

@@ -923,9 +923,9 @@ void physics_apply_whack (
     // vec3d   npos;
 
     // Detect null vector.
-    if ((fl_abs (impulse->xyz.x) <= WHACK_LIMIT) &&
-        (fl_abs (impulse->xyz.y) <= WHACK_LIMIT) &&
-        (fl_abs (impulse->xyz.z) <= WHACK_LIMIT))
+    if ((fabsf (impulse->xyz.x) <= WHACK_LIMIT) &&
+        (fabsf (impulse->xyz.y) <= WHACK_LIMIT) &&
+        (fabsf (impulse->xyz.z) <= WHACK_LIMIT))
         return;
 
     // first do the rotational velocity
@@ -983,7 +983,7 @@ float velocity_ramp (
     if (t == 0.0f) return v_in;
 
     delta_v = v_goal - v_in;
-    dist = (float)fl_abs (delta_v);
+    dist = (float)fabsf (delta_v);
 
     // hack to speed up closure when close to goal
     if (dist < ramp_time_const / 3) ramp_time_const = dist / 3;
@@ -1078,9 +1078,9 @@ void physics_apply_shock (
     normal.xyz.y = vm_vec_dot (direction_vec, &orient->vec.uvec);
     normal.xyz.z = vm_vec_dot (direction_vec, &orient->vec.fvec);
 
-    sin.xyz.x = fl_sqrt (fl_abs (1.0f - normal.xyz.x * normal.xyz.x));
-    sin.xyz.y = fl_sqrt (fl_abs (1.0f - normal.xyz.y * normal.xyz.y));
-    sin.xyz.z = fl_sqrt (fl_abs (1.0f - normal.xyz.z * normal.xyz.z));
+    sin.xyz.x = sqrtf (fabsf (1.0f - normal.xyz.x * normal.xyz.x));
+    sin.xyz.y = sqrtf (fabsf (1.0f - normal.xyz.y * normal.xyz.y));
+    sin.xyz.z = sqrtf (fabsf (1.0f - normal.xyz.z * normal.xyz.z));
 
     vm_vec_make (&torque, 0.0f, 0.0f, 0.0f);
 
@@ -1206,9 +1206,9 @@ void physics_collide_whack (
     vec3d body_delta_rotvel;
 
     // Detect null vector.
-    if ((fl_abs (impulse->xyz.x) <= WHACK_LIMIT) &&
-        (fl_abs (impulse->xyz.y) <= WHACK_LIMIT) &&
-        (fl_abs (impulse->xyz.z) <= WHACK_LIMIT))
+    if ((fabsf (impulse->xyz.x) <= WHACK_LIMIT) &&
+        (fabsf (impulse->xyz.y) <= WHACK_LIMIT) &&
+        (fabsf (impulse->xyz.z) <= WHACK_LIMIT))
         return;
 
     vm_vec_rotate (&body_delta_rotvel, world_delta_rotvel, orient);
@@ -1260,36 +1260,36 @@ int check_rotvel_limit (physics_info* pi) {
         // ROTVEL_CAP) );
         // Warning(LOCATION,"Excessive rotvel (wx: %f, wy: %f, wz:%f)\n",
         // pi->rotvel.xyz.x, pi->rotvel.xyz.y, pi->rotvel.xyz.z);
-        if (fl_abs (pi->rotvel.xyz.x) > pi->max_rotvel.xyz.x) {
-            pi->rotvel.xyz.x = (pi->rotvel.xyz.x / fl_abs (pi->rotvel.xyz.x)) *
+        if (fabsf (pi->rotvel.xyz.x) > pi->max_rotvel.xyz.x) {
+            pi->rotvel.xyz.x = (pi->rotvel.xyz.x / fabsf (pi->rotvel.xyz.x)) *
                                (pi->max_rotvel.xyz.x - (float)ROTVEL_TOL);
             change_made = 1;
         }
-        if (fl_abs (pi->rotvel.xyz.y) > pi->max_rotvel.xyz.y) {
-            pi->rotvel.xyz.y = (pi->rotvel.xyz.y / fl_abs (pi->rotvel.xyz.y)) *
+        if (fabsf (pi->rotvel.xyz.y) > pi->max_rotvel.xyz.y) {
+            pi->rotvel.xyz.y = (pi->rotvel.xyz.y / fabsf (pi->rotvel.xyz.y)) *
                                (pi->max_rotvel.xyz.y - (float)ROTVEL_TOL);
             change_made = 1;
         }
-        if (fl_abs (pi->rotvel.xyz.z) > pi->max_rotvel.xyz.z) {
-            pi->rotvel.xyz.z = (pi->rotvel.xyz.z / fl_abs (pi->rotvel.xyz.z)) *
+        if (fabsf (pi->rotvel.xyz.z) > pi->max_rotvel.xyz.z) {
+            pi->rotvel.xyz.z = (pi->rotvel.xyz.z / fabsf (pi->rotvel.xyz.z)) *
                                (pi->max_rotvel.xyz.z - (float)ROTVEL_TOL);
             change_made = 1;
         }
     }
     else {
         // case of dead ship
-        if (fl_abs (pi->rotvel.xyz.x) > DEAD_ROTVEL_CAP) {
-            pi->rotvel.xyz.x = (pi->rotvel.xyz.x / fl_abs (pi->rotvel.xyz.x)) *
+        if (fabsf (pi->rotvel.xyz.x) > DEAD_ROTVEL_CAP) {
+            pi->rotvel.xyz.x = (pi->rotvel.xyz.x / fabsf (pi->rotvel.xyz.x)) *
                                (float)(DEAD_ROTVEL_CAP - ROTVEL_TOL);
             change_made = 1;
         }
-        if (fl_abs (pi->rotvel.xyz.y) > DEAD_ROTVEL_CAP) {
-            pi->rotvel.xyz.y = (pi->rotvel.xyz.y / fl_abs (pi->rotvel.xyz.y)) *
+        if (fabsf (pi->rotvel.xyz.y) > DEAD_ROTVEL_CAP) {
+            pi->rotvel.xyz.y = (pi->rotvel.xyz.y / fabsf (pi->rotvel.xyz.y)) *
                                (float)(DEAD_ROTVEL_CAP - ROTVEL_TOL);
             change_made = 1;
         }
-        if (fl_abs (pi->rotvel.xyz.z) > DEAD_ROTVEL_CAP) {
-            pi->rotvel.xyz.z = (pi->rotvel.xyz.z / fl_abs (pi->rotvel.xyz.z)) *
+        if (fabsf (pi->rotvel.xyz.z) > DEAD_ROTVEL_CAP) {
+            pi->rotvel.xyz.z = (pi->rotvel.xyz.z / fabsf (pi->rotvel.xyz.z)) *
                                (float)(DEAD_ROTVEL_CAP - ROTVEL_TOL);
             change_made = 1;
         }

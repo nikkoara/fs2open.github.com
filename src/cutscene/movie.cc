@@ -152,11 +152,11 @@ void determine_display_positions (Player* player, PlaybackState* state) {
     }
     else {
         // centers on 1024x768, fills on 640x480
-        screenX = i2fl (
+        screenX = float (
             ((gr_screen.center_w - static_cast< int > (props.size.width)) /
              2) +
             gr_screen.center_offset_x);
-        screenY = i2fl (
+        screenY = float (
             ((gr_screen.center_h - static_cast< int > (props.size.height)) /
              2) +
             gr_screen.center_offset_y);

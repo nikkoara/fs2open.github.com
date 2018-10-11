@@ -55,8 +55,8 @@ void convert_model_material (
 
     data_out->color = material.get_color ();
 
-    data_out->vpwidth = 1.0f / i2fl (gr_screen.max_w);
-    data_out->vpheight = 1.0f / i2fl (gr_screen.max_h);
+    data_out->vpwidth = 1.0f / float (gr_screen.max_w);
+    data_out->vpheight = 1.0f / float (gr_screen.max_h);
     if (shader_flags & SDR_FLAG_MODEL_ANIMATED) {
         data_out->anim_timer = material.get_animated_effect_time ();
         data_out->effect_num = material.get_animated_effect ();
@@ -276,9 +276,9 @@ void convert_model_material (
             data_out->fogStart = fog_params.dist_near;
             data_out->fogScale =
                 1.0f / (fog_params.dist_far - fog_params.dist_near);
-            data_out->fogColor.xyzw.x = i2fl (fog_params.r) / 255.0f;
-            data_out->fogColor.xyzw.y = i2fl (fog_params.g) / 255.0f;
-            data_out->fogColor.xyzw.z = i2fl (fog_params.b) / 255.0f;
+            data_out->fogColor.xyzw.x = float (fog_params.r) / 255.0f;
+            data_out->fogColor.xyzw.y = float (fog_params.g) / 255.0f;
+            data_out->fogColor.xyzw.z = float (fog_params.b) / 255.0f;
             data_out->fogColor.xyzw.w = 1.0f;
         }
     }

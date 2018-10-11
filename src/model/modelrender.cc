@@ -1,9 +1,5 @@
 // -*- mode: c++; -*-
 
-#include "defs.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
-
 /*
  * Copyright (C) Freespace Open 2013.  All rights reserved.
  *
@@ -13,18 +9,21 @@
  *
  */
 
-#include <algorithm>
+#include "defs.hh"
 
+
+#include "assert/assert.hh"
 #include "asteroid/asteroid.hh"
 #include "cmdline/cmdline.hh"
 #include "gamesequence/gamesequence.hh"
+#include "graphics/light.hh"
+#include "graphics/matrix.hh"
 #include "graphics/opengl/gropengldraw.hh"
 #include "graphics/opengl/gropenglshader.hh"
 #include "graphics/tmapper.hh"
-#include "graphics/matrix.hh"
-#include "graphics/light.hh"
 #include "graphics/uniforms.hh"
 #include "io/timer.hh"
+#include "log/log.hh"
 #include "math/prng.hh"
 #include "model/modelrender.hh"
 #include "nebula/neb.hh"
@@ -35,6 +34,8 @@
 #include "ship/shipfx.hh"
 #include "tracing/tracing.hh"
 #include "weapon/weapon.hh"
+
+#include <algorithm>
 
 extern int Model_texturing;
 extern int Model_polys;

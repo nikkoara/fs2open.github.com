@@ -1,9 +1,9 @@
 // -*- mode: c++; -*-
 
-#include <csetjmp>
-
 #include "defs.hh"
+
 #include "ai/aigoals.hh"
+#include "assert/assert.hh"
 #include "asteroid/asteroid.hh"
 #include "autopilot/autopilot.hh"
 #include "cmdline/cmdline.hh"
@@ -14,9 +14,7 @@
 #include "gamesequence/gamesequence.hh"
 #include "gamesnd/eventmusic.hh"
 #include "gamesnd/gamesnd.hh"
-#include "shared/alphacolors.hh"
 #include "graphics/matrix.hh"
-#include "util/list.hh"
 #include "hud/hud.hh"
 #include "hud/hudartillery.hh"
 #include "hud/hudets.hh"
@@ -31,6 +29,7 @@
 #include "jumpnode/jumpnode.hh"
 #include "lighting/lighting.hh"
 #include "localization/localize.hh"
+#include "log/log.hh"
 #include "math/fvi.hh"
 #include "math/prng.hh"
 #include "math/vecmat.hh"
@@ -57,6 +56,8 @@
 #include "radar/radarsetup.hh"
 #include "render/3d.hh"
 #include "render/batching.hh"
+#include "shared/alphacolors.hh"
+#include "ship.hh"
 #include "ship/afterburner.hh"
 #include "ship/ship.hh"
 #include "ship/shipcontrails.hh"
@@ -64,6 +65,9 @@
 #include "ship/shiphit.hh"
 #include "ship/subsysdamage.hh"
 #include "species_defs/species_defs.hh"
+#include "tracing/Monitor.hh"
+#include "tracing/tracing.hh"
+#include "util/list.hh"
 #include "weapon/beam.hh"
 #include "weapon/corkscrew.hh"
 #include "weapon/emp.hh"
@@ -71,11 +75,8 @@
 #include "weapon/shockwave.hh"
 #include "weapon/swarm.hh"
 #include "weapon/weapon.hh"
-#include "tracing/Monitor.hh"
-#include "tracing/tracing.hh"
-#include "ship.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
+
+#include <csetjmp>
 
 using namespace Ship;
 
@@ -2751,19 +2752,19 @@ static int parse_ship_values (
             float degrees;
             stuff_float (&degrees);
             sip->collision_physics.landing_max_angle =
-                cosf (fl_radians (90.0f - degrees));
+                cosf (to_radians (90.0f - degrees));
         }
         if (optional_string ("+Landing Min Angle:")) {
             float degrees;
             stuff_float (&degrees);
             sip->collision_physics.landing_min_angle =
-                cosf (fl_radians (90.0f - degrees));
+                cosf (to_radians (90.0f - degrees));
         }
         if (optional_string ("+Landing Max Rotate Angle:")) {
             float degrees;
             stuff_float (&degrees);
             sip->collision_physics.landing_max_rot_angle =
-                cosf (fl_radians (90.0f - degrees));
+                cosf (to_radians (90.0f - degrees));
         }
         if (optional_string ("+Reorient Max Forward Vel:")) {
             stuff_float (&sip->collision_physics.reorient_max_z);
@@ -2782,19 +2783,19 @@ static int parse_ship_values (
             float degrees;
             stuff_float (&degrees);
             sip->collision_physics.reorient_max_angle =
-                cosf (fl_radians (90.0f - degrees));
+                cosf (to_radians (90.0f - degrees));
         }
         if (optional_string ("+Reorient Min Angle:")) {
             float degrees;
             stuff_float (&degrees);
             sip->collision_physics.reorient_min_angle =
-                cosf (fl_radians (90.0f - degrees));
+                cosf (to_radians (90.0f - degrees));
         }
         if (optional_string ("+Reorient Max Rotate Angle:")) {
             float degrees;
             stuff_float (&degrees);
             sip->collision_physics.reorient_max_rot_angle =
-                cosf (fl_radians (90.0f - degrees));
+                cosf (to_radians (90.0f - degrees));
         }
         if (optional_string ("+Reorient Speed Mult:")) {
             stuff_float (&sip->collision_physics.reorient_mult);
@@ -2803,7 +2804,7 @@ static int parse_ship_values (
             float degrees;
             stuff_float (&degrees);
             sip->collision_physics.landing_rest_angle =
-                cosf (fl_radians (90.0f - degrees));
+                cosf (to_radians (90.0f - degrees));
         }
         parse_game_sound (
             "+Landing Sound:", &sip->collision_physics.landing_sound_idx);
@@ -3027,7 +3028,7 @@ static int parse_ship_values (
     if (optional_string ("$Warpin time:")) {
         float t_time;
         stuff_float (&t_time);
-        sip->warpin_time = fl2i (t_time * 1000.0f);
+        sip->warpin_time = int (t_time * 1000.0f);
         if (sip->warpin_time <= 0) {
             WARNINGF (LOCATION,"Warp-in time specified as 0 or less on %s '%s'; value ignored",info_type_name, sip->name);
         }
@@ -3069,7 +3070,7 @@ static int parse_ship_values (
         float t_time;
         stuff_float (&t_time);
         if (t_time >= 0)
-            sip->warpout_engage_time = fl2i (t_time * 1000.0f);
+            sip->warpout_engage_time = int (t_time * 1000.0f);
         else
             WARNINGF (LOCATION,"Warp-out engage time specified as 0 or less on %s '%s'; value ignored",info_type_name, sip->name);
     }
@@ -3084,7 +3085,7 @@ static int parse_ship_values (
     if (optional_string ("$Warpout time:")) {
         float t_time;
         stuff_float (&t_time);
-        sip->warpout_time = fl2i (t_time * 1000.0f);
+        sip->warpout_time = int (t_time * 1000.0f);
         if (sip->warpout_time <= 0) {
             WARNINGF (LOCATION,"Warp-out time specified as 0 or less on %s '%s'; value ignored",info_type_name, sip->name);
         }
@@ -4405,7 +4406,7 @@ static int parse_ship_values (
                 int value;
                 stuff_int (&value);
                 CAP (value, 0, 90);
-                float angle = fl_radians (90 - value);
+                float angle = to_radians (90 - value);
                 sp->turret_max_fov = cosf (angle);
             }
 
@@ -4413,7 +4414,7 @@ static int parse_ship_values (
                 int value;
                 stuff_int (&value);
                 CAP (value, 0, 359);
-                float angle = fl_radians (value) / 2.0f;
+                float angle = to_radians (value) / 2.0f;
                 sp->turret_y_fov = cosf (angle);
                 turret_has_base_fov = true;
             }
@@ -4624,11 +4625,11 @@ static int parse_ship_values (
                             stuff_vec3d (&current_trigger->angle);
 
                             current_trigger->angle.xyz.x =
-                                fl_radians (current_trigger->angle.xyz.x);
+                                to_radians (current_trigger->angle.xyz.x);
                             current_trigger->angle.xyz.y =
-                                fl_radians (current_trigger->angle.xyz.y);
+                                to_radians (current_trigger->angle.xyz.y);
                             current_trigger->angle.xyz.z =
-                                fl_radians (current_trigger->angle.xyz.z);
+                                to_radians (current_trigger->angle.xyz.z);
                         }
                         else {
                             current_trigger->absolute = false;
@@ -4638,31 +4639,31 @@ static int parse_ship_values (
                             stuff_vec3d (&current_trigger->angle);
 
                             current_trigger->angle.xyz.x =
-                                fl_radians (current_trigger->angle.xyz.x);
+                                to_radians (current_trigger->angle.xyz.x);
                             current_trigger->angle.xyz.y =
-                                fl_radians (current_trigger->angle.xyz.y);
+                                to_radians (current_trigger->angle.xyz.y);
                             current_trigger->angle.xyz.z =
-                                fl_radians (current_trigger->angle.xyz.z);
+                                to_radians (current_trigger->angle.xyz.z);
                         }
 
                         if (optional_string ("+velocity:")) {
                             stuff_vec3d (&current_trigger->vel);
                             current_trigger->vel.xyz.x =
-                                fl_radians (current_trigger->vel.xyz.x);
+                                to_radians (current_trigger->vel.xyz.x);
                             current_trigger->vel.xyz.y =
-                                fl_radians (current_trigger->vel.xyz.y);
+                                to_radians (current_trigger->vel.xyz.y);
                             current_trigger->vel.xyz.z =
-                                fl_radians (current_trigger->vel.xyz.z);
+                                to_radians (current_trigger->vel.xyz.z);
                         }
 
                         if (optional_string ("+acceleration:")) {
                             stuff_vec3d (&current_trigger->accel);
                             current_trigger->accel.xyz.x =
-                                fl_radians (current_trigger->accel.xyz.x);
+                                to_radians (current_trigger->accel.xyz.x);
                             current_trigger->accel.xyz.y =
-                                fl_radians (current_trigger->accel.xyz.y);
+                                to_radians (current_trigger->accel.xyz.y);
                             current_trigger->accel.xyz.z =
-                                fl_radians (current_trigger->accel.xyz.z);
+                                to_radians (current_trigger->accel.xyz.z);
                         }
 
                         if (optional_string ("+time:"))
@@ -4687,11 +4688,11 @@ static int parse_ship_values (
                             stuff_vec3d (&current_trigger->angle);
 
                             current_trigger->angle.xyz.x =
-                                fl_radians (current_trigger->angle.xyz.x);
+                                to_radians (current_trigger->angle.xyz.x);
                             current_trigger->angle.xyz.y =
-                                fl_radians (current_trigger->angle.xyz.y);
+                                to_radians (current_trigger->angle.xyz.y);
                             current_trigger->angle.xyz.z =
-                                fl_radians (current_trigger->angle.xyz.z);
+                                to_radians (current_trigger->angle.xyz.z);
                         }
                         else {
                             current_trigger->absolute = false;
@@ -4699,30 +4700,30 @@ static int parse_ship_values (
                             stuff_vec3d (&current_trigger->angle);
 
                             current_trigger->angle.xyz.x =
-                                fl_radians (current_trigger->angle.xyz.x);
+                                to_radians (current_trigger->angle.xyz.x);
                             current_trigger->angle.xyz.y =
-                                fl_radians (current_trigger->angle.xyz.y);
+                                to_radians (current_trigger->angle.xyz.y);
                             current_trigger->angle.xyz.z =
-                                fl_radians (current_trigger->angle.xyz.z);
+                                to_radians (current_trigger->angle.xyz.z);
                         }
 
                         required_string ("+velocity:");
                         stuff_vec3d (&current_trigger->vel);
                         current_trigger->vel.xyz.x =
-                            fl_radians (current_trigger->vel.xyz.x);
+                            to_radians (current_trigger->vel.xyz.x);
                         current_trigger->vel.xyz.y =
-                            fl_radians (current_trigger->vel.xyz.y);
+                            to_radians (current_trigger->vel.xyz.y);
                         current_trigger->vel.xyz.z =
-                            fl_radians (current_trigger->vel.xyz.z);
+                            to_radians (current_trigger->vel.xyz.z);
 
                         if (optional_string ("+acceleration:")) {
                             stuff_vec3d (&current_trigger->accel);
                             current_trigger->accel.xyz.x =
-                                fl_radians (current_trigger->accel.xyz.x);
+                                to_radians (current_trigger->accel.xyz.x);
                             current_trigger->accel.xyz.y =
-                                fl_radians (current_trigger->accel.xyz.y);
+                                to_radians (current_trigger->accel.xyz.y);
                             current_trigger->accel.xyz.z =
-                                fl_radians (current_trigger->accel.xyz.z);
+                                to_radians (current_trigger->accel.xyz.z);
                         }
                         else {
                             current_trigger->accel.xyz.x = 0.0f;
@@ -6718,7 +6719,7 @@ static int subsys_set (int objnum, int ignore_subsys_info) {
         ship_system->turret_next_enemy_check_stamp = timestamp (0);
         ship_system->turret_enemy_objnum = -1;
         ship_system->turret_next_fire_stamp = timestamp (
-            (int)frand_range (1.0f, 500.0f)); // next time this turret can fire
+            (int)fs2::prng::randf (0, 1.0f, 500.0f)); // next time this turret can fire
         ship_system->turret_last_fire_direction = model_system->turret_norm;
         ship_system->turret_next_fire_pos = 0;
         ship_system->turret_time_enemy_in_range = 0.0f;
@@ -7800,17 +7801,17 @@ static void ship_blow_up_area_apply_blast (object* exp_objp) {
 
         inner_rad = exp_objp->radius * 2.0f;
         outer_rad = exp_objp->radius * 4.0f; // + (override * 0.3f);
-        max_damage = i2fl (override);
+        max_damage = float (override);
         max_blast = override * 5.0f;
         shockwave_speed = 100.0f;
     }
     else {
         if (shipp->use_special_explosion) {
-            inner_rad = i2fl (shipp->special_exp_inner);
-            outer_rad = i2fl (shipp->special_exp_outer);
-            max_damage = i2fl (shipp->special_exp_damage);
-            max_blast = i2fl (shipp->special_exp_blast);
-            shockwave_speed = i2fl (shipp->special_exp_shockwave_speed);
+            inner_rad = float (shipp->special_exp_inner);
+            outer_rad = float (shipp->special_exp_outer);
+            max_damage = float (shipp->special_exp_damage);
+            max_blast = float (shipp->special_exp_blast);
+            shockwave_speed = float (shipp->special_exp_shockwave_speed);
         }
         else {
             inner_rad = sip->shockwave.inner_rad;
@@ -7832,9 +7833,9 @@ static void ship_blow_up_area_apply_blast (object* exp_objp) {
         sci.blast = max_blast;
         sci.damage = max_damage;
         sci.speed = shockwave_speed;
-        sci.rot_angles.p = frand_range (0.0f, MAX_SHOCK_ANGLE_RANGE);
-        sci.rot_angles.b = frand_range (0.0f, MAX_SHOCK_ANGLE_RANGE);
-        sci.rot_angles.h = frand_range (0.0f, MAX_SHOCK_ANGLE_RANGE);
+        sci.rot_angles.p = fs2::prng::randf (0, 0.0f, MAX_SHOCK_ANGLE_RANGE);
+        sci.rot_angles.b = fs2::prng::randf (0, 0.0f, MAX_SHOCK_ANGLE_RANGE);
+        sci.rot_angles.h = fs2::prng::randf (0, 0.0f, MAX_SHOCK_ANGLE_RANGE);
         shipfx_do_shockwave_stuff (shipp, &sci);
     }
     else {
@@ -8078,10 +8079,10 @@ static void ship_dying_frame (object* objp, int ship_num) {
                 vec3d rand_vec, outpnt; // [0-.7 rad] in plane
                 vm_vec_rand_vec_quick (&rand_vec);
                 float scale = -vm_vec_dot (&objp->orient.vec.fvec, &rand_vec) *
-                              (0.9f + 0.2f * frand ());
+                              (0.9f + 0.2f * fs2::prng::randf (0));
                 vm_vec_scale_add2 (&rand_vec, &objp->orient.vec.fvec, scale);
                 vm_vec_normalize_quick (&rand_vec);
-                scale = objp->radius * frand () * 0.717f;
+                scale = objp->radius * fs2::prng::randf (0) * 0.717f;
                 vm_vec_scale (&rand_vec, scale);
                 vm_vec_add (&outpnt, &objp->pos, &rand_vec);
 
@@ -8341,7 +8342,7 @@ static void ship_dying_frame (object* objp, int ship_num) {
                 // following two lines.
                 shipp->end_death_time = shipp->really_final_death_time =
                     timestamp (
-                        fl2i (explosion_life * 1000.0f) /
+                        int (explosion_life * 1000.0f) /
                         5); // Wait till 30% of vclip time before breaking the
                             // ship up.
             }
@@ -8474,7 +8475,7 @@ static int thruster_glow_anim_load (generic_anim* ga) {
     ga->num_frames = NOISE_NUM_FRAMES;
 
     ASSERT (fps != 0);
-    ga->total_time = i2fl (ga->num_frames) / fps;
+    ga->total_time = float (ga->num_frames) / fps;
 
     return 0;
 }
@@ -9391,7 +9392,7 @@ static void ship_set_default_weapons (ship* shipp, ship_info* sip) {
             wip = &Weapon_info[swp->secondary_bank_weapons[i]];
             float size = (float)wip->cargo_size;
             swp->secondary_bank_ammo[i] =
-                fl2i (sip->secondary_bank_ammo_capacity[i] / size);
+                int (sip->secondary_bank_ammo_capacity[i] / size);
             // Karajorma - Support ships will use the wrong values if we don't
             // set this.
             swp->secondary_bank_start_ammo[i] = swp->secondary_bank_ammo[i];
@@ -9669,7 +9670,7 @@ int ship_create (matrix* orient, vec3d* pos, int ship_type, char* ship_name) {
     }
     for (i = 0; i < pm->n_detail_levels; i++)
         pm->detail_depth[i] = (i < sip->num_detail_levels)
-                                  ? i2fl (sip->detail_distance[i])
+                                  ? float (sip->detail_distance[i])
                                   : 0.0f;
 
     flagset< Object::Object_Flags > default_ship_object_flags;
@@ -9869,7 +9870,7 @@ static void ship_model_change (int n, int ship_type) {
     }
     for (i = 0; i < pm->n_detail_levels; i++)
         pm->detail_depth[i] = (i < sip->num_detail_levels)
-                                  ? i2fl (sip->detail_distance[i])
+                                  ? float (sip->detail_distance[i])
                                   : 0.0f;
 
     if (sip->flags[Ship::Info_Flags::Model_point_shields]) {
@@ -10875,7 +10876,7 @@ static int ship_weapon_maybe_fail (ship* sp) {
     if (weapons_subsys_str < SUBSYS_WEAPONS_STR_FIRE_FAIL) { rval = 1; }
     else if (weapons_subsys_str < SUBSYS_WEAPONS_STR_FIRE_OK) {
         // chance to fire depends on weapons subsystem strength
-        if ((frand () - 0.2f) > weapons_subsys_str) rval = 1;
+        if ((fs2::prng::randf (0) - 0.2f) > weapons_subsys_str) rval = 1;
     }
 
     if (!rval) {
@@ -15810,7 +15811,7 @@ char* ship_return_time_to_goal (char* outbuf, ship* sp) {
             speed = objp->phys_info.speed;
 
             if (speed < min_speed) speed = min_speed;
-            time = fl2i (dist / speed);
+            time = int (dist / speed);
         }
     }
     else if ((aip->mode == AIM_DOCK) && (aip->submode < AIS_DOCK_4)) {
@@ -16049,7 +16050,7 @@ void ship_maybe_praise_self (ship* deader_sp, ship* killer_sp) {
     int j;
     bool wingman = false;
 
-    if ((int)(frand () * 100) >
+    if ((int)(fs2::prng::randf (0) * 100) >
         Builtin_messages[MESSAGE_PRAISE_SELF].occurrence_chance) {
         return;
     }
@@ -16270,7 +16271,7 @@ void ship_maybe_scream (ship* sp) {
     // if screaming is enabled, skip all checks
     if (!(sp->flags[Ship_Flags::Always_death_scream])) {
         // only scream x% of the time
-        if ((int)(frand () * 100) >
+        if ((int)(fs2::prng::randf (0) * 100) >
             Builtin_messages[MESSAGE_WINGMAN_SCREAM].occurrence_chance) {
             return;
         }
@@ -17421,7 +17422,7 @@ float ship_get_exp_damage (object* objp) {
     ship* shipp = &Ships[objp->instance];
 
     if (shipp->special_exp_damage >= 0) {
-        damage = i2fl (shipp->special_exp_damage);
+        damage = float (shipp->special_exp_damage);
     }
     else {
         damage = Ship_info[shipp->ship_info_index].shockwave.damage;
@@ -17754,7 +17755,7 @@ float ship_get_max_speed (ship* shipp) {
     ai_info* aip = &Ai_info[shipp->ai_index];
     if ((aip->mode == AIM_WAYPOINTS || aip->mode == AIM_FLY_TO_SHIP) &&
         aip->waypoint_speed_cap > 0)
-        return i2fl (aip->waypoint_speed_cap);
+        return float (aip->waypoint_speed_cap);
 
     // max overclock
     max_speed = sip->max_overclocked_speed;
@@ -18414,7 +18415,7 @@ float ArmorType::GetDamage (
                 using_constant = true;
             }
             else if (storage_idx == AT_CONSTANT_RANDOM) {
-                constant_val = frand ();
+                constant_val = fs2::prng::randf (0);
                 curr_arg = constant_val;
                 using_constant = true;
             }
@@ -18441,7 +18442,7 @@ float ArmorType::GetDamage (
                  adtp->Calculations[i] == AT_TYPE_SET ||
                  adtp->Calculations[i] == AT_TYPE_RANDOM)) {
                 curr_arg = curr_arg * (flFrametime * 1000.0f) /
-                           i2fl (BEAM_DAMAGE_TIME);
+                           float (BEAM_DAMAGE_TIME);
             }
 
             // new calcs go here
@@ -18519,10 +18520,10 @@ float ArmorType::GetDamage (
             case AT_TYPE_RANDOM: // Nuke: get a random number between
                                  // damage_applied and +value:
                 if (damage_applied > curr_arg) {
-                    damage_applied = frand_range (curr_arg, damage_applied);
+                    damage_applied = fs2::prng::randf (0, curr_arg, damage_applied);
                 }
                 else {
-                    damage_applied = frand_range (damage_applied, curr_arg);
+                    damage_applied = fs2::prng::randf (0, damage_applied, curr_arg);
                 }
                 break;
             }
@@ -19125,9 +19126,9 @@ void ship_set_thruster_info (
 
     // Maybe add noise to thruster geometry.
     if (!(sip->flags[Ship::Info_Flags::No_thruster_geo_noise])) {
-        mst->length.xyz.z *= (1.0f + frand () / 5.0f - 0.1f);
-        mst->length.xyz.y *= (1.0f + frand () / 5.0f - 0.1f);
-        mst->length.xyz.x *= (1.0f + frand () / 5.0f - 0.1f);
+        mst->length.xyz.z *= (1.0f + fs2::prng::randf (0) / 5.0f - 0.1f);
+        mst->length.xyz.y *= (1.0f + fs2::prng::randf (0) / 5.0f - 0.1f);
+        mst->length.xyz.x *= (1.0f + fs2::prng::randf (0) / 5.0f - 0.1f);
     }
 
     CLAMP (mst->length.xyz.z, -1.0f, 1.0f);
@@ -19178,37 +19179,37 @@ void ship_render_batch_thrusters (object* obj) {
         if (pi->desired_rotvel.xyz.x < 0 &&
             (mtp->use_flags[Ship::Thruster_Flags::Pitch_up])) {
             render_amount =
-                fl_abs (pi->desired_rotvel.xyz.x) / pi->max_rotvel.xyz.x;
+                fabsf (pi->desired_rotvel.xyz.x) / pi->max_rotvel.xyz.x;
         }
         else if (
             pi->desired_rotvel.xyz.x > 0 &&
             (mtp->use_flags[Ship::Thruster_Flags::Pitch_down])) {
             render_amount =
-                fl_abs (pi->desired_rotvel.xyz.x) / pi->max_rotvel.xyz.x;
+                fabsf (pi->desired_rotvel.xyz.x) / pi->max_rotvel.xyz.x;
         }
         else if (
             pi->desired_rotvel.xyz.y < 0 &&
             (mtp->use_flags[Ship::Thruster_Flags::Roll_right])) {
             render_amount =
-                fl_abs (pi->desired_rotvel.xyz.y) / pi->max_rotvel.xyz.y;
+                fabsf (pi->desired_rotvel.xyz.y) / pi->max_rotvel.xyz.y;
         }
         else if (
             pi->desired_rotvel.xyz.y > 0 &&
             (mtp->use_flags[Ship::Thruster_Flags::Roll_left])) {
             render_amount =
-                fl_abs (pi->desired_rotvel.xyz.y) / pi->max_rotvel.xyz.y;
+                fabsf (pi->desired_rotvel.xyz.y) / pi->max_rotvel.xyz.y;
         }
         else if (
             pi->desired_rotvel.xyz.z < 0 &&
             (mtp->use_flags[Ship::Thruster_Flags::Bank_right])) {
             render_amount =
-                fl_abs (pi->desired_rotvel.xyz.z) / pi->max_rotvel.xyz.z;
+                fabsf (pi->desired_rotvel.xyz.z) / pi->max_rotvel.xyz.z;
         }
         else if (
             pi->desired_rotvel.xyz.z > 0 &&
             (mtp->use_flags[Ship::Thruster_Flags::Bank_left])) {
             render_amount =
-                fl_abs (pi->desired_rotvel.xyz.z) / pi->max_rotvel.xyz.z;
+                fabsf (pi->desired_rotvel.xyz.z) / pi->max_rotvel.xyz.z;
         }
 
         // Backslash - show thrusters according to thrust amount, not speed
@@ -19298,7 +19299,7 @@ void ship_render_batch_thrusters (object* obj) {
                 if (mtp->tex_nframes > 0)
                     bmap_frame += bm_get_anim_frame (
                         mtp->tex_id,
-                        i2fl (timestamp () - shipp->thrusters_start[i]) /
+                        float (timestamp () - shipp->thrusters_start[i]) /
                             1000.0f,
                         0.0f, true);
 

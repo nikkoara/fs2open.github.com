@@ -1,20 +1,22 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
+#include "assert/assert.hh"
 #include "camera/camera.hh"
-#include "shared/alphacolors.hh"
-#include "util/list.hh"
-#include "shared/globals.hh" //VM_FREECAMERA etc
 #include "graphics/matrix.hh"
 #include "hud/hud.hh" //hud_get_draw
+#include "log/log.hh"
+#include "math/prng.hh"
 #include "math/vecmat.hh"
 #include "mod_table/mod_table.hh"
 #include "model/model.hh" //polymodel, model_get
 #include "parse/parselo.hh"
 #include "playerman/player.hh" //player_get_padlock_orient
+#include "shared/alphacolors.hh"
+#include "shared/globals.hh" //VM_FREECAMERA etc
 #include "ship/ship.hh"        //compute_slew_matrix
-#include "assert/assert.hh"
-#include "log/log.hh"
+#include "util/list.hh"
 
 //*************************IMPORTANT GLOBALS*************************
 float VIEWER_ZOOM_DEFAULT = 0.75f; // Default viewer zoom, 0.625 as per
@@ -499,7 +501,7 @@ void warp_camera::do_frame (float in_frametime) {
         // pick x and y velocities so they are always on a
         // circle with a 25 m radius.
 
-        float tmp_angle = frand () * PI2;
+        float tmp_angle = fs2::prng::randf (0) * PI2;
 
         tmp.xyz.x = 22.0f * sinf (tmp_angle);
         tmp.xyz.y = -22.0f * cosf (tmp_angle);
@@ -575,8 +577,8 @@ subtitle::subtitle (
     text_fontnum = in_text_fontnum;
 
     // Setup display and fade time
-    display_time = fl_abs (in_display_time);
-    fade_time = fl_abs (in_fade_time);
+    display_time = fabsf (in_display_time);
+    fade_time = fabsf (in_fade_time);
 
     // Setup image
     if ((in_imageanim != NULL) && (in_imageanim[0] != '\0')) {
@@ -660,14 +662,14 @@ subtitle::subtitle (
 void subtitle::do_frame (float frametime) {
     // Figure out how much alpha
     if (time_displayed < fade_time) {
-        text_color.alpha = (ubyte)fl2i (255.0f * (time_displayed / fade_time));
+        text_color.alpha = (ubyte)int (255.0f * (time_displayed / fade_time));
     }
     else if (time_displayed > time_displayed_end) {
         // We're finished
         return;
     }
     else if ((time_displayed - fade_time) > display_time) {
-        text_color.alpha = (ubyte)fl2i (
+        text_color.alpha = (ubyte)int (
             255.0f *
             (1 - (time_displayed - fade_time - display_time) / fade_time));
     }
@@ -719,8 +721,8 @@ void subtitle::do_frame (float frametime) {
 
             gr_push_scale_matrix (&scale);
             gr_bitmap (
-                fl2i (image_pos.x / scale.xyz.x),
-                fl2i (image_pos.y / scale.xyz.y), GR_RESIZE_NONE);
+                int (image_pos.x / scale.xyz.x),
+                int (image_pos.y / scale.xyz.y), GR_RESIZE_NONE);
             gr_pop_scale_matrix ();
         }
         // no scaling

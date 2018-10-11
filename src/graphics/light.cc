@@ -1,14 +1,14 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
+#include "assert/assert.hh"
 #include "cmdline/cmdline.hh"
 #include "graphics/2d.hh"
 #include "light.hh"
-#include "math/bitarray.hh"
 #include "matrix.hh"
 #include "render/3d.hh"
 #include "shared/types.hh"
-#include "assert/assert.hh"
 
 // Structures
 struct gr_light {
@@ -321,9 +321,9 @@ void gr_set_lighting (bool /*set*/, bool state) {
 }
 
 void gr_set_ambient_light (int red, int green, int blue) {
-    gr_light_ambient[0] = i2fl (red) / 255.0f;
-    gr_light_ambient[1] = i2fl (green) / 255.0f;
-    gr_light_ambient[2] = i2fl (blue) / 255.0f;
+    gr_light_ambient[0] = float (red) / 255.0f;
+    gr_light_ambient[1] = float (green) / 255.0f;
+    gr_light_ambient[2] = float (blue) / 255.0f;
     gr_light_ambient[3] = 1.0f;
 
     gr_calculate_ambient_factor ();

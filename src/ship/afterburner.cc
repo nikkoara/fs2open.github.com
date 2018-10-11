@@ -196,7 +196,7 @@ void afterburners_update (object* objp, float fl_frametime) {
         if (!timestamp_elapsed (Player_disengage_timer)) {
             float remaining;
             remaining = timestamp_until (Player_disengage_timer) /
-                        i2fl (DISENGAGE_TIME);
+                        float (DISENGAGE_TIME);
             if (remaining <= 0) { afterburner_stop_sounds (); }
             else {
                 snd_set_volume (

@@ -1,7 +1,9 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
 #include "ai/aibig.hh"
+#include "assert/assert.hh"
 #include "asteroid/asteroid.hh"
 #include "cmdline/cmdline.hh"
 #include "cmeasure/cmeasure.hh"
@@ -14,6 +16,7 @@
 #include "iff_defs/iff_defs.hh"
 #include "io/joy_ff.hh"
 #include "io/timer.hh"
+#include "log/log.hh"
 #include "math/fix.hh"
 #include "math/prng.hh"
 #include "missionui/missionweaponchoice.hh"
@@ -38,8 +41,6 @@
 #include "weapon/flak.hh"
 #include "weapon/muzzleflash.hh"
 #include "weapon/swarm.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
 
 // Since SSMs are parsed after weapons, if we want to allow SSM strikes to be
 // specified by name, we need to store those names until after SSMs are parsed.
@@ -1270,7 +1271,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
 
             if (optional_string ("+View Cone:")) {
                 stuff_float (&view_cone_angle);
-                wip->fov = cosf (fl_radians (view_cone_angle * 0.5f));
+                wip->fov = cosf (to_radians (view_cone_angle * 0.5f));
             }
 
             if (optional_string ("+Seeker Strength:")) {
@@ -1311,7 +1312,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
             if (optional_string ("+View Cone:")) {
                 float view_cone_angle;
                 stuff_float (&view_cone_angle);
-                wip->fov = (float)cos (fl_radians (view_cone_angle * 0.5f));
+                wip->fov = (float)cos (to_radians (view_cone_angle * 0.5f));
             }
 
             if (optional_string (
@@ -1566,7 +1567,7 @@ int parse_weapon (int subtype, bool replace, const char* filename) {
         if (optional_string ("+Max Life:")) {
             stuff_float (&ti->max_life);
             ti->stamp =
-                fl2i (1000.0f * ti->max_life) / (NUM_TRAIL_SECTIONS + 1);
+                int (1000.0f * ti->max_life) / (NUM_TRAIL_SECTIONS + 1);
         }
 
         if (required_string ("+Bitmap:")) {
@@ -3972,7 +3973,7 @@ void find_homing_object_cmeasures (
                         wp->cmeasure_ignore_list->push_back (
                             (*cit)->signature);
 
-                        if (frand () >= chance) {
+                        if (fs2::prng::randf (0) >= chance) {
                             // failed to decoy
                             WARNINGF (LOCATION,"Weapon (%s-%04i) ignoring CounterMeasure (%s-%04i) Frame: %i",wip->name, weapon_objp->instance, cm_wip->name,(*cit)->signature, Framecount);
                         }
@@ -4088,7 +4089,7 @@ void weapon_home (object* obj, int num, float frame_time) {
                 wip->is_locked_homing () &&
                 wip->wi_flags[Weapon::Info_Flags::Die_on_lost_lock]) {
                 if (wp->lifeleft > 0.5f) {
-                    wp->lifeleft = frand_range (
+                    wp->lifeleft = fs2::prng::randf (0,
                         0.1f, 0.5f); // randomise a bit to avoid multiple
                                      // missiles detonating in one frame
                 }
@@ -4331,9 +4332,8 @@ void weapon_home (object* obj, int num, float frame_time) {
                 target_pos = hobjp->pos;
                 wp->homing_pos = target_pos;
             }
-            else if (
-                pick_homing_point || (dist < 500.0f) ||
-                (rand_chance (flFrametime, 2.0f))) {
+            else if (pick_homing_point || dist < 500.0f ||
+                     fs2::prng::randf (0) < flFrametime * 2.) {
                 if (hobjp->type == OBJ_SHIP) {
                     if (!pick_homing_point) {
                         // ensure that current attack point is only updated in
@@ -4838,7 +4838,7 @@ void weapon_process_post (object* obj, float frame_time) {
                         parent_aip->lead_scale -= cur_dist / 2000.0f;
                     }
 
-                    if (fl_abs (parent_aip->lead_scale) > 1.0f) {
+                    if (fabsf (parent_aip->lead_scale) > 1.0f) {
                         parent_aip->lead_scale *= 0.9f;
                     }
                 }
@@ -5449,14 +5449,14 @@ int weapon_create (
             if (wip->particle_spewers[s].particle_spew_type != PSPEW_NONE) {
                 wp->particle_spew_time[s] = -1;
                 wp->particle_spew_rand =
-                    frand_range (0, PI2); // per weapon randomness
+                    fs2::prng::randf (0, 0, PI2); // per weapon randomness
             }
         }
     }
 
     // Check if we want to gen a random number
     // This is used for lifetime min/max
-    float rand_val = frand ();
+    float rand_val = fs2::prng::randf (0);
 
     wp->weapon_info_index = weapon_type;
 
@@ -5667,7 +5667,7 @@ int weapon_create (
         for (i = 0; i < pm->n_detail_levels; i++) {
             // for weapons, detail levels are all preset to -1
             if (wip->detail_distance[i] >= 0)
-                pm->detail_depth[i] = i2fl (wip->detail_distance[i]);
+                pm->detail_depth[i] = float (wip->detail_distance[i]);
             else
                 pm->detail_depth[i] = (objp->radius * 20.0f + 20.0f) * i;
         }
@@ -5843,7 +5843,7 @@ void spawn_child_weapons (object* objp) {
                 // Assign a little randomness to lifeleft so they don't all
                 // disappear at the same time.
                 if (weapon_objnum != -1) {
-                    float rand_val = frand ();
+                    float rand_val = fs2::prng::randf (0);
 
                     Weapons[Objects[weapon_objnum].instance].lifeleft *=
                         rand_val * 0.4f + 0.8f;
@@ -6056,12 +6056,12 @@ void weapon_do_electronics_effect (
             }
 
             // add a little randomness to the disruption time
-            disrupt_time += frand_range (-1.0f, 1.0f) * wip->elec_randomness;
+            disrupt_time += fs2::prng::randf (0, -1.0f, 1.0f) * wip->elec_randomness;
 
             // disrupt this subsystem for the calculated time
             // if it turns out to be less than 0 seconds, don't bother
             if (disrupt_time > 0) {
-                ship_subsys_set_disrupted (ss, fl2i (disrupt_time));
+                ship_subsys_set_disrupted (ss, int (disrupt_time));
             }
         }
     }
@@ -6980,10 +6980,10 @@ void weapon_get_laser_color (color* c, object* objp) {
         pct *= 2.0f;
 
         r +=
-            fl2i ((winfo->laser_color_2.red - winfo->laser_color_1.red) * pct);
-        g += fl2i (
+            int ((winfo->laser_color_2.red - winfo->laser_color_1.red) * pct);
+        g += int (
             (winfo->laser_color_2.green - winfo->laser_color_1.green) * pct);
-        b += fl2i (
+        b += int (
             (winfo->laser_color_2.blue - winfo->laser_color_1.blue) * pct);
     }
 
@@ -7073,7 +7073,7 @@ void weapon_maybe_spew_particle (object* obj) {
                         // randomly perturb x, y and z
 
                         // uvec
-                        ang = frand_range (
+                        ang = fs2::prng::randf (0,
                             -PI_2,
                             PI_2); // fl_radian(frand_range(-90.0f, 90.0f));
                                    // -optimized by nuke
@@ -7086,7 +7086,7 @@ void weapon_maybe_spew_particle (object* obj) {
                             wip->particle_spewers[psi].particle_spew_scale);
 
                         // rvec
-                        ang = frand_range (
+                        ang = fs2::prng::randf (0,
                             -PI_2,
                             PI_2); // fl_radian(frand_range(-90.0f, 90.0f));
                                    // -optimized by nuke
@@ -7099,7 +7099,7 @@ void weapon_maybe_spew_particle (object* obj) {
                             wip->particle_spewers[psi].particle_spew_scale);
 
                         // fvec
-                        ang = frand_range (
+                        ang = fs2::prng::randf (0,
                             -PI_2,
                             PI_2); // fl_radian(frand_range(-90.0f, 90.0f));
                                    // -optimized by nuke
@@ -7411,9 +7411,9 @@ void weapon_maybe_spew_particle (object* obj) {
                          i++) {
                         // use polar coordinates to ensure a disk shaped spew
                         // plane
-                        ang_rand = frand_range (-PI, PI);
+                        ang_rand = fs2::prng::randf (0, -PI, PI);
                         len_rand =
-                            frand () *
+                            fs2::prng::randf (0) *
                             wip->particle_spewers[psi].particle_spew_scale;
                         sin_ang = sinf (ang_rand);
                         cos_ang = cosf (ang_rand);
@@ -7823,7 +7823,7 @@ void weapon_render (object* obj, model_draw_list* scene) {
             }
 
             if (wip->wi_flags[Weapon::Info_Flags::Transparent])
-                alpha = fl2i (wp->alpha_current * 255.0f);
+                alpha = int (wp->alpha_current * 255.0f);
 
             vec3d headp;
 
@@ -7870,7 +7870,7 @@ void weapon_render (object* obj, model_draw_list* scene) {
                     wp->laser_glow_bitmap_frame -=
                         wip->laser_glow_bitmap.total_time;
 
-                framenum = fl2i (
+                framenum = int (
                     (wp->laser_glow_bitmap_frame *
                      wip->laser_glow_bitmap.num_frames) /
                     wip->laser_glow_bitmap.total_time);
@@ -7879,7 +7879,7 @@ void weapon_render (object* obj, model_draw_list* scene) {
             }
 
             if (wip->wi_flags[Weapon::Info_Flags::Transparent]) {
-                alpha = fl2i (wp->alpha_current * 255.0f);
+                alpha = int (wp->alpha_current * 255.0f);
                 alpha -=
                     38; // take 1.5f into account for the normal glow alpha
 
@@ -7922,7 +7922,7 @@ void weapon_render (object* obj, model_draw_list* scene) {
 
             // Add noise to thruster geometry.
             ft = 1.0f; // Always use 1.0f for missiles
-            ft *= (1.0f + frand () / 5.0f - 1.0f / 10.0f);
+            ft *= (1.0f + fs2::prng::randf (0) / 5.0f - 1.0f / 10.0f);
             if (ft > 1.0f) ft = 1.0f;
 
             mst.length.xyz.x = ft;
@@ -8239,7 +8239,7 @@ void weapon_info::reset () {
 
         bsip->width = 1.0f;
         bsip->flicker = 0.1f;
-        bsip->z_add = i2fl (MAX_BEAM_SECTIONS - i - 1);
+        bsip->z_add = float (MAX_BEAM_SECTIONS - i - 1);
         bsip->tile_type = 0;
         bsip->tile_factor = 1.0f;
         bsip->translation = 0.0f;
