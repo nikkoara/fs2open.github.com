@@ -1,0 +1,83 @@
+// -*- mode: c++; -*-
+
+#ifndef FREESPACE2_SPECIES_DEFS_SPECIES_DEFS_HH
+#define FREESPACE2_SPECIES_DEFS_SPECIES_DEFS_HH
+
+#include "defs.hh"
+
+#include "gamesnd/gamesnd.hh"
+#include "graphics/generic.hh"
+#include "hud/hudparse.hh"
+#include "mission/missionbriefcommon.hh"
+
+// for bitmap thrusters
+struct thrust_pair_bitmap  {
+    generic_bitmap normal;
+    generic_bitmap afterburn;
+};
+
+// for animated thrusters
+struct thrust_pair  {
+    generic_anim normal;
+    generic_anim afterburn;
+};
+
+struct thrust_info  {
+    thrust_pair flames;
+    thrust_pair glow;
+};
+
+// Currently the only species-specific feature not in species_info is ship
+// debris.  This is because ship debris chunks are treated as asteroids and
+// tied so tightly into the asteroid code that separating them makes the code
+// much more complicated.
+
+class species_info {
+public:
+    char species_name[NAME_LENGTH];
+    int default_iff;
+    float awacs_multiplier;
+
+    union {
+        struct {
+            int r, g, b;
+        } rgb;
+        int a1d[3];
+    } fred_color;
+
+    generic_bitmap debris_texture;
+    generic_anim shield_anim;
+    thrust_info thruster_info;
+
+    // Bobboau's thruster stuff
+    thrust_pair_bitmap thruster_secondary_glow_info;
+    thrust_pair_bitmap thruster_tertiary_glow_info;
+    thrust_pair_bitmap thruster_distortion_info;
+
+    // the members below this comment are not parsed in species_defs.tbl
+
+    game_snd snd_flyby_fighter;
+    game_snd snd_flyby_bomber;
+
+    int bii_index[MIN_BRIEF_ICONS];
+
+    // countermeasures by species
+    char cmeasure_name[NAME_LENGTH];
+    int cmeasure_index;
+
+    species_info () {
+        for (int i = 0; i < MIN_BRIEF_ICONS; i++) bii_index[i] = -1;
+
+        cmeasure_name[0] = '\0';
+        cmeasure_index = -1;
+    }
+};
+
+extern std::vector< species_info > Species_info;
+
+// load up the species_defs.tbl into the correct data areas
+// IMPORTANT: If Num_species != 3, icons.tbl, asteroid.tbl, and sounds.tbl have
+// to be modified to compensate!
+void species_init ();
+
+#endif // FREESPACE2_SPECIES_DEFS_SPECIES_DEFS_HH
