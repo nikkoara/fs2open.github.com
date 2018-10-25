@@ -1,3 +1,0 @@
-# -*- mode: makefile; -*-
-
-LUA_CPPFLAGS = -DLUA_USE_MACOSX

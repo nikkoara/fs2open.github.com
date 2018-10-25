@@ -6,14 +6,6 @@ SUBDIRS = external/glad
 
 include $(top_srcdir)/Makefile.common
 
-if DARWIN
-include $(top_srcdir)/Makefile.darwin
-endif
-
-if LINUX
-include $(top_srcdir)/Makefile.linux
-endif
-
 bin_PROGRAMS = fs2
 
 fs2_SOURCES =                                   \
