@@ -1093,9 +1093,6 @@ extern int eval_num (int);
 extern bool is_sexp_true (int, int referenced_node = -1);
 extern int query_operator_return_type (int);
 extern int query_operator_argument_type (int, int);
-extern void
-update_sexp_references (const char*, const char*);
-extern void update_sexp_references (const char*, const char*, int);
 extern int query_referenced_in_sexp (int, const char*, int*);
 extern int verify_vector (char*);
 extern void skip_white (char**);
@@ -1115,7 +1112,7 @@ int special_argument_appears_in_sexp_list (int);
 extern void sexp_unmark_persistent (int);
 extern void sexp_mark_persistent (int);
 extern int verify_sexp_tree (int);
-extern int query_sexp_ai_goal_valid (int, int);
+
 int query_node_in_sexp (int, int);
 void flush_sexp_tree (int);
 

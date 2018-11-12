@@ -277,6 +277,7 @@ bool StartAutopilot () {
     // player).
     // TODO:implement a way to allow a FREDer to say a different ship is leader
     Autopilot_flight_leader = get_wing_leader (Player_ship->wingnum);
+
     if (Autopilot_flight_leader == NULL) {
         // force player to be the leader if he doesn't have a wing
         Autopilot_flight_leader = Player_obj;
@@ -286,7 +287,9 @@ bool StartAutopilot () {
         LockAPConv = timestamp (); // lock convergence instantly
     else
         LockAPConv = timestamp (3000); // 3 seconds before we lock convergence
+
     Player_use_ai = 1;
+
     set_time_compression (1);
     lock_time_compression (true);
 

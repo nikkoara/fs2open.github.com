@@ -453,24 +453,16 @@ int Players_mlocked_timestamp;
 int Sexp_music_handle = -1;
 void sexp_stop_music (bool fade = true);
 
-int hud_gauge_type_lookup (char* name);
-
 int get_sexp ();
 
 void build_extended_sexp_string (std::string& accumulator, int cur_node, int level, int mode);
-void update_sexp_references (const char* old_name, const char* new_name, int format, int node);
 int sexp_determine_team (char* subj);
-int extract_sexp_variable_index (int node);
 void init_sexp_vars ();
 int eval_num (int node);
 
 // for handling variables
 void add_block_variable (const char* text, const char* var_name, int type, int index);
 void sexp_modify_variable (int node);
-int sexp_get_variable_by_index (int node);
-void sexp_set_variable_by_index (int node);
-void sexp_copy_variable_from_index (int node);
-void sexp_copy_variable_between_indexes (int node);
 
 std::vector< char* > Sexp_replacement_arguments;
 int Sexp_current_argument_nesting_level;
@@ -561,7 +553,6 @@ int get_effect_from_name (char* name);
 #define NOT_A_SEXP_OPERATOR -1
 
 // Karajorma - some useful helper methods
-player* get_player_from_ship_node (int node);
 ship* sexp_get_ship_from_node (int node);
 
 // hud-display-gauge magic values
@@ -631,22 +622,27 @@ void init_sexp () {
 
     sexp_nodes_init ();
     init_sexp_vars ();
+
     Locked_sexp_false = Locked_sexp_true = -1;
 
-    Locked_sexp_false =
-        alloc_sexp ("false", SEXP_LIST, SEXP_ATOM_OPERATOR, -1, -1);
+    Locked_sexp_false = alloc_sexp (
+        "false", SEXP_LIST, SEXP_ATOM_OPERATOR, -1, -1);
     ASSERT (Locked_sexp_false != -1);
+
     Sexp_nodes[Locked_sexp_false].type = SEXP_ATOM; // fix bypassing value
     Sexp_nodes[Locked_sexp_false].value = SEXP_KNOWN_FALSE;
 
-    Locked_sexp_true =
-        alloc_sexp ("true", SEXP_LIST, SEXP_ATOM_OPERATOR, -1, -1);
+    Locked_sexp_true = alloc_sexp (
+        "true", SEXP_LIST, SEXP_ATOM_OPERATOR, -1, -1);
     ASSERT (Locked_sexp_true != -1);
-    Sexp_nodes[Locked_sexp_true].type = SEXP_ATOM; // fix bypassing value
+
+    Sexp_nodes[Locked_sexp_true].type  = SEXP_ATOM; // fix bypassing value
     Sexp_nodes[Locked_sexp_true].value = SEXP_KNOWN_TRUE;
 }
 
-void sexp_shutdown () { sexp_nodes_close (); }
+void sexp_shutdown () {
+    sexp_nodes_close ();
+}
 
 /**
  * Allocate an sexp node.
@@ -1033,8 +1029,7 @@ int get_operator_index (int node) {
         "Passed an out-of-range node index (%d) to get_operator_index(int)!",
         node);
 
-    if (!Fred_running &&
-        (Sexp_nodes[node].op_index != NO_OPERATOR_INDEX_DEFINED)) {
+    if (Sexp_nodes[node].op_index != NO_OPERATOR_INDEX_DEFINED) {
         return Sexp_nodes[node].op_index;
     }
 
@@ -1055,7 +1050,7 @@ int get_operator_const (const char* token) {
 }
 
 int get_operator_const (int node) {
-    if (!Fred_running && Sexp_nodes[node].op_index >= 0) {
+    if (Sexp_nodes[node].op_index >= 0) {
         return Operators[Sexp_nodes[node].op_index].value;
     }
 
@@ -1103,7 +1098,7 @@ int check_operator_argument_count (int count, int op) {
  * See the returns types in sexp.h
  */
 int check_sexp_syntax (
-    int node, int return_type, int recursive, int* bad_node, int mode) {
+    int node, int return_type, int recursive, int* bad_node, int) {
     int i = 0, z, t, type, argnum = 0, count, op, type2 = 0, op2;
     int op_node;
     int var_index = -1;
@@ -1290,8 +1285,7 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) { return SEXP_CHECK_TYPE_MISMATCH; }
 
             if (ship_name_lookup (CTEXT (node), 0) < 0) {
-                if (Fred_running ||
-                    !mission_parse_get_arrival_ship (CTEXT (node))) {
+                if (!mission_parse_get_arrival_ship (CTEXT (node))) {
                     return SEXP_CHECK_INVALID_SHIP;
                 }
             }
@@ -1303,8 +1297,7 @@ int check_sexp_syntax (
             if (type2 != SEXP_ATOM_STRING) { return SEXP_CHECK_TYPE_MISMATCH; }
 
             if (ship_name_lookup (CTEXT (node), 1) < 0) {
-                if (Fred_running ||
-                    !mission_parse_get_arrival_ship (CTEXT (node))) {
+                if (!mission_parse_get_arrival_ship (CTEXT (node))) {
                     if (type == OPF_SHIP) { // return invalid ship if not also
                                             // looking for point
                         return SEXP_CHECK_INVALID_SHIP;
@@ -1342,8 +1335,7 @@ int check_sexp_syntax (
                 break;
             }
             // also check arrival list if we're running the game
-            if (!Fred_running &&
-                mission_parse_get_arrival_ship (CTEXT (node))) {
+            if (mission_parse_get_arrival_ship (CTEXT (node))) {
                 break;
             }
 
@@ -1425,17 +1417,6 @@ int check_sexp_syntax (
                 return SEXP_CHECK_INVALID_SUBSYS;
             }
 
-            if (Fred_running) {
-                // if we're checking for an AWACS subsystem and this is not an
-                // awacs subsystem
-                if ((type == OPF_AWACS_SUBSYSTEM) &&
-                    !(Ship_info[ship_class]
-                          .subsystems[i]
-                          .flags[Model::Subsystem_Flags::Awacs])) {
-                    return SEXP_CHECK_INVALID_SUBSYS;
-                }
-            }
-
             break;
         }
 
@@ -1477,59 +1458,6 @@ int check_sexp_syntax (
         case OPF_AI_GOAL:
             if (type2 != OPR_AI_GOAL) { return SEXP_CHECK_TYPE_MISMATCH; }
 
-            if (Fred_running) {
-                int ship_num, ship2, w = 0;
-
-                // if it's the "goals" operator, this is part of initial
-                // orders, so just assume it's okay
-                if (get_operator_const (Sexp_nodes[op_node].text) ==
-                    OP_GOALS_ID) {
-                    break;
-                }
-
-                ship_num = ship_name_lookup (
-                    CTEXT (Sexp_nodes[op_node].rest),
-                    1); // Goober5000 - include players
-                if (ship_num < 0) {
-                    w = wing_name_lookup (CTEXT (Sexp_nodes[op_node].rest));
-                    if (w < 0) {
-                        if (bad_node) { *bad_node = Sexp_nodes[op_node].rest; }
-
-                        return SEXP_CHECK_INVALID_SHIP; // should have already
-                                                        // been caught earlier,
-                                                        // but just in case..
-                    }
-                }
-
-                ASSERT (Sexp_nodes[node].subtype == SEXP_ATOM_LIST);
-                z = Sexp_nodes[node].first;
-                ASSERT (Sexp_nodes[z].subtype != SEXP_ATOM_LIST);
-                z = get_operator_const (CTEXT (z));
-                if (ship_num >= 0) {
-                    if (!query_sexp_ai_goal_valid (z, ship_num)) {
-                        return SEXP_CHECK_ORDER_NOT_ALLOWED;
-                    }
-                }
-                else {
-                    for (i = 0; i < Wings[w].wave_count; i++) {
-                        if (!query_sexp_ai_goal_valid (
-                                z, Wings[w].ship_index[i])) {
-                            return SEXP_CHECK_ORDER_NOT_ALLOWED;
-                        }
-                    }
-                }
-
-                if ((z == OP_AI_DOCK) && (Sexp_nodes[node].rest >= 0)) {
-                    ship2 = ship_name_lookup (
-                        CTEXT (Sexp_nodes[node].rest),
-                        1); // Goober5000 - include players
-                    if ((ship_num < 0) ||
-                        !ship_docking_valid (ship_num, ship2)) {
-                        return SEXP_CHECK_DOCKING_NOT_ALLOWED;
-                    }
-                }
-            }
-
             // we should check the syntax of the actual goal!!!!
             z = Sexp_nodes[node].first;
             if ((z = check_sexp_syntax (
@@ -1557,117 +1485,32 @@ int check_sexp_syntax (
         case OPF_MESSAGE:
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
-            if (Fred_running) {
-                for (i = 0; i < Num_messages; i++)
-                    if (!strcasecmp (Messages[i].name, CTEXT (node))) break;
-
-                if (i == Num_messages) return SEXP_CHECK_UNKNOWN_MESSAGE;
-            }
-
             break;
 
         case OPF_PRIORITY: {
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
-
-            if (Fred_running) { // should still check in Fred though..
-                char* name;
-
-                name = CTEXT (node);
-                if (!strcasecmp (name, "low") ||
-                    !strcasecmp (name, "normal") || !strcasecmp (name, "high"))
-                    break;
-
-                return SEXP_CHECK_INVALID_PRIORITY;
-            }
-
             break;
         }
 
         case OPF_MISSION_NAME:
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
-            if (Fred_running) {
-                if (mode == SEXP_MODE_CAMPAIGN) {
-                    for (i = 0; i < Campaign.num_missions; i++)
-                        if (!strcasecmp (
-                                CTEXT (node), Campaign.missions[i].name)) {
-                            if ((i != Sexp_useful_number) &&
-                                (Campaign.missions[i].level >=
-                                 Campaign.missions[Sexp_useful_number].level))
-                                return SEXP_CHECK_INVALID_LEVEL;
-
-                            break;
-                        }
-
-                    if (i == Campaign.num_missions)
-                        return SEXP_CHECK_INVALID_MISSION_NAME;
-                }
-                else {
-                    // mwa -- put the following if statement to prevent Fred
-                    // errors for possibly valid conditions.  We should do
-                    // something else here!!!
-                    if ((Operators[op].value == OP_PREVIOUS_EVENT_TRUE) ||
-                        (Operators[op].value == OP_PREVIOUS_EVENT_FALSE) ||
-                        (Operators[op].value ==
-                         OP_PREVIOUS_EVENT_INCOMPLETE) ||
-                        (Operators[op].value == OP_PREVIOUS_GOAL_TRUE) ||
-                        (Operators[op].value == OP_PREVIOUS_GOAL_FALSE) ||
-                        (Operators[op].value == OP_PREVIOUS_GOAL_INCOMPLETE))
-                        break;
-
-                    if (!(*Mission_filename) ||
-                        strcasecmp (Mission_filename, CTEXT (node)) != 0)
-                        return SEXP_CHECK_INVALID_MISSION_NAME;
-                }
-            }
-
             break;
 
         case OPF_GOAL_NAME:
             if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
 
-            // we only need to check the campaign list if running in Fred and
-            // are in campaign mode. otherwise, check the set of current goals
-            if (Fred_running && (mode == SEXP_MODE_CAMPAIGN)) {
-                z = find_parent_operator (node);
-                ASSERT (z >= 0);
-                z = Sexp_nodes[z].rest; // first argument of operator should be
-                                        // mission name
-                ASSERT (z >= 0);
-                for (i = 0; i < Campaign.num_missions; i++)
-                    if (!strcasecmp (CTEXT (z), Campaign.missions[i].name))
-                        break;
+            // MWA -- short circuit evaluation of these things for now.
+            if ((Operators[op].value == OP_PREVIOUS_GOAL_TRUE) ||
+                (Operators[op].value == OP_PREVIOUS_GOAL_FALSE) ||
+                (Operators[op].value == OP_PREVIOUS_GOAL_INCOMPLETE))
+                break;
 
-                // read the goal/event list from the mission file if both
-                // num_goals and num_events are < 0
-                if ((Campaign.missions[i].num_goals <= 0) &&
-                    (Campaign.missions[i].num_events <= 0))
-                    read_mission_goal_list (i);
-
-                if (i < Campaign.num_missions) {
-                    for (t = 0; t < Campaign.missions[i].num_goals; t++)
-                        if (!strcasecmp (
-                                CTEXT (node),
-                                Campaign.missions[i].goals[t].name))
-                            break;
-
-                    if (t == Campaign.missions[i].num_goals)
-                        return SEXP_CHECK_INVALID_GOAL_NAME;
-                }
-            }
-            else {
-                // MWA -- short circuit evaluation of these things for now.
-                if ((Operators[op].value == OP_PREVIOUS_GOAL_TRUE) ||
-                    (Operators[op].value == OP_PREVIOUS_GOAL_FALSE) ||
-                    (Operators[op].value == OP_PREVIOUS_GOAL_INCOMPLETE))
+            for (i = 0; i < Num_goals; i++)
+                if (!strcasecmp (CTEXT (node), Mission_goals[i].name))
                     break;
 
-                for (i = 0; i < Num_goals; i++)
-                    if (!strcasecmp (CTEXT (node), Mission_goals[i].name))
-                        break;
-
-                if (i == Num_goals) return SEXP_CHECK_INVALID_GOAL_NAME;
-            }
+            if (i == Num_goals) return SEXP_CHECK_INVALID_GOAL_NAME;
 
             break;
 
@@ -1677,118 +1520,30 @@ int check_sexp_syntax (
             // like above checking for goals, check events in the campaign only
             // if in Fred and only if in campaign mode.  Otherwise, check the
             // current set of events
-            if (Fred_running && (mode == SEXP_MODE_CAMPAIGN)) {
-                z = find_parent_operator (node);
-                ASSERT (z >= 0);
-                z = Sexp_nodes[z].rest; // first argument of operator should be
-                                        // mission name
-                ASSERT (z >= 0);
-                for (i = 0; i < Campaign.num_missions; i++)
-                    if (!strcasecmp (CTEXT (z), Campaign.missions[i].name))
-                        break;
+            // MWA -- short circuit evaluation of these things for now.
+            if ((Operators[op].value == OP_PREVIOUS_EVENT_TRUE) ||
+                (Operators[op].value == OP_PREVIOUS_EVENT_FALSE) ||
+                (Operators[op].value == OP_PREVIOUS_EVENT_INCOMPLETE))
+                break;
 
-                // read the goal/event list from the mission file if both
-                // num_goals and num_events are < 0
-                if ((Campaign.missions[i].num_goals <= 0) &&
-                    (Campaign.missions[i].num_events <= 0))
-                    read_mission_goal_list (i);
-
-                if (i < Campaign.num_missions) {
-                    for (t = 0; t < Campaign.missions[i].num_events; t++)
-                        if (!strcasecmp (
-                                CTEXT (node),
-                                Campaign.missions[i].events[t].name))
-                            break;
-
-                    if (t == Campaign.missions[i].num_events)
-                        return SEXP_CHECK_INVALID_EVENT_NAME;
-                }
-            }
-            else {
-                // MWA -- short circuit evaluation of these things for now.
-                if ((Operators[op].value == OP_PREVIOUS_EVENT_TRUE) ||
-                    (Operators[op].value == OP_PREVIOUS_EVENT_FALSE) ||
-                    (Operators[op].value == OP_PREVIOUS_EVENT_INCOMPLETE))
+            for (i = 0; i < Num_mission_events; i++) {
+                if (!strcasecmp (CTEXT (node), Mission_events[i].name))
                     break;
-
-                for (i = 0; i < Num_mission_events; i++) {
-                    if (!strcasecmp (CTEXT (node), Mission_events[i].name))
-                        break;
-                }
-                if (i == Num_mission_events)
-                    return SEXP_CHECK_INVALID_EVENT_NAME;
             }
+
+            if (i == Num_mission_events)
+                return SEXP_CHECK_INVALID_EVENT_NAME;
+
             break;
 
         case OPF_DOCKER_POINT:
-            if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
-
-            // This makes massive assumptions about the structure of the SEXP
-            // using it. If you add any new SEXPs that use this OPF, you will
-            // probably need to edit this section to accommodate them.
-            if (Fred_running) {
-                int ship_num, model;
-
-                // Otherwise (for ai-dock), we want its parent.
-                z = find_parent_operator (op_node);
-
-                // if it's the "goals" operator, this is part of initial
-                // orders, so just assume it's okay
-                if (OP_GOALS_ID == get_operator_const (Sexp_nodes[z].text)) {
-                    break;
-                }
-
-                // look for the ship this goal is being assigned to
-                ship_num = ship_name_lookup (CTEXT (Sexp_nodes[z].rest), 1);
-                if (ship_num < 0) {
-                    if (bad_node) *bad_node = Sexp_nodes[z].rest;
-
-                    return SEXP_CHECK_INVALID_SHIP; // should have already been
-                                                    // caught earlier, but just
-                                                    // in case..
-                }
-
-                model = Ship_info[Ships[ship_num].ship_info_index].model_num;
-                z = model_get_num_dock_points (model);
-                for (i = 0; i < z; i++)
-                    if (!strcasecmp (
-                            CTEXT (node), model_get_dock_name (model, i)))
-                        break;
-
-                if (i == z) return SEXP_CHECK_INVALID_DOCKER_POINT;
-            }
-
+            if (type2 != SEXP_ATOM_STRING)
+                return SEXP_CHECK_TYPE_MISMATCH;
             break;
 
         case OPF_DOCKEE_POINT:
-            if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
-
-            // This makes massive assumptions about the structure of the SEXP
-            // using it. If you add any new SEXPs that use this OPF, you will
-            // probably need to edit this section to accommodate them.
-            if (Fred_running) {
-                int ship_num, model;
-
-                ship_num = ship_name_lookup (CTEXT (Sexp_nodes[op_node].rest), 1);
-
-                if (ship_num < 0) {
-                    if (bad_node) *bad_node = Sexp_nodes[op_node].rest;
-
-                    return SEXP_CHECK_INVALID_SHIP; // should have already been
-                                                    // caught earlier, but just
-                                                    // in case..
-                }
-
-                model = Ship_info[Ships[ship_num].ship_info_index].model_num;
-                z = model_get_num_dock_points (model);
-                for (i = 0; i < z; i++)
-                    if (!strcasecmp (
-                            CTEXT (node), model_get_dock_name (model, i)))
-                        break;
-
-                if (i == z) return SEXP_CHECK_INVALID_DOCKEE_POINT;
-            }
-
+            if (type2 != SEXP_ATOM_STRING)
+                return SEXP_CHECK_TYPE_MISMATCH;
             break;
 
         case OPF_WHO_FROM:
@@ -1801,16 +1556,15 @@ int check_sexp_syntax (
                         if ((ship_name_lookup (CTEXT (node), TRUE) < 0) &&
                             (wing_name_lookup (CTEXT (node), 1) <
                              0)) // is it in the mission?
-                            if (Fred_running ||
-                                !mission_parse_get_arrival_ship (CTEXT (node)))
+                            if (!mission_parse_get_arrival_ship (CTEXT (node)))
                                 return SEXP_CHECK_INVALID_MSG_SOURCE;
             }
 
             break;
 
         case OPF_KEYPRESS:
-            if (type2 != SEXP_ATOM_STRING) return SEXP_CHECK_TYPE_MISMATCH;
-
+            if (type2 != SEXP_ATOM_STRING)
+                return SEXP_CHECK_TYPE_MISMATCH;
             break;
 
         case OPF_SKILL_LEVEL:
@@ -1926,21 +1680,16 @@ void get_unformatted_sexp_variable_name (
 
 /**
  * Get text to stuff into Sexp_node in case of variable
- *
- * If Fred_running - stuff Sexp_variables[].variable_name
- * otherwise - stuff index into Sexp_variables array.
  */
 void get_sexp_text_for_variable (char* text, char* token) {
     int sexp_var_index;
 
     get_unformatted_sexp_variable_name (text, token);
 
-    if (!Fred_running) {
-        // freespace - get index into Sexp_variables array
-        sexp_var_index = get_index_sexp_variable_name (text);
-        ASSERT (sexp_var_index != -1);
-        sprintf (text, "%d", sexp_var_index);
-    }
+    // freespace - get index into Sexp_variables array
+    sexp_var_index = get_index_sexp_variable_name (text);
+    ASSERT (sexp_var_index != -1);
+    sprintf (text, "%d", sexp_var_index);
 }
 
 /**
@@ -1992,8 +1741,7 @@ int get_sexp () {
 
             // check if string variable
             if (*(Mp + 1) == SEXP_VARIABLE_CHAR) {
-                char variable_token
-                    [2 * TOKEN_LENGTH + 2]; // variable_token[contents_token]
+                char variable_token [2 * TOKEN_LENGTH + 2]; // variable_token[contents_token]
 
                 // reduce length by 1 for end \"
                 auto length = len - 1;
@@ -2126,12 +1874,9 @@ int get_sexp () {
         }
     }
 
-    // Goober5000 - preload stuff for certain sexps
-    if (!Fred_running) {
-        if (OP_SET_SPECIAL_WARPOUT_NAME == (op = get_operator_const (CTEXT (start))))
-            // set flag for taylor
-            Knossos_warp_ani_used = 1;
-    }
+    if (OP_SET_SPECIAL_WARPOUT_NAME == (op = get_operator_const (CTEXT (start))))
+        // set flag for taylor
+        Knossos_warp_ani_used = 1;
 
     return start;
 }
@@ -2301,17 +2046,10 @@ void stuff_sexp_text_string (std::string& dest, int node, int mode) {
 
             // Error check - can be Fred or FreeSpace
             if (mode == SEXP_ERROR_CHECK_MODE) {
-                if (Fred_running) {
-                    sprintf (
-                        dest, "%s[%s] ", Sexp_nodes[node].text,
-                        Sexp_variables[sexp_variables_index].text);
-                }
-                else {
-                    sprintf (
-                        dest, "%s[%s] ",
-                        Sexp_variables[sexp_variables_index].variable_name,
-                        Sexp_variables[sexp_variables_index].text);
-                }
+                sprintf (
+                    dest, "%s[%s] ",
+                    Sexp_variables[sexp_variables_index].variable_name,
+                    Sexp_variables[sexp_variables_index].text);
             }
             else {
                 // Save as string - only  Fred
@@ -2330,17 +2068,9 @@ void stuff_sexp_text_string (std::string& dest, int node, int mode) {
 
             // Error check - can be Fred or FreeSpace
             if (mode == SEXP_ERROR_CHECK_MODE) {
-                if (Fred_running) {
-                    sprintf (
-                        dest, "%s[%s] ",
-                        Sexp_variables[sexp_variables_index].variable_name,
-                        Sexp_variables[sexp_variables_index].text);
-                }
-                else {
-                    sprintf (
-                        dest, "%s[%s] ", Sexp_nodes[node].text,
-                        Sexp_variables[sexp_variables_index].text);
-                }
+                sprintf (
+                    dest, "%s[%s] ", Sexp_nodes[node].text,
+                    Sexp_variables[sexp_variables_index].text);
             }
             else {
                 // Save as string - only Fred
@@ -2442,24 +2172,6 @@ void convert_sexp_to_string (std::string& dest, int cur_node, int mode) {
 // Helper methods for getting data from nodes. Cause it's stupid to keep
 // re-rolling this stuff for every single SEXP
 // -----------------------------------------------------------------------------------
-
-/**
- * Takes a SEXP node which contains the name of a ship and returns the player
- * for that ship or NULL if it is an AI ship
- */
-player* get_player_from_ship_node (int node) {
-    ASSERT (node != -1);
-
-    int sindex = ship_name_lookup (CTEXT (node));
-
-    if (sindex >= 0) {
-        if (Player_obj == &Objects[Ships[sindex].objnum]) {
-            return Player;
-        }
-    }
-
-    return NULL;
-}
 
 /**
  * Given a node, returns a pointer to the ship or NULL if this isn't the name
@@ -4332,99 +4044,6 @@ int sexp_was_medal_granted (int n) {
 }
 
 /**
- * @todo Add code to check the damage ships which have exited have taken
- */
-float get_damage_caused (int damaged_ship, int attacker) {
-    int sindex, idx;
-    float damage_total = 0.0f;
-
-    // is the ship that took damage in the mission still?
-    sindex = ship_get_by_signature (damaged_ship);
-
-    if (sindex >= 0) {
-        for (idx = 0; idx < MAX_DAMAGE_SLOTS; idx++) {
-            if (Ships[sindex].damage_ship_id[idx] == attacker) {
-                damage_total += Ships[sindex].damage_ship[idx];
-                break;
-            }
-        }
-    }
-    else {
-        // TO DO - Add code to check the damage ships which have exited have
-        // taken
-
-        sindex = ship_find_exited_ship_by_signature (damaged_ship);
-        for (idx = 0; idx < MAX_DAMAGE_SLOTS; idx++) {
-            if (Ships_exited[sindex].damage_ship_id[idx] == attacker) {
-                damage_total += Ships_exited[sindex].damage_ship[idx];
-                break;
-            }
-        }
-    }
-    return damage_total;
-}
-
-// Karajorma
-int sexp_get_damage_caused (int node) {
-    int sindex, damaged_sig, attacker_sig;
-    float damage_caused = 0.0f;
-    char* name;
-    int ship_class;
-
-    name = CTEXT (node);
-    sindex = ship_name_lookup (name);
-    if (sindex < 0) {
-        // this ship may have exited already.
-        sindex = ship_find_exited_ship_by_name (CTEXT (node));
-        if (sindex < 0) {
-            // this is probably a ship which hasn't arrived and thus can't have
-            // taken any damage yet
-            return int (damage_caused);
-        }
-        else {
-            damaged_sig = Ships_exited[sindex].obj_signature;
-            ship_class = Ships_exited[sindex].ship_class;
-        }
-    }
-    else {
-        damaged_sig = Objects[Ships[sindex].objnum].signature;
-        ship_class = Ships[sindex].ship_info_index;
-    }
-
-    node = CDR (node);
-    ASSERT (node != -1);
-
-    // go through the list of ships who we think may have attacked the ship
-    for (; node != -1; node = CDR (node)) {
-        name = CTEXT (node);
-        sindex = ship_name_lookup (name);
-        if (sindex < 0) {
-            sindex = ship_find_exited_ship_by_name (name);
-            if (sindex < 0) { continue; }
-            else {
-                attacker_sig = Ships_exited[sindex].obj_signature;
-            }
-        }
-        else {
-            attacker_sig = Objects[Ships[sindex].objnum].signature;
-        }
-
-        if (attacker_sig < 0) { continue; }
-
-        damage_caused += get_damage_caused (damaged_sig, attacker_sig);
-    }
-
-    ASSERTX (
-        (ship_class > -1) &&
-            (ship_class < static_cast< int > (Ship_info.size ())),
-        "Invalid ship class '%d' passed to sexp_get_damage_caused() (should "
-        "be >= 0 and < %d); get a coder!\n",
-        ship_class, static_cast< int > (Ship_info.size ()));
-    return (
-        int)((damage_caused / Ship_info[ship_class].max_hull_strength) * 100.0f);
-}
-
-/**
  * Returns true if the percentage of ships (and ships in wings) departed is at
  * least the percentage given.
  *
@@ -5378,14 +4997,6 @@ void sexp_change_iff (int n) {
     }
 }
 
-void sexp_ingame_ship_change_iff_color (
-    ship* shipp, int observer_team, int observed_team,
-    int alternate_iff_color) {
-    ASSERT (shipp != NULL);
-
-    shipp->ship_iff_color[observer_team][observed_team] = alternate_iff_color;
-}
-
 void sexp_parse_ship_change_iff_color (
     p_object* parse_obj, int observer_team, int observed_team,
     int alternate_iff_color) {
@@ -5527,14 +5138,6 @@ void sexp_hud_set_message (int n) {
 /* Make sure that the Sexp_hud_display_* get added to the game_state
 transitions in freespace.cpp (game_enter_state()). */
 int Sexp_hud_display_warpout = 0;
-
-int hud_gauge_type_lookup (char* name) {
-    for (int i = 0; i < Num_hud_gauge_types; i++) {
-        if (!strcasecmp (name, Hud_gauge_types[i].name))
-            return Hud_gauge_types[i].def;
-    }
-    return -1;
-}
 
 // Goober5000
 void sexp_stop_music (bool fade) {
@@ -9881,7 +9484,7 @@ int get_sexp_main () {
     start_node = get_sexp ();
 
     // only need to check syntax if we have a operator
-    if (!Fred_running && (start_node >= 0)) {
+    if (start_node >= 0) {
         op = get_operator_index (CTEXT (start_node));
         if (op < 0) {
             ASSERTX (0, "Can't find operator %s in operator list!\n",CTEXT (start_node));
@@ -10836,86 +10439,6 @@ int query_operator_argument_type (int op, int argnum) {
     return 0;
 }
 
-// DA: 1/7/99  Used to rename ships and waypoints, not variables
-// Strictly used in FRED
-void update_sexp_references (const char* old_name, const char* new_name) {
-    int i;
-
-    ASSERT (strlen (new_name) < TOKEN_LENGTH);
-    for (i = 0; i < Num_sexp_nodes; i++) {
-        if ((SEXP_NODE_TYPE (i) == SEXP_ATOM) &&
-            (Sexp_nodes[i].subtype == SEXP_ATOM_STRING))
-            if (!strcasecmp (CTEXT (i), old_name))
-                strcpy (CTEXT (i), new_name);
-    }
-}
-
-// DA: 1/7/99  Used to rename event names, goal names, not variables
-// Strictly used in FRED
-void update_sexp_references (
-    const char* old_name, const char* new_name, int format) {
-    int i;
-    if (!strcmp (old_name, new_name)) { return; }
-
-    ASSERT (strlen (new_name) < TOKEN_LENGTH);
-    for (i = 0; i < Num_sexp_nodes; i++) {
-        if (is_sexp_top_level (i))
-            update_sexp_references (old_name, new_name, format, i);
-    }
-}
-
-// DA: 1/7/99  Used to rename event names, goal names, not variables
-// recursive function to update references to a certain type of data
-void update_sexp_references (
-    const char* old_name, const char* new_name, int format, int node) {
-    int i, n, op;
-
-    if (node < 0) return;
-
-    if ((SEXP_NODE_TYPE (node) == SEXP_LIST) &&
-        (Sexp_nodes[node].subtype == SEXP_ATOM_LIST)) {
-        if (Sexp_nodes[node].first)
-            update_sexp_references (
-                old_name, new_name, format, Sexp_nodes[node].first);
-
-        if (Sexp_nodes[node].rest)
-            update_sexp_references (
-                old_name, new_name, format, Sexp_nodes[node].rest);
-
-        return;
-    }
-
-    if (SEXP_NODE_TYPE (node) != SEXP_ATOM) return;
-
-    if (Sexp_nodes[node].subtype != SEXP_ATOM_OPERATOR) return;
-
-    op = get_operator_index (CTEXT (node));
-    ASSERT (Sexp_nodes[node].first < 0);
-    n = Sexp_nodes[node].rest;
-    i = 0;
-    while (n >= 0) {
-        if (SEXP_NODE_TYPE (n) == SEXP_LIST) {
-            update_sexp_references (
-                old_name, new_name, format, Sexp_nodes[n].first);
-        }
-        else {
-            ASSERT (
-                (SEXP_NODE_TYPE (n) == SEXP_ATOM) &&
-                ((Sexp_nodes[n].subtype == SEXP_ATOM_NUMBER) ||
-                 (Sexp_nodes[n].subtype == SEXP_ATOM_STRING)));
-
-            if (query_operator_argument_type (op, i) == format) {
-                if (!strcasecmp (CTEXT (n), old_name))
-                    strcpy (CTEXT (n), new_name);
-            }
-        }
-
-        n = Sexp_nodes[n].rest;
-        i++;
-    }
-}
-
-
 int verify_vector (char* text) {
     char* str;
 
@@ -11176,49 +10699,6 @@ const char* sexp_error_message (int num) {
     }
 }
 
-int query_sexp_ai_goal_valid (int sexp_ai_goal, int ship_num) {
-    int i, op;
-
-    for (op = 0; op < (int)Operators.size (); op++)
-        if (Operators[op].value == sexp_ai_goal) break;
-
-    ASSERT (op < (int)Operators.size ());
-    for (i = 0; i < Num_sexp_ai_goal_links; i++)
-        if (Sexp_ai_goal_links[i].op_code == sexp_ai_goal) break;
-
-    ASSERT (i < Num_sexp_ai_goal_links);
-    return ai_query_goal_valid (ship_num, Sexp_ai_goal_links[i].ai_goal);
-}
-
-// Takes an Sexp_node.text pointing to a variable (of form
-// "Sexp_variables[xx]=string" or "Sexp_variables[xx]=number") and returns the
-// index into the Sexp_variables array of the actual value
-int extract_sexp_variable_index (int node) {
-    char* text = Sexp_nodes[node].text;
-    char char_index[8];
-    char* start_index;
-    int variable_index;
-
-    // get past the '['
-    start_index = text + 15;
-    ASSERT (isdigit (*start_index));
-
-    int len = 0;
-
-    while (*start_index != ']') {
-        char_index[len++] = *(start_index++);
-        ASSERT (len < 3);
-    }
-
-    ASSERT (len > 0);
-    char_index[len] = 0; // append null termination to string
-
-    variable_index = atoi (char_index);
-    ASSERT ((variable_index >= 0) && (variable_index < MAX_SEXP_VARIABLES));
-
-    return variable_index;
-}
-
 /**
  * Wrapper around Sexp_node[xx].text for normal and variable
  */
@@ -11230,21 +10710,13 @@ char* CTEXT (int n) {
     ASSERTX (
         n >= 0 && n < Num_sexp_nodes,
         "Passed an out-of-range node index (%d) to CTEXT!", n);
-    if (n < 0) { return NULL; }
 
-    // Goober5000 - MWAHAHAHAHAHAHAHA!  Thank you, Volition programmers!
-    // Without the CTEXT wrapper, when-argument would probably be infeasibly
-    // difficult to code.
+    if (n < 0)
+        return 0;
+
     if (!strcmp (Sexp_nodes[n].text, SEXP_ARGUMENT_STRING)) {
-        if (Fred_running) {
-            // CTEXT is used when writing sexps to savefiles, so don't
-            // translate the argument
-            return Sexp_nodes[n].text;
-        }
-        else {
-            // make sure we have an argument to replace it with
-            if (Sexp_replacement_arguments.empty ()) return Sexp_nodes[n].text;
-        }
+        // make sure we have an argument to replace it with
+        if (Sexp_replacement_arguments.empty ()) return Sexp_nodes[n].text;
 
         // if the replacement argument is a variable name, get the variable
         // index
@@ -11271,14 +10743,8 @@ char* CTEXT (int n) {
 
     // Goober5000 - if not special argument, proceed as normal
     if (Sexp_nodes[n].type & SEXP_FLAG_VARIABLE) {
-        if (Fred_running) {
-            sexp_variable_index =
-                get_index_sexp_variable_name (Sexp_nodes[n].text);
-            ASSERT (sexp_variable_index != -1);
-        }
-        else {
-            sexp_variable_index = atoi (Sexp_nodes[n].text);
-        }
+        sexp_variable_index = atoi (Sexp_nodes[n].text);
+
         // Reference a Sexp_variable
         // string format -- "Sexp_variables[xx]=number" or
         // "Sexp_variables[xx]=string", where xx is the index
@@ -11356,20 +10822,6 @@ int sexp_add_variable (
     return index;
 }
 
-// Goober5000 - minor variant of the above that is now required for variable
-// arrays
-void sexp_add_array_block_variable (int index, bool is_numeric) {
-    ASSERT (index >= 0 && index < MAX_SEXP_VARIABLES);
-
-    strcpy (Sexp_variables[index].text, "");
-    strcpy (Sexp_variables[index].variable_name, "variable array block");
-
-    if (is_numeric)
-        Sexp_variables[index].type = SEXP_VARIABLE_NUMBER | SEXP_VARIABLE_SET;
-    else
-        Sexp_variables[index].type = SEXP_VARIABLE_STRING | SEXP_VARIABLE_SET;
-}
-
 /**
  * Modify a Sexp_variable to be used in a mission
  *
@@ -11434,209 +10886,13 @@ void sexp_modify_variable (int n) {
     }
 }
 
-bool is_sexp_node_numeric (int node) {
-    ASSERT (node >= 0);
-
-    // make the common case fast: if the node has a CAR node, that means it
-    // uses an operator; and operators cannot currently return strings
-    if (Sexp_nodes[node].first >= 0) return true;
-
-    // if the node text is numeric, the node is too
-    if (can_construe_as_integer (Sexp_nodes[node].text)) return true;
-
-    // otherwise it's gotta be text
-    return false;
-}
-
-// By Goober5000. Very similar to sexp_modify_variable(). Even uses the same
-// multi code! :)
-void sexp_set_variable_by_index (int node) {
-    int sexp_variable_index;
-    int new_number;
-    char* new_text;
-    char number_as_str[TOKEN_LENGTH];
-
-    ASSERT (node >= 0);
-
-    // get sexp_variable index
-    sexp_variable_index = eval_num (node);
-
-    // check range
-    if (sexp_variable_index < 0 || sexp_variable_index >= MAX_SEXP_VARIABLES) {
-        WARNINGF (LOCATION,"set-variable-by-index: sexp variable index %d out of range!  min is 0; max is %d",sexp_variable_index, MAX_SEXP_VARIABLES - 1);
-        return;
-    }
-
-    // verify variable set
-    if (!(Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_SET)) {
-        // well phooey.  go ahead and create it
-        sexp_add_array_block_variable (
-            sexp_variable_index, is_sexp_node_numeric (CDR (node)));
-    }
-
-    if (Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_NUMBER) {
-        // get new numerical value
-        new_number = eval_sexp (CDR (node));
-        sprintf (number_as_str, "%d", new_number);
-
-        // assign to variable
-        sexp_modify_variable (number_as_str, sexp_variable_index);
-    }
-    else if (Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING) {
-        // get new string
-        new_text = CTEXT (CDR (node));
-
-        // assign to variable
-        sexp_modify_variable (new_text, sexp_variable_index);
-    }
-    else {
-        ASSERTX (0, "Invalid variable type.\n");
-    }
-}
-
-// Goober5000
-int sexp_get_variable_by_index (int node) {
-    int sexp_variable_index;
-
-    ASSERT (node >= 0);
-
-    // get sexp_variable index
-    sexp_variable_index = eval_num (node);
-
-    // check range
-    if (sexp_variable_index < 0 || sexp_variable_index >= MAX_SEXP_VARIABLES) {
-        WARNINGF (LOCATION,"get-variable-by-index: sexp variable index %d out of range!  min is 0; max is %d",sexp_variable_index, MAX_SEXP_VARIABLES - 1);
-        return 0;
-    }
-
-    if (Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_NOT_USED) {
-        WARNINGF (LOCATION,"warning: retrieving a value from a sexp variable which is not in use!");
-    }
-    else if (!(Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_SET)) {
-        WARNINGF (LOCATION,"warning: retrieving a value from a sexp variable which is not set!");
-    }
-
-    if (Sexp_variables[sexp_variable_index].type & SEXP_VARIABLE_STRING) {
-        WARNINGF (LOCATION,"warning: variable %d is a string but it is not possible to return a string value through a sexp!",sexp_variable_index);
-        return SEXP_NAN_FOREVER;
-    }
-
-    return atoi (Sexp_variables[sexp_variable_index].text);
-}
-
-// Goober5000
-// (yes, this reuses a lot of code, but it's a major pain to consolidate it)
-void sexp_copy_variable_from_index (int node) {
-    int from_index;
-    int to_index;
-
-    ASSERT (node >= 0);
-
-    // get sexp_variable index
-    from_index = eval_num (node);
-
-    // check range
-    if (from_index < 0 || from_index >= MAX_SEXP_VARIABLES) {
-        WARNINGF (LOCATION,"copy-variable-from-index: sexp variable index %d out of range!  min is 0; max is %d",from_index, MAX_SEXP_VARIABLES - 1);
-        return;
-    }
-
-    if (Sexp_variables[from_index].type & SEXP_VARIABLE_NOT_USED) {
-        WARNINGF (LOCATION,"warning: retrieving a value from a sexp variable which is not in use!");
-    }
-    else if (!(Sexp_variables[from_index].type & SEXP_VARIABLE_SET)) {
-        WARNINGF (LOCATION,"warning: retrieving a value from a sexp variable which is not set!");
-    }
-
-    // now get the variable we are modifying
-    to_index = atoi (Sexp_nodes[CDR (node)].text);
-
-    // verify variable set
-    ASSERT (Sexp_variables[to_index].type & SEXP_VARIABLE_SET);
-
-    // verify matching types
-    if (((Sexp_variables[from_index].type & SEXP_VARIABLE_NUMBER) &&
-         !(Sexp_variables[to_index].type & SEXP_VARIABLE_NUMBER)) ||
-        ((Sexp_variables[from_index].type & SEXP_VARIABLE_STRING) &&
-         !(Sexp_variables[to_index].type & SEXP_VARIABLE_STRING))) {
-        WARNINGF (LOCATION,"copy-variable-from-index: cannot copy variables of different types!  source = '%s', destination = '%s'",Sexp_variables[from_index].variable_name,Sexp_variables[to_index].variable_name);
-        return;
-    }
-
-    // assign to variable
-    sexp_modify_variable (Sexp_variables[from_index].text, to_index);
-}
-
-// Goober5000
-// (yes, this reuses a lot of code, but it's a major pain to consolidate it)
-// (and yes, that reused a comment :p)
-void sexp_copy_variable_between_indexes (int node) {
-    int from_index;
-    int to_index;
-
-    ASSERT (node >= 0);
-
-    // get sexp_variable indexes
-    from_index = eval_num (node);
-    to_index = eval_num (CDR (node));
-
-    // check ranges
-    if (from_index < 0 || from_index >= MAX_SEXP_VARIABLES) {
-        WARNINGF (LOCATION,"copy-variable-between-indexes: sexp variable index %d out of range!  min is 0; max is %d",from_index, MAX_SEXP_VARIABLES - 1);
-        return;
-    }
-    if (to_index < 0 || to_index >= MAX_SEXP_VARIABLES) {
-        WARNINGF (LOCATION,"copy-variable-between-indexes: sexp variable index %d out of range!  min is 0; max is %d",to_index, MAX_SEXP_VARIABLES - 1);
-        return;
-    }
-
-    if (Sexp_variables[from_index].type & SEXP_VARIABLE_NOT_USED) {
-        WARNINGF (LOCATION,"warning: retrieving a value from a sexp variable which is not in use!");
-    }
-    else if (!(Sexp_variables[from_index].type & SEXP_VARIABLE_SET)) {
-        WARNINGF (LOCATION,"warning: retrieving a value from a sexp variable which is not set!");
-    }
-
-    if (!(Sexp_variables[to_index].type & SEXP_VARIABLE_SET)) {
-        // well phooey.  go ahead and create it
-        sexp_add_array_block_variable (
-            to_index,
-            (Sexp_variables[from_index].type & SEXP_VARIABLE_NUMBER) != 0);
-    }
-
-    // verify matching types
-    if (((Sexp_variables[from_index].type & SEXP_VARIABLE_NUMBER) &&
-         !(Sexp_variables[to_index].type & SEXP_VARIABLE_NUMBER)) ||
-        ((Sexp_variables[from_index].type & SEXP_VARIABLE_STRING) &&
-         !(Sexp_variables[to_index].type & SEXP_VARIABLE_STRING))) {
-        WARNINGF (LOCATION,"copy-variable-between-indexes: cannot copy variables of different types!  source = '%s', destination = '%s'",Sexp_variables[from_index].variable_name,Sexp_variables[to_index].variable_name);
-        return;
-    }
-
-    // assign to variable
-    sexp_modify_variable (Sexp_variables[from_index].text, to_index);
-}
-
-// Different type needed for Fred (1) allow modification of type (2) no
-// callback required
-
 /**
  * Given a sexp node return the index of the variable at that node, -1 if not
  * found
  */
 int get_index_sexp_variable_from_node (int node) {
-    int var_index;
-
-    if (!(Sexp_nodes[node].type & SEXP_FLAG_VARIABLE)) { return -1; }
-
-    if (Fred_running) {
-        var_index = get_index_sexp_variable_name (Sexp_nodes[node].text);
-    }
-    else {
-        var_index = atoi (Sexp_nodes[node].text);
-    }
-
-    return var_index;
+    return Sexp_nodes[node].type & SEXP_FLAG_VARIABLE
+        ? atoi (Sexp_nodes[node].text) : -1;
 }
 
 /**
