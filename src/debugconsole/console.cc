@@ -4,6 +4,8 @@
 #include <cmath>
 #include <cstdarg>
 
+#include <deque>
+
 #include "defs.hh"
 #include "debugconsole/console.hh"
 #include "shared/alphacolors.hh"

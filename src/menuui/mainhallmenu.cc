@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <climits>
 
-#include "defs.hh"
+#include <deque>
 
 #include "anim/animplay.hh"
 #include "anim/packunpack.hh"

@@ -2,6 +2,8 @@
 
 #include <climits>
 
+#include <list>
+
 #include "defs.hh"
 #include "cfile/cfile.hh"
 #include "cmdline/cmdline.hh"

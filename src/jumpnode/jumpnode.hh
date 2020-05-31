@@ -6,6 +6,7 @@
 #include "defs.hh"
 
 #include <cstdlib>
+#include <list>
 
 #include "graphics/2d.hh"
 
