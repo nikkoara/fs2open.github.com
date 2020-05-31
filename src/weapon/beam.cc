@@ -52,9 +52,11 @@
 
 #define TOOLTIME 1500.0f
 
-beam Beams[MAX_BEAMS]; // all beams
+beam Beams[MAX_BEAMS] /* = { 0 } */; // all beams
+
 beam Beam_free_list;   // free beams
 beam Beam_used_list;   // used beams
+
 int Beam_count = 0;    // how many beams are in use
 
 // octant indices. These are "good" pairs of octants to use for beam target
@@ -254,9 +256,11 @@ void beam_level_init () {
     int idx;
 
     Beam_count = 0;
+
     list_init (&Beam_free_list);
     list_init (&Beam_used_list);
-    memset (Beams, 0, sizeof (beam) * MAX_BEAMS);
+
+    std::fill(Beams, Beams + sizeof Beams / sizeof *Beams, beam{ });
 
     // Link all object slots into the free list
     for (idx = 0; idx < MAX_BEAMS; idx++) {
