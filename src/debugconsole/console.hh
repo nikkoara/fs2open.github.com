@@ -66,11 +66,11 @@ class debug_command;
  * would display it as: toggle_it  - Usage: sample. Toggles This_var on/off.
  *  Note: The only allowed function type is a void fn( void )
  */
-#define DCF(function_name, help_text)                    \
-    void dcf_##function_name ();                         \
-    debug_command dcmd_##function_name (                 \
-        #function_name, help_text, dcf_##function_name); \
-    void dcf_##function_name ()
+#define DCF(function_name, help_text)                            \
+        void dcf_##function_name();                              \
+        debug_command dcmd_##function_name(                      \
+                #function_name, help_text, dcf_##function_name); \
+        void dcf_##function_name()
 
 /**
  *  @def Shortcut for debug commands that toggle a bool, such as Show_lightning
@@ -79,43 +79,42 @@ class debug_command;
  * console
  *  @param [in] bool_variable Name of the variable to allow toggling.
  */
-#define DCF_BOOL(function_name, bool_variable)                             \
-    void dcf_##function_name ();                                           \
-    debug_command dcmd_##function_name (                                   \
-        #function_name, "Sets or toggles the boolean: " #bool_variable,    \
-        dcf_##function_name);                                              \
-    void dcf_##function_name () {                                          \
-        bool bool_tmp = bool_variable != 0;                                \
-        if (dc_optional_string_either ("help", "--help")) {                \
-            dc_printf (                                                    \
-                "Usage: %s [bool]\nSets %s to true or false.  If nothing " \
-                "passed, then toggles it.\n",                              \
-                #function_name, #bool_variable);                           \
-            return;                                                        \
-        }                                                                  \
-        if (dc_optional_string_either ("status", "--status") ||            \
-            dc_optional_string_either ("?", "--?")) {                      \
-            dc_printf (                                                    \
-                "%s = %s\n", #bool_variable,                               \
-                (bool_variable ? "TRUE" : "FALSE"));                       \
-            return;                                                        \
-        }                                                                  \
-        if (!dc_maybe_stuff_boolean (&bool_tmp)) {                         \
-            if (bool_variable != 0)                                        \
-                bool_variable = 0;                                         \
-            else                                                           \
-                bool_variable = 1;                                         \
-        }                                                                  \
-        else {                                                             \
-            if (bool_tmp)                                                  \
-                bool_variable = 1;                                         \
-            else                                                           \
-                bool_variable = 0;                                         \
-        }                                                                  \
-        dc_printf (                                                        \
-            "%s set to %s\n", #bool_variable,                              \
-            (bool_variable != 0 ? "TRUE" : "FALSE"));                      \
-    }
+#define DCF_BOOL(function_name, bool_variable)                                                                  \
+        void dcf_##function_name();                                                                             \
+        debug_command dcmd_##function_name(                                                                     \
+                #function_name, "Sets or toggles the boolean: " #bool_variable,                                 \
+                dcf_##function_name);                                                                           \
+        void dcf_##function_name()                                                                              \
+        {                                                                                                       \
+                bool bool_tmp = bool_variable != 0;                                                             \
+                if (dc_optional_string_either("help", "--help")) {                                              \
+                        dc_printf(                                                                              \
+                                "Usage: %s [bool]\nSets %s to true or false.  If nothing "                      \
+                                "passed, then toggles it.\n",                                                   \
+                                #function_name, #bool_variable);                                                \
+                        return;                                                                                 \
+                }                                                                                               \
+                if (dc_optional_string_either("status", "--status") || dc_optional_string_either("?", "--?")) { \
+                        dc_printf(                                                                              \
+                                "%s = %s\n", #bool_variable,                                                    \
+                                (bool_variable ? "TRUE" : "FALSE"));                                            \
+                        return;                                                                                 \
+                }                                                                                               \
+                if (!dc_maybe_stuff_boolean(&bool_tmp)) {                                                       \
+                        if (bool_variable != 0)                                                                 \
+                                bool_variable = 0;                                                              \
+                        else                                                                                    \
+                                bool_variable = 1;                                                              \
+                } else {                                                                                        \
+                        if (bool_tmp)                                                                           \
+                                bool_variable = 1;                                                              \
+                        else                                                                                    \
+                                bool_variable = 0;                                                              \
+                }                                                                                               \
+                dc_printf(                                                                                      \
+                        "%s set to %s\n", #bool_variable,                                                       \
+                        (bool_variable != 0 ? "TRUE" : "FALSE"));                                               \
+        }
 
 /**
  *  @def Same as DCF_BOOL, but with custom help strings
@@ -124,26 +123,26 @@ class debug_command;
  * console
  *  @param [in] bool_variable Name of the variable to allow toggling.
  */
-#define DCF_BOOL2(function_name, bool_variable, short_help, long_help) \
-    void dcf_##function_name ();                                       \
-    debug_command dcmd_##function_name (                               \
-        #function_name, short_help, dcf_##function_name);              \
-    void dcf_##function_name () {                                      \
-        if (dc_optional_string_either ("help", "--help")) {            \
-            dc_printf (#long_help);                                    \
-            return;                                                    \
-        }                                                              \
-        if (dc_optional_string_either ("status", "--status") ||        \
-            dc_optional_string_either ("?", "--?")) {                  \
-            dc_printf (                                                \
-                "%s = %s\n", #function_name,                           \
-                (bool_variable ? "TRUE" : "FALSE"));                   \
-            return;                                                    \
-        }                                                              \
-        if (!dc_maybe_stuff_boolean (&bool_variable)) {                \
-            bool_variable = !bool_variable;                            \
-        }                                                              \
-    }
+#define DCF_BOOL2(function_name, bool_variable, short_help, long_help)                                          \
+        void dcf_##function_name();                                                                             \
+        debug_command dcmd_##function_name(                                                                     \
+                #function_name, short_help, dcf_##function_name);                                               \
+        void dcf_##function_name()                                                                              \
+        {                                                                                                       \
+                if (dc_optional_string_either("help", "--help")) {                                              \
+                        dc_printf(#long_help);                                                                  \
+                        return;                                                                                 \
+                }                                                                                               \
+                if (dc_optional_string_either("status", "--status") || dc_optional_string_either("?", "--?")) { \
+                        dc_printf(                                                                              \
+                                "%s = %s\n", #function_name,                                                    \
+                                (bool_variable ? "TRUE" : "FALSE"));                                            \
+                        return;                                                                                 \
+                }                                                                                               \
+                if (!dc_maybe_stuff_boolean(&bool_variable)) {                                                  \
+                        bool_variable = !bool_variable;                                                         \
+                }                                                                                               \
+        }
 
 /**
  * @def Shortcut for single-variable setters/monitors
@@ -152,21 +151,21 @@ class debug_command;
  * @param [in] float_variable
  * @param [in] short_help
  */
-#define DCF_FLOAT(function_name, float_variable, short_help)           \
-    void dcf_##function_name ();                                       \
-    debug_command dcmd_##function_name (                               \
-        #function_name, short_help, dcf_##function_name);              \
-    void dcf_##function_name () {                                      \
-        float value;                                                   \
-        if (dc_optional_string_either ("status", "--status") ||        \
-            dc_optional_string_either ("?", "--?")) {                  \
-            dc_printf ("%s = %f\n", #float_variable, float_variable);  \
-            return;                                                    \
-        }                                                              \
-        dc_stuff_float (&value);                                       \
-        float_variable = value;                                        \
-        dc_printf ("%s set to %f\n", #float_variable, float_variable); \
-    }
+#define DCF_FLOAT(function_name, float_variable, short_help)                                                    \
+        void dcf_##function_name();                                                                             \
+        debug_command dcmd_##function_name(                                                                     \
+                #function_name, short_help, dcf_##function_name);                                               \
+        void dcf_##function_name()                                                                              \
+        {                                                                                                       \
+                float value;                                                                                    \
+                if (dc_optional_string_either("status", "--status") || dc_optional_string_either("?", "--?")) { \
+                        dc_printf("%s = %f\n", #float_variable, float_variable);                                \
+                        return;                                                                                 \
+                }                                                                                               \
+                dc_stuff_float(&value);                                                                         \
+                float_variable = value;                                                                         \
+                dc_printf("%s set to %f\n", #float_variable, float_variable);                                   \
+        }
 
 /**
  * @def Shortcut for single-variable setters/monitors with lower/upper bounds
@@ -178,23 +177,23 @@ class debug_command;
  * @param [in] upper_bounds
  * @param [in] short_help
  */
-#define DCF_FLOAT2(                                                        \
-    function_name, float_variable, lower_bounds, upper_bounds, short_help) \
-    void dcf_##function_name ();                                           \
-    debug_command dcmd_##function_name (                                   \
-        #function_name, short_help, dcf_##function_name);                  \
-    void dcf_##function_name () {                                          \
-        float value;                                                       \
-        if (dc_optional_string_either ("status", "--status") ||            \
-            dc_optional_string_either ("?", "--?")) {                      \
-            dc_printf ("%s = %f\n", #float_variable, float_variable);      \
-            return;                                                        \
-        }                                                                  \
-        dc_stuff_float (&value);                                           \
-        CLAMP (float_variable, lower_bounds, upper_bounds);                \
-        float_variable = value;                                            \
-        dc_printf ("%s set to %f\n", #float_variable, float_variable);     \
-    }
+#define DCF_FLOAT2(                                                                                             \
+        function_name, float_variable, lower_bounds, upper_bounds, short_help)                                  \
+        void dcf_##function_name();                                                                             \
+        debug_command dcmd_##function_name(                                                                     \
+                #function_name, short_help, dcf_##function_name);                                               \
+        void dcf_##function_name()                                                                              \
+        {                                                                                                       \
+                float value;                                                                                    \
+                if (dc_optional_string_either("status", "--status") || dc_optional_string_either("?", "--?")) { \
+                        dc_printf("%s = %f\n", #float_variable, float_variable);                                \
+                        return;                                                                                 \
+                }                                                                                               \
+                dc_stuff_float(&value);                                                                         \
+                CLAMP(float_variable, lower_bounds, upper_bounds);                                              \
+                float_variable = value;                                                                         \
+                dc_printf("%s set to %f\n", #float_variable, float_variable);                                   \
+        }
 
 /**
  * @def Shortcut for single-variable setters/monitors
@@ -203,21 +202,21 @@ class debug_command;
  * @param [in] int_variable
  * @param [in] short_help
  */
-#define DCF_INT(function_name, int_variable, short_help)           \
-    void dcf_##function_name ();                                   \
-    debug_command dcmd_##function_name (                           \
-        #function_name, short_help, dcf_##function_name);          \
-    void dcf_##function_name () {                                  \
-        int value;                                                 \
-        if (dc_optional_string_either ("status", "--status") ||    \
-            dc_optional_string_either ("?", "--?")) {              \
-            dc_printf ("%s = %i\n", #int_variable, int_variable);  \
-            return;                                                \
-        }                                                          \
-        dc_stuff_int (&value);                                     \
-        int_variable = value;                                      \
-        dc_printf ("%s set to %i\n", #int_variable, int_variable); \
-    }
+#define DCF_INT(function_name, int_variable, short_help)                                                        \
+        void dcf_##function_name();                                                                             \
+        debug_command dcmd_##function_name(                                                                     \
+                #function_name, short_help, dcf_##function_name);                                               \
+        void dcf_##function_name()                                                                              \
+        {                                                                                                       \
+                int value;                                                                                      \
+                if (dc_optional_string_either("status", "--status") || dc_optional_string_either("?", "--?")) { \
+                        dc_printf("%s = %i\n", #int_variable, int_variable);                                    \
+                        return;                                                                                 \
+                }                                                                                               \
+                dc_stuff_int(&value);                                                                           \
+                int_variable = value;                                                                           \
+                dc_printf("%s set to %i\n", #int_variable, int_variable);                                       \
+        }
 
 /**
  * @def Shortcut for single-variable setters/monitors with lower/upper bounds
@@ -229,23 +228,23 @@ class debug_command;
  * @param [in] upper_bounds
  * @param [in] short_help
  */
-#define DCF_INT2(                                                        \
-    function_name, int_variable, lower_bounds, upper_bounds, short_help) \
-    void dcf_##function_name ();                                         \
-    debug_command dcmd_##function_name (                                 \
-        #function_name, short_help, dcf_##function_name);                \
-    void dcf_##function_name () {                                        \
-        int value;                                                       \
-        if (dc_optional_string_either ("status", "--status") ||          \
-            dc_optional_string_either ("?", "--?")) {                    \
-            dc_printf ("%s = %i\n", #int_variable, int_variable);        \
-            return;                                                      \
-        }                                                                \
-        dc_stuff_int (&value);                                           \
-        CLAMP (int_variable, lower_bounds, upper_bounds);                \
-        int_variable = value;                                            \
-        dc_printf ("%s set to %i\n", #int_variable, int_variable);       \
-    }
+#define DCF_INT2(                                                                                               \
+        function_name, int_variable, lower_bounds, upper_bounds, short_help)                                    \
+        void dcf_##function_name();                                                                             \
+        debug_command dcmd_##function_name(                                                                     \
+                #function_name, short_help, dcf_##function_name);                                               \
+        void dcf_##function_name()                                                                              \
+        {                                                                                                       \
+                int value;                                                                                      \
+                if (dc_optional_string_either("status", "--status") || dc_optional_string_either("?", "--?")) { \
+                        dc_printf("%s = %i\n", #int_variable, int_variable);                                    \
+                        return;                                                                                 \
+                }                                                                                               \
+                dc_stuff_int(&value);                                                                           \
+                CLAMP(int_variable, lower_bounds, upper_bounds);                                                \
+                int_variable = value;                                                                           \
+                dc_printf("%s set to %i\n", #int_variable, int_variable);                                       \
+        }
 
 /**
  *  @class debug_command
@@ -260,22 +259,22 @@ class debug_command;
  */
 class debug_command {
 public:
-    const char*
-        name; //!< The name of the command, as shown in the debug console
-    const char* help; //!< The short help string, as shown by 'help <command>'
-    void (*func) (); //!< Pointer to the function that to run when this command
-                     //!< is evoked
+        const char *
+                name;     //!< The name of the command, as shown in the debug console
+        const char *help; //!< The short help string, as shown by 'help <command>'
+        void (*func)();   //!< Pointer to the function that to run when this command
+                          //!< is evoked
 
-    debug_command ();
+        debug_command();
 
-    /**
+        /**
      * @brief Adds a debug command to the debug_commands map, if it isn't in
      * there already.
      *
      * @details The DCF macro more or less guarantees that a command won't be
      * duplicated on compile time. But no harm in some extra caution.
      */
-    debug_command (const char* name, const char* help, void (*func) ());
+        debug_command(const char *name, const char *help, void (*func)());
 };
 
 /**
@@ -284,13 +283,14 @@ public:
  */
 class is_dcmd {
 public:
-    const char* name;
+        const char *name;
 
-    is_dcmd (const char* _name) : name (_name) {}
+        is_dcmd(const char *_name) : name(_name) { }
 
-    bool operator() (debug_command* dcmd) {
-        return (strcmp (name, dcmd->name) == 0);
-    }
+        bool operator()(debug_command *dcmd)
+        {
+                return (strcmp(name, dcmd->name) == 0);
+        }
 };
 
 extern bool Dc_debug_on;
@@ -306,20 +306,20 @@ extern std::string dc_command_str; // The rest of the command line, from the
  * @details Returns true if user has pressed Esc, returns false otherwise. Use
  * this in your function to (safely?) break out of the loop it's presumably in.
  */
-bool dc_pause_output (void);
+bool dc_pause_output(void);
 
 /**
  * @brief Prints the given char string to the debug console
  * @details See the doc for std::printf() for formating and more details
  */
-void dc_printf (const char* format, ...)
-    __attribute__ ((format (printf, 1, 2)));
+void dc_printf(const char *format, ...)
+        __attribute__((format(printf, 1, 2)));
 
 /**
  * @brief Opens and processes the debug console. (Blocking call)
  * @details TODO: Make this a non-blocking call so that the game can still run
  * while the debug console is open.
  */
-void debug_console (void (*func) (void) = NULL);
+void debug_console(void (*func)(void) = NULL);
 
 #endif // FREESPACE2_DEBUGCONSOLE_CONSOLE_HH

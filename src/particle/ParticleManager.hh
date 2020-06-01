@@ -11,7 +11,7 @@
 #include "util/id.hh"
 
 namespace particle {
-struct particle_effect_tag {};
+struct particle_effect_tag { };
 /**
  * The particle index type.
  */
@@ -29,26 +29,25 @@ using ParticleEffectHandle = ::util::ID< particle_effect_tag, ptrdiff_t, -1 >;
  */
 class ParticleManager {
 private:
-    std::vector< std::shared_ptr< ParticleEffect > >
-        m_effects; //!< All parsed effects
+        std::vector< std::shared_ptr< ParticleEffect > >
+                m_effects; //!< All parsed effects
 
-    std::vector< ParticleSource > m_sources; //!< The currently active sources
+        std::vector< ParticleSource > m_sources; //!< The currently active sources
 
-    bool m_processingSources =
-        false; //!< @c true if sources are currently being processed
-    /**
+        bool m_processingSources = false; //!< @c true if sources are currently being processed
+        /**
      * If the sources are currently being processed, no additional sources can
      * be added. Instead, they are added to this vector and then added to the
      * main vector when processing is done.
      */
-    std::vector< ParticleSource > m_deferredSourceAdding;
+        std::vector< ParticleSource > m_deferredSourceAdding;
 
-    /**
+        /**
      * The global paticle manager
      */
-    static std::unique_ptr< ParticleManager > m_manager;
+        static std::unique_ptr< ParticleManager > m_manager;
 
-    /**
+        /**
      * @brief Creates a source and returns a pointer to it
      *
      * This also handles the case when a source is created when current
@@ -58,52 +57,52 @@ private:
      * modified!
      * @return The source pointer
      */
-    ParticleSource* createSource ();
+        ParticleSource *createSource();
 
 public:
-    ParticleManager () {}
+        ParticleManager() { }
 
-    /**
+        /**
      * @brief Initializes the effect system
      *
      * This creates the ParticleManager and parses the config files
      */
-    static void init ();
+        static void init();
 
-    /**
+        /**
      * @brief Gets the global particle manager
      * @return The particle manager
      */
-    static inline ParticleManager* get () {
-        ASSERTX (
-            m_manager != nullptr, "ParticleManager was not properly inited!");
+        static inline ParticleManager *get()
+        {
+                ASSERTX(
+                        m_manager != nullptr, "ParticleManager was not properly inited!");
 
-        return m_manager.get ();
-    }
+                return m_manager.get();
+        }
 
-    /**
+        /**
      * @brief Shuts down the particle effect system
      */
-    static void shutdown ();
+        static void shutdown();
 
-    /**
+        /**
      * @brief Gets an effect by index
      * @param effectID The id of the effect to retrieve
      * @return The particle effect pointer, will not be @c nullptr
      */
-    inline ParticleEffectPtr getEffect (ParticleEffectHandle effectID) {
-        ASSERTX (
-            effectID.value () >= 0 &&
-                effectID.value () <
-                    static_cast< ParticleEffectHandle::impl_type > (
-                        m_effects.size ()),
-            "Particle effect index %zd" " is invalid!",
-            effectID.value ());
+        inline ParticleEffectPtr getEffect(ParticleEffectHandle effectID)
+        {
+                ASSERTX(
+                        effectID.value() >= 0 && effectID.value() < static_cast< ParticleEffectHandle::impl_type >(m_effects.size()),
+                        "Particle effect index %zd"
+                        " is invalid!",
+                        effectID.value());
 
-        return m_effects[effectID.value ()].get ();
-    }
+                return m_effects[effectID.value()].get();
+        }
 
-    /**
+        /**
      * @brief Gets an effect by name
      *
      * @note If possible, only call this once and then store the index. The
@@ -114,32 +113,32 @@ public:
      * empty
      * @return The index of the effect
      */
-    ParticleEffectHandle getEffectByName (const std::string& name);
+        ParticleEffectHandle getEffectByName(const std::string &name);
 
-    /**
+        /**
      * @brief Adds an effect
      * @param effect The effect to add
      * @return The index of the added effect
      */
-    ParticleEffectHandle addEffect (ParticleEffectPtr effect);
+        ParticleEffectHandle addEffect(ParticleEffectPtr effect);
 
-    /**
+        /**
      * @brief Does one processing step of the particle manager
      * @param frameTime The length of the current frame
      */
-    void doFrame (float frameTime);
+        void doFrame(float frameTime);
 
-    /**
+        /**
      * @brief Removes all sources
      */
-    void clearSources ();
+        void clearSources();
 
-    /**
+        /**
      * @brief Pages in all used effects
      */
-    void pageIn ();
+        void pageIn();
 
-    /**
+        /**
      * @brief Creates a source for the specified effect
      *
      * This returns a wrapper class because some effects may create multiple
@@ -148,7 +147,7 @@ public:
      * @param index The index of the effect
      * @return A wrapper class which allows access to the created sources
      */
-    ParticleSourceWrapper createSource (ParticleEffectHandle index);
+        ParticleSourceWrapper createSource(ParticleEffectHandle index);
 };
 
 namespace internal {
@@ -165,8 +164,8 @@ namespace internal {
  * name
  * @return The index of the added effect
  */
-ParticleEffectHandle parseEffectElement (
-    EffectType forcedType = EffectType::Invalid, const std::string& name = "");
+ParticleEffectHandle parseEffectElement(
+        EffectType forcedType = EffectType::Invalid, const std::string &name = "");
 
 /**
  * @brief Utility function for required_string
@@ -178,7 +177,7 @@ ParticleEffectHandle parseEffectElement (
  * @param no_create The no_create value
  * @return @c true if the token was present, @c false otherwise
  */
-bool required_string_if_new (const char* token, bool no_create);
+bool required_string_if_new(const char *token, bool no_create);
 
 /**
  * @brief Parses an animation
@@ -190,7 +189,7 @@ bool required_string_if_new (const char* token, bool no_create);
  * @param critical @c true if a failure is critical
  * @return The animation handle
  */
-int parseAnimation (bool critical = true);
+int parseAnimation(bool critical = true);
 } // namespace internal
 
 namespace util {
@@ -205,7 +204,7 @@ namespace util {
  * more specific
  * @return The index
  */
-ParticleEffectHandle parseEffect (const std::string& objectName = "");
+ParticleEffectHandle parseEffect(const std::string &objectName = "");
 } // namespace util
 } // namespace particle
 

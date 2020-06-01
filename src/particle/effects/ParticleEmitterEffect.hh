@@ -15,20 +15,20 @@ namespace effects {
  */
 class ParticleEmitterEffect : public ParticleEffect {
 private:
-    particle_emitter m_emitter;
-    int m_particleBitmap = -1;
-    float m_range = -1;
+        particle_emitter m_emitter;
+        int m_particleBitmap = -1;
+        float m_range = -1;
 
 public:
-    ParticleEmitterEffect ();
+        ParticleEmitterEffect();
 
-    bool processSource (const ParticleSource* source) override;
+        bool processSource(const ParticleSource *source) override;
 
-    void parseValues (bool nocreate) override;
+        void parseValues(bool nocreate) override;
 
-    void pageIn () override;
+        void pageIn() override;
 
-    void setValues (const particle_emitter& emitter, int bitmap, float range);
+        void setValues(const particle_emitter &emitter, int bitmap, float range);
 };
 } // namespace effects
 } // namespace particle

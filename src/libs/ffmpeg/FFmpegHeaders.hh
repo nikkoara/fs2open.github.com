@@ -20,8 +20,8 @@ extern "C" {
 #include <libswresample/swresample.h>
 #endif
 
-#include <libavutil/imgutils.h>
 #include <libavutil/error.h>
+#include <libavutil/imgutils.h>
 #include <libavutil/opt.h>
 }
 

@@ -1,40 +1,47 @@
 // -*- mode: c++; -*-
 
+#include "tracing/tracing.hh"
+
+#include "defs.hh"
+
 #include <cinttypes>
+
 #include <fstream>
 #include <future>
 #include <mutex>
 #include <queue>
 
-#include "defs.hh"
-#include "tracing/tracing.hh"
-#include "graphics/2d.hh"
-#include "parse/parselo.hh"
-#include "io/timer.hh"
-#include "TraceEventWriter.hh"
-#include "MainFrameTimer.hh"
 #include "FrameProfiler.hh"
+#include "MainFrameTimer.hh"
+#include "TraceEventWriter.hh"
 #include "assert/assert.hh"
+#include "graphics/2d.hh"
+#include "io/timer.hh"
+#include "parse/parselo.hh"
 
 // A function for getting the id of the current thread
 #if __LINUX__
 #include <sys/syscall.h>
 
-static int64_t get_tid () { return (int64_t)syscall (SYS_gettid); }
+static int64_t get_tid() { return (int64_t)syscall(SYS_gettid); }
 #else
 #include <pthread.h>
 
-static int64_t get_tid () {
-    // This is not a reliable way of getting the tid but it's better than
-    // nothing
-    return (int64_t)pthread_self ();
+static int64_t get_tid()
+{
+        // This is not a reliable way of getting the tid but it's better than
+        // nothing
+        return (int64_t)pthread_self();
 }
 #endif
 
 // A function for getting the id of the current process
 #include <unistd.h>
 
-static int64_t get_pid () { return (int64_t)getpid (); }
+static int64_t get_pid()
+{
+        return (int64_t)getpid();
+}
 
 namespace {
 
@@ -50,34 +57,36 @@ std::vector< int > query_objects;
 std::queue< int > free_query_objects;
 bool do_gpu_queries = true;
 
-int get_query_object () {
-    if (!free_query_objects.empty ()) {
-        auto id = free_query_objects.front ();
-        free_query_objects.pop ();
+int get_query_object()
+{
+        if (!free_query_objects.empty()) {
+                auto id = free_query_objects.front();
+                free_query_objects.pop();
+                return id;
+        }
+
+        auto id = gr_create_query_object();
+        query_objects.push_back(id);
         return id;
-    }
-
-    auto id = gr_create_query_object ();
-    query_objects.push_back (id);
-    return id;
 }
 
-int get_gpu_timestamp_query () {
-    GR_DEBUG_SCOPE ("Query tracing timestamp");
+int get_gpu_timestamp_query()
+{
+        GR_DEBUG_SCOPE("Query tracing timestamp");
 
-    auto query = get_query_object ();
-    gr_query_value (query, QueryType::Timestamp);
+        auto query = get_query_object();
+        gr_query_value(query, QueryType::Timestamp);
 
-    return query;
+        return query;
 }
 
-void free_query_object (int obj) { free_query_objects.push (obj); }
+void free_query_object(int obj) { free_query_objects.push(obj); }
 
 struct gpu_trace_event {
-    trace_event base_evt;
+        trace_event base_evt;
 
-    int gpu_begin_query = -1;
-    int gpu_end_query = -1;
+        int gpu_begin_query = -1;
+        int gpu_end_query = -1;
 };
 
 std::queue< gpu_trace_event > gpu_events;
@@ -95,303 +104,332 @@ std::uint64_t cpu_start_time = 0;
 
 std::uint64_t current_id = 0;
 
-void submit_event (trace_event* evt) {
-    if (evt->pid == GPU_PID) { evt->timestamp -= gpu_start_time; }
-    else {
-        evt->timestamp -= cpu_start_time;
-    }
+void submit_event(trace_event *evt)
+{
+        if (evt->pid == GPU_PID) {
+                evt->timestamp -= gpu_start_time;
+        } else {
+                evt->timestamp -= cpu_start_time;
+        }
 
-    if (traceEventWriter) {
-        // Trace event writer receives all events
-        traceEventWriter->processEvent (evt);
-    }
+        if (traceEventWriter) {
+                // Trace event writer receives all events
+                traceEventWriter->processEvent(evt);
+        }
 
-    if (mainFrameTimer) { mainFrameTimer->processEvent (evt); }
+        if (mainFrameTimer) {
+                mainFrameTimer->processEvent(evt);
+        }
 
-    if (frameProfiler) { frameProfiler->processEvent (evt); }
+        if (frameProfiler) {
+                frameProfiler->processEvent(evt);
+        }
 }
 
-void process_gpu_events () {
-    ASSERTX (
-        get_tid () == main_thread_id,
-        "This function must be called from the main thread!");
+void process_gpu_events()
+{
+        ASSERTX(
+                get_tid() == main_thread_id,
+                "This function must be called from the main thread!");
 
-    if (gpu_start_query >= 0) {
-        if (gr_query_value_available (gpu_start_query)) {
-            gpu_start_time = gr_get_query_value (gpu_start_query);
-            gpu_start_query = -1;
-        }
-        else {
-            // Wait until query is finished
-            return;
-        }
-    }
-
-    GR_DEBUG_SCOPE ("Query GPU timestamps");
-
-    while (!gpu_events.empty ()) {
-        auto& first = gpu_events.front ();
-        auto result_available = true;
-
-        if (first.gpu_begin_query != -1) {
-            if (gr_query_value_available (first.gpu_begin_query)) {
-                first.base_evt.timestamp =
-                    gr_get_query_value (first.gpu_begin_query);
-
-                free_query_object (first.gpu_begin_query);
-                first.gpu_begin_query = -1;
-            }
-            else {
-                // Query not processed yet, try again later...
-                result_available = false;
-            }
+        if (gpu_start_query >= 0) {
+                if (gr_query_value_available(gpu_start_query)) {
+                        gpu_start_time = gr_get_query_value(gpu_start_query);
+                        gpu_start_query = -1;
+                } else {
+                        // Wait until query is finished
+                        return;
+                }
         }
 
-        switch (first.base_evt.type) {
-        case EventType::Complete:
-            // For complete events, check the end query
-            if (gr_query_value_available (first.gpu_end_query)) {
-                // All queries are finished, get the values and submit the
-                // event
-                auto finished_evt = first.base_evt;
-                auto val = gr_get_query_value (first.gpu_end_query);
+        GR_DEBUG_SCOPE("Query GPU timestamps");
 
-                finished_evt.duration = val - finished_evt.timestamp;
-                free_query_object (first.gpu_end_query);
+        while (!gpu_events.empty()) {
+                auto &first = gpu_events.front();
+                auto result_available = true;
 
-                submit_event (&finished_evt);
+                if (first.gpu_begin_query != -1) {
+                        if (gr_query_value_available(first.gpu_begin_query)) {
+                                first.base_evt.timestamp = gr_get_query_value(first.gpu_begin_query);
 
-                gpu_events.pop ();
-            }
-            else {
-                result_available = false;
-            }
-            break;
-        case EventType::Begin:
-        case EventType::End:
-            if (result_available) {
-                submit_event (&first.base_evt);
+                                free_query_object(first.gpu_begin_query);
+                                first.gpu_begin_query = -1;
+                        } else {
+                                // Query not processed yet, try again later...
+                                result_available = false;
+                        }
+                }
 
-                gpu_events.pop ();
-            }
-            break;
-        default:
-            ASSERT (0);
-            gpu_events.pop ();
-            break;
+                switch (first.base_evt.type) {
+                case EventType::Complete:
+                        // For complete events, check the end query
+                        if (gr_query_value_available(first.gpu_end_query)) {
+                                // All queries are finished, get the values and submit the
+                                // event
+                                auto finished_evt = first.base_evt;
+                                auto val = gr_get_query_value(first.gpu_end_query);
+
+                                finished_evt.duration = val - finished_evt.timestamp;
+                                free_query_object(first.gpu_end_query);
+
+                                submit_event(&finished_evt);
+
+                                gpu_events.pop();
+                        } else {
+                                result_available = false;
+                        }
+                        break;
+                case EventType::Begin:
+                case EventType::End:
+                        if (result_available) {
+                                submit_event(&first.base_evt);
+
+                                gpu_events.pop();
+                        }
+                        break;
+                default:
+                        ASSERT(0);
+                        gpu_events.pop();
+                        break;
+                }
+
+                if (!result_available) {
+                        // GPU result not available, try again next frame
+                        break;
+                }
         }
-
-        if (!result_available) {
-            // GPU result not available, try again next frame
-            break;
-        }
-    }
 }
 
-void init_event (const Category& category, trace_event* evt) {
-    evt->category = &category;
+void init_event(const Category &category, trace_event *evt)
+{
+        evt->category = &category;
 
-    evt->timestamp = timer_get_nanoseconds ();
+        evt->timestamp = timer_get_nanoseconds();
 
-    evt->pid = get_pid ();
-    evt->tid = get_tid ();
+        evt->pid = get_pid();
+        evt->tid = get_tid();
 }
 } // namespace
 
 namespace tracing {
-void init () {
-    do_trace_events = false;
-    do_async_events = false;
-    do_counter_events = false;
+void init()
+{
+        do_trace_events = false;
+        do_async_events = false;
+        do_counter_events = false;
 
-    if (Cmdline_profile_write_file) {
-        mainFrameTimer.reset (new ThreadedMainFrameTimer ());
-        do_async_events = true;
-    }
+        if (Cmdline_profile_write_file) {
+                mainFrameTimer.reset(new ThreadedMainFrameTimer());
+                do_async_events = true;
+        }
 
-    if (Cmdline_frame_profile) {
-        frameProfiler.reset (new FrameProfiler ());
-        do_trace_events = true;
-    }
+        if (Cmdline_frame_profile) {
+                frameProfiler.reset(new FrameProfiler());
+                do_trace_events = true;
+        }
 
-    do_gpu_queries = gr_is_capable (CAPABILITY_TIMESTAMP_QUERY);
+        do_gpu_queries = gr_is_capable(CAPABILITY_TIMESTAMP_QUERY);
 
-    if (do_gpu_queries) { gpu_start_query = get_gpu_timestamp_query (); }
-    cpu_start_time = timer_get_nanoseconds ();
+        if (do_gpu_queries) {
+                gpu_start_query = get_gpu_timestamp_query();
+        }
+        cpu_start_time = timer_get_nanoseconds();
 
-    main_thread_id = get_tid ();
+        main_thread_id = get_tid();
 
-    initialized = true;
+        initialized = true;
 }
 
-void process_events () {
-    if (do_gpu_queries) {
-        // Process pending GPU events
-        process_gpu_events ();
-    }
+void process_events()
+{
+        if (do_gpu_queries) {
+                // Process pending GPU events
+                process_gpu_events();
+        }
 }
-void frame_profile_process_frame () {
-    ASSERTX (
-        frameProfiler, "Frame profiling must be enabled for this function!");
+void frame_profile_process_frame()
+{
+        ASSERTX(
+                frameProfiler, "Frame profiling must be enabled for this function!");
 
-    return frameProfiler->processFrame ();
-}
-
-std::string get_frame_profile_output () {
-    ASSERTX (
-        frameProfiler, "Frame profiling must be enabled for this function!");
-
-    return frameProfiler->getContent ();
+        return frameProfiler->processFrame();
 }
 
-void shutdown () {
-    while (!gpu_events.empty ()) {
-        process_events ();
-        fs2::os::sleep (5);
-    }
+std::string get_frame_profile_output()
+{
+        ASSERTX(
+                frameProfiler, "Frame profiling must be enabled for this function!");
 
-    for (auto query : query_objects) { gr_delete_query_object (query); }
-    query_objects.clear ();
+        return frameProfiler->getContent();
+}
 
-    mainFrameTimer = nullptr;
-    traceEventWriter = nullptr;
+void shutdown()
+{
+        while (!gpu_events.empty()) {
+                process_events();
+                fs2::os::sleep(5);
+        }
 
-    initialized = false;
+        for (auto query : query_objects) { gr_delete_query_object(query); }
+        query_objects.clear();
+
+        mainFrameTimer = nullptr;
+        traceEventWriter = nullptr;
+
+        initialized = false;
 }
 
 namespace complete {
 
-void start (const Category& category, trace_event* evt) {
-    if (!do_trace_events) {
-        // No one to process the event is here
-        return;
-    }
+void start(const Category &category, trace_event *evt)
+{
+        if (!do_trace_events) {
+                // No one to process the event is here
+                return;
+        }
 
-    if (!initialized) { return; }
+        if (!initialized) {
+                return;
+        }
 
-    init_event (category, evt);
+        init_event(category, evt);
 
-    evt->duration = 0;
-    evt->type = EventType::Complete;
-    evt->event_id = ++current_id;
+        evt->duration = 0;
+        evt->type = EventType::Complete;
+        evt->event_id = ++current_id;
 
-    if (do_gpu_queries && category.usesGPUCounter ()) {
-        ASSERTX (
-            get_tid () == main_thread_id,
-            "This function must be called from the main thread!");
+        if (do_gpu_queries && category.usesGPUCounter()) {
+                ASSERTX(
+                        get_tid() == main_thread_id,
+                        "This function must be called from the main thread!");
 
-        gpu_trace_event gpu_event;
-        gpu_event.base_evt.category = &category;
-        gpu_event.base_evt.tid = 1;
-        gpu_event.base_evt.pid = GPU_PID;
-        gpu_event.base_evt.type = EventType::Begin;
+                gpu_trace_event gpu_event;
+                gpu_event.base_evt.category = &category;
+                gpu_event.base_evt.tid = 1;
+                gpu_event.base_evt.pid = GPU_PID;
+                gpu_event.base_evt.type = EventType::Begin;
 
-        gpu_event.gpu_begin_query = get_gpu_timestamp_query ();
+                gpu_event.gpu_begin_query = get_gpu_timestamp_query();
 
-        // This does not need to be synchronized since GPU queries are only
-        // allowed on the main thread.
-        gpu_events.push (gpu_event);
-    }
+                // This does not need to be synchronized since GPU queries are only
+                // allowed on the main thread.
+                gpu_events.push(gpu_event);
+        }
 }
 
-void end (trace_event* evt) {
-    if (!do_trace_events) {
-        // No one to process the event is here
-        return;
-    }
+void end(trace_event *evt)
+{
+        if (!do_trace_events) {
+                // No one to process the event is here
+                return;
+        }
 
-    if (!initialized) { return; }
+        if (!initialized) {
+                return;
+        }
 
-    ASSERTX (
-        evt->pid == get_pid (),
-        "Complete events must be generated from the same process!");
-    ASSERTX (
-        evt->tid == get_tid (),
-        "Complete events must be generated from the same thread!");
+        ASSERTX(
+                evt->pid == get_pid(),
+                "Complete events must be generated from the same process!");
+        ASSERTX(
+                evt->tid == get_tid(),
+                "Complete events must be generated from the same thread!");
 
-    evt->duration = timer_get_nanoseconds () - evt->timestamp;
-    evt->end_event_id = ++current_id;
+        evt->duration = timer_get_nanoseconds() - evt->timestamp;
+        evt->end_event_id = ++current_id;
 
-    // Process CPU events
-    submit_event (evt);
+        // Process CPU events
+        submit_event(evt);
 
-    // Create GPU events
-    if (do_gpu_queries && evt->category->usesGPUCounter ()) {
-        ASSERTX (
-            get_tid () == main_thread_id,
-            "This function must be called from the main thread!");
+        // Create GPU events
+        if (do_gpu_queries && evt->category->usesGPUCounter()) {
+                ASSERTX(
+                        get_tid() == main_thread_id,
+                        "This function must be called from the main thread!");
 
-        gpu_trace_event gpu_event;
-        gpu_event.base_evt.category = evt->category;
-        gpu_event.base_evt.tid = 1;
-        gpu_event.base_evt.pid = GPU_PID;
-        gpu_event.base_evt.type = EventType::End;
+                gpu_trace_event gpu_event;
+                gpu_event.base_evt.category = evt->category;
+                gpu_event.base_evt.tid = 1;
+                gpu_event.base_evt.pid = GPU_PID;
+                gpu_event.base_evt.type = EventType::End;
 
-        gpu_event.gpu_begin_query = get_gpu_timestamp_query ();
+                gpu_event.gpu_begin_query = get_gpu_timestamp_query();
 
-        // This does not need to be synchronized since GPU queries are only
-        // allowed on the main thread.
-        gpu_events.push (gpu_event);
-    }
+                // This does not need to be synchronized since GPU queries are only
+                // allowed on the main thread.
+                gpu_events.push(gpu_event);
+        }
 }
 
 } // namespace complete
 
 namespace async {
 
-void begin (const Category& category, const Scope& async_scope) {
-    if (!do_async_events) { return; }
+void begin(const Category &category, const Scope &async_scope)
+{
+        if (!do_async_events) {
+                return;
+        }
 
-    trace_event evt;
-    init_event (category, &evt);
+        trace_event evt;
+        init_event(category, &evt);
 
-    evt.type = EventType::AsyncBegin;
-    evt.scope = &async_scope;
-    evt.event_id = ++current_id;
+        evt.type = EventType::AsyncBegin;
+        evt.scope = &async_scope;
+        evt.event_id = ++current_id;
 
-    submit_event (&evt);
+        submit_event(&evt);
 }
 
-void step (const Category& category, const Scope& async_scope) {
-    if (!do_async_events) { return; }
+void step(const Category &category, const Scope &async_scope)
+{
+        if (!do_async_events) {
+                return;
+        }
 
-    trace_event evt;
-    init_event (category, &evt);
+        trace_event evt;
+        init_event(category, &evt);
 
-    evt.type = EventType::AsyncStep;
-    evt.scope = &async_scope;
-    evt.event_id = ++current_id;
+        evt.type = EventType::AsyncStep;
+        evt.scope = &async_scope;
+        evt.event_id = ++current_id;
 
-    submit_event (&evt);
+        submit_event(&evt);
 }
 
-void end (const Category& category, const Scope& async_scope) {
-    if (!do_async_events) { return; }
+void end(const Category &category, const Scope &async_scope)
+{
+        if (!do_async_events) {
+                return;
+        }
 
-    trace_event evt;
-    init_event (category, &evt);
+        trace_event evt;
+        init_event(category, &evt);
 
-    evt.type = EventType::AsyncEnd;
-    evt.scope = &async_scope;
-    evt.event_id = ++current_id;
+        evt.type = EventType::AsyncEnd;
+        evt.scope = &async_scope;
+        evt.event_id = ++current_id;
 
-    submit_event (&evt);
+        submit_event(&evt);
 }
 
 } // namespace async
 
 namespace counter {
 
-void value (const Category& category, float value) {
-    if (!do_counter_events) { return; }
+void value(const Category &category, float value)
+{
+        if (!do_counter_events) {
+                return;
+        }
 
-    trace_event evt;
-    init_event (category, &evt);
-    evt.type = EventType::Counter;
-    evt.value = value;
-    evt.event_id = ++current_id;
+        trace_event evt;
+        init_event(category, &evt);
+        evt.type = EventType::Counter;
+        evt.value = value;
+        evt.event_id = ++current_id;
 
-    submit_event (&evt);
+        submit_event(&evt);
 }
 
 } // namespace counter

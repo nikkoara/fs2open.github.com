@@ -5,10 +5,10 @@
 
 #include "defs.hh"
 
-#include "shared/types.hh"
-
 #include <cmath>
 #include <cstdint>
+
+#include "shared/types.hh"
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -20,20 +20,22 @@ extern int Cutscene_bar_flags;
 struct shader;
 extern shader Viewer_shader;
 
-enum FadeType { FI_NONE, FI_FADEIN, FI_FADEOUT };
+enum FadeType { FI_NONE,
+                FI_FADEIN,
+                FI_FADEOUT };
 
 extern FadeType Fade_type;
 extern int Fade_start_timestamp;
 extern int Fade_end_timestamp;
 
-struct vei  {
-    angles_t angles; // Angles defining viewer location.
-    float distance;  // Distance from which to view, plus 2x radius.
+struct vei {
+        angles_t angles; // Angles defining viewer location.
+        float distance;  // Distance from which to view, plus 2x radius.
 };
 
-struct vci  {
-    angles_t angles;
-    float distance; // Distance from which to view, plus 3x radius
+struct vci {
+        angles_t angles;
+        float distance; // Distance from which to view, plus 3x radius
 };
 
 extern fix Missiontime;
@@ -103,24 +105,24 @@ extern float Gloss_override;
 #define MAX_DETAIL_LEVEL 4 // The highest valid value for the "analog" detail level settings
 
 // If you change this, update player file in ManagePilot.cpp
-struct detail_levels  {
-    int setting; // Which default setting this was created from.   0=lowest...
-                 // NUM_DEFAULT_DETAIL_LEVELS-1, -1=Custom
+struct detail_levels {
+        int setting; // Which default setting this was created from.   0=lowest...
+                     // NUM_DEFAULT_DETAIL_LEVELS-1, -1=Custom
 
-    // "Analogs"
-    int nebula_detail;     // 0=lowest detail, MAX_DETAIL_LEVEL=highest detail
-    int detail_distance;   // 0=lowest MAX_DETAIL_LEVEL=highest
-    int hardware_textures; // 0=max culling, MAX_DETAIL_LEVEL=no culling
-    int num_small_debris;  // 0=min number, MAX_DETAIL_LEVEL=max number
-    int num_particles;     // 0=min number, MAX_DETAIL_LEVEL=max number
-    int num_stars;         // 0=min number, MAX_DETAIL_LEVEL=max number
-    int shield_effects;    // 0=min, MAX_DETAIL_LEVEL=max
-    int lighting;          // 0=min, MAX_DETAIL_LEVEL=max
+        // "Analogs"
+        int nebula_detail;     // 0=lowest detail, MAX_DETAIL_LEVEL=highest detail
+        int detail_distance;   // 0=lowest MAX_DETAIL_LEVEL=highest
+        int hardware_textures; // 0=max culling, MAX_DETAIL_LEVEL=no culling
+        int num_small_debris;  // 0=min number, MAX_DETAIL_LEVEL=max number
+        int num_particles;     // 0=min number, MAX_DETAIL_LEVEL=max number
+        int num_stars;         // 0=min number, MAX_DETAIL_LEVEL=max number
+        int shield_effects;    // 0=min, MAX_DETAIL_LEVEL=max
+        int lighting;          // 0=min, MAX_DETAIL_LEVEL=max
 
-    // Booleans
-    int targetview_model; // 0=off, 1=on
-    int planets_suns;     // 0=off, 1=on
-    int weapon_extras;    // extra weapon details. trails, glows
+        // Booleans
+        int targetview_model; // 0=off, 1=on
+        int planets_suns;     // 0=off, 1=on
+        int weapon_extras;    // extra weapon details. trails, glows
 };
 
 // Global values used to access detail levels in game and libs
@@ -129,9 +131,9 @@ extern detail_levels Detail;
 #define NUM_DEFAULT_DETAIL_LEVELS 4 // How many "predefined" detail levels there are
 
 // Call this with 0=lowest, NUM_DEFAULT_DETAIL_LEVELS=highest
-void detail_level_set (int level);
-int current_detail_level ();
+void detail_level_set(int level);
+int current_detail_level();
 
-void insertion_sort (void*, size_t, size_t, int (*)(const void*, const void*));
+void insertion_sort(void *, size_t, size_t, int (*)(const void *, const void *));
 
 #endif // FREESPACE2_SHARED_GLOBALS_HH

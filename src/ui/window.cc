@@ -1,58 +1,60 @@
 // -*- mode: c++; -*-
 
 #include "defs.hh"
+
+#include "assert/assert.hh"
 #include "bmpman/bmpman.hh"
 #include "cmdline/cmdline.hh"
-#include "shared/alphacolors.hh"
 #include "io/timer.hh"
 #include "localization/localize.hh"
+#include "log/log.hh"
 #include "osapi/osapi.hh"
 #include "parse/parselo.hh"
+#include "shared/alphacolors.hh"
 #include "ui/ui.hh"
 #include "ui/uidefs.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
 
 // global xstr colors
-color* Xstr_colors[UI_NUM_XSTR_COLORS][3] = {
-    {
-        // UI_XSTR_COLOR_GREEN
-        &Color_normal,
-        &Color_ui_light_green,
-        &Color_ui_green,
-    },
-    {
-        // UI_XSTR_COLOR_PINK
-        &Color_normal,
-        &Color_ui_light_pink,
-        &Color_ui_pink,
-    },
+color *Xstr_colors[UI_NUM_XSTR_COLORS][3] = {
+        {
+                // UI_XSTR_COLOR_GREEN
+                &Color_normal,
+                &Color_ui_light_green,
+                &Color_ui_green,
+        },
+        {
+                // UI_XSTR_COLOR_PINK
+                &Color_normal,
+                &Color_ui_light_pink,
+                &Color_ui_pink,
+        },
 };
 
 // --------------------------------------------------------------------
 // UI_WINDOW constructor
 //
 //
-UI_WINDOW::UI_WINDOW () {
-    int idx;
+UI_WINDOW::UI_WINDOW()
+{
+        int idx;
 
-    mask_bmap_id = -1;       // bitmap id of the mask bitmap to define hotspots
-    foreground_bmap_id = -1; // bitmap id of the foreground bitmap to display
-    mask_bmap_ptr = NULL;    // pointer to bitmap of the mask
-    mask_data = NULL;        // points to raw mask bitmap data
-    mask_w = -1;             // bitmap width
-    mask_h = -1;             // bitmap height
-    tooltip_handler = NULL;  // pointer to function to handle custom tooltips
+        mask_bmap_id = -1;       // bitmap id of the mask bitmap to define hotspots
+        foreground_bmap_id = -1; // bitmap id of the foreground bitmap to display
+        mask_bmap_ptr = NULL;    // pointer to bitmap of the mask
+        mask_data = NULL;        // points to raw mask bitmap data
+        mask_w = -1;             // bitmap width
+        mask_h = -1;             // bitmap height
+        tooltip_handler = NULL;  // pointer to function to handle custom tooltips
 
-    // NULL all the xstring structs
-    for (idx = 0; idx < MAX_UI_XSTRS; idx++) { xstrs[idx] = NULL; }
+        // NULL all the xstring structs
+        for (idx = 0; idx < MAX_UI_XSTRS; idx++) { xstrs[idx] = NULL; }
 }
 
 // --------------------------------------------------------------------
 // UI_WINDOW destructor
 //
 //
-UI_WINDOW::~UI_WINDOW () {}
+UI_WINDOW::~UI_WINDOW() { }
 
 // --------------------------------------------------------------------
 // UI_WINDOW::set_mask_bmap()
@@ -60,48 +62,49 @@ UI_WINDOW::~UI_WINDOW () {}
 // Specify the filename for the mask bitmap to use.  This has the hotspots
 // for all the different controls.
 //
-void UI_WINDOW::set_mask_bmap (const char* fname) {
-    int bmap;
+void UI_WINDOW::set_mask_bmap(const char *fname)
+{
+        int bmap;
 
-    bmap = bm_load (fname);
+        bmap = bm_load(fname);
 
-    if (bmap < 0) {
-        ASSERTX (0, "Could not load in %s!", fname);
-    }
-    else {
-        set_mask_bmap (bmap, fname);
-    }
+        if (bmap < 0) {
+                ASSERTX(0, "Could not load in %s!", fname);
+        } else {
+                set_mask_bmap(bmap, fname);
+        }
 }
 
-void UI_WINDOW::set_mask_bmap (int bmap, const char* /*name*/) {
-    // int i;
+void UI_WINDOW::set_mask_bmap(int bmap, const char * /*name*/)
+{
+        // int i;
 
-    // init_tooltips();
-    ASSERT (bmap >= 0);
+        // init_tooltips();
+        ASSERT(bmap >= 0);
 
-    if (bmap != mask_bmap_id) {
-        if (mask_bmap_id >= 0) { bm_unlock (mask_bmap_id); }
+        if (bmap != mask_bmap_id) {
+                if (mask_bmap_id >= 0) {
+                        bm_unlock(mask_bmap_id);
+                }
 
-        mask_w = -1;
-        mask_h = -1;
+                mask_w = -1;
+                mask_h = -1;
 
-        mask_bmap_id = bmap;
-        mask_bmap_ptr =
-            bm_lock (mask_bmap_id, 8, BMP_AABITMAP | BMP_MASK_BITMAP);
-        mask_data = (ubyte*)mask_bmap_ptr->data;
-        bm_get_info (bmap, &mask_w, &mask_h);
-        tt_group = -1;
-        /*
+                mask_bmap_id = bmap;
+                mask_bmap_ptr = bm_lock(mask_bmap_id, 8, BMP_AABITMAP | BMP_MASK_BITMAP);
+                mask_data = (ubyte *)mask_bmap_ptr->data;
+                bm_get_info(bmap, &mask_w, &mask_h);
+                tt_group = -1;
+                /*
         for (i=0; i<Num_tooltip_groups; i++){
             if (!strcasecmp(Tooltip_groups[i].mask, name)){
                 tt_group = i;
             }
         }
         */
-    }
-    else {
-        WARNINGF (LOCATION, "tried to switch bitmap mask to the same bitmap");
-    }
+        } else {
+                WARNINGF(LOCATION, "tried to switch bitmap mask to the same bitmap");
+        }
 }
 
 // --------------------------------------------------------------------
@@ -110,183 +113,198 @@ void UI_WINDOW::set_mask_bmap (int bmap, const char* /*name*/) {
 // Specify the filename for the mask bitmap to display on the ui window as
 // a background.
 //
-void UI_WINDOW::set_foreground_bmap (const char* fname) {
-    // load in the background bitmap
-    foreground_bmap_id = bm_load (fname);
-    if (foreground_bmap_id < 0) {
-        ASSERTX (0, "Could not load in %s!", fname);
-    }
+void UI_WINDOW::set_foreground_bmap(const char *fname)
+{
+        // load in the background bitmap
+        foreground_bmap_id = bm_load(fname);
+        if (foreground_bmap_id < 0) {
+                ASSERTX(0, "Could not load in %s!", fname);
+        }
 }
 
-void UI_WINDOW::create (
-    int _x, int _y, int _w, int _h, int _flags, int _f_id) {
-    x = _x;
-    y = _y;
-    w = _w;
-    h = _h;
-    flags = _flags;
-    f_id = font::FontManager::isFontNumberValid (_f_id) ? _f_id : font::FONT1;
+void UI_WINDOW::create(
+        int _x, int _y, int _w, int _h, int _flags, int _f_id)
+{
+        x = _x;
+        y = _y;
+        w = _w;
+        h = _h;
+        flags = _flags;
+        f_id = font::FontManager::isFontNumberValid(_f_id) ? _f_id : font::FONT1;
 
-    first_gadget = NULL;
-    selected_gadget = NULL;
-    tooltip_handler = NULL; // pointer to function to handle custom tooltips
-    ignore_gadgets = 0;
-    use_hack_to_get_around_stupid_problem_flag = 0;
+        first_gadget = NULL;
+        selected_gadget = NULL;
+        tooltip_handler = NULL; // pointer to function to handle custom tooltips
+        ignore_gadgets = 0;
+        use_hack_to_get_around_stupid_problem_flag = 0;
 
-    if (_x < 0) _x = 0;
-    if (_x + _w - 1 >= gr_screen.max_w_unscaled)
-        _x = gr_screen.max_w_unscaled - _w;
-    if (_y < 0) _y = 0;
-    if (_y + _h - 1 >= gr_screen.max_h_unscaled)
-        _y = gr_screen.max_h_unscaled - _h;
+        if (_x < 0)
+                _x = 0;
+        if (_x + _w - 1 >= gr_screen.max_w_unscaled)
+                _x = gr_screen.max_w_unscaled - _w;
+        if (_y < 0)
+                _y = 0;
+        if (_y + _h - 1 >= gr_screen.max_h_unscaled)
+                _y = gr_screen.max_h_unscaled - _h;
 
-    game_flush ();
+        game_flush();
 }
 
-void UI_WINDOW::release_bitmaps () {
-    if (mask_bmap_ptr) {
-        // done with the mask bitmap, so unlock it
-        bm_unlock (mask_bmap_id);
+void UI_WINDOW::release_bitmaps()
+{
+        if (mask_bmap_ptr) {
+                // done with the mask bitmap, so unlock it
+                bm_unlock(mask_bmap_id);
 
-        // unload the bitmaps
-        if (mask_bmap_id >= 0) {
-            bm_release (mask_bmap_id);
-            mask_bmap_id = -1;
+                // unload the bitmaps
+                if (mask_bmap_id >= 0) {
+                        bm_release(mask_bmap_id);
+                        mask_bmap_id = -1;
+                }
+
+                mask_data = NULL;
+                mask_bmap_ptr = NULL;
         }
 
-        mask_data = NULL;
-        mask_bmap_ptr = NULL;
-    }
-
-    if (foreground_bmap_id >= 0) {
-        bm_release (foreground_bmap_id);
-        foreground_bmap_id = -1;
-    }
-}
-
-void UI_WINDOW::destroy () {
-    UI_GADGET* cur;
-    int idx;
-
-    // free up any bitmaps
-    release_bitmaps ();
-
-    // destroy all gadgets
-    if (first_gadget) {
-        cur = first_gadget;
-        do {
-            cur->destroy ();
-            cur = cur->next;
-
-        } while (cur != first_gadget);
-    }
-
-    // free up all xstrs
-    for (idx = 0; idx < MAX_UI_XSTRS; idx++) {
-        // free up this struct
-        if (xstrs[idx] != NULL) {
-            if (xstrs[idx]->xstr != NULL) {
-                free (const_cast< char* > (xstrs[idx]->xstr));
-            }
-            free (xstrs[idx]);
-            xstrs[idx] = NULL;
+        if (foreground_bmap_id >= 0) {
+                bm_release(foreground_bmap_id);
+                foreground_bmap_id = -1;
         }
-    }
 }
 
-void UI_WINDOW::draw () {
-    UI_GADGET* tmp;
+void UI_WINDOW::destroy()
+{
+        UI_GADGET *cur;
+        int idx;
 
-    gr_reset_clip ();
-    font::set_font (f_id);
+        // free up any bitmaps
+        release_bitmaps();
 
-    if (foreground_bmap_id >= 0) {
-        gr_set_bitmap (foreground_bmap_id);
-        gr_bitmap (x, y, GR_RESIZE_MENU);
-    }
+        // destroy all gadgets
+        if (first_gadget) {
+                cur = first_gadget;
+                do {
+                        cur->destroy();
+                        cur = cur->next;
 
-    if (flags & WIN_FILLED) { ui_draw_box_out (x, y, x + w - 1, y + h - 1); }
-
-    if (flags & WIN_BORDER) {
-        ui_draw_frame (
-            x - BORDER_WIDTH, y - BORDER_WIDTH, x + w + BORDER_WIDTH - 1,
-            y + h + BORDER_WIDTH - 1);
-    }
-
-    if (first_gadget) {
-        tmp = first_gadget;
-        do {
-            if (!tmp->hidden) tmp->draw ();
-
-            tmp = tmp->next;
-
-        } while (tmp != first_gadget);
-    }
-
-    if (first_gadget) {
-        tmp = first_gadget;
-        do {
-            if (!tmp->hidden && (tmp->kind == UI_KIND_BUTTON) &&
-                ((UI_BUTTON*)tmp)->button_down ()) {
-                tmp->draw ();
-            }
-
-            tmp = tmp->next;
-        } while (tmp != first_gadget);
-    }
-
-    // draw all xstrs
-    draw_xstrs ();
-
-    // draw tooltips
-    draw_tooltip ();
-
-    // convenient debug code for showing mouse coords
-    if (Cmdline_mouse_coords) {
-        int mx, my;
-        mouse_get_pos (&mx, &my);
-        // mprintf(("MOUSE (%d, %d)\n", mx, my));
-        gr_set_color_fast (&Color_normal);
-        gr_printf_no_resize (mx, my - 12, "%d %d", mx, my);
-    }
-}
-
-void UI_WINDOW::draw_XSTR_forced (UI_GADGET* owner, int frame) {
-    int idx;
-
-    // lookup the xstr and draw it if necessary
-    for (idx = 0; idx < MAX_UI_XSTRS; idx++) {
-        if ((xstrs[idx] != NULL) && (xstrs[idx]->assoc == owner)) {
-            draw_one_xstr (xstrs[idx], frame);
+                } while (cur != first_gadget);
         }
-    }
+
+        // free up all xstrs
+        for (idx = 0; idx < MAX_UI_XSTRS; idx++) {
+                // free up this struct
+                if (xstrs[idx] != NULL) {
+                        if (xstrs[idx]->xstr != NULL) {
+                                free(const_cast< char * >(xstrs[idx]->xstr));
+                        }
+                        free(xstrs[idx]);
+                        xstrs[idx] = NULL;
+                }
+        }
 }
 
-int UI_WINDOW::get_current_hotspot () {
-    int offset, pixel_val;
+void UI_WINDOW::draw()
+{
+        UI_GADGET *tmp;
 
-    if (!mask_data) { return -1; }
+        gr_reset_clip();
+        font::set_font(f_id);
 
-    // check the pixel value under the mouse
-    offset = ui_mouse.y * gr_screen.max_w_unscaled + ui_mouse.x;
-    pixel_val = *(mask_data + offset);
-    return pixel_val;
+        if (foreground_bmap_id >= 0) {
+                gr_set_bitmap(foreground_bmap_id);
+                gr_bitmap(x, y, GR_RESIZE_MENU);
+        }
+
+        if (flags & WIN_FILLED) {
+                ui_draw_box_out(x, y, x + w - 1, y + h - 1);
+        }
+
+        if (flags & WIN_BORDER) {
+                ui_draw_frame(
+                        x - BORDER_WIDTH, y - BORDER_WIDTH, x + w + BORDER_WIDTH - 1,
+                        y + h + BORDER_WIDTH - 1);
+        }
+
+        if (first_gadget) {
+                tmp = first_gadget;
+                do {
+                        if (!tmp->hidden)
+                                tmp->draw();
+
+                        tmp = tmp->next;
+
+                } while (tmp != first_gadget);
+        }
+
+        if (first_gadget) {
+                tmp = first_gadget;
+                do {
+                        if (!tmp->hidden && (tmp->kind == UI_KIND_BUTTON) && ((UI_BUTTON *)tmp)->button_down()) {
+                                tmp->draw();
+                        }
+
+                        tmp = tmp->next;
+                } while (tmp != first_gadget);
+        }
+
+        // draw all xstrs
+        draw_xstrs();
+
+        // draw tooltips
+        draw_tooltip();
+
+        // convenient debug code for showing mouse coords
+        if (Cmdline_mouse_coords) {
+                int mx, my;
+                mouse_get_pos(&mx, &my);
+                // mprintf(("MOUSE (%d, %d)\n", mx, my));
+                gr_set_color_fast(&Color_normal);
+                gr_printf_no_resize(mx, my - 12, "%d %d", mx, my);
+        }
 }
 
-void UI_WINDOW::draw_tooltip () {
-    // int i;
-    // tooltip_group *ptr;
-    int hotspot;
-    UI_GADGET* gadget;
+void UI_WINDOW::draw_XSTR_forced(UI_GADGET *owner, int frame)
+{
+        int idx;
 
-    if (tt_group < 0) return;
+        // lookup the xstr and draw it if necessary
+        for (idx = 0; idx < MAX_UI_XSTRS; idx++) {
+                if ((xstrs[idx] != NULL) && (xstrs[idx]->assoc == owner)) {
+                        draw_one_xstr(xstrs[idx], frame);
+                }
+        }
+}
 
-    // ptr = &Tooltip_groups[tt_group];
-    hotspot = get_current_hotspot ();
+int UI_WINDOW::get_current_hotspot()
+{
+        int offset, pixel_val;
 
-    // mprintf(("HOTSPOT: %d [%d]\n",hotspot, Framecount));
+        if (!mask_data) {
+                return -1;
+        }
 
-    /*
+        // check the pixel value under the mouse
+        offset = ui_mouse.y * gr_screen.max_w_unscaled + ui_mouse.x;
+        pixel_val = *(mask_data + offset);
+        return pixel_val;
+}
+
+void UI_WINDOW::draw_tooltip()
+{
+        // int i;
+        // tooltip_group *ptr;
+        int hotspot;
+        UI_GADGET *gadget;
+
+        if (tt_group < 0)
+                return;
+
+        // ptr = &Tooltip_groups[tt_group];
+        hotspot = get_current_hotspot();
+
+        // mprintf(("HOTSPOT: %d [%d]\n",hotspot, Framecount));
+
+        /*
     if (hotspot != last_tooltip_hotspot) {
         last_tooltip_hotspot = hotspot;
         last_tooltip_time = timer_get_milliseconds();
@@ -297,23 +315,23 @@ void UI_WINDOW::draw_tooltip () {
         return;
     */
 
-    if (first_gadget) {
-        gadget = first_gadget;
-        do {
-            if (gadget->get_hotspot () == hotspot) {
-                if (gadget->hidden) // if control is hidden, don't draw tooltip
-                                    // for it.
-                    return;
-                else
-                    break;
-            }
+        if (first_gadget) {
+                gadget = first_gadget;
+                do {
+                        if (gadget->get_hotspot() == hotspot) {
+                                if (gadget->hidden) // if control is hidden, don't draw tooltip
+                                                    // for it.
+                                        return;
+                                else
+                                        break;
+                        }
 
-            gadget = gadget->next;
+                        gadget = gadget->next;
 
-        } while (gadget != first_gadget);
-    }
+                } while (gadget != first_gadget);
+        }
 
-    /*
+        /*
     for (i=ptr->start; i<ptr->end; i++) {
         if (Tooltips[i].hotspot == hotspot) {
             char *str;
@@ -342,267 +360,290 @@ void UI_WINDOW::draw_tooltip () {
     */
 }
 
-void UI_WINDOW::render_tooltip (char* str) {
-    int str_w, str_h;
+void UI_WINDOW::render_tooltip(char *str)
+{
+        int str_w, str_h;
 
-    gr_get_string_size (&str_w, &str_h, str);
-    ASSERT (
-        str_w < gr_screen.max_w_unscaled - 4 &&
-        str_h < gr_screen.max_h_unscaled - 4);
+        gr_get_string_size(&str_w, &str_h, str);
+        ASSERT(
+                str_w < gr_screen.max_w_unscaled - 4 && str_h < gr_screen.max_h_unscaled - 4);
 
-    if (ttx < 2) ttx = 2;
+        if (ttx < 2)
+                ttx = 2;
 
-    if (tty < 2) tty = 2;
+        if (tty < 2)
+                tty = 2;
 
-    if (ttx + str_w + 2 > gr_screen.max_w_unscaled)
-        ttx = gr_screen.max_w_unscaled - str_w;
+        if (ttx + str_w + 2 > gr_screen.max_w_unscaled)
+                ttx = gr_screen.max_w_unscaled - str_w;
 
-    if (tty + str_h + 2 > gr_screen.max_h_unscaled)
-        tty = gr_screen.max_h_unscaled - str_h;
+        if (tty + str_h + 2 > gr_screen.max_h_unscaled)
+                tty = gr_screen.max_h_unscaled - str_h;
 
-    gr_set_color_fast (&Color_black);
-    gr_rect (ttx - 1, tty - 1, str_w + 2, str_h + 1, GR_RESIZE_MENU);
+        gr_set_color_fast(&Color_black);
+        gr_rect(ttx - 1, tty - 1, str_w + 2, str_h + 1, GR_RESIZE_MENU);
 
-    gr_set_color_fast (&Color_bright_white);
-    gr_string (ttx, tty, str, GR_RESIZE_MENU);
+        gr_set_color_fast(&Color_bright_white);
+        gr_string(ttx, tty, str, GR_RESIZE_MENU);
 }
 
 // key_in: If not -1, this means to use this key as input, and not call
 // game_poll()
-int UI_WINDOW::process (int key_in, int process_mouse) {
-    UI_GADGET* tmp;
+int UI_WINDOW::process(int key_in, int process_mouse)
+{
+        UI_GADGET *tmp;
 
-    // only does stuff in non THREADED mode
-    fs2::os::events::process_all ();
+        // only does stuff in non THREADED mode
+        fs2::os::events::process_all();
 
-    if (process_mouse) { ui_mouse_process (); }
+        if (process_mouse) {
+                ui_mouse_process();
+        }
 
-    if (key_in == -1) { keypress = game_check_key (); }
-    else {
-        keypress = key_in;
-    }
+        if (key_in == -1) {
+                keypress = game_check_key();
+        } else {
+                keypress = key_in;
+        }
 
-    last_keypress = keypress;
-    do_dump_check ();
-    if (mouse_captured_gadget && B1_RELEASED) { mouse_captured_gadget = NULL; }
+        last_keypress = keypress;
+        do_dump_check();
+        if (mouse_captured_gadget && B1_RELEASED) {
+                mouse_captured_gadget = NULL;
+        }
 
-    if (!first_gadget) {
+        if (!first_gadget) {
+                use_hack_to_get_around_stupid_problem_flag = 0;
+                return last_keypress;
+        }
+
+        check_focus_switch_keys();
+
+        // run through all top level gadgets and process them (they are responsible
+        // for processing their children, which UI_GADGET will handle if you don't
+        // override process() or if you do, you call UI_GADGET::process()).
+        if (!ignore_gadgets) {
+                tmp = first_gadget;
+                do {
+                        if (!tmp->check_move())
+                                tmp->process();
+
+                        tmp = tmp->next;
+
+                } while (tmp != first_gadget);
+        }
+
         use_hack_to_get_around_stupid_problem_flag = 0;
         return last_keypress;
-    }
+}
 
-    check_focus_switch_keys ();
+void UI_WINDOW::check_focus_switch_keys() { return; }
 
-    // run through all top level gadgets and process them (they are responsible
-    // for processing their children, which UI_GADGET will handle if you don't
-    // override process() or if you do, you call UI_GADGET::process()).
-    if (!ignore_gadgets) {
-        tmp = first_gadget;
+void UI_WINDOW::capture_mouse(UI_GADGET *gadget)
+{
+        mouse_captured_gadget = gadget;
+}
+
+void UI_WINDOW::set_ignore_gadgets(int state) { ignore_gadgets = state; }
+
+void UI_WINDOW::add_XSTR(
+        const char *string, int _xstr_id, int _x, int _y, UI_GADGET *_assoc,
+        int _color_type, int _font_id)
+{
+        int idx;
+        int found = -1;
+        UI_XSTR *ui_x;
+
+        // try and find a free xstr
+        for (idx = 0; idx < MAX_UI_XSTRS; idx++) {
+                if (xstrs[idx] == NULL) {
+                        found = idx;
+                        break;
+                }
+        }
+
+        // if we don't have a free spot
+        if (found < 0) {
+                ASSERT(0);
+                // window.
+                return;
+        }
+
+        // allocate a new struct
+        xstrs[idx] = (UI_XSTR *)malloc(sizeof(UI_XSTR));
+        if (xstrs[idx] == NULL) {
+                return;
+        }
+        ui_x = xstrs[idx];
+
+        // fill in the data
+        ui_x->xstr = strdup(string);
+        if (ui_x->xstr == NULL) {
+                free(ui_x);
+                xstrs[idx] = NULL;
+                return;
+        }
+        ui_x->xstr_id = _xstr_id;
+        ui_x->x = _x;
+        ui_x->y = _y;
+        ui_x->assoc = _assoc;
+        ui_x->font_id = _font_id;
+        ui_x->clr = _color_type;
+        ASSERT((ui_x->clr >= 0) && (ui_x->clr < UI_NUM_XSTR_COLORS));
+        if ((ui_x->clr < 0) || (ui_x->clr >= UI_NUM_XSTR_COLORS)) {
+                ui_x->clr = 0;
+        }
+}
+
+void UI_WINDOW::add_XSTR(UI_XSTR *xstr)
+{
+        int idx;
+        int found = -1;
+        UI_XSTR *ui_x;
+
+        // try and find a free xstr
+        for (idx = 0; idx < MAX_UI_XSTRS; idx++) {
+                if (xstrs[idx] == NULL) {
+                        found = idx;
+                        break;
+                }
+        }
+
+        // if we don't have a free spot
+        if (found < 0) {
+                ASSERT(0);
+                // window.
+                return;
+        }
+
+        // allocate a new struct
+        xstrs[idx] = (UI_XSTR *)malloc(sizeof(UI_XSTR));
+        if (xstrs[idx] == NULL) {
+                return;
+        }
+        ui_x = xstrs[idx];
+
+        // fill in the data
+        ui_x->xstr = strdup(xstr->xstr);
+        if (ui_x->xstr == NULL) {
+                free(ui_x);
+                xstrs[idx] = NULL;
+                return;
+        }
+        ui_x->xstr_id = xstr->xstr_id;
+        ui_x->x = xstr->x;
+        ui_x->y = xstr->y;
+        ui_x->assoc = xstr->assoc;
+        ui_x->font_id = xstr->font_id;
+        ui_x->clr = xstr->clr;
+        ASSERT((ui_x->clr >= 0) && (ui_x->clr < UI_NUM_XSTR_COLORS));
+        if ((ui_x->clr < 0) || (ui_x->clr >= UI_NUM_XSTR_COLORS)) {
+                ui_x->clr = 0;
+        }
+}
+
+void UI_WINDOW::draw_one_xstr(UI_XSTR *xs, int frame)
+{
+        font::FSFont *f_backup = NULL;
+        char str[255] = "";
+
+        // sanity
+        if ((xs == NULL) || (xs->xstr == NULL)) {
+                return;
+        }
+
+        // if it has an associated gadet that is hidden, do nothing
+        if ((xs->assoc != NULL) && (xs->assoc->hidden)) {
+                return;
+        }
+
+        // maybe set the font
+        if (xs->font_id >= 0) {
+                // backup the current font
+                ASSERT(font::get_current_font() != NULL);
+                f_backup = font::get_current_font();
+
+                // set the new font
+                font::set_font(xs->font_id);
+        }
+
+        // set the color
+        if (xs->assoc == NULL) {
+                gr_set_color_fast(&Color_normal);
+        } else {
+                // just buttons for now
+                switch (xs->assoc->kind) {
+                case UI_KIND_BUTTON:
+                        // override case
+                        if ((frame != -1) && (frame < 3)) {
+                                gr_set_color_fast(Xstr_colors[xs->clr][frame]);
+                        }
+                        // normal checking
+                        else {
+                                // if the button is pressed
+                                if (((UI_BUTTON *)xs->assoc)->button_down()) {
+                                        gr_set_color_fast(Xstr_colors[xs->clr][2]);
+                                }
+                                // if the mouse is just over it
+                                else if (xs->assoc->is_mouse_on()) {
+                                        gr_set_color_fast(Xstr_colors[xs->clr][1]);
+                                } else {
+                                        gr_set_color_fast(Xstr_colors[xs->clr][0]);
+                                }
+                                break;
+                        }
+                        break;
+
+                // all other controls just draw the normal frame
+                default:
+                        if ((frame != -1) && (frame < 3)) {
+                                gr_set_color_fast(Xstr_colors[xs->clr][frame]);
+                        } else {
+                                gr_set_color_fast(Xstr_colors[xs->clr][0]);
+                        }
+                        break;
+                }
+
+                // if the gadget disabled, just draw the normal nonhighlighted frame
+                if (xs->assoc->disabled()) {
+                        gr_set_color_fast(Xstr_colors[xs->clr][0]);
+                }
+        }
+
+        // print this puppy out
+        int xoffset = lcl_get_xstr_offset(xs->xstr_id, gr_screen.res);
+        strncpy(str, XSTR(xs->xstr, xs->xstr_id), 254);
+        if (str[0] == '&') {
+                if (strlen(str) > 1) {
+                        gr_string((xs->x) + xoffset, xs->y, str + 1, GR_RESIZE_MENU);
+                }
+        } else {
+                gr_string((xs->x) + xoffset, xs->y, str, GR_RESIZE_MENU);
+        }
+
+        // maybe restore the old font
+        if (f_backup != NULL) {
+                font::FontManager::setCurrentFont(f_backup);
+        }
+}
+
+void UI_WINDOW::draw_xstrs()
+{
+        int idx = 0;
+
+        // draw the xstrs
         do {
-            if (!tmp->check_move ()) tmp->process ();
+                draw_one_xstr(xstrs[idx], -1);
 
-            tmp = tmp->next;
-
-        } while (tmp != first_gadget);
-    }
-
-    use_hack_to_get_around_stupid_problem_flag = 0;
-    return last_keypress;
-}
-
-void UI_WINDOW::check_focus_switch_keys () { return; }
-
-void UI_WINDOW::capture_mouse (UI_GADGET* gadget) {
-    mouse_captured_gadget = gadget;
-}
-
-void UI_WINDOW::set_ignore_gadgets (int state) { ignore_gadgets = state; }
-
-void UI_WINDOW::add_XSTR (
-    const char* string, int _xstr_id, int _x, int _y, UI_GADGET* _assoc,
-    int _color_type, int _font_id) {
-    int idx;
-    int found = -1;
-    UI_XSTR* ui_x;
-
-    // try and find a free xstr
-    for (idx = 0; idx < MAX_UI_XSTRS; idx++) {
-        if (xstrs[idx] == NULL) {
-            found = idx;
-            break;
-        }
-    }
-
-    // if we don't have a free spot
-    if (found < 0) {
-        ASSERT (0);
-                 // window.
-        return;
-    }
-
-    // allocate a new struct
-    xstrs[idx] = (UI_XSTR*)malloc (sizeof (UI_XSTR));
-    if (xstrs[idx] == NULL) { return; }
-    ui_x = xstrs[idx];
-
-    // fill in the data
-    ui_x->xstr = strdup (string);
-    if (ui_x->xstr == NULL) {
-        free (ui_x);
-        xstrs[idx] = NULL;
-        return;
-    }
-    ui_x->xstr_id = _xstr_id;
-    ui_x->x = _x;
-    ui_x->y = _y;
-    ui_x->assoc = _assoc;
-    ui_x->font_id = _font_id;
-    ui_x->clr = _color_type;
-    ASSERT ((ui_x->clr >= 0) && (ui_x->clr < UI_NUM_XSTR_COLORS));
-    if ((ui_x->clr < 0) || (ui_x->clr >= UI_NUM_XSTR_COLORS)) {
-        ui_x->clr = 0;
-    }
-}
-
-void UI_WINDOW::add_XSTR (UI_XSTR* xstr) {
-    int idx;
-    int found = -1;
-    UI_XSTR* ui_x;
-
-    // try and find a free xstr
-    for (idx = 0; idx < MAX_UI_XSTRS; idx++) {
-        if (xstrs[idx] == NULL) {
-            found = idx;
-            break;
-        }
-    }
-
-    // if we don't have a free spot
-    if (found < 0) {
-        ASSERT (0);
-                 // window.
-        return;
-    }
-
-    // allocate a new struct
-    xstrs[idx] = (UI_XSTR*)malloc (sizeof (UI_XSTR));
-    if (xstrs[idx] == NULL) { return; }
-    ui_x = xstrs[idx];
-
-    // fill in the data
-    ui_x->xstr = strdup (xstr->xstr);
-    if (ui_x->xstr == NULL) {
-        free (ui_x);
-        xstrs[idx] = NULL;
-        return;
-    }
-    ui_x->xstr_id = xstr->xstr_id;
-    ui_x->x = xstr->x;
-    ui_x->y = xstr->y;
-    ui_x->assoc = xstr->assoc;
-    ui_x->font_id = xstr->font_id;
-    ui_x->clr = xstr->clr;
-    ASSERT ((ui_x->clr >= 0) && (ui_x->clr < UI_NUM_XSTR_COLORS));
-    if ((ui_x->clr < 0) || (ui_x->clr >= UI_NUM_XSTR_COLORS)) {
-        ui_x->clr = 0;
-    }
-}
-
-void UI_WINDOW::draw_one_xstr (UI_XSTR* xs, int frame) {
-    font::FSFont* f_backup = NULL;
-    char str[255] = "";
-
-    // sanity
-    if ((xs == NULL) || (xs->xstr == NULL)) { return; }
-
-    // if it has an associated gadet that is hidden, do nothing
-    if ((xs->assoc != NULL) && (xs->assoc->hidden)) { return; }
-
-    // maybe set the font
-    if (xs->font_id >= 0) {
-        // backup the current font
-        ASSERT (font::get_current_font () != NULL);
-        f_backup = font::get_current_font ();
-
-        // set the new font
-        font::set_font (xs->font_id);
-    }
-
-    // set the color
-    if (xs->assoc == NULL) { gr_set_color_fast (&Color_normal); }
-    else {
-        // just buttons for now
-        switch (xs->assoc->kind) {
-        case UI_KIND_BUTTON:
-            // override case
-            if ((frame != -1) && (frame < 3)) {
-                gr_set_color_fast (Xstr_colors[xs->clr][frame]);
-            }
-            // normal checking
-            else {
-                // if the button is pressed
-                if (((UI_BUTTON*)xs->assoc)->button_down ()) {
-                    gr_set_color_fast (Xstr_colors[xs->clr][2]);
-                }
-                // if the mouse is just over it
-                else if (xs->assoc->is_mouse_on ()) {
-                    gr_set_color_fast (Xstr_colors[xs->clr][1]);
-                }
-                else {
-                    gr_set_color_fast (Xstr_colors[xs->clr][0]);
-                }
-                break;
-            }
-            break;
-
-        // all other controls just draw the normal frame
-        default:
-            if ((frame != -1) && (frame < 3)) {
-                gr_set_color_fast (Xstr_colors[xs->clr][frame]);
-            }
-            else {
-                gr_set_color_fast (Xstr_colors[xs->clr][0]);
-            }
-            break;
-        }
-
-        // if the gadget disabled, just draw the normal nonhighlighted frame
-        if (xs->assoc->disabled ()) {
-            gr_set_color_fast (Xstr_colors[xs->clr][0]);
-        }
-    }
-
-    // print this puppy out
-    int xoffset = lcl_get_xstr_offset (xs->xstr_id, gr_screen.res);
-    strncpy (str, XSTR (xs->xstr, xs->xstr_id), 254);
-    if (str[0] == '&') {
-        if (strlen (str) > 1) {
-            gr_string ((xs->x) + xoffset, xs->y, str + 1, GR_RESIZE_MENU);
-        }
-    }
-    else {
-        gr_string ((xs->x) + xoffset, xs->y, str, GR_RESIZE_MENU);
-    }
-
-    // maybe restore the old font
-    if (f_backup != NULL) { font::FontManager::setCurrentFont (f_backup); }
-}
-
-void UI_WINDOW::draw_xstrs () {
-    int idx = 0;
-
-    // draw the xstrs
-    do {
-        draw_one_xstr (xstrs[idx], -1);
-
-        // next xstr
-        idx++;
-    } while (idx < MAX_UI_XSTRS);
+                // next xstr
+                idx++;
+        } while (idx < MAX_UI_XSTRS);
 }
 
 // TEST CODE
 
-void UI_WINDOW::do_dump_check () {
+void UI_WINDOW::do_dump_check()
+{
 #if 0
         if ( keypress == KEY_SHIFTED+KEY_CTRLED+KEY_ALTED+KEY_F12 ) {
                 FILE *fp;

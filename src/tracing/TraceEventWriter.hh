@@ -5,10 +5,10 @@
 
 #include "defs.hh"
 
-#include "tracing/tracing.hh"
-#include "tracing/ThreadedEventProcessor.hh"
-
 #include <fstream>
+
+#include "tracing/ThreadedEventProcessor.hh"
+#include "tracing/tracing.hh"
 
 /** @file
  *  @ingroup tracing
@@ -16,14 +16,14 @@
 
 namespace tracing {
 class TraceEventWriter {
-    std::ofstream _out;
-    bool _first_line = true;
+        std::ofstream _out;
+        bool _first_line = true;
 
 public:
-    TraceEventWriter ();
-    ~TraceEventWriter ();
+        TraceEventWriter();
+        ~TraceEventWriter();
 
-    void processEvent (const trace_event* event);
+        void processEvent(const trace_event *event);
 };
 
 typedef ThreadedEventProcessor< TraceEventWriter > ThreadedTraceEventWriter;

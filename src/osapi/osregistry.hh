@@ -17,23 +17,19 @@ using registry_type = pt::ptree;
 namespace registry {
 
 std::string
-read (const std::string&, const std::string& = { });
+read(const std::string &, const std::string & = {});
 
-int
-read (const std::string&, int = 0);
+int read(const std::string &, int = 0);
 
-float
-read (const std::string&, float = 0.f);
+float read(const std::string &, float = 0.f);
 
-void
-write (const std::string&, const std::string&);
+void write(const std::string &, const std::string &);
 
-void
-write (const std::string&, int);
+void write(const std::string &, int);
 
-void
-write (const std::string&, float);
+void write(const std::string &, float);
 
-}}
+}
+}
 
 #endif // FREESPACE2_OSAPI_OSREGISTRY_HH

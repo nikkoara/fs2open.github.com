@@ -1,27 +1,28 @@
 // -*- mode: c++; -*-
 
-#include <cstdio>
-#include <cstdarg>
-#include <string>
-#include <sstream>
+#include "defs.hh"
+
 #include <climits>
 #include <cstdarg>
+#include <cstdio>
 
-#include "defs.hh"
-#include "graphics/software/font_internal.hh"
-#include "graphics/software/FontManager.hh"
-#include "graphics/software/FSFont.hh"
-#include "graphics/software/VFNTFont.hh"
-#include "graphics/software/NVGFont.hh"
-#include "graphics/2d.hh"
-#include "mod_table/mod_table.hh"
+#include <sstream>
+#include <string>
+
+#include "assert/assert.hh"
 #include "bmpman/bmpman.hh"
 #include "cfile/cfile.hh"
+#include "graphics/2d.hh"
+#include "graphics/software/FSFont.hh"
+#include "graphics/software/FontManager.hh"
+#include "graphics/software/NVGFont.hh"
+#include "graphics/software/VFNTFont.hh"
+#include "graphics/software/font_internal.hh"
 #include "localization/localize.hh"
+#include "log/log.hh"
+#include "mod_table/mod_table.hh"
 #include "parse/parselo.hh"
 #include "tracing/Monitor.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
 
 namespace {
 namespace fo = font;
@@ -29,426 +30,424 @@ using namespace font;
 
 bool font_initialized = false;
 
-bool parse_type (FontType& type, std::string& fileName) {
-    int num = optional_string_either ("$TrueType:", "$Font:");
-    if (num == 0) { type = NVG_FONT; }
-    else if (num == 1) {
-        type = VFNT_FONT;
-    }
-    else {
-        type = UNKNOWN_FONT;
-    }
+bool parse_type(FontType &type, std::string &fileName)
+{
+        int num = optional_string_either("$TrueType:", "$Font:");
+        if (num == 0) {
+                type = NVG_FONT;
+        } else if (num == 1) {
+                type = VFNT_FONT;
+        } else {
+                type = UNKNOWN_FONT;
+        }
 
-    if (type != UNKNOWN_FONT) {
-        stuff_string (fileName, F_NAME);
-        return true;
-    }
-    else {
-        return false;
-    }
+        if (type != UNKNOWN_FONT) {
+                stuff_string(fileName, F_NAME);
+                return true;
+        } else {
+                return false;
+        }
 }
 
-void parse_nvg_font (const std::string& fontFilename) {
-    float size = 8.0f;
-    std::string fontStr;
-    bool hasName = false;
+void parse_nvg_font(const std::string &fontFilename)
+{
+        float size = 8.0f;
+        std::string fontStr;
+        bool hasName = false;
 
-    if (optional_string ("+Name:")) {
-        stuff_string (fontStr, F_NAME);
+        if (optional_string("+Name:")) {
+                stuff_string(fontStr, F_NAME);
 
-        hasName = true;
-    }
-
-    if (optional_string ("+Size:")) {
-        stuff_float (&size);
-
-        if (size <= 0.0f) {
-            error_display (
-                0, "+Size has to be bigger than 0 for font \"%s\".",
-                fontFilename.c_str ());
-            size = 8;
+                hasName = true;
         }
-    }
 
-    // Build name from existing values if no name is specified
-    if (!hasName) {
-        std::stringstream ss;
+        if (optional_string("+Size:")) {
+                stuff_float(&size);
 
-        ss << fontFilename << "-";
-
-        ss << size;
-
-        fontStr = ss.str ();
-    }
-
-    if (FontManager::getFont (fontStr) != NULL) {
-        if (hasName) {
-            error_display (
-                0,
-                "Font with name \"%s\" is already present! Font names have to "
-                "be unique!",
-                fontStr.c_str ());
-            return;
+                if (size <= 0.0f) {
+                        error_display(
+                                0, "+Size has to be bigger than 0 for font \"%s\".",
+                                fontFilename.c_str());
+                        size = 8;
+                }
         }
-        else {
-            error_display (
-                0,
-                "Found font with same default name (\"%s\"). This is most "
-                "likely a duplicate.",
-                fontStr.c_str ());
-            return;
+
+        // Build name from existing values if no name is specified
+        if (!hasName) {
+                std::stringstream ss;
+
+                ss << fontFilename << "-";
+
+                ss << size;
+
+                fontStr = ss.str();
         }
-    }
 
-    NVGFont* nvgFont = FontManager::loadNVGFont (fontFilename, size);
-
-    if (nvgFont == NULL) {
-        error_display (0, "Couldn't load font \"%s\".", fontFilename.c_str ());
-        return;
-    }
-
-    if (optional_string ("+Top offset:")) {
-        float temp;
-
-        stuff_float (&temp);
-
-        nvgFont->setTopOffset (temp);
-    }
-
-    if (optional_string ("+Bottom offset:")) {
-        float temp;
-
-        stuff_float (&temp);
-
-        nvgFont->setBottomOffset (temp);
-    }
-
-    if (optional_string ("+Tab width:")) {
-        float temp;
-        stuff_float (&temp);
-
-        if (temp < 0.0f) {
-            error_display (
-                0,
-                "Invalid tab spacing %f. Has to be greater or equal to zero.",
-                temp);
+        if (FontManager::getFont(fontStr) != NULL) {
+                if (hasName) {
+                        error_display(
+                                0,
+                                "Font with name \"%s\" is already present! Font names have to "
+                                "be unique!",
+                                fontStr.c_str());
+                        return;
+                } else {
+                        error_display(
+                                0,
+                                "Found font with same default name (\"%s\"). This is most "
+                                "likely a duplicate.",
+                                fontStr.c_str());
+                        return;
+                }
         }
-        else {
-            nvgFont->setTabWidth (temp);
+
+        NVGFont *nvgFont = FontManager::loadNVGFont(fontFilename, size);
+
+        if (nvgFont == NULL) {
+                error_display(0, "Couldn't load font \"%s\".", fontFilename.c_str());
+                return;
         }
-    }
 
-    if (optional_string ("+Letter spacing:")) {
-        float temp;
-        stuff_float (&temp);
+        if (optional_string("+Top offset:")) {
+                float temp;
 
-        if (temp < 0.0f) {
-            error_display (
-                0,
-                "Invalid letter spacing %f! Has to be greater or equal to "
-                "zero.",
-                temp);
+                stuff_float(&temp);
+
+                nvgFont->setTopOffset(temp);
         }
-        else {
-            nvgFont->setLetterSpacing (temp);
+
+        if (optional_string("+Bottom offset:")) {
+                float temp;
+
+                stuff_float(&temp);
+
+                nvgFont->setBottomOffset(temp);
         }
-    }
 
-    if (!Unicode_text_mode) {
-        // Special characters only exist in non-Unicode mode
-        if (optional_string ("+Special Character Font:")) {
-            std::string fontName;
-            stuff_string (fontName, F_NAME);
+        if (optional_string("+Tab width:")) {
+                float temp;
+                stuff_float(&temp);
 
-            fo::font* fontData = FontManager::loadFontOld (fontName.c_str ());
-
-            if (fontData == NULL) {
-                error_display (
-                    0,
-                    "Failed to load font \"%s\" for special characters of "
-                    "font \"%s\"!",
-                    fontName.c_str (), fontFilename.c_str ());
-            }
-            else {
-                nvgFont->setSpecialCharacterFont (fontData);
-            }
+                if (temp < 0.0f) {
+                        error_display(
+                                0,
+                                "Invalid tab spacing %f. Has to be greater or equal to zero.",
+                                temp);
+                } else {
+                        nvgFont->setTabWidth(temp);
+                }
         }
-        else {
-            fo::font* fontData = FontManager::loadFontOld ("font01.vf");
 
-            if (fontData == nullptr) {
-                error_display (
-                    0,
-                    "Failed to load default font \"%s\" for special "
-                    "characters of font \"%s\"! "
-                    "This font is required for rendering special characters "
-                    "and will cause an error later.",
-                    "font01.vf", fontFilename.c_str ());
-            }
-            else {
-                nvgFont->setSpecialCharacterFont (fontData);
-            }
+        if (optional_string("+Letter spacing:")) {
+                float temp;
+                stuff_float(&temp);
+
+                if (temp < 0.0f) {
+                        error_display(
+                                0,
+                                "Invalid letter spacing %f! Has to be greater or equal to "
+                                "zero.",
+                                temp);
+                } else {
+                        nvgFont->setLetterSpacing(temp);
+                }
         }
-    }
 
-    nvgFont->setName (fontStr);
+        if (!Unicode_text_mode) {
+                // Special characters only exist in non-Unicode mode
+                if (optional_string("+Special Character Font:")) {
+                        std::string fontName;
+                        stuff_string(fontName, F_NAME);
 
-    // Make sure that the height is not invalid
-    nvgFont->computeFontMetrics ();
+                        fo::font *fontData = FontManager::loadFontOld(fontName.c_str());
+
+                        if (fontData == NULL) {
+                                error_display(
+                                        0,
+                                        "Failed to load font \"%s\" for special characters of "
+                                        "font \"%s\"!",
+                                        fontName.c_str(), fontFilename.c_str());
+                        } else {
+                                nvgFont->setSpecialCharacterFont(fontData);
+                        }
+                } else {
+                        fo::font *fontData = FontManager::loadFontOld("font01.vf");
+
+                        if (fontData == nullptr) {
+                                error_display(
+                                        0,
+                                        "Failed to load default font \"%s\" for special "
+                                        "characters of font \"%s\"! "
+                                        "This font is required for rendering special characters "
+                                        "and will cause an error later.",
+                                        "font01.vf", fontFilename.c_str());
+                        } else {
+                                nvgFont->setSpecialCharacterFont(fontData);
+                        }
+                }
+        }
+
+        nvgFont->setName(fontStr);
+
+        // Make sure that the height is not invalid
+        nvgFont->computeFontMetrics();
 }
 
-void parse_vfnt_font (const std::string& fontFilename) {
-    VFNTFont* font = FontManager::loadVFNTFont (fontFilename);
+void parse_vfnt_font(const std::string &fontFilename)
+{
+        VFNTFont *font = FontManager::loadVFNTFont(fontFilename);
 
-    if (font == NULL) {
-        error_display (0, "Couldn't load font\"%s\".", fontFilename.c_str ());
-        return;
-    }
-
-    std::string fontName;
-
-    if (optional_string ("+Name:")) { stuff_string (fontName, F_NAME); }
-    else {
-        fontName.assign (fontFilename);
-    }
-
-    font->setName (fontName);
-
-    // max allowed special char index; i.e. 7 special chars in retail fonts 1 &
-    // 3
-    static const int MAX_SPECIAL_CHAR_IDX = UCHAR_MAX - 6;
-
-    auto font_id = FontManager::getFontIndex (font);
-
-    // 'default' special char index for all languages using this font
-    int default_special_char_index = 0;
-    if (optional_string ("+Default Special Character Index:")) {
-        stuff_int (&default_special_char_index);
-
-        if (default_special_char_index < 0 ||
-            default_special_char_index >= MAX_SPECIAL_CHAR_IDX) {
-            ASSERTX (0, "Default special character index (%d) for font (%s), must be 0 - %u",default_special_char_index, fontName.c_str (),MAX_SPECIAL_CHAR_IDX);
+        if (font == NULL) {
+                error_display(0, "Couldn't load font\"%s\".", fontFilename.c_str());
+                return;
         }
 
-        for (auto i = 0; i < (int)Lcl_languages.size (); ++i) {
-            Lcl_languages[i].special_char_indexes[font_id] =
-                (ubyte)default_special_char_index;
-        }
-    }
-
-    while (optional_string ("+Language:")) {
-        char lang_name[LCL_LANG_NAME_LEN + 1];
-        int special_char_index, lang_idx = -1;
-
-        stuff_string (lang_name, F_NAME, LCL_LANG_NAME_LEN + 1);
-
-        // find language and set the index, or if not found move to the next
-        // one
-        for (auto i = 0; i < (int)Lcl_languages.size (); ++i) {
-            if (!strcmp (Lcl_languages[i].lang_name, lang_name)) {
-                lang_idx = i;
-                break;
-            }
-        }
-
-        if (lang_idx == -1) {
-            WARNINGF (LOCATION,"Ignoring invalid language (%s) specified by font (%s); not built-in or in strings.tbl",lang_name, fontName.c_str ());
-            skip_to_start_of_string_either ("+Language:", "$Font:", "#End");
-            continue;
-        }
-
-        if (optional_string ("+Special Character Index:")) {
-            stuff_int (&special_char_index);
-
-            if (special_char_index < 0 ||
-                special_char_index >= MAX_SPECIAL_CHAR_IDX) {
-                ASSERTX (0, "Special character index (%d) for font (%s), language (%s) is invalid, must be 0 - %u",special_char_index, fontName.c_str (), lang_name,MAX_SPECIAL_CHAR_IDX);
-            }
-
-            Lcl_languages[lang_idx].special_char_indexes[font_id] =
-                (ubyte)special_char_index;
-        }
-    }
-
-    if (optional_string ("+Top offset:")) {
-        float temp;
-
-        stuff_float (&temp);
-
-        font->setTopOffset (temp);
-    }
-
-    if (optional_string ("+Bottom offset:")) {
-        float temp;
-
-        stuff_float (&temp);
-
-        font->setBottomOffset (temp);
-    }
-    // Make sure that the height is not invalid
-    font->computeFontMetrics ();
-}
-
-void font_parse_setup (const char* fileName) {
-    read_file_text (fileName, CF_TYPE_TABLES);
-    reset_parse ();
-    required_string ("#Fonts");
-}
-
-void parse_font_tbl (const char* fileName) {
-    try {
-        font_parse_setup (fileName);
-
-        FontType type;
         std::string fontName;
 
-        while (parse_type (type, fontName)) {
-            switch (type) {
-            case VFNT_FONT:
-                if (Unicode_text_mode) {
-                    error_display (
-                        1,
-                        "Bitmap fonts are not supported in Unicode text "
-                        "mode!");
-                }
-                parse_vfnt_font (fontName);
-                break;
-            case NVG_FONT: parse_nvg_font (fontName); break;
-            default:
-                error_display (
-                    0, "Unknown font type %d! Get a coder!", (int)type);
-                break;
-            }
+        if (optional_string("+Name:")) {
+                stuff_string(fontName, F_NAME);
+        } else {
+                fontName.assign(fontFilename);
         }
 
-        // done parsing
-        required_string ("#End");
-    }
-    catch (const parse::ParseException& e) {
-        ERRORF (
-            LOCATION, "parse failed '%s'!  Error message = %s.\n", fileName,
-            e.what ());
-    }
+        font->setName(fontName);
+
+        // max allowed special char index; i.e. 7 special chars in retail fonts 1 &
+        // 3
+        static const int MAX_SPECIAL_CHAR_IDX = UCHAR_MAX - 6;
+
+        auto font_id = FontManager::getFontIndex(font);
+
+        // 'default' special char index for all languages using this font
+        int default_special_char_index = 0;
+        if (optional_string("+Default Special Character Index:")) {
+                stuff_int(&default_special_char_index);
+
+                if (default_special_char_index < 0 || default_special_char_index >= MAX_SPECIAL_CHAR_IDX) {
+                        ASSERTX(0, "Default special character index (%d) for font (%s), must be 0 - %u", default_special_char_index, fontName.c_str(), MAX_SPECIAL_CHAR_IDX);
+                }
+
+                for (auto i = 0; i < (int)Lcl_languages.size(); ++i) {
+                        Lcl_languages[i].special_char_indexes[font_id] = (ubyte)default_special_char_index;
+                }
+        }
+
+        while (optional_string("+Language:")) {
+                char lang_name[LCL_LANG_NAME_LEN + 1];
+                int special_char_index, lang_idx = -1;
+
+                stuff_string(lang_name, F_NAME, LCL_LANG_NAME_LEN + 1);
+
+                // find language and set the index, or if not found move to the next
+                // one
+                for (auto i = 0; i < (int)Lcl_languages.size(); ++i) {
+                        if (!strcmp(Lcl_languages[i].lang_name, lang_name)) {
+                                lang_idx = i;
+                                break;
+                        }
+                }
+
+                if (lang_idx == -1) {
+                        WARNINGF(LOCATION, "Ignoring invalid language (%s) specified by font (%s); not built-in or in strings.tbl", lang_name, fontName.c_str());
+                        skip_to_start_of_string_either("+Language:", "$Font:", "#End");
+                        continue;
+                }
+
+                if (optional_string("+Special Character Index:")) {
+                        stuff_int(&special_char_index);
+
+                        if (special_char_index < 0 || special_char_index >= MAX_SPECIAL_CHAR_IDX) {
+                                ASSERTX(0, "Special character index (%d) for font (%s), language (%s) is invalid, must be 0 - %u", special_char_index, fontName.c_str(), lang_name, MAX_SPECIAL_CHAR_IDX);
+                        }
+
+                        Lcl_languages[lang_idx].special_char_indexes[font_id] = (ubyte)special_char_index;
+                }
+        }
+
+        if (optional_string("+Top offset:")) {
+                float temp;
+
+                stuff_float(&temp);
+
+                font->setTopOffset(temp);
+        }
+
+        if (optional_string("+Bottom offset:")) {
+                float temp;
+
+                stuff_float(&temp);
+
+                font->setBottomOffset(temp);
+        }
+        // Make sure that the height is not invalid
+        font->computeFontMetrics();
 }
 
-void parse_fonts_tbl () {
-    // Parse main TBL first
-    parse_font_tbl ("fonts.tbl");
+void font_parse_setup(const char *fileName)
+{
+        read_file_text(fileName, CF_TYPE_TABLES);
+        reset_parse();
+        required_string("#Fonts");
+}
 
-    // Then other ones
-    parse_modular_table ("*-fnt.tbm", parse_font_tbl);
+void parse_font_tbl(const char *fileName)
+{
+        try {
+                font_parse_setup(fileName);
 
-    // double check
-    if (FontManager::numberOfFonts () < 3) {
-        ASSERTX (0, "At least three fonts have to be loaded but only %d valid entries were found!",FontManager::numberOfFonts ());
-    }
+                FontType type;
+                std::string fontName;
+
+                while (parse_type(type, fontName)) {
+                        switch (type) {
+                        case VFNT_FONT:
+                                if (Unicode_text_mode) {
+                                        error_display(
+                                                1,
+                                                "Bitmap fonts are not supported in Unicode text "
+                                                "mode!");
+                                }
+                                parse_vfnt_font(fontName);
+                                break;
+                        case NVG_FONT: parse_nvg_font(fontName); break;
+                        default:
+                                error_display(
+                                        0, "Unknown font type %d! Get a coder!", (int)type);
+                                break;
+                        }
+                }
+
+                // done parsing
+                required_string("#End");
+        } catch (const parse::ParseException &e) {
+                ERRORF(
+                        LOCATION, "parse failed '%s'!  Error message = %s.\n", fileName,
+                        e.what());
+        }
+}
+
+void parse_fonts_tbl()
+{
+        // Parse main TBL first
+        parse_font_tbl("fonts.tbl");
+
+        // Then other ones
+        parse_modular_table("*-fnt.tbm", parse_font_tbl);
+
+        // double check
+        if (FontManager::numberOfFonts() < 3) {
+                ASSERTX(0, "At least three fonts have to be loaded but only %d valid entries were found!", FontManager::numberOfFonts());
+        }
 }
 } // namespace
 
 namespace font {
-void init () {
-    if (font_initialized) {
-        // Already initialized
-        return;
-    }
+void init()
+{
+        if (font_initialized) {
+                // Already initialized
+                return;
+        }
 
-    FontManager::init ();
+        FontManager::init();
 
-    parse_fonts_tbl ();
+        parse_fonts_tbl();
 
-    set_font (0);
+        set_font(0);
 
-    font_initialized = true;
+        font_initialized = true;
 }
 
-void close () {
-    if (!font_initialized) { return; }
+void close()
+{
+        if (!font_initialized) {
+                return;
+        }
 
-    FontManager::close ();
+        FontManager::close();
 
-    font_initialized = false;
+        font_initialized = false;
 }
 
-int force_fit_string (char* str, int max_str, int max_width) {
-    int w;
+int force_fit_string(char *str, int max_str, int max_width)
+{
+        int w;
 
-    gr_get_string_size (&w, NULL, str);
-    if (w > max_width) {
-        if ((int)strlen (str) > max_str - 3) {
-            ASSERT (max_str >= 3);
-            str[max_str - 3] = 0;
+        gr_get_string_size(&w, NULL, str);
+        if (w > max_width) {
+                if ((int)strlen(str) > max_str - 3) {
+                        ASSERT(max_str >= 3);
+                        str[max_str - 3] = 0;
+                }
+
+                strcpy(str + strlen(str) - 1, "...");
+                gr_get_string_size(&w, NULL, str);
+                while (w > max_width) {
+                        ASSERT(
+                                strlen(str) >= 4); // if this is hit, a bad max_width was passed in and the
+                        // calling function needs fixing.
+                        strcpy(str + strlen(str) - 4, "...");
+                        gr_get_string_size(&w, NULL, str);
+                }
         }
 
-        strcpy (str + strlen (str) - 1, "...");
-        gr_get_string_size (&w, NULL, str);
-        while (w > max_width) {
-            ASSERT (
-                strlen (str) >=
-                4); // if this is hit, a bad max_width was passed in and the
-                    // calling function needs fixing.
-            strcpy (str + strlen (str) - 4, "...");
-            gr_get_string_size (&w, NULL, str);
-        }
-    }
-
-    return w;
+        return w;
 }
 
-void stuff_first (std::string& firstFont) {
-    try {
-        font_parse_setup ("fonts.tbl");
+void stuff_first(std::string &firstFont)
+{
+        try {
+                font_parse_setup("fonts.tbl");
 
-        FontType type;
-        parse_type (type, firstFont);
-    }
-    catch (const parse::ParseException& e) {
-        ASSERTX (0, "Failed to setup font parsing. This may be caused by an empty fonts.tbl file.\nError message: %s",e.what ());
-        firstFont = "";
-    }
+                FontType type;
+                parse_type(type, firstFont);
+        } catch (const parse::ParseException &e) {
+                ASSERTX(0, "Failed to setup font parsing. This may be caused by an empty fonts.tbl file.\nError message: %s", e.what());
+                firstFont = "";
+        }
 }
 
-int parse_font () {
-    int font_idx;
+int parse_font()
+{
+        int font_idx;
 
-    std::string input;
-    stuff_string (input, F_NAME);
-    std::stringstream ss (input);
+        std::string input;
+        stuff_string(input, F_NAME);
+        std::stringstream ss(input);
 
-    int fontNum;
-    ss >> fontNum;
+        int fontNum;
+        ss >> fontNum;
 
-    if (ss.fail ()) {
-        fontNum = FontManager::getFontIndex (input);
+        if (ss.fail()) {
+                fontNum = FontManager::getFontIndex(input);
 
-        if (fontNum < 0) {
-            error_display (0, "Invalid font name \"%s\"!", input.c_str ());
-            font_idx = -1;
+                if (fontNum < 0) {
+                        error_display(0, "Invalid font name \"%s\"!", input.c_str());
+                        font_idx = -1;
+                } else {
+                        font_idx = fontNum;
+                }
+        } else {
+                if (fontNum < 0 || fontNum >= FontManager::numberOfFonts()) {
+                        error_display(
+                                0,
+                                "Invalid font number %d! must be greater or equal to zero and "
+                                "smaller than %d.",
+                                fontNum, FontManager::numberOfFonts());
+                        font_idx = -1;
+                } else {
+                        font_idx = fontNum;
+                }
         }
-        else {
-            font_idx = fontNum;
-        }
-    }
-    else {
-        if (fontNum < 0 || fontNum >= FontManager::numberOfFonts ()) {
-            error_display (
-                0,
-                "Invalid font number %d! must be greater or equal to zero and "
-                "smaller than %d.",
-                fontNum, FontManager::numberOfFonts ());
-            font_idx = -1;
-        }
-        else {
-            font_idx = fontNum;
-        }
-    }
 
-    return font_idx;
+        return font_idx;
 }
 
-FSFont* get_current_font () { return FontManager::getCurrentFont (); }
+FSFont *get_current_font() { return FontManager::getCurrentFont(); }
 
-FSFont* get_font (const std::string& name) {
-    return FontManager::getFont (name);
+FSFont *get_font(const std::string &name)
+{
+        return FontManager::getFont(name);
 }
 
 /**
@@ -466,129 +465,143 @@ FSFont* get_font (const std::string& name) {
  *
  * @return      The character width.
  */
-int get_char_width_old (
-    fo::font* fnt, ubyte c1, ubyte c2, int* width, int* spacing) {
-    int i, letter;
+int get_char_width_old(
+        fo::font *fnt, ubyte c1, ubyte c2, int *width, int *spacing)
+{
+        int i, letter;
 
-    letter = c1 - fnt->first_ascii;
+        letter = c1 - fnt->first_ascii;
 
-    // not in font, draw as space
-    if (letter < 0 || letter >= fnt->num_chars) {
-        *width = 0;
-        *spacing = fnt->w;
-        return -1;
-    }
-
-    *width = fnt->char_data[letter].byte_width;
-    *spacing = fnt->char_data[letter].spacing;
-
-    i = fnt->char_data[letter].kerning_entry;
-    if (i > -1) {
-        if (!(c2 == 0 || c2 == '\n')) {
-            int letter2;
-
-            letter2 = c2 - fnt->first_ascii;
-
-            if ((letter2 >= 0) && (letter2 < fnt->num_chars) &&
-                (i < fnt->num_kern_pairs)) {
-                font_kernpair* k = &fnt->kern_data[i];
-                while ((i < fnt->num_kern_pairs) && (k->c1 == (char)letter) &&
-                       (k->c2 < (char)letter2)) {
-                    i++;
-                    k++;
-                }
-
-                if ((i < fnt->num_kern_pairs) && (k->c2 == (char)letter2)) {
-                    *spacing += k->offset;
-                }
-            }
+        // not in font, draw as space
+        if (letter < 0 || letter >= fnt->num_chars) {
+                *width = 0;
+                *spacing = fnt->w;
+                return -1;
         }
-    }
 
-    return letter;
+        *width = fnt->char_data[letter].byte_width;
+        *spacing = fnt->char_data[letter].spacing;
+
+        i = fnt->char_data[letter].kerning_entry;
+        if (i > -1) {
+                if (!(c2 == 0 || c2 == '\n')) {
+                        int letter2;
+
+                        letter2 = c2 - fnt->first_ascii;
+
+                        if ((letter2 >= 0) && (letter2 < fnt->num_chars) && (i < fnt->num_kern_pairs)) {
+                                font_kernpair *k = &fnt->kern_data[i];
+                                while ((i < fnt->num_kern_pairs) && (k->c1 == (char)letter) && (k->c2 < (char)letter2)) {
+                                        i++;
+                                        k++;
+                                }
+
+                                if ((i < fnt->num_kern_pairs) && (k->c2 == (char)letter2)) {
+                                        *spacing += k->offset;
+                                }
+                        }
+                }
+        }
+
+        return letter;
 }
 } // namespace font
 
-int gr_get_font_height () {
-    if (FontManager::isReady ()) {
-        return int (FontManager::getCurrentFont ()->getHeight ());
-    }
-    else {
-        return 16;
-    }
+int gr_get_font_height()
+{
+        if (FontManager::isReady()) {
+                return int(FontManager::getCurrentFont()->getHeight());
+        } else {
+                return 16;
+        }
 }
 
-void gr_get_string_size (int* w1, int* h1, const char* text, int len) {
-    if (!FontManager::isReady ()) {
-        if (w1) *w1 = 16;
+void gr_get_string_size(int *w1, int *h1, const char *text, int len)
+{
+        if (!FontManager::isReady()) {
+                if (w1)
+                        *w1 = 16;
 
-        if (h1) *h1 = 16;
+                if (h1)
+                        *h1 = 16;
 
-        return;
-    }
+                return;
+        }
 
-    float w = 0.0f;
-    float h = 0.0f;
+        float w = 0.0f;
+        float h = 0.0f;
 
-    FontManager::getCurrentFont ()->getStringSize (
-        text, static_cast< size_t > (len), -1, &w, &h);
+        FontManager::getCurrentFont()->getStringSize(
+                text, static_cast< size_t >(len), -1, &w, &h);
 
-    if (w1) { *w1 = int (ceil (w)); }
-    if (h1) { *h1 = int (ceil (h)); }
+        if (w1) {
+                *w1 = int(ceil(w));
+        }
+        if (h1) {
+                *h1 = int(ceil(h));
+        }
 }
 
-MONITOR (FontChars)
+MONITOR(FontChars)
 
 char grx_printf_text[2048];
 
-void gr_printf (int x, int y, const char* format, ...) {
-    va_list args;
+void gr_printf(int x, int y, const char *format, ...)
+{
+        va_list args;
 
-    if (!FontManager::isReady ()) return;
+        if (!FontManager::isReady())
+                return;
 
-    va_start (args, format);
-    vsnprintf (grx_printf_text, sizeof (grx_printf_text) - 1, format, args);
-    va_end (args);
-    grx_printf_text[sizeof (grx_printf_text) - 1] = '\0';
+        va_start(args, format);
+        vsnprintf(grx_printf_text, sizeof(grx_printf_text) - 1, format, args);
+        va_end(args);
+        grx_printf_text[sizeof(grx_printf_text) - 1] = '\0';
 
-    gr_string (x, y, grx_printf_text);
+        gr_string(x, y, grx_printf_text);
 }
 
-void gr_printf_menu (int x, int y, const char* format, ...) {
-    va_list args;
+void gr_printf_menu(int x, int y, const char *format, ...)
+{
+        va_list args;
 
-    if (!FontManager::isReady ()) return;
+        if (!FontManager::isReady())
+                return;
 
-    va_start (args, format);
-    vsnprintf (grx_printf_text, sizeof (grx_printf_text) - 1, format, args);
-    va_end (args);
-    grx_printf_text[sizeof (grx_printf_text) - 1] = '\0';
+        va_start(args, format);
+        vsnprintf(grx_printf_text, sizeof(grx_printf_text) - 1, format, args);
+        va_end(args);
+        grx_printf_text[sizeof(grx_printf_text) - 1] = '\0';
 
-    gr_string (x, y, grx_printf_text, GR_RESIZE_MENU);
+        gr_string(x, y, grx_printf_text, GR_RESIZE_MENU);
 }
 
-void gr_printf_menu_zoomed (int x, int y, const char* format, ...) {
-    va_list args;
+void gr_printf_menu_zoomed(int x, int y, const char *format, ...)
+{
+        va_list args;
 
-    if (!FontManager::isReady ()) return;
+        if (!FontManager::isReady())
+                return;
 
-    va_start (args, format);
-    vsnprintf (grx_printf_text, sizeof (grx_printf_text) - 1, format, args);
-    va_end (args);
-    grx_printf_text[sizeof (grx_printf_text) - 1] = '\0';
+        va_start(args, format);
+        vsnprintf(grx_printf_text, sizeof(grx_printf_text) - 1, format, args);
+        va_end(args);
+        grx_printf_text[sizeof(grx_printf_text) - 1] = '\0';
 
-    gr_string (x, y, grx_printf_text, GR_RESIZE_MENU_ZOOMED);
+        gr_string(x, y, grx_printf_text, GR_RESIZE_MENU_ZOOMED);
 }
 
-void gr_printf_no_resize (int x, int y, const char* format, ...) {
-    va_list args;
+void gr_printf_no_resize(int x, int y, const char *format, ...)
+{
+        va_list args;
 
-    if (!FontManager::isReady ()) return;
+        if (!FontManager::isReady())
+                return;
 
-    va_start (args, format);
-    vsnprintf (grx_printf_text, sizeof (grx_printf_text) - 1, format, args);
-    va_end (args);
-    grx_printf_text[sizeof (grx_printf_text) - 1] = '\0';
+        va_start(args, format);
+        vsnprintf(grx_printf_text, sizeof(grx_printf_text) - 1, format, args);
+        va_end(args);
+        grx_printf_text[sizeof(grx_printf_text) - 1] = '\0';
 
-    gr_string (x, y, grx_printf_text, GR_RESIZE_NONE);
+        gr_string(x, y, grx_printf_text, GR_RESIZE_NONE);
 }

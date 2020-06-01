@@ -5,8 +5,8 @@
 
 #include "defs.hh"
 
-#include "util/HeapAllocator.hh"
 #include "graphics/2d.hh"
+#include "util/HeapAllocator.hh"
 
 namespace graphics {
 namespace util {
@@ -19,39 +19,39 @@ namespace util {
  * in that case.
  */
 class GPUMemoryHeap {
-    std::unique_ptr< ::util::HeapAllocator > _allocator;
-    int _bufferHandle = -1;
+        std::unique_ptr<::util::HeapAllocator > _allocator;
+        int _bufferHandle = -1;
 
-    void* _dataBuffer = nullptr;
-    size_t _bufferSize = 0;
+        void *_dataBuffer = nullptr;
+        size_t _bufferSize = 0;
 
-    void resizeBuffer (size_t newSize);
+        void resizeBuffer(size_t newSize);
 
-    void* bufferPointer (size_t offset);
+        void *bufferPointer(size_t offset);
 
 public:
-    explicit GPUMemoryHeap (GpuHeap heap_type);
-    ~GPUMemoryHeap ();
+        explicit GPUMemoryHeap(GpuHeap heap_type);
+        ~GPUMemoryHeap();
 
-    GPUMemoryHeap (const GPUMemoryHeap&) = delete;
-    GPUMemoryHeap& operator= (const GPUMemoryHeap&) = delete;
+        GPUMemoryHeap(const GPUMemoryHeap &) = delete;
+        GPUMemoryHeap &operator=(const GPUMemoryHeap &) = delete;
 
-    /**
+        /**
      * @brief Store some data in a GPU heap
      * @param size The size of the data to store
      * @param data The data to store
      * @return The offset in bytes from the beginning of the buffer where the
      * stored data begins
      */
-    size_t allocateGpuData (size_t size, void* data);
+        size_t allocateGpuData(size_t size, void *data);
 
-    /**
+        /**
      * @brief Frees up some GPU data from this heap
      * @param offset The offset at which to free the data
      */
-    void freeGpuData (size_t offset);
+        void freeGpuData(size_t offset);
 
-    /**
+        /**
      * @brief Gets the handle of the used buffer for use in rendering
      * operations
      *
@@ -60,7 +60,7 @@ public:
      *
      * @return The graphics code buffer handle.
      */
-    int bufferHandle ();
+        int bufferHandle();
 };
 
 } // namespace util

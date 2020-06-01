@@ -9,7 +9,12 @@
 
 namespace util {
 
-enum class Encoding { ASCII, UTF8, UTF16LE, UTF16BE, UTF32LE, UTF32BE };
+enum class Encoding { ASCII,
+                      UTF8,
+                      UTF16LE,
+                      UTF16BE,
+                      UTF32LE,
+                      UTF32BE };
 
 /**
  * @brief Guesses the encoding of the given content by looking at the first few
@@ -18,7 +23,7 @@ enum class Encoding { ASCII, UTF8, UTF16LE, UTF16BE, UTF32LE, UTF32BE };
  * instead of ASCII
  * @return The guessed encoding of the content
  */
-Encoding guess_encoding (const std::string& content, bool assume_utf8 = true);
+Encoding guess_encoding(const std::string &content, bool assume_utf8 = true);
 
 /**
  * @brief Determines if the given text has a Byte Order Mark (BOM) that has to
@@ -26,7 +31,7 @@ Encoding guess_encoding (const std::string& content, bool assume_utf8 = true);
  * @param content The text to check
  * @return @c true if there is a BOM, @c false otherwise
  */
-bool has_bom (const std::string& content);
+bool has_bom(const std::string &content);
 
 /**
  * @brief Guesses if the specifies buffer contains Latin1 encoding
@@ -37,7 +42,7 @@ bool has_bom (const std::string& content);
  *
  * @note The code of this function was copied from uchardet.
  */
-bool guessLatin1Encoding (const char* aBuf, size_t aLen);
+bool guessLatin1Encoding(const char *aBuf, size_t aLen);
 
 /**
  * @brief Checks the encoding of the specified file pointer and possibly skips
@@ -60,8 +65,8 @@ bool guessLatin1Encoding (const char* aBuf, size_t aLen);
  * @return The length of the file in bytes. Does not include the BOM if it
  * exists.
  */
-int check_encoding_and_skip_bom (
-    CFILE* file, const char* filename, int* start_offset = nullptr);
+int check_encoding_and_skip_bom(
+        CFILE *file, const char *filename, int *start_offset = nullptr);
 } // namespace util
 
 #endif // FREESPACE2_UTIL_ENCODING_HH

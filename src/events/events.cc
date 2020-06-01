@@ -12,5 +12,5 @@ util::event< void, int, int > GameLeaveState;
 
 util::event< void, int, int > GameEnterState;
 
-util::event< void, const char* > GameMissionLoad;
+util::event< void, const char * > GameMissionLoad;
 } // namespace events

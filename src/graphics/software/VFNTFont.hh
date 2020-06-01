@@ -19,46 +19,46 @@ struct font;
  */
 class VFNTFont : public FSFont {
 private:
-    font* fontPtr; //!< The font pointer
+        font *fontPtr; //!< The font pointer
 
 public:
-    /**
+        /**
      * @brief   Constructor that initializes the object with a primary font
      * pointer
      *
      * @param [in]      fnt     A pointer to the font data. Has to be non-null
      */
-    explicit VFNTFont (font* fnt);
+        explicit VFNTFont(font *fnt);
 
-    /**
+        /**
      * @brief   Destroys the allocated font pointer
      */
-    ~VFNTFont () override;
+        ~VFNTFont() override;
 
-    /**
+        /**
      * @brief   Gets the font data struct.
      *
      * @return  the font data.
      */
-    font* getFontData ();
+        font *getFontData();
 
-    /**
+        /**
      * @brief   Gets the type. This will always return FontType::VFNT_FONT
      *
      * @return  The type.
      */
-    FontType getType () const override;
+        FontType getType() const override;
 
-    /**
+        /**
      * @brief   Gets the height of this font
      *
      * @see FSFont::getHeight()
      *
      * @return  The height.
      */
-    float getTextHeight () const override;
+        float getTextHeight() const override;
 
-    /**
+        /**
      * @brief   Gets the size of the specified string in pixels.
      *
      * @param [in]      text    the text which should be checked.
@@ -67,9 +67,9 @@ public:
      * @param [out]     width   If non-null, the width.
      * @param [out]     height  If non-null, the height.
      */
-    void getStringSize (
-        const char* text, size_t textLen, int resize_mode, float* width,
-        float* height) const override;
+        void getStringSize(
+                const char *text, size_t textLen, int resize_mode, float *width,
+                float *height) const override;
 };
 } // namespace font
 

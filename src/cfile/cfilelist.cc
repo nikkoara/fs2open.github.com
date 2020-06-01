@@ -1,93 +1,95 @@
 // -*- mode: c++; -*-
 
+#include "defs.hh"
+
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cstdio>
-#include <string>
+
 #include <algorithm>
+#include <string>
 
-#include "defs.hh"
 #include "cfile/cfile.hh"
-#include "shared/types.hh"
 #include "log/log.hh"
+#include "shared/types.hh"
 
-void cf_sort_filenames (
-    std::vector< std::string >& list, int sort,
-    std::vector< file_list_info >* info) {
-    // NOTE: This really needs to be updated to C++ style sorting at some point
+void cf_sort_filenames(
+        std::vector< std::string > &list, int sort,
+        std::vector< file_list_info > *info)
+{
+        // NOTE: This really needs to be updated to C++ style sorting at some point
 
-    int i, j, incr;
-    std::string t;
-    file_list_info tt;
+        int i, j, incr;
+        std::string t;
+        file_list_info tt;
 
-    int n = (int)list.size ();
+        int n = (int)list.size();
 
-    if (sort == CF_SORT_NAME) {
-        incr = n / 2;
-        while (incr > 0) {
-            for (i = incr; i < n; i++) {
-                j = i - incr;
-                while (j >= 0) {
-                    if (strcasecmp (
-                            list[j].c_str (), list[j + incr].c_str ()) > 0) {
-                        t = list[j];
-                        list[j] = list[j + incr];
-                        list[j + incr] = t;
+        if (sort == CF_SORT_NAME) {
+                incr = n / 2;
+                while (incr > 0) {
+                        for (i = incr; i < n; i++) {
+                                j = i - incr;
+                                while (j >= 0) {
+                                        if (strcasecmp(
+                                                    list[j].c_str(), list[j + incr].c_str())
+                                            > 0) {
+                                                t = list[j];
+                                                list[j] = list[j + incr];
+                                                list[j + incr] = t;
 
-                        if (info) {
-                            tt = (*info)[j];
-                            (*info)[j] = (*info)[j + incr];
-                            (*info)[j + incr] = tt;
+                                                if (info) {
+                                                        tt = (*info)[j];
+                                                        (*info)[j] = (*info)[j + incr];
+                                                        (*info)[j + incr] = tt;
+                                                }
+
+                                                j -= incr;
+                                        } else
+                                                break;
+                                }
                         }
 
-                        j -= incr;
-                    }
-                    else
-                        break;
+                        incr /= 2;
                 }
-            }
 
-            incr /= 2;
+                return;
+        } else if (sort == CF_SORT_TIME) {
+                ASSERT(info);
+                incr = n / 2;
+                while (incr > 0) {
+                        for (i = incr; i < n; i++) {
+                                j = i - incr;
+                                while (j >= 0) {
+                                        if ((*info)[j].write_time < (*info)[j + incr].write_time) {
+                                                t = list[j];
+                                                list[j] = list[j + incr];
+                                                list[j + incr] = t;
+
+                                                tt = (*info)[j];
+                                                (*info)[j] = (*info)[j + incr];
+                                                (*info)[j + incr] = tt;
+                                                j -= incr;
+                                        } else
+                                                break;
+                                }
+                        }
+
+                        incr /= 2;
+                }
+
+                return;
+        } else if (sort == CF_SORT_REVERSE) {
+                std::reverse(list.begin(), list.end());
+
+                if (info) {
+                        std::reverse(info->begin(), info->end());
+                }
+
+                return;
         }
 
-        return;
-    }
-    else if (sort == CF_SORT_TIME) {
-        ASSERT (info);
-        incr = n / 2;
-        while (incr > 0) {
-            for (i = incr; i < n; i++) {
-                j = i - incr;
-                while (j >= 0) {
-                    if ((*info)[j].write_time < (*info)[j + incr].write_time) {
-                        t = list[j];
-                        list[j] = list[j + incr];
-                        list[j + incr] = t;
-
-                        tt = (*info)[j];
-                        (*info)[j] = (*info)[j + incr];
-                        (*info)[j + incr] = tt;
-                        j -= incr;
-                    }
-                    else
-                        break;
-                }
-            }
-
-            incr /= 2;
-        }
-
-        return;
-    }
-    else if (sort == CF_SORT_REVERSE) {
-        std::reverse (list.begin (), list.end ());
-
-        if (info) { std::reverse (info->begin (), info->end ()); }
-
-        return;
-    }
-
-    WARNINGF (LOCATION, "Unknown sorting method %d passed to cf_sort_filenames()",sort);
+        WARNINGF(LOCATION, "Unknown sorting method %d passed to cf_sort_filenames()", sort);
 }
 
 // Sorts a list of filenames using the specified sorting method (CF_SORT_*).
@@ -98,93 +100,90 @@ void cf_sort_filenames (
 // however if you
 // have extra file info, you should pass it as well to get it sorted
 // too (so an index into list is the same index for info for that file
-void cf_sort_filenames (int n, char** list, int sort, file_list_info* info) {
-    int i, j, incr;
-    char* t;
-    file_list_info tt;
+void cf_sort_filenames(int n, char **list, int sort, file_list_info *info)
+{
+        int i, j, incr;
+        char *t;
+        file_list_info tt;
 
-    if (sort == CF_SORT_NAME) {
-        incr = n / 2;
-        while (incr > 0) {
-            for (i = incr; i < n; i++) {
-                j = i - incr;
-                while (j >= 0) {
-                    if (strcasecmp (list[j], list[j + incr]) > 0) {
-                        t = list[j];
-                        list[j] = list[j + incr];
-                        list[j + incr] = t;
+        if (sort == CF_SORT_NAME) {
+                incr = n / 2;
+                while (incr > 0) {
+                        for (i = incr; i < n; i++) {
+                                j = i - incr;
+                                while (j >= 0) {
+                                        if (strcasecmp(list[j], list[j + incr]) > 0) {
+                                                t = list[j];
+                                                list[j] = list[j + incr];
+                                                list[j + incr] = t;
 
-                        if (info) {
-                            tt = info[j];
-                            info[j] = info[j + incr];
-                            info[j + incr] = tt;
+                                                if (info) {
+                                                        tt = info[j];
+                                                        info[j] = info[j + incr];
+                                                        info[j + incr] = tt;
+                                                }
+
+                                                j -= incr;
+                                        } else
+                                                break;
+                                }
                         }
 
-                        j -= incr;
-                    }
-                    else
-                        break;
+                        incr /= 2;
                 }
-            }
 
-            incr /= 2;
+                return;
+        } else if (sort == CF_SORT_TIME) {
+                ASSERT(info);
+                incr = n / 2;
+                while (incr > 0) {
+                        for (i = incr; i < n; i++) {
+                                j = i - incr;
+                                while (j >= 0) {
+                                        if (info[j].write_time < info[j + incr].write_time) {
+                                                t = list[j];
+                                                list[j] = list[j + incr];
+                                                list[j + incr] = t;
+
+                                                tt = info[j];
+                                                info[j] = info[j + incr];
+                                                info[j + incr] = tt;
+                                                j -= incr;
+                                        } else
+                                                break;
+                                }
+                        }
+
+                        incr /= 2;
+                }
+
+                return;
+        } else if (sort == CF_SORT_REVERSE) {
+                incr = n / 2;
+                char buffer[MAX_FILENAME_LEN];
+                file_list_info tt_tmp;
+
+                for (i = 0; i < incr; i++) {
+                        t = list[n - 1 - i];
+
+                        if (list[i] != t) {
+                                strcpy(buffer, list[i]);
+                                strcpy(list[i], t);
+                                strcpy(t, buffer);
+
+                                if (info) {
+                                        tt = info[n - 1 - i];
+                                        tt_tmp = info[i];
+                                        info[i] = tt;
+                                        tt = tt_tmp;
+                                }
+                        }
+                }
+
+                return;
         }
 
-        return;
-    }
-    else if (sort == CF_SORT_TIME) {
-        ASSERT (info);
-        incr = n / 2;
-        while (incr > 0) {
-            for (i = incr; i < n; i++) {
-                j = i - incr;
-                while (j >= 0) {
-                    if (info[j].write_time < info[j + incr].write_time) {
-                        t = list[j];
-                        list[j] = list[j + incr];
-                        list[j + incr] = t;
-
-                        tt = info[j];
-                        info[j] = info[j + incr];
-                        info[j + incr] = tt;
-                        j -= incr;
-                    }
-                    else
-                        break;
-                }
-            }
-
-            incr /= 2;
-        }
-
-        return;
-    }
-    else if (sort == CF_SORT_REVERSE) {
-        incr = n / 2;
-        char buffer[MAX_FILENAME_LEN];
-        file_list_info tt_tmp;
-
-        for (i = 0; i < incr; i++) {
-            t = list[n - 1 - i];
-
-            if (list[i] != t) {
-                strcpy (buffer, list[i]);
-                strcpy (list[i], t);
-                strcpy (t, buffer);
-
-                if (info) {
-                    tt = info[n - 1 - i];
-                    tt_tmp = info[i];
-                    info[i] = tt;
-                    tt = tt_tmp;
-                }
-            }
-        }
-
-        return;
-    }
-
-    WARNINGF (LOCATION, "Unknown sorting method %d passed to cf_sort_filenames()",sort);
+        WARNINGF(LOCATION, "Unknown sorting method %d passed to cf_sort_filenames()", sort);
 }
 
 #if (0) // these aren't used anywhere now
@@ -195,123 +194,122 @@ void cf_sort_filenames (int n, char** list, int sort, file_list_info* info) {
 // out                     Buffer to write it out to
 // in                              Buffer to compress
 // bytecount       Number of bytes input
-int cf_compress (char* out, char* in, int bytecount) {
-    int pixcount;            // number of pixels in the current packet
-    char* inputpixel = NULL; // current input pixel position
-    char* matchpixel = NULL; // pixel value to match for a run
-    char* flagbyte = NULL;   // location of last flag byte to set
-    int rlcount;             // current count in r.l. string
-    int rlthresh;            // minimum valid run length
-    char* copyloc;           // location to begin copying at
+int cf_compress(char *out, char *in, int bytecount)
+{
+        int pixcount;            // number of pixels in the current packet
+        char *inputpixel = NULL; // current input pixel position
+        char *matchpixel = NULL; // pixel value to match for a run
+        char *flagbyte = NULL;   // location of last flag byte to set
+        int rlcount;             // current count in r.l. string
+        int rlthresh;            // minimum valid run length
+        char *copyloc;           // location to begin copying at
 
-    // set the threshold -- the minimum valid run length
-    rlthresh = 2; // Require a 2 pixel span before rle'ing
+        // set the threshold -- the minimum valid run length
+        rlthresh = 2; // Require a 2 pixel span before rle'ing
 
-    // set the first pixel up
+        // set the first pixel up
 
-    flagbyte = out; // place to put next flag if run
-    inputpixel = in;
-    pixcount = 1;
-    rlcount = 0;
-    copyloc = (char*)0;
+        flagbyte = out; // place to put next flag if run
+        inputpixel = in;
+        pixcount = 1;
+        rlcount = 0;
+        copyloc = (char *)0;
 
-    // loop till data processing complete
-    do {
-        // if we have accumulated a 128-byte packet, process it
-        if (pixcount == 129) {
-            *flagbyte = 127;
+        // loop till data processing complete
+        do {
+                // if we have accumulated a 128-byte packet, process it
+                if (pixcount == 129) {
+                        *flagbyte = 127;
 
-            // set the run flag if this is a run
+                        // set the run flag if this is a run
 
-            if (rlcount >= rlthresh) {
-                *flagbyte |= 0x80;
-                pixcount = 2;
-            }
+                        if (rlcount >= rlthresh) {
+                                *flagbyte |= 0x80;
+                                pixcount = 2;
+                        }
 
-            // copy the data into place
-            ++flagbyte;
-            memmove (flagbyte, copyloc, pixcount - 1);
-            flagbyte += pixcount - 1;
-            pixcount = 1;
+                        // copy the data into place
+                        ++flagbyte;
+                        memmove(flagbyte, copyloc, pixcount - 1);
+                        flagbyte += pixcount - 1;
+                        pixcount = 1;
 
-            // set up for next packet
-            continue;
-        }
-
-        // if zeroth byte, handle as special case
-        if (pixcount == 1) {
-            rlcount = 0;
-            copyloc = inputpixel;    /* point to 1st guy in packet */
-            matchpixel = inputpixel; /* set pointer to pix to match */
-            pixcount = 2;
-            inputpixel += 1;
-            continue;
-        }
-
-        // assembling a packet -- look at next pixel
-
-        // current pixel == match pixel?
-        if (*inputpixel == *matchpixel) {
-            // establishing a run of enough length to
-            // save space by doing it
-            // -- write the non-run length packet
-            // -- start run-length packet
-
-            if (++rlcount == rlthresh) {
-                // close a non-run packet
-
-                if (pixcount > (rlcount + 1)) {
-                    // write out length and do not set run flag
-
-                    *flagbyte++ = (char)(pixcount - 2 - rlthresh);
-
-                    memmove (flagbyte, copyloc, (pixcount - 1 - rlcount));
-                    flagbyte += (pixcount - 1 - rlcount);
-
-                    copyloc = inputpixel;
-                    pixcount = rlcount + 1;
+                        // set up for next packet
+                        continue;
                 }
-            }
-        }
-        else {
-            // no match -- either break a run or continue without one
-            // if a run exists break it:
-            // write the bytes in the string (1+1)
-            // start the next string
 
-            if (rlcount >= rlthresh) {
-                *flagbyte++ = (char)(0x80 | rlcount);
-                memmove (flagbyte, copyloc, 1);
-                flagbyte += 1;
-                pixcount = 1;
-                continue;
-            }
-            else {
-                // not a match and currently not a run
-                // - save the current pixel
-                // - reset the run-length flag
-                rlcount = 0;
-                matchpixel = inputpixel;
-            }
-        }
-        pixcount++;
-        inputpixel += 1;
-    } while (inputpixel < (in + bytecount));
+                // if zeroth byte, handle as special case
+                if (pixcount == 1) {
+                        rlcount = 0;
+                        copyloc = inputpixel;    /* point to 1st guy in packet */
+                        matchpixel = inputpixel; /* set pointer to pix to match */
+                        pixcount = 2;
+                        inputpixel += 1;
+                        continue;
+                }
 
-    // quit this buffer without loosing any data
-    if (--pixcount >= 1) {
-        *flagbyte = (char)(pixcount - 1);
-        if (rlcount >= rlthresh) {
-            *flagbyte |= 0x80;
-            pixcount = 1;
-        }
+                // assembling a packet -- look at next pixel
 
-        // copy the data into place
-        ++flagbyte;
-        memmove (flagbyte, copyloc, pixcount);
-        flagbyte += pixcount;
-    }
-    return (flagbyte - out);
+                // current pixel == match pixel?
+                if (*inputpixel == *matchpixel) {
+                        // establishing a run of enough length to
+                        // save space by doing it
+                        // -- write the non-run length packet
+                        // -- start run-length packet
+
+                        if (++rlcount == rlthresh) {
+                                // close a non-run packet
+
+                                if (pixcount > (rlcount + 1)) {
+                                        // write out length and do not set run flag
+
+                                        *flagbyte++ = (char)(pixcount - 2 - rlthresh);
+
+                                        memmove(flagbyte, copyloc, (pixcount - 1 - rlcount));
+                                        flagbyte += (pixcount - 1 - rlcount);
+
+                                        copyloc = inputpixel;
+                                        pixcount = rlcount + 1;
+                                }
+                        }
+                } else {
+                        // no match -- either break a run or continue without one
+                        // if a run exists break it:
+                        // write the bytes in the string (1+1)
+                        // start the next string
+
+                        if (rlcount >= rlthresh) {
+                                *flagbyte++ = (char)(0x80 | rlcount);
+                                memmove(flagbyte, copyloc, 1);
+                                flagbyte += 1;
+                                pixcount = 1;
+                                continue;
+                        } else {
+                                // not a match and currently not a run
+                                // - save the current pixel
+                                // - reset the run-length flag
+                                rlcount = 0;
+                                matchpixel = inputpixel;
+                        }
+                }
+                pixcount++;
+                inputpixel += 1;
+        } while (inputpixel < (in + bytecount));
+
+        // quit this buffer without loosing any data
+        if (--pixcount >= 1) {
+                *flagbyte = (char)(pixcount - 1);
+                if (rlcount >= rlthresh) {
+                        *flagbyte |= 0x80;
+                        pixcount = 1;
+                }
+
+                // copy the data into place
+                ++flagbyte;
+                memmove(flagbyte, copyloc, pixcount);
+                flagbyte += pixcount;
+        }
+        return (flagbyte - out);
 }
 
 // cf_decompress - Do Decompression on a run-length encoded block of data.
@@ -321,34 +319,34 @@ int cf_compress (char* out, char* in, int bytecount) {
 // out                     Buffer to write it out to
 // in                              Buffer to compress
 // bytecount       Number of bytes input
-int cf_decompress (char* out, char* in) {
-    int count;
+int cf_decompress(char *out, char *in)
+{
+        int count;
 
-    char* param_out = out;
+        char *param_out = out;
 
-    while (1) {
-        count = int(*in++);
-        int run_span = count & 0x80;
+        while (1) {
+                count = int(*in++);
+                int run_span = count & 0x80;
 
-        count &= (~0x80);
+                count &= (~0x80);
 
-        if (count > 0) {
-            if (run_span) {
-                // RLE'd data
-                ubyte c = *in++;
+                if (count > 0) {
+                        if (run_span) {
+                                // RLE'd data
+                                ubyte c = *in++;
 
-                memset (out, c, count);
-                out += count;
-            }
-            else {
-                memmove (out, in, count);
-                in += count;
-                out += count;
-            }
+                                memset(out, c, count);
+                                out += count;
+                        } else {
+                                memmove(out, in, count);
+                                in += count;
+                                out += count;
+                        }
+                }
         }
-    }
 
-    return out - param_out;
+        return out - param_out;
 }
 
 #endif // 0
@@ -358,159 +356,165 @@ int cf_decompress (char* out, char* in) {
 // returns:   returns the number of full elements read
 //
 //
-int cfread_compressed (void* buf, int elsize, int nelem, CFILE* cfile) {
-    char* out = (char*)buf;
+int cfread_compressed(void *buf, int elsize, int nelem, CFILE *cfile)
+{
+        char *out = (char *)buf;
 
-    while (1) {
-        ubyte count;
+        while (1) {
+                ubyte count;
 
-        if (cfread (&count, 1, 1, cfile) != 1) { break; }
+                if (cfread(&count, 1, 1, cfile) != 1) {
+                        break;
+                }
 
-        int run_span = count & 0x80;
-        count &= (~0x80);
-        count++;
+                int run_span = count & 0x80;
+                count &= (~0x80);
+                count++;
 
-        if (count > 0) {
-            if (run_span) {
-                // RLE'd data
-                ubyte c;
-                if (cfread (&c, 1, 1, cfile) != 1) { break; }
-                memset (out, c, count);
-            }
-            else {
-                if (cfread (out, 1, count, cfile) != count) { break; }
-            }
-            out += count;
-            if (out >= (char*)buf + (elsize * nelem)) { break; }
+                if (count > 0) {
+                        if (run_span) {
+                                // RLE'd data
+                                ubyte c;
+                                if (cfread(&c, 1, 1, cfile) != 1) {
+                                        break;
+                                }
+                                memset(out, c, count);
+                        } else {
+                                if (cfread(out, 1, count, cfile) != count) {
+                                        break;
+                                }
+                        }
+                        out += count;
+                        if (out >= (char *)buf + (elsize * nelem)) {
+                                break;
+                        }
+                } else {
+                        break;
+                }
         }
-        else {
-            break;
-        }
-    }
 
-    return (int)((out - (char*)buf) / elsize);
+        return (int)((out - (char *)buf) / elsize);
 }
 
-int cfwrite_compressed (
-    void* param_buf, int param_elsize, int param_nelem, CFILE* cfile) {
-    char* in = (char*)param_buf;
-    int bytecount = (param_elsize * param_nelem);
+int cfwrite_compressed(
+        void *param_buf, int param_elsize, int param_nelem, CFILE *cfile)
+{
+        char *in = (char *)param_buf;
+        int bytecount = (param_elsize * param_nelem);
 
-    int pixcount;            // number of pixels in the current packet
-    char* inputpixel = NULL; // current input pixel position
-    char* matchpixel = NULL; // pixel value to match for a run
-    int rlcount;             // current count in r.l. string
-    int rlthresh;            // minimum valid run length
-    char* copyloc;           // location to begin copying at
+        int pixcount;            // number of pixels in the current packet
+        char *inputpixel = NULL; // current input pixel position
+        char *matchpixel = NULL; // pixel value to match for a run
+        int rlcount;             // current count in r.l. string
+        int rlthresh;            // minimum valid run length
+        char *copyloc;           // location to begin copying at
 
-    // set the threshold -- the minimum valid run length
-    rlthresh = 2; // Require a 2 pixel span before rle'ing
+        // set the threshold -- the minimum valid run length
+        rlthresh = 2; // Require a 2 pixel span before rle'ing
 
-    // set the first pixel up
+        // set the first pixel up
 
-    inputpixel = in;
-    pixcount = 1;
-    rlcount = 0;
-    copyloc = (char*)0;
+        inputpixel = in;
+        pixcount = 1;
+        rlcount = 0;
+        copyloc = (char *)0;
 
-    // loop till data processing complete
-    do {
-        // if we have accumulated a 128-byte packet, process it
-        if (pixcount == 129) {
-            ubyte code = 127;
+        // loop till data processing complete
+        do {
+                // if we have accumulated a 128-byte packet, process it
+                if (pixcount == 129) {
+                        ubyte code = 127;
 
-            // set the run flag if this is a run
+                        // set the run flag if this is a run
 
-            if (rlcount >= rlthresh) {
-                code |= 0x80;
-                pixcount = 2;
-            }
+                        if (rlcount >= rlthresh) {
+                                code |= 0x80;
+                                pixcount = 2;
+                        }
 
-            cfwrite (&code, 1, 1, cfile);
+                        cfwrite(&code, 1, 1, cfile);
 
-            // copy the data into place
-            cfwrite (copyloc, 1, pixcount - 1, cfile);
-            pixcount = 1;
+                        // copy the data into place
+                        cfwrite(copyloc, 1, pixcount - 1, cfile);
+                        pixcount = 1;
 
-            // set up for next packet
-            continue;
-        }
-
-        // if zeroth byte, handle as special case
-        if (pixcount == 1) {
-            rlcount = 0;
-            copyloc = inputpixel;    /* point to 1st guy in packet */
-            matchpixel = inputpixel; /* set pointer to pix to match */
-            pixcount = 2;
-            inputpixel += 1;
-            continue;
-        }
-
-        // assembling a packet -- look at next pixel
-
-        // current pixel == match pixel?
-        if (*inputpixel == *matchpixel) {
-            // establishing a run of enough length to
-            // save space by doing it
-            // -- write the non-run length packet
-            // -- start run-length packet
-
-            if (++rlcount == rlthresh) {
-                // close a non-run packet
-
-                if (pixcount > (rlcount + 1)) {
-                    // write out length and do not set run flag
-
-                    ubyte code = (ubyte) (pixcount - 2 - rlthresh);
-                    cfwrite (&code, 1, 1, cfile);
-
-                    cfwrite (copyloc, 1, (pixcount - 1 - rlcount), cfile);
-                    copyloc = inputpixel;
-                    pixcount = rlcount + 1;
+                        // set up for next packet
+                        continue;
                 }
-            }
+
+                // if zeroth byte, handle as special case
+                if (pixcount == 1) {
+                        rlcount = 0;
+                        copyloc = inputpixel;    /* point to 1st guy in packet */
+                        matchpixel = inputpixel; /* set pointer to pix to match */
+                        pixcount = 2;
+                        inputpixel += 1;
+                        continue;
+                }
+
+                // assembling a packet -- look at next pixel
+
+                // current pixel == match pixel?
+                if (*inputpixel == *matchpixel) {
+                        // establishing a run of enough length to
+                        // save space by doing it
+                        // -- write the non-run length packet
+                        // -- start run-length packet
+
+                        if (++rlcount == rlthresh) {
+                                // close a non-run packet
+
+                                if (pixcount > (rlcount + 1)) {
+                                        // write out length and do not set run flag
+
+                                        ubyte code = (ubyte)(pixcount - 2 - rlthresh);
+                                        cfwrite(&code, 1, 1, cfile);
+
+                                        cfwrite(copyloc, 1, (pixcount - 1 - rlcount), cfile);
+                                        copyloc = inputpixel;
+                                        pixcount = rlcount + 1;
+                                }
+                        }
+                } else {
+                        // no match -- either break a run or continue without one
+                        // if a run exists break it:
+                        // write the bytes in the string (1+1)
+                        // start the next string
+
+                        if (rlcount >= rlthresh) {
+                                ubyte code = (ubyte)(0x80 | rlcount);
+                                cfwrite(&code, 1, 1, cfile);
+                                cfwrite(copyloc, 1, 1, cfile);
+                                pixcount = 1;
+                                continue;
+                        } else {
+                                // not a match and currently not a run
+                                // - save the current pixel
+                                // - reset the run-length flag
+                                rlcount = 0;
+                                matchpixel = inputpixel;
+                        }
+                }
+                pixcount++;
+                inputpixel += 1;
+        } while (inputpixel < (in + bytecount));
+
+        // quit this buffer without loosing any data
+        if (--pixcount >= 1) {
+                ubyte code = ubyte(pixcount - 1);
+
+                // set the run flag if this is a run
+
+                if (rlcount >= rlthresh) {
+                        code |= 0x80;
+                        pixcount = 1;
+                }
+
+                cfwrite(&code, 1, 1, cfile);
+
+                // copy the data into place
+                cfwrite(copyloc, 1, pixcount, cfile);
         }
-        else {
-            // no match -- either break a run or continue without one
-            // if a run exists break it:
-            // write the bytes in the string (1+1)
-            // start the next string
 
-            if (rlcount >= rlthresh) {
-                ubyte code = (ubyte) (0x80 | rlcount);
-                cfwrite (&code, 1, 1, cfile);
-                cfwrite (copyloc, 1, 1, cfile);
-                pixcount = 1;
-                continue;
-            }
-            else {
-                // not a match and currently not a run
-                // - save the current pixel
-                // - reset the run-length flag
-                rlcount = 0;
-                matchpixel = inputpixel;
-            }
-        }
-        pixcount++;
-        inputpixel += 1;
-    } while (inputpixel < (in + bytecount));
-
-    // quit this buffer without loosing any data
-    if (--pixcount >= 1) {
-        ubyte code = ubyte (pixcount - 1);
-
-        // set the run flag if this is a run
-
-        if (rlcount >= rlthresh) {
-            code |= 0x80;
-            pixcount = 1;
-        }
-
-        cfwrite (&code, 1, 1, cfile);
-
-        // copy the data into place
-        cfwrite (copyloc, 1, pixcount, cfile);
-    }
-
-    return param_nelem;
+        return param_nelem;
 }

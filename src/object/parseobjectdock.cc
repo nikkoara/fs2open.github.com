@@ -6,80 +6,89 @@
  * create based on the source.
  */
 
+#include "object/parseobjectdock.hh"
+
 #include "defs.hh"
+
+#include <boost/dynamic_bitset.hpp>
 
 #include "assert/assert.hh"
 #include "math/prng.hh"
 #include "mission/missionparse.hh"
-#include "object/parseobjectdock.hh"
 #include "shared/types.hh"
-
-#include <boost/dynamic_bitset.hpp>
 
 // helper prototypes
 
-void dock_evaluate_tree (
-    p_object* objp, p_dock_function_info* infop,
-    void (*function) (p_object*, p_dock_function_info*),
-    boost::dynamic_bitset< >& visited);
-void dock_dock_docked_children_tree (p_object* objp, p_object* parent_objp);
+void dock_evaluate_tree(
+        p_object *objp, p_dock_function_info *infop,
+        void (*function)(p_object *, p_dock_function_info *),
+        boost::dynamic_bitset<> &visited);
+void dock_dock_docked_children_tree(p_object *objp, p_object *parent_objp);
 
 // management prototypes
 
-void dock_add_instance (p_object* objp, char* dockpoint, p_object* other_objp);
-p_dock_instance* dock_find_instance (p_object* objp, p_object* other_objp);
-p_dock_instance* dock_find_instance (p_object* objp, char* dockpoint);
+void dock_add_instance(p_object *objp, char *dockpoint, p_object *other_objp);
+p_dock_instance *dock_find_instance(p_object *objp, p_object *other_objp);
+p_dock_instance *dock_find_instance(p_object *objp, char *dockpoint);
 
-bool object_is_docked (p_object* objp) { return (objp->dock_list != NULL); }
+bool object_is_docked(p_object *objp) { return (objp->dock_list != NULL); }
 
-p_object* dock_get_first_docked_object (p_object* objp) {
-    // are we docked?
-    if (!object_is_docked (objp)) return NULL;
+p_object *dock_get_first_docked_object(p_object *objp)
+{
+        // are we docked?
+        if (!object_is_docked(objp))
+                return NULL;
 
-    return objp->dock_list->docked_objp;
+        return objp->dock_list->docked_objp;
 }
 
-bool dock_check_docked_one_on_one (p_object* objp) {
-    // we must be docked
-    if (!object_is_docked (objp)) return false;
+bool dock_check_docked_one_on_one(p_object *objp)
+{
+        // we must be docked
+        if (!object_is_docked(objp))
+                return false;
 
-    // our dock list must contain only one object
-    if (objp->dock_list->next != NULL) return false;
+        // our dock list must contain only one object
+        if (objp->dock_list->next != NULL)
+                return false;
 
-    // the other guy's dock list must contain only one object
-    if (dock_get_first_docked_object (objp)->dock_list->next != NULL)
-        return false;
+        // the other guy's dock list must contain only one object
+        if (dock_get_first_docked_object(objp)->dock_list->next != NULL)
+                return false;
 
-    // debug check to make sure that we're docked to each other
-    ASSERT (
-        objp == dock_get_first_docked_object (objp)->dock_list->docked_objp);
+        // debug check to make sure that we're docked to each other
+        ASSERT(
+                objp == dock_get_first_docked_object(objp)->dock_list->docked_objp);
 
-    // success
-    return true;
+        // success
+        return true;
 }
 
-bool dock_check_find_direct_docked_object (
-    p_object* objp, p_object* other_objp) {
-    return (dock_find_instance (objp, other_objp) != NULL);
+bool dock_check_find_direct_docked_object(
+        p_object *objp, p_object *other_objp)
+{
+        return (dock_find_instance(objp, other_objp) != NULL);
 }
 
-p_object* dock_find_object_at_dockpoint (p_object* objp, char* dockpoint) {
-    p_dock_instance* result = dock_find_instance (objp, dockpoint);
+p_object *dock_find_object_at_dockpoint(p_object *objp, char *dockpoint)
+{
+        p_dock_instance *result = dock_find_instance(objp, dockpoint);
 
-    if (result == NULL)
-        return NULL;
-    else
-        return result->docked_objp;
+        if (result == NULL)
+                return NULL;
+        else
+                return result->docked_objp;
 }
 
-char* dock_find_dockpoint_used_by_object (
-    p_object* objp, p_object* other_objp) {
-    p_dock_instance* result = dock_find_instance (objp, other_objp);
+char *dock_find_dockpoint_used_by_object(
+        p_object *objp, p_object *other_objp)
+{
+        p_dock_instance *result = dock_find_instance(objp, other_objp);
 
-    if (result == NULL)
-        return NULL;
-    else
-        return result->dockpoint_used;
+        if (result == NULL)
+                return NULL;
+        else
+                return result->dockpoint_used;
 }
 
 // functions to deal with all docked objects anywhere
@@ -89,110 +98,118 @@ char* dock_find_dockpoint_used_by_object (
 // -----------------------
 
 // evaluate a certain function for all docked objects
-void dock_evaluate_all_docked_objects (
-    p_object* objp, p_dock_function_info* infop,
-    void (*function) (p_object*, p_dock_function_info*)) {
-    ASSERT ((objp != NULL) && (infop != NULL) && (function != NULL));
+void dock_evaluate_all_docked_objects(
+        p_object *objp, p_dock_function_info *infop,
+        void (*function)(p_object *, p_dock_function_info *))
+{
+        ASSERT((objp != NULL) && (infop != NULL) && (function != NULL));
 
-    // not docked?
-    if (!object_is_docked (objp)) {
-        // call the function for just the one object
-        function (objp, infop);
-        return;
-    }
+        // not docked?
+        if (!object_is_docked(objp)) {
+                // call the function for just the one object
+                function(objp, infop);
+                return;
+        }
 
-    // we only have two objects docked
-    if (dock_check_docked_one_on_one (objp)) {
-        // call the function for the first object, and return if instructed
-        function (objp, infop);
-        if (infop->early_return_condition) return;
+        // we only have two objects docked
+        if (dock_check_docked_one_on_one(objp)) {
+                // call the function for the first object, and return if instructed
+                function(objp, infop);
+                if (infop->early_return_condition)
+                        return;
 
-        // call the function for the second object, and return if instructed
-        function (objp->dock_list->docked_objp, infop);
-        if (infop->early_return_condition) return;
-    }
+                // call the function for the second object, and return if instructed
+                function(objp->dock_list->docked_objp, infop);
+                if (infop->early_return_condition)
+                        return;
+        }
 
-    // NOTE - never treat a group of parse objects as a hub... it cuts down on
-    // bugs, and it's not needed because it's not time-critical
+        // NOTE - never treat a group of parse objects as a hub... it cuts down on
+        // bugs, and it's not needed because it's not time-critical
 
-    // we have multiple objects docked and we must treat them as a tree
-    else {
-        boost::dynamic_bitset< > visited (Parse_objects.size ());
-        dock_evaluate_tree (objp, infop, function, visited);
-    }
+        // we have multiple objects docked and we must treat them as a tree
+        else {
+                boost::dynamic_bitset<> visited(Parse_objects.size());
+                dock_evaluate_tree(objp, infop, function, visited);
+        }
 }
 
-void dock_evaluate_tree (
-    p_object* objp, p_dock_function_info* infop,
-    void (*function) (p_object*, p_dock_function_info*),
-    boost::dynamic_bitset< >& visited) {
+void dock_evaluate_tree(
+        p_object *objp, p_dock_function_info *infop,
+        void (*function)(p_object *, p_dock_function_info *),
+        boost::dynamic_bitset<> &visited)
+{
+        // make sure we haven't visited this object already
+        if (visited[POBJ_INDEX(objp)])
+                return;
 
-    // make sure we haven't visited this object already
-    if (visited [POBJ_INDEX (objp)])
-        return;
+        // mark as visited
+        visited[POBJ_INDEX(objp)] = true;
 
-    // mark as visited
-    visited [POBJ_INDEX (objp)] = true;
-
-    // call the function for this object, and return if instructed
-    function (objp, infop);
-
-    if (infop->early_return_condition)
-        return;
-
-    // iterate through all docked objects
-    for (p_dock_instance* ptr = objp->dock_list; ptr; ptr = ptr->next) {
-        dock_evaluate_tree (ptr->docked_objp, infop, function, visited);
+        // call the function for this object, and return if instructed
+        function(objp, infop);
 
         if (infop->early_return_condition)
-            return;
-    }
+                return;
+
+        // iterate through all docked objects
+        for (p_dock_instance *ptr = objp->dock_list; ptr; ptr = ptr->next) {
+                dock_evaluate_tree(ptr->docked_objp, infop, function, visited);
+
+                if (infop->early_return_condition)
+                        return;
+        }
 }
 
 // special-case functions
 // ----------------------
 
-void dock_dock_docked_objects (p_object* objp) {
-    if (!object_is_docked (objp)) return;
+void dock_dock_docked_objects(p_object *objp)
+{
+        if (!object_is_docked(objp))
+                return;
 
-    // has this object (by extension, this group of docked objects) been
-    // handled already?
-    if (objp->flags[Mission::Parse_Object_Flags::Already_handled]) return;
+        // has this object (by extension, this group of docked objects) been
+        // handled already?
+        if (objp->flags[Mission::Parse_Object_Flags::Already_handled])
+                return;
 
-    ASSERT (objp->flags[Mission::Parse_Object_Flags::SF_Dock_leader]);
+        ASSERT(objp->flags[Mission::Parse_Object_Flags::SF_Dock_leader]);
 
-    p_dock_function_info dfi;
+        p_dock_function_info dfi;
 
-    // start a tree with that object as the parent... do NOT use the
-    // überfunction for this, because we must use a tree for the parent
-    // ancestry to work correctly
+        // start a tree with that object as the parent... do NOT use the
+        // überfunction for this, because we must use a tree for the parent
+        // ancestry to work correctly
 
-    // we don't need a bit array because P2_ALREADY_HANDLED takes care of it
+        // we don't need a bit array because P2_ALREADY_HANDLED takes care of it
 
-    // start evaluating the tree, starting with the dock leader
-    dock_dock_docked_children_tree (objp, NULL);
+        // start evaluating the tree, starting with the dock leader
+        dock_dock_docked_children_tree(objp, NULL);
 }
 
-void dock_dock_docked_children_tree (p_object* objp, p_object* parent_objp) {
-    // has this object been handled already?
-    if (objp->flags[Mission::Parse_Object_Flags::Already_handled]) return;
+void dock_dock_docked_children_tree(p_object *objp, p_object *parent_objp)
+{
+        // has this object been handled already?
+        if (objp->flags[Mission::Parse_Object_Flags::Already_handled])
+                return;
 
-    // mark as handled
-    objp->flags.set (Mission::Parse_Object_Flags::Already_handled);
+        // mark as handled
+        objp->flags.set(Mission::Parse_Object_Flags::Already_handled);
 
-    // if parent_objp exists
-    if (parent_objp != NULL) {
-        // dock this object to it
-        parse_dock_one_docked_object (objp, parent_objp);
-    }
+        // if parent_objp exists
+        if (parent_objp != NULL) {
+                // dock this object to it
+                parse_dock_one_docked_object(objp, parent_objp);
+        }
 
-    // iterate through all docked objects
-    for (p_dock_instance* ptr = objp->dock_list; ptr != NULL;
-         ptr = ptr->next) {
-        // start another tree with the docked object as the root and this
-        // object as the parent
-        dock_dock_docked_children_tree (ptr->docked_objp, objp);
-    }
+        // iterate through all docked objects
+        for (p_dock_instance *ptr = objp->dock_list; ptr != NULL;
+             ptr = ptr->next) {
+                // start another tree with the docked object as the root and this
+                // object as the parent
+                dock_dock_docked_children_tree(ptr->docked_objp, objp);
+        }
 }
 // ---------------------------------------------------------------------------------------------------------------
 // end of über code block
@@ -200,78 +217,83 @@ void dock_dock_docked_children_tree (p_object* objp, p_object* parent_objp) {
 
 // dock management functions
 // -------------------------------------------------------------------------------------
-void dock_dock_objects (
-    p_object* objp1, char* dockpoint1, p_object* objp2, char* dockpoint2) {
+void dock_dock_objects(
+        p_object *objp1, char *dockpoint1, p_object *objp2, char *dockpoint2)
+{
 #ifndef NDEBUG
-    if ((dock_find_instance (objp1, objp2) != NULL) ||
-        (dock_find_instance (objp2, objp1) != NULL)) {
-        ASSERTX (0, "Trying to dock an object that's already docked!\n");
-    }
+        if ((dock_find_instance(objp1, objp2) != NULL) || (dock_find_instance(objp2, objp1) != NULL)) {
+                ASSERTX(0, "Trying to dock an object that's already docked!\n");
+        }
 
-    if ((dock_find_instance (objp1, dockpoint1) != NULL) ||
-        (dock_find_instance (objp2, dockpoint2) != NULL)) {
-        ASSERTX (0, "Trying to dock to a dockpoint that's in use!\n");
-    }
+        if ((dock_find_instance(objp1, dockpoint1) != NULL) || (dock_find_instance(objp2, dockpoint2) != NULL)) {
+                ASSERTX(0, "Trying to dock to a dockpoint that's in use!\n");
+        }
 #endif
 
-    // put objects on each others' dock lists
-    dock_add_instance (objp1, dockpoint1, objp2);
-    dock_add_instance (objp2, dockpoint2, objp1);
+        // put objects on each others' dock lists
+        dock_add_instance(objp1, dockpoint1, objp2);
+        dock_add_instance(objp2, dockpoint2, objp1);
 }
 
 // dock list functions
 // -------------------------------------------------------------------------------------------
-void dock_add_instance (
-    p_object* objp, char* dockpoint, p_object* other_objp) {
-    p_dock_instance* item;
+void dock_add_instance(
+        p_object *objp, char *dockpoint, p_object *other_objp)
+{
+        p_dock_instance *item;
 
-    // create item
-    item = (p_dock_instance*)malloc (sizeof (p_dock_instance));
-    strcpy (item->dockpoint_used, dockpoint);
-    item->docked_objp = other_objp;
+        // create item
+        item = (p_dock_instance *)malloc(sizeof(p_dock_instance));
+        strcpy(item->dockpoint_used, dockpoint);
+        item->docked_objp = other_objp;
 
-    // prepend item to existing list
-    item->next = objp->dock_list;
-    objp->dock_list = item;
+        // prepend item to existing list
+        item->next = objp->dock_list;
+        objp->dock_list = item;
 }
 
 // just free the list without worrying about undocking anything
-void dock_free_dock_list (p_object* objp) {
-    while (objp->dock_list != NULL) {
-        p_dock_instance* ptr = objp->dock_list;
-        objp->dock_list = ptr->next;
-        free (ptr);
-    }
+void dock_free_dock_list(p_object *objp)
+{
+        while (objp->dock_list != NULL) {
+                p_dock_instance *ptr = objp->dock_list;
+                objp->dock_list = ptr->next;
+                free(ptr);
+        }
 }
 
-p_dock_instance* dock_find_instance (p_object* objp, p_object* other_objp) {
-    p_dock_instance* ptr = objp->dock_list;
+p_dock_instance *dock_find_instance(p_object *objp, p_object *other_objp)
+{
+        p_dock_instance *ptr = objp->dock_list;
 
-    // iterate until item found
-    while (ptr != NULL) {
-        // if found, return it
-        if (ptr->docked_objp == other_objp) return ptr;
+        // iterate until item found
+        while (ptr != NULL) {
+                // if found, return it
+                if (ptr->docked_objp == other_objp)
+                        return ptr;
 
-        // iterate
-        ptr = ptr->next;
-    }
+                // iterate
+                ptr = ptr->next;
+        }
 
-    // not found
-    return NULL;
+        // not found
+        return NULL;
 }
 
-p_dock_instance* dock_find_instance (p_object* objp, char* dockpoint) {
-    p_dock_instance* ptr = objp->dock_list;
+p_dock_instance *dock_find_instance(p_object *objp, char *dockpoint)
+{
+        p_dock_instance *ptr = objp->dock_list;
 
-    // iterate until item found
-    while (ptr != NULL) {
-        // if found, return it
-        if (!strcmp (ptr->dockpoint_used, dockpoint)) return ptr;
+        // iterate until item found
+        while (ptr != NULL) {
+                // if found, return it
+                if (!strcmp(ptr->dockpoint_used, dockpoint))
+                        return ptr;
 
-        // iterate
-        ptr = ptr->next;
-    }
+                // iterate
+                ptr = ptr->next;
+        }
 
-    // not found
-    return NULL;
+        // not found
+        return NULL;
 }

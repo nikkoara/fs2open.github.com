@@ -22,15 +22,15 @@ namespace joystick {
  * @note Order here is based on SDL bit positions
  */
 enum HatPosition {
-    HAT_CENTERED = -1,
-    HAT_UP = 0,
-    HAT_RIGHT,
-    HAT_DOWN,
-    HAT_LEFT,
-    HAT_RIGHTUP,
-    HAT_RIGHTDOWN,
-    HAT_LEFTUP,
-    HAT_LEFTDOWN
+        HAT_CENTERED = -1,
+        HAT_UP = 0,
+        HAT_RIGHT,
+        HAT_DOWN,
+        HAT_LEFT,
+        HAT_RIGHTUP,
+        HAT_RIGHTDOWN,
+        HAT_LEFTUP,
+        HAT_LEFTDOWN
 };
 
 /**
@@ -41,7 +41,7 @@ enum HatPosition {
  */
 class Joystick {
 public:
-    /**
+        /**
      * @brief Constructs a new joystick instance from a SDL handle
      *
      * This object will take ownership of the passed SDL handle and it will be
@@ -49,61 +49,61 @@ public:
      *
      * @param device_id The SDL device index
      */
-    explicit Joystick (int device_id);
+        explicit Joystick(int device_id);
 
-    /**
+        /**
      * @brief Moves the resources of the other object into @c this
      *
      * @param other A rvalue reference
      */
-    Joystick (Joystick&& other) noexcept;
+        Joystick(Joystick &&other) noexcept;
 
-    /**
+        /**
      * @brief Frees the owned SDL handle
      */
-    ~Joystick ();
+        ~Joystick();
 
-    /**
+        /**
      * @brief Moves the resources of the other object into @c this
      *
      * @param other A rvalue reference to the other object
      */
-    Joystick& operator= (Joystick&& other) noexcept;
+        Joystick &operator=(Joystick &&other) noexcept;
 
-    /**
+        /**
      * @brief Determines if this joystick is still connected to the computer
      *
      * @return @c true if the joystick is attached, @c false otherwise
      */
-    bool isAttached () const;
+        bool isAttached() const;
 
-    /**
+        /**
      * @brief Gets the value of the specified axis
      *
      * @param index The index of the axis, must be in [0, numAxes())
      * @return The axis value, in range [-2^16, 2^16-1]
      */
-    Sint16 getAxis (int index) const;
+        Sint16 getAxis(int index) const;
 
-    /**
+        /**
      * @brief Determines if this button is currently pressed
      *
      * @param index The index of the button, must be in [0, numButtons())
      *
      * @return @c true if the button is currently pressed
      */
-    bool isButtonDown (int index) const;
+        bool isButtonDown(int index) const;
 
-    /**
+        /**
      * @brief Gets the time the button has been pressed
      *
      * @param index The index of the button, must be in [0, numButtons())
      *
      * @return How long (in seconds) the button has been pressed.
      */
-    float getButtonDownTime (int index) const;
+        float getButtonDownTime(int index) const;
 
-    /**
+        /**
      * @brief Times the specified button has been pressed since the last reset
      * @param index The index of the button, must be in [0, numButtons())
      * @param reset @c true to reset the count
@@ -112,23 +112,23 @@ public:
      * @warning This function may be removed in the future, it's only here for
      * compatibility with the current code base.
      */
-    int getButtonDownCount (int index, bool reset);
+        int getButtonDownCount(int index, bool reset);
 
-    /**
+        /**
      * @brief Gets the relative ball movement
      * @param index The index of the ball, must be in [0, numBalls())
      * @return The @c x and @c y movement of the ball
      */
-    coord2d getBall (int index) const;
+        coord2d getBall(int index) const;
 
-    /**
+        /**
      * @brief Gets the current position of the hat.
      * @param index The index of the hat to query, must be in [0, numHats())
      * @return The hat position
      */
-    HatPosition getHatPosition (int index) const;
+        HatPosition getHatPosition(int index) const;
 
-    /**
+        /**
      * @brief Gets the down time of the given hat and position
      * @param[in] index The index of the hat to query, must be in [0,
      * numHats())
@@ -140,9 +140,9 @@ public:
      * @returns The time, in seconds, that the hat has been active in that
      * position
      */
-    float getHatDownTime (int index, HatPosition pos, bool ext) const;
+        float getHatDownTime(int index, HatPosition pos, bool ext) const;
 
-    /**
+        /**
      * @brief Times the specified button has been pressed since the last reset
      * @param[in] index The index of the button, must be in [0, numHats())
      * @param[in] pos The position to query, must be in [0, JOY_NUM_HAT_POS)
@@ -154,136 +154,136 @@ public:
      * @warning This function may be removed in the future, it's only here for
      * compatibility with the current code base.
      */
-    int getHatDownCount (int index, HatPosition pos, bool ext, bool reset);
+        int getHatDownCount(int index, HatPosition pos, bool ext, bool reset);
 
-    /**
+        /**
      * @brief Gets the number of axes on this joystick
      * @return The number of axes
      */
-    int numAxes () const;
+        int numAxes() const;
 
-    /**
+        /**
      * @brief Gets the number of balls on this joystick
      * @return The number of balls
      */
-    int numBalls () const;
+        int numBalls() const;
 
-    /**
+        /**
      * @brief Gets the number of buttons on this joystick
      * @return The number of buttons
      */
-    int numButtons () const;
+        int numButtons() const;
 
-    /**
+        /**
      * @brief Gets the number of hats on this joystick
      * @return The number of hats
      */
-    int numHats () const;
+        int numHats() const;
 
-    /**
+        /**
      * @brief Gets a globally unique identifier of this joystick
      * This is useful for identifying a joystick if it has been disconnected at
      * some point
      * @return The string representation of the GUID
      */
-    std::string getGUID () const;
+        std::string getGUID() const;
 
-    /**
+        /**
      * @brief Gets the name of the joystick
      * @return The name
      */
-    std::string getName () const;
+        std::string getName() const;
 
-    /**
+        /**
      * @brief Gets the unique instance ID of the joystick
      * @return The instance ID
      */
-    SDL_JoystickID getID () const;
+        SDL_JoystickID getID() const;
 
-    /**
+        /**
      * @brief Gets the device index of this joystick
      * @return The device index
      */
-    int getDeviceId () const;
+        int getDeviceId() const;
 
-    /**
+        /**
      * @brief The SDL joystick handle
      * @return The handle
      */
-    SDL_Joystick* getDevice ();
+        SDL_Joystick *getDevice();
 
-    /**
+        /**
      * @brief Handles a SDL joystick event
      * @param evt The event to handle
      *
      * @note Only for internal use, don't call externally
      */
-    void handleJoyEvent (const SDL_Event& evt);
+        void handleJoyEvent(const SDL_Event &evt);
 
-    void printInfo ();
+        void printInfo();
 
 private:
-    Joystick (const Joystick&);
-    Joystick& operator= (const Joystick&);
+        Joystick(const Joystick &);
+        Joystick &operator=(const Joystick &);
 
-    /**
+        /**
      * @brief Fills internal array
      */
-    void fillValues ();
+        void fillValues();
 
-    void handleAxisEvent (const SDL_JoyAxisEvent& evt);
-    void handleBallEvent (const SDL_JoyBallEvent& evt);
-    void handleButtonEvent (const SDL_JoyButtonEvent& evt);
-    void handleHatEvent (const SDL_JoyHatEvent& evt);
+        void handleAxisEvent(const SDL_JoyAxisEvent &evt);
+        void handleBallEvent(const SDL_JoyBallEvent &evt);
+        void handleButtonEvent(const SDL_JoyButtonEvent &evt);
+        void handleHatEvent(const SDL_JoyHatEvent &evt);
 
-    int _device_id;          //!< The SDL device index
-    SDL_Joystick* _joystick; //!< The SDL joystick handle
+        int _device_id;          //!< The SDL device index
+        SDL_Joystick *_joystick; //!< The SDL joystick handle
 
-    std::string _guidStr; //!< The GUID string
-    std::string _name;    //!< The joystick name
+        std::string _guidStr; //!< The GUID string
+        std::string _name;    //!< The joystick name
 
-    SDL_JoystickID _id; //!< The instance ID
+        SDL_JoystickID _id; //!< The instance ID
 
-    std::vector< Sint16 > _axisValues;  //!< The current axes values
-    std::vector< coord2d > _ballValues; //!< The ball values
+        std::vector< Sint16 > _axisValues;  //!< The current axes values
+        std::vector< coord2d > _ballValues; //!< The ball values
 
-    struct button_info {
-        int DownTimestamp; //!< The timestamp since when the button is pressed,
-                           //!< -1 if not pressed
-        int DownCount;     //!< The number of times the button was pressed
-    };
+        struct button_info {
+                int DownTimestamp; //!< The timestamp since when the button is pressed,
+                                   //!< -1 if not pressed
+                int DownCount;     //!< The number of times the button was pressed
+        };
 
-    std::vector< button_info > _button;
+        std::vector< button_info > _button;
 
-    struct hat_info {
-        HatPosition Value; //!< The current hat position
+        struct hat_info {
+                HatPosition Value; //!< The current hat position
 
-        int DownTimestamp4[4]; //!< The timestamp when each 4-hat position was
-                               //!< last hit, -1 if inactive.
-        int DownTimestamp8[8]; //!< The timestamp when each 8-hat posision was
-                               //!< last hit, -1 if inactive.
+                int DownTimestamp4[4]; //!< The timestamp when each 4-hat position was
+                                       //!< last hit, -1 if inactive.
+                int DownTimestamp8[8]; //!< The timestamp when each 8-hat posision was
+                                       //!< last hit, -1 if inactive.
 
-        int DownCount4[4]; //!< The number of times each 4-hat position has
-                           //!< been hit since we last checked.
-        int DownCount8[8]; //!< The number of times each 8-hat position has
-                           //!< been hit since we last checked.
-    };
+                int DownCount4[4]; //!< The number of times each 4-hat position has
+                                   //!< been hit since we last checked.
+                int DownCount8[8]; //!< The number of times each 8-hat position has
+                                   //!< been hit since we last checked.
+        };
 
-    std::vector< hat_info > _hat;
+        std::vector< hat_info > _hat;
 };
 
 /**
  * @brief Initializes the joystick subsystem
  * @return @c true when successfully initialized
  */
-bool init ();
+bool init();
 
 /**
  * @brief Gets number of connected joysticks
  * This value can change if new devices are connected to the system
  * @return The number of joysticks
  */
-size_t getJoystickCount ();
+size_t getJoystickCount();
 
 /**
  * @brief Gets the joystick with the specified index
@@ -292,7 +292,7 @@ size_t getJoystickCount ();
  * @param index The index, must be in range [0, getJoystickCount())
  * @return The Joystick pointer, the pointer is owned by the joystick subsystem
  */
-Joystick* getJoystick (size_t index);
+Joystick *getJoystick(size_t index);
 
 /**
  * @brief Gets the primary joystick
@@ -301,26 +301,26 @@ Joystick* getJoystick (size_t index);
  * @warning This function may be removed in the future when multi-joystick
  * support is implemented
  */
-Joystick* getCurrentJoystick ();
+Joystick *getCurrentJoystick();
 
 /**
  * @brief Frees resources of the joystick subsystem
  */
-void shutdown ();
+void shutdown();
 
 struct JoystickInformation {
-    std::string name;
-    std::string guid;
+        std::string name;
+        std::string guid;
 
-    uint32_t num_axes;
-    uint32_t num_balls;
-    uint32_t num_buttons;
-    uint32_t num_hats;
+        uint32_t num_axes;
+        uint32_t num_balls;
+        uint32_t num_buttons;
+        uint32_t num_hats;
 
-    bool is_haptic;
+        bool is_haptic;
 };
 
-std::vector< JoystickInformation > getJoystickInformations ();
+std::vector< JoystickInformation > getJoystickInformations();
 } // namespace joystick
 } // namespace io
 
@@ -331,12 +331,12 @@ const int JOY_AXIS_MIN = 0;
 const int JOY_AXIS_CENTER = 32768;
 const int JOY_AXIS_MAX = 65536;
 
-int joystick_read_raw_axis (int num_axes, int* axis);
+int joystick_read_raw_axis(int num_axes, int *axis);
 
-float joy_down_time (int btn);
+float joy_down_time(int btn);
 
-int joy_down_count (int btn, int reset_count);
+int joy_down_count(int btn, int reset_count);
 
-int joy_down (int btn);
+int joy_down(int btn);
 
 #endif // FREESPACE2_IO_JOY_HH

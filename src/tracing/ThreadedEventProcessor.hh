@@ -5,12 +5,12 @@
 
 #include "defs.hh"
 
-#include "tracing/tracing.hh"
-
 #include <thread>
 
-#include <boost/thread/sync_bounded_queue.hpp>
 #include <boost/thread/concurrent_queues/queue_op_status.hpp>
+#include <boost/thread/sync_bounded_queue.hpp>
+
+#include "tracing/tracing.hh"
 
 /** @file
  *  @ingroup tracing
@@ -37,51 +37,52 @@ namespace tracing {
  */
 template< class Processor, size_t N = 200 >
 struct ThreadedEventProcessor {
-    template< typename... Params >
-    explicit ThreadedEventProcessor (Params&&... params)
-        : q_ (N),
-          w_ (&ThreadedEventProcessor< Processor >::workerThread, this),
-          p_ (std::forward< Params > (params)...) {}
+        template< typename... Params >
+        explicit ThreadedEventProcessor(Params &&... params)
+                : q_(N),
+                  w_(&ThreadedEventProcessor< Processor >::workerThread, this),
+                  p_(std::forward< Params >(params)...) { }
 
-    ~ThreadedEventProcessor () {
-        q_.close ();
-        w_.join ();
-    }
-
-    void processEvent (const trace_event* event) {
-        using namespace boost::concurrent;
-
-        try {
-            q_.wait_push_back (*event);
+        ~ThreadedEventProcessor()
+        {
+                q_.close();
+                w_.join();
         }
-        catch (const sync_queue_is_closed&) {
-            WARNINGF (LOCATION,"Stream queue was closed in processEvent! This should not be possible...");
+
+        void processEvent(const trace_event *event)
+        {
+                using namespace boost::concurrent;
+
+                try {
+                        q_.wait_push_back(*event);
+                } catch (const sync_queue_is_closed &) {
+                        WARNINGF(LOCATION, "Stream queue was closed in processEvent! This should not be possible...");
+                }
         }
-    }
 
 private:
-    void workerThread () {
-        using namespace boost;
-        using boost::concurrent::sync_queue_is_closed;
+        void workerThread()
+        {
+                using namespace boost;
+                using boost::concurrent::sync_queue_is_closed;
 
-        while (!q_.closed ()) {
-            try {
-                trace_event evt;
+                while (!q_.closed()) {
+                        try {
+                                trace_event evt;
 
-                if (queue_op_status::success != q_.wait_pull_front (evt))
-                    break;
+                                if (queue_op_status::success != q_.wait_pull_front(evt))
+                                        break;
 
-                p_.processEvent (&evt);
-            }
-            catch (const sync_queue_is_closed&) {
-                break;
-            }
+                                p_.processEvent(&evt);
+                        } catch (const sync_queue_is_closed &) {
+                                break;
+                        }
+                }
         }
-    }
 
-    boost::sync_bounded_queue< trace_event > q_;
-    std::thread w_;
-    Processor p_;
+        boost::sync_bounded_queue< trace_event > q_;
+        std::thread w_;
+        Processor p_;
 };
 
 } // namespace tracing

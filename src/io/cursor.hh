@@ -7,9 +7,9 @@
 
 #include <SDL_mouse.h>
 
-#include "cmdline/cmdline.hh"
-
 #include <memory>
+
+#include "cmdline/cmdline.hh"
 
 namespace io {
 namespace mouse {
@@ -21,65 +21,65 @@ namespace mouse {
  */
 class Cursor {
 private:
-    std::vector< SDL_Cursor* > mAnimationFrames; //!< The individual frames
+        std::vector< SDL_Cursor * > mAnimationFrames; //!< The individual frames
 
-    int mBitmapHandle; //!< The bitmap of this cursor
+        int mBitmapHandle; //!< The bitmap of this cursor
 
-    int mBeginTimeStamp; //!< The timestamp when the animation was started,
-                         //!< unused when not animated
-    size_t mLastFrame;   //!< The last frame which was set
+        int mBeginTimeStamp; //!< The timestamp when the animation was started,
+                             //!< unused when not animated
+        size_t mLastFrame;   //!< The last frame which was set
 
-    Cursor (const Cursor&);            // Not implemented
-    Cursor& operator= (const Cursor&); // Not implemented
+        Cursor(const Cursor &);            // Not implemented
+        Cursor &operator=(const Cursor &); // Not implemented
 public:
-    /**
+        /**
      * @brief Default constructor
      * @param bitmap The bitmap handle of the cursor. The cursor takes
      * ownership over this handle
      */
-    explicit Cursor (int bitmap)
-        : mBitmapHandle (bitmap), mBeginTimeStamp (-1),
-          mLastFrame (static_cast< size_t > (-1)) {}
+        explicit Cursor(int bitmap)
+                : mBitmapHandle(bitmap), mBeginTimeStamp(-1),
+                  mLastFrame(static_cast< size_t >(-1)) { }
 
-    /**
+        /**
      * @brief Move constructor
      *
      * Transfers SDL resources to this newly constructed object
      */
-    Cursor (Cursor&& other) noexcept;
+        Cursor(Cursor &&other) noexcept;
 
-    /**
+        /**
      * @brief Move operator
      *
      * Transfers SDL resources to this object
      */
-    Cursor& operator= (Cursor&& other) noexcept;
+        Cursor &operator=(Cursor &&other) noexcept;
 
-    /**
+        /**
      * @brief Cursor destructor
      *
      * Frees the allocated SDL cursors
      */
-    ~Cursor ();
+        ~Cursor();
 
-    /**
+        /**
      * @brief Adds an animation frame
      *
      * @param frame The cursor frame to add
      */
-    void addFrame (SDL_Cursor* frame);
+        void addFrame(SDL_Cursor *frame);
 
-    /**
+        /**
      * @brief Called to enable the cursor
      * Either this function sets the cursor directly, or initializes values to
      * #setCurrentFrame() works correctly
      */
-    void enable ();
+        void enable();
 
-    /**
+        /**
      * @brief Called to set the correct frame
      */
-    void setCurrentFrame ();
+        void setCurrentFrame();
 };
 
 /**
@@ -87,30 +87,30 @@ public:
  */
 class CursorManager {
 private:
-    static CursorManager* mSingleton; //!< The singleton manager
+        static CursorManager *mSingleton; //!< The singleton manager
 
-    std::vector< std::unique_ptr< Cursor > >
-        mLoadedCursors; //!< A list of loaded cursors
+        std::vector< std::unique_ptr< Cursor > >
+                mLoadedCursors; //!< A list of loaded cursors
 
-    Cursor* mCurrentCursor; //!< The current cursor
+        Cursor *mCurrentCursor; //!< The current cursor
 
-    std::vector< std::pair< bool, bool > >
-        mStatusStack; //!< Contains the stack of saved mouse statuses
+        std::vector< std::pair< bool, bool > >
+                mStatusStack; //!< Contains the stack of saved mouse statuses
 
-    /**
+        /**
      * @brief Default constructor
      *
      * @note This class should not be instantiated outside from this module
      */
-    CursorManager ();
+        CursorManager();
 
 public:
-    /**
+        /**
      * @brief Releases the cursor resources
      */
-    ~CursorManager ();
+        ~CursorManager();
 
-    /**
+        /**
      * @brief Loads a cursor
      *
      * Loads the specified file name as a cursor, by default this will try to
@@ -120,24 +120,24 @@ public:
      * @param animated @c true to also load animated images
      * @return The cursor or @c NULL if the process failed
      */
-    Cursor* loadCursor (const char* fileName, bool animated = true);
+        Cursor *loadCursor(const char *fileName, bool animated = true);
 
-    /**
+        /**
      * @brief Loads a cursor from a bitmap handle
      * The returned cursor takes ownership over the passed handle.
      *
      * @param bitmapHandle The bitmap handle, must be a valid handle
      * @return The new cursor
      */
-    Cursor* loadFromBitmap (int bitmapHandle);
+        Cursor *loadFromBitmap(int bitmapHandle);
 
-    /**
+        /**
      * @brief Sets the current cursor
      * @param cursor The cursor instance to be set, may not be @c NULL
      */
-    void setCurrentCursor (Cursor* cursor);
+        void setCurrentCursor(Cursor *cursor);
 
-    /**
+        /**
      * @brief Show or hide the cursor.
      *
      * Optionally @c grab may be specified to grab or not grab the mouse when
@@ -146,53 +146,53 @@ public:
      * @param show @c true to show @c false to hide
      * @param grab @c true to grab the mouse @c false to disable grabbing
      */
-    void showCursor (bool show, bool grab = false);
+        void showCursor(bool show, bool grab = false);
 
-    /**
+        /**
      * @brief Specifies if the cursor is shown
      * @return @c true if shown ,@c false otherwise
      */
-    bool isCursorShown () { return mStatusStack.back ().first; }
+        bool isCursorShown() { return mStatusStack.back().first; }
 
-    /**
+        /**
      * @brief Gets the current cursor
      * @return The current cursor instance
      */
-    Cursor* getCurrentCursor () { return mCurrentCursor; }
+        Cursor *getCurrentCursor() { return mCurrentCursor; }
 
-    /**
+        /**
      * @brief Pushes the current status onto the stack as a new entry
      */
-    void pushStatus ();
+        void pushStatus();
 
-    /**
+        /**
      * @brief Removes the top status from the stack and restores the previous
      * @returns The removed state
      */
-    std::pair< bool, bool > popStatus ();
+        std::pair< bool, bool > popStatus();
 
 public:
-    /**
+        /**
      * @brief Gets the global CursorManager
      * @return The CursorManager
      */
-    static CursorManager* get () { return mSingleton; }
+        static CursorManager *get() { return mSingleton; }
 
-    /**
+        /**
      * @brief Initializes the Cursor system
      */
-    static void init ();
+        static void init();
 
-    /**
+        /**
      * @brief Do a cursor frame
      * This is needed for animated cursors
      */
-    static void doFrame ();
+        static void doFrame();
 
-    /**
+        /**
      * @brief Releases cursor resources
      */
-    static void shutdown ();
+        static void shutdown();
 };
 } // namespace mouse
 } // namespace io

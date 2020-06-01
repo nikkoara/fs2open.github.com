@@ -24,67 +24,67 @@ namespace tracing {
 /**
  * @brief Process if used for GPU events
  */
-const std::int64_t GPU_PID = std::numeric_limits< std::int64_t >::min ();
+const std::int64_t GPU_PID = std::numeric_limits< std::int64_t >::min();
 
 /**
  * @brief Possible types of events
  */
 enum class EventType {
-    Invalid,
+        Invalid,
 
-    Complete,
-    Begin,
-    End,
+        Complete,
+        Begin,
+        End,
 
-    AsyncBegin,
-    AsyncStep,
-    AsyncEnd,
+        AsyncBegin,
+        AsyncStep,
+        AsyncEnd,
 
-    Counter
+        Counter
 };
 
 /**
  * @brief Data of a trace event
  */
 struct trace_event {
-    const Category* category = nullptr;
-    const Scope* scope = nullptr;
-    EventType type = EventType::Invalid;
+        const Category *category = nullptr;
+        const Scope *scope = nullptr;
+        EventType type = EventType::Invalid;
 
-    std::uint64_t timestamp = 0;
-    std::uint64_t duration = 0;
+        std::uint64_t timestamp = 0;
+        std::uint64_t duration = 0;
 
-    std::uint64_t event_id = 0;
-    std::uint64_t end_event_id = 0;
+        std::uint64_t event_id = 0;
+        std::uint64_t end_event_id = 0;
 
-    std::int64_t tid = -1;
-    std::int64_t pid = -1;
+        std::int64_t tid = -1;
+        std::int64_t pid = -1;
 
-    float value = -1.f;
+        float value = -1.f;
 };
 
 /**
  * @brief Initializes the tracing subsystem
  */
-void init ();
+void init();
 
 /**
  * @brief Should be called regularly to process GPU events
  */
-void process_events ();
+void process_events();
 
-void frame_profile_process_frame ();
+void frame_profile_process_frame();
 
 /**
  * @brief Gets the output of the frame profiler.
  * @return The frame profiler output
  */
-std::string get_frame_profile_output ();
+std::string get_frame_profile_output();
 
 /**
  * @brief Deinitializes the tracing subsystem
  */
-void shutdown ();
+void shutdown();
 
 namespace complete {
 /**
@@ -92,7 +92,7 @@ namespace complete {
  * @param category The category this event belongs to
  * @param evt The event which hold the data
  */
-void start (const Category& category, trace_event* evt);
+void start(const Category &category, trace_event *evt);
 
 /**
  * @brief Ends and submits a complete event
@@ -101,19 +101,20 @@ void start (const Category& category, trace_event* evt);
  *
  * @param evt The event to submit
  */
-void end (trace_event* evt);
+void end(trace_event *evt);
 
 /**
  * @brief Class for tracing a scope with a complete event
  */
 class ScopedCompleteEvent {
-    trace_event _evt;
+        trace_event _evt;
 
 public:
-    explicit ScopedCompleteEvent (const Category& category) {
-        start (category, &_evt);
-    }
-    ~ScopedCompleteEvent () { end (&_evt); }
+        explicit ScopedCompleteEvent(const Category &category)
+        {
+                start(category, &_evt);
+        }
+        ~ScopedCompleteEvent() { end(&_evt); }
 };
 } // namespace complete
 
@@ -126,7 +127,7 @@ namespace async {
  * @param category The category of the event
  * @param async_scope The scope of the event
  */
-void begin (const Category& category, const Scope& async_scope);
+void begin(const Category &category, const Scope &async_scope);
 
 /**
  * @brief Steps an asynchronous event
@@ -136,7 +137,7 @@ void begin (const Category& category, const Scope& async_scope);
  * @param category The category of the event
  * @param async_scope The scope of the event
  */
-void step (const Category& category, const Scope& async_scope);
+void step(const Category &category, const Scope &async_scope);
 
 /**
  * @brief Ends an asynchronous event
@@ -146,7 +147,7 @@ void step (const Category& category, const Scope& async_scope);
  * @param category The category of the event
  * @param async_scope The scope of the event
  */
-void end (const Category& category, const Scope& async_scope);
+void end(const Category &category, const Scope &async_scope);
 } // namespace async
 
 namespace counter {
@@ -156,14 +157,14 @@ namespace counter {
  * @param category The event category
  * @param value The new value of the category
  */
-void value (const Category& category, float value);
+void value(const Category &category, float value);
 
 } // namespace counter
 
 } // namespace tracing
 
-#define TRACE_SCOPE(category)                            \
-    ::tracing::complete::ScopedCompleteEvent FS2_PASTE ( \
-        complete_trace_scope, __LINE__) (category)
+#define TRACE_SCOPE(category)                               \
+        ::tracing::complete::ScopedCompleteEvent FS2_PASTE( \
+                complete_trace_scope, __LINE__)(category)
 
 #endif // FREESPACE2_TRACING_TRACING_HH

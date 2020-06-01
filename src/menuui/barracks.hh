@@ -8,12 +8,12 @@
 extern int Barracks_overlay_id;
 
 // initialize the barracks
-void barracks_init ();
+void barracks_init();
 
 // do a frame for the barrracks
-void barracks_do_frame (float frametime);
+void barracks_do_frame(float frametime);
 
 // close the barracks
-void barracks_close ();
+void barracks_close();
 
 #endif // FREESPACE2_MENUUI_BARRACKS_HH

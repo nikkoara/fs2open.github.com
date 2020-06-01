@@ -18,18 +18,18 @@ namespace graphics {
  * added to this class.
  */
 class line_draw_list {
-    struct line_vertex {
-        vec2d position;
-        vec4 color;
-    };
-    std::vector< line_vertex > _line_vertices;
+        struct line_vertex {
+                vec2d position;
+                vec4 color;
+        };
+        std::vector< line_vertex > _line_vertices;
 
-    void add_vertex (int x, int y, int resize_mode, const color* color);
+        void add_vertex(int x, int y, int resize_mode, const color *color);
 
 public:
-    line_draw_list ();
+        line_draw_list();
 
-    /**
+        /**
      * @brief Adds a line to this draw list. The coordinates are screen pixel
      * positions.
      * @param x1 Start X-Coordinate of the line
@@ -38,10 +38,10 @@ public:
      * @param y2 End Y-Coordinate of the line
      * @param resize_mode The resize mode of the screen position
      */
-    void add_line (
-        int x1, int y1, int x2, int y2, int resize_mode = GR_RESIZE_FULL);
+        void add_line(
+                int x1, int y1, int x2, int y2, int resize_mode = GR_RESIZE_FULL);
 
-    /**
+        /**
      * @brief Adds a gradient to this draw list. The coordinates are screen
      * pixel positions.
      *
@@ -54,16 +54,16 @@ public:
      * @param y2 End Y-Coordinate of the line
      * @param resize_mode The resize mode of the screen position
      */
-    void add_gradient (
-        int x1, int y1, int x2, int y2, int resize_mode = GR_RESIZE_FULL);
+        void add_gradient(
+                int x1, int y1, int x2, int y2, int resize_mode = GR_RESIZE_FULL);
 
-    /**
+        /**
      * @brief Flushes the stored line draws
      *
      * This will clear al previously drawn line segments so after this is
      * called the instance can be filled with new line draws.
      */
-    void flush ();
+        void flush();
 };
 
 } // namespace graphics

@@ -5,23 +5,23 @@
 
 #include "defs.hh"
 
-#include "cutscene/ffmpeg/internal.hh"
 #include "cutscene/ffmpeg/FFMPEGDecoder.hh"
+#include "cutscene/ffmpeg/internal.hh"
 
 namespace cutscene {
 namespace ffmpeg {
 
 class SubtitleDecoder : public FFMPEGStreamDecoder< SubtitleFrame > {
 public:
-    explicit SubtitleDecoder (DecoderStatus* status);
+        explicit SubtitleDecoder(DecoderStatus *status);
 
-    ~SubtitleDecoder () override;
+        ~SubtitleDecoder() override;
 
-    void decodePacket (AVPacket* packet) override;
+        void decodePacket(AVPacket *packet) override;
 
-    void finishDecoding () override;
-    void pushSubtitleFrame (AVPacket* subtitle, AVSubtitle* pSubtitle);
-    void flushBuffers () override;
+        void finishDecoding() override;
+        void pushSubtitleFrame(AVPacket *subtitle, AVSubtitle *pSubtitle);
+        void flushBuffers() override;
 };
 
 } // namespace ffmpeg

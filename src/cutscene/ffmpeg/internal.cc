@@ -4,44 +4,45 @@
 
 namespace cutscene {
 namespace ffmpeg {
-DecoderStatus::DecoderStatus () {}
+DecoderStatus::DecoderStatus() { }
 
-DecoderStatus::~DecoderStatus () {
-    videoStreamIndex = -1;
-    videoStream = nullptr;
-    videoCodec = nullptr;
+DecoderStatus::~DecoderStatus()
+{
+        videoStreamIndex = -1;
+        videoStream = nullptr;
+        videoCodec = nullptr;
 
-    if (videoCodecCtx != nullptr) {
-        avcodec_close (videoCodecCtx);
+        if (videoCodecCtx != nullptr) {
+                avcodec_close(videoCodecCtx);
 #if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(57, 24, 255)
-        avcodec_free_context (&videoCodecCtx);
+                avcodec_free_context(&videoCodecCtx);
 #endif
-        videoCodecCtx = nullptr;
-    }
+                videoCodecCtx = nullptr;
+        }
 
-    audioStreamIndex = -1;
-    audioStream = nullptr;
-    audioCodec = nullptr;
+        audioStreamIndex = -1;
+        audioStream = nullptr;
+        audioCodec = nullptr;
 
-    if (audioCodecCtx != nullptr) {
-        avcodec_close (audioCodecCtx);
+        if (audioCodecCtx != nullptr) {
+                avcodec_close(audioCodecCtx);
 #if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(57, 24, 255)
-        avcodec_free_context (&audioCodecCtx);
+                avcodec_free_context(&audioCodecCtx);
 #endif
-        audioCodecCtx = nullptr;
-    }
+                audioCodecCtx = nullptr;
+        }
 
-    subtitleStreamIndex = -1;
-    subtitleStream = nullptr;
-    subtitleCodec = nullptr;
+        subtitleStreamIndex = -1;
+        subtitleStream = nullptr;
+        subtitleCodec = nullptr;
 
-    if (subtitleCodecCtx != nullptr) {
-        avcodec_close (subtitleCodecCtx);
+        if (subtitleCodecCtx != nullptr) {
+                avcodec_close(subtitleCodecCtx);
 #if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(57, 24, 255)
-        avcodec_free_context (&subtitleCodecCtx);
+                avcodec_free_context(&subtitleCodecCtx);
 #endif
-        subtitleCodecCtx = nullptr;
-    }
+                subtitleCodecCtx = nullptr;
+        }
 }
 
 } // namespace ffmpeg

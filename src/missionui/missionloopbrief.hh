@@ -14,12 +14,12 @@
 //
 
 // init
-void loop_brief_init ();
+void loop_brief_init();
 
 // do
-void loop_brief_do (float frametime);
+void loop_brief_do(float frametime);
 
 // close
-void loop_brief_close ();
+void loop_brief_close();
 
 #endif // FREESPACE2_MISSIONUI_MISSIONLOOPBRIEF_HH

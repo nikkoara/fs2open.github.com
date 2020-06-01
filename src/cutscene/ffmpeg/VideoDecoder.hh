@@ -5,30 +5,30 @@
 
 #include "defs.hh"
 
-#include "cutscene/ffmpeg/internal.hh"
 #include "cutscene/ffmpeg/FFMPEGDecoder.hh"
+#include "cutscene/ffmpeg/internal.hh"
 
 namespace cutscene {
 namespace ffmpeg {
 class VideoDecoder : public FFMPEGStreamDecoder< VideoFrame > {
 private:
-    int m_frameId;
-    SwsContext* m_swsCtx;
-    AVPixelFormat m_destinationFormat;
+        int m_frameId;
+        SwsContext *m_swsCtx;
+        AVPixelFormat m_destinationFormat;
 
-    void convertAndPushPicture (const AVFrame* frame);
+        void convertAndPushPicture(const AVFrame *frame);
 
 public:
-    explicit VideoDecoder (
-        DecoderStatus* status, AVPixelFormat destination_fmt);
+        explicit VideoDecoder(
+                DecoderStatus *status, AVPixelFormat destination_fmt);
 
-    ~VideoDecoder () override;
+        ~VideoDecoder() override;
 
-    void decodePacket (AVPacket* packet) override;
+        void decodePacket(AVPacket *packet) override;
 
-    void finishDecoding () override;
+        void finishDecoding() override;
 
-    void flushBuffers () override;
+        void flushBuffers() override;
 };
 } // namespace ffmpeg
 } // namespace cutscene

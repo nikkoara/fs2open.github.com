@@ -22,13 +22,13 @@ namespace tracing {
  * longer time or that can happen asynchronously.
  */
 class Scope {
-    const char* _name;
+        const char *_name;
 
 public:
-    explicit Scope (const char* name);
-    ~Scope ();
+        explicit Scope(const char *name);
+        ~Scope();
 
-    const char* getName () const { return _name; }
+        const char *getName() const { return _name; }
 };
 
 extern Scope MainFrameScope;

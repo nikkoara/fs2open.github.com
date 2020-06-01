@@ -5,8 +5,8 @@
 
 #include "defs.hh"
 
-#include "graphics/2d.hh"
 #include "UniformAligner.hh"
+#include "graphics/2d.hh"
 
 namespace graphics {
 namespace util {
@@ -20,47 +20,47 @@ namespace util {
  * rendering operations.
  */
 class UniformBuffer {
-    int _buffer_obj = -1;
+        int _buffer_obj = -1;
 
-    UniformAligner _aligner;
+        UniformAligner _aligner;
 
-    gr_sync _sync_obj = nullptr;
+        gr_sync _sync_obj = nullptr;
 
 public:
-    UniformBuffer (size_t element_size, size_t header_size = 0);
-    ~UniformBuffer ();
+        UniformBuffer(size_t element_size, size_t header_size = 0);
+        ~UniformBuffer();
 
-    UniformBuffer (const UniformBuffer&) = delete;
-    UniformBuffer& operator= (const UniformBuffer&) = delete;
+        UniformBuffer(const UniformBuffer &) = delete;
+        UniformBuffer &operator=(const UniformBuffer &) = delete;
 
-    UniformBuffer (UniformBuffer&& other) noexcept;
-    UniformBuffer& operator= (UniformBuffer&& other) noexcept;
+        UniformBuffer(UniformBuffer &&other) noexcept;
+        UniformBuffer &operator=(UniformBuffer &&other) noexcept;
 
-    inline UniformAligner& aligner () { return _aligner; }
+        inline UniformAligner &aligner() { return _aligner; }
 
-    inline int bufferHandle () { return _buffer_obj; }
+        inline int bufferHandle() { return _buffer_obj; }
 
-    /**
+        /**
      * @brief Submits the data from the uniform aligner to the underlying
      * buffer object.
      */
-    void submitData ();
+        void submitData();
 
-    /**
+        /**
      * @brief Signal that the code is done using this uniform buffer
      *
      * This is used for synchronizing access to this buffer. After this call is
      * finished and until the data has been consumed by the GPU, this buffer is
      * considered to the "in use".
      */
-    void finished ();
+        void finished();
 
-    /**
+        /**
      * @brief Determines if the buffer is still in use by the GPU
      * @return @c true if the GPU may still be using this buffer, @c false if
      * not
      */
-    bool isInUse ();
+        bool isInUse();
 };
 
 } // namespace util

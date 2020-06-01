@@ -14,12 +14,12 @@
 //
 
 // initialize the temporary main hall
-void mht_init ();
+void mht_init();
 
 // do a frame for the main hall
-void mht_do ();
+void mht_do();
 
 // close the temporary main hall
-void mht_close ();
+void mht_close();
 
 #endif // FREESPACE2_MENUUI_MAINHALLTEMP_HH

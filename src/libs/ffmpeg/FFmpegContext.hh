@@ -5,12 +5,11 @@
 
 #include "defs.hh"
 
-#include "cfile/cfile.hh"
+#include <memory>
 
 #include "FFmpeg.hh"
 #include "FFmpegHeaders.hh"
-
-#include <memory>
+#include "cfile/cfile.hh"
 
 namespace libs {
 namespace ffmpeg {
@@ -24,23 +23,23 @@ namespace ffmpeg {
  */
 class FFmpegContext {
 private:
-    AVFormatContext* m_ctx;
-    CFILE* m_file;
+        AVFormatContext *m_ctx;
+        CFILE *m_file;
 
-    FFmpegContext (CFILE* file);
+        FFmpegContext(CFILE *file);
 
 public:
-    ~FFmpegContext ();
+        ~FFmpegContext();
 
-    FFmpegContext (const FFmpegContext&) = delete;
-    FFmpegContext& operator= (const FFmpegContext&) = delete;
+        FFmpegContext(const FFmpegContext &) = delete;
+        FFmpegContext &operator=(const FFmpegContext &) = delete;
 
-    inline AVFormatContext* ctx () { return m_ctx; }
+        inline AVFormatContext *ctx() { return m_ctx; }
 
-    static std::unique_ptr< FFmpegContext > createContext (CFILE* mediaFile);
+        static std::unique_ptr< FFmpegContext > createContext(CFILE *mediaFile);
 
-    static std::unique_ptr< FFmpegContext >
-    createContext (const std::string& path, int dir_type);
+        static std::unique_ptr< FFmpegContext >
+        createContext(const std::string &path, int dir_type);
 };
 
 } // namespace ffmpeg

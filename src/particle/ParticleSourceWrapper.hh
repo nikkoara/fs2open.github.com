@@ -26,44 +26,44 @@ class ParticleSource;
  */
 class ParticleSourceWrapper {
 private:
-    std::vector< ParticleSource* > m_sources;
+        std::vector< ParticleSource * > m_sources;
 
-    bool m_finished = false;
+        bool m_finished = false;
 
 public:
-    ParticleSourceWrapper (const ParticleSourceWrapper&) = delete;
+        ParticleSourceWrapper(const ParticleSourceWrapper &) = delete;
 
-    ParticleSourceWrapper& operator= (const ParticleSourceWrapper&) = delete;
+        ParticleSourceWrapper &operator=(const ParticleSourceWrapper &) = delete;
 
-    ParticleSourceWrapper () {}
-    explicit ParticleSourceWrapper (std::vector< ParticleSource* >&& sources);
-    explicit ParticleSourceWrapper (ParticleSource* source);
+        ParticleSourceWrapper() { }
+        explicit ParticleSourceWrapper(std::vector< ParticleSource * > &&sources);
+        explicit ParticleSourceWrapper(ParticleSource *source);
 
-    ~ParticleSourceWrapper ();
+        ~ParticleSourceWrapper();
 
-    ParticleSourceWrapper (ParticleSourceWrapper&& other) noexcept;
+        ParticleSourceWrapper(ParticleSourceWrapper &&other) noexcept;
 
-    ParticleSourceWrapper& operator= (ParticleSourceWrapper&& other) noexcept;
+        ParticleSourceWrapper &operator=(ParticleSourceWrapper &&other) noexcept;
 
-    void finish ();
+        void finish();
 
-    void setCreationTimestamp (int timestamp);
+        void setCreationTimestamp(int timestamp);
 
-    void moveToParticle (const WeakParticlePtr& ptr);
+        void moveToParticle(const WeakParticlePtr &ptr);
 
-    void moveToObject (object* obj, vec3d* localPos);
+        void moveToObject(object *obj, vec3d *localPos);
 
-    void moveTo (vec3d* pos);
+        void moveTo(vec3d *pos);
 
-    void setOrientationFromNormalizedVec (vec3d* normalizedDir);
+        void setOrientationFromNormalizedVec(vec3d *normalizedDir);
 
-    void setOrientationFromVec (vec3d* dir);
+        void setOrientationFromVec(vec3d *dir);
 
-    void setOrientationMatrix (matrix* mtx);
+        void setOrientationMatrix(matrix *mtx);
 
-    void setOrientationNormal (vec3d* normal);
+        void setOrientationNormal(vec3d *normal);
 
-    void setWeaponState (WeaponState state);
+        void setWeaponState(WeaponState state);
 };
 } // namespace particle
 

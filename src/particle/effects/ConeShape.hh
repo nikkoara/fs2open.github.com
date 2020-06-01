@@ -14,44 +14,45 @@ namespace effects {
  * @ingroup particleEffects
  */
 class ConeShape {
-    ::util::NormalFloatRange m_normalDeviation;
+        ::util::NormalFloatRange m_normalDeviation;
 
 public:
-    ConeShape () {}
+        ConeShape() { }
 
-    matrix getDisplacementMatrix () {
-        angles_t angs;
+        matrix getDisplacementMatrix()
+        {
+                angles_t angs;
 
-        angs.b = 0.0f;
+                angs.b = 0.0f;
 
-        angs.h = m_normalDeviation.next ();
-        angs.p = m_normalDeviation.next ();
+                angs.h = m_normalDeviation.next();
+                angs.p = m_normalDeviation.next();
 
-        matrix m;
+                matrix m;
 
-        vm_angles_2_matrix (&m, &angs);
+                vm_angles_2_matrix(&m, &angs);
 
-        return m;
-    }
-
-    void parse (bool nocreate) {
-        if (internal::required_string_if_new ("+Deviation:", nocreate)) {
-            float deviation;
-            stuff_float (&deviation);
-
-            m_normalDeviation =
-                ::util::NormalFloatRange (0.0, to_radians (deviation));
+                return m;
         }
-    }
 
-    EffectType getType () const { return EffectType::Cone; }
+        void parse(bool nocreate)
+        {
+                if (internal::required_string_if_new("+Deviation:", nocreate)) {
+                        float deviation;
+                        stuff_float(&deviation);
 
-    /**
+                        m_normalDeviation = ::util::NormalFloatRange(0.0, to_radians(deviation));
+                }
+        }
+
+        EffectType getType() const { return EffectType::Cone; }
+
+        /**
      * @brief Specifies if the velocities of the particles should be scaled
      * with the deviation from the direction
      * @return @c true
      */
-    static constexpr bool scale_velocity_deviation () { return true; }
+        static constexpr bool scale_velocity_deviation() { return true; }
 };
 
 } // namespace effects

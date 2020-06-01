@@ -5,18 +5,19 @@
 
 #include "defs.hh"
 
-#include "glad/glad.h"
 #include "graphics/grinternal.hh"
+
+#include "glad/glad.h"
 
 const ubyte GL_zero_3ub[3] = { 0, 0, 0 };
 
-bool gr_opengl_init (std::unique_ptr< fs2::os::GraphicsOperations >&& graphicsOps);
-void gr_opengl_cleanup (bool closing, int minimize = 1);
-int opengl_check_for_errors (const char* err_at = NULL);
-bool gr_opengl_is_capable (gr_capability capability);
-bool gr_opengl_get_property (gr_property prop, void* dest);
-void gr_opengl_push_debug_group (const char* name);
-void gr_opengl_pop_debug_group ();
+bool gr_opengl_init(std::unique_ptr< fs2::os::GraphicsOperations > &&graphicsOps);
+void gr_opengl_cleanup(bool closing, int minimize = 1);
+int opengl_check_for_errors(const char *err_at = NULL);
+bool gr_opengl_is_capable(gr_capability capability);
+bool gr_opengl_get_property(gr_property prop, void *dest);
+void gr_opengl_push_debug_group(const char *name);
+void gr_opengl_pop_debug_group();
 
 /**
  * @brief Assigns a string name to the specified handle
@@ -28,17 +29,17 @@ void gr_opengl_pop_debug_group ();
  * @param name The name of the object
  */
 #if !defined(NDEBUG) || defined(FS_OPENGL_DEBUG) || defined(DOXYGEN)
-void opengl_set_object_label (
-    GLenum type, GLuint handle, const std::string& name);
+void opengl_set_object_label(
+        GLenum type, GLuint handle, const std::string &name);
 #else
 // Remove this definition
-inline void opengl_set_object_label (GLenum, GLuint, const std::string&) {}
+inline void opengl_set_object_label(GLenum, GLuint, const std::string &) { }
 #endif
 
-uint opengl_data_type_size (GLenum data_type);
+uint opengl_data_type_size(GLenum data_type);
 
 #ifndef NDEBUG
-#define GL_CHECK_FOR_ERRORS(s) opengl_check_for_errors ((s))
+#define GL_CHECK_FOR_ERRORS(s) opengl_check_for_errors((s))
 #else
 #define GL_CHECK_FOR_ERRORS(s)
 #endif

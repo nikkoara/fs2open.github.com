@@ -25,19 +25,19 @@ extern void grx_tmapper( int nv, vertex * verts[], uint flags );
 
 // Flags to pass to g3_draw_??? routines
 #define TMAP_FLAG_TEXTURED (1 << 0) // Uses texturing (Interpolate uv's)
-#define TMAP_FLAG_CORRECT (1 << 1)  // Perspective correct (Interpolate sw)
-#define TMAP_FLAG_RAMP (1 << 2)     // Use RAMP lighting (interpolate L)
-#define TMAP_FLAG_RGB (1 << 3)      // Use RGB lighting (interpolate RGB)
-#define TMAP_FLAG_GOURAUD \
-    (1 << 4) // Lighting values differ on each vertex.
-             // If this is not set, then the texture mapper will use
-             // the lighting parameters in each vertex, otherwise it
-             // will use the ones specified in tmapper_set_??
+#define TMAP_FLAG_CORRECT  (1 << 1) // Perspective correct (Interpolate sw)
+#define TMAP_FLAG_RAMP     (1 << 2) // Use RAMP lighting (interpolate L)
+#define TMAP_FLAG_RGB      (1 << 3) // Use RGB lighting (interpolate RGB)
+#define TMAP_FLAG_GOURAUD                                                                  \
+        (1 << 4)                   // Lighting values differ on each vertex.
+                                   // If this is not set, then the texture mapper will use
+                                   // the lighting parameters in each vertex, otherwise it
+                                   // will use the ones specified in tmapper_set_??
 #define TMAP_FLAG_XPARENT (1 << 5) // texture could have transparency
-#define TMAP_FLAG_TILED (1 << 6)   // This means uv's can be > 1.0
-#define TMAP_FLAG_NEBULA \
-    (1 << 7) // Must be used with RAMP and GOURAUD.  Means l 0-1 is 0-31
-             // palette entries
+#define TMAP_FLAG_TILED   (1 << 6) // This means uv's can be > 1.0
+#define TMAP_FLAG_NEBULA                                                     \
+        (1 << 7) // Must be used with RAMP and GOURAUD.  Means l 0-1 is 0-31
+                 // palette entries
 
 //#define TMAP_HIGHEST_FLAG_BIT         7               // The highest bit used in the
 // TMAP_FLAGS #define TMAP_MAX_SCANLINES                (1<<(TMAP_HIGHEST_FLAG_BIT+1))
@@ -45,27 +45,27 @@ extern void grx_tmapper( int nv, vertex * verts[], uint flags );
 // Add any entries that don't work for software under here:
 // Make sure to disable them at top of grx_tmapper
 #define TMAP_FLAG_ALPHA (1 << 8) // Has an alpha component
-#define TMAP_FLAG_BATCH_TRANSFORMS \
-    (1 << 9) // Use batched transform data transmitted via texture/uniform
-             // buffer
+#define TMAP_FLAG_BATCH_TRANSFORMS                                             \
+        (1 << 9) // Use batched transform data transmitted via texture/uniform
+                 // buffer
 
 // Interface specific stuff (for separate filtering, sizing, etc.), replaces
 // old TMAP_FLAG_BITMAP_SECTION
 #define TMAP_FLAG_INTERFACE (1 << 10)
 
 // flags for full nebula effect
-#define TMAP_FLAG_PIXEL_FOG \
-    (1 << 11) // fog the polygon based upon the average pixel colors of the
-              // backbuffer behind it
+#define TMAP_FLAG_PIXEL_FOG                                                     \
+        (1 << 11) // fog the polygon based upon the average pixel colors of the
+                  // backbuffer behind it
 
 // RT Flags added to determine whats being drawn for HT&L
 #define TMAP_HTL_3D_UNLIT (1 << 12)
-#define TMAP_HTL_2D (1 << 13) // I don't think this flag is being used (Swifty)
+#define TMAP_HTL_2D       (1 << 13) // I don't think this flag is being used (Swifty)
 
 // tristrips, for trails mostly, might find other uses eventualy
-#define TMAP_FLAG_TRISTRIP (1 << 14)
-#define TMAP_FLAG_TRILIST (1 << 15)
-#define TMAP_FLAG_QUADLIST (1 << 16)
+#define TMAP_FLAG_TRISTRIP  (1 << 14)
+#define TMAP_FLAG_TRILIST   (1 << 15)
+#define TMAP_FLAG_QUADLIST  (1 << 16)
 #define TMAP_FLAG_QUADSTRIP (1 << 17)
 
 // use greyscale texture
@@ -85,15 +85,15 @@ extern void grx_tmapper( int nv, vertex * verts[], uint flags );
 
 #define TMAP_FLAG_DESATURATE (1 << 23)
 
-#define TMAP_FLAG_POINTLIST (1 << 24)
-#define TMAP_FLAG_LINESTRIP (1 << 25)
-#define TMAP_FLAG_LINES (1 << 26)
+#define TMAP_FLAG_POINTLIST  (1 << 24)
+#define TMAP_FLAG_LINESTRIP  (1 << 25)
+#define TMAP_FLAG_LINES      (1 << 26)
 #define TMAP_FLAG_VERTEX_GEN (1 << 27)
-#define TMAP_FLAG_EMISSIVE (1 << 28)
+#define TMAP_FLAG_EMISSIVE   (1 << 28)
 
-#define TMAP_ADDRESS_WRAP 1
+#define TMAP_ADDRESS_WRAP   1
 #define TMAP_ADDRESS_MIRROR 2
-#define TMAP_ADDRESS_CLAMP 3
+#define TMAP_ADDRESS_CLAMP  3
 
 // WMC - moved this here so it'd be in 2d.h and 3d.h
 // bitmap_2d_list,
@@ -102,12 +102,12 @@ extern void grx_tmapper( int nv, vertex * verts[], uint flags );
 // will overide these, others will only overide if givein an invalid size like
 // 0 or -1)
 struct bitmap_2d_list {
-    bitmap_2d_list (int X = 0, int Y = 0, int W = -1, int H = -1)
-        : x (X), y (Y), w (W), h (H) {}
-    int x;
-    int y;
-    int w;
-    int h;
+        bitmap_2d_list(int X = 0, int Y = 0, int W = -1, int H = -1)
+                : x(X), y(Y), w(W), h(H) { }
+        int x;
+        int y;
+        int w;
+        int h;
 };
 
 // texture_rect
@@ -116,25 +116,25 @@ struct bitmap_2d_list {
 // from 0,0 in the upper left to 1,1 in the lowwer right
 // out of range values are valid
 struct texture_rect_list {
-    texture_rect_list (
-        float u0In = 0.0f, float v0In = 0.0f, float u1In = 1.0f,
-        float v1In = 1.0f)
-        : u0 (u0In), v0 (v0In), u1 (u1In), v1 (v1In) {}
-    float u0;
-    float v0;
-    float u1;
-    float v1;
+        texture_rect_list(
+                float u0In = 0.0f, float v0In = 0.0f, float u1In = 1.0f,
+                float v1In = 1.0f)
+                : u0(u0In), v0(v0In), u1(u1In), v1(v1In) { }
+        float u0;
+        float v0;
+        float u1;
+        float v1;
 };
 
 struct bitmap_rect_list {
-    bitmap_rect_list (float X, float Y, float W, float H)
-        : texture_rect (X, Y, W, H) {}
-    bitmap_rect_list (
-        int X = 0, int Y = 0, int W = -1, int H = -1, float TX = 0.0f,
-        float TY = 0.0f, float TW = 1.0f, float TH = 1.0f)
-        : screen_rect (X, Y, W, H), texture_rect (TX, TY, TW, TH) {}
-    bitmap_2d_list screen_rect;
-    texture_rect_list texture_rect;
+        bitmap_rect_list(float X, float Y, float W, float H)
+                : texture_rect(X, Y, W, H) { }
+        bitmap_rect_list(
+                int X = 0, int Y = 0, int W = -1, int H = -1, float TX = 0.0f,
+                float TY = 0.0f, float TW = 1.0f, float TH = 1.0f)
+                : screen_rect(X, Y, W, H), texture_rect(TX, TY, TW, TH) { }
+        bitmap_2d_list screen_rect;
+        texture_rect_list texture_rect;
 };
 
 #endif // FREESPACE2_GRAPHICS_TMAPPER_HH

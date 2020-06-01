@@ -21,27 +21,29 @@ namespace font {
  * @date        24.11.2011
  */
 struct TrueTypeFontData {
-    size_t size;                     //<! Size of allocated memory
-    std::unique_ptr< ubyte[] > data; //<! Allocated font data
+        size_t size;                     //<! Size of allocated memory
+        std::unique_ptr< ubyte[] > data; //<! Allocated font data
 
-    TrueTypeFontData () : size (0) {}
+        TrueTypeFontData() : size(0) { }
 
-    TrueTypeFontData (TrueTypeFontData&& other) noexcept {
-        std::swap (data, other.data);
-        size = other.size;
-    }
+        TrueTypeFontData(TrueTypeFontData &&other) noexcept
+        {
+                std::swap(data, other.data);
+                size = other.size;
+        }
 
-    TrueTypeFontData& operator= (TrueTypeFontData&& other) noexcept {
-        std::swap (data, other.data);
-        size = other.size;
+        TrueTypeFontData &operator=(TrueTypeFontData &&other) noexcept
+        {
+                std::swap(data, other.data);
+                size = other.size;
 
-        return *this;
-    }
+                return *this;
+        }
 
 private:
-    TrueTypeFontData (const TrueTypeFontData&) = delete;
+        TrueTypeFontData(const TrueTypeFontData &) = delete;
 
-    TrueTypeFontData& operator= (const TrueTypeFontData&) = delete;
+        TrueTypeFontData &operator=(const TrueTypeFontData &) = delete;
 };
 
 // Forward declarations
@@ -66,7 +68,7 @@ struct font;
  */
 class FontManager {
 public:
-    /**
+        /**
      * @brief Returns a pointer to the font with the specified name
      *
      * Searches the internal list of fonts for a font with the name @c name and
@@ -76,9 +78,9 @@ public:
      * @param name The name that should be searched for
      * @return The font pointer or @c NULL when font could not be found.
      */
-    static FSFont* getFont (const std::string& name);
+        static FSFont *getFont(const std::string &name);
 
-    /**
+        /**
      * @brief Returns a pointer to the font at the specified index
      *
      * Returns the font pointer which is located as the specified index or @c
@@ -87,15 +89,16 @@ public:
      * @param index The index that should be returns
      * @return Font pointer
      */
-    inline static FSFont* getFont (int index) {
-        ASSERTX (
-            index >= 0 && index < (int)fonts.size (),
-            "Invalid font index %d given!", index);
+        inline static FSFont *getFont(int index)
+        {
+                ASSERTX(
+                        index >= 0 && index < (int)fonts.size(),
+                        "Invalid font index %d given!", index);
 
-        return fonts[index].get ();
-    }
+                return fonts[index].get();
+        }
 
-    /**
+        /**
      * @brief Returns the index of the currently used font
      *
      * Returns the index the currently active font pointer has.
@@ -103,9 +106,9 @@ public:
      * @return The current font index. 0 by default, -1 when FontManager isn't
      * initialized yet
      */
-    static int getCurrentFontIndex ();
+        static int getCurrentFontIndex();
 
-    /**
+        /**
      * @brief Returns a pointer to the current font
      *
      * Returns a pointer of the currently active font.
@@ -113,17 +116,17 @@ public:
      * @return Pointer of currently active font or @c NULL when no font is
      * currently active
      */
-    static FSFont* getCurrentFont ();
+        static FSFont *getCurrentFont();
 
-    /**
+        /**
      * @brief Returns the index of the font with the specified @c name.
      *
      * @param name The name which should be searched
      * @return The index or -1 when font could not be found
      */
-    static int getFontIndex (const std::string& name);
+        static int getFontIndex(const std::string &name);
 
-    /**
+        /**
      * @brief Returns the index of the specified font pointer
      *
      * Searches through the internal font vector and returns the index for
@@ -132,37 +135,37 @@ public:
      * @param font The font which should be searched
      * @return The index of the font or -1 when font could not be found
      */
-    static int getFontIndex (FSFont* font);
+        static int getFontIndex(FSFont *font);
 
-    /**
+        /**
      * @brief Returns the number of fonts currently saved in the manager
      * @return The number of fonts
      */
-    static int numberOfFonts ();
+        static int numberOfFonts();
 
-    /**
+        /**
      * @brief Specifies if the font system is ready to be used for rendering
      * text
      * @return @c true if ready (there is a current font), @c false if not
      */
-    static bool isReady ();
+        static bool isReady();
 
-    /**
+        /**
      * @brief Checks if the specified number is a valid font ID
      * @return @c true if the number can be used with #getFont(int), @c false
      * otherwise
      */
-    static bool isFontNumberValid (int fontNumber);
+        static bool isFontNumberValid(int fontNumber);
 
-    /**
+        /**
      * @brief Sets the currently active font
      * @param font The font which should be used, may not be @c NULL
      *
      * @warning The integrity of the specified pointer is not checked
      */
-    static void setCurrentFont (FSFont* font);
+        static void setCurrentFont(FSFont *font);
 
-    /**
+        /**
      * @brief Loads a TrueType font
      *
      * Loads a TrueType font with the specified @c fileName and initializes it
@@ -175,10 +178,10 @@ public:
      * @param type The type of the font
      * @return A FTGLFont pointer or @c NULL when font could not be loaded
      */
-    static NVGFont*
-    loadNVGFont (const std::string& fileName, float fontSize = 12.0f);
+        static NVGFont *
+        loadNVGFont(const std::string &fileName, float fontSize = 12.0f);
 
-    /**
+        /**
      * @brief Loads an old VFNT font
      *
      * Loads the VFNT font with the specified @c fileName and returns it in
@@ -187,38 +190,38 @@ public:
      * @param fileName The name of the font file
      * @return The font pointer or @c null on error
      */
-    static VFNTFont* loadVFNTFont (const std::string& fileName);
+        static VFNTFont *loadVFNTFont(const std::string &fileName);
 
-    /**
+        /**
      * @brief Loads old volition font data
      */
-    static font* loadFontOld (const std::string& name);
+        static font *loadFontOld(const std::string &name);
 
-    /**
+        /**
      *  @brief Initializes the font system
      */
-    static void init ();
+        static void init();
 
-    /**
+        /**
      * @brief Disposes the fonts saved in the class
      *
      * Cleans up the memory used by the font system and sets the current font
      * to @c NULL
      */
-    static void close ();
+        static void close();
 
 private:
-    FontManager (){};
+        FontManager(){};
 
-    FontManager (const FontManager&){};
+        FontManager(const FontManager &){};
 
-    ~FontManager () {}
+        ~FontManager() { }
 
-    static std::map< std::string, TrueTypeFontData > allocatedData;
-    static std::map< std::string, std::unique_ptr< font > > vfntFontData;
-    static std::vector< std::unique_ptr< FSFont > > fonts;
+        static std::map< std::string, TrueTypeFontData > allocatedData;
+        static std::map< std::string, std::unique_ptr< font > > vfntFontData;
+        static std::vector< std::unique_ptr< FSFont > > fonts;
 
-    static FSFont* currentFont;
+        static FSFont *currentFont;
 };
 
 } // namespace font

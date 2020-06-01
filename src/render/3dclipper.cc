@@ -8,256 +8,250 @@
 int free_point_num = 0;
 
 vertex temp_points[TMAP_MAX_VERTS];
-vertex* free_points[TMAP_MAX_VERTS];
+vertex *free_points[TMAP_MAX_VERTS];
 
-void init_free_points (void) {
-    int i;
+void init_free_points(void)
+{
+        int i;
 
-    for (i = 0; i < TMAP_MAX_VERTS; i++) free_points[i] = &temp_points[i];
+        for (i = 0; i < TMAP_MAX_VERTS; i++) free_points[i] = &temp_points[i];
 }
 
-vertex* get_temp_point () {
-    vertex* p;
+vertex *get_temp_point()
+{
+        vertex *p;
 
-    p = free_points[free_point_num++];
+        p = free_points[free_point_num++];
 
-    p->flags = PF_TEMP_POINT;
+        p->flags = PF_TEMP_POINT;
 
-    return p;
+        return p;
 }
 
-void free_temp_point (vertex* p) {
-    ASSERT (p->flags & PF_TEMP_POINT);
+void free_temp_point(vertex *p)
+{
+        ASSERT(p->flags & PF_TEMP_POINT);
 
-    free_points[--free_point_num] = p;
+        free_points[--free_point_num] = p;
 
-    p->flags &= ~PF_TEMP_POINT;
+        p->flags &= ~PF_TEMP_POINT;
 }
 
 /**
  * @brief Clips an edge against one plane.
  */
-vertex*
-clip_edge (int plane_flag, vertex* on_pnt, vertex* off_pnt, uint flags) {
-    float ratio;
-    vertex* tmp;
+vertex *
+clip_edge(int plane_flag, vertex *on_pnt, vertex *off_pnt, uint flags)
+{
+        float ratio;
+        vertex *tmp;
 
-    tmp = get_temp_point ();
+        tmp = get_temp_point();
 
-    if (plane_flag & CC_OFF_USER) {
-        // Clip with user-defined plane
-        vec3d w, ray_direction;
-        float num, den;
+        if (plane_flag & CC_OFF_USER) {
+                // Clip with user-defined plane
+                vec3d w, ray_direction;
+                float num, den;
 
-        vm_vec_sub (&ray_direction, &off_pnt->world, &on_pnt->world);
+                vm_vec_sub(&ray_direction, &off_pnt->world, &on_pnt->world);
 
-        vm_vec_sub (&w, &on_pnt->world, &G3_user_clip_point);
+                vm_vec_sub(&w, &on_pnt->world, &G3_user_clip_point);
 
-        den = -vm_vec_dot (&G3_user_clip_normal, &ray_direction);
-        if (den ==
-            0.0f) {  // Ray & plane are parallel, so there is no intersection
-            ASSERT (0);
-            ratio = 1.0f;
-        }
-        else {
-            num = vm_vec_dot (&G3_user_clip_normal, &w);
+                den = -vm_vec_dot(&G3_user_clip_normal, &ray_direction);
+                if (den == 0.0f) { // Ray & plane are parallel, so there is no intersection
+                        ASSERT(0);
+                        ratio = 1.0f;
+                } else {
+                        num = vm_vec_dot(&G3_user_clip_normal, &w);
 
-            ratio = num / den;
-        }
+                        ratio = num / den;
+                }
 
-        vm_vec_sub (&tmp->world, &off_pnt->world, &on_pnt->world);
-        vm_vec_scale (&tmp->world, ratio);
-        vm_vec_add2 (&tmp->world, &on_pnt->world);
-    }
-    else {
-        float a, b, kn, kd;
+                vm_vec_sub(&tmp->world, &off_pnt->world, &on_pnt->world);
+                vm_vec_scale(&tmp->world, ratio);
+                vm_vec_add2(&tmp->world, &on_pnt->world);
+        } else {
+                float a, b, kn, kd;
 
-        // compute clipping value k = (xs-zs) / (xs-xe-zs+ze)
-        // use x or y as appropriate, and negate x/y value as appropriate
+                // compute clipping value k = (xs-zs) / (xs-xe-zs+ze)
+                // use x or y as appropriate, and negate x/y value as appropriate
 
-        if (plane_flag & (CC_OFF_RIGHT | CC_OFF_LEFT)) {
-            a = on_pnt->world.xyz.x;
-            b = off_pnt->world.xyz.x;
-        }
-        else {
-            a = on_pnt->world.xyz.y;
-            b = off_pnt->world.xyz.y;
-        }
+                if (plane_flag & (CC_OFF_RIGHT | CC_OFF_LEFT)) {
+                        a = on_pnt->world.xyz.x;
+                        b = off_pnt->world.xyz.x;
+                } else {
+                        a = on_pnt->world.xyz.y;
+                        b = off_pnt->world.xyz.y;
+                }
 
-        if (plane_flag & (CC_OFF_LEFT | CC_OFF_BOT)) {
-            a = -a;
-            b = -b;
-        }
+                if (plane_flag & (CC_OFF_LEFT | CC_OFF_BOT)) {
+                        a = -a;
+                        b = -b;
+                }
 
-        kn = a - on_pnt->world.xyz.z;       // xs-zs
-        kd = kn - b + off_pnt->world.xyz.z; // xs-zs-xe+ze
+                kn = a - on_pnt->world.xyz.z;       // xs-zs
+                kd = kn - b + off_pnt->world.xyz.z; // xs-zs-xe+ze
 
-        ratio = kn / kd;
+                ratio = kn / kd;
 
-        tmp->world.xyz.x =
-            on_pnt->world.xyz.x +
-            (off_pnt->world.xyz.x - on_pnt->world.xyz.x) * ratio;
-        tmp->world.xyz.y =
-            on_pnt->world.xyz.y +
-            (off_pnt->world.xyz.y - on_pnt->world.xyz.y) * ratio;
+                tmp->world.xyz.x = on_pnt->world.xyz.x + (off_pnt->world.xyz.x - on_pnt->world.xyz.x) * ratio;
+                tmp->world.xyz.y = on_pnt->world.xyz.y + (off_pnt->world.xyz.y - on_pnt->world.xyz.y) * ratio;
 
-        if (plane_flag & (CC_OFF_TOP | CC_OFF_BOT)) {
-            tmp->world.xyz.z = tmp->world.xyz.y;
-        }
-        else {
-            tmp->world.xyz.z = tmp->world.xyz.x;
+                if (plane_flag & (CC_OFF_TOP | CC_OFF_BOT)) {
+                        tmp->world.xyz.z = tmp->world.xyz.y;
+                } else {
+                        tmp->world.xyz.z = tmp->world.xyz.x;
+                }
+
+                if (plane_flag & (CC_OFF_LEFT | CC_OFF_BOT))
+                        tmp->world.xyz.z = -tmp->world.xyz.z;
         }
 
-        if (plane_flag & (CC_OFF_LEFT | CC_OFF_BOT))
-            tmp->world.xyz.z = -tmp->world.xyz.z;
-    }
-
-    if (flags & TMAP_FLAG_TEXTURED) {
-        tmp->texture_position.u =
-            on_pnt->texture_position.u +
-            (off_pnt->texture_position.u - on_pnt->texture_position.u) * ratio;
-        tmp->texture_position.v =
-            on_pnt->texture_position.v +
-            (off_pnt->texture_position.v - on_pnt->texture_position.v) * ratio;
-    }
-
-    if (flags & TMAP_FLAG_GOURAUD) {
-        if (flags & TMAP_FLAG_RAMP) {
-            float on_b, off_b;
-
-            on_b = float (on_pnt->b);
-            off_b = float (off_pnt->b);
-
-            tmp->b = ubyte (int (on_b + (off_b - on_b) * ratio));
+        if (flags & TMAP_FLAG_TEXTURED) {
+                tmp->texture_position.u = on_pnt->texture_position.u + (off_pnt->texture_position.u - on_pnt->texture_position.u) * ratio;
+                tmp->texture_position.v = on_pnt->texture_position.v + (off_pnt->texture_position.v - on_pnt->texture_position.v) * ratio;
         }
-        if (flags & TMAP_FLAG_RGB) {
-            float on_r, on_b, on_g;
-            float off_r, off_b, off_g;
 
-            on_r = float (on_pnt->r);
-            off_r = float (off_pnt->r);
+        if (flags & TMAP_FLAG_GOURAUD) {
+                if (flags & TMAP_FLAG_RAMP) {
+                        float on_b, off_b;
 
-            on_g = float (on_pnt->g);
-            off_g = float (off_pnt->g);
+                        on_b = float(on_pnt->b);
+                        off_b = float(off_pnt->b);
 
-            on_b = float (on_pnt->b);
-            off_b = float (off_pnt->b);
+                        tmp->b = ubyte(int(on_b + (off_b - on_b) * ratio));
+                }
+                if (flags & TMAP_FLAG_RGB) {
+                        float on_r, on_b, on_g;
+                        float off_r, off_b, off_g;
 
-            tmp->r = ubyte (int (on_r + (off_r - on_r) * ratio));
-            tmp->g = ubyte (int (on_g + (off_g - on_g) * ratio));
-            tmp->b = ubyte (int (on_b + (off_b - on_b) * ratio));
+                        on_r = float(on_pnt->r);
+                        off_r = float(off_pnt->r);
+
+                        on_g = float(on_pnt->g);
+                        off_g = float(off_pnt->g);
+
+                        on_b = float(on_pnt->b);
+                        off_b = float(off_pnt->b);
+
+                        tmp->r = ubyte(int(on_r + (off_r - on_r) * ratio));
+                        tmp->g = ubyte(int(on_g + (off_g - on_g) * ratio));
+                        tmp->b = ubyte(int(on_b + (off_b - on_b) * ratio));
+                }
         }
-    }
 
-    if (flags & TMAP_FLAG_ALPHA) {
-        float on_a, off_a;
+        if (flags & TMAP_FLAG_ALPHA) {
+                float on_a, off_a;
 
-        on_a = float (on_pnt->a);
-        off_a = float (off_pnt->a);
+                on_a = float(on_pnt->a);
+                off_a = float(off_pnt->a);
 
-        tmp->a = ubyte (int (on_a + (off_a - on_a) * ratio));
-    }
+                tmp->a = ubyte(int(on_a + (off_a - on_a) * ratio));
+        }
 
-    g3_code_vertex (tmp);
+        g3_code_vertex(tmp);
 
-    return tmp;
+        return tmp;
 }
 
 /**
  * @brief Clips a line to the viewing pyramid.
  */
-void clip_line (vertex** p0, vertex** p1, ubyte codes_or, uint flags) {
-    int plane_flag;
-    vertex* old_p1;
+void clip_line(vertex **p0, vertex **p1, ubyte codes_or, uint flags)
+{
+        int plane_flag;
+        vertex *old_p1;
 
-    for (plane_flag = 1; plane_flag <= CC_OFF_USER; plane_flag <<= 1)
-        if (codes_or & plane_flag) {
-            if ((*p0)->codes & plane_flag) {
-                vertex* t = *p0;
-                *p0 = *p1;
-                *p1 = t;
-            } // swap!
+        for (plane_flag = 1; plane_flag <= CC_OFF_USER; plane_flag <<= 1)
+                if (codes_or & plane_flag) {
+                        if ((*p0)->codes & plane_flag) {
+                                vertex *t = *p0;
+                                *p0 = *p1;
+                                *p1 = t;
+                        } // swap!
 
-            old_p1 = *p1;
+                        old_p1 = *p1;
 
-            *p1 = clip_edge (plane_flag, *p0, *p1, flags);
-            codes_or =
-                (unsigned char)((*p0)->codes | (*p1)->codes); // get new codes
+                        *p1 = clip_edge(plane_flag, *p0, *p1, flags);
+                        codes_or = (unsigned char)((*p0)->codes | (*p1)->codes); // get new codes
 
-            if (old_p1->flags & PF_TEMP_POINT) free_temp_point (old_p1);
-        }
+                        if (old_p1->flags & PF_TEMP_POINT)
+                                free_temp_point(old_p1);
+                }
 }
 
 /**
  * @brief Clips a plane to the viewing pyramid.
  */
-int clip_plane (
-    int plane_flag, vertex** src, vertex** dest, int* nv, ccodes* cc,
-    uint flags) {
-    int i;
-    vertex** save_dest = dest;
+int clip_plane(
+        int plane_flag, vertex **src, vertex **dest, int *nv, ccodes *cc,
+        uint flags)
+{
+        int i;
+        vertex **save_dest = dest;
 
-    // copy first two verts to end
-    src[*nv] = src[0];
-    src[*nv + 1] = src[1];
+        // copy first two verts to end
+        src[*nv] = src[0];
+        src[*nv + 1] = src[1];
 
-    cc->cc_and = 0xff;
-    cc->cc_or = 0;
+        cc->cc_and = 0xff;
+        cc->cc_or = 0;
 
-    for (i = 1; i <= *nv; i++) {
-        if (src[i]->codes & plane_flag) { // cur point off?
+        for (i = 1; i <= *nv; i++) {
+                if (src[i]->codes & plane_flag) { // cur point off?
 
-            if (!(src[i - 1]->codes & plane_flag)) { // prev not off?
+                        if (!(src[i - 1]->codes & plane_flag)) { // prev not off?
 
-                *dest = clip_edge (plane_flag, src[i - 1], src[i], flags);
-                cc->cc_or |= (*dest)->codes;
-                cc->cc_and &= (*dest)->codes;
-                dest++;
-            }
+                                *dest = clip_edge(plane_flag, src[i - 1], src[i], flags);
+                                cc->cc_or |= (*dest)->codes;
+                                cc->cc_and &= (*dest)->codes;
+                                dest++;
+                        }
 
-            if (!(src[i + 1]->codes & plane_flag)) {
-                *dest = clip_edge (plane_flag, src[i + 1], src[i], flags);
-                cc->cc_or |= (*dest)->codes;
-                cc->cc_and &= (*dest)->codes;
-                dest++;
-            }
+                        if (!(src[i + 1]->codes & plane_flag)) {
+                                *dest = clip_edge(plane_flag, src[i + 1], src[i], flags);
+                                cc->cc_or |= (*dest)->codes;
+                                cc->cc_and &= (*dest)->codes;
+                                dest++;
+                        }
 
-            // see if must free discarded point
+                        // see if must free discarded point
 
-            if (src[i]->flags & PF_TEMP_POINT) free_temp_point (src[i]);
+                        if (src[i]->flags & PF_TEMP_POINT)
+                                free_temp_point(src[i]);
+                } else { // cur not off, copy to dest buffer
+
+                        *dest++ = src[i];
+
+                        cc->cc_or |= src[i]->codes;
+                        cc->cc_and &= src[i]->codes;
+                }
         }
-        else { // cur not off, copy to dest buffer
 
-            *dest++ = src[i];
-
-            cc->cc_or |= src[i]->codes;
-            cc->cc_and &= src[i]->codes;
-        }
-    }
-
-    return (int)(dest - save_dest);
+        return (int)(dest - save_dest);
 }
 
 /**
  * @brief Clips a polygon to the viewing pyramid.
  */
-vertex**
-clip_polygon (vertex** src, vertex** dest, int* nv, ccodes* cc, uint flags) {
-    int plane_flag;
-    vertex** t;
+vertex **
+clip_polygon(vertex **src, vertex **dest, int *nv, ccodes *cc, uint flags)
+{
+        int plane_flag;
+        vertex **t;
 
-    for (plane_flag = 1; plane_flag <= CC_OFF_USER; plane_flag <<= 1)
+        for (plane_flag = 1; plane_flag <= CC_OFF_USER; plane_flag <<= 1)
 
-        if (cc->cc_or & plane_flag) {
-            *nv = clip_plane (plane_flag, src, dest, nv, cc, flags);
+                if (cc->cc_or & plane_flag) {
+                        *nv = clip_plane(plane_flag, src, dest, nv, cc, flags);
 
-            if (cc->cc_and) // clipped away
-                return dest;
+                        if (cc->cc_and) // clipped away
+                                return dest;
 
-            t = src;
-            src = dest;
-            dest = t;
-        }
+                        t = src;
+                        src = dest;
+                        dest = t;
+                }
 
-    return src; // we swapped after we copied
+        return src; // we swapped after we copied
 }

@@ -15,13 +15,13 @@ class ParticleSource;
  * @ingroup particleSystems
  */
 enum class EffectType : int64_t {
-    Invalid = -1,
-    Single,
-    Composite,
-    Cone,
-    Sphere,
+        Invalid = -1,
+        Single,
+        Composite,
+        Cone,
+        Sphere,
 
-    MAX,
+        MAX,
 };
 
 /**
@@ -38,20 +38,20 @@ enum class EffectType : int64_t {
  */
 class ParticleEffect {
 protected:
-    std::string m_name; //!< The name if this effect
+        std::string m_name; //!< The name if this effect
 
 public:
-    /**
+        /**
      * @brief Initializes the base ParticleEffect
      * @param name The name this effect should have
      */
-    explicit ParticleEffect (const std::string& name) : m_name (name) {}
+        explicit ParticleEffect(const std::string &name) : m_name(name) { }
 
-    virtual ~ParticleEffect () {}
+        virtual ~ParticleEffect() { }
 
-    const std::string& getName () const { return m_name; }
+        const std::string &getName() const { return m_name; }
 
-    /**
+        /**
      * @brief Parses the values of this effect
      *
      * @note If your effect should be available for usage in tables you can use
@@ -60,18 +60,18 @@ public:
      *
      * @param nocreate
      */
-    virtual void parseValues (bool /*nocreate*/) {}
+        virtual void parseValues(bool /*nocreate*/) { }
 
-    /**
+        /**
      * @brief Page in used effects
      *
      * @note This is called at mission start to determine which textures are
      * used by this effect. Use #bm_page_in_texture to specify which textures
      * will be used.
      */
-    virtual void pageIn () {}
+        virtual void pageIn() { }
 
-    /**
+        /**
      * @brief Process a particle source
      *
      * @note This is the main function of the effect. In this function the
@@ -88,9 +88,9 @@ public:
      * @return @c true if the effect should continue to be processed, @c false
      * if the effect is done.
      */
-    virtual bool processSource (const ParticleSource* source) = 0;
+        virtual bool processSource(const ParticleSource *source) = 0;
 
-    /**
+        /**
      * @brief Initializes the source for this effect
      *
      * @note Implementations can use this function to apply one-time operations
@@ -100,9 +100,9 @@ public:
      *
      * @param source The source to be initialized
      */
-    virtual void initializeSource (ParticleSource& /*source*/) {}
+        virtual void initializeSource(ParticleSource & /*source*/) { }
 
-    /**
+        /**
      * @brief Gets the type of this effect
      *
      * @note Implementations should override this and return their own type if
@@ -110,13 +110,13 @@ public:
      *
      * @return The effect type.
      */
-    virtual EffectType getType () const { return EffectType::Invalid; }
+        virtual EffectType getType() const { return EffectType::Invalid; }
 };
 
 /**
  * A particle pointer.
  */
-typedef ParticleEffect* ParticleEffectPtr;
+typedef ParticleEffect *ParticleEffectPtr;
 } // namespace particle
 
 #endif // FREESPACE2_PARTICLE_PARTICLEEFFECT_HH

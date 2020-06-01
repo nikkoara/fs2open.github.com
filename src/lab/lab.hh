@@ -14,8 +14,8 @@
  *
  */
 
-void lab_init ();
-void lab_close ();
-void lab_do_frame (float frametime);
+void lab_init();
+void lab_close();
+void lab_do_frame(float frametime);
 
 #endif // FREESPACE2_LAB_LAB_HH

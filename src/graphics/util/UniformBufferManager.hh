@@ -5,9 +5,8 @@
 
 #include "defs.hh"
 
-#include "graphics/2d.hh"
-
 #include "UniformBuffer.hh"
+#include "graphics/2d.hh"
 
 namespace graphics {
 namespace util {
@@ -24,30 +23,30 @@ namespace util {
  * synchronization operations when updating the buffer data.
  */
 class UniformBufferManager {
-    uniform_block_type _type;
+        uniform_block_type _type;
 
-    std::vector< std::unique_ptr< UniformBuffer > >
-        _buffers; //!< All buffers that are managed by this manager
+        std::vector< std::unique_ptr< UniformBuffer > >
+                _buffers; //!< All buffers that are managed by this manager
 
-    std::vector< UniformBuffer* >
-        _retiredBuffers; //!< The buffers that are currently free and can be
-                         //!< reused
-    std::vector< UniformBuffer* >
-        _usedBuffers; //!< The buffers that are currently in use
+        std::vector< UniformBuffer * >
+                _retiredBuffers; //!< The buffers that are currently free and can be
+                                 //!< reused
+        std::vector< UniformBuffer * >
+                _usedBuffers; //!< The buffers that are currently in use
 
 public:
-    explicit UniformBufferManager (uniform_block_type uniform_type);
+        explicit UniformBufferManager(uniform_block_type uniform_type);
 
-    UniformBufferManager (const UniformBufferManager&) = delete;
-    UniformBufferManager& operator= (const UniformBufferManager&) = delete;
+        UniformBufferManager(const UniformBufferManager &) = delete;
+        UniformBufferManager &operator=(const UniformBufferManager &) = delete;
 
-    UniformBuffer* getBuffer ();
+        UniformBuffer *getBuffer();
 
-    /**
+        /**
      * @brief Checks the used buffer and retires any buffers that are no longer
      * in use for later reuse
      */
-    void retireBuffers ();
+        void retireBuffers();
 };
 
 } // namespace util

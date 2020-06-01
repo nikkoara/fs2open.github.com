@@ -23,20 +23,20 @@ extern float Awacs_level;          // Awacs_friendly - Awacs_hostile
 //
 
 // call when initializing level, before parsing mission
-void awacs_level_init ();
+void awacs_level_init();
 
 // call every frame to process AWACS details
-void awacs_process ();
+void awacs_process();
 
 // get the total AWACS level for target to viewer
 // < 0.0f               : untargetable
 // 0.0 - 1.0f   : marginally targetable
 // 1.0f                 : fully targetable as normal
-float awacs_get_level (object* target, ship* viewer, int use_awacs = 1);
+float awacs_get_level(object *target, ship *viewer, int use_awacs = 1);
 
 // Determine if ship is visible by team
 // return 1 if ship is fully visible
 // return 0 if ship is only partly visible
-int ship_is_visible_by_team (object* target, ship* viewer);
+int ship_is_visible_by_team(object *target, ship *viewer);
 
 #endif // FREESPACE2_SHIP_AWACS_HH

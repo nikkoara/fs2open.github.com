@@ -18,36 +18,36 @@ struct ai_goal;
 // list in Fred\Management.cpp, and let Hoffoss know! WMC - Oh and add them to
 // Ai_goal_names plz. TY! :) Goober5000 - As well as Ai_goal_text and
 // Ai_goal_list, if appropriate
-#define AI_GOAL_CHASE (1 << 1)     // 0x00000002
-#define AI_GOAL_DOCK (1 << 2)      // 0x00000004        // used for undocking as well
-#define AI_GOAL_WAYPOINTS (1 << 3) // 0x00000008
-#define AI_GOAL_WAYPOINTS_ONCE (1 << 4)    // 0x00000010
-#define AI_GOAL_WARP (1 << 5)              // 0x00000020
-#define AI_GOAL_DESTROY_SUBSYSTEM (1 << 6) // 0x00000040
-#define AI_GOAL_FORM_ON_WING (1 << 7)      // 0x00000080
-#define AI_GOAL_UNDOCK (1 << 8)            // 0x00000100
-#define AI_GOAL_CHASE_WING (1 << 9)        // 0x00000200
-#define AI_GOAL_GUARD (1 << 10)            // 0x00000400
-#define AI_GOAL_DISABLE_SHIP (1 << 11)     // 0x00000800
-#define AI_GOAL_DISARM_SHIP (1 << 12)      // 0x00001000
-#define AI_GOAL_CHASE_ANY (1 << 13)        // 0x00002000
-#define AI_GOAL_IGNORE (1 << 14)           // 0x00004000
-#define AI_GOAL_GUARD_WING (1 << 15)       // 0x00008000
-#define AI_GOAL_EVADE_SHIP (1 << 16)       // 0x00010000
+#define AI_GOAL_CHASE             (1 << 1)  // 0x00000002
+#define AI_GOAL_DOCK              (1 << 2)  // 0x00000004        // used for undocking as well
+#define AI_GOAL_WAYPOINTS         (1 << 3)  // 0x00000008
+#define AI_GOAL_WAYPOINTS_ONCE    (1 << 4)  // 0x00000010
+#define AI_GOAL_WARP              (1 << 5)  // 0x00000020
+#define AI_GOAL_DESTROY_SUBSYSTEM (1 << 6)  // 0x00000040
+#define AI_GOAL_FORM_ON_WING      (1 << 7)  // 0x00000080
+#define AI_GOAL_UNDOCK            (1 << 8)  // 0x00000100
+#define AI_GOAL_CHASE_WING        (1 << 9)  // 0x00000200
+#define AI_GOAL_GUARD             (1 << 10) // 0x00000400
+#define AI_GOAL_DISABLE_SHIP      (1 << 11) // 0x00000800
+#define AI_GOAL_DISARM_SHIP       (1 << 12) // 0x00001000
+#define AI_GOAL_CHASE_ANY         (1 << 13) // 0x00002000
+#define AI_GOAL_IGNORE            (1 << 14) // 0x00004000
+#define AI_GOAL_GUARD_WING        (1 << 15) // 0x00008000
+#define AI_GOAL_EVADE_SHIP        (1 << 16) // 0x00010000
 
 // the next goals are for support ships only
-#define AI_GOAL_STAY_NEAR_SHIP (1 << 17)     // 0x00020000
+#define AI_GOAL_STAY_NEAR_SHIP     (1 << 17) // 0x00020000
 #define AI_GOAL_KEEP_SAFE_DISTANCE (1 << 18) // 0x00040000
-#define AI_GOAL_REARM_REPAIR (1 << 19)       // 0x00080000
+#define AI_GOAL_REARM_REPAIR       (1 << 19) // 0x00080000
 
 // resume regular goals
 #define AI_GOAL_STAY_STILL (1 << 20) // 0x00100000
-#define AI_GOAL_PLAY_DEAD (1 << 21)  // 0x00200000
+#define AI_GOAL_PLAY_DEAD  (1 << 21) // 0x00200000
 
 // added by SCP
-#define AI_GOAL_CHASE_WEAPON (1 << 22)     // 0x00400000
-#define AI_GOAL_FLY_TO_SHIP (1 << 23)      // 0x00800000
-#define AI_GOAL_IGNORE_NEW (1 << 24)       // 0x01000000
+#define AI_GOAL_CHASE_WEAPON     (1 << 22) // 0x00400000
+#define AI_GOAL_FLY_TO_SHIP      (1 << 23) // 0x00800000
+#define AI_GOAL_IGNORE_NEW       (1 << 24) // 0x01000000
 #define AI_GOAL_CHASE_SHIP_CLASS (1 << 25) // 0x02000000
 
 // now the masks for ship types
@@ -98,52 +98,52 @@ extern int Num_ai_goals;
 extern int Num_ai_dock_names;
 extern char Ai_dock_names[MAX_AI_DOCK_NAMES][NAME_LENGTH];
 
-extern const char* Ai_goal_text (int goal);
+extern const char *Ai_goal_text(int goal);
 
 // extern function definitions
-extern void ai_post_process_mission ();
-extern void ai_maybe_add_form_goal (wing* wingp);
-extern void ai_process_mission_orders (int objnum, ai_info* aip);
+extern void ai_post_process_mission();
+extern void ai_maybe_add_form_goal(wing *wingp);
+extern void ai_process_mission_orders(int objnum, ai_info *aip);
 
-extern int ai_goal_num (ai_goal* goals);
+extern int ai_goal_num(ai_goal *goals);
 
 // adds goals to ships/wing through sexpressions
-extern void ai_add_ship_goal_scripting (
-    int mode, int submode, int priority, char* shipname, ai_info* aip);
-extern void ai_add_ship_goal_sexp (int sexp, int type, ai_info* aip);
-extern void ai_add_wing_goal_sexp (int sexp, int type, int wingnum);
-extern void ai_add_goal_sub_sexp (int sexp, int type, ai_goal* aigp);
+extern void ai_add_ship_goal_scripting(
+        int mode, int submode, int priority, char *shipname, ai_info *aip);
+extern void ai_add_ship_goal_sexp(int sexp, int type, ai_info *aip);
+extern void ai_add_wing_goal_sexp(int sexp, int type, int wingnum);
+extern void ai_add_goal_sub_sexp(int sexp, int type, ai_goal *aigp);
 
-extern int ai_remove_goal_sexp_sub (int sexp, ai_goal* aigp);
-extern void ai_remove_wing_goal_sexp (int sexp, int wingnum);
+extern int ai_remove_goal_sexp_sub(int sexp, ai_goal *aigp);
+extern void ai_remove_wing_goal_sexp(int sexp, int wingnum);
 
 // adds goals to ships/sings through player orders
-extern void ai_add_ship_goal_player (
-    int type, int mode, int submode, char* shipname, ai_info* aip);
-extern void ai_add_wing_goal_player (
-    int type, int mode, int submode, char* shipname, int wingnum);
+extern void ai_add_ship_goal_player(
+        int type, int mode, int submode, char *shipname, ai_info *aip);
+extern void ai_add_wing_goal_player(
+        int type, int mode, int submode, char *shipname, int wingnum);
 
-extern void ai_remove_ship_goal (ai_info* aip, int index);
-extern void ai_clear_ship_goals (ai_info* aip);
-extern void ai_clear_wing_goals (int wingnum);
+extern void ai_remove_ship_goal(ai_info *aip, int index);
+extern void ai_clear_ship_goals(ai_info *aip);
+extern void ai_clear_wing_goals(int wingnum);
 
-extern void ai_copy_mission_wing_goal (ai_goal* aigp, ai_info* aip);
+extern void ai_copy_mission_wing_goal(ai_goal *aigp, ai_info *aip);
 
-extern void ai_mission_goal_complete (ai_info* aip);
-extern void ai_mission_wing_goal_complete (int wingnum, ai_goal* remove_goalp);
+extern void ai_mission_goal_complete(ai_info *aip);
+extern void ai_mission_wing_goal_complete(int wingnum, ai_goal *remove_goalp);
 
-extern void ai_update_goal_references (
-    ai_goal* goals, int type, const char* old_name, const char* new_name);
+extern void ai_update_goal_references(
+        ai_goal *goals, int type, const char *old_name, const char *new_name);
 extern int
-query_referenced_in_ai_goals (ai_goal* goals, int type, const char* name);
-extern char* ai_add_dock_name (const char* str);
+query_referenced_in_ai_goals(ai_goal *goals, int type, const char *name);
+extern char *ai_add_dock_name(const char *str);
 
-extern int ai_query_goal_valid (int ship, int ai_goal_type);
+extern int ai_query_goal_valid(int ship, int ai_goal_type);
 
-extern void ai_add_goal_ship_internal (
-    ai_info* aip, int goal_type, char* name, int docker_point,
-    int dockee_point, int immediate = 1);
-extern void ai_add_goal_wing_internal (
-    wing* wingp, int goal_type, char* name, int immediate = 1);
+extern void ai_add_goal_ship_internal(
+        ai_info *aip, int goal_type, char *name, int docker_point,
+        int dockee_point, int immediate = 1);
+extern void ai_add_goal_wing_internal(
+        wing *wingp, int goal_type, char *name, int immediate = 1);
 
 #endif // FREESPACE2_AI_AIGOALS_HH

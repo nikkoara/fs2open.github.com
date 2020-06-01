@@ -32,26 +32,26 @@ namespace util {
 template< class Tag, class Impl, Impl default_value >
 class ID {
 public:
-    typedef Tag tag_type;
-    typedef Impl impl_type;
+        typedef Tag tag_type;
+        typedef Impl impl_type;
 
-    static ID invalid () { return ID (); }
+        static ID invalid() { return ID(); }
 
-    // Defaults to ID::invalid()
-    ID () : m_val (default_value) {}
+        // Defaults to ID::invalid()
+        ID() : m_val(default_value) { }
 
-    // Explicit constructor:
-    explicit ID (Impl val) : m_val (val) {}
+        // Explicit constructor:
+        explicit ID(Impl val) : m_val(val) { }
 
-    inline Impl value () const { return m_val; }
+        inline Impl value() const { return m_val; }
 
-    friend bool operator== (ID a, ID b) { return a.m_val == b.m_val; }
-    friend bool operator!= (ID a, ID b) { return a.m_val != b.m_val; }
+        friend bool operator==(ID a, ID b) { return a.m_val == b.m_val; }
+        friend bool operator!=(ID a, ID b) { return a.m_val != b.m_val; }
 
-    inline bool isValid () { return m_val != default_value; }
+        inline bool isValid() { return m_val != default_value; }
 
 private:
-    Impl m_val;
+        Impl m_val;
 };
 
 } // namespace util

@@ -17,15 +17,15 @@
 namespace tracing {
 
 class Category {
-    const char* _name;
-    bool _graphics_category;
+        const char *_name;
+        bool _graphics_category;
 
 public:
-    Category (const char* name, bool is_graphics);
+        Category(const char *name, bool is_graphics);
 
-    const char* getName () const;
+        const char *getName() const;
 
-    bool usesGPUCounter () const;
+        bool usesGPUCounter() const;
 };
 
 extern Category LuaOnFrame;

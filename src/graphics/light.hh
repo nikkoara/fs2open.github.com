@@ -5,8 +5,9 @@
 
 #include "defs.hh"
 
-#include "lighting/lighting.hh"
+#include "cmdline/cmdline.hh"
 #include "graphics/util/uniform_structs.hh"
+#include "lighting/lighting.hh"
 
 // Variables
 extern graphics::model_light gr_light_uniforms[graphics::MAX_UNIFORM_LIGHTS];
@@ -21,15 +22,15 @@ extern float gr_light_ambient[4];
 extern float gr_user_ambient;
 
 // Functions
-void gr_set_light (light* fs_light);
-void gr_reset_lighting ();
-void gr_set_lighting (bool set, bool state);
-void gr_set_center_alpha (int type);
-void gr_set_ambient_light (int red, int green, int blue);
+void gr_set_light(light *fs_light);
+void gr_reset_lighting();
+void gr_set_lighting(bool set, bool state);
+void gr_set_center_alpha(int type);
+void gr_set_ambient_light(int red, int green, int blue);
 
-void gr_calculate_ambient_factor (int ambient_factor = Cmdline_ambient_factor);
+void gr_calculate_ambient_factor(int ambient_factor = Cmdline_ambient_factor);
 
-void gr_light_init ();
-void gr_light_shutdown ();
+void gr_light_init();
+void gr_light_shutdown();
 
 #endif // FREESPACE2_GRAPHICS_LIGHT_HH

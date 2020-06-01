@@ -5,12 +5,10 @@
 
 #include "defs.hh"
 
+#include "libs/ffmpeg/FFmpegContext.hh"
+#include "osapi/osapi.hh"
 #include "sound/audiostr.hh"
 #include "sound/openal.hh"
-
-#include "libs/ffmpeg/FFmpegContext.hh"
-
-#include "osapi/osapi.hh"
 
 namespace ffmpeg {
 
@@ -18,9 +16,9 @@ namespace ffmpeg {
  * @brief Properties of an audio stream
  */
 struct AudioProperties {
-    int sample_rate = -1;
-    int64_t channel_layout = -1;
-    AVSampleFormat format = AV_SAMPLE_FMT_NONE;
+        int sample_rate = -1;
+        int64_t channel_layout = -1;
+        AVSampleFormat format = AV_SAMPLE_FMT_NONE;
 };
 
 // Forward declaration
@@ -35,33 +33,33 @@ class FFmpegAudioReader;
  * @details This uses FFmpeg to decode the audio files.
  */
 class WaveFile {
-    std::unique_ptr< libs::ffmpeg::FFmpegContext > m_ctx;
+        std::unique_ptr< libs::ffmpeg::FFmpegContext > m_ctx;
 
-    AudioProperties m_baseAudioProps;
-    AudioProperties m_audioProps;
+        AudioProperties m_baseAudioProps;
+        AudioProperties m_audioProps;
 
-    SwrContext* m_resampleCtx = nullptr;
+        SwrContext *m_resampleCtx = nullptr;
 
-    int m_audioStreamIndex = -1;
-    AVStream* m_audioStream = nullptr;
+        int m_audioStreamIndex = -1;
+        AVStream *m_audioStream = nullptr;
 
-    AVFrame* m_decodeFrame = nullptr;
+        AVFrame *m_decodeFrame = nullptr;
 
-    AVCodecContext* m_audioCodecCtx = nullptr;
+        AVCodecContext *m_audioCodecCtx = nullptr;
 
-    std::unique_ptr< FFmpegAudioReader > m_frameReader;
+        std::unique_ptr< FFmpegAudioReader > m_frameReader;
 
-    size_t getBufferedData (uint8_t* buffer, size_t buffer_size);
+        size_t getBufferedData(uint8_t *buffer, size_t buffer_size);
 
 public:
-    WaveFile ();
-    ~WaveFile ();
+        WaveFile();
+        ~WaveFile();
 
-    // Disallow copying
-    WaveFile (const WaveFile&) = delete;
-    WaveFile& operator= (const WaveFile&) = delete;
+        // Disallow copying
+        WaveFile(const WaveFile &) = delete;
+        WaveFile &operator=(const WaveFile &) = delete;
 
-    /**
+        /**
      * @brief Opens the specified file for playback
      *
      * After this call you can start reading from this file
@@ -71,9 +69,9 @@ public:
      * should be kept
      * @return @c true if the file was succesfully loaded, @c false otherwise
      */
-    bool Open (const char* pszFilename, bool keep_ext = true);
+        bool Open(const char *pszFilename, bool keep_ext = true);
 
-    /**
+        /**
      * @brief Prepare file for audio reading
      *
      * This reset the file poiner to the start of the stream and reset internal
@@ -82,9 +80,9 @@ public:
      *
      * @return @c true if succesfull, @c false otherwise
      */
-    bool Cue ();
+        bool Cue();
 
-    /**
+        /**
      * @brief Read audio data into a buffer
      *
      * Reads up to cbSize bytes of audio data into the buffer. cbSize must be a
@@ -96,51 +94,51 @@ public:
      * is available, try a bigger buffer. Returns -1 when the end of the stream
      * or an error has been encountered
      */
-    int Read (uint8_t* pbDest, size_t cbSize);
+        int Read(uint8_t *pbDest, size_t cbSize);
 
-    /**
+        /**
      * @brief Gets the OpenAL format of the audio.
      * @return The OpenAL format.
      */
-    ALenum getALFormat () const;
+        ALenum getALFormat() const;
 
-    /**
+        /**
      * @brief Gets the size in bytes of one audio sample
      * @return The sample byte size
      */
-    int getSampleByteSize () const;
+        int getSampleByteSize() const;
 
-    /**
+        /**
      * @brief Gets the amount of samples per second
      * @return The sample rate
      */
-    int getSampleRate () const;
+        int getSampleRate() const;
 
-    /**
+        /**
      * @brief Determines length of the file in seconds
      * @return The length of the audio in the file in seconds
      */
-    double getDuration () const;
+        double getDuration() const;
 
-    /**
+        /**
      * @brief Get total number of samples in the file
      * @return The total number of samples in the file
      */
-    int getTotalSamples () const;
+        int getTotalSamples() const;
 
-    /**
+        /**
      * @brief Gets number of channels of the audio in the file
      * @return The number of channels
      */
-    int getNumChannels () const;
+        int getNumChannels() const;
 
-    /**
+        /**
      * @brief Gets the properties of the audio in the file
      * @return The audio properties
      */
-    const AudioProperties& getAudioProperties () const { return m_audioProps; }
+        const AudioProperties &getAudioProperties() const { return m_audioProps; }
 
-    /**
+        /**
      * @brief Changes the audio format the read functions return
      *
      * This will enable resampling of the audio read from the file. This can be
@@ -149,11 +147,11 @@ public:
      *
      * @param props The desired properties of the output
      */
-    void setAdjustedAudioProperties (const AudioProperties& props);
+        void setAdjustedAudioProperties(const AudioProperties &props);
 
 protected:
-    size_t handleDecodedFrame (
-        AVFrame* av_frame, uint8_t* out_buffer, size_t buffer_size);
+        size_t handleDecodedFrame(
+                AVFrame *av_frame, uint8_t *out_buffer, size_t buffer_size);
 };
 
 } // namespace ffmpeg

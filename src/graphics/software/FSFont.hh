@@ -5,9 +5,9 @@
 
 #include "defs.hh"
 
-#include "graphics/2d.hh"
-
 #include <limits>
+
+#include "graphics/2d.hh"
 
 namespace font {
 /**
@@ -17,10 +17,10 @@ namespace font {
  * specific behavior
  */
 enum FontType {
-    VFNT_FONT,    //!< A normal FreeSpace font
-    NVG_FONT,     //!< A TrueType font as used by the NanoVG library
-    UNKNOWN_FONT, //!< An unknown font type. Probably means that an error
-                  //!< happened
+        VFNT_FONT,    //!< A normal FreeSpace font
+        NVG_FONT,     //!< A TrueType font as used by the NanoVG library
+        UNKNOWN_FONT, //!< An unknown font type. Probably means that an error
+                      //!< happened
 };
 
 /**
@@ -33,52 +33,52 @@ enum FontType {
  */
 class FSFont {
 private:
-    std::string name; //!< The name of this font
+        std::string name; //!< The name of this font
 
 protected:
-    float offsetTop;    //!< The offset at the top of a line of text
-    float offsetBottom; //!< The offset at the bottom of a line of text
+        float offsetTop;    //!< The offset at the top of a line of text
+        float offsetBottom; //!< The offset at the bottom of a line of text
 
-    float _height;
-    float _ascender;
-    float _descender;
+        float _height;
+        float _ascender;
+        float _descender;
 
-    void checkFontMetrics ();
+        void checkFontMetrics();
 
 public:
-    /**
+        /**
      * @brief   Default constructor.
      *
      * @date    23.11.2011
      */
-    FSFont ();
+        FSFont();
 
-    /**
+        /**
      * @brief   Destructor.
      *
      * @date    23.11.2011
      */
-    virtual ~FSFont ();
+        virtual ~FSFont();
 
-    /**
+        /**
      * @brief   Sets the name of this font.
      *
      * @date    23.11.2011
      *
      * @param   name    The new name.
      */
-    void setName (const std::string& newName);
+        void setName(const std::string &newName);
 
-    /**
+        /**
      * @brief   Gets the name of this font.
      *
      * @date    23.11.2011
      *
      * @return  The name.
      */
-    const std::string& getName () const;
+        const std::string &getName() const;
 
-    /**
+        /**
      * @brief   Gets the type of this font.
      *
      * The return value depends on the implementing subclass.
@@ -90,9 +90,9 @@ public:
      * @see FontType::VFNT_FONT
      * @see FontType::FTGL_FONT
      */
-    virtual FontType getType () const = 0;
+        virtual FontType getType() const = 0;
 
-    /**
+        /**
      * @brief   Gets the height of this font in pixels with regard to font top
      * and bottom offsets.
      *
@@ -100,9 +100,9 @@ public:
      *
      * @return  The height.
      */
-    float getHeight () const;
+        float getHeight() const;
 
-    /**
+        /**
      * @brief   Gets the height of this font in pixels without the top and
      * bottom offsets.
      *
@@ -110,9 +110,9 @@ public:
      *
      * @return  The height.
      */
-    virtual float getTextHeight () const = 0;
+        virtual float getTextHeight() const = 0;
 
-    /**
+        /**
      * @brief   Gets a string size.
      * Computes the size of the given string when it would be drawn by this
      * font
@@ -125,22 +125,22 @@ public:
      * @param [out]     width   If non-null, the width.
      * @param [out]     height  If non-null, the height.
      */
-    virtual void getStringSize (
-        const char* text,
-        size_t textLen = std::numeric_limits< size_t >::max (),
-        int resize_mode = -1, float* width = NULL,
-        float* height = NULL) const = 0;
+        virtual void getStringSize(
+                const char *text,
+                size_t textLen = std::numeric_limits< size_t >::max(),
+                int resize_mode = -1, float *width = NULL,
+                float *height = NULL) const = 0;
 
-    /**
+        /**
      * @brief   Gets the offset of this font from the top of the drawing line
      *
      * @date    27.11.2012
      *
      * @return  The top offset.
      */
-    float getTopOffset () const;
+        float getTopOffset() const;
 
-    /**
+        /**
      * @brief   Gets the offset of this font from the bottom of the end of the
      * text to where the next line will start.
      *
@@ -148,42 +148,42 @@ public:
      *
      * @return  The bottom offset.
      */
-    float getBottomOffset () const;
+        float getBottomOffset() const;
 
-    /**
+        /**
      * @brief   Sets the top offset for this font
      *
      * @date    27.1.2012
      *
      * @param   newOffset The new top offset for this font
      */
-    void setTopOffset (float newOffset);
+        void setTopOffset(float newOffset);
 
-    /**
+        /**
      * @brief   Sets the bottom offset for this font
      *
      * @date    27.1.2012
      *
      * @param   newOffset The new bottom offset for this font
      */
-    void setBottomOffset (float newOffset);
+        void setBottomOffset(float newOffset);
 
-    /**
+        /**
      * @brief Recomputes the font metrics
      */
-    virtual void computeFontMetrics ();
+        virtual void computeFontMetrics();
 
-    /**
+        /**
      * @brief Gets the ascender value of this font
      * @return The ascender value
      */
-    float getAscender ();
+        float getAscender();
 
-    /**
+        /**
      * @breif Gets the descender value of this font
      * @return The descender value
      */
-    float getDescender ();
+        float getDescender();
 };
 } // namespace font
 

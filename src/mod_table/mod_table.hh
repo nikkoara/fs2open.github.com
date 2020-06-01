@@ -41,7 +41,7 @@ extern std::string Window_icon_path;
 extern bool Disable_built_in_translations;
 extern bool Weapon_shockwaves_respect_huge;
 
-void mod_table_init ();
+void mod_table_init();
 
 /**
  * @brief Resets the mod values back to their default values
@@ -49,7 +49,7 @@ void mod_table_init ();
  * This is mostly useful for the unit tests where mod value changes can
  * interfere with other tests
  */
-void mod_table_reset ();
+void mod_table_reset();
 
 /**
  * @brief Checks if the mod specified support for the given engine version
@@ -66,6 +66,6 @@ void mod_table_reset ();
  * @return @c true if the mod specified support for this or a later version, @c
  * false otherwise
  */
-bool mod_supports_version (int major, int minor, int build);
+bool mod_supports_version(int major, int minor, int build);
 
 #endif // FREESPACE2_MOD_TABLE_MOD_TABLE_HH

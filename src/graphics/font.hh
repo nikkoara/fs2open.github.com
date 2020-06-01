@@ -5,7 +5,7 @@
 
 #include "defs.hh"
 
-#include "graphics/software/font.hh"
 #include "graphics/software/FontManager.hh"
+#include "graphics/software/font.hh"
 
 #endif // FREESPACE2_GRAPHICS_FONT_HH

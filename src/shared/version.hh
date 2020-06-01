@@ -36,26 +36,26 @@
 namespace gameversion {
 
 struct version {
-    int major = 0;
-    int minor = 0;
-    int build = 0;
-    int revision = 0;
+        int major = 0;
+        int minor = 0;
+        int build = 0;
+        int revision = 0;
 
-    version () {}
+        version() { }
 
-    version (int major, int minor, int build, int revision);
+        version(int major, int minor, int build, int revision);
 
-    bool operator< (const version& other) const;
-    bool operator== (const version& other) const;
-    bool operator!= (const version& other) const;
-    bool operator> (const version& rhs) const;
-    bool operator<= (const version& rhs) const;
-    bool operator>= (const version& rhs) const;
+        bool operator<(const version &other) const;
+        bool operator==(const version &other) const;
+        bool operator!=(const version &other) const;
+        bool operator>(const version &rhs) const;
+        bool operator<=(const version &rhs) const;
+        bool operator>=(const version &rhs) const;
 };
 
-version parse_version ();
+version parse_version();
 
-version get_executable_version ();
+version get_executable_version();
 
 /**
  * @brief Checks if the current version is at least the given version
@@ -64,14 +64,14 @@ version get_executable_version ();
  *
  * @returns @c true when we are at least the given version, @c false otherwise
  */
-bool check_at_least (const version& v);
+bool check_at_least(const version &v);
 
 /**
  * @brief Returns the string representation of the passed version
  * @param major The version to format
  * @returns A string representation of the version number
  */
-std::string format_version (const version& v);
+std::string format_version(const version &v);
 
 } // namespace gameversion
 

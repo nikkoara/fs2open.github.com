@@ -17,36 +17,36 @@ class SubtitleDecoder;
 
 class FFMPEGDecoder : public Decoder {
 private:
-    std::unique_ptr< InputStream > m_input;
+        std::unique_ptr< InputStream > m_input;
 
-    std::unique_ptr< InputStream > m_subtitleInput;
+        std::unique_ptr< InputStream > m_subtitleInput;
 
-    std::unique_ptr< DecoderStatus > m_status;
+        std::unique_ptr< DecoderStatus > m_status;
 
-    PlaybackProperties m_properties;
+        PlaybackProperties m_properties;
 
-    bool hasExternalSubtitle () const;
+        bool hasExternalSubtitle() const;
 
-    void runSubtitleDecoder (SubtitleDecoder* decoder);
+        void runSubtitleDecoder(SubtitleDecoder *decoder);
 
 public:
-    FFMPEGDecoder ();
+        FFMPEGDecoder();
 
-    ~FFMPEGDecoder () override;
+        ~FFMPEGDecoder() override;
 
-    bool initialize (
-        const std::string& fileName,
-        const PlaybackProperties& properties) override;
+        bool initialize(
+                const std::string &fileName,
+                const PlaybackProperties &properties) override;
 
-    MovieProperties getProperties () const override;
+        MovieProperties getProperties() const override;
 
-    void startDecoding () override;
+        void startDecoding() override;
 
-    bool hasAudio () const override;
+        bool hasAudio() const override;
 
-    bool hasSubtitles () const override;
+        bool hasSubtitles() const override;
 
-    void close () override;
+        void close() override;
 };
 } // namespace ffmpeg
 } // namespace cutscene

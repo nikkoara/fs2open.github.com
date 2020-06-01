@@ -25,7 +25,7 @@ struct font;
  *
  * @param firstFont The std::string which should contain the name
  */
-void stuff_first (std::string& firstFont);
+void stuff_first(std::string &firstFont);
 
 /**
  * Crops a string if required to force it to not exceed max_width pixels when
@@ -38,7 +38,7 @@ void stuff_first (std::string& firstFont);
  * to).
  * @return                      The width of the string
  */
-int force_fit_string (char* str, int max_str, int max_width);
+int force_fit_string(char *str, int max_str, int max_width);
 
 /**
  * @brief Inites the font system
@@ -46,22 +46,23 @@ int force_fit_string (char* str, int max_str, int max_width);
  * Initializes the font system by setting up the FontManager, parse the font
  * table(s) and set the current font id to 0.
  */
-void init ();
+void init();
 
 /**
  * @brief Closes the Font system
  *
  * Deallocates all allocated memory for the fonts and the respective font data.
  */
-void close ();
+void close();
 
 /**
  * Retrieves the font which is located at index @c font_num and sets this font
  * as the current font
  * @param font_num The new font number, may not be an illegal font number
  */
-inline void set_font (int fontnum) {
-    FontManager::setCurrentFont (FontManager::getFont (fontnum));
+inline void set_font(int fontnum)
+{
+        FontManager::setCurrentFont(FontManager::getFont(fontnum));
 }
 
 /**
@@ -73,15 +74,16 @@ inline void set_font (int fontnum) {
  *
  * @return The font index or -1 on error
  */
-int parse_font ();
+int parse_font();
 
 /**
  * @brief The currently active font index
  * @return The font index or -1 when the FontManager hasnt't been initialized
  * yet
  */
-inline int get_current_fontnum () {
-    return FontManager::getCurrentFontIndex ();
+inline int get_current_fontnum()
+{
+        return FontManager::getCurrentFontIndex();
 }
 
 /**
@@ -89,7 +91,7 @@ inline int get_current_fontnum () {
  *
  * @return The current font object or NULL when not yet ready
  */
-FSFont* get_current_font ();
+FSFont *get_current_font();
 
 /**
  * @brief Retrieves a font by index
@@ -99,8 +101,9 @@ FSFont* get_current_font ();
  * @param fontNum The index which should be returned
  * @return A font pointer or NULL of the index is not valid
  */
-inline FSFont* get_font (int fontNum) {
-    return FontManager::getFont (fontNum);
+inline FSFont *get_font(int fontNum)
+{
+        return FontManager::getFont(fontNum);
 }
 
 /**
@@ -109,7 +112,7 @@ inline FSFont* get_font (int fontNum) {
  * @param name The name which should be searched
  * @return The font pointer or NULL if no font with that name could be found
  */
-FSFont* get_font (const std::string& name);
+FSFont *get_font(const std::string &name);
 
 } // namespace font
 

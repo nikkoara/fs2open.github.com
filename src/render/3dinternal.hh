@@ -17,11 +17,11 @@ extern float View_zoom;
 extern vec3d View_position, Matrix_scale;
 extern matrix View_matrix, Unscaled_matrix;
 
-extern void free_temp_point (vertex* p);
-extern vertex**
-clip_polygon (vertex** src, vertex** dest, int* nv, ccodes* cc, uint flags);
-extern void init_free_points (void);
-extern void clip_line (vertex** p0, vertex** p1, ubyte codes_or, uint flags);
+extern void free_temp_point(vertex *p);
+extern vertex **
+clip_polygon(vertex **src, vertex **dest, int *nv, ccodes *cc, uint flags);
+extern void init_free_points(void);
+extern void clip_line(vertex **p0, vertex **p1, ubyte codes_or, uint flags);
 
 extern int G3_count;
 
@@ -30,6 +30,6 @@ extern vec3d G3_user_clip_normal;
 extern vec3d G3_user_clip_point;
 
 // Returns TRUE if point is behind user plane
-extern int g3_point_behind_user_plane (const vec3d* pnt);
+extern int g3_point_behind_user_plane(const vec3d *pnt);
 
 #endif // FREESPACE2_RENDER_3DINTERNAL_HH

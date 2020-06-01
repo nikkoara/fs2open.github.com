@@ -8,67 +8,73 @@
 #include "GPUMemoryHeap.hh"
 
 namespace {
-BufferType getBufferType (GpuHeap heap_type) {
-    switch (heap_type) {
-    case GpuHeap::ModelVertex: return BufferType::Vertex;
-    case GpuHeap::ModelIndex: return BufferType::Index;
-    case GpuHeap::NUM_VALUES:
-    default:
-        ASSERT (0);
-        return BufferType::Vertex;
-    }
+BufferType getBufferType(GpuHeap heap_type)
+{
+        switch (heap_type) {
+        case GpuHeap::ModelVertex: return BufferType::Vertex;
+        case GpuHeap::ModelIndex: return BufferType::Index;
+        case GpuHeap::NUM_VALUES:
+        default:
+                ASSERT(0);
+                return BufferType::Vertex;
+        }
 }
 } // namespace
 
 namespace graphics {
 namespace util {
 
-GPUMemoryHeap::GPUMemoryHeap (GpuHeap heap_type) {
-    _bufferHandle =
-        gr_create_buffer (getBufferType (heap_type), BufferUsageHint::Static);
+GPUMemoryHeap::GPUMemoryHeap(GpuHeap heap_type)
+{
+        _bufferHandle = gr_create_buffer(getBufferType(heap_type), BufferUsageHint::Static);
 
-    _allocator.reset (
-        new ::util::HeapAllocator ([this](size_t n) { resizeBuffer (n); }));
+        _allocator.reset(
+                new ::util::HeapAllocator([this](size_t n) { resizeBuffer(n); }));
 }
-GPUMemoryHeap::~GPUMemoryHeap () {
-    if (_bufferHandle != -1) {
-        gr_delete_buffer (_bufferHandle);
-        _bufferHandle = -1;
-    }
+GPUMemoryHeap::~GPUMemoryHeap()
+{
+        if (_bufferHandle != -1) {
+                gr_delete_buffer(_bufferHandle);
+                _bufferHandle = -1;
+        }
 
-    if (_dataBuffer != nullptr) {
-        free (_dataBuffer);
+        if (_dataBuffer != nullptr) {
+                free(_dataBuffer);
 
-        _dataBuffer = nullptr;
-        _bufferSize = 0;
-    }
+                _dataBuffer = nullptr;
+                _bufferSize = 0;
+        }
 }
-void GPUMemoryHeap::resizeBuffer (size_t newSize) {
-    _dataBuffer = realloc (_dataBuffer, newSize);
-    _bufferSize = newSize;
+void GPUMemoryHeap::resizeBuffer(size_t newSize)
+{
+        _dataBuffer = realloc(_dataBuffer, newSize);
+        _bufferSize = newSize;
 
-    gr_update_buffer_data (_bufferHandle, _bufferSize, _dataBuffer);
+        gr_update_buffer_data(_bufferHandle, _bufferSize, _dataBuffer);
 }
-void* GPUMemoryHeap::bufferPointer (size_t offset) {
-    auto bytePtr = reinterpret_cast< uint8_t* > (_dataBuffer);
+void *GPUMemoryHeap::bufferPointer(size_t offset)
+{
+        auto bytePtr = reinterpret_cast< uint8_t * >(_dataBuffer);
 
-    return reinterpret_cast< void* > (bytePtr + offset);
+        return reinterpret_cast< void * >(bytePtr + offset);
 }
-size_t GPUMemoryHeap::allocateGpuData (size_t size, void* data) {
-    auto offset = _allocator->allocate (size);
+size_t GPUMemoryHeap::allocateGpuData(size_t size, void *data)
+{
+        auto offset = _allocator->allocate(size);
 
-    auto dataPtr = bufferPointer (offset);
-    memcpy (dataPtr, data, size);
-    gr_update_buffer_data_offset (_bufferHandle, offset, size, data);
+        auto dataPtr = bufferPointer(offset);
+        memcpy(dataPtr, data, size);
+        gr_update_buffer_data_offset(_bufferHandle, offset, size, data);
 
-    return offset;
+        return offset;
 }
-void GPUMemoryHeap::freeGpuData (size_t offset) {
-    _allocator->free (offset);
-    // Just leave the data in the buffers since it doesn't hurt anyone if it's
-    // kept in there
+void GPUMemoryHeap::freeGpuData(size_t offset)
+{
+        _allocator->free(offset);
+        // Just leave the data in the buffers since it doesn't hurt anyone if it's
+        // kept in there
 }
-int GPUMemoryHeap::bufferHandle () { return _bufferHandle; }
+int GPUMemoryHeap::bufferHandle() { return _bufferHandle; }
 
 } // namespace util
 } // namespace graphics

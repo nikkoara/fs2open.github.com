@@ -1,10 +1,13 @@
 // -*- mode: c++; -*-
 
-#include <climits> // this is need even when not building debug!!
-#include <type_traits>
+#include "missionui/missionscreencommon.hh"
 
 #include "defs.hh"
+
+#include <climits> // this is need even when not building debug!!
+
 #include "anim/animplay.hh"
+#include "assert/assert.hh"
 #include "cmdline/cmdline.hh"
 #include "cutscene/cutscenes.hh"
 #include "cutscene/movie.hh"
@@ -12,7 +15,6 @@
 #include "gamesequence/gamesequence.hh"
 #include "gamesnd/eventmusic.hh"
 #include "gamesnd/gamesnd.hh"
-#include "util/list.hh"
 #include "graphics/2d.hh"
 #include "graphics/matrix.hh"
 #include "graphics/shadows.hh"
@@ -21,8 +23,8 @@
 #include "io/mouse.hh"
 #include "io/timer.hh"
 #include "lighting/lighting.hh"
+#include "log/log.hh"
 #include "missionui/missionbrief.hh"
-#include "missionui/missionscreencommon.hh"
 #include "missionui/missionshipchoice.hh"
 #include "missionui/missionweaponchoice.hh"
 #include "parse/sexp.hh"
@@ -31,9 +33,10 @@
 #include "render/batching.hh"
 #include "ship/ship.hh"
 #include "ui/uidefs.hh"
+#include "util/list.hh"
 #include "weapon/weapon.hh"
-#include "assert/assert.hh"
-#include "log/log.hh"
+
+#include <type_traits>
 
 //////////////////////////////////////////////////////////////////
 // Game Globals
@@ -48,7 +51,7 @@ int Mouse_down_last_frame = 0;
 
 // Timers used to flash buttons after timeouts
 #define MSC_FLASH_AFTER_TIME 60000 // time before flashing a button
-#define MSC_FLASH_INTERVAL 200     // time between flashes
+#define MSC_FLASH_INTERVAL   200   // time between flashes
 int Flash_timer;                   // timestamp used to start flashing
 int Flash_toggle;                  // timestamp used to toggle flashing
 int Flash_bright;                  // state of button to flash
@@ -58,8 +61,7 @@ int Flash_bright;                  // state of button to flash
 //////////////////////////////////////////////////////////////////
 int Current_screen;
 int Next_screen;
-static int InterfacePaletteBitmap =
-    -1; // PCX file that holds the interface palette
+static int InterfacePaletteBitmap = -1; // PCX file that holds the interface palette
 color Icon_colors[NUM_ICON_FRAMES];
 shader Icon_shaders[NUM_ICON_FRAMES];
 
@@ -78,96 +80,97 @@ int Wl_pool_teams[MAX_TVT_TEAMS][MAX_WEAPON_TYPES];
 int Ss_pool_teams[MAX_TVT_TEAMS][MAX_SHIP_CLASSES];
 int Wss_num_wings_teams[MAX_TVT_TEAMS];
 
-wss_unit* Wss_slots = NULL;
-int* Wl_pool = NULL;
-int* Ss_pool = NULL;
+wss_unit *Wss_slots = NULL;
+int *Wl_pool = NULL;
+int *Ss_pool = NULL;
 int Wss_num_wings;
 
 //////////////////////////////////////////////////////////////////
 // Externs
 //////////////////////////////////////////////////////////////////
-extern void ss_set_team_pointers (int team);
-extern void ss_reset_team_pointers ();
-extern void wl_set_team_pointers (int team);
-extern void wl_reset_team_pointers ();
+extern void ss_set_team_pointers(int team);
+extern void ss_reset_team_pointers();
+extern void wl_set_team_pointers(int team);
+extern void wl_reset_team_pointers();
 extern int anim_timer_start;
-extern void ss_reset_selected_ship ();
+extern void ss_reset_selected_ship();
 
 //////////////////////////////////////////////////////////////////
 // UI
 //////////////////////////////////////////////////////////////////
-UI_WINDOW* Active_ui_window;
+UI_WINDOW *Active_ui_window;
 
 brief_common_buttons
-    Common_buttons[3][GR_NUM_RESOLUTIONS][NUM_COMMON_BUTTONS] = {
-        { // UGH
-          {
-              // GR_640
-              brief_common_buttons ("CB_00", 7, 3, 37, 7, 0),
-              brief_common_buttons ("CB_01", 7, 19, 37, 23, 1),
-              brief_common_buttons ("CB_02", 7, 35, 37, 39, 2),
-              brief_common_buttons ("CB_05", 571, 425, 572, 413, 5),
-              brief_common_buttons ("CB_06", 533, 425, 500, 440, 6),
-              brief_common_buttons ("CB_07", 533, 455, 479, 464, 7),
-          },
-          {
-              // GR_1024
-              brief_common_buttons ("2_CB_00", 12, 5, 59, 12, 0),
-              brief_common_buttons ("2_CB_01", 12, 31, 59, 37, 1),
-              brief_common_buttons ("2_CB_02", 12, 56, 59, 62, 2),
-              brief_common_buttons ("2_CB_05", 914, 681, 937, 671, 5),
-              brief_common_buttons ("2_CB_06", 854, 681, 822, 704, 6),
-              brief_common_buttons ("2_CB_07", 854, 724, 800, 743, 7),
-          } },
-        { // UGH
-          {
-              // GR_640
-              brief_common_buttons ("CB_00", 7, 3, 37, 7, 0),
-              brief_common_buttons ("CB_01", 7, 19, 37, 23, 1),
-              brief_common_buttons ("CB_02", 7, 35, 37, 39, 2),
-              brief_common_buttons ("CB_05", 571, 425, 572, 413, 5),
-              brief_common_buttons ("CB_06", 533, 425, 500, 440, 6),
-              brief_common_buttons ("CB_07", 533, 455, 479, 464, 7),
-          },
-          {
-              // GR_1024
-              brief_common_buttons ("2_CB_00", 12, 5, 59, 12, 0),
-              brief_common_buttons ("2_CB_01", 12, 31, 59, 37, 1),
-              brief_common_buttons ("2_CB_02", 12, 56, 59, 62, 2),
-              brief_common_buttons ("2_CB_05", 914, 681, 937, 671, 5),
-              brief_common_buttons ("2_CB_06", 854, 681, 822, 704, 6),
-              brief_common_buttons ("2_CB_07", 854, 724, 800, 743, 7),
-          } },
-        { // UGH
-          {
-              // GR_640
-              brief_common_buttons ("CB_00", 7, 3, 37, 7, 0),
-              brief_common_buttons ("CB_01", 7, 19, 37, 23, 1),
-              brief_common_buttons ("CB_02", 7, 35, 37, 39, 2),
-              brief_common_buttons ("CB_05", 571, 425, 572, 413, 5),
-              brief_common_buttons ("CB_06", 533, 425, 500, 440, 6),
-              brief_common_buttons ("CB_07", 533, 455, 479, 464, 7),
-          },
-          {
-              // GR_1024
-              brief_common_buttons ("2_CB_00", 12, 5, 59, 12, 0),
-              brief_common_buttons ("2_CB_01", 12, 31, 59, 37, 1),
-              brief_common_buttons ("2_CB_02", 12, 56, 59, 62, 2),
-              brief_common_buttons ("2_CB_05", 914, 681, 937, 671, 5),
-              brief_common_buttons ("2_CB_06", 854, 681, 822, 704, 6),
-              brief_common_buttons ("2_CB_07", 854, 724, 800, 743, 7),
-          } }
-    };
+        Common_buttons[3][GR_NUM_RESOLUTIONS][NUM_COMMON_BUTTONS]
+        = {
+                  { // UGH
+                    {
+                            // GR_640
+                            brief_common_buttons("CB_00", 7, 3, 37, 7, 0),
+                            brief_common_buttons("CB_01", 7, 19, 37, 23, 1),
+                            brief_common_buttons("CB_02", 7, 35, 37, 39, 2),
+                            brief_common_buttons("CB_05", 571, 425, 572, 413, 5),
+                            brief_common_buttons("CB_06", 533, 425, 500, 440, 6),
+                            brief_common_buttons("CB_07", 533, 455, 479, 464, 7),
+                    },
+                    {
+                            // GR_1024
+                            brief_common_buttons("2_CB_00", 12, 5, 59, 12, 0),
+                            brief_common_buttons("2_CB_01", 12, 31, 59, 37, 1),
+                            brief_common_buttons("2_CB_02", 12, 56, 59, 62, 2),
+                            brief_common_buttons("2_CB_05", 914, 681, 937, 671, 5),
+                            brief_common_buttons("2_CB_06", 854, 681, 822, 704, 6),
+                            brief_common_buttons("2_CB_07", 854, 724, 800, 743, 7),
+                    } },
+                  { // UGH
+                    {
+                            // GR_640
+                            brief_common_buttons("CB_00", 7, 3, 37, 7, 0),
+                            brief_common_buttons("CB_01", 7, 19, 37, 23, 1),
+                            brief_common_buttons("CB_02", 7, 35, 37, 39, 2),
+                            brief_common_buttons("CB_05", 571, 425, 572, 413, 5),
+                            brief_common_buttons("CB_06", 533, 425, 500, 440, 6),
+                            brief_common_buttons("CB_07", 533, 455, 479, 464, 7),
+                    },
+                    {
+                            // GR_1024
+                            brief_common_buttons("2_CB_00", 12, 5, 59, 12, 0),
+                            brief_common_buttons("2_CB_01", 12, 31, 59, 37, 1),
+                            brief_common_buttons("2_CB_02", 12, 56, 59, 62, 2),
+                            brief_common_buttons("2_CB_05", 914, 681, 937, 671, 5),
+                            brief_common_buttons("2_CB_06", 854, 681, 822, 704, 6),
+                            brief_common_buttons("2_CB_07", 854, 724, 800, 743, 7),
+                    } },
+                  { // UGH
+                    {
+                            // GR_640
+                            brief_common_buttons("CB_00", 7, 3, 37, 7, 0),
+                            brief_common_buttons("CB_01", 7, 19, 37, 23, 1),
+                            brief_common_buttons("CB_02", 7, 35, 37, 39, 2),
+                            brief_common_buttons("CB_05", 571, 425, 572, 413, 5),
+                            brief_common_buttons("CB_06", 533, 425, 500, 440, 6),
+                            brief_common_buttons("CB_07", 533, 455, 479, 464, 7),
+                    },
+                    {
+                            // GR_1024
+                            brief_common_buttons("2_CB_00", 12, 5, 59, 12, 0),
+                            brief_common_buttons("2_CB_01", 12, 31, 59, 37, 1),
+                            brief_common_buttons("2_CB_02", 12, 56, 59, 62, 2),
+                            brief_common_buttons("2_CB_05", 914, 681, 937, 671, 5),
+                            brief_common_buttons("2_CB_06", 854, 681, 822, 704, 6),
+                            brief_common_buttons("2_CB_07", 854, 724, 800, 743, 7),
+                    } }
+          };
 
 #define COMMON_BRIEFING_BUTTON 0
-#define COMMON_SS_BUTTON 1
-#define COMMON_WEAPON_BUTTON 2
-#define COMMON_COMMIT_BUTTON 3
-#define COMMON_HELP_BUTTON 4
-#define COMMON_OPTIONS_BUTTON 5
+#define COMMON_SS_BUTTON       1
+#define COMMON_WEAPON_BUTTON   2
+#define COMMON_COMMIT_BUTTON   3
+#define COMMON_HELP_BUTTON     4
+#define COMMON_OPTIONS_BUTTON  5
 
-int Background_playing; // Flag to indicate background animation is playing
-static anim* Background_anim; // Ids for the anim data that is loaded
+int Background_playing;       // Flag to indicate background animation is playing
+static anim *Background_anim; // Ids for the anim data that is loaded
 
 // value for which Team_data entry to use
 int Common_team;
@@ -179,29 +182,33 @@ int Wing_slot_empty_bitmap;
 int Wing_slot_disabled_bitmap;
 
 // prototypes
-int wss_slots_all_empty ();
+int wss_slots_all_empty();
 
 // Display the no ships selected error
-void common_show_no_ship_error () {
-    popup (
-        PF_USE_AFFIRMATIVE_ICON, 1, POPUP_OK,
-        XSTR (
-            "At least one ship must be selected before proceeding to weapons "
-            "loadout",
-            460));
+void common_show_no_ship_error()
+{
+        popup(
+                PF_USE_AFFIRMATIVE_ICON, 1, POPUP_OK,
+                XSTR(
+                        "At least one ship must be selected before proceeding to weapons "
+                        "loadout",
+                        460));
 }
 
 // Check the status of the buttons common to the loadout screens
-void common_check_buttons () {
-    int i;
-    UI_BUTTON* b;
+void common_check_buttons()
+{
+        int i;
+        UI_BUTTON *b;
 
-    for (i = 0; i < NUM_COMMON_BUTTONS; i++) {
-        b = &Common_buttons[Current_screen - 1][gr_screen.res][i].button;
-        if (b->pressed ()) { common_button_do (i); }
-    }
+        for (i = 0; i < NUM_COMMON_BUTTONS; i++) {
+                b = &Common_buttons[Current_screen - 1][gr_screen.res][i].button;
+                if (b->pressed()) {
+                        common_button_do(i);
+                }
+        }
 
-    /*
+        /*
         // AL 11-23-97: let a joystick button press commit
         if ( joy_down_count(0) || joy_down_count(1) ) {
             Commit_pressed = 1;
@@ -216,252 +223,277 @@ void common_check_buttons () {
 // since we sometimes need to draw pressed buttons last to ensure the entire
 // button gets drawn (and not overlapped by other buttons)
 //
-void common_redraw_pressed_buttons () {
-    int i;
-    UI_BUTTON* b;
+void common_redraw_pressed_buttons()
+{
+        int i;
+        UI_BUTTON *b;
 
-    for (i = 0; i < NUM_COMMON_BUTTONS; i++) {
-        b = &Common_buttons[Current_screen - 1][gr_screen.res][i].button;
-        if (b->button_down ()) { b->draw_forced (2); }
-    }
+        for (i = 0; i < NUM_COMMON_BUTTONS; i++) {
+                b = &Common_buttons[Current_screen - 1][gr_screen.res][i].button;
+                if (b->button_down()) {
+                        b->draw_forced(2);
+                }
+        }
 }
 
-void common_buttons_maybe_reload (UI_WINDOW* /*ui_window*/) {
-    UI_BUTTON* b;
-    int i;
+void common_buttons_maybe_reload(UI_WINDOW * /*ui_window*/)
+{
+        UI_BUTTON *b;
+        int i;
 
-    for (i = 0; i < NUM_COMMON_BUTTONS; i++) {
-        b = &Common_buttons[Current_screen - 1][gr_screen.res][i].button;
-        b->set_bmaps (
-            Common_buttons[Current_screen - 1][gr_screen.res][i].filename);
-    }
+        for (i = 0; i < NUM_COMMON_BUTTONS; i++) {
+                b = &Common_buttons[Current_screen - 1][gr_screen.res][i].button;
+                b->set_bmaps(
+                        Common_buttons[Current_screen - 1][gr_screen.res][i].filename);
+        }
 }
 
-void common_buttons_init (UI_WINDOW* ui_window) {
-    UI_BUTTON* b;
-    int i;
+void common_buttons_init(UI_WINDOW *ui_window)
+{
+        UI_BUTTON *b;
+        int i;
 
-    for (i = 0; i < NUM_COMMON_BUTTONS; i++) {
-        b = &Common_buttons[Current_screen - 1][gr_screen.res][i].button;
-        b->create (
-            ui_window, "",
-            Common_buttons[Current_screen - 1][gr_screen.res][i].x,
-            Common_buttons[Current_screen - 1][gr_screen.res][i].y, 60, 30, 0,
-            1);
-        // set up callback for when a mouse first goes over a button
-        b->set_highlight_action (common_play_highlight_sound);
-        b->set_bmaps (
-            Common_buttons[Current_screen - 1][gr_screen.res][i].filename);
-        b->link_hotspot (
-            Common_buttons[Current_screen - 1][gr_screen.res][i].hotspot);
-    }
+        for (i = 0; i < NUM_COMMON_BUTTONS; i++) {
+                b = &Common_buttons[Current_screen - 1][gr_screen.res][i].button;
+                b->create(
+                        ui_window, "",
+                        Common_buttons[Current_screen - 1][gr_screen.res][i].x,
+                        Common_buttons[Current_screen - 1][gr_screen.res][i].y, 60, 30, 0,
+                        1);
+                // set up callback for when a mouse first goes over a button
+                b->set_highlight_action(common_play_highlight_sound);
+                b->set_bmaps(
+                        Common_buttons[Current_screen - 1][gr_screen.res][i].filename);
+                b->link_hotspot(
+                        Common_buttons[Current_screen - 1][gr_screen.res][i].hotspot);
+        }
 
-    // add some text
-    ui_window->add_XSTR (
-        "Briefing", 1504,
-        Common_buttons[Current_screen - 1][gr_screen.res]
-                      [COMMON_BRIEFING_BUTTON]
-                          .xt,
-        Common_buttons[Current_screen - 1][gr_screen.res]
-                      [COMMON_BRIEFING_BUTTON]
-                          .yt,
-        &Common_buttons[Current_screen - 1][gr_screen.res]
-                       [COMMON_BRIEFING_BUTTON]
-                           .button,
-        UI_XSTR_COLOR_GREEN);
-    ui_window->add_XSTR (
-        "Ship Selection", 1067,
-        Common_buttons[Current_screen - 1][gr_screen.res][COMMON_SS_BUTTON].xt,
-        Common_buttons[Current_screen - 1][gr_screen.res][COMMON_SS_BUTTON].yt,
-        &Common_buttons[Current_screen - 1][gr_screen.res][COMMON_SS_BUTTON]
-             .button,
-        UI_XSTR_COLOR_GREEN);
-    ui_window->add_XSTR (
-        "Weapon Loadout", 1068,
-        Common_buttons[Current_screen - 1][gr_screen.res][COMMON_WEAPON_BUTTON]
-            .xt,
-        Common_buttons[Current_screen - 1][gr_screen.res][COMMON_WEAPON_BUTTON]
-            .yt,
-        &Common_buttons[Current_screen - 1][gr_screen.res]
-                       [COMMON_WEAPON_BUTTON]
-                           .button,
-        UI_XSTR_COLOR_GREEN);
-    ui_window->add_XSTR (
-        "Commit", 1062,
+        // add some text
+        ui_window->add_XSTR(
+                "Briefing", 1504,
+                Common_buttons[Current_screen - 1][gr_screen.res]
+                              [COMMON_BRIEFING_BUTTON]
+                                      .xt,
+                Common_buttons[Current_screen - 1][gr_screen.res]
+                              [COMMON_BRIEFING_BUTTON]
+                                      .yt,
+                &Common_buttons[Current_screen - 1][gr_screen.res]
+                               [COMMON_BRIEFING_BUTTON]
+                                       .button,
+                UI_XSTR_COLOR_GREEN);
+        ui_window->add_XSTR(
+                "Ship Selection", 1067,
+                Common_buttons[Current_screen - 1][gr_screen.res][COMMON_SS_BUTTON].xt,
+                Common_buttons[Current_screen - 1][gr_screen.res][COMMON_SS_BUTTON].yt,
+                &Common_buttons[Current_screen - 1][gr_screen.res][COMMON_SS_BUTTON]
+                         .button,
+                UI_XSTR_COLOR_GREEN);
+        ui_window->add_XSTR(
+                "Weapon Loadout", 1068,
+                Common_buttons[Current_screen - 1][gr_screen.res][COMMON_WEAPON_BUTTON]
+                        .xt,
+                Common_buttons[Current_screen - 1][gr_screen.res][COMMON_WEAPON_BUTTON]
+                        .yt,
+                &Common_buttons[Current_screen - 1][gr_screen.res]
+                               [COMMON_WEAPON_BUTTON]
+                                       .button,
+                UI_XSTR_COLOR_GREEN);
+        ui_window->add_XSTR(
+                "Commit", 1062,
+                Common_buttons[Current_screen - 1][gr_screen.res][COMMON_COMMIT_BUTTON]
+                        .xt,
+                Common_buttons[Current_screen - 1][gr_screen.res][COMMON_COMMIT_BUTTON]
+                        .yt,
+                &Common_buttons[Current_screen - 1][gr_screen.res]
+                               [COMMON_COMMIT_BUTTON]
+                                       .button,
+                UI_XSTR_COLOR_PINK);
+        ui_window->add_XSTR(
+                "Help", 928,
+                Common_buttons[Current_screen - 1][gr_screen.res][COMMON_HELP_BUTTON]
+                        .xt,
+                Common_buttons[Current_screen - 1][gr_screen.res][COMMON_HELP_BUTTON]
+                        .yt,
+                &Common_buttons[Current_screen - 1][gr_screen.res][COMMON_HELP_BUTTON]
+                         .button,
+                UI_XSTR_COLOR_GREEN);
+        ui_window->add_XSTR(
+                "Options", 1036,
+                Common_buttons[Current_screen - 1][gr_screen.res]
+                              [COMMON_OPTIONS_BUTTON]
+                                      .xt,
+                Common_buttons[Current_screen - 1][gr_screen.res]
+                              [COMMON_OPTIONS_BUTTON]
+                                      .yt,
+                &Common_buttons[Current_screen - 1][gr_screen.res]
+                               [COMMON_OPTIONS_BUTTON]
+                                       .button,
+                UI_XSTR_COLOR_GREEN);
+
+        common_reset_buttons();
+
         Common_buttons[Current_screen - 1][gr_screen.res][COMMON_COMMIT_BUTTON]
-            .xt,
-        Common_buttons[Current_screen - 1][gr_screen.res][COMMON_COMMIT_BUTTON]
-            .yt,
-        &Common_buttons[Current_screen - 1][gr_screen.res]
-                       [COMMON_COMMIT_BUTTON]
-                           .button,
-        UI_XSTR_COLOR_PINK);
-    ui_window->add_XSTR (
-        "Help", 928,
+                .button.set_hotkey(KEY_CTRLED + KEY_ENTER);
         Common_buttons[Current_screen - 1][gr_screen.res][COMMON_HELP_BUTTON]
-            .xt,
-        Common_buttons[Current_screen - 1][gr_screen.res][COMMON_HELP_BUTTON]
-            .yt,
-        &Common_buttons[Current_screen - 1][gr_screen.res][COMMON_HELP_BUTTON]
-             .button,
-        UI_XSTR_COLOR_GREEN);
-    ui_window->add_XSTR (
-        "Options", 1036,
-        Common_buttons[Current_screen - 1][gr_screen.res]
-                      [COMMON_OPTIONS_BUTTON]
-                          .xt,
-        Common_buttons[Current_screen - 1][gr_screen.res]
-                      [COMMON_OPTIONS_BUTTON]
-                          .yt,
-        &Common_buttons[Current_screen - 1][gr_screen.res]
-                       [COMMON_OPTIONS_BUTTON]
-                           .button,
-        UI_XSTR_COLOR_GREEN);
+                .button.set_hotkey(KEY_F1);
+        Common_buttons[Current_screen - 1][gr_screen.res][COMMON_OPTIONS_BUTTON]
+                .button.set_hotkey(KEY_F2);
 
-    common_reset_buttons ();
-
-    Common_buttons[Current_screen - 1][gr_screen.res][COMMON_COMMIT_BUTTON]
-        .button.set_hotkey (KEY_CTRLED + KEY_ENTER);
-    Common_buttons[Current_screen - 1][gr_screen.res][COMMON_HELP_BUTTON]
-        .button.set_hotkey (KEY_F1);
-    Common_buttons[Current_screen - 1][gr_screen.res][COMMON_OPTIONS_BUTTON]
-        .button.set_hotkey (KEY_F2);
-
-    // for scramble or training missions, disable the ship/weapon selection
-    // regions
-    if (brief_only_allow_briefing ()) {
-        Common_buttons[Current_screen - 1][gr_screen.res][COMMON_SS_REGION]
-            .button.disable ();
-        Common_buttons[Current_screen - 1][gr_screen.res][COMMON_WEAPON_REGION]
-            .button.disable ();
-    }
+        // for scramble or training missions, disable the ship/weapon selection
+        // regions
+        if (brief_only_allow_briefing()) {
+                Common_buttons[Current_screen - 1][gr_screen.res][COMMON_SS_REGION]
+                        .button.disable();
+                Common_buttons[Current_screen - 1][gr_screen.res][COMMON_WEAPON_REGION]
+                        .button.disable();
+        }
 }
 
 // Try to load background bitmaps as appropriate
-int mission_ui_background_load (
-    const char* custom_background, const char* single_background,
-    const char* multi_background) {
-    int background_bitmap = -1;
+int mission_ui_background_load(
+        const char *custom_background, const char *single_background,
+        const char *multi_background)
+{
+        int background_bitmap = -1;
 
-    if (custom_background && (*custom_background != '\0')) {
-        background_bitmap = bm_load (custom_background);
-        if (background_bitmap < 0)
-            WARNINGF (LOCATION, "Failed to load custom background bitmap %s!",custom_background);
-    }
-
-    // if special background failed to load, or if no special background was
-    // supplied, load the standard bitmap
-    if (background_bitmap < 0) {
-        if (multi_background && (Game_mode & GM_MULTIPLAYER))
-            background_bitmap = bm_load (multi_background);
-        else
-            background_bitmap = bm_load (single_background);
-    }
-
-    // return what we've got
-    return background_bitmap;
-}
-
-void set_active_ui (UI_WINDOW* ui_window) { Active_ui_window = ui_window; }
-
-void common_music_init (int score_index) {
-    if (Cmdline_freespace_no_music) { return; }
-
-    if (score_index >= NUM_SCORES) {
-        ASSERT (0);
-        return;
-    }
-
-    if (Mission_music[score_index] < 0) {
-        if (Num_music_files > 0) {
-            Mission_music[score_index] = 0;
-            WARNINGF (LOCATION,"No briefing music is selected, so play first briefing track: %s",Spooled_music[Mission_music[score_index]].name);
+        if (custom_background && (*custom_background != '\0')) {
+                background_bitmap = bm_load(custom_background);
+                if (background_bitmap < 0)
+                        WARNINGF(LOCATION, "Failed to load custom background bitmap %s!", custom_background);
         }
-        else {
-            return;
+
+        // if special background failed to load, or if no special background was
+        // supplied, load the standard bitmap
+        if (background_bitmap < 0) {
+                if (multi_background && (Game_mode & GM_MULTIPLAYER))
+                        background_bitmap = bm_load(multi_background);
+                else
+                        background_bitmap = bm_load(single_background);
         }
-    }
 
-    briefing_load_music (Spooled_music[Mission_music[score_index]].filename);
-    // Use this id to trigger the start of music playing on the briefing screen
-    Briefing_music_begin_timestamp = timestamp (BRIEFING_MUSIC_DELAY);
+        // return what we've got
+        return background_bitmap;
 }
 
-void common_music_do () {
-    if (Cmdline_freespace_no_music) { return; }
+void set_active_ui(UI_WINDOW *ui_window) { Active_ui_window = ui_window; }
 
-    // Use this id to trigger the start of music playing on the briefing screen
-    if (timestamp_elapsed (Briefing_music_begin_timestamp)) {
-        Briefing_music_begin_timestamp = 0;
-        briefing_start_music ();
-    }
-}
-
-void common_music_close () {
-    if (Cmdline_freespace_no_music) { return; }
-
-    if (Num_music_files <= 0) return;
-
-    briefing_stop_music (true);
-}
-
-int common_num_cutscenes_valid (int movie_type) {
-    int num_valid_cutscenes = 0;
-
-    for (uint i = 0; i < The_mission.cutscenes.size (); i++) {
-        if (movie_type == The_mission.cutscenes[i].type) {
-            if (!eval_sexp (The_mission.cutscenes[i].formula)) { continue; }
-
-            num_valid_cutscenes++;
+void common_music_init(int score_index)
+{
+        if (Cmdline_freespace_no_music) {
+                return;
         }
-    }
 
-    return num_valid_cutscenes;
+        if (score_index >= NUM_SCORES) {
+                ASSERT(0);
+                return;
+        }
+
+        if (Mission_music[score_index] < 0) {
+                if (Num_music_files > 0) {
+                        Mission_music[score_index] = 0;
+                        WARNINGF(LOCATION, "No briefing music is selected, so play first briefing track: %s", Spooled_music[Mission_music[score_index]].name);
+                } else {
+                        return;
+                }
+        }
+
+        briefing_load_music(Spooled_music[Mission_music[score_index]].filename);
+        // Use this id to trigger the start of music playing on the briefing screen
+        Briefing_music_begin_timestamp = timestamp(BRIEFING_MUSIC_DELAY);
 }
 
-void common_maybe_play_cutscene (
-    int movie_type, bool restart_music, int music) {
-    bool music_off = false;
-
-    for (uint i = 0; i < The_mission.cutscenes.size (); i++) {
-        if (movie_type == The_mission.cutscenes[i].type) {
-            if (!eval_sexp (The_mission.cutscenes[i].formula)) { continue; }
-
-            if (strlen (The_mission.cutscenes[i].filename)) {
-                common_music_close ();
-                music_off = true;
-                movie::play (
-                    The_mission.cutscenes[i].filename); // Play the movie!
-                cutscene_mark_viewable (The_mission.cutscenes[i].filename);
-            }
+void common_music_do()
+{
+        if (Cmdline_freespace_no_music) {
+                return;
         }
-    }
 
-    if (music_off && restart_music) { common_music_init (music); }
+        // Use this id to trigger the start of music playing on the briefing screen
+        if (timestamp_elapsed(Briefing_music_begin_timestamp)) {
+                Briefing_music_begin_timestamp = 0;
+                briefing_start_music();
+        }
+}
+
+void common_music_close()
+{
+        if (Cmdline_freespace_no_music) {
+                return;
+        }
+
+        if (Num_music_files <= 0)
+                return;
+
+        briefing_stop_music(true);
+}
+
+int common_num_cutscenes_valid(int movie_type)
+{
+        int num_valid_cutscenes = 0;
+
+        for (uint i = 0; i < The_mission.cutscenes.size(); i++) {
+                if (movie_type == The_mission.cutscenes[i].type) {
+                        if (!eval_sexp(The_mission.cutscenes[i].formula)) {
+                                continue;
+                        }
+
+                        num_valid_cutscenes++;
+                }
+        }
+
+        return num_valid_cutscenes;
+}
+
+void common_maybe_play_cutscene(
+        int movie_type, bool restart_music, int music)
+{
+        bool music_off = false;
+
+        for (uint i = 0; i < The_mission.cutscenes.size(); i++) {
+                if (movie_type == The_mission.cutscenes[i].type) {
+                        if (!eval_sexp(The_mission.cutscenes[i].formula)) {
+                                continue;
+                        }
+
+                        if (strlen(The_mission.cutscenes[i].filename)) {
+                                common_music_close();
+                                music_off = true;
+                                movie::play(
+                                        The_mission.cutscenes[i].filename); // Play the movie!
+                                cutscene_mark_viewable(The_mission.cutscenes[i].filename);
+                        }
+                }
+        }
+
+        if (music_off && restart_music) {
+                common_music_init(music);
+        }
 }
 
 // function that sets the current palette to the interface palette.  This
 // function needs to be followed by common_free_interface_palette() to restore
 // the game palette.
-void common_set_interface_palette (const char* filename) {
-    static char buf[MAX_FILENAME_LEN + 1] = { 0 };
+void common_set_interface_palette(const char *filename)
+{
+        static char buf[MAX_FILENAME_LEN + 1] = { 0 };
 
-    if (!filename) filename = NOX ("palette01");
+        if (!filename)
+                filename = NOX("palette01");
 
-    ASSERT (strlen (filename) <= MAX_FILENAME_LEN);
-    if ((InterfacePaletteBitmap != -1) && !strcasecmp (filename, buf))
-        return; // already set to this palette
+        ASSERT(strlen(filename) <= MAX_FILENAME_LEN);
+        if ((InterfacePaletteBitmap != -1) && !strcasecmp(filename, buf))
+                return; // already set to this palette
 
-    strcpy (buf, filename);
+        strcpy(buf, filename);
 
-    // unload the interface bitmap from memory
-    if (InterfacePaletteBitmap != -1) {
-        bm_release (InterfacePaletteBitmap);
-        InterfacePaletteBitmap = -1;
-    }
+        // unload the interface bitmap from memory
+        if (InterfacePaletteBitmap != -1) {
+                bm_release(InterfacePaletteBitmap);
+                InterfacePaletteBitmap = -1;
+        }
 
-    // ugh - we don't need this anymore
-    /*
+        // ugh - we don't need this anymore
+        /*
     InterfacePaletteBitmap = bm_load(filename);
     if (InterfacePaletteBitmap < 0) {
         Error(LOCATION, "Could not load in \"%s\"!", filename);
@@ -470,55 +502,60 @@ void common_set_interface_palette (const char* filename) {
 }
 
 // release the interface palette .pcx file, and restore the game palette
-void common_free_interface_palette () {
-    // unload the interface bitmap from memory
-    if (InterfacePaletteBitmap != -1) {
-        bm_release (InterfacePaletteBitmap);
-        InterfacePaletteBitmap = -1;
-    }
+void common_free_interface_palette()
+{
+        // unload the interface bitmap from memory
+        if (InterfacePaletteBitmap != -1) {
+                bm_release(InterfacePaletteBitmap);
+                InterfacePaletteBitmap = -1;
+        }
 }
 
 // Init timers used for flashing buttons
-void common_flash_button_init () {
-    Flash_timer = timestamp (MSC_FLASH_AFTER_TIME);
-    Flash_toggle = 1;
-    Flash_bright = 0;
+void common_flash_button_init()
+{
+        Flash_timer = timestamp(MSC_FLASH_AFTER_TIME);
+        Flash_toggle = 1;
+        Flash_bright = 0;
 }
 
 // determine if we should draw a button as bright
-int common_flash_bright () {
-    if (timestamp_elapsed (Flash_timer)) {
-        if (timestamp_elapsed (Flash_toggle)) {
-            Flash_toggle = timestamp (MSC_FLASH_INTERVAL);
-            Flash_bright ^= 1;
+int common_flash_bright()
+{
+        if (timestamp_elapsed(Flash_timer)) {
+                if (timestamp_elapsed(Flash_toggle)) {
+                        Flash_toggle = timestamp(MSC_FLASH_INTERVAL);
+                        Flash_bright ^= 1;
+                }
         }
-    }
 
-    return Flash_bright;
+        return Flash_bright;
 }
 
 // set the necessary pointers
-void common_set_team_pointers (int team) {
-    ASSERT ((team >= 0) && (team < MAX_TVT_TEAMS));
+void common_set_team_pointers(int team)
+{
+        ASSERT((team >= 0) && (team < MAX_TVT_TEAMS));
 
-    Wss_slots = Wss_slots_teams[team];
-    Ss_pool = Ss_pool_teams[team];
-    Wl_pool = Wl_pool_teams[team];
+        Wss_slots = Wss_slots_teams[team];
+        Ss_pool = Ss_pool_teams[team];
+        Wl_pool = Wl_pool_teams[team];
 
-    ss_set_team_pointers (team);
-    wl_set_team_pointers (team);
+        ss_set_team_pointers(team);
+        wl_set_team_pointers(team);
 }
 
 // reset the necessary pointers to defaults
-void common_reset_team_pointers () {
-    ss_reset_team_pointers ();
-    wl_reset_team_pointers ();
+void common_reset_team_pointers()
+{
+        ss_reset_team_pointers();
+        wl_reset_team_pointers();
 
-    // these are done last so that we can make use of the Assert()'s in the
-    // above functions to make sure the screens are exited and this is safe
-    Wss_slots = NULL;
-    Ss_pool = NULL;
-    Wl_pool = NULL;
+        // these are done last so that we can make use of the Assert()'s in the
+        // above functions to make sure the screens are exited and this is safe
+        Wss_slots = NULL;
+        Ss_pool = NULL;
+        Wl_pool = NULL;
 }
 
 // common_select_init() will load in animations and bitmaps that are common to
@@ -528,159 +565,163 @@ void common_reset_team_pointers () {
 // loadings of animations/bitmaps.
 //
 // This function also sets the palette based on the file palette01.pcx
-void common_select_init () {
-    if (Common_select_inited) {
-        WARNINGF (LOCATION, "common_select_init() returning without doing anything");
-        return;
-    }
+void common_select_init()
+{
+        if (Common_select_inited) {
+                WARNINGF(LOCATION, "common_select_init() returning without doing anything");
+                return;
+        }
 
-    WARNINGF (LOCATION, "entering common_select_init()");
+        WARNINGF(LOCATION, "entering common_select_init()");
 
-    // No anims are playing
-    Background_playing = 0;
-    Background_anim = NULL;
+        // No anims are playing
+        Background_playing = 0;
+        Background_anim = NULL;
 
-    Current_screen = Next_screen = ON_BRIEFING_SELECT;
+        Current_screen = Next_screen = ON_BRIEFING_SELECT;
 
-    // load in the icons for the wing slots
-    load_wing_icons (NOX ("iconwing01"));
+        // load in the icons for the wing slots
+        load_wing_icons(NOX("iconwing01"));
 
-    Current_screen = Next_screen = ON_BRIEFING_SELECT;
+        Current_screen = Next_screen = ON_BRIEFING_SELECT;
 
-    Commit_pressed = 0;
+        Commit_pressed = 0;
 
-    Common_select_inited = 1;
+        Common_select_inited = 1;
 
-    // assume the first team -- we'll change this value if we need to
-    Common_team = 0;
+        // assume the first team -- we'll change this value if we need to
+        Common_team = 0;
 
-    common_set_team_pointers (Common_team);
+        common_set_team_pointers(Common_team);
 
-    ship_select_common_init ();
-    weapon_select_common_init ();
-    common_flash_button_init ();
+        ship_select_common_init();
+        weapon_select_common_init();
+        common_flash_button_init();
 
-    // restore loadout from Player_loadout if this is the same mission as the
-    // one previously played
-    if (!strcasecmp (
-            Player_loadout.filename, Game_current_mission_filename)) {
-        wss_maybe_restore_loadout ();
-        ss_synch_interface ();
-        wl_synch_interface ();
-    }
+        // restore loadout from Player_loadout if this is the same mission as the
+        // one previously played
+        if (!strcasecmp(
+                    Player_loadout.filename, Game_current_mission_filename)) {
+                wss_maybe_restore_loadout();
+                ss_synch_interface();
+                wl_synch_interface();
+        }
 
-    ss_reset_selected_ship ();
+        ss_reset_selected_ship();
 
-    Drop_icon_mflag = 0;
-    Drop_on_wing_mflag = 0;
+        Drop_icon_mflag = 0;
+        Drop_on_wing_mflag = 0;
 
-    // init colors
-    gr_init_alphacolor (&Icon_colors[ICON_FRAME_NORMAL], 32, 128, 128, 255);
-    gr_init_alphacolor (&Icon_colors[ICON_FRAME_HOT], 48, 160, 160, 255);
-    gr_init_alphacolor (&Icon_colors[ICON_FRAME_SELECTED], 64, 192, 192, 255);
-    gr_init_alphacolor (&Icon_colors[ICON_FRAME_PLAYER], 192, 128, 64, 255);
-    gr_init_alphacolor (&Icon_colors[ICON_FRAME_DISABLED], 175, 175, 175, 255);
-    gr_init_alphacolor (
-        &Icon_colors[ICON_FRAME_DISABLED_HIGH], 100, 100, 100, 255);
-    // init shaders
-    gr_create_shader (&Icon_shaders[ICON_FRAME_NORMAL], 32, 128, 128, 255);
-    gr_create_shader (&Icon_shaders[ICON_FRAME_HOT], 48, 160, 160, 255);
-    gr_create_shader (&Icon_shaders[ICON_FRAME_SELECTED], 64, 192, 192, 255);
-    gr_create_shader (&Icon_shaders[ICON_FRAME_PLAYER], 192, 128, 64, 255);
-    gr_create_shader (&Icon_shaders[ICON_FRAME_DISABLED], 175, 175, 175, 255);
-    gr_create_shader (
-        &Icon_shaders[ICON_FRAME_DISABLED_HIGH], 100, 100, 100, 255);
+        // init colors
+        gr_init_alphacolor(&Icon_colors[ICON_FRAME_NORMAL], 32, 128, 128, 255);
+        gr_init_alphacolor(&Icon_colors[ICON_FRAME_HOT], 48, 160, 160, 255);
+        gr_init_alphacolor(&Icon_colors[ICON_FRAME_SELECTED], 64, 192, 192, 255);
+        gr_init_alphacolor(&Icon_colors[ICON_FRAME_PLAYER], 192, 128, 64, 255);
+        gr_init_alphacolor(&Icon_colors[ICON_FRAME_DISABLED], 175, 175, 175, 255);
+        gr_init_alphacolor(
+                &Icon_colors[ICON_FRAME_DISABLED_HIGH], 100, 100, 100, 255);
+        // init shaders
+        gr_create_shader(&Icon_shaders[ICON_FRAME_NORMAL], 32, 128, 128, 255);
+        gr_create_shader(&Icon_shaders[ICON_FRAME_HOT], 48, 160, 160, 255);
+        gr_create_shader(&Icon_shaders[ICON_FRAME_SELECTED], 64, 192, 192, 255);
+        gr_create_shader(&Icon_shaders[ICON_FRAME_PLAYER], 192, 128, 64, 255);
+        gr_create_shader(&Icon_shaders[ICON_FRAME_DISABLED], 175, 175, 175, 255);
+        gr_create_shader(
+                &Icon_shaders[ICON_FRAME_DISABLED_HIGH], 100, 100, 100, 255);
 }
 
-void common_reset_buttons () {
-    int i;
-    UI_BUTTON* b;
+void common_reset_buttons()
+{
+        int i;
+        UI_BUTTON *b;
 
-    for (i = 0; i < NUM_COMMON_BUTTONS; i++) {
-        b = &Common_buttons[Current_screen - 1][gr_screen.res][i].button;
-        b->reset_status ();
-    }
+        for (i = 0; i < NUM_COMMON_BUTTONS; i++) {
+                b = &Common_buttons[Current_screen - 1][gr_screen.res][i].button;
+                b->reset_status();
+        }
 
-    switch (Current_screen) {
-    case ON_BRIEFING_SELECT:
-        Common_buttons[Current_screen - 1][gr_screen.res]
-                      [COMMON_BRIEFING_REGION]
-                          .button.skip_first_highlight_callback ();
-        break;
-    case ON_SHIP_SELECT:
-        Common_buttons[Current_screen - 1][gr_screen.res][COMMON_SS_REGION]
-            .button.skip_first_highlight_callback ();
-        break;
-    case ON_WEAPON_SELECT:
-        Common_buttons[Current_screen - 1][gr_screen.res][COMMON_WEAPON_REGION]
-            .button.skip_first_highlight_callback ();
-        break;
-    }
+        switch (Current_screen) {
+        case ON_BRIEFING_SELECT:
+                Common_buttons[Current_screen - 1][gr_screen.res]
+                              [COMMON_BRIEFING_REGION]
+                                      .button.skip_first_highlight_callback();
+                break;
+        case ON_SHIP_SELECT:
+                Common_buttons[Current_screen - 1][gr_screen.res][COMMON_SS_REGION]
+                        .button.skip_first_highlight_callback();
+                break;
+        case ON_WEAPON_SELECT:
+                Common_buttons[Current_screen - 1][gr_screen.res][COMMON_WEAPON_REGION]
+                        .button.skip_first_highlight_callback();
+                break;
+        }
 }
 
 // common_select_do() is called once per loop in the interface screens and is
 // used for drawing and changing the common animations and blitting common
 // bitmaps.
-int common_select_do (float /*frametime*/) {
-    if (help_overlay_active (Briefing_overlay_id) ||
-        help_overlay_active (Ship_select_overlay_id) ||
-        help_overlay_active (Weapon_select_overlay_id)) {
-        Common_buttons[0][gr_screen.res][COMMON_HELP_BUTTON]
-            .button.reset_status ();
-        Common_buttons[1][gr_screen.res][COMMON_HELP_BUTTON]
-            .button.reset_status ();
-        Common_buttons[2][gr_screen.res][COMMON_HELP_BUTTON]
-            .button.reset_status ();
-        Active_ui_window->set_ignore_gadgets (1);
-    }
-    else {
-        Active_ui_window->set_ignore_gadgets (0);
-    }
-
-    int k = 0;
-    int new_k = Active_ui_window->process (k);
-
-    if (k > 0 || new_k > 0 || B1_JUST_RELEASED) {
-        if (help_overlay_active (Briefing_overlay_id) ||
-            help_overlay_active (Ship_select_overlay_id) ||
-            help_overlay_active (Weapon_select_overlay_id)) {
-            help_overlay_set_state (Briefing_overlay_id, gr_screen.res, 0);
-            help_overlay_set_state (Ship_select_overlay_id, gr_screen.res, 0);
-            help_overlay_set_state (
-                Weapon_select_overlay_id, gr_screen.res, 0);
-            Active_ui_window->set_ignore_gadgets (0);
-            k = 0;
-            new_k = 0;
+int common_select_do(float /*frametime*/)
+{
+        if (help_overlay_active(Briefing_overlay_id) || help_overlay_active(Ship_select_overlay_id) || help_overlay_active(Weapon_select_overlay_id)) {
+                Common_buttons[0][gr_screen.res][COMMON_HELP_BUTTON]
+                        .button.reset_status();
+                Common_buttons[1][gr_screen.res][COMMON_HELP_BUTTON]
+                        .button.reset_status();
+                Common_buttons[2][gr_screen.res][COMMON_HELP_BUTTON]
+                        .button.reset_status();
+                Active_ui_window->set_ignore_gadgets(1);
+        } else {
+                Active_ui_window->set_ignore_gadgets(0);
         }
-    }
 
-    // test for mouse buttons,  must be done after Active_ui_window->process()
-    // has been called to work properly
-    //
-    Drop_icon_mflag = 0;
-    Drop_on_wing_mflag = 0;
-    Brief_mouse_up_flag = 0;
-    Mouse_down_last_frame = 0;
+        int k = 0;
+        int new_k = Active_ui_window->process(k);
 
-    // if the left mouse button was released...
-    if (B1_RELEASED) {
-        Drop_icon_mflag = 1;
-        Drop_on_wing_mflag = 1;
-    }
+        if (k > 0 || new_k > 0 || B1_JUST_RELEASED) {
+                if (help_overlay_active(Briefing_overlay_id) || help_overlay_active(Ship_select_overlay_id) || help_overlay_active(Weapon_select_overlay_id)) {
+                        help_overlay_set_state(Briefing_overlay_id, gr_screen.res, 0);
+                        help_overlay_set_state(Ship_select_overlay_id, gr_screen.res, 0);
+                        help_overlay_set_state(
+                                Weapon_select_overlay_id, gr_screen.res, 0);
+                        Active_ui_window->set_ignore_gadgets(0);
+                        k = 0;
+                        new_k = 0;
+                }
+        }
 
-    // if the left mouse button was pressed...
-    if (B1_PRESSED) { Mouse_down_last_frame = 1; }
+        // test for mouse buttons,  must be done after Active_ui_window->process()
+        // has been called to work properly
+        //
+        Drop_icon_mflag = 0;
+        Drop_on_wing_mflag = 0;
+        Brief_mouse_up_flag = 0;
+        Mouse_down_last_frame = 0;
 
-    // basically a "click", only check for the click here to avoid
-    // action-on-over on briefing map
-    if (B1_JUST_PRESSED) { Brief_mouse_up_flag = 1; }
+        // if the left mouse button was released...
+        if (B1_RELEASED) {
+                Drop_icon_mflag = 1;
+                Drop_on_wing_mflag = 1;
+        }
 
-    // reset timers for flashing buttons if key pressed
-    if ((k > 0) || (new_k > 0)) { common_flash_button_init (); }
+        // if the left mouse button was pressed...
+        if (B1_PRESSED) {
+                Mouse_down_last_frame = 1;
+        }
 
-    common_music_do ();
+        // basically a "click", only check for the click here to avoid
+        // action-on-over on briefing map
+        if (B1_JUST_PRESSED) {
+                Brief_mouse_up_flag = 1;
+        }
 
-    /*
+        // reset timers for flashing buttons if key pressed
+        if ((k > 0) || (new_k > 0)) {
+                common_flash_button_init();
+        }
+
+        common_music_do();
+
+        /*
     if ( Background_playing ) {
 
         if ( Background_anim_instance->frame_num == BUTTON_SLIDE_IN_FRAME ) {
@@ -699,42 +740,42 @@ int common_select_do (float /*frametime*/) {
     }
     */
 
-    if (Current_screen != Next_screen) {
-        switch (Next_screen) {
-        case ON_BRIEFING_SELECT:
-            gameseq_post_event (GS_EVENT_START_BRIEFING);
-            break;
+        if (Current_screen != Next_screen) {
+                switch (Next_screen) {
+                case ON_BRIEFING_SELECT:
+                        gameseq_post_event(GS_EVENT_START_BRIEFING);
+                        break;
 
-        case ON_SHIP_SELECT:
-            gameseq_post_event (GS_EVENT_SHIP_SELECTION);
-            break;
+                case ON_SHIP_SELECT:
+                        gameseq_post_event(GS_EVENT_SHIP_SELECTION);
+                        break;
 
-        case ON_WEAPON_SELECT:
-            if (!wss_slots_all_empty ()) {
-                gameseq_post_event (GS_EVENT_WEAPON_SELECTION);
-            }
-            else {
-                common_show_no_ship_error ();
-            }
-            break;
-        } // end switch
-    }
+                case ON_WEAPON_SELECT:
+                        if (!wss_slots_all_empty()) {
+                                gameseq_post_event(GS_EVENT_WEAPON_SELECTION);
+                        } else {
+                                common_show_no_ship_error();
+                        }
+                        break;
+                } // end switch
+        }
 
-    return new_k;
+        return new_k;
 }
 
 // -------------------------------------------------------------------------------------
 // common_render()
 //
-void common_render (float frametime) {
-    if (!Background_playing) {
-        GR_MAYBE_CLEAR_RES (Brief_background_bitmap);
-        gr_set_bitmap (Brief_background_bitmap);
-        gr_bitmap (0, 0, GR_RESIZE_MENU);
-    }
+void common_render(float frametime)
+{
+        if (!Background_playing) {
+                GR_MAYBE_CLEAR_RES(Brief_background_bitmap);
+                gr_set_bitmap(Brief_background_bitmap);
+                gr_bitmap(0, 0, GR_RESIZE_MENU);
+        }
 
-    anim_render_all (0, frametime);
-    anim_render_all (ON_SHIP_SELECT, frametime);
+        anim_render_all(0, frametime);
+        anim_render_all(ON_SHIP_SELECT, frametime);
 }
 
 // -------------------------------------------------------------------------------------
@@ -745,176 +786,178 @@ void common_render (float frametime) {
 // frame for whatever stage of the briefing/ship select/weapons loadout we are
 // on.
 //
-void common_render_selected_screen_button () {
-    Common_buttons[Next_screen - 1][gr_screen.res][Next_screen - 1]
-        .button.draw_forced (2);
+void common_render_selected_screen_button()
+{
+        Common_buttons[Next_screen - 1][gr_screen.res][Next_screen - 1]
+                .button.draw_forced(2);
 }
 
 // -------------------------------------------------------------------------------------
 // common_button_do() do the button action for the specified pressed button
 //
-void common_button_do (int i) {
-    if (i == COMMON_COMMIT_BUTTON) {
-        Commit_pressed = 1;
-        return;
-    }
-
-    if (Background_playing) return;
-
-    switch (i) {
-    case COMMON_BRIEFING_BUTTON:
-        if (Current_screen != ON_BRIEFING_SELECT) {
-            gamesnd_play_iface (InterfaceSounds::SCREEN_MODE_PRESSED);
-            Next_screen = ON_BRIEFING_SELECT;
+void common_button_do(int i)
+{
+        if (i == COMMON_COMMIT_BUTTON) {
+                Commit_pressed = 1;
+                return;
         }
-        break;
 
-    case COMMON_WEAPON_BUTTON:
-        if (Current_screen != ON_WEAPON_SELECT) {
-            if (!wss_slots_all_empty ()) {
-                gamesnd_play_iface (InterfaceSounds::SCREEN_MODE_PRESSED);
-                Next_screen = ON_WEAPON_SELECT;
-            }
-            else {
-                common_show_no_ship_error ();
-            }
-        }
-        break;
+        if (Background_playing)
+                return;
 
-    case COMMON_SS_BUTTON:
-        if (Current_screen != ON_SHIP_SELECT) {
-            gamesnd_play_iface (InterfaceSounds::SCREEN_MODE_PRESSED);
-            Next_screen = ON_SHIP_SELECT;
-        }
-        break;
+        switch (i) {
+        case COMMON_BRIEFING_BUTTON:
+                if (Current_screen != ON_BRIEFING_SELECT) {
+                        gamesnd_play_iface(InterfaceSounds::SCREEN_MODE_PRESSED);
+                        Next_screen = ON_BRIEFING_SELECT;
+                }
+                break;
 
-    case COMMON_OPTIONS_BUTTON:
-        gamesnd_play_iface (InterfaceSounds::SWITCH_SCREENS);
-        gameseq_post_event (GS_EVENT_OPTIONS_MENU);
-        break;
+        case COMMON_WEAPON_BUTTON:
+                if (Current_screen != ON_WEAPON_SELECT) {
+                        if (!wss_slots_all_empty()) {
+                                gamesnd_play_iface(InterfaceSounds::SCREEN_MODE_PRESSED);
+                                Next_screen = ON_WEAPON_SELECT;
+                        } else {
+                                common_show_no_ship_error();
+                        }
+                }
+                break;
 
-    case COMMON_HELP_BUTTON:
-        gamesnd_play_iface (InterfaceSounds::HELP_PRESSED);
-        launch_context_help ();
-        break;
+        case COMMON_SS_BUTTON:
+                if (Current_screen != ON_SHIP_SELECT) {
+                        gamesnd_play_iface(InterfaceSounds::SCREEN_MODE_PRESSED);
+                        Next_screen = ON_SHIP_SELECT;
+                }
+                break;
 
-    } // end switch
+        case COMMON_OPTIONS_BUTTON:
+                gamesnd_play_iface(InterfaceSounds::SWITCH_SCREENS);
+                gameseq_post_event(GS_EVENT_OPTIONS_MENU);
+                break;
+
+        case COMMON_HELP_BUTTON:
+                gamesnd_play_iface(InterfaceSounds::HELP_PRESSED);
+                launch_context_help();
+                break;
+
+        } // end switch
 }
 
 // common_check_keys() will check for keypresses common to all the interface
 // screens.
-void common_check_keys (int k) {
-    switch (k) {
-    case KEY_ESC: {
-        if (Current_screen == ON_BRIEFING_SELECT) {
-            if (brief_get_closeup_icon () != NULL) {
-                brief_turn_off_closeup_icon ();
-                break;
-            }
-        }
-
-        // go through the single player quit process
-        gameseq_post_event (GS_EVENT_MAIN_MENU);
-        break;
-    }
-
-    case KEY_CTRLED + KEY_ENTER: Commit_pressed = 1; break;
-
-    case KEY_B:
-        if (Current_screen != ON_BRIEFING_SELECT && !Background_playing) {
-            Next_screen = ON_BRIEFING_SELECT;
-        }
-        break;
-
-    case KEY_W:
-        if (brief_only_allow_briefing ()) {
-            gamesnd_play_iface (InterfaceSounds::GENERAL_FAIL);
-            break;
-        }
-
-        if (Current_screen != ON_WEAPON_SELECT && !Background_playing) {
-            if (!wss_slots_all_empty ()) { Next_screen = ON_WEAPON_SELECT; }
-            else {
-                common_show_no_ship_error ();
-            }
-        }
-
-        break;
-
-    case KEY_S:
-
-        if (brief_only_allow_briefing ()) {
-            gamesnd_play_iface (InterfaceSounds::GENERAL_FAIL);
-            break;
-        }
-
-        if (Current_screen != ON_SHIP_SELECT && !Background_playing) {
-            Next_screen = ON_SHIP_SELECT;
-        }
-
-        break;
-
-    case KEY_SHIFTED + KEY_TAB:
-
-        if (brief_only_allow_briefing ()) {
-            gamesnd_play_iface (InterfaceSounds::GENERAL_FAIL);
-            break;
-        }
-
-        if (!Background_playing) {
-            switch (Current_screen) {
-            case ON_BRIEFING_SELECT:
-                if (!wss_slots_all_empty ()) {
-                    Next_screen = ON_WEAPON_SELECT;
+void common_check_keys(int k)
+{
+        switch (k) {
+        case KEY_ESC: {
+                if (Current_screen == ON_BRIEFING_SELECT) {
+                        if (brief_get_closeup_icon() != NULL) {
+                                brief_turn_off_closeup_icon();
+                                break;
+                        }
                 }
-                else {
-                    common_show_no_ship_error ();
+
+                // go through the single player quit process
+                gameseq_post_event(GS_EVENT_MAIN_MENU);
+                break;
+        }
+
+        case KEY_CTRLED + KEY_ENTER: Commit_pressed = 1; break;
+
+        case KEY_B:
+                if (Current_screen != ON_BRIEFING_SELECT && !Background_playing) {
+                        Next_screen = ON_BRIEFING_SELECT;
                 }
                 break;
 
-            case ON_SHIP_SELECT: Next_screen = ON_BRIEFING_SELECT; break;
-
-            case ON_WEAPON_SELECT: Next_screen = ON_SHIP_SELECT; break;
-            default: ASSERT (0); break;
-            } // end switch
-        }
-
-        break;
-
-    case KEY_TAB:
-
-        if (brief_only_allow_briefing ()) {
-            gamesnd_play_iface (InterfaceSounds::GENERAL_FAIL);
-            break;
-        }
-
-        if (!Background_playing) {
-            switch (Current_screen) {
-            case ON_BRIEFING_SELECT: Next_screen = ON_SHIP_SELECT; break;
-
-            case ON_SHIP_SELECT:
-                if (!wss_slots_all_empty ()) {
-                    Next_screen = ON_WEAPON_SELECT;
+        case KEY_W:
+                if (brief_only_allow_briefing()) {
+                        gamesnd_play_iface(InterfaceSounds::GENERAL_FAIL);
+                        break;
                 }
-                else {
-                    common_show_no_ship_error ();
+
+                if (Current_screen != ON_WEAPON_SELECT && !Background_playing) {
+                        if (!wss_slots_all_empty()) {
+                                Next_screen = ON_WEAPON_SELECT;
+                        } else {
+                                common_show_no_ship_error();
+                        }
                 }
+
                 break;
 
-            case ON_WEAPON_SELECT: Next_screen = ON_BRIEFING_SELECT; break;
-            default: ASSERT (0); break;
-            } // end switch
-        }
+        case KEY_S:
 
-        break;
+                if (brief_only_allow_briefing()) {
+                        gamesnd_play_iface(InterfaceSounds::GENERAL_FAIL);
+                        break;
+                }
 
-    case KEY_P:
-        if (Anim_paused)
-            Anim_paused = 0;
-        else
-            Anim_paused = 1;
-        break;
-    } // end switch
+                if (Current_screen != ON_SHIP_SELECT && !Background_playing) {
+                        Next_screen = ON_SHIP_SELECT;
+                }
+
+                break;
+
+        case KEY_SHIFTED + KEY_TAB:
+
+                if (brief_only_allow_briefing()) {
+                        gamesnd_play_iface(InterfaceSounds::GENERAL_FAIL);
+                        break;
+                }
+
+                if (!Background_playing) {
+                        switch (Current_screen) {
+                        case ON_BRIEFING_SELECT:
+                                if (!wss_slots_all_empty()) {
+                                        Next_screen = ON_WEAPON_SELECT;
+                                } else {
+                                        common_show_no_ship_error();
+                                }
+                                break;
+
+                        case ON_SHIP_SELECT: Next_screen = ON_BRIEFING_SELECT; break;
+
+                        case ON_WEAPON_SELECT: Next_screen = ON_SHIP_SELECT; break;
+                        default: ASSERT(0); break;
+                        } // end switch
+                }
+
+                break;
+
+        case KEY_TAB:
+
+                if (brief_only_allow_briefing()) {
+                        gamesnd_play_iface(InterfaceSounds::GENERAL_FAIL);
+                        break;
+                }
+
+                if (!Background_playing) {
+                        switch (Current_screen) {
+                        case ON_BRIEFING_SELECT: Next_screen = ON_SHIP_SELECT; break;
+
+                        case ON_SHIP_SELECT:
+                                if (!wss_slots_all_empty()) {
+                                        Next_screen = ON_WEAPON_SELECT;
+                                } else {
+                                        common_show_no_ship_error();
+                                }
+                                break;
+
+                        case ON_WEAPON_SELECT: Next_screen = ON_BRIEFING_SELECT; break;
+                        default: ASSERT(0); break;
+                        } // end switch
+                }
+
+                break;
+
+        case KEY_P:
+                if (Anim_paused)
+                        Anim_paused = 0;
+                else
+                        Anim_paused = 1;
+                break;
+        } // end switch
 }
 
 // common_select_close() will release the memory for animations and bitmaps
@@ -925,839 +968,839 @@ void common_check_keys (int k) {
 // weapon_select_close() and ship_select_close() are both called, since
 // common_select_close() is the function that is called the interface screens
 // are finally exited.
-void common_select_close () {
-    if (!Common_select_inited) {
-        WARNINGF (LOCATION,"common_select_close() returning without doing anything");
-        return;
-    }
+void common_select_close()
+{
+        if (!Common_select_inited) {
+                WARNINGF(LOCATION, "common_select_close() returning without doing anything");
+                return;
+        }
 
-    WARNINGF (LOCATION, "entering common_select_close()");
+        WARNINGF(LOCATION, "entering common_select_close()");
 
-    // catch open anims that weapon_select_init_team() opened when not in
-    // weapon_select - taylor
-    // *** not the same as weapon_select_close() ***
-    weapon_select_close_team ();
+        // catch open anims that weapon_select_init_team() opened when not in
+        // weapon_select - taylor
+        // *** not the same as weapon_select_close() ***
+        weapon_select_close_team();
 
-    weapon_select_close ();
+        weapon_select_close();
 
-    ship_select_close ();
-    brief_close ();
+        ship_select_close();
+        brief_close();
 
-    common_free_interface_palette ();
+        common_free_interface_palette();
 
-    // release the bitmpas that were previously extracted from anim files
-    unload_wing_icons ();
+        // release the bitmpas that were previously extracted from anim files
+        unload_wing_icons();
 
-    // Release any instances that may still exist
-    anim_release_all_instances ();
+        // Release any instances that may still exist
+        anim_release_all_instances();
 
-    // free the anim's that were loaded into memory
-    /*
+        // free the anim's that were loaded into memory
+        /*
     if ( Background_anim ) {
         anim_free(Background_anim);
         Background_anim = NULL;
     }
     */
 
-    common_music_close ();
+        common_music_close();
 
-    common_reset_team_pointers ();
+        common_reset_team_pointers();
 
-    Common_select_inited = 0;
+        Common_select_inited = 0;
 }
 
 // ------------------------------------------------------------------------
 // load_wing_icons() creates the bitmaps for wing icons
 //
-void load_wing_icons (const char* filename) {
-    int first_frame, num_frames;
+void load_wing_icons(const char *filename)
+{
+        int first_frame, num_frames;
 
-    first_frame = bm_load_animation (filename, &num_frames);
-    if (first_frame == -1) {
-        ASSERTX (0, "Could not load icons from %s\n", filename);
-        return;
-    }
+        first_frame = bm_load_animation(filename, &num_frames);
+        if (first_frame == -1) {
+                ASSERTX(0, "Could not load icons from %s\n", filename);
+                return;
+        }
 
-    Wing_slot_disabled_bitmap = first_frame;
-    Wing_slot_empty_bitmap = first_frame + 1;
-    // Wing_slot_player_empty_bitmap = first_frame + 2;
+        Wing_slot_disabled_bitmap = first_frame;
+        Wing_slot_empty_bitmap = first_frame + 1;
+        // Wing_slot_player_empty_bitmap = first_frame + 2;
 }
 
 // ------------------------------------------------------------------------
 // common_scroll_up_pressed()
 //
-int common_scroll_up_pressed (int* start, int size, int max_show) {
-    // check if we even need to scroll at all
-    if (size <= max_show) { return 0; }
+int common_scroll_up_pressed(int *start, int size, int max_show)
+{
+        // check if we even need to scroll at all
+        if (size <= max_show) {
+                return 0;
+        }
 
-    if ((size - *start) > max_show) {
-        *start += 1;
-        return 1;
-    }
-    return 0;
+        if ((size - *start) > max_show) {
+                *start += 1;
+                return 1;
+        }
+        return 0;
 }
 
 // ------------------------------------------------------------------------
 // common_scroll_down_pressed()
 //
-int common_scroll_down_pressed (int* start, int size, int max_show) {
-    // check if we even need to scroll at all
-    if (size <= max_show) { return 0; }
+int common_scroll_down_pressed(int *start, int size, int max_show)
+{
+        // check if we even need to scroll at all
+        if (size <= max_show) {
+                return 0;
+        }
 
-    if (*start > 0) {
-        *start -= 1;
-        return 1;
-    }
-    return 0;
+        if (*start > 0) {
+                *start -= 1;
+                return 1;
+        }
+        return 0;
 }
 
 // NEWSTUFF BEGIN
 
 // save ship selection loadout to the Player_loadout struct
-void wss_save_loadout () {
-    int i, j;
+void wss_save_loadout()
+{
+        int i, j;
 
-    ASSERT ((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
+        ASSERT((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
 
-    // save the ship pool
-    for (i = 0; i < MAX_SHIP_CLASSES; i++) {
-        Player_loadout.ship_pool[i] = Ss_pool[i];
-    }
-
-    // save the weapons pool
-    for (i = 0; i < MAX_WEAPON_TYPES; i++) {
-        Player_loadout.weapon_pool[i] = Wl_pool[i];
-    }
-
-    // save the ship class / weapons for each slot
-    for (i = 0; i < MAX_WSS_SLOTS; i++) {
-        Player_loadout.unit_data[i].ship_class = Wss_slots[i].ship_class;
-
-        for (j = 0; j < MAX_SHIP_WEAPONS; j++) {
-            Player_loadout.unit_data[i].wep[j] = Wss_slots[i].wep[j];
-            Player_loadout.unit_data[i].wep_count[j] =
-                Wss_slots[i].wep_count[j];
+        // save the ship pool
+        for (i = 0; i < MAX_SHIP_CLASSES; i++) {
+                Player_loadout.ship_pool[i] = Ss_pool[i];
         }
-    }
+
+        // save the weapons pool
+        for (i = 0; i < MAX_WEAPON_TYPES; i++) {
+                Player_loadout.weapon_pool[i] = Wl_pool[i];
+        }
+
+        // save the ship class / weapons for each slot
+        for (i = 0; i < MAX_WSS_SLOTS; i++) {
+                Player_loadout.unit_data[i].ship_class = Wss_slots[i].ship_class;
+
+                for (j = 0; j < MAX_SHIP_WEAPONS; j++) {
+                        Player_loadout.unit_data[i].wep[j] = Wss_slots[i].wep[j];
+                        Player_loadout.unit_data[i].wep_count[j] = Wss_slots[i].wep_count[j];
+                }
+        }
 }
 
 // restore ship/weapons loadout from the Player_loadout struct
-void wss_maybe_restore_loadout () {
-    int i, j;
-    wss_unit* slot;
+void wss_maybe_restore_loadout()
+{
+        int i, j;
+        wss_unit *slot;
 
-    ASSERT ((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
+        ASSERT((Ss_pool != NULL) && (Wl_pool != NULL) && (Wss_slots != NULL));
 
-    // only restore if mission hasn't changed
-    if (strcasecmp (Player_loadout.last_modified, The_mission.modified) != 0) {
-        return;
-    }
+        // only restore if mission hasn't changed
+        if (strcasecmp(Player_loadout.last_modified, The_mission.modified) != 0) {
+                return;
+        }
 
-    // first we generate a pool of ships and weapons used the last time this
-    // mission was played. We also generate a pool of what is available in this
-    // mission.
-    int last_loadout_ships[MAX_SHIP_CLASSES];
-    int this_loadout_ships[MAX_SHIP_CLASSES];
+        // first we generate a pool of ships and weapons used the last time this
+        // mission was played. We also generate a pool of what is available in this
+        // mission.
+        int last_loadout_ships[MAX_SHIP_CLASSES];
+        int this_loadout_ships[MAX_SHIP_CLASSES];
 
-    int last_loadout_weapons[MAX_WEAPON_TYPES];
-    int this_loadout_weapons[MAX_WEAPON_TYPES];
+        int last_loadout_weapons[MAX_WEAPON_TYPES];
+        int this_loadout_weapons[MAX_WEAPON_TYPES];
 
-    // zero all pools
-    for (i = 0; i < MAX_SHIP_CLASSES; i++) {
-        last_loadout_ships[i] = 0;
-        this_loadout_ships[i] = 0;
-    }
-    for (i = 0; i < MAX_WEAPON_TYPES; i++) {
-        last_loadout_weapons[i] = 0;
-        this_loadout_weapons[i] = 0;
-    }
+        // zero all pools
+        for (i = 0; i < MAX_SHIP_CLASSES; i++) {
+                last_loadout_ships[i] = 0;
+                this_loadout_ships[i] = 0;
+        }
+        for (i = 0; i < MAX_WEAPON_TYPES; i++) {
+                last_loadout_weapons[i] = 0;
+                this_loadout_weapons[i] = 0;
+        }
 
-    // record the ship classes / weapons used last time
-    for (i = 0; i < MAX_WSS_SLOTS; i++) {
-        slot = &Player_loadout.unit_data[i];
-        if ((slot->ship_class >= 0) &&
-            (slot->ship_class < static_cast< int > (Ship_info.size ()))) {
-            ++last_loadout_ships[slot->ship_class];
+        // record the ship classes / weapons used last time
+        for (i = 0; i < MAX_WSS_SLOTS; i++) {
+                slot = &Player_loadout.unit_data[i];
+                if ((slot->ship_class >= 0) && (slot->ship_class < static_cast< int >(Ship_info.size()))) {
+                        ++last_loadout_ships[slot->ship_class];
 
-            for (j = 0; j < MAX_SHIP_WEAPONS; j++) {
-                if ((slot->wep[j] >= 0) && (slot->wep[j] < Num_weapon_types)) {
-                    last_loadout_weapons[slot->wep[j]] += slot->wep_count[j];
+                        for (j = 0; j < MAX_SHIP_WEAPONS; j++) {
+                                if ((slot->wep[j] >= 0) && (slot->wep[j] < Num_weapon_types)) {
+                                        last_loadout_weapons[slot->wep[j]] += slot->wep_count[j];
+                                }
+                        }
                 }
-            }
         }
-    }
 
-    // record the ships classes / weapons used by the player and wingmen. We
-    // don't include the amount in the pools yet
-    for (i = 0; i < MAX_WSS_SLOTS; i++) {
-        if ((Wss_slots[i].ship_class >= 0) &&
-            (Wss_slots[i].ship_class <
-             static_cast< int > (Ship_info.size ()))) {
-            ++this_loadout_ships[Wss_slots[i].ship_class];
+        // record the ships classes / weapons used by the player and wingmen. We
+        // don't include the amount in the pools yet
+        for (i = 0; i < MAX_WSS_SLOTS; i++) {
+                if ((Wss_slots[i].ship_class >= 0) && (Wss_slots[i].ship_class < static_cast< int >(Ship_info.size()))) {
+                        ++this_loadout_ships[Wss_slots[i].ship_class];
 
-            for (j = 0; j < MAX_SHIP_WEAPONS; j++) {
-                if ((Wss_slots[i].wep[j] >= 0) &&
-                    (Wss_slots[i].wep[j] < Num_weapon_types)) {
-                    this_loadout_weapons[Wss_slots[i].wep[j]] +=
-                        Wss_slots[i].wep_count[j];
+                        for (j = 0; j < MAX_SHIP_WEAPONS; j++) {
+                                if ((Wss_slots[i].wep[j] >= 0) && (Wss_slots[i].wep[j] < Num_weapon_types)) {
+                                        this_loadout_weapons[Wss_slots[i].wep[j]] += Wss_slots[i].wep_count[j];
+                                }
+                        }
                 }
-            }
         }
-    }
 
-    // now compare the two, adding in what was left in the pools. If there are
-    // less of a ship or weapon class in the mission now than there were last
-    // time, we can't restore and must abort.
-    for (i = 0; i < static_cast< int > (Ship_info.size ()); i++) {
-        if (Ss_pool[i] >= 1) { this_loadout_ships[i] += Ss_pool[i]; }
-        if (this_loadout_ships[i] < last_loadout_ships[i]) { return; }
-    }
-
-    for (i = 0; i < Num_weapon_types; i++) {
-        if (Wl_pool[i] >= 1) { this_loadout_weapons[i] += Wl_pool[i]; }
-        if (this_loadout_weapons[i] < last_loadout_weapons[i]) { return; }
-    }
-
-    // go through the slots and restore the previous runthrough's loadout. Also
-    // remove that ship from total of ships in this mission
-    for (i = 0; i < MAX_WSS_SLOTS; i++) {
-        slot = &Player_loadout.unit_data[i];
-
-        if ((slot->ship_class >= 0) &&
-            (slot->ship_class < static_cast< int > (Ship_info.size ()))) {
-            --this_loadout_ships[slot->ship_class];
-            ASSERTX (
-                (this_loadout_ships[slot->ship_class] >= 0),
-                "Attempting to restore the previous missions loadout has "
-                "resulted in an invalid number of ships available");
+        // now compare the two, adding in what was left in the pools. If there are
+        // less of a ship or weapon class in the mission now than there were last
+        // time, we can't restore and must abort.
+        for (i = 0; i < static_cast< int >(Ship_info.size()); i++) {
+                if (Ss_pool[i] >= 1) {
+                        this_loadout_ships[i] += Ss_pool[i];
+                }
+                if (this_loadout_ships[i] < last_loadout_ships[i]) {
+                        return;
+                }
         }
-        // restore the ship class for each slot
-        Wss_slots[i].ship_class = slot->ship_class;
 
-        for (j = 0; j < MAX_SHIP_WEAPONS; j++) {
-            if ((slot->ship_class >= 0) && (slot->wep[j] >= 0) &&
-                (slot->wep[j] < Num_weapon_types)) {
-                this_loadout_weapons[slot->wep[j]] -= slot->wep_count[j];
-                ASSERTX (
-                    (this_loadout_weapons[slot->wep[j]] >= 0),
-                    "Attempting to restore the previous missions loadout has "
-                    "resulted in an invalid number of weapons available");
-            }
-
-            Wss_slots[i].wep[j] = slot->wep[j];
-            Wss_slots[i].wep_count[j] = slot->wep_count[j];
+        for (i = 0; i < Num_weapon_types; i++) {
+                if (Wl_pool[i] >= 1) {
+                        this_loadout_weapons[i] += Wl_pool[i];
+                }
+                if (this_loadout_weapons[i] < last_loadout_weapons[i]) {
+                        return;
+                }
         }
-    }
 
-    // restore the ship pool
-    for (i = 0; i < static_cast< int > (Ship_info.size ()); i++) {
-        Ss_pool[i] = this_loadout_ships[i];
-    }
+        // go through the slots and restore the previous runthrough's loadout. Also
+        // remove that ship from total of ships in this mission
+        for (i = 0; i < MAX_WSS_SLOTS; i++) {
+                slot = &Player_loadout.unit_data[i];
 
-    // restore the weapons pool
-    for (i = 0; i < Num_weapon_types; i++) {
-        Wl_pool[i] = this_loadout_weapons[i];
-    }
+                if ((slot->ship_class >= 0) && (slot->ship_class < static_cast< int >(Ship_info.size()))) {
+                        --this_loadout_ships[slot->ship_class];
+                        ASSERTX(
+                                (this_loadout_ships[slot->ship_class] >= 0),
+                                "Attempting to restore the previous missions loadout has "
+                                "resulted in an invalid number of ships available");
+                }
+                // restore the ship class for each slot
+                Wss_slots[i].ship_class = slot->ship_class;
+
+                for (j = 0; j < MAX_SHIP_WEAPONS; j++) {
+                        if ((slot->ship_class >= 0) && (slot->wep[j] >= 0) && (slot->wep[j] < Num_weapon_types)) {
+                                this_loadout_weapons[slot->wep[j]] -= slot->wep_count[j];
+                                ASSERTX(
+                                        (this_loadout_weapons[slot->wep[j]] >= 0),
+                                        "Attempting to restore the previous missions loadout has "
+                                        "resulted in an invalid number of weapons available");
+                        }
+
+                        Wss_slots[i].wep[j] = slot->wep[j];
+                        Wss_slots[i].wep_count[j] = slot->wep_count[j];
+                }
+        }
+
+        // restore the ship pool
+        for (i = 0; i < static_cast< int >(Ship_info.size()); i++) {
+                Ss_pool[i] = this_loadout_ships[i];
+        }
+
+        // restore the weapons pool
+        for (i = 0; i < Num_weapon_types; i++) {
+                Wl_pool[i] = this_loadout_weapons[i];
+        }
 }
 
 // Do a direct restore of the Player_loadout ship/weapon data to the wings
-void wss_direct_restore_loadout () {
-    int i, j;
-    wing* wp;
-    wss_unit* slot;
+void wss_direct_restore_loadout()
+{
+        int i, j;
+        wing *wp;
+        wss_unit *slot;
 
-    // only restore if mission hasn't changed
-    if (strcasecmp (Player_loadout.last_modified, The_mission.modified) != 0) {
-        return;
-    }
-
-    // niffiwan: if Starting_wings[] has missing wings,
-    // Player_loadout.unit_data skips the missing wings.  Use a new variable to
-    // track the number of valid wings in Starting_wings[], otherwise mission
-    // can crash on restart
-    int valid_wing_index = -1;
-
-    for (i = 0; i < MAX_WING_BLOCKS; i++) {
-        if (Starting_wings[i] < 0) continue;
-
-        valid_wing_index++;
-        wp = &Wings[Starting_wings[i]];
-
-        // If this wing is still on the arrival list, then update the parse
-        // objects
-        if (wp->ship_index[0] == -1) {
-            p_object* p_objp;
-            j = 0;
-            for (p_objp = GET_FIRST (&Ship_arrival_list);
-                 p_objp != END_OF_LIST (&Ship_arrival_list);
-                 p_objp = GET_NEXT (p_objp)) {
-                if (p_objp->wingnum == WING_INDEX (wp)) {
-                    // niffiwan: don't overrun the array
-                    if (j >= MAX_WING_SLOTS) {
-                        WARNINGF (LOCATION,"Starting Wing '%s' has more than 'MAX_WING_SLOTS' ships",Starting_wing_names[i]);
-                        break;
-                    }
-                    slot =
-                        &Player_loadout
-                             .unit_data[valid_wing_index * MAX_WING_SLOTS + j];
-                    p_objp->ship_class = slot->ship_class;
-                    wl_update_parse_object_weapons (p_objp, slot);
-                    j++;
-                }
-            }
+        // only restore if mission hasn't changed
+        if (strcasecmp(Player_loadout.last_modified, The_mission.modified) != 0) {
+                return;
         }
-        else {
-            int k;
-            int cleanup_ship_index[MAX_WING_SLOTS];
-            ship* shipp;
 
-            for (k = 0; k < MAX_WING_SLOTS; k++) {
-                cleanup_ship_index[k] = -1;
-            }
+        // niffiwan: if Starting_wings[] has missing wings,
+        // Player_loadout.unit_data skips the missing wings.  Use a new variable to
+        // track the number of valid wings in Starting_wings[], otherwise mission
+        // can crash on restart
+        int valid_wing_index = -1;
 
-            // This wing is already created, so directly update the ships
-            for (j = 0; j < MAX_WING_SLOTS; j++) {
-                if (wp->ship_index[j] ==
-                    -1) { // if this is an invalid ship, move on
-                    continue;
-                }
-
-                slot = &Player_loadout
-                            .unit_data[valid_wing_index * MAX_WING_SLOTS + j];
-                shipp = &Ships[wp->ship_index[j]];
-                if (shipp->ship_info_index != slot->ship_class) {
-                    if (slot->ship_class == -1) {
-                        cleanup_ship_index[j] = wp->ship_index[j];
-                        ship_add_exited_ship (
-                            shipp, Ship::Exit_Flags::Player_deleted);
-                        obj_delete (shipp->objnum);
-                        hud_set_wingman_status_none (
-                            shipp->wing_status_wing_index,
-                            shipp->wing_status_wing_pos);
+        for (i = 0; i < MAX_WING_BLOCKS; i++) {
+                if (Starting_wings[i] < 0)
                         continue;
-                    }
-                    else {
-                        change_ship_type (wp->ship_index[j], slot->ship_class);
-                    }
-                }
-                wl_bash_ship_weapons (&Ships[wp->ship_index[j]].weapons, slot);
-            }
 
-            for (k = 0; k < MAX_WING_SLOTS; k++) {
-                if (cleanup_ship_index[k] != -1) {
-                    ship_wing_cleanup (cleanup_ship_index[k], wp);
+                valid_wing_index++;
+                wp = &Wings[Starting_wings[i]];
+
+                // If this wing is still on the arrival list, then update the parse
+                // objects
+                if (wp->ship_index[0] == -1) {
+                        p_object *p_objp;
+                        j = 0;
+                        for (p_objp = GET_FIRST(&Ship_arrival_list);
+                             p_objp != END_OF_LIST(&Ship_arrival_list);
+                             p_objp = GET_NEXT(p_objp)) {
+                                if (p_objp->wingnum == WING_INDEX(wp)) {
+                                        // niffiwan: don't overrun the array
+                                        if (j >= MAX_WING_SLOTS) {
+                                                WARNINGF(LOCATION, "Starting Wing '%s' has more than 'MAX_WING_SLOTS' ships", Starting_wing_names[i]);
+                                                break;
+                                        }
+                                        slot = &Player_loadout
+                                                        .unit_data[valid_wing_index * MAX_WING_SLOTS + j];
+                                        p_objp->ship_class = slot->ship_class;
+                                        wl_update_parse_object_weapons(p_objp, slot);
+                                        j++;
+                                }
+                        }
+                } else {
+                        int k;
+                        int cleanup_ship_index[MAX_WING_SLOTS];
+                        ship *shipp;
+
+                        for (k = 0; k < MAX_WING_SLOTS; k++) {
+                                cleanup_ship_index[k] = -1;
+                        }
+
+                        // This wing is already created, so directly update the ships
+                        for (j = 0; j < MAX_WING_SLOTS; j++) {
+                                if (wp->ship_index[j] == -1) { // if this is an invalid ship, move on
+                                        continue;
+                                }
+
+                                slot = &Player_loadout
+                                                .unit_data[valid_wing_index * MAX_WING_SLOTS + j];
+                                shipp = &Ships[wp->ship_index[j]];
+                                if (shipp->ship_info_index != slot->ship_class) {
+                                        if (slot->ship_class == -1) {
+                                                cleanup_ship_index[j] = wp->ship_index[j];
+                                                ship_add_exited_ship(
+                                                        shipp, Ship::Exit_Flags::Player_deleted);
+                                                obj_delete(shipp->objnum);
+                                                hud_set_wingman_status_none(
+                                                        shipp->wing_status_wing_index,
+                                                        shipp->wing_status_wing_pos);
+                                                continue;
+                                        } else {
+                                                change_ship_type(wp->ship_index[j], slot->ship_class);
+                                        }
+                                }
+                                wl_bash_ship_weapons(&Ships[wp->ship_index[j]].weapons, slot);
+                        }
+
+                        for (k = 0; k < MAX_WING_SLOTS; k++) {
+                                if (cleanup_ship_index[k] != -1) {
+                                        ship_wing_cleanup(cleanup_ship_index[k], wp);
+                                }
+                        }
                 }
-            }
-        }
-    } // end for
+        } // end for
 }
-int wss_slots_all_empty () {
-    int i;
+int wss_slots_all_empty()
+{
+        int i;
 
-    ASSERT (Wss_slots != NULL);
+        ASSERT(Wss_slots != NULL);
 
-    for (i = 0; i < MAX_WSS_SLOTS; i++) {
-        if (Wss_slots[i].ship_class >= 0) break;
-    }
+        for (i = 0; i < MAX_WSS_SLOTS; i++) {
+                if (Wss_slots[i].ship_class >= 0)
+                        break;
+        }
 
-    if (i == MAX_WSS_SLOTS)
-        return 1;
-    else
-        return 0;
+        if (i == MAX_WSS_SLOTS)
+                return 1;
+        else
+                return 0;
 }
 
 // determine the mode (WSS_...) based on slot/list index values
-int wss_get_mode (
-    int from_slot, int from_list, int to_slot, int to_list, int wl_ship_slot) {
-    int mode, to_slot_empty = 0;
+int wss_get_mode(
+        int from_slot, int from_list, int to_slot, int to_list, int wl_ship_slot)
+{
+        int mode, to_slot_empty = 0;
 
-    ASSERT (Wss_slots != NULL);
+        ASSERT(Wss_slots != NULL);
 
-    if (wl_ship_slot >= 0) {
-        // weapons loadout
-        if (to_slot >= 0) {
-            if (Wss_slots[wl_ship_slot].wep_count[to_slot] == 0) {
-                to_slot_empty = 1;
-            }
+        if (wl_ship_slot >= 0) {
+                // weapons loadout
+                if (to_slot >= 0) {
+                        if (Wss_slots[wl_ship_slot].wep_count[to_slot] == 0) {
+                                to_slot_empty = 1;
+                        }
+                }
+        } else {
+                // ship select
+                if (to_slot >= 0) {
+                        if (Wss_slots[to_slot].ship_class == -1) {
+                                to_slot_empty = 1;
+                        }
+                }
         }
-    }
-    else {
-        // ship select
-        if (to_slot >= 0) {
-            if (Wss_slots[to_slot].ship_class == -1) { to_slot_empty = 1; }
+
+        // determine mode
+        if (from_slot >= 0 && to_slot >= 0) {
+                mode = WSS_SWAP_SLOT_SLOT;
+        } else if (from_slot >= 0 && to_list >= 0) {
+                mode = WSS_DUMP_TO_LIST;
+        } else if ((from_list >= 0) && (to_slot >= 0) && (to_slot_empty)) {
+                mode = WSS_GRAB_FROM_LIST;
+        } else if ((from_list >= 0) && (to_slot >= 0) && (!to_slot_empty)) {
+                mode = WSS_SWAP_LIST_SLOT;
+        } else {
+                mode = -1; // no changes required
         }
-    }
 
-    // determine mode
-    if (from_slot >= 0 && to_slot >= 0) { mode = WSS_SWAP_SLOT_SLOT; }
-    else if (from_slot >= 0 && to_list >= 0) {
-        mode = WSS_DUMP_TO_LIST;
-    }
-    else if ((from_list >= 0) && (to_slot >= 0) && (to_slot_empty)) {
-        mode = WSS_GRAB_FROM_LIST;
-    }
-    else if ((from_list >= 0) && (to_slot >= 0) && (!to_slot_empty)) {
-        mode = WSS_SWAP_LIST_SLOT;
-    }
-    else {
-        mode = -1; // no changes required
-    }
-
-    return mode;
+        return mode;
 }
 
-void draw_model_icon (
-    int model_id, int flags, float closeup_zoom, int x, int y, int w, int h,
-    ship_info* sip, int resize_mode, const vec3d* closeup_pos) {
-    matrix object_orient = IDENTITY_MATRIX;
-    angles_t rot_angles = { 0.0f, 0.0f, 0.0f };
-    float zoom = closeup_zoom * 2.5f;
+void draw_model_icon(
+        int model_id, int flags, float closeup_zoom, int x, int y, int w, int h,
+        ship_info *sip, int resize_mode, const vec3d *closeup_pos)
+{
+        matrix object_orient = IDENTITY_MATRIX;
+        angles_t rot_angles = { 0.0f, 0.0f, 0.0f };
+        float zoom = closeup_zoom * 2.5f;
 
-    if (sip == NULL) {
-        // Assume it's a weapon
-        rot_angles.h = -(PI_2);
-    }
-    else if (
-        sip->model_icon_angles.p != 0.0f || sip->model_icon_angles.b != 0.0f ||
-        sip->model_icon_angles.h != 0.0f) {
-        // If non-zero model_icon_angles exists, always use that
-        rot_angles = sip->model_icon_angles;
-    }
-    else if (sip->is_small_ship ()) {
-        rot_angles.p = -(PI_2);
-    }
-    else if (
-        (sip->max_speed <= 0.0f) && !(sip->flags[Ship::Info_Flags::Cargo])) {
-        // Probably an installation or Knossos
-        rot_angles.h = PI;
-    }
-    else {
-        // Probably a capship
-        rot_angles.h = PI_2;
-    }
-    vm_angles_2_matrix (&object_orient, &rot_angles);
+        if (sip == NULL) {
+                // Assume it's a weapon
+                rot_angles.h = -(PI_2);
+        } else if (
+                sip->model_icon_angles.p != 0.0f || sip->model_icon_angles.b != 0.0f || sip->model_icon_angles.h != 0.0f) {
+                // If non-zero model_icon_angles exists, always use that
+                rot_angles = sip->model_icon_angles;
+        } else if (sip->is_small_ship()) {
+                rot_angles.p = -(PI_2);
+        } else if (
+                (sip->max_speed <= 0.0f) && !(sip->flags[Ship::Info_Flags::Cargo])) {
+                // Probably an installation or Knossos
+                rot_angles.h = PI;
+        } else {
+                // Probably a capship
+                rot_angles.h = PI_2;
+        }
+        vm_angles_2_matrix(&object_orient, &rot_angles);
 
-    gr_set_clip (x, y, w, h, resize_mode);
-    g3_start_frame (1);
-    if (sip != NULL) {
-        g3_set_view_matrix (&sip->closeup_pos, &vmd_identity_matrix, zoom);
+        gr_set_clip(x, y, w, h, resize_mode);
+        g3_start_frame(1);
+        if (sip != NULL) {
+                g3_set_view_matrix(&sip->closeup_pos, &vmd_identity_matrix, zoom);
 
-        gr_set_proj_matrix (
-            0.5f * Proj_fov, gr_screen.clip_aspect, Min_draw_distance,
-            Max_draw_distance);
-    }
-    else {
-        polymodel* pm = model_get (model_id);
-        bsp_info* bs = NULL; // tehe
-        for (int i = 0; i < pm->n_models; i++) {
-            if (!pm->submodel[i].is_thruster) {
-                bs = &pm->submodel[i];
-                break;
-            }
+                gr_set_proj_matrix(
+                        0.5f * Proj_fov, gr_screen.clip_aspect, Min_draw_distance,
+                        Max_draw_distance);
+        } else {
+                polymodel *pm = model_get(model_id);
+                bsp_info *bs = NULL; // tehe
+                for (int i = 0; i < pm->n_models; i++) {
+                        if (!pm->submodel[i].is_thruster) {
+                                bs = &pm->submodel[i];
+                                break;
+                        }
+                }
+
+                if (bs == NULL) {
+                        bs = &pm->submodel[0];
+                }
+
+                vec3d weap_closeup = *closeup_pos;
+                float y_closeup;
+                float tm_zoom = closeup_zoom;
+
+                // Find the center of teh submodel
+                weap_closeup.xyz.x = -(bs->min.xyz.z + (bs->max.xyz.z - bs->min.xyz.z) / 2.0f);
+                weap_closeup.xyz.y = -(bs->min.xyz.y + (bs->max.xyz.y - bs->min.xyz.y) / 2.0f);
+                // weap_closeup.xyz.z = (weap_closeup.xyz.x/tanf(zoom / 2.0f));
+                weap_closeup.xyz.z = -(bs->rad / tanf(tm_zoom / 2.0f));
+
+                y_closeup = -(weap_closeup.xyz.y / tanf(tm_zoom / 2.0f));
+                if (y_closeup < weap_closeup.xyz.z) {
+                        weap_closeup.xyz.z = y_closeup;
+                }
+                if (bs->min.xyz.x < weap_closeup.xyz.z) {
+                        weap_closeup.xyz.z = bs->min.xyz.x;
+                }
+                g3_set_view_matrix(&weap_closeup, &vmd_identity_matrix, tm_zoom);
+
+                gr_set_proj_matrix(
+                        0.5f * Proj_fov, gr_screen.clip_aspect, 0.05f, 1000.0f);
         }
 
-        if (bs == NULL) { bs = &pm->submodel[0]; }
+        model_render_params render_info;
+        render_info.set_detail_level_lock(0);
 
-        vec3d weap_closeup = *closeup_pos;
-        float y_closeup;
-        float tm_zoom = closeup_zoom;
+        gr_set_view_matrix(&Eye_position, &Eye_matrix);
 
-        // Find the center of teh submodel
-        weap_closeup.xyz.x =
-            -(bs->min.xyz.z + (bs->max.xyz.z - bs->min.xyz.z) / 2.0f);
-        weap_closeup.xyz.y =
-            -(bs->min.xyz.y + (bs->max.xyz.y - bs->min.xyz.y) / 2.0f);
-        // weap_closeup.xyz.z = (weap_closeup.xyz.x/tanf(zoom / 2.0f));
-        weap_closeup.xyz.z = -(bs->rad / tanf (tm_zoom / 2.0f));
-
-        y_closeup = -(weap_closeup.xyz.y / tanf (tm_zoom / 2.0f));
-        if (y_closeup < weap_closeup.xyz.z) { weap_closeup.xyz.z = y_closeup; }
-        if (bs->min.xyz.x < weap_closeup.xyz.z) {
-            weap_closeup.xyz.z = bs->min.xyz.x;
+        if (!(flags & MR_NO_LIGHTING)) {
+                light_reset();
+                vec3d light_dir = vmd_zero_vector;
+                light_dir.xyz.x = -0.5;
+                light_dir.xyz.y = 2.0f;
+                light_dir.xyz.z = -2.0f;
+                light_add_directional(&light_dir, 0.65f, 1.0f, 1.0f, 1.0f);
+                light_rotate_all();
         }
-        g3_set_view_matrix (&weap_closeup, &vmd_identity_matrix, tm_zoom);
 
-        gr_set_proj_matrix (
-            0.5f * Proj_fov, gr_screen.clip_aspect, 0.05f, 1000.0f);
-    }
+        if (sip != NULL && sip->replacement_textures.size() > 0) {
+                render_info.set_replacement_textures(
+                        model_id, sip->replacement_textures);
+        }
 
-    model_render_params render_info;
-    render_info.set_detail_level_lock (0);
+        Glowpoint_override = true;
+        model_clear_instance(model_id);
 
-    gr_set_view_matrix (&Eye_position, &Eye_matrix);
+        render_info.set_flags(flags);
+        model_render_immediate(
+                &render_info, model_id, &object_orient, &vmd_zero_vector);
+        Glowpoint_override = false;
 
-    if (!(flags & MR_NO_LIGHTING)) {
-        light_reset ();
-        vec3d light_dir = vmd_zero_vector;
-        light_dir.xyz.x = -0.5;
-        light_dir.xyz.y = 2.0f;
-        light_dir.xyz.z = -2.0f;
-        light_add_directional (&light_dir, 0.65f, 1.0f, 1.0f, 1.0f);
-        light_rotate_all ();
-    }
+        gr_end_view_matrix();
+        gr_end_proj_matrix();
 
-    if (sip != NULL && sip->replacement_textures.size () > 0) {
-        render_info.set_replacement_textures (
-            model_id, sip->replacement_textures);
-    }
-
-    Glowpoint_override = true;
-    model_clear_instance (model_id);
-
-    render_info.set_flags (flags);
-    model_render_immediate (
-        &render_info, model_id, &object_orient, &vmd_zero_vector);
-    Glowpoint_override = false;
-
-    gr_end_view_matrix ();
-    gr_end_proj_matrix ();
-
-    g3_end_frame ();
-    gr_reset_clip ();
+        g3_end_frame();
+        gr_reset_clip();
 }
 
-void light_set_all_relevent ();
-void draw_model_rotating (
-    model_render_params* render_info, int model_id, int x1, int y1, int x2,
-    int y2, float* rotation_buffer, vec3d* closeup_pos, float closeup_zoom,
-    float rev_rate, int flags, int resize_mode, int effect) {
-    // WMC - Can't draw a non-model
-    if (model_id < 0) return;
+void light_set_all_relevent();
+void draw_model_rotating(
+        model_render_params *render_info, int model_id, int x1, int y1, int x2,
+        int y2, float *rotation_buffer, vec3d *closeup_pos, float closeup_zoom,
+        float rev_rate, int flags, int resize_mode, int effect)
+{
+        // WMC - Can't draw a non-model
+        if (model_id < 0)
+                return;
 
-    float time = (timer_get_milliseconds () - anim_timer_start) / 1000.0f;
-    angles_t rot_angles, view_angles;
-    matrix model_orient;
+        float time = (timer_get_milliseconds() - anim_timer_start) / 1000.0f;
+        angles_t rot_angles, view_angles;
+        matrix model_orient;
 
-    if (effect ==
-        2) { // FS2 Effect; Phase 0 Expand scanline, Phase 1 scan the grid and
-             // wireframe, Phase 2 scan up and reveal the ship, Phase 3 tilt
-             // the camera, Phase 4 start rotating the ship
-        // rotate the ship as much as required for this frame
-        if (time >= 3.6f) // Phase 4
-            *rotation_buffer += PI2 * flFrametime / rev_rate;
-        else
-            *rotation_buffer = PI; // No rotation before Phase 4
-        while (*rotation_buffer > PI2) { *rotation_buffer -= PI2; }
+        if (effect == 2) { // FS2 Effect; Phase 0 Expand scanline, Phase 1 scan the grid and
+                           // wireframe, Phase 2 scan up and reveal the ship, Phase 3 tilt
+                           // the camera, Phase 4 start rotating the ship
+                // rotate the ship as much as required for this frame
+                if (time >= 3.6f) // Phase 4
+                        *rotation_buffer += PI2 * flFrametime / rev_rate;
+                else
+                        *rotation_buffer = PI; // No rotation before Phase 4
+                while (*rotation_buffer > PI2) { *rotation_buffer -= PI2; }
 
-        view_angles.p = -PI_2;
+                view_angles.p = -PI_2;
 
-        if (time >= 3.0f) {     // Phase 3
-            if (time >= 3.6f) { // done tilting
+                if (time >= 3.0f) {         // Phase 3
+                        if (time >= 3.6f) { // done tilting
+                                view_angles.p = -0.6f;
+                        } else {
+                                view_angles.p = (PI_2 - 0.6f) * (time - 3.0f) * 1.66667f - PI_2; // Phase 3 Tilt animation
+                        }
+                }
+
+                view_angles.b = 0.0f;
+                view_angles.h = 0.0f;
+                vm_angles_2_matrix(&model_orient, &view_angles);
+                rot_angles.p = 0.0f;
+                rot_angles.b = 0.0f;
+                rot_angles.h = *rotation_buffer;
+                vm_rotate_matrix_by_angles(&model_orient, &rot_angles);
+                gr_set_clip(x1, y1, x2, y2, resize_mode);
+                vec3d wire_normal, ship_normal, plane_point;
+
+                // Clip the wireframe below the scanline
+                wire_normal.xyz.x = 0.0f;
+                wire_normal.xyz.y = 1.0f;
+                wire_normal.xyz.z = 0.0f;
+
+                // Clip the ship above the scanline
+                ship_normal.xyz.x = 0.0f;
+                ship_normal.xyz.y = -1.0f;
+                ship_normal.xyz.z = 0.0f;
+                polymodel *pm = model_get(model_id);
+
+                // Make the clipping plane
+                float clip = -pm->rad * 0.7f;
+                if (time < 1.5f && time >= 0.5f) // Phase 1 Move down
+                        clip = pm->rad * (time - 1.0f) * 1.4f;
+
+                if (time >= 1.5f)
+                        clip = pm->rad * (time - 2.0f) * (-1.4f); // Phase 2 Move up
+
+                vm_vec_scale_sub(&plane_point, &vmd_zero_vector, &wire_normal, clip);
+
+                g3_start_frame(1);
+                if ((closeup_pos != NULL) && (vm_vec_mag(closeup_pos) > 0.0f)) {
+                        g3_set_view_matrix(
+                                closeup_pos, &vmd_identity_matrix, closeup_zoom);
+                } else {
+                        vec3d pos = { { { 0.0f, 0.0f, -(pm->rad * 1.5f) } } };
+                        g3_set_view_matrix(&pos, &vmd_identity_matrix, closeup_zoom);
+                }
+
+                gr_set_proj_matrix(
+                        Proj_fov, gr_screen.clip_aspect, Min_draw_distance,
+                        Max_draw_distance);
+                gr_set_view_matrix(&Eye_position, &Eye_matrix);
+
+                vec3d start, stop;
+                float size = pm->rad * 0.7f;
+                float start_scale = MIN(time, 0.5f) * 2.5f;
+                float offset = size * 0.5f * MIN(MAX(time - 3.0f, 0.0f), 0.6f) * 1.66667f;
+
+                g3_start_instance_angles(&vmd_zero_vector, &view_angles);
+
+                if (time < 0.5f) { // Do the expanding scanline in phase 0
+                        gr_set_color(0, 255, 0);
+                        start.xyz.x = size * start_scale;
+                        start.xyz.y = 0.0f;
+                        start.xyz.z = -clip;
+                        stop.xyz.x = -size * start_scale;
+                        stop.xyz.y = 0.0f;
+                        stop.xyz.z = -clip;
+                        // g3_draw_htl_line(&start,&stop);
+                        g3_render_line_3d(true, &start, &stop);
+                }
+                g3_done_instance(true);
+
+                gr_zbuffer_set(
+                        GR_ZBUFF_NONE);             // Turn off Depthbuffer so we don't get gridlines
+                                                    // over the ship or a disappearing scanline
+                Glowpoint_use_depth_buffer = false; // Since we don't have one
+                if (time >= 0.5f) {                 // Phase 1 onward draw the grid
+                        int i;
+                        start.xyz.y = -offset;
+                        start.xyz.z = size + offset * 0.5f;
+                        stop.xyz.y = -offset;
+                        stop.xyz.z = -size + offset * 0.5f;
+                        gr_set_color(0, 200, 0);
+                        g3_start_instance_angles(&vmd_zero_vector, &view_angles);
+
+                        if (time < 1.5f) {
+                                stop.xyz.z = -clip;
+                        }
+
+                        for (i = -3; i < 4; i++) {
+                                start.xyz.x = stop.xyz.x = size * 0.333f * i;
+                                // g3_draw_htl_line(&start,&stop);
+                                g3_render_line_3d(false, &start, &stop);
+                        }
+
+                        start.xyz.x = size;
+                        stop.xyz.x = -size;
+
+                        for (i = 3; i > -4; i--) {
+                                start.xyz.z = stop.xyz.z = size * 0.333f * i + offset * 0.5f;
+                                if ((time < 1.5f) && (start.xyz.z <= -clip))
+                                        break;
+                                // g3_draw_htl_line(&start,&stop);
+                                g3_render_line_3d(false, &start, &stop);
+                        }
+
+                        g3_done_instance(true);
+
+                        // lighting for techroom
+                        light_reset();
+                        vec3d light_dir = vmd_zero_vector;
+                        light_dir.xyz.y = 1.0f;
+                        light_dir.xyz.x = 0.0000001f;
+                        light_add_directional(&light_dir, 0.65f, 1.0f, 1.0f, 1.0f);
+                        light_rotate_all();
+                        // lighting for techroom
+
+                        // render the ships
+                        model_clear_instance(model_id);
+                        render_info->set_detail_level_lock(0);
+
+                        gr_zbuffer_set(true);
+                        if (Cmdline_shadow_quality) {
+                                gr_end_view_matrix();
+                                gr_end_proj_matrix();
+
+                                gr_reset_clip();
+
+                                model_render_params shadow_render_info;
+
+                                shadow_render_info.set_detail_level_lock(0);
+                                shadow_render_info.set_flags(
+                                        flags | MR_NO_TEXTURING | MR_NO_LIGHTING);
+
+                                if (flags & MR_IS_MISSILE) {
+                                        shadows_start_render(
+                                                &Eye_matrix, &Eye_position, Proj_fov,
+                                                gr_screen.clip_aspect, -closeup_pos->xyz.z + pm->rad,
+                                                -closeup_pos->xyz.z + pm->rad + 20.0f,
+                                                -closeup_pos->xyz.z + pm->rad + 200.0f,
+                                                -closeup_pos->xyz.z + pm->rad + 1000.0f);
+                                } else {
+                                        shadows_start_render(
+                                                &Eye_matrix, &Eye_position, Proj_fov,
+                                                gr_screen.clip_aspect, -closeup_pos->xyz.z + pm->rad,
+                                                -closeup_pos->xyz.z + pm->rad + 200.0f,
+                                                -closeup_pos->xyz.z + pm->rad + 2000.0f,
+                                                -closeup_pos->xyz.z + pm->rad + 10000.0f);
+                                }
+
+                                model_render_immediate(
+                                        &shadow_render_info, model_id, &model_orient,
+                                        &vmd_zero_vector);
+                                shadows_end_render();
+
+                                gr_set_clip(x1, y1, x2, y2, resize_mode);
+
+                                gr_set_proj_matrix(
+                                        Proj_fov, gr_screen.clip_aspect, Min_draw_distance,
+                                        Max_draw_distance);
+                                gr_set_view_matrix(&Eye_position, &Eye_matrix);
+                        }
+                        gr_zbuffer_set(false);
+                        gr_set_color(80, 49, 160);
+                        render_info->set_color(80, 49, 160);
+
+                        render_info->set_animated_effect(
+                                ANIMATED_SHADER_LOADOUTSELECT_FS2, -clip);
+
+                        if ((time < 2.5f) && (time >= 0.5f)) { // Phase 1 and 2 render the wireframe
+                                if (time >= 1.5f)              // Just clip the wireframe after Phase 1
+                                        render_info->set_clip_plane(plane_point, wire_normal);
+
+                                render_info->set_flags(
+                                        flags | MR_SHOW_OUTLINE_HTL | MR_NO_POLYS | MR_NO_TEXTURING | MR_NO_LIGHTING);
+
+                                model_render_immediate(
+                                        render_info, model_id, &model_orient, &vmd_zero_vector);
+                        }
+
+                        if (time >= 1.5f) { // Render the ship in Phase 2 onwards
+                                render_info->set_clip_plane(plane_point, ship_normal);
+                                render_info->set_flags(flags);
+
+                                model_render_immediate(
+                                        render_info, model_id, &model_orient, &vmd_zero_vector);
+                        }
+
+                        if (time < 2.5f) { // Render the scanline in Phase 1 and 2
+                                gr_set_color(0, 255, 0);
+                                start.xyz.x = size * 1.25f;
+                                start.xyz.y = 0.0f;
+                                start.xyz.z = -clip;
+                                stop.xyz.x = -size * 1.25f;
+                                stop.xyz.y = 0.0f;
+                                stop.xyz.z = -clip;
+                                g3_start_instance_angles(&vmd_zero_vector, &view_angles);
+                                // g3_draw_htl_line(&start,&stop);
+                                g3_render_line_3d(false, &start, &stop);
+                                g3_done_instance(true);
+                        }
+                }
+
+                gr_zbuffer_set(GR_ZBUFF_FULL); // Turn off depthbuffer again
+
+                batching_render_all();
+                Glowpoint_use_depth_buffer = true; // Back to normal
+
+                gr_end_view_matrix();
+                gr_end_proj_matrix();
+                g3_end_frame();
+                gr_reset_clip();
+        } else {
+                // rotate the ship as much as required for this frame
+                *rotation_buffer += PI2 * flFrametime / rev_rate;
+                while (*rotation_buffer > PI2) { *rotation_buffer -= PI2; }
+
                 view_angles.p = -0.6f;
-            }
-            else {
-                view_angles.p = (PI_2 - 0.6f) * (time - 3.0f) * 1.66667f -
-                                PI_2; // Phase 3 Tilt animation
-            }
-        }
+                view_angles.b = 0.0f;
+                view_angles.h = 0.0f;
+                vm_angles_2_matrix(&model_orient, &view_angles);
 
-        view_angles.b = 0.0f;
-        view_angles.h = 0.0f;
-        vm_angles_2_matrix (&model_orient, &view_angles);
-        rot_angles.p = 0.0f;
-        rot_angles.b = 0.0f;
-        rot_angles.h = *rotation_buffer;
-        vm_rotate_matrix_by_angles (&model_orient, &rot_angles);
-        gr_set_clip (x1, y1, x2, y2, resize_mode);
-        vec3d wire_normal, ship_normal, plane_point;
+                rot_angles.p = 0.0f;
+                rot_angles.b = 0.0f;
+                rot_angles.h = *rotation_buffer;
+                vm_rotate_matrix_by_angles(&model_orient, &rot_angles);
 
-        // Clip the wireframe below the scanline
-        wire_normal.xyz.x = 0.0f;
-        wire_normal.xyz.y = 1.0f;
-        wire_normal.xyz.z = 0.0f;
+                g3_start_frame(1);
 
-        // Clip the ship above the scanline
-        ship_normal.xyz.x = 0.0f;
-        ship_normal.xyz.y = -1.0f;
-        ship_normal.xyz.z = 0.0f;
-        polymodel* pm = model_get (model_id);
+                polymodel *pm = model_get(model_id);
 
-        // Make the clipping plane
-        float clip = -pm->rad * 0.7f;
-        if (time < 1.5f && time >= 0.5f) // Phase 1 Move down
-            clip = pm->rad * (time - 1.0f) * 1.4f;
-
-        if (time >= 1.5f)
-            clip = pm->rad * (time - 2.0f) * (-1.4f); // Phase 2 Move up
-
-        vm_vec_scale_sub (&plane_point, &vmd_zero_vector, &wire_normal, clip);
-
-        g3_start_frame (1);
-        if ((closeup_pos != NULL) && (vm_vec_mag (closeup_pos) > 0.0f)) {
-            g3_set_view_matrix (
-                closeup_pos, &vmd_identity_matrix, closeup_zoom);
-        }
-        else {
-            vec3d pos = { { { 0.0f, 0.0f, -(pm->rad * 1.5f) } } };
-            g3_set_view_matrix (&pos, &vmd_identity_matrix, closeup_zoom);
-        }
-
-        gr_set_proj_matrix (
-            Proj_fov, gr_screen.clip_aspect, Min_draw_distance,
-            Max_draw_distance);
-        gr_set_view_matrix (&Eye_position, &Eye_matrix);
-
-        vec3d start, stop;
-        float size = pm->rad * 0.7f;
-        float start_scale = MIN (time, 0.5f) * 2.5f;
-        float offset =
-            size * 0.5f * MIN (MAX (time - 3.0f, 0.0f), 0.6f) * 1.66667f;
-
-        g3_start_instance_angles (&vmd_zero_vector, &view_angles);
-
-        if (time < 0.5f) { // Do the expanding scanline in phase 0
-            gr_set_color (0, 255, 0);
-            start.xyz.x = size * start_scale;
-            start.xyz.y = 0.0f;
-            start.xyz.z = -clip;
-            stop.xyz.x = -size * start_scale;
-            stop.xyz.y = 0.0f;
-            stop.xyz.z = -clip;
-            // g3_draw_htl_line(&start,&stop);
-            g3_render_line_3d (true, &start, &stop);
-        }
-        g3_done_instance (true);
-
-        gr_zbuffer_set (
-            GR_ZBUFF_NONE); // Turn off Depthbuffer so we don't get gridlines
-                            // over the ship or a disappearing scanline
-        Glowpoint_use_depth_buffer = false; // Since we don't have one
-        if (time >= 0.5f) {                 // Phase 1 onward draw the grid
-            int i;
-            start.xyz.y = -offset;
-            start.xyz.z = size + offset * 0.5f;
-            stop.xyz.y = -offset;
-            stop.xyz.z = -size + offset * 0.5f;
-            gr_set_color (0, 200, 0);
-            g3_start_instance_angles (&vmd_zero_vector, &view_angles);
-
-            if (time < 1.5f) { stop.xyz.z = -clip; }
-
-            for (i = -3; i < 4; i++) {
-                start.xyz.x = stop.xyz.x = size * 0.333f * i;
-                // g3_draw_htl_line(&start,&stop);
-                g3_render_line_3d (false, &start, &stop);
-            }
-
-            start.xyz.x = size;
-            stop.xyz.x = -size;
-
-            for (i = 3; i > -4; i--) {
-                start.xyz.z = stop.xyz.z = size * 0.333f * i + offset * 0.5f;
-                if ((time < 1.5f) && (start.xyz.z <= -clip)) break;
-                // g3_draw_htl_line(&start,&stop);
-                g3_render_line_3d (false, &start, &stop);
-            }
-
-            g3_done_instance (true);
-
-            // lighting for techroom
-            light_reset ();
-            vec3d light_dir = vmd_zero_vector;
-            light_dir.xyz.y = 1.0f;
-            light_dir.xyz.x = 0.0000001f;
-            light_add_directional (&light_dir, 0.65f, 1.0f, 1.0f, 1.0f);
-            light_rotate_all ();
-            // lighting for techroom
-
-            // render the ships
-            model_clear_instance (model_id);
-            render_info->set_detail_level_lock (0);
-
-            gr_zbuffer_set (true);
-            if (Cmdline_shadow_quality) {
-                gr_end_view_matrix ();
-                gr_end_proj_matrix ();
-
-                gr_reset_clip ();
-
-                model_render_params shadow_render_info;
-
-                shadow_render_info.set_detail_level_lock (0);
-                shadow_render_info.set_flags (
-                    flags | MR_NO_TEXTURING | MR_NO_LIGHTING);
-
-                if (flags & MR_IS_MISSILE) {
-                    shadows_start_render (
-                        &Eye_matrix, &Eye_position, Proj_fov,
-                        gr_screen.clip_aspect, -closeup_pos->xyz.z + pm->rad,
-                        -closeup_pos->xyz.z + pm->rad + 20.0f,
-                        -closeup_pos->xyz.z + pm->rad + 200.0f,
-                        -closeup_pos->xyz.z + pm->rad + 1000.0f);
-                }
-                else {
-                    shadows_start_render (
-                        &Eye_matrix, &Eye_position, Proj_fov,
-                        gr_screen.clip_aspect, -closeup_pos->xyz.z + pm->rad,
-                        -closeup_pos->xyz.z + pm->rad + 200.0f,
-                        -closeup_pos->xyz.z + pm->rad + 2000.0f,
-                        -closeup_pos->xyz.z + pm->rad + 10000.0f);
+                // render the wodel
+                if ((closeup_pos != NULL) && (vm_vec_mag(closeup_pos) > 0.0f)) {
+                        g3_set_view_matrix(
+                                closeup_pos, &vmd_identity_matrix, closeup_zoom);
+                } else {
+                        vec3d pos = { { { 0.0f, 0.0f, -(pm->rad * 1.5f) } } };
+                        g3_set_view_matrix(&pos, &vmd_identity_matrix, closeup_zoom);
                 }
 
-                model_render_immediate (
-                    &shadow_render_info, model_id, &model_orient,
-                    &vmd_zero_vector);
-                shadows_end_render ();
+                // lighting for techroom
+                light_reset();
+                vec3d light_dir = vmd_zero_vector;
+                light_dir.xyz.y = 1.0f;
+                light_add_directional(&light_dir, 0.65f, 1.0f, 1.0f, 1.0f);
+                light_rotate_all();
+                // lighting for techroom
 
-                gr_set_clip (x1, y1, x2, y2, resize_mode);
+                model_clear_instance(model_id);
 
-                gr_set_proj_matrix (
-                    Proj_fov, gr_screen.clip_aspect, Min_draw_distance,
-                    Max_draw_distance);
-                gr_set_view_matrix (&Eye_position, &Eye_matrix);
-            }
-            gr_zbuffer_set (false);
-            gr_set_color (80, 49, 160);
-            render_info->set_color (80, 49, 160);
+                render_info->set_detail_level_lock(0);
 
-            render_info->set_animated_effect (
-                ANIMATED_SHADER_LOADOUTSELECT_FS2, -clip);
+                if (Cmdline_shadow_quality) {
+                        if (flags & MR_IS_MISSILE) {
+                                shadows_start_render(
+                                        &Eye_matrix, &Eye_position, Proj_fov,
+                                        gr_screen.clip_aspect, -closeup_pos->xyz.z + pm->rad,
+                                        -closeup_pos->xyz.z + pm->rad + 20.0f,
+                                        -closeup_pos->xyz.z + pm->rad + 200.0f,
+                                        -closeup_pos->xyz.z + pm->rad + 1000.0f);
+                        } else {
+                                shadows_start_render(
+                                        &Eye_matrix, &Eye_position, Proj_fov,
+                                        gr_screen.clip_aspect, -closeup_pos->xyz.z + pm->rad,
+                                        -closeup_pos->xyz.z + pm->rad + 200.0f,
+                                        -closeup_pos->xyz.z + pm->rad + 2000.0f,
+                                        -closeup_pos->xyz.z + pm->rad + 10000.0f);
+                        }
 
-            if ((time < 2.5f) &&
-                (time >= 0.5f)) { // Phase 1 and 2 render the wireframe
-                if (time >= 1.5f) // Just clip the wireframe after Phase 1
-                    render_info->set_clip_plane (plane_point, wire_normal);
+                        model_render_params shadow_render_info;
 
-                render_info->set_flags (
-                    flags | MR_SHOW_OUTLINE_HTL | MR_NO_POLYS |
-                    MR_NO_TEXTURING | MR_NO_LIGHTING);
+                        shadow_render_info.set_flags(
+                                flags | MR_NO_TEXTURING | MR_NO_LIGHTING);
+                        shadow_render_info.set_detail_level_lock(0);
 
-                model_render_immediate (
-                    render_info, model_id, &model_orient, &vmd_zero_vector);
-            }
+                        model_render_immediate(
+                                &shadow_render_info, model_id, &model_orient,
+                                &vmd_zero_vector);
+                        shadows_end_render();
+                }
 
-            if (time >= 1.5f) { // Render the ship in Phase 2 onwards
-                render_info->set_clip_plane (plane_point, ship_normal);
-                render_info->set_flags (flags);
+                gr_set_clip(x1, y1, x2, y2, resize_mode);
 
-                model_render_immediate (
-                    render_info, model_id, &model_orient, &vmd_zero_vector);
-            }
+                gr_set_proj_matrix(
+                        Proj_fov, gr_screen.clip_aspect, Min_draw_distance,
+                        Max_draw_distance);
+                gr_set_view_matrix(&Eye_position, &Eye_matrix);
 
-            if (time < 2.5f) { // Render the scanline in Phase 1 and 2
-                gr_set_color (0, 255, 0);
-                start.xyz.x = size * 1.25f;
-                start.xyz.y = 0.0f;
-                start.xyz.z = -clip;
-                stop.xyz.x = -size * 1.25f;
-                stop.xyz.y = 0.0f;
-                stop.xyz.z = -clip;
-                g3_start_instance_angles (&vmd_zero_vector, &view_angles);
-                // g3_draw_htl_line(&start,&stop);
-                g3_render_line_3d (false, &start, &stop);
-                g3_done_instance (true);
-            }
+                gr_set_color(0, 128, 0);
+
+                if (effect == 1) { // FS1 effect
+                        render_info->set_animated_effect(
+                                ANIMATED_SHADER_LOADOUTSELECT_FS1, MIN(time * 0.5f, 2.0f));
+                        render_info->set_flags(flags);
+                } else {
+                        render_info->set_flags(flags);
+                }
+
+                model_render_immediate(
+                        render_info, model_id, &model_orient, &vmd_zero_vector);
+
+                batching_render_all();
+
+                gr_end_view_matrix();
+                gr_end_proj_matrix();
+                g3_end_frame();
+                gr_reset_clip();
         }
-
-        gr_zbuffer_set (GR_ZBUFF_FULL); // Turn off depthbuffer again
-
-        batching_render_all ();
-        Glowpoint_use_depth_buffer = true; // Back to normal
-
-        gr_end_view_matrix ();
-        gr_end_proj_matrix ();
-        g3_end_frame ();
-        gr_reset_clip ();
-    }
-    else {
-        // rotate the ship as much as required for this frame
-        *rotation_buffer += PI2 * flFrametime / rev_rate;
-        while (*rotation_buffer > PI2) { *rotation_buffer -= PI2; }
-
-        view_angles.p = -0.6f;
-        view_angles.b = 0.0f;
-        view_angles.h = 0.0f;
-        vm_angles_2_matrix (&model_orient, &view_angles);
-
-        rot_angles.p = 0.0f;
-        rot_angles.b = 0.0f;
-        rot_angles.h = *rotation_buffer;
-        vm_rotate_matrix_by_angles (&model_orient, &rot_angles);
-
-        g3_start_frame (1);
-
-        polymodel* pm = model_get (model_id);
-
-        // render the wodel
-        if ((closeup_pos != NULL) && (vm_vec_mag (closeup_pos) > 0.0f)) {
-            g3_set_view_matrix (
-                closeup_pos, &vmd_identity_matrix, closeup_zoom);
-        }
-        else {
-            vec3d pos = { { { 0.0f, 0.0f, -(pm->rad * 1.5f) } } };
-            g3_set_view_matrix (&pos, &vmd_identity_matrix, closeup_zoom);
-        }
-
-        // lighting for techroom
-        light_reset ();
-        vec3d light_dir = vmd_zero_vector;
-        light_dir.xyz.y = 1.0f;
-        light_add_directional (&light_dir, 0.65f, 1.0f, 1.0f, 1.0f);
-        light_rotate_all ();
-        // lighting for techroom
-
-        model_clear_instance (model_id);
-
-        render_info->set_detail_level_lock (0);
-
-        if (Cmdline_shadow_quality) {
-            if (flags & MR_IS_MISSILE) {
-                shadows_start_render (
-                    &Eye_matrix, &Eye_position, Proj_fov,
-                    gr_screen.clip_aspect, -closeup_pos->xyz.z + pm->rad,
-                    -closeup_pos->xyz.z + pm->rad + 20.0f,
-                    -closeup_pos->xyz.z + pm->rad + 200.0f,
-                    -closeup_pos->xyz.z + pm->rad + 1000.0f);
-            }
-            else {
-                shadows_start_render (
-                    &Eye_matrix, &Eye_position, Proj_fov,
-                    gr_screen.clip_aspect, -closeup_pos->xyz.z + pm->rad,
-                    -closeup_pos->xyz.z + pm->rad + 200.0f,
-                    -closeup_pos->xyz.z + pm->rad + 2000.0f,
-                    -closeup_pos->xyz.z + pm->rad + 10000.0f);
-            }
-
-            model_render_params shadow_render_info;
-
-            shadow_render_info.set_flags (
-                flags | MR_NO_TEXTURING | MR_NO_LIGHTING);
-            shadow_render_info.set_detail_level_lock (0);
-
-            model_render_immediate (
-                &shadow_render_info, model_id, &model_orient,
-                &vmd_zero_vector);
-            shadows_end_render ();
-        }
-
-        gr_set_clip (x1, y1, x2, y2, resize_mode);
-
-        gr_set_proj_matrix (
-            Proj_fov, gr_screen.clip_aspect, Min_draw_distance,
-            Max_draw_distance);
-        gr_set_view_matrix (&Eye_position, &Eye_matrix);
-
-        gr_set_color (0, 128, 0);
-
-        if (effect == 1) { // FS1 effect
-            render_info->set_animated_effect (
-                ANIMATED_SHADER_LOADOUTSELECT_FS1, MIN (time * 0.5f, 2.0f));
-            render_info->set_flags (flags);
-        }
-        else {
-            render_info->set_flags (flags);
-        }
-
-        model_render_immediate (
-            render_info, model_id, &model_orient, &vmd_zero_vector);
-
-        batching_render_all ();
-
-        gr_end_view_matrix ();
-        gr_end_proj_matrix ();
-        g3_end_frame ();
-        gr_reset_clip ();
-    }
 }
 
 // NEWSTUFF END

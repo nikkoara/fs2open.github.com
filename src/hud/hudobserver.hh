@@ -13,6 +13,6 @@ struct ai_info;
 extern ship Hud_obs_ship;
 extern ai_info Hud_obs_ai;
 
-void hud_observer_init (ship* shipp, ai_info* aip);
+void hud_observer_init(ship *shipp, ai_info *aip);
 
 #endif // FREESPACE2_HUD_HUDOBSERVER_HH

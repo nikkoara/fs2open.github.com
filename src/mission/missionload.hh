@@ -18,13 +18,13 @@ extern std::vector< std::string > Ignored_missions;
 // It sets the following global variables:
 // Game_current_mission_filename
 
-int mission_load (char* filename_ext);
+int mission_load(char *filename_ext);
 
-bool mission_is_ignored (const char* filename);
+bool mission_is_ignored(const char *filename);
 
 // Functions for mission load menu
-void mission_load_menu_init ();
-void mission_load_menu_close ();
-void mission_load_menu_do ();
+void mission_load_menu_init();
+void mission_load_menu_close();
+void mission_load_menu_do();
 
 #endif // FREESPACE2_MISSION_MISSIONLOAD_HH

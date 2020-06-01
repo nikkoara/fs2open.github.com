@@ -7,9 +7,9 @@
 
 namespace movie {
 
-bool play (const char* name);
+bool play(const char *name);
 
-void play_two (const char* name1, const char* name2);
+void play_two(const char *name1, const char *name2);
 
 } // namespace movie
 

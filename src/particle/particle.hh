@@ -5,9 +5,9 @@
 
 #include "defs.hh"
 
-#include "object/object.hh"
-
 #include <memory>
+
+#include "object/object.hh"
 
 namespace particle {
 //============================================================================
@@ -15,19 +15,19 @@ namespace particle {
 //============================================================================
 
 // Resets particle system.  Call between levels.
-void init ();
+void init();
 
 // called at game exit to cleanup any used resources
-void close ();
+void close();
 
 // Moves the particles for each frame
-void move_all (float frametime);
+void move_all(float frametime);
 
 // Renders all the particles
-void render_all ();
+void render_all();
 
 // kill all active particles
-void kill_all ();
+void kill_all();
 
 //============================================================================
 //=============== LOW-LEVEL SINGLE PARTICLE CREATION CODE ====================
@@ -37,61 +37,60 @@ void kill_all ();
  * The different types of particles
  */
 enum ParticleType {
-    PARTICLE_DEBUG,  //!< A red sphere, no optional data required
-    PARTICLE_BITMAP, //!< A bitmap, optional data is the bitmap number.  If
-                     //!< bitmap is an animation, lifetime is calculated by the
-                     //!< number of frames and fps.
-    PARTICLE_FIRE,   //!< The vclip used for explosions, optional means nothing
-    PARTICLE_SMOKE,  //!< The vclip used for smoke, optional means nothing
-    PARTICLE_SMOKE2, //!< The vclip used for smoke, optional means nothing
-    PARTICLE_BITMAP_PERSISTENT, //!< A bitmap, optional data is the bitmap
-                                //!< number.  If bitmap is an animation,
-                                //!< lifetime is calculated by the number of
-                                //!< frames and fps.
+        PARTICLE_DEBUG,             //!< A red sphere, no optional data required
+        PARTICLE_BITMAP,            //!< A bitmap, optional data is the bitmap number.  If
+                                    //!< bitmap is an animation, lifetime is calculated by the
+                                    //!< number of frames and fps.
+        PARTICLE_FIRE,              //!< The vclip used for explosions, optional means nothing
+        PARTICLE_SMOKE,             //!< The vclip used for smoke, optional means nothing
+        PARTICLE_SMOKE2,            //!< The vclip used for smoke, optional means nothing
+        PARTICLE_BITMAP_PERSISTENT, //!< A bitmap, optional data is the bitmap
+                                    //!< number.  If bitmap is an animation,
+                                    //!< lifetime is calculated by the number of
+                                    //!< frames and fps.
 
-    NUM_PARTICLE_TYPES,
-    INVALID_TYPE
+        NUM_PARTICLE_TYPES,
+        INVALID_TYPE
 };
 
 // particle creation stuff
-struct particle_info  {
-    // old-style particle info
-    vec3d pos = vmd_zero_vector;
-    vec3d vel = vmd_zero_vector;
-    float lifetime = -1.0f;
-    float rad = -1.0f;
-    ParticleType type = INVALID_TYPE;
-    int optional_data = -1;
+struct particle_info {
+        // old-style particle info
+        vec3d pos = vmd_zero_vector;
+        vec3d vel = vmd_zero_vector;
+        float lifetime = -1.0f;
+        float rad = -1.0f;
+        ParticleType type = INVALID_TYPE;
+        int optional_data = -1;
 
-    // new-style particle info
-    int attached_objnum = -1; // if these are set, the pos is relative to the
-                              // pos of the origin of the attached object
-    int attached_sig = -1; // to make sure the object hasn't changed or died.
-                           // velocity is ignored in this case
-    bool reverse = false;  // play any animations in reverse
-    bool lifetime_from_animation =
-        true; // if the particle plays an animation then use the anim length
-              // for the particle life
+        // new-style particle info
+        int attached_objnum = -1;            // if these are set, the pos is relative to the
+                                             // pos of the origin of the attached object
+        int attached_sig = -1;               // to make sure the object hasn't changed or died.
+                                             // velocity is ignored in this case
+        bool reverse = false;                // play any animations in reverse
+        bool lifetime_from_animation = true; // if the particle plays an animation then use the anim length
+                                             // for the particle life
 };
 
-struct particle  {
-    // old style data
-    vec3d pos;         // position
-    vec3d velocity;    // velocity
-    float age;         // How long it's been alive
-    float max_life;    // How much life we had
-    float radius;      // radius
-    int type;          // type                                                                          // -1 = None
-    int optional_data; // depends on type
-    int nframes;       // If an ani, how many frames?
+struct particle {
+        // old style data
+        vec3d pos;         // position
+        vec3d velocity;    // velocity
+        float age;         // How long it's been alive
+        float max_life;    // How much life we had
+        float radius;      // radius
+        int type;          // type                                                                          // -1 = None
+        int optional_data; // depends on type
+        int nframes;       // If an ani, how many frames?
 
-    // new style data
-    int attached_objnum; // if this is set, pos is relative to the attached
-                         // object. velocity is ignored
-    int attached_sig;    // to check for dead/nonexistent objects
-    bool reverse;        // play any animations in reverse
-    int particle_index;  // used to keep particle offset in dynamic array for
-                         // orient usage
+        // new style data
+        int attached_objnum; // if this is set, pos is relative to the attached
+                             // object. velocity is ignored
+        int attached_sig;    // to check for dead/nonexistent objects
+        bool reverse;        // play any animations in reverse
+        int particle_index;  // used to keep particle offset in dynamic array for
+                             // orient usage
 };
 
 typedef std::weak_ptr< particle > WeakParticlePtr;
@@ -108,7 +107,7 @@ typedef std::shared_ptr< particle > ParticlePtr;
  * @param pinfo A structure containg information about how the particle should
  * be created
  */
-void create (particle_info* pinfo);
+void create(particle_info *pinfo);
 
 /**
  * @brief Convenience function for creating a non-persistent particle without
@@ -117,9 +116,9 @@ void create (particle_info* pinfo);
  *
  * @see particle::create(particle_info* pinfo)
  */
-void create (
-    vec3d* pos, vec3d* vel, float lifetime, float rad, ParticleType type,
-    int optional_data = -1, object* objp = NULL, bool reverse = false);
+void create(
+        vec3d *pos, vec3d *vel, float lifetime, float rad, ParticleType type,
+        int optional_data = -1, object *objp = NULL, bool reverse = false);
 
 /**
  * @brief Creates a persistent particle
@@ -133,34 +132,34 @@ void create (
  * be created
  * @return A weak reference to the particle
  */
-WeakParticlePtr createPersistent (particle_info* pinfo);
+WeakParticlePtr createPersistent(particle_info *pinfo);
 
 //============================================================================
 //============== HIGH-LEVEL PARTICLE SYSTEM CREATION CODE ====================
 //============================================================================
 
 // Use a structure rather than pass a ton of parameters to particle_emit
-struct particle_emitter  {
-    int num_low;           // Lowest number of particles to create
-    int num_high;          // Highest number of particles to create
-    vec3d pos;             // Where the particles emit from
-    vec3d vel;             // Initial velocity of all the particles
-    float min_life;        // How long the particles live
-    float max_life;        // How long the particles live
-    vec3d normal;          // What normal the particle emit arond
-    float normal_variance; // How close they stick to that normal 0=good, 1=360
-                           // degree
-    float min_vel;         // How fast the slowest particle can move
-    float max_vel;         // How fast the fastest particle can move
-    float min_rad;         // Min radius
-    float max_rad;         // Max radius
+struct particle_emitter {
+        int num_low;           // Lowest number of particles to create
+        int num_high;          // Highest number of particles to create
+        vec3d pos;             // Where the particles emit from
+        vec3d vel;             // Initial velocity of all the particles
+        float min_life;        // How long the particles live
+        float max_life;        // How long the particles live
+        vec3d normal;          // What normal the particle emit arond
+        float normal_variance; // How close they stick to that normal 0=good, 1=360
+                               // degree
+        float min_vel;         // How fast the slowest particle can move
+        float max_vel;         // How fast the fastest particle can move
+        float min_rad;         // Min radius
+        float max_rad;         // Max radius
 };
 
 // Creates a bunch of particles. You pass a structure
 // rather than a bunch of parameters.
-void emit (
-    particle_emitter* pe, ParticleType type, int optional_data,
-    float range = 1.0);
+void emit(
+        particle_emitter *pe, ParticleType type, int optional_data,
+        float range = 1.0);
 } // namespace particle
 
 #endif // FREESPACE2_PARTICLE_PARTICLE_HH

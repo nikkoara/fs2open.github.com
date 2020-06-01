@@ -5,12 +5,12 @@
 
 #include "defs.hh"
 
-#include "osapi/osregistry.hh"
-#include "util/flagset.hh"
-
 #include <filesystem>
 #include <functional>
 #include <memory>
+
+#include "osapi/osregistry.hh"
+#include "util/flagset.hh"
 namespace fs = std::filesystem;
 
 #include <SDL_events.h>
@@ -18,20 +18,20 @@ namespace fs = std::filesystem;
 namespace fs2 {
 namespace os {
 
-void init ();
-void fini ();
+void init();
+void fini();
 
-void title (const char*);
-const char* title ();
+void title(const char *);
+const char *title();
 
-bool is_foreground ();
+bool is_foreground();
 
-inline void sleep (unsigned ms) { SDL_Delay (ms); }
+inline void sleep(unsigned ms) { SDL_Delay(ms); }
 
-fs::path get_config_path ();
-fs::path get_config_path (const fs::path&);
+fs::path get_config_path();
+fs::path get_config_path(const fs::path &);
 
-inline constexpr bool is_legacy_mode () { return false; }
+inline constexpr bool is_legacy_mode() { return false; }
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -47,24 +47,27 @@ inline constexpr bool is_legacy_mode () { return false; }
  * @brief Flags for OpenGL context creation
  * @ingroup os_graphics_api
  */
-enum class OpenGLContextFlags { Debug = 0, ForwardCompatible, NUM_VALUES };
+enum class OpenGLContextFlags { Debug = 0,
+                                ForwardCompatible,
+                                NUM_VALUES };
 
 /**
  * @brief The required context profile
  * @ingroup os_graphics_api
  */
-enum class OpenGLProfile { Core, Compatibility };
+enum class OpenGLProfile { Core,
+                           Compatibility };
 
 /**
  * @brief Attributes for OpenGL context creation
  * @ingroup os_graphics_api
  */
 struct OpenGLContextAttributes {
-    uint32_t major_version; //!< The major version of the created context
-    uint32_t minor_version; //!< The minor version of the created context
+        uint32_t major_version; //!< The major version of the created context
+        uint32_t minor_version; //!< The minor version of the created context
 
-    flagset< OpenGLContextFlags > flags; //!< The OpenGL context flags
-    OpenGLProfile profile;               //!< The desired OpenGL profile
+        flagset< OpenGLContextFlags > flags; //!< The OpenGL context flags
+        OpenGLProfile profile;               //!< The desired OpenGL profile
 };
 
 /**
@@ -72,23 +75,23 @@ struct OpenGLContextAttributes {
  * @ingroup os_graphics_api
  */
 struct ViewportPixelFormat {
-    uint32_t red_size;
-    uint32_t green_size;
-    uint32_t blue_size;
-    uint32_t alpha_size;
+        uint32_t red_size;
+        uint32_t green_size;
+        uint32_t blue_size;
+        uint32_t alpha_size;
 
-    uint32_t depth_size;
-    uint32_t stencil_size;
+        uint32_t depth_size;
+        uint32_t stencil_size;
 
-    uint32_t multi_samples; //!< The amount of multi-sampling, use 0 for no
-                            //!< multi-sampling
+        uint32_t multi_samples; //!< The amount of multi-sampling, use 0 for no
+                                //!< multi-sampling
 };
 
 /**
  * @brief A function pointer for loading an OpenGL function
  * @ingroup os_graphics_api
  */
-typedef void* (*OpenGLLoadProc) (const char* name);
+typedef void *(*OpenGLLoadProc)(const char *name);
 
 /**
  * @brief An OpenGL context
@@ -98,51 +101,56 @@ typedef void* (*OpenGLLoadProc) (const char* name);
  */
 class OpenGLContext {
 public:
-    virtual ~OpenGLContext () {}
+        virtual ~OpenGLContext() { }
 
-    /**
+        /**
      * @brief Gets an OpenGL loader function
      */
-    virtual OpenGLLoadProc getLoaderFunction () = 0;
+        virtual OpenGLLoadProc getLoaderFunction() = 0;
 
-    /**
+        /**
      * @brief Sets the swap interval
      */
-    virtual void setSwapInterval (int status) = 0;
+        virtual void setSwapInterval(int status) = 0;
 };
 
 /**
  * @brief Flags for viewport creation
  * @ingroup os_graphics_api
  */
-enum class ViewPortFlags { Fullscreen = 0, Borderless, Resizeable, NUM_VALUES };
+enum class ViewPortFlags { Fullscreen = 0,
+                           Borderless,
+                           Resizeable,
+                           NUM_VALUES };
 
 /**
  * @brief Properties of a viewport that should be created
  * @ingroup os_graphics_api
  */
 struct ViewPortProperties {
-    bool enable_opengl; //!< Set to true if the viewport should support OpenGL
-                        //!< rendering
-    OpenGLContextAttributes gl_attributes;
+        bool enable_opengl; //!< Set to true if the viewport should support OpenGL
+                            //!< rendering
+        OpenGLContextAttributes gl_attributes;
 
-    ViewportPixelFormat pixel_format;
+        ViewportPixelFormat pixel_format;
 
-    std::string title;
+        std::string title;
 
-    uint32_t width;
-    uint32_t height;
+        uint32_t width;
+        uint32_t height;
 
-    flagset< ViewPortFlags > flags;
+        flagset< ViewPortFlags > flags;
 
-    uint32_t display;
+        uint32_t display;
 };
 
 /**
  * @brief State of a viewport
  * @ingroup os_graphics_api
  */
-enum class ViewportState { Windowed, Borderless, Fullscreen };
+enum class ViewportState { Windowed,
+                           Borderless,
+                           Fullscreen };
 
 /**
  * @brief A viewport supporting graphics operations
@@ -154,9 +162,9 @@ enum class ViewportState { Windowed, Borderless, Fullscreen };
  */
 class Viewport {
 public:
-    virtual ~Viewport () { }
+        virtual ~Viewport() { }
 
-    /**
+        /**
      * @brief Returns a SDL_Window handle for this viewport
      *
      * @note The returned handle is owned by the viewport and may not be
@@ -165,9 +173,9 @@ public:
      * @return The window handle or @c nullptr if the viewport can't be
      * represented as an SDL_Window
      */
-    virtual SDL_Window* toSDLWindow () = 0;
+        virtual SDL_Window *toSDLWindow() = 0;
 
-    /**
+        /**
      * @brief Gets the size of this viewport
      *
      * @note This is the actual window size. On HiDPI systems the size of the
@@ -176,35 +184,35 @@ public:
      *
      * @return A (width, height) pair
      */
-    virtual std::pair< uint32_t, uint32_t > getSize () = 0;
+        virtual std::pair< uint32_t, uint32_t > getSize() = 0;
 
-    /**
+        /**
      * @brief Swaps the buffers of this window
      */
-    virtual void swapBuffers () = 0;
+        virtual void swapBuffers() = 0;
 
-    /**
+        /**
      * @brief Sets the window state of the viewport
      *
      * @note Implementation may ignore invocations of this function
      *
      * @param state The desired state
      */
-    virtual void setState (ViewportState state) = 0;
+        virtual void setState(ViewportState state) = 0;
 
-    /**
+        /**
      * @brief Minimizes the viewport
      *
      * @note Implementation may ignore invocations of this function
      */
-    virtual void minimize () = 0;
+        virtual void minimize() = 0;
 
-    /**
+        /**
      * @brief Restores/Maximizes the viewport
      *
      * @note Implementation may ignore invocations of this function
      */
-    virtual void restore () = 0;
+        virtual void restore() = 0;
 };
 
 /**
@@ -217,9 +225,9 @@ public:
  */
 class GraphicsOperations {
 public:
-    virtual ~GraphicsOperations () { }
+        virtual ~GraphicsOperations() { }
 
-    /**
+        /**
      * @brief Creates an OpenGL contex
      *
      * Uses the specified attributes and creates an OpenGL context. The width
@@ -232,10 +240,11 @@ public:
      * @return A pointer to the OpenGL context or @c nullptr if the creation
      * has failed
      */
-    virtual std::unique_ptr< OpenGLContext > createOpenGLContext (
-        Viewport* viewport, const OpenGLContextAttributes& gl_attrs) = 0;
+        virtual std::unique_ptr< OpenGLContext > createOpenGLContext(
+                Viewport *viewport, const OpenGLContextAttributes &gl_attrs)
+                = 0;
 
-    /**
+        /**
      * @brief Makes an OpenGL context current
      *
      * @warning The viewport must be configured to support OpenGL!
@@ -243,10 +252,11 @@ public:
      * @param view The viewport to make the context current on
      * @param ctx The OpenGL context to make current, may be @c nullptr
      */
-    virtual void
-    makeOpenGLContextCurrent (Viewport* view, OpenGLContext* ctx) = 0;
+        virtual void
+        makeOpenGLContextCurrent(Viewport *view, OpenGLContext *ctx)
+                = 0;
 
-    /**
+        /**
      * @brief Creates a new viewport
      *
      * @note Implementations may choose to dissallow viewport creation after a
@@ -257,8 +267,8 @@ public:
      * @return The created viewport, may be @c nullptr if the viewport can't be
      * created
      */
-    virtual std::unique_ptr< Viewport >
-    createViewport (const ViewPortProperties& props) = 0;
+        virtual std::unique_ptr< Viewport >
+        createViewport(const ViewPortProperties &props) = 0;
 };
 
 /**
@@ -273,7 +283,7 @@ public:
  *
  * @ingroup os_graphics_api
  */
-Viewport* addViewport (std::unique_ptr< Viewport >&& viewport);
+Viewport *addViewport(std::unique_ptr< Viewport > &&viewport);
 
 /**
  * @brief Sets the main viewport of the application
@@ -281,7 +291,7 @@ Viewport* addViewport (std::unique_ptr< Viewport >&& viewport);
  *
  * @ingroup os_graphics_api
  */
-void setMainViewPort (Viewport* mainView);
+void setMainViewPort(Viewport *mainView);
 
 /**
  * @brief Gets the main viewport of the application
@@ -289,7 +299,7 @@ void setMainViewPort (Viewport* mainView);
  *
  * @ingroup os_graphics_api
  */
-Viewport* getMainViewport ();
+Viewport *getMainViewport();
 
 /**
  * @brief Gets the SDL handle of the main window
@@ -298,9 +308,9 @@ Viewport* getMainViewport ();
  *
  * @ingroup os_graphics_api
  */
-SDL_Window* getSDLMainWindow ();
+SDL_Window *getSDLMainWindow();
 
-void closeAllViewports ();
+void closeAllViewports();
 
 /**
  * @defgroup eventhandling API for consuming OS events
@@ -320,7 +330,7 @@ const int DEFAULT_LISTENER_WEIGHT = 0;
  * @brief An event handler
  * Gets the generated sdl event and must return if it handled the event or not.
  */
-typedef std::function< bool(const SDL_Event&) > Listener;
+typedef std::function< bool(const SDL_Event &) > Listener;
 
 /**
  * @brief An identification for a listener
@@ -337,14 +347,14 @@ typedef size_t ListenerIdentifier;
  * @see removeEventListener()
  */
 ListenerIdentifier
-addEventListener (SDL_EventType type, int weigth, const Listener& listener);
+addEventListener(SDL_EventType type, int weigth, const Listener &listener);
 
 /**
  * @brief Removes the event handler with the given identifier
  * @param identifier The identifier of the event handler that should be removed
  * @return @c true if the event handler was removed, @c false otherwise
  */
-bool removeEventListener (ListenerIdentifier identifier);
+bool removeEventListener(ListenerIdentifier identifier);
 
 #define LISTEN   fs2::os::events::addEventListener
 #define UNLISTEN fs2::os::events::removeEventListener
@@ -358,10 +368,10 @@ bool removeEventListener (ListenerIdentifier identifier);
  * @param window The window the event should belong to
  * @return @c true if the event belongs to the window, @c false otherwise
  */
-bool isWindowEvent (const SDL_Event& e, SDL_Window* window);
+bool isWindowEvent(const SDL_Event &e, SDL_Window *window);
 
-void buffer_all ();
-void process_all ();
+void buffer_all();
+void process_all();
 
 } // namespace events
 } // namespace os

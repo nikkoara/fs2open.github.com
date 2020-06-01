@@ -5,8 +5,9 @@
 
 #include "defs.hh"
 
-#include <ctime>
 #include <sys/stat.h>
+
+#include <ctime>
 
 #include <stdexcept>
 
@@ -16,77 +17,77 @@
 #define CF_SEEK_CUR (1)
 #define CF_SEEK_END (2)
 
-struct CFILE  {
-    int id;      // Index into cfile.cpp specific structure
-    int version; // version of this file
+struct CFILE {
+        int id;      // Index into cfile.cpp specific structure
+        int version; // version of this file
 };
 
 // extra info that can be returned when getting a file listing
 struct file_list_info {
-    time_t write_time;
+        time_t write_time;
 };
 
 #define CF_MAX_FILENAME_LENGTH \
-    32 // Includes null terminater, so real length is 31
+        32 // Includes null terminater, so real length is 31
 #define CF_MAX_PATHNAME_LENGTH \
-    256 // Includes null terminater, so real length is 255
+        256 // Includes null terminater, so real length is 255
 
 #define CF_TYPE_ANY -1 // Used to check in any directory
 
-#define CF_TYPE_INVALID 0
-#define CF_TYPE_ROOT 1 // Root must be 1!!
-#define CF_TYPE_DATA 2
-#define CF_TYPE_MAPS 3
-#define CF_TYPE_TEXT 4
-#define CF_TYPE_MODELS 5
-#define CF_TYPE_TABLES 6
-#define CF_TYPE_SOUNDS 7
-#define CF_TYPE_SOUNDS_8B22K 8
-#define CF_TYPE_SOUNDS_16B11K 9
-#define CF_TYPE_VOICE 10
-#define CF_TYPE_VOICE_BRIEFINGS 11
-#define CF_TYPE_VOICE_CMD_BRIEF 12
+#define CF_TYPE_INVALID           0
+#define CF_TYPE_ROOT              1 // Root must be 1!!
+#define CF_TYPE_DATA              2
+#define CF_TYPE_MAPS              3
+#define CF_TYPE_TEXT              4
+#define CF_TYPE_MODELS            5
+#define CF_TYPE_TABLES            6
+#define CF_TYPE_SOUNDS            7
+#define CF_TYPE_SOUNDS_8B22K      8
+#define CF_TYPE_SOUNDS_16B11K     9
+#define CF_TYPE_VOICE             10
+#define CF_TYPE_VOICE_BRIEFINGS   11
+#define CF_TYPE_VOICE_CMD_BRIEF   12
 #define CF_TYPE_VOICE_DEBRIEFINGS 13
-#define CF_TYPE_VOICE_PERSONAS 14
-#define CF_TYPE_VOICE_SPECIAL 15
-#define CF_TYPE_VOICE_TRAINING 16
-#define CF_TYPE_MUSIC 17
-#define CF_TYPE_MOVIES 18
-#define CF_TYPE_INTERFACE 19
-#define CF_TYPE_FONT 20
-#define CF_TYPE_EFFECTS 21
-#define CF_TYPE_HUD 22
-#define CF_TYPE_PLAYERS 23
-#define CF_TYPE_PLAYER_IMAGES 24
-#define CF_TYPE_SQUAD_IMAGES 25
-#define CF_TYPE_SINGLE_PLAYERS 26
-#define CF_TYPE_MULTI_PLAYERS 27
-#define CF_TYPE_CACHE 28
-#define CF_TYPE_MULTI_CACHE 29
-#define CF_TYPE_MISSIONS 30
-#define CF_TYPE_CONFIG 31
-#define CF_TYPE_DEMOS 32
-#define CF_TYPE_CBANIMS 33
-#define CF_TYPE_INTEL_ANIMS 34
-#define CF_TYPE_SCRIPTS 35
-#define CF_TYPE_FICTION 36
-#define CF_TYPE_FREDDOCS 37
+#define CF_TYPE_VOICE_PERSONAS    14
+#define CF_TYPE_VOICE_SPECIAL     15
+#define CF_TYPE_VOICE_TRAINING    16
+#define CF_TYPE_MUSIC             17
+#define CF_TYPE_MOVIES            18
+#define CF_TYPE_INTERFACE         19
+#define CF_TYPE_FONT              20
+#define CF_TYPE_EFFECTS           21
+#define CF_TYPE_HUD               22
+#define CF_TYPE_PLAYERS           23
+#define CF_TYPE_PLAYER_IMAGES     24
+#define CF_TYPE_SQUAD_IMAGES      25
+#define CF_TYPE_SINGLE_PLAYERS    26
+#define CF_TYPE_MULTI_PLAYERS     27
+#define CF_TYPE_CACHE             28
+#define CF_TYPE_MULTI_CACHE       29
+#define CF_TYPE_MISSIONS          30
+#define CF_TYPE_CONFIG            31
+#define CF_TYPE_DEMOS             32
+#define CF_TYPE_CBANIMS           33
+#define CF_TYPE_INTEL_ANIMS       34
+#define CF_TYPE_SCRIPTS           35
+#define CF_TYPE_FICTION           36
+#define CF_TYPE_FREDDOCS          37
 
-#define CF_MAX_PATH_TYPES \
-    38 // Can be as high as you'd like //DTP; yeah but beware alot of things
-       // uses CF_MAX_PATH_TYPES
+#define CF_MAX_PATH_TYPES                                                             \
+        38      // Can be as high as you'd like //DTP; yeah but beware alot of things
+                // uses CF_MAX_PATH_TYPES
 
 // TRUE if type is specified and valid
 #define CF_TYPE_SPECIFIED(path_type) \
-    (((path_type) > CF_TYPE_INVALID) && ((path_type) < CF_MAX_PATH_TYPES))
+        (((path_type) > CF_TYPE_INVALID) && ((path_type) < CF_MAX_PATH_TYPES))
 
 // #define's for the type parameter in cfopen.
-#define CFILE_NORMAL 0               // open file normally
+#define CFILE_NORMAL        0        // open file normally
 #define CFILE_MEMORY_MAPPED (1 << 0) // open file as a memory-mapped file
 
-#define CF_SORT_NONE 0
-#define CF_SORT_NAME 1
-#define CF_SORT_TIME 2
+#define CF_SORT_NONE    0
+#define CF_SORT_NAME    1
+#define CF_SORT_TIME    2
 #define CF_SORT_REVERSE 3
 
 /**
@@ -102,71 +103,70 @@ struct file_list_info {
  * remaining mods or the top-level root directory.
  */
 enum CFileLocationFlags {
-    CF_LOCATION_ROOT_GAME =
-        1 << 0, //!< The game root location. This is the location of the game
-                //!< data (e.g. FS2 retail)
-    /**
+        CF_LOCATION_ROOT_GAME = 1 << 0, //!< The game root location. This is the location of the game
+                                        //!< data (e.g. FS2 retail)
+        /**
      * @brief The user directories.
      *
      * If the engine is in portable mode then using this flag exclusively will
      * result in a failure to open files!
      */
-    CF_LOCATION_ROOT_USER = 1 << 1,
+        CF_LOCATION_ROOT_USER = 1 << 1,
 
-    /**
+        /**
      * @brief The memory root
      *
      * This contains all the built-in files available to the engine.
      */
-    CF_LOCATION_ROOT_MEMORY = 1 << 2,
+        CF_LOCATION_ROOT_MEMORY = 1 << 2,
 
-    /**
+        /**
      * @brief Mask for extracting root type from a location bit field
      */
-    CF_LOCATION_ROOT_MASK = 0xFFFF,
+        CF_LOCATION_ROOT_MASK = 0xFFFF,
 
-    CF_LOCATION_TYPE_ROOT = 1 << 16, //!< The basic, top-level root location
-    /**
+        CF_LOCATION_TYPE_ROOT = 1 << 16, //!< The basic, top-level root location
+        /**
      * @brief The primary mod location.
      *
      * This is the mod that appears first on the command line. If there are no
      * mods then the root location is considered to be the primary mod
      */
-    CF_LOCATION_TYPE_PRIMARY_MOD = 1 << 17,
-    /**
+        CF_LOCATION_TYPE_PRIMARY_MOD = 1 << 17,
+        /**
      * @brief The remaining mods.
      *
      * If there are no mods on the command line then this might not include any
      * valid location.
      */
-    CF_LOCATION_TYPE_SECONDARY_MODS = 1 << 18,
+        CF_LOCATION_TYPE_SECONDARY_MODS = 1 << 18,
 
-    /**
+        /**
      * @brief Bitmask for extracting the type from a location bit field
      */
-    CF_LOCATION_TYPE_MASK = 0xFFFF0000,
+        CF_LOCATION_TYPE_MASK = 0xFFFF0000,
 
-    /**
+        /**
      * @brief A combination of all flags
      *
      * This should be used when the default behavior without any location
      * filtering is desired.
      */
-    CF_LOCATION_ALL = CF_LOCATION_ROOT_MASK | CF_LOCATION_TYPE_MASK
+        CF_LOCATION_ALL = CF_LOCATION_ROOT_MASK | CF_LOCATION_TYPE_MASK
 };
 
-#define cfread_fix(file) (fix) cfread_int (file)
-#define cfwrite_fix(i, file) cfwrite_int (i, file)
+#define cfread_fix(file)     (fix) cfread_int(file)
+#define cfwrite_fix(i, file) cfwrite_int(i, file)
 
 // callback function used for get_file_list() to filter files to be added to
 // list.  Return 1 to add file to list, or 0 to not add it.
-extern int (*Get_file_list_filter) (const char* filename);
+extern int (*Get_file_list_filter)(const char *filename);
 
 // extra check for child directory under CF_TYPE_*
 // NOTE: if specified cf_get_file_list() will not search pack files!
 // NOTE: specified string must not contain ':' or spaces or begin with
 // DIR_SEPARATOR!
-extern const char* Get_file_list_child;
+extern const char *Get_file_list_child;
 
 // cfile directory. valid after cfile_init() returns successfully
 #define CFILE_ROOT_DIRECTORY_LEN 256
@@ -174,198 +174,199 @@ extern char Cfile_root_dir[CFILE_ROOT_DIRECTORY_LEN];
 extern char Cfile_user_dir[CFILE_ROOT_DIRECTORY_LEN];
 
 //================= LOW-LEVEL FUNCTIONS ==================
-int cfile_init (const char* exe_dir, const char* cdrom_dir = NULL);
-void cfile_close ();
+int cfile_init(const char *exe_dir, const char *cdrom_dir = NULL);
+void cfile_close();
 
 // Call this if pack files got added or removed or the
 // cdrom changed.  This will refresh the list of filenames
 // stored in packfiles and on the cdrom.
-void cfile_refresh ();
+void cfile_refresh();
 
 // add an extension to a filename if it doesn't already have it
-char* cf_add_ext (const char* filename, const char* ext);
+char *cf_add_ext(const char *filename, const char *ext);
 
 // return CF_TYPE (directory location type) of a CFILE you called cfopen()
 // successfully on.
-int cf_get_dir_type (CFILE* cfile);
+int cf_get_dir_type(CFILE *cfile);
 
 // Opens the file.  If no path is given, use the extension to look into the
 // default path.  If mode is NULL, delete the file.
-CFILE* _cfopen (
-    const char* source_file, int line, const char* filename, const char* mode,
-    int type = CFILE_NORMAL, int dir_type = CF_TYPE_ANY, bool localize = false,
-    uint32_t location_flags = CF_LOCATION_ALL);
+CFILE *_cfopen(
+        const char *source_file, int line, const char *filename, const char *mode,
+        int type = CFILE_NORMAL, int dir_type = CF_TYPE_ANY, bool localize = false,
+        uint32_t location_flags = CF_LOCATION_ALL);
 #define cfopen(...) \
-    _cfopen (LOCATION, __VA_ARGS__) // Pass source location to the function
+        _cfopen(LOCATION, __VA_ARGS__) // Pass source location to the function
 
 // like cfopen(), but it accepts a fully qualified path only (ie, the result of
 // a cf_find_file_location() call) NOTE: only supports reading files!!
-CFILE* _cfopen_special (
-    const char* source_file, int line, const char* file_path, const char* mode,
-    const size_t size, const size_t offset, const void* data,
-    int dir_type = CF_TYPE_ANY);
+CFILE *_cfopen_special(
+        const char *source_file, int line, const char *file_path, const char *mode,
+        const size_t size, const size_t offset, const void *data,
+        int dir_type = CF_TYPE_ANY);
 #define cfopen_special(...) \
-    _cfopen_special (       \
-        LOCATION, __VA_ARGS__) // Pass source location to the function
+        _cfopen_special(    \
+                LOCATION, __VA_ARGS__) // Pass source location to the function
 
 // Flush the open file buffer
-int cflush (CFILE* cfile);
+int cflush(CFILE *cfile);
 
 // version number of opened file.  Will be 0 unless you put something else here
 // after you open a file.  Once set, you can use minimum version numbers with
 // the read functions.
-void cf_set_version (CFILE* cfile, int version);
+void cf_set_version(CFILE *cfile, int version);
 
 // will throw an error if cfread*() functions read past this mark
 // converted to raw offsets when used, but gets passed actual length from
 // current position setting 'len' to zero will disable the check
-void cf_set_max_read_len (CFILE* cfile, size_t len);
+void cf_set_max_read_len(CFILE *cfile, size_t len);
 
 // Deletes a file. Returns 0 on error, 1 if successful
-int cf_delete (
-    const char* filename, int dir_type,
-    uint32_t location_flags = CF_LOCATION_ALL);
+int cf_delete(
+        const char *filename, int dir_type,
+        uint32_t location_flags = CF_LOCATION_ALL);
 
 // Same as _access function to read a file's access bits
-int cf_access (const char* filename, int dir_type, int mode);
+int cf_access(const char *filename, int dir_type, int mode);
 
 // Returns 1 if the file exists, 0 if not.
 // Checks only the file system.
-int cf_exists (const char* filename, int dir_type);
+int cf_exists(const char *filename, int dir_type);
 
 // Goober5000
 // Returns 1 if the file exists, 0 if not.
 // Checks both the file system and the VPs.
-int cf_exists_full (const char* filename, int dir_type);
+int cf_exists_full(const char *filename, int dir_type);
 // check num_ext worth of ext_list extensions
-int cf_exists_full_ext (
-    const char* filename, int dir_type, const int num_ext,
-    const char** ext_list);
+int cf_exists_full_ext(
+        const char *filename, int dir_type, const int num_ext,
+        const char **ext_list);
 
 // ctmpfile() opens a temporary file stream.  File is deleted automatically
 // when closed
-CFILE* ctmpfile ();
+CFILE *ctmpfile();
 
 // Closes the file
-int cfclose (CFILE* cfile);
+int cfclose(CFILE *cfile);
 
 // Checks if the given handle is valid
-int cf_is_valid (CFILE* cfile);
+int cf_is_valid(CFILE *cfile);
 
 // Returns size of file...
-int cfilelength (CFILE* fp);
+int cfilelength(CFILE *fp);
 
-inline int cfilelength (int fd) {
-    struct stat st;
-    return 0 == fstat (fd, &st) ? st.st_size : -1;
+inline int cfilelength(int fd)
+{
+        struct stat st;
+        return 0 == fstat(fd, &st) ? st.st_size : -1;
 }
 
 // Reads data
-int cfread (void* buf, int elsize, int nelem, CFILE* fp);
+int cfread(void *buf, int elsize, int nelem, CFILE *fp);
 
 // cfwrite() writes to the file
-int cfwrite (const void* buf, int elsize, int nelem, CFILE* cfile);
+int cfwrite(const void *buf, int elsize, int nelem, CFILE *cfile);
 
 // Reads/writes RLE compressed data.
-int cfread_compressed (void* buf, int elsize, int nelem, CFILE* cfile);
-int cfwrite_compressed (
-    void* param_buf, int param_elsize, int param_nelem, CFILE* cfile);
+int cfread_compressed(void *buf, int elsize, int nelem, CFILE *cfile);
+int cfwrite_compressed(
+        void *param_buf, int param_elsize, int param_nelem, CFILE *cfile);
 
 // Moves the file pointer
-int cfseek (CFILE* fp, int offset, int where);
+int cfseek(CFILE *fp, int offset, int where);
 
 // Returns current position of file.
-int cftell (CFILE* fp);
+int cftell(CFILE *fp);
 
 // cfputc() writes a character to a file
-int cfputc (int c, CFILE* cfile);
+int cfputc(int c, CFILE *cfile);
 
 // cfputs() writes a string to a file
-int cfputs (const char* str, CFILE* cfile);
+int cfputs(const char *str, CFILE *cfile);
 
 // cfgetc() reads a character to a file
-int cfgetc (CFILE* cfile);
+int cfgetc(CFILE *cfile);
 
 // cfgets() reads a string from a file
-char* cfgets (char* buf, int n, CFILE* cfile);
+char *cfgets(char *buf, int n, CFILE *cfile);
 
 // cfeof() Tests for end-of-file on a stream
-int cfeof (CFILE* cfile);
+int cfeof(CFILE *cfile);
 
 // Return the data pointer associated with the CFILE structure (for memory
 // mapped files)
-const void* cf_returndata (CFILE* cfile);
+const void *cf_returndata(CFILE *cfile);
 
 // get the 2 byte checksum of the passed filename - return 0 if operation
 // failed, 1 if succeeded
-int cf_chksum_short (
-    const char* filename, ushort* chksum, int max_size = -1,
-    int cf_type = CF_TYPE_ANY);
+int cf_chksum_short(
+        const char *filename, ushort *chksum, int max_size = -1,
+        int cf_type = CF_TYPE_ANY);
 
 // get the 2 byte checksum of the passed file - return 0 if operation failed, 1
 // if succeeded NOTE : preserves current file position
-int cf_chksum_short (CFILE* file, ushort* chksum, int max_size = -1);
+int cf_chksum_short(CFILE *file, ushort *chksum, int max_size = -1);
 
 // get the 32 bit CRC checksum of the passed filename - return 0 if operation
 // failed, 1 if succeeded
-int cf_chksum_long (
-    const char* filename, uint* chksum, int max_size = -1,
-    int cf_type = CF_TYPE_ANY);
+int cf_chksum_long(
+        const char *filename, uint *chksum, int max_size = -1,
+        int cf_type = CF_TYPE_ANY);
 
 // get the 32 bit CRC checksum of the passed file - return 0 if operation
 // failed, 1 if succeeded NOTE : preserves current file position
-int cf_chksum_long (CFILE* file, uint* chksum, int max_size = -1);
+int cf_chksum_long(CFILE *file, uint *chksum, int max_size = -1);
 
-int cf_chksum_pack (const char* filename, uint* chk_long, bool full = false);
+int cf_chksum_pack(const char *filename, uint *chk_long, bool full = false);
 
 // convenient for misc checksumming purposes
 // ------------------------------------------
 
 // update cur_chksum with the chksum of the new_data of size new_data_size
-ushort cf_add_chksum_short (ushort seed, ubyte* buffer, int size);
+ushort cf_add_chksum_short(ushort seed, ubyte *buffer, int size);
 
 // update cur_chksum with the chksum of the new_data of size new_data_size
-uint cf_add_chksum_long (uint seed, ubyte* buffer, size_t size);
+uint cf_add_chksum_long(uint seed, ubyte *buffer, size_t size);
 
 // convenient for misc checksumming purposes
 // ------------------------------------------
 
 //================= HIGH LEVEL FUNCTIONS ==================
-int cfexist (const char* filename); // Returns true if file exists on disk (1)
-                                    // or in hog (2).
+int cfexist(const char *filename); // Returns true if file exists on disk (1)
+                                   // or in hog (2).
 
 // rename a file, utilizing the extension to determine where file is.
-#define CF_RENAME_SUCCESS 0     // successfully renamed the file
+#define CF_RENAME_SUCCESS     0 // successfully renamed the file
 #define CF_RENAME_FAIL_ACCESS 1 // new name could not be created
-#define CF_RENAME_FAIL_EXIST 2  // old name does not exist
-int cf_rename (const char* old_name, const char* name, int type = CF_TYPE_ANY);
+#define CF_RENAME_FAIL_EXIST  2 // old name does not exist
+int cf_rename(const char *old_name, const char *name, int type = CF_TYPE_ANY);
 
 // changes the attributes of a file
-void cf_attrib (const char* name, int set, int clear, int type);
+void cf_attrib(const char *name, int set, int clear, int type);
 
 // flush (delete all files in) the passed directory (by type), return the # of
 // files deleted NOTE : WILL NOT DELETE READ-ONLY FILES
-int cfile_flush_dir (int type);
+int cfile_flush_dir(int type);
 
 // functions for reading from cfile
 // These are all high level, built up from
 // cfread.
-int cfgetc (CFILE* fp);
-char* cfgets (char* buf, size_t n, CFILE* fp);
-char cfread_char (CFILE* file, int ver = 0, char deflt = 0);
-ubyte cfread_ubyte (CFILE* file, int ver = 0, ubyte deflt = 0);
-short cfread_short (CFILE* file, int ver = 0, short deflt = 0);
-ushort cfread_ushort (CFILE* file, int ver = 0, ushort deflt = 0);
-int cfread_int (CFILE* file, int ver = 0, int deflt = 0);
-uint cfread_uint (CFILE* file, int ver = 0, uint deflt = 0);
-float cfread_float (CFILE* file, int ver = 0, float deflt = 0.0f);
-void cfread_vector (vec3d* vec, CFILE* file, int ver = 0, vec3d* deflt = NULL);
-void cfread_angles (
-    angles_t* ang, CFILE* file, int ver = 0, angles_t* deflt = NULL);
+int cfgetc(CFILE *fp);
+char *cfgets(char *buf, size_t n, CFILE *fp);
+char cfread_char(CFILE *file, int ver = 0, char deflt = 0);
+ubyte cfread_ubyte(CFILE *file, int ver = 0, ubyte deflt = 0);
+short cfread_short(CFILE *file, int ver = 0, short deflt = 0);
+ushort cfread_ushort(CFILE *file, int ver = 0, ushort deflt = 0);
+int cfread_int(CFILE *file, int ver = 0, int deflt = 0);
+uint cfread_uint(CFILE *file, int ver = 0, uint deflt = 0);
+float cfread_float(CFILE *file, int ver = 0, float deflt = 0.0f);
+void cfread_vector(vec3d *vec, CFILE *file, int ver = 0, vec3d *deflt = NULL);
+void cfread_angles(
+        angles_t *ang, CFILE *file, int ver = 0, angles_t *deflt = NULL);
 
 // Reads variable length, null-termined string.   Will only read up
 // to n characters.
-void cfread_string (char* buf, int n, CFILE* file);
+void cfread_string(char *buf, int n, CFILE *file);
 /**
  * @brief Read a fixed length string that is not null-terminated, with the
  * length stored in file
@@ -376,21 +377,21 @@ void cfread_string (char* buf, int n, CFILE* file);
  *
  * @note Appends NULL character to string (buf)
  */
-void cfread_string_len (char* buf, int n, CFILE* file);
+void cfread_string_len(char *buf, int n, CFILE *file);
 
 // functions for writing cfiles
-int cfwrite_char (char c, CFILE* file);
-int cfwrite_float (float f, CFILE* file);
-int cfwrite_int (int i, CFILE* file);
-int cfwrite_uint (uint i, CFILE* file);
-int cfwrite_short (short s, CFILE* file);
-int cfwrite_ushort (ushort s, CFILE* file);
-int cfwrite_ubyte (ubyte u, CFILE* file);
-int cfwrite_vector (vec3d* vec, CFILE* file);
-int cfwrite_angles (angles_t* ang, CFILE* file);
+int cfwrite_char(char c, CFILE *file);
+int cfwrite_float(float f, CFILE *file);
+int cfwrite_int(int i, CFILE *file);
+int cfwrite_uint(uint i, CFILE *file);
+int cfwrite_short(short s, CFILE *file);
+int cfwrite_ushort(ushort s, CFILE *file);
+int cfwrite_ubyte(ubyte u, CFILE *file);
+int cfwrite_vector(vec3d *vec, CFILE *file);
+int cfwrite_angles(angles_t *ang, CFILE *file);
 
 // writes variable length, null-termined string.
-int cfwrite_string (const char* buf, CFILE* file);
+int cfwrite_string(const char *buf, CFILE *file);
 
 /**
  * @brief Write a fixed length string (not including its null terminator), with
@@ -399,34 +400,34 @@ int cfwrite_string (const char* buf, CFILE* file);
  * @param buf String to write to file
  * @param file File to write to
  */
-int cfwrite_string_len (const char* buf, CFILE* file);
+int cfwrite_string_len(const char *buf, CFILE *file);
 
-int cf_get_file_list (
-    std::vector< std::string >& list, int pathtype, const char* filter,
-    int sort = CF_SORT_NONE, std::vector< file_list_info >* info = nullptr,
-    uint32_t location_flags = CF_LOCATION_ALL);
-int cf_get_file_list (
-    int max, char** list, int type, const char* filter,
-    int sort = CF_SORT_NONE, file_list_info* info = nullptr,
-    uint32_t location_flags = CF_LOCATION_ALL);
-int cf_get_file_list_preallocated (
-    int max, char arr[][MAX_FILENAME_LEN], char** list, int type,
-    const char* filter, int sort = CF_SORT_NONE,
-    file_list_info* info = nullptr, uint32_t location_flags = CF_LOCATION_ALL);
-void cf_sort_filenames (
-    int n, char** list, int sort, file_list_info* info = NULL);
-void cf_sort_filenames (
-    std::vector< std::string >& list, int sort,
-    std::vector< file_list_info >* info = NULL);
+int cf_get_file_list(
+        std::vector< std::string > &list, int pathtype, const char *filter,
+        int sort = CF_SORT_NONE, std::vector< file_list_info > *info = nullptr,
+        uint32_t location_flags = CF_LOCATION_ALL);
+int cf_get_file_list(
+        int max, char **list, int type, const char *filter,
+        int sort = CF_SORT_NONE, file_list_info *info = nullptr,
+        uint32_t location_flags = CF_LOCATION_ALL);
+int cf_get_file_list_preallocated(
+        int max, char arr[][MAX_FILENAME_LEN], char **list, int type,
+        const char *filter, int sort = CF_SORT_NONE,
+        file_list_info *info = nullptr, uint32_t location_flags = CF_LOCATION_ALL);
+void cf_sort_filenames(
+        int n, char **list, int sort, file_list_info *info = NULL);
+void cf_sort_filenames(
+        std::vector< std::string > &list, int sort,
+        std::vector< file_list_info > *info = NULL);
 
 struct CFileLocation {
-    bool found = false;
-    std::string full_name;
-    size_t size = 0;
-    size_t offset = 0;
-    const void* data_ptr = nullptr;
+        bool found = false;
+        std::string full_name;
+        size_t size = 0;
+        size_t offset = 0;
+        const void *data_ptr = nullptr;
 
-    explicit CFileLocation (bool found_in = false) : found (found_in) {}
+        explicit CFileLocation(bool found_in = false) : found(found_in) { }
 };
 
 // Searches for a file.   Follows all rules and precedence and searches
@@ -439,16 +440,16 @@ struct CFileLocation {
 // size        - File size
 // offset      - Offset into pack file.  0 if not a packfile.
 // Returns: If not found returns 0.
-CFileLocation cf_find_file_location (
-    const char* filespec, int pathtype, bool localize = false,
-    uint32_t location_flags = CF_LOCATION_ALL);
+CFileLocation cf_find_file_location(
+        const char *filespec, int pathtype, bool localize = false,
+        uint32_t location_flags = CF_LOCATION_ALL);
 
 struct CFileLocationExt : public CFileLocation {
-    int extension_index = -1;
+        int extension_index = -1;
 
-    explicit CFileLocationExt (int extension_index_in = -1)
-        : CFileLocation (extension_index_in >= 0),
-          extension_index (extension_index_in) {}
+        explicit CFileLocationExt(int extension_index_in = -1)
+                : CFileLocation(extension_index_in >= 0),
+                  extension_index(extension_index_in) { }
 };
 
 // Searches for a file.   Follows all rules and precedence and searches
@@ -466,43 +467,43 @@ struct CFileLocationExt : public CFileLocation {
 // Returns: If not found returns -1, else returns offset into ext_list.
 // (NOTE: This function is exponentially slow, so don't use it unless truely
 // needed!!)
-CFileLocationExt cf_find_file_location_ext (
-    const char* filename, const int ext_num, const char** ext_list,
-    int pathtype, bool localize = false);
+CFileLocationExt cf_find_file_location_ext(
+        const char *filename, const int ext_num, const char **ext_list,
+        int pathtype, bool localize = false);
 
 // Functions to change directories
-int cfile_chdir (const char* dir);
+int cfile_chdir(const char *dir);
 
 // push current directory on a 'stack' (so we can restore it) and change the
 // directory
-int cfile_push_chdir (int type);
+int cfile_push_chdir(int type);
 
 // restore directory on top of the stack
-int cfile_pop_dir ();
+int cfile_pop_dir();
 
 namespace cfile {
 // exceptions and other errors
 class cfile_error : public std::exception {
 public:
-    cfile_error () : m_excuse ("CFILE Exception") {}
+        cfile_error() : m_excuse("CFILE Exception") { }
 
-    explicit cfile_error (const std::string& excuse) : m_excuse (excuse) {}
+        explicit cfile_error(const std::string &excuse) : m_excuse(excuse) { }
 
-    ~cfile_error () noexcept override {}
+        ~cfile_error() noexcept override { }
 
-    const char* what () const noexcept override { return m_excuse.c_str (); }
+        const char *what() const noexcept override { return m_excuse.c_str(); }
 
 private:
-    std::string m_excuse;
+        std::string m_excuse;
 };
 
 class max_read_length : public cfile_error {
 public:
-    explicit max_read_length (const std::string& excuse)
-        : cfile_error (excuse) {}
+        explicit max_read_length(const std::string &excuse)
+                : cfile_error(excuse) { }
 
-    max_read_length ()
-        : cfile_error ("Attempted to read beyond length limit") {}
+        max_read_length()
+                : cfile_error("Attempted to read beyond length limit") { }
 };
 
 } // namespace cfile
