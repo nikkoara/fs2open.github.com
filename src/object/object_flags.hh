@@ -8,7 +8,7 @@
 #include "util/flagset.hh"
 
 namespace Object {
-FLAG_LIST(Object_Flags){
+enum class Object_Flags : size_t {
         Renders,                // It renders as something ( objtype_render gets called)
         Collides,               // It collides with stuff (objtype_check_impact & objtype_hit
                                 // gets called)
@@ -43,7 +43,7 @@ FLAG_LIST(Object_Flags){
         Temp_marked,       // Temporarily marked (Fred).
         Hidden,            // Object is hidden (not shown) and can't be manipulated
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 }
 

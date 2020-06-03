@@ -840,20 +840,22 @@ public:
         // Helper functions
         inline bool is_arriving()
         {
-                return flags
-                        [Ship::Ship_Flags::Arriving_stage_1,
-                         Ship::Ship_Flags::Arriving_stage_2];
+                return flags[
+                        Ship::Ship_Flags::Arriving_stage_1,
+                        Ship::Ship_Flags::Arriving_stage_2];
         }
         inline bool is_departing()
         {
-                return flags
-                        [Ship::Ship_Flags::Depart_warp, Ship::Ship_Flags::Depart_dockbay];
+                return flags[
+                        Ship::Ship_Flags::Depart_warp,
+                        Ship::Ship_Flags::Depart_dockbay];
         }
         inline bool cannot_warp()
         {
-                return flags
-                        [Ship::Ship_Flags::Warp_broken, Ship::Ship_Flags::Warp_never,
-                         Ship::Ship_Flags::Disabled];
+                return flags[
+                        Ship::Ship_Flags::Warp_broken,
+                        Ship::Ship_Flags::Warp_never,
+                        Ship::Ship_Flags::Disabled];
         }
         inline bool is_dying_or_departing()
         {

@@ -6350,7 +6350,7 @@ void sexp_allow_weapon(int n)
 /**
  * generic function for all those sexps that set flags
  * For all flag type parameters: If a particular flag should not be set, use
- * the ::NUM_VALUES member of that enum
+ * the ::SIZEOF_ENUM member of that enum
  *
  * @note this function has a similar purpose to sexp_alter_ship_flag_helper;
  * make sure you check/update both
@@ -6388,7 +6388,7 @@ void sexp_deal_with_ship_flag(
                         auto object_flag_orig = Objects[Ships[ship_index].objnum].flags;
 
                         // see if we have an object flag to set
-                        if (object_flag != Object::Object_Flags::NUM_VALUES) {
+                        if (object_flag != Object::Object_Flags::SIZEOF_ENUM) {
                                 // set or clear?
                                 Objects[Ships[ship_index].objnum].flags.set(
                                         (Object::Object_Flags)object_flag, set_it);
@@ -6408,7 +6408,7 @@ void sexp_deal_with_ship_flag(
                         }
 
                         // see if we have a ship flag to set
-                        if (ship_flag != Ship::Ship_Flags::NUM_VALUES) {
+                        if (ship_flag != Ship::Ship_Flags::SIZEOF_ENUM) {
                                 // set or clear?
                                 Ships[ship_index].flags.set(
                                         (Ship::Ship_Flags)ship_flag, set_it);
@@ -6432,7 +6432,7 @@ void sexp_deal_with_ship_flag(
                         }
 
                         // see if we have a p_object flag to set
-                        if (p_object_flag != Mission::Parse_Object_Flags::NUM_VALUES) {
+                        if (p_object_flag != Mission::Parse_Object_Flags::SIZEOF_ENUM) {
                                 // set or clear?
                                 p_objp->flags.set(
                                         (Mission::Parse_Object_Flags)p_object_flag, set_it);
@@ -6532,7 +6532,7 @@ void sexp_alter_ship_flag_helper(
                 object_flag_orig = oswpt.objp->flags;
 
                 // see if we have an object flag to set
-                if (object_flag != Object::Object_Flags::NUM_VALUES) {
+                if (object_flag != Object::Object_Flags::SIZEOF_ENUM) {
                         auto tmp_flagset = oswpt.objp->flags;
                         // set or clear?
                         tmp_flagset.set(object_flag, set_flag);
@@ -6553,7 +6553,7 @@ void sexp_alter_ship_flag_helper(
                 }
 
                 // see if we have a ship flag to set
-                if (ship_flag != Ship::Ship_Flags::NUM_VALUES) {
+                if (ship_flag != Ship::Ship_Flags::SIZEOF_ENUM) {
                         // set or clear?
                         oswpt.shipp->flags.set((Ship::Ship_Flags)ship_flag, set_flag);
                 }
@@ -6566,7 +6566,7 @@ void sexp_alter_ship_flag_helper(
                 }
 
                 // see if we have an ai flag to set
-                if (ai_flag != AI::AI_Flags::NUM_VALUES) {
+                if (ai_flag != AI::AI_Flags::SIZEOF_ENUM) {
                         // set or clear?
                         Ai_info[oswpt.shipp->ai_index].ai_flags.set(ai_flag, set_flag);
                 }
@@ -6577,7 +6577,7 @@ void sexp_alter_ship_flag_helper(
                 }
 
                 // see if we have a p_object flag to set
-                if (parse_obj_flag != Mission::Parse_Object_Flags::NUM_VALUES && oswpt.p_objp != NULL) {
+                if (parse_obj_flag != Mission::Parse_Object_Flags::SIZEOF_ENUM && oswpt.p_objp != NULL) {
                         oswpt.p_objp->flags.set(parse_obj_flag, set_flag);
                 }
                 break;
@@ -6604,7 +6604,7 @@ void sexp_deal_with_warp(int n, bool repairable, bool damage_it)
         }
 
         sexp_deal_with_ship_flag(
-                n, true, Object::Object_Flags::NUM_VALUES, ship_flag, p_object_flag,
+                n, true, Object::Object_Flags::SIZEOF_ENUM, ship_flag, p_object_flag,
                 damage_it);
 }
 
@@ -7006,7 +7006,7 @@ int sexp_goal_incomplete(int n)
 void sexp_protect_ships(int n, bool flag)
 {
         sexp_deal_with_ship_flag(
-                n, true, Object::Object_Flags::Protected, Ship::Ship_Flags::NUM_VALUES,
+                n, true, Object::Object_Flags::Protected, Ship::Ship_Flags::SIZEOF_ENUM,
                 Mission::Parse_Object_Flags::OF_Protected, flag);
 }
 
@@ -7021,7 +7021,7 @@ void sexp_beam_protect_ships(int n, bool flag)
 {
         sexp_deal_with_ship_flag(
                 n, true, Object::Object_Flags::Beam_protected,
-                Ship::Ship_Flags::NUM_VALUES,
+                Ship::Ship_Flags::SIZEOF_ENUM,
                 Mission::Parse_Object_Flags::OF_Beam_protected, flag);
 }
 
@@ -7034,7 +7034,7 @@ void sexp_beam_protect_ships(int n, bool flag)
 void sexp_ships_visible(int n, bool visible)
 {
         sexp_deal_with_ship_flag(
-                n, true, Object::Object_Flags::NUM_VALUES,
+                n, true, Object::Object_Flags::SIZEOF_ENUM,
                 Ship::Ship_Flags::Hidden_from_sensors,
                 Mission::Parse_Object_Flags::SF_Hidden_from_sensors, !visible, true);
 
@@ -7057,7 +7057,7 @@ void sexp_ships_invulnerable(int n, bool invulnerable)
 {
         sexp_deal_with_ship_flag(
                 n, true, Object::Object_Flags::Invulnerable,
-                Ship::Ship_Flags::NUM_VALUES,
+                Ship::Ship_Flags::SIZEOF_ENUM,
                 Mission::Parse_Object_Flags::OF_Invulnerable, invulnerable);
 }
 

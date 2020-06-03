@@ -682,7 +682,7 @@ void labviewer_update_flags_window()
                 auto sip = &Ship_info[Lab_selected_index];
 
                 for (auto flag_def : Ship_Class_Flags) {
-                        if (flag_def.flag == Ship::Info_Flags::NUM_VALUES)
+                        if (flag_def.flag == Ship::Info_Flags::SIZEOF_ENUM)
                                 continue;
                         flag_def.cb->SetFlag(sip->flags, flag_def.flag, sip);
                 }
@@ -690,7 +690,7 @@ void labviewer_update_flags_window()
                 auto wip = &Weapon_info[Lab_selected_index];
 
                 for (auto flag_def : Weapon_Class_Flags) {
-                        if (flag_def.flag == Weapon::Info_Flags::NUM_VALUES)
+                        if (flag_def.flag == Weapon::Info_Flags::SIZEOF_ENUM)
                                 continue;
                         flag_def.cb->SetFlag(wip->wi_flags, flag_def.flag, wip);
                 }

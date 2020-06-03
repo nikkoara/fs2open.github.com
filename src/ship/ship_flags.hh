@@ -9,15 +9,15 @@
 
 namespace Ship {
 
-FLAG_LIST(Weapon_Flags){
+enum class Weapon_Flags : size_t {
         Beam_Free = 0, // if this is a beam weapon, its free to fire
         Turret_Lock,   // is this turret is free to fire or locked
         Tagged_Only,   // only fire if target is tagged
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 
-FLAG_LIST(Subsystem_Flags){
+enum class Subsystem_Flags : size_t {
         Cargo_revealed = 0, Untargetable, No_SS_targeting,
         Has_fired, // used by scripting to flag a turret as having been fired
         FOV_Required, FOV_edge_check,
@@ -42,19 +42,19 @@ FLAG_LIST(Subsystem_Flags){
                                    // disabled if the ship has the "repair disabled
                                    // subsystems" flag - MageKing17
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 
-FLAG_LIST(System_Flags){
+enum class System_Flags : size_t {
         Alive = 0,       // subsystem has active alive sound
         Dead,            // subsystem has active dead sound
         Rotate,          // subsystem has active rotation sound
         Turret_rotation, // rotation sound to be scaled like turrets do
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 
-FLAG_LIST(Ship_Flags){
+enum class Ship_Flags : size_t {
         Ignore_count = 0,  // ignore this ship when counting ship types for goals
         Reinforcement,     // this ship is a reinforcement ship
         Escort,            // this ship is an escort ship
@@ -148,16 +148,16 @@ FLAG_LIST(Ship_Flags){
         Render_without_heightmap, Render_without_ambientmap,
         Render_without_miscmap, Render_full_detail, Render_without_light,
 
-        NUM_VALUES
+        SIZEOF_ENUM
 
 };
 
-FLAG_LIST(Exit_Flags){ Destroyed = 0, Departed, Cargo_known,
+enum class Exit_Flags : size_t { Destroyed = 0, Departed, Cargo_known,
                        Player_deleted, Been_tagged, Red_alert_carry,
 
-                       NUM_VALUES };
+                       SIZEOF_ENUM };
 
-FLAG_LIST(Info_Flags){
+enum class Info_Flags : size_t {
         No_collide = 0, Player_ship, Default_player_ship,
         Path_fixup,                    // when set, path verts have been set for this ship's model
         Support,                       // this ship can perform repair/rearm functions
@@ -223,20 +223,20 @@ FLAG_LIST(Info_Flags){
         Subsys_repair_when_disabled,   // MageKing17 - Subsystems auto-repair
                                        // themselves even when disabled.
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 
-FLAG_LIST(Aiming_Flags){
+enum class Aiming_Flags : size_t {
         Autoaim = 0,         // has autoaim
         Auto_convergence,    // has automatic convergence
         Std_convergence,     // has standard - ie. non-automatic - convergence
         Autoaim_convergence, // has autoaim with convergence
         Convergence_offset,  // marks that convergence has offset value
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 
-FLAG_LIST(Type_Info_Flags){ Counts_for_alone,
+enum class Type_Info_Flags : size_t { Counts_for_alone,
                             Praise_destruction,
                             Hotkey_on_list,
                             Target_as_threat,
@@ -256,13 +256,13 @@ FLAG_LIST(Type_Info_Flags){ Counts_for_alone,
                             AI_can_form_wing,
                             AI_protected_on_cripple,
 
-                            NUM_VALUES };
+                            SIZEOF_ENUM };
 
-FLAG_LIST(Thruster_Flags){ Bank_right, Bank_left, Pitch_up, Pitch_down,
+enum class Thruster_Flags : size_t { Bank_right, Bank_left, Pitch_up, Pitch_down,
                            Roll_right, Roll_left, Slide_right, Slide_left,
                            Slide_up, Slide_down, Forward, Reverse,
 
-                           NUM_VALUES };
+                           SIZEOF_ENUM };
 
 // Not all wing flags are parseable or saveable in mission files. Right now,
 // the only ones which can be set by mission designers are: ignore_count,
@@ -272,7 +272,7 @@ FLAG_LIST(Thruster_Flags){ Bank_right, Bank_left, Pitch_up, Pitch_down,
 // missionparse)
 #define PARSEABLE_WING_FLAGS 8
 
-FLAG_LIST(Wing_Flags){
+enum class Wing_Flags : size_t {
         Gone,                // all ships were either destroyed or departed
         Departing,           // wing's departure cue turned true
         Ignore_count,        // ignore all ships in this wing for goal counting purposes.
@@ -292,15 +292,15 @@ FLAG_LIST(Wing_Flags){
                              // from being created (like its mother ship being destroyed)
         Nav_carry,           // Kazan - Wing has nav-carry-status
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 
-FLAG_LIST(Subsys_Sound_Flags){ Alive, Dead, Rotate, Turret_rotation,
+enum class Subsys_Sound_Flags : size_t { Alive, Dead, Rotate, Turret_rotation,
 
-                               NUM_VALUES };
+                               SIZEOF_ENUM };
 
-FLAG_LIST(Awacs_Warning_Flags){ Warn_25, Warn_75,
+enum class Awacs_Warning_Flags : size_t { Warn_25, Warn_75,
 
-                                NUM_VALUES };
+                                SIZEOF_ENUM };
 } // namespace Ship
 #endif // FREESPACE2_SHIP_SHIP_FLAGS_HH

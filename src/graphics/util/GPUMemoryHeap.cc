@@ -13,7 +13,7 @@ BufferType getBufferType(GpuHeap heap_type)
         switch (heap_type) {
         case GpuHeap::ModelVertex: return BufferType::Vertex;
         case GpuHeap::ModelIndex: return BufferType::Index;
-        case GpuHeap::NUM_VALUES:
+        case GpuHeap::SIZEOF_ENUM:
         default:
                 ASSERT(0);
                 return BufferType::Vertex;

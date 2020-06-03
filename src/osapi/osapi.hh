@@ -49,7 +49,7 @@ inline constexpr bool is_legacy_mode() { return false; }
  */
 enum class OpenGLContextFlags { Debug = 0,
                                 ForwardCompatible,
-                                NUM_VALUES };
+                                SIZEOF_ENUM };
 
 /**
  * @brief The required context profile
@@ -121,7 +121,7 @@ public:
 enum class ViewPortFlags { Fullscreen = 0,
                            Borderless,
                            Resizeable,
-                           NUM_VALUES };
+                           SIZEOF_ENUM };
 
 /**
  * @brief Properties of a viewport that should be created

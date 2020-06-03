@@ -8,7 +8,7 @@
 #include "util/flagset.hh"
 
 namespace AI {
-FLAG_LIST(AI_Flags){
+enum class AI_Flags : size_t {
         Formation_wing,                // Fly in formation as part of wing.
         Awaiting_repair,               // Awaiting a repair ship.
         Being_repaired,                // Currently docked with repair ship.
@@ -47,10 +47,10 @@ FLAG_LIST(AI_Flags){
         Free_afterburner_use,          // Use afterburners while following waypoints or
                                        // flying towards objects
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 
-FLAG_LIST(Goal_Flags){
+enum class Goal_Flags : size_t {
         Docker_index_valid,  // when set, index field for docker is valid
         Dockee_index_valid,  // when set, index field for dockee is valid
         Goal_on_hold,        // when set, this goal cannot currently be satisfied,
@@ -65,10 +65,10 @@ FLAG_LIST(Goal_Flags){
         Depart_sound_played, // Goober5000 - replacement for AL's hack ;)
         Target_own_team,
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 
-FLAG_LIST(Maneuver_Override_Flags){
+enum class Maneuver_Override_Flags : size_t {
         Full,     // Full sexp control
         Roll,     // Sexp forced roll maneuver
         Pitch,    // Sexp forced pitch change
@@ -78,10 +78,10 @@ FLAG_LIST(Maneuver_Override_Flags){
         Sideways, // horizontal movement
         Forward,  // forward movement
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 
-FLAG_LIST(Profile_Flags){
+enum class Profile_Flags : size_t {
         Advanced_turret_fov_edge_checks,
         Ai_aims_from_ship_center,
         Ai_can_slow_down_attacking_big_ships,
@@ -133,7 +133,7 @@ FLAG_LIST(Profile_Flags){
         Use_newtonian_dampening,
         Use_only_single_fov_for_turrets,
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 } // namespace AI
 

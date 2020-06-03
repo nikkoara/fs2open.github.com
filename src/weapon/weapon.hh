@@ -561,28 +561,30 @@ public:
 
         inline bool is_homing()
         {
-                return wi_flags
-                        [Weapon::Info_Flags::Homing_heat,
-                         Weapon::Info_Flags::Homing_aspect,
-                         Weapon::Info_Flags::Homing_javelin];
+                return wi_flags[
+                        Weapon::Info_Flags::Homing_heat,
+                        Weapon::Info_Flags::Homing_aspect,
+                        Weapon::Info_Flags::Homing_javelin];
         }
         inline bool is_locked_homing()
         {
-                return wi_flags
-                        [Weapon::Info_Flags::Homing_aspect,
-                         Weapon::Info_Flags::Homing_javelin];
+                return wi_flags[
+                        Weapon::Info_Flags::Homing_aspect,
+                        Weapon::Info_Flags::Homing_javelin];
         }
         inline bool hurts_big_ships()
         {
-                return wi_flags
-                        [Weapon::Info_Flags::Bomb, Weapon::Info_Flags::Beam,
-                         Weapon::Info_Flags::Huge, Weapon::Info_Flags::Big_only];
+                return wi_flags[
+                        Weapon::Info_Flags::Bomb,
+                        Weapon::Info_Flags::Beam,
+                        Weapon::Info_Flags::Huge,
+                        Weapon::Info_Flags::Big_only];
         }
         inline bool is_interceptable()
         {
-                return wi_flags
-                        [Weapon::Info_Flags::Fighter_Interceptable,
-                         Weapon::Info_Flags::Turret_Interceptable];
+                return wi_flags[
+                        Weapon::Info_Flags::Fighter_Interceptable,
+                        Weapon::Info_Flags::Turret_Interceptable];
         }
 
         const char *get_display_string();

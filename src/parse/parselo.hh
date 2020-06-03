@@ -176,7 +176,7 @@ int parse_string_flag_list(
                         if (!strcasecmp(slp[i], defs[j].name)) {
                                 if (defs[j].in_use) {
                                         ASSERTX(
-                                                defs[j].def != T::NUM_VALUES,
+                                                defs[j].def != T::SIZEOF_ENUM,
                                                 "Error in definition for flag_def_list, flag '%s' has "
                                                 "been given an invalid value but is still marked as "
                                                 "in use.\n",

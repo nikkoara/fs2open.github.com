@@ -9,7 +9,7 @@
 
 namespace Model {
 
-FLAG_LIST(Subsystem_Flags){
+enum class Subsystem_Flags : size_t {
         Rotates,           // This means the object rotates automatically with "turn_rate"
         Stepped_rotate,    // This means that the rotation occurs in steps
         Ai_rotate,         // This means that the rotation is controlled by ai
@@ -72,10 +72,10 @@ FLAG_LIST(Subsystem_Flags){
         Share_fire_direction,           // (DahBlount) Whenever the turret fires, make all
                                         // firing points fire in the same direction.
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 
-FLAG_LIST(Render_Flags){
+enum class Render_Flags : size_t {
         Normal,               // Draw a normal object
         Show_outline,         // Draw the object in outline mode. Color specified by
                               // model_set_outline_color
@@ -117,7 +117,7 @@ FLAG_LIST(Render_Flags){
         Force_clamp,          // force clamp - Hery
         Animated_shader,      // Use a animated Shader - Valathil
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 } // namespace Model
 

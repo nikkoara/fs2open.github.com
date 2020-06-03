@@ -2298,11 +2298,11 @@ size_t vertex_layout::hash() const
 }
 
 static std::unique_ptr< graphics::util::GPUMemoryHeap >
-        gpu_heaps[static_cast< size_t >(GpuHeap::NUM_VALUES)];
+        gpu_heaps[static_cast< size_t >(GpuHeap::SIZEOF_ENUM)];
 
 static void gpu_heap_init()
 {
-        for (size_t i = 0; i < static_cast< size_t >(GpuHeap::NUM_VALUES); ++i) {
+        for (size_t i = 0; i < static_cast< size_t >(GpuHeap::SIZEOF_ENUM); ++i) {
                 auto enumVal = static_cast< GpuHeap >(i);
 
                 gpu_heaps[i].reset(new graphics::util::GPUMemoryHeap(enumVal));
@@ -2317,7 +2317,7 @@ static void gpu_heap_deinit()
 static graphics::util::GPUMemoryHeap *get_gpu_heap(GpuHeap heap_type)
 {
         ASSERTX(
-                heap_type != GpuHeap::NUM_VALUES, "Invalid heap type value detected.");
+                heap_type != GpuHeap::SIZEOF_ENUM, "Invalid heap type value detected.");
 
         return gpu_heaps[static_cast< size_t >(heap_type)].get();
 }

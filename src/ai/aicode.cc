@@ -5949,7 +5949,7 @@ int ai_fire_primary_weapon(object *objp)
         }
 
         if ((swp->current_primary_bank < 0) || (swp->current_primary_bank >= swp->num_primary_banks) || timestamp_elapsed(aip->primary_select_timestamp)) {
-                Weapon::Info_Flags flags = Weapon::Info_Flags::NUM_VALUES;
+                Weapon::Info_Flags flags = Weapon::Info_Flags::SIZEOF_ENUM;
                 if (aip->targeted_subsys != NULL) {
                         flags = Weapon::Info_Flags::Puncture;
                 }

@@ -9,7 +9,7 @@
 
 namespace Weapon {
 
-FLAG_LIST(Info_Flags){
+enum class Info_Flags : size_t {
         Homing_heat,    // if set, this weapon homes via seeking heat
         Homing_aspect,  // if set, this weapon homes via chasing aspect
         Electronics,    // Takes out electronics systems.
@@ -115,10 +115,10 @@ FLAG_LIST(Info_Flags){
         Die_on_lost_lock,                 // WIF_LOCKED_HOMING missiles will die if they lose their
                                           // lock
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 
-FLAG_LIST(Weapon_Flags){
+enum class Weapon_Flags : size_t {
         Lock_warning_played,      // set when a lock warning sound is played for the
                                   // player (needed since we don't want to play multiple
                                   // lock sounds)
@@ -136,12 +136,12 @@ FLAG_LIST(Weapon_Flags){
         No_homing,                // this weapon should ignore any homing behavior it'd usually
                                   // have
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 
-FLAG_LIST(Burst_Flags){ Fast_firing, Random_length,
+enum class Burst_Flags : size_t { Fast_firing, Random_length,
 
-                        NUM_VALUES };
+                        SIZEOF_ENUM };
 } // namespace Weapon
 
 #endif // FREESPACE2_WEAPON_WEAPON_FLAGS_HH

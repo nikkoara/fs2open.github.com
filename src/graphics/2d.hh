@@ -1358,7 +1358,7 @@ enum class GpuHeap {
         ModelVertex = 0,
         ModelIndex,
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 
 /**

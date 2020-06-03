@@ -119,7 +119,7 @@ flag_def_list_new< Weapon::Info_Flags > Weapon_Info_Flags[] = {
         { "pierce shields", Weapon::Info_Flags::Pierce_shields, true, false },
         { "local ssm", Weapon::Info_Flags::Local_ssm, true, false },
         { "tagged only", Weapon::Info_Flags::Tagged_only, true, false },
-        { "beam no whack", Weapon::Info_Flags::NUM_VALUES, false,
+        { "beam no whack", Weapon::Info_Flags::SIZEOF_ENUM, false,
           true }, // special case
         { "cycle", Weapon::Info_Flags::Cycle, true, false },
         { "small only", Weapon::Info_Flags::Small_only, true, false },

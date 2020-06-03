@@ -9,7 +9,7 @@
 
 namespace Mission {
 
-FLAG_LIST(Mission_Flags){
+enum class Mission_Flags : size_t {
         Subspace,                 // mission takes place in subspace
         No_promotion,             // cannot get promoted or badges in this mission
         Fullneb,                  // mission is a full nebula mission
@@ -44,10 +44,10 @@ FLAG_LIST(Mission_Flags){
                                   // missions
         End_to_mainhall,          // niffiwan - Return to the mainhall after debrief
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 
-FLAG_LIST(Parse_Object_Flags){
+enum class Parse_Object_Flags : size_t {
         SF_Cargo_known, SF_Ignore_count, SF_Reinforcement, SF_Escort,
         SF_No_arrival_music, SF_No_arrival_warp, OF_No_shields, OF_Protected,
         OF_Player_start, SF_No_departure_warp, SF_Locked, OF_Invulnerable,
@@ -78,7 +78,7 @@ FLAG_LIST(Parse_Object_Flags){
                            // used generically
         OF_No_collide, SF_No_disabled_self_destruct,
 
-        NUM_VALUES
+        SIZEOF_ENUM
 };
 } // namespace Mission
 

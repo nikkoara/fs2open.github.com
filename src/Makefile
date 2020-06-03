@@ -4,7 +4,8 @@ include ./Makefile.vars
 
 WARNINGS =										\
 	-Wno-unused-function						\
-	-Wno-deprecated-declarations
+	-Wno-deprecated-declarations				\
+	-Wno-comma-subscript
 
 CXXFLAGS = -g -O -std=c++2a -W -Wall $(WARNINGS)
 
